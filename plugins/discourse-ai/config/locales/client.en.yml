@@ -311,7 +311,8 @@ en:
     discourse_ai:
       title: "AI"
       dsa_classification:
-        updated: "Selection updated"
+        suggest: "Suggest with AI"
+        updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
       view_raw: "View raw"

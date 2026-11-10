@@ -112,15 +112,4 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     @include ellipsis;
     min-width: 0;
   }
-
-  &__choose.btn {
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    color: var(--primary-medium);
-    font-style: italic;
-
-    .d-icon {
-      color: var(--tertiary);
-    }
-  }
 }

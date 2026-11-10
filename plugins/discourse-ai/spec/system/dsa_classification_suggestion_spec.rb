@@ -7,7 +7,6 @@ RSpec.describe "DSA classification suggestion" do
 
   let(:review_page) { PageObjects::Pages::Review.new }
   let(:modal) { PageObjects::Modals::DsaModeration.new }
-  let(:suggestion) { PageObjects::Components::AiDsaClassificationSuggestion.new }
   let(:advertising_rule) do
     {
       ground: "No advertising",
@@ -56,36 +55,24 @@ RSpec.describe "DSA classification suggestion" do
       expect(modal).to have_readable_rule(advertising_rule[:ground])
 
       modal.close_rule_menu
-      suggestion.suggest_rule
-
-      expect(modal).to have_selected_rule(advertising_rule[:ground])
-      expect(modal).to have_focused_rule
-      expect(modal).to have_selected_category("Other violation of terms and conditions")
-      expect(review_page).to have_reviewable_with_pending_status(reviewable)
-
-      suggestion.suggest_category
-
-      expect(modal).to have_selected_category(category)
-      expect(modal).to have_focused_category
-      expect(modal).to have_selected_rule(advertising_rule[:ground])
-
-      modal.select_category("Other violation of terms and conditions")
-
       PageObjects::CDP
         .new
         .with_paused_request("**/dsa-classifications/*/suggest") do |request|
-          suggestion.suggest_category
+          page.driver.with_playwright_page do |browser|
+            browser.get_by_role("button", name: "Suggest with AI", exact: true).click
+          end
           request.wait
 
-          expect(modal).to have_loading_category
+          expect(modal).to have_disabled_button("Silence")
 
-          modal.select_category(category)
-          modal.select_category("Other violation of terms and conditions")
           request.resume
-
-          expect(modal).to have_no_loading_category
-          expect(modal).to have_selected_category("Other violation of terms and conditions")
         end
+
+      expect(modal).to have_selected_rule(advertising_rule[:ground])
+      expect(modal).to have_selected_category(category)
+      expect(review_page).to have_reviewable_with_pending_status(reviewable)
+
+      modal.select_category("Other violation of terms and conditions")
 
       modal.confirm("Silence")
 

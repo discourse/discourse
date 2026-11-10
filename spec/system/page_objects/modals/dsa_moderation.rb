@@ -87,6 +87,10 @@ module PageObjects
         within(full_modal_selector) { has_no_button?("Cancel", exact: true) }
       end
 
+      def has_disabled_button?(label)
+        within(full_modal_selector) { has_button?(label, exact: true, disabled: true) }
+      end
+
       def confirm(label)
         within(full_modal_selector) { click_button(label, exact: true) }
       end
@@ -125,28 +129,6 @@ module PageObjects
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
         ) { |trigger| trigger["aria-description"] == ground }
-      end
-
-      def has_focused_rule?
-        has_css?(
-          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select:focus",
-        )
-      end
-
-      def has_focused_category?
-        has_css?("#{full_modal_selector} [data-name='category'] .dsa-classification-select:focus")
-      end
-
-      def has_loading_category?
-        has_css?(
-          "#{full_modal_selector} [data-name='category'] .dsa-classification-select[aria-busy='true']",
-        )
-      end
-
-      def has_no_loading_category?
-        has_no_css?(
-          "#{full_modal_selector} [data-name='category'] .dsa-classification-select[aria-busy='true']",
-        )
       end
 
       def has_selected_category?(category)

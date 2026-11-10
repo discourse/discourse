@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -84,9 +85,9 @@ const Body = <template>
     <div hidden={{@flow.showContinue}}>
       <DsaModerationDetails
         @formId={{@flow.formId}}
+        @onRegisterApi={{@flow.registerFormApi}}
         @onSubmit={{@flow.classify}}
         @options={{@flow.options}}
-        @reviewableId={{@flow.reviewableId}}
       />
     </div>
   {{else}}
@@ -107,11 +108,20 @@ const Footer = <template>
       class={{@submitClass}}
       type={{if @flow.enabled "submit" "button"}}
       @action={{unless @flow.enabled @flow.submit}}
-      @disabled={{@disabled}}
+      @disabled={{or @disabled @flow.suggestionLoading}}
       @form={{if @flow.enabled @flow.formId}}
       @icon={{@submitIcon}}
       @isLoading={{@isLoading}}
       @translatedLabel={{@submitLabel}}
+    />
+  {{/if}}
+  {{#if @flow.suggestionButton}}
+    <@flow.suggestionButton
+      @disabled={{@disabled}}
+      @getForm={{@flow.getFormApi}}
+      @loading={{@flow.suggestionLoading}}
+      @onLoadingChange={{@flow.setSuggestionLoading}}
+      @reviewableId={{@flow.reviewableId}}
     />
   {{/if}}
   {{#if @flow.showBack}}
@@ -133,8 +143,10 @@ const Footer = <template>
 
 export default class DsaModeration extends Component {
   @tracked classificationStep = false;
+  @tracked suggestionLoading = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
+  #formApi;
 
   get actionStepLabel() {
     return this.args.actionStepLabel ?? i18n("review.moderation_steps.action");
@@ -160,6 +172,12 @@ export default class DsaModeration extends Component {
     return this.args.reviewableId;
   }
 
+  get suggestionButton() {
+    if (this.enabled && !this.showContinue && this.reviewableId) {
+      return applyValueTransformer("dsa-classification-suggestion", null);
+    }
+  }
+
   get showTitleHelp() {
     return this.enabled && !this.hasActionDetails && !this.nextStepLabel;
   }
@@ -173,13 +191,26 @@ export default class DsaModeration extends Component {
   }
 
   @action
+  getFormApi() {
+    return this.#formApi;
+  }
+
+  @action
+  registerFormApi(formApi) {
+    this.#formApi = formApi;
+  }
+
+  @action
   back() {
+    this.suggestionLoading = false;
     this.classificationStep = false;
   }
 
   @action
   classify(classification) {
-    return this.args.onSubmit({ dsa_classification: { ...classification } });
+    if (!this.suggestionLoading) {
+      return this.args.onSubmit({ dsa_classification: { ...classification } });
+    }
   }
 
   @action
@@ -190,6 +221,11 @@ export default class DsaModeration extends Component {
   @action
   focusCurrentStep(element) {
     element.querySelector('[aria-current="step"]').focus();
+  }
+
+  @action
+  setSuggestionLoading(loading) {
+    this.suggestionLoading = loading;
   }
 
   @action
