@@ -265,6 +265,14 @@ RSpec.describe FileStore::BaseStore do
     end
   end
 
+  describe "#get_cache_path_for" do
+    it "uses a per-site directory and only the file name" do
+      expect(described_class.new.get_cache_path_for("a/b/c.png")).to eq(
+        File.join(FileStore::BaseStore::CACHE_DIR, "default", "c.png"),
+      )
+    end
+  end
+
   describe "#cache_file" do
     let(:store) { FileStore::BaseStore.new }
     let(:cache_dir) { FileStore::BaseStore::CACHE_DIR }
@@ -296,7 +304,7 @@ RSpec.describe FileStore::BaseStore do
         end
       end
 
-      remaining = Dir.glob("#{cache_dir}*")
+      remaining = Dir.glob(File.join(cache_dir, "*", "*"))
       expect(remaining.length).to eq(5)
       expect(File.exist?(store.get_cache_path_for("cached_0.tmp"))).to eq(false)
       expect(File.exist?(store.get_cache_path_for("cached_1.tmp"))).to eq(false)
