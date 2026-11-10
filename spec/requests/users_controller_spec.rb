@@ -4450,6 +4450,31 @@ RSpec.describe UsersController do
         expect(user1.user_avatar.reload.custom_upload_id).to eq(upload.id)
       end
     end
+
+    context "when a moderator picks a secure upload belonging to the target user" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        SiteSetting.authorized_extensions = "*"
+        sign_in(moderator)
+      end
+
+      it "forbids using this image as an avatar" do
+        pm_post = Fabricate(:private_message_post, user: user1)
+        secure_upload = Fabricate(:upload, user: user1, secure: true, access_control_post: pm_post)
+
+        expect(moderator.guardian.can_see_upload?(secure_upload)).to eq(false)
+
+        put "/u/#{user1.username}/preferences/avatar/pick.json",
+            params: {
+              upload_id: secure_upload.id,
+              type: "custom",
+            }
+
+        expect(response).to be_forbidden
+        expect(user1.reload.uploaded_avatar_id).to be_nil
+      end
+    end
   end
 
   describe "#select_avatar" do
