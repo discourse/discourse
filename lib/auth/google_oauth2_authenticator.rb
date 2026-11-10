@@ -74,10 +74,12 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     allowed_groups =
       SiteSetting.google_oauth2_hd_groups_allowed.split("|").map(&:strip).reject(&:blank?)
     if allowed_groups.present? && !member_of_allowed_group?(groups, allowed_groups)
-      return Auth::Result.new.tap do |auth_result|
-        auth_result.failed = true
-        auth_result.failed_reason = I18n.t("google_oauth2.not_in_allowed_group")
-      end
+      return(
+        Auth::Result.new.tap do |auth_result|
+          auth_result.failed = true
+          auth_result.failed_reason = I18n.t("google_oauth2.not_in_allowed_group")
+        end
+      )
     end
 
     result = super
@@ -99,9 +101,9 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def fetches_groups?
     SiteSetting.google_oauth2_hd.present? &&
-      (SiteSetting.google_oauth2_hd_groups ||
-        SiteSetting.google_oauth2_hd_groups_allowed.present?) &&
-      groups_service_account_configured?
+      (
+        SiteSetting.google_oauth2_hd_groups || SiteSetting.google_oauth2_hd_groups_allowed.present?
+      ) && groups_service_account_configured?
   end
 
   def groups_service_account_configured?

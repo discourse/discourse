@@ -269,9 +269,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@auth_hash)
 
           expect(result).to be_failed
-          expect(result.failed_reason).to eq(
-            I18n.t("google_oauth2.not_in_allowed_group"),
-          )
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
         end
 
         it "rejects authentication when group retrieval fails" do
@@ -284,9 +282,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@auth_hash)
 
           expect(result).to be_failed
-          expect(result.failed_reason).to eq(
-            I18n.t("google_oauth2.not_in_allowed_group"),
-          )
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
         end
 
         it "rejects authentication when a later page of group retrieval fails" do
@@ -295,10 +291,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
             "https://admin.googleapis.com/admin/directory/v1/groups?userKey=#{@auth_hash.uid}"
           stub_request(:get, groups_url).to_return(
             status: 200,
-            body: {
-              groups: [{ id: "12345", name: "group1" }],
-              nextPageToken: "next-page",
-            }.to_json,
+            body: { groups: [{ id: "12345", name: "group1" }], nextPageToken: "next-page" }.to_json,
             headers: {
               "Content-Type" => "application/json",
             },
@@ -311,9 +304,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           result = described_class.new.after_authenticate(@auth_hash)
 
           expect(result).to be_failed
-          expect(result.failed_reason).to eq(
-            I18n.t("google_oauth2.not_in_allowed_group"),
-          )
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
         end
 
         it "doesn't explode with invalid credentials" do
