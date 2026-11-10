@@ -759,7 +759,7 @@ module DiscourseAi
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
-            user: attributed_user,
+            user: attributed_user || visibility_user,
             guardian: visibility_guardian,
             custom_instructions: custom_instructions,
             feature_name: feature_name.presence || "bot",
