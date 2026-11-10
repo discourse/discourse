@@ -1,15 +1,16 @@
 import { censorFn } from "pretty-text/censored-words";
 
 function recurse(tokens, apply) {
-  let i;
-  for (i = 0; i < tokens.length; i++) {
-    if (tokens[i].type === "html_raw" && tokens[i].onebox) {
+  for (const token of tokens) {
+    // html_raw is final HTML restored after the sanitizer, so rewriting it here
+    // would bypass sanitization
+    if (token.type === "html_raw") {
       continue;
     }
 
-    apply(tokens[i]);
-    if (tokens[i].children) {
-      recurse(tokens[i].children, apply);
+    apply(token);
+    if (token.children) {
+      recurse(token.children, apply);
     }
   }
 }
