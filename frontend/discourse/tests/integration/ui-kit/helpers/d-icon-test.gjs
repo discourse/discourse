@@ -33,4 +33,15 @@ module("Integration | ui-kit | Helper | dIcon", function (hooks) {
         '<svg class="fa d-icon d-icon-d-watching svg-icon fa-width-auto svg-string" width="1em" height="1em" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-bell-exclamation"></use></svg>'
       );
   });
+
+  test("passes the options to the renderer", async function (assert) {
+    await render(
+      <template>
+        <div class="test">{{dIcon "bars" class="gadget" label="Menu"}}</div>
+      </template>
+    );
+
+    assert.dom(".test svg").hasClass("gadget");
+    assert.dom(".test .sr-only").hasText("Menu");
+  });
 });
