@@ -14,13 +14,13 @@
     <meta property="og:description" content="<%= @description %>">
     <meta property="og:site_name" content="<%= SiteSetting.blog_title %>">
     <meta property="og:url" content="<%= @canonical_url %>">
-    <meta property="og:type" content="<%= @topic ? 'article' : 'website' %>">
-    <meta name="twitter:card" content="<%= @topic && blog_revision_image(@article) ? 'summary_large_image' : 'summary' %>">
-    <% if @topic && !@preview %>
-      <% if blog_revision_image(@article) %><meta property="og:image" content="<%= blog_revision_image(@article) %>"><% end %>
-      <meta property="article:published_time" content="<%= @publication.published_at&.iso8601 %>">
-      <meta property="article:modified_time" content="<%= @publication.article_updated_at&.iso8601 %>">
-      <script type="application/ld+json" nonce="<%= csp_nonce_placeholder %>"><%= raw ERB::Util.json_escape(blog_article_schema) %></script>
+    <meta property="og:type" content="<%= @article_metadata ? 'article' : 'website' %>">
+    <meta name="twitter:card" content="<%= @article_metadata&.twitter_card || 'summary' %>">
+    <% if @article_metadata && !@preview %>
+      <% if @article_metadata.image_url %><meta property="og:image" content="<%= @article_metadata.image_url %>"><% end %>
+      <meta property="article:published_time" content="<%= @article_metadata.published_time %>">
+      <meta property="article:modified_time" content="<%= @article_metadata.modified_time %>">
+      <script type="application/ld+json" nonce="<%= csp_nonce_placeholder %>"><%= raw ERB::Util.json_escape(@article_metadata.schema) %></script>
     <% end %>
     <link rel="alternate" type="application/rss+xml" title="<%= SiteSetting.blog_title %>" href="<%= blog_url('/feed.xml') %>">
     <% if SiteSetting.favicon %><link rel="icon" href="<%= ::UrlHelper.absolute(SiteSetting.favicon.url) %>"><% end %>

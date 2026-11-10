@@ -287,9 +287,8 @@ bs_BA:
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
-      sections:
-        theme: "Izgled"
-        search: "Pretraži"
+      fonts:
+        base_font: "Tijelo"
       homepage:
         topics: "Topics"
         categories: "Kategorije"

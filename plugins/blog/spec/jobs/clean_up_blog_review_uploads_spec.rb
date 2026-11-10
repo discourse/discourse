@@ -17,8 +17,8 @@ RSpec.describe Jobs::CleanUpBlogReviewUploads do
         cooked: "<p><img src=\"#{upload.url}\"></p>",
       )
       first_post.link_post_uploads
-      expired = Blog::Review.issue!(topic: topic, user: admin)
-      active = Blog::Review.issue!(topic: topic, user: admin)
+      expired = issue_blog_review(topic, user: admin)
+      active = issue_blog_review(topic, user: admin)
       expired.update!(expires_at: 1.second.ago)
       SiteSetting.blog_enabled = false
 

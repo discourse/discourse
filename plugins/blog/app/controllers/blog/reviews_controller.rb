@@ -7,7 +7,9 @@ module ::Blog
     REVIEWS_PER_PAGE = 30
     FEEDBACK_PER_PAGE = 30
 
-    before_action :find_topic
+    before_action :ensure_discussion_host
+    before_action :prevent_caching
+    before_action :find_topic, only: %i[index topic_feedback feedback]
 
     rescue_from ActiveRecord::RecordInvalid do |error|
       render_json_error error.record, status: :unprocessable_entity
@@ -16,38 +18,68 @@ module ::Blog
     def index
       records =
         Review
-          .where(topic_id: @topic.id)
+          .where(topic: @topic)
           .includes(:creator)
           .order(id: :desc)
           .offset(page * REVIEWS_PER_PAGE)
           .limit(REVIEWS_PER_PAGE + 1)
           .to_a
-      counts = ReviewFeedback.where(review_id: records.map(&:id)).group(:review_id).count
-      eligible = Review.eligible_topic?(@topic)
-      creators = {}
-      reviews =
-        records
-          .first(REVIEWS_PER_PAGE)
-          .map do |review|
-            allowed =
-              creators.fetch(review.creator_id) do
-                creators[review.creator_id] = Review.creator_allowed?(review.creator, @topic)
-              end
-            entry(review, active: eligible && review.current? && allowed).merge(
-              feedback_count: counts[review.id] || 0,
-            )
-          end
-      render json: { reviews: reviews, more: records.length > REVIEWS_PER_PAGE }
+      reviews = records.first(REVIEWS_PER_PAGE)
+      render json: {
+               reviews:
+                 serialize_data(
+                   reviews,
+                   ReviewSerializer,
+                   active_review_ids: Review.accessible_ids(reviews, @topic),
+                   feedback_counts: ReviewFeedback.where(review: reviews).group(:review_id).count,
+                 ),
+               more: records.length > REVIEWS_PER_PAGE,
+             }
     end
 
     def create
-      review = Review.issue!(topic: @topic, user: current_user, label: params[:label].to_s)
-      render json: { review: entry(review) }, status: :created
+      Review::Create.call(service_params) do
+        on_success do |review:, topic:|
+          render json: {
+                   review:
+                     ReviewSerializer.new(
+                       review,
+                       root: false,
+                       active_review_ids: Review.accessible_ids([review], topic),
+                     ).as_json,
+                 },
+                 status: :created
+        end
+        on_failed_contract { raise Discourse::NotFound }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_edit_blog_topic) { raise Discourse::InvalidAccess }
+        on_failed_policy(:blog_is_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:topic_is_reviewable) { raise Discourse::InvalidAccess }
+        on_failed_policy(:within_review_limit) do
+          raise Discourse::InvalidParameters.new(I18n.t("blog.review.limit"))
+        end
+        on_model_not_found(:snapshot) { raise Discourse::InvalidParameters.new(:cooked) }
+        on_failed_policy(:snapshot_within_size_limit) do
+          raise Discourse::InvalidParameters.new(:cooked)
+        end
+        on_model_errors(:review) do |review|
+          render_json_error review, status: :unprocessable_entity
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def destroy
-      Review.where(topic_id: @topic.id).find(params[:id]).revoke!(current_user)
-      head :no_content
+      Review::Revoke.call(service_params.deep_merge(params: { review_id: params[:id] })) do
+        on_success { head :no_content }
+        on_failed_contract { raise Discourse::NotFound }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_edit_blog_topic) { raise Discourse::InvalidAccess }
+        on_model_not_found(:review) { raise Discourse::NotFound }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def topic_feedback
@@ -61,13 +93,11 @@ module ::Blog
           .to_a
       render json: {
                feedback:
-                 records
-                   .first(FEEDBACK_PER_PAGE)
-                   .map do |record|
-                     record.as_json(only: %i[id name email message created_at]).merge(
-                       review: record.review.as_json(only: %i[id label post_version revoked_at]),
-                     )
-                   end,
+                 serialize_data(
+                   records.first(FEEDBACK_PER_PAGE),
+                   ReviewFeedbackSerializer,
+                   include_review: true,
+                 ),
                more: records.length > FEEDBACK_PER_PAGE,
                # Feedback is paginated, so one page can't tell the client which version is newest.
                latest_version: scope.maximum("blog_reviews.post_version"),
@@ -75,7 +105,7 @@ module ::Blog
     end
 
     def feedback
-      review = Review.where(topic_id: @topic.id).find(params[:id])
+      review = Review.where(topic: @topic).find(params[:id])
       records =
         review
           .feedback
@@ -84,10 +114,7 @@ module ::Blog
           .limit(FEEDBACK_PER_PAGE + 1)
           .to_a
       render json: {
-               feedback:
-                 records.first(FEEDBACK_PER_PAGE).as_json(
-                   only: %i[id name email message created_at],
-                 ),
+               feedback: serialize_data(records.first(FEEDBACK_PER_PAGE), ReviewFeedbackSerializer),
                more: records.length > FEEDBACK_PER_PAGE,
                total: review.feedback.count,
              }
@@ -95,21 +122,21 @@ module ::Blog
 
     private
 
-    def find_topic
+    def ensure_discussion_host
       raise Discourse::NotFound if Configuration.blog_host?(request)
-      @topic = Topic.find(params[:topic_id])
-      Configuration.ensure_editor!(current_user, @topic)
+    end
+
+    def prevent_caching
       response.headers["Cache-Control"] = "private, no-store"
+    end
+
+    def find_topic
+      @topic = Topic.find(params[:topic_id])
+      guardian.ensure_can_edit_blog_topic!(@topic)
     end
 
     def page
       [params[:page].to_i, 0].max
-    end
-
-    def entry(review, active: review.accessible?)
-      review.as_json(
-        only: %i[id label title post_version created_at expires_at revoked_at revoked_by_publish],
-      ).merge(active: active, url: (review.url if active))
     end
   end
 end

@@ -1253,6 +1253,51 @@ RSpec.describe PostAlerter do
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
     end
 
+    context "when the original title of a PM is restricted" do
+      def revise_title(title, revised_at: Time.zone.now)
+        post.revise(admin, { title: title }, revised_at: revised_at)
+      end
+
+      it "uses the current title when the title revision is hidden" do
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when an earlier revision is hidden" do
+        post.revise(admin, { raw: "This is the revised post" }, revised_at: Time.zone.now)
+        revise_title("This is the revised title", revised_at: 1.day.from_now)
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when edit history is not visible to the public" do
+        SiteSetting.edit_history_visible_to_public = false
+        revise_title("This is the revised title")
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "keeps the original title for staff" do
+        original_title = topic.title
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+        topic.topic_allowed_users.create!(user: admin)
+
+        PostAlerter.new.create_notification(admin, type, post)
+
+        expect(admin.notifications.last.data_hash["topic_title"]).to eq(original_title)
+      end
+    end
+
     it "triggers :pre_notification_alert" do
       events = DiscourseEvent.track_events { PostAlerter.new.create_notification(user, type, post) }
 

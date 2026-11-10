@@ -7,8 +7,7 @@ module DiscourseZendeskPlugin
 
     config.after_initialize do
       Discourse::Application.routes.append do
-        post "/zendesk-plugin/issues" => "discourse_zendesk_plugin/issues#create",
-             :constraints => StaffConstraint.new
+        post "/zendesk-plugin/issues" => "discourse_zendesk_plugin/issues#create"
         put "/zendesk-plugin/sync" => "discourse_zendesk_plugin/sync#webhook"
       end
     end

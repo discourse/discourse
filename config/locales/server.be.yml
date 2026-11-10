@@ -2308,6 +2308,12 @@ be:
   design_wizard:
     palette_pairs:
       default: "Прадвызначаная"
+      neutral: "нейтральны"
+      shades_of_blue: "Адценні сіняга"
+      summer: "лета"
+      grey_amber: "шэры Amber"
+      latte: "Latte"
+      dark_rose: "Dark Rose"
   wizard:
     title: "дыскурс Setup"
     step:

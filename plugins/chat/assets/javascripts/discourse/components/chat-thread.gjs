@@ -292,6 +292,22 @@ export default class ChatThread extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const [messages, meta] = this.processMessages(this.args.thread, result);
     if (!messages?.length) {
       return;
@@ -373,6 +389,14 @@ export default class ChatThread extends Component {
         visible: this.paneState.isDocumentVisible,
         active: this.paneState.isActiveReader,
       });
+    }
+
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
     }
 
     this.paneState.handleIncomingMessage({

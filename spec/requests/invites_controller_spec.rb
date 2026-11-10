@@ -477,6 +477,39 @@ RSpec.describe InvitesController do
         expect(Jobs::InviteEmail.jobs.first["args"].first["invite_to_topic"]).to be_truthy
       end
 
+      it "sends a forum invitation when topic access is revoked before delivery" do
+        sign_in(user)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               topic_id: topic.id,
+               invite_to_topic: true,
+             }
+
+        expect(response.status).to eq(200)
+        invite = Invite.find(response.parsed_body["id"])
+        expect(invite.topics).to contain_exactly(topic)
+
+        topic.update!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          title: "Restricted updated topic title",
+          excerpt: "Restricted updated topic excerpt",
+        )
+        expect(user.guardian.can_see?(topic.reload)).to eq(false)
+
+        job_args = Jobs::InviteEmail.jobs.last["args"].first.symbolize_keys
+        expect { Jobs::InviteEmail.new.execute(job_args) }.to change {
+          ActionMailer::Base.deliveries.size
+        }.by(1)
+
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq([invite.email])
+        expect(message.subject).not_to include(topic.title)
+        expect(message.body.decoded).not_to include(topic.title, topic.excerpt)
+        expect(message.body.decoded).to include(invite.invite_key)
+      end
+
       it "fails when topic_id is invalid" do
         sign_in(user)
 
@@ -1930,6 +1963,40 @@ RSpec.describe InvitesController do
         fab!(:invite) { Fabricate(:invite, email: "test@example.com") }
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
         fab!(:group)
+
+        it "does not grant access to a private topic from an expired email invite" do
+          expired_invite = Fabricate(:invite, email: "expired@example.com", expires_at: 1.day.ago)
+          valid_invite = Fabricate(:invite, email: nil, max_redemptions_allowed: 10)
+          redeeming_user = Fabricate(:user, email: expired_invite.email)
+          expired_invite.invited_by.change_trust_level!(TrustLevel[2])
+          Group.refresh_automatic_groups_for_user!(expired_invite.invited_by)
+          private_topic = Fabricate(:private_message_topic, user: expired_invite.invited_by)
+          private_post =
+            Fabricate(
+              :post,
+              topic: private_topic,
+              user: expired_invite.invited_by,
+              raw: "private message content",
+            )
+          TopicInvite.create!(invite: expired_invite, topic: private_topic)
+          expect(expired_invite).not_to be_redeemable
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+          sign_in(redeeming_user)
+
+          put "/invites/show/#{valid_invite.invite_key}.json",
+              params: {
+                id: valid_invite.invite_key,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+
+          get "/t/#{private_topic.slug}/#{private_topic.id}.json"
+
+          expect(response.status).to be_in([403, 404])
+          expect(response.body).not_to include(private_post.raw)
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+        end
 
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }

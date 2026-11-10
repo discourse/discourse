@@ -4,10 +4,15 @@
 module DiscourseAi
   module Completions
     class CancelManager
+      MIN_TRANSPORT_TIMEOUT = 0.1
+
       attr_reader :cancelled
       attr_reader :callbacks
 
-      def initialize
+      # @param timeout [Numeric, nil] seconds after which transports should give up;
+      #   endpoints bound their own network timeouts by what remains.
+      def initialize(timeout: nil)
+        @deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout if timeout
         @cancelled = false
         @cancel_event = Concurrent::Event.new
         @callbacks = Concurrent::Array.new
@@ -74,6 +79,21 @@ module DiscourseAi
 
       def cancelled?
         @cancelled
+      end
+
+      def remaining_seconds
+        return if !@deadline
+        [@deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC), 0].max
+      end
+
+      def expired?
+        remaining_seconds&.zero? || false
+      end
+
+      # Caps a transport timeout so it cannot outlive the deadline.
+      def bound_timeout(timeout)
+        remaining = remaining_seconds
+        remaining ? [timeout, [remaining, MIN_TRANSPORT_TIMEOUT].max].min : timeout
       end
 
       def add_callback(cb)

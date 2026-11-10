@@ -57,7 +57,7 @@ namespace :blog do
       These sample articles are demo content. Replace them with your own when you are ready.
     MD
     SiteSetting.blog_enabled = true
-    Blog::Configuration.ensure_ready!
+    Blog::Readiness.ensure!
     SiteSetting.embed_full_app = true
     SiteSetting.embed_full_app_signin_flow = true
     blog_uri = URI(Blog::Configuration.origin)
@@ -183,15 +183,20 @@ namespace :blog do
           category: drafts.id,
           skip_rate_limits: true,
         )
-      publication = Blog::Publication.for_topic(post.topic)
-      publication.save_metadata!(
-        admin,
-        path: example[:path],
-        excerpt: example[:excerpt],
-        featured: example[:featured] || false,
-        published_at: index.days.ago,
+      service_args = { params: { topic_id: post.topic_id }, guardian: admin.guardian }
+      Blog::Publication::UpdateMetadata.call!(
+        service_args.deep_merge(
+          params: {
+            metadata: {
+              path: example[:path],
+              excerpt: example[:excerpt],
+              featured: example[:featured] || false,
+              published_at: index.days.ago,
+            },
+          },
+        ),
       )
-      publication.publish!(admin)
+      Blog::Publication::Publish.call!(service_args)
     end
     unless Topic.where(category_id: drafts.id, title: "Draft: what we are building next").exists?
       PostCreator.create!(

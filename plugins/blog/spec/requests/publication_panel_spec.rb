@@ -72,12 +72,12 @@ RSpec.describe "Blog publication panel", type: :request do
       "active_review_links" => 0,
     )
 
-    older = Blog::Review.issue!(topic: topic, user: admin, label: "Round one")
-    newer = Blog::Review.issue!(topic: topic, user: admin)
+    older = issue_blog_review(topic, user: admin, label: "Round one")
+    newer = issue_blog_review(topic, user: admin)
     newer.update_columns(post_version: 2)
-    older.submit_feedback!(name: "Ada", message: "Tighten the introduction.")
-    newer.submit_feedback!(message: "Loving it but the colours hurt.")
-    older.revoke!(admin)
+    submit_blog_review_feedback(older, name: "Ada", message: "Tighten the introduction.")
+    submit_blog_review_feedback(newer, message: "Loving it but the colours hurt.")
+    revoke_blog_review(older, user: admin)
 
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include(
@@ -104,7 +104,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
   it "keeps editorial state and diffs away from readers and unpublished topics" do
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     discussion = publication.discussion_topic
 
     get "/t/#{discussion.id}.json"
@@ -141,13 +141,13 @@ RSpec.describe "Blog publication panel", type: :request do
   it "reports withdrawn articles and ignores unchanged re-submissions" do
     sign_in(admin)
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
 
-    publication.submit!(admin)
+    submit_blog_draft(publication, admin)
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include("status" => "live", "changes" => [])
 
-    publication.unpublish!(admin)
+    unpublish_blog_article(publication, admin)
     get "/t/#{topic.id}.json"
     expect(response.parsed_body["blog_publication"]).to include(
       "status" => "unpublished",
@@ -157,7 +157,7 @@ RSpec.describe "Blog publication panel", type: :request do
 
   it "reports diffs that are too large instead of failing" do
     sign_in(admin)
-    Blog::Publication.for_topic(topic).publish!(admin)
+    publish_blog_draft(Blog::Publication.for_topic(topic), admin)
     first_post.revise(admin, raw: "A corrected article body ready for another release.")
     DiscourseDiff
       .any_instance

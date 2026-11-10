@@ -97,6 +97,10 @@ module PageObjects
         visit(channel.url + "/info/settings")
       end
 
+      def visit_channel_preferences(channel)
+        visit(channel.url + "/info/preferences")
+      end
+
       def visit_channel_members(channel)
         visit(channel.url + "/info/members")
       end
@@ -171,11 +175,11 @@ module PageObjects
       end
 
       def has_add_member_button?
-        has_css?(".c-channel-members__list-item.-add-member")
+        has_css?(".c-channel-members__add-member")
       end
 
       def has_no_add_member_button?
-        has_no_css?(".c-channel-members__list-item.-add-member")
+        has_no_css?(".c-channel-members__add-member")
       end
 
       private

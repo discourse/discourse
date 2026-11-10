@@ -1,53 +1,73 @@
+@use "lib/viewport";
+
 .upcoming-changes-table {
-  table-layout: fixed;
   width: 100%;
 
   td.d-table__cell {
-    vertical-align: middle;
+    vertical-align: top;
     padding: var(--space-4) var(--space-3);
   }
 
   td.d-table__cell.--detail.upcoming-change__metadata {
     height: 100%;
   }
+
+  .d-table__cell.--overview .d-table__overview-name {
+    margin-bottom: 0;
+  }
 }
 
 .upcoming-change {
+  // Leaves the audience input room for the default pair of groups on one line.
   &__name-header {
-    width: 65%;
+    width: 52%;
   }
 
+  // Shrink to the header and toggle.
   &__enabled-header {
-    width: 35%;
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
   }
 
-  &__dependents,
-  &__related {
-    margin-top: var(--space-2);
+  &__notices {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-2);
   }
 
   &__depends-on-notice {
     font-size: var(--font-down-1);
     color: var(--danger);
-    margin-top: var(--space-2);
   }
 
-  &__opt-in-groups-label {
-    display: block;
+  &__description {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
   }
 
   &__image-preview.lightbox[href] {
     // very specific to override
     &:hover {
       box-shadow: none;
-    }
-
-    & + .upcoming-change__learn-more {
-      &::before {
-        content: "•";
-      }
     }
   }
 
@@ -68,56 +88,77 @@
     }
   }
 
-  &__groups {
-    display: flex;
+  &__availability-cell {
+    @include viewport.until(md) {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
 
-    .group-selector-wrapper {
-      // make space for button
-      width: calc(100% - 3.125em);
+    .upcoming-change__group-selection-wrapper {
+      min-width: 0;
     }
   }
 
-  &__description-details {
-    display: inline-block;
-  }
-
-  &__save-groups {
-    align-self: start;
-    margin-left: var(--space-2);
-  }
-
-  &__toggle-cell {
+  &__group-controls {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
 
-    .upcoming-change__group-selection-wrapper {
-      margin-top: 0.5rem;
-      display: flex;
+    .email-group-user-chooser {
+      flex: 1;
+      min-width: 0;
 
-      .group-selector-wrapper {
-        flex: 1 1 auto;
+      // Line up a single row of groups with the save button, with even
+      // spacing around the groups.
+      .multi-select-header {
+        min-height: 2.375em;
+        align-items: center;
+        padding: var(--space-1);
+      }
+
+      &.multi-select .multi-select-header .select-kit-header--filter {
+        margin: 0;
       }
     }
   }
 
-  &__plugin {
-    font-size: var(--font-down-2);
-    color: var(--primary-high);
-    margin-bottom: var(--space-2);
+  // Locked audiences can't take input, so don't reserve a line for the
+  // filter. Saving disables the input briefly too, but keeps the filter so
+  // the row doesn't change height.
+  &__group-selection-wrapper.--locked {
+    .email-group-user-chooser
+      .multi-select-header
+      .select-kit-header--filter
+      .select-kit-filter {
+      display: none;
+    }
   }
 
-  &__labels &__badges {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    margin: 0;
-    padding: var(--space-2) 0;
+  &__save-groups {
+    flex-shrink: 0;
+  }
+
+  // Centre the toggle against a single row of the audience input.
+  &__enabled-cell .d-toggle-switch {
+    justify-content: flex-end;
+
+    @include viewport.from(md) {
+      margin-top: calc((2.375em - 1.5em) / 2);
+    }
+  }
+
+  &__groups-description {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    margin-block: var(--space-2) 0;
+  }
+
+  &__badges {
+    margin-top: var(--space-1);
   }
 
   &__status-notice {
     font-size: var(--font-down-1);
     color: var(--danger);
-    margin-top: var(--space-2);
   }
 }

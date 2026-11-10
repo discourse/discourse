@@ -640,7 +640,6 @@ lt:
       dismiss: "Atšaukti nustatymus"
       select_theme:
         title: "Pritaikyti savo svetainę"
-        description: "Pasirinkite spalvas, šriftus ir svetainės išdėstymą."
         action: "Peržiūrėti parinktis"
         completed: "Keisti parinktis"
         show_light_screenshot: "Rodyti šviesią ekrano kopiją"
@@ -681,10 +680,6 @@ lt:
       next: "Kitas"
       launch: "Dizaino vedlys"
       launch_description: "Dar kartą peržiūrėkite savo svetainės temą, spalvas, šriftus ir išdėstymą."
-      intro:
-        description: "Šis vedlys padės jums nustatyti svetainės temą, spalvas, šriftus, pagrindinio puslapio išdėstymą, pasveikinimo juostą ir paieškos stilių."
-        autosave: "Kiekvienas žingsnis išsaugomas jį atliekant, todėl nariai pakeitimus mato iš karto. Uždarę galėsite viską atkurti."
-        start: "Pradėkite"
       close:
         message: "Jau išsaugojote kai kuriuos savo svetainės dizaino pakeitimus. Ar norite juos išsaugoti?"
         message_without_revert: "Jau išsaugojote kai kuriuos savo svetainės dizaino pakeitimus. Jų čia atšaukti negalima."
@@ -692,54 +687,26 @@ lt:
         revert: "Atšaukti pakeitimus"
         continue_editing: "Tęsti redagavimą"
       sections:
-        theme: "Tema"
-        colors: "Numatytoji spalva"
         fonts: "Šriftai"
+        logo: "Logotipas"
         homepage: "Pagrindinis puslapis"
-        welcome_banner: "Sveikinimo reklaminė juosta"
-        search: "Paieška"
       theme:
         selected: "Pasirinkta"
         applying: "Pritaikoma…"
         custom_theme_notice: "Jūsų svetainėje šiuo metu kaip numatytoji tema naudojama „ %{name} “. Pasirinkite temą iš žemiau pateiktų variantų, kad galėtumėte peržiūrėti jos pavyzdį. Išsaugojus bus pakeista jūsų dabartinė tema."
-      colors:
-        light: "Šviesi"
-        dark: "Tamsi"
-        dark_only: "%{name} turi tik tamsųjį režimą"
-        both_modes: "Kiekvienoje paletėje yra atitinkamas šviesus ir tamsus režimas"
-        user_selectable: "Leisti nariams keisti paletes"
-        user_selectable_description: "Rodyti šias paletes meniu, iš kurio nariai gali rinktis"
       fonts:
-        base_font: "Pagrindinis šriftas"
-        heading_font: "Antraštės šriftas"
+        base_font: "Tekstas"
+      logo:
+        description: "Rodomas svetainės viršutinėje navigacijos juostoje, taip pat svetainės el. pašto pranešimų viršuje."
+        help_text: "Rekomenduojamas dydis yra 600 x 80 pikselių."
       homepage:
         topics: "Temos"
         categories: "Kategorijos"
-        topic_page_type: "Temos puslapio tipas"
-        topic_pages:
-          latest: "Temos surūšiuotos pagal naujausią veiklą, pradedant naujausiomis."
-          new: "Temos, sukurtos per pastarąsias kelias dienas, pradedant naujausiomis."
-          hot: "Šiuo metu populiariausios temos, atsižvelgiant į bendrą populiarumą ir naujausią aktyvumą."
         category_page_style: "Kategorijos puslapio stilius"
         styles:
           boxes: "Dėžutės"
           with_topics: "Kategorijos su temomis"
           only: "Tik kategorijos"
-      welcome_banner:
-        enable: "Rodyti sveikinimo juostą"
-        enable_description: "Sveikinkite lankytojus, pateikdami savo svetainės pavadinimą ir paieškos laukelį"
-        location: "Juostos vieta"
-        locations:
-          below_site_header: "Po svetainės antrašte"
-          above_topic_content: "Virš temų sąrašo"
-      search:
-        experiences:
-          search_icon:
-            title: "Paieškos ikona"
-            description: "Antraštėje esantis didinamasis stiklas, atidarantis paiešką."
-          search_field:
-            title: "Paieškos laukas"
-            description: "Visada matomas paieškos laukas antraštėje."
     about:
       edit: "Redaguoti šį puslapį"
       simple_title: "Apie"

@@ -680,20 +680,21 @@ ar:
       title: "تخصيص موقعك"
       back: "رجوع"
       next: "التالي"
+      steps:
+        theme:
+          title: "اختيار سمة"
       sections:
-        theme: "السمة"
         fonts: "الخطوط"
+        logo: "الشعار"
         homepage: "الصفحة الرئيسية"
-        welcome_banner: "بانر الترحيب"
-        search: "البحث"
       theme:
         selected: "محدَّدة"
-      colors:
-        light: "فاتح"
-        dark: "داكن"
       fonts:
-        base_font: "الخط الأساسي"
-        heading_font: "خط العنوان"
+        base_font: "النص الأساسي"
+        heading_font: "العناوين"
+      logo:
+        description: "يظهر في شريط التنقل العلوي للموقع، وكذلك في الجزء العلوي من إشعارات البريد الإلكتروني الخاصة بالموقع."
+        help_text: "الحجم الموصى به هو 600 × 80 بكسل."
       homepage:
         topics: "الموضوعات"
         categories: "الفئات"

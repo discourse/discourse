@@ -4453,7 +4453,13 @@ fi:
   design_wizard:
     palette_pairs:
       default: "Oletus"
+      neutral: "Neutraali"
+      shades_of_blue: "Sinisen sävyt"
+      summer: "Kesäinen"
       dracula: "Dracula"
+      grey_amber: "Harmaa ambra"
+      latte: "Latte"
+      dark_rose: "Tumma ruusu"
   wizard:
     title: "Discoursen asennus"
     step:

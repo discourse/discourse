@@ -456,12 +456,13 @@ pt:
       back: "Anterior"
       next: "Próximo"
       sections:
-        theme: "Tema"
+        logo: "Logótipo"
         homepage: "Página de início"
-        search: "Procurar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
+      fonts:
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
+      logo:
+        help_text: "O tamanho recomendado é 600 x 80 píxeis."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"

@@ -1010,6 +1010,87 @@ RSpec.describe SessionController do
         expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
       end
 
+      it "rejects a suspended invitee without consuming the invite or code" do
+        user.update!(
+          email: invite.email,
+          suspended_till: 2.days.from_now,
+          suspended_at: Time.zone.now,
+        )
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          "error" => user.suspended_message,
+          "reason" => "suspended",
+        )
+        expect(session[:current_user_id]).to be_nil
+        expect(invite.reload).not_to be_redeemed
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "rejects an invitee from a blocked IP without consuming the invite or code" do
+        user.update!(email: invite.email)
+        Fabricate(:screened_ip_address, ip_address: "192.0.2.1")
+
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               code:,
+             },
+             headers: {
+               "REMOTE_ADDR" => "192.0.2.1",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t("login.not_allowed_from_ip_address", username: user.username),
+        )
+        expect(session[:current_user_id]).to be_nil
+        expect(invite.reload).not_to be_redeemed
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "rejects an invited admin from an IP outside the admin allowlist" do
+        SiteSetting.use_admin_ip_allowlist = true
+        user.update!(email: invite.email, admin: true)
+        Fabricate(
+          :screened_ip_address,
+          ip_address: "192.0.2.2",
+          action_type: ScreenedIpAddress.actions[:allow_admin],
+        )
+
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               code:,
+             },
+             headers: {
+               "REMOTE_ADDR" => "192.0.2.1",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t("login.admin_not_allowed_from_ip_address", username: user.username),
+        )
+        expect(session[:current_user_id]).to be_nil
+        expect(invite.reload).not_to be_redeemed
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "rejects an unapproved invitee without consuming the invite or code" do
+        SiteSetting.must_approve_users = true
+        user.update!(email: invite.email, approved: false)
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+        expect(session[:current_user_id]).to be_nil
+        expect(invite.reload).not_to be_redeemed
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
       it "does not consume the code when the invite expires before verification" do
         invite.update!(expires_at: 1.day.ago)
 
@@ -3327,6 +3408,42 @@ RSpec.describe SessionController do
   end
 
   describe "#create" do
+    shared_examples "a rejected non-string JSON password" do |password|
+      it "rejects a non-string JSON password #{password.inspect} without logging in" do
+        EmailToken.confirm(email_token.token)
+        user.update!(password: password.to_s) if password.is_a?(Numeric)
+
+        post "/session.json", params: { login: user.username, password: }, as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t("login.incorrect_username_email_or_password"),
+        )
+        expect(session[:current_user_id]).to be_nil
+      end
+    end
+
+    shared_examples "a rejected missing or empty JSON password" do |password|
+      it "rejects a missing or empty JSON password #{password.inspect} with a bad request" do
+        post "/session.json", params: { login: user.username, password: }, as: :json
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(session[:current_user_id]).to be_nil
+      end
+    end
+
+    include_examples "a rejected non-string JSON password", { value: "myawesomepassword" }
+    include_examples "a rejected non-string JSON password", ["myawesomepassword"]
+    include_examples "a rejected non-string JSON password", 719_384_625_018
+    include_examples "a rejected non-string JSON password", 719_384_625.5
+    include_examples "a rejected non-string JSON password", true
+    include_examples "a rejected non-string JSON password", false
+
+    include_examples "a rejected missing or empty JSON password", nil
+    include_examples "a rejected missing or empty JSON password", {}
+    include_examples "a rejected missing or empty JSON password", []
+
     context "when read only mode" do
       before do
         Discourse.enable_readonly_mode
@@ -3731,6 +3848,33 @@ RSpec.describe SessionController do
                 user.user_auth_tokens.first.auth_token,
               )
             end
+
+            it "does not log in a second client that replays the same token" do
+              freeze_time(Time.zone.parse("2026-11-06 12:00:05")) do
+                params = {
+                  login: user.username,
+                  password: "myawesomepassword",
+                  second_factor_token:
+                    ROTP::TOTP.new(user_second_factor.data).at(Time.zone.now + 30),
+                  second_factor_method: UserSecondFactor.methods[:totp],
+                }
+
+                post "/session.json", params: params
+                expect(session[:current_user_id]).to eq(user.id)
+
+                reset!
+
+                post "/session.json", params: params
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["error"]).to eq(
+                  I18n.t("login.invalid_second_factor_code"),
+                )
+                expect(session[:current_user_id]).to be_nil
+                expect(response.cookies["_t"]).to be_blank
+                expect(UserAuthToken.where(user: user).count).to eq(1)
+              end
+            end
           end
 
           context "when using backup code method" do
@@ -4023,6 +4167,47 @@ RSpec.describe SessionController do
           json = response.parsed_body
           expect(json["error_type"]).to eq("rate_limit")
         end
+      end
+
+      it "does not count wrong-password attempts toward the per-account second factor rate limit" do
+        EmailToken.confirm(email_token.token)
+        user_second_factor = Fabricate(:user_second_factor_totp, user: user)
+
+        wrong_password_params = {
+          login: user.username,
+          password: "wrongpassword",
+          second_factor_token: "000000",
+          second_factor_method: UserSecondFactor.methods[:totp],
+        }
+
+        6.times do
+          post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.incorrect_username_email_or_password"),
+          )
+        end
+
+        post "/session.json", params: wrong_password_params, env: { REMOTE_ADDR: "1.2.3.4" }
+
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["error_type"]).to eq("rate_limit")
+
+        post "/session.json",
+             params: {
+               login: user.username,
+               password: "myawesomepassword",
+               second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+               second_factor_method: UserSecondFactor.methods[:totp],
+             },
+             env: {
+               REMOTE_ADDR: "5.6.7.8",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).not_to be_present
+        expect(session[:current_user_id]).to eq(user.id)
       end
     end
   end

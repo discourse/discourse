@@ -567,21 +567,23 @@ he:
       back: "חזרה"
       next: "הבא"
       launch: "אשף עיצוב"
+      steps:
+        theme:
+          title: "בחירת ערכת עיצוב"
+        homepage:
+          title: "מראה ותחושה"
       sections:
-        theme: "ערכת עיצוב"
-        colors: "צבע ברירת מחדל"
         fonts: "גופנים"
+        logo: "לוגו"
         homepage: "דף הבית"
-        welcome_banner: "כרזת קבלת פנים"
-        search: "חיפוש"
       theme:
         selected: "נבחרים"
-      colors:
-        light: "בהיר"
-        dark: "כהה"
       fonts:
-        base_font: "גופן בסיס"
-        heading_font: "גופן כותרת"
+        base_font: "Body"
+        heading_font: "כותרות"
+      logo:
+        description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
+        help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
       homepage:
         topics: "נושאים"
         categories: "קטגוריות"
@@ -589,20 +591,6 @@ he:
           boxes: "תיבות"
           with_topics: "קטגוריות עם נושאים"
           only: "קטגוריות בלבד"
-      welcome_banner:
-        enable: "הצגת כרזת קבלת פנים"
-        location: "מקום כרזה"
-        locations:
-          below_site_header: "מתחת לכותרת האתר"
-          above_topic_content: "מעל לרשימת הנושאים"
-      search:
-        experiences:
-          search_icon:
-            title: "סמל חיפוש"
-            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
-          search_field:
-            title: "שדה חיפוש"
-            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
       edit: "עריכת העמוד הזה"
       simple_title: "על אודות"

@@ -79,6 +79,7 @@ RSpec.describe ReviewablesController do
           "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
           "name" => "Illegal or harmful speech",
         )
+        expect(options["default_category"]).to eq("STATEMENT_CATEGORY_OTHER_VIOLATION_TC")
         expect(queries.count { |sql| sql.include?('FROM "dsa_statement_of_records"') }).to eq(1)
       end
 
@@ -376,6 +377,32 @@ RSpec.describe ReviewablesController do
         json_review = json["reviewables"][0]
         expect(json_review["id"]).to eq(reviewable.id)
         expect(json_review["user_id"]).to eq(user.id)
+      end
+
+      it "hides full names from moderators when names are disabled" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.enable_names = false
+        user = Fabricate(:user, name: "Private Review Name")
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        json_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(json_review.dig("payload", "name")).to be_nil
+
+        sign_in(admin)
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        admin_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(admin_review.dig("payload", "name")).to eq(user.name)
       end
 
       it "returns correct error message if ReviewableUser not found" do
@@ -1612,6 +1639,21 @@ RSpec.describe ReviewablesController do
         expect(json["payload"]["title"]).to eq("new topic title")
         expect(json["payload"]["extra"]).to be_blank
         expect(json["category_id"]).to eq(new_category_id.to_s)
+      end
+
+      it "does not let a moderator move a queued topic to a category they cannot see" do
+        original_category_id = reviewable_topic.category_id
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        put "/review/#{reviewable_topic.id}.json?version=#{reviewable_topic.version}",
+            params: {
+              reviewable: {
+                category_id: private_category.id,
+              },
+            }
+
+        expect(response.code).to eq("403")
+        expect(reviewable_topic.reload.category_id).to eq(original_category_id)
       end
     end
 

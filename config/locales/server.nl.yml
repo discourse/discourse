@@ -4920,7 +4920,13 @@ nl:
   design_wizard:
     palette_pairs:
       default: "Standaard"
+      neutral: "Neutraal"
+      shades_of_blue: "Blauwtinten"
+      summer: "Zomer"
       dracula: "Dracula"
+      grey_amber: "Grijsgeel"
+      latte: "Latte"
+      dark_rose: "Donkerroze"
   wizard:
     title: "Discourse instellen"
     step:

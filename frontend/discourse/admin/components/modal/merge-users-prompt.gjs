@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
@@ -15,6 +16,11 @@ export default class MergeUsersPrompt extends Component {
       !this.targetUsername ||
       this.args.model.user.username === this.targetUsername[0]
     );
+  }
+
+  @action
+  updateTargetUsername(targetUsername) {
+    this.targetUsername = targetUsername;
   }
 
   <template>
@@ -34,6 +40,7 @@ export default class MergeUsersPrompt extends Component {
           }}
         </p>
         <EmailGroupUserChooser
+          @onChange={{this.updateTargetUsername}}
           @options={{hash
             maximum=1
             filterPlaceholder="admin.user.merge.prompt.target_username_placeholder"

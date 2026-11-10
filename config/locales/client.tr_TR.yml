@@ -520,19 +520,17 @@ tr_TR:
       back: "Geri"
       next: "Sonraki"
       sections:
-        theme: "Tema"
         fonts: "Yazı Tipleri"
+        logo: "Logo"
         homepage: "Ana Sayfa"
-        welcome_banner: "Hoş geldiniz afişi"
-        search: "Ara"
       theme:
         selected: "Seçili"
-      colors:
-        light: "Açık"
-        dark: "Koyu"
       fonts:
-        base_font: "Temel yazı tipi"
-        heading_font: "Başlık yazı tipi"
+        base_font: "Gövde"
+        heading_font: "Başlıklar"
+      logo:
+        description: "Sitenin üst navigasyonunda ve sitenin E-posta Bildirimlerinin üstünde görünür."
+        help_text: "Önerilen boyut 600 x 80 pikseldir."
       homepage:
         topics: "Konular"
         categories: "Kategoriler"

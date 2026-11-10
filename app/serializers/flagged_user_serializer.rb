@@ -81,7 +81,7 @@ class FlaggedUserSerializer < BasicUserSerializer
   end
 
   def include_silence_reason?
-    object.silenced? && object.silence_reason.present?
+    scope.can_see_silencing_reason?(object) && object.silenced? && object.silence_reason.present?
   end
 
   def include_suspended_till?
@@ -89,6 +89,6 @@ class FlaggedUserSerializer < BasicUserSerializer
   end
 
   def include_suspend_reason?
-    object.suspended? && object.suspend_reason.present?
+    scope.can_see_suspension_reason?(object) && object.suspended? && object.suspend_reason.present?
   end
 end

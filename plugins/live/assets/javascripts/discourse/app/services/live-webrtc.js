@@ -766,6 +766,8 @@ export default class LiveWebrtcService extends Service {
         peerManager: this.#peerManager,
         shouldMaintainPeer: (userId) =>
           this.#meshSignals.shouldMaintainPeerConnection(roomId, userId),
+        playbackFor: (userId) =>
+          this.#participantAudio.playbackFor(roomId, userId),
       }),
       collectedAt: Date.now(),
     };

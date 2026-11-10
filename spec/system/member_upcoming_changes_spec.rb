@@ -57,7 +57,7 @@ RSpec.describe "Member upcoming changes" do
         sign_in(admin)
 
         upcoming_changes_page.visit
-        upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
+        upcoming_changes_page.change_item(:enable_upload_debug_mode).toggle
         expect(upcoming_changes_page).to have_disabled_success_toast
       end
 

@@ -7,9 +7,15 @@ import { i18n } from "discourse-i18n";
 
 export default class ThemeCardPreview extends Component {
   @service interfaceColor;
-  @service session;
 
-  @tracked showingDarkScreenshot = this.#shouldShowDarkByDefault();
+  // Null until toggled, so the preview follows the interface's color mode.
+  @tracked selectedScreenshotMode = null;
+
+  get showingDarkScreenshot() {
+    return this.selectedScreenshotMode
+      ? this.selectedScreenshotMode === "dark"
+      : this.interfaceColor.darkModeActive;
+  }
 
   get currentScreenshotUrl() {
     const { screenshot_dark_url, screenshot_light_url } = this.args.theme;
@@ -37,15 +43,7 @@ export default class ThemeCardPreview extends Component {
 
   @action
   toggleScreenshot() {
-    this.showingDarkScreenshot = !this.showingDarkScreenshot;
-  }
-
-  #shouldShowDarkByDefault() {
-    return (
-      this.interfaceColor?.colorModeIsDark ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches ||
-      this.session?.defaultColorSchemeIsDark
-    );
+    this.selectedScreenshotMode = this.showingDarkScreenshot ? "light" : "dark";
   }
 
   <template>

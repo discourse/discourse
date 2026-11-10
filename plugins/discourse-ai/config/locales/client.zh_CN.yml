@@ -124,12 +124,15 @@ zh_CN:
       node_unavailable:
         requires_ai: "需要启用 AI 插件"
         requires_decision_model: "需要决策模型"
+        requires_ai_translation: "需要配置 AI 翻译"
       nodes:
         "action:ai_agent": "AI 智能体"
         "action:classify": "分类"
+        "trigger:post_locale_detected": "检测到的帖子"
       node_descriptions:
         "action:ai_agent": "运行 AI 智能体来处理数据或生成内容"
         "action:classify": "针对每个项目，向决策模型提出问题"
+        "trigger:post_locale_detected": "当检测到新帖子或已编辑帖子时触发。"
     discourse_automation:
       scriptables:
         llm_report:
@@ -668,7 +671,9 @@ zh_CN:
         title: "配置垃圾信息处理"
         select_llm: "选择 LLM"
         no_llm_selected: "无"
+        select_decision_model: "选择决策模型"
         no_decision_model_selected: "无"
+        decision_model_help: "决策模型会在有把握的情况下自行对每个帖子进行评分，并将不确定的帖子留给逻辑逻辑模型 LLM 进行评分。如果没有逻辑逻辑模型，则由决策模型自行决定每个帖子的评分。"
         select_agent: "选择智能体"
         custom_instructions: "自定义指令"
         custom_instructions_help: "特定于您的站点的自定义指令，帮助指导 AI 识别垃圾信息，例如“更积极地扫描非英语帖子”。"
@@ -694,6 +699,7 @@ zh_CN:
           reason: "推理"
           llm: "LLM"
           decision_model: "决策模型"
+          spam_probability: "垃圾邮件概率"
           scan_history: "扫描历史记录"
           sent_message: "发送消息"
           system_prompt: "系统提示"
@@ -858,6 +864,9 @@ zh_CN:
             summary_forever: "有效载荷保留 %{detailed} 天，摘要永久保留"
             finite: "有效载荷保留 %{detailed} 天，摘要保留 %{summary} 天，然后删除"
       ai_agent:
+        new_bot_option:
+          label: "AI 智能体"
+          description: "创建机器人及其语言模型、提示、工具和权限。"
         ai_tools: "工具"
         native_tools_help: "启用“始终使用默认语言模型”且所选默认语言模型支持提供商原生工具时，这些工具（例如网络搜索或页面获取）将显示。"
         mcp_servers: "MCP 服务器"
@@ -1553,6 +1562,7 @@ zh_CN:
           bge-large-en: "开源的纯英文模型，自托管"
           bge-m3: "适用于较长内容的开源多语言模型，可自行托管"
           multilingual-e5-large: "开源多语言模型，自托管"
+          cohere-embed-v4: "Cohere 的多语言模型托管在 AWS Bedrock 上"
           gemini-embedding-001: "谷歌托管的多语言模型"
           text-embedding-3-large: "OpenAI 最精确的嵌入模型"
           text-embedding-3-small: "OpenAI 更快、更低成本的嵌入模型"
@@ -1566,6 +1576,7 @@ zh_CN:
           failure: "尝试生成嵌入向量导致以下错误：%{error}"
         hints:
           dimensions_warning: "保存后，此值将无法更改。"
+          bedrock_api_key: "Bedrock API 密钥，或者当设置了访问密钥 ID 时使用的秘密访问密钥。留空则使用 IAM 角色或服务器的 AWS 凭证。"
           matryoshka_dimensions: "定义用于分层或多层数据表示的嵌套嵌入向量的大小，类似于套娃相互嵌套的方式。"
           embed_prompt: "生成论坛内容嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
           search_prompt: "生成搜索查询嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
@@ -1595,6 +1606,10 @@ zh_CN:
           fake: "自定义"
         provider_fields:
           model_name: "模型名称"
+          model_id: "模型 ID 或推理配置文件"
+          region: "AWS 区域"
+          access_key_id: "AWS 访问密钥 ID"
+          role_arn: "IAM 角色 ARN"
         semantic_search: "话题（语义）"
         semantic_search_results:
           toggle: "相关结果"
