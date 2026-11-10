@@ -19,6 +19,7 @@ lt:
         edit: Redaguoti
         activate: Aktyvuoti
         preview: Peržiūrėti
+        customize: Pakeisti
         import: Importuoti
         export: Eksportuoti
         active: Aktyvus
@@ -32,6 +33,7 @@ lt:
         change:
           title: antraštė
           body: tekstas
+          tags: žymos
       review:
         label: Pavadinimas
         create: Sukurti nuorodą

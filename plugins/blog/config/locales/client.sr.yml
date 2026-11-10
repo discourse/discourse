@@ -11,6 +11,7 @@ sr:
         overridden: Posebna
         preview_archive: Arhiviraj
         edit: Izmeni
+        customize: Prilagođavanje
         export: Izvoz
         active: Aktivni
   js:
@@ -18,6 +19,7 @@ sr:
       panel:
         change:
           title: naslov
+          tags: tagovi
       review:
         create: Napravi link
         copy: Kopija

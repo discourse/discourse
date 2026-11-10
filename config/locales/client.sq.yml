@@ -6,6 +6,13 @@
 
 sq:
   js:
+    code_editor:
+      search:
+        next: "Vazhdo përpara"
+        previous: "I kaluar"
+        close: "Mbyll"
+      fold:
+        to: "për"
     user_api_key:
       authorize: "Autorizo"
       deny: "Anulo"
@@ -4036,10 +4043,10 @@ sq:
           title: "Pluginet"
       upcoming_changes:
         name: "Emri"
-        enabled: "Aktivizuar"
+        enabled: "Aktivizuar?"
+        feedback: "Reagime"
+        settings: "Rregullimet"
         preview: "Parashikimi"
-        enabled_for_options:
-          everyone: "Të gjithë"
         impact_roles:
           admins: "Administratorët"
           moderators: "Moderatorë"

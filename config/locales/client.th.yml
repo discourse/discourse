@@ -6,6 +6,13 @@
 
 th:
   js:
+    code_editor:
+      search:
+        next: "ต่อไป"
+        previous: "ก่อนหน้า"
+        close: "ปิด"
+      fold:
+        to: "ถึง"
     user_api_key:
       deny: "ยกเลิก"
       copied: "คัดลอกแล้ว!"
@@ -2690,9 +2697,9 @@ th:
           title: "ตัวเสริม"
       upcoming_changes:
         name: "ชื่อ"
+        enabled: "เปิดใช้"
+        settings: "การตั้งค่า"
         preview: "แสดงตัวอย่าง"
-        enabled_for_options:
-          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"

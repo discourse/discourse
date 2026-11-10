@@ -17,6 +17,7 @@ bs_BA:
         theme_name: Ime teme
         edit: Izmijeni
         preview: Pregled
+        customize: Customize
         export: Izvoz
         active: Active
   js:
@@ -28,6 +29,7 @@ bs_BA:
         change:
           title: naslov
           body: tijelo
+          tags: oznake
       review:
         copy: Copy
         open: Otvori

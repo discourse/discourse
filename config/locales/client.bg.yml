@@ -6,6 +6,13 @@
 
 bg:
   js:
+    code_editor:
+      search:
+        next: "Напред"
+        previous: "Предишни"
+        close: "Затвори"
+      fold:
+        to: "до"
     user_api_key:
       deny: "Отмени"
       copied: "Копирано!"
@@ -3517,10 +3524,10 @@ bg:
           title: "Приставки"
       upcoming_changes:
         name: "Име"
-        enabled: "Да е включен"
+        enabled: "Да е включен?"
+        feedback: "Обратна връзка"
+        settings: "Настройки"
         preview: "Преглед"
-        enabled_for_options:
-          everyone: "Всички"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"

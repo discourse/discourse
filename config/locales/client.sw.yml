@@ -6,6 +6,13 @@
 
 sw:
   js:
+    code_editor:
+      search:
+        next: "Ijayo"
+        previous: "Uliopita"
+        close: "Funga"
+      fold:
+        to: "kwenda"
     user_api_key:
       authorize: "Idhini"
       deny: "Batili"
@@ -2482,10 +2489,9 @@ sw:
           title: "Programu Jalizi"
       upcoming_changes:
         name: "Jina"
-        enabled: "Imeruhusiwa"
+        enabled: "Imeruhusiwa?"
+        settings: "Mipangilio"
         preview: "Kihakiki"
-        enabled_for_options:
-          everyone: "Kila Mtu"
         impact_roles:
           admins: "Viongozi"
           moderators: "Wasimamizi"

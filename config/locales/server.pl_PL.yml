@@ -533,6 +533,7 @@ pl_PL:
         no_sender_detected_error: "Zdarza się, kiedy nie można znaleźć prawidłowego adresu e‐mail w nagłówku Od."
         from_reply_by_address_error: "Zdarza się, gdy nagłówek From pasuje do odpowiedzi według adresu e-mail."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
+        suspended_user_error: "Dzieje się tak, gdy nadawca został zawieszony."
         silenced_user_error: "Dzieje się, gdy wysyłający został uciszony."
         bad_destination_address: "Zdarza się, gdy żaden z adresów e-mail w polach Do / DW nie odpowiada skonfigurowanemu adresowi poczty przychodzącej."
         strangers_not_allowed_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie jest członkiem."
@@ -4322,6 +4323,16 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja konto powiązane z tym adresem email nie jest aktywne. Proszę aktywować konto przed wysyłaniem emaili.
+    email_reject_suspended_user:
+      title: "E-mail odrzuca zawieszonego użytkownika"
+      subject_template: "[%{email_prefix}] Problem z e-mailem — zawieszony użytkownik"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – zawieszony użytkownik"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana do %{destination} (zatytułowana %{former_title}) nie zadziałała.
+
+        Konto powiązane z tym adresem e-mail jest zawieszone. Zawieszone konta nie mogą tworzyć postów ani wysyłać wiadomości e-mail.
+
+        Jeśli uważasz, że to błąd, [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_silenced_user:
       title: "E-mail odrzucony: wyciszony użytkownik"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - wyciszony użytkownik"

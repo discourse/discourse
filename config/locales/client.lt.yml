@@ -30,6 +30,16 @@ lt:
       any_domain: "CIMD iš bet kurio domeno"
     ace_editor:
       resize: "Keisti kodo redaktoriaus dydį"
+    code_editor:
+      resize: "Keisti kodo redaktoriaus dydį"
+      search:
+        replace: "Pakeisti"
+        next: "Kitas"
+        previous: "Buvęs"
+        close: "Uždaryti"
+        go: "Eiti"
+      fold:
+        to: "kam"
     user_api_key:
       title: 'Suteikti leidimą „%{application_name}“'
       authorize: "Leisti"
@@ -3092,7 +3102,6 @@ lt:
         }.
     learn_more: "Sužinokite daugiau…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Sužinokite daugiau…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Atsiliepimai…</a>"
     mute: Nutildyti
     unmute: Pašalinti nutildymą
     last_post: Paskelbta
@@ -7117,24 +7126,22 @@ lt:
         name: "Pavadinimas"
         plugin: "Įskiepis"
         metadata: "Metaduomenys"
-        enabled: "Įgalinta"
-        enabled_for: "Įgalinta..."
+        enabled: "Įgalinti?"
         show_image: "Rodyti vaizdą"
-        edit_groups: "Redaguoti pasirinkimo grupes"
+        feedback: "Atsiliepimai"
         groups_updated: "Grupės atnaujintos!"
         save_groups: "Išsaugoti grupes"
         add_groups_to_enable: "Pridėkite grupes, kad įgalintumėte šią funkciją"
         no_changes_to_save: "Nėra pakeitimų, kuriuos būtų galima išsaugoti"
         select_groups: "Pasirinkite grupes…"
         opt_in_groups: "Pasirinkimo grupės"
-        show_related_settings: "Rodyti susijusius nustatymus..."
+        settings: "Nustatymai"
         opt_in_groups_instructions: "Pasirinkimo grupes galima naudoti tam, kad tam tikra vartotojų grupė galėtų išbandyti pakeitimą prieš jį išleidžiant visiems. Atminkite, kad šios grupės taps nereikšmingos, kai pakeitimas pasieks stabilią būseną."
         enabled_for_throttle: "Per greitai pakeitėte, kam šis pakeitimas įjungtas. Palaukite kelias sekundes ir bandykite dar kartą."
         change_enabled_for_success: "Įjungėte šį pakeitimą %{enabledFor}"
         change_disabled: "Jūs atsisakėte šio pakeitimo"
         depends_on_notice: "Šiam pakeitimui atlikti reikia įjungti %{dependencyLinks}."
         permanent_notice: "Šis pakeitimas dabar yra nuolatinis ir netrukus bus pašalintas. Jūs nebegalėsite atsisakyti."
-        permanent_soon_notice: "Šis pakeitimas netrukus taps nuolatiniu. Nebegalėsite atsisakyti."
         permanent_no_group_selection: "N/A, nuolatiniai pakeitimai taikomi visoms grupėms."
         no_changes: "Šiuo metu nėra jokių būsimų pakeitimų."
         preview: "Peržiūrėti"
@@ -7142,7 +7149,6 @@ lt:
         default_warning_short: "Šio nustatymo numatytoji reikšmė pasikeitė, daugiau apie tai skaitykite <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>būsimų pakeitimų</a> puslapyje."
         enabled_for_options:
           no_one: "Niekas"
-          everyone: "Visi"
           staff: "tik %{staffGroupName}"
           specific_groups: "Konkreti(-ios) grupė(-ės)"
           specific_groups_with_group_names:
@@ -7557,30 +7563,94 @@ lt:
               title: "„OpenGraph“ vaizdo šaltinis"
               description: "Pasirinkite, kaip pateikiami „OpenGraph“ peržiūros vaizdai temoms, kurios neturi savo vaizdo."
               uploaded: "Naudokite įkeltą paveikslėlį"
+              generated: "Sukurti paveikslėlį kiekvienai temai"
+            opengraph_image:
+              title: "OpenGraph paveikslėlis"
+              description: "Numatytasis OpenGraph paveikslėlis, naudojamas, kai puslapyje nėra kito tinkamo paveikslėlio. Jei laukelis paliekamas tuščias, bus naudojamas „large_icon“."
+            generate_topic_og_image:
+              title: "Sukurti teminius OG paveikslėlius"
+              description: "Automatiškai sukuria OpenGraph peržiūros paveikslėlius temoms, kuriose nėra paveikslėlio. Naudoja temos pavadinimą, kategoriją ir svetainės spalvas."
             og_image_preview:
+              title: "Sugeneruoto OG paveikslėlio peržiūra"
+              description: "Automatiškai sukurtų OpenGraph paveikslėlių peržiūra temoms, kuriose nėra vaizdų. Įveskite temos ID, kad galėtumėte išbandyti."
               generate: "Generuoti"
               topic_id_label: "Temos ID"
+              topic_id_placeholder: "pvz., 123"
+              placeholder: "Įveskite temos ID ir spustelėkite „Sukurti“, kad peržiūrėtumėte."
+              error: "Nepavyko sukurti peržiūros. Patikrinkite temos ID ir pabandykite dar kartą."
+            x_summary_large_image:
+              title: "X santraukos didelis paveikslėlis"
+              description: "X kortelės „didelis santraukos paveikslėlis“. Jei paliekamas tuščias, įprastos kortelės metaduomenys generuojami naudojant „OpenGraph_image“, jei tai nėra .svg failas."
+              help_text: "Rekomenduojamas dydis yra bent 280 x 150 pikselių. Nenaudokite SVG formato paveikslėlio."
         fonts:
+          title: "Šriftai"
+          header_description: "Konfigūruokite visoje svetainėje naudojamus šriftus, įskaitant bazinį šriftą, antraštės šriftą ir numatytąjį teksto dydį"
           form:
+            more_fonts: "Daugiau šriftų"
+            fewer_fonts: "Mažiau šriftų"
+            saved: "Šrifto nustatymai išsaugoti."
+            base_font:
+              title: "Bazinis šriftas"
             heading_font:
               title: "Antraštės šriftas"
+            default_text_size:
+              title: "Numatytasis teksto dydis"
+              description: "Šį dydį vėliau gali koreguoti kiekvienas vartotojas pagal savo pageidavimus."
           backfill_modal:
+            title: "Taikyti naujus numatytuosius teksto nustatymus?"
+            description:
+              one: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą esamam %{count} vartotojui?"
+              few: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamiems vartotojams?"
+              many: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
+              other: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
             modal_yes: "Taip"
+            modal_no: "Ne, taikyti tik nuo šiol"
         welcome_banner:
+          title: "Sveikinimo reklamjuostė"
+          header_description: "Konfigūruokite reklamjuostę su paieškos lauku, rodoma lankytojams jūsų svetainėje."
+          saved: "Sveikinimo reklamjuostės nustatymai sėkmingai išsaugoti."
           form:
+            enabled_themes:
+              label: "Įjungta temose..."
+              description: "Pasirinkite, kurios temos turėtų rodyti reklamjuostę. Rodomos tik aktyvios temos."
+              select_label: "Pasirinkite temas"
+            background_image:
+              label: "Fono paveikslėlis"
+              description: "Šis paveikslėlis bus rodomas už reklamjuostės teksto."
+            text_color:
+              label: "Teksto spalva"
+              description: "Įkėlus aukščiau pateiktą „Fono paveikslėlį“, naudokite šį nustatymą, kad pakeistumėte reklamjuostės teksto spalvą ir užtikrintumėte, jog jį būtų galima įskaityti. Kai paliekamas tuščias arba fono paveikslėlis neįkeltas, spalvą valdo aktyvi tema."
             page_visibility:
+              label: "Puslapio matomumas"
+              description: "Pasirinkite, kur turėtų būti rodoma reklamjuostė."
               options:
                 top_menu_pages: "Pagrindinio meniu puslapiai"
+                homepage: "Tik pagrindinis puslapis"
                 discovery: "Atradimų puslapiai"
+                all_pages: "Visi puslapiai"
             location:
               label: "Vieta"
+              description: "Pasirinkite, kur puslapyje turėtų būti rodoma reklamjuostė."
+              options:
+                above_topic_content: "Aukščiau temos turinio"
+                below_site_header: "Žemiau svetainės antraštės"
             text_section:
+              title: "Tinkinamas tekstas"
               locale_label: "Kalba"
+            header_new_members:
+              label: "Antraštė naujiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Sveiki atvykę, %{preferred_display_name}!"
             header_logged_in:
+              label: "Antraštė prisijungusiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:
+              label: "Antraštė anoniminiams lankytojams"
+              description: "Galimas kintamasis: <code>&percnt;{site_name}</code>"
               placeholder: "Sveiki atvykę į %{site_name}!"
             subheader_logged_in:
+              label: "Paantraštė prisijungusiems nariams"
               description: "Antrinis tekstas, rodomas po antrašte prisijungusiems vartotojams."
               placeholder: "Peržiūrėkite, kas naujo bendruomenėje"
             subheader_anonymous:

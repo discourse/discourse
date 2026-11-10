@@ -11,6 +11,15 @@ nl:
       go_back: "Terug"
       title: "Illegale content melden"
       email: "E-mailadres"
+    code_editor:
+      search:
+        replace: "Vervangen"
+        next: "Volgende"
+        previous: "Vorige"
+        close: "Sluiten"
+        go: "Gaan"
+      fold:
+        to: "tot"
     user_api_key:
       title: '''%{application_name}'' autoriseren'
       authorize: "Autoriseren"
@@ -2603,7 +2612,6 @@ nl:
         }.
     learn_more: "Meer informatie…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Meer informatie…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Dempen
     unmute: Dempen opheffen
     last_post: Geplaatst
@@ -5757,23 +5765,21 @@ nl:
         name: "Naam"
         plugin: "Plug-in"
         metadata: "Metagegevens"
-        enabled: "Ingeschakeld"
-        enabled_for: "Ingeschakeld voor..."
+        enabled: "Ingeschakeld?"
         show_image: "Afbeelding weergeven"
-        edit_groups: "Aanmeldgroepen bewerken"
+        feedback: "Feedback"
         groups_updated: "Groepen bijgewerkt!"
         save_groups: "Groepen opslaan"
         add_groups_to_enable: "Voeg groepen toe om deze functie in te schakelen"
         no_changes_to_save: "Geen wijzigingen om op te slaan"
         select_groups: "Selecteer groepen…"
         opt_in_groups: "Aanmeldingsgroepen"
-        show_related_settings: "Gerelateerde instellingen weergeven..."
+        settings: "Instellingen"
         opt_in_groups_instructions: "Aanmeldingsgroepen kunnen worden gebruikt om een bepaalde groep gebruikers een wijziging te laten testen voordat deze voor wordt uitgebracht. Deze groepen worden irrelevant zodra een wijziging de status stabiel krijgt."
         enabled_for_throttle: "Je hebt te snel gewijzigd voor wie deze wijziging is ingeschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
         change_enabled_for_success: "Je hebt deze wijziging ingeschakeld voor %{enabledFor}"
         change_disabled: "Je hebt je afgemeld voor deze wijziging"
         permanent_notice: "Deze wijziging is nu permanent en wordt binnenkort verwijderd. Je kunt je niet meer afmelden."
-        permanent_soon_notice: "Deze wijziging wordt binnenkort permanent. Je kunt je niet meer afmelden."
         permanent_no_group_selection: "N.v.t., permanente wijzigingen gelden voor alle groepen."
         no_changes: "Er zijn op dit moment geen aankomende wijzigingen."
         preview: "Voorbeeld"
@@ -5781,7 +5787,6 @@ nl:
         default_warning_short: "De standaard voor deze instelling is gewijzigd, lees meer hierover op de pagina <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>aankomende wijzigingen</a>."
         enabled_for_options:
           no_one: "Niemand"
-          everyone: "Iedereen"
           staff: "Alleen %{staffGroupName}"
           specific_groups: "Specifieke groep(en)"
           specific_groups_with_group_names:

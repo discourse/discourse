@@ -1453,6 +1453,11 @@ pl_PL:
         set_llm_first: "Najpierw ustaw %{setting}"
         model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
         empty_response: "Model zwrócił pustą odpowiedź."
+        test_timeout:
+          one: "Model nie odpowiedział w ciągu %{count} sekundy. Dostawca może być przeciążony. Spróbuj ponownie później."
+          few: "Model nie odpowiedział w ciągu %{count} sekund. Dostawca może być przeciążony. Spróbuj ponownie później."
+          many: "Model nie odpowiedział w ciągu %{count} sekund. Dostawca może być przeciążony. Spróbuj ponownie później."
+          other: "Model nie odpowiedział w ciągu %{count} sekund. Dostawca może być przeciążony. Spróbuj ponownie później."
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
         invalid_agent_response_format: "Wybrany agent musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"

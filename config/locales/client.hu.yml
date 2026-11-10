@@ -11,6 +11,15 @@ hu:
       go_back: "Visszalépés"
       title: "Illegális tartalom bejelentése"
       email: "E-mail-cím"
+    code_editor:
+      search:
+        replace: "Csere"
+        next: "Következő"
+        previous: "Vissza"
+        close: "Bezárás"
+        go: "Ugrás"
+      fold:
+        to: "–"
     user_api_key:
       title: '"%{application_name}" engedélyezése'
       authorize: "Engedélyezés"
@@ -2578,7 +2587,6 @@ hu:
         } korlát túllépve.
     learn_more: "További információ…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>További információ…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Visszajelzés…</a>"
     mute: Némítás
     unmute: Némítás feloldása
     last_post: Közzétett
@@ -5586,29 +5594,26 @@ hu:
         name: "Név"
         plugin: "Bővítmény"
         metadata: "Metaadat"
-        enabled: "Bekapcsolva"
-        enabled_for: "Engedélyezve..."
+        enabled: "Engedélyezve?"
         show_image: "Kép megjelenítése"
-        edit_groups: "Feliratkozási csoportok szerkesztése"
+        feedback: "Visszajelzés"
         groups_updated: "Csoportok frissítve!"
         save_groups: "Csoportok mentése"
         add_groups_to_enable: "Csoportok hozzáadása a funkció engedélyezéséhez"
         no_changes_to_save: "Nincsenek menthető módosítások"
         select_groups: "Csoportok kiválasztása…"
         opt_in_groups: "Feliratkozási csoportok"
-        show_related_settings: "Kapcsolódó beállítások megjelenítése..."
+        settings: "Beállítások"
         opt_in_groups_instructions: "A feliratkozási csoportok segítségével lehetővé tehető, hogy egy adott felhasználói csoport tesztelje a módosítást, mielőtt az mindenki számára elérhetővé válna. Fontos megjegyezni, hogy ezek a csoportok elveszítik a relevanciájukat, miután a módosítás stabil állapotba kerül."
         enabled_for_throttle: "Túl gyorsan módosítottad, hogy kikre vonatkozik ez a módosítás. Kérjük, várj néhány másodpercet, mielőtt újra próbálkozol."
         change_enabled_for_success: "Engedélyezted ezt a módosítást a(z) %{enabledFor} számára"
         change_disabled: "Kizártad ezt a módosítást"
         permanent_notice: "Ez a módosítás mostantól végleges, és hamarosan eltávolításra kerül. Többé nem lehet leiratkozni."
-        permanent_soon_notice: "Ez a változás hamarosan végleges lesz. Többé nem lesz lehetőséged a leiratkozásra."
         permanent_no_group_selection: "N/A, az állandó változtatások minden csoportra vonatkoznak."
         no_changes: "Jelenleg nincsenek közelgő változások."
         preview: "Előnézet"
         enabled_for_options:
           no_one: "Senki"
-          everyone: "Mindenki"
           staff: "csak %{staffGroupName}"
           specific_groups: "Meghatározott csoport(ok)"
           specific_groups_with_group_names:

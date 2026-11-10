@@ -12,6 +12,15 @@ fr:
       title: "Signaler un contenu illégal"
       email: "Adresse e-mail"
       resend_email_code: "Renvoyer le code"
+    code_editor:
+      search:
+        replace: "Remplacer"
+        next: "Suivant"
+        previous: "Précédent"
+        close: "Fermer"
+        go: "Valider"
+      fold:
+        to: "pour"
     user_api_key:
       title: 'Autoriser « %{application_name} »'
       authorize: "Autoriser"
@@ -2696,7 +2705,6 @@ fr:
         }.
     learn_more: "En savoir plus…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>En savoir plus…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Commentaires…</a>"
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -6172,24 +6180,23 @@ fr:
         name: "Nom"
         plugin: "Extension"
         metadata: "Métadonnées"
-        enabled: "Activé"
-        enabled_for: "Activé pour..."
+        enabled: "Activé ?"
         show_image: "Afficher l'image"
-        edit_groups: "Modifier les groupes participants"
+        feedback: "Commentaires"
+        toggle: "Activer %{name}"
         groups_updated: "Groupes mis à jour !"
         save_groups: "Enregistrer les groupes"
         add_groups_to_enable: "Ajouter des groupes pour activer cette fonctionnalité"
         no_changes_to_save: "Aucune modification à enregistrer"
         select_groups: "Sélectionnez des groupes…"
         opt_in_groups: "Groupes participants"
-        show_related_settings: "Afficher les paramètres associés..."
+        settings: "Paramètres"
         opt_in_groups_instructions: "Les groupes participants permettent à un ensemble d'utilisateurs de tester un changement avant son déploiement général. Notez que ces groupes ne seront plus pris en compte une fois que le changement aura atteint le statut « Stable »."
         enabled_for_throttle: "Vous avez modifié trop rapidement les personnes autorisées à bénéficier de cette modification. Veuillez patienter quelques secondes avant de réessayer."
         change_enabled_for_success: "Vous avez activé cette modification pour %{enabledFor}"
         change_disabled: "Vous ne participez plus à cette modification"
         depends_on_notice: "Cette modification nécessite l'activation de %{dependencyLinks}."
         permanent_notice: "Cette modification est désormais permanente et disparaîtra bientôt de cette liste. Vous ne pouvez plus vous en retirer."
-        permanent_soon_notice: "Cette modification deviendra bientôt permanente. Vous ne pourrez plus vous en retirer."
         permanent_no_group_selection: "Sans objet. Des modifications permanentes s'appliquent à tous les groupes."
         no_changes: "Aucun changement n'est prévu pour le moment."
         preview: "Aperçu"
@@ -6197,7 +6204,6 @@ fr:
         default_warning_short: "La valeur par défaut de ce paramètre a changé, lisez plus d'informations à ce sujet dans la page des <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>modifications à venir</a>."
         enabled_for_options:
           no_one: "Personne"
-          everyone: "Tout le monde"
           staff: "%{staffGroupName} uniquement"
           specific_groups: "Groupe(s) spécifique(s)"
           specific_groups_with_group_names:

@@ -12,6 +12,15 @@ pt_BR:
       title: "Denunciar conteúdo ilegal"
       email: "Endereço de e-mail"
       resend_email_code: "Reenviar código"
+    code_editor:
+      search:
+        replace: "Substituir"
+        next: "Próximo"
+        previous: "Anterior"
+        close: "Fechar"
+        go: "Ir"
+      fold:
+        to: "para"
     user_api_key:
       title: 'Autorizar "%{application_name}"'
       authorize: "Autorizar"
@@ -2619,7 +2628,6 @@ pt_BR:
         }.
     learn_more: "Saiba mais…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Saiba mais…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -5665,29 +5673,26 @@ pt_BR:
         name: "Nome"
         plugin: "Plugin"
         metadata: "Metadados"
-        enabled: "Ativado"
-        enabled_for: "Ativado para..."
+        enabled: "Ativado(a)?"
         show_image: "Mostrar imagem"
-        edit_groups: "Editar grupos de adesão"
+        feedback: "Comentário"
         groups_updated: "Grupos atualizados!"
         save_groups: "Salvar grupos"
         add_groups_to_enable: "Adicione grupos para ativar este recurso."
         no_changes_to_save: "Nenhuma alteração para salvar"
         select_groups: "Selecionar grupos…"
         opt_in_groups: "Grupos de adesão voluntária"
-        show_related_settings: "Mostrar configurações relacionadas..."
+        settings: "Definições"
         opt_in_groups_instructions: "Os grupos de adesão voluntária podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja liberada para todos. Observe que esses grupos se tornarão irrelevantes assim que a alteração atingir o status Estável."
         enabled_for_throttle: "Você alterou a pessoa para quem essa alteração está ativada muito rapidamente. Aguarde alguns segundos antes de tentar novamente."
         change_enabled_for_success: "Você ativou essa alteração para %{enabledFor}"
         change_disabled: "Você optou por não participar desta alteração."
         permanent_notice: "Essa alteração agora é permanente e será removida em breve. Você não poderá mais optar por não participar."
-        permanent_soon_notice: "Esta mudança se tornará permanente em breve. Você não poderá mais optar por não participar."
         permanent_no_group_selection: "Não aplicável, alterações permanentes se aplicam a todos os grupos."
         no_changes: "Não há alterações previstas neste momento."
         preview: "Pré-visualizar"
         enabled_for_options:
           no_one: "Ninguém"
-          everyone: "Todos(as)"
           staff: "Apenas %{staffGroupName}"
           specific_groups: "Grupo(s) específico(s)"
           specific_groups_with_group_names:

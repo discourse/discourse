@@ -20,3 +20,5 @@ lt:
       few: "%{count} atsakymai"
       many: "%{count} atsakymai"
       other: "%{count} atsakymai"
+    themes:
+      default: Numatytasis

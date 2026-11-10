@@ -8,6 +8,14 @@ te:
   js:
     dsa_notice:
       choice_title: "ఇది చట్టవిరుద్ధం"
+    code_editor:
+      search:
+        replace: "భర్తీ చేయండి"
+        next: "తదుపరి"
+        previous: "గత"
+        close: "మూసివేయండి"
+      fold:
+        to: "వరకు"
     user_api_key:
       authorize: "అధికారం ఇవ్వండి"
       deny: "రద్దుచేయండి"
@@ -4335,11 +4343,11 @@ te:
           title: "అధునాతన"
       upcoming_changes:
         name: "పేరు"
-        enabled: "ప్రారంభించబడింది"
+        enabled: "ప్రారంభించబడిందా?"
+        feedback: "అభిప్రాయం"
         select_groups: "సమూహాలను ఎంచుకోండి…"
+        settings: "అమరికలు"
         preview: "ప్రివ్యూ"
-        enabled_for_options:
-          everyone: "అందరూ"
         impact_roles:
           moderators: "నిర్వాహకులు"
           staff: "సిబ్బంది"

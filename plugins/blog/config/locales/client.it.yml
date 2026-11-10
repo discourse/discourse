@@ -22,6 +22,8 @@ it:
         edit: Modifica
         activate: Attiva
         preview: Anteprima
+        customize: Personalizza
+        customized_theme_name: "%{name} (personalizzato)"
         import: Importa
         export: Esporta
         active: Attivi
@@ -34,6 +36,7 @@ it:
         change:
           title: titolo
           body: corpo
+          tags: etichette
       review:
         create: Crea link
         copy: Copia

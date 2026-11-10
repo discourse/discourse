@@ -97,7 +97,11 @@ pl_PL:
       preview_diagnostic: "%{template}, wiersz %{line}: %{message}"
       template_invalid: "Podaj prawidłowy szablon Liquid o rozmiarze nie większym niż 65 536 bajtów."
       template_parse_error: "Nieprawidłowy szablon Liquid: %{error}"
-      current: Aktualny wygląd
+      default: Domyślna
+      descriptions:
+        default: Przejrzysty, cichy układ czytelniczy wbudowany w blog.
+        broadsheet: Układ redakcyjny gazety z nagłówkami szeryfowymi i ponumerowaną siatką artykułów.
+        discourse-blog: Zaokrąglone karty na miękkim lawendowym płótnie z główną historią.
       invalid: "Podaj nazwę (do 100 znaków), sześciocyfrowe kolory szesnastkowe i kod CSS/JavaScript o rozmiarze nie większym niż 65 536 bajtów każdy."
       limit: Możesz zapisać do 30 motywów bloga. Najpierw usuń nieużywany motyw.
       stale: Ten motyw został zmieniony. Odśwież go i sprawdź najnowszy szkic, zanim przejdziesz dalej.

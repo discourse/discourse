@@ -10,6 +10,15 @@ sk:
       choice_title: "Je to nezákonné"
       title: "Nahlásiť nezákonný obsah"
       email: "E-mailová adresa"
+    code_editor:
+      search:
+        replace: "Nahradiť"
+        next: "Ďalej"
+        previous: "Predchádzajúci"
+        close: "Zatvoriť"
+        go: "Choď"
+      fold:
+        to: "komu"
     user_api_key:
       authorize: "Autorizovať"
       deny: "Zrušiť"
@@ -5598,11 +5607,11 @@ sk:
           title: "Pokročilé"
       upcoming_changes:
         name: "Meno"
-        enabled: "Povolené"
+        enabled: "Povolené?"
+        feedback: "Spätná väzba"
         select_groups: "Vyberte skupiny…"
+        settings: "Nastavení"
         preview: "Náhľad"
-        enabled_for_options:
-          everyone: "Každý"
         statuses:
           experimental: "Experimentálne"
         impact_roles:

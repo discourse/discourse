@@ -23,6 +23,8 @@ ja:
         edit: 編集
         activate: アクティベーション
         preview: プレビュー
+        customize: カスタマイズ
+        customized_theme_name: "%{name} (カスタム)"
         import: インポート
         export: エクスポート
         active: アクティブ
@@ -35,6 +37,7 @@ ja:
         change:
           title: タイトル
           body: 本文
+          tags: タグ
       review:
         create: リンクを作成
         copy: コピー

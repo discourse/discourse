@@ -13,6 +13,7 @@ be:
         mobile: Мабільная
         edit: Рэдагаваць
         preview: Перадпрагляд
+        customize: Кастамізаваць
         export: Экспарт
         active: Актыўныя
   js:
@@ -22,6 +23,7 @@ be:
         change:
           title: загаловак
           body: тэкст
+          tags: цэтлікі
       review:
         copy: Капіраваць
         status:

@@ -23,6 +23,7 @@ vi:
         edit: Sửa
         activate: Kích hoạt
         preview: Xem trước
+        customize: Tùy biến
         import: Nhập
         export: Xuất
         active: Hoạt động
@@ -35,6 +36,7 @@ vi:
         change:
           title: tiêu đề
           body: thân
+          tags: Thẻ
       review:
         create: Tạo link
         copy: Sao chép

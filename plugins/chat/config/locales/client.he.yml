@@ -93,8 +93,6 @@ he:
           other: "למחוק את %{count} ההודעות האלה?"
       channel_settings:
         title: "הגדרות ערוץ"
-        edit: "עריכה"
-        add: "הוספה"
         star_channel: "סימון ערוץ בכוכב"
         close_channel: "סגירת ערוץ"
         open_channel: "פתיחת ערוץ"
@@ -103,7 +101,6 @@ he:
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
         leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
-        notification_settings: "הגדרות התראה"
         notification_settings_context: "התראות"
         join: "הצטרפות"
         leave: "עזוב"
@@ -350,21 +347,22 @@ he:
       members_view:
         filter_placeholder: איתור חברים
         add_member: הוספת חברים
-        back_to_settings: "חזרה להגדרות"
       about_view:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
-        title: כותרת
         name: שם
         description: תיאור
       channel_info:
         back_to_all_channels: "כל הערוצים"
         back_to_channel: "חזרה"
+        nav_label: "פרטי ערוץ"
         tabs:
           members: חברים
+          preferences: העדפות
           settings: הגדרות
           search: חיפוש
         remove_member: "הסרה"
+        members_title: "%{channel} חברים"
       new_message_modal:
         title: שליחת הודעה
         add_user_long: <kbd>shift + לחיצת עכבר</kbd> או <kbd>shift + enter</kbd><span>מוסיפים ‎@%{username}</span>
@@ -384,15 +382,12 @@ he:
         create_new_group_chat: "יצירת צ׳אט קבוצתי"
         group_with_too_many_members: "יותר מדי חברים (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: עריכת ערוץ
         input_placeholder: הוספת שם
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
         reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
-        title: עריכת תיאור
         input_placeholder: הוספת תיאור
-        description: כדי לספר לאנשים על מה הערוץ הזה
       direct_message_creator:
         add_to_channel: "הוספה לערוץ"
         title: הודעה חדשה
@@ -497,7 +492,6 @@ he:
         always: "לכל פעילות"
       settings:
         channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
-        channel_wide_mentions_description: "לאפשר למשתמשים להודיע לכל החברים שב־‎#%{channel} באמצעות ‎@all (כולם) או רק לאלו שפעילים כרגע עם ‎@here (כאן)"
         channel_threading_label: "שרשור"
         channel_threading_description: "כאשר שרשור פעיל, תגובות להודעות בצ׳אט תיצורנה דיון נפרד, שיתקיים לצד הערוץ הראשי."
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
@@ -517,9 +511,6 @@ he:
         save: "שמירה"
         saved: "נשמר"
         unfollow: "לעזוב"
-        admin_title: "הנהלה"
-        settings_title: "הגדרות"
-        info_title: "פרטי ערוץ"
         category_label: "קטגוריה"
         history_label: "היסטוריה"
         members_label: "חברים"

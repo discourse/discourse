@@ -6,6 +6,11 @@
 
 id:
   js:
+    code_editor:
+      search:
+        close: "Tutup"
+      fold:
+        to: "kepada"
     user_api_key:
       authorize: "Izinkan"
       deny: "Batal"
@@ -2443,9 +2448,9 @@ id:
           title: "Surel"
       upcoming_changes:
         name: "Nama"
-        enabled: "Diaktifkan"
-        enabled_for_options:
-          everyone: "Semua orang"
+        enabled: "Diaktifkan?"
+        feedback: "Umpan balik"
+        settings: "Pengaturan"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
