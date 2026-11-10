@@ -12,6 +12,10 @@ RSpec.describe UploadSecurity do
   let(:type) { nil }
   let(:opts) { { type: type, creating: creating } }
 
+  it "treats every admin asset type as public" do
+    expect(UploadCreator::ADMIN_ASSET_TYPES - described_class::PUBLIC_TYPES).to be_empty
+  end
+
   context "when secure uploads is enabled" do
     before do
       setup_s3
@@ -87,6 +91,22 @@ RSpec.describe UploadSecurity do
 
           describe "for a public type category_background" do
             let(:type) { "category_background" }
+
+            it "returns false" do
+              expect(security.should_be_secure?).to eq(false)
+            end
+          end
+
+          describe "for a public type category_background_dark" do
+            let(:type) { "category_background_dark" }
+
+            it "returns false" do
+              expect(security.should_be_secure?).to eq(false)
+            end
+          end
+
+          describe "for a public type branding" do
+            let(:type) { "branding" }
 
             it "returns false" do
               expect(security.should_be_secure?).to eq(false)
