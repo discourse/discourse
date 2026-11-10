@@ -121,6 +121,88 @@ RSpec.describe UserAvatarsController do
   end
 
   describe "#show" do
+    shared_examples "retained avatar access" do |source|
+      it "restricts a retained #{source} to viewers who can edit the user" do
+        user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+        upload =
+          File.open(file_from_fixtures("cropped.png")) do |file|
+            UploadCreator.new(file, "retained-avatar.png", type: "avatar").create_for(user.id)
+          end
+        user.user_avatar.update!(source => upload)
+        path = "/user_avatar/default/#{user.username}/50/#{UserAvatar.version(upload.id)}.png"
+
+        get path
+        expect(response).to be_forbidden
+
+        user.update!(uploaded_avatar: nil)
+        get path
+        expect(response).to be_forbidden
+
+        sign_in(Fabricate(:user))
+        get path
+        expect(response).to be_forbidden
+
+        [user, Fabricate(:admin)].each do |viewer|
+          sign_in(viewer)
+          get path
+          expect(response).to be_successful
+          expect(response.body).to eq(
+            File.binread(Discourse.store.path_for(upload.get_optimized_image(50, 50))),
+          )
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+        end
+
+        user.update!(uploaded_avatar: upload)
+        sign_out
+        get path
+        expect(response).to be_successful
+        expect(response.headers["Cache-Control"]).to include("public", "immutable")
+      end
+
+      it "keeps a retained remote #{source} off public CDNs and shared caches" do
+        setup_s3
+        global_setting :redirect_avatar_requests, true
+        SiteSetting.avatar_sizes = "98"
+        SiteSetting.s3_cdn_url = "https://s3-cdn.example.com"
+        set_cdn_url("https://app-cdn.example.com")
+        user = Fabricate(:user)
+        upload = Fabricate(:upload, user: user)
+        Fabricate(
+          :optimized_image,
+          upload: upload,
+          width: 98,
+          height: 98,
+          url:
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/retained.png",
+          version: OptimizedImage::VERSION,
+        )
+        user.user_avatar.update!(source => upload)
+        stub_request(:get, "https://s3-cdn.example.com/retained.png").to_return(
+          body: "retained image",
+        )
+
+        [97, 98].each do |size|
+          get "/user_avatar/default/#{user.username}/#{size}/#{upload.id}.png"
+          expect(response).to be_forbidden
+        end
+
+        sign_in(user)
+        get "/user_avatar/default/#{user.username}/97/#{upload.id}.png"
+        expect(response).to redirect_to(
+          UserAvatar.local_avatar_url("default", user.username_lower, upload.id, 98),
+        )
+        expect(response.headers["Cache-Control"]).to eq("private, no-store")
+
+        get "/user_avatar/default/#{user.username}/98/#{upload.id}.png"
+        expect(response).to be_successful
+        expect(response.body).to eq("retained image")
+        expect(response.headers["Cache-Control"]).to eq("private, no-store")
+      end
+    end
+
+    include_examples "retained avatar access", :custom_upload
+    include_examples "retained avatar access", :gravatar_upload
+
     it "serves a retained associated account picture when another avatar is selected" do
       user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
       upload =
@@ -130,9 +212,15 @@ RSpec.describe UserAvatarsController do
       Fabricate(:user_associated_account, user: user, avatar_upload_id: upload.id)
 
       get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
+      expect(response).to be_forbidden
+
+      sign_in(user)
+
+      get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
 
       expect(response).to be_successful
       expect(response.media_type).to eq("image/png")
+      expect(response.headers["Cache-Control"]).to eq("private, no-store")
       expect(OptimizedImage.exists?(upload_id: upload.id, width: 50, height: 50)).to eq(true)
     end
 

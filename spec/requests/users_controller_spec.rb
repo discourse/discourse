@@ -5945,6 +5945,25 @@ RSpec.describe UsersController do
         expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
+      it "does not leak retained custom avatar and gravatar images to anonymous viewers" do
+        another_user.user_stat.update!(post_count: 1)
+        custom_upload = Fabricate(:upload, user: another_user)
+        gravatar_upload = Fabricate(:upload, user: another_user)
+        another_user.create_user_avatar!(
+          custom_upload_id: custom_upload.id,
+          gravatar_upload_id: gravatar_upload.id,
+        )
+
+        get "/u/#{another_user.username}.json"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["user"]
+
+        expect(parsed).not_to have_key("custom_avatar_upload_id")
+        expect(parsed).not_to have_key("custom_avatar_template")
+        expect(parsed).not_to have_key("gravatar_avatar_upload_id")
+        expect(parsed).not_to have_key("gravatar_avatar_template")
+      end
+
       describe "user profile views" do
         it "tracks an anonymous profile view" do
           get "/"
@@ -5970,6 +5989,28 @@ RSpec.describe UsersController do
         json = response.parsed_body
 
         expect(json["user"]["has_title_badges"]).to eq(false)
+      end
+
+      it "exposes the owner's retained custom avatar and gravatar metadata" do
+        custom_upload = Fabricate(:upload, user: user1)
+        gravatar_upload = Fabricate(:upload, user: user1)
+        user1.create_user_avatar!(
+          custom_upload_id: custom_upload.id,
+          gravatar_upload_id: gravatar_upload.id,
+        )
+
+        get "/u/#{user1.username}.json"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["user"]
+
+        expect(parsed["custom_avatar_upload_id"]).to eq(custom_upload.id)
+        expect(parsed["custom_avatar_template"]).to eq(
+          User.avatar_template(user1.username, custom_upload.id),
+        )
+        expect(parsed["gravatar_avatar_upload_id"]).to eq(gravatar_upload.id)
+        expect(parsed["gravatar_avatar_template"]).to eq(
+          User.avatar_template(user1.username, gravatar_upload.id),
+        )
       end
 
       it "returns not found when the username doesn't exist" do

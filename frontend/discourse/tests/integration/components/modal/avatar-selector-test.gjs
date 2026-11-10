@@ -9,6 +9,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import ModalContainer from "discourse/components/modal-container";
+import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
 import User from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -21,6 +22,54 @@ async function showAvatarSelector(context, model) {
 
 module("Integration | Component | Modal | AvatarSelector", function (hooks) {
   setupRenderingTest(hooks, { anonymous: true });
+
+  hooks.afterEach(() => restoreBaseUri());
+
+  test("retained avatar previews use the authenticated site origin with a CDN configured", async function (assert) {
+    setupURL(
+      "https://cdn.example.com",
+      "https://forum.example.com/forum",
+      "/forum"
+    );
+    this.siteSettings.gravatar_enabled = true;
+    this.siteSettings.selectable_avatars_mode = "disabled";
+    const template = (id) =>
+      `/forum/user_avatar/default/jane/{size}/${id}_2.png`;
+    const model = {
+      user: User.create({
+        username: "jane",
+        can_upload_avatar: true,
+        avatar_template: template(1),
+        gravatar_avatar_template: template(2),
+        custom_avatar_template: template(3),
+        associated_account_avatars: [
+          {
+            id: 1,
+            name: "provider",
+            upload_id: 4,
+            avatar_template: template(4),
+          },
+        ],
+      }),
+    };
+
+    await showAvatarSelector(this, model);
+
+    for (const [choice, id] of [
+      ["gravatar", 2],
+      ["upload", 3],
+      ["associated-account", 4],
+    ]) {
+      assert
+        .dom(`.avatar-choice--${choice} img`)
+        .hasAttribute(
+          "src",
+          new RegExp(
+            `^https://forum\\.example\\.com/forum/user_avatar/default/jane/\\d+/${id}_2\\.png$`
+          )
+        );
+    }
+  });
 
   test("deferred file selection can be cancelled without changing the saved selection", async function (assert) {
     const initialFile = new File(["initial"], "initial.png", {
