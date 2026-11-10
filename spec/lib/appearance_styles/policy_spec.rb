@@ -182,7 +182,18 @@ RSpec.describe AppearanceStyles::Policy do
         declare("light-dark(red, #400)", property: "color"),
         "light-dark() takes hex colors",
       )
-      expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
+      expect_valid(
+        {
+          rules: [
+            {
+              area: "user_badge",
+              declarations: {
+                "background-color" => "rgba(var(--tertiary-rgb), 0.2)",
+              },
+            },
+          ],
+        },
+      )
       expect_error(
         declare("rgba(var(--tertiary-rgb), 0.2)", property: "color"),
         "text needs an opaque color",
@@ -318,7 +329,18 @@ RSpec.describe AppearanceStyles::Policy do
         },
         "can't tell how readable",
       )
-      expect_valid(declare("rgba(var(--tertiary-rgb), 0.2)", property: "background-color"))
+      expect_valid(
+        {
+          rules: [
+            {
+              area: "user_badge",
+              declarations: {
+                "background-color" => "rgba(var(--tertiary-rgb), 0.2)",
+              },
+            },
+          ],
+        },
+      )
     end
 
     it "needs text to be opaque" do
@@ -394,6 +416,57 @@ RSpec.describe AppearanceStyles::Policy do
         {
           rules: [{ area: "header", declarations: { "color" => "light-dark(#000000, #ffffff)" } }],
         },
+      )
+    end
+
+    it "checks text on a see-through background against what shows through it" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "transparent",
+                "color" => "var(--secondary)",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is 1.0:1",
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "rgba(var(--secondary-rgb), 0.9)",
+                "color" => "var(--secondary)",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+      expect_valid(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "rgba(var(--primary-rgb), 0.9)",
+                "color" => "var(--secondary)",
+              },
+            },
+          ],
+        },
+      )
+    end
+
+    it "checks the draft's value for variables that are also palette colors" do
+      expect_error(
+        { variables: { "--d-selected-text-color" => "transparent" } },
+        "text needs an opaque color",
       )
     end
 

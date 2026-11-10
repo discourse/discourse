@@ -461,12 +461,8 @@ module AppearanceStyles
 
         backgrounds.all? do |background|
           own = own_backgrounds.include?(background)
-          background_hex = resolve_node(background, mode)
+          background_hex = shown_background(background, area, mode)
           next unreadable_unknown(path, "background") if background_hex.nil? && own
-          # an area core leaves see-through shows the page behind it
-          if background_hex == :translucent && !own
-            background_hex = resolve_color(AreaCatalog::PAGE_BACKGROUND, mode)
-          end
           next true if !background_hex.is_a?(String)
 
           ratio = contrast(text_hex, background_hex)
@@ -575,7 +571,7 @@ module AppearanceStyles
     def readable_on?(text, background, area, path)
       %w[light dark].all? do |mode|
         text_hex = resolve_color(text, mode)
-        background_hex = resolve_node(background, mode)
+        background_hex = shown_background(background, area, mode)
         next true if !text_hex.is_a?(String) || !background_hex.is_a?(String)
 
         required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
@@ -592,6 +588,50 @@ module AppearanceStyles
           "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode; it needs #{required}:1",
         )
       end
+    end
+
+    # The color a background shows: see-through ones are composited onto the
+    # background core shows around the area. Returns nil when that can't be
+    # told.
+    def shown_background(node, area, mode, depth = 0)
+      hex = resolve_node(node, mode)
+      return hex if hex != :translucent || depth > 8
+
+      behind = resolve_color(outside_background(area), mode)
+      return if !behind.is_a?(String)
+
+      case node.type
+      when :ident
+        behind if node.value.downcase == "transparent"
+      when :function
+        if node.value == "var"
+          name = node.children.first&.value
+          value = (@draft_variables || {})[name] || @registry[name]&.default
+          nodes = value && CssValue.parse(value.to_s)
+          nodes&.size == 1 ? shown_background(nodes.first, area, mode, depth + 1) : nil
+        elsif (rgb = palette_rgb(node))
+          name, opacity = rgb
+          color = resolve_variable(name.delete_suffix("-rgb"), mode)
+          blend(color, behind, opacity) if color.is_a?(String)
+        end
+      end
+    rescue CssValue::ParseError
+      nil
+    end
+
+    def blend(color, behind, opacity)
+      ColorMath::Converters.rgb_to_hex(
+        ColorMath::Converters
+          .hex_to_rgb(color)
+          .zip(ColorMath::Converters.hex_to_rgb(behind))
+          .map { |front, back| ((front * opacity) + (back * (1 - opacity))).round },
+      )
+    end
+
+    # The background around an area, outside it.
+    def outside_background(area)
+      painted = @catalog.chain(area).drop(1).find(&:paints_background)
+      painted ? painted.background : AreaCatalog::PAGE_BACKGROUND
     end
 
     # The background core shows behind an area's text.
@@ -758,9 +798,14 @@ module AppearanceStyles
 
     def resolve_variable(name, mode, depth = 0, use_draft: true)
       return if depth > 8
+
+      # a design variable a draft overrides wins, even when the palette also
+      # defines it
+      value = use_draft ? (@draft_variables || {})[name] : nil
+      return resolve_color(value, mode, depth + 1, use_draft:) if value
       return @palette_colors[mode][name] if @registry.palette_variable?(name)
 
-      value = (use_draft ? (@draft_variables || {})[name] : nil) || @registry[name]&.default
+      value = @registry[name]&.default
       value && resolve_color(value, mode, depth + 1, use_draft:)
     end
 
