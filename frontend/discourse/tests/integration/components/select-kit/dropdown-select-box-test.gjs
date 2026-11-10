@@ -38,10 +38,15 @@ module(
 
     test("selection behavior", async function (assert) {
       setDefaultState(this);
+      this.set("onChange", (value) => this.set("value", value));
 
       await render(
         <template>
-          <DropdownSelectBox @content={{this.content}} @value={{this.value}} />
+          <DropdownSelectBox
+            @content={{this.content}}
+            @onChange={{this.onChange}}
+            @value={{this.value}}
+          />
         </template>
       );
 

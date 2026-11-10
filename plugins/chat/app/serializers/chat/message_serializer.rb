@@ -240,10 +240,6 @@ module Chat
       object.pinned_message.present?
     end
 
-    def include_pinned?
-      SiteSetting.chat_pinned_messages
-    end
-
     def thread
       Chat::ThreadSerializer.new(
         object.thread,

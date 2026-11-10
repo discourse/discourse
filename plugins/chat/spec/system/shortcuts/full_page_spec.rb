@@ -32,8 +32,6 @@ RSpec.describe "Shortcuts | full page" do
       Fabricate(:chat_pinned_message, chat_message: other_message, user: current_user)
     end
 
-    before { SiteSetting.chat_pinned_messages = true }
-
     it "closes the pinned messages list" do
       chat.visit_channel(channel_1)
       find(".chat-pinned-bar__see-all").click

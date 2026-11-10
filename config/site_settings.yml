@@ -42,14 +42,21 @@
 #                            `stable` status admins are warned that it will become permanent and they will no
 #                            longer be able to opt out. Set to false when that warning does not apply, for
 #                            example a change that only alters the default value of another site setting.
-#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
-#                            dropdown options the admin can pick for this upcoming change.
+#                          - group_setting: (optional setting name) use an existing group_list setting as
+#                            the audience instead of SiteSettingGroup. Must reference a core setting or one
+#                            from the change's own plugin. Cannot combine with allow_enabled_for.
+#                            The rollout boolean and audience are independent: toggling preserves the linked
+#                            setting, and audience edits update that setting using its normal validation,
+#                            mandatory_values, disallowed_groups, confirmation flow, and staff logging.
+#                            An empty list means no audience; anonymous access requires anonymous_users.
+#                            Linked audience restrictions still apply after auto-promotion and permanent status.
+#                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
 #                            Valid values: everyone, staff, specific_groups.
 #
-#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
-#                            the only value (it cannot combine with staff or specific_groups).
-#                            Omit the key to allow all four options (the default permissive
-#                            behavior).
+#                            `everyone` must be the only value and means the change can't be scoped to
+#                            groups; the admin UI then shows the impact role's groups as a locked audience,
+#                            so make the role match who the change affects. Omit the key to let admins
+#                            pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.

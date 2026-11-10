@@ -2384,6 +2384,46 @@ HTML
         </p>
       HTML
     end
+
+    it "keeps HTML replacements self-contained" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: '<abbr title="fruit">apple</abbr>',
+        html: true,
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<span>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple pie")).to eq('<p><abbr title="fruit">apple</abbr> pie</p>')
+      expect(PrettyText.cook("banana bread")).to eq("<p><span></span> bread</p>")
+    end
+
+    it "does not emit HTML replacements when the sanitizer is disabled" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: "orange",
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<b>bold</b>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple banana", sanitize: false)).to eq(
+        "<p>orange &lt;b&gt;bold&lt;/b&gt;</p>",
+      )
+    end
   end
 
   it "supports typographer" do

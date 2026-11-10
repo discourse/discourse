@@ -103,7 +103,6 @@ class UploadCreator
     # classes with shared methods, rather than doing all these checks all over the
     # place. Needs a refactor.
     external_upload_too_big = @opts[:external_upload_too_big]
-    sha1_before_changes = Upload.generate_digest(@file) if @file
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
       if is_image && !external_upload_too_big
@@ -257,19 +256,16 @@ class UploadCreator
       end
       return @upload unless @upload.errors.empty? && @upload.save(validate: @opts[:validate])
 
-      should_move = false
-      upload_changed =
-        if external_upload_too_big
-          false
-        else
-          Upload.generate_digest(@file) != sha1_before_changes
-        end
-
       store = Discourse.store
 
-      if @opts[:existing_external_upload_key] && store.external?
-        should_move = external_upload_too_big || !upload_changed
-      end
+      # Only move the already-uploaded external object into place when we never
+      # downloaded it (it was too big to fetch to a local tempfile). Whenever the
+      # validated local bytes are available we must store those instead: the
+      # external object is mutable and could be swapped after validation, which
+      # would decouple the stored content from the sha1 we record and use for
+      # cross-user deduplication.
+      should_move =
+        @opts[:existing_external_upload_key].present? && store.external? && external_upload_too_big
 
       if should_move
         # move the file in the store instead of reuploading

@@ -84,6 +84,34 @@ acceptance("User Preferences - Interface", function (needs) {
       skip_new_user_tips: "false",
     });
   });
+
+  test("saves the selected theme", async function (assert) {
+    Site.current().set("user_themes", [
+      { theme_id: 1, name: "A Theme", default: true },
+      { theme_id: 2, name: "Another Theme" },
+    ]);
+
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert
+      .dom(".save-theme-alert")
+      .doesNotExist("does not ask to save before a theme is chosen");
+
+    const theme = selectKit(".theme .combo-box");
+    await theme.expand();
+    await theme.selectRowByValue(2);
+
+    assert.strictEqual(theme.header().value(), "2", "shows the chosen theme");
+    assert.dom(".save-theme-alert").exists("asks to save to change the theme");
+
+    await click(".save-changes");
+
+    assert.deepEqual(
+      lastUserData["theme_ids[]"],
+      ["2"],
+      "saves the chosen theme as the default"
+    );
+  });
 });
 
 acceptance("Content language preferences", function (needs) {

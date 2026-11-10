@@ -1,5 +1,5 @@
-import ChannelInfoMembers from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-members";
+import ChannelMembers from "discourse/plugins/chat/discourse/components/chat/routes/channel-members";
 
 export default <template>
-  <ChannelInfoMembers @channel={{@controller.model}} />
+  <ChannelMembers @channel={{@controller.model}} />
 </template>

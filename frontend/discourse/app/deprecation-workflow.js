@@ -317,6 +317,12 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // The component is deprecated but still under test until it is removed.
+  {
+    handler: "silence",
+    matchId: "discourse.ace-editor",
+    env: "qunit-test",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
