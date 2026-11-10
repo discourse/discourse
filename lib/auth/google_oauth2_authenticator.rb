@@ -128,8 +128,6 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     end
   end
 
-  # Returns the groups retrieved and whether the listing is complete. Group
-  # sync consumes whatever was retrieved; the allowlist requires a complete list.
   def raw_groups(uid)
     groups = []
     complete = true
