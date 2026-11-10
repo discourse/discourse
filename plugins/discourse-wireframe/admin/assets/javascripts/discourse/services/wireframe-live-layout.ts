@@ -43,15 +43,6 @@ export type LiveLayoutPublishResult = {
     /** Current live publication timestamp returned for a conflict. */
     publishedAt?: string;
   }>;
-  /** Git-owned outlets deliberately left unpublished. */
-  skipped: Array<{
-    /** Skipped outlet identifier. */
-    outlet: string;
-    /** Destination theme ID. */
-    themeId: number;
-    /** Reason the outlet was not written. */
-    reason: "git";
-  }>;
 };
 
 type PublishResponse = {
@@ -117,17 +108,13 @@ export default class WireframeLiveLayoutService extends Service {
   #tokensSeeded: boolean = false;
 
   /**
-   * Publishes every edited outlet to its owner theme — the live, broadcast
+   * Publishes every edited outlet to the session's design — the live, broadcast
    * write. Sequential by design so a partial failure leaves earlier successes
-   * persisted. Each outlet resolves its own owner, so a page assembled from
-   * several themes publishes each region to the theme that owns it;
-   * `fallbackThemeId` is the target only for an outlet nothing owns yet. A
-   * Git-owned outlet is skipped (never written) with its draft preserved; a 409
-   * conflict keeps the outlet edited and carries the live version for the
-   * conflict prompt.
+   * persisted. A 409 conflict keeps the outlet edited and carries the live
+   * version for the conflict prompt.
    *
-   * @param fallbackThemeId - Publish target for outlets nothing owns yet.
-   * @returns Per-outlet successes, failures, and deliberate skips.
+   * @param fallbackThemeId - The design that receives every outlet.
+   * @returns Per-outlet successes and failures.
    */
   async publish(
     fallbackThemeId?: number | null
@@ -135,7 +122,6 @@ export default class WireframeLiveLayoutService extends Service {
     const result: LiveLayoutPublishResult = {
       saved: [],
       errors: [],
-      skipped: [],
     };
     for (const outlet of this.wireframeMutationEngine.editedOutletNames()) {
       await this.#publishOne(outlet, fallbackThemeId, result);
@@ -144,12 +130,12 @@ export default class WireframeLiveLayoutService extends Service {
   }
 
   /**
-   * Publishes a single outlet to its owner theme — the per-outlet Publish
+   * Publishes a single outlet to the session's design — the per-outlet Publish
    * affordance. Same per-outlet logic as the `publish` loop.
    *
    * @param outlet - Outlet identifier.
-   * @param fallbackThemeId - Target when nothing owns the outlet yet.
-   * @returns Per-outlet success, failure, or deliberate skip.
+   * @param fallbackThemeId - The design that receives the outlet.
+   * @returns Per-outlet success or failure.
    */
   async publishOutlet(
     outlet: string,
@@ -158,7 +144,6 @@ export default class WireframeLiveLayoutService extends Service {
     const result: LiveLayoutPublishResult = {
       saved: [],
       errors: [],
-      skipped: [],
     };
     await this.#publishOne(outlet, fallbackThemeId, result);
     return result;
@@ -209,83 +194,63 @@ export default class WireframeLiveLayoutService extends Service {
   }
 
   /**
-   * Exports a single outlet's layout as the repo-file JSON and triggers a
-   * download. With `useDraft`, the current (possibly unpublished) draft is sent
-   * as the source; otherwise the server exports the live field.
+   * Creates a named design (a local component installed on the theme in use) and
+   * returns its theme id. Any other design of that theme is uninstalled.
    *
-   * @param themeId - ID of the theme owning the outlet.
-   * @param outlet - Outlet identifier.
-   * @param options - Export source options.
-   *   - `useDraft` - Export the current draft instead of the live field.
+   * @param themeId - ID of the theme in use.
+   * @param name - Name the author gave the design.
+   * @param options - Creation options.
+   *   - `withEdits` - Seed the design with every edited outlet's draft.
+   * @returns The created design.
    */
-  async exportOutlet(
+  createDesign(
     themeId: number,
-    outlet: string,
+    name: string,
     {
-      useDraft,
+      withEdits = false,
     }: {
-      /** Whether to export the current draft instead of the live layout. */
-      useDraft?: boolean;
+      /** Whether to seed the design with the edited outlets' drafts. */
+      withEdits?: boolean;
     } = {}
-  ): Promise<void> {
-    const data: {
-      /** Serialized draft layout, when requested. */
-      layout_json?: string;
-      /** The outlet identifier. */
-      outlet_name: string;
-      /** The owning theme ID. */
-      theme_id: number;
-    } = { theme_id: themeId, outlet_name: outlet };
-    if (useDraft) {
-      data.layout_json = this.#serializeLayoutJson(outlet);
-    }
-    // TODO(devxp-typescript-pending): remove this response cast once core's
-    // `ajax` helper exposes a generic response type.
-    const response = (await ajax("/admin/customize/block-layouts/export.json", {
-      type: "POST",
-      data,
-    })) as {
-      /** Download filename returned by the export endpoint. */
-      filename: string;
-      /** Serialized layout content returned by the export endpoint. */
-      content: string;
-    };
-    // `content` is already a serialized JSON string — download it verbatim.
-    this._triggerDownload(response.filename, response.content);
-  }
-
-  /**
-   * Duplicates the theme into a new editable (non-Git) theme, carrying every
-   * edited outlet's draft, and returns the new theme id.
-   *
-   * @param themeId - ID of the source theme.
-   * @returns Newly created editable theme.
-   */
-  duplicateTheme(themeId: number): Promise<ThemeActionResponse> {
-    // TODO(devxp-typescript-pending): remove this response cast once core's
-    // `ajax` helper exposes a generic response type.
-    return ajax("/admin/customize/block-layouts/duplicate.json", {
-      type: "POST",
-      data: { theme_id: themeId, drafts: this.#editedDrafts() },
-    }) as Promise<ThemeActionResponse>;
-  }
-
-  /**
-   * Creates (or reuses) a local customization component for a Git theme,
-   * carrying every edited outlet's draft, and returns the component's theme id.
-   *
-   * @param themeId - ID of the parent theme being customized.
-   * @returns Created or reused customization component.
-   */
-  createCustomizationComponent(themeId: number): Promise<ThemeActionResponse> {
-    // Companion creation + its parent↔component mapping is an editor concept, so it
+  ): Promise<ThemeActionResponse> {
+    // Design creation + its parent↔component mapping is an editor concept, so it
     // lives on the plugin endpoint rather than the core block-layouts controller.
     // TODO(devxp-typescript-pending): remove this response cast once core's
     // `ajax` helper exposes a generic response type.
     return ajax("/admin/plugins/wireframe/customization-component.json", {
       type: "POST",
-      data: { theme_id: themeId, drafts: this.#editedDrafts() },
+      data: {
+        theme_id: themeId,
+        name,
+        drafts: withEdits ? this.#editedDrafts() : [],
+      },
     }) as Promise<ThemeActionResponse>;
+  }
+
+  /**
+   * Renames a design.
+   *
+   * @param designId - ID of the design.
+   * @param name - The new name.
+   */
+  renameDesign(designId: number, name: string): Promise<unknown> {
+    return ajax(`/admin/themes/${designId}`, {
+      type: "PUT",
+      data: { theme: { name } },
+    });
+  }
+
+  /**
+   * Installs one of the theme's designs, uninstalling the others.
+   *
+   * @param themeId - ID of the theme in use.
+   * @param designId - ID of the design to install.
+   */
+  installDesign(themeId: number, designId: number): Promise<unknown> {
+    return ajax("/admin/plugins/wireframe/companion.json", {
+      type: "PUT",
+      data: { theme_id: themeId, design_id: designId },
+    });
   }
 
   /**
@@ -305,10 +270,34 @@ export default class WireframeLiveLayoutService extends Service {
   }
 
   /**
+   * Records the live version of layouts loaded after boot (a previewed design),
+   * so publishing them is guarded like the preloaded ones.
+   *
+   * @param rows - Layouts with the theme, outlet and version token of each.
+   */
+  recordVersionTokens(
+    rows: Array<{
+      /** Theme owning the layout. */
+      theme_id: number;
+      /** Outlet the layout fills. */
+      outlet: string;
+      /** Live version of the layout. */
+      version_token: string | null;
+    }>
+  ): void {
+    this.#seedTokens();
+    for (const row of rows) {
+      if (row.version_token != null) {
+        this.#setToken(row.theme_id, row.outlet, row.version_token);
+      }
+    }
+  }
+
+  /**
    * Publishes one outlet and appends its outcome to an aggregate result.
    *
    * @param outlet - Outlet identifier to publish.
-   * @param fallbackThemeId - Destination when the outlet has no owner.
+   * @param fallbackThemeId - The design that receives the outlet.
    * @param result - Aggregate result receiving this outlet's outcome.
    */
   async #publishOne(
@@ -316,21 +305,10 @@ export default class WireframeLiveLayoutService extends Service {
     fallbackThemeId: number | null | undefined,
     result: LiveLayoutPublishResult
   ): Promise<void> {
-    const owner = this.wireframePublishTarget.outletOwner(outlet);
-    // An active editor session always has an owner, explicit fallback, or
-    // default theme target; retain the existing runtime fallback chain.
+    // Every outlet publishes to the session's design, wherever its current
+    // layout comes from: the theme in use is never written to.
     const themeId =
-      owner.themeId ??
-      fallbackThemeId ??
-      this.wireframePublishTarget.defaultThemeId!;
-
-    if (owner.isGit) {
-      // Never write a Git-managed theme's live field (Export/Duplicate is a
-      // later phase); leave the outlet edited and its draft intact so the work
-      // isn't lost.
-      result.skipped.push({ outlet, themeId, reason: "git" });
-      return;
-    }
+      fallbackThemeId ?? this.wireframePublishTarget.defaultThemeId!;
 
     try {
       const response = await this.#publishRequest(

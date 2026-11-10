@@ -29,6 +29,12 @@ class StubWireframeService extends Service {
 
   validationWarnings = [];
 
+  createdDesigns = [];
+
+  switched = [];
+
+  navigatedToThemeInUse = false;
+
   #config;
 
   constructor(owner, config) {
@@ -56,6 +62,29 @@ class StubWireframeService extends Service {
 
   get homepageThemeId() {
     return this.#config.homepageThemeId ?? 5;
+  }
+
+  get designInUse() {
+    return this.#config.designInUse ?? true;
+  }
+
+  get designName() {
+    return this.#config.designName ?? "Untitled layout";
+  }
+
+  get hasDesign() {
+    return this.#config.activeThemeTarget?.publishable ?? false;
+  }
+
+  switchDesign(designId) {
+    this.switched.push(designId);
+    return null;
+  }
+
+  markDesignInUse() {}
+
+  navigateToThemeInUse() {
+    this.navigatedToThemeInUse = true;
   }
 
   hasRenderableContent(name) {
@@ -86,17 +115,13 @@ class StubWireframeService extends Service {
   discardAll() {}
   saveAllEditedDrafts() {}
   publishEditedOutlets() {}
+
   resetToDefault() {}
-  exportOutlet() {}
-  createCustomizationComponent() {
-    return {};
-  }
 
-  duplicateForEditing() {
-    return {};
+  createDesign(name) {
+    this.createdDesigns.push(name);
+    return { themeId: 9 };
   }
-
-  navigateToEditTheme() {}
 
   exit() {}
 }
@@ -129,16 +154,10 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("DTabs adoption preserves publication intent across manual keyboard activation", async function (assert) {
-      stubWireframe(this.owner, {
-        homepageToggleAvailable: true,
-        renderableOutlets: ["homepage-blocks"],
-      });
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        false;
+    test("DTabs adoption supports manual keyboard activation", async function (assert) {
+      stubWireframe(this.owner, {});
 
       await render(<template><PublishReviewDrawer /></template>);
-      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
 
       const [details, changes] = findAll(".wireframe-review__tab");
       await focus(details);
@@ -153,7 +172,10 @@ module(
         .dom(changes)
         .hasAttribute("aria-selected", "true", "Enter activates Changes");
       assert
-        .dom(".wireframe-review__homepage")
+        .dom(".wireframe-review__empty")
+        .exists({ count: 1 }, "only the active panel's content is mounted");
+      assert
+        .dom(".wireframe-review__group")
         .doesNotExist("inactive content is unmounted");
       assert
         .dom(".wireframe-review [role=tabpanel]")
@@ -162,18 +184,6 @@ module(
           changes.id,
           "the active tab labels the panel"
         );
-
-      await click(details);
-      assert
-        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
-        .hasAttribute(
-          "aria-checked",
-          "true",
-          "the publication choice survives the panel swap"
-        );
-      assert
-        .dom(".wireframe-review__publish")
-        .isNotDisabled("the staged choice remains publishable");
     });
 
     test("a publishable theme renders a group that will publish, with Publish enabled", async function (assert) {
@@ -181,16 +191,12 @@ module(
         activeThemeTarget: {
           themeId: 5,
           themeName: "Acme",
-          isGit: false,
-          isSystem: false,
           publishable: true,
         },
         publishTargets: [
           {
             themeId: 5,
             themeName: "Acme",
-            isGit: false,
-            isSystem: false,
             publishable: true,
             outlets: ["homepage-blocks"],
           },
@@ -216,16 +222,12 @@ module(
         activeThemeTarget: {
           themeId: 5,
           themeName: "Acme",
-          isGit: false,
-          isSystem: false,
           publishable: true,
         },
         publishTargets: [
           {
             themeId: 5,
             themeName: "Acme",
-            isGit: false,
-            isSystem: false,
             publishable: true,
             outlets: ["homepage-blocks"],
           },
@@ -240,119 +242,109 @@ module(
         .exists("a published, publishable outlet can be reset");
     });
 
-    test("a Git theme offers create-component, duplicate, and per-outlet export with Publish disabled", async function (assert) {
+    test("a theme with no design yet marks the edits as awaiting a name and creates one on Publish", async function (assert) {
       stubWireframe(this.owner, {
         activeThemeTarget: {
-          themeId: 7,
-          themeName: "Imported",
-          isGit: true,
-          isSystem: false,
+          themeId: -1,
+          themeName: "Foundation",
           publishable: false,
         },
         publishTargets: [
           {
-            themeId: 7,
-            themeName: "Imported",
-            isGit: true,
-            isSystem: false,
+            themeId: -1,
+            themeName: "Foundation",
             publishable: false,
             outlets: ["homepage-blocks"],
           },
         ],
       });
-
       await render(<template><PublishReviewDrawer /></template>);
 
       assert
-        .dom(".wireframe-review__create-component")
-        .exists("offers a companion component");
+        .dom(".wireframe-review__group-status.--pending")
+        .exists("the group is awaiting a design name");
       assert
-        .dom(".wireframe-review__duplicate")
-        .exists("offers duplicate for a Git theme");
-      assert
-        .dom(".wireframe-review__export")
-        .exists("offers per-outlet export for a Git theme");
-      assert
-        .dom(".wireframe-review__group-status.--blocked")
-        .exists("the group is marked blocked");
+        .dom(
+          ".wireframe-review__create-component, .wireframe-review__duplicate"
+        )
+        .doesNotExist("no theme-level escape hatches are offered");
       assert
         .dom(".wireframe-review__publish")
-        .isDisabled("Publish is disabled when no target is publishable");
+        .isNotDisabled("Publish stays available — it creates the design");
+
+      await click(".wireframe-review__publish");
+
+      assert.deepEqual(
+        this.owner.lookup("service:wireframe-staging").createdDesigns,
+        ["Untitled layout"],
+        "the design is created with the header's name"
+      );
     });
 
-    test("the homepage toggle is hidden when the opt-in isn't available", async function (assert) {
-      stubWireframe(this.owner, {
+    function stubHomepagePublish(owner, config = {}) {
+      stubWireframe(owner, {
+        homepageToggleAvailable: true,
+        homepageThemeId: 42,
+        renderableOutlets: ["homepage-blocks"],
+        activeThemeTarget: {
+          themeId: 9,
+          themeName: "Spring",
+          publishable: true,
+        },
         publishTargets: [
           {
-            themeId: 5,
-            themeName: "Acme",
-            isGit: false,
-            isSystem: false,
+            themeId: 9,
+            themeName: "Spring",
             publishable: true,
             outlets: ["homepage-blocks"],
           },
         ],
+        ...config,
       });
+    }
+
+    test("publishing a design the theme doesn't use asks whether to use it", async function (assert) {
+      stubHomepagePublish(this.owner, { designInUse: false });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        true;
+      let prompt;
+      this.owner.unregister("service:dialog");
+      this.owner.register(
+        "service:dialog",
+        class extends Service {
+          alert(params) {
+            prompt = params;
+            params.buttons[0].action();
+          }
+        }
+      );
+
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__publish");
+
+      const staging = this.owner.lookup("service:wireframe-staging");
+      assert.strictEqual(
+        prompt.buttons.length,
+        3,
+        "offers use, publish only, and cancel"
+      );
+      assert.deepEqual(staging.switched, [5], "the design is put in use");
+      assert.true(
+        staging.navigatedToThemeInUse,
+        "reloads onto what visitors see"
+      );
+    });
+
+    test("there is no homepage toggle in the drawer", async function (assert) {
+      stubHomepagePublish(this.owner);
 
       await render(<template><PublishReviewDrawer /></template>);
 
       assert.dom(".wireframe-review__homepage").doesNotExist();
     });
 
-    test("the homepage toggle can't switch on while the homepage layout is empty", async function (assert) {
-      stubWireframe(this.owner, {
-        homepageToggleAvailable: true,
-        renderableOutlets: [],
-      });
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        false;
-
-      await render(<template><PublishReviewDrawer /></template>);
-
-      assert
-        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
-        .isDisabled("the switch is disabled with nothing to render");
-      assert
-        .dom(".wireframe-review__homepage-hint")
-        .exists("the disabled reason is explained");
-      assert
-        .dom(".wireframe-review__publish")
-        .isDisabled("nothing is pending, so Publish stays disabled");
-    });
-
-    test("flipping the homepage toggle stages the choice and enables Publish", async function (assert) {
-      stubWireframe(this.owner, {
-        homepageToggleAvailable: true,
-        renderableOutlets: ["homepage-blocks"],
-      });
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        false;
-
-      await render(<template><PublishReviewDrawer /></template>);
-
-      assert
-        .dom(".wireframe-review__publish")
-        .isDisabled("nothing is staged yet");
-
-      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
-
-      assert
-        .dom(".wireframe-review__homepage .d-toggle-switch__checkbox")
-        .hasAria("checked", "true", "the switch reflects the staged choice");
-      assert
-        .dom(".wireframe-review__homepage-hint")
-        .exists("the pending choice is explained");
-      assert
-        .dom(".wireframe-review__publish")
-        .isNotDisabled("a staged homepage choice makes Publish available");
-    });
-
-    test("publish applies the staged homepage choice for the rendered theme", async function (assert) {
-      stubWireframe(this.owner, {
-        homepageToggleAvailable: true,
-        homepageThemeId: 42,
-        renderableOutlets: ["homepage-blocks"],
-      });
+    test("publish switches the custom homepage on for the theme in use", async function (assert) {
+      stubHomepagePublish(this.owner);
       const siteSettings = this.owner.lookup("service:site-settings");
       siteSettings.wireframe_custom_homepage = false;
 
@@ -363,13 +355,12 @@ module(
       });
 
       await render(<template><PublishReviewDrawer /></template>);
-      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
       await click(".wireframe-review__publish");
 
       assert.deepEqual(
         putBodies,
         [["42", "name=wireframe_custom_homepage&value=true"]],
-        "the setting write targets the rendered theme with an explicit boolean"
+        "the setting write targets the theme in use with an explicit boolean"
       );
       assert.true(
         siteSettings.wireframe_custom_homepage,
@@ -377,12 +368,29 @@ module(
       );
     });
 
-    test("a failed homepage write keeps the drawer open with Publish still enabled", async function (assert) {
-      stubWireframe(this.owner, {
-        homepageToggleAvailable: true,
-        homepageThemeId: 42,
-        renderableOutlets: ["homepage-blocks"],
+    test("publish leaves the homepage setting alone when it is already on or has no content", async function (assert) {
+      pretender.put("/admin/themes/:id/site-setting", () => {
+        assert.step("written");
+        return response({ success: "OK" });
       });
+
+      stubHomepagePublish(this.owner);
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        true;
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__publish");
+
+      stubHomepagePublish(this.owner, { renderableOutlets: [] });
+      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
+        false;
+      await render(<template><PublishReviewDrawer /></template>);
+      await click(".wireframe-review__publish");
+
+      assert.verifySteps([]);
+    });
+
+    test("a failed homepage write keeps the drawer open", async function (assert) {
+      stubHomepagePublish(this.owner);
       this.owner.lookup("service:site-settings").wireframe_custom_homepage =
         false;
 
@@ -391,7 +399,6 @@ module(
       );
 
       await render(<template><PublishReviewDrawer /></template>);
-      await click(".wireframe-review__homepage .d-toggle-switch__checkbox");
       await click(".wireframe-review__publish");
 
       assert
@@ -400,43 +407,6 @@ module(
       assert
         .dom(".wireframe-review")
         .exists("the drawer stays open for a retry");
-      assert
-        .dom(".wireframe-review__publish")
-        .isNotDisabled("the staged choice keeps Publish available to retry");
-    });
-
-    test("a core system theme offers the companion component but not duplicate", async function (assert) {
-      stubWireframe(this.owner, {
-        activeThemeTarget: {
-          themeId: -1,
-          themeName: "Foundation",
-          isGit: false,
-          isSystem: true,
-          publishable: false,
-        },
-        publishTargets: [
-          {
-            themeId: -1,
-            themeName: "Foundation",
-            isGit: false,
-            isSystem: true,
-            publishable: false,
-            outlets: ["homepage-blocks"],
-          },
-        ],
-      });
-
-      await render(<template><PublishReviewDrawer /></template>);
-
-      assert
-        .dom(".wireframe-review__create-component")
-        .exists("offers a companion component");
-      assert
-        .dom(".wireframe-review__duplicate")
-        .doesNotExist("no duplicate for a core system theme");
-      assert
-        .dom(".wireframe-review__export")
-        .doesNotExist("no per-outlet export for a core system theme");
     });
   }
 );

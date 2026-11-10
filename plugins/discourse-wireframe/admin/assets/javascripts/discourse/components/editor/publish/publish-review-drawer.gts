@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { type ComponentLike, type ModifierLike } from "@glint/template";
+import { type ModifierLike } from "@glint/template";
 import type DialogService from "discourse/dialog-holder/services/dialog";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -13,7 +12,6 @@ import type SiteSettingsService from "discourse/services/site-settings";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTabs from "discourse/ui-kit/d-tabs";
-import DToggleSwitchUntyped from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dCloseOnClickOutsideUntyped from "discourse/ui-kit/modifiers/d-close-on-click-outside";
@@ -57,25 +55,6 @@ const dCloseOnClickOutside =
     };
   }>;
 
-// TODO(devxp-typescript-pending): drop once d-toggle-switch is authored in .gts
-// with a real Signature, then import it directly. Untyped .gjs today gives no
-// arg/attr types, so declaring its Element here lets the `{{on}}` modifier and
-// aria attributes attach to the switch (it spreads `...attributes` onto its
-// inner button).
-const DToggleSwitch = DToggleSwitchUntyped as unknown as ComponentLike<{
-  /** Toggle state and label configuration. */
-  Args: {
-    /** Whether the toggle is enabled. */
-    state?: boolean;
-    /** Translation key naming the toggle. */
-    label?: string;
-    /** Pre-translated toggle label. */
-    translatedLabel?: string;
-  };
-  /** Button element receiving splatted attributes. */
-  Element: HTMLButtonElement;
-}>;
-
 // TODO(devxp-typescript-pending): replace this local augmentation once core
 // exposes a typed extension mechanism for plugin site settings.
 interface WireframeSiteSettings extends SiteSettingsService {
@@ -84,27 +63,17 @@ interface WireframeSiteSettings extends SiteSettingsService {
   wireframe_custom_homepage?: boolean;
 }
 
-type ThemeActionResult = {
-  /** Newly created theme identifier, when the action succeeds. */
-  themeId?: number;
-  /** Error message returned when the action fails. */
-  error?: string;
-};
-
 /**
  * The save-and-publish review surface: a right-docked drawer that consolidates
- * everything about committing edits. Its Details tab groups the edited outlets by
- * the theme that owns them, so the author sees exactly where each region will
- * land — the directly-publishable themes and, separately, the active theme when
- * it can't be published to (a core or Git theme), with the companion / duplicate /
- * export escape hatches inline. Its Changes tab summarises, per outlet, how the
- * edited layout differs from what is live, with an optional raw-layout view.
+ * everything about committing edits. Its Details tab names the design the edits
+ * will land on (or notes that one is created on first publish) and lists the
+ * edited outlets. Its Changes tab summarises, per outlet, how the edited layout
+ * differs from what is live, with an optional raw-layout view.
  *
- * Opened from the toolbar Save button, the publish-target indicator, and the
- * blocked callout; all three flip `wireframeStaging.reviewDrawerOpen`. Mounted once at
- * the shell level so it survives tab switches. Save/publish/discard and the
- * escape hatches all live here — the toolbar carries only the button that opens
- * the drawer.
+ * Opened from the toolbar Save button and the design indicator; both flip
+ * `wireframeStaging.reviewDrawerOpen`. Mounted once at the shell level so it
+ * survives tab switches. Save/publish/discard all live here — the toolbar carries
+ * only the button that opens the drawer.
  */
 export default class PublishReviewDrawer extends Component {
   @service declare wireframeWorkspace: WireframeWorkspaceService;
@@ -124,11 +93,6 @@ export default class PublishReviewDrawer extends Component {
   /** Banner message for a failed save/publish, or null. */
   @tracked saveError: string | null = null;
 
-  /** In-flight theme-producing escape-hatch action (create component / duplicate). */
-  @tracked isWorking = false;
-
-  /** Inline error from an escape-hatch action, or null. */
-  @tracked actionError: string | null = null;
   @tracked activeTab = "details";
 
   isRawExpanded = (outletName: string) => this.#expandedRaw.has(outletName);
@@ -144,14 +108,6 @@ export default class PublishReviewDrawer extends Component {
 
   /** Outlets whose raw-layout view is expanded on the Changes tab. */
   #expandedRaw = trackedSet<string>();
-
-  /**
-   * The staged homepage opt-in choice, applied by publish; null while the
-   * author hasn't touched the toggle (the row then mirrors the live setting).
-   * Deliberately component-local: the drawer is destroyed with the editing
-   * session, so the intent can never outlive it.
-   */
-  @tracked _homepageIntent: boolean | null = null;
 
   get isOpen() {
     return (
@@ -169,26 +125,6 @@ export default class PublishReviewDrawer extends Component {
     return this.targets.flatMap((group) => group.outlets);
   }
 
-  /**
-   * The theme this session edits against, surfaced when it can't be published to
-   * directly so the companion / duplicate escape hatches have a home. These
-   * actions target the active theme (not a per-group theme), so they live in one
-   * place rather than inside each group.
-   */
-  get showActiveThemeEscapeHatch() {
-    const target = this.wireframePublishTarget.activeThemeTarget;
-    return target != null && !target.publishable;
-  }
-
-  get activeThemeTarget() {
-    return this.wireframePublishTarget.activeThemeTarget;
-  }
-
-  /** Whether at least one edited outlet can be published directly. */
-  get hasPublishableTargets() {
-    return this.targets.some((group) => group.publishable);
-  }
-
   /** Whether Save draft is available (unsaved edits exist and nothing is in flight). */
   get canSaveDraft() {
     return (
@@ -200,48 +136,12 @@ export default class PublishReviewDrawer extends Component {
 
   /** Whether Publish is available (something to commit and nothing in flight). */
   get canPublish() {
-    return (
-      !this.isSaving &&
-      (this.hasPublishableTargets || this.homepageIntentPending)
-    );
-  }
-
-  /** Whether the homepage opt-in row may be offered in this session/state. */
-  get showHomepageToggle() {
-    return this.wireframePublishTarget.homepageToggleAvailable;
-  }
-
-  /** The homepage setting's live value for the rendered theme. */
-  get homepageCurrentValue() {
-    return this.siteSettings.wireframe_custom_homepage === true;
-  }
-
-  /** The state the homepage row displays: the staged intent, else the live value. */
-  get homepageDesired() {
-    return this._homepageIntent ?? this.homepageCurrentValue;
+    return !this.isSaving && this.targets.length > 0;
   }
 
   /** Whether the homepage layout that publish would write renders anything. */
   get canEnableHomepage() {
     return this.wireframeLayoutQuery.hasRenderableContent(HOMEPAGE_OUTLET);
-  }
-
-  /**
-   * Whether the homepage toggle is interactable. Switching ON is gated on the
-   * post-publish layout having content — an enabled-but-empty homepage renders
-   * a blank page for visitors; switching OFF is always permitted.
-   */
-  get homepageToggleDisabled() {
-    return !this.homepageDesired && !this.canEnableHomepage;
-  }
-
-  /** Whether publish must also write the staged homepage choice. */
-  get homepageIntentPending() {
-    return (
-      this.showHomepageToggle &&
-      this._homepageIntent != null &&
-      this._homepageIntent !== this.homepageCurrentValue
-    );
   }
 
   @action
@@ -277,15 +177,6 @@ export default class PublishReviewDrawer extends Component {
   }
 
   @action
-  toggleHomepageIntent() {
-    const next = !this.homepageDesired;
-    if (next && !this.canEnableHomepage) {
-      return;
-    }
-    this._homepageIntent = next;
-  }
-
-  @action
   publish() {
     if (!this.canPublish) {
       return;
@@ -316,36 +207,6 @@ export default class PublishReviewDrawer extends Component {
     });
   }
 
-  @action
-  async exportOutlet(outletName: string) {
-    this.actionError = await this.wireframeStaging.exportOutlet(outletName);
-  }
-
-  @action
-  confirmCreateComponent() {
-    this.dialog.confirm({
-      title: i18n("wireframe.outlet.create_component_confirm_title"),
-      message: i18n("wireframe.outlet.create_component_confirm_message"),
-      confirmButtonLabel: "wireframe.outlet.create_component_confirm_button",
-      didConfirm: () =>
-        this.#runThemeAction(
-          () => this.wireframeStaging.createCustomizationComponent(),
-          { isComponent: true }
-        ),
-    });
-  }
-
-  @action
-  confirmDuplicate() {
-    this.dialog.confirm({
-      title: i18n("wireframe.outlet.duplicate_confirm_title"),
-      message: i18n("wireframe.outlet.duplicate_confirm_message"),
-      confirmButtonLabel: "wireframe.outlet.duplicate_confirm_button",
-      didConfirm: () =>
-        this.#runThemeAction(() => this.wireframeStaging.duplicateForEditing()),
-    });
-  }
-
   async #performSaveDrafts() {
     this.isSaving = true;
     this.saveError = null;
@@ -359,13 +220,35 @@ export default class PublishReviewDrawer extends Component {
   async #performPublish() {
     this.isSaving = true;
     this.saveError = null;
+    let previewed = false;
     try {
+      if (this.targets.length > 0 && !this.wireframePublishTarget.hasDesign) {
+        this.saveError = await this.#createDesignForPublish();
+        if (this.saveError != null) {
+          return;
+        }
+      }
+      let useDesign = false;
+      if (
+        this.wireframePublishTarget.hasDesign &&
+        !this.wireframePublishTarget.designInUse
+      ) {
+        const choice = await this.#askToUseDesign();
+        if (choice == null) {
+          return;
+        }
+        previewed = true;
+        useDesign = choice === "use";
+      }
       // The service owns the per-outlet owner targeting, the stale-version
       // conflict prompt, and the edit-state reconciliation; a banner string comes
       // back for any non-conflict error, or null on success.
       this.saveError = await this.wireframeStaging.publishEditedOutlets();
-      if (this.saveError == null) {
-        this.saveError = await this.#applyHomepageIntent();
+      if (this.saveError == null && useDesign) {
+        this.saveError = await this.#useDesign();
+      }
+      if (this.saveError == null && this.wireframePublishTarget.designInUse) {
+        this.saveError = await this.#enableHomepage();
       }
     } finally {
       this.isSaving = false;
@@ -377,83 +260,114 @@ export default class PublishReviewDrawer extends Component {
     // failed homepage write is safe.
     if (this.saveError == null) {
       this.wireframeWorkspace.exit();
+      // A previewed design's layouts are only on this page; reload so it shows
+      // what visitors see.
+      if (previewed) {
+        this.wireframePublishTarget.navigateToThemeInUse();
+      }
     }
   }
 
   /**
-   * Writes the staged homepage choice for the rendered theme, re-validating at
-   * apply time: the drawer survives SPA navigation, so an intent staged on the
-   * homepage must not fire from another page; and a publish that returned
-   * cleanly can still have skipped the homepage outlet (a Git-owned target, or
-   * a version conflict the author cancelled) — an edit state that survives the
-   * publish is the tell.
+   * Asks whether a design the theme doesn't use yet should be used once it's
+   * published.
    *
-   * @returns A banner message when the write failed or was refused, or null
-   *   when the choice was applied or there was nothing to apply.
+   * @returns `"use"`, `"publish"` to publish without using it, or null when
+   *   the author backs out.
    */
-  async #applyHomepageIntent(): Promise<string | null> {
-    if (!this.homepageIntentPending) {
+  async #askToUseDesign(): Promise<"use" | "publish" | null> {
+    let choice: "use" | "publish" | null = null;
+    await this.dialog.alert({
+      title: i18n("wireframe.design.use_prompt_title"),
+      message: i18n("wireframe.design.use_prompt_message", {
+        name: this.wireframePublishTarget.designName,
+      }),
+      buttons: [
+        {
+          label: i18n("wireframe.design.use_prompt_use"),
+          class: "btn-primary wireframe-use-design__use",
+          action: () => (choice = "use"),
+        },
+        {
+          label: i18n("wireframe.design.use_prompt_publish_only"),
+          class: "btn-default wireframe-use-design__publish-only",
+          action: () => (choice = "publish"),
+        },
+        {
+          label: i18n("cancel"),
+          class: "btn-flat wireframe-use-design__cancel",
+        },
+      ],
+    });
+    return choice;
+  }
+
+  /**
+   * Makes the session's design the one its theme uses.
+   *
+   * @returns A banner message when that failed, or null.
+   */
+  async #useDesign(): Promise<string | null> {
+    const designId = this.wireframePublishTarget.activeThemeId;
+    if (designId == null) {
       return null;
     }
-    const desired = this._homepageIntent!;
+    const error = await this.wireframeStaging.switchDesign(designId);
+    if (error == null) {
+      this.wireframePublishTarget.markDesignInUse(designId);
+    }
+    return error;
+  }
+
+  /**
+   * Switches the custom homepage on for the theme in use once the homepage
+   * layout has been published with something to show, so publishing a homepage is
+   * all it takes for visitors to see it. Re-validated at apply time: the drawer
+   * survives SPA navigation, and a publish that returned cleanly can still have
+   * left the homepage outlet unpublished (a version conflict the author
+   * cancelled).
+   *
+   * @returns A banner message when the write failed, or null when it was applied
+   *   or there was nothing to do.
+   */
+  async #enableHomepage(): Promise<string | null> {
     const themeId = this.wireframePublishTarget.homepageThemeId;
-    if (themeId == null) {
+    if (
+      themeId == null ||
+      !this.wireframePublishTarget.homepageToggleAvailable ||
+      this.siteSettings.wireframe_custom_homepage === true ||
+      this.wireframeMutationEngine
+        .editedOutletNames()
+        .includes(HOMEPAGE_OUTLET) ||
+      !this.canEnableHomepage
+    ) {
       return null;
-    }
-    if (desired) {
-      if (
-        this.wireframeMutationEngine
-          .editedOutletNames()
-          .includes(HOMEPAGE_OUTLET)
-      ) {
-        return i18n("wireframe.review.use_as_homepage_unpublished");
-      }
-      if (!this.canEnableHomepage) {
-        return i18n("wireframe.review.use_as_homepage_empty");
-      }
     }
     try {
-      // Always an explicit boolean: a nil value makes the endpoint delete the
-      // override, which errors when no override row exists yet.
       await ajax(`/admin/themes/${themeId}/site-setting`, {
         type: "PUT",
-        data: { name: "wireframe_custom_homepage", value: desired },
+        data: { name: "wireframe_custom_homepage", value: true },
       });
     } catch (error) {
       return extractError(error, i18n("generic_error"));
     }
     // Mirror what the MessageBus subscriber would apply, so the session doesn't
     // depend on the echo arriving before teardown.
-    this.siteSettings.wireframe_custom_homepage = desired;
-    this._homepageIntent = null;
+    this.siteSettings.wireframe_custom_homepage = true;
     return null;
   }
 
-  // Runs a theme-producing escape-hatch action; on success reloads onto the new
-  // theme so its layers load and Publish enables, otherwise surfaces the error.
-  async #runThemeAction(
-    produce: () => Promise<ThemeActionResult>,
-    {
-      isComponent = false,
-    }: {
-      /** Whether the produced theme is a component rather than a parent theme. */
-      isComponent?: boolean;
-    } = {}
-  ): Promise<void> {
-    this.isWorking = true;
-    this.actionError = null;
-    try {
-      const { themeId, error } = await produce();
-      if (themeId) {
-        this.wireframePublishTarget.navigateToEditTheme(themeId, {
-          isComponent,
-        });
-      } else {
-        this.actionError = error ?? null;
-      }
-    } finally {
-      this.isWorking = false;
-    }
+  /**
+   * Creates the design the edits will publish to, named by the header title (or
+   * its placeholder). On success the session is bound to it, so the publish that
+   * follows writes there.
+   *
+   * @returns A banner message when the design couldn't be created, or null.
+   */
+  async #createDesignForPublish(): Promise<string | null> {
+    const name = this.wireframePublishTarget.designName;
+    const { themeId, error } = await this.wireframeStaging.createDesign(name);
+    return themeId ? null : (error ?? i18n("wireframe.design.create_failed"));
   }
 
   <template>
@@ -498,86 +412,27 @@ export default class PublishReviewDrawer extends Component {
             @key="details"
             @label={{i18n "wireframe.review.tab_details"}}
           >
-            {{#if this.showActiveThemeEscapeHatch}}
-              <section class="wireframe-review__escape">
-                <p class="wireframe-review__escape-notice">
-                  {{#if this.activeThemeTarget.isSystem}}
-                    {{i18n "wireframe.outlet.system_notice"}}
-                  {{else}}
-                    {{i18n "wireframe.outlet.git_notice"}}
-                  {{/if}}
-                </p>
-                <DButton
-                  class="btn-primary wireframe-review__create-component"
-                  @action={{this.confirmCreateComponent}}
-                  @disabled={{this.isWorking}}
-                  @label="wireframe.outlet.create_component"
-                  @title={{i18n "wireframe.outlet.create_component_title"}}
-                />
-                {{#unless this.activeThemeTarget.isSystem}}
-                  <DButton
-                    class="btn-default wireframe-review__duplicate"
-                    @action={{this.confirmDuplicate}}
-                    @disabled={{this.isWorking}}
-                    @label="wireframe.outlet.duplicate"
-                    @title={{i18n "wireframe.outlet.duplicate_title"}}
-                  />
-                {{/unless}}
-                {{#if this.actionError}}
-                  <p class="wireframe-review__escape-error" role="alert">
-                    {{this.actionError}}
-                  </p>
-                {{/if}}
-              </section>
-            {{/if}}
-
-            {{#if this.showHomepageToggle}}
-              <section class="wireframe-review__homepage">
-                <div class="wireframe-review__homepage-row">
-                  <DToggleSwitch
-                    aria-describedby={{if
-                      this.homepageToggleDisabled
-                      "wireframe-review-homepage-hint"
-                    }}
-                    aria-label={{i18n "wireframe.review.use_as_homepage"}}
-                    disabled={{this.homepageToggleDisabled}}
-                    @state={{this.homepageDesired}}
-                    @translatedLabel={{i18n "wireframe.review.use_as_homepage"}}
-                    {{on "click" this.toggleHomepageIntent}}
-                  />
-                </div>
-                {{#if this.homepageToggleDisabled}}
-                  <p
-                    class="wireframe-review__homepage-hint"
-                    id="wireframe-review-homepage-hint"
-                  >
-                    {{i18n "wireframe.review.use_as_homepage_empty"}}
-                  </p>
-                {{else if this.homepageIntentPending}}
-                  <p class="wireframe-review__homepage-hint">
-                    {{i18n "wireframe.review.use_as_homepage_pending"}}
-                  </p>
-                {{/if}}
-              </section>
-            {{/if}}
-
             {{#each this.targets as |group|}}
               <section class="wireframe-review__group">
                 <div class="wireframe-review__group-header">
                   <span class="wireframe-review__group-theme">
-                    {{dIcon (if group.publishable "paintbrush" "lock")}}
-                    {{group.themeName}}
+                    {{dIcon "paintbrush"}}
+                    {{#if group.publishable}}
+                      {{group.themeName}}
+                    {{else}}
+                      {{this.wireframePublishTarget.designName}}
+                    {{/if}}
                   </span>
                   <span
                     class={{dConcatClass
                       "wireframe-review__group-status"
-                      (if group.publishable "--ok" "--blocked")
+                      (if group.publishable "--ok" "--pending")
                     }}
                   >
                     {{#if group.publishable}}
                       {{i18n "wireframe.review.target_publishable"}}
                     {{else}}
-                      {{i18n "wireframe.review.target_blocked"}}
+                      {{i18n "wireframe.review.target_new_design"}}
                     {{/if}}
                   </span>
                 </div>
@@ -588,17 +443,8 @@ export default class PublishReviewDrawer extends Component {
                         class="wireframe-review__outlet-name"
                       >{{outletName}}</code>
                       <div class="wireframe-review__outlet-actions">
-                        {{#if group.isGit}}
-                          <DButton
-                            class="btn-flat wireframe-review__export"
-                            @action={{fn this.exportOutlet outletName}}
-                            @disabled={{this.isWorking}}
-                            @icon="download"
-                            @label="wireframe.outlet.export"
-                            @title={{i18n "wireframe.outlet.export_title"}}
-                          />
-                        {{else if (this.isOutletPublished outletName)}}
-                          {{#if group.publishable}}
+                        {{#if group.publishable}}
+                          {{#if (this.isOutletPublished outletName)}}
                             <DButton
                               class="btn-flat btn-danger wireframe-review__reset"
                               @action={{fn this.confirmReset outletName}}

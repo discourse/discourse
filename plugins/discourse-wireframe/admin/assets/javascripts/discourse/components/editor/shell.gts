@@ -15,8 +15,8 @@ import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-a
 import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import { i18n } from "discourse-i18n";
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
+import DesignTitle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/design-title";
 import EditorPanelSwitcher from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/panel-switcher";
-import PublishTargetStatus from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/publish-target-status";
 import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
 import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
@@ -25,7 +25,6 @@ import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/comp
 import IssuesPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/issues/issues-panel";
 import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-panel";
 import PalettePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/palette-panel";
-import PublishBlockedCallout from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-blocked-callout";
 import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
 import type WireframeDragDwellService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-dwell";
 import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
@@ -231,9 +230,9 @@ export default class EditorShell extends Component {
             />
           </div>
 
-          {{! Center zone — passive status naming where edits will publish. }}
+          {{! Center zone — the design name, editable in place, plus its menu. }}
           <div class="toolbar-center">
-            <PublishTargetStatus />
+            <DesignTitle />
           </div>
 
           {{! Right zone — view options and the commit action. }}
@@ -266,8 +265,6 @@ export default class EditorShell extends Component {
             />
           </div>
         </div>
-
-        <PublishBlockedCallout />
 
         <EditorPanelSwitcher as |panel|>
           {{#if (eq panel "palette")}}

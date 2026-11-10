@@ -8,9 +8,21 @@ const SCHEMA_VERSION = 1;
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 const COMPANION_URL = "/admin/plugins/wireframe/companion.json";
 
+/** A named design of a theme. */
+export type Design = {
+  /** The design component's theme ID. */
+  id: number;
+  /** Name the author gave the design. */
+  name: string;
+  /** Whether the design is the one installed on the theme. */
+  active: boolean;
+};
+
 type CompanionResponse = {
-  /** Existing companion theme ID, or `null` when none exists. */
+  /** Installed design's theme ID, or `null` when none is installed. */
   companion_id: number | null;
+  /** All designs of the theme. */
+  designs?: Design[];
 };
 
 type DraftRowResponse = {
@@ -60,27 +72,33 @@ export default class WireframeDraftsService extends Service {
   /** Resolves the live layout that is serialized into a draft. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 
-  /** Per-session cache of `themeId → companion id (or null)`; the mapping is stable within a load. */
-  #companionCache = new Map<number, number | null>();
-
   /**
-   * The id of a theme's block-layout companion component (a publishable child that
-   * holds its overrides), or null when there is none. Lets the editor target an
-   * existing companion on re-entry instead of re-offering to set one up. Cached
-   * per session; a transport error degrades to null (no companion).
+   * The id of the design installed on a theme (the local component that holds its
+   * overrides), or null when none is. Lets the editor target the installed design
+   * on entry. A transport error degrades to null (no design).
    *
-   * @param themeId - Theme whose companion should be resolved.
-   * @returns The companion theme ID, or `null` when none exists.
+   * @param themeId - Theme whose installed design should be resolved.
+   * @returns The design's theme ID, or `null` when none is installed.
    */
   async companionId(themeId: number): Promise<number | null> {
+    return (await this.fetchDesigns(themeId)).installedId;
+  }
+
+  /**
+   * Every design of a theme plus which one is installed. Never rejects: a
+   * transport error reads as "no designs".
+   *
+   * @param themeId - Theme whose designs should be listed.
+   */
+  async fetchDesigns(themeId: number): Promise<{
+    /** Installed design's ID, or `null`. */
+    installedId: number | null;
+    /** All designs of the theme, newest first. */
+    designs: Design[];
+  }> {
     if (themeId == null) {
-      return null;
+      return { installedId: null, designs: [] };
     }
-    const cachedCompanionId = this.#companionCache.get(themeId);
-    if (cachedCompanionId !== undefined) {
-      return cachedCompanionId;
-    }
-    let companionId: number | null;
     try {
       // TODO(devxp-typescript-pending): remove this response cast once core's
       // `ajax` helper exposes a generic response type.
@@ -88,12 +106,13 @@ export default class WireframeDraftsService extends Service {
         type: "GET",
         data: { theme_id: themeId },
       })) as CompanionResponse;
-      companionId = response?.companion_id ?? null;
+      return {
+        installedId: response?.companion_id ?? null,
+        designs: response?.designs ?? [],
+      };
     } catch {
-      companionId = null;
+      return { installedId: null, designs: [] };
     }
-    this.#companionCache.set(themeId, companionId);
-    return companionId;
   }
 
   /**

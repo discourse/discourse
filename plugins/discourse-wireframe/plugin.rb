@@ -8,8 +8,11 @@
 
 register_asset "stylesheets/wireframe.scss"
 register_asset "stylesheets/admin/wireframe-chrome.scss", :admin
+register_asset "stylesheets/admin/wireframe-empty-homepage.scss", :admin
 
 enabled_site_setting :wireframe_enabled
+
+add_admin_route("wireframe.admin.title", "discourse-wireframe", { use_new_show_route: true })
 
 module ::DiscourseWireframe
   PLUGIN_NAME = "discourse-wireframe"

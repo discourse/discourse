@@ -200,11 +200,6 @@ describe "Edit wireframe cards" do
     cards.show_media_stories
     cards.select_speaker
     cards.position_speaker_image(:feature, x: 20, y: 80)
-    editor.create_customization_component
-    dialog.click_yes
-    expect(editor).to have_publishable_target
-    cards.show_media_stories
-    cards.select_speaker
     cards.position_speaker_image(:feature, x: 25, y: 75)
     cards.toggle_identity_group
     cards.fill_identity_name(saved_name)

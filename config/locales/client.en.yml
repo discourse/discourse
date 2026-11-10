@@ -6380,9 +6380,6 @@ en:
         today: "Today"
         custom: "Custom"
 
-    custom_homepage:
-      admin_message: "This site's homepage is set to display custom content, but nothing is configured to render here yet. (This message is only shown to site administrators.)"
-
     browser_update: 'Unfortunately, <a href="https://discourse.org/about#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:

@@ -1070,30 +1070,58 @@ body.wireframe-active {
   }
 }
 
-.wireframe-target-status {
+.wireframe-design-title {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
   min-width: 0;
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
 
-  .d-icon {
-    font-size: var(--font-down-2);
+  .wireframe-design-title__text,
+  .wireframe-design-title__input {
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+    background: none;
+    box-shadow: none;
+    color: var(--primary);
+    font: inherit;
+    font-size: var(--font-0);
+    font-weight: 600;
+    line-height: 1.3;
+    box-sizing: content-box;
   }
 
-  &__label {
+  .wireframe-design-title__text {
+    max-width: 24ch;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: text;
+
+    &:hover {
+      border-color: var(--primary-low-mid);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 1px;
+    }
   }
 
-  &.--blocked {
-    color: var(--danger);
+  .wireframe-design-title__input {
+    width: calc(var(--title-length, 12) * 1ch);
+    min-width: 8ch;
+    max-width: 32ch;
+    border-color: var(--tertiary);
+    background: var(--secondary);
+    outline: none;
+  }
 
-    .d-icon {
-      color: var(--danger);
-    }
+  .wireframe-design-title__menu {
+    flex-shrink: 0;
   }
 }
 
@@ -3740,32 +3768,6 @@ body.wf-conditions-panel-dragging {
   user-select: none;
 }
 
-.wireframe-blocked-callout {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  background: var(--tertiary-low);
-  border-bottom: 1px solid var(--tertiary);
-  font-size: var(--font-down-1);
-
-  &__icon .d-icon {
-    color: var(--tertiary);
-  }
-
-  &__message {
-    flex: 1;
-    overflow-wrap: anywhere;
-  }
-
-  &__setup,
-  &__dismiss {
-    flex-shrink: 0;
-  }
-}
-
 .wireframe-review {
   position: fixed;
   top: 0;
@@ -3901,8 +3903,8 @@ body.wf-conditions-panel-dragging {
       color: var(--success);
     }
 
-    &.--blocked {
-      color: var(--danger);
+    &.--pending {
+      color: var(--primary-medium);
     }
   }
 
@@ -5956,5 +5958,20 @@ body.wireframe-active--dim-non-editable
     color: var(--danger);
     font-size: var(--font-down-1);
     margin: 0.25rem 0;
+  }
+}
+
+.wireframe-designs {
+  &__name {
+    font-weight: 600;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+
+    &.--active {
+      color: var(--success);
+      font-weight: 600;
+    }
   }
 }
