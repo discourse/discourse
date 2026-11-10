@@ -201,8 +201,11 @@ function audioHTML(token) {
   </audio>`;
 }
 
+// `[1-9][0-9]*` rather than `[1-9]+[0-9]*`: overlapping quantifiers force a
+// rejected match to retry every split of a long digit run, which lets a small
+// user-supplied suffix burn unbounded cooking time.
 const IMG_SIZE_REGEX =
-  /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
+  /^([1-9][0-9]*)x([1-9][0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2})([%x]?))?$/;
 function isKnownImageSuffix(segment) {
   return (
     segment === "video" ||
