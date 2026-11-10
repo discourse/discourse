@@ -313,8 +313,8 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
             CookedPostProcessor.new(Fabricate(:post)).get_size("/secure-uploads/#{path}"),
           ).to eq(nil)
           expect {
-            HotlinkedMediaDownloader.download("/secure-uploads/#{path}", -1, tmp_file_name: "x")
-          }.to raise_error(HotlinkedMediaDownloader::ImageBrokenError)
+            Jobs::PullHotlinkedImages.new.attempt_download("/secure-uploads/#{path}", -1)
+          }.to raise_error(Jobs::PullHotlinkedImages::ImageBrokenError)
         end
       end
     end

@@ -183,11 +183,19 @@ class TopicsBulkAction
       if t.first_post.revise(@user, changes, bulk_revision_opts)
         @changed_ids << t.id
       else
-        TopicCategoryChangeValidator
-          .safe_revision_errors(topic: t, guardian:, category_changed: true)
-          .each { |msg| @errors[msg] += 1 }
+        change_category_errors(t).each { |msg| @errors[msg] += 1 }
       end
     end
+  end
+
+  def change_category_errors(topic)
+    tag_ids = topic.tags.map(&:id).uniq
+    if tag_ids.present? &&
+         DiscourseTagging.visible_tags(guardian).where(id: tag_ids).count < tag_ids.size
+      return [I18n.t("category.errors.disallowed_tags_generic")]
+    end
+
+    topic.errors.full_messages
   end
 
   def convert_to_public_topic
