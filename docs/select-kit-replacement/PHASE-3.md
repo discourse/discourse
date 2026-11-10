@@ -194,8 +194,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     ("moderators Group", "someone@example.com Email", a user chip has none) and the removal hint;
     rows read username, name and position; the about page's pick-one user and group fields read
     their name, placeholder and FormKit description.
-- ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
-  handoff.
+- ☑ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
+  handoff (2026-11-10).
   - ☑ `DSelectTopic` and `DSelectTopicList` over the site search, with held topics looked up
     together through a new read-only `GET /topics/lookup` (`Topic::LookupByIds`, at most 50
     ids, visibility through the guardian, mutes ignored) and `Topic.findByIds` (2026-10-31).
@@ -240,5 +240,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 - ☐ Remove the removed-name guard tagged `TODO (select-kit-rework-merge)` (see "Customizable
   texts" above).
-- ☐ Decide whether `DSelectTopicList` stays. It has had no callers since the pickers inside modals
-  moved to `DSelectTopic` (2026-11-03), and is kept for now because a use case may come up.
+- ☐ Move the ad-hoc selectors that land on `main` while the branch is open to the matching
+  recipe or `DSelect` component, behind the flag like every other call site. Check each `main`
+  merge for new pickers built on `DMenu` or `DMultiSelect`, not only new select-kit uses. Known:
+  - ☐ The upcoming change group control (`upcoming-change-group-control.gjs`, #45142, merged
+    2026-11-09) uses `EmailGroupUserChooser` and arrives with the next `main` merge. #45929
+    (open) moves it to `DMultiSelect`.
+
+`DSelectTopicList` stays (decided 2026-11-10): it has no callers since the pickers inside modals
+moved to `DSelectTopic` (2026-11-03), and a use case for it is planned.
