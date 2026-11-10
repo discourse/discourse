@@ -56,6 +56,17 @@ RSpec.describe StaticController do
         expect(response.media_type).to eq("image/vnd.microsoft.icon")
         expect(response.body.b).to eq(File.binread(file_from_fixtures("smallest.ico", "images")))
       end
+
+      it "serves the default favicon when the file is not in the store" do
+        SiteSetting.favicon = upload
+        SiteIconManager.favicon.update_columns(url: "/403.html")
+
+        get "/favicon/proxied"
+
+        expect(response.body.b).to eq(
+          File.binread(Rails.public_path.join("images/default-favicon.png")),
+        )
+      end
     end
 
     context "with external store" do

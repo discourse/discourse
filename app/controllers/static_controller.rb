@@ -225,7 +225,8 @@ class StaticController < ApplicationController
               file&.unlink
             end
           else
-            File.read(Rails.public_path.join(favicon.url[1..-1]))
+            path = Discourse.store.path_for(favicon)
+            path ? File.read(path) : ""
           end
         end
 

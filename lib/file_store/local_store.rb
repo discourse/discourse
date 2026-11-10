@@ -11,9 +11,9 @@ module FileStore
 
     def remove_file(url, _)
       return unless is_relative?(url)
-      source = "#{public_dir}#{url}"
-      return unless File.exist?(source)
-      destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
+      source = contained_path(url, relative_base_url)
+      return unless source && File.file?(source)
+      destination = source.sub(File.join(public_dir, relative_base_url), tombstone_dir)
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.remove(destination) if File.exist?(destination)
@@ -56,7 +56,9 @@ module FileStore
 
     def path_for(upload)
       url = upload.try(:url)
-      "#{public_dir}#{upload.url}" if url && url[0] == "/" && url[1] != "/"
+      if url && url[0] == "/" && url[1] != "/"
+        contained_path(url, upload_path, relative_base_url, "images")
+      end
     end
 
     def purge_tombstone(grace_period)
@@ -123,6 +125,11 @@ module FileStore
     end
 
     private
+
+    def contained_path(url, *dirs)
+      path = File.expand_path("#{public_dir}#{url}")
+      path if path.start_with?(*dirs.map { File.join(public_dir, it, "") })
+    end
 
     def list_missing(model)
       count = 0
