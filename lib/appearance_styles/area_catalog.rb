@@ -18,6 +18,8 @@ module AppearanceStyles
         :icon,
         :background,
         :hover_background,
+        :paints_background,
+        :within,
       )
 
     PAGE_BACKGROUND = "var(--secondary)"
@@ -44,6 +46,8 @@ module AppearanceStyles
                 icon: entry["icon"] == true,
                 background: entry["background"] || PAGE_BACKGROUND,
                 hover_background: entry["hover_background"],
+                paints_background: entry.key?("background"),
+                within: Array(entry["within"]).freeze,
               ),
             ]
           end
@@ -55,6 +59,15 @@ module AppearanceStyles
     def text_color(key, entry)
       color = entry.fetch("text_color") { raise ArgumentError, "area #{key} needs a text_color" }
       color == "none" ? nil : color
+    end
+
+    # The area and the areas around it, innermost first, ending with the page.
+    def chain(area)
+      [
+        area,
+        *area.within.map { |key| @areas.fetch(key) },
+        (@areas["page"] if area.key != "page"),
+      ].compact
     end
 
     def [](key)

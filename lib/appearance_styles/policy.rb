@@ -228,6 +228,7 @@ module AppearanceStyles
       @checked_rules = []
       rules.each_with_index { |rule, index| blocks.concat(check_rule(rule, "rules[#{index}]")) }
       readable_together? if @errors.empty?
+      readable_nested? if @errors.empty?
 
       css = blocks.join("\n")
       if css.bytesize > MAX_CSS_BYTES
@@ -509,6 +510,95 @@ module AppearanceStyles
         end
     end
 
+    # Text in an area shows on the background of the nearest area around it
+    # that paints one, and may take its color from an area around it, so
+    # rules on surrounding areas are checked with the text inside them.
+    def readable_nested?
+      rules_by_area = @checked_rules.group_by { |rule| rule[:area].key }
+      @catalog.all.all? do |area|
+        chain = @catalog.chain(area)
+        outer = chain.drop(1)
+        next true if outer.none? { |around| rules_by_area[around.key] }
+
+        own_rules = rules_by_area[area.key] || []
+        texts =
+          own_rules.filter_map do |rule|
+            [rule[:declarations]["color"], rule] if rule[:declarations]["color"]
+          end
+        if texts.empty?
+          next true if area.text_color.nil?
+          texts = [[area.text_color, nil]]
+          inherited =
+            outer
+              .lazy
+              .map do |around|
+                (rules_by_area[around.key] || []).select { |rule| rule[:declarations]["color"] }
+              end
+              .find(&:any?)
+          texts += inherited.map { |rule| [rule[:declarations]["color"], rule] } if inherited
+        end
+
+        backgrounds = nil
+        chain.each do |node|
+          painted =
+            (rules_by_area[node.key] || []).flat_map do |rule|
+              background_values(rule[:declarations]).map { |background| [background, rule] }
+            end
+          if painted.any?
+            backgrounds = painted
+            break
+          end
+          if node.paints_background
+            backgrounds = CssValue.parse(node.background).map { |background| [background, nil] }
+            break
+          end
+        end
+        backgrounds ||=
+          CssValue.parse(AreaCatalog::PAGE_BACKGROUND).map { |background| [background, nil] }
+
+        texts.all? do |text, text_rule|
+          backgrounds.all? do |background, background_rule|
+            sources = [text_rule, background_rule].compact.uniq
+            # a rule's own text on its own background was checked with the rule
+            next true if sources.all? { |rule| rule[:area] == area }
+            next true if sources.empty?
+
+            readable_on?(text, background, area, sources.map { |rule| rule[:path] }.join(" and "))
+          end
+        end
+      end
+    end
+
+    # Like variable pairs, AA or no worse than core's own default for the area,
+    # which misses AA in places (category headings, links).
+    def readable_on?(text, background, area, path)
+      %w[light dark].all? do |mode|
+        text_hex = resolve_color(text, mode)
+        background_hex = resolve_node(background, mode)
+        next true if !text_hex.is_a?(String) || !background_hex.is_a?(String)
+
+        required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+        default_text = area.text_color && resolve_color(area.text_color, mode, use_draft: false)
+        default_background = resolve_color(default_background(area), mode, use_draft: false)
+        if default_text.is_a?(String) && default_background.is_a?(String)
+          required = [required, contrast(default_text, default_background)].min
+        end
+
+        ratio = contrast(text_hex, background_hex)
+        next true if ratio >= required
+        error(
+          path,
+          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode; it needs #{required}:1",
+        )
+      end
+    end
+
+    # The background core shows behind an area's text.
+    def default_background(area)
+      painted = @catalog.chain(area).find(&:paints_background)
+      painted ? painted.background : AreaCatalog::PAGE_BACKGROUND
+    end
+
     def overlap?(first, second)
       states = [first[:state], second[:state]]
       return false if states.compact.size == 2 && states.uniq.size == 2 && !states.include?("hover")
@@ -574,19 +664,56 @@ module AppearanceStyles
     # backgrounds whose text is listed above.
     def variable_pairs
       @variable_pairs ||=
-        @registry.all.filter_map do |variable|
-          text = BACKGROUND_TEXT[variable.name]
-          match =
-            variable.name.match(/\A(.*?)(?:-bg-color|-background-color|-background)(--[a-z]+)?\z/)
-          if match
-            base, state = match.captures
-            text =
-              ["#{base}-text-color#{state}", "#{base}-color#{state}"].find do |name|
-                @registry[name]
-              end || text
-          end
-          [variable.name, text] if text
+        begin
+          pairs =
+            @registry.all.flat_map do |variable|
+              texts = [BACKGROUND_TEXT[variable.name]]
+              match =
+                variable.name.match(
+                  /\A(.*?)(?:-bg-color|-background-color|-background)(--[a-z]+)?\z/,
+                )
+              if match
+                base, state = match.captures
+                named =
+                  ["#{base}-text-color#{state}", "#{base}-color#{state}"].find do |name|
+                    @registry[name]
+                  end
+                icon = "#{base}-icon-color#{state}"
+                texts = [named || texts.first, (icon if @registry[icon])]
+              end
+              texts.compact.map { |text| [variable.name, text] }
+            end
+          paired = pairs.map(&:last)
+          standalone =
+            @registry.all.filter_map do |variable|
+              next if !foreground?(variable) || paired.include?(variable.name)
+              [foreground_background(variable.name), variable.name]
+            end
+          pairs + standalone
         end
+    end
+
+    # Color variables core uses for text or icons.
+    def foreground?(variable)
+      variable.type == "color" &&
+        (
+          variable.name.match?(/-color(--[a-z-]+)?\z/) ||
+            variable.name.match?(/\A--token-color-(text|icon)-/)
+        ) && !variable.name.match?(/background|-bg-|bg-color|border|shadow|outline|divider|fill/)
+    end
+
+    # The background a text or icon variable without a pair shows on.
+    def foreground_background(name)
+      case name
+      when /\A--d-sidebar-/
+        "--d-sidebar-background"
+      when /\A--d-header-/
+        "--header_background"
+      when /\A--token-color-/
+        "--token-color-surface"
+      else
+        "--secondary"
+      end
     end
 
     # Text needs 4.5:1 and icons 3:1 (WCAG non-text contrast). Core's own

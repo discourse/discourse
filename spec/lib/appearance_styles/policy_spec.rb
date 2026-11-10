@@ -30,8 +30,9 @@ RSpec.describe AppearanceStyles::Policy do
       expect_valid(
         variables: {
           "--d-button-primary-bg-color" => "var(--tertiary)",
-          "--d-link-color" => "light-dark(#0a7, #4fd)",
+          "--d-link-color" => "light-dark(#06705a, #4fd)",
           "--d-sidebar-background" => "color-mix(in srgb, var(--secondary) 90%, var(--tertiary))",
+          "--d-sidebar-link-icon-color" => "var(--primary-high)",
         },
       )
     end
@@ -110,8 +111,8 @@ RSpec.describe AppearanceStyles::Policy do
           {
             area: "header",
             declarations: {
-              "background" => "linear-gradient(90deg, var(--primary), var(--primary-high))",
-              "color" => "var(--secondary)",
+              "background" =>
+                "linear-gradient(90deg, var(--header_background), color-mix(in srgb, var(--header_background) 40%, var(--tertiary)))",
             },
           },
           { area: "share_button", declarations: { "display" => "none" } },
@@ -201,15 +202,15 @@ RSpec.describe AppearanceStyles::Policy do
         run(
           variables: {
             "--d-border-radius" => "12px",
-            "--d-link-color" => "light-dark(#0a7, #4fd)",
+            "--d-link-color" => "light-dark(#06705a, #4fd)",
             "--d-logo-height" => "3em",
           },
           rules: [
             {
               area: "header",
               declarations: {
-                "background" => "linear-gradient(90deg, var(--primary), var(--primary-high))",
-                "color" => "var(--secondary)",
+                "background" =>
+                  "linear-gradient(90deg, var(--header_background), color-mix(in srgb, var(--header_background) 40%, var(--tertiary)))",
               },
             },
             {
@@ -227,7 +228,9 @@ RSpec.describe AppearanceStyles::Policy do
       compiled, _map = Stylesheet::Compiler.compile(result.css, "assistant.scss")
 
       expect(compiled).to include(":root:not(:has(>body.admin-interface))")
-      expect(compiled).to include("light-dark(#0a7, #4fd)").or include("light-dark(#0a7,#4fd)")
+      expect(compiled).to include("light-dark(#06705a, #4fd)").or include(
+             "light-dark(#06705a,#4fd)",
+           )
       expect(compiled).to include("body:not(.admin-interface) .topic-list-item:hover")
     end
 
@@ -355,6 +358,52 @@ RSpec.describe AppearanceStyles::Policy do
       expect(AppearanceStyles::AreaCatalog.instance["post_images"].text_color).to be_nil
     end
 
+    it "checks text in an area against the background of an area around it" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "post_body",
+              declarations: {
+                "background-color" => "var(--primary)",
+                "color" => "var(--secondary)",
+              },
+            },
+            { area: "post_headings", declarations: { "color" => "var(--primary)" } },
+          ],
+        },
+        "Headings in posts",
+      )
+      expect_valid(
+        {
+          rules: [
+            {
+              area: "post_body",
+              declarations: {
+                "background-color" => "light-dark(#ffffff, #000000)",
+              },
+            },
+            { area: "post_headings", declarations: { "color" => "var(--primary)" } },
+          ],
+        },
+      )
+    end
+
+    it "checks text color variables against the background they show on" do
+      expect_error(
+        { variables: { "--d-link-color" => "transparent" } },
+        "text needs an opaque color",
+      )
+      expect_error(
+        { variables: { "--d-link-color" => "light-dark(#ffffff, #000000)" } },
+        "--d-link-color on --secondary is",
+      )
+      expect_error(
+        { variables: { "--d-button-primary-icon-color" => "var(--tertiary)" } },
+        "--d-button-primary-icon-color on --d-button-primary-bg-color is",
+      )
+    end
+
     it "checks rules for the same area together when both can apply" do
       expect_error(
         {
@@ -468,6 +517,7 @@ RSpec.describe AppearanceStyles::Policy do
             variables: {
               "--d-button-primary-bg-color" => "var(--quaternary)",
               "--d-button-primary-text-color" => "light-dark(#1a1a1a, #1a1a1a)",
+              "--d-button-primary-icon-color" => "light-dark(#1a1a1a, #1a1a1a)",
             },
           },
           palettes:,
@@ -581,7 +631,7 @@ RSpec.describe AppearanceStyles::Policy do
         {
           rules: [
             {
-              area: "post",
+              area: "topic_map",
               declarations: {
                 "background-color" => "var(--primary-low)",
                 "color" => "var(--primary-low-mid)",
@@ -595,7 +645,7 @@ RSpec.describe AppearanceStyles::Policy do
       expect_valid(
         rules: [
           {
-            area: "post",
+            area: "topic_map",
             declarations: {
               "background-color" => "var(--primary-very-low)",
               "color" => "var(--primary-high)",
