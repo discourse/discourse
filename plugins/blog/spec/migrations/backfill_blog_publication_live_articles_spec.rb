@@ -8,14 +8,7 @@ RSpec.describe BackfillBlogPublicationLiveArticles do
   include_context "with blog editorial setup"
 
   fab!(:topic) { Fabricate(:topic, category: drafts, user: writer) }
-  fab!(:first_post) do
-    Fabricate(
-      :post,
-      topic:,
-      user: writer,
-      raw: "Read the guide at https://old.example.com/guide today.",
-    )
-  end
+  fab!(:first_post) { Fabricate(:post, topic:, user: writer) }
 
   let(:discussion_post) { publication.discussion_topic.first_post }
 
@@ -28,22 +21,14 @@ RSpec.describe BackfillBlogPublicationLiveArticles do
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
-  it "takes the discussion post's HTML, which already has any earlier hostname remap" do
-    DbHelper.remap("old.example.com", "new.example.com")
+  it "copies the approved snapshot, not a discussion post re-rendered after publishing" do
+    discussion_post.update_columns(cooked: "<p>A onebox refetched after approval.</p>")
 
     described_class.new.up
 
     expect(publication.reload).to have_attributes(
-      cooked: include("https://new.example.com/guide"),
-      image_url: "",
+      cooked: publication.published_revision.cooked,
+      image_url: publication.published_revision.data["image_url"],
     )
-  end
-
-  it "keeps the revision snapshot when the discussion post is gone" do
-    discussion_post.trash!
-
-    described_class.new.up
-
-    expect(publication.reload.cooked).to eq(publication.published_revision.cooked)
   end
 end
