@@ -3,12 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeGroupControl extends Component {
+  @service siteSettings;
+
   @tracked _saving = false;
   @tracked _draftGroups = null;
 
@@ -77,21 +81,40 @@ export default class UpcomingChangeGroupControl extends Component {
       }}
     >
       <div class="upcoming-change__group-controls">
-        <EmailGroupUserChooser
-          @onChange={{this.groupsChanged}}
-          @options={{hash
-            disabled=this.disabled
-            groupsOnly=true
-            useHeaderFilter=true
-            fullWidthWrap=true
-            lockedValues=@lockedGroups
-            excludedGroupIds=@disallowedGroups
-            includeEveryone=@includeEveryone
-            none="admin.upcoming_changes.select_groups"
-            headerAriaLabel=(i18n "admin.upcoming_changes.select_groups")
-          }}
-          @value={{this.groups}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectGroup
+            @disabled={{this.disabled}}
+            @emit="names"
+            @everyone={{if @includeEveryone true false}}
+            @exclude={{@disallowedGroups}}
+            @lockedValues={{@lockedGroups}}
+            @multiple={{true}}
+            @onChange={{this.groupsChanged}}
+            @texts={{hash
+              ariaLabel=(i18n "admin.upcoming_changes.select_groups")
+              placeholder=(i18n "admin.upcoming_changes.select_groups")
+            }}
+            @value={{this.groups}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <EmailGroupUserChooser
+            @onChange={{this.groupsChanged}}
+            @options={{hash
+              disabled=this.disabled
+              groupsOnly=true
+              useHeaderFilter=true
+              fullWidthWrap=true
+              lockedValues=@lockedGroups
+              excludedGroupIds=@disallowedGroups
+              includeEveryone=@includeEveryone
+              none="admin.upcoming_changes.select_groups"
+              headerAriaLabel=(i18n "admin.upcoming_changes.select_groups")
+            }}
+            @value={{this.groups}}
+          />
+        {{/if}}
         {{#unless @locked}}
           <DButton
             class={{dConcatClass

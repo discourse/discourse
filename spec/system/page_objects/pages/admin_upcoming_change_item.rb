@@ -74,29 +74,45 @@ module PageObjects
       end
 
       def group_selector
-        PageObjects::Components::SelectKit.new(
-          "#{change_item_selector(@setting_name)} .email-group-user-chooser",
-        )
+        if new_select_controls?
+          PageObjects::Components::UiKit::DSelect.at(
+            "#{change_item_selector(@setting_name)} .upcoming-change__group-controls .d-select",
+          )
+        else
+          PageObjects::Components::SelectKit.new(
+            "#{change_item_selector(@setting_name)} .email-group-user-chooser",
+          )
+        end
       end
 
       def has_editable_audience?
+        if new_select_controls?
+          return(
+            find_item(@setting_name).has_css?(
+              ".upcoming-change__group-controls .d-select__input:not([disabled])",
+            )
+          )
+        end
         find_item(@setting_name).has_css?(".email-group-user-chooser:not(.is-disabled)")
       end
 
       def has_locked_audience?(*group_names)
         item = find_item(@setting_name)
-        item.has_css?(".email-group-user-chooser.is-disabled") &&
-          item.has_no_css?(".upcoming-change__save-groups") &&
+        disabled =
+          if new_select_controls?
+            ".upcoming-change__group-controls .d-select__input[disabled]"
+          else
+            ".email-group-user-chooser.is-disabled"
+          end
+        item.has_css?(disabled) && item.has_no_css?(".upcoming-change__save-groups") &&
           item.has_css?(
             ".upcoming-change__groups-description",
             text: I18n.t("admin_js.admin.upcoming_changes.audience_locked"),
-          ) &&
-          group_names.all? do |group_name|
-            item.has_css?(".selected-choice[data-value='#{group_name}'] .d-icon-lock")
-          end
+          ) && group_names.all? { |group_name| has_locked_group?(group_name) }
       end
 
       def open_group_selector
+        return if new_select_controls?
         if group_selector.is_collapsed?
           group_selector.collapsed_component.find(".select-kit-header").send_keys(:enter)
         end
@@ -105,21 +121,27 @@ module PageObjects
       def has_groups?(*group_names)
         open_group_selector
         group_names.all? do |group_name|
-          find_item(@setting_name).has_css?(".selected-choice[data-value='#{group_name}']")
+          find_item(@setting_name).has_css?("#{chip_selector}[data-value='#{group_name}']")
         end
       end
 
       def has_no_groups?
-        find_item(@setting_name).has_no_css?(".selected-choice")
+        find_item(@setting_name).has_no_css?(chip_selector)
       end
 
       def add_group(group_name)
         open_group_selector
         group_selector.search(group_name)
-        group_selector.select_row_by_value(group_name)
+        if new_select_controls?
+          group_selector.select_value(group_name)
+          group_selector.close
+        else
+          group_selector.select_row_by_value(group_name)
+        end
       end
 
       def remove_group(group_name)
+        return group_selector.remove_trigger_chip(group_name) if new_select_controls?
         open_group_selector
         find_item(@setting_name).find(".selected-choice[data-value='#{group_name}']").click
       end
@@ -147,10 +169,21 @@ module PageObjects
       end
 
       def has_locked_group?(group_name)
+        return group_selector.has_locked_value?(group_name) if new_select_controls?
         open_group_selector
         find_item(@setting_name).has_css?(
           ".selected-choice[data-value='#{group_name}'] .d-icon-lock",
         )
+      end
+
+      private
+
+      def new_select_controls?
+        SiteSetting.enable_new_select_controls
+      end
+
+      def chip_selector
+        new_select_controls? ? ".d-select__chip" : ".selected-choice"
       end
     end
   end

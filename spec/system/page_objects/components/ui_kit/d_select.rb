@@ -244,6 +244,12 @@ module PageObjects
           end
         end
 
+        # Whether a held value shows as one that can't be removed, as a chip or strip item.
+        def has_locked_value?(value)
+          locked = ".--locked#{hook_selector("value", value)} [aria-disabled='true'] .d-icon-lock"
+          page.has_css?("#{root_selector} #{locked}, #{linked_panel_selector} #{locked}")
+        end
+
         def has_option_value?(value)
           option_match?("value", value)
         end

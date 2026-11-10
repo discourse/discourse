@@ -243,12 +243,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - ☐ Move the ad-hoc selectors that land on `main` while the branch is open to the matching
   recipe or `DSelect` component, behind the flag like every other call site. Check each `main`
   merge for new pickers built on `DMenu` or `DMultiSelect`, not only new select-kit uses. Known:
-  - ☐ The upcoming change group control (`upcoming-change-group-control.gjs`, #45142, merged
-    in `ebd1d84f27e`) uses `EmailGroupUserChooser` with options #45142 added: `groupsOnly`
-    (automatic and pseudogroups included), `includeEveryone`, `excludedGroupIds` and
-    `lockedValues`, groups that can't be removed. `DSelectGroup` covers all but the locked
-    groups; DSelect has no held item that can't be removed. #45929 (open) moves the control to
-    `DMultiSelect`.
+  - ☑ The upcoming change group control (`upcoming-change-group-control.gjs`, #45142, merged
+    in `ebd1d84f27e`) branches on the flag to `DSelectGroup` (2026-11-10): `@emit="names"`,
+    `@everyone`, `@exclude` and `@lockedValues` for the groups that can't be removed. Its
+    system spec runs in both modes. #45929 (open) moves the legacy branch to `DMultiSelect`;
+    when it lands, keep the flag branch and drop whichever legacy control it leaves.
   - ☐ The DSA statement's community rule field (`dsa-moderation-details.gjs`, merged in
     `ebd1d84f27e`): a FormKit custom field that picks one rule, shown with its explanation,
     from a `DMenu` with a `DDropdownMenu`.
