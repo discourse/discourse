@@ -82,7 +82,8 @@ export const UserOption: TOC<{
         <span class="d-user-option__username">
           {{~formatUsername (itemName @item)~}}
         </span>
-        {{~#if (fullName @item)~}}
+        {{! Keep the space before the name: without it screen readers run the two words together. }}
+        {{#if (fullName @item)~}}
           <span class="d-user-option__name">{{fullName @item}}</span>
         {{~/if~}}
       </span>

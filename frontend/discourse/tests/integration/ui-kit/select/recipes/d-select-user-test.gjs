@@ -121,6 +121,26 @@ module(
       );
     });
 
+    test("reads a row's username and name as separate words", async function (assert) {
+      stubUserSearch();
+
+      await render(<template><DSelectUser /></template>);
+      const select = new DSelect();
+      await select.open();
+      await select.search("bo");
+
+      const row = optionNamed("bob");
+      const labelIds = row.getAttribute("aria-labelledby")?.split(/\s+/) ?? [];
+      const named = labelIds.length
+        ? labelIds.map((id) => document.getElementById(id).textContent)
+        : [row.textContent];
+      const name = named.join(" ").replace(/\s+/g, " ").trim();
+      assert.true(
+        name.includes("bob Bob Ross"),
+        `a space keeps the two apart in the row's name ("${name}")`
+      );
+    });
+
     test("a row's username and name share a baseline", async function (assert) {
       stubUserSearch();
 
