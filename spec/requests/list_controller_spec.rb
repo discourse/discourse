@@ -207,6 +207,47 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "does not reveal topics that only match non-visible post content" do
+      visible_topic = Fabricate(:topic_with_op, raw: "The public prefix oracle content")
+      whisper_topic = Fabricate(:topic_with_op, raw: "A public topic")
+      hidden_topic = Fabricate(:topic_with_op, raw: "Another public topic")
+      deleted_topic = Fabricate(:topic_with_op, raw: "Yet another public topic")
+
+      whisper_post =
+        Fabricate(
+          :post,
+          topic: whisper_topic,
+          raw: "The staff prefix oracle content",
+          post_type: Post.types[:whisper],
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          raw: "The flagged prefix oracle content",
+          hidden: true,
+        )
+      deleted_post =
+        Fabricate(:post, topic: deleted_topic, raw: "The deleted prefix oracle content")
+
+      with_search_indexer_enabled do
+        [visible_topic, whisper_post, hidden_post, deleted_post].each do |record|
+          SearchIndexer.index(record, force: true)
+        end
+      end
+      deleted_post.trash!
+
+      get "/latest.json", params: { search: "prefix" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to contain_exactly(
+        visible_topic.id,
+      )
+      expect(response.body).not_to include(whisper_post.raw)
+      expect(response.body).not_to include(hidden_post.raw)
+      expect(response.body).not_to include(deleted_post.raw)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
