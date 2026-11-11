@@ -173,6 +173,15 @@ module PrettyText
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     text = text || ""
 
+    opt_input = markdown_options(opts)
+
+    protect do
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call("__PrettyText.cook", text, opt_input)
+    end
+  end
+
+  def self.markdown_options(opts = {})
     custom_emoji = {}
     Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
 
@@ -221,10 +230,7 @@ module PrettyText
     # keeps any HTML from the input, so only for input that is already safe
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false
 
-    protect do
-      DiscourseEvent.trigger(:markdown_context, v8)
-      v8.call("__PrettyText.cook", text, opt_input)
-    end
+    opt_input
   end
 
   def self.paths
@@ -259,6 +265,19 @@ module PrettyText
 
   def self.splice_hashtags(raw, replacements)
     protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
+  end
+
+  def self.update_bbcode_attributes(raw, tag_name, attributes, opts = {})
+    protect do
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call(
+        "__PrettyText.updateBBCodeAttributes",
+        raw,
+        tag_name,
+        attributes,
+        markdown_options(opts),
+      )
+    end
   end
 
   def self.unescape_emoji(title)
