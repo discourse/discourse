@@ -23,6 +23,8 @@ he:
         edit: עריכה
         activate: הפעלה
         preview: תצוגה מקדימה
+        customize: התאמה אישית
+        customized_theme_name: "%{name} (מותאם אישית)"
         import: ייבוא
         export: ייצוא
         active: פעיל
@@ -35,6 +37,7 @@ he:
         change:
           title: כותרת
           body: body
+          tags: תגיות
       review:
         create: יצירת קישור
         copy: העתקה

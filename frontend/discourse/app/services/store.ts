@@ -8,7 +8,12 @@ import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import WeakValueMap from "discourse/lib/weak-value-map";
+import type Badge from "discourse/models/badge";
 import type BadgeGrouping from "discourse/models/badge-grouping";
+import type {
+  BookmarkCreateAttrs,
+  default as Bookmark,
+} from "discourse/models/bookmark";
 import type Category from "discourse/models/category";
 import type Composer from "discourse/models/composer";
 import type Group from "discourse/models/group";
@@ -28,18 +33,30 @@ import RestModel, {
 import ResultSet from "discourse/models/result-set";
 import type Reviewable from "discourse/models/reviewable";
 import type Site from "discourse/models/site";
+import type { default as Tag, TagCreateAttrs } from "discourse/models/tag";
+import type TagGroup from "discourse/models/tag-group";
+import type TagInfo from "discourse/models/tag-info";
+import type TagNotification from "discourse/models/tag-notification";
+import type TagSettings from "discourse/models/tag-settings";
 import type {
   default as Topic,
   TopicCreateAttrs,
 } from "discourse/models/topic";
+import type {
+  default as TopicDetails,
+  TopicDetailsCreateAttrs,
+} from "discourse/models/topic-details";
 import type TopicList from "discourse/models/topic-list";
 import type TopicTrackingState from "discourse/models/topic-tracking-state";
 import type { default as User, UserCreateAttrs } from "discourse/models/user";
+import type UserBadge from "discourse/models/user-badge";
 import type UserDraft from "discourse/models/user-draft";
 
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
+  badge: Badge;
   "badge-grouping": BadgeGrouping;
+  bookmark: Bookmark;
   category: Category;
   composer: Composer;
   group: Group;
@@ -51,10 +68,17 @@ export interface ModelRegistry {
   "published-page": PublishedPage;
   reviewable: Reviewable;
   site: Site;
+  tag: Tag;
+  "tag-group": TagGroup;
+  "tag-info": TagInfo;
+  "tag-notification": TagNotification;
+  "tag-settings": TagSettings;
   topic: Topic;
+  "topic-details": TopicDetails;
   "topic-list": TopicList;
   "topic-tracking-state": TopicTrackingState;
   user: User;
+  "user-badge": UserBadge;
   "user-draft": UserDraft;
 }
 
@@ -63,8 +87,11 @@ export interface ModelRegistry {
  * their instance fields. Plugins add entries through module augmentation.
  */
 export interface ModelCreateAttrsRegistry {
+  bookmark: BookmarkCreateAttrs;
   post: PostCreateAttrs<Post>;
+  tag: TagCreateAttrs;
   topic: TopicCreateAttrs<Topic>;
+  "topic-details": TopicDetailsCreateAttrs;
   user: UserCreateAttrs<User>;
 }
 

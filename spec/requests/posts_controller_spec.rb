@@ -2706,6 +2706,36 @@ RSpec.describe PostsController do
         expect(cooked.at_css("iframe")).to be_nil
       end
 
+      it "keeps an iframe URL inside the link href of notification emails" do
+        recipient = Fabricate(:user)
+        topic = Fabricate(:topic, user: recipient)
+        Fabricate(:post, topic: topic, user: recipient)
+        iframe_source = "https://www.instagram.com/p/x'style='position:fixed;inset:0'title='x"
+
+        post "/posts.json",
+             params: {
+               raw: %(Reply <iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(200)
+        email =
+          UserNotifications.user_replied(
+            recipient,
+            post: Post.find(response.parsed_body["id"]),
+            notification_type: "replied",
+            notification_data_hash: {
+              original_username: user.username,
+            },
+          )
+        link =
+          Nokogiri
+            .HTML5(Email::Renderer.new(email).html)
+            .css("a")
+            .find { |a| a["href"].start_with?("https://www.instagram.com") }
+        expect(link.to_h).to eq("href" => iframe_source)
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
@@ -3473,6 +3503,22 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(422)
       end
+    end
+
+    it "cooks an unrecognized image size suffix in bounded time" do
+      sign_in(user_trust_level_0)
+      numbers = "1" * 800
+      raw = "![a|#{numbers}x#{numbers},](https://example.com/image.png)"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      post "/posts.json", params: { raw: raw, topic_id: post_by_user.topic_id }
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(response.status).to eq(200)
+      expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
     end
   end
 
@@ -4600,6 +4646,42 @@ RSpec.describe PostsController do
 
         data = response.parsed_body
         expect(data.length).to eq(0)
+      end
+
+      it "doesn't return whispers for moderators outside whispers_allowed_groups" do
+        whisperers = Fabricate(:group)
+        whisperers.add(user)
+        SiteSetting.whispers_allowed_groups = whisperers.id.to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        reply = Fabricate(:post, topic: topic, user: user)
+        PostDestroyer.new(admin, whisper).destroy
+        PostDestroyer.new(admin, reply).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          reply.id,
+        )
+      end
+
+      it "returns whispers for moderators in whispers_allowed_groups" do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        PostDestroyer.new(admin, whisper).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          whisper.id,
+        )
       end
 
       it "returns PMs for admins who are also moderators" do

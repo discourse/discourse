@@ -69,6 +69,11 @@ module Jobs
 
       Guardian.new(@current_user).ensure_can_export_entity!(@entity, nil, @extra)
 
+      if @entity == "report" && @extra[:name].present? &&
+           !Report::VALID_TYPE_REGEX.match?(@extra[:name])
+        raise Discourse::InvalidParameters.new("args.name")
+      end
+
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
       entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
         "#{@extra[:name].dasherize}-#{@timestamp}"

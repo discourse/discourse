@@ -247,7 +247,23 @@ interface ExpectedTopicFields {
   unread_by_group_member?: boolean;
   unread_posts?: number;
   unseen?: boolean;
-  user_badges?: object | null;
+  /** `TopicView#user_badges`, sent when a theme asks for post user badges. */
+  user_badges?: {
+    users: Record<string, { id: number; badge_ids: number[] }>;
+    badges: Record<
+      string,
+      {
+        id: number;
+        name: string;
+        slug: string;
+        description: string;
+        icon: string | null;
+        image_url: string | null;
+        badge_grouping_id: number;
+        badge_type_id: number;
+      }
+    >;
+  } | null;
   user_id?: number | null;
   user_last_posted_at?: string | null;
   views?: number;

@@ -968,7 +968,9 @@ class UserNotifications < ActionMailer::Base
     allowed_groups = post.topic.allowed_groups.order("user_count DESC")
 
     allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred} (#{g.user_count})](#{g.full_url})")
+      list.push(
+        "[#{Email::MessageBuilder.escape_markdown(g.name_full_preferred)} (#{g.user_count})](#{g.full_url})",
+      )
       break if list.size >= SiteSetting.max_participant_names
     end
 
@@ -997,9 +999,9 @@ class UserNotifications < ActionMailer::Base
       break if list.size >= SiteSetting.max_participant_names
 
       if reveal_staged_email && u.staged?
-        list.push("#{u.email}")
+        list.push(Email::MessageBuilder.escape_markdown(u.email))
       else
-        list.push("[#{u.display_name}](#{u.full_url})")
+        list.push("[#{Email::MessageBuilder.escape_markdown(u.display_name)}](#{u.full_url})")
       end
     end
 

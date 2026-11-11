@@ -45,8 +45,6 @@ sl:
         title: "Pripeto"
       pinned: "Pripeto"
       channel_settings:
-        edit: "Uredi"
-        add: "Dodaj"
         notification_settings_context: "Obvestila"
         join: "Pridruži se"
         leave: "Zapusti"
@@ -95,13 +93,14 @@ sl:
       members_view:
         add_member: Dodaj člana
       about_view:
-        title: Naziv
         name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Nazaj"
+        nav_label: "Informacije o kanalu"
         tabs:
           members: Člani
+          preferences: Nastavitve
           settings: Nastavitve
           search: Išči
         remove_member: "Odstrani"
@@ -162,9 +161,6 @@ sl:
         save: "Shrani"
         saved: "Shranjeno"
         unfollow: "Zapusti"
-        admin_title: "Admin"
-        settings_title: "Nastavitve"
-        info_title: "Informacije o kanalu"
         category_label: "Kategorija"
         history_label: "Zgodovina"
         members_label: "Člani"

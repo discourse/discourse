@@ -1402,6 +1402,8 @@ zh_CN:
         set_llm_first: "首先设置%{setting}"
         model_unreachable: "我们无法从此模型获得回答。请先检查您的设置。"
         empty_response: "模型返回了空回答。"
+        test_timeout:
+          other: "模型在 %{count} 秒内未响应。服务器可能过载，请稍后再试。"
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_agent_response_format: "所选智能体必须具有包含名为“spam”的布尔字段的响应格式。"
         must_select_model: "必须先选择一个 LLM"

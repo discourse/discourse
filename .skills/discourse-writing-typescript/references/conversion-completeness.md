@@ -36,10 +36,18 @@ subset of checks.
    look typed.
 9. Run `bin/lint --fix` and re-read the file after formatting and member ordering.
    Converting previously unchecked JavaScript can expose lint failures in untouched-looking
-   code; those failures belong to the conversion.
+   code; those failures belong to the conversion. The rename also turns on `tsdoc/syntax`,
+   which lints only TypeScript files. It rejects bare `{{...}}`, HTML tags and `>` in doc
+   comments, so fence template examples (```` ```hbs ````) and wrap inline usage in backticks.
 10. Audit explicit `.js`/`.gjs` imports after each rename and run the relevant runtime tests.
     Tests may remain JavaScript when their conversion is out of scope, but their imports and
     runtime coverage must still work.
+11. Sweep the stopgaps the conversion may retire. Search the whole repo, plugins and themes
+    included, for `TODO(typescript-pending)` notes, `ComponentLike`/`HelperLike`/
+    `ModifierLike` casts and suppression directives that mention the converted module or
+    its exports. Many notes describe the gap rather than naming the module, so read every
+    note's text, not only name matches. Remove each stopgap the new types now cover, then
+    rerun `pnpm lint:types`. Leave a note whose gap is still open.
 
 ## Incremental evidence versus completion
 

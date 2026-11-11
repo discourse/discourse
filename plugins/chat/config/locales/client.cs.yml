@@ -91,8 +91,6 @@ cs:
           other: "Jste si jisti, že chcete odstranit těchto %{count} zpráv?"
       channel_settings:
         title: "Nastavení kanálu"
-        edit: "Upravit"
-        add: "přidat"
         star_channel: "Nastavit jako oblíbený"
         unstar_channel: "Odebrat z oblíbených"
         close_channel: "Zavřít kanál"
@@ -102,7 +100,6 @@ cs:
         join_channel: "Připojit se k kanálu"
         leave_channel: "Opustit kanál"
         leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
-        notification_settings: "Nastavení oznámení"
         notification_settings_context: "Upozornění"
         join: "Přidat se ke skupině"
         leave: "Opustit"
@@ -360,21 +357,22 @@ cs:
       members_view:
         filter_placeholder: Najít členy
         add_member: Přidat člena
-        back_to_settings: "Zpět na nastavení"
       about_view:
         associated_topic: Propojené téma
         associated_category: Propojená kategorie
-        title: Název
         name: Jméno
         description: Popis
       channel_info:
         back_to_all_channels: "Všechny kanály"
         back_to_channel: "Zpět"
+        nav_label: "Informace o kanálu"
         tabs:
           members: Členové
+          preferences: Nastavení
           settings: Nastavení
           search: Vyhledat
         remove_member: "Smazat"
+        members_title: "%{channel} členů"
       new_message_modal:
         title: Odeslání zprávy
         add_user_long: <kbd>shift + kliknutí</kbd> nebo <kbd>shift + enter</kbd><span>Přidat @%{username}</span>
@@ -394,15 +392,12 @@ cs:
         create_new_group_chat: "Vytvoření skupinové konverzace"
         group_with_too_many_members: "má příliš mnoho členů (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Úprava kanálu
         input_placeholder: Přidat název
         slug_description: Zkratka kanálu se používá v URL adrese místo názvu kanálu
         name: Název kanálu
         reset_emoji: Obnovit emotikon
       channel_edit_description_modal:
-        title: Úprava popisu
         input_placeholder: Přidejte popis
-        description: Řekněte lidem, o čem je tento kanál
       direct_message_creator:
         add_to_channel: "Přidat do kanálu"
         title: Nová zpráva
@@ -532,7 +527,6 @@ cs:
         always: "Pro všechny aktivity"
       settings:
         channel_wide_mentions_label: "Povolit zmínky @all a @here"
-        channel_wide_mentions_description: "Umožněte uživatelům upozornit všechny členy #%{channel} pomocí @all nebo pouze ty, kteří jsou v danou chvíli aktivní, pomocí @here."
         channel_threading_label: "Vlákna"
         channel_threading_description: "Když je povoleno vytváření vláken, odpovědi na zprávy chatu vytvoří samostatnou konverzaci, která bude existovat vedle hlavního kanálu."
         auto_join_users_label: "Automaticky přidávat uživatele"
@@ -553,9 +547,6 @@ cs:
         save: "Uložit"
         saved: "Uloženo"
         unfollow: "Opustit"
-        admin_title: "Administrace"
-        settings_title: "Nastavení"
-        info_title: "Informace o kanálu"
         category_label: "Kategorie"
         history_label: "Historie"
         members_label: "Členové"

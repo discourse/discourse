@@ -18,3 +18,5 @@ nb_NO:
     replies:
       one: "%{count} svar"
       other: "%{count} svar"
+    themes:
+      default: Forvalg

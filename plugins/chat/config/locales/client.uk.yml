@@ -106,8 +106,7 @@ uk:
           other: "Ви впевнені, що хочете видалити ці %{count} повідомлень?"
       channel_settings:
         title: "Налаштування каналу"
-        edit: "Редагувати"
-        add: "Додати"
+        page_title: "%{channel} налаштування"
         star_channel: "Обраний канал"
         unstar_channel: "Зняти зірочку з каналу"
         close_channel: "Закрити канал"
@@ -116,10 +115,21 @@ uk:
         open_channel_disabled_read_only: "Канали лише для читання не можна повторно відкрити."
         archive_channel: "Архівувати канал"
         delete_channel: "Видалити канал"
+        danger_zone:
+          title: "Небезпечна зона"
+          archive_title: "Архівувати цей канал"
+          archive_description: "Перемістіть повідомлення цього каналу в тему та зробіть канал лише для читання."
+          close_title: "Закрити цей канал"
+          close_description: "Заборонити учасникам надсилати нові повідомлення. Ви можете знову відкрити канал у будь-який час."
+          open_title: "Знову відкрити цей канал"
+          open_description: "Дозвольте учасникам знову надсилати повідомлення в цьому каналі."
+          delete_title: "Видалити цей канал"
+          delete_description: "Після видалення цей канал та всі його повідомлення неможливо відновити."
+          leave_title: "Вийти з цього каналу"
+          leave_description: "Ви більше не будете отримувати повідомлення та сповіщення від цього каналу. Ви можете знову приєднатися до нього в будь-який час."
         join_channel: "Приєднатися до каналу"
         leave_channel: "Вийти з каналу"
         leave_groupchat_info: "Залишивши цей груповий чат, ви більше не матимете доступу до нього та не отримуватимете сповіщень, пов'язаних з ним. Щоб знову приєднатися, вас потрібно буде повторно запросити учасником групового чату."
-        notification_settings: "Налаштування сповіщень"
         notification_settings_context: "Сповіщення"
         join: "Приєднатися"
         leave: "Покинути"
@@ -442,21 +452,23 @@ uk:
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
-        back_to_settings: "Повернутися до налаштувань"
       about_view:
         associated_topic: Пов'язана тема
         associated_category: Пов'язана категорія
-        title: Назва
         name: Імʼя
         description: Опис
       channel_info:
         back_to_all_channels: "Всі канали"
         back_to_channel: "Назад"
+        nav_label: "Інформація про канал"
         tabs:
           members: Учасники
+          preferences: Налаштування
           settings: Налаштування
           search: Пошук
         remove_member: "Вилучити"
+        members_title: "%{channel} учасників"
+        preferences_title: "%{channel} налаштування"
       new_message_modal:
         title: Надіслати повідомлення
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
@@ -476,7 +488,6 @@ uk:
         create_new_group_chat: "Створити груповий чат"
         group_with_too_many_members: "має забагато учасників (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Редагувати канал
         input_placeholder: Додайте назву
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
@@ -484,9 +495,7 @@ uk:
         emoji: Емодзі каналу
         reset_emoji: Скинути емодзі
       channel_edit_description_modal:
-        title: Редагувати опис
         input_placeholder: Додати опис
-        description: Розкажіть людям, про що цей канал
       direct_message_creator:
         add_to_channel: "Додати до каналу"
         title: Нове повідомлення
@@ -650,7 +659,6 @@ uk:
         always: "Для всіх дій"
       settings:
         channel_wide_mentions_label: "Дозволити згадки @all та @here"
-        channel_wide_mentions_description: "Дозволити користувачам сповіщати всіх учасників #%{channel} за допомогою @all або лише тих, хто активний на даний момент, за допомогою @here"
         channel_threading_label: "Потоки/ланцюжки"
         channel_threading_description: "Якщо ланцюжки увімкнено, відповіді на повідомлення чату створюватимуть окрему бесіду, яка існуватиме поряд з основним каналом."
         auto_join_users_label: "Автоматично додавати користувачів"
@@ -671,9 +679,6 @@ uk:
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
-        admin_title: "Адміністратор"
-        settings_title: "Налаштування"
-        info_title: "Інформація про канал"
         category_label: "Категорія"
         history_label: "Історія"
         members_label: "Учасники"

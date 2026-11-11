@@ -23,6 +23,8 @@ tr_TR:
         edit: Düzenle
         activate: Etkinleştir
         preview: Ön izle
+        customize: Kişiselleştir
+        customized_theme_name: "%{name} (özel)"
         import: İçe Aktar
         export: Dışarı Aktar
         active: Aktif
@@ -35,6 +37,7 @@ tr_TR:
         change:
           title: başlık
           body: gövde
+          tags: etiketler
       review:
         create: Bağlantı oluştur
         copy: Kopyala

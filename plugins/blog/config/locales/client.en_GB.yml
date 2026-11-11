@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 en_GB:
+  admin_js:
+    blog:
+      admin:
+        customize: Customise

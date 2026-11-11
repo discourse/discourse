@@ -201,6 +201,7 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
+    ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
     ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
@@ -501,6 +502,9 @@ en:
         other_content_in_pm: "Personal messages containing posts from other people cannot be shared publicly"
         failed_to_share: "Failed to share the conversation"
         conversation_deleted: "Conversation share deleted successfully"
+    dsa_classification:
+      suggestion_failed: "The AI could not suggest a classification. Choose one yourself or try again."
+      credit_limit_exceeded: "The AI has used all of today's credits for classification suggestions. Choose a classification yourself."
     spam_detection:
       flag_reason: "Flagged as spam by <a href='%{url}'>Discourse AI</a>"
       silence_reason: "User silenced automatically by <a href='%{url}'>Discourse AI</a>"
@@ -605,6 +609,9 @@ en:
         execution_failed: "The delegated task failed."
         approval_unavailable: "Tools requiring approval are unavailable in delegated runs."
       chat_tool_approval:
+        enable_mcp_theme_access_title: "Let AI apps build themes"
+        enable_mcp_theme_access_details: "Apps you connect to %{mcp_url}, such as Claude or ChatGPT, will be able to create and edit themes, including their JavaScript, as the administrator who connects them. Their changes take effect straight away and aren't checked the way the Admin Assistant's are. Apps you've already connected will ask you to approve the new access. You can turn the theme tools off again under [MCP capabilities](%{settings_url})."
+        enable_mcp_theme_access_question: "Do you want to let AI apps build themes?"
         create_tag_title: "Create tag: %{name}"
         create_tag_question: "Do you want to create this tag?"
         create_category_title: "Create category: %{name}"
@@ -914,6 +921,8 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        theme_app_handoff: "Checking how to build themes with an AI app"
+        enable_mcp_theme_access: "Let AI apps build themes"
         load_discourse_website_page: "Load Discourse website page"
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
@@ -965,6 +974,7 @@ en:
         search_settings: "Searching site settings"
         search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
+        list_upcoming_changes: "List upcoming changes"
         change_site_setting: "Change site setting"
         generate_appearance_change: "Building palettes"
         save_appearance_change: "Save appearance change"
@@ -979,6 +989,8 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        theme_app_handoff: "Explain how to build themes with an AI app through the MCP server"
+        enable_mcp_theme_access: "Let AI apps build themes through the MCP server"
         load_discourse_website_page: "Load a named page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         search_uploaded_documents: "Search documents uploaded to this agent"
@@ -1032,6 +1044,7 @@ en:
         search_settings: "Search site settings"
         search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
+        list_upcoming_changes: "List available upcoming changes and their rollout state"
         change_site_setting: "Change the value of a site setting"
         generate_appearance_change: "Build readable palettes and pick fonts from brand colors or a website"
         save_appearance_change: "Save palettes or a new theme without making them live"
@@ -1122,6 +1135,7 @@ en:
           one: "Found %{count} destination"
           other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
+        list_upcoming_changes: "Listing upcoming changes"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
         generate_appearance_change: "Built palettes"
         list_appearance_changes: "Listed appearance changes"
@@ -1355,6 +1369,10 @@ en:
           invalid_value: "Invalid value: %{error}"
           failed: "Failed to change the site setting."
         success: "Site setting %{setting_name} has been changed to '%{value}'."
+      list_upcoming_changes:
+        errors:
+          not_allowed: "Only administrators can view upcoming changes."
+          failed: "Upcoming changes could not be loaded."
       read_site_setting:
         errors:
           not_allowed: "You are not allowed to read site settings."
@@ -1411,6 +1429,91 @@ en:
       fonts:
         base_font: "Body font"
         heading_font: "Heading font"
+
+    mcp_theme_access:
+      not_allowed: "Only administrators can let AI apps build themes."
+      unavailable: "Building themes with AI apps isn't available here."
+      themes_unavailable: "New themes can't be created on this site, so AI apps can't build them either."
+      server_locked: "A global setting keeps the MCP server off, so it can't be turned on here."
+      already_enabled: "AI apps can already build themes on this site."
+      approval_required: "This change needs an administrator's approval."
+      failed: "The change couldn't be made."
+      enabled: "AI apps can now build themes on this site. Connect an app to the MCP server to start."
+      enabled_except_blocked: "The rest is turned on, but AI apps can't build themes yet. These theme tools are blocked in an emergency: %{tools}. An administrator can unblock them under MCP capabilities: %{url}"
+      "on": "On"
+      "off": "Off"
+      none: "none"
+      request_placeholder: "(describe what you want)"
+      blocked_tool: "%{tool} is blocked in an emergency. An administrator can unblock it under MCP capabilities: %{url}"
+      changes:
+        server: "MCP server"
+        tools: "Tools apps can use"
+        admin_scopes: "Administrators' access"
+      setup:
+        server: "Turn on the MCP server."
+        tools: "Let apps use these theme tools: %{tools}."
+        admin_scopes: "Give administrators theme access."
+      starter_message: |-
+        I'm an administrator of the Discourse site %{site_url}. Use its MCP server to build a theme. Its current default theme is "%{theme}".
+
+        What I want: %{request}
+
+        Please:
+        - Create a new theme or theme component rather than changing the default theme, and don't make it the default.
+        - Use Discourse's CSS custom properties and palette colors, such as var(--tertiary), instead of hard-coded colors, so dark mode keeps working.
+        - Tell me the theme's ID when it's saved, so I can preview it at %{site_url}/admin/themes/ID/preview before making it live.
+      built_in:
+        welcome_banner: "A welcome banner above the topic list: %{base_url}/admin/config/interface"
+        sidebar_sections: "Custom sidebar sections and links, from the sidebar's + button"
+        banner_topic: "A banner topic shown to everyone, from a topic's admin wrench menu"
+        global_notice: "A notice across the top of every page: %{base_url}/admin/site_settings/category/all_results?filter=global_notice"
+        theme_components: "Ready-made theme components, such as custom header links: %{base_url}/admin/config/customize/components"
+
+    mcp_app_setup:
+      none: "none"
+      notes:
+        approved_domains: "Apps can only sign in from approved domains (%{domains}). If an app's sign-in page says the page is private, add its domain, for example claude.ai or chatgpt.com, under MCP settings: %{settings_url}"
+        pre_registered_only: "Apps can only sign in once an administrator registers them, under MCP clients: %{clients_url}"
+      apps:
+        claude:
+          name: "Claude (web or desktop)"
+          steps: |-
+            1. In Claude, go to Settings, then Connectors, then Add custom connector.
+            2. Name it "%{name}" and paste %{url}
+            3. Click Add, then Connect. Your site opens; sign in if asked and click Approve.
+            On a Claude Team or Enterprise plan, an owner has to add the connector for your organization first.
+        chatgpt:
+          name: "ChatGPT"
+          steps: |-
+            1. In ChatGPT, go to Settings, then Security and login, and turn on Developer mode.
+            2. Add a connector named "%{name}" with the URL %{url}
+            3. Connect it. Your site opens; sign in if asked and click Approve.
+            A workspace administrator can turn developer mode off for everyone.
+        claude_code:
+          name: "Claude Code"
+          steps: |-
+            1. Run: claude mcp add --transport http my-community %{url}
+            2. Run: claude mcp login my-community
+            3. Your site opens; sign in if asked and click Approve.
+        codex:
+          name: "Codex"
+          steps: |-
+            1. Run: codex mcp add my-community --url %{url} --oauth-client-registration cimd
+            2. Your site opens; sign in if asked and click Approve.
+            Check the connection with: codex mcp list
+        cursor:
+          name: "Cursor"
+          steps: |-
+            1. Add this to ~/.cursor/mcp.json: {"mcpServers": {"my-community": {"url": "%{url}"}}}
+            2. Turn the server on in Cursor's MCP settings.
+            3. Your site opens; sign in if asked and click Approve.
+        vscode:
+          name: "Visual Studio Code"
+          steps: |-
+            1. Open the Command Palette and run "MCP: Add Server".
+            2. Choose HTTP and paste %{url}
+            3. Your site opens; sign in if asked and click Approve.
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"

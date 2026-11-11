@@ -18,6 +18,7 @@ sv:
         theme_name: Temanamn
         edit: Redigera
         preview: Förhandsgranska
+        customize: Anpassa
         import: Importera
         export: Exportera
         active: Aktiv
@@ -30,6 +31,7 @@ sv:
         change:
           title: rubrik
           body: huvuddel
+          tags: taggar
       review:
         copy: Kopiera
         open: Öppen

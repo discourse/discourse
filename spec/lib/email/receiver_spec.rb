@@ -15,6 +15,17 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  it "preserves the sender date when creating a topic by email" do
+    Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true)
+    mail = Mail.read_from_string(email(:new_user))
+
+    Email::Receiver.new(mail.to_s).process!
+
+    expect(Post.last.post_number).to eq(1)
+    expect(Post.last.created_at).to eq_time(mail.date)
+    expect(Post.last.topic.created_at).to eq_time(mail.date)
+  end
+
   describe "MIME structure depth" do
     it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
       expect {
@@ -851,6 +862,93 @@ RSpec.describe Email::Receiver do
         end
       end
     end
+
+    context "when the referenced message belongs to another group's private message" do
+      fab!(:other_group) { Fabricate(:group, allow_unknown_sender_topic_replies: false) }
+      fab!(:sender) { Fabricate(:user, email: "sender@foo.com") }
+      fab!(:other_group_post) do
+        Fabricate(
+          :group_private_message_post,
+          recipients: other_group,
+          raw: "Confidential conversation",
+        )
+      end
+
+      let(:message_id) { "discourse/post/#{other_group_post.id}@#{Discourse.current_hostname}" }
+
+      before { group.update!(allow_unknown_sender_topic_replies: true) }
+
+      def reply_to_referenced_message(message_id)
+        <<~MAIL
+          From: #{sender.email}
+          To: team@bar.com
+          Subject: Re: Support request
+          Date: #{Time.current.rfc2822}
+          Message-ID: <outside-reply@example.com>
+          In-Reply-To: <#{message_id}>
+          Content-Type: text/plain; charset=UTF-8
+
+          This reply references another group's conversation.
+        MAIL
+      end
+
+      it "starts a new topic in the receiving group for an IncomingEmail reference" do
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(Topic.last.posts.first.user).to eq(sender)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "starts a new topic in the receiving group for an EmailLog reference" do
+        Fabricate(
+          :email_log,
+          user: sender,
+          post: other_group_post,
+          topic_id: other_group_post.topic_id,
+          message_id: message_id,
+          to_address: sender.email,
+          email_type: "user_private_message",
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "threads the reply when the topic is also allowed to the receiving group" do
+        other_group_post.topic.topic_allowed_groups.create!(group: group)
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect {
+          Email::Receiver.new(reply_to_referenced_message(message_id)).process!
+        }.to not_change { Topic.count }.and change { Post.count }.by(1)
+
+        expect(other_group_post.topic.posts.count).to eq(2)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(true)
+      end
+    end
   end
 
   describe "new topic in a category" do
@@ -1469,6 +1567,39 @@ RSpec.describe Email::Receiver do
 
       let!(:post_reply_key) do
         Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
+
+      it "uses receipt time for replies and their topic activity and close timer" do
+        now = freeze_time Time.zone.now.round
+        admin = Fabricate(:admin)
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          nil,
+          by_user: admin,
+          based_on_last_post: true,
+          duration_minutes: 1440,
+        )
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to change { topic.posts.count }.by(1)
+
+        reply = topic.posts.order(:post_number).last
+        expect(reply.created_at).to eq_time(now)
+        expect(topic.reload.last_posted_at).to eq_time(now)
+        expect(topic.bumped_at).to eq_time(now)
+        expect(topic.public_topic_timer.reload.execute_at).to eq_time(now + 24.hours)
+      end
+
+      it "preserves historical reply dates during imports" do
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s, import_mode: true).process! }.to change {
+          topic.posts.count
+        }.by(1)
+
+        expect(topic.posts.order(:post_number).last.created_at).to eq_time(mail.date)
       end
 
       context "when the email address isn't matching the one we sent the notification to" do

@@ -21,6 +21,7 @@ hr:
         edit: Uredi
         activate: Aktivirajte
         preview: Pregled
+        customize: Prilagodba
         export: Izvoz
         active: Aktivno
   js:
@@ -32,6 +33,7 @@ hr:
         change:
           title: titula
           body: tijelo
+          tags: oznake
       review:
         create: Kreirajte poveznicu
         copy: Kopija

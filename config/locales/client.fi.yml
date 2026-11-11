@@ -11,6 +11,15 @@ fi:
       go_back: "Palaa takaisin"
       title: "Ilmoita laittomasta sisällöstä"
       email: "Sähköpostiosoite"
+    code_editor:
+      search:
+        replace: "Korvaa"
+        next: "Seuraava"
+        previous: "Edellinen"
+        close: "Sulje"
+        go: "Siirry"
+      fold:
+        to: "-"
     user_api_key:
       authorize: "Anna käyttöoikeus"
       deny: "Peruuta"
@@ -5197,11 +5206,11 @@ fi:
           title: "Lisäasetukset"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Käytössä"
+        enabled: "Otettu käyttöön?"
+        feedback: "Palaute"
         select_groups: "Valitse ryhmät…"
+        settings: "Asetukset"
         preview: "Esikatselu"
-        enabled_for_options:
-          everyone: "Kaikki"
         statuses:
           experimental: "Kokeellinen"
         impact_roles:

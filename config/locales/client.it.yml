@@ -11,6 +11,15 @@ it:
       go_back: "Torna Indietro"
       title: "Segnala contenuti illegali"
       email: "Indirizzo e-mail"
+    code_editor:
+      search:
+        replace: "Sostituisci"
+        next: "Avanti"
+        previous: "Precedente"
+        close: "Chiudi"
+        go: "Vai"
+      fold:
+        to: "a"
     user_api_key:
       authorize: "Autorizza"
       deny: "Annulla"
@@ -5194,11 +5203,11 @@ it:
           title: "Avanzato"
       upcoming_changes:
         name: "Nome"
-        enabled: "Abilitato"
+        enabled: "Abilitato?"
+        feedback: "Feedback"
         select_groups: "Seleziona gruppi…"
+        settings: "Impostazioni"
         preview: "Anteprima"
-        enabled_for_options:
-          everyone: "Chiunque"
         statuses:
           experimental: "Sperimentale"
         impact_roles:

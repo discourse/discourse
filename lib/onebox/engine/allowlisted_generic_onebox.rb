@@ -253,8 +253,8 @@ module Onebox
 
         <<~HTML
         <iframe src="#{escaped_url}"
-                width="#{data[:player_width] || "100%"}"
-                height="#{data[:player_height]}"
+                width="#{ERB::Util.html_escape(data[:player_width] || "100%")}"
+                height="#{ERB::Util.html_escape(data[:player_height])}"
                 scrolling="no"
                 frameborder="0">
         </iframe>
@@ -279,7 +279,7 @@ module Onebox
         width = data[:image_width] || data[:thumbnail_width] || data[:width]
         height = data[:image_height] || data[:thumbnail_height] || data[:height]
 
-        "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
+        "<img src='#{escaped_src}' alt='#{ERB::Util.html_escape(alt)}' width='#{ERB::Util.html_escape(width)}' height='#{ERB::Util.html_escape(height)}' class='onebox'>"
       end
 
       def video_html
@@ -288,9 +288,9 @@ module Onebox
 
         <<-HTML
           <video
-            title='#{data[:title]}'
-            width='#{data[:video_width]}'
-            height='#{data[:video_height]}'
+            title='#{ERB::Util.html_escape(data[:title])}'
+            width='#{ERB::Util.html_escape(data[:video_width])}'
+            height='#{ERB::Util.html_escape(data[:video_height])}'
             style='max-width:100%'
             poster='#{escaped_image_src}'
             controls=''

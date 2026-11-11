@@ -16,6 +16,7 @@ te:
         theme_name: థీమ్ పేరు
         edit: సవరించండి
         preview: ప్రివ్యూ
+        customize: కస్టమైజ్
         export: ఎగుమతి
         active: క్రియాశీల
   js:
@@ -27,6 +28,7 @@ te:
         change:
           title: శీర్షిక
           body: బాడీ
+          tags: ట్యాగులు
       review:
         copy: నకలు
         status:

@@ -10,14 +10,56 @@ uk:
       choice_title: "Це незаконно."
       go_back: "Повернутися назад"
       title: "Повідомити про незаконний вміст"
+      content_url: "Точна URL-адреса контенту"
+      explanation: "Чому ви вважаєте, що цей вміст є незаконним?"
+      explanation_help: "Опишіть факти та поясніть, чому контент може бути незаконним. Вам не потрібно посилатися на конкретний закон."
+      name: "Повне ім'я або назва організації"
       email: "Адреса електронної пошти"
+      declaration_section: "Декларація"
+      submit: "Надіслати звіт"
+      get_email_code: "Отримати код на електронну пошту"
       resend_email_code: "Надіслати код повторно"
+      email_verified: "Перевірено"
+      verification_code: "Код підтвердження"
+      received: "Звіт отримано"
+      received_description: "%{site} отримав ваш звіт для розгляду."
+      reference: "Посилання на ваш звіт: <strong>%{reference}</strong>."
+      contact_confirmation: "Ми надішлемо вам електронною поштою квитанцію та копію вашого звіту. Команда рецензентів надішле вам результат електронною поштою."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Тільки реєстрація адміністратора"
       approved_domains: "CIMD із затверджених доменів"
       any_domain: "CIMD з будь-якого домену"
     ace_editor:
       resize: "Змінити розмір редактора коду"
+    code_editor:
+      resize: "Змінити розмір редактора коду"
+      tab_hint: "Натисніть клавішу Escape, а потім — Tab, щоб перемістити фокус за межі редактора."
+      completions: "Завершення"
+      search:
+        find: "Знайти"
+        replace: "Замінити"
+        next: "Далі"
+        previous: "Попередні"
+        all: "Виберіть усі збіги"
+        match_case: "З урахуванням регістру"
+        regexp: "Регулярний вираз"
+        by_word: "Цілі слова"
+        replace_all: "Замінити все"
+        close: "Закрити"
+        go_to_line: "Перейти до рядка"
+        go: "Створити"
+        current_match: "Поточний збіг"
+        on_line: "онлайн"
+        replaced_match: "Замінено збіг у рядку %{line}"
+        replaced_all: "Замінені збіги: %{matches}"
+      fold:
+        fold_line: "Згорнути рядок"
+        unfold_line: "Розгорнути рядок"
+        folded_code: "Згорнутий код"
+        unfold: "Розгорнути"
+        folded_lines: "Згорнуті рядки"
+        unfolded_lines: "Розгорнуті рядки"
+        to: "до"
     user_api_key:
       title: 'Авторизувати "%{application_name}"'
       authorize: "Авторизувати"
@@ -68,6 +110,7 @@ uk:
         access_permission_editor: "Редактор"
         access_permission_editor_description: "Дозволяє створювати і редагувати вміст для цього об'єкта"
         access_permission_owner: "Власник"
+        access_permission_owner_description: "Власник має повний контроль над цим %{target}, і може додавати або видаляти інших власників."
         access_permission_viewer: "Переглядач"
         access_permission_viewer_description: "Може переглядати вміст для цього об'єкта"
         access_permission_remove: "Вилучити"
@@ -77,6 +120,7 @@ uk:
         mandatory: "Обов’язкове"
         disallowed: "Заборонено"
         required_permission_not_added: "Принаймні один грантоотримувач повинен мати дозвіл %{permission} для цього %{typeName}"
+        owner_required: "Принаймні один користувач повинен залишатися власником цього %{typeName}"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -437,11 +481,23 @@ uk:
     skip_to_top: "Перейти до початку"
     skip_user_nav: "Перейти до вмісту профілю"
     reorder:
+      announcement: "Переміщено %{label} на позицію %{position} %{total}"
+      announcement_cross_list: "Переміщено %{label} на %{list}, позиція %{position} у %{total}"
+      handle: "Змінити порядок %{label}"
+      handle_description: "Використовуйте клавіші зі стрілками для переходу між рядками. Натисніть Enter, щоб переглянути варіанти переміщення."
+      handle_description_drag_only: "Перетягніть, щоб перемістити цей рядок."
       remove: "Видалити %{label}"
       removed: "Видалено %{label}"
       move_up: "Посунути вгору"
       move_down: "Посунути вниз"
+      move_to_top: "Перемістити вгору"
+      move_to_bottom: "Перемістити вниз"
+      move_to_list: "Перейти до %{list}"
       position: "%{position} з %{total}"
+      at_start: "%{label} вже перший"
+      at_end: "%{label} вже останній"
+      move_refused: "Не вдалося перемістити %{label}"
+      add_item: "Додати елемент"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_no_smtp: "Вся вихідна електронна пошта вимкнена, оскільки не налаштовано SMTP-сервер. Електронні листи будь-якого типу не можуть бути надіслані."
     emails_are_disabled_non_staff: "Надсилання листів електронною поштою було вимкнено для користувачів, які не є членами команди обслуговування."
@@ -633,10 +689,18 @@ uk:
         predefined_topics_description: "Виберіть з колекції тем для початку розмови, щоб розпочати обговорення"
         use_predefined: "Переглянути шаблони"
         back: "Назад"
+        category_unavailable: "Ця категорія недоступна для публікації."
         icebreakers:
+          plan_categories:
+            title: "З яких категорій ми повинні почати?"
+            body: "Давайте розберемося, як організувати речі перед запуском! Про що люди хочуть говорити найбільше? Ми можемо почати лише з кількох категорій і додати більше пізніше."
+          plan_invites:
+            body: "Завжди приємніше приєднатися до спільноти, в якій вже є деякі люди. Кого ми повинні запросити першим? Подумайте про людей, які люблять спілкуватися, допомагати іншим і були б раді долучитися рано."
           introduce_yourself:
             title: "Представтеся"
             body: "Ласкаво просимо до спільноти! Давайте познайомимося. Будь ласка, представтеся та розкажіть трохи про свої інтереси. Я перший скажу: я захоплююся технологіями та люблю навчати інших!"
+          write_your_own:
+            title: "Напишіть своє власне"
     design_wizard:
       title: "Налаштуйте свій сайт"
       step_label: "Перейдіть до кроку %{index}"
@@ -986,8 +1050,12 @@ uk:
         search: "Пошук повідомлення"
         placeholder: "введіть тут назву, URL-адресу або ідентифікатор"
     dsa_statements:
+      title: "Класифікація DSA"
+      rule: "Правила спільноти"
+      rule_prompt: "Виберіть правило спільноти"
       category: "Категорія"
       category_prompt: "Оберіть категорію"
+      save: "Зберегти класифікацію"
     review:
       show_more: "Показати більше"
       show_less: "Показати менше"
@@ -1287,6 +1355,11 @@ uk:
         chars_remaining: "Залишилося %{count} символів"
         delete_note: "Видалити цю примітку"
         delete: "Видалити"
+        mentions_not_notified:
+          one: "%{usernames} не отримає сповіщення, оскільки не має доступу до цього огляду."
+          few: "%{usernames} не отримає сповіщення, оскільки не має доступу до цього огляду."
+          many: "%{usernames} не отримає сповіщення, оскільки не має доступу до цього огляду."
+          other: "%{usernames} не отримає сповіщення, оскільки не має доступу до цього огляду."
       topic_label: "Тема"
       queued_user: "Користувач у черзі"
       posted_in: "Опубліковано в"
@@ -1935,6 +2008,8 @@ uk:
       no_notifications_title: "У вас ще немає сповіщень"
       no_notifications_body: >
         На цій панелі ви отримуватимете сповіщення про дії, які безпосередньо стосуються вас, включаючи відповіді на ваші теми та дописи, коли хтось <b>@згадає</b> вас або цитує вас, а також відповідає на теми, які ви переглядаєте. Сповіщення також надходитимуть на вашу електронну пошту, якщо ви деякий час не входите в систему. <br><br> Знайдіть %{icon}, щоб вирішити, про які конкретні теми, розділи та теґи ви хочете отримувати сповіщення. Щоб дізнатися більше, перегляньте свої <a href='%{preferencesUrl}'>параметри сповіщень</a>.
+      no_mentions_title: "Вас ще не згадували"
+      no_mentions_body: "Коли хтось згадує ваше @ім’я_користувача в публікації, сповіщення з’явиться тут."
       no_other_notifications_title: "У вас ще немає інших сповіщень"
       no_other_notifications_body: >
         На цій панелі ви отримуватимете сповіщення про інші види діяльності, які можуть бути доречними для вас, наприклад, коли хтось посилається на один з ваших дописів або редагує їх.
@@ -2413,9 +2488,12 @@ uk:
         letter_based: "Ваше зображення додане автоматично"
         uploaded_avatar: "Інше зображення"
         uploaded_avatar_empty: "Додати інше зображення"
+        current_avatar: "Поточне зображення"
+        associated_account: "%{provider} картинка"
         upload_title: "Завантажити своє зображення"
         image_is_not_a_square: "Увага: ми обрізали ваше зображення; ширина і висота були неоднакові."
         logo_small: "Маленький логотип сайту. Використовується типово."
+        use_custom: "Або виберіть інше зображення:"
       change_profile_background:
         title: "Заголовок профілю"
         instructions: "Заголовки профілю будуть по центру та типово матимуть ширину 1110 пікселів."
@@ -2898,6 +2976,7 @@ uk:
     user_status:
       save: "Зберегти"
       set_custom_status: "Встановити власний статус"
+      edit_status: "Редагувати статус"
       what_are_you_doing: "Що ви робите?"
       pause_notifications: "Призупинити сповіщення"
       remove_status: "Видалити статус"
@@ -3064,7 +3143,6 @@ uk:
         }.
     learn_more: "Дізнатися більше…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Дізнатися більше…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Відгук…</a>"
     mute: Приглушити
     unmute: Розблокувати
     last_post: Опубліковано
@@ -3745,6 +3823,10 @@ uk:
       show_preview: "показати попередній перегляд"
       hide_preview: "приховати попередній перегляд"
       resize: "Змінити розмір редактора"
+      switch_to_markdown: "Перейти до редактора Markdown (%{keyboardShortcut})"
+      switch_to_rich_text: "Перейти до редактора з розширеними можливостями (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Переключитися на редактор Markdown"
+      switch_to_rich_text_no_shortcut: "Перейти до редактора з розширеними можливостями"
       quote_post_title: "Процитувати весь допис повністю"
       bold_label: "Ж"
       bold_title: "Жирний текст"
@@ -3944,6 +4026,26 @@ uk:
         alignment_center: "центр"
         alignment_right: "праворуч"
         alignment_changed: "Вирівнювання стовпців змінено на %{alignment}"
+        rows_added:
+          one: "Додано %{count} рядок"
+          few: "Додано %{count} рядки"
+          many: "Додано %{count} рядків"
+          other: "Додано %{count} рядків"
+        columns_added:
+          one: "додано %{count} стовпець"
+          few: "додано %{count} стовпці"
+          many: "додано %{count} стовпців"
+          other: "додано %{count} стовпців"
+        rows_removed:
+          one: "Видалено %{count} рядок"
+          few: "Видалено %{count} рядки"
+          many: "Видалено %{count} рядків"
+          other: "Видалено %{count} рядків"
+        columns_removed:
+          one: "Видалено %{count} стовпець"
+          few: "Видалено %{count} стовпці"
+          many: "Видалено %{count} стовпців"
+          other: "Видалено %{count} стовпців"
       unsupported_token: "Редактор форматованого тексту не підтримує всі функції, що використовуються в цій публікації; ви перемикаєтесь на редактор Markdown."
     notifications:
       tooltip:
@@ -4152,6 +4254,11 @@ uk:
       full_page_title: "Пошук"
       results: "результати"
       no_results: "Нічого не знайдено."
+      results_announcement:
+        one: "Знайдено %{count} результат."
+        few: "Знайдено %{count} результати."
+        many: "Знайдено %{count} результатів."
+        other: "Знайдено %{count} результатів."
       no_more_results: "Більше нічого не знайдено."
       post_format: "#%{post_number} від %{username}"
       results_page: "Результати пошуку для '%{term}'"
@@ -5723,6 +5830,7 @@ uk:
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
       latest_topics: "Останні теми"
+      view_all_topics: "Переглянути всі теми (%{number})"
       description_updated: "Опис оновлено"
       description_expand: "Показати більше"
       description_collapse: "Показати менше"
@@ -6040,6 +6148,7 @@ uk:
       with_category: "%{filter}%{category} теми"
       filter:
         title: "Відфільтровані результати для %{filter}"
+        results_for: "Результати за запитом: %{query}"
         reset: "скинути"
         button:
           label: "Filter"
@@ -6310,6 +6419,11 @@ uk:
         few: "%{number} нагороджено"
         many: "%{number} нагороджено"
         other: "%{number} нагороджено"
+      granted_times:
+        one: "Надано %{number} час"
+        few: "Надано %{number} часи"
+        many: "Надано %{number} часів"
+        other: "Надано %{number} часів"
       select_badge_for_title: Оберіть значок, що буде вашим званням
       none: "(немає)"
       successfully_granted: "Нагорода %{badge} успішно присвоєна %{username}"
@@ -6332,7 +6446,10 @@ uk:
       calendar: "Календар"
       save_ics: "Завантажити .ics файл"
       save_google: "Додати до календаря Google"
+      save_outlook: "Додати до Microsoft Outlook"
+      save_apple: "Додати до календаря Apple"
       remember: "Не запитувати мене знову"
+      remember_explanation: "Ви можете змінити цей параметр пізніше у налаштуваннях вашого профілю."
       download: "Завантажити"
       default_calendar: "Календар за замовчуванням"
       default_calendar_instruction: "Визначте, який календар слід використовувати при збереженні дат"
@@ -6437,6 +6554,8 @@ uk:
         synonyms_hint: "Коли використовуються вищезазначені теги, вони будуть замінені на %{baseTagName}."
         add_synonyms_confirm: "Будь-яке місце, де зараз використовується %{synonymNames} , буде змінено на %{tagName} . Ви впевнені, що хочете внести цю зміну?"
       localization:
+        language: "Мова тегів"
+        language_description: "Основна мова назви та опису цього тегу."
         hint: "Додайте локалізації, щоб відображати різні назви тегів для користувачів різними мовами."
         locale: "Локаль"
         name: "Імʼя"
@@ -6811,6 +6930,7 @@ uk:
         forum:
           label: Форум
       back_to_forum: "Повернутися до форуму"
+      back_to_admin: "Назад до адміністративної панелі"
       filter_links: "Фільтр посилання..."
       clear_filter: "Очистити фільтр"
       no_results:
@@ -7021,24 +7141,23 @@ uk:
         name: "Імʼя"
         plugin: "Плагін"
         metadata: "Метадані"
-        enabled: "Включено"
-        enabled_for: "Увімкнено для..."
+        enabled: "Включено?"
         show_image: "Показати зображення"
-        edit_groups: "Редагувати групи підписки"
+        feedback: "Зворотній зв'язок"
+        toggle: "Увімкнути %{name}"
         groups_updated: "Групи оновлено!"
         save_groups: "Зберегти групи"
         add_groups_to_enable: "Додайте групи, щоб увімкнути цю функцію"
         no_changes_to_save: "Немає змін для збереження"
         select_groups: "Виберіть групи…"
         opt_in_groups: "Вибрані групи"
-        show_related_settings: "Показати пов’язані налаштування..."
+        settings: "Налаштування"
         opt_in_groups_instructions: "Групи вибрані можна використовувати, щоб дозволити певній групі користувачів протестувати зміну, перш ніж вона буде опублікована для всіх. Зверніть увагу, що ці групи втратять актуальність, щойно зміна перейде до статусу «Стабільна»."
         enabled_for_throttle: "Ви занадто швидко змінили, для кого ввімкнено цю зміну. Зачекайте кілька секунд, перш ніж повторити спробу."
         change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
         change_disabled: "Ви відмовилися від цієї зміни"
         depends_on_notice: "Для цієї зміни потрібно ввімкнути %{dependencyLinks}."
         permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
-        permanent_soon_notice: "Ця зміна незабаром стане остаточною. Ви більше не зможете відмовитися від неї."
         permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
         no_changes: "Наразі жодних змін не планується."
         preview: "Попередній перегляд"
@@ -7046,7 +7165,6 @@ uk:
         default_warning_short: "Значення за замовчуванням для цього параметра змінилося, докладніше про це читайте на сторінці <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>майбутніх змін</a>."
         enabled_for_options:
           no_one: "Ніхто"
-          everyone: "Усі"
           staff: "тільки %{staffGroupName}"
           specific_groups: "Конкретна(і) група(и)"
           specific_groups_with_group_names:
@@ -7238,7 +7356,10 @@ uk:
             client_id_description: "Ідентифікатор для цієї програми. Введіть таке ж значення при налаштуванні клієнта."
             redirect_uris: "URI перенаправлення"
             redirect_uris_description: "Куди повертається браузер після того, як користувач схвалює доступ. Введіть один точний URI на рядок."
+            management: "Оновлення реєстрації"
+            manual: "Керується адміністраторами"
             automatic: "Автоматичні"
+            manual_description: "Адміністратори керують назвою цього клієнта та URI перенаправлення. Оновлення метаданих не вплине на ці параметри, тому слід підтримувати їх актуальність."
             create: "Додати клієнта"
             created: "Додано клієнт OAuth."
             empty: "Клієнти OAuth не зареєстровані."

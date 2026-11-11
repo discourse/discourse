@@ -30,10 +30,10 @@ module Onebox
           <aside class="onebox google-photos">
             <header class="source">
               <img src="#{raw[:favicon]}" class="site-icon" width="16" height="16">
-              <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{raw[:site_name]}</a>
+              <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{ERB::Util.html_escape(raw[:site_name])}</a>
             </header>
             <article class="onebox-body">
-              <h3><a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{og.title}</a></h3>
+              <h3><a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{ERB::Util.html_escape(og.title)}</a></h3>
               <div class="aspect-image-full-size">
                 <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener" class="image-wrapper">
                   <img src="#{og.secure_image_url}" class="scale-image"/>
@@ -54,7 +54,7 @@ module Onebox
             <a href='#{escaped_url}' target='_blank' rel='noopener'>
               <span class='outer-box' style='width:#{og.image_width}px'>
                 <span class='inner-box'>
-                  <span class='album-title'>#{Onebox::Helpers.truncate(album_title, 80)}</span>
+                  <span class='album-title'>#{ERB::Util.html_escape(Onebox::Helpers.truncate(album_title, 80))}</span>
                 </span>
               </span>
               <img src='#{og.secure_image_url}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>

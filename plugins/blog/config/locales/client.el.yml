@@ -22,6 +22,7 @@ el:
         edit: Επεξεργασία
         activate: Ενεργοποίηση
         preview: Προεπισκόπηση
+        customize: Προσαρμογή
         import: Εισαγωγή
         export: Εξαγωγή
         active: Ενεργό
@@ -34,6 +35,7 @@ el:
         change:
           title: τίτλος
           body: κύριο μέρος
+          tags: ετικέτες
       review:
         create: Δημιουργία συνδέσμου
         copy: Αντιγραφή

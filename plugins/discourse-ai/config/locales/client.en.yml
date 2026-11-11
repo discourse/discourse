@@ -310,6 +310,10 @@ en:
 
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Suggest with AI"
+        updated: "Classification updated"
+        no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
       view_raw: "View raw"
       view_decoded: "View decoded"
@@ -1246,6 +1250,7 @@ en:
           system_one: "System One"
           typesafe: "TypeSafe"
           open_ai: "OpenAI Decisions"
+          CDCK: "CDCK"
 
       mcp_servers:
         short_title: "MCP servers"
@@ -1340,6 +1345,7 @@ en:
         type: "Type"
         provider: "Provider"
         edit: "Edit"
+        seeded_warning: "This is pre-configured on your site and cannot be edited."
         choose_type: "What kind of model do you want to add?"
         select_type: "Select"
         types:
@@ -1652,7 +1658,6 @@ en:
           text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
           text-embedding-ada-002: "OpenAI's previous-generation model, superseded by text-embedding-3-small"
         edit: "Edit"
-        seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
           title: "Run test"
           running: "Running test..."

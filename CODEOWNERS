@@ -14,3 +14,32 @@
 # libvips
 *discourse_vips* @tgxworld
 *discourse-vips* @tgxworld
+
+# Access control lists
+**/acl/ @martin-brennan
+**/access_control_list/ @martin-brennan
+*access_control_list* @martin-brennan
+*access_control_parameter* @martin-brennan
+*access-control* @martin-brennan
+d_access_control* @martin-brennan
+acl_* @martin-brennan
+*_acl_* @martin-brennan
+*_acls_* @martin-brennan
+*_owner_acls* @martin-brennan
+*_permissions_to_acls* @martin-brennan
+/.skills/discourse-acl-authoring/ @martin-brennan
+
+# Upcoming Changes
+**/upcoming_changes/ @martin-brennan
+**/upcoming-changes/ @martin-brennan
+*upcoming_change* @martin-brennan
+*upcoming-change* @martin-brennan
+*site_setting_group* @martin-brennan
+/app/services/site_setting/upsert_groups.rb @martin-brennan
+/spec/services/site_setting/upsert_groups_spec.rb @martin-brennan
+/.skills/discourse-upcoming-changes/ @martin-brennan
+/.skills/discourse-upcoming-changes-authoring/ @martin-brennan
+/frontend/discourse/app/static/dev-tools/upcoming-changes-debug/ @discourse/dev-xp @martin-brennan
+
+# Boards
+/plugins/boards/ @martin-brennan

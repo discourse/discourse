@@ -738,88 +738,33 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
-    it "highlights Unicode bidirectional override characters during cleanup" do
-      cooked = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        \u202E
-        </code></pre>
-      HTML
-      cleaned = PrettyText.cleanup(cooked)
-      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+    it "highlights every dangerous Unicode bidirectional character in code and pre elements" do
+      characters = %W[\u202A \u202B \u202C \u202D \u202E \u2066 \u2067 \u2068 \u2069]
 
-      html = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>
-        </code></pre>
-      HTML
+      cooked = PrettyText.cook(<<~MD)
+        ```
+        #{characters.join}
+        ```
 
-      expect(cleaned.strip).to eq(html.strip)
+        <code>#{characters.join}</code>
+
+        <pre>#{characters.join}</pre>
+      MD
+
+      warnings = Nokogiri::HTML5.fragment(cooked).css(".bidi-warning")
+      expect(warnings.map { |warning| [warning.parent.name, warning.text] }).to eq(
+        %w[code code pre]
+          .product(characters)
+          .map { |tag, char| [tag, format("<U+%04X>", char.ord)] },
+      )
     end
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        ```
-        #{bidi}
-        ```
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><code class="lang-auto"><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span>
-          </code></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-    end
+    it "keeps attributes intact when they contain Unicode bidirectional override characters" do
+      title = "\u202E<img src=/x style=position:fixed>"
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters in solo code and pre nodes, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <code>#{bidi}</code>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <p><code><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></code></p>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <pre>#{bidi}</pre>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
+      cooked = PrettyText.cook("<code>\u202E<abbr title=\"#{title}\">a</abbr></code>")
+
+      expect(Nokogiri::HTML5.fragment(cooked).at_css("code abbr")["title"]).to eq(title)
     end
   end
 
@@ -2657,6 +2602,20 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+    end
+
+    it "does not backtrack catastrophically on long numeric suffixes" do
+      suffix = "#{"1" * 1000}x#{"1" * 1000},"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      cooked = PrettyText.cook("![a|#{suffix}](http://png.com/my.png)")
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(cooked).to include(%{alt="a|#{suffix}"})
+      expect(elapsed).to be < 2, "cooking took #{elapsed.round(2)}s"
     end
 
     it "ignores whitespace and allows scaling by percent, width, height" do

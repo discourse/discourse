@@ -175,6 +175,7 @@ export interface SiteAclEntry {
 export interface SiteCategoryType extends CategoryTypeMetadata {
   description: string;
   icon: string | null;
+  svg_icon: string | null;
 }
 
 /** The site banner; an empty object when no banner is set. */
@@ -370,12 +371,9 @@ export default class Site extends RestModel {
     }
 
     if (result.archetypes) {
-      result.archetypes = (
-        result.archetypes as unknown as { site?: Site }[]
-      ).map((a) => {
+      result.archetypes = result.archetypes.map((a) => {
         a.site = result;
-        // TODO(typescript-pending): RestCompatModel.create is untyped; remove when it returns the subclass.
-        return Archetype.create(a) as Archetype;
+        return Archetype.create(a);
       });
     }
 
@@ -625,13 +623,6 @@ export default class Site extends RestModel {
     if (!tags) {
       return [];
     }
-    // TODO(typescript-pending): the store registry has no tag entry; remove when it does.
-    return tags.map(
-      (tag) =>
-        this.store.createRecord(
-          "tag",
-          tag as unknown as RestModelAttrs<RestModel>
-        ) as unknown as Tag
-    );
+    return tags.map((tag) => this.store.createRecord("tag", tag));
   }
 }

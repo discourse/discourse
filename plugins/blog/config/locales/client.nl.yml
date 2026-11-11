@@ -23,6 +23,8 @@ nl:
         edit: Bewerken
         activate: Activeren
         preview: Voorbeeld
+        customize: Aanpassen
+        customized_theme_name: "%{name} (aangepast)"
         import: Importeren
         export: Exporteren
         active: Actief
@@ -35,6 +37,7 @@ nl:
         change:
           title: titel
           body: inhoud
+          tags: tags
       review:
         create: Link maken
         copy: Kopiëren

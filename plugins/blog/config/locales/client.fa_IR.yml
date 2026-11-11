@@ -21,6 +21,7 @@ fa_IR:
         edit: ویرایش
         activate: فعال کردن
         preview: پیش‌نمایش
+        customize: سفارشی‌سازی
         import: ورود داده‌ها
         export: خروجی گرفتن
         active: فعال
@@ -33,6 +34,7 @@ fa_IR:
         change:
           title: عنوان
           body: body
+          tags: برچسب‌ها
       review:
         create: ایجاد پیوند
         copy: کپی

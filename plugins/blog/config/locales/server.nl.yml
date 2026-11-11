@@ -18,3 +18,5 @@ nl:
     replies:
       one: "%{count} antwoord"
       other: "%{count} antwoorden"
+    themes:
+      default: Standaard

@@ -18,6 +18,7 @@ nb_NO:
         theme_name: Navn på tema
         edit: Rediger
         preview: Forhåndsvis
+        customize: Tilpasse
         import: Importer
         export: Eksporter
         active: Aktiv
@@ -30,6 +31,7 @@ nb_NO:
         change:
           title: tittel
           body: body
+          tags: stikkord
       review:
         copy: Kopier
         open: Åpne

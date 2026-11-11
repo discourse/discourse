@@ -115,10 +115,10 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       bundle = Migrations::Converters::MarkdownEngine::Bundle
 
       files = []
-      # Only the JavaScript sources — the core-bundle globs also cover build
-      # configs and the lockfile, which read no site settings.
+      # Only the JavaScript and TypeScript sources — the core-bundle globs also
+      # cover build configs and the lockfile, which read no site settings.
       bundle.core_bundle_globs.each do |pattern|
-        files.concat(Dir.glob(pattern, base: root).grep(/\.js\z/).map { |f| File.join(root, f) })
+        files.concat(Dir.glob(pattern, base: root).grep(/\.[jt]s\z/).map { |f| File.join(root, f) })
       end
       bundle::CORE_MARKDOWN_PLUGINS.each do |plugin|
         files.concat(

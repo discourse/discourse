@@ -18,3 +18,5 @@ sq:
     replies:
       one: "%{count} përgjigje"
       other: "%{count} përgjigje"
+    themes:
+      default: Paracaktuar

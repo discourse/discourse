@@ -28,6 +28,17 @@ RSpec.describe Onebox::OpenGraph do
     end
   end
 
+  describe "#title_attr" do
+    it "escapes the title for an HTML attribute" do
+      graph =
+        described_class.new(
+          Nokogiri.HTML(%{<meta property="og:title" content="It's &quot;quoted&quot;">}),
+        )
+
+      expect(graph.title_attr).to eq("title='It&#39;s &quot;quoted&quot;'")
+    end
+  end
+
   describe "Collections" do
     subject(:graph) { described_class.new(doc) }
 

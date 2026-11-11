@@ -24,7 +24,7 @@ import { postUrl } from "discourse/lib/utilities";
 import ActionSummary, {
   type ActionSummaryFields,
 } from "discourse/models/action-summary";
-import Badge from "discourse/models/badge";
+import Badge, { type BadgePayload } from "discourse/models/badge";
 import type {
   CategoryFields,
   default as Category,
@@ -199,8 +199,7 @@ export interface PostFields {
     clicks: number;
     title?: string | null;
   }[];
-  /** TODO(typescript-pending): Badge lacks a typed createFromJson envelope; narrow when Badge is converted. */
-  badges_granted?: RestPayload[];
+  badges_granted?: BadgesGrantedEnvelope[];
   post_localizations?: unknown[];
   localized_oneboxes?: {
     topic_id: number;
@@ -220,35 +219,20 @@ export interface PostFields {
   children?: RestPayload[];
 }
 
-/** TODO(typescript-pending): TopicDetails forwarders omit these payload fields; remove when TopicDetails is typed. */
-type PostTopicDetails = Omit<Topic["details"], "notification_level"> & {
-  created_by?: TopicBasicUser;
-  can_delete?: boolean;
-  can_edit_staff_notes?: boolean;
-  can_permanently_delete?: boolean;
-  can_publish_page?: boolean;
-  can_recover?: boolean;
-  can_split_merge_topic?: boolean;
-  notification_level?: number;
-};
-
-/** TODO(typescript-pending): Topic user_badges is only object; remove when its badge payload and Badge are typed. */
-type PostTopicBadges = {
-  users: Record<number, { badge_ids: number[] }>;
-  badges: Record<
-    number,
-    {
-      id: number;
-      name: string;
-      slug: string;
-      description: string | null;
-      icon: string | null;
-      image_url: string | null;
-      badge_grouping_id: number | null;
-      badge_type_id: number;
-    }
-  >;
-};
+/** One post-header grant, with its badge and badge type sideloads. */
+export interface BadgesGrantedEnvelope {
+  basic_user_badge: {
+    id: number;
+    granted_at: string;
+    /** Grouped grants only. */
+    count?: number;
+    /** Null without a badge grouping. */
+    grouping_position: number | null;
+    badge_id: number;
+  };
+  badges: BadgePayload[];
+  badge_types: { id: number; name: string; sort_order: number }[];
+}
 
 /** Raw summaries become ActionSummary instances during munge; zero counts may be omitted by the server. */
 export type PostActionSummaryData = Pick<ActionSummaryFields, "id"> &
@@ -445,7 +429,7 @@ export default class Post extends RestModel {
   @tracked action_code_who: unknown;
   @tracked actions_summary?: ActionSummary[];
   @tracked admin?: boolean;
-  @tracked badges_granted?: RestPayload[];
+  @tracked badges_granted?: BadgesGrantedEnvelope[];
   @tracked bookmarked?: boolean;
   @tracked can_delete?: boolean;
   @tracked can_permanently_delete?: boolean;
@@ -550,8 +534,7 @@ export default class Post extends RestModel {
 
   @computed("topic.details.created_by.id")
   get topicCreatedById() {
-    return (this.topic?.details as PostTopicDetails | undefined)?.created_by
-      ?.id;
+    return this.topic?.details?.created_by?.id;
   }
 
   set topicCreatedById(value: number | undefined) {
@@ -591,10 +574,7 @@ export default class Post extends RestModel {
 
   @computed("topic.details.created_by.id", "user_id")
   get topicOwner() {
-    return deepEqual(
-      (this.topic?.details as PostTopicDetails | undefined)?.created_by?.id,
-      this.user_id
-    );
+    return deepEqual(this.topic?.details?.created_by?.id, this.user_id);
   }
 
   get shareUrl() {
@@ -689,15 +669,11 @@ export default class Post extends RestModel {
   }
 
   get canDeleteTopic() {
-    return (
-      this.firstPost &&
-      !this.deleted &&
-      (this.topic!.details as PostTopicDetails).can_delete
-    );
+    return this.firstPost && !this.deleted && this.topic!.details.can_delete;
   }
 
   get canEditStaffNotes() {
-    return !!(this.topic!.details as PostTopicDetails).can_edit_staff_notes;
+    return !!this.topic!.details.can_edit_staff_notes;
   }
 
   get canFlag() {
@@ -712,23 +688,20 @@ export default class Post extends RestModel {
     return (
       this.deleted &&
       (this.firstPost
-        ? (this.topic!.details as PostTopicDetails).can_permanently_delete
+        ? this.topic!.details.can_permanently_delete
         : this.can_permanently_delete)
     );
   }
 
   get canPublishPage() {
-    return (
-      this.firstPost &&
-      !!(this.topic!.details as PostTopicDetails).can_publish_page
-    );
+    return this.firstPost && !!this.topic!.details.can_publish_page;
   }
 
   get canRecoverTopic() {
     return (
       this.firstPost &&
       (this.deleted || this.user_deleted) &&
-      (this.topic!.details as PostTopicDetails).can_recover
+      this.topic!.details.can_recover
     );
   }
 
@@ -737,7 +710,7 @@ export default class Post extends RestModel {
       this.firstPost &&
       !this.deleted &&
       !this.user_deleted &&
-      (this.topic!.details as PostTopicDetails).can_recover
+      this.topic!.details.can_recover
     );
   }
 
@@ -750,8 +723,7 @@ export default class Post extends RestModel {
   }
 
   get canSplitMergeTopic() {
-    return !!(this.topic?.details as PostTopicDetails | undefined)
-      ?.can_split_merge_topic;
+    return !!this.topic?.details?.can_split_merge_topic;
   }
 
   get canToggleLike() {
@@ -852,30 +824,26 @@ export default class Post extends RestModel {
   }
 
   get topicNotificationLevel() {
-    return (this.topic!.details as PostTopicDetails).notification_level;
+    return this.topic!.details.notification_level;
   }
 
   get userBadges() {
     if (!this.topic?.user_badges) {
       return;
     }
-    const badgeIds = (this.topic.user_badges as PostTopicBadges).users[
-      this.user_id!
-    ]?.badge_ids;
+    const badgeIds = this.topic.user_badges.users[this.user_id!]?.badge_ids;
     if (badgeIds) {
       return badgeIds.map(
-        (badgeId) =>
-          (this.topic!.user_badges as PostTopicBadges).badges[badgeId]
+        (badgeId) => this.topic!.user_badges!.badges[badgeId]
       );
     }
   }
 
-  /** TODO(typescript-pending): Badge.createFromJson infers WarpRestModel wrappers; remove the cast when Badge returns its own type. */
   @cached
   get badgesGranted(): (Badge | undefined)[] | undefined {
     return this.badges_granted?.map((json) => {
       const badges = Badge.createFromJson(json);
-      return (Array.isArray(badges) ? badges[0] : badges) as Badge | undefined;
+      return Array.isArray(badges) ? badges[0] : badges;
     });
   }
 

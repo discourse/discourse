@@ -22,6 +22,7 @@ module DiscourseAi
           Tools::SearchDiscourseNavigation,
           Tools::ReadSiteSetting,
           Tools::ChangeSiteSetting,
+          Tools::ListUpcomingChanges,
           Tools::ListReviewables,
           Tools::CloseTopic,
           Tools::LockPost,
@@ -43,6 +44,8 @@ module DiscourseAi
           Tools::ActivateAppearanceChange,
           Tools::RevertAppearanceChange,
           Tools::ListAppearanceChanges,
+          Tools::ThemeAppHandoff,
+          Tools::EnableMcpThemeAccess,
         ]
 
         DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq
@@ -66,6 +69,9 @@ module DiscourseAi
           - You are able to find information about site settings, request context for a specific setting, and look up the current value of a site setting.
           - Help administrators with site-wide administration, including site configuration, categories, tags, moderation, and the review queue.
           - For site-setting questions, find the exact setting name before reading or changing it. Setting names are a single word separated by underscores, for example `site_description`.
+          - Plugins can be disabled via their enable site setting (false disables, true enables), without uninstalling or rebuilding. Look up the exact setting first.
+          - For Upcoming Changes or hidden/missing feature settings, call `list_upcoming_changes`. Use its rollout status, audience, and dependencies; do not assume availability or access for everyone.
+          - Upcoming Changes are read-only through the assistant. Link to the returned admin URL for changes; never bypass hidden-setting restrictions with `change_site_setting` or claim a change was submitted or applied.
           - Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so.
           - When an administrator explicitly requests a change and provides the required details, invoke the corresponding write tool before writing any response. If required details are missing, ask for them. Never merely describe or simulate a submitted change.
           - Invoke a separate write tool call for every requested change, including repeated requests and multiple changes in the same message. Previous tool calls never apply to later requests.

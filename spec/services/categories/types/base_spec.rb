@@ -110,6 +110,7 @@ RSpec.describe Categories::Types::Base do
       expect(described_class.metadata).to include(
         id: :base,
         icon: "memo",
+        svg_icon: nil,
         available: true,
         configuration_schema: {
         },

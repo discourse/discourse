@@ -682,13 +682,6 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
     move_type_str.sub!("topic", "message") if @move_to_pm
 
-    topic_link =
-      if posts.first.is_first_post?
-        "[#{destination_topic.title}](#{destination_topic.relative_url})"
-      else
-        "[#{destination_topic.title}](#{posts.first.relative_url})"
-      end
-
     post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
 
     continue =
@@ -707,11 +700,22 @@ class PostMover
 
     message =
       I18n.with_locale(SiteSetting.default_locale) do
-        I18n.t(
-          "move_posts.#{move_type_str}_moderator_post",
-          count: posts.length,
-          topic_link: topic_link,
-        )
+        if original_topic_readers_can_see_destination?
+          topic_link =
+            if posts.first.is_first_post?
+              "[#{destination_topic.title}](#{destination_topic.relative_url})"
+            else
+              "[#{destination_topic.title}](#{posts.first.relative_url})"
+            end
+
+          I18n.t(
+            "move_posts.#{move_type_str}_moderator_post",
+            count: posts.length,
+            topic_link: topic_link,
+          )
+        else
+          I18n.t("move_posts.#{move_type_str}_moderator_post_no_link", count: posts.length)
+        end
       end
 
     original_topic.add_moderator_post(
@@ -721,6 +725,16 @@ class PostMover
       action_code: "split_topic",
       post_number: @first_post_number_moved,
     )
+  end
+
+  # Anyone able to read the original topic sees the move notice, so the
+  # destination is only named when all of those readers can also see it.
+  def original_topic_readers_can_see_destination?
+    return true if !destination_topic.read_restricted_category?
+    return false if !original_topic.read_restricted_category?
+    return true if original_topic.category_id == destination_topic.category_id
+
+    (original_topic.category.secure_group_ids - destination_topic.category.secure_group_ids).empty?
   end
 
   def posts

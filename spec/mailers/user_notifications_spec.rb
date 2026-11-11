@@ -402,6 +402,17 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to include("New Users")
       end
 
+      it "does not leak hidden posts as the digest best post excerpt" do
+        secret = "this is the secret hidden reply body"
+        hidden_reply =
+          Fabricate(:post, topic: popular_topic, post_number: 2, raw: secret, score: 9999)
+        hidden_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(popular_topic.reload.visible).to eq(true)
+        expect(email.text_part.body.to_s).not_to include(secret)
+        expect(email.html_part.body.to_s).not_to include(secret)
+      end
+
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
         expect(email.html_part.body.to_s).to_not include("New Users")
@@ -1684,6 +1695,29 @@ RSpec.describe UserNotifications do
 
       expect(mail.body).to include(
         "[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)",
+      )
+    end
+
+    it "renders participant names as text" do
+      SiteSetting.prioritize_username_in_ux = false
+      group = Fabricate(:group, full_name: "Help](https://evil.example) <img src=x> \\[x")
+      member = Fabricate(:user, name: "<b>Bond</b>")
+      topic.allowed_users = [user, member]
+      topic.allowed_groups = [group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      links =
+        Nokogiri.HTML5(mail.html_part.body.to_s).css("a").to_h { |link| [link["href"], link.text] }
+      expect(links).to include(
+        group.full_url => "#{group.full_name} (0)",
+        member.full_url => member.name,
       )
     end
 

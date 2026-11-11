@@ -26,7 +26,7 @@ module Onebox
             src="#{iframe_src}"
             width="#{oembed.width}"
             height="#{oembed.height}"
-            title="#{oembed.title}"
+            #{oembed.title_attr}
             frameborder="0"
             allowfullscreen
           ></iframe>

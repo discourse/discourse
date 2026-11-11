@@ -23,6 +23,7 @@ hu:
         edit: Szerkesztés
         activate: Aktiválás
         preview: Előnézet
+        customize: Személyre szabás
         import: Importálás
         export: Exportálás
         active: Aktív
@@ -35,6 +36,7 @@ hu:
         change:
           title: cím
           body: törzs
+          tags: címkék
       review:
         create: Hivatkozás létrehozása
         copy: Másolás

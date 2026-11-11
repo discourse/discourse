@@ -16,6 +16,16 @@ ug:
       any_domain: "خالىغان تور دائىرىسىدىن كەلگەن CIMD"
     ace_editor:
       resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
+    code_editor:
+      resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
+      search:
+        replace: "ئالماشتۇر"
+        next: "كېيىنكى"
+        previous: "ئالدىنقى"
+        close: "تاقا"
+        go: "باشلا"
+      fold:
+        to: "كىمگە"
     user_api_key:
       authorize: "دەلىللە"
       deny: "ۋاز كەچ"
@@ -2603,7 +2613,6 @@ ug:
         } چېكىدىن ئېشىپ كەتتى.
     learn_more: "مول بىلىم…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مول بىلىم…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>قايتۇرما ئىنكاس…</a>"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
     last_post: يوللانغان ۋاقىت
@@ -5550,23 +5559,22 @@ ug:
         name: "ئىسمى"
         plugin: "قىستۇرما"
         metadata: "تەپسىلىي سانلىق مەلۇمات"
-        enabled: "قوزغىتىلدى"
-        enabled_for: "قوزغىتىلدى ..."
+        enabled: "قوزغىتىلدى؟"
         show_image: "سۈرەتنى كۆرسەت"
-        edit_groups: "قوشۇلىدىغان گۇرۇپپا تاللاشنى تەھرىرلەيدۇ"
+        feedback: "قايتۇرما ئىنكاس"
         groups_updated: "گۇرۇپپا يېڭىلاندى!"
         save_groups: "گۇرۇپپا ۋاقلا"
         add_groups_to_enable: "بۇ ئىقتىدارنى قوزغىتىش ئۈچۈن گۇرۇپپىغا قوشىدۇ"
         no_changes_to_save: "ساقلايدىغان ئۆزگەرتىش يوق"
         select_groups: "گۇرۇپپا تاللا…"
         opt_in_groups: "قوشۇلىدىغان گۇرۇپپىنى تاللايدۇ"
+        settings: "تەڭشەك"
         opt_in_groups_instructions: "كىرىدىغان گۇرۇپپىنى تاللاش مۇئەييەن ئىشلەتكۈچى گۇرۇپپىسى رەسمىي ئۆزگىرىش ئېلان قىلىنىشتىن ئىلگىرى سىناشقا ئىشلىتەلەيدۇ. ئەسكەرتىش ئۆزگىرىش مۇقىم ھالەتكە كىرگەندىن كېيىن ھەممە ئىشلەتكۈچى ئۆزگىرىشنى قوللىنىدۇ."
         enabled_for_throttle: "بۇ ئۆزگىرىشنى بەك تېز قوزغاتتىڭىز. ئازراق كۈتۈپ ئاندىن قايتا سىناڭ."
         change_enabled_for_success: "%{enabledFor} نىڭ ئۆزگەرتىشىنى قوزغاتتىڭىز"
         preview: "ئالدىن كۆزەت"
         enabled_for_options:
           no_one: "ھېچكىم"
-          everyone: "ھەممەيلەن"
           specific_groups: "مۇئەييەن گۇرۇپپا"
           specific_groups_with_group_names:
             one: "گۇرۇپپا %{groupNames}"

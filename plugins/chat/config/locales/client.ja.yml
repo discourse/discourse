@@ -82,8 +82,6 @@ ja:
           other: "これら %{count} 件のメッセージを削除してもよろしいですか？"
       channel_settings:
         title: "チャンネルの設定"
-        edit: "編集"
-        add: "追加"
         star_channel: "チャンネルにスターを設定する"
         unstar_channel: "チャンネルのスターを解除する"
         close_channel: "チャンネルを閉鎖する"
@@ -93,7 +91,6 @@ ja:
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
         leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
-        notification_settings: "通知設定"
         notification_settings_context: "通知"
         join: "参加"
         leave: "退出"
@@ -324,21 +321,22 @@ ja:
       members_view:
         filter_placeholder: メンバーを検索
         add_member: メンバーを追加
-        back_to_settings: "設定に戻る"
       about_view:
         associated_topic: リンクされたトピック
         associated_category: リンクされたカテゴリ
-        title: タイトル
         name: 名前
         description: 説明
       channel_info:
         back_to_all_channels: "すべてのチャンネル"
         back_to_channel: "戻る"
+        nav_label: "チャンネル情報"
         tabs:
           members: メンバー
+          preferences: 設定
           settings: 設定
           search: 検索
         remove_member: "削除"
+        members_title: "%{channel} メンバー"
       new_message_modal:
         title: メッセージを送信する
         add_user_long: <kbd>Shift + クリック</kbd>または <kbd>Shift + Enter</kbd><span>@%{username} を追加</span>
@@ -358,15 +356,12 @@ ja:
         create_new_group_chat: "グループチャットを作成"
         group_with_too_many_members: "にはメンバーが多すぎます (%{membersCount} 人)"
       channel_edit_name_slug_modal:
-        title: チャンネルを編集する
         input_placeholder: 名前を追加してください
         slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
         reset_emoji: 絵文字をリセット
       channel_edit_description_modal:
-        title: 説明を編集する
         input_placeholder: 説明を追加する
-        description: このチャンネルの紹介を入力します
       direct_message_creator:
         add_to_channel: "チャンネルに追加"
         title: 新しいメッセージ
@@ -448,7 +443,6 @@ ja:
         always: "すべてのアクティビティ"
       settings:
         channel_wide_mentions_label: "@all と @here メンションを許可する"
-        channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
         channel_threading_label: "スレッド"
         channel_threading_description: "スレッドが有効になっている場合、チャットメッセージへの返信によって個別の会話が作成され、メインチャンネルと並行して存在することになります。"
         auto_join_users_label: "自動的にユーザーを追加する"
@@ -469,9 +463,6 @@ ja:
         save: "保存"
         saved: "保存済み"
         unfollow: "退出"
-        admin_title: "管理者"
-        settings_title: "設定"
-        info_title: "チャンネル情報"
         category_label: "カテゴリ"
         history_label: "履歴"
         members_label: "メンバー"
