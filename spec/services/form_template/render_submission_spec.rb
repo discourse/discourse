@@ -190,6 +190,8 @@ RSpec.describe FormTemplate::RenderSubmission do
 
       it "renders the default output" do
         expect(result.raw).to eq("### Details\n**Hello**\n\n### seats\n1e2")
+        expect(result.form_submission.render).to eq(result.raw)
+        expect(result.form_submission.answers).to eq(answers.stringify_keys)
       end
     end
 

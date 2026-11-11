@@ -11,6 +11,7 @@ import type DialogService from "discourse/dialog-holder/services/dialog";
 import type { AjaxError } from "discourse/lib/ajax";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
+import { deepEqual } from "discourse/lib/object";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
@@ -22,7 +23,10 @@ import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import type Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
-import type Post from "discourse/models/post";
+import type {
+  default as Post,
+  PostFormSubmission,
+} from "discourse/models/post";
 import RestModel, {
   type RestModelAttrs,
   type RestModelClass,
@@ -68,6 +72,11 @@ export interface ComposerSaveOptions {
   editReason?: string | null;
 }
 
+export interface ComposerFormTemplateDraft {
+  id?: number;
+  answers: Record<string, unknown>;
+}
+
 /** Runtime-assigned data; plugins augment this interface with their own fields. */
 export interface ComposerFields {
   action?: string;
@@ -97,6 +106,11 @@ export interface ComposerFields {
   hasTargetGroups?: boolean;
   warningsDisabled?: boolean;
   formTemplateId?: number;
+  formTemplateDraft?: ComposerFormTemplateDraft | null;
+  originalFormTemplateDraft?: ComposerFormTemplateDraft | null;
+  hasSavedFormTemplateDraft?: boolean;
+  formSubmission?: PostFormSubmission | null;
+  formTemplateData?: Record<string, unknown> | null;
   composerHeight?: string | number;
   _hasTopicTemplates?: boolean;
 }
@@ -137,6 +151,9 @@ export interface ComposerOpenOptions {
   original_title?: string | null;
   original_tags?: ComposerTags | null;
   adminOnboardingTopicOption?: string | null;
+  formTemplateId?: number;
+  formTemplateDraft?: ComposerFormTemplateDraft | null;
+  originalFormTemplateDraft?: ComposerFormTemplateDraft | null;
   reply_to_post_number?: number | null;
   reply_to_user?: ComposerReplyToUser | null;
   [key: string]: unknown;
@@ -198,6 +215,8 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _update_serializer: Record<string, string> = {
+    form_template_data: "formTemplateData",
+    original_form_answers: "originalFormAnswers",
     raw: "reply",
     topic_id: "topic.id",
     original_text: "originalText",
@@ -213,6 +232,8 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _draft_serializer: Record<string, string> = {
+    formTemplateDraft: "formTemplateDraft",
+    originalFormTemplateDraft: "originalFormTemplateDraft",
     reply: "reply",
     action: "action",
     title: "title",
@@ -553,9 +574,39 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("reply", "originalText")
+  @computed(
+    "reply",
+    "originalText",
+    "formTemplateDraft",
+    "originalFormTemplateDraft",
+    "formSubmission",
+    "category"
+  )
   get replyDirty() {
+    const formDraft = this.formTemplateDraft;
+    if (
+      formDraft &&
+      (this.formSubmission ||
+        this.category?.form_template_ids?.some(
+          (id) => String(id) === String(formDraft.id)
+        ))
+    ) {
+      return !deepEqual(formDraft, this.originalFormTemplateDraft);
+    }
     return (this.reply || "").trim() !== (this.originalText || "").trim();
+  }
+
+  get currentFormTemplateDraft() {
+    const draft = this.formTemplateDraft;
+    if (draft && String(draft.id) === String(this.formTemplateId)) {
+      return draft;
+    }
+  }
+
+  get originalFormAnswers() {
+    if (this.formSubmission && this.originalFormTemplateDraft) {
+      return JSON.stringify(this.originalFormTemplateDraft.answers);
+    }
   }
 
   @computed("title", "originalTitle")
@@ -1013,7 +1064,8 @@ export default class Composer extends RestModel {
     "reply",
     "titleLengthValid",
     "replyLength",
-    "minimumPostLength"
+    "minimumPostLength",
+    "formTemplateDraft"
   )
   get canSaveDraft() {
     if (this.action === Composer.ADD_TRANSLATION) {
@@ -1026,6 +1078,10 @@ export default class Composer extends RestModel {
 
     if (this.disableDrafts) {
       return false;
+    }
+
+    if (this.formTemplateDraft) {
+      return true;
     }
 
     // Title is only edited when editing topic OP or making a new topic.
@@ -1214,6 +1270,12 @@ export default class Composer extends RestModel {
 
   clearState() {
     this.setProperties({
+      formTemplateDraft: null,
+      hasSavedFormTemplateDraft: false,
+      originalFormTemplateDraft: null,
+      formTemplateData: null,
+      formSubmission: null,
+      formTemplateId: null,
       originalText: null,
       originalTitle: null,
       originalTags: null,
@@ -1304,6 +1366,7 @@ export default class Composer extends RestModel {
     // user clicked "overwrite edits" button
     if (this.editConflict) {
       delete props.original_text;
+      delete props.original_form_answers;
       delete props.original_title;
       delete props.original_tags;
     }
@@ -1545,6 +1608,9 @@ export default class Composer extends RestModel {
       { forceSave: this.draftForceSave }
     )
       .then((result) => {
+        if (this.formTemplateDraft) {
+          this.set("hasSavedFormTemplateDraft", true);
+        }
         if ("draft_sequence" in result) {
           this.set("draftSequence", result.draft_sequence);
         }
@@ -1650,6 +1716,12 @@ export default class Composer extends RestModel {
     }
 
     this.setProperties({
+      formSubmission: null,
+      formTemplateData: null,
+      formTemplateDraft: opts.formTemplateDraft,
+      hasSavedFormTemplateDraft: !!opts.formTemplateDraft,
+      originalFormTemplateDraft: opts.originalFormTemplateDraft,
+      formTemplateId: opts.formTemplateDraft?.id || opts.formTemplateId,
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
@@ -1788,6 +1860,22 @@ export default class Composer extends RestModel {
       this.set("reply", opts.quote);
       this.set("originalText", opts.quote);
     }
+
+    promise = promise.then(() => {
+      if (isEdit(opts.action) && this.post?.form_submission) {
+        const submission = this.post.form_submission;
+        const draft = {
+          id: submission.template_id,
+          answers: submission.answers,
+        };
+        this.setProperties({
+          formSubmission: submission,
+          formTemplateId: submission.template_id,
+          formTemplateDraft: opts.formTemplateDraft || draft,
+          originalFormTemplateDraft: opts.originalFormTemplateDraft || draft,
+        });
+      }
+    });
 
     if (opts.title) {
       this.set("title", opts.title);

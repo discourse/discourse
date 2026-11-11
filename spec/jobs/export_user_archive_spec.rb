@@ -173,6 +173,22 @@ RSpec.describe Jobs::ExportUserArchive do
     let(:message) { Fabricate(:private_message_topic) }
     let(:message_post) { Fabricate(:post, user: user, topic: message) }
 
+    it "includes saved answers omitted from the rendered post" do
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "note", type: "input" }].as_json.to_yaml,
+          output_template: "A public invitation.",
+        )
+      submission =
+        FormTemplate::Submission.from_template(template, answers: { "note" => "Omitted answer" })
+      normal_post.update_columns(raw: submission.render, form_data: submission.to_h)
+
+      data, = make_component_csv
+
+      expect(JSON.parse(data.first[:form_data])).to eq(submission.to_h)
+    end
+
     it "properly exports posts" do
       SiteSetting.max_category_nesting = 3
       [reply, subsubpost, message_post]

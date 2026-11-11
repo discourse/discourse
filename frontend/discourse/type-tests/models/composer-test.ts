@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { expectTypeOf } from "expect-type";
 import type Category from "discourse/models/category";
 import Composer, {
+  type ComposerFormTemplateDraft,
   type ComposerImageSizes,
   type ComposerOpenOptions,
   type ComposerSaveOptions,
@@ -12,7 +13,10 @@ import Composer, {
   registerCustomizationCallback,
   REPLY,
 } from "discourse/models/composer";
-import type Post from "discourse/models/post";
+import type {
+  default as Post,
+  PostFormSubmission,
+} from "discourse/models/post";
 import type RestModel from "discourse/models/rest";
 import type Site from "discourse/models/site";
 import type Topic from "discourse/models/topic";
@@ -241,3 +245,10 @@ expectTypeOf<ComposerSaveOptions["imageSizes"]>().toEqualTypeOf<
 post.metaData = { custom_field: { nested: true } };
 post.metaData = EmberObject.create();
 post.metaData = null;
+
+expectTypeOf(composer.formTemplateDraft).toEqualTypeOf<
+  ComposerFormTemplateDraft | null | undefined
+>();
+expectTypeOf(composer.formSubmission).toEqualTypeOf<
+  PostFormSubmission | null | undefined
+>();

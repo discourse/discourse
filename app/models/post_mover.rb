@@ -308,6 +308,7 @@ class PostMover
       PostCreator.new(
         post.user,
         raw: post.raw,
+        form_data: post.form_data,
         topic_id: destination_topic.id,
         acting_user: user,
         cook_method: post.cook_method,
