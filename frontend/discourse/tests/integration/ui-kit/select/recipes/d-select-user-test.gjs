@@ -810,6 +810,40 @@ module(
         assert.false(onChange.called, "the row is not picked");
       });
 
+      test("reads a disabled group's name and reason as separate words", async function (assert) {
+        const { load } = stubLoader({
+          groups: [
+            {
+              id: 4,
+              name: "anonymous_users",
+              full_name: "Anonymous users",
+              disabled: true,
+              disabledReason: "Not allowed",
+            },
+          ],
+        });
+
+        await render(
+          <template>
+            <DSelectUser @includeGroups="visible" @load={{load}} />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+
+        const row = optionNamed("anonymous_users");
+        const labelIds =
+          row.getAttribute("aria-labelledby")?.split(/\s+/) ?? [];
+        const named = labelIds.length
+          ? labelIds.map((id) => document.getElementById(id).textContent)
+          : [row.textContent];
+        const name = named.join(" ").replace(/\s+/g, " ").trim();
+        assert.true(
+          name.includes("anonymous_users Not allowed"),
+          `a space keeps the two apart in the row's name ("${name}")`
+        );
+      });
+
       test("emits each pick with its record id, and whether a group is automatic", async function (assert) {
         const onChange = sinon.spy();
         const { load } = stubLoader({
