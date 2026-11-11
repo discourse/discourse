@@ -118,7 +118,8 @@ opens and closes, keeps `role="combobox"`.
 
 From the input:
 
-- Up/Down, PageUp/PageDown and Enter move through and pick results.
+- Up/Down, PageUp/PageDown and Enter move through and pick results. While the list is open,
+  Enter never reaches a form around the select, even on a disabled row or an empty list.
 - Home/End and Left/Right move the caret and clear the active row, so screen readers read
   the text again. Up or Down brings the row back.
 - Left at the start of the input enters the chips (Right in right-to-left pages).

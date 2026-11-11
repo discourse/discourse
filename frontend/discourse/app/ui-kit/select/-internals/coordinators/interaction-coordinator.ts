@@ -347,28 +347,37 @@ export default class InteractionCoordinator {
     }
   }
 
-  /** Covers Enter before a listbox or active row exists; active rows use activateElement. */
+  /**
+   * Covers Enter that no row takes; active rows use activateElement. An open list owns Enter,
+   * so one on a disabled row or an empty list never submits a form around the select.
+   */
   @action
   handleControllerKeydown(event: KeyboardEvent): void {
     if (
       event.key !== "Enter" ||
       event.isComposing ||
       event.target !== this.filterInput ||
-      !this.isExpanded ||
-      this.#presenter.isLocked ||
-      this.#engine.belowMinChars ||
-      !(this.#engine.serverPending || this.#engine.serverAwaitingFirstPage) ||
-      this.#engine.serverRevealPending
+      !this.isExpanded
     ) {
       return;
     }
     const activeId = this.filterInput?.getAttribute("aria-activedescendant");
-    if (activeId && document.getElementById(activeId)) {
+    const activeRow = activeId ? document.getElementById(activeId) : null;
+    if (
+      !activeRow &&
+      !this.#presenter.isLocked &&
+      !this.#engine.belowMinChars &&
+      (this.#engine.serverPending || this.#engine.serverAwaitingFirstPage) &&
+      !this.#engine.serverRevealPending
+    ) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.#announcer.announceStillLoading();
       return;
     }
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    this.#announcer.announceStillLoading();
+    if (!activeRow || activeRow.getAttribute("aria-disabled") === "true") {
+      event.preventDefault();
+    }
   }
 
   @action

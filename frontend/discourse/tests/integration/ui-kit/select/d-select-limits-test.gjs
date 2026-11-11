@@ -1369,6 +1369,67 @@ module(
       assert.true(onChange.notCalled, "but it cannot be picked");
     });
 
+    test("Enter on a disabled row never submits the form around the select", async function (assert) {
+      const formSaw = [];
+      const recordEnter = (event) => {
+        if (event.key === "Enter") {
+          formSaw.push(event.defaultPrevented);
+        }
+      };
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <form>
+            <DSelect @items={{REASONED}} @onChange={{onChange}} />
+          </form>
+        </template>
+      );
+      find("form").addEventListener("keydown", recordEnter);
+      await click("[role='combobox']");
+      while (
+        !find("[role='option'].--active")?.textContent.includes("Banana")
+      ) {
+        await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      }
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.true(onChange.notCalled, "the disabled row is not picked");
+      assert.false(
+        formSaw.includes(false),
+        "the form never gets an Enter it would submit on"
+      );
+      assert.dom(".d-select__panel").exists("the list stays open");
+    });
+
+    test("Enter on an open list with no rows never submits the form around the select", async function (assert) {
+      const formSaw = [];
+      const recordEnter = (event) => {
+        if (event.key === "Enter") {
+          formSaw.push(event.defaultPrevented);
+        }
+      };
+
+      await render(
+        <template>
+          <form>
+            <DSelect @items={{REASONED}} />
+          </form>
+        </template>
+      );
+      find("form").addEventListener("keydown", recordEnter);
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "zzz");
+      assert.dom("[role='option']").doesNotExist("nothing matches");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.false(
+        formSaw.includes(false),
+        "the form never gets an Enter it would submit on"
+      );
+    });
+
     test("a disabled row's reason is its visible description", async function (assert) {
       await render(
         <template><DSelect @items={{REASONED}} @variant="static" /></template>
