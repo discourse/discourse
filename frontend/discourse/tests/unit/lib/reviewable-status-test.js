@@ -77,4 +77,23 @@ module("Unit | Helper | reviewable-status", function (hooks) {
       undefined
     );
   });
+
+  test("reviewableOutcome keeps approved/rejected wording for reviewables that don't answer whether there's a problem", function (assert) {
+    this.siteSettings.review_queue_consistent_answers = true;
+
+    assert.deepEqual(
+      reviewableOutcome(APPROVED, "ReviewablePluginNomination", false, false),
+      {
+        name: "approved_flag",
+        icon: "check",
+        cssClass: "approved",
+        timelineKey: "review.timeline.approved_by",
+      }
+    );
+    assert.strictEqual(
+      reviewableOutcome(REJECTED, "ReviewablePluginNomination", false, false)
+        .cssClass,
+      "rejected"
+    );
+  });
 });

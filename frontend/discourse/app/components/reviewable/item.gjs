@@ -812,6 +812,7 @@ export default class ReviewableItem extends Component {
                 @reviewable.status
                 @reviewable.type
                 @reviewable.approval_style
+                @reviewable.answersProblem
               }}
 
               <span class="reviewable-created-date">

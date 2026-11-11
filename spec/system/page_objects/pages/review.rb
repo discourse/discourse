@@ -236,8 +236,22 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_text?("No problem found by") }
       end
 
+      def has_reviewable_with_status?(reviewable, status)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__status.--#{status}")
+        end
+      end
+
       def has_reviewable_with_approved_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      end
+
+      def has_reviewable_with_rejected_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
+      end
+
+      def has_rejected_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
       end
 
       def has_approved_item_in_timeline?(reviewable)

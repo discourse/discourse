@@ -413,6 +413,19 @@ export default class Reviewable extends RestModel {
     return i18n("review.context_question.something_wrong_with_post");
   }
 
+  /**
+   * Whether resolving this reviewable answers whether there's a problem. Plugin
+   * types that aren't flags or approval queues (e.g. nominations) keep their
+   * approved/rejected wording.
+   */
+  get answersProblem(): boolean {
+    return (
+      this.type_source === "core" ||
+      this.created_from_flag ||
+      this.approval_style
+    );
+  }
+
   @computed("category_id")
   get category() {
     return Category.findById(this.category_id);

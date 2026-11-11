@@ -101,4 +101,35 @@ module("Unit | Model | reviewable", function (hooks) {
       "Approve this user?"
     );
   });
+
+  test("answersProblem is false only for plugin types that aren't flags or approval queues", function (assert) {
+    assert.true(
+      this.build({ type: "ReviewableFlaggedPost", approval_style: false })
+        .answersProblem,
+      "core flag"
+    );
+    assert.true(
+      this.build({
+        type: "ReviewablePluginFlag",
+        type_source: "a-plugin",
+        approval_style: false,
+        created_from_flag: true,
+      }).answersProblem,
+      "plugin flag"
+    );
+    assert.true(
+      this.build({ type: "ReviewablePluginQueue", type_source: "a-plugin" })
+        .answersProblem,
+      "plugin approval queue"
+    );
+    assert.false(
+      this.build({
+        type: "ReviewablePluginNomination",
+        type_source: "a-plugin",
+        approval_style: false,
+        created_from_flag: false,
+      }).answersProblem,
+      "plugin nomination"
+    );
+  });
 });

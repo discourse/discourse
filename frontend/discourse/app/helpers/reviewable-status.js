@@ -60,16 +60,23 @@ function registeredStatusName(status, type) {
 /**
  * How an approved or rejected reviewable is shown: its status label, icon and
  * CSS modifier, and the timeline entry for whoever resolved it. With consistent
- * answers these describe whether a problem was confirmed; otherwise they
- * describe what was approved or rejected.
+ * answers these describe whether a problem was confirmed; otherwise, or when
+ * the reviewable isn't about a problem, they describe what was approved or
+ * rejected.
  *
  * @param {number} status - The reviewable's (or score's) resolved status
  * @param {string} type - The reviewable class name
  * @param {boolean} approvalStyle - Whether approving means no problem was found
+ * @param {boolean} [answersProblem=true] - Whether resolving the reviewable answers whether there's a problem
  * @returns {{ name: string, icon: string, cssClass: string, timelineKey: string } | undefined}
  *   undefined when the status is neither approved nor rejected
  */
-export function reviewableOutcome(status, type, approvalStyle) {
+export function reviewableOutcome(
+  status,
+  type,
+  approvalStyle,
+  answersProblem = true
+) {
   const confirmed = reviewableProblemConfirmed(status, approvalStyle);
   if (confirmed === undefined) {
     return;
@@ -81,7 +88,10 @@ export function reviewableOutcome(status, type, approvalStyle) {
     ? "review.timeline.approved_by"
     : "review.timeline.rejected_by";
 
-  if (!helperContext().siteSettings.review_queue_consistent_answers) {
+  if (
+    !answersProblem ||
+    !helperContext().siteSettings.review_queue_consistent_answers
+  ) {
     return {
       name: registered || legacyOutcomeName(approved, type, approvalStyle),
       icon: approved ? "check" : "xmark",
@@ -126,7 +136,8 @@ const LEGACY_APPROVAL_STYLE_TYPES = new Set([
 function dataFor(
   status,
   type,
-  approvalStyle = LEGACY_APPROVAL_STYLE_TYPES.has(type)
+  approvalStyle = LEGACY_APPROVAL_STYLE_TYPES.has(type),
+  answersProblem = true
 ) {
   switch (status) {
     case PENDING:
@@ -136,7 +147,8 @@ function dataFor(
       const { name, icon, cssClass } = reviewableOutcome(
         status,
         type,
-        approvalStyle
+        approvalStyle,
+        answersProblem
       );
       return { name, icon, cssClass };
     }
@@ -156,10 +168,16 @@ function dataFor(
  * @param {number} status - The status of the reviewable item
  * @param {string} type - The type of the reviewable item
  * @param {boolean} [approvalStyle] - Whether approving the item means no problem was found; inferred from the type when omitted
+ * @param {boolean} [answersProblem=true] - Whether resolving the item answers whether there's a problem
  * @returns {string} HTML for the reviewable item status
  */
-export function newReviewableStatus(status, type, approvalStyle) {
-  let data = dataFor(status, type, approvalStyle);
+export function newReviewableStatus(
+  status,
+  type,
+  approvalStyle,
+  answersProblem
+) {
+  let data = dataFor(status, type, approvalStyle, answersProblem);
   if (!data) {
     return;
   }

@@ -136,7 +136,8 @@ export default class ReviewableTimeline extends Component {
                 const outcome = reviewableOutcome(
                   score.status,
                   this.args.reviewable.type,
-                  this.args.reviewable.approval_style
+                  this.args.reviewable.approval_style,
+                  this.args.reviewable.answersProblem
                 );
                 reviewIcon = outcome.icon;
                 titleKey = outcome.timelineKey;
