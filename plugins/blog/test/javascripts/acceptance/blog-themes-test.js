@@ -9,6 +9,10 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import interceptClick from "discourse/lib/intercept-click";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -208,14 +212,8 @@ acceptance("Blog themes and identity", function (needs) {
       .doesNotHaveAttribute("aria-current");
     await click(".blog-theme-editor__customize");
     const form = formKit(".blog-theme-editor__form");
-    assert
-      .dom('[data-name="template_index"]')
-      .hasClass(
-        "blog-theme-editor__template-field",
-        "the custom editor receives its full-width layout"
-      );
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>{{ site.title }}</h1>"
     );
     assert
@@ -237,18 +235,16 @@ acceptance("Blog themes and identity", function (needs) {
         "the effective default is visible before editing"
       );
     await click(".blog-theme-editor__customize");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "site.title",
-        "customizing starts with visible working source"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes("site.title"),
+      "customizing starts with visible working source"
+    );
     assert
       .dom('[data-name="template_index"]')
       .doesNotExist("other templates are not stacked below it");
 
-    await fillControl(
-      '[data-name="template_layout"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_layout"]',
       "<main>Unsaved author edits</main>"
     );
     const editor = find(".blog-theme-editor__template-control");
@@ -271,18 +267,18 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-variables")
       .doesNotExist("inserting a snippet closes the reference");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "the inserted snippet is visible in the editor"
-      );
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "Unsaved author edits",
-        "inserting preserves the author's changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "the inserted snippet is visible in the editor"
+    );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "Unsaved author edits"
+      ),
+      "inserting preserves the author's changes"
+    );
     assert.strictEqual(
       find(".blog-theme-editor__template-control"),
       editor,
@@ -291,12 +287,12 @@ acceptance("Blog themes and identity", function (needs) {
 
     await click('[data-authoring-tab="design"]');
     await click('[data-authoring-tab="template_layout"]');
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "FormKit retains the snippet across tab changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "FormKit retains the snippet across tab changes"
+    );
 
     await click(".blog-theme-editor__restore-default");
     await click(".dialog-footer .btn-primary");
@@ -343,8 +339,8 @@ acceptance("Blog themes and identity", function (needs) {
       .fillIn(".blog { color: blue; }");
     await click('[data-authoring-tab="template_index"]');
     await click(".blog-theme-editor__customize");
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>Unsaved preview</h1>"
     );
     await click(".blog-theme-editor__preview-draft");
@@ -394,9 +390,12 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-preview")
       .doesNotExist("closing returns to the editor");
-    assert
-      .dom('[data-name="template_index"] .ace_content')
-      .includesText("Unsaved preview", "template edits survive previewing");
+    assert.true(
+      codeEditorValue('[data-name="template_index"]').includes(
+        "Unsaved preview"
+      ),
+      "template edits survive previewing"
+    );
   });
 
   test("explains that article previews need a published article", async function (assert) {

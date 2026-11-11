@@ -46,8 +46,6 @@ ko:
         confirm_move: "메시지 이동"
       channel_settings:
         title: "채널 설정"
-        edit: "편집"
-        add: "추가"
         close_channel: "채널 닫기"
         open_channel: "채널 열기"
         archive_channel: "아카이브 채널"
@@ -175,7 +173,6 @@ ko:
       members_view:
         filter_placeholder: 회원 찾기
       about_view:
-        title: 제목
         name: 그룹명
         description: 내용
       channel_info:
@@ -183,9 +180,11 @@ ko:
         back_to_channel: "뒤로"
         tabs:
           members: 회원
+          preferences: 환경 설정
           settings: 설정
           search: 검색
         remove_member: "제거"
+        members_title: "회원 %{channel}명"
       new_message_modal:
         title: 전송
         add_user_short: <span>사용자 추가</span>
@@ -198,11 +197,9 @@ ko:
         no_items: "항목이 없습니다"
         filter: "필터"
       channel_edit_name_slug_modal:
-        title: 채널 수정
         input_placeholder: 이름 추가
         name: 채널명
       channel_edit_description_modal:
-        title: 설명 수정
         input_placeholder: 설명 추가
       direct_message_creator:
         title: 새로운 메시지
@@ -254,8 +251,6 @@ ko:
         save: "저장"
         saved: "저장되었습니다"
         unfollow: "나가기"
-        admin_title: "관리자"
-        settings_title: "설정"
         category_label: "카테고리"
         history_label: "히스토리"
         members_label: "회원"

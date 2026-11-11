@@ -37,6 +37,9 @@ module Email
     class InactiveUserError < ProcessingError
     end
 
+    class SuspendedUserError < ProcessingError
+    end
+
     class SilencedUserError < ProcessingError
     end
 
@@ -106,6 +109,7 @@ module Email
     attr_reader :raw_email
     attr_reader :mail
     attr_reader :message_id
+    attr_reader :from_email
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
 
@@ -346,6 +350,7 @@ module Email
       @incoming_email.update_columns(user_id: user.id)
 
       raise InactiveUserError if !user.active && !user.staged
+      raise SuspendedUserError if user.suspended?
       raise SilencedUserError if user.silenced?
     end
 
@@ -1041,7 +1046,14 @@ module Email
         post_ids << post_id_from_email_log if post_id_from_email_log
       end
 
-      target_post = post_ids.any? && Post.where(id: post_ids).order(:created_at).last
+      target_post =
+        if post_ids.any?
+          Post
+            .joins(topic: :topic_allowed_groups)
+            .where(id: post_ids, topic_allowed_groups: { group_id: group.id })
+            .order(:created_at)
+            .last
+        end
       too_old_for_group_smtp = destination_too_old?(target_post) && group.smtp_enabled
 
       if target_post.blank? || too_old_for_group_smtp
@@ -1579,6 +1591,7 @@ module Email
       options[:via_email] = true
       options[:raw_email] = @raw_email
 
+      options[:created_at] = Time.zone.now if options[:topic_id] && !options[:import_mode]
       options[:created_at] ||= @mail.date
       options[:created_at] = DateTime.now if options[:created_at] > DateTime.now
 
@@ -1606,6 +1619,12 @@ module Email
         )
         user = Discourse.system_user
         options[:post_type] = Post.types[:whisper]
+      end
+
+      # Skipping validations also skips the max_post_length check, so bound
+      # the body here before it reaches the post or queued post records.
+      if options[:skip_validations]
+        options[:raw] = options[:raw].truncate(SiteSetting.max_post_length, omission: "")
       end
 
       # To avoid race conditions with the post alerter and Group SMTP

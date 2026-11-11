@@ -57,8 +57,6 @@ hr:
         confirm_move: "Premjesti poruke"
       channel_settings:
         title: "Postavke kanala"
-        edit: "Uredi"
-        add: "Dodaj"
         leave_channel: "Napusti kanal"
         notification_settings_context: "Obavijesti"
         join: "Pridružite se"
@@ -177,21 +175,21 @@ hr:
       search_view:
         filter_placeholder: Pretražite poruke
       about_view:
-        title: Naslov
         name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"
         tabs:
           members: Članovi
+          preferences: Postavke
           settings: Postavke
           search: Pretraživanje
         remove_member: "Ukloni"
+        members_title: "%{channel} članova"
       new_message_modal:
         no_items: "Nema stvari"
         filter: "Filter"
       channel_edit_name_slug_modal:
-        title: Uredi kanal
         input_placeholder: Dodajte ime
         name: Naziv kanala
       direct_message_creator:
@@ -245,8 +243,6 @@ hr:
         save: "Spremi"
         saved: "Spremljeno"
         unfollow: "Napustiti"
-        admin_title: "Administrator"
-        settings_title: "Postavke"
         category_label: "Kategorija"
         history_label: "Povijest"
         members_label: "Članovi"

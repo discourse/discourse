@@ -33,6 +33,16 @@ zh_CN:
       any_domain: "来自任何域的 CIMD"
     ace_editor:
       resize: "调整代码编辑器大小"
+    code_editor:
+      resize: "调整代码编辑器大小"
+      search:
+        replace: "替换"
+        next: "下一步"
+        previous: "上一步"
+        close: "关闭"
+        go: "开始"
+      fold:
+        to: "至"
     user_api_key:
       title: '授权“%{application_name}”'
       authorize: "授权"
@@ -2732,7 +2742,6 @@ zh_CN:
         }</a>超过了 { limit, plural,other { # 个错误/分钟}}的站点设置上限。
     learn_more: "了解详情…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>了解详情…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>反馈…</a>"
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -6203,24 +6212,23 @@ zh_CN:
         name: "名称"
         plugin: "插件"
         metadata: "元数据"
-        enabled: "已启用"
-        enabled_for: "已启用…"
+        enabled: "已启用？"
         show_image: "显示图片"
-        edit_groups: "编辑选择加入的群组"
+        feedback: "反馈"
+        toggle: "启用 %{name}"
         groups_updated: "群组已更新！"
         save_groups: "保存群组"
         add_groups_to_enable: "添加群组以启用此功能"
         no_changes_to_save: "没有要保存的更改"
         select_groups: "选择群组…"
         opt_in_groups: "选择加入的群组"
-        show_related_settings: "显示相关设置…"
+        settings: "设置"
         opt_in_groups_instructions: "选择加入的群组可以用于让特定用户群组在向所有人发布更改前进行测试。请注意，当更改进入稳定状态后，这些群组将不再适用。"
         enabled_for_throttle: "您修改此更改启用对象的速度过快。请稍等片刻后再试。"
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此更改"
         depends_on_notice: "此更改需要启用%{dependencyLinks} 。"
         permanent_notice: "此更改现已永久生效，并将很快被移除。您无法再选择退出。"
-        permanent_soon_notice: "此更改将很快永久生效。您将无法再选择退出。"
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
         no_changes: "目前暂无即将推出的更改"
         preview: "预览"
@@ -6228,7 +6236,6 @@ zh_CN:
         default_warning_short: "此设置的默认值已更改，请在<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a>页面中阅读更多相关信息。"
         enabled_for_options:
           no_one: "没有人"
-          everyone: "所有人"
           staff: "仅限 %{staffGroupName}"
           specific_groups: "特定群组"
           specific_groups_with_group_names:

@@ -18,6 +18,7 @@ ko:
         theme_name: 테마명
         edit: 편집
         preview: 미리 보기
+        customize: 사용자 지정
         import: 가져오기
         export: 내보내기
         active: 활성화 사용자
@@ -30,6 +31,7 @@ ko:
         change:
           title: 제목
           body: 바디
+          tags: 태그
       review:
         create: 링크 만들기
         copy: 복사

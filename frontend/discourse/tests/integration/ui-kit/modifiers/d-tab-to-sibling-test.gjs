@@ -1,4 +1,4 @@
-import { focus, render, triggerKeyEvent } from "@ember/test-helpers";
+import { find, focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dTabToSibling from "discourse/ui-kit/modifiers/d-tab-to-sibling";
@@ -91,6 +91,57 @@ module("Integration | ui-kit | Modifier | dTabToSibling", function (hooks) {
     assert
       .dom(".input-field")
       .isFocused("Should focus input field after Tab from button");
+  });
+
+  test("skips hidden and disabled siblings", async function (assert) {
+    await render(
+      <template>
+        <div class="container">
+          <div class="first-item" tabindex="0" {{dTabToSibling}}>First</div>
+          <div class="hidden-item" hidden tabindex="0">Hidden</div>
+          <button class="disabled-button" disabled>Disabled</button>
+          <div class="last-item" tabindex="0">Last</div>
+        </div>
+      </template>
+    );
+
+    await focus(".first-item");
+    await triggerKeyEvent(".first-item", "keydown", "Tab");
+
+    assert
+      .dom(".last-item")
+      .isFocused("Should skip the hidden and disabled siblings");
+  });
+
+  test("prevents the default Tab behavior only when a sibling takes focus", async function (assert) {
+    const defaultPrevented = [];
+
+    await render(
+      <template>
+        <div class="container">
+          <div class="first-item" tabindex="0" {{dTabToSibling}}>First</div>
+          <div class="last-item" tabindex="0" {{dTabToSibling}}>Last</div>
+        </div>
+      </template>
+    );
+
+    // Bubbling to the container runs after the modifier's own listener.
+    find(".container").addEventListener("keydown", (event) =>
+      defaultPrevented.push(event.defaultPrevented)
+    );
+
+    await focus(".first-item");
+    await triggerKeyEvent(".first-item", "keydown", "Tab");
+
+    await focus(".last-item");
+    await triggerKeyEvent(".last-item", "keydown", "Tab");
+
+    assert.deepEqual(
+      defaultPrevented,
+      [true, false],
+      "the browser handles Tab when there is no next sibling"
+    );
+    assert.dom(".last-item").isFocused("focus stays on the last item");
   });
 
   test("ignores non-Tab key events", async function (assert) {

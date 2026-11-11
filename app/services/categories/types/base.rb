@@ -338,6 +338,13 @@ module Categories
           "memo"
         end
 
+        # Sprite icon for the type chooser, preferred over the +icon+ emoji when
+        # present. Use base names (not +far-+/+fab-+) so the site's icon set and
+        # theme replacements apply; it must be in the sprite (+register_svg_icon+).
+        def svg_icon
+          nil
+        end
+
         # Configure any custom fields that are specific to this category type,
         # should be called from within +configure_category+ for each type.
         #
@@ -400,6 +407,7 @@ module Categories
             title: I18n.t("category_types.#{type_id}.title", default: name),
             description: I18n.t("category_types.#{type_id}.description", default: ""),
             icon:,
+            svg_icon:,
             available: available?,
             visible: visible?,
             configuration_schema: resolved_configuration_schema,

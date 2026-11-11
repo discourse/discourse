@@ -96,8 +96,6 @@ fr:
           other: "Voulez-vous vraiment supprimer ces %{count} messages ?"
       channel_settings:
         title: "Paramètres du canal"
-        edit: "Modifier"
-        add: "Ajouter"
         star_channel: "Ajouter le canal aux favoris"
         unstar_channel: "Retirer le canal des favoris"
         close_channel: "Fermer le canal"
@@ -106,10 +104,11 @@ fr:
         open_channel_disabled_read_only: "Les canaux en lecture seule ne peuvent pas être rouverts."
         archive_channel: "Archiver le canal"
         delete_channel: "Supprimer le canal"
+        danger_zone:
+          title: "Zone de danger"
         join_channel: "Rejoindre le canal"
         leave_channel: "Quitter le canal"
         leave_groupchat_info: "Si vous quittez cette discussion de groupe, vous n'y aurez plus accès et vous ne recevrez plus de notifications associées. Pour vous inscrire à nouveau, vous devrez être réinvité(e) par un membre de la discussion de groupe."
-        notification_settings: "Paramètres de notification"
         notification_settings_context: "Notifications"
         join: "Rejoindre"
         leave: "Quitter"
@@ -388,21 +387,22 @@ fr:
       members_view:
         filter_placeholder: Trouver des membres
         add_member: Ajouter un membre
-        back_to_settings: "Retour aux paramètres"
       about_view:
         associated_topic: Sujet lié
         associated_category: Catégorie liée
-        title: Titre
         name: Nom
         description: Description
       channel_info:
         back_to_all_channels: "Tous les canaux"
         back_to_channel: "Retour"
+        nav_label: "Informations du canal"
         tabs:
           members: Membres
+          preferences: Préférences
           settings: Paramètres
           search: Recherche
         remove_member: "Supprimer"
+        members_title: "%{channel} membres"
       new_message_modal:
         title: Envoyer un message
         add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
@@ -422,7 +422,6 @@ fr:
         create_new_group_chat: "Créer une discussion de groupe"
         group_with_too_many_members: "a trop de membres (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Modifier le canal
         input_placeholder: Ajouter un nom
         slug_description: Un identifiant de canal est utilisé dans l'URL au lieu du nom du canal
         name: Nom du canal
@@ -430,9 +429,7 @@ fr:
         emoji: Émoji du canal
         reset_emoji: Réinitialiser l'émoji
       channel_edit_description_modal:
-        title: Modifier la description
         input_placeholder: Ajouter une description
-        description: Dites aux utilisateurs en quoi consiste ce canal
       direct_message_creator:
         add_to_channel: "Ajouter au canal"
         title: Nouveau message
@@ -548,7 +545,6 @@ fr:
         always: "Pour toutes les activités"
       settings:
         channel_wide_mentions_label: "Autoriser les mentions @all et @here"
-        channel_wide_mentions_description: "Autoriser les utilisateurs à notifier tous les membres de #%{channel} avec @all ou uniquement ceux qui sont actifs en ce moment avec @here"
         channel_threading_label: "Fil de discussion"
         channel_threading_description: "Lorsque le fil de discussion est activé, les réponses à un message créeront une conversation distincte, qui existera parallèlement au canal principal."
         auto_join_users_label: "Ajouter automatiquement des utilisateurs"
@@ -569,9 +565,6 @@ fr:
         save: "Enregistrer"
         saved: "Enregistré"
         unfollow: "Quitter"
-        admin_title: "Administrateur"
-        settings_title: "Paramètres"
-        info_title: "Informations du canal"
         category_label: "Catégorie"
         history_label: "Historique"
         members_label: "Membres"

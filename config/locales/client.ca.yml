@@ -6,6 +6,14 @@
 
 ca:
   js:
+    code_editor:
+      search:
+        replace: "Reemplaça"
+        next: "Següent"
+        previous: "Previ"
+        close: "Tanca"
+      fold:
+        to: "a"
     user_api_key:
       authorize: "Autoritza"
       deny: "Cancel·la"
@@ -3157,10 +3165,9 @@ ca:
           title: "Connectors"
       upcoming_changes:
         name: "Nom"
-        enabled: "Activat"
+        enabled: "Activat?"
+        settings: "Configuració"
         preview: "Previsualitza"
-        enabled_for_options:
-          everyone: "Tothom"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"

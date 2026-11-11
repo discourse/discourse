@@ -1425,7 +1425,7 @@ export default class PostStream extends RestModel {
 
       this._setSuggestedTopics(result);
       if (result.user_badges) {
-        this.topic.user_badges ??= {};
+        this.topic.user_badges ??= {} as NonNullable<Topic["user_badges"]>;
         Object.assign(this.topic.user_badges, result.user_badges);
       }
 

@@ -6,6 +6,15 @@
 
 ko:
   js:
+    code_editor:
+      search:
+        replace: "바꾸기"
+        next: "다음"
+        previous: "이전값"
+        close: "닫기"
+        go: "이동"
+      fold:
+        to: "받는사람"
     user_api_key:
       authorize: "인증하기"
       deny: "취소"
@@ -3864,10 +3873,10 @@ ko:
           title: "플러그인"
       upcoming_changes:
         name: "그룹명"
-        enabled: "활성화"
+        enabled: "활성화?"
+        feedback: "피드백"
+        settings: "설정"
         preview: "미리 보기"
-        enabled_for_options:
-          everyone: "모두"
         impact_roles:
           admins: "관리자"
           moderators: "관리자"

@@ -307,6 +307,26 @@ RSpec.describe TopicsBulkAction do
           I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
         )
       end
+
+      it "records an error when a moderator cannot see the destination category" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        original_category = topic.category
+
+        bulk_action =
+          TopicsBulkAction.new(
+            Fabricate(:moderator),
+            [topic.id],
+            type: "change_category",
+            category_id: restricted_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.category).to eq(original_category)
+        expect(bulk_action.errors).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+        )
+      end
     end
 
     context "when destination category does not allow the topic's tags" do
@@ -316,8 +336,10 @@ RSpec.describe TopicsBulkAction do
       fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
       fab!(:admin)
       fab!(:moderator)
-      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
-      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+      fab!(:topic_with_tag) do
+        Fabricate(:topic, user:, category: source_category, tags: [restricted_tag])
+      end
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag, user:) }
 
       before { destination_category.update!(tags: [other_tag]) }
 
@@ -359,6 +381,36 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic_with_tag.reload.category).to eq(source_category)
+      end
+
+      it "names the disallowed tags when the user can see them" do
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        bulk_action.perform!
+
+        expect(bulk_action.errors.keys).to contain_exactly(include("restricted-tag"))
+      end
+
+      it "does not reveal tags the user cannot see" do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [restricted_tag.name])
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+        expect(bulk_action.errors).to eq(I18n.t("category.errors.disallowed_tags_generic") => 1)
       end
     end
 
@@ -1096,6 +1148,27 @@ RSpec.describe TopicsBulkAction do
 
       expect(pm.reload.bumped_at).to be_within(1.second).of(bumped_at)
       expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
+    end
+
+    it "keeps the PM private when a moderator cannot see the destination category" do
+      moderator = Fabricate(:moderator)
+      own_message = Fabricate(:private_message_topic, user: moderator)
+      Fabricate(:post, topic: own_message, user: moderator)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+      bulk_action =
+        TopicsBulkAction.new(
+          moderator,
+          [own_message.id],
+          type: "convert_to_public_topic",
+          category_id: private_category.id,
+        )
+
+      expect(bulk_action.perform!).to eq([])
+      expect(own_message.reload.archetype).to eq(Archetype.private_message)
+      expect(bulk_action.errors).to eq(
+        I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+      )
     end
   end
 

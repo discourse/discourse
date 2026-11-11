@@ -1,11 +1,10 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
-import ChatMessageInteractor, {
-  resetRemovedChatComposerSecondaryActions,
-} from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Unit | Utility | plugin-api", function (hooks) {
@@ -46,27 +45,36 @@ module("Unit | Utility | plugin-api", function (hooks) {
       const secondaryActions = interactor.secondaryActions;
       assert.true(secondaryActions.length > 0);
 
-      try {
-        // remove the first secondary action listed
-        api.removeChatComposerSecondaryActions(secondaryActions[0].id);
+      api.removeChatComposerSecondaryActions(secondaryActions[0].id);
 
-        const updatedSecondaryActions = interactor.secondaryActions;
+      assert.deepEqual(
+        interactor.secondaryActions.map((v) => v.id),
+        secondaryActions.slice(1).map((v) => v.id)
+      );
+    });
+  });
 
-        // assert that the secondary action was removed
-        assert.true(
-          updatedSecondaryActions.length < secondaryActions.length,
-          "the updated secondary actions must contain less items than the original"
-        );
-        assert.false(
-          updatedSecondaryActions
-            .map((v) => v.id)
-            .includes(secondaryActions[0]),
-          "the updated secondary actions must not include the removed action"
-        );
-      } finally {
-        // reset the secondary actions removed to prevent leakage to other tests
-        resetRemovedChatComposerSecondaryActions();
-      }
+  test("#decorateChatMessage", function (assert) {
+    withPluginApi((api) => {
+      const calls = [];
+      api.decorateChatMessage((element, helper, message) =>
+        calls.push([element, helper, message])
+      );
+
+      const element = document.createElement("div");
+      const helper = {};
+      const message = {};
+      applyBehaviorTransformer(
+        "chat-message-decorate",
+        () => calls.push("default"),
+        {
+          element,
+          helper,
+          message,
+        }
+      );
+
+      assert.deepEqual(calls, [[element, helper, message], "default"]);
     });
   });
 });

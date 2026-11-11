@@ -317,6 +317,12 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // The component is deprecated but still under test until it is removed.
+  {
+    handler: "silence",
+    matchId: "discourse.ace-editor",
+    env: "qunit-test",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
@@ -331,6 +337,8 @@ const workflows = [
     "discourse.es6-extension",
     "discourse.html-safe-helper",
     "discourse.modify-class-model",
+    "discourse.native-array-extensions.firstObject",
+    "discourse.native-array-extensions.lastObject",
     "discourse.plugin-outlet-args",
     "discourse.plugin-outlet-classic-args-clash",
     "discourse.plugin-outlet-classic-hooks",
@@ -343,7 +351,6 @@ const workflows = [
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
     "discourse.user.userOptions",
-    /^discourse\.native-array-extensions\..+$/,
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
 
   // used in system specs

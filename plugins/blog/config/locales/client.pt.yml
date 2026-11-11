@@ -19,6 +19,7 @@ pt:
         edit: Editar
         activate: Ativar
         preview: Pré-visualização
+        customize: Personalizar
         import: Importar
         export: Exportar
         active: Ativo
@@ -31,6 +32,7 @@ pt:
         change:
           title: título
           body: corpo
+          tags: etiquetas
       review:
         create: Criar ligação
         copy: Copiar

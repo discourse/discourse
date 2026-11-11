@@ -927,6 +927,36 @@ RSpec.describe SessionController do
       expect(EmailLoginCode.active.for_email(user.email)).to be_empty
     end
 
+    it "activates the address the code was sent to when the primary email was changed before verification" do
+      deactivated_user =
+        Fabricate(:user, email: "person@example.com", password: "supersecurepassword")
+      Fabricate(:secondary_email, user: deactivated_user, email: "person.alt@example.com")
+      domain_group = Fabricate(:group, automatic_membership_email_domains: "other.example.org")
+      deactivated_user.deactivate(Discourse.system_user)
+
+      put "/u/update-activation-email.json",
+          params: {
+            username: deactivated_user.username,
+            password: "supersecurepassword",
+            email: "person@other.example.org",
+          }
+      expect(response.status).to eq(200)
+
+      secondary_code = EmailLoginCode.generate!(email: "person.alt@example.com")
+      post "/session/login-code/verify.json",
+           params: {
+             email: secondary_code.email,
+             code: secondary_code.code,
+           }
+      expect(response.status).to eq(200)
+
+      deactivated_user.reload
+      expect(deactivated_user).to be_active
+      expect(deactivated_user.email).to eq("person.alt@example.com")
+      expect(UserEmail.exists?(email: "person@other.example.org")).to eq(false)
+      expect(domain_group.reload.users).not_to include(deactivated_user)
+    end
+
     context "when verifying a code for an email invite" do
       let(:invite) { Fabricate(:invite, email: "invited@example.com") }
       let(:topic) { Fabricate(:topic) }
@@ -1123,6 +1153,38 @@ RSpec.describe SessionController do
     context "when verifying a code for a domain-scoped invite" do
       let(:invite) { Fabricate(:invite, email: nil, domain: "allowed.example") }
       let(:login_code) { EmailLoginCode.generate!(email: "person@blocked.example") }
+
+      it "activates the address the code was sent to when the primary email was changed before verification" do
+        deactivated_user =
+          Fabricate(:user, email: "person@example.com", password: "supersecurepassword")
+        Fabricate(:secondary_email, user: deactivated_user, email: "person@allowed.example")
+        domain_group = Fabricate(:group, automatic_membership_email_domains: "other.example.org")
+        deactivated_user.deactivate(Discourse.system_user)
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: deactivated_user.username,
+              password: "supersecurepassword",
+              email: "person@other.example.org",
+            }
+        expect(response.status).to eq(200)
+
+        secondary_code = EmailLoginCode.generate!(email: "person@allowed.example")
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               email: secondary_code.email,
+               code: secondary_code.code,
+             }
+        expect(response.status).to eq(200)
+
+        deactivated_user.reload
+        expect(deactivated_user).to be_active
+        expect(deactivated_user.email).to eq("person@allowed.example")
+        expect(UserEmail.exists?(email: "person@other.example.org")).to eq(false)
+        expect(domain_group.reload.users).not_to include(deactivated_user)
+        expect(invite.reload).to be_redeemed
+      end
 
       it "accepts a verified secondary email when the primary email is outside the allowed domain" do
         user.update!(email: "person@blocked.example")
@@ -3847,6 +3909,33 @@ RSpec.describe SessionController do
               expect(UserAuthToken.hash_token(unhashed_token)).to eq(
                 user.user_auth_tokens.first.auth_token,
               )
+            end
+
+            it "does not log in a second client that replays the same token" do
+              freeze_time(Time.zone.parse("2026-11-06 12:00:05")) do
+                params = {
+                  login: user.username,
+                  password: "myawesomepassword",
+                  second_factor_token:
+                    ROTP::TOTP.new(user_second_factor.data).at(Time.zone.now + 30),
+                  second_factor_method: UserSecondFactor.methods[:totp],
+                }
+
+                post "/session.json", params: params
+                expect(session[:current_user_id]).to eq(user.id)
+
+                reset!
+
+                post "/session.json", params: params
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["error"]).to eq(
+                  I18n.t("login.invalid_second_factor_code"),
+                )
+                expect(session[:current_user_id]).to be_nil
+                expect(response.cookies["_t"]).to be_blank
+                expect(UserAuthToken.where(user: user).count).to eq(1)
+              end
             end
           end
 

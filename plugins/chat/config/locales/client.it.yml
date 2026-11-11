@@ -81,8 +81,6 @@ it:
           other: "Intendi davvero eliminare questi %{count} messaggi?"
       channel_settings:
         title: "Impostazioni del canale"
-        edit: "Modifica"
-        add: "Aggiungi"
         close_channel: "Chiudi canale"
         open_channel: "Apri canale"
         archive_channel: "Archivia canale"
@@ -327,21 +325,22 @@ it:
       members_view:
         filter_placeholder: Trova membri
         add_member: Aggiungi membro
-        back_to_settings: "Torna alle impostazioni"
       about_view:
         associated_topic: Argomento collegato
         associated_category: Categoria collegata
-        title: Titolo
         name: Nome
         description: Descrizione
       channel_info:
         back_to_all_channels: "Tutti i canali"
         back_to_channel: "Indietro"
+        nav_label: "Informazioni sul canale"
         tabs:
           members: Membri
+          preferences: Preferenze
           settings: Impostazioni
           search: Cerca
         remove_member: "Rimuovi"
+        members_title: "%{channel} membri"
       new_message_modal:
         title: Invia messaggio
         add_user_long: <kbd>MAIUSC + clic</kbd> o <kbd>MAIUSC + INVIO</kbd><span>Aggiunge @%{username}</span>
@@ -361,14 +360,11 @@ it:
         create_new_group_chat: "Crea chat di gruppo"
         group_with_too_many_members: "ha troppi membri (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Modifica canale
         input_placeholder: Aggiungi un nome
         slug_description: Lo slug del canale viene utilizzato nell'URL al posto del nome del canale
         name: Nome del canale
       channel_edit_description_modal:
-        title: Modifica descrizione
         input_placeholder: Aggiungi una descrizione
-        description: Spiega agli altri di cosa si occupa questo canale
       direct_message_creator:
         add_to_channel: "Aggiungi al canale"
         title: Nuovo messaggio
@@ -462,7 +458,6 @@ it:
         always: "Per tutte le attività"
       settings:
         channel_wide_mentions_label: "Consenti le menzioni @all e @here"
-        channel_wide_mentions_description: "Consenti agli utenti di avvisare tutti i membri di #%{channel} con @all o solo quelli che sono attivi al momento con @here"
         channel_threading_label: "Threading"
         channel_threading_description: "Quando il threading è abilitato, le risposte a un messaggio di chat creeranno una conversazione separata, che esisterà accanto al canale principale."
         auto_join_users_label: "Aggiunta automatica utenti"
@@ -482,9 +477,6 @@ it:
         save: "Salva"
         saved: "Salvato"
         unfollow: "Esci"
-        admin_title: "Amministratore"
-        settings_title: "Impostazioni"
-        info_title: "Informazioni sul canale"
         category_label: "Categoria"
         history_label: "Cronologia"
         members_label: "Membri"

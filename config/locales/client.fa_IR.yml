@@ -10,6 +10,14 @@ fa_IR:
       choice_title: "غیرقانونی است"
       title: "گزارش محتوای ناقض قانون"
       email: "آدرس ایمیل"
+    code_editor:
+      search:
+        replace: "جایگزینی"
+        next: "بعدی"
+        previous: "پیشین"
+        close: "بستن"
+      fold:
+        to: "به"
     user_api_key:
       authorize: "اجازه دادن"
       deny: "لغو"
@@ -4858,11 +4866,11 @@ fa_IR:
           title: "پیشرفته"
       upcoming_changes:
         name: "نام"
-        enabled: "فعال شده"
+        enabled: "فعال شده؟"
+        feedback: "بازخورد"
         select_groups: "انتخاب گروه‌ها"
+        settings: "تنظیم"
         preview: "پیش‌نمایش"
-        enabled_for_options:
-          everyone: "همه"
         statuses:
           experimental: "آزمایشی"
         impact_roles:

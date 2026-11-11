@@ -23,6 +23,8 @@ pt_BR:
         edit: Editar
         activate: Ativar
         preview: Pré-visualizar
+        customize: Personalizar
+        customized_theme_name: "%{name} (personalizado)"
         import: Importar
         export: Exportar
         active: Ativo(a)
@@ -35,6 +37,7 @@ pt_BR:
         change:
           title: título
           body: corpo
+          tags: tags
       review:
         create: Criar link
         copy: Copiar

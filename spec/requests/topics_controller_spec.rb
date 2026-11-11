@@ -516,6 +516,47 @@ RSpec.describe TopicsController do
           end
         end
 
+        describe "moving a post to a topic in a read-restricted category" do
+          fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+          fab!(:source_topic, :topic)
+          fab!(:source_op) { Fabricate(:post, topic: source_topic) }
+          fab!(:source_reply) { Fabricate(:post, topic: source_topic) }
+          fab!(:restricted_category) { Fabricate(:private_category, group: Group[:staff]) }
+          fab!(:restricted_destination_topic) do
+            Fabricate(
+              :topic,
+              category: restricted_category,
+              title: "Top secret destination title",
+              user: admin,
+            )
+          end
+
+          it "does not disclose the restricted destination title in the source topic move notice" do
+            expect(reader.guardian.can_see?(source_topic)).to eq(true)
+            expect(reader.guardian.can_see?(restricted_destination_topic)).to eq(false)
+
+            post "/t/#{source_topic.id}/move-posts.json",
+                 params: {
+                   post_ids: [source_reply.id],
+                   destination_topic_id: restricted_destination_topic.id,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["success"]).to eq(true)
+
+            sign_in(reader)
+            get "/t/#{source_topic.id}.json"
+            expect(response.status).to eq(200)
+
+            posts = response.parsed_body["post_stream"]["posts"]
+            move_notice = posts.find { |p| p["action_code"] == "split_topic" }
+            expect(move_notice).to be_present
+            expect(posts.map { |p| p["cooked"] }.join(" ")).not_to include(
+              restricted_destination_topic.title,
+            )
+          end
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to topic and keeps original post in place" do
             expect do
@@ -2427,6 +2468,16 @@ RSpec.describe TopicsController do
           I18n.t("category.errors.move_topic_to_category_disallowed"),
         )
         expect(topic.reload.category_id).not_to eq(category.id)
+      end
+
+      it "does not let a moderator move a topic to a category they cannot see" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        sign_in(moderator)
+
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.category_id).not_to eq(private_category.id)
       end
 
       context "when updating shared drafts" do
@@ -5105,6 +5156,93 @@ RSpec.describe TopicsController do
       end
     end
 
+    context "when the first post is hidden" do
+      fab!(:hidden_topic) do
+        Fabricate(:post, user: post_author1, raw: "this is the secret hidden body text").topic
+      end
+      fab!(:visible_reply) do
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          post_number: 2,
+          raw: "this reply is perfectly visible",
+        )
+      end
+
+      let(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
+
+      before do
+        hidden_topic.update_excerpt(hidden_topic.first_post.excerpt_for_topic)
+        hidden_topic.first_post.hide!(PostActionType.types[:off_topic])
+      end
+
+      it "does not leak the hidden first post body in the crawler meta description" do
+        get hidden_topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
+
+      it "does not leak the hidden first post body when a crawler requests a visible reply" do
+        get "#{hidden_topic.relative_url}/2", env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+        expect(response.body).to include("this reply is perfectly visible")
+      end
+
+      it "does not leak the hidden first post body in the regular HTML description when requesting a visible reply" do
+        get "#{hidden_topic.relative_url}/2"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
+
+      it "includes the first post excerpt for a viewer who can see hidden posts" do
+        sign_in(admin)
+
+        get hidden_topic.relative_url
+
+        expect(response.status).to eq(200)
+        description = Nokogiri.HTML5(response.body).at_css("meta[name='description']")["content"]
+        expect(description).to include("this is the secret hidden body text")
+      end
+    end
+
+    context "when a reply is hidden" do
+      fab!(:reply_topic) do
+        Fabricate(:post, user: post_author1, raw: "the first post visible body text").topic
+      end
+      fab!(:hidden_reply) do
+        Fabricate(
+          :post,
+          topic: reply_topic,
+          post_number: 2,
+          raw: "this is the secret hidden reply text",
+        )
+      end
+
+      let(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
+
+      before do
+        reply_topic.update_excerpt(reply_topic.first_post.excerpt_for_topic)
+        hidden_reply.hide!(PostActionType.types[:off_topic])
+      end
+
+      it "keeps the visible first post excerpt but not the hidden reply in crawler metadata" do
+        get "#{reply_topic.relative_url}/2", env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden reply text")
+        description = Nokogiri.HTML5(response.body).at_css("meta[name='description']")["content"]
+        expect(description).to include("the first post visible body text")
+      end
+    end
+
     describe "image only topic" do
       it "uses image alt tag for meta description" do
         post =
@@ -5541,6 +5679,21 @@ RSpec.describe TopicsController do
       topic.trash!
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
+    end
+
+    context "when the first post is hidden" do
+      fab!(:hidden_topic) do
+        Fabricate(:post, user: post_author1, raw: "this is the secret hidden body text").topic
+      end
+
+      before { hidden_topic.first_post.hide!(PostActionType.types[:off_topic]) }
+
+      it "does not leak the hidden first post body in the channel description" do
+        get "/t/foo/#{hidden_topic.id}.rss"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("this is the secret hidden body text")
+      end
     end
   end
 
@@ -7091,6 +7244,23 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "does not let a moderator convert into a category they cannot see" do
+        own_message = Fabricate(:private_message_topic, user: moderator)
+        Fabricate(:post, user: moderator, topic: own_message)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        sign_in(moderator)
+        put "/t/#{own_message.id}/convert-topic/public.json?category_id=#{private_category.id}"
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed"),
+        )
+        own_message.reload
+        expect(own_message.archetype).to eq(Archetype.private_message)
+        expect(own_message.category_id).to be_nil
+      end
+
       context "with success" do
         it "returns success and the new url" do
           sign_in(admin)
@@ -7119,6 +7289,46 @@ RSpec.describe TopicsController do
             I18n.t("errors.messages.topic_title_already_used", url: existing_topic.url),
           )
         end
+      end
+    end
+
+    describe "converting a system message PM" do
+      fab!(:victim, :user)
+      fab!(:system_pm) { Fabricate(:system_message_topic, user: victim) }
+      fab!(:secret_post) do
+        Fabricate(
+          :post,
+          topic: system_pm,
+          user: Discourse.system_user,
+          raw: "Your data export is ready: upload://topsecretexport.zip",
+        )
+      end
+
+      it "allows a participant moderator to convert it to a public topic" do
+        system_pm.topic_allowed_users.create!(user: moderator)
+        sign_in(moderator)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json", params: { category_id: category.id }
+
+        expect(response.status).to eq(200)
+        expect(system_pm.reload.archetype).to eq(Archetype.default)
+        expect(system_pm.category_id).to eq(category.id)
+      end
+
+      it "does not let a non-participant moderator publish and leak it" do
+        sign_in(moderator)
+
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+
+        put "/t/#{system_pm.id}/convert-topic/public.json?category_id=#{category.id}"
+        expect(response).to be_forbidden
+        expect(system_pm.reload.archetype).to eq(Archetype.private_message)
+
+        sign_out
+        get "/t/#{system_pm.id}.json"
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include("topsecretexport.zip")
       end
     end
   end
@@ -7496,6 +7706,30 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
         expect(pm_topic.reload.public_topic_timer).to eq(nil)
+      end
+
+      it "raises an error when publishing a topic the user can only read to a category" do
+        readers = Fabricate(:group)
+        readers.add(trust_level_4)
+        read_only_category =
+          Fabricate(
+            :private_category,
+            group: readers,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        read_only_topic = Fabricate(:topic, category: read_only_category)
+        sign_in(trust_level_4)
+
+        post "/t/#{read_only_topic.id}/timer.json",
+             params: {
+               time: 24,
+               status_type: "publish_to_category",
+               category_id: category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(read_only_topic.reload.public_topic_timer).to eq(nil)
       end
 
       it "allows a category moderator to create a delete timer" do
@@ -7963,6 +8197,52 @@ RSpec.describe TopicsController do
             topic.reload
             expect(topic.shared_draft.category_id).to eq(other_cat.id)
           end
+
+          it "does not turn a topic outside the shared drafts category into a shared draft" do
+            ordinary_topic = Fabricate(:topic, category: category)
+
+            put "/t/#{ordinary_topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+            expect(response.status).to eq(403)
+            expect(ordinary_topic.reload.shared_draft).to be_nil
+          end
+        end
+      end
+
+      context "as a non-staff shared-draft group member" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:member) { Fabricate(:user, refresh_auto_groups: true) }
+
+        before do
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(member)
+          sign_in(member)
+        end
+
+        it "updates the destination of an existing shared draft" do
+          Fabricate(:shared_draft, topic: topic, category: category)
+
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.shared_draft.category_id).to eq(other_cat.id)
+        end
+
+        it "does not turn a topic the member can edit into a shared draft" do
+          own_topic = Fabricate(:topic, category: category, user: member)
+          Fabricate(:post, topic: own_topic, user: member)
+
+          put "/t/#{own_topic.id}/shared-draft.json", params: { category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(own_topic.reload.shared_draft).to be_nil
+        end
+
+        it "does not turn a topic moved into the shared drafts category into a shared draft" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+
+          expect(response.status).to eq(403)
+          expect(topic.reload.shared_draft).to be_nil
         end
       end
     end
@@ -7983,6 +8263,8 @@ RSpec.describe TopicsController do
       end
 
       context "as staff" do
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+
         before { sign_in(moderator) }
 
         it "publishes the topic" do
@@ -8024,6 +8306,97 @@ RSpec.describe TopicsController do
                 destination_category_id: shared_drafts_category.id,
               }
           expect(response.status).to eq(400)
+        end
+      end
+
+      context "as a non-staff shared-draft group member" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:publisher) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+
+        before do
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(publisher)
+          sign_in(publisher)
+        end
+
+        it "publishes the draft when the member can edit the source topic" do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+
+          expect(response.status).to eq(200)
+          topic.reload
+          expect(topic.category_id).to eq(category.id)
+          expect(topic.visible).to eq(true)
+        end
+
+        context "when the member cannot edit the source topic" do
+          fab!(:topic_timer) do
+            Fabricate(
+              :topic_timer,
+              topic: topic,
+              status_type: TopicTimer.types[:publish_to_category],
+              category_id: category.id,
+            )
+          end
+
+          before do
+            SiteSetting.editing_grace_period = 0
+            PostRevisor.new(post).revise!(post_author1, raw: "an important revision")
+            shared_drafts_category.set_permissions(shared_drafts_group => :readonly)
+            shared_drafts_category.save!
+          end
+
+          it "denies publication and leaves the draft untouched" do
+            expect(post.reload.revisions.count).to eq(1)
+
+            put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+
+            expect(response.status).to eq(403)
+            topic.reload
+            expect(topic.category_id).to eq(shared_drafts_category.id)
+            expect(topic.visible).to eq(false)
+            expect(post.reload.revisions.count).to eq(1)
+            expect(topic_timer.reload.deleted_at).to be_nil
+          end
+        end
+      end
+
+      context "when the topic is not a shared draft" do
+        fab!(:shared_drafts_group, :group)
+        fab!(:member) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:destination_cat, :category)
+        fab!(:own_topic) { Fabricate(:topic, category: category, user: member) }
+        fab!(:own_post) { Fabricate(:post, topic: own_topic, user: member) }
+
+        before do
+          SiteSetting.editing_grace_period = 0
+          SiteSetting.shared_drafts_allowed_groups = shared_drafts_group.id.to_s
+          shared_drafts_group.add(member)
+          PostRevisor.new(own_post).revise!(moderator, raw: "an important revision")
+          own_topic.update_status("visible", false, moderator)
+          sign_in(member)
+        end
+
+        it "does not publish a topic the member can edit" do
+          put "/t/#{own_topic.id}/publish.json",
+              params: {
+                destination_category_id: destination_cat.id,
+              }
+
+          expect(response.status).to eq(403)
+          own_topic.reload
+          expect(own_topic.category_id).to eq(category.id)
+          expect(own_topic.visible).to eq(false)
+          expect(own_post.reload.revisions.count).to eq(1)
+        end
+
+        it "does not publish a topic after the member requests a shared-draft destination for it" do
+          put "/t/#{own_topic.id}/shared-draft.json", params: { category_id: category.id }
+          put "/t/#{own_topic.id}/publish.json", params: { destination_category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(own_topic.reload.visible).to eq(false)
+          expect(own_post.reload.revisions.count).to eq(1)
         end
       end
     end

@@ -105,8 +105,6 @@ zh_CN:
           other: "确定要删除 %{count} 条消息吗？"
       channel_settings:
         title: "频道设置"
-        edit: "编辑"
-        add: "添加"
         star_channel: "收藏频道"
         unstar_channel: "取消收藏频道"
         close_channel: "关闭频道"
@@ -115,10 +113,11 @@ zh_CN:
         open_channel_disabled_read_only: "无法重新打开只读频道。"
         archive_channel: "归档频道"
         delete_channel: "删除频道"
+        danger_zone:
+          title: "危险区域"
         join_channel: "加入频道"
         leave_channel: "离开频道"
         leave_groupchat_info: "离开此群组聊天后，您将无法再访问它，也不会收到与之相关的通知。要重新加入，需要群组聊天成员再次向您发送邀请。"
-        notification_settings: "通知设置"
         notification_settings_context: "通知"
         join: "加入"
         leave: "离开"
@@ -387,21 +386,22 @@ zh_CN:
       members_view:
         filter_placeholder: 查找成员
         add_member: 添加成员
-        back_to_settings: "返回设置"
       about_view:
         associated_topic: 链接的话题
         associated_category: 链接的类别
-        title: 标题
         name: 名称
         description: 描述
       channel_info:
         back_to_all_channels: "所有频道"
         back_to_channel: "返回"
+        nav_label: "频道信息"
         tabs:
           members: 成员
+          preferences: 偏好设置
           settings: 设置
           search: 搜索
         remove_member: "移除"
+        members_title: "%{channel} 位成员"
       new_message_modal:
         title: 发送消息
         add_user_long: <kbd>shift + 点击</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
@@ -421,7 +421,6 @@ zh_CN:
         create_new_group_chat: "创建群组聊天"
         group_with_too_many_members: "成员过多 (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: 编辑频道
         input_placeholder: 添加名称
         slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
@@ -429,9 +428,7 @@ zh_CN:
         emoji: 频道表情符号
         reset_emoji: 重置表情符号
       channel_edit_description_modal:
-        title: 编辑描述
         input_placeholder: 添加描述
-        description: 告诉人们这个频道的主题
       direct_message_creator:
         add_to_channel: "添加到频道"
         title: 新消息
@@ -538,7 +535,6 @@ zh_CN:
         always: "所有活动"
       settings:
         channel_wide_mentions_label: "允许 @all 和 @here 提及"
-        channel_wide_mentions_description: "允许用户使用 @all 通知#%{channel} 的所有成员，或仅使用 @here 通知当前活跃的成员"
         channel_threading_label: "消息串"
         channel_threading_description: "启用消息串后，对聊天消息的回复将创建一个单独的对话，该对话将与主频道并存。"
         auto_join_users_label: "自动添加用户"
@@ -559,9 +555,6 @@ zh_CN:
         save: "保存"
         saved: "已保存"
         unfollow: "离开"
-        admin_title: "管理员"
-        settings_title: "设置"
-        info_title: "频道信息"
         category_label: "类别"
         history_label: "历史记录"
         members_label: "成员"

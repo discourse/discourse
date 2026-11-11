@@ -402,6 +402,17 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to include("New Users")
       end
 
+      it "does not leak hidden posts as the digest best post excerpt" do
+        secret = "this is the secret hidden reply body"
+        hidden_reply =
+          Fabricate(:post, topic: popular_topic, post_number: 2, raw: secret, score: 9999)
+        hidden_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(popular_topic.reload.visible).to eq(true)
+        expect(email.text_part.body.to_s).not_to include(secret)
+        expect(email.html_part.body.to_s).not_to include(secret)
+      end
+
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
         expect(email.html_part.body.to_s).to_not include("New Users")
@@ -1687,6 +1698,29 @@ RSpec.describe UserNotifications do
       )
     end
 
+    it "renders participant names as text" do
+      SiteSetting.prioritize_username_in_ux = false
+      group = Fabricate(:group, full_name: "Help](https://evil.example) <img src=x> \\[x")
+      member = Fabricate(:user, name: "<b>Bond</b>")
+      topic.allowed_users = [user, member]
+      topic.allowed_groups = [group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      links =
+        Nokogiri.HTML5(mail.html_part.body.to_s).css("a").to_h { |link| [link["href"], link.text] }
+      expect(links).to include(
+        group.full_url => "#{group.full_name} (0)",
+        member.full_url => member.name,
+      )
+    end
+
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true
@@ -2202,6 +2236,36 @@ RSpec.describe UserNotifications do
 
     context "when the invitation opens a topic" do
       include_examples "escaping HTML in invitation titles", destination: :topic
+    end
+  end
+
+  describe "watched word HTML replacements in invitation emails" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:invitee, :user)
+
+    it "renders the HTML replacement as text" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "invited",
+        replacement: "<b>replaced</b>",
+        html: true,
+      )
+      post = Fabricate(:private_message_post, recipient: inviter)
+      post.topic.invite(inviter, invitee.username)
+      notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+
+      mail =
+        UserNotifications.user_invited_to_private_message(
+          invitee,
+          notification_type: "invited_to_private_message",
+          notification_data_hash: notification.data_hash,
+          post: notification.post,
+        )
+      renderer = Email::Renderer.new(mail)
+
+      expect(renderer.html).not_to include("<b>replaced</b>")
+      expect(renderer.html).to include("&lt;b&gt;replaced&lt;/b&gt;")
     end
   end
 

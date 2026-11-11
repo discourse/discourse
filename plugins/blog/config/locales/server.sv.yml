@@ -18,3 +18,5 @@ sv:
     replies:
       one: "%{count} svar"
       other: "%{count} svar"
+    themes:
+      default: Standard

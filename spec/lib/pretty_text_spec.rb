@@ -738,88 +738,33 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
-    it "highlights Unicode bidirectional override characters during cleanup" do
-      cooked = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        \u202E
-        </code></pre>
-      HTML
-      cleaned = PrettyText.cleanup(cooked)
-      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+    it "highlights every dangerous Unicode bidirectional character in code and pre elements" do
+      characters = %W[\u202A \u202B \u202C \u202D \u202E \u2066 \u2067 \u2068 \u2069]
 
-      html = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>
-        </code></pre>
-      HTML
+      cooked = PrettyText.cook(<<~MD)
+        ```
+        #{characters.join}
+        ```
 
-      expect(cleaned.strip).to eq(html.strip)
+        <code>#{characters.join}</code>
+
+        <pre>#{characters.join}</pre>
+      MD
+
+      warnings = Nokogiri::HTML5.fragment(cooked).css(".bidi-warning")
+      expect(warnings.map { |warning| [warning.parent.name, warning.text] }).to eq(
+        %w[code code pre]
+          .product(characters)
+          .map { |tag, char| [tag, format("<U+%04X>", char.ord)] },
+      )
     end
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        ```
-        #{bidi}
-        ```
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><code class="lang-auto"><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span>
-          </code></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-    end
+    it "keeps attributes intact when they contain Unicode bidirectional override characters" do
+      title = "\u202E<img src=/x style=position:fixed>"
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters in solo code and pre nodes, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <code>#{bidi}</code>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <p><code><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></code></p>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <pre>#{bidi}</pre>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
+      cooked = PrettyText.cook("<code>\u202E<abbr title=\"#{title}\">a</abbr></code>")
+
+      expect(Nokogiri::HTML5.fragment(cooked).at_css("code abbr")["title"]).to eq(title)
     end
   end
 
@@ -2384,6 +2329,46 @@ HTML
         </p>
       HTML
     end
+
+    it "keeps HTML replacements self-contained" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: '<abbr title="fruit">apple</abbr>',
+        html: true,
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<span>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple pie")).to eq('<p><abbr title="fruit">apple</abbr> pie</p>')
+      expect(PrettyText.cook("banana bread")).to eq("<p><span></span> bread</p>")
+    end
+
+    it "does not emit HTML replacements when the sanitizer is disabled" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: "orange",
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<b>bold</b>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple banana", sanitize: false)).to eq(
+        "<p>orange &lt;b&gt;bold&lt;/b&gt;</p>",
+      )
+    end
   end
 
   it "supports typographer" do
@@ -2617,6 +2602,20 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+    end
+
+    it "does not backtrack catastrophically on long numeric suffixes" do
+      suffix = "#{"1" * 1000}x#{"1" * 1000},"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      cooked = PrettyText.cook("![a|#{suffix}](http://png.com/my.png)")
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(cooked).to include(%{alt="a|#{suffix}"})
+      expect(elapsed).to be < 2, "cooking took #{elapsed.round(2)}s"
     end
 
     it "ignores whitespace and allows scaling by percent, width, height" do
@@ -3166,6 +3165,78 @@ HTML
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)
+    end
+  end
+
+  describe "bbcode blocks nested inside other container blocks" do
+    it "still finds the closing tag of a bbcode block inside a block quote" do
+      md = <<~MD
+        [b]hi[/b]
+        [quote]
+        x
+        [/quote]
+
+        > [quote]
+        > y
+        > [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <blockquote>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </blockquote>
+      HTML
+    end
+
+    it "still finds the closing tag of a bbcode block in a list item" do
+      md = <<~MD
+        - [quote]
+          y
+          [/quote]
+        - [quote]
+          z
+          [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </li>
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>z</p>
+        </blockquote>
+        </aside>
+        </li>
+      HTML
+    end
+  end
+
+  describe "cooking unclosed bbcode tags" do
+    def cook_duration(raw)
+      PrettyText.cook("warm up the v8 context") # exclude one-off engine init
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      PrettyText.cook(raw)
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    end
+
+    it "cooks many unclosed block bbcode tags in roughly linear time" do
+      raw = (["[quote]"] * 3000).join("\n")
+      expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
+      raw = "[code]" * 6000
+      expect(cook_duration(raw)).to be < 2
     end
   end
 end

@@ -128,7 +128,7 @@ class UserAvatarsController < ApplicationController
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
-        image = optimized_path if File.exist?(optimized_path)
+        image = optimized_path if optimized_path && File.exist?(optimized_path)
       elsif GlobalSetting.redirect_avatar_requests
         return redirect_s3_avatar(Discourse.store.cdn_url(optimized.url))
       else

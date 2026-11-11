@@ -21,7 +21,8 @@ class GroupsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
   skip_before_action :check_xhr, only: [:show]
-  after_action :add_noindex_header
+  # Run before check_xhr can return the HTML shell.
+  prepend_before_action :add_noindex_header
 
   TYPE_FILTERS = GroupDirectoryQuery::TYPE_FILTERS
 
@@ -461,10 +462,19 @@ class GroupsController < ApplicationController
     offset = (params[:offset] && params[:offset].to_i) || 0
 
     group_histories =
-      GroupHistory.with_filters(group, params[:filters]).limit(page_size).offset(offset * page_size)
+      GroupHistory
+        .with_filters(group, params[:filters])
+        .preload(:group)
+        .limit(page_size)
+        .offset(offset * page_size)
 
     render_json_dump(
-      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      logs:
+        serialize_data(
+          group_histories,
+          BasicGroupHistorySerializer,
+          is_group_owner: group.group_users.exists?(user: current_user, owner: true),
+        ),
       all_loaded: group_histories.count < page_size,
     )
   end

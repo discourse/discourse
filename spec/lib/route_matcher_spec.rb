@@ -259,7 +259,7 @@ RSpec.describe RouteMatcher do
       expect(request.env[described_class::PATH_PARAMETERS]).to include(id: "3")
     end
 
-    it "handles a missing ordinary category alias value" do
+    it "handles present and missing ordinary category alias values" do
       matcher =
         described_class.new(
           params: %i[category_id],
@@ -270,8 +270,19 @@ RSpec.describe RouteMatcher do
             "category_id" => ["3"],
           },
         )
+      env =
+        request_env(path_parameters: {}, query_parameters: { category_slug_path_with_id: "foo/3" })
 
+      expect(matcher.match?(env: env)).to eq(true)
       expect(matcher.match?(env: request_env(path_parameters: {}))).to eq(false)
+    end
+
+    it "ignores empty-named parameters when an ordinary parameter has no alias" do
+      matcher =
+        described_class.new(params: %i[topic_id], allowed_param_values: { "topic_id" => ["3"] })
+      env = request_env(path_parameters: {}, query_parameters: { "" => "3" })
+
+      expect(matcher.match?(env: env)).to eq(false)
     end
   end
 end

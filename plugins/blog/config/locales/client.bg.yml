@@ -14,6 +14,7 @@ bg:
         mobile: Мобилен
         edit: Редактирай
         preview: Преглед
+        customize: Персонализация
         import: Импорт
         export: Експорт
         active: Активни
@@ -26,6 +27,7 @@ bg:
         change:
           title: заглавие
           body: тяло
+          tags: етикети
       review:
         copy: Копирай
         open: Отвори

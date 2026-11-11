@@ -448,6 +448,19 @@ RSpec.describe Email::Styles do
       expect(@frag.css("[data-stripped-secure-upload]")).to be_present
     end
 
+    it "uses the default size when the dimensions are not numbers" do
+      styler = Email::Styles.new(<<~HTML)
+        <div data-stripped-secure-upload="/secure-uploads/original/1X/123456.png" data-width='1" onerror="alert(1)' data-height="1"></div>
+      HTML
+      styler.inline_secure_images(attachments, attachments_index)
+
+      expect(Nokogiri::HTML5.fragment(styler.to_s).at_css("img").to_h).to eq(
+        "src" => "cid:email/test.png",
+        "data-embedded-secure-image" => "true",
+        "style" => "max-width: 50%; max-height: #{Email::Styles::MAX_IMAGE_DIMENSION}px;",
+      )
+    end
+
     context "when an optimized image is used instead of the original" do
       let(:html) do
         "<a href=\"#{Discourse.base_url}\/secure-uploads/optimized/2X/1/123456_2_20x30.png\"><img src=\"/secure-uploads/optimized/2X/1/123456_2_20x30.png\" width=\"20\" height=\"30\"></a>"

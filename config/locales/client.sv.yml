@@ -9,6 +9,14 @@ sv:
     dsa_notice:
       choice_title: "Det är olagligt"
       go_back: "Gå tillbaka"
+    code_editor:
+      search:
+        replace: "Ersätt"
+        next: "Nästa"
+        previous: "Föregående"
+        close: "Stäng"
+      fold:
+        to: "till"
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
@@ -4442,11 +4450,11 @@ sv:
           title: "Avancerat"
       upcoming_changes:
         name: "Namn"
-        enabled: "Aktiverad"
+        enabled: "Aktiverad?"
+        feedback: "Feedback"
         select_groups: "Välj grupper…"
+        settings: "Inställningar"
         preview: "Förhandsgranska"
-        enabled_for_options:
-          everyone: "Alla"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"

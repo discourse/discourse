@@ -19,3 +19,5 @@ hr:
       one: "%{count} odgovor"
       few: "%{count} odgovora"
       other: "%{count} odgovora"
+    themes:
+      default: Zadano

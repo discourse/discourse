@@ -812,6 +812,7 @@ RSpec.describe CategoriesController do
                   "icon" => "memo",
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
+                  "svg_icon" => "comment",
                   "title" => "discussion",
                   "visible" => true,
                 },

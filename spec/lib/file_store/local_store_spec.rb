@@ -30,6 +30,24 @@ RSpec.describe FileStore::LocalStore do
   end
 
   describe "#remove_upload" do
+    it "only moves files from the uploads directory" do
+      uploads_dir = "#{store.public_dir}#{store.relative_base_url}"
+      FileUtils.mkdir_p("#{uploads_dir}/original")
+
+      Tempfile.create("remove_upload", store.public_dir) do |file|
+        [
+          "#{store.relative_base_url}/../../../#{File.basename(file)}",
+          "#{store.relative_base_url}/original/..",
+        ].each do |url|
+          upload.url = url
+          store.remove_upload(upload)
+        end
+
+        expect(File.exist?(file)).to eq(true)
+        expect(Dir.exist?("#{uploads_dir}/original")).to eq(true)
+      end
+    end
+
     it "does not delete non uploaded" do
       FileUtils.expects(:mkdir_p).never
       store.remove_upload(upload)
@@ -52,6 +70,31 @@ RSpec.describe FileStore::LocalStore do
       expect(File.mtime(tombstone_path)).to_not eq(mtime)
     ensure
       [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
+    end
+  end
+
+  describe "#path_for" do
+    it "returns the path of uploads and seeded images" do
+      upload.url = "/#{upload_path}/original/1X/#{upload.sha1}.png"
+      expect(store.path_for(upload)).to eq("#{store.public_dir}#{upload.url}")
+
+      upload.url = "/images/avatar.png"
+      expect(store.path_for(upload)).to eq("#{store.public_dir}/images/avatar.png")
+
+      set_subfolder "/forum"
+      upload.url = "/forum/#{upload_path}/original/1X/#{upload.sha1}.png"
+      expect(store.path_for(upload)).to eq("#{store.public_dir}#{upload.url}")
+    end
+
+    it "returns nil for urls outside of the store directories" do
+      [
+        "//cdn.example.com/original/1X/#{upload.sha1}.png",
+        "/#{upload_path}/../other/original/1X/#{upload.sha1}.png",
+        "/#{upload_path}-other/original/1X/#{upload.sha1}.png",
+      ].each do |url|
+        upload.url = url
+        expect(store.path_for(upload)).to eq(nil), url
+      end
     end
   end
 

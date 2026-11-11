@@ -1,49 +1,113 @@
 @use "lib/viewport";
 
 .category-type-cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  margin-block: var(--space-8);
+  container-type: inline-size;
+  margin-block: var(--space-6) var(--space-8);
+
+  &__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+
+    @container (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
 
   &__card {
+    // Category types can override the accent to tint their icon tile.
+    --category-type-accent: var(--tertiary);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--secondary);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
 
     &-select {
       all: unset; // reset browser button styles
+      box-sizing: border-box;
+      flex: 1 1 auto;
       width: 100%;
       display: grid;
-      grid-template-areas: "icon title" "icon description";
-      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "icon name chevron"
+        "icon description chevron";
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: auto 1fr;
+      align-items: center;
+      gap: 0 var(--space-4);
+      padding: var(--space-5) var(--space-6);
       cursor: pointer;
       text-align: left;
-      gap: 0 var(--space-6);
-      padding: var(--space-9) 0 var(--space-9);
+      border-radius: inherit;
 
-      @include viewport.from(sm) {
-        padding: var(--space-8) 0 var(--space-9);
-        gap: 0 var(--space-8);
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: 2px;
+      }
+
+      @container (width >= 40rem) {
+        grid-template-areas: "icon" "name" "description";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+        align-items: start;
+        padding: var(--space-6);
       }
     }
 
     &-icon {
       grid-area: icon;
-      font-size: 2.75em;
-      margin-top: -0.1em;
-      padding-left: var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      aspect-ratio: 1;
+      border-radius: var(--d-border-radius);
+      color: var(--category-type-accent);
+      background: color-mix(
+        in srgb,
+        var(--category-type-accent) 12%,
+        var(--secondary)
+      );
+      font-size: var(--font-up-2);
+
+      .emoji {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      @container (width >= 40rem) {
+        margin-bottom: var(--space-4);
+      }
     }
 
     &-name {
-      grid-area: title;
+      grid-area: name;
+      align-self: end;
       font-size: var(--font-up-1);
       font-weight: bold;
+      color: var(--primary);
     }
 
     &-description {
       grid-area: description;
+      align-self: start;
+      margin-top: var(--space-1);
       color: var(--primary-high);
+      line-height: var(--line-height-medium);
+    }
+
+    &-chevron {
+      grid-area: chevron;
+      color: var(--primary-medium);
+
+      @container (width >= 40rem) {
+        display: none;
+      }
     }
 
     &-bottom {
@@ -53,18 +117,35 @@
     &:hover,
     &:focus-within {
       border-color: var(--tertiary);
+      background: var(--tertiary-very-low);
+
+      .category-type-cards__card-chevron {
+        color: var(--tertiary);
+      }
     }
 
     &.--unavailable {
-      padding-bottom: 0;
-
       .category-type-cards__card-select {
         cursor: not-allowed;
+
+        // rows put the title beside the corner badge, cards keep it clear
+        @container (width < 40rem) {
+          padding-top: var(--space-8);
+        }
+      }
+
+      .category-type-cards__card-chevron {
+        visibility: hidden;
+      }
+
+      .category-type-cards__card-icon {
+        filter: grayscale(1);
       }
 
       &:hover,
-      &:focus-visible {
+      &:focus-within {
         border-color: var(--primary-low);
+        background: var(--secondary);
       }
 
       [class^="category-type-cards__card-"] {
@@ -91,11 +172,14 @@
 
   &__ask-admin-message {
     width: 100%;
+    min-width: 0;
+    white-space: normal;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: var(--space-3) var(--space-6);
+    font-size: var(--font-down-1);
     background-color: var(--tertiary-very-low);
     color: var(--tertiary);
     border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);

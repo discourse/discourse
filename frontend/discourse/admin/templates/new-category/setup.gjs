@@ -4,7 +4,10 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="edit-category">
-    <DPageHeader @titleLabel={{i18n "category.choose_type.title"}} />
+    <DPageHeader
+      @descriptionLabel={{i18n "category.choose_type.description"}}
+      @titleLabel={{i18n "category.choose_type.title"}}
+    />
     <CategoryTypeCards @counts={{@model.counts}} @types={{@model.types}} />
   </div>
 </template>
