@@ -78,7 +78,6 @@ module("Unit | Utility | link-mentions", function (hooks) {
       .dom(pmPreview.querySelector("a.mention"))
       .hasAttribute("data-reason", "private");
 
-    // Replying in an unrelated public topic must not reuse the PM context
     const publicPreview = domFromString(
       `<div><span class="mention">@pm_user</span></div>`
     )[0];
@@ -112,6 +111,44 @@ module("Unit | Utility | link-mentions", function (hooks) {
     );
   });
 
+  test("results are keyed by PM recipients regardless of order and case", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/composer/mentions", () => {
+      requestCount++;
+      return response({
+        users: ["pm_user"],
+        user_reasons: { pm_user: "private" },
+        groups: {},
+        group_reasons: {},
+        max_users_notified_per_group_mention: 100,
+      });
+    });
+
+    const unseenFor = (allowedNames) =>
+      linkSeenMentions(
+        domFromString(`<div><span class="mention">@pm_user</span></div>`)[0],
+        { min_username_length: 2 },
+        { allowedNames }
+      );
+
+    await fetchUnseenMentions({
+      names: ["pm_user"],
+      allowedNames: ["alice", "bob"],
+    });
+
+    assert.deepEqual(
+      unseenFor(["Bob", "alice"]),
+      [],
+      "the same recipients reuse the cached result"
+    );
+    assert.deepEqual(
+      unseenFor(["alice"]),
+      ["pm_user"],
+      "different recipients validate again"
+    );
+    assert.strictEqual(requestCount, 1);
+  });
+
   test("a response arriving after a context switch does not populate the new context", async function (assert) {
     let resolvePm;
     const pmPending = new Promise((resolve) => (resolvePm = resolve));
@@ -129,8 +166,6 @@ module("Unit | Utility | link-mentions", function (hooks) {
       });
     });
 
-    // start validating a mention in a PM, then switch to a public topic
-    // while the PM request is still pending
     const pmFetch = fetchUnseenMentions({ names: ["pm_user"], topicId: 1 });
     await fetchUnseenMentions({ names: ["pm_user"], topicId: 2 });
 

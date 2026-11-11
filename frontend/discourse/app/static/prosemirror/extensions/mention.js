@@ -5,9 +5,6 @@ import getURL from "discourse/lib/get-url";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
 
-// Valid and invalid mention results are topic dependent, so they are
-// cached per topic rather than globally (a `private` answer from a PM
-// composer must not leak into a public topic composer in the same page).
 const MENTION_CACHES = new Map();
 
 function mentionsCache(topicId) {
@@ -185,7 +182,7 @@ const extension = {
 async function fetchMentions(names, context) {
   const cache = mentionsCache(context.topicId);
 
-  // only fetch new mentions that are not already validated for this topic
+  // only fetch new mentions that are not already validated
   names = uniqueItemsFromArray(names).filter((name) => {
     const lower = name.toLowerCase();
     return !cache.valid.has(lower) && !cache.invalid.has(lower);
