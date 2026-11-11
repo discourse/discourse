@@ -37,9 +37,16 @@ export default class Bookmark extends RestCompatModel {
   static type = "bookmark";
   static builders = { delete: deleteBookmark };
 
-  // `user` is wrapped as a User instance (legacy parity); `currentUser` is
-  // stashed on the wrapper as an own property (survives `_adoptResource` and
-  // isn't part of the schema).
+  /**
+   * `user` is wrapped as a User instance (legacy parity); `currentUser` is
+   * stashed on the wrapper as an own property (survives `_adoptResource` and
+   * isn't part of the schema).
+   *
+   * @template {typeof Bookmark} C
+   * @this {C}
+   * @param {Partial<InstanceType<C>> & import("discourse/models/rest").RestModelStoreAttrs | import("discourse/models/rest").RestModelAttrs<InstanceType<C>>} [args]
+   * @returns {InstanceType<C>}
+   */
   static create(args = {}) {
     if (args instanceof Bookmark) {
       return args;

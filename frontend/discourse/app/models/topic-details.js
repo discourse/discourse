@@ -18,9 +18,15 @@ import User from "discourse/models/user";
 export default class TopicDetails extends RestCompatModel {
   static type = "topic-details";
 
-  // `store.createRecord("topicDetails", { id, topic, ...attrs })` entry point.
-  // Extras (e.g. tests doing `topic.details = { allowed_users: [...] }`) land
-  // in `#draft` until `updateFromJson` populates the cache record.
+  /**
+   * `store.createRecord("topicDetails", { id, topic, ...attrs })` entry point.
+   * Extras (e.g. tests doing `topic.details = { allowed_users: [...] }`) land
+   * in `#draft` until `updateFromJson` populates the cache record.
+   *
+   * @template {typeof TopicDetails} C
+   * @this {C}
+   * @returns {InstanceType<C>}
+   */
   static create({ id, topic, ...rest } = {}) {
     const td = new this(id);
     if (topic !== undefined) {
@@ -80,8 +86,12 @@ export default class TopicDetails extends RestCompatModel {
     return this.#draft;
   }
 
-  // Wraps user/participant sideloads to match legacy RestModel behavior so
-  // `instanceof User` and EmberObject methods keep working.
+  /**
+   * Wraps user/participant sideloads to match legacy RestModel behavior so
+   * `instanceof User` and EmberObject methods keep working.
+   *
+   * @returns {undefined}
+   */
   updateFromJson(details) {
     const id = this.#effectiveTopicId();
     if (id == null || !details) {

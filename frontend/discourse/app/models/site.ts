@@ -374,8 +374,7 @@ export default class Site extends RestModel {
         result.archetypes as unknown as { site?: Site }[]
       ).map((a) => {
         a.site = result;
-        // TODO(typescript-pending): RestCompatModel.create is untyped; remove when it returns the subclass.
-        return Archetype.create(a) as Archetype;
+        return Archetype.create(a);
       });
     }
 
