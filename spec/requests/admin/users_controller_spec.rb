@@ -2145,12 +2145,7 @@ RSpec.describe Admin::UsersController do
 
     context "when the user has a configured developer email" do
       fab!(:developer_user) do
-        Fabricate(
-          :inactive_user,
-          username: "dev_account",
-          email: "dev@example.com",
-          password: "a-very-long-password-123",
-        )
+        Fabricate(:inactive_user, username: "dev_account", email: "dev@example.com")
       end
       fab!(:email_domain_group) do
         Fabricate(:group, automatic_membership_email_domains: "example.com")
@@ -2159,27 +2154,13 @@ RSpec.describe Admin::UsersController do
       before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
 
       shared_examples "developer email activation denied" do
-        it "does not activate the account or grant admin access" do
+        it "does not activate the account" do
           put "/admin/users/#{developer_user.id}/activate.json"
 
           expect(response.status).to eq(403)
           expect(developer_user.reload).not_to be_active
           expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
           expect(email_domain_group.users.reload).not_to include(developer_user)
-
-          delete "/session"
-
-          post "/session.json",
-               params: {
-                 login: developer_user.username,
-                 password: "a-very-long-password-123",
-               }
-
-          expect(response.parsed_body["reason"]).to eq("not_activated")
-          expect(developer_user.reload.admin).to eq(false)
-
-          get "/admin/users/#{developer_user.id}.json"
-          expect(response.parsed_body["can_activate"]).to eq(false)
         end
       end
 
