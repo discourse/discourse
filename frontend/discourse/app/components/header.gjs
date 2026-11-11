@@ -46,15 +46,34 @@ export default class GlimmerHeader extends Component {
   @service site;
   @service appEvents;
   @service header;
+  @service pageShellPrototype;
 
-  appEventsListeners = modifierFn(() => {
+  appEventsListeners = modifierFn((element) => {
     this.appEvents.on(
       "header:keyboard-trigger",
       this,
       this.headerKeyboardTrigger
     );
 
+    const closeOnEscape = (event) => {
+      if (
+        this.pageShellPrototype.enabled &&
+        event.key === "Escape" &&
+        !event.defaultPrevented &&
+        !event.isComposing &&
+        (this.search.visible ||
+          this.header.userVisible ||
+          this.header.hamburgerVisible)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeCurrentMenu();
+      }
+    };
+    element.addEventListener("keydown", closeOnEscape);
+
     return () => {
+      element.removeEventListener("keydown", closeOnEscape);
       this.appEvents.off(
         "header:keyboard-trigger",
         this,
