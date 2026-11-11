@@ -67,8 +67,6 @@ module Email
           :email_reject_auto_generated
         when Email::Receiver::InactiveUserError
           :email_reject_inactive_user
-        when Email::Receiver::SuspendedUserError
-          :email_reject_suspended_user
         when Email::Receiver::SilencedUserError
           :email_reject_silenced_user
         when Email::Receiver::BadDestinationAddress

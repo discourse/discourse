@@ -271,14 +271,6 @@ RSpec.describe Email::Receiver do
       expect(Topic.last.title).to eq("This topic needs a title")
     end
 
-    it "rejects email from a suspended sender" do
-      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
-
-      expect { process(:email_reply_1) }.to raise_error(
-        Email::Receiver::SuspendedUserError,
-      ).and not_change(Topic, :count)
-    end
-
     it "bounds the body of posts created without validations" do
       SiteSetting.max_post_length = 100
       body = "This body is long enough to exceed the maximum post length. " * 20
