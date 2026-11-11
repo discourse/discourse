@@ -37,4 +37,14 @@ module("Integration | ui-kit | Helper | dReplaceEmoji", function (hooks) {
 
     assert.dom(`span`).hasText("safe text");
   });
+
+  test("passes the options on", async function (assert) {
+    await render(
+      <template>
+        <span>{{dReplaceEmoji ":heart:" title="Gizmo"}}</span>
+      </template>
+    );
+
+    assert.dom(`.emoji[title="Gizmo"]`).exists();
+  });
 });
