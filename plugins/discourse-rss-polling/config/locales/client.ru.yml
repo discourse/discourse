@@ -14,6 +14,14 @@ ru:
     rss_polling:
       title: RSS-опрос
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: создать RSS-ленту
+            update_rss_polling_feed: обновить RSS-ленту
+            destroy_rss_polling_feed: удалить RSS-ленту
+            enable_rss_polling_feed: включить RSS-ленту
+            disable_rss_polling_feed: отключить RSS-ленту
       rss_polling:
         author: Автор
         feed_url: URL-адрес
