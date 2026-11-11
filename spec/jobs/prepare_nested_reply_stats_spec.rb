@@ -56,6 +56,16 @@ RSpec.describe Jobs::PrepareNestedReplyStats do
     expect(described_class.jobs).to be_empty
   end
 
+  it "continues explicit preparation when automatic backfill is disabled" do
+    topic = Fabricate(:topic)
+    op = Fabricate(:post, topic: topic, post_number: 1)
+    SiteSetting.nested_replies_backfill_batch_size = 0
+
+    described_class.new.execute(after_topic_id: topic.id - 1, max_topic_id: topic.id)
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(true)
+  end
+
   it "isolates a failed topic so later topics are still prepared" do
     after_topic_id = Topic.maximum(:id).to_i
     failed_topic = Fabricate(:topic)
