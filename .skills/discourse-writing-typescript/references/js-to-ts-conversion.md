@@ -105,6 +105,15 @@ callback identity and `this`-binding. Keep the original member form, re-read the
 `bin/lint --fix`, and re-run the diff check above, since the reorder itself can introduce a
 behavior change.
 
+## Before renaming: tests that can fail
+
+The type-check cannot show that a port kept its behavior; only runtime tests can. Before
+renaming a file, check that tests cover it. When it has none, or they skip the options and
+branches the port touches, add tests against the unchanged JavaScript and see them pass.
+Then prove each new test can fail: plant one deliberate bug per test, see it fail, and
+restore the file from git. A test never seen failing proves nothing about the port. Ship
+these tests in the same change as the conversion.
+
 ## Rename mechanics: a single commit
 
 git's rename detection is content similarity at diff time (50% threshold). For a **small
