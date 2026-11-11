@@ -8,6 +8,13 @@ nb_NO:
   js:
     dsa_notice:
       choice_title: "Det er ulovlig"
+    code_editor:
+      search:
+        next: "Neste"
+        previous: "Forrige"
+        close: "Lukk"
+      fold:
+        to: "til"
     user_api_key:
       authorize: "Autoriser"
       deny: "Avbryt"
@@ -4369,10 +4376,10 @@ nb_NO:
           title: "Utvidelser"
       upcoming_changes:
         name: "Navn"
-        enabled: "Aktivert"
+        enabled: "Aktivert?"
+        feedback: "Tilbakemelding"
+        settings: "Innstillinger"
         preview: "Forhåndsvis"
-        enabled_for_options:
-          everyone: "Alle"
         impact_roles:
           admins: "Adminer"
           moderators: "Moderatorer"

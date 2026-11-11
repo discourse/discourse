@@ -1052,7 +1052,6 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
-      enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
       user_dark_scheme_id: user_dark_scheme_id || -1,

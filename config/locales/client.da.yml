@@ -9,6 +9,14 @@ da:
     dsa_notice:
       choice_title: "Det er ulovligt"
       email: "E-mail adresse"
+    code_editor:
+      search:
+        replace: "Erstat"
+        next: "Næste"
+        previous: "Forrige"
+        close: "Luk"
+      fold:
+        to: "til"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -4395,11 +4403,11 @@ da:
           title: "Avanceret"
       upcoming_changes:
         name: "Navn"
-        enabled: "Aktiveret"
+        enabled: "Aktiveret?"
+        feedback: "Tilbagemelding"
         select_groups: "Vælg grupper…"
+        settings: "Indstillinger"
         preview: "Forhåndsvisning"
-        enabled_for_options:
-          everyone: "Alle"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:

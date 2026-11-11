@@ -336,8 +336,10 @@ RSpec.describe TopicsBulkAction do
       fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
       fab!(:admin)
       fab!(:moderator)
-      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
-      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+      fab!(:topic_with_tag) do
+        Fabricate(:topic, user:, category: source_category, tags: [restricted_tag])
+      end
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag, user:) }
 
       before { destination_category.update!(tags: [other_tag]) }
 
@@ -379,6 +381,36 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic_with_tag.reload.category).to eq(source_category)
+      end
+
+      it "names the disallowed tags when the user can see them" do
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        bulk_action.perform!
+
+        expect(bulk_action.errors.keys).to contain_exactly(include("restricted-tag"))
+      end
+
+      it "does not reveal tags the user cannot see" do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [restricted_tag.name])
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+        expect(bulk_action.errors).to eq(I18n.t("category.errors.disallowed_tags_generic") => 1)
       end
     end
 

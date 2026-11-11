@@ -14,6 +14,16 @@ zh_TW:
       resend_email_code: "重新傳送代碼"
     ace_editor:
       resize: "調整程式碼編輯器大小"
+    code_editor:
+      resize: "調整程式碼編輯器大小"
+      search:
+        replace: "取代"
+        next: "下一步"
+        previous: "上一個"
+        close: "關閉"
+        go: "開始"
+      fold:
+        to: "發至"
     user_api_key:
       title: '授權「%{application_name}」'
       authorize: "授權"
@@ -2610,7 +2620,6 @@ zh_TW:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 個錯誤/分鐘}}</a>超過了 {limit, plural, other {# 個錯誤/分鐘}} 的網站設定上限。
     learn_more: "了解更多…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>了解更多…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>意見回饋…</a>"
     mute: 靜音
     unmute: 取消靜音
     last_post: 最新貼文
@@ -6050,24 +6059,23 @@ zh_TW:
         name: "名稱"
         plugin: "外掛程式"
         metadata: "中繼資料"
-        enabled: "啟用"
-        enabled_for: "啟用對象…"
+        enabled: "已啟用？"
         show_image: "顯示圖片"
-        edit_groups: "編輯選擇加入群組"
+        feedback: "意見回饋"
+        toggle: "啟用 %{name}"
         groups_updated: "群組已更新！"
         save_groups: "儲存群組"
         add_groups_to_enable: "新增群組以啟用此功能"
         no_changes_to_save: "沒有可儲存的變更"
         select_groups: "選擇群組…"
         opt_in_groups: "選擇加入群組"
-        show_related_settings: "顯示相關設定…"
+        settings: "設置"
         opt_in_groups_instructions: "選擇加入群組可讓特定使用者群組在變更發布給所有人之前先行測試。請注意，一旦變更進展至「穩定」狀態，這些群組將不再適用。"
         enabled_for_throttle: "你變更此項目啟用對象的速度過快。請稍候幾秒再試一次。"
         change_enabled_for_success: "你已為 %{enabledFor} 啟用此變更"
         change_disabled: "你已選擇不使用此變更"
         depends_on_notice: "此變更需要啟用 %{dependencyLinks}。"
         permanent_notice: "此變更現已成為永久項目，且即將被移除。你已無法選擇停用。"
-        permanent_soon_notice: "此變更即將成為永久項目。之後你將無法選擇停用。"
         permanent_no_group_selection: "不適用；永久變更會套用至所有群組。"
         no_changes: "目前沒有即將推出的變更。"
         preview: "預覽"
@@ -6075,7 +6083,6 @@ zh_TW:
         default_warning_short: "此設定的預設值已變更；請前往<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即將推出的變更</a>頁面瞭解詳情。"
         enabled_for_options:
           no_one: "沒有人"
-          everyone: "所有使用者"
           staff: "僅限 %{staffGroupName}"
           specific_groups: "特定群組"
           specific_groups_with_group_names:

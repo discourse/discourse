@@ -119,6 +119,90 @@ RSpec.describe PostMover do
     end
   end
 
+  describe "move notice in the original topic" do
+    fab!(:group)
+    fab!(:other_group, :group)
+    fab!(:public_category, :category)
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+    fab!(:topic) { Fabricate(:topic, category: public_category) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    def move_notice(source)
+      source.posts.find_by(action_code: "split_topic")
+    end
+
+    def expect_destination_named(source, destination)
+      expect(move_notice(source).raw).to include(destination.title)
+    end
+
+    def expect_destination_hidden(source, destination, move_type: "existing_topic")
+      raw = move_notice(source).raw
+
+      expect(raw).to eq(I18n.t("move_posts.#{move_type}_moderator_post_no_link", count: 1))
+      expect(raw).not_to include(destination.title)
+      expect(raw).not_to include(destination.relative_url)
+    end
+
+    it "names a destination in a public category" do
+      destination = Fabricate(:topic, category: public_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "hides an existing destination in a private category" do
+      destination = Fabricate(:topic, category: private_category, title: "Hidden destination title")
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_hidden(topic, destination)
+    end
+
+    it "hides a new destination created in a private category" do
+      destination =
+        topic.move_posts(
+          admin,
+          [reply.id],
+          title: "Hidden destination title",
+          category_id: private_category.id,
+        )
+
+      expect_destination_hidden(topic, destination, move_type: "new_topic")
+    end
+
+    it "names the destination when both topics are in the same private category" do
+      topic.update!(category: private_category)
+      destination = Fabricate(:topic, category: private_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "names the destination when its readers include every reader of the original topic" do
+      topic.update!(category: private_category)
+      wider_category = Fabricate(:private_category, group: group)
+      wider_category.set_permissions(group => :full, other_group => :full)
+      wider_category.save!
+      destination = Fabricate(:topic, category: wider_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "hides the destination when some readers of the original topic cannot see it" do
+      topic.update!(category: Fabricate(:private_category, group: other_group))
+      destination = Fabricate(:topic, category: private_category, title: "Hidden destination title")
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_hidden(topic, destination)
+    end
+  end
+
   describe "#move_types" do
     context "when verifying enum sequence" do
       it "'new_topic' should be at 1st position" do

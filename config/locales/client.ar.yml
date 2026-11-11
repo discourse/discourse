@@ -12,6 +12,14 @@ ar:
       title: "الإبلاغ عن المحتوى غير القانوني"
       email: "عنوان البريد الإلكتروني"
       resend_email_code: "إعادة إرسال الرمز"
+    code_editor:
+      search:
+        replace: "استبدال"
+        next: "التالي"
+        previous: "السابق"
+        close: "إغلاق"
+      fold:
+        to: "إلى"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -3203,7 +3211,6 @@ ar:
         }.
     learn_more: "معرفة المزيد…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>اعرف المزيد…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>الملاحظات…</a>"
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -7352,24 +7359,23 @@ ar:
         name: "الاسم"
         plugin: "الإضافات"
         metadata: "البيانات الوصفية"
-        enabled: "مفعَّلة"
-        enabled_for: "مُفعّل لـ..."
+        enabled: "مفعَّلة؟"
         show_image: "اعرض الصورة"
-        edit_groups: "تعديل مجموعات الانضمام الاختياري"
+        feedback: "الملاحظات"
+        toggle: "تفعيل %{name}"
         groups_updated: "حُدثت المجموعات!"
         save_groups: "احفظ المجموعات"
         add_groups_to_enable: "أضف مجموعات لتفعيل هذه الميزة"
         no_changes_to_save: "لا توجد تغييرات للحفظ"
         select_groups: "تحديد المجموعات…"
         opt_in_groups: "مجموعات الانضمام الاختياري"
-        show_related_settings: "إظهار الإعدادات ذات الصلة..."
+        settings: "الإعدادان"
         opt_in_groups_instructions: "يمكن استخدام مجموعات الانضمام الاختياري للسماح لمجموعة معينة من المستخدمين باختبار تغييرٍ ما قبل طرحه للجميع. يرجى ملاحظة أن هذه المجموعات لن تكون ذات صلة بمجرد انتقال التغيير إلى الحالة المستقرة."
         enabled_for_throttle: "لقد قمت بتغيير الأشخاص المفعَّلة لديهم هذه الميزة بسرعة كبيرة. يرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
         change_enabled_for_success: "لقد فعلت هذا التغيير لـ %{enabledFor}"
         change_disabled: "تم إلغاء اشتراكك في هذا التغيير"
         depends_on_notice: "يتطلَّب هذا التغيير تفعيل %{dependencyLinks}."
         permanent_notice: "أصبح هذا التغيير دائمًا وسيتم إزالته قريبًا. لم يعد بإمكانك إلغاء الاشتراك."
-        permanent_soon_notice: "سيصبح هذا التغيير دائمًا في أقرب وقت. لن تتمكن بعد الآن من إلغاء الاشتراك."
         permanent_no_group_selection: "لا ينطبق؛ حيث تسري التغييرات الدائمة على كافة المجموعات"
         no_changes: "لا توجد تغييرات قادمة في الوقت الحالي."
         preview: "معاينة"
@@ -7377,7 +7383,6 @@ ar:
         default_warning_short: "لقد تغيرت القيمة الافتراضية لهذا الإعداد، يمكنك قراءة المزيد حول ذلك في صفحة <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>التغييرات القادمة</a>."
         enabled_for_options:
           no_one: "لا أحد"
-          everyone: "الجميع"
           staff: "%{staffGroupName} فقط"
           specific_groups: "مجموعة (مجموعات) محدَّدة"
           specific_groups_with_group_names:

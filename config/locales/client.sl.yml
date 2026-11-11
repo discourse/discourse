@@ -6,6 +6,14 @@
 
 sl:
   js:
+    code_editor:
+      search:
+        replace: "Zamenjaj"
+        next: "Naprej"
+        previous: "Prejšnja"
+        close: "Zapri"
+      fold:
+        to: "do"
     user_api_key:
       deny: "Prekliči"
       copied: "Kopirano!"
@@ -3776,11 +3784,11 @@ sl:
           title: "Vtičniki"
       upcoming_changes:
         name: "Ime"
-        enabled: "Vključeno"
+        enabled: "Vključeno?"
+        feedback: "Povratna informacija"
         select_groups: "Izberi skupine…"
+        settings: "Nastavitve"
         preview: "Predogled"
-        enabled_for_options:
-          everyone: "Vsi"
         impact_roles:
           admins: "Administratorji"
           moderators: "Moderatorji"

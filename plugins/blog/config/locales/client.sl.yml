@@ -17,6 +17,7 @@ sl:
         theme_name: Ime videza
         edit: Uredi
         preview: Predogled
+        customize: Prilagodi
         import: Uvozi
         export: Izvozi
         active: Aktivni
@@ -28,6 +29,7 @@ sl:
         preview: Predogled
         change:
           title: naziv
+          tags: oznake
       review:
         copy: Kopiraj
         open: Odpri

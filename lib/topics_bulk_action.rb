@@ -192,7 +192,9 @@ class TopicsBulkAction
       if t.first_post.revise(@user, changes, bulk_revision_opts)
         @changed_ids << t.id
       else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+        TopicCategoryChangeValidator
+          .safe_revision_errors(topic: t, guardian:, category_changed: true)
+          .each { |msg| @errors[msg] += 1 }
       end
     end
   end

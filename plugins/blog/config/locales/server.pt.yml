@@ -18,3 +18,5 @@ pt:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostas"
+    themes:
+      default: Predefinição

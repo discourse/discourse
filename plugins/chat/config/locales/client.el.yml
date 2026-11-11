@@ -86,8 +86,6 @@ el:
           other: "Σίγουρα θέλετε να διαγράψετε αυτά τα %{count} μηνύματα;"
       channel_settings:
         title: "Ρυθμίσεις καναλιού"
-        edit: "Επεξεργασία"
-        add: "Προσθήκη"
         close_channel: "Κλείσιμο καναλιού"
         open_channel: "Άνοιγμα καναλιού"
         open_channel_disabled_archived: "Τα αρχειοθετημένα κανάλια δεν μπορούν να ανοίξουν ξανά."
@@ -97,7 +95,6 @@ el:
         join_channel: "Εγγραφή στο κανάλι"
         leave_channel: "Αποχώρηση από το κανάλι"
         leave_groupchat_info: "Αποχωρώντας από αυτήν την ομαδική συνομιλία, δεν θα έχετε πλέον πρόσβαση σε αυτήν και δεν θα λαμβάνετε ειδοποιήσεις σχετικά με αυτήν. Για να συμμετάσχετε ξανά, θα πρέπει να σας προσκαλέσει ξανά ένα μέλος της ομαδικής συνομιλίας."
-        notification_settings: "Ρυθμίσεις ειδοποιήσεων"
         notification_settings_context: "Ειδοποιήσεις"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
@@ -273,21 +270,22 @@ el:
       members_view:
         filter_placeholder: Βρείτε μέλη
         add_member: Προσθήκη Μέλους
-        back_to_settings: "Πίσω στις ρυθμίσεις"
       about_view:
         associated_topic: Συνδεδεμένο θέμα
         associated_category: Συνδεδεμένη κατηγορία
-        title: Τίτλος
         name: Όνομα
         description: Περιγραφή
       channel_info:
         back_to_all_channels: "Όλα τα κανάλια"
         back_to_channel: "Πίσω"
+        nav_label: "Πληροφορίες καναλιού"
         tabs:
           members: Μέλη
+          preferences: Προτιμήσεις
           settings: Ρυθμίσεις
           search: Αναζήτηση
         remove_member: "Αφαίρεση"
+        members_title: "%{channel} μέλη"
       new_message_modal:
         title: Αποστολή μηνύματος
         add_user_long: <kbd>shift + click</kbd> ή <kbd>shift + enter</kbd><span>Προσθήκη @%{username}</span>
@@ -307,14 +305,11 @@ el:
         create_new_group_chat: "Δημιουργία ομαδικής συνομιλίας"
         group_with_too_many_members: "έχει πάρα πολλά μέλη (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Επεξεργασία καναλιού
         input_placeholder: Προσθέστε ένα όνομα
         name: Όνομα καναλιού
         reset_emoji: Επαναφορά emoji
       channel_edit_description_modal:
-        title: Επεξεργασία περιγραφής
         input_placeholder: Προσθέστε μια περιγραφή
-        description: Πείτε στους χρήστες τι αφορά αυτό το κανάλι
       direct_message_creator:
         add_to_channel: "Προσθήκη στο κανάλι"
         title: Νέο Μήνυμα
@@ -407,7 +402,6 @@ el:
         always: "Για όλες τις δραστηριότητες"
       settings:
         channel_wide_mentions_label: "Να επιτρέπονται οι επισημάνσεις @all και @here"
-        channel_wide_mentions_description: "Να επιτρέπεται στους χρήστες να ειδοποιούν όλα τα μέλη του #%{channel} με @all ή μόνο όσους είναι ενεργοί εκείνη τη στιγμή με @here"
         auto_join_users_label: "Αυτόματη προσθήκη χρηστών"
         notification_level: "Αποστολή ειδοποιήσεων push"
         follow: "Γίνετε μέλος"
@@ -423,9 +417,6 @@ el:
         save: "Αποθήκευση"
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
-        admin_title: "Διαχειριστής"
-        settings_title: "Ρυθμίσεις"
-        info_title: "Πληροφορίες καναλιού"
         category_label: "Κατηγορία"
         history_label: "Ιστορικό"
         members_label: "Μέλη"

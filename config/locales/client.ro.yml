@@ -9,6 +9,13 @@ ro:
     dsa_notice:
       choice_title: "Este ilegal"
       email: "Adresă email"
+    code_editor:
+      search:
+        next: "Următorul"
+        previous: "Precedent"
+        close: "Închide"
+      fold:
+        to: "către"
     user_api_key:
       title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
@@ -3957,16 +3964,15 @@ ro:
           title: "Avansat"
       upcoming_changes:
         name: "Nume"
-        enabled: "Activate"
-        enabled_for: "Activate pentru..."
+        enabled: "Activată?"
         add_groups_to_enable: "Adaugă grupuri pentru a activa această funcționalitate"
         no_changes_to_save: "Nicio modificare de salvat"
+        settings: "Setări"
         enabled_for_throttle: "Ai modificat prea repede pentru cine este activată această modificare. Te rog să aștepți câteva secunde înainte de a încerca din nou."
         change_enabled_for_success: "Ai activat această modificare pentru %{enabledFor}"
         preview: "Previzualizează"
         enabled_for_options:
           no_one: "Nimeni"
-          everyone: "Toată lumea"
           specific_groups: "Grupuri specifice"
           specific_groups_with_group_names:
             one: "grupul %{groupNames}"

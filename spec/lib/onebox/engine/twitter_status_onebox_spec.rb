@@ -144,9 +144,21 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       expect(html).to eq("")
     end
 
+    it "renders the tweet from open graph tags as text" do
+      tweet = "<div class='injected'>Sign in</div>"
+      stub_request(:get, link).to_return(body: <<~HTML)
+        <meta property="og:title" content="Discourse (@discourse) on X">
+        <meta property="og:description" content="“#{CGI.escapeHTML(tweet)}”">
+      HTML
+
+      description = Nokogiri::HTML5.fragment(html).at_css(".tweet-description")
+
+      expect(description.text).to eq(tweet)
+    end
+
     describe "it resorts to html open graph tags" do
       context "with a standard tweet" do
-        let(:tweet_content) { "I've never played Minecraft" }
+        let(:tweet_content) { "I&#39;ve never played Minecraft" }
         include_context "with standard tweet info"
         before { @onebox_fixture = "twitterstatus_noclient" }
 

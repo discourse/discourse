@@ -22,6 +22,7 @@ ug:
         edit: تەھرىر
         activate: ئاكتىپلا
         preview: ئالدىن كۆزەت
+        customize: ئىختىيارى
         export: چىقار
         active: ئاكتىپ
   js:
@@ -33,6 +34,7 @@ ug:
         change:
           title: ئاتاق
           body: مەزمۇن
+          tags: بەلگە
       review:
         create: ئۇلانما قۇر
         copy: كۆچۈر

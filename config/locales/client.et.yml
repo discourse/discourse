@@ -6,6 +6,13 @@
 
 et:
   js:
+    code_editor:
+      search:
+        next: "Järgmine"
+        previous: "Eelmine"
+        close: "Sulge"
+      fold:
+        to: "kellele"
     user_api_key:
       authorize: "Autoriseeri"
       deny: "Loobu"
@@ -2805,10 +2812,10 @@ et:
           title: "Pistikprogrammid"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Sisse lülitatud"
+        enabled: "Sisse lülitatud?"
+        feedback: "Tagasiside"
+        settings: "Seaded"
         preview: "Eelvaade"
-        enabled_for_options:
-          everyone: "Kõik"
         impact_roles:
           admins: "Adminnid"
           moderators: "Moderaatorid"

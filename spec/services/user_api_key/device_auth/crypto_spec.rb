@@ -14,6 +14,12 @@ RSpec.describe UserApiKey::DeviceAuth::Crypto do
         Discourse::InvalidParameters,
       )
     end
+
+    it "rejects non-string public keys without generating a keypair" do
+      expect { described_class.parse_public_key!(4096) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
   end
 
   describe ".validate_payload_size!" do

@@ -78,7 +78,7 @@ pl_PL:
         saved: Tożsamość bloga została zapisana. Odśwież bloga, aby zobaczyć zmiany.
         identity_tab: Tożsamość
         identity_description: Nazwa, wstęp i treść „O mnie” wspólne dla wszystkich motywów blogów.
-        themes_index_description: Wybierz motyw do edycji. Szkice zmian pozostaną prywatne, dopóki ich nie aktywujesz.
+        themes_index_description: Wybierz projekt, który zobaczą czytelnicy. Dostosuj dołączony motyw lub edytuj swój własny; zmiany pozostaną prywatne, dopóki ich nie aktywujesz.
         thumbnail:
           journal: Dziennik
           headline: Bądź ciekawy.
@@ -89,8 +89,6 @@ pl_PL:
         preview_short: Podgląd szkicu
         new_theme_short: Nowy motyw
         git_source: Źródło Git
-        no_themes: Brak zapisanych motywów
-        no_themes_description: Utwórz motyw na podstawie swojego obecnego projektu lub zaimportuj go z Git.
         themes: Motywy
         themes_description: Zachowaj wiele projektów i iteruj bez wprowadzania zmian w aktywnym blogu. Czytelnicy widzą ostatnią aktywowaną migawkę, a nie Twoje zmiany robocze ani aktualizacje Git.
         theme_name: Nazwa motywu
@@ -99,8 +97,14 @@ pl_PL:
         preview: Podgląd
         theme_actions: Działania związane z motywem
         local_edits_badge: Lokalne edycje
+        preset_description: W zestawie z blogiem
+        customize: Wygląd
+        customized_theme_name: "%{name} (niestandardowe)"
         new_theme_name: Nowy motyw bloga
-        new_theme: Nowy motyw z aktywnego projektu
+        start_from: Zacznij od
+        start_from_included: Dołączone motywy
+        start_from_drafts: Zapisane wersje robocze
+        start_from_confirm: "Zacznij od nowa od %{name}? Zmiany na tej stronie zostaną utracone."
         import: Import
         import_description: "Importuj motyw z repozytorium Git lub pliku ZIP. Importy tworzą nowe wersje robocze bez zmiany aktywnego motywu."
         import_source: Importuj z
@@ -122,7 +126,7 @@ pl_PL:
         save_before_activate: Zapisz zmiany przed aktywacją szkicu.
         activate_theme: Aktywuj zapisany szkic
         activate_confirm: "Aktywuj %{name}? To zastąpi projekt, który widzą czytelnicy. Twoje pozostałe zapisane motywy pozostaną dostępne."
-        activated: Motyw aktywowany. Blog na żywo korzysta teraz z tej zapisanej wersji.
+        activated: Motyw aktywowany. Czytelnicy widzą teraz ten projekt.
         pull_git: Pobierz najnowszą wersję z Git
         pull_confirm: Wyciągnąć ostatnią zatwierdzenie? To zastąpi zapisany szkic, łącznie z lokalnymi edycjami. Aktywny projekt nie ulegnie zmianie.
         local_edits: W tym szkicu wprowadzono lokalne zmiany od czasu ostatniego importu do Gita.
@@ -193,6 +197,7 @@ pl_PL:
           path: ścieżka
           excerpt: fragment
           featured: wyróżniona flaga
+          tags: tagi
           published_at: data publikacji
         show_diff: Pokaż różnicę
         hide_diff: Ukryj różnice

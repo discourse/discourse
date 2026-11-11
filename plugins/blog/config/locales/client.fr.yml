@@ -23,6 +23,8 @@ fr:
         edit: Modifier
         activate: Activer
         preview: Aperçu
+        customize: Personnaliser
+        customized_theme_name: "%{name} (personnalisé)"
         import: Téléverser
         export: Exporter
         active: Actif
@@ -35,6 +37,7 @@ fr:
         change:
           title: titre
           body: corps
+          tags: étiquettes
       review:
         create: Créer un lien
         copy: Copie

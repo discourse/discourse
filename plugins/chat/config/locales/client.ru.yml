@@ -102,8 +102,6 @@ ru:
           other: "Точно удалить эти %{count} сообщения?"
       channel_settings:
         title: "Настройки канала"
-        edit: "Изменить"
-        add: "Добавить"
         star_channel: "Помеченные каналы"
         unstar_channel: "Убрать Избранное"
         close_channel: "Закрыть канал"
@@ -115,7 +113,6 @@ ru:
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
-        notification_settings: "Настройки уведомлений"
         notification_settings_context: "Уведомления"
         join: "Подписаться"
         leave: "Отписаться"
@@ -385,21 +382,22 @@ ru:
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
-        back_to_settings: "Назад к настройкам"
       about_view:
         associated_topic: Связанная тема
         associated_category: Связанная категория
-        title: Название
         name: Название
         description: Описание
       channel_info:
         back_to_all_channels: "Все каналы"
         back_to_channel: "Назад"
+        nav_label: "Информация о канале"
         tabs:
           members: Участники
+          preferences: Настройки
           settings: Настройки
           search: Искать
         remove_member: "Удалить"
+        members_title: "%{channel} участников"
       new_message_modal:
         title: Отправка сообщения
         add_user_long: <kbd>Shift + щелчок</kbd> или <kbd>Shift + Ввод</kbd><span>Добавить пользователя @%{username}</span>
@@ -419,15 +417,12 @@ ru:
         create_new_group_chat: "Создать групповой чат"
         group_with_too_many_members: "имеет слишком много участников (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Изменение канала
         input_placeholder: Укажите название
         slug_description: Слаг канала используется в URL-адресе вместо названия канала.
         name: Название канала
         reset_emoji: Сбросить эмодзи
       channel_edit_description_modal:
-        title: Изменить описание
         input_placeholder: Добавить описание
-        description: Расскажите, о чем этот канал
       direct_message_creator:
         add_to_channel: "Добавить в канал"
         title: Новое сообщение
@@ -563,7 +558,6 @@ ru:
         always: "Для всех действий"
       settings:
         channel_wide_mentions_label: "Разрешить упоминания @all и @here"
-        channel_wide_mentions_description: "Разрешить пользователям уведомлять всех в канале #%{channel} (@all) и только активных участников (@here)"
         channel_threading_label: "Цепочки сообщений"
         channel_threading_description: "Если включить цепочки, ответы на сообщение чата будут создавать отдельный разговор параллельно с основным каналом."
         auto_join_users_label: "Автоматически добавлять пользователей"
@@ -584,9 +578,6 @@ ru:
         save: "Сохранить"
         saved: "Сохранено"
         unfollow: "Отписаться"
-        admin_title: "Администрирование"
-        settings_title: "Настройки"
-        info_title: "Информация о канале"
         category_label: "Категория"
         history_label: "История"
         members_label: "Участники"

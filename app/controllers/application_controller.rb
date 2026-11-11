@@ -840,7 +840,11 @@ class ApplicationController < ActionController::Base
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
-      return if request.path == path("/") && !cookies[:authentication_data]
+      # Only the login landing page is public; other routes at the root still require login.
+      if request.path == path("/") && !cookies[:authentication_data] &&
+           controller_name == "home_page" && action_name == "blank"
+        return
+      end
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")
@@ -856,6 +860,9 @@ class ApplicationController < ActionController::Base
     # - one_time_password scope is allowed
     if !current_user && params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect)
       begin
+        # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit
+        # length instead of parsing one, so reject non-strings before it.
+        raise OpenSSL::PKey::RSAError if !params[:user_api_public_key].is_a?(String)
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")

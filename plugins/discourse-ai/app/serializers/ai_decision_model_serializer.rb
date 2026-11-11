@@ -24,6 +24,10 @@ class AiDecisionModelSerializer < ApplicationSerializer
     object.seeded? ? "********" : object.url
   end
 
+  def provider
+    object.seeded? ? "CDCK" : object.provider
+  end
+
   def seeded
     object.seeded?
   end

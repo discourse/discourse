@@ -23,6 +23,8 @@ ru:
         edit: Изменить
         activate: Активировать
         preview: Предпросмотр
+        customize: Оформление
+        customized_theme_name: "%{name} (пользовательский)"
         import: Импорт
         export: Экспорт
         active: Активна
@@ -35,6 +37,7 @@ ru:
         change:
           title: название
           body: body
+          tags: теги
       review:
         create: Создать ссылку
         copy: Копировать

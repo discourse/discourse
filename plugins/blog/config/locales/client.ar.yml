@@ -23,6 +23,8 @@ ar:
         edit: تعديل
         activate: التنشيط
         preview: معاينة
+        customize: تخصيص
+        customized_theme_name: "%{name} (custom)"
         import: استيراد
         export: تصدير
         active: نشطة
@@ -35,6 +37,7 @@ ar:
         change:
           title: العنوان
           body: النص الأساسي
+          tags: الوسوم
       review:
         create: إنشاء رابط
         copy: نسخ

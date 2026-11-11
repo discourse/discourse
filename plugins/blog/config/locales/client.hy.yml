@@ -19,6 +19,7 @@ hy:
         edit: Խմբագրել
         activate: Ակտիվացնել
         preview: Նախադիտում
+        customize: Անհատականացնել
         import: Ներմուծել
         export: Արտահանել
         active: Ակտիվ
@@ -31,6 +32,7 @@ hy:
         change:
           title: վերնագիր
           body: բովանդակություն
+          tags: պիտակներ
       review:
         copy: Կրկնօրինակել
         open: Բացել

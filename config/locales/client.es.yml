@@ -11,6 +11,15 @@ es:
       go_back: "Volver"
       title: "Denunciar contenido ilegal"
       email: "Dirección de correo electrónico"
+    code_editor:
+      search:
+        replace: "Reemplazar"
+        next: "Siguiente"
+        previous: "Anterior"
+        close: "Cerrar"
+        go: "Ir"
+      fold:
+        to: "a"
     user_api_key:
       title: 'Autorizar a «%{application_name}»'
       authorize: "Autorizar"
@@ -2601,7 +2610,6 @@ es:
         }.
     learn_more: "Más información…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Más información…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Danos tu opinión…</a>"
     mute: Silenciar
     unmute: No silenciar
     last_post: Fecha de publicación
@@ -5696,23 +5704,21 @@ es:
         name: "Nombre"
         plugin: "Plugin"
         metadata: "Metadatos"
-        enabled: "Activado"
-        enabled_for: "Activado para..."
+        enabled: "¿Activado?"
         show_image: "Ver imagen"
-        edit_groups: "Editar grupos de suscripción voluntaria"
+        feedback: "Comentarios"
         groups_updated: "Grupos actualizados"
         save_groups: "Guardar grupos"
         add_groups_to_enable: "Añadir grupos para activar esta característica"
         no_changes_to_save: "No hay cambios que guardar"
         select_groups: "Seleccionar grupos…"
         opt_in_groups: "Grupos de suscripción voluntaria"
-        show_related_settings: "Ver ajustes relacionados..."
+        settings: "Ajustes"
         opt_in_groups_instructions: "Los grupos de suscripción voluntaria permiten que un grupo específico de usuarios pruebe un cambio antes de que se implemente para todo el mundo. Ten en cuenta que estos grupos dejarán de ser relevantes una vez que el cambio alcance el estado Estable."
         enabled_for_throttle: "Has modificado demasiado rápido para quién está activado este cambio. Espera unos segundos antes de volver a intentarlo."
         change_enabled_for_success: "Has activado este cambio para %{enabledFor}"
         change_disabled: "Has descartado este cambio"
         permanent_notice: "Este cambio ahora es permanente y pronto se eliminará. Ya no puedes descartarlo."
-        permanent_soon_notice: "Este cambio será permanente pronto. Ya no podrás descartarlo."
         permanent_no_group_selection: "N/A, los cambios permanentes se aplican a todos los grupos."
         no_changes: "Por el momento no hay cambios previstos."
         preview: "Vista previa"
@@ -5720,7 +5726,6 @@ es:
         default_warning_short: "El valor por defecto de este ajuste ha cambiado, obtén más información sobre esto en la página de <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>próximos cambios</a>."
         enabled_for_options:
           no_one: "Nadie"
-          everyone: "Todos"
           staff: "Solo %{staffGroupName}"
           specific_groups: "Grupo(s) específico(s)"
           specific_groups_with_group_names:

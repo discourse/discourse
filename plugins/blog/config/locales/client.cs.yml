@@ -23,6 +23,7 @@ cs:
         edit: Upravit
         activate: Aktivace
         preview: Náhled
+        customize: Přizpůsobení
         import: Import
         export: Export
         active: Aktivní
@@ -35,6 +36,7 @@ cs:
         change:
           title: název
           body: tělo
+          tags: štítky
       review:
         create: Vytvořit odkaz
         copy: Kopírovat

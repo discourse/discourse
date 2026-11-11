@@ -9,9 +9,9 @@ import * as i18nShim from "./shims/i18n.js";
 // the server-side context.
 const ptModules = import.meta.glob(
   [
-    "../pretty-text/addon/**/*.js",
-    "!../pretty-text/addon/oneboxer.js",
-    "!../pretty-text/addon/upload-short-url.js",
+    "../discourse/pretty-text/**/*.js",
+    "!../discourse/pretty-text/oneboxer.js",
+    "!../discourse/pretty-text/upload-short-url.js",
   ],
   { eager: true }
 );
@@ -30,7 +30,7 @@ function defineMultiple(prefix, base, mods) {
 
 // Registers the core module surface into loader.js so plugins can require() it.
 export function registerCoreModules() {
-  defineMultiple("pretty-text", "../pretty-text/addon/", ptModules);
+  defineMultiple("pretty-text", "../discourse/pretty-text/", ptModules);
   defineMultiple(
     "discourse-markdown-it",
     "../discourse-markdown-it/src/",

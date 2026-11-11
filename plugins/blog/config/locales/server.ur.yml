@@ -18,3 +18,5 @@ ur:
     replies:
       one: "%{count} جواب"
       other: "%{count} جوابات"
+    themes:
+      default: ڈِیفالٹ

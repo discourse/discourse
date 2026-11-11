@@ -125,6 +125,43 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when the user has a second factor enabled" do
+        before { user_deferred.update!(active: false) }
+
+        it "activates the account without logging in a user with TOTP" do
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with only backup codes" do
+          Fabricate(:user_second_factor_backup, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with a security key" do
+          Fabricate(:user_security_key_with_random_credential, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+      end
+
       context "when user is not approved" do
         before { SiteSetting.must_approve_users = true }
 
@@ -1119,6 +1156,34 @@ RSpec.describe UsersController do
 
           post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(400)
+        end
+
+        it "cannot set external_ids with a granular users:create API key" do
+          staged = Fabricate(:staged, email: "test@example.com", active: true)
+          granular_api_key =
+            Fabricate(
+              :api_key,
+              user: admin,
+              api_key_scopes: [
+                Fabricate.build(:api_key_scope, resource: "users", action: "create"),
+              ],
+            )
+
+          params = {
+            username: "foobar",
+            email: "test@example.com",
+            external_ids: {
+              "pluginauth" => "pluginauth_uid",
+            },
+          }
+
+          expect {
+            post "/u.json", params: params, headers: { HTTP_API_KEY: granular_api_key.key }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(staged.reload).to have_attributes(staged: true, active: true)
+          expect(staged.custom_fields["from_staged"]).to be_nil
         end
       end
     end
@@ -3876,6 +3941,48 @@ RSpec.describe UsersController do
         put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key }
         expect(response.status).to eq(400)
       end
+
+      context "when authenticating with a granular users:update API key" do
+        fab!(:granular_api_key, refind: false) do
+          Fabricate(
+            :api_key,
+            user: admin,
+            api_key_scopes: [Fabricate.build(:api_key_scope, resource: "users", action: "update")],
+          )
+        end
+
+        fab!(:victim, :admin)
+
+        it "cannot bind a new SSO identity to another account" do
+          params = { external_ids: { discourse_connect: "attacker_controlled_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { SingleSignOnRecord.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.single_sign_on_record).to be_blank
+        end
+
+        it "cannot bind a new associated account to another account" do
+          params = { external_ids: { "pluginauth" => "pluginauth_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.user_associated_account_ids).to be_blank
+        end
+      end
     end
 
     context "with user status" do
@@ -4624,6 +4731,31 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(user1.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user1.user_avatar.reload.custom_upload_id).to eq(upload.id)
+      end
+    end
+
+    context "when a moderator picks a secure upload belonging to the target user" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        SiteSetting.authorized_extensions = "*"
+        sign_in(moderator)
+      end
+
+      it "forbids using this image as an avatar" do
+        pm_post = Fabricate(:private_message_post, user: user1)
+        secure_upload = Fabricate(:upload, user: user1, secure: true, access_control_post: pm_post)
+
+        expect(moderator.guardian.can_see_upload?(secure_upload)).to eq(false)
+
+        put "/u/#{user1.username}/preferences/avatar/pick.json",
+            params: {
+              upload_id: secure_upload.id,
+              type: "custom",
+            }
+
+        expect(response).to be_forbidden
+        expect(user1.reload.uploaded_avatar_id).to be_nil
       end
     end
   end
@@ -5690,6 +5822,19 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "raises an error for an account that has been active before" do
+        user = post_user
+        user.update!(last_seen_at: 1.year.ago)
+
+        put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(user.reload.email).to eq("osama@example.com")
+      end
+
       it "raises an error when logged in" do
         post_user
         sign_in(moderator)
@@ -5784,6 +5929,49 @@ RSpec.describe UsersController do
             }
 
         expect(response.status).to eq(403)
+      end
+
+      it "raises an error for an admin deactivated for inactivity" do
+        admin = Fabricate(:admin, password: "dormantadminpassword", last_seen_at: 2.years.ago)
+        Jobs::InvalidateInactiveAdmins.new.execute({})
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: admin.username,
+              password: "dormantadminpassword",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(admin.reload.active).to eq(false)
+        expect(admin.email).not_to eq("updatedemail@example.com")
+      end
+
+      it "raises an error for an account deactivated by staff before it was ever seen" do
+        unseen_user = Fabricate(:user, active: false, password: "qwerqwer123")
+        Fabricate(
+          :user_history,
+          acting_user: admin,
+          target_user_id: unseen_user.id,
+          action: UserHistory.actions[:deactivate_user],
+        )
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: unseen_user.username,
+              password: "qwerqwer123",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(unseen_user.reload.active).to eq(false)
+        expect(unseen_user.email).not_to eq("updatedemail@example.com")
       end
 
       it "raises an error when logged in" do
@@ -6399,6 +6587,45 @@ RSpec.describe UsersController do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
       expect(response).to have_http_status(:forbidden)
+    end
+
+    context "when a requested user is inactive" do
+      before do
+        inactive_user.user_stat.update!(post_count: 1)
+        inactive_user.user_profile.update!(bio_raw: "Inactive user bio")
+      end
+
+      it "does not include the inactive user for anonymous users" do
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "does not include the inactive user for regular users" do
+        sign_in(another_user)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "includes the inactive user for staff" do
+        sign_in(moderator)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+          inactive_user.username,
+        )
+      end
     end
 
     context "when `hide_profile` user option is checked" do
