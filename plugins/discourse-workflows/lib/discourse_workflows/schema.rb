@@ -224,7 +224,8 @@ module DiscourseWorkflows
             "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
             "trust_level_locked": { "type": "boolean" },
-            "user_fields": { "type": "object" }
+            "user_fields": { "type": "object" },
+            "custom_fields": { "type": "object", "x-optional": true }
           }
         JSON
         .merge(

@@ -656,6 +656,8 @@ en:
         include_extensions_external_ids: "External ids"
         include_extensions_emails: "Emails"
         include_extensions_ips: "IP addresses and locations"
+        custom_field_names: "Include custom fields"
+        custom_field_names_placeholder: "Select custom fields"
         actor_username: "Performed by user"
       badge:
         operation: "Operation"

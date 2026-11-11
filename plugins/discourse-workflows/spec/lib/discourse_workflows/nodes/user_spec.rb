@@ -4,6 +4,101 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
   fab!(:user)
   fab!(:admin)
 
+  describe ".load_options_context" do
+    subject(:options) { described_class.load_options_context(load_options_context) }
+
+    let(:filter) { nil }
+    let(:load_options_context) do
+      DiscourseWorkflows::LoadOptionsContext.new(
+        method_name: "user_custom_fields",
+        filter: filter,
+        node_class: described_class,
+      )
+    end
+
+    before do
+      user.custom_fields["workflow_key"] = "first"
+      user.save_custom_fields
+      admin.custom_fields["workflow_key"] = "second"
+      admin.custom_fields["other_key"] = "other"
+      admin.save_custom_fields
+    end
+
+    it "returns distinct user custom field names for the chooser" do
+      expect(options).to contain_exactly(
+        { id: "other_key", name: "other_key" },
+        { id: "workflow_key", name: "workflow_key" },
+      )
+    end
+
+    context "with a filter" do
+      let(:filter) { "workflow" }
+
+      it "filters user custom field names by the filter term" do
+        expect(options).to contain_exactly({ id: "workflow_key", name: "workflow_key" })
+      end
+    end
+
+    it "limits user custom field names returned to the chooser" do
+      101.times do |index|
+        UserCustomField.create!(user: user, name: "workflow_key_#{index}", value: "value")
+      end
+
+      expect(options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
+    end
+  end
+
+  describe "custom fields" do
+    before do
+      User.register_custom_field_type("wf_int_field", :integer)
+      user.custom_fields["wf_int_field"] = 42
+      user.custom_fields["wf_plain_field"] = "plain"
+      user.custom_fields["wf_unrequested"] = "hidden"
+      user.save_custom_fields
+    end
+
+    after { User.send(:custom_field_meta_data).delete("wf_int_field") }
+
+    it "returns only the requested custom fields on get" do
+      configuration = {
+        "operation" => "get",
+        "username" => user.username,
+        "custom_field_names" => %w[wf_int_field wf_plain_field wf_missing],
+      }
+      result = execute_node(configuration:)
+
+      expect(result.dig("user", "custom_fields")).to eq(
+        "wf_int_field" => 42,
+        "wf_plain_field" => "plain",
+        "wf_missing" => nil,
+      )
+      expect(result).to match_node_output_schema(described_class, configuration:)
+    end
+
+    it "returns requested custom fields on edit" do
+      configuration = {
+        "operation" => "edit",
+        "username" => user.username,
+        "updates" => {
+          "title" => "New title",
+        },
+        "custom_field_names" => ["wf_plain_field"],
+      }
+      result = execute_node(configuration:)
+
+      expect(result.dig("user", "custom_fields")).to eq("wf_plain_field" => "plain")
+      expect(result).to match_node_output_schema(described_class, configuration:)
+    end
+
+    it "omits custom_fields when none are requested" do
+      configuration = { "operation" => "get", "username" => user.username }
+      result = execute_node(configuration:)
+
+      expect(result["user"]).not_to have_key("custom_fields")
+      expect(result).to match_node_output_schema(described_class, configuration:)
+    end
+  end
+
   describe "#execute" do
     it "gets user fields and group memberships", :aggregate_failures do
       user.user_profile.update!(bio_raw: "Original bio")
@@ -60,13 +155,12 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
         "card_background_upload_id" => card_background.id,
       )
       expect(result.dig("user", "avatar_template")).to include(avatar.id.to_s)
-      expect(
-        DiscourseWorkflows::Schema::USER_ACTION_SCHEMA.dig(
-          "properties",
-          "user",
-          "properties",
-        ).keys - result["user"].keys,
-      ).to be_empty
+      required_keys =
+        DiscourseWorkflows::Schema::USER_ACTION_SCHEMA
+          .dig("properties", "user", "properties")
+          .reject { |_key, schema| schema["x-optional"] }
+          .keys
+      expect(required_keys - result["user"].keys).to be_empty
     end
 
     it "always returns account status signals", :aggregate_failures do

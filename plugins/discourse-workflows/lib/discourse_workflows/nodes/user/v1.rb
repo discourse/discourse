@@ -16,6 +16,7 @@ module DiscourseWorkflows
           { name: "trust_level", type: :options, required: true, options: trust_level_options },
           { name: "trust_level_locked", type: :boolean, required: false },
         ].freeze
+        CUSTOM_FIELD_OPTIONS_LIMIT = 100
         MISSING = DiscourseWorkflows::Executor::NodeExecutionContext::MISSING
         TEXT_UPDATES = %w[title website location].freeze
         BACKGROUND_REMOVALS = {
@@ -97,9 +98,47 @@ module DiscourseWorkflows
               options: EXTENSIONS.keys,
               default: [],
             },
+            custom_field_names: {
+              type: :multi_options,
+              required: false,
+              options: [],
+              default: [],
+              type_options: {
+                # Declaring a dependency keeps this full-table scan out of the preloaded node types.
+                load_options_depends_on: %w[operation],
+                load_options_method: "user_custom_fields",
+              },
+              control_options: {
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.user.custom_field_names_placeholder",
+              },
+            },
             **actor_property,
           },
         )
+
+        def self.load_options_context(context)
+          case context.method_name
+          when "user_custom_fields"
+            custom_field_scope = ::UserCustomField.where.not(name: [nil, ""])
+            if context.filter.present?
+              custom_field_scope =
+                custom_field_scope.where(
+                  "name ILIKE ?",
+                  "%#{ActiveRecord::Base.sanitize_sql_like(context.filter)}%",
+                )
+            end
+
+            custom_field_scope
+              .distinct
+              .order(:name)
+              .limit(CUSTOM_FIELD_OPTIONS_LIMIT)
+              .pluck(:name)
+              .map { |name| { id: name, name: name } }
+          end
+        end
 
         def execute(exec_ctx)
           items =
@@ -119,12 +158,13 @@ module DiscourseWorkflows
 
         def process(exec_ctx, user, actor, operation, item_index)
           extensions = requested_extensions(exec_ctx, item_index)
+          custom_field_names = requested_custom_field_names(exec_ctx, item_index)
 
           case operation
           when "get"
-            get_user(user, actor.guardian, extensions:)
+            get_user(user, actor.guardian, extensions:, custom_field_names:)
           when "edit"
-            edit_user(exec_ctx, user, actor, item_index, extensions:)
+            edit_user(exec_ctx, user, actor, item_index, extensions:, custom_field_names:)
           else
             raise_node_error!(
               I18n.t("discourse_workflows.errors.unknown_operation", operation: operation),
@@ -150,12 +190,17 @@ module DiscourseWorkflows
           requested
         end
 
-        def get_user(user, guardian, extensions:)
-          guardian.ensure_can_see_profile!(user)
-          { user: serialize_user_details(user, guardian, extensions:) }
+        def requested_custom_field_names(exec_ctx, item_index)
+          requested = exec_ctx.get_node_parameter("custom_field_names", item_index, default: [])
+          Array(requested).compact.map(&:to_s).reject(&:blank?).uniq
         end
 
-        def edit_user(exec_ctx, user, actor, item_index, extensions:)
+        def get_user(user, guardian, extensions:, custom_field_names:)
+          guardian.ensure_can_see_profile!(user)
+          { user: serialize_user_details(user, guardian, extensions:, custom_field_names:) }
+        end
+
+        def edit_user(exec_ctx, user, actor, item_index, extensions:, custom_field_names:)
           guardian = actor.guardian
           updates = update_parameters(exec_ctx, item_index)
           attributes = editable_attributes(updates)
@@ -169,7 +214,7 @@ module DiscourseWorkflows
             update_trust_level_lock(user, actor, guardian, trust_level_locked)
           end
 
-          { user: serialize_user_details(user.reload, guardian, extensions:) }
+          { user: serialize_user_details(user.reload, guardian, extensions:, custom_field_names:) }
         end
 
         def update_parameters(exec_ctx, item_index)
@@ -263,21 +308,31 @@ module DiscourseWorkflows
           )
         end
 
-        def serialize_user_details(user, guardian, extensions:)
+        def serialize_user_details(user, guardian, extensions:, custom_field_names:)
           profile = user.user_profile if include_profile_details?(user, guardian)
 
-          serialize_user(user, guardian: guardian).merge(
-            title: user.title,
-            bio_raw: profile&.bio_raw,
-            website: profile&.website,
-            location: profile&.location,
-            profile_background_upload_id: profile&.profile_background_upload_id,
-            card_background_upload_id: profile&.card_background_upload_id,
-            manual_locked_trust_level: user.manual_locked_trust_level,
-            trust_level_locked: !user.manual_locked_trust_level.nil?,
-            user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
-            groups: serialize_groups(user, guardian),
-          ).merge(extensions_data(user, guardian, extensions))
+          serialize_user(user, guardian: guardian)
+            .merge(
+              title: user.title,
+              bio_raw: profile&.bio_raw,
+              website: profile&.website,
+              location: profile&.location,
+              profile_background_upload_id: profile&.profile_background_upload_id,
+              card_background_upload_id: profile&.card_background_upload_id,
+              manual_locked_trust_level: user.manual_locked_trust_level,
+              trust_level_locked: !user.manual_locked_trust_level.nil?,
+              user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
+              groups: serialize_groups(user, guardian),
+            )
+            .merge(extensions_data(user, guardian, extensions))
+            .merge(custom_fields_data(user, custom_field_names))
+        end
+
+        def custom_fields_data(user, names)
+          return {} if names.empty?
+
+          values = ::User.custom_fields_for_ids([user.id], names)[user.id] || {}
+          { custom_fields: names.index_with { |name| values[name] } }
         end
 
         def extensions_data(user, guardian, extensions)
