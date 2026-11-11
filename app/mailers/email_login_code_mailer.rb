@@ -5,12 +5,22 @@ class EmailLoginCodeMailer < ActionMailer::Base
 
   layout "email_template"
 
-  def send_code(email, code, password_reset: false)
+  def send_code(
+    email,
+    code,
+    password_reset: false,
+    locale: nil,
+    theme_id: nil,
+    preview_theme: false
+  )
     build_email(
       email,
       template: password_reset ? "password_reset_code_mailer" : "email_login_code_mailer",
       code: code,
       minutes: EmailLoginCode::VALID_FOR.in_minutes.to_i,
+      locale: locale.presence || I18n.locale,
+      theme_id:,
+      preview_theme:,
     )
   end
 end
