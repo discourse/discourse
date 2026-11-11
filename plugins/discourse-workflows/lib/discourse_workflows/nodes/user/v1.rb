@@ -324,10 +324,10 @@ module DiscourseWorkflows
         end
 
         def custom_fields_data(user, guardian, names)
-          names = readable_custom_field_names(guardian, names)
           return {} if names.empty?
 
-          values = ::User.custom_fields_for_ids([user.id], names)[user.id] || {}
+          names = readable_custom_field_names(guardian, names)
+          values = names.empty? ? {} : ::User.custom_fields_for_ids([user.id], names)[user.id] || {}
           { custom_fields: names.index_with { |name| values[name] } }
         end
 

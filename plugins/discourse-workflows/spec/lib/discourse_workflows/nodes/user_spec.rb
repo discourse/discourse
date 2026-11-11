@@ -328,6 +328,19 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
         expect(result).to match_node_output_schema(described_class, configuration:)
       end
 
+      it "returns empty custom fields when none of the requested fields are readable",
+         :aggregate_failures do
+        configuration =
+          self.configuration.merge(
+            "custom_field_names" => %w[wf_unrequested user_field_1],
+            "actor_username" => moderator.username,
+          )
+        result = execute_node(configuration:)
+
+        expect(result.dig("user", "custom_fields")).to eq({})
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
+
       it "returns any requested field to an admin actor", :aggregate_failures do
         configuration = self.configuration.merge("actor_username" => admin.username)
         result = execute_node(configuration:)
