@@ -229,7 +229,7 @@ function initInlineTagSuggester(api) {
             ];
           });
 
-          spec.options(() =>
+          spec.config(() =>
             state.suggesting
               ? {
                   loadingStatus: true,

@@ -21,7 +21,7 @@ import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-l
 import SelectEngine, {
   SelectDescriptor,
   SelectItem,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -34,7 +34,7 @@ interface SelectionStripSignature {
     /** Resolves labels through the same cache as the trigger. */
     resolveSelection: (
       value: unknown,
-      options?: SelectLoadOptions
+      request?: SelectLoadRequest
     ) =>
       | readonly SelectDescriptor[]
       | Promise<readonly SelectDescriptor[] | undefined>

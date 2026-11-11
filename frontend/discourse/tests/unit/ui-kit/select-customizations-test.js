@@ -753,7 +753,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
   test("a customization's noneRow and noneLabel reach a headless engine", function (assert) {
     customize((selects) =>
       selects.forAll((spec) =>
-        spec.options(() => ({ noneRow: true, texts: { noneLabel: "Nothing" } }))
+        spec.config(() => ({ noneRow: true, texts: { noneLabel: "Nothing" } }))
       )
     );
 
@@ -761,7 +761,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       noneRow(
         new SelectEngine({
           items: ITEMS,
-          getOptions: () => ({ noneRow: true }),
+          getArgs: () => ({ noneRow: true }),
           getTexts: () => ({ noneLabel: "None" }),
         })
       ),
@@ -783,16 +783,16 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
   test("a throwing options callback is reported and its partial skipped", function (assert) {
     customize((selects) => {
       selects.forAll((spec) =>
-        spec.options(() => {
+        spec.config(() => {
           throw new Error("options boom");
         })
       );
       selects.forAll((spec) =>
-        spec.options(() => ({ texts: { noneLabel: "After" } }))
+        spec.config(() => ({ texts: { noneLabel: "After" } }))
       );
     });
     const withNoneRow = () =>
-      new SelectEngine({ items: ITEMS, getOptions: () => ({ noneRow: true }) });
+      new SelectEngine({ items: ITEMS, getArgs: () => ({ noneRow: true }) });
 
     assert.throws(() => withNoneRow().buildItems(ITEMS), /options boom/);
 
@@ -805,7 +805,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
   });
 
   test("options takes only a function", function (assert) {
-    customize((selects) => selects.forAll((spec) => spec.options("label")));
+    customize((selects) => selects.forAll((spec) => spec.config("label")));
 
     assert.throws(() => new SelectEngine({}), /must be a function/);
   });
@@ -815,13 +815,13 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     const caret = { open: "plus", closed: "minus" };
     customize((selects) => {
       selects.forIdentifier("fruit", (spec) =>
-        spec.options((current) => {
+        spec.config((current) => {
           snapshots.push(current);
           return { disabled: false, texts: { ariaLabel: "Identifier" } };
         })
       );
       selects.forAll((spec) => {
-        spec.options((current) => {
+        spec.config((current) => {
           snapshots.push(current);
           return {
             disabled: true,
@@ -829,7 +829,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
             caretIcon: caret,
           };
         });
-        spec.options((current) => {
+        spec.config((current) => {
           snapshots.push(current);
           return { disabled: false, texts: { ariaLabel: "Second" } };
         });
@@ -840,7 +840,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       getTexts: () => ({ ariaLabel: "Base" }),
     });
 
-    assert.true(engine.resolvedOptions.disabled, "the first lock stays");
+    assert.true(engine.config.disabled, "the first lock stays");
     assert.strictEqual(
       engine.text("ariaLabel"),
       "Identifier",
@@ -857,7 +857,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       "so are their texts"
     );
     assert.true(
-      Object.isFrozen(engine.resolvedOptions.caretIcon),
+      Object.isFrozen(engine.config.caretIcon),
       "nested caret state is frozen too"
     );
     assert.false(Object.isFrozen(caret), "the callback's own object is not");
@@ -871,7 +871,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     })();
     customize((selects) =>
       selects.forAll((spec) =>
-        spec.options(() =>
+        spec.config(() =>
           state.override === undefined
             ? {}
             : { texts: { noneLabel: state.override } }
@@ -879,7 +879,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       )
     );
     const engine = new SelectEngine({
-      getOptions: () => ({ noneRow: true }),
+      getArgs: () => ({ noneRow: true }),
       getTexts: () => ({ noneLabel: state.label }),
       getMultiple: () => state.multiple,
     });
@@ -910,11 +910,11 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     );
   });
 
-  test("resolving options never reads items or the lock", function (assert) {
+  test("resolving config never reads items or the lock", function (assert) {
     let itemReads = 0;
     customize((selects) =>
       selects.forAll((spec) =>
-        spec.options((current, context) => ({
+        spec.config((current, context) => ({
           disabled: context.control.value === 2 && !context.control.pending,
         }))
       )
@@ -932,13 +932,13 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     });
     const before = itemReads;
 
-    assert.true(engine.resolvedOptions.disabled, "the value drives the lock");
+    assert.true(engine.config.disabled, "the value drives the lock");
     assert.strictEqual(itemReads, before, "no item reads");
   });
 });
 
 module(
-  "Unit | ui-kit | select-customizations | recipe options",
+  "Unit | ui-kit | select-customizations | recipe config",
   function (hooks) {
     setupTest(hooks);
 
@@ -950,7 +950,7 @@ module(
       const seen = [];
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(current);
             return { prefix: current.prefix ?? "fallback", added: "ignored" };
           })
@@ -960,10 +960,10 @@ module(
       try {
         const engine = new SelectEngine({
           kind: "recipe",
-          getKindOptions: () => state.options,
+          getKindConfig: () => state.options,
         });
         assert.strictEqual(
-          engine.resolvedOptions.prefix,
+          engine.config.prefix,
           "fallback",
           "an undefined key can be overridden"
         );
@@ -975,13 +975,9 @@ module(
         assert.strictEqual(seen[0].suffix, undefined, "null has no base value");
 
         state.options = { prefix: "live", added: "new" };
-        assert.strictEqual(
-          engine.resolvedOptions.prefix,
-          "live",
-          "new values are live"
-        );
+        assert.strictEqual(engine.config.prefix, "live", "new values are live");
         assert.false(
-          Object.hasOwn(engine.resolvedOptions, "added"),
+          Object.hasOwn(engine.config, "added"),
           "a later key does not extend the declared set"
         );
         assert.true(
@@ -1011,30 +1007,30 @@ module(
       );
       const engine = new SelectEngine({
         kind: "recipe",
-        getKindOptions: () => ({ prefix: state.prefix }),
+        getKindConfig: () => ({ prefix: state.prefix }),
         onChange: (_value, _item, change) => (emitted = change),
       });
 
       engine.select({ id: 1 });
       state.prefix = "after";
       assert.strictEqual(
-        engine.resolvedOptions.prefix,
+        engine.config.prefix,
         "after",
-        "the live options moved on"
+        "the live config moved on"
       );
 
       await resume();
       assert.strictEqual(
-        emitted.options,
-        context.options,
+        emitted.config,
+        context.config,
         "the middleware and the emit share the snapshot"
       );
       assert.strictEqual(
-        emitted.options.prefix,
+        emitted.config.prefix,
         "before",
         "the deferred emit keeps the original values"
       );
-      assert.true(Object.isFrozen(emitted.options), "the snapshot is frozen");
+      assert.true(Object.isFrozen(emitted.config), "the snapshot is frozen");
     });
   }
 );

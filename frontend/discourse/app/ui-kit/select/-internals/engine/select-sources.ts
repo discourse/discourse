@@ -1,54 +1,52 @@
 import { tracked } from "@glimmer/tracking";
 import { makeArray } from "discourse/lib/helpers";
 import type {
-  SelectEngineOptions,
+  SelectEngineInit,
   SelectItem,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectLoadResponse,
   SelectLoadResult,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options.ts";
+import type SelectArgsView from "./select-args.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
 
 /**
  * The full client-side item set (empty for a server source), used both for local
  * filtering and to resolve a value's display item without a fetch.
  */
-export function localItems(options: SelectOptionsView): SelectItem[] {
-  if (options.isAsync) {
+export function localItems(args: SelectArgsView): SelectItem[] {
+  if (args.isAsync) {
     return [];
   }
   // `makeArray` normalizes whatever the source yields — a thunk that returns null, or a
   // non-array value — into a real array, so downstream array reads never see a non-array.
   const resolved =
-    typeof options.items === "function"
-      ? options.items(options.resolvedOptions)
-      : options.items;
+    typeof args.items === "function" ? args.items(args.config) : args.items;
   return makeArray(resolved) as SelectItem[];
 }
 
 /** The client list after `filterBy` — the one filter pass a `LocalSource` answers with. */
 export function filterLocal(
-  options: SelectOptionsView,
+  args: SelectArgsView,
   filter: string
 ): SelectItem[] {
-  const all = localItems(options);
+  const all = localItems(args);
   if (!filter) {
     return all;
   }
   const term = filter.toLowerCase();
-  return all.filter((item) => matchesFilter(options, item, term));
+  return all.filter((item) => matchesFilter(args, item, term));
 }
 
 function matchesFilter(
-  options: SelectOptionsView,
+  args: SelectArgsView,
   item: SelectItem,
   term: string
 ): boolean {
-  if (typeof options.filterBy === "function") {
-    return options.filterBy(item, term, options.resolvedOptions);
+  if (typeof args.filterBy === "function") {
+    return args.filterBy(item, term, args.config);
   }
-  const field = options.filterBy ?? options.labelField;
+  const field = args.filterBy ?? args.labelField;
   return String(item?.[field] ?? "")
     .toLowerCase()
     .includes(term);
@@ -127,7 +125,7 @@ export interface SelectSource {
   answersSynchronously(): boolean;
   /** Records a rendered source's transformed option count, built from `input` raw rows. */
   noteVisible(visible: number, input: number): void;
-  rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
+  rows(opts: SelectLoadRequest): SelectItem[] | Promise<SelectItem[]>;
   total(): number | undefined;
   canRevealMore(): boolean;
   /** Whether later rows may still arrive for this query, whether or not a page is in flight. */
@@ -220,10 +218,10 @@ export class LocalSource implements SelectSource {
 
 export class PagedSource implements SelectSource {
   /** The query's loader, reused by its reveals and retries until the query resets. */
-  #queryLoad?: NonNullable<SelectEngineOptions["load"]>;
+  #queryLoad?: NonNullable<SelectEngineInit["load"]>;
 
   /** Resolves the source for the first request of each query. */
-  #resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
+  #resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
   #state: SelectState;
   #keyOf: (item: SelectItem) => string | null;
   #getMaxLoaded: () => number | undefined;
@@ -260,7 +258,7 @@ export class PagedSource implements SelectSource {
 
   constructor(opts: {
     /** Resolves a query's loader outside render, when its first request starts. */
-    resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
+    resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
     state: SelectState;
     keyOf: (item: SelectItem) => string | null;
     /** Reads the optional server row ceiling. */
@@ -281,7 +279,7 @@ export class PagedSource implements SelectSource {
     return JSON.stringify([filter, nonce, reveal]);
   }
 
-  rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]> {
+  rows(opts: SelectLoadRequest): SelectItem[] | Promise<SelectItem[]> {
     return this.#loadServerItems(this.#state.filter, opts);
   }
 
@@ -438,7 +436,7 @@ export class PagedSource implements SelectSource {
 
   #loadServerItems(
     filter: string,
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ): SelectItem[] | Promise<SelectItem[]> {
     const maxLoaded = this.#getMaxLoaded();
     if (

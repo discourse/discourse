@@ -267,7 +267,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forIdentifier("custom-groups", (spec) =>
-              spec.options(() => ({ texts: { placeholder: "Any group" } }))
+              spec.config(() => ({ texts: { placeholder: "Any group" } }))
             )
           )
         );

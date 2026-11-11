@@ -8,7 +8,7 @@ import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobo
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectItem,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -49,7 +49,7 @@ interface SingleTriggerDisplaySignature {
     /** Resolves the bound selection into its display item. */
     resolveSelection: (
       value: unknown,
-      options?: SelectLoadOptions
+      request?: SelectLoadRequest
     ) => SelectItem | Promise<SelectItem>;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (

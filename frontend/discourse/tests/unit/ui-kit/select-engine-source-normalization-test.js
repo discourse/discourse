@@ -390,7 +390,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         const records = [{ id: "__row:0", name: "Looks synthetic" }];
         const engine = new SelectEngine({
           items: records,
-          getOptions: () => ({ noneRow: true }),
+          getArgs: () => ({ noneRow: true }),
         });
 
         const keys = engine.buildItems(records).map((row) => row.key);
@@ -1250,7 +1250,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           assert.strictEqual(
             call.resolved,
             groupByOptions,
-            "the options are the resolved options"
+            "the config is the resolved config"
           );
         });
       });

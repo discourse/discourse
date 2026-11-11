@@ -181,7 +181,7 @@ export const RECIPE_TEXT_KEYS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * The old text arguments and option keys, and the text each one became.
+ * The old text arguments and config keys, and the text each one became.
  *
  * TODO (select-kit-rework-merge): A migration net for this branch's own call sites only;
  * DSelect never shipped these names. Remove this map, `assertNoRemovedTextArgs` and its callers,
@@ -272,7 +272,7 @@ export function resetSelectTextNotices(): void {
 }
 
 /** What a resolver needs about its select. */
-export interface SelectTextResolverOptions {
+export interface SelectTextResolverInit {
   layers: readonly SelectTextLayer[];
   wrappers?: Readonly<Record<string, SelectTextWrapper | undefined>>;
   kind: string | undefined;
@@ -304,19 +304,19 @@ function reportInvalid(message: string, error?: unknown): void {
   );
 }
 
-/** Renders texts for one options snapshot: its layers, wrappers and select state. */
+/** Renders texts for one config snapshot: its layers, wrappers and select state. */
 export class SelectTextResolver {
-  #options: SelectTextResolverOptions;
+  #init: SelectTextResolverInit;
   #evaluating = new Set<string>();
 
-  constructor(options: SelectTextResolverOptions) {
-    this.#options = options;
+  constructor(init: SelectTextResolverInit) {
+    this.#init = init;
   }
 
   /** Renders a text with its wrapper: what is drawn or spoken. */
   render(key: string, values: object = {}): string {
     const merged = this.#merged(key, values);
-    const wrapper = this.#options.wrappers?.[key];
+    const wrapper = this.#init.wrappers?.[key];
     if (!wrapper) {
       return merged;
     }
@@ -332,14 +332,14 @@ export class SelectTextResolver {
 
   /** Whether a layer above the engine default sets a non-blank text. */
   explicit(key: string): boolean {
-    const text = this.#from(key, {}, this.#options.layers.length - 1, false);
+    const text = this.#from(key, {}, this.#init.layers.length - 1, false);
     return !!text?.trim();
   }
 
   /** Renders a text from every layer, without its wrapper. */
   #merged(key: string, values: object = {}): string {
     return (
-      this.#from(key, values, this.#options.layers.length - 1) ??
+      this.#from(key, values, this.#init.layers.length - 1) ??
       this.#fromDefault(key, values) ??
       ""
     );
@@ -356,7 +356,7 @@ export class SelectTextResolver {
     report = true
   ): string | undefined {
     for (let layer = index; layer >= 0; layer--) {
-      const entry = this.#options.layers[layer]!.texts[key];
+      const entry = this.#init.layers[layer]!.texts[key];
       if (entry === null || entry === undefined) {
         continue;
       }
@@ -417,7 +417,7 @@ export class SelectTextResolver {
         return undefined;
       }
       if (TRANSLATION_KEY.test(entry) && I18n.lookup(entry) !== undefined) {
-        this.#options.notices.warn(
+        this.#init.notices.warn(
           `DSelect: text "${key}" is the translation key "${entry}" given as a string; it is shown as is. Pass { translationKey: "${entry}" } to translate it.`,
           "discourse.d-select.texts-translation-key-as-string",
           key
@@ -461,7 +461,7 @@ export class SelectTextResolver {
   /** Translates a `{ translationKey }` entry, catching a message that needs a value the text doesn't pass. */
   #translate(key: string, locale: string, values: object): string | undefined {
     if (I18n.lookup(locale) === undefined) {
-      this.#options.notices.warn(
+      this.#init.notices.warn(
         `DSelect: text "${key}" uses the translation key "${locale}", which isn't in the locale`,
         "discourse.d-select.texts-missing-translation",
         key
@@ -554,7 +554,7 @@ export class SelectTextResolver {
   }
 
   #isRequired(key: string): boolean {
-    return (this.#options.required ?? REQUIRED_SELECT_TEXTS).has(key);
+    return (this.#init.required ?? REQUIRED_SELECT_TEXTS).has(key);
   }
 
   #emptyMessage(key: string): string {
@@ -566,20 +566,20 @@ export class SelectTextResolver {
    * back. A test-supplied `report` replaces the assertion, so the fallback can be tested.
    */
   #invalid(key: string, message: string, error?: unknown): void {
-    const report = DEBUG && this.#options.report;
+    const report = DEBUG && this.#init.report;
     if (DEBUG && !report) {
       assert(message, false);
     }
-    if (this.#options.notices.firstReport(key)) {
+    if (this.#init.notices.firstReport(key)) {
       (report || reportInvalid)(message, error);
     }
   }
 
   #context(key: string, own: (values?: object) => string): SelectTextContext {
     return {
-      kind: this.#options.kind,
-      identifier: this.#options.identifier,
-      multiple: this.#options.multiple,
+      kind: this.#init.kind,
+      identifier: this.#init.identifier,
+      multiple: this.#init.multiple,
       text: (other: string, values?: object) =>
         other === key ? own(values) : this.#merged(other, values),
     };
@@ -606,7 +606,7 @@ export function selectTextResolver(
 let defaultResolver: SelectTextResolver | undefined;
 
 /**
- * Renders a text against a resolved options snapshot, as recipes receive it in `specialItems`,
+ * Renders a text against a resolved config snapshot, as recipes receive it in `specialItems`,
  * group builders, blocks and customization callbacks. Returns `""` when the text is "no text".
  */
 export function renderSelectText(
@@ -618,7 +618,7 @@ export function renderSelectText(
   if (!resolver) {
     if (DEBUG) {
       warn(
-        "DSelect: renderSelectText needs a resolved options snapshot; using the engine defaults",
+        "DSelect: renderSelectText needs a resolved config snapshot; using the engine defaults",
         false,
         { id: "discourse.d-select.texts-no-snapshot" }
       );

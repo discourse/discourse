@@ -3,9 +3,9 @@ import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectItem,
   type SelectItemRow,
-  type SelectResolvedOptions,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -18,12 +18,12 @@ const ROW_TEXT_KEYS: Readonly<Record<string, string>> = {
 
 /** A row text, from the select's options when the row has them. */
 function rowText(
-  options: SelectResolvedOptions | undefined,
+  config: SelectConfig | undefined,
   key: string,
   values: object
 ): string {
-  return options
-    ? renderSelectText(options, key, values)
+  return config
+    ? renderSelectText(config, key, values)
     : i18n(ROW_TEXT_KEYS[key]!, values);
 }
 
@@ -68,8 +68,8 @@ export const TagOption: TemplateOnlyComponent<{
   Args: {
     /** The tag row, including its optional count and synonym target. */
     item: SelectItem;
-    /** The select's resolved options, which carry its texts. */
-    options?: SelectResolvedOptions;
+    /** The select's resolved config, which carries its texts. */
+    config?: SelectConfig;
     /** The row's state, which says whether it's the create row. */
     row: SelectItemRow;
   };
@@ -78,14 +78,14 @@ export const TagOption: TemplateOnlyComponent<{
     {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
     {{tagItemName @item}}
   {{else if @row.create}}
-    {{rowText @options "createItem" (createValues @item)}}
+    {{rowText @config "createItem" (createValues @item)}}
   {{else}}
     <span class="d-tag-option">
       {{dDiscourseTag @item.name noHref=true tagName="span"}}
       {{#if @item.count}}
         {{#let
-          (rowText @options "tagCountBadge" (countValues @item))
-          (rowText @options "tagCount" (countValues @item))
+          (rowText @config "tagCountBadge" (countValues @item))
+          (rowText @config "tagCount" (countValues @item))
           as |badge spoken|
         }}
           {{#if badge}}

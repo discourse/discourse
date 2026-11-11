@@ -11,8 +11,8 @@ import {
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectItem,
-  type SelectResolvedOptions,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -27,8 +27,8 @@ const TYPE_TEXT_KEYS: Readonly<Record<string, string>> = {
 };
 
 /** A chip's type word, from the select's options when the chip has them. */
-function typeText(options: SelectResolvedOptions | undefined, key: string) {
-  return options ? renderSelectText(options, key) : i18n(TYPE_TEXT_KEYS[key]!);
+function typeText(config: SelectConfig | undefined, key: string) {
+  return config ? renderSelectText(config, key) : i18n(TYPE_TEXT_KEYS[key]!);
 }
 
 /** Narrows an item's type at the rendering boundary. */
@@ -122,8 +122,8 @@ export const UserSelection: TOC<{
   Args: {
     /** The held value's item. */
     item: SelectItem;
-    /** The select's resolved options, which carry its texts. */
-    options?: SelectResolvedOptions;
+    /** The select's resolved config, which carries its texts. */
+    config?: SelectConfig;
   };
 }> = <template>
   {{#if (isType @item "user")}}
@@ -134,19 +134,19 @@ export const UserSelection: TOC<{
     <span class="d-group-option --selection">
       {{dIcon "users"}}
       <span class="d-group-option__name">{{itemName @item}}</span>
-      <span class="sr-only">{{typeText @options "groupType"}}</span>
+      <span class="sr-only">{{typeText @config "groupType"}}</span>
     </span>
   {{else if (isType @item "email")}}
     <span class="d-email-option --selection">
       {{dIcon "envelope"}}
       <span class="d-email-option__address">{{itemName @item}}</span>
-      <span class="sr-only">{{typeText @options "emailType"}}</span>
+      <span class="sr-only">{{typeText @config "emailType"}}</span>
     </span>
   {{else if (isType @item "unknown")}}
     <span class="d-unknown-option --selection">
       {{dIcon "triangle-exclamation"}}
       <span class="d-unknown-option__name">{{itemName @item}}</span>
-      <span class="sr-only">{{typeText @options "unknownType"}}</span>
+      <span class="sr-only">{{typeText @config "unknownType"}}</span>
     </span>
   {{else}}
     {{itemName @item}}

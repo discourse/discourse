@@ -480,7 +480,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: { removeFilter: "Show everything", noTags: "Untagged" },
               }))
             )
@@ -510,7 +510,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: { maxLoaded: "Type to find more" },
               }))
             )
@@ -528,7 +528,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: { tagCount: ({ count }) => `${count} uses` },
               }))
             )
@@ -617,7 +617,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forIdentifier("custom-tags", (spec) =>
-              spec.options(() => ({ texts: { placeholder: "any label" } }))
+              spec.config(() => ({ texts: { placeholder: "any label" } }))
             );
           })
         );
@@ -649,7 +649,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-tag-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 caretIcon: { open: "chevron-up", closed: "chevron-right" },
               }))
             );
@@ -1105,7 +1105,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: {
                   placeholder: "more tags",
                   tagCount: ({ count }) => `${count} uses`,

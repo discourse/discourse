@@ -7,7 +7,7 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectChangeContext } from "./customizations.ts";
-import type SelectOptionsView from "./select-options.ts";
+import type SelectArgsView from "./select-args.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
 
 /** The held locked keys, and why the input breaks the contract when it does. */
@@ -21,7 +21,7 @@ const NO_LOCKED_KEYS: LockedKeys = Object.freeze({
 });
 
 export default class SelectionActions {
-  #options: SelectOptionsView;
+  #args: SelectArgsView;
   #onIntent: (origin?: SelectionOrigin) => void;
   #beforeEmit: (
     origin: SelectionOrigin | undefined,
@@ -43,7 +43,7 @@ export default class SelectionActions {
   ) => void | Promise<void>;
 
   constructor(opts: {
-    options: SelectOptionsView;
+    args: SelectArgsView;
     onIntent: (origin?: SelectionOrigin) => void;
     beforeEmit: (
       origin: SelectionOrigin | undefined,
@@ -63,7 +63,7 @@ export default class SelectionActions {
       context: SelectChangeContext
     ) => void | Promise<void>;
   }) {
-    this.#options = opts.options;
+    this.#args = opts.args;
     this.#onIntent = opts.onIntent;
     this.#beforeEmit = opts.beforeEmit;
     this.#runActionItem = opts.runActionItem;
@@ -80,29 +80,29 @@ export default class SelectionActions {
    * @returns A frozen id array (multiple) or a single id / `null`.
    */
   get value(): SelectValue {
-    return this.#options.multiple ? this._valueArray : this._singleValue;
+    return this.#args.multiple ? this._valueArray : this._singleValue;
   }
 
   /** Whether anything is selected. */
   get hasValue(): boolean {
-    return this.#options.multiple
+    return this.#args.multiple
       ? this._valueArray.length > 0
       : this.value != null;
   }
 
   /** The multi-select selection cap, or `null` when uncapped (always `null` for single). */
   get maximum(): number | null {
-    return this.#options.maximum;
+    return this.#args.maximum;
   }
 
   /** The advisory multi-select minimum (`0` = none, and always `0` for single). */
   get minimum(): number {
-    return this.#options.minimum;
+    return this.#args.minimum;
   }
 
   /** Whether anything held can be removed: a held value that isn't locked. */
   get hasRemovableValue(): boolean {
-    if (!this.#options.multiple) {
+    if (!this.#args.multiple) {
       return this.hasValue;
     }
     return this._valueArray.some((value) => !this.isLockedValue(value));
@@ -118,7 +118,7 @@ export default class SelectionActions {
 
   /** Whether the selection is still short of the advisory {@link minimum}. */
   get belowMinimum(): boolean {
-    const minimum = this.#options.minimum;
+    const minimum = this.#args.minimum;
     return minimum > 0 && this.selectedCount < minimum;
   }
 
@@ -134,14 +134,14 @@ export default class SelectionActions {
 
   /** How many more items may still be added, or `undefined` when uncapped. */
   get remaining(): number | undefined {
-    const maximum = this.#options.maximum;
+    const maximum = this.#args.maximum;
     return maximum == null
       ? undefined
       : Math.max(0, maximum - this.selectedCount);
   }
 
   get #atMaximum(): boolean {
-    const maximum = this.#options.maximum;
+    const maximum = this.#args.maximum;
     return maximum != null && this.selectedCount >= maximum;
   }
 
@@ -153,9 +153,7 @@ export default class SelectionActions {
 
   @cached
   get _selectedKeys(): ReadonlySet<string | null> {
-    return new Set(
-      this._valueArray.map((value) => this.#options.valueKey(value))
-    );
+    return new Set(this._valueArray.map((value) => this.#args.valueKey(value)));
   }
 
   /**
@@ -164,7 +162,7 @@ export default class SelectionActions {
    */
   @cached
   get _lockedKeys(): LockedKeys {
-    const locked = this.#options.lockedValues;
+    const locked = this.#args.lockedValues;
     if (locked == null) {
       return NO_LOCKED_KEYS;
     }
@@ -177,7 +175,7 @@ export default class SelectionActions {
     if (locked.length === 0) {
       return NO_LOCKED_KEYS;
     }
-    if (!this.#options.multiple) {
+    if (!this.#args.multiple) {
       return {
         ...NO_LOCKED_KEYS,
         problem:
@@ -188,7 +186,7 @@ export default class SelectionActions {
     const keys = new Set<string | null>();
     const unheld: SelectItemId[] = [];
     for (const value of locked as SelectItemId[]) {
-      const key = this.#options.valueKey(value);
+      const key = this.#args.valueKey(value);
       if (held.has(key)) {
         keys.add(key);
       } else {
@@ -207,21 +205,19 @@ export default class SelectionActions {
 
   @cached
   get _singleValue(): SelectItemId | null {
-    return this.#options.singleValue(this.#options.value);
+    return this.#args.singleValue(this.#args.value);
   }
 
   @cached
   get _valueArray(): readonly SelectItemId[] {
     return Object.freeze(
-      this.#options.dedupeValues(
-        makeArray(this.#options.value) as SelectItemId[]
-      )
+      this.#args.dedupeValues(makeArray(this.#args.value) as SelectItemId[])
     );
   }
 
   /** Whether a held value is locked, matching ids by their key. */
   isLockedValue(value: SelectItemId): boolean {
-    return this.#lockedKeys.has(this.#options.valueKey(value));
+    return this.#lockedKeys.has(this.#args.valueKey(value));
   }
 
   /** Every value in `previous` whose key `next` no longer holds, in held order. */
@@ -229,11 +225,9 @@ export default class SelectionActions {
     previous: readonly SelectItemId[],
     next: readonly SelectItemId[]
   ): SelectItemId[] {
-    const nextKeys = new Set(
-      next.map((value) => this.#options.valueKey(value))
-    );
+    const nextKeys = new Set(next.map((value) => this.#args.valueKey(value)));
     return previous.filter(
-      (value) => !nextKeys.has(this.#options.valueKey(value))
+      (value) => !nextKeys.has(this.#args.valueKey(value))
     );
   }
 
@@ -264,16 +258,16 @@ export default class SelectionActions {
     // The "none" row stands in for the empty selection, so it reads as selected exactly when
     // nothing else is. Single-select only, and resolved before the key lookup — its value is
     // `null`, which the comparison below would otherwise reject as unselectable.
-    if (item.__none && !this.#options.multiple) {
+    if (item.__none && !this.#args.multiple) {
       return !this.hasValue;
     }
-    const key = this.#options.valueKey(this.#options.itemValue(item));
+    const key = this.#args.valueKey(this.#args.itemValue(item));
     if (key == null) {
       return false;
     }
-    return this.#options.multiple
+    return this.#args.multiple
       ? this._selectedKeys.has(key)
-      : this.#options.valueKey(this.value) === key;
+      : this.#args.valueKey(this.value) === key;
   }
 
   /**
@@ -292,10 +286,10 @@ export default class SelectionActions {
    * Toggles an item: for multi, selects or deselects; for single, selects it.
    */
   toggle(item: SelectItem): void {
-    if (this.#options.locked) {
+    if (this.#args.locked) {
       return;
     }
-    if (this.#options.multiple && this.isSelected(item)) {
+    if (this.#args.multiple && this.isSelected(item)) {
       this.deselect(item);
     } else {
       this.select(item);
@@ -309,18 +303,18 @@ export default class SelectionActions {
    */
   select(item: SelectItem, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (this.#options.locked) {
+    if (this.#args.locked) {
       return;
     }
     if (this.isSelected(item)) {
       if (origin) {
-        this.#options.onReconfirm?.(item, origin);
+        this.#args.onReconfirm?.(item, origin);
       }
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
       // keystroke after opening, and leaving it inert would read as a broken control.
-      if (!this.#options.multiple && this.#options.closeOnSelect) {
-        this.#options.requestClose?.();
+      if (!this.#args.multiple && this.#args.closeOnSelect) {
+        this.#args.requestClose?.();
       }
       return;
     }
@@ -332,15 +326,15 @@ export default class SelectionActions {
       return;
     }
     this.#cacheResolved(item);
-    if (this.#options.multiple) {
+    if (this.#args.multiple) {
       this.#emitChange(
-        [...this._valueArray, this.#options.itemValue(item)],
+        [...this._valueArray, this.#args.itemValue(item)],
         origin
       );
     } else {
-      this.#emitChange(this.#options.itemValue(item), origin);
-      if (this.#options.closeOnSelect) {
-        this.#options.requestClose?.();
+      this.#emitChange(this.#args.itemValue(item), origin);
+      if (this.#args.closeOnSelect) {
+        this.#args.requestClose?.();
       }
     }
   }
@@ -348,7 +342,7 @@ export default class SelectionActions {
   /** Adds a batch without losing its update authority during middleware or deferred emits. */
   selectMany(items: readonly SelectItem[], origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (this.#options.locked) {
+    if (this.#args.locked) {
       return;
     }
 
@@ -367,7 +361,7 @@ export default class SelectionActions {
       ) {
         continue;
       }
-      const key = this.#options.valueKey(this.#options.itemValue(item));
+      const key = this.#args.valueKey(this.#args.itemValue(item));
       if (key == null) {
         continue;
       }
@@ -376,7 +370,7 @@ export default class SelectionActions {
         continue;
       }
       seen.add(key);
-      if (!this.#options.multiple) {
+      if (!this.#args.multiple) {
         this.select(item, origin);
         return;
       }
@@ -388,7 +382,7 @@ export default class SelectionActions {
     }
     if (additions.length === 0) {
       if (held + limit > 0) {
-        this.#options.onBulkUnchanged?.({ held, limit });
+        this.#args.onBulkUnchanged?.({ held, limit });
       }
       return;
     }
@@ -398,7 +392,7 @@ export default class SelectionActions {
     this.#emitChange(
       [
         ...this._valueArray,
-        ...additions.map((item) => this.#options.itemValue(item)),
+        ...additions.map((item) => this.#args.itemValue(item)),
       ],
       {
         ...(origin ?? { programmatic: true }),
@@ -412,23 +406,23 @@ export default class SelectionActions {
    */
   deselect(item: SelectItem, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (this.#options.locked) {
+    if (this.#args.locked) {
       return;
     }
-    if (!this.#options.multiple) {
+    if (!this.#args.multiple) {
       if (origin && !this.isSelected(item)) {
         return;
       }
       this.#emitChange(null, origin);
       return;
     }
-    const value = this.#options.itemValue(item);
+    const value = this.#args.itemValue(item);
     if (this.isLockedValue(value)) {
       return;
     }
-    const key = this.#options.valueKey(value);
+    const key = this.#args.valueKey(value);
     this.#emitChange(
-      this._valueArray.filter((v) => this.#options.valueKey(v) !== key),
+      this._valueArray.filter((v) => this.#args.valueKey(v) !== key),
       origin
     );
   }
@@ -436,7 +430,7 @@ export default class SelectionActions {
   /** Removes the last held value from a multi-select selection. */
   deselectLast(origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (this.#options.locked || !this.#options.multiple) {
+    if (this.#args.locked || !this.#args.multiple) {
       return;
     }
     const values = this._valueArray;
@@ -452,13 +446,13 @@ export default class SelectionActions {
    */
   clear(origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (this.#options.locked) {
+    if (this.#args.locked) {
       return;
     }
     if (origin && !this.hasValue) {
       return;
     }
-    if (!this.#options.multiple) {
+    if (!this.#args.multiple) {
       this.#emitChange(null, origin, "clear");
       return;
     }
@@ -485,7 +479,7 @@ export default class SelectionActions {
     // native one.
     const nextValue = this.#coerceValue(rawNextValue);
     const items = this.#itemsFor(nextValue);
-    const payload = this.#options.multiple ? items : (items[0] ?? null);
+    const payload = this.#args.multiple ? items : (items[0] ?? null);
     const context = {
       value: nextValue,
       items: payload,
@@ -501,12 +495,12 @@ export default class SelectionActions {
       if (
         !this.#dropsLockedValue(nextValue) &&
         this.#beforeEmit(origin, nextValue) &&
-        !this.#options.locked
+        !this.#args.locked
       ) {
-        this.#options.onChange?.(nextValue, payload, {
+        this.#args.onChange?.(nextValue, payload, {
           origin,
           reason,
-          options: context.options,
+          config: context.config,
         });
 
         // Legacy extensions run only after the controlled change commits.
@@ -522,7 +516,7 @@ export default class SelectionActions {
     }
     const nextKeys = new Set(
       (makeArray(nextValue) as SelectItemId[]).map((value) =>
-        this.#options.valueKey(value)
+        this.#args.valueKey(value)
       )
     );
     return [...locked].some((key) => !nextKeys.has(key));
@@ -534,7 +528,7 @@ export default class SelectionActions {
     const values: SelectItemId[] =
       value == null
         ? []
-        : this.#options.multiple
+        : this.#args.multiple
           ? (makeArray(value) as SelectItemId[])
           : [value];
     return values
@@ -549,12 +543,12 @@ export default class SelectionActions {
   // is returned untouched. Matching is by string form, so coercion never changes which option is
   // selected, only the emitted type.
   #coerceValue(value: SelectValue): SelectValue {
-    if (!this.#options.multiple || value == null) {
+    if (!this.#args.multiple || value == null) {
       return value;
     }
     return (makeArray(value) as SelectItemId[]).map((id) => {
       const item = this.#resolveOneSync(id);
-      return item ? this.#options.itemValue(item) : id;
+      return item ? this.#args.itemValue(item) : id;
     });
   }
 }

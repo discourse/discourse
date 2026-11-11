@@ -23,11 +23,11 @@ import type {
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectCoreTextKey,
   type SelectItem,
-  type SelectLoadOptions,
+  type SelectLoadRequest,
   type SelectLoadResult,
-  type SelectResolvedOptions,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -154,10 +154,10 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   /** The held filter's row, built from the options so a customized shortcut name reaches it. */
   @action
-  valueItems(options: SelectResolvedOptions): CategoryItem[] {
+  valueItems(config: SelectConfig): CategoryItem[] {
     const id = this.heldId;
     if (id === NO_CATEGORIES_ID) {
-      return [{ id, name: renderSelectText(options, "noSubcategories") }];
+      return [{ id, name: renderSelectText(config, "noSubcategories") }];
     }
     const value = this.args.value;
     if (id === undefined || typeof value !== "object" || !value) {
@@ -174,7 +174,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
   @action
   load(
     query: string,
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ): SelectLoadResult | Promise<SelectLoadResult> {
     const search = Category.searchCategories(query, {
       includeAncestors: true,
@@ -196,8 +196,8 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   /** Shortcuts lead the level while browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot, options: SelectResolvedOptions) {
-    return this.#shortcuts(snapshot.filter, options);
+  specialItems(snapshot: SelectSnapshot, config: SelectConfig) {
+    return this.#shortcuts(snapshot.filter, config);
   }
 
   /**
@@ -225,7 +225,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     }
   }
 
-  #shortcuts(query: string, options: SelectResolvedOptions): CategoryItem[] {
+  #shortcuts(query: string, config: SelectConfig): CategoryItem[] {
     if (query) {
       return [];
     }
@@ -234,13 +234,13 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     if (held !== undefined && !this.args.editing) {
       shortcuts.push({
         id: ALL_CATEGORIES_ID,
-        name: renderSelectText(options, "removeFilter"),
+        name: renderSelectText(config, "removeFilter"),
       });
     }
     if (this.args.parentCategory && held !== NO_CATEGORIES_ID) {
       shortcuts.push({
         id: NO_CATEGORIES_ID,
-        name: renderSelectText(options, "noSubcategories"),
+        name: renderSelectText(config, "noSubcategories"),
       });
     }
     return shortcuts;
@@ -266,9 +266,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @valueItems={{this.valueItems}}
       @variant="button"
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else}}
           <CategoryBadge
             @ancestors={{not @parentCategory}}
@@ -278,9 +278,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
           />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
           <CategoryBadge @item={{item}} />
         {{/if}}

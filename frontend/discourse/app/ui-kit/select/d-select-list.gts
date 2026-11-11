@@ -19,7 +19,7 @@ import SelectHost, {
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import { legacySelectKitIdentifiers } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
@@ -34,7 +34,7 @@ import type {
   SelectItem,
   SelectItemRow,
   SelectKindTexts,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -58,7 +58,7 @@ interface DSelectListSignature {
       items: SelectItem[] | SelectItem | null,
       change: Parameters<NonNullable<SelectHostArgs["onChange"]>>[2]
     ) => void;
-    /** Local options, or a function of resolved options. */
+    /** Local items, or a function of the resolved config. */
     items?: SelectHostArgs["items"];
     /** Async query source, optionally paginating with total or hasMore. */
     load?: SelectHostArgs["load"];
@@ -111,8 +111,8 @@ interface DSelectListSignature {
      * not a customization key.
      */
     legacyKind?: string | string[];
-    /** Declares live recipe options; core option keys remain reserved. */
-    kindOptions?: Record<string, unknown>;
+    /** Declares live recipe config; core config keys remain reserved. */
+    kindConfig?: Record<string, unknown>;
     /**
      * Every text the select draws or speaks, by key: a translated string, `{ translationKey }`
      * for a translation, or a function of the text's values. Each entry merges over the recipe's
@@ -160,21 +160,21 @@ interface DSelectListSignature {
     /** Custom option content. */
     item?: [
       /** Raw option. */ item: SelectItem,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
       /** What the row is beyond its item: `create` marks the create row. */
       row: SelectItemRow,
     ];
     /** Custom held-chip content. */
     selection?: [
       /** Held item. */ item: SelectItem,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
     /** Stands in for each held chip while held values resolve. */
     selectionLoading?: [];
     /** Content for unavailable held values. */
     unresolved?: [
       /** Fallback item. */ item: SelectItem,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom no-results content for a nonempty query. */
     empty?: [];
@@ -186,12 +186,12 @@ interface DSelectListSignature {
     /** Pinned content between held chips and results, outside the listbox. */
     listHeader?: [
       /** Live list state. */ state: SelectListState,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
     /** Pinned content after results; dismissal belongs to the containing panel. */
     footer?: [
       /** Live list state. */ state: SelectListState,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
   };
 }
@@ -297,7 +297,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
   @action
   resolveHeld(
     value: unknown,
-    opts?: SelectLoadOptions
+    opts?: SelectLoadRequest
   ):
     | readonly SelectDescriptor[]
     | Promise<readonly SelectDescriptor[] | undefined>
@@ -435,7 +435,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @queryDisplay="always"
             @registerInput={{this.interaction.registerFilter}}
             @roleMode="search"
-            @searchIcon={{this.engine.resolvedOptions.searchIcon}}
+            @searchIcon={{this.engine.config.searchIcon}}
             @selection={{this.heldSelection}}
             @showMenu={{this.interaction.focusInput}}
             @tabPassthrough={{true}}
@@ -443,24 +443,24 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @value={{@value}}
           >
             <:selection as |item|>
-              {{~yield item this.engine.resolvedOptions to="selection"~}}
+              {{~yield item this.engine.config to="selection"~}}
             </:selection>
             <:selectionLoading>
               {{~yield to="selectionLoading"~}}
             </:selectionLoading>
             <:unresolved as |item|>
-              {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+              {{~yield item this.engine.config to="unresolved"~}}
             </:unresolved>
           </MultiChips>
         </:field>
-        <:item as |item options row|>
-          {{~yield item options row to="item"~}}
+        <:item as |item config row|>
+          {{~yield item config row to="item"~}}
         </:item>
-        <:selection as |item options|>
-          {{~yield item options to="selection"~}}
+        <:selection as |item config|>
+          {{~yield item config to="selection"~}}
         </:selection>
-        <:unresolved as |item options|>
-          {{~yield item options to="unresolved"~}}
+        <:unresolved as |item config|>
+          {{~yield item config to="unresolved"~}}
         </:unresolved>
         <:empty>
           {{~yield to="empty"~}}
@@ -468,11 +468,11 @@ export default class DSelectList extends Component<DSelectListSignature> {
         <:error as |error retry|>
           {{~yield error retry to="error"~}}
         </:error>
-        <:listHeader as |state options|>
-          {{~yield state options to="listHeader"~}}
+        <:listHeader as |state config|>
+          {{~yield state config to="listHeader"~}}
         </:listHeader>
-        <:footer as |state options|>
-          {{~yield state options to="footer"~}}
+        <:footer as |state config|>
+          {{~yield state config to="footer"~}}
         </:footer>
       </SelectPanel>
     </div>

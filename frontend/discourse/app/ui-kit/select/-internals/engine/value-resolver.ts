@@ -5,13 +5,13 @@ import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectItem,
   SelectItemId,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options.ts";
+import type SelectArgsView from "./select-args.ts";
 
-interface ValueResolverOptions {
-  options: SelectOptionsView;
+interface ValueResolverInit {
+  args: SelectArgsView;
   knownRows: () => SelectItem[];
 }
 
@@ -25,7 +25,7 @@ type PendingResolution = {
 export default class ValueResolver {
   /**
    * value → resolved item, so a re-render or reopen never re-fetches a label. Keyed by the
-   * normalized value (see `SelectOptionsView#valueKey`) so a string/number id mismatch is a
+   * normalized value (see `SelectArgsView#valueKey`) so a string/number id mismatch is a
    * cache hit.
    */
   #resolvedCache = trackedMap<string, SelectItem>();
@@ -43,7 +43,7 @@ export default class ValueResolver {
   // Fallback items that were actually produced by `createUnresolvedItem`.
   #customUnresolvedItems = new WeakSet<SelectItem>();
 
-  #options: SelectOptionsView;
+  #args: SelectArgsView;
 
   // The rows already in hand for the current source, whichever kind it is. A paginated
   // source returns its untracked accumulator; without this rung it would refetch a value
@@ -51,22 +51,22 @@ export default class ValueResolver {
   // and the fetch path already covers the case where the row has not landed yet.
   #knownRows: () => SelectItem[];
 
-  constructor(opts: ValueResolverOptions) {
-    this.#options = opts.options;
+  constructor(opts: ValueResolverInit) {
+    this.#args = opts.args;
     this.#knownRows = opts.knownRows;
   }
 
   resolveSelection(
     value: SelectValue,
-    opts: SelectLoadOptions = {}
+    opts: SelectLoadRequest = {}
   ):
     | SelectItem
     | SelectItem[]
     | Promise<SelectItem>
     | Promise<SelectItem[]>
     | undefined {
-    if (!this.#options.multiple) {
-      const single = this.#options.singleValue(value);
+    if (!this.#args.multiple) {
+      const single = this.#args.singleValue(value);
       if (single == null) {
         return undefined;
       }
@@ -75,9 +75,7 @@ export default class ValueResolver {
         ? this.#firstOf(resolved)
         : resolved[0]!;
     }
-    const values = this.#options.dedupeValues(
-      makeArray(value) as SelectItemId[]
-    );
+    const values = this.#args.dedupeValues(makeArray(value) as SelectItemId[]);
     // Empty multi → undefined so the trigger shows its placeholder (not an empty list).
     if (values.length === 0) {
       return undefined;
@@ -130,16 +128,16 @@ export default class ValueResolver {
       `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
         `queries and is never asked what a given id is, so a select that can mount holding a ` +
         `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
-      !this.#options.load ||
-        !!this.#options.resolveValue ||
-        !!this.#options.resolveValues ||
-        this.#options.valueItemsDeclared
+      !this.#args.load ||
+        !!this.#args.resolveValue ||
+        !!this.#args.resolveValues ||
+        this.#args.valueItemsDeclared
     );
   }
 
   cacheResolved(item: SelectItem | null | undefined): void {
     if (item) {
-      this.#cacheResolvedValue(this.#options.itemValue(item), item);
+      this.#cacheResolvedValue(this.#args.itemValue(item), item);
     }
   }
 
@@ -154,16 +152,13 @@ export default class ValueResolver {
    * settle. "Failed" has to be a terminal answer; `reload` is what retries it.
    */
   resolveOneSync(value: SelectItemId): SelectItem | undefined {
-    const key = this.#options.valueKey(value);
+    const key = this.#args.valueKey(value);
     if (key == null) {
       return undefined;
     }
     const recorded = this.#recordedOutcomes(key);
     return (
-      this.#matching(
-        makeArray(this.#options.valueItems) as SelectItem[],
-        key
-      ) ??
+      this.#matching(makeArray(this.#args.valueItems) as SelectItem[], key) ??
       recorded.find((item) => !item.__unresolved) ??
       this.#matching(this.#knownRows(), key) ??
       recorded[0]
@@ -184,7 +179,7 @@ export default class ValueResolver {
    */
   #resolveMany(
     values: SelectItemId[],
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ): SelectItem[] | Promise<SelectItem[]> {
     const synced = values.map((v) => this.resolveOneSync(v));
     if (synced.every((item) => item != null)) {
@@ -199,7 +194,7 @@ export default class ValueResolver {
       if (synced[index] != null) {
         return false;
       }
-      const key = this.#options.valueKey(value);
+      const key = this.#args.valueKey(value);
       const pending = key == null ? undefined : this.#pending.get(key);
       if (pending && !pending.controller.signal.aborted) {
         requests.add(pending);
@@ -267,7 +262,7 @@ export default class ValueResolver {
         })
         .finally(() => {
           for (const value of values) {
-            const key = this.#options.valueKey(value);
+            const key = this.#args.valueKey(value);
             if (key != null && this.#pending.get(key) === request) {
               this.#pending.delete(key);
             }
@@ -275,7 +270,7 @@ export default class ValueResolver {
         }),
     };
     for (const value of values) {
-      const key = this.#options.valueKey(value);
+      const key = this.#args.valueKey(value);
       if (key != null) {
         this.#pending.set(key, request);
       }
@@ -316,7 +311,7 @@ export default class ValueResolver {
     items: SelectItem[]
   ): void {
     values.forEach((value, index) => {
-      const key = this.#options.valueKey(value);
+      const key = this.#args.valueKey(value);
       const item = items[index];
       if (synced[index] == null && key != null && item) {
         this.#synchronousOutcomes.set(key, item);
@@ -359,7 +354,7 @@ export default class ValueResolver {
 
   #matching(items: SelectItem[], key: string): SelectItem | undefined {
     return items.find(
-      (i) => this.#options.valueKey(this.#options.itemValue(i)) === key
+      (i) => this.#args.valueKey(this.#args.itemValue(i)) === key
     );
   }
 
@@ -368,12 +363,12 @@ export default class ValueResolver {
   // `resolveValue` (fans out — only when no batch resolver is supplied).
   #resolveBatch(
     values: SelectItemId[],
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ): Map<string, SelectItem> | Promise<Map<string, SelectItem>> {
-    const loadOptions = { ...opts, options: this.#options.resolvedOptions };
-    if (this.#options.resolveValues) {
+    const request = { ...opts, config: this.#args.config };
+    if (this.#args.resolveValues) {
       const result = this.#attempt(() =>
-        this.#options.resolveValues!(values, loadOptions)
+        this.#args.resolveValues!(values, request)
       );
       return this.#isPromise(result)
         ? result.then(
@@ -383,9 +378,7 @@ export default class ValueResolver {
         : this.#toResolvedMap(result);
     }
     const per = values.map((v) => {
-      const result = this.#attempt(() =>
-        this.#options.resolveValue?.(v, loadOptions)
-      );
+      const result = this.#attempt(() => this.#args.resolveValue?.(v, request));
       return this.#isPromise(result)
         ? result.then(
             (item) => [v, item] as const,
@@ -419,7 +412,7 @@ export default class ValueResolver {
   ): Map<string, SelectItem> {
     return this.#pairsToMap(
       (makeArray(items) as SelectItem[]).map(
-        (item) => [this.#options.itemValue(item), item] as const
+        (item) => [this.#args.itemValue(item), item] as const
       )
     );
   }
@@ -429,7 +422,7 @@ export default class ValueResolver {
   ): Map<string, SelectItem> {
     const map = new Map<string, SelectItem>();
     for (const [value, item] of pairs) {
-      const key = this.#options.valueKey(value);
+      const key = this.#args.valueKey(value);
       if (key != null && item) {
         map.set(key, item);
       }
@@ -446,7 +439,7 @@ export default class ValueResolver {
     resolved: Map<string, SelectItem>
   ): SelectItem[] {
     return values.map((v, index) => {
-      const key = this.#options.valueKey(v);
+      const key = this.#args.valueKey(v);
       return (
         synced[index] ??
         (key == null ? undefined : resolved.get(key)) ??
@@ -465,31 +458,28 @@ export default class ValueResolver {
     if (DEBUG) {
       this.assertCanResolve(value);
     }
-    const built = this.#options.createUnresolvedItem
+    const built = this.#args.createUnresolvedItem
       ? this.#attempt(() =>
-          this.#options.createUnresolvedItem!(
-            value,
-            this.#options.resolvedOptions
-          )
+          this.#args.createUnresolvedItem!(value, this.#args.config)
         )
       : undefined;
     if (built) {
       const item = {
         ...built,
-        [this.#options.valueField]: value,
+        [this.#args.valueField]: value,
         __unresolved: true,
       };
       this.#customUnresolvedItems.add(item);
       return item;
     }
     const item: SelectItem = {
-      [this.#options.valueField]: value,
+      [this.#args.valueField]: value,
       __unresolved: true,
     };
     // Show the value as the label so an unresolved row renders the id, not a blank — unless
     // the label field IS the value field, where it is already present (keeping the raw type).
-    if (this.#options.labelField !== this.#options.valueField) {
-      item[this.#options.labelField] = String(value ?? "");
+    if (this.#args.labelField !== this.#args.valueField) {
+      item[this.#args.labelField] = String(value ?? "");
     }
     return item;
   }
@@ -498,7 +488,7 @@ export default class ValueResolver {
     value: SelectItemId,
     item: SelectItem | null | undefined
   ): void {
-    const key = this.#options.valueKey(value);
+    const key = this.#args.valueKey(value);
     if (key == null || !item) {
       return;
     }

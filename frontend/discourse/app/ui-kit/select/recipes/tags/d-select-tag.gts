@@ -44,9 +44,9 @@ import {
   type TagObject,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
+  SelectConfig,
   SelectItem,
-  SelectLoadOptions,
-  SelectResolvedOptions,
+  SelectLoadRequest,
   SelectTexts,
   SelectTextWrapper,
   SelectValue,
@@ -317,16 +317,12 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
   }
 
   @action
-  allowCreate(
-    filter: string,
-    items: SelectItem[],
-    options: SelectResolvedOptions
-  ) {
+  allowCreate(filter: string, items: SelectItem[], config: SelectConfig) {
     const name = cleanTagName(filter, this.siteSettings);
     const validation = this._validation.get(
       this.#validationKey(this.loadContext, name)
     );
-    const maximum = this.#zeroCap ? 0 : options.maximum;
+    const maximum = this.#zeroCap ? 0 : config.maximum;
     return !!(
       this.#creationAllowed &&
       name &&
@@ -448,7 +444,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
 
   /** Keys a held tag by its id, taking a held name's id from the session's lookups. */
   @action
-  async load(filter: string, opts: SelectLoadOptions) {
+  async load(filter: string, opts: SelectLoadRequest) {
     const context: TagSearchContext = opts.context ?? {};
     const result = await searchTags(filter, {
       context: {
@@ -552,22 +548,22 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       @variant={{@variant}}
       {{this.resolveHeldNames}}
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else}}
-          <TagOption @item={{item}} @options={{options}} @row={{row}} />
+          <TagOption @config={{config}} @item={{item}} @row={{row}} />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
           <TagSelection @item={{item}} />
         {{/if}}
       </:selection>
-      <:footer as |state options|>
-        {{yield state options to="footer"}}
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
       </:footer>
     </DSelect>
   </template>

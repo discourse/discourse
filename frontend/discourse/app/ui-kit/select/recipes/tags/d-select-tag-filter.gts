@@ -29,8 +29,8 @@ import {
 import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectItem,
-  type SelectResolvedOptions,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -217,7 +217,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   /** The held filter's row, built from the options so a customized shortcut name reaches it. */
   @action
-  valueItems(options: SelectResolvedOptions): SelectItem[] {
+  valueItems(config: SelectConfig): SelectItem[] {
     if (this.args.multiple) {
       // A tag model keeps its fields on getters, which a spread would drop.
       return this.#heldTags.map((tag) => ({
@@ -229,7 +229,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     }
     const id = this.heldId;
     if (id === NO_TAG_ID) {
-      return [{ id, name: renderSelectText(options, "noTags") }];
+      return [{ id, name: renderSelectText(config, "noTags") }];
     }
     // A tag model keeps its fields on getters, which a spread would drop.
     return id === undefined ? [] : [this.#tag!];
@@ -268,10 +268,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   /** The shortcuts lead browsing and are left out of searches. */
   @action
-  specialItems(
-    snapshot: SelectSnapshot,
-    options: SelectResolvedOptions
-  ): SelectItem[] {
+  specialItems(snapshot: SelectSnapshot, config: SelectConfig): SelectItem[] {
     if (snapshot.filter || this.args.multiple) {
       return [];
     }
@@ -280,13 +277,13 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     if (held !== undefined) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: renderSelectText(options, "removeFilter"),
+        name: renderSelectText(config, "removeFilter"),
       });
     }
     if (held !== NO_TAG_ID) {
       shortcuts.push({
         id: NO_TAG_ID,
-        name: renderSelectText(options, "noTags"),
+        name: renderSelectText(config, "noTags"),
       });
     }
     return shortcuts;
@@ -363,18 +360,18 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @valueItems={{this.valueItems}}
       @variant={{this.variant}}
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else if (this.isShortcut item)}}
           <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
         {{else}}
-          <TagOption @item={{item}} @options={{options}} @row={{row}} />
+          <TagOption @config={{config}} @item={{item}} @row={{row}} />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else if @multiple}}
           <TagSelection @item={{item}} />
         {{else}}
@@ -384,8 +381,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
           </span>
         {{/if}}
       </:selection>
-      <:footer as |state options|>
-        {{yield state options to="footer"}}
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
       </:footer>
     </DSelect>
   </template>

@@ -23,11 +23,11 @@ import type {
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectControl,
   type SelectCoreTextKey,
   type SelectItem,
-  type SelectLoadOptions,
-  type SelectResolvedOptions,
+  type SelectLoadRequest,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -193,7 +193,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   @action
-  load(query: string, opts: SelectLoadOptions) {
+  load(query: string, opts: SelectLoadRequest) {
     // The pinned rows and the family ids below read these records synchronously from the site.
     const ids = [
       ...[this.args.scope, this.args.prioritize].map((value) =>
@@ -222,19 +222,16 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
 
   /** In multiple mode the select draws no none row of its own, so the recipe adds it. */
   @action
-  specialItems(
-    snapshot: SelectSnapshot,
-    options: SelectResolvedOptions
-  ): CategoryItem[] {
+  specialItems(snapshot: SelectSnapshot, config: SelectConfig): CategoryItem[] {
     const rows: CategoryItem[] = [];
-    if (this.args.multiple && options.noneRow && !snapshot.filter) {
+    if (this.args.multiple && config.noneRow && !snapshot.filter) {
       rows.push({
         id: "category-none",
-        name: renderSelectText(options, "noneLabel"),
+        name: renderSelectText(config, "noneLabel"),
         onSelect: (control) => control.clear(),
       });
     }
-    rows.push(...this.#pinned(snapshot.filter, options));
+    rows.push(...this.#pinned(snapshot.filter, config));
     return rows;
   }
 
@@ -246,7 +243,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   groupFooter(
     key: unknown,
     rows: readonly SelectItem[],
-    options: SelectResolvedOptions
+    config: SelectConfig
   ): CategoryItem | null {
     const row = key == null ? undefined : rows.find((item) => item.id === key);
     const category = (row as CategoryItem | undefined)?.category;
@@ -256,7 +253,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return {
       id: `category-descendants-${category.id}`,
       // Names the category's own topic count, as the badge it draws shows it.
-      name: renderSelectText(options, "familyFooter", {
+      name: renderSelectText(config, "familyFooter", {
         category: category.displayName,
         count: category.topic_count,
       }),
@@ -299,7 +296,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
    * while browsing. Disabled categories are excluded from the search, so they are always
    * offered as pinned rows whenever they match, and are never grouped or given a footer.
    */
-  #pinned(query: string, options: SelectResolvedOptions): CategoryItem[] {
+  #pinned(query: string, config: SelectConfig): CategoryItem[] {
     const root = query ? undefined : this.#familyId(this.args.scope);
     const roots = Category.findByIds(root == null ? [] : [root]).filter(
       this.#categoryAllowed()
@@ -309,7 +306,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
     const descriptions = this.args.descriptions ?? !this.args.multiple;
     const readOnlyDescription =
-      renderSelectText(options, "readOnlyDescription") || undefined;
+      renderSelectText(config, "readOnlyDescription") || undefined;
     return [...new Set([...roots, ...disabled])].map((category) => {
       const row = categoryItem(category, descriptions);
       if (disabled.includes(category)) {
@@ -334,7 +331,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
    * after it, before the rest of the family. The key comes from the search that ordered the
    * rows, so a later site update can never re-key a row that is already shown.
    */
-  #search(query: string, opts: SelectLoadOptions) {
+  #search(query: string, opts: SelectLoadRequest) {
     const groupFamilies = this.#offersDescendants(query);
     const search = Category.searchCategories(query, {
       groupFamilies: groupFamilies || undefined,
@@ -425,9 +422,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else}}
           <CategoryBadge @ancestors={{true}} @counts={{true}} @item={{item}} />
         {{/if}}
@@ -435,17 +432,17 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       <:groupFooter as |item|>
         <CategoryBadge @counts={{true}} @family={{true}} @item={{item}} />
       </:groupFooter>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
           <span class="d-category-selection">
             <CategoryBadge @ancestors={{@showAncestors}} @item={{item}} />
           </span>
         {{/if}}
       </:selection>
-      <:footer as |state options|>
-        {{yield state options to="footer"}}
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
       </:footer>
     </DSelect>
   </template>

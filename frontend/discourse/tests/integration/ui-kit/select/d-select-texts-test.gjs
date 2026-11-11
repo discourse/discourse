@@ -81,7 +81,7 @@ function customize(register) {
 function forIdentifier(texts) {
   customize((selects) =>
     selects.forIdentifier("texts-test", (spec) =>
-      spec.options(() => ({ texts }))
+      spec.config(() => ({ texts }))
     )
   );
 }
@@ -1414,7 +1414,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
           spec.content((items, context) => {
-            options.value = context.options;
+            options.value = context.config;
             return items;
           })
         )
@@ -1456,7 +1456,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
           spec.content((items, context) => {
-            options.value = context.options;
+            options.value = context.config;
             return items;
           })
         )
@@ -1506,7 +1506,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
           spec.content((items, context) => {
-            options.value = context.options;
+            options.value = context.config;
             return items;
           })
         )
@@ -1544,13 +1544,13 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("DSelectList forwards kind texts and wrappers across all option layers", async function (assert) {
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { searchPlaceholder: "all" } }))
+          spec.config(() => ({ texts: { searchPlaceholder: "all" } }))
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options(() => ({ texts: { searchPlaceholder: "kind" } }))
+          spec.config(() => ({ texts: { searchPlaceholder: "kind" } }))
         );
         selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() => ({ texts: { searchPlaceholder: "identifier" } }))
+          spec.config(() => ({ texts: { searchPlaceholder: "identifier" } }))
         );
       });
       await mount({
@@ -1579,19 +1579,19 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       const tier = tracked(0);
       customize((selects) => {
         selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() =>
+          spec.config(() =>
             tier.value >= 5 ? { texts: { placeholder: "identifier" } } : {}
           )
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options(() =>
+          spec.config(() =>
             tier.value >= 4
               ? { texts: { placeholder: "kind customization" } }
               : {}
           )
         );
         selects.forAll((spec) =>
-          spec.options(() =>
+          spec.config(() =>
             tier.value >= 3
               ? { texts: { placeholder: "all customization" } }
               : {}
@@ -1641,24 +1641,24 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       const snapshot = tracked(undefined);
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: { placeholder: "all", noResults: "all sibling" },
           }))
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: { placeholder: "kind", searchPlaceholder: "kind sibling" },
           }))
         );
         selects.forIdentifier("texts-test", (spec) => {
-          spec.options(() => ({
+          spec.config(() => ({
             texts: {
               placeholder: "identifier",
               minChars: "identifier sibling",
             },
           }));
           spec.content((items, context) => {
-            snapshot.value = context.options;
+            snapshot.value = context.config;
             return items;
           });
         });
@@ -1699,7 +1699,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
                   setup
                 );
           add((spec) =>
-            spec.options(() => ({
+            spec.config(() => ({
               texts: {
                 placeholder: "earlier",
                 searchPlaceholder: "earlier sibling",
@@ -1707,7 +1707,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
             }))
           );
           add((spec) =>
-            spec.options(() => ({ texts: { placeholder: "later" } }))
+            spec.config(() => ({ texts: { placeholder: "later" } }))
           );
         });
         await mount({ variant: "button" });
@@ -1728,17 +1728,17 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("nullish entries at every higher tier are no-ops", async function (assert) {
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: { placeholder: null, searchPlaceholder: undefined },
           }))
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: { placeholder: undefined, searchPlaceholder: null },
           }))
         );
         selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: {
               placeholder: () => null,
               searchPlaceholder: () => undefined,
@@ -1789,13 +1789,13 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         `${layer}(${context.text("placeholder")})`;
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { placeholder: decorate("all") } }))
+          spec.config(() => ({ texts: { placeholder: decorate("all") } }))
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options(() => ({ texts: { placeholder: decorate("kind") } }))
+          spec.config(() => ({ texts: { placeholder: decorate("kind") } }))
         );
         selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             texts: { placeholder: decorate("identifier") },
           }))
         );
@@ -1822,9 +1822,9 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       );
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) => {
-          spec.options(() => ({ texts: { recipeText: final.value } }));
+          spec.config(() => ({ texts: { recipeText: final.value } }));
           spec.content((items, context) => {
-            options.value = context.options;
+            options.value = context.config;
             return items;
           });
         })
@@ -1861,7 +1861,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       const preceding = tracked(undefined);
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             preceding.value = current;
             return {
               texts: {
@@ -1871,7 +1871,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
           })
         );
         selects.forKind("texts-kind", (spec) =>
-          spec.options((current) => ({
+          spec.config((current) => ({
             texts: {
               placeholder: `kind(${renderSelectText(current, "placeholder")})`,
             },
@@ -1909,7 +1909,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
           spec.content((items, context) => {
-            options.value = context.options;
+            options.value = context.config;
             return items;
           })
         )
@@ -2413,7 +2413,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("a forAll noneLabel alone never adds a none row", async function (assert) {
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { noneLabel: "Global none" } }))
+          spec.config(() => ({ texts: { noneLabel: "Global none" } }))
         )
       );
       await mount();
@@ -2441,7 +2441,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("a customization can enable noneRow and customize its text", async function (assert) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             noneRow: true,
             texts: { noneLabel: "Customized none" },
           }))
@@ -2463,7 +2463,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         if (source === "customization") {
           customize((selects) =>
             selects.forIdentifier("texts-test", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 loadingStatus: true,
                 texts: { loadingLabel: "Customized loading" },
               }))
@@ -2546,7 +2546,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       test(`a customization's "${name}" option is rejected, pointing at its text`, async function (assert) {
         customize((selects) =>
           selects.forIdentifier("texts-test", (spec) =>
-            spec.options(() => ({ [name]: "Label" }))
+            spec.config(() => ({ [name]: "Label" }))
           )
         );
         await expectAssertion(
@@ -2591,7 +2591,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("an unknown forAll text warns once across two selects", async function (assert) {
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { unknownTypo: "unknown" } }))
+          spec.config(() => ({ texts: { unknownTypo: "unknown" } }))
         )
       );
       await render(
@@ -2619,7 +2619,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         if (source === "forKind") {
           customize((selects) =>
             selects.forKind("texts-kind", (spec) =>
-              spec.options(() => ({ texts }))
+              spec.config(() => ({ texts }))
             )
           );
         } else if (source === "forIdentifier") {
@@ -2637,7 +2637,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     test("a forAll key that differs from an engine text only in case asserts", async function (assert) {
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { noresults: "typo" } }))
+          spec.config(() => ({ texts: { noresults: "typo" } }))
         )
       );
 

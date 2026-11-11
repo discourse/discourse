@@ -29,7 +29,7 @@ export interface SkeletonRow {
   label?: string;
 }
 
-interface LoadFeedbackTrackerOptions {
+interface LoadFeedbackTrackerInit {
   engine: SelectEngine;
   getFilterDebounceDelay: () => number;
   getSkeletonCountArg: () => number | undefined;
@@ -63,7 +63,7 @@ export default class LoadFeedbackTracker {
     engine,
     getFilterDebounceDelay,
     getSkeletonCountArg,
-  }: LoadFeedbackTrackerOptions) {
+  }: LoadFeedbackTrackerInit) {
     this.#engine = engine;
     this.#getFilterDebounceDelay = getFilterDebounceDelay;
     this.#getSkeletonCountArg = getSkeletonCountArg;
@@ -83,7 +83,7 @@ export default class LoadFeedbackTracker {
     let count = this.#getSkeletonCountArg();
     if (count === undefined) {
       count = this.#skeletonCount;
-      if (this.#engine.resolvedOptions.loadingStatus) {
+      if (this.#engine.config.loadingStatus) {
         count = Math.max(count - 1, 1);
       }
     }

@@ -29,7 +29,7 @@ interface VariantPresenterArgs extends SelectPresenterArgs {
   variant?: SelectVariant;
 }
 
-interface VariantPresenterOptions {
+interface VariantPresenterInit {
   getArgs: () => VariantPresenterArgs;
   engine: SelectEngine;
   shouldRenderInModal: (modalForMobile: boolean) => boolean;
@@ -50,7 +50,7 @@ export default class VariantPresenter
   #shouldRenderInModal: (modalForMobile: boolean) => boolean;
   #usesDirectFocus: () => boolean;
 
-  constructor(options: VariantPresenterOptions) {
+  constructor(options: VariantPresenterInit) {
     super(options);
     this.#activeListboxId = options.activeListboxId;
     this.#engine = options.engine;
@@ -231,7 +231,7 @@ export default class VariantPresenter
 
   /** The resolved caret icon for the current open/closed state. */
   get caretIcon(): string {
-    const arg = this.#engine.resolvedOptions.caretIcon;
+    const arg = this.#engine.config.caretIcon;
     if (typeof arg === "string") {
       return arg;
     }
@@ -242,17 +242,17 @@ export default class VariantPresenter
 
   /** The caret shows unless a consumer explicitly opts out (icon-only triggers). */
   get showCaret(): boolean {
-    return this.#engine.resolvedOptions.showCaret ?? true;
+    return this.#engine.config.showCaret ?? true;
   }
 
   /**
    * Whether to render a label-less trigger. Effective only on the `button`/`static` single-select
    * variants; on a `typeahead` (editable input) or `multiple` (chips are the display) the arg is
-   * inert. Options resolution ignores it with a warning when no accessible label resolves.
+   * inert. Config resolution ignores it with a warning when no accessible label resolves.
    */
   get iconOnly(): boolean {
     return (
-      !!this.#engine.resolvedOptions.iconOnly &&
+      !!this.#engine.config.iconOnly &&
       this.triggerIsControl &&
       !this.#getArgs().multiple
     );
@@ -260,13 +260,13 @@ export default class VariantPresenter
 
   /** The resolved decorative leading trigger icon. */
   get icon(): string | undefined {
-    return this.#engine.resolvedOptions.icon;
+    return this.#engine.config.icon;
   }
 
   /** Whether the clear control renders: opted in, something selected, and not locked. */
   get showClear(): boolean {
     return (
-      !!this.#engine.resolvedOptions.clearable &&
+      !!this.#engine.config.clearable &&
       this.#engine.hasRemovableValue &&
       !this.isLocked
     );

@@ -4589,12 +4589,12 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("a builder receives the resolved options, so a held label follows a customized text", async function (assert) {
+    test("a builder receives the resolved config, so a held label follows a customized text", async function (assert) {
       const label = tracked("No fruit");
       withPluginApi((api) =>
         api.registerValueTransformer("select-customizations", ({ value }) =>
           value.forIdentifier("held-builder", (spec) =>
-            spec.options(() => ({ texts: { heldName: label.value } }))
+            spec.config(() => ({ texts: { heldName: label.value } }))
           )
         )
       );

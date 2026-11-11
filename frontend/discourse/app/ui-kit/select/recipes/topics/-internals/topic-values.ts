@@ -2,9 +2,9 @@ import { makeArray } from "discourse/lib/helpers";
 import type Topic from "discourse/models/topic";
 import {
   renderSelectText,
+  type SelectConfig,
   type SelectItem,
   type SelectItemId,
-  type SelectResolvedOptions,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -17,11 +17,11 @@ export type TopicChangeHandler = (
 /** The stand-in for a held id no topic answers for, named by the `unresolved` text. */
 export function unresolvedTopic(
   value: SelectItemId,
-  options: SelectResolvedOptions
+  config: SelectConfig
 ): SelectItem {
   return {
     id: value,
-    title: renderSelectText(options, "unresolved", { id: value }),
+    title: renderSelectText(config, "unresolved", { id: value }),
   };
 }
 

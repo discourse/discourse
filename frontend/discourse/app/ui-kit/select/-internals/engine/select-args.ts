@@ -2,19 +2,19 @@ import { DEBUG } from "@glimmer/env";
 import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { assert, warn } from "@ember/debug";
 import type {
+  SelectConfig,
   SelectPresentationArgs,
-  SelectResolvedOptions,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import {
   renderSelectText,
   type SelectTexts,
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import type {
-  SelectEngineOptions,
+  SelectEngineInit,
   SelectItem,
   SelectItemId,
   SelectLegacyContext,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectLoadResult,
   SelectValue,
   SelectValueItemsBuilder,
@@ -30,83 +30,83 @@ const EMPTY_CONTEXT: object = Object.freeze({});
  * field-driven helpers (`valueKey`, `itemValue`, `itemLabel`, `dedupeValues`) so every
  * collaborator applies `valueField`/`labelField` identically.
  */
-export default class SelectOptionsView {
+export default class SelectArgsView {
   #hideSelected?: boolean;
-  #readHideSelected?: SelectEngineOptions["getHideSelected"];
-  #readMultiple?: SelectEngineOptions["getMultiple"];
-  #readLocked?: SelectEngineOptions["getLocked"];
-  #multiple?: SelectEngineOptions["multiple"];
+  #readHideSelected?: SelectEngineInit["getHideSelected"];
+  #readMultiple?: SelectEngineInit["getMultiple"];
+  #readLocked?: SelectEngineInit["getLocked"];
+  #multiple?: SelectEngineInit["multiple"];
   #kind?: string;
   #identifier?: string;
-  #readKindContext?: SelectEngineOptions["getKindContext"];
-  #readInstanceContext?: SelectEngineOptions["getInstanceContext"];
-  #readMinChars?: SelectEngineOptions["getMinChars"];
-  #minChars?: SelectEngineOptions["minChars"];
-  #readMaxLoaded?: SelectEngineOptions["getMaxLoaded"];
-  #maxLoaded?: SelectEngineOptions["maxLoaded"];
-  #readMaximum?: SelectEngineOptions["getMaximum"];
-  #maximum?: SelectEngineOptions["maximum"];
+  #readKindContext?: SelectEngineInit["getKindContext"];
+  #readInstanceContext?: SelectEngineInit["getInstanceContext"];
+  #readMinChars?: SelectEngineInit["getMinChars"];
+  #minChars?: SelectEngineInit["minChars"];
+  #readMaxLoaded?: SelectEngineInit["getMaxLoaded"];
+  #maxLoaded?: SelectEngineInit["maxLoaded"];
+  #readMaximum?: SelectEngineInit["getMaximum"];
+  #maximum?: SelectEngineInit["maximum"];
   #hasWarnedMaximum = false;
-  #readMinimum?: SelectEngineOptions["getMinimum"];
-  #minimum?: SelectEngineOptions["minimum"];
-  #readLockedValues?: SelectEngineOptions["getLockedValues"];
-  #lockedValues?: SelectEngineOptions["lockedValues"];
+  #readMinimum?: SelectEngineInit["getMinimum"];
+  #minimum?: SelectEngineInit["minimum"];
+  #readLockedValues?: SelectEngineInit["getLockedValues"];
+  #lockedValues?: SelectEngineInit["lockedValues"];
 
   /** Raw presentation inputs, kept separate from downstream lock and selection readers. */
-  #readPresentationOptions?: SelectEngineOptions["getOptions"];
+  #readPresentationArgs?: SelectEngineInit["getArgs"];
 
   /** Attached after customization setup and before source validation. */
-  #readResolvedOptions?: () => SelectResolvedOptions;
+  #readResolvedOptions?: () => SelectConfig;
 
   /** Raw recipe values remain upstream of option resolution. */
-  #readKindOptions?: SelectEngineOptions["getKindOptions"];
-  #kindOptions?: SelectEngineOptions["kindOptions"];
-  #readTexts?: SelectEngineOptions["getTexts"];
-  #readKindTexts?: SelectEngineOptions["getKindTexts"];
-  #kindTexts?: SelectEngineOptions["kindTexts"];
-  #readKindTextWrappers?: SelectEngineOptions["getKindTextWrappers"];
-  #kindTextWrappers?: SelectEngineOptions["kindTextWrappers"];
+  #readKindOptions?: SelectEngineInit["getKindConfig"];
+  #kindOptions?: SelectEngineInit["kindConfig"];
+  #readTexts?: SelectEngineInit["getTexts"];
+  #readKindTexts?: SelectEngineInit["getKindTexts"];
+  #kindTexts?: SelectEngineInit["kindTexts"];
+  #readKindTextWrappers?: SelectEngineInit["getKindTextWrappers"];
+  #kindTextWrappers?: SelectEngineInit["kindTextWrappers"];
   #valueField: string;
-  #normalizeKey?: SelectEngineOptions["normalizeKey"];
+  #normalizeKey?: SelectEngineInit["normalizeKey"];
   #labelField: string;
   // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
   // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
   // mid-flight, and the misconfiguration assert must not fire on it.
   #valueItemsDeclared: boolean;
-  #filterBy?: SelectEngineOptions["filterBy"];
-  #items?: SelectEngineOptions["items"];
+  #filterBy?: SelectEngineInit["filterBy"];
+  #items?: SelectEngineInit["items"];
   #load?: (
     filter: string,
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ) => SelectLoadResult | Promise<SelectLoadResult>;
-  #readValueItems?: SelectEngineOptions["getValueItems"];
+  #readValueItems?: SelectEngineInit["getValueItems"];
   #builtValueItems = new WeakMap<
     SelectValueItemsBuilder,
     WeakMap<object, ReturnType<typeof createCache<SelectItem | SelectItem[]>>>
   >();
-  #valueItems?: SelectEngineOptions["valueItems"];
-  #resolveValue?: SelectEngineOptions["resolveValue"];
-  #resolveValues?: SelectEngineOptions["resolveValues"];
-  #readAllowCreate?: SelectEngineOptions["getAllowCreate"];
-  #allowCreate?: SelectEngineOptions["allowCreate"];
-  #createItem?: SelectEngineOptions["createItem"];
-  #createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
-  #specialItems?: SelectEngineOptions["specialItems"];
-  #groupBy?: SelectEngineOptions["groupBy"];
+  #valueItems?: SelectEngineInit["valueItems"];
+  #resolveValue?: SelectEngineInit["resolveValue"];
+  #resolveValues?: SelectEngineInit["resolveValues"];
+  #readAllowCreate?: SelectEngineInit["getAllowCreate"];
+  #allowCreate?: SelectEngineInit["allowCreate"];
+  #createItem?: SelectEngineInit["createItem"];
+  #createUnresolvedItem?: SelectEngineInit["createUnresolvedItem"];
+  #specialItems?: SelectEngineInit["specialItems"];
+  #groupBy?: SelectEngineInit["groupBy"];
   #groupDividers: boolean;
-  #groupHeader?: SelectEngineOptions["groupHeader"];
-  #groupFooter?: SelectEngineOptions["groupFooter"];
+  #groupHeader?: SelectEngineInit["groupHeader"];
+  #groupFooter?: SelectEngineInit["groupFooter"];
   #readCloseOnSelect: boolean | undefined;
-  #onChange?: SelectEngineOptions["onChange"];
-  #onReconfirm?: SelectEngineOptions["onReconfirm"];
-  #onBulkUnchanged?: SelectEngineOptions["onBulkUnchanged"];
-  #onUpdateStart?: SelectEngineOptions["onUpdateStart"];
-  #requestClose?: SelectEngineOptions["requestClose"];
+  #onChange?: SelectEngineInit["onChange"];
+  #onReconfirm?: SelectEngineInit["onReconfirm"];
+  #onBulkUnchanged?: SelectEngineInit["onBulkUnchanged"];
+  #onUpdateStart?: SelectEngineInit["onUpdateStart"];
+  #requestClose?: SelectEngineInit["requestClose"];
   #readValue: () => SelectValue;
   #isAsync: boolean;
   #legacy: SelectLegacyContext | null;
 
-  constructor(opts: SelectEngineOptions) {
+  constructor(opts: SelectEngineInit) {
     this.#readMultiple = opts.getMultiple;
     this.#hideSelected = opts.hideSelected;
     this.#readHideSelected = opts.getHideSelected;
@@ -126,9 +126,9 @@ export default class SelectOptionsView {
     this.#minimum = opts.minimum;
     this.#readLockedValues = opts.getLockedValues;
     this.#lockedValues = opts.lockedValues;
-    this.#readPresentationOptions = opts.getOptions;
-    this.#readKindOptions = opts.getKindOptions;
-    this.#kindOptions = opts.kindOptions;
+    this.#readPresentationArgs = opts.getArgs;
+    this.#readKindOptions = opts.getKindConfig;
+    this.#kindOptions = opts.kindConfig;
     this.#readTexts = opts.getTexts;
     this.#readKindTexts = opts.getKindTexts;
     this.#kindTexts = opts.kindTexts;
@@ -215,8 +215,8 @@ export default class SelectOptionsView {
   }
 
   /** The call site's live presentation args, before customizations. */
-  get presentationOptions(): Readonly<SelectPresentationArgs> {
-    return this.#readPresentationOptions?.() ?? {};
+  get presentationArgs(): Readonly<SelectPresentationArgs> {
+    return this.#readPresentationArgs?.() ?? {};
   }
 
   /** The call site's live texts. */
@@ -225,24 +225,24 @@ export default class SelectOptionsView {
   }
 
   /** The recipe's live texts; the customization registry captures their initial keys. */
-  get kindTexts(): SelectEngineOptions["kindTexts"] {
+  get kindTexts(): SelectEngineInit["kindTexts"] {
     return this.#readKindTexts ? this.#readKindTexts() : this.#kindTexts;
   }
 
   /** The recipe's live text wrappers; their initial keys are captured at construction. */
-  get kindTextWrappers(): SelectEngineOptions["kindTextWrappers"] {
+  get kindTextWrappers(): SelectEngineInit["kindTextWrappers"] {
     return this.#readKindTextWrappers
       ? this.#readKindTextWrappers()
       : this.#kindTextWrappers;
   }
 
   /** Live recipe base values; the customization registry captures their initial keys. */
-  get kindOptions(): Record<string, unknown> | undefined {
+  get kindConfig(): Record<string, unknown> | undefined {
     return this.#readKindOptions ? this.#readKindOptions() : this.#kindOptions;
   }
 
   /** The engine's immutable core and recipe snapshot, for downstream consumers only. */
-  get resolvedOptions(): SelectResolvedOptions {
+  get config(): SelectConfig {
     return this.#readResolvedOptions!();
   }
 
@@ -286,7 +286,7 @@ export default class SelectOptionsView {
     if (typeof items !== "function") {
       return items;
     }
-    // Built once per builder and options snapshot. The cache keeps tracking what the builder
+    // Built once per builder and config snapshot. The cache keeps tracking what the builder
     // reads, so a change there rebuilds it even while the snapshot stays the same.
     const options = this.#readResolvedOptions!();
     let bySnapshot = this.#builtValueItems.get(items);
@@ -302,7 +302,7 @@ export default class SelectOptionsView {
     return getValue(cache);
   }
 
-  get allowCreate(): SelectEngineOptions["allowCreate"] {
+  get allowCreate(): SelectEngineInit["allowCreate"] {
     return this.#readAllowCreate?.() ?? this.#allowCreate;
   }
 
@@ -341,39 +341,39 @@ export default class SelectOptionsView {
     return this.#valueItemsDeclared;
   }
 
-  get filterBy(): SelectEngineOptions["filterBy"] {
+  get filterBy(): SelectEngineInit["filterBy"] {
     return this.#filterBy;
   }
 
-  get items(): SelectEngineOptions["items"] {
+  get items(): SelectEngineInit["items"] {
     return this.#items;
   }
 
-  get load(): SelectEngineOptions["load"] {
+  get load(): SelectEngineInit["load"] {
     return this.#load;
   }
 
-  get resolveValue(): SelectEngineOptions["resolveValue"] {
+  get resolveValue(): SelectEngineInit["resolveValue"] {
     return this.#resolveValue;
   }
 
-  get resolveValues(): SelectEngineOptions["resolveValues"] {
+  get resolveValues(): SelectEngineInit["resolveValues"] {
     return this.#resolveValues;
   }
 
-  get createItem(): SelectEngineOptions["createItem"] {
+  get createItem(): SelectEngineInit["createItem"] {
     return this.#createItem;
   }
 
-  get createUnresolvedItem(): SelectEngineOptions["createUnresolvedItem"] {
+  get createUnresolvedItem(): SelectEngineInit["createUnresolvedItem"] {
     return this.#createUnresolvedItem;
   }
 
-  get specialItems(): SelectEngineOptions["specialItems"] {
+  get specialItems(): SelectEngineInit["specialItems"] {
     return this.#specialItems;
   }
 
-  get groupBy(): SelectEngineOptions["groupBy"] {
+  get groupBy(): SelectEngineInit["groupBy"] {
     return this.#groupBy;
   }
 
@@ -381,31 +381,31 @@ export default class SelectOptionsView {
     return this.#groupDividers;
   }
 
-  get groupHeader(): SelectEngineOptions["groupHeader"] {
+  get groupHeader(): SelectEngineInit["groupHeader"] {
     return this.#groupHeader;
   }
 
-  get groupFooter(): SelectEngineOptions["groupFooter"] {
+  get groupFooter(): SelectEngineInit["groupFooter"] {
     return this.#groupFooter;
   }
 
-  get onChange(): SelectEngineOptions["onChange"] {
+  get onChange(): SelectEngineInit["onChange"] {
     return this.#onChange;
   }
 
-  get onReconfirm(): SelectEngineOptions["onReconfirm"] {
+  get onReconfirm(): SelectEngineInit["onReconfirm"] {
     return this.#onReconfirm;
   }
 
-  get onBulkUnchanged(): SelectEngineOptions["onBulkUnchanged"] {
+  get onBulkUnchanged(): SelectEngineInit["onBulkUnchanged"] {
     return this.#onBulkUnchanged;
   }
 
-  get onUpdateStart(): SelectEngineOptions["onUpdateStart"] {
+  get onUpdateStart(): SelectEngineInit["onUpdateStart"] {
     return this.#onUpdateStart;
   }
 
-  get requestClose(): SelectEngineOptions["requestClose"] {
+  get requestClose(): SelectEngineInit["requestClose"] {
     return this.#requestClose;
   }
 
@@ -422,7 +422,7 @@ export default class SelectOptionsView {
   }
 
   /** Connects engine-owned resolution without making raw option reads depend on it. */
-  attachResolvedOptions(read: () => SelectResolvedOptions): void {
+  attachResolvedOptions(read: () => SelectConfig): void {
     this.#readResolvedOptions = read;
   }
 

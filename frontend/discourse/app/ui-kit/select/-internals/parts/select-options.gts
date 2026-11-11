@@ -23,7 +23,7 @@ import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import SelectEngine, {
   type SelectItem as SelectItemModel,
   selectItemLabel,
-  type SelectLoadOptions,
+  type SelectLoadRequest,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Fixes the callback tuple before the template curries a lifecycle modifier. */
@@ -140,7 +140,7 @@ interface SelectOptionsSignature {
     /** Loads the list content for the current async context. */
     loadListContent: (
       context: unknown,
-      options?: SelectLoadOptions
+      request?: SelectLoadRequest
     ) => SelectListContent | Promise<SelectListContent>;
     /** The element controlling active-descendant roving focus. */
     filterInput: HTMLElement | null;
@@ -209,7 +209,7 @@ const LoadingList: TemplateOnlyComponent<LoadingListSignature> = <template>
     tabindex="-1"
   >
     {{#if (or (not @staticBody) @feedback.showInitialPlaceholder)}}
-      {{#if @engine.resolvedOptions.loadingStatus}}
+      {{#if @engine.config.loadingStatus}}
         <li class="d-select__loading-status" role="status">
           {{dIcon "spinner" class="d-select__pending-icon"}}
           <span>

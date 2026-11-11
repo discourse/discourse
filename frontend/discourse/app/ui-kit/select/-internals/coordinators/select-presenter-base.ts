@@ -1,7 +1,7 @@
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
-import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectPresentationConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 /** Presentation contract shared by every options body. */
@@ -25,7 +25,7 @@ export interface OptionsPresenter {
 }
 
 /** Live arguments common to select presentations. */
-export interface SelectPresenterArgs extends SelectPresentationOptions {
+export interface SelectPresenterArgs extends SelectPresentationConfig {
   /** Field used for fallback labels. */
   labelField?: string;
   /** Locks editing while retaining focusability. */
@@ -60,7 +60,7 @@ export default class SelectPresenterBase {
 
   /** Whether the resolved disabled option prevents opening or mutation. */
   get isDisabled(): boolean {
-    return this.#engine.resolvedOptions.disabled ?? false;
+    return this.#engine.config.disabled ?? false;
   }
 
   get isReadonly(): boolean {

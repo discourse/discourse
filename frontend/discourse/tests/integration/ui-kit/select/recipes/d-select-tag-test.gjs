@@ -1429,7 +1429,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forIdentifier("composer-tags", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: {
                   placeholder: "Customized…",
                   minimumPlaceholder: ({ count }) => `Pick ${count}`,
@@ -1492,7 +1492,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-tag", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: {
                   tagCountBadge: ({ count }) => `(${count})`,
                   tagCount: ({ count }) => `${count} uses`,

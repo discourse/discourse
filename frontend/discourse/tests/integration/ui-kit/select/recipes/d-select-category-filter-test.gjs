@@ -133,7 +133,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 caretIcon: { open: "chevron-up", closed: "chevron-right" },
               }))
             );
@@ -240,7 +240,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category-filter", (spec) =>
-              spec.options((previous, { kindContext }) =>
+              spec.config((previous, { kindContext }) =>
                 kindContext.parentCategory?.id === 2
                   ? { texts: { placeholder: "pick a child" } }
                   : undefined
@@ -366,7 +366,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-category-filter", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: {
                   removeFilter: "Show everything",
                   noSubcategories: "Top level only",

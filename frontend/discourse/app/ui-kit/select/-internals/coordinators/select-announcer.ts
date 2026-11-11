@@ -28,11 +28,11 @@ interface PendingCount {
   previous: { query: string; message: string } | null;
 }
 
-interface ScheduleReportOptions {
+interface ScheduleReportParams {
   repeatable?: boolean;
 }
 
-interface SelectAnnouncerOptions {
+interface SelectAnnouncerInit {
   /** Whether list-state reports may speak at this moment. Selection reports remain ungated. */
   canReport?: () => boolean;
   a11y: A11y;
@@ -49,7 +49,7 @@ interface SelectAnnouncerOptions {
   speaksSinglePick?: () => boolean;
 }
 
-interface ValueChangedOptions {
+interface ValueChangedParams {
   origin?: SelectionOrigin;
   reason?: "clear";
   onAddedWithQuery: () => void;
@@ -111,7 +111,7 @@ export default class SelectAnnouncer {
     getShouldSuppressEntryCount,
     isRevealDue = () => false,
     speaksSinglePick = () => false,
-  }: SelectAnnouncerOptions) {
+  }: SelectAnnouncerInit) {
     this.#a11y = a11y;
     this.#canReport = canReport;
     this.#engine = engine;
@@ -470,7 +470,7 @@ export default class SelectAnnouncer {
   valueChanged(
     oldValues: SelectValue,
     nextValues: SelectValue,
-    { onAddedWithQuery, origin, reason }: ValueChangedOptions
+    { onAddedWithQuery, origin, reason }: ValueChangedParams
   ): void {
     if (origin?.bulk) {
       const { added, held, limit } = origin.bulk;
@@ -680,7 +680,7 @@ export default class SelectAnnouncer {
   #scheduleReport(
     query: string,
     message: string,
-    { repeatable = false }: ScheduleReportOptions = {}
+    { repeatable = false }: ScheduleReportParams = {}
   ): void {
     // A query that lands on exactly the set it already had is not news, whatever the reader typed
     // to get there — and there is no honest way to say it. Announcing the unchanged count is

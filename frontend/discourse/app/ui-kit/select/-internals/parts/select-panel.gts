@@ -7,7 +7,7 @@ import type LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordin
 import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
 import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import type WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectOptions, {
   type SelectListContent,
 } from "discourse/ui-kit/select/-internals/parts/select-options";
@@ -17,7 +17,7 @@ import SelectEngine, {
   SelectDescriptor,
   SelectItem,
   type SelectItemRow,
-  SelectLoadOptions,
+  SelectLoadRequest,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -92,7 +92,7 @@ interface SelectPanelSignature<State> {
     /** Resolves held items through the host cache. */
     resolveSelection: (
       value: unknown,
-      options?: SelectLoadOptions
+      request?: SelectLoadRequest
     ) =>
       | readonly SelectDescriptor[]
       | Promise<readonly SelectDescriptor[] | undefined>
@@ -112,7 +112,7 @@ interface SelectPanelSignature<State> {
     /** Loads options while preserving host-specific resolved-query state. */
     loadListContent: (
       context: unknown,
-      options?: SelectLoadOptions
+      request?: SelectLoadRequest
     ) => SelectListContent | Promise<SelectListContent>;
     /** Suppresses an empty result state for an empty query. */
     hideEmptyQuery?: boolean;
@@ -169,28 +169,28 @@ interface SelectPanelSignature<State> {
     /** Custom item content. */
     item?: [
       /** The rendered item. */ item: SelectItem,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
       /** What the row is, beyond its item. */ row: SelectItemRow,
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
       /** The rendered item. */ item: SelectItem,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom groupFooter content. */
     groupFooter?: [
       /** The rendered item. */ item: SelectItem,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom selection content. */
     selection?: [
       /** The rendered item. */ item: SelectItem,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom unresolved content. */
     unresolved?: [
       /** The rendered item. */ item: SelectItem,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom skeletonItem content. */
     skeletonItem?: [];
@@ -204,12 +204,12 @@ interface SelectPanelSignature<State> {
     /** Pinned listHeader content outside the listbox. */
     listHeader?: [
       /** Host-built live state. */ state: State,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Pinned footer content outside the listbox. */
     footer?: [
       /** Host-built live state. */ state: State,
-      /** Resolved core and recipe options. */ options: SelectResolvedOptions,
+      /** Resolved core and recipe config. */ config: SelectConfig,
     ];
   };
 }
@@ -218,8 +218,8 @@ interface SelectPanelSignature<State> {
 export default class SelectPanel<State> extends Component<
   SelectPanelSignature<State>
 > {
-  get resolvedOptions(): SelectResolvedOptions {
-    return this.args.engine.resolvedOptions;
+  get config(): SelectConfig {
+    return this.args.engine.config;
   }
 
   <template>
@@ -254,17 +254,17 @@ export default class SelectPanel<State> extends Component<
         @value={{@value}}
       >
         <:selection as |item|>
-          {{~yield item this.resolvedOptions to="selection"~}}
+          {{~yield item this.config to="selection"~}}
         </:selection>
         <:unresolved as |item|>
-          {{~yield item this.resolvedOptions to="unresolved"~}}
+          {{~yield item this.config to="unresolved"~}}
         </:unresolved>
       </SelectionStrip>
     {{/if}}
 
     {{#if @hasListHeaderBlock}}
       <div class="d-select__list-header">
-        {{~yield @state this.resolvedOptions to="listHeader"~}}
+        {{~yield @state this.config to="listHeader"~}}
       </div>
     {{/if}}
 
@@ -336,13 +336,13 @@ export default class SelectPanel<State> extends Component<
             @tabIndex={{@tabIndex}}
           >
             <:item as |item row|>
-              {{~yield item this.resolvedOptions row to="item"~}}
+              {{~yield item this.config row to="item"~}}
             </:item>
             <:groupHeader as |item|>
-              {{~yield item this.resolvedOptions to="groupHeader"~}}
+              {{~yield item this.config to="groupHeader"~}}
             </:groupHeader>
             <:groupFooter as |item|>
-              {{~yield item this.resolvedOptions to="groupFooter"~}}
+              {{~yield item this.config to="groupFooter"~}}
             </:groupFooter>
             <:skeletonItem>
               {{~yield to="skeletonItem"~}}
@@ -367,7 +367,7 @@ export default class SelectPanel<State> extends Component<
         class="d-select__footer"
         role="group"
       >
-        {{yield @state this.resolvedOptions to="footer"}}
+        {{yield @state this.config to="footer"}}
       </div>
     {{/if}}
   </template>

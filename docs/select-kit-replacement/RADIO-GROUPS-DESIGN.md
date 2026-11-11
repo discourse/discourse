@@ -31,7 +31,7 @@ option evicts its group-mates from the value at the moment of selection.
 ## API
 
 ```ts
-// SelectEngineOptions / DSelect args
+// SelectEngineInit / DSelect args
 groupBy?: string | ((item: SelectItem) => SelectItemId);   // existing — same key space
 exclusiveGroups?: boolean | SelectItemId[] | ((key: SelectItemId) => boolean);
 // true            → every group is one-of
@@ -53,7 +53,7 @@ create-on-the-fly, and the compat bridge all funnel through it, which is the sam
 that placed `maximum` there. Two collaborators move to make that possible:
 
 - The group-key function becomes shared: extract `ListComposer.#groupKey` into
-  `SelectOptionsView.itemGroupKey(item)` so the composer and the selection actions read one
+  `SelectArgsView.itemGroupKey(item)` so the composer and the selection actions read one
   definition and cannot drift.
 - The exclusivity predicate (normalized from `boolean | keys[] | fn`) is exposed on the
   options view beside it.

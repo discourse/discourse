@@ -246,9 +246,9 @@ module(
   }
 );
 
-/** Registers one `spec.options` callback for every select. */
+/** Registers one `spec.config` callback for every select. */
 function overrideOptions(callback) {
-  customize((selects) => selects.forAll((spec) => spec.options(callback)));
+  customize((selects) => selects.forAll((spec) => spec.config(callback)));
 }
 
 const MANY = Array.from({ length: 30 }, (_, i) => ({
@@ -577,19 +577,19 @@ module(
       const seen = [];
       customize((selects) => {
         selects.forIdentifier("fruit", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(["identifier", current.texts.ariaLabel]);
             return { texts: { ariaLabel: "From identifier" } };
           })
         );
         selects.forKind("picker", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(["kind", current.texts.ariaLabel]);
             return { texts: { ariaLabel: "From kind" } };
           })
         );
         selects.forAll((spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(["all", current.texts.ariaLabel]);
             return { texts: { ariaLabel: "From all", placeholder: "Kept" } };
           })
@@ -626,9 +626,7 @@ module(
       customize((selects) =>
         selects.forAll((spec) => {
           const state = trackedObject({ suggesting: false });
-          spec.options(() =>
-            state.suggesting ? { caretIcon: "spinner" } : {}
-          );
+          spec.config(() => (state.suggesting ? { caretIcon: "spinner" } : {}));
           spec.content((items) => [
             {
               id: "toggle",
@@ -661,7 +659,7 @@ module(
         .hasClass("d-icon-spinner", "the caret follows the state");
     });
 
-    test("options callbacks run per change, not per row", async function (assert) {
+    test("config callbacks run per change, not per row", async function (assert) {
       const label = tracked("First");
       let calls = 0;
       overrideOptions(() => {
@@ -674,7 +672,7 @@ module(
       assert.true(calls >= 1, "the options were resolved");
       assert.true(
         calls <= 2,
-        `rendering thirty rows resolved the options ${calls} times`
+        `rendering thirty rows resolved the config ${calls} times`
       );
 
       const before = calls;
@@ -683,20 +681,20 @@ module(
       assert
         .dom("[role='combobox']")
         .hasAttribute("aria-label", "Second", "the change applied");
-      assert.true(calls > before, "the change re-resolved the options");
+      assert.true(calls > before, "the change re-resolved the config");
       assert.true(
         calls - before <= 2,
-        `one change resolved the options ${calls - before} times`
+        `one change resolved the config ${calls - before} times`
       );
     });
 
-    test("options callbacks receive the names, data, value and control, but no options", async function (assert) {
+    test("config callbacks receive the names, data, value and control, but no config", async function (assert) {
       let seen;
       const kindContext = { scope: "recipe" };
       const instanceContext = { topicId: 7 };
       customize((selects) =>
         selects.forKind("picker", (spec) =>
-          spec.options((current, context) => {
+          spec.config((current, context) => {
             seen = context;
             return {};
           })
@@ -722,16 +720,16 @@ module(
       assert.strictEqual(seen.instanceContext, instanceContext);
       assert.strictEqual(seen.value, 2, "the normalized value");
       assert.strictEqual(seen.control.value, 2, "a control to read from");
-      assert.false("options" in seen, "no resolved options, which would cycle");
+      assert.false("config" in seen, "no resolved config, which would cycle");
     });
 
     test("a non-object result is skipped and an unknown key warns", async function (assert) {
       const warn = sinon.stub(console, "warn");
       customize((selects) => {
-        selects.forAll((spec) => spec.options(() => undefined));
-        selects.forAll((spec) => spec.options(() => "label"));
+        selects.forAll((spec) => spec.config(() => undefined));
+        selects.forAll((spec) => spec.config(() => "label"));
         selects.forAll((spec) =>
-          spec.options(() => ({ texts: { ariaLabel: "Kept" }, lable: "Typo" }))
+          spec.config(() => ({ texts: { ariaLabel: "Kept" }, lable: "Typo" }))
         );
       });
 
@@ -824,13 +822,13 @@ module(
 function customizeRecipe() {
   customize((selects) =>
     selects.forKind("recipe", (spec) =>
-      spec.options((current) => ({ prefix: `${current.prefix}+kind` }))
+      spec.config((current) => ({ prefix: `${current.prefix}+kind` }))
     )
   );
 }
 
 module(
-  "Integration | ui-kit | select | DSelect select-customizations | recipe options",
+  "Integration | ui-kit | select | DSelect select-customizations | recipe config",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -838,19 +836,19 @@ module(
       const seen = [];
       customize((selects) => {
         selects.forIdentifier("crumb", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(current.prefix);
             return { prefix: `${current.prefix}+identifier` };
           })
         );
         selects.forKind("recipe", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(current.prefix);
             return { prefix: `${current.prefix}+kind` };
           })
         );
         selects.forAll((spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen.push(current.prefix);
             return { prefix: `${current.prefix}+all` };
           })
@@ -863,7 +861,7 @@ module(
             @identifier="crumb"
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
           >
             <:item as |item options|>
               {{~concat options.prefix " " item.name~}}
@@ -883,7 +881,7 @@ module(
         .exists("the recipe renders the most specific value");
     });
 
-    test("resolved options reach the items function", async function (assert) {
+    test("the resolved config reaches the items function", async function (assert) {
       customizeRecipe();
       const itemsFor = (options) => [{ id: 1, name: `${options?.prefix} one` }];
 
@@ -892,7 +890,7 @@ module(
           <DSelect
             @items={{itemsFor}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
           />
         </template>
       );
@@ -910,19 +908,19 @@ module(
       assert.dom("[role='option']").exists({ count: 3 });
     });
 
-    test("resolved options reach @load, @resolveValue and @resolveValues", async function (assert) {
+    test("the resolved config reaches @load, @resolveValue and @resolveValues", async function (assert) {
       customizeRecipe();
       const seen = {};
       const load = (filter, opts) => {
-        seen.load = opts.options?.prefix;
+        seen.load = opts.config?.prefix;
         return [{ id: 1, name: "One" }];
       };
       const resolveValue = (value, opts) => {
-        seen.resolveValue = opts.options?.prefix;
+        seen.resolveValue = opts.config?.prefix;
         return { id: value, name: `Item ${value}` };
       };
       const resolveValues = (values, opts) => {
-        seen.resolveValues = opts.options?.prefix;
+        seen.resolveValues = opts.config?.prefix;
         return values.map((id) => ({ id, name: `Item ${id}` }));
       };
       const held = [8];
@@ -933,7 +931,7 @@ module(
             <DSelect
               @debounce={{false}}
               @kind="recipe"
-              @kindOptions={{hash prefix="base"}}
+              @kindConfig={{hash prefix="base"}}
               @load={{load}}
               @resolveValue={{resolveValue}}
               @value={{7}}
@@ -943,7 +941,7 @@ module(
           <div class="multi">
             <DSelect
               @kind="recipe"
-              @kindOptions={{hash prefix="base"}}
+              @kindConfig={{hash prefix="base"}}
               @load={{load}}
               @multiple={{true}}
               @resolveValues={{resolveValues}}
@@ -962,7 +960,7 @@ module(
       });
     });
 
-    test("resolved options reach onChange as part of its third argument", async function (assert) {
+    test("the resolved config reaches onChange as part of its third argument", async function (assert) {
       customizeRecipe();
       const onChange = sinon.spy();
 
@@ -971,7 +969,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @onChange={{onChange}}
           />
         </template>
@@ -983,10 +981,10 @@ module(
       const [value, item, change] = onChange.firstCall.args;
       assert.strictEqual(value, 2, "the value keeps its position");
       assert.strictEqual(item.name, "Banana", "so does the item");
-      assert.strictEqual(change.options?.prefix, "base+kind");
+      assert.strictEqual(change.config?.prefix, "base+kind");
     });
 
-    test("resolved options reach every recipe callback as the last argument", async function (assert) {
+    test("the resolved config reaches every recipe callback as the last argument", async function (assert) {
       customizeRecipe();
       const seen = {};
       const record = (name, options) => (seen[name] = options?.prefix);
@@ -1041,7 +1039,7 @@ module(
             @groupHeader={{groupHeader}}
             @items={{items}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @specialItems={{specialItems}}
             @value={{99}}
           />
@@ -1067,7 +1065,7 @@ module(
       );
     });
 
-    test("resolved options reach the blocks as the last parameter", async function (assert) {
+    test("the resolved config reaches the blocks as the last parameter", async function (assert) {
       customizeRecipe();
       const items = [{ id: 1, name: "Apple", section: "fruit" }];
       const groupHeader = (key) => key;
@@ -1082,7 +1080,7 @@ module(
               @groupHeader={{groupHeader}}
               @items={{items}}
               @kind="recipe"
-              @kindOptions={{hash prefix="base"}}
+              @kindConfig={{hash prefix="base"}}
               @value={{1}}
               @variant="static"
             >
@@ -1107,7 +1105,7 @@ module(
             <DSelect
               @items={{items}}
               @kind="recipe"
-              @kindOptions={{hash prefix="base"}}
+              @kindConfig={{hash prefix="base"}}
               @value={{99}}
               @variant="static"
             >
@@ -1135,7 +1133,7 @@ module(
       ];
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({ texts: { ariaLabel: "From extension" } }))
+          spec.config(() => ({ texts: { ariaLabel: "From extension" } }))
         )
       );
 
@@ -1144,7 +1142,7 @@ module(
           <DSelect
             @items={{itemsFor}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @texts={{hash ariaLabel="Call site"}}
           />
         </template>
@@ -1163,7 +1161,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix=prefix.value}}
+            @kindConfig={{hash prefix=prefix.value}}
           >
             <:item as |item options|>
               {{~concat options.prefix " " item.name~}}
@@ -1184,7 +1182,7 @@ module(
       let seen;
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options((current) => {
+          spec.config((current) => {
             seen = current;
             return { prefix: "set" };
           })
@@ -1197,7 +1195,7 @@ module(
             <DSelect
               @items={{ITEMS}}
               @kind="recipe"
-              @kindOptions={{hash prefix=null}}
+              @kindConfig={{hash prefix=null}}
             >
               <:item as |item options|>
                 {{~concat options.prefix " " item.name~}}
@@ -1220,7 +1218,7 @@ module(
       const warn = sinon.stub(console, "warn");
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
-          spec.options(() => ({
+          spec.config(() => ({
             prefix: "ok",
             texts: { ariaLabel: "ok" },
             sufix: "typo",
@@ -1234,7 +1232,7 @@ module(
             <DSelect
               @items={{ITEMS}}
               @kind="recipe"
-              @kindOptions={{hash prefix="base"}}
+              @kindConfig={{hash prefix="base"}}
             />
           </template>
         );
@@ -1248,19 +1246,19 @@ module(
       }
     });
 
-    test("@kindOptions without @kind asserts", async function (assert) {
+    test("@kindConfig without @kind asserts", async function (assert) {
       let message;
       setupOnerror((error) => (message ??= error.message));
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @kindOptions={{hash prefix="base"}} />
+          <DSelect @items={{ITEMS}} @kindConfig={{hash prefix="base"}} />
         </template>
       );
 
       assert.true(
-        !!message?.includes("@kindOptions"),
-        `the assertion names @kindOptions: ${message}`
+        !!message?.includes("@kindConfig"),
+        `the assertion names @kindConfig: ${message}`
       );
       assert.true(
         /@kind(?!Options)/.test(message ?? ""),
@@ -1277,7 +1275,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash ariaLabel="Mine"}}
+            @kindConfig={{hash ariaLabel="Mine"}}
           />
         </template>
       );
@@ -1288,24 +1286,24 @@ module(
       );
     });
 
-    test("every point's context carries the resolved options", async function (assert) {
+    test("every point's context carries the resolved config", async function (assert) {
       customizeRecipe();
       const seen = {};
       customize((selects) =>
         selects.forKind("recipe", (spec) => {
           spec.content((items, context) => {
-            seen.content = context.options;
+            seen.content = context.config;
             return items;
           });
           spec.row((row, context) => {
-            seen.row = context.options;
+            seen.row = context.config;
           });
           spec.load((load, context) => {
-            seen.load = context.options;
+            seen.load = context.config;
             return load;
           });
           spec.change((next, context) => {
-            seen.change = context.options;
+            seen.change = context.config;
             next();
           });
         })
@@ -1317,7 +1315,7 @@ module(
           <DSelect
             @debounce={{false}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @load={{load}}
           />
         </template>
@@ -1337,11 +1335,11 @@ module(
 
     test("a change middleware and the emit it lets through share one snapshot", async function (assert) {
       customizeRecipe();
-      let middlewareOptions;
+      let middlewareConfig;
       customize((selects) =>
         selects.forKind("recipe", (spec) =>
           spec.change((next, context) => {
-            middlewareOptions = context.options;
+            middlewareConfig = context.config;
             next();
           })
         )
@@ -1353,7 +1351,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @onChange={{onChange}}
           />
         </template>
@@ -1361,7 +1359,7 @@ module(
       await click("[role='combobox']");
       await click(optionWithText("Banana"));
 
-      assert.strictEqual(onChange.firstCall.args[2].options, middlewareOptions);
+      assert.strictEqual(onChange.firstCall.args[2].config, middlewareConfig);
     });
 
     test("the change context carries the control", async function (assert) {
@@ -1398,7 +1396,7 @@ module(
       customize((selects) =>
         selects.forKind("recipe", (spec) => {
           const state = trackedObject({ suggesting: false });
-          spec.options(() =>
+          spec.config(() =>
             state.suggesting
               ? { texts: { placeholder: "Suggesting" }, prefix: "suggest" }
               : { texts: { placeholder: "Browsing" }, prefix: "browse" }
@@ -1421,7 +1419,7 @@ module(
           <DSelect
             @items={{ITEMS}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
           >
             <:item as |item options|>
               {{~concat options.prefix " " item.name~}}
@@ -1438,7 +1436,7 @@ module(
       assert.dom(optionWithText("suggest Apple")).exists();
     });
 
-    test("an async select's items function sees resolved options during construction", async function (assert) {
+    test("an async select's items function sees the resolved config during construction", async function (assert) {
       customizeRecipe();
       const calls = [];
       const itemsFor = (options) => {
@@ -1452,14 +1450,14 @@ module(
           <DSelect
             @items={{itemsFor}}
             @kind="recipe"
-            @kindOptions={{hash prefix="base"}}
+            @kindConfig={{hash prefix="base"}}
             @load={{load}}
           />
         </template>
       );
 
       assert.true(calls.length > 0, "construction read the items function");
-      assert.strictEqual(calls[0], "base+kind", "with resolved options");
+      assert.strictEqual(calls[0], "base+kind", "with the resolved config");
     });
   }
 );

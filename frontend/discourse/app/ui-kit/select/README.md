@@ -8,7 +8,7 @@ pointer, and overlay behavior. Consumers stay controlled: the parent owns `@valu
 what `@onChange` reports.
 
 See the arg reference in `d-select.gts` (`Args` block) and the option reference in
-`select-engine.ts` (`SelectEngineOptions`).
+`select-engine.ts` (`SelectEngineInit`).
 
 Direct `SelectEngine` consumers must have `getValue` read tracked state when the value can
 change, or return a fixed value. Replacing an array must update tracked state; editing it in
@@ -179,7 +179,7 @@ field preserves the outside control's focus.
 
 Keep `@load` stable for the component's lifetime. Pass its reactive inputs in a plain object
 through `@loadContext`, for example `@loadContext={{hash categoryId=this.categoryId}}`.
-The loader receives a shallow, frozen snapshot as `opts.context` alongside `opts.options`;
+The loader receives a shallow, frozen snapshot as `opts.context` alongside `opts.config`;
 `spec.load` customizations receive that same snapshot as `context.loadContext`. Every page and
 retry of one query uses the same snapshot. An array entry compares by its elements, so a call site
 may derive an equal array on every render (`@exclude` rebuilt after each pick) without reloading;
@@ -229,8 +229,8 @@ entirely on `d-select.gts` and `select-engine.ts`.
 
 - `-internals/engine/` — the headless layer behind `SelectEngine`, which stays the single
   stable identity (the legacy bridge and plugin hooks key on the engine instance):
-  `select-sources.ts` (reactive state + local/paged sources), `select-options.ts` (live
-  option readers with cross-option defaults), `list-composer.ts` (the ordered `buildItems`
+  `select-sources.ts` (reactive state + local/paged sources), `select-args.ts` (live
+  readers of the call-site args, with cross-argument defaults), `list-composer.ts` (the ordered `buildItems`
   compiler and descriptor stamping), `selection-actions.ts` (selection operations, limits,
   and change-emission ordering), `value-resolver.ts` (value→item resolution and its caches).
 - `-internals/coordinators/` — non-rendering component-side classes, constructed once and
@@ -341,7 +341,7 @@ From lowest to highest, per entry:
 2. the recipe's `@kindTexts`, one object or a list of layers, lowest first (see below);
 3. the call site's `@texts`;
 4. the `texts` key of `options` customizations: `forAll`, then `forKind`, then `forIdentifier`,
-   each in registration order (`spec.options(() => ({ texts: { noResults: "…" } }))`).
+   each in registration order (`spec.config(() => ({ texts: { noResults: "…" } }))`).
 
 A recipe built on another can pass `@kindTexts` as a list, inner recipe first. Each layer stays
 separate, so a function in the outer layer can build on the inner one: `context.text(ownKey)`
@@ -613,7 +613,7 @@ api.registerValueTransformer("select-customizations", ({ value: selects }) => {
   });
 
   selects.forIdentifier("composer-tags", (spec) =>
-    spec.options((current, { instanceContext }) => ({
+    spec.config((current, { instanceContext }) => ({
       disabled: instanceContext.locked,
     }))
   );
@@ -925,7 +925,7 @@ Presentation:
 - `@texts` (`ariaLabel`, `placeholder`), `@ariaLabelledBy`, `@id` and `@describedBy` name and
   describe the control. A recipe sets its own defaults through `@kindTexts` and forwards `@texts`
   untouched (see [Texts](#texts)).
-- `@kindOptions` declares only rules the engine has no option for.
+- `@kindConfig` declares only rules the engine has no option for.
 
 Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
 `removeAccents` (`lib/utilities.js`) folds accents, and the `ui-kit/helpers/` badges
@@ -1165,14 +1165,14 @@ found only by searching. Until cleanup, `DSelectTopic` defaults `@legacyKind` to
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 
-A recipe declares the values extensions may override with `@kindOptions`, a hash of its keys and
+A recipe declares the values extensions may override with `@kindConfig`, a hash of its keys and
 their base values:
 
 ```gjs
 <DSelect
   @identifier={{@identifier}}
   @kind="select-example"
-  @kindOptions={{hash shownRows=15}}
+  @kindConfig={{hash shownRows=15}}
   @load={{this.load}}
   @onChange={{this.onChange}}
 />
@@ -1181,7 +1181,7 @@ their base values:
 - Declare a key only for a rule the engine has no option for. The caret, for one, is the core
   `caretIcon` (`@caretIcon={{hash open="angle-down" closed="angle-right"}}`), which extensions
   already override.
-- `@kindOptions` requires `@kind`, and a key named like a core key asserts. A `null` value counts
+- `@kindConfig` requires `@kind`, and a key named like a core key asserts. A `null` value counts
   as absent, but the key stays declared.
 - The keys are fixed when the select is created; their values stay live.
 - Extensions override them with the same `spec.options` as core keys, through `forKind` (or
@@ -1284,7 +1284,7 @@ by mechanism.
   yielded to `:footer`.
 - Customization through one `select-customizations` transformer targeting `@kind` or
   `@identifier` (content, rows, presentation options, loading and change, see
-  [Extension points](#extension-points)); recipe options through `@kindOptions`; plus richer
+  [Extension points](#extension-points)); recipe options through `@kindConfig`; plus richer
   screen-reader announcements than the legacy family.
 - Groups via `@groupBy` (a field name or `(item, options) => key`). Grouping runs after filtering
   on every render, so an empty group draws nothing and boundaries are always recomputed. A client

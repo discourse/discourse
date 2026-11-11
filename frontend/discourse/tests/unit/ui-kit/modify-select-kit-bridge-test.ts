@@ -10,7 +10,7 @@ import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridg
 import type { SelectCustomizationRegistry } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
   type SelectDescriptor,
-  type SelectEngineOptions,
+  type SelectEngineInit,
 } from "discourse/ui-kit/select/select-engine";
 
 const CONTENT_ID = "discourse.select-kit.modify-select-kit-content";
@@ -75,7 +75,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   });
 
   // Builds an engine wired for the bridge with a resolvable owner and a live element.
-  function engineFor(owner: Owner | undefined, opts: SelectEngineOptions = {}) {
+  function engineFor(owner: Owner | undefined, opts: SelectEngineInit = {}) {
     const element = document.createElement("div");
     return new SelectEngine({
       kind: opts.kind ?? "test-select",
@@ -643,7 +643,7 @@ module(
       const element = document.createElement("div");
       const engine = new SelectEngine({
         kind: "sticky-select",
-        getOptions: () => ({ noneRow: true }),
+        getArgs: () => ({ noneRow: true }),
         specialItems: () => [{ id: "special", name: "Special", sticky: true }],
         legacy: {
           owner: getOwner(this),

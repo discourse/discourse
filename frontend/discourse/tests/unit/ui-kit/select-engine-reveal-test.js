@@ -510,7 +510,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
     });
 
-    test("works when the caller passes no options at all", async function (assert) {
+    test("works when the caller passes no request at all", async function (assert) {
       // Existing callers invoke loadItems(loadContext) with no second argument; reading
       // opts.signal unguarded would throw here.
       const { load } = recordingLoad(() => clientItems(10));
@@ -1441,7 +1441,7 @@ module(
           total: 100,
           hasMore: true,
         }),
-        getOptions: () => ({ noneRow: true }),
+        getArgs: () => ({ noneRow: true }),
         specialItems: () => [{ id: "special", name: "Special", sticky: true }],
       });
       const rows = engine.buildItems(

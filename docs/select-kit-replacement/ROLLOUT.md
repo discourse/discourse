@@ -303,7 +303,7 @@ customization ports are done.
   messages, the "N selected" count, the create row, the none row, chip hints, remove-button names
   and live announcements. Then confirm that the API lets a call site override each one, and that
   every recipe exposes the same overrides instead of fixing them. Strings that cannot be overridden
-  get an argument or a `@kindOptions` key before the families that render them join the flag.
+  get an argument or a `@kindConfig` key before the families that render them join the flag.
   Requested 2026-10-23. **Done 2026-10-30:** every text DSelect or a recipe draws or speaks is a
   key in one `@texts` hash, and customizations set it under `texts` (README, "Texts"). The old
   `@ariaLabel`, `@placeholder`, `@searchPlaceholder`, `@noResultsLabel`, `@noneLabel` and

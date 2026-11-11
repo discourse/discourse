@@ -13,13 +13,13 @@ import type {
   SelectPresenterArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectEngine, {
   type SelectDescriptor,
-  type SelectEngineOptions,
+  type SelectEngineInit,
   type SelectItem as SelectItemModel,
-  type SelectLoadOptions,
+  type SelectLoadRequest,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -27,8 +27,8 @@ import SelectEngine, {
 export interface SelectPasteContext {
   /** The current query text. */
   filter: string;
-  /** The select's resolved presentation and recipe options. */
-  options: SelectResolvedOptions;
+  /** The select's resolved presentation and recipe config. */
+  config: SelectConfig;
   /** The current controlled selection. */
   value: SelectValue;
 }
@@ -38,10 +38,10 @@ export interface SelectHostArgs
   extends
     SelectPresenterArgs,
     Pick<
-      SelectEngineOptions,
+      SelectEngineInit,
       | "kind"
       | "identifier"
-      | "kindOptions"
+      | "kindConfig"
       | "kindTexts"
       | "kindTextWrappers"
       | "minChars"
@@ -93,7 +93,7 @@ export interface SelectHostArgs
 }
 
 /** Hosting component callbacks; readers stay live across argument updates. */
-export interface SelectHostOptions {
+export interface SelectHostInit {
   /** Owner used by compatibility callbacks. */
   owner: Owner | undefined;
   /** Shared screen-reader announcement service. */
@@ -160,17 +160,17 @@ export default class SelectHost {
 
   /** Defers context checks so a reactive argument never writes state during render. */
   watchLoadContext = modifier(() => {
-    const context = this.#options.getArgs().loadContext ?? {};
+    const context = this.#init.getArgs().loadContext ?? {};
     // Reading each entry subscribes the modifier to it.
     for (const key of Reflect.ownKeys(context)) {
       Reflect.get(context, key);
     }
-    const session = this.#options.session();
+    const session = this.#init.session();
     const check = schedule("afterRender", () => {
       if (
         !isDestroying(this) &&
-        this.#options.isLive() &&
-        this.#options.session() === session
+        this.#init.isLive() &&
+        this.#init.session() === session
       ) {
         this.engine.reloadIfContextChanged();
       }
@@ -178,103 +178,102 @@ export default class SelectHost {
     return () => cancel(check);
   });
 
-  #options: SelectHostOptions;
+  #init: SelectHostInit;
 
-  constructor(options: SelectHostOptions) {
-    this.#options = options;
-    const legacyKind = options.getArgs().legacyKind;
+  constructor(init: SelectHostInit) {
+    this.#init = init;
+    const legacyKind = init.getArgs().legacyKind;
     this.engine = new SelectEngine({
       // Read lazily so the engine reflects the parent's (reactive) @value — controlled.
-      getValue: () => this.#options.getArgs().value,
-      getHideSelected: () => this.#options.getArgs().hideSelected,
-      getLocked: () => this.#options.getPresenter().isLocked,
+      getValue: () => this.#init.getArgs().value,
+      getHideSelected: () => this.#init.getArgs().hideSelected,
+      getLocked: () => this.#init.getPresenter().isLocked,
       // Live readers for the reactive inputs, so a runtime change to any of these args
       // propagates into the engine (which reads them on every access). Static-by-contract
       // args below are passed by value.
-      getMultiple: () => this.#options.getMultiple(),
-      kind: this.#options.getArgs().kind,
+      getMultiple: () => this.#init.getMultiple(),
+      kind: this.#init.getArgs().kind,
       legacyKinds: makeArray(legacyKind),
-      identifier: this.#options.getArgs().identifier,
-      getKindContext: () => this.#options.getArgs().kindContext,
-      getKindOptions: () => this.#options.getArgs().kindOptions,
-      getTexts: () => this.#options.getArgs().texts,
-      kindTexts: this.#options.getArgs().kindTexts,
-      getKindTexts: () => this.#options.getArgs().kindTexts,
-      kindTextWrappers: this.#options.getArgs().kindTextWrappers,
-      getKindTextWrappers: () => this.#options.getArgs().kindTextWrappers,
-      getInstanceContext: () => this.#options.getArgs().instanceContext,
-      getMinChars: () => this.#options.getArgs().minChars,
-      getMaxLoaded: () => this.#options.getArgs().maxLoaded,
-      getMaximum: () => this.#options.getArgs().maximum,
-      getLockedValues: () => this.#options.getArgs().lockedValues,
-      getMinimum: () => this.#options.getArgs().minimum,
-      getOptions: () => this.#options.getArgs(),
-      items: (resolvedOptions) => {
-        const args = this.#options.getArgs();
+      identifier: this.#init.getArgs().identifier,
+      getKindContext: () => this.#init.getArgs().kindContext,
+      getKindConfig: () => this.#init.getArgs().kindConfig,
+      getTexts: () => this.#init.getArgs().texts,
+      kindTexts: this.#init.getArgs().kindTexts,
+      getKindTexts: () => this.#init.getArgs().kindTexts,
+      kindTextWrappers: this.#init.getArgs().kindTextWrappers,
+      getKindTextWrappers: () => this.#init.getArgs().kindTextWrappers,
+      getInstanceContext: () => this.#init.getArgs().instanceContext,
+      getMinChars: () => this.#init.getArgs().minChars,
+      getMaxLoaded: () => this.#init.getArgs().maxLoaded,
+      getMaximum: () => this.#init.getArgs().maximum,
+      getLockedValues: () => this.#init.getArgs().lockedValues,
+      getMinimum: () => this.#init.getArgs().minimum,
+      getArgs: () => this.#init.getArgs(),
+      items: (config) => {
+        const args = this.#init.getArgs();
         return typeof args.items === "function"
-          ? args.items(resolvedOptions)
+          ? args.items(config)
           : args.items;
       },
-      load: this.#options.getArgs().load,
-      getLoadContext: () => this.#options.getArgs().loadContext,
+      load: this.#init.getArgs().load,
+      getLoadContext: () => this.#init.getArgs().loadContext,
       onReloadList: () => this.announcer.reloadList(),
-      filterBy: this.#options.getArgs().filterBy,
-      valueField: this.#options.getArgs().valueField,
-      normalizeKey: this.#options.getArgs().normalizeKey,
-      labelField: this.#options.getArgs().labelField,
+      filterBy: this.#init.getArgs().filterBy,
+      valueField: this.#init.getArgs().valueField,
+      normalizeKey: this.#init.getArgs().normalizeKey,
+      labelField: this.#init.getArgs().labelField,
       // Passed only when the consumer actually declared the arg. An arg that is present but
       // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is
       // what lets the engine tell that apart from "no identity mechanism was ever supplied".
       getValueItems:
-        "valueItems" in this.#options.getArgs()
-          ? () => this.#options.getArgs().valueItems
+        "valueItems" in this.#init.getArgs()
+          ? () => this.#init.getArgs().valueItems
           : undefined,
-      resolveValue: this.#options.getArgs().resolveValue,
-      resolveValues: this.#options.getArgs().resolveValues,
-      getAllowCreate: () => this.#options.getArgs().allowCreate,
-      createItem: this.#options.getArgs().createItem,
-      createUnresolvedItem: this.#options.getArgs().createUnresolvedItem,
-      specialItems: this.#options.getArgs().specialItems,
-      groupBy: this.#options.getArgs().groupBy,
-      groupDividers: this.#options.getArgs().groupDividers,
-      groupHeader: this.#options.getArgs().groupHeader,
-      groupFooter: this.#options.getArgs().groupFooter,
+      resolveValue: this.#init.getArgs().resolveValue,
+      resolveValues: this.#init.getArgs().resolveValues,
+      getAllowCreate: () => this.#init.getArgs().allowCreate,
+      createItem: this.#init.getArgs().createItem,
+      createUnresolvedItem: this.#init.getArgs().createUnresolvedItem,
+      specialItems: this.#init.getArgs().specialItems,
+      groupBy: this.#init.getArgs().groupBy,
+      groupDividers: this.#init.getArgs().groupDividers,
+      groupHeader: this.#init.getArgs().groupHeader,
+      groupFooter: this.#init.getArgs().groupFooter,
       onChange: this.handleChange,
       onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
       onBulkUnchanged: (skipped) => this.announcer.bulkUnchanged(skipped),
       onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
-      requestClose: () => this.#options.requestClose(),
+      requestClose: () => this.#init.requestClose(),
       legacy: {
-        owner: this.#options.owner,
-        getElement: () => this.#options.getElement(),
+        owner: this.#init.owner,
+        getElement: () => this.#init.getElement(),
         isDestroyed: () => isDestroying(this),
       },
     });
     this.feedback = new LoadFeedbackTracker({
       engine: this.engine,
       getFilterDebounceDelay: () =>
-        this.#options.getPresenter().filterDebounceDelay,
-      getSkeletonCountArg: () => this.#options.getArgs().skeletonCount,
+        this.#init.getPresenter().filterDebounceDelay,
+      getSkeletonCountArg: () => this.#init.getArgs().skeletonCount,
     });
 
     this.listbox = new WindowedListCoordinator({
       engine: this.engine,
       feedback: this.feedback,
       onStillLoading: () => this.announcer.announceStillLoading(),
-      getListboxId: () => this.#options.getListboxId(),
-      isStaticModal: () => this.#options.isStaticModal(),
+      getListboxId: () => this.#init.getListboxId(),
+      isStaticModal: () => this.#init.isStaticModal(),
     });
 
     this.announcer = new SelectAnnouncer({
-      a11y: this.#options.getA11y(),
-      canReport: this.#options.canReport,
+      a11y: this.#init.getA11y(),
+      canReport: this.#init.canReport,
       engine: this.engine,
       getActiveOptionKey: () => this.listbox.activeOptionKey,
       reannounceActive: () => this.listbox.reannounceActive(),
-      getShouldSuppressEntryCount: () =>
-        this.#options.shouldSuppressEntryCount(),
+      getShouldSuppressEntryCount: () => this.#init.shouldSuppressEntryCount(),
       isRevealDue: () => this.feedback.showRevealPlaceholder,
-      speaksSinglePick: this.#options.speaksSinglePick,
+      speaksSinglePick: this.#init.speaksSinglePick,
     });
     associateDestroyableChild(this, this.engine);
     associateDestroyableChild(this, this.feedback);
@@ -299,7 +298,7 @@ export default class SelectHost {
   @action
   loadListContent(
     context: unknown,
-    opts?: SelectLoadOptions
+    opts?: SelectLoadRequest
   ): SelectListContent | Promise<SelectListContent> {
     const rawItems = this.engine.loadItems(context, opts);
     const report = (content: SelectListContent): SelectListContent => {
@@ -343,7 +342,7 @@ export default class SelectHost {
   @action
   resolveMulti(
     value: unknown,
-    opts?: SelectLoadOptions
+    opts?: SelectLoadRequest
   ):
     | readonly SelectDescriptor[]
     | Promise<readonly SelectDescriptor[] | undefined>
@@ -371,7 +370,7 @@ export default class SelectHost {
   @action
   resolveSingle(
     value: unknown,
-    opts?: SelectLoadOptions
+    opts?: SelectLoadRequest
   ): SelectItemModel | Promise<SelectItemModel> {
     return this.engine.resolveSelection(value as SelectValue, opts) as
       | SelectItemModel
@@ -382,36 +381,36 @@ export default class SelectHost {
   handleChange(
     nextValue: SelectValue,
     payload: SelectItemModel | SelectItemModel[] | null,
-    change: Parameters<NonNullable<SelectEngineOptions["onChange"]>>[2]
+    change: Parameters<NonNullable<SelectEngineInit["onChange"]>>[2]
   ): void {
     // This must be read before forwarding because the parent applies nextValue synchronously.
-    const oldValues = this.#options.getArgs().value;
+    const oldValues = this.#init.getArgs().value;
     this.announcer.valueChanged(oldValues, nextValue, {
       ...change,
       onAddedWithQuery: () => {
-        this.#options.clearQuery();
+        this.#init.clearQuery();
       },
     });
-    this.#options.getArgs().onChange?.(nextValue, payload, change);
+    this.#init.getArgs().onChange?.(nextValue, payload, change);
   }
 
   /** Consumes parsed pastes while keeping selection and query cleanup under one authority. */
   @action
   handlePaste(event: ClipboardEvent): void | Promise<void> {
-    const args = this.#options.getArgs();
+    const args = this.#init.getArgs();
     const parsePaste =
       args.parsePaste ??
       (this.engine.multiple ? this.engine.parsePaste : undefined);
-    if (this.#options.getPresenter().isLocked || !parsePaste) {
+    if (this.#init.getPresenter().isLocked || !parsePaste) {
       return;
     }
-    const session = this.#options.session();
+    const session = this.#init.session();
     const query = this.engine.queryKey;
     const result = parsePaste(
       event.clipboardData?.getData("text/plain") ?? "",
       {
         filter: this.engine.filter,
-        options: this.engine.resolvedOptions,
+        config: this.engine.config,
         value: this.engine.value,
       }
     );
@@ -431,11 +430,11 @@ export default class SelectHost {
           // Middleware may synchronously replace the selection intent or edit the query.
           if (
             scope.current &&
-            this.#options.session() === session &&
+            this.#init.session() === session &&
             this.engine.queryKey === query
           ) {
             this.announcer.suppressCount();
-            this.#options.clearQuery();
+            this.#init.clearQuery();
           }
         };
         if (result instanceof Promise) {

@@ -5,7 +5,7 @@ import type {
   SelectUpdateScope,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import type SelectOptionsView from "./select-options.ts";
+import type SelectArgsView from "./select-args.ts";
 import type { SelectState } from "./select-sources.ts";
 import type SelectionActions from "./selection-actions.ts";
 
@@ -71,19 +71,19 @@ export class UpdateRecord {
 export default class SelectionUpdates {
   #actions: SelectionActions;
   #engine: object;
-  #options: SelectOptionsView;
+  #args: SelectArgsView;
   #state: SelectState;
   #current: UpdateRecord | null = null;
 
   constructor(opts: {
     engine: object;
-    options: SelectOptionsView;
+    args: SelectArgsView;
     state: SelectState;
     actions: SelectionActions;
   }) {
     this.#actions = opts.actions;
     this.#engine = opts.engine;
-    this.#options = opts.options;
+    this.#args = opts.args;
     this.#state = opts.state;
   }
 
@@ -165,7 +165,7 @@ export default class SelectionUpdates {
     if (this.#current === record && !isDestroying(this.#engine)) {
       record.asynchronous = true;
       this.#state.update = record;
-      this.#options.onUpdateStart?.(() => this.#isCurrent(record));
+      this.#args.onUpdateStart?.(() => this.#isCurrent(record));
     }
     const chain = Promise.resolve(result).then(
       () => this.#end(record),
@@ -216,7 +216,7 @@ export default class SelectionUpdates {
 
   #valueKey(value: SelectValue): string {
     return JSON.stringify(
-      makeArray(value).map((id) => this.#options.valueKey(id))
+      makeArray(value).map((id) => this.#args.valueKey(id))
     );
   }
 
@@ -227,7 +227,7 @@ export default class SelectionUpdates {
       }
       return;
     }
-    if (!this.#options.locked) {
+    if (!this.#args.locked) {
       write();
     }
   }

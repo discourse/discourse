@@ -42,7 +42,7 @@ facade and codemod plan this phase used to carry is superseded.
   before (`dc9d88ce4b5`).
 - ☑ **Row titles:** `spec.row` sets a row's `title`; an item's own `title` is never a tooltip
   (`dc9d88ce4b5`).
-- ☑ **Recipe options:** recipes declare overridable values with `@kindOptions` (`aef9c15d75c`).
+- ☑ **Recipe options:** recipes declare overridable values with `@kindConfig` (`aef9c15d75c`).
 - ☑ **Test infrastructure:** tests branch with the flag instead of one test driving both
   implementations (see `ROLLOUT.md`, Verification). DSelect has stable `data-value`/`data-name`
   hooks and a `data-select-id` panel link (`1acddc9ddf5`); QUnit gets `dSelect()` and

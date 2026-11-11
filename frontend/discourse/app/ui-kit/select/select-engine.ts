@@ -6,13 +6,13 @@ import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
+  type SelectConfig,
   type SelectPresentationArgs,
   type SelectResolvedContext,
-  type SelectResolvedOptions,
   type SelectRowPresentation,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
-import SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
+import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import {
   filterLocal,
   localItems,
@@ -51,8 +51,8 @@ export {
   type SelectTextWrapper,
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
 
-/** The frozen options snapshot recipes receive in their callbacks and blocks. */
-export type { SelectResolvedOptions };
+/** The frozen config snapshot recipes receive in their callbacks and blocks. */
+export type { SelectConfig };
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -222,10 +222,10 @@ export function selectItemLabel(
   return String(item?.[labelField] ?? "");
 }
 
-/** Options threaded into a source (`load` / `resolveValue`) call. */
-export interface SelectLoadOptions {
+/** What a source (`load` / `resolveValue`) call is asked for. */
+export interface SelectLoadRequest {
   /** Resolved core and recipe values, supplied by the select engine. */
-  options?: SelectResolvedOptions;
+  config?: SelectConfig;
   /** Shallow snapshot of `@loadContext`, shared by every page of this query. */
   context?: Readonly<Record<string, unknown>>;
   /** Maximum page length requested from a paginated source. */
@@ -289,7 +289,7 @@ export interface SelectLegacyContext {
 }
 
 /** Options for {@link SelectControl#reload}. */
-export interface SelectReloadOptions {
+export interface SelectReloadRequest {
   /**
    * Shows the loading state at once instead of after the usual delay, for a reload that changes
    * what the list shows (a different source), where the current rows are already wrong.
@@ -320,7 +320,7 @@ export interface SelectControl {
   /** Clears a nonempty selection. */
   clear(): void;
   /** Starts a new query without superseding a pending update. */
-  reload(options?: SelectReloadOptions): void;
+  reload(request?: SelectReloadRequest): void;
   /** Runs event-time work with write authority until it ends or is superseded. */
   update(
     work: (scope: SelectUpdateScope) => void | Promise<void>
@@ -353,11 +353,11 @@ export interface SelectUpdateScope {
 export type SelectGroupBoundaryBuilder = (
   key: SelectItemId,
   rows: readonly SelectItem[],
-  options: SelectResolvedOptions
+  config: SelectConfig
 ) => string | SelectItem | null | undefined;
 
 /**
- * Constructor options for a {@link SelectEngine}.
+ * What a {@link SelectEngine} is constructed with.
  *
  * Function-valued options are invoked with an unspecified receiver — read the provided
  * arguments, never `this`. Where a callback acts on the select, it is handed a
@@ -369,12 +369,12 @@ export type SelectGroupBoundaryBuilder = (
  * non-reactive consumers. A component wires these to its live args; the engine re-applies
  * each default on read.
  */
-/** Builds the held items from the resolved options. */
+/** Builds the held items from the resolved config. */
 export type SelectValueItemsBuilder = (
-  options: SelectResolvedOptions
+  config: SelectConfig
 ) => SelectItem | SelectItem[];
 
-export interface SelectEngineOptions {
+export interface SelectEngineInit {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
   multiple?: boolean;
 
@@ -414,13 +414,13 @@ export interface SelectEngineOptions {
   getLockedValues?: () => readonly SelectItemId[] | undefined;
 
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
-  getOptions?: () => Readonly<SelectPresentationArgs>;
+  getArgs?: () => Readonly<SelectPresentationArgs>;
 
-  /** Recipe option keys and base values; keys are fixed at construction. Requires `kind`. */
-  kindOptions?: Record<string, unknown>;
+  /** Recipe config keys and base values; keys are fixed at construction. Requires `kind`. */
+  kindConfig?: Record<string, unknown>;
 
-  /** Live base values for {@link kindOptions}; the initial keys declare the schema. */
-  getKindOptions?: () => Record<string, unknown> | undefined;
+  /** Live base values for {@link kindConfig}; the initial keys declare the schema. */
+  getKindConfig?: () => Record<string, unknown> | undefined;
 
   /** Live reader for the call site's texts, the layer above the recipe's. */
   getTexts?: () => SelectTexts | undefined;
@@ -448,10 +448,10 @@ export interface SelectEngineOptions {
     | undefined;
 
   /** Live reader for {@link valueItems}. */
-  getValueItems?: () => SelectEngineOptions["valueItems"];
+  getValueItems?: () => SelectEngineInit["valueItems"];
 
   /** Live reader for {@link allowCreate}. */
-  getAllowCreate?: () => SelectEngineOptions["allowCreate"];
+  getAllowCreate?: () => SelectEngineInit["allowCreate"];
 
   /** The recipe or family name, fixed at construction. */
   kind?: string;
@@ -475,15 +475,15 @@ export interface SelectEngineOptions {
   getInstanceContext?: () => object | undefined;
 
   /**
-   * A static array (or `(options) => array`) of items — the client-only source. Provide this
+   * A static array (or `(config) => array`) of items — the client-only source. Provide this
    * or `load`, not both.
    */
   items?:
     | SelectItem[]
-    | ((options: SelectResolvedOptions) => SelectItem[] | null | undefined);
+    | ((config: SelectConfig) => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit, page, cursor, context, options }) => items | { items, total?, hasMore?, cursor? }`,
+   * `(filter, { signal, offset, limit, page, cursor, context, config }) => items | { items, total?, hasMore?, cursor? }`,
    * synchronously or as a promise. Pagination starts without a limit so the source defines
    * its page size.
    *
@@ -497,7 +497,7 @@ export interface SelectEngineOptions {
    */
   load?: (
     filter: string,
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ) => SelectLoadResult | Promise<SelectLoadResult>;
 
   /**
@@ -507,7 +507,7 @@ export interface SelectEngineOptions {
   loadContext?: Readonly<Record<string, unknown>>;
 
   /** Live reader for {@link loadContext}. */
-  getLoadContext?: () => SelectEngineOptions["loadContext"];
+  getLoadContext?: () => SelectEngineInit["loadContext"];
 
   /** Called when a list reload invalidates result announcements. */
   onReloadList?: () => void;
@@ -518,11 +518,7 @@ export interface SelectEngineOptions {
    */
   filterBy?:
     | string
-    | ((
-        item: SelectItem,
-        term: string,
-        options: SelectResolvedOptions
-      ) => boolean);
+    | ((item: SelectItem, term: string, config: SelectConfig) => boolean);
 
   /**
    * Minimum filter length before the list searches, 2 or more. Omitted, any input searches;
@@ -598,30 +594,30 @@ export interface SelectEngineOptions {
    * refreshes. A resolver cannot do that: its outcome is cached, including the failure, and
    * only `reload()` retries it.
    *
-   * A function receives the resolved options and returns the items, so a held item's name can
+   * A function receives the resolved config and returns the items, so a held item's name can
    * come from a text (`renderSelectText(options, key)`). It is rebuilt when the options or what
    * it reads change.
    */
   valueItems?: SelectItem | SelectItem[] | SelectValueItemsBuilder;
 
   /**
-   * `(value, { signal, options }) => item | Promise<item>`, used to resolve a value id to its
+   * `(value, { signal, config }) => item | Promise<item>`, used to resolve a value id to its
    * display item when it isn't already known.
    */
   resolveValue?: (
     value: SelectItemId,
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ) => SelectItem | Promise<SelectItem | undefined> | undefined;
 
   /**
    * Batch counterpart to `resolveValue` for multi-select:
-   * `(values, { signal, options }) => items | Promise<items>`. The engine calls it once for the uncached
+   * `(values, { signal, config }) => items | Promise<items>`. The engine calls it once for the uncached
    * ids (cached / seeded ids are skipped) so N chips never mean N requests. Omitted or errored
    * ids become fallbacks.
    */
   resolveValues?: (
     values: SelectItemId[],
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ) => SelectItem[] | Promise<SelectItem[]>;
 
   /**
@@ -630,47 +626,41 @@ export interface SelectEngineOptions {
    */
   allowCreate?:
     | boolean
-    | ((
-        filter: string,
-        items: SelectItem[],
-        options: SelectResolvedOptions
-      ) => boolean);
+    | ((filter: string, items: SelectItem[], config: SelectConfig) => boolean);
 
   /**
-   * `(filter, options) => item` producing the synthetic "create" item. Name it by its value
+   * `(filter, config) => item` producing the synthetic "create" item. Name it by its value
    * text; the engine marks the row as create and supplies the "Create" wording.
    */
-  createItem?: (filter: string, options: SelectResolvedOptions) => SelectItem;
+  createItem?: (filter: string, config: SelectConfig) => SelectItem;
 
   /**
-   * `(value, options) => item` producing the fallback for a held id that could not be resolved,
+   * `(value, config) => item` producing the fallback for a held id that could not be resolved,
    * so a recipe can name it (e.g. `Topic #123`) instead of showing the bare id. The
    * engine marks the result `__unresolved` regardless of what the builder returns.
    * Defaults to the id itself on `labelField`.
    */
   createUnresolvedItem?: (
     value: SelectItemId,
-    options: SelectResolvedOptions
+    config: SelectConfig
   ) => SelectItem;
 
   /**
-   * `(snapshot, options) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
+   * `(snapshot, config) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
    */
   specialItems?: (
     snapshot: SelectSnapshot,
-    options: SelectResolvedOptions
+    config: SelectConfig
   ) => SelectItem[];
 
   /**
-   * Groups the filtered options by a field name or `(item, options) => key`. A group without a
+   * Groups the filtered options by a field name or `(item, config) => key`. A group without a
    * header of either kind gets an unlabeled divider, except at the head of the list or when
    * `groupDividers` is false. A client source merges every row of a key into one group; a
    * source that pages groups consecutive rows, so a later page only extends the last group or
    * adds new ones, and a key that comes back starts another group.
    */
-  groupBy?:
-    | string
-    | ((item: SelectItem, options: SelectResolvedOptions) => SelectItemId);
+  groupBy?: string | ((item: SelectItem, config: SelectConfig) => SelectItemId);
 
   /**
    * Whether a group without a header gets a divider before it. Defaults to true; false groups
@@ -702,7 +692,7 @@ export interface SelectEngineOptions {
   /**
    * `(nextValue, item|items, change) => void`, where `nextValue` is the id(s) and the second arg
    * is the resolved item(s), each matching the arity. The parent applies `nextValue` to
-   * `@value`. The third argument carries origin, clear metadata, and resolved options.
+   * `@value`. The third argument carries origin, clear metadata, and the resolved config.
    */
   onChange?: (
     nextValue: SelectValue,
@@ -712,8 +702,8 @@ export interface SelectEngineOptions {
       origin?: SelectionOrigin;
       /** Marks a clear, which keeps any locked values, from removing an item. */
       reason?: "clear";
-      /** The options snapshot shared with the change middleware. */
-      options: SelectResolvedOptions;
+      /** The config snapshot shared with the change middleware. */
+      config: SelectConfig;
     }
   ) => void;
 
@@ -780,9 +770,9 @@ class EngineControl implements SelectControl {
   }
 
   /** Starts a new query while the select is alive, preserving update authority. */
-  reload(options?: SelectReloadOptions): void {
+  reload(request?: SelectReloadRequest): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.reload(options);
+      this.#engine.reload(request);
     }
   }
 
@@ -826,7 +816,7 @@ export default class SelectEngine {
   // Fires the `@items`+`@load` misconfiguration warning at most once per engine.
   #dualSourceWarned = false;
 
-  #options: SelectOptionsView;
+  #args: SelectArgsView;
   #legacyKinds: readonly string[];
   #valueResolver: ValueResolver;
   #selectionActions: SelectionActions;
@@ -834,7 +824,7 @@ export default class SelectEngine {
   #listComposer: ListComposer;
   #source!: SelectSource;
   #control: SelectControl;
-  #getLoadContext: () => SelectEngineOptions["loadContext"];
+  #getLoadContext: () => SelectEngineInit["loadContext"];
   #onReloadList?: () => void;
   #requestContextQuery?: string;
   #requestLoadContext?: Readonly<Record<string, unknown>>;
@@ -853,20 +843,20 @@ export default class SelectEngine {
 
   /**
    * @param opts - The engine's configuration; every field is documented on
-   *   {@link SelectEngineOptions}.
+   *   {@link SelectEngineInit}.
    */
-  constructor(opts: SelectEngineOptions = {}) {
+  constructor(opts: SelectEngineInit = {}) {
     this.#legacyKinds = Object.freeze([...(opts.legacyKinds ?? [])]);
     this.#getLoadContext = opts.getLoadContext ?? (() => opts.loadContext);
     this.#onReloadList = opts.onReloadList;
-    this.#options = new SelectOptionsView(opts);
+    this.#args = new SelectArgsView(opts);
     this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
-      options: this.#options,
+      args: this.#args,
       knownRows: () => this.#source.knownRows(),
     });
     this.#selectionActions = new SelectionActions({
-      options: this.#options,
+      args: this.#args,
       runChange: (defaultStep, context) =>
         this.#customizations.runChange(defaultStep, context),
       onIntent: (origin) => this.#selectionUpdates.handleIntent(origin),
@@ -884,13 +874,13 @@ export default class SelectEngine {
     });
     this.#selectionUpdates = new SelectionUpdates({
       engine: this,
-      options: this.#options,
+      args: this.#args,
       state: this.#state,
       actions: this.#selectionActions,
     });
     registerDestructor(this, () => this.#selectionUpdates.supersede());
     this.#listComposer = new ListComposer({
-      options: this.#options,
+      args: this.#args,
       applyContent: (items, context) =>
         this.#customizations.applyContent(items, context),
       getFilter: () => this.#state.filter,
@@ -908,30 +898,29 @@ export default class SelectEngine {
         control: this.#control,
       }),
     });
-    this.#source = this.#options.load
+    this.#source = this.#args.load
       ? new PagedSource({
           resolveLoad: (filter) => this.#resolveLoad(filter),
           state: this.#state,
-          getMaxLoaded: () => this.#options.maxLoaded,
-          keyOf: (item) =>
-            this.#options.valueKey(this.#options.itemValue(item)),
+          getMaxLoaded: () => this.#args.maxLoaded,
+          keyOf: (item) => this.#args.valueKey(this.#args.itemValue(item)),
         })
       : new LocalSource({
           filtered: () => this.filteredItems,
-          all: () => localItems(this.#options),
+          all: () => localItems(this.#args),
         });
     this.#customizations = new SelectCustomizations(
       {
         kind: this.kind,
         identifier: this.identifier,
       },
-      this.#options.kindOptions,
+      this.#args.kindConfig,
       {
-        kindTexts: this.#options.kindTexts,
-        kindTextWrappers: this.#options.kindTextWrappers,
+        kindTexts: this.#args.kindTexts,
+        kindTextWrappers: this.#args.kindTextWrappers,
       }
     );
-    this.#options.attachResolvedOptions(() => this.resolvedOptions);
+    this.#args.attachResolvedOptions(() => this.config);
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
     this.#assertSingleSource();
@@ -979,8 +968,8 @@ export default class SelectEngine {
 
   /** One reactive options pass shared by the engine, presenter, and every rendered row. */
   @cached
-  get resolvedOptions(): SelectResolvedOptions {
-    const args = this.#options.presentationOptions;
+  get config(): SelectConfig {
+    const args = this.#args.presentationArgs;
     return this.#customizations.resolveOptions(
       {
         caretIcon: args.caretIcon,
@@ -993,19 +982,19 @@ export default class SelectEngine {
         loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
-      this.#options.kindOptions,
+      this.#args.kindConfig,
       {
         kind: this.kind,
         identifier: this.identifier,
-        kindContext: this.#options.kindContext,
-        instanceContext: this.#options.instanceContext,
+        kindContext: this.#args.kindContext,
+        instanceContext: this.#args.instanceContext,
         value: this.value,
         control: this.#control,
       },
       {
-        kindTexts: this.#options.kindTexts,
-        texts: this.#options.texts,
-        wrappers: this.#options.kindTextWrappers,
+        kindTexts: this.#args.kindTexts,
+        texts: this.#args.texts,
+        wrappers: this.#args.kindTextWrappers,
         multiple: this.multiple,
         labelledBy: !!args.ariaLabelledBy,
       }
@@ -1026,7 +1015,7 @@ export default class SelectEngine {
 
   /** Whether the source is server-backed (drives debouncing). */
   get isAsync(): boolean {
-    return this.#options.isAsync;
+    return this.#args.isAsync;
   }
 
   /** Whether the source's latest answer arrived without a promise. */
@@ -1036,7 +1025,7 @@ export default class SelectEngine {
 
   /** The minimum filter length before the list searches (`0` = no minimum). */
   get minChars(): number {
-    return this.#options.minChars;
+    return this.#args.minChars;
   }
 
   /**
@@ -1047,14 +1036,13 @@ export default class SelectEngine {
    */
   get belowMinChars(): boolean {
     return (
-      this.#options.minChars > 0 &&
-      this.#state.filter.length < this.#options.minChars
+      this.#args.minChars > 0 && this.#state.filter.length < this.#args.minChars
     );
   }
 
   /** How many more characters are needed to reach {@link minChars} (reactive). */
   get remainingMinChars(): number {
-    return Math.max(0, this.#options.minChars - this.#state.filter.length);
+    return Math.max(0, this.#args.minChars - this.#state.filter.length);
   }
 
   /** The multi-select selection cap, or `null` when uncapped (always `null` for single). */
@@ -1090,19 +1078,19 @@ export default class SelectEngine {
     return this.#selectionActions.remaining;
   }
 
-  /** Whether a held value can be removed: one that isn't in {@link SelectEngineOptions#lockedValues}. */
+  /** Whether a held value can be removed: one that isn't in {@link SelectEngineInit#lockedValues}. */
   get hasRemovableValue(): boolean {
     return this.#selectionActions.hasRemovableValue;
   }
 
   /** Whether this is a multi-select. */
   get multiple(): boolean {
-    return this.#options.multiple;
+    return this.#args.multiple;
   }
 
   /** The recipe or family name captured at construction. */
   get kind(): string | undefined {
-    return this.#options.kind;
+    return this.#args.kind;
   }
 
   /** Compatibility aliases captured at construction; never customization keys. */
@@ -1112,7 +1100,7 @@ export default class SelectEngine {
 
   /** The call-site name captured at construction. */
   get identifier(): string | undefined {
-    return this.#options.identifier;
+    return this.#args.identifier;
   }
 
   /** The live handle for action rows and content, options, load, and change customizations. */
@@ -1139,7 +1127,7 @@ export default class SelectEngine {
    * part of the consumer-facing API.
    */
   get legacyContext(): SelectLegacyContext | null {
-    return this.#options.legacy;
+    return this.#args.legacy;
   }
 
   /**
@@ -1180,7 +1168,7 @@ export default class SelectEngine {
     // enough either, because `@cached` hands the same array to every reader in the render,
     // so mutating it would corrupt what the engine itself reads next. Matches `buildItems`,
     // which also yields a frozen projection.
-    return Object.freeze([...filterLocal(this.#options, this.#state.filter)]);
+    return Object.freeze([...filterLocal(this.#args, this.#state.filter)]);
   }
 
   /** Whether the current source can fetch another page within any configured ceiling. */
@@ -1213,7 +1201,7 @@ export default class SelectEngine {
    * error), unlike a render-time count of navigable rows.
    */
   get loadedCount(): number {
-    return this.#options.isAsync
+    return this.#args.isAsync
       ? this.#state.serverLoadedCount
       : (this.total ?? 0);
   }
@@ -1282,7 +1270,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Renders a text from the resolved options: every layer, then the recipe's wrapper. Call it
+   * Renders a text from the resolved config: every layer, then the recipe's wrapper. Call it
    * where the text is drawn or spoken, so a text that reads live recipe state stays current.
    *
    * @param key - The text's key.
@@ -1291,7 +1279,7 @@ export default class SelectEngine {
    */
   @bind
   text(key: string, values?: object): string {
-    return renderSelectText(this.resolvedOptions, key, values);
+    return renderSelectText(this.config, key, values);
   }
 
   /**
@@ -1313,7 +1301,7 @@ export default class SelectEngine {
   @bind
   loadItems(
     _context: unknown,
-    opts: SelectLoadOptions = {}
+    opts: SelectLoadRequest = {}
   ): SelectItem[] | Promise<SelectItem[]> {
     this.#assertSingleSource();
     return this.#source.rows(opts);
@@ -1372,7 +1360,7 @@ export default class SelectEngine {
   @bind
   resolveSelection(
     value: SelectValue,
-    opts: SelectLoadOptions = {}
+    opts: SelectLoadRequest = {}
   ):
     | SelectItem
     | SelectItem[]
@@ -1399,7 +1387,7 @@ export default class SelectEngine {
   }
 
   getItemLabel(item: SelectItem | null | undefined): string {
-    return selectItemLabel(item, this.#options.labelField);
+    return selectItemLabel(item, this.#args.labelField);
   }
 
   /**
@@ -1415,7 +1403,7 @@ export default class SelectEngine {
   getSelectionLabel(item: SelectItem | null | undefined): string {
     if (item?.__unresolved && !this.isCustomUnresolvedItem(item)) {
       return this.text("unresolvedValue", {
-        value: String(item[this.#options.valueField] ?? ""),
+        value: String(item[this.#args.valueField] ?? ""),
       });
     }
     return this.getItemLabel(item);
@@ -1562,7 +1550,7 @@ export default class SelectEngine {
     if (names.length < 2) {
       return null;
     }
-    const options = this.#options;
+    const options = this.#args;
     const rows = this.#source.knownRows().filter((row) => !row.onSelect);
     const allowCreate = options.allowCreate;
     return names
@@ -1581,10 +1569,10 @@ export default class SelectEngine {
         }
         const creates =
           typeof allowCreate === "function"
-            ? allowCreate(name, rows, this.resolvedOptions)
+            ? allowCreate(name, rows, this.config)
             : !!allowCreate;
         return creates && options.createItem
-          ? options.createItem(name, this.resolvedOptions)
+          ? options.createItem(name, this.config)
           : undefined;
       })
       .filter((item): item is SelectItem => item !== undefined);
@@ -1596,10 +1584,10 @@ export default class SelectEngine {
    * stay cached.
    */
   @bind
-  reload(options?: SelectReloadOptions): void {
+  reload(request?: SelectReloadRequest): void {
     this.#valueResolver.evictUnresolved();
     this.#reloadList();
-    this.#immediateQueryKey = options?.immediate ? this.queryKey : null;
+    this.#immediateQueryKey = request?.immediate ? this.queryKey : null;
   }
 
   /** Checks live loader inputs at event time; never call during render. */
@@ -1628,7 +1616,7 @@ export default class SelectEngine {
    */
   @bind
   requestClose(): void {
-    this.#options.requestClose?.();
+    this.#args.requestClose?.();
   }
 
   #contextEntryChanged(
@@ -1652,9 +1640,9 @@ export default class SelectEngine {
     return {
       kind: this.kind,
       identifier: this.identifier,
-      kindContext: this.#options.kindContext,
-      instanceContext: this.#options.instanceContext,
-      options: this.resolvedOptions,
+      kindContext: this.#args.kindContext,
+      instanceContext: this.#args.instanceContext,
+      config: this.config,
     };
   }
 
@@ -1666,7 +1654,7 @@ export default class SelectEngine {
   }
 
   /** Resolves the loader outside render when a query's first request starts. */
-  #resolveLoad(filter: string): NonNullable<SelectEngineOptions["load"]> {
+  #resolveLoad(filter: string): NonNullable<SelectEngineInit["load"]> {
     const context = this.#getLoadContext() ?? {};
     const snapshot: Readonly<Record<string, unknown>> = Object.freeze(
       Object.fromEntries(
@@ -1681,7 +1669,7 @@ export default class SelectEngine {
       })
     );
     this.#requestContextQuery = this.queryKey;
-    const load = this.#customizations.applyLoad(this.#options.load!, {
+    const load = this.#customizations.applyLoad(this.#args.load!, {
       loadContext: snapshot,
       filter,
       ...this.#extensionContext(),
@@ -1691,7 +1679,7 @@ export default class SelectEngine {
       load(query, {
         ...opts,
         context: snapshot,
-        options: this.resolvedOptions,
+        config: this.config,
       });
   }
 
@@ -1699,16 +1687,16 @@ export default class SelectEngine {
   // Warns once when both are supplied — checked here rather than only in the constructor
   // because a live `items` source can turn non-empty after construction.
   #assertSingleSource(): void {
-    if (this.#dualSourceWarned || !this.#options.isAsync) {
+    if (this.#dualSourceWarned || !this.#args.isAsync) {
       return;
     }
     // Runs inside the list's load, so its reads must not become reload inputs: resolving the
     // options reads the recipe's context and presentation arguments, and a change to any of them
     // would cancel the page in flight.
     const local = untrack(() =>
-      typeof this.#options.items === "function"
-        ? this.#options.items(this.resolvedOptions)
-        : this.#options.items
+      typeof this.#args.items === "function"
+        ? this.#args.items(this.config)
+        : this.#args.items
     );
     if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
       this.#dualSourceWarned = true;

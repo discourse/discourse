@@ -175,22 +175,22 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @valueItems={{this.valueItems}}
       @variant={{@variant}}
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else}}
           <TopicOption @item={{item}} />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
           <TopicSelection @item={{item}} @withCategory={{not @multiple}} />
         {{/if}}
       </:selection>
-      <:footer as |state options|>
-        {{yield state options to="footer"}}
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
       </:footer>
     </DSelect>
   </template>

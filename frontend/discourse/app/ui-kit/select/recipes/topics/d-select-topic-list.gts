@@ -26,8 +26,8 @@ import {
   unresolvedTopic,
 } from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
 import type {
+  SelectConfig,
   SelectItem,
-  SelectResolvedOptions,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -73,12 +73,12 @@ interface DSelectTopicListSignature {
     /** Custom option content. */
     item?: [
       /** The topic. */ item: SelectItem,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom held-chip content. */
     selection?: [
       /** The held topic. */ item: SelectItem,
-      /** Resolved options. */ options: SelectResolvedOptions,
+      /** Resolved config. */ config: SelectConfig,
     ];
   };
 }
@@ -172,16 +172,16 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
       @value={{@value}}
       @valueItems={{this.valueItems}}
     >
-      <:item as |item options|>
+      <:item as |item config|>
         {{#if (has-block "item")}}
-          {{yield item options to="item"}}
+          {{yield item config to="item"}}
         {{else}}
           <TopicOption @item={{item}} />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
           <TopicSelection @item={{item}} />
         {{/if}}

@@ -8,7 +8,7 @@ import { TIMEZONES } from "../../../../../lib/select-fixtures.js";
 
 const hourCycle = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
-}).resolvedOptions().hourCycle;
+}).config().hourCycle;
 
 function localTimeIn(timeZone, now) {
   return new Intl.DateTimeFormat(undefined, {

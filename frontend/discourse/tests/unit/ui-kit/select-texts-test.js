@@ -78,7 +78,7 @@ async function snapshot(context, configuration = {}) {
     api.registerValueTransformer("select-customizations", ({ value }) =>
       value.forIdentifier("texts-unit", (spec) =>
         spec.content((items, resolved) => {
-          captured.value = resolved.options;
+          captured.value = resolved.config;
           return items;
         })
       )
@@ -124,7 +124,7 @@ module("Unit | ui-kit | select | texts", function (hooks) {
     assert.strictEqual(
       typeof options,
       "object",
-      "a real select published its resolved options"
+      "a real select published its resolved config"
     );
     for (const [key, locale] of Object.entries(LOCALES)) {
       assert.strictEqual(

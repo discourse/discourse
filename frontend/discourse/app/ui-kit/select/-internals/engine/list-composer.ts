@@ -1,7 +1,7 @@
 import { DEBUG } from "@glimmer/env";
 import { assert, warn } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
-import type SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
+import type SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import type {
   SelectDescriptor,
   SelectItem,
@@ -37,7 +37,7 @@ interface GroupedRows {
 type BoundaryKind = "none" | "text" | "action";
 
 export default class ListComposer {
-  #options: SelectOptionsView;
+  #args: SelectArgsView;
   #getFilter: () => string;
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
@@ -67,7 +67,7 @@ export default class ListComposer {
   #boundaryRows = 0;
 
   constructor(opts: {
-    options: SelectOptionsView;
+    args: SelectArgsView;
     getFilter: () => string;
     getValue: () => SelectValue;
     getHasValue: () => boolean;
@@ -87,7 +87,7 @@ export default class ListComposer {
     /** Whether the source may still add rows to this query, a page in flight or not. */
     canGrow: () => boolean;
   }) {
-    this.#options = opts.options;
+    this.#args = opts.args;
     this.#getFilter = opts.getFilter;
     this.#getValue = opts.getValue;
     this.#getHasValue = opts.getHasValue;
@@ -140,7 +140,7 @@ export default class ListComposer {
 
     // Runs are found before held rows are hidden, so what is selected never renumbers them.
     const runs =
-      this.#shouldGroup() && this.#options.isAsync
+      this.#shouldGroup() && this.#args.isAsync
         ? this.#assignRuns(items)
         : undefined;
     // The next page may continue the last run, so its footer waits rather than move later.
@@ -149,7 +149,7 @@ export default class ListComposer {
     const extending = runs ? this.#trackExtension(filter, rawCount) : false;
 
     const createCandidate = this.#createItem(items, filter);
-    const hideSelected = this.#options.hideSelected;
+    const hideSelected = this.#args.hideSelected;
     const include = (item: SelectItem) =>
       !hideSelected ||
       this.#isStructural(item) ||
@@ -160,10 +160,7 @@ export default class ListComposer {
     items = items.filter(include);
 
     const consumerSpecial = makeArray(
-      this.#options.specialItems?.(
-        this.#snapshot(),
-        this.#options.resolvedOptions
-      ) ?? []
+      this.#args.specialItems?.(this.#snapshot(), this.#args.config) ?? []
     ) as SelectItem[];
     const visibleSpecial = consumerSpecial.filter(include);
     // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
@@ -253,7 +250,7 @@ export default class ListComposer {
     // A client source is always sized by the rows shown: under a debounce its total already
     // counts the next filter while the previous rows are still on screen.
     const sourceTotal =
-      !this.#options.isAsync || total == null
+      !this.#args.isAsync || total == null
         ? sourceCount
         : Math.max(total + sourceCount - inputCount, sourceCount);
     const setSize =
@@ -298,17 +295,13 @@ export default class ListComposer {
   }
 
   #createItem(items: SelectItem[], filter: string): SelectItem | null {
-    if (!filter || !this.#options.createItem) {
+    if (!filter || !this.#args.createItem) {
       return null;
     }
     const allowed =
-      typeof this.#options.allowCreate === "function"
-        ? this.#options.allowCreate(
-            filter,
-            items,
-            this.#options.resolvedOptions
-          )
-        : !!this.#options.allowCreate;
+      typeof this.#args.allowCreate === "function"
+        ? this.#args.allowCreate(filter, items, this.#args.config)
+        : !!this.#args.allowCreate;
     if (!allowed) {
       return null;
     }
@@ -316,19 +309,15 @@ export default class ListComposer {
     if (
       items.some(
         (item) =>
-          String(this.#options.itemLabel(item) ?? "").toLowerCase() === term
+          String(this.#args.itemLabel(item) ?? "").toLowerCase() === term
       )
     ) {
       return null;
     }
-    const item = this.#options.createItem(
-      filter,
-      this.#options.resolvedOptions
-    );
-    const key = this.#options.valueKey(this.#options.itemValue(item));
+    const item = this.#args.createItem(filter, this.#args.config);
+    const key = this.#args.valueKey(this.#args.itemValue(item));
     return items.some(
-      (loaded) =>
-        this.#options.valueKey(this.#options.itemValue(loaded)) === key
+      (loaded) => this.#args.valueKey(this.#args.itemValue(loaded)) === key
     )
       ? null
       : item;
@@ -340,7 +329,7 @@ export default class ListComposer {
     atMaximum: boolean,
     isCreate = false
   ): SelectDescriptor {
-    const value = this.#options.itemValue(item);
+    const value = this.#args.itemValue(item);
     // An action row runs a callback and never becomes a value, so it cannot be the selection even
     // when its id collides with a held one — `isSelected` compares values and cannot tell the two
     // apart. The public `isSelected` is deliberately left alone: it answers a question about
@@ -396,7 +385,7 @@ export default class ListComposer {
     if (item.__none) {
       return engineKey("none");
     }
-    const key = this.#options.valueKey(value);
+    const key = this.#args.valueKey(value);
     // A value-less row (a null-id special, or a structural row a loader returned) has no
     // natural key; its position is stable within the ordered special/create prefix.
     return key == null ? engineKey(`row:${index}`) : recordKey(key);
@@ -425,24 +414,24 @@ export default class ListComposer {
    * `select()` path, which emits `null` because the row's value field is `null`.
    */
   #noneRow(): SelectItem | null {
-    if (this.#options.noneLabel == null || this.#getFilter() !== "") {
+    if (this.#args.noneLabel == null || this.#getFilter() !== "") {
       return null;
     }
     return {
-      [this.#options.valueField]: null,
-      [this.#options.labelField]: this.#options.noneLabel,
+      [this.#args.valueField]: null,
+      [this.#args.labelField]: this.#args.noneLabel,
       __none: true,
     };
   }
 
   #shouldGroup(): boolean {
-    return this.#options.groupBy != null;
+    return this.#args.groupBy != null;
   }
 
   #groupKey(item: SelectItem): SelectItemId {
-    return typeof this.#options.groupBy === "function"
-      ? this.#options.groupBy(item, this.#options.resolvedOptions)
-      : item[this.#options.groupBy as string];
+    return typeof this.#args.groupBy === "function"
+      ? this.#args.groupBy(item, this.#args.config)
+      : item[this.#args.groupBy as string];
   }
 
   /**
@@ -455,8 +444,8 @@ export default class ListComposer {
     rows: readonly SelectItem[]
   ): SelectItem | null {
     const build =
-      kind === "header" ? this.#options.groupHeader : this.#options.groupFooter;
-    const result = build?.(group.key, rows, this.#options.resolvedOptions);
+      kind === "header" ? this.#args.groupHeader : this.#args.groupFooter;
+    const result = build?.(group.key, rows, this.#args.config);
     if (result == null) {
       return null;
     }
@@ -620,7 +609,7 @@ export default class ListComposer {
       const members = [header, ...group.items, footer].filter(
         (row): row is SelectItem => !!row
       );
-      if (!header && out.length > 0 && this.#options.groupDividers) {
+      if (!header && out.length > 0 && this.#args.groupDividers) {
         out.push({
           __divider: true,
           groupKey: group.key,

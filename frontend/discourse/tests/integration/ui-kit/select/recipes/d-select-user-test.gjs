@@ -644,7 +644,7 @@ module(
       withPluginApi((api) =>
         api.registerValueTransformer("select-customizations", ({ value }) =>
           value.forKind("select-user", (spec) =>
-            spec.options((current) => ({
+            spec.config((current) => ({
               searchOptions: { ...current.searchOptions, assignable: true },
             }))
           )

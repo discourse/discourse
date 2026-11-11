@@ -797,7 +797,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-category", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: { readOnlyDescription: "Locked here" },
               }))
             )
@@ -844,7 +844,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-category", (spec) =>
-              spec.options(() => ({
+              spec.config(() => ({
                 texts: {
                   familyFooter: (values) => {
                     seen.push(values);
@@ -878,7 +878,7 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) =>
             value.forKind("select-category", (spec) =>
-              spec.options(() => ({ texts: { noneLabel: "No category" } }))
+              spec.config(() => ({ texts: { noneLabel: "No category" } }))
             )
           )
         );

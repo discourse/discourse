@@ -31,7 +31,7 @@ import SelectHost, {
 import VariantPresenter, {
   type SelectVariant,
 } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
-import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
@@ -45,7 +45,7 @@ import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowe
 import type {
   SelectCoreTexts,
   SelectDescriptor,
-  SelectEngineOptions,
+  SelectEngineInit,
   SelectItem as SelectItemModel,
   SelectItemRow,
   SelectKindTexts,
@@ -87,8 +87,8 @@ export interface DSelectSignature {
      * not a customization key.
      */
     legacyKind?: string | string[];
-    /** Declares recipe option keys and their live base values. Requires `@kind`; core keys are reserved. */
-    kindOptions?: Record<string, unknown>;
+    /** Declares recipe config keys and their live base values. Requires `@kind`; core keys are reserved. */
+    kindConfig?: Record<string, unknown>;
     /**
      * Every text the select draws or speaks, by key: a translated string, `{ translationKey }`
      * for a translation, or a function of the text's values. Each entry merges over the recipe's
@@ -115,44 +115,44 @@ export interface DSelectSignature {
      * one it was given.
      */
     instanceContext?: object;
-    items?: SelectEngineOptions["items"];
-    load?: SelectEngineOptions["load"];
+    items?: SelectEngineInit["items"];
+    load?: SelectEngineInit["load"];
     /** Loader inputs, compared by own keys to reload the list: arrays by their elements, other values by identity. */
-    loadContext?: SelectEngineOptions["loadContext"];
-    filterBy?: SelectEngineOptions["filterBy"];
+    loadContext?: SelectEngineInit["loadContext"];
+    filterBy?: SelectEngineInit["filterBy"];
     valueField?: string;
     /** Maps an id to the key that decides identity, such as a lowercasing one for usernames. Ids match exactly without it. Read once. */
-    normalizeKey?: SelectEngineOptions["normalizeKey"];
+    normalizeKey?: SelectEngineInit["normalizeKey"];
     labelField?: string;
-    valueItems?: SelectEngineOptions["valueItems"];
-    resolveValue?: SelectEngineOptions["resolveValue"];
-    resolveValues?: SelectEngineOptions["resolveValues"];
-    allowCreate?: SelectEngineOptions["allowCreate"];
-    createItem?: SelectEngineOptions["createItem"];
-    createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
-    specialItems?: SelectEngineOptions["specialItems"];
+    valueItems?: SelectEngineInit["valueItems"];
+    resolveValue?: SelectEngineInit["resolveValue"];
+    resolveValues?: SelectEngineInit["resolveValues"];
+    allowCreate?: SelectEngineInit["allowCreate"];
+    createItem?: SelectEngineInit["createItem"];
+    createUnresolvedItem?: SelectEngineInit["createUnresolvedItem"];
+    specialItems?: SelectEngineInit["specialItems"];
     /**
      * Groups the options: a field name or `(item, options) => key`. A group with no header of
      * either kind gets an unlabeled divider, unless `@groupDividers` is false. A `@load` source
      * groups consecutive rows, so pages only append. Recomputed after filtering, so an empty
      * group draws nothing.
      */
-    groupBy?: SelectEngineOptions["groupBy"];
+    groupBy?: SelectEngineInit["groupBy"];
     /** False groups rows without drawing dividers between groups. Read once, like `@groupBy`. */
-    groupDividers?: SelectEngineOptions["groupDividers"];
+    groupDividers?: SelectEngineInit["groupDividers"];
     /**
      * `(key, rows, options) => text | actionRow | null` builds a group's header: text renders
      * a presentational header, an item with `onSelect` a navigable action row. The
      * `<:groupHeader>` block draws either kind.
      */
-    groupHeader?: SelectEngineOptions["groupHeader"];
+    groupHeader?: SelectEngineInit["groupHeader"];
     /**
      * Builds a group's footer, like `@groupHeader`, drawn by `<:groupFooter>`. A `@load`
      * source shows its last group's footer once no more rows can load.
      */
-    groupFooter?: SelectEngineOptions["groupFooter"];
-    /** Receives the next value, resolved items, and metadata including resolved options. */
-    onChange?: SelectEngineOptions["onChange"];
+    groupFooter?: SelectEngineInit["groupFooter"];
+    /** Receives the next value, resolved items, and metadata including the resolved config. */
+    onChange?: SelectEngineInit["onChange"];
     /**
      * A decorative trailing icon in a search field that is not the trigger: the `button` panel's
      * field and the mobile modal's. A desktop `typeahead` trigger is its own search field and
@@ -289,7 +289,7 @@ export interface DSelectSignature {
      * value. They count toward `@maximum`. Multi-select only; a fixed single value is
      * `@readonly`.
      */
-    lockedValues?: SelectEngineOptions["lockedValues"];
+    lockedValues?: SelectEngineInit["lockedValues"];
     /**
      * Single-select only: adds a first-class "none" row to the top of the list, labeled with
      * `texts.noneLabel`. Selecting it clears the value to `null`, and the row reads as selected
@@ -316,12 +316,12 @@ export interface DSelectSignature {
   };
   Element: HTMLElement;
   Blocks: {
-    /** Custom markup for an option and its resolved options snapshot. */
+    /** Custom markup for an option and its resolved config snapshot. */
     item?: [
       /** The raw option item. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
       /** What the row is beyond its item: `create` marks the create row. */
       row: SelectItemRow,
     ];
@@ -335,7 +335,7 @@ export interface DSelectSignature {
       /** The resolved held item. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /**
      * Shown in place of a held selection while it resolves: in each chip, or in the single
@@ -352,7 +352,7 @@ export interface DSelectSignature {
       /** The fallback for an unresolved held id. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /**
      * Draws a group header of either kind; yields its item. A text header's item carries its
@@ -363,14 +363,14 @@ export interface DSelectSignature {
       /** The header item. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /** Draws a group footer of either kind, like `<:groupHeader>`. */
     groupFooter?: [
       /** The footer item. */
       item: SelectItemModel,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /**
      * One placeholder row, shown while a page of rows loads (the first load, or more rows
@@ -384,7 +384,7 @@ export interface DSelectSignature {
       /** The live dropdown state. */
       state: SelectState,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /**
      * Content pinned below the option list (labels, links, action buttons). Yields the live
@@ -394,7 +394,7 @@ export interface DSelectSignature {
       /** The live dropdown state. */
       state: SelectState,
       /** Resolved core and recipe values. */
-      options: SelectResolvedOptions,
+      config: SelectConfig,
     ];
     /**
      * Consumer override for the source-error state, replacing the default muted message + retry.
@@ -791,13 +791,13 @@ export default class DSelect extends Component<DSelectSignature> {
               @value={{@value}}
             >
               <:selection as |item|>
-                {{~yield item this.engine.resolvedOptions to="selection"~}}
+                {{~yield item this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
               <:unresolved as |item|>
-                {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+                {{~yield item this.engine.config to="unresolved"~}}
               </:unresolved>
             </MultiChips>
           {{else}}
@@ -832,13 +832,13 @@ export default class DSelect extends Component<DSelectSignature> {
               @value={{@value}}
             >
               <:selection as |item|>
-                {{~yield item this.engine.resolvedOptions to="selection"~}}
+                {{~yield item this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
               <:unresolved as |item|>
-                {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+                {{~yield item this.engine.config to="unresolved"~}}
               </:unresolved>
             </SingleTriggerDisplay>
           {{/if}}
@@ -966,7 +966,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     @queryDisplay="always"
                     @registerInput={{this.interaction.captureFilter}}
                     @roleMode="search"
-                    @searchIcon={{this.engine.resolvedOptions.searchIcon}}
+                    @searchIcon={{this.engine.config.searchIcon}}
                     @selection={{this.heldSelection}}
                     @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
                     @showMenu={{menuArgs.show}}
@@ -975,18 +975,10 @@ export default class DSelect extends Component<DSelectSignature> {
                     @value={{@value}}
                   >
                     <:selection as |item|>
-                      {{~yield
-                        item
-                        this.engine.resolvedOptions
-                        to="selection"
-                      ~}}
+                      {{~yield item this.engine.config to="selection"~}}
                     </:selection>
                     <:unresolved as |item|>
-                      {{~yield
-                        item
-                        this.engine.resolvedOptions
-                        to="unresolved"
-                      ~}}
+                      {{~yield item this.engine.config to="unresolved"~}}
                     </:unresolved>
                     <:selectionLoading>
                       {{~yield to="selectionLoading"~}}
@@ -996,7 +988,7 @@ export default class DSelect extends Component<DSelectSignature> {
                   <div
                     class={{dConcatClass
                       "d-select__search"
-                      (if this.engine.resolvedOptions.searchIcon "--with-icon")
+                      (if this.engine.config.searchIcon "--with-icon")
                     }}
                   >
                     <ComboboxQueryInput
@@ -1027,9 +1019,9 @@ export default class DSelect extends Component<DSelectSignature> {
                         capture=true
                       }}
                     />
-                    {{#if this.engine.resolvedOptions.searchIcon}}
+                    {{#if this.engine.config.searchIcon}}
                       {{dIcon
-                        this.engine.resolvedOptions.searchIcon
+                        this.engine.config.searchIcon
                         class="d-select__search-icon"
                       }}
                     {{/if}}
@@ -1037,23 +1029,23 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/if}}
               {{/if}}
             </:field>
-            <:item as |item options row|>
-              {{~yield item options row to="item"~}}
+            <:item as |item config row|>
+              {{~yield item config row to="item"~}}
             </:item>
-            <:groupHeader as |item options|>
-              {{~yield item options to="groupHeader"~}}
+            <:groupHeader as |item config|>
+              {{~yield item config to="groupHeader"~}}
             </:groupHeader>
-            <:groupFooter as |item options|>
-              {{~yield item options to="groupFooter"~}}
+            <:groupFooter as |item config|>
+              {{~yield item config to="groupFooter"~}}
             </:groupFooter>
             <:skeletonItem>
               {{~yield to="skeletonItem"~}}
             </:skeletonItem>
-            <:selection as |item options|>
-              {{~yield item options to="selection"~}}
+            <:selection as |item config|>
+              {{~yield item config to="selection"~}}
             </:selection>
-            <:unresolved as |item options|>
-              {{~yield item options to="unresolved"~}}
+            <:unresolved as |item config|>
+              {{~yield item config to="unresolved"~}}
             </:unresolved>
             <:empty>
               {{~yield to="empty"~}}
@@ -1061,11 +1053,11 @@ export default class DSelect extends Component<DSelectSignature> {
             <:error as |error retry|>
               {{~yield error retry to="error"~}}
             </:error>
-            <:listHeader as |state options|>
-              {{yield state options to="listHeader"}}
+            <:listHeader as |state config|>
+              {{yield state config to="listHeader"}}
             </:listHeader>
-            <:footer as |state options|>
-              {{~yield state options to="footer"~}}
+            <:footer as |state config|>
+              {{~yield state config to="footer"~}}
             </:footer>
           </SelectPanel>
         </div>

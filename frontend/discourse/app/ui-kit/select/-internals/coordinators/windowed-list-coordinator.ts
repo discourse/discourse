@@ -32,7 +32,7 @@ interface OptionRow extends SelectDescriptor {
 /** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
 export type ListRow = OptionRow | SkeletonRow;
 
-interface WindowedListCoordinatorOptions {
+interface WindowedListCoordinatorInit {
   engine: SelectEngine;
   feedback: LoadFeedbackTracker;
   getListboxId: () => string;
@@ -221,7 +221,7 @@ export default class WindowedListCoordinator {
     getListboxId,
     isStaticModal,
     onStillLoading,
-  }: WindowedListCoordinatorOptions) {
+  }: WindowedListCoordinatorInit) {
     this.#engine = engine;
     this.#feedback = feedback;
     this.#getListboxId = getListboxId;

@@ -11,7 +11,7 @@ import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/sel
 import VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
-interface InteractionCoordinatorOptions {
+interface InteractionCoordinatorInit {
   engine: SelectEngine;
   presenter: VariantPresenter;
   announcer: SelectAnnouncer;
@@ -127,7 +127,7 @@ export default class InteractionCoordinator {
     onClose,
     isMultiple,
     clearActive,
-  }: InteractionCoordinatorOptions) {
+  }: InteractionCoordinatorInit) {
     this.#engine = engine;
     this.#presenter = presenter;
     this.#announcer = announcer;

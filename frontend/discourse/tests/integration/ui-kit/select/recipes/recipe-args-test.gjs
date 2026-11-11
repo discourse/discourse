@@ -93,13 +93,13 @@ function removeButton(locked) {
   );
 }
 
-/** Records the instance context of every options step for the shared identifier. */
+/** Records the instance context of every config step for the shared identifier. */
 function watchIdentifier() {
   const seen = [];
   withPluginApi((api) =>
     api.registerValueTransformer("select-customizations", ({ value }) =>
       value.forIdentifier(IDENTIFIER, (spec) =>
-        spec.options((_current, context) => {
+        spec.config((_current, context) => {
           seen.push(context.instanceContext);
         })
       )

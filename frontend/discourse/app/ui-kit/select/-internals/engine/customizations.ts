@@ -22,7 +22,7 @@ import {
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import type {
   SelectControl,
-  SelectEngineOptions,
+  SelectEngineInit,
   SelectItem,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -54,7 +54,7 @@ export interface SelectContentContext extends SelectResolvedContext {
 }
 
 /** Core presentation values that customizations may override. */
-export interface SelectPresentationOptions {
+export interface SelectPresentationConfig {
   /** The caret glyph, optionally chosen separately for each menu state. */
   caretIcon?:
     | string
@@ -89,24 +89,24 @@ export interface SelectPresentationOptions {
 }
 
 /** The call site's presentation arguments, read before customizations. */
-export interface SelectPresentationArgs extends SelectPresentationOptions {
+export interface SelectPresentationArgs extends SelectPresentationConfig {
   /** Id of the caller's visible caption, which names the control instead of `texts.ariaLabel`. */
   ariaLabelledBy?: string;
 }
 
 /** Core and declared recipe values, resolved together into an immutable snapshot. */
-export type SelectResolvedOptions = Readonly<
-  SelectPresentationOptions & Record<string, unknown>
+export type SelectConfig = Readonly<
+  SelectPresentationConfig & Record<string, unknown>
 >;
 
-/** Runtime customization data after options resolution. */
+/** Runtime customization data after config resolution. */
 export interface SelectResolvedContext extends SelectCustomizationContext {
   /** The resolved core and recipe values at invocation time. */
-  options: SelectResolvedOptions;
+  config: SelectConfig;
 }
 
 /** Core keys reserved from recipe declarations, including keys with no base value. */
-const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
+const CORE_CONFIG_KEYS = new Set<keyof SelectPresentationConfig>([
   "caretIcon",
   "iconOnly",
   "texts",
@@ -148,11 +148,11 @@ function isCaseMissOfKnownText(key: string): boolean {
   );
 }
 
-/** Options callbacks read upstream state only, avoiding selection and presentation cycles. */
-export interface SelectOptionsContext extends SelectCustomizationContext {
+/** Config steps read upstream state only, avoiding selection and presentation cycles. */
+export interface SelectConfigContext extends SelectCustomizationContext {
   /** The normalized controlled value. */
   value: SelectValue;
-  /** The live select handle; only read it while resolving options. */
+  /** The live select handle; only read it while resolving config. */
   control: SelectControl;
 }
 
@@ -201,13 +201,13 @@ type Content = (
 ) => SelectItem[];
 /** A row step mutates presentation; its return value is ignored. */
 type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
-/** An options step returns a partial over an immutable snapshot of the values so far. */
-type Options = (
-  current: SelectResolvedOptions,
-  context: SelectOptionsContext
-) => (Partial<SelectPresentationOptions> & Record<string, unknown>) | void;
+/** A config step returns a partial over an immutable snapshot of the values so far. */
+type Config = (
+  current: SelectConfig,
+  context: SelectConfigContext
+) => (Partial<SelectPresentationConfig> & Record<string, unknown>) | void;
 /** The loader a load step receives and returns. */
-type Loader = NonNullable<SelectEngineOptions["load"]>;
+type Loader = NonNullable<SelectEngineInit["load"]>;
 /** A load step wraps or replaces the previous loader. */
 type Load = (load: Loader, context: SelectLoadContext) => Loader;
 /** A continuation can be held, vetoed, or awaited, but only runs once. */
@@ -224,8 +224,8 @@ export interface SelectCustomizationSpec {
   content(callback: Content): void;
   /** Appends a row presentation step. */
   row(callback: Row): void;
-  /** Appends a step resolving core and declared recipe options. */
-  options(callback: Options): void;
+  /** Appends a step resolving core and declared recipe config. */
+  config(callback: Config): void;
   /** Appends a loader step. */
   load(callback: Load): void;
   /** Appends change middleware. */
@@ -253,11 +253,11 @@ class Declarations {
   /** Row steps, in declaration order. */
   row: Row[] = [];
 
-  /** Options steps, in declaration order. */
-  options: Options[] = [];
+  /** Config steps, in declaration order. */
+  config: Config[] = [];
 
-  /** The tier of each options step: 0 for `forAll`, 1 for `forKind`, 2 for `forIdentifier`. */
-  optionsTiers: number[] = [];
+  /** The tier of each config step: 0 for `forAll`, 1 for `forKind`, 2 for `forIdentifier`. */
+  configTiers: number[] = [];
 
   /** Loader steps, in declaration order. */
   load: Load[] = [];
@@ -274,7 +274,7 @@ export default class SelectCustomizations {
   /** Recipe schema is captured once; base values are read live during resolution. */
   #kindOptionKeys: string[];
 
-  /** Text keys the recipe declares, captured once like its option keys. */
+  /** Text keys the recipe declares, captured once like its config keys. */
   #kindTextKeys: Set<string>;
 
   /** Texts the recipe wraps, captured once; the wrappers themselves are read live. */
@@ -282,22 +282,19 @@ export default class SelectCustomizations {
 
   #names: SelectNames;
 
-  /** Each text notice is given once per select, however often its options resolve again. */
+  /** each text notice is given once per select, however often its config resolves again. */
   #notices = new SelectTextNotices();
 
   /** Collects all registrations before running matching setups in tier order. */
   constructor(
     names: SelectNames,
-    kindOptions?: Record<string, unknown>,
+    kindConfig?: Record<string, unknown>,
     textSchema: {
       kindTexts?: SelectKindTexts;
       kindTextWrappers?: Readonly<Record<string, unknown>>;
     } = {}
   ) {
-    assert(
-      "DSelect: @kindOptions requires @kind",
-      !kindOptions || !!names.kind
-    );
+    assert("DSelect: @kindConfig requires @kind", !kindConfig || !!names.kind);
     assert(
       "DSelect: @kindTexts requires @kind",
       !textSchema.kindTexts || !!names.kind
@@ -307,12 +304,12 @@ export default class SelectCustomizations {
       !textSchema.kindTextWrappers || !!names.kind
     );
     this.#names = names;
-    this.#kindOptionKeys = Object.keys(kindOptions ?? {});
+    this.#kindOptionKeys = Object.keys(kindConfig ?? {});
     for (const key of this.#kindOptionKeys) {
       // TODO (select-kit-rework-merge): Drop the REMOVED_TEXT_NAMES reservation.
       assert(
-        `DSelect: @kindOptions key "${key}" collides with a core option`,
-        !CORE_OPTION_KEYS.has(key as keyof SelectPresentationOptions) &&
+        `DSelect: @kindConfig key "${key}" collides with a core option`,
+        !CORE_CONFIG_KEYS.has(key as keyof SelectPresentationConfig) &&
           !Object.hasOwn(REMOVED_TEXT_NAMES, key)
       );
     }
@@ -426,18 +423,15 @@ export default class SelectCustomizations {
    * over the layers it has seen.
    */
   resolveOptions(
-    base: SelectPresentationOptions,
-    kindOptions: Record<string, unknown> | undefined,
-    context: SelectOptionsContext,
+    base: SelectPresentationConfig,
+    kindConfig: Record<string, unknown> | undefined,
+    context: SelectConfigContext,
     textInputs: SelectTextInputs
-  ): SelectResolvedOptions {
-    const declared: SelectPresentationOptions & Record<string, unknown> = {
+  ): SelectConfig {
+    const declared: SelectPresentationConfig & Record<string, unknown> = {
       ...base,
       ...Object.fromEntries(
-        this.#kindOptionKeys.map((key) => [
-          key,
-          kindOptions?.[key] ?? undefined,
-        ])
+        this.#kindOptionKeys.map((key) => [key, kindConfig?.[key] ?? undefined])
       ),
       texts: undefined,
     };
@@ -450,8 +444,8 @@ export default class SelectCustomizations {
       ),
       this.#textLayer(textInputs.texts, "@texts"),
     ];
-    let current = this.#optionsSnapshot(declared, layers, wrappers, textInputs);
-    this.#steps.options.forEach((step, index) => {
+    let current = this.#configSnapshot(declared, layers, wrappers, textInputs);
+    this.#steps.config.forEach((step, index) => {
       const previous = current;
       const partial = withTransformerErrorHandling(
         () => step(previous, context),
@@ -474,8 +468,8 @@ export default class SelectCustomizations {
         }
         if (!Object.hasOwn(declared, key)) {
           if (DEBUG) {
-            warn(`DSelect: unknown options customization key "${key}"`, false, {
-              id: "discourse.d-select.unknown-option",
+            warn(`DSelect: unknown config customization key "${key}"`, false, {
+              id: "discourse.d-select.unknown-config",
             });
           }
           continue;
@@ -491,10 +485,10 @@ export default class SelectCustomizations {
         this.#textLayer(
           partial.texts,
           "a customization",
-          this.#steps.optionsTiers[index] === 0
+          this.#steps.configTiers[index] === 0
         )
       );
-      current = this.#optionsSnapshot(next, layers, wrappers, textInputs);
+      current = this.#configSnapshot(next, layers, wrappers, textInputs);
     });
     const noneRow = !!current.noneRow;
     const loadingStatus = !!current.loadingStatus;
@@ -516,7 +510,7 @@ export default class SelectCustomizations {
       loadingStatus !== current.loadingStatus ||
       iconOnly !== current.iconOnly
     ) {
-      current = this.#optionsSnapshot(
+      current = this.#configSnapshot(
         { ...current, noneRow, loadingStatus, iconOnly },
         layers,
         wrappers,
@@ -576,12 +570,12 @@ export default class SelectCustomizations {
    * Copies nested caret state and the merged texts, so freezing a snapshot never freezes
    * caller-owned data, then attaches a resolver over the text layers seen so far.
    */
-  #optionsSnapshot(
-    options: SelectPresentationOptions & Record<string, unknown>,
+  #configSnapshot(
+    config: SelectPresentationConfig & Record<string, unknown>,
     layers: ReadonlyArray<Record<string, unknown>>,
     wrappers: Readonly<Record<string, unknown>>,
     textInputs: SelectTextInputs
-  ): SelectResolvedOptions {
+  ): SelectConfig {
     const texts: Record<string, unknown> = {};
     for (const layer of layers) {
       for (const [key, entry] of Object.entries(layer)) {
@@ -591,21 +585,21 @@ export default class SelectCustomizations {
       }
     }
     const snapshot = {
-      ...options,
+      ...config,
       texts: Object.freeze(texts) as SelectTexts,
       caretIcon:
-        typeof options.caretIcon === "object" && options.caretIcon !== null
-          ? Object.freeze({ ...options.caretIcon })
-          : options.caretIcon,
+        typeof config.caretIcon === "object" && config.caretIcon !== null
+          ? Object.freeze({ ...config.caretIcon })
+          : config.caretIcon,
     };
     const required = new Set(REQUIRED_SELECT_TEXTS);
     if (textInputs.labelledBy) {
       required.delete("ariaLabel");
     }
-    if (options.noneRow) {
+    if (config.noneRow) {
       required.add("noneLabel");
     }
-    if (options.loadingStatus) {
+    if (config.loadingStatus) {
       required.add("loadingLabel");
     }
     attachSelectTextResolver(
@@ -694,7 +688,7 @@ export default class SelectCustomizations {
         row: (callback) => append(pending.row, callback),
         load: (callback) => append(pending.load, callback),
         change: (callback) => append(pending.change, callback),
-        options: (callback) => append(pending.options, callback),
+        config: (callback) => append(pending.config, callback),
       },
       {
         get(target, key, receiver) {
@@ -726,8 +720,8 @@ export default class SelectCustomizations {
     if (succeeded) {
       this.#steps.content.push(...pending.content);
       this.#steps.row.push(...pending.row);
-      this.#steps.options.push(...pending.options);
-      this.#steps.optionsTiers.push(...pending.options.map(() => tier));
+      this.#steps.config.push(...pending.config);
+      this.#steps.configTiers.push(...pending.config.map(() => tier));
       this.#steps.load.push(...pending.load);
       this.#steps.change.push(...pending.change);
     }

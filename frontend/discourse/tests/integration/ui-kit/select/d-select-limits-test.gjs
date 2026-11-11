@@ -1586,8 +1586,8 @@ module(
         "the parser receives the current value"
       );
       assert.true(
-        Boolean(context.options),
-        "the parser receives resolved options"
+        Boolean(context.config),
+        "the parser receives the resolved config"
       );
       assert
         .dom("input.d-select__filter")

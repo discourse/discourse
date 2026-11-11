@@ -24,10 +24,10 @@ import {
   userPickerName,
 } from "discourse/ui-kit/select/recipes/users/-internals/user-texts";
 import type {
+  SelectConfig,
   SelectItem,
   SelectItemId,
-  SelectLoadOptions,
-  SelectResolvedOptions,
+  SelectLoadRequest,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -223,7 +223,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   }
 
   @action
-  async load(filter: string, opts: SelectLoadOptions) {
+  async load(filter: string, opts: SelectLoadRequest) {
     const rows = (await searchUsers({
       term: filter,
       groups: this.args.includeGroups,
@@ -232,7 +232,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       includeStaged: this.args.includeStaged,
       topicId: this.args.topicId,
       categoryId: this.args.categoryId,
-      searchOptions: opts.options?.searchOptions as
+      searchOptions: opts.config?.searchOptions as
         | Record<string, unknown>
         | undefined,
       load: this.args.load,
@@ -283,11 +283,11 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   @action
   async resolveValues(
     values: SelectItemId[],
-    opts: SelectLoadOptions
+    opts: SelectLoadRequest
   ): Promise<SelectItem[]> {
     const names = values.map(String);
     const special = new Map<string, SelectItem>(
-      (opts.options ? this.#specialRows(opts.options) : []).map((item) => [
+      (opts.config ? this.#specialRows(opts.config) : []).map((item) => [
         String(item.id),
         item,
       ])
@@ -358,11 +358,11 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     );
   }
 
-  #specialRows(options: SelectResolvedOptions): SelectItem[] {
+  #specialRows(config: SelectConfig): SelectItem[] {
     return (
       this.args.specialItems?.(
         { filter: "", value: this.selectedValue, hasValue: true },
-        options
+        config
       ) ?? []
     );
   }
@@ -382,12 +382,12 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
       @kind="select-user"
+      @kindConfig={{hash searchOptions=@searchOptions}}
       @kindContext={{hash
         value=@value
         includeGroups=@includeGroups
         exclude=@exclude
       }}
-      @kindOptions={{hash searchOptions=@searchOptions}}
       @kindTexts={{this.kindTexts}}
       @legacyKind={{this.legacyKind}}
       @load={{this.load}}
@@ -407,25 +407,25 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @value={{this.selectedValue}}
       @variant={{@variant}}
     >
-      <:item as |item options row|>
+      <:item as |item config row|>
         {{#if (has-block "item")}}
-          {{yield item options row to="item"}}
+          {{yield item config row to="item"}}
         {{else}}
           <UserOption @item={{item}} />
         {{/if}}
       </:item>
-      <:selection as |item options|>
+      <:selection as |item config|>
         {{#if (has-block "selection")}}
-          {{yield item options to="selection"}}
+          {{yield item config to="selection"}}
         {{else}}
-          <UserSelection @item={{item}} @options={{options}} />
+          <UserSelection @config={{config}} @item={{item}} />
         {{/if}}
       </:selection>
       <:unresolved as |item|>
         <UserSelection @item={{item}} />
       </:unresolved>
-      <:footer as |state options|>
-        {{yield state options to="footer"}}
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
       </:footer>
     </DSelect>
   </template>
