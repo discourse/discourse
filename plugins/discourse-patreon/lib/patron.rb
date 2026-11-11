@@ -128,6 +128,7 @@ module Patreon
         UserEmail
           .includes(:user)
           .where(email: emails)
+          .where(user_id: User.where(active: true))
           .map do |u|
             patreon_id = patrons.key(u.email)
             update_local_user(u.user, patreon_id)
@@ -154,7 +155,11 @@ module Patreon
             provider_uid: patreon_id,
           },
         )
-      user ||= User.joins(:user_emails).find_by(user_emails: { email: all[patreon_id] })
+      user ||=
+        User
+          .joins(:user_emails)
+          .where(active: true)
+          .find_by(user_emails: { email: all[patreon_id] })
       return if user.blank?
 
       update_local_user(user, patreon_id)
