@@ -145,6 +145,210 @@ RSpec.describe Email::Receiver do
     expect { process(:null_byte_in_subject) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
+  describe "account restrictions by email destination" do
+    fab!(:sender) { Fabricate(:user, email: "sender@example.com", refresh_auto_groups: true) }
+    fab!(:group) { Fabricate(:group, incoming_email: "support@example.com") }
+    fab!(:category) { Fabricate(:category, email_in: "category@example.com") }
+    fab!(:group_topic) do
+      Fabricate(:group_private_message_topic, user: sender, recipient_group: group)
+    end
+    fab!(:group_post) { Fabricate(:post, topic: group_topic, user: sender) }
+    fab!(:category_post) do
+      Fabricate(:post, user: sender, topic: Fabricate(:topic, category: category))
+    end
+    fab!(:private_post) do
+      Fabricate(:post, user: sender, topic: Fabricate(:private_message_topic, user: sender))
+    end
+
+    before { configure_reply_by_email }
+
+    def incoming_message(to:, reply_to: nil)
+      Mail
+        .new do
+          from "sender@example.com"
+          self.to = to
+          subject "Account support request"
+          date Time.current
+          in_reply_to reply_to if reply_to
+          body "Please help me resolve the issue with my account."
+        end
+        .to_s
+    end
+
+    shared_examples "restricted email sender" do |error|
+      it "creates a new group inbox conversation" do
+        post = Email::Receiver.new(incoming_message(to: group.incoming_email)).process!
+
+        expect(post).to be_persisted
+        expect(post.user).to eq(sender)
+        expect(post.topic).to be_private_message
+        expect(post.topic.allowed_groups).to contain_exactly(group)
+        expect(IncomingEmail.last.post_id).to eq(post.id)
+      end
+
+      it "replies to a group address in an existing conversation" do
+        original =
+          Fabricate(
+            :incoming_email,
+            post: group_post,
+            topic: group_topic,
+            from_address: sender.email,
+            message_id: "group-message@example.com",
+          )
+        mail = incoming_message(to: group.incoming_email, reply_to: original.message_id)
+
+        expect { Email::Receiver.new(mail).process! }.to change { group_topic.posts.count }.by(
+          1,
+        ).and not_change(Topic, :count)
+
+        expect(Post.last.user).to eq(sender)
+      end
+
+      it "replies to a group conversation through a reply key" do
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to change { group_topic.posts.count }.by(
+          1,
+        ).and not_change(Topic, :count)
+      end
+
+      it "replies to a group conversation through message references" do
+        SiteSetting.find_related_post_with_key = false
+        message_id = "discourse/post/#{group_post.id}@#{Discourse.current_hostname}"
+        mail = incoming_message(to: group.incoming_email, reply_to: message_id)
+
+        expect { Email::Receiver.new(mail).process! }.to change { group_topic.posts.count }.by(
+          1,
+        ).and not_change(Topic, :count)
+      end
+
+      it "preserves reply key ownership for group conversations" do
+        other_user = Fabricate(:user)
+        group_topic.topic_allowed_users.create!(user: other_user)
+        key = Fabricate(:post_reply_key, user: other_user, post: group_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(
+          Email::Receiver::ReplyUserNotMatchingError,
+        ).and not_change(Post, :count)
+      end
+
+      it "preserves group conversation access checks" do
+        group_topic.topic_allowed_users.where(user: sender).destroy_all
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(
+          Email::Receiver::ReplyNotAllowedError,
+        ).and not_change(Post, :count)
+      end
+
+      it "rejects category submissions containing a forwarded message" do
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = sender.email
+        mail.to = category.email_in
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects replies to a category that mirrors a mailing list" do
+        category.update!(mailinglist_mirror: true)
+        message_id = "discourse/post/#{category_post.id}@#{Discourse.current_hostname}"
+        mail = incoming_message(to: category.email_in, reply_to: message_id)
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects new category topics" do
+        mail = incoming_message(to: category.email_in)
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "delivers only to the group inbox when a category reply key is also a recipient" do
+        key = Fabricate(:post_reply_key, user: sender, post: category_post)
+        mail = incoming_message(to: ["reply+#{key.reply_key}@bar.com", group.incoming_email])
+
+        post = Email::Receiver.new(mail).process!
+
+        expect(post.topic.allowed_groups).to contain_exactly(group)
+        expect(category_post.topic.posts.count).to eq(1)
+      end
+
+      it "rejects referenced category replies even when addressed to a group inbox" do
+        SiteSetting.find_related_post_with_key = false
+        message_id = "discourse/post/#{category_post.id}@#{Discourse.current_hostname}"
+        mail = incoming_message(to: group.incoming_email, reply_to: message_id)
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects replies to an individual private message" do
+        key = Fabricate(:post_reply_key, user: sender, post: private_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects category replies through a reply key" do
+        key = Fabricate(:post_reply_key, user: sender, post: category_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+    end
+
+    context "when the sender is inactive" do
+      before { sender.update!(active: false) }
+
+      include_examples "restricted email sender", Email::Receiver::InactiveUserError
+    end
+
+    context "when the sender is silenced" do
+      before { sender.update!(silenced_till: 1.year.from_now) }
+
+      include_examples "restricted email sender", Email::Receiver::SilencedUserError
+    end
+
+    context "when the sender is suspended" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      include_examples "restricted email sender", Email::Receiver::SuspendedUserError
+    end
+
+    it "validates the content of a suspended sender's group reply through a reply key" do
+      sender.update!(suspended_till: 1.year.from_now)
+      key = Fabricate(:post_reply_key, user: sender, post: group_post)
+      mail = Mail.new(incoming_message(to: "reply+#{key.reply_key}@bar.com"))
+      mail.body = "x"
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::InvalidPost,
+        /too short/,
+      ).and not_change(Post, :count)
+    end
+  end
+
   describe "bounces to VERP" do
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
@@ -269,14 +473,6 @@ RSpec.describe Email::Receiver do
     it "handles email with no subject" do
       expect { process(:no_subject) }.to change(Topic, :count)
       expect(Topic.last.title).to eq("This topic needs a title")
-    end
-
-    it "rejects email from a suspended sender" do
-      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
-
-      expect { process(:email_reply_1) }.to raise_error(
-        Email::Receiver::SuspendedUserError,
-      ).and not_change(Topic, :count)
     end
 
     it "bounds the body of posts created without validations" do

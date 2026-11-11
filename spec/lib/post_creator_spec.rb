@@ -1632,6 +1632,23 @@ RSpec.describe PostCreator do
   end
 
   describe "suspended users" do
+    it "rejects group replies submitted outside incoming email" do
+      user = Fabricate(:user, suspended_till: 1.year.from_now)
+      topic =
+        Fabricate(:group_private_message_topic, user: user, recipient_group: Fabricate(:group))
+      Fabricate(:post, topic: topic, user: user)
+      creator =
+        PostCreator.new(
+          user,
+          topic_id: topic.id,
+          raw: "This reply is submitted through the web.",
+          is_group_message: true,
+        )
+
+      expect { creator.create }.not_to change(Post, :count)
+      expect(creator.errors[:base]).to include(I18n.t(:user_is_suspended))
+    end
+
     it "does not allow suspended users to create topics" do
       user = Fabricate(:user, suspended_at: 1.month.ago, suspended_till: 1.month.from_now)
 

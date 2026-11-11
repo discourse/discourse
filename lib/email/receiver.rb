@@ -246,7 +246,7 @@ module Email
       user = @from_user
 
       if user.present?
-        log_and_validate_user(user)
+        log_user(user)
       elsif !SiteSetting.enable_staged_users
         category = Category.find_by_email(mail.to)
         if category&.email_in_allow_strangers? && SiteSetting.email_in_allow_system_user_fallback
@@ -276,6 +276,7 @@ module Email
 
       if action = subscription_action_for(body, subject)
         raise UnsubscribeNotAllowed if user.nil?
+        validate_user(user)
         send_subscription_mail(action, user)
         return
       end
@@ -328,6 +329,7 @@ module Email
 
         # We don't stage new users for emails to reply addresses, exit if user is nil
         raise BadDestinationAddress if user.blank?
+        validate_user(user)
 
         # We only get here if there are no destinations (the email is not going to
         # a Category, Group, or PostReplyKey)
@@ -346,9 +348,11 @@ module Email
       end
     end
 
-    def log_and_validate_user(user)
+    def log_user(user)
       @incoming_email.update_columns(user_id: user.id)
+    end
 
+    def validate_user(user)
       raise InactiveUserError if !user.active && !user.staged
       raise SuspendedUserError if user.suspended?
       raise SilencedUserError if user.silenced?
@@ -960,6 +964,8 @@ module Email
     end
 
     def process_destination(destination, user, body, elided)
+      validate_user(user) if user && destination.is_a?(Category)
+
       if SiteSetting.forwarded_emails_behaviour != "hide" && has_been_forwarded? &&
            process_forwarded_email(destination, user)
         return
@@ -995,6 +1001,7 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post = Post.with_deleted.find(destination.post_id)
+        validate_user(user) unless group_message?(post.topic)
         raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if destination.user_id != user.id && !forwarded_reply_key?(destination, user)
@@ -1387,6 +1394,7 @@ module Email
     end
 
     def create_topic(options = {})
+      validate_user(options[:user]) unless options[:is_group_message]
       enable_email_pm_setting(options[:user]) if options[:archetype] == Archetype.private_message
 
       create_post_with_attachments(options)
@@ -1411,6 +1419,8 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:is_group_message] = group_message?(options[:topic])
+      validate_user(options[:user]) unless options[:is_group_message]
       if options[:bounce] && options[:topic].archetype != Archetype.private_message
         raise BouncedEmailError
       end
@@ -1432,10 +1442,12 @@ module Email
         raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:topic].id
         options[:reply_to_post_number] = options[:post]&.post_number
-        options[:is_group_message] = options[:topic].private_message? &&
-          options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
+    end
+
+    def group_message?(topic)
+      topic.present? && topic.private_message? && topic.allowed_groups.exists?
     end
 
     def create_post_action(user, post, type)
@@ -1759,7 +1771,7 @@ module Email
     end
 
     def stage_sender_user(email, display_name)
-      find_or_create_user!(email, display_name).tap { |u| log_and_validate_user(u) }
+      find_or_create_user!(email, display_name).tap { |u| log_user(u) }
     end
 
     def delete_created_staged_users

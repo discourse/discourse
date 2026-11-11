@@ -102,7 +102,8 @@ class PostCreator
     @topic = nil
     @post = nil
 
-    if @user.suspended? && !skip_validations?
+    group_email = @opts[:via_email] && @opts[:is_group_message]
+    if @user.suspended? && !skip_validations? && !group_email
       errors.add(:base, I18n.t(:user_is_suspended))
       return false
     end
