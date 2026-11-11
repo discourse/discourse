@@ -60,7 +60,7 @@ module PageObjects
       end
 
       def changes_banner
-        PageObjects::Components::AdminChangesBanner.new
+        PageObjects::Components::DFloatingControlBar.new
       end
 
       def has_color_scheme_selector?

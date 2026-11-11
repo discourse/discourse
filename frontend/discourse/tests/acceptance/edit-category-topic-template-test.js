@@ -56,10 +56,10 @@ acceptance("Admin - Edit category topic template", function (needs) {
     await fillIn(".d-editor-input", "New topic template content");
 
     assert
-      .dom(".admin-changes-banner")
+      .dom(".d-floating-control-bar")
       .exists("banner is shown after changing topic template");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       putData.topic_template,
@@ -75,10 +75,10 @@ acceptance("Admin - Edit category topic template", function (needs) {
     await fillIn("#category-topic-title-placeholder", "Enter a bug title");
 
     assert
-      .dom(".admin-changes-banner")
+      .dom(".d-floating-control-bar")
       .exists("banner is shown after changing topic title placeholder");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       putData.topic_title_placeholder,
@@ -98,10 +98,10 @@ acceptance("Admin - Edit category topic template", function (needs) {
     await formTemplateChooser.selectRowByValue(1);
 
     assert
-      .dom(".admin-changes-banner")
+      .dom(".d-floating-control-bar")
       .exists("banner is shown after selecting a form template");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.deepEqual(
       putData.form_template_ids,
@@ -109,7 +109,7 @@ acceptance("Admin - Edit category topic template", function (needs) {
       "it sends the updated form template ids"
     );
     assert
-      .dom(".admin-changes-banner")
+      .dom(".d-floating-control-bar")
       .doesNotExist("banner is gone after saving");
   });
 });
