@@ -7,8 +7,9 @@
  *   not a test directory.
  */
 export default function wrapTestModulesPlugin({ root }) {
+  const escapedRoot = root.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const testModule = new RegExp(
-    `^${RegExp.escape(root)}/tests/(?!helpers/).*-test\\.(?:gjs|js|ts|gts)$`
+    `^${escapedRoot}/tests/(?!helpers/).*-test\\.(?:gjs|js|ts|gts)$`
   );
 
   return {
