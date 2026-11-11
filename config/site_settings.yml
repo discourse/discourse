@@ -4840,6 +4840,13 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_page_shell_prototype:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    depends_on:
+      - enable_main_outlet_grid_layout_change
   enable_main_outlet_grid_layout_change:
     default: false
     client: true

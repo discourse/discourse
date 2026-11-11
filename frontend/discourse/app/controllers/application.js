@@ -13,6 +13,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 export default class ApplicationController extends Controller {
   @service footer;
   @service mobileTabBar;
+  @service pageShellPrototype;
   @service router;
   @service scrollState;
   @service sidebarState;
@@ -43,6 +44,12 @@ export default class ApplicationController extends Controller {
   // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
   // Accessing the value in a getter prevents static viewport initialization warnings.
   get showSidebar() {
+    if (this.pageShellPrototype.enabled) {
+      return (
+        this.pageShellPrototype.left === "open" && !this.site.narrowDesktopView
+      );
+    }
+
     return this._showSidebar ?? this.calculateShowSidebar();
   }
 
@@ -166,6 +173,11 @@ export default class ApplicationController extends Controller {
 
   @action
   toggleSidebar() {
+    if (this.pageShellPrototype.enabled) {
+      this.pageShellPrototype.toggleLeft();
+      return;
+    }
+
     // enables CSS transitions, but not on did-insert
     document.body.classList.add("sidebar-animate");
 
