@@ -1001,7 +1001,7 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post = Post.with_deleted.find(destination.post_id)
-        validate_user(user) unless group_message?(post.topic)
+        validate_user(user) unless group_inbox_message?(post.topic)
         raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if destination.user_id != user.id && !forwarded_reply_key?(destination, user)
@@ -1071,7 +1071,7 @@ module Email
           title: subject,
           archetype: Archetype.private_message,
           target_group_names: [group.name],
-          is_group_message: true,
+          is_group_inbox_message: true,
           skip_validations: true,
         )
       else
@@ -1199,7 +1199,7 @@ module Email
           archetype: Archetype.private_message,
           target_usernames: [user.username],
           target_group_names: [destination.name],
-          is_group_message: true,
+          is_group_inbox_message: true,
           skip_validations: true,
           created_at: date,
         )
@@ -1420,11 +1420,12 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
-      options[:is_group_message] = group_message?(options[:topic])
+      options[:is_group_inbox_message] = group_inbox_message?(options[:topic])
       post_action_type = post_action_for(options[:raw])
       notification_level = notification_level_for(options[:raw])
-      group_message_post = options[:is_group_message] && !post_action_type && !notification_level
-      validate_user(options[:user]) unless group_message_post || options[:bounce]
+      group_inbox_post =
+        options[:is_group_inbox_message] && !post_action_type && !notification_level
+      validate_user(options[:user]) unless group_inbox_post || options[:bounce]
       if options[:bounce] && options[:topic].archetype != Archetype.private_message
         raise BouncedEmailError
       end
@@ -1450,7 +1451,7 @@ module Email
       end
     end
 
-    def group_message?(topic)
+    def group_inbox_message?(topic)
       topic.present? && topic.private_message? && topic.allowed_groups.exists?
     end
 
@@ -1514,7 +1515,7 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          opts = { for_group_message: options[:is_group_message] }
+          opts = { for_group_message: options[:is_group_inbox_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
           upload_sha = upload.original_sha1.presence || upload.sha1
           if upload.errors.empty?

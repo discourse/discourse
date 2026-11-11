@@ -1632,7 +1632,7 @@ RSpec.describe PostCreator do
   end
 
   describe "suspended users" do
-    it "creates a post for an accepted incoming email without a group message flag" do
+    it "creates a post for an accepted group inbox email" do
       user = Fabricate(:user, suspended_till: 1.year.from_now)
       topic =
         Fabricate(:group_private_message_topic, user: user, recipient_group: Fabricate(:group))
@@ -1641,14 +1641,31 @@ RSpec.describe PostCreator do
         PostCreator.new(
           user,
           topic_id: topic.id,
-          raw: "This post records an accepted incoming email.",
+          raw: "This post records an accepted group inbox email.",
           via_email: true,
+          is_group_inbox_message: true,
         )
 
       post = creator.create
 
       expect(post).to be_persisted
       expect(post.via_email).to eq(true)
+    end
+
+    it "rejects incoming email outside a group inbox" do
+      user = Fabricate(:user, suspended_till: 1.year.from_now)
+      topic = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: topic, user: user)
+      creator =
+        PostCreator.new(
+          user,
+          topic_id: topic.id,
+          raw: "This email is outside a group inbox.",
+          via_email: true,
+        )
+
+      expect { creator.create }.not_to change(Post, :count)
+      expect(creator.errors[:base]).to include(I18n.t(:user_is_suspended))
     end
 
     it "rejects group replies submitted outside incoming email" do
@@ -1661,7 +1678,7 @@ RSpec.describe PostCreator do
           user,
           topic_id: topic.id,
           raw: "This reply is submitted through the web.",
-          is_group_message: true,
+          is_group_inbox_message: true,
         )
 
       expect { creator.create }.not_to change(Post, :count)
