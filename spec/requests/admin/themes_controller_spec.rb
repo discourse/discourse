@@ -1367,6 +1367,99 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
+      context "with localized tag selections in an objects setting" do
+        fab!(:tag) { Fabricate(:tag, name: "cat", locale: "en", public_topic_count: 1) }
+
+        before do
+          SiteSetting.tagging_enabled = true
+          SiteSetting.allow_user_locale = true
+          SiteSetting.content_localization_enabled = true
+          admin.update!(locale: "zh_CN")
+          Fabricate(:tag_localization, tag:, locale: "zh_CN", name: "猫")
+          theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+            tag_styles:
+              type: objects
+              default: []
+              schema:
+                name: tag style
+                properties:
+                  tags:
+                    type: tags
+          YAML
+          theme.save!
+        end
+
+        it "saves a localized picker selection by ID while exposing source names" do
+          get "/tags/filter/search.json", params: { q: "cat", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          selected_tag =
+            response.parsed_body.fetch("results").find { |result| result["id"] == tag.id }
+          expect(selected_tag).to include("id" => tag.id, "name" => "猫")
+
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [selected_tag.fetch("id")] }].to_json,
+              }
+
+          expect(response.status).to eq(200), response.body
+          expect(response.parsed_body.fetch("tag_styles")).to eq([{ "tags" => ["cat"] }])
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+          expect(UserHistory.last.new_value).to eq([{ tags: [tag.id] }].to_json)
+        end
+
+        it "continues to accept canonical name arrays from existing clients" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.name] }].to_json,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.fetch("tag_styles")).to eq([{ "tags" => ["cat"] }])
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+        end
+
+        it "does not interpret translated display names as source names" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: ["猫"] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.theme_settings.exists?(name: "tag_styles")).to eq(false)
+        end
+
+        it "rejects unknown tag IDs without changing the saved setting" do
+          theme.update_setting(:tag_styles, [{ tags: [tag.name] }])
+
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.id, 99_999_999] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+        end
+
+        it "rejects unknown tag names without saving the setting" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.name, "unknown-tag"] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.theme_settings.exists?(name: "tag_styles")).to eq(false)
+        end
+      end
+
       it "returns an error for an invalid objects setting value" do
         theme.set_field(
           target: :settings,

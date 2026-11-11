@@ -66,8 +66,10 @@ export default class SchemaSettingField extends Component {
           @description={{this.description}}
           @name={{@name}}
           @onChange={{@onValueChange}}
+          @sendTagIds={{@sendTagIds}}
           @setting={{@setting}}
           @spec={{@spec}}
+          @tagRecords={{@tagRecords}}
           @value={{@value}}
         />
       </div>
