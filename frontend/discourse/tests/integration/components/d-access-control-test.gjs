@@ -1239,6 +1239,38 @@ module(
       );
     });
 
+    test("announces each grantee it adds, with its permission", async function (assert) {
+      const a11y = this.owner.lookup("service:a11y");
+      const announced = () => a11y.announcementHistory.map(({ text }) => text);
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("team_a");
+
+      assert.true(
+        announced().includes("Added Team A as Editor"),
+        "a group is announced by the name its row shows"
+      );
+
+      await chooser.open();
+      await chooser.select("trust_level_0");
+
+      assert.true(
+        announced().includes("Added Trust level 0 as Viewer"),
+        "with the permission it was given"
+      );
+    });
+
     test("a read-only default group is added with the view permission", async function (assert) {
       const state = controlledState();
 

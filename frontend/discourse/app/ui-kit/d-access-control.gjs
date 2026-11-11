@@ -78,6 +78,7 @@ function rowTypeSortOrder(type) {
 }
 
 export default class DAccessControl extends Component {
+  @service a11y;
   @service site;
   @service siteSettings;
 
@@ -392,6 +393,7 @@ export default class DAccessControl extends Component {
     const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
+    this.#announceAdded(newPermission);
   }
 
   /** Adds a grantee picked in the add box, in the shape the legacy chooser emitted. */
@@ -486,6 +488,19 @@ export default class DAccessControl extends Component {
     }
 
     return permissionOptions;
+  }
+
+  /** Tells screen readers who was added, since the new row appears away from the add box. */
+  #announceAdded(grantee) {
+    const permission = this.buildPermissionOptions().find(
+      ({ id }) => id === grantee.permission
+    );
+    this.a11y.announce(
+      i18n("access_control.manage.grantee_added", {
+        name: grantee.display_name,
+        permission: permission?.name ?? grantee.permission,
+      })
+    );
   }
 
   /** A group record for the add box, disabled when no permission can be granted to it. */

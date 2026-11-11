@@ -115,6 +115,7 @@ en:
         access_permission_remove: "Remove"
         access_permission_remove_description: "Remove permission for this grantee"
         add_group: "Add user or group"
+        grantee_added: "Added %{name} as %{permission}"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
         disallowed: "Disallowed"
