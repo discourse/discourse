@@ -58,7 +58,7 @@ after_initialize do
         }
   end
 
-  on(:user_created) do |user|
+  on(:user_confirmed_email) do |user|
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
     patreon_id = Patreon::Patron.all.key(user.email)
 
@@ -71,7 +71,7 @@ after_initialize do
 
         Group.where(id: group_ids).each { |group| group.add user }
 
-        Patreon::Patron.update_local_user(user, patreon_id, true)
+        Patreon::Patron.update_local_user(user, patreon_id)
       rescue => e
         Rails.logger.warn(
           "Patreon group membership callback failed for new user #{id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",

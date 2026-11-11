@@ -78,5 +78,23 @@ RSpec.describe Patreon::Patron do
       expect(group1.users.to_a).to eq([patreon_user_info.user])
       expect(group2.users.to_a).to eq([patreon_user_info.user])
     end
+
+    it "does not bind or group an inactive account whose unverified email matches a patron" do
+      inactive = Fabricate(:user, email: "foo@bar.com", active: false)
+
+      described_class.sync_groups
+
+      expect(group1.users).not_to include(inactive)
+      expect(inactive.reload.custom_fields["patreon_id"]).to be_blank
+    end
+
+    it "does not match an inactive account by email when syncing by Patreon ID" do
+      inactive = Fabricate(:user, email: "foo@bar.com", active: false)
+
+      described_class.sync_groups_by(patreon_id: "111111")
+
+      expect(group1.users).not_to include(inactive)
+      expect(inactive.reload.custom_fields["patreon_id"]).to be_blank
+    end
   end
 end
