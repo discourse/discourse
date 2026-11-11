@@ -24,10 +24,9 @@ class DoNotDisturbController < ApplicationController
         end
       )
 
-    new_timing = current_user.do_not_disturb_timings.new(starts_at: Time.zone.now, ends_at: ends_at)
+    new_timing = UserNotificationPause.new(user: current_user).start(ends_at:)
 
-    if new_timing.save
-      current_user.publish_do_not_disturb(ends_at: ends_at)
+    if new_timing.persisted?
       render json: { ends_at: ends_at }
     else
       render_json_error(new_timing)
@@ -35,10 +34,7 @@ class DoNotDisturbController < ApplicationController
   end
 
   def destroy
-    current_user.active_do_not_disturb_timings.destroy_all
-    current_user.publish_do_not_disturb(ends_at: nil)
-    current_user.shelved_notifications.each(&:process)
-    current_user.shelved_notifications.destroy_all
+    UserNotificationPause.new(user: current_user).end_all
     render json: success_json
   end
 

@@ -19,6 +19,7 @@ import { isWithinEventTimeframe } from "../../models/discourse-post-event-event.
 import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send.js";
 import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit.js";
 import EmbeddableChatChannel from "./embeddable-chat-channel.gjs";
+import LivestreamNotificationPause from "./notification-pause.gjs";
 
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
@@ -31,7 +32,7 @@ export default class LivestreamZoomPage extends Component {
 
   @tracked errorMessage;
 
-  // Bumped to reload the frame, which is what a retry amounts to: the meeting
+  // Bumped to reload the frame, which is what a retry amounts to: the webinar
   // is set up by the page inside it, from scratch, on load.
   @tracked joinAttempt = 0;
 
@@ -52,11 +53,11 @@ export default class LivestreamZoomPage extends Component {
   #attendanceConfirmed = false;
 
   // Attendance is what follows a user into the livestream chat channel, so
-  // someone who reaches the meeting without ever answering the RSVP would sit
+  // someone who reaches the webinar without ever answering the RSVP would sit
   // in front of a read-only chat beside it. Anyone who has already made a
   // choice, including an explicit "not going", keeps it.
   //
-  // This page is the only way into the meeting, and it is addressable in its
+  // This page is the only way into the webinar, and it is addressable in its
   // own right, so it is asked for here rather than beside the button that
   // usually leads here.
   //
@@ -102,7 +103,7 @@ export default class LivestreamZoomPage extends Component {
     );
   }
 
-  // Zoom's meeting view sizes itself to the window it is in, so it is given one
+  // Zoom's webinar view sizes itself to the window it is in, so it is given one
   // of its own. Inside the frame the viewport is the frame, which leaves the
   // page free to put chat below it.
   get frameUrl() {
@@ -139,7 +140,7 @@ export default class LivestreamZoomPage extends Component {
     }
 
     if (event.data.state === "left") {
-      // This page is only ever the meeting, so a user who leaves it has
+      // This page is only ever the webinar, so a user who leaves it has
       // nowhere to go but back to the topic the webinar belongs to.
       window.location.assign(this.topicUrl);
     } else if (event.data.state === "error") {
@@ -171,7 +172,7 @@ export default class LivestreamZoomPage extends Component {
         this.appEvents.trigger("calendar:create-invitee-status", appEventData);
       }
     } catch (e) {
-      // Chat beside the meeting stays read-only without this, and its own RSVP
+      // Chat beside the webinar stays read-only without this, and its own RSVP
       // prompt is the way back from that, so the failure is worth saying out
       // loud rather than leaving the user to find it there.
       popupAjaxError(e);
@@ -231,6 +232,10 @@ export default class LivestreamZoomPage extends Component {
           title={{i18n "discourse_events.livestream.zoom.frame_title"}}
           {{this.listenForFrame}}
         ></iframe>
+
+        {{#if this.currentUser}}
+          <LivestreamNotificationPause @topicId={{@topic.id}} />
+        {{/if}}
       {{else}}
         <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
           <p class="discourse-calendar-livestream-zoom-page__waiting">

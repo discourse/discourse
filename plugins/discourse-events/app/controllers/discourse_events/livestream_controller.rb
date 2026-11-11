@@ -13,7 +13,7 @@ module DiscourseEvents
     ZOOM_SDK_VERSION = "6.2.0"
     ZOOM_SDK_CDN = "https://source.zoom.us"
 
-    # Hosts Zoom's full-page meeting view for embedding. The meeting sizes
+    # Hosts Zoom's full-page webinar view for embedding. The webinar sizes
     # itself to the window it is in, so it is given a window of its own to
     # render into and the page around it stays free for other content.
     def zoom_frame
@@ -39,7 +39,7 @@ module DiscourseEvents
         sdkVersion: ZOOM_SDK_VERSION,
         signatureUrl: "#{frame_base_path}/signature.json?#{signature_params.to_query}",
         # Zoom navigates this window when the user leaves, which is the only
-        # notice the page around it gets that the meeting is over.
+        # notice the page around it gets that the webinar is over.
         leaveUrl:
           "#{Discourse.base_url_no_prefix}#{frame_base_path}/frame?topic_id=#{topic.id}&left=1",
         hasLeft: params[:left].present?,
@@ -58,6 +58,29 @@ module DiscourseEvents
         on_failed_policy(:can_see_topic) { raise Discourse::NotFound }
         on_failed_contract { raise Discourse::InvalidParameters }
         on_failure { raise Discourse::NotFound }
+      end
+    end
+
+    def pause_notifications
+      DiscourseEvents::Livestream::PauseNotifications.call(service_params) do |result|
+        on_success { |guardian:| render json: { ends_at: guardian.user.do_not_disturb_until } }
+
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_topic) { raise Discourse::NotFound }
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_failed_policy(:event_not_over) { raise Discourse::InvalidAccess }
+        on_model_not_found(:do_not_disturb_timing) { head :conflict }
+        on_failure { render json: failed_json, status: :unprocessable_entity }
+      end
+    end
+
+    def resume_notifications
+      DiscourseEvents::Livestream::ResumeNotifications.call(service_params) do |result|
+        on_success { head :no_content }
+
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_failure { render json: failed_json, status: :unprocessable_entity }
       end
     end
 

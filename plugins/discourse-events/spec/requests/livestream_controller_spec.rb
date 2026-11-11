@@ -195,7 +195,7 @@ module DiscourseEvents
           )
         end
 
-        # Zoom leaves the meeting by navigating this page to its own URL with
+        # Zoom leaves the webinar by navigating this page to its own URL with
         # the flag set, which is the only notice the app around it gets.
         it "tells the app the user has left when Zoom returns them" do
           get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id, left: 1 }
@@ -257,6 +257,81 @@ module DiscourseEvents
         get "/t/#{topic.slug}/-1/zoom"
 
         expect(response.status).to eq(404)
+      end
+    end
+
+    # `post` names the event's post here.
+    def request_pause(pause_key)
+      process(
+        :post,
+        "/discourse-calendar/livestream/notification-pause.json",
+        params: {
+          topic_id: topic.id,
+          pause_key:,
+        },
+      )
+    end
+
+    describe "#pause_notifications" do
+      let(:pause_key) { SecureRandom.uuid }
+
+      it "rejects anonymous users" do
+        request_pause(pause_key)
+
+        expect(response.status).to eq(403)
+      end
+
+      it "pauses notifications until the event ends" do
+        sign_in(current_user)
+
+        request_pause(pause_key)
+
+        expect(response.status).to eq(200)
+        expect(Time.zone.parse(response.parsed_body["ends_at"])).to eq_time(event.ends_at)
+      end
+
+      it "returns not found for a topic the user cannot see" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        sign_in(current_user)
+
+        request_pause(pause_key)
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a conflict when the pause was already ended" do
+        sign_in(current_user)
+        delete "/discourse-calendar/livestream/notification-pause/#{pause_key}.json"
+
+        request_pause(pause_key)
+
+        expect(response.status).to eq(409)
+      end
+    end
+
+    describe "#resume_notifications" do
+      it "rejects anonymous users" do
+        delete "/discourse-calendar/livestream/notification-pause/#{SecureRandom.uuid}.json"
+
+        expect(response.status).to eq(403)
+      end
+
+      it "succeeds with no content" do
+        sign_in(current_user)
+        pause_key = SecureRandom.uuid
+        request_pause(pause_key)
+
+        delete "/discourse-calendar/livestream/notification-pause/#{pause_key}.json"
+
+        expect(response.status).to eq(204)
+      end
+
+      it "rejects a malformed pause key" do
+        sign_in(current_user)
+
+        delete "/discourse-calendar/livestream/notification-pause/not-a-key.json"
+
+        expect(response.status).to eq(400)
       end
     end
   end

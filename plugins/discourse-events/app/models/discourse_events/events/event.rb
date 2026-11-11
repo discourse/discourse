@@ -17,6 +17,10 @@ module DiscourseEvents
       MAX_RAW_INVITEES = 10
       MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
+      # An event with no end has nothing to pause notifications until, and leaving
+      # the webinar is what normally ends the pause, so this only bounds a tab
+      # left open.
+      OPEN_ENDED_NOTIFICATION_PAUSE = 3.hours
       DEFAULT_TIMEZONE = "UTC"
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
@@ -261,6 +265,12 @@ module DiscourseEvents
 
       def starts_at
         current_event_date&.starts_at || original_starts_at
+      end
+
+      def notification_pause_ends_at
+        return (ends_at || starts_at).end_of_day if all_day
+
+        ends_at || OPEN_ENDED_NOTIFICATION_PAUSE.from_now
       end
 
       # Between occurrences of a recurring livestream there is nothing to chat
