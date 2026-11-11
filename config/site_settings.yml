@@ -2201,7 +2201,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
