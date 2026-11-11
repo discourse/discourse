@@ -15,9 +15,7 @@ class DiscourseEvents::Livestream::PauseNotifications
   policy :can_see_topic
   model :event
   policy :event_not_over
-  model :notification_pause, :build_notification_pause
   model :do_not_disturb_timing, :start_pause
-  step :announce_pause
 
   private
 
@@ -37,16 +35,12 @@ class DiscourseEvents::Livestream::PauseNotifications
     event.notification_pause_ends_at > Time.zone.now
   end
 
-  def build_notification_pause(params:, guardian:)
-    DiscourseEvents::Livestream::NotificationPause.new(user: guardian.user, key: params.pause_key)
-  end
-
   # Finds nothing when leaving the meeting already ended this pause.
-  def start_pause(notification_pause:, event:)
-    notification_pause.start(ends_at: event.notification_pause_ends_at)
-  end
-
-  def announce_pause(guardian:)
-    guardian.user.publish_do_not_disturb(ends_at: guardian.user.do_not_disturb_until)
+  def start_pause(params:, guardian:, event:)
+    UserNotificationPause.new(user: guardian.user).start(
+      ends_at: event.notification_pause_ends_at,
+      source: "livestream",
+      key: params.pause_key,
+    )
   end
 end

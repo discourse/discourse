@@ -225,7 +225,6 @@ end
 require_relative "lib/discourse_events/engine"
 require_relative "lib/discourse_events/livestream/allowed_hosts"
 require_relative "lib/discourse_events/livestream/allowed_hosts_validator"
-require_relative "lib/discourse_events/livestream/notification_pause"
 require_relative "lib/discourse_events/livestream/topic_extension"
 require_relative "lib/discourse_events/livestream/chat_channel_extension"
 require_relative "lib/discourse_events/livestream/zoom_url_parser"
