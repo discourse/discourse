@@ -195,7 +195,7 @@ module DiscourseEvents
           )
         end
 
-        # Zoom leaves the meeting by navigating this page to its own URL with
+        # Zoom leaves the webinar by navigating this page to its own URL with
         # the flag set, which is the only notice the app around it gets.
         it "tells the app the user has left when Zoom returns them" do
           get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id, left: 1 }

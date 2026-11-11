@@ -18,7 +18,7 @@ module DiscourseEvents
       MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
       # An event with no end has nothing to pause notifications until, and leaving
-      # the meeting is what normally ends the pause, so this only bounds a tab
+      # the webinar is what normally ends the pause, so this only bounds a tab
       # left open.
       OPEN_ENDED_NOTIFICATION_PAUSE = 3.hours
       DEFAULT_TIMEZONE = "UTC"

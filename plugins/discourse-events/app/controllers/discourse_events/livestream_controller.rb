@@ -13,7 +13,7 @@ module DiscourseEvents
     ZOOM_SDK_VERSION = "6.2.0"
     ZOOM_SDK_CDN = "https://source.zoom.us"
 
-    # Hosts Zoom's full-page meeting view for embedding. The meeting sizes
+    # Hosts Zoom's full-page webinar view for embedding. The webinar sizes
     # itself to the window it is in, so it is given a window of its own to
     # render into and the page around it stays free for other content.
     def zoom_frame
@@ -39,7 +39,7 @@ module DiscourseEvents
         sdkVersion: ZOOM_SDK_VERSION,
         signatureUrl: "#{frame_base_path}/signature.json?#{signature_params.to_query}",
         # Zoom navigates this window when the user leaves, which is the only
-        # notice the page around it gets that the meeting is over.
+        # notice the page around it gets that the webinar is over.
         leaveUrl:
           "#{Discourse.base_url_no_prefix}#{frame_base_path}/frame?topic_id=#{topic.id}&left=1",
         hasLeft: params[:left].present?,

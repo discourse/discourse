@@ -35,7 +35,7 @@ class DiscourseEvents::Livestream::PauseNotifications
     event.notification_pause_ends_at > Time.zone.now
   end
 
-  # Finds nothing when leaving the meeting already ended this pause.
+  # Finds nothing when leaving the webinar already ended this pause.
   def start_pause(params:, guardian:, event:)
     UserNotificationPause.new(user: guardian.user).start(
       ends_at: event.notification_pause_ends_at,

@@ -9,12 +9,12 @@ import { i18n } from "discourse-i18n";
 
 const PAUSE_URL = "/discourse-calendar/livestream/notification-pause";
 
-// A reload loads the meeting again before the pause the last load ended is
+// A reload loads the webinar again before the pause the last load ended is
 // gone, so the load that ends one leaves a note for the next to find.
 const UNLOAD_MARK_KEY = "discourse-events-livestream-notification-pause-ended";
 const UNLOAD_MARK_TTL_MS = 30000;
 
-// Pauses notifications for as long as the meeting is open, with a toast
+// Pauses notifications for as long as the webinar is open, with a toast
 // offering a way out for anyone who would rather keep them.
 export default class LivestreamNotificationPause extends Component {
   @service currentUser;
@@ -30,12 +30,12 @@ export default class LivestreamNotificationPause extends Component {
   constructor() {
     super(...arguments);
 
-    // Leaving the meeting, or closing the tab, is a full page load, which never
+    // Leaving the webinar, or closing the tab, is a full page load, which never
     // tears the component down.
     window.addEventListener("pagehide", this.resumeOnUnload);
 
     // Someone already in do not disturb has settled this for themselves,
-    // unless what they are in is the pause this meeting just ended.
+    // unless what they are in is the pause this webinar just ended.
     if (this.#takeUnloadMark() || !this.notifications.isInDoNotDisturb) {
       this.#pause();
     }
@@ -107,7 +107,7 @@ export default class LivestreamNotificationPause extends Component {
       });
     } catch {
       // Nobody asked for the pause, so failing to start it is not worth
-      // interrupting the meeting over.
+      // interrupting the webinar over.
       if (this.#pauseKey === pauseKey) {
         this.#pauseKey = null;
       }
