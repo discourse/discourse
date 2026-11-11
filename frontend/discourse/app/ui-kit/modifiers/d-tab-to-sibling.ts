@@ -1,55 +1,61 @@
 import { registerDestructor } from "@ember/destroyable";
-import Modifier from "ember-modifier";
+import type Owner from "@ember/owner";
+import Modifier, { type ArgsFor } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+
+interface DTabToSiblingSignature {
+  Element: HTMLElement;
+}
 
 /**
  * Modifier that redirects tab navigation to focus sibling elements
  * instead of children within the element.
  *
- * Usage: {{tabToSibling}}
+ * Usage: `{{dTabToSibling}}`
  *
  * When Tab is pressed on the element, it will focus the next sibling.
  * When Shift+Tab is pressed, it will focus the previous sibling.
  * If no focusable sibling is found, falls back to default behavior.
  *
- * @example
- * // Use on list items to navigate between them instead of focusing children
+ * @example Use on list items to navigate between them instead of focusing children.
+ * ```hbs
  * <div class="search-results">
  *   {{#each items as |item|}}
- *     <div class="search-result" {{tabToSibling}} tabindex="0">
+ *     <div class="search-result" {{dTabToSibling}} tabindex="0">
  *       <h3>{{item.title}}</h3>
  *       <button>Action</button>  <!-- Tab won't focus this -->
  *     </div>
  *   {{/each}}
  * </div>
- *
- * @component DTabToSiblingModifier
+ * ```
  */
-export default class DTabToSiblingModifier extends Modifier {
+export default class DTabToSiblingModifier extends Modifier<DTabToSiblingSignature> {
+  declare element: HTMLElement;
+
   /**
-   * @param {object} owner - The owner object
-   * @param {Array} args - Arguments passed to the modifier
+   * @param owner - The owner object
+   * @param args - Arguments passed to the modifier
    */
-  constructor(owner, args) {
+  constructor(owner: Owner, args: ArgsFor<DTabToSiblingSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
   /**
    * Applies the modifier to the element
-   * @param {Element} element - The DOM element to apply the modifier to
+   * @param element - The DOM element to apply the modifier to
    */
-  modify(element) {
+  modify(element: HTMLElement) {
     this.element = element;
     this.element.addEventListener("keydown", this.handleKeydown);
   }
 
   /**
    * Handles keydown events to manage tab navigation
-   * @param {KeyboardEvent} event - The keyboard event
+   * @param event - The keyboard event
    */
   @bind
-  handleKeydown(event) {
+  handleKeydown(event: KeyboardEvent) {
     if (event.key !== "Tab") {
       return;
     }
@@ -69,18 +75,22 @@ export default class DTabToSiblingModifier extends Modifier {
 
   /**
    * Finds the next or previous focusable sibling element
-   * @param {Element} element - The current element
-   * @param {string} direction - "next" or "previous"
-   * @returns {Element|null} - The focusable sibling element or null
+   * @param element - The current element
+   * @param direction - "next" or "previous"
+   * @returns The focusable sibling element or null
    */
-  findFocusableSibling(element, direction) {
+  findFocusableSibling(
+    element: Element,
+    direction: "next" | "previous"
+  ): HTMLElement | null {
     const siblingProperty =
       direction === "next" ? "nextElementSibling" : "previousElementSibling";
     let sibling = element[siblingProperty];
 
     while (sibling) {
       if (this.isFocusable(sibling)) {
-        return sibling;
+        // Only HTML elements have the `offsetParent` that `isFocusable` requires.
+        return sibling as HTMLElement;
       }
       sibling = sibling[siblingProperty];
     }
@@ -90,21 +100,21 @@ export default class DTabToSiblingModifier extends Modifier {
 
   /**
    * Checks if an element is focusable
-   * @param {Element} element - The element to check
-   * @returns {boolean} - True if the element is focusable
+   * @param element - The element to check
+   * @returns True if the element is focusable
    */
-  isFocusable(element) {
+  isFocusable(element: Element): boolean {
     const tabindex = element.getAttribute("tabindex");
     if (tabindex === "-1") {
       return false;
     }
 
-    if (!element.offsetParent) {
-      return;
+    if (!(element as HTMLElement).offsetParent) {
+      return false;
     }
 
-    if (element.disabled) {
-      return;
+    if ((element as HTMLElement & { disabled?: boolean }).disabled) {
+      return false;
     }
 
     const focusable = [

@@ -82,6 +82,78 @@ module(
       );
     });
 
+    test("calls the callback with each observed entry", async function (assert) {
+      const entries = [];
+      const callback = (entry) => entries.push(entry);
+
+      await render(
+        <template>
+          <div class="observed" {{dObserveIntersection callback}}></div>
+        </template>
+      );
+
+      await this.observations[0].trigger({ isIntersecting: false });
+
+      assert.strictEqual(entries.length, 1, "the callback runs once");
+      assert.strictEqual(
+        entries[0].target,
+        document.querySelector(".observed"),
+        "it receives the entry for the observed element"
+      );
+      assert.false(entries[0].isIntersecting, "the entry is passed unchanged");
+    });
+
+    test("uses a full threshold and no root margin by default", async function (assert) {
+      const callback = () => {};
+
+      await render(
+        <template>
+          <div class="observed" {{dObserveIntersection callback}}></div>
+        </template>
+      );
+
+      assert.strictEqual(this.observations[0].options.threshold, 1);
+      assert.strictEqual(
+        this.observations[0].options.rootMargin,
+        "0px 0px 0px 0px"
+      );
+    });
+
+    test("joins an array root margin, adding px to numbers", async function (assert) {
+      const callback = () => {};
+      const rootMargin = [10, "5%", 0, "2px"];
+
+      await render(
+        <template>
+          <div
+            class="observed"
+            {{dObserveIntersection callback rootMargin=rootMargin}}
+          ></div>
+        </template>
+      );
+
+      assert.strictEqual(
+        this.observations[0].options.rootMargin,
+        "10px 5% 0px 2px",
+        "numbers become pixel lengths and strings are kept"
+      );
+    });
+
+    test("does not observe while loading", async function (assert) {
+      const callback = () => {};
+
+      await render(
+        <template>
+          <div
+            class="observed"
+            {{dObserveIntersection callback isLoading=true}}
+          ></div>
+        </template>
+      );
+
+      assert.strictEqual(this.observations.length, 0, "nothing is observed");
+    });
+
     test("an unmatched selector leaves the observer rooted at the viewport", async function (assert) {
       const callback = () => {};
 
