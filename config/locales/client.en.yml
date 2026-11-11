@@ -1,5 +1,25 @@
 en:
   js:
+    page_shell_prototype:
+      title: "Page shell layout prototype"
+      width: "Shell width"
+      centered: "Centered"
+      full: "Full width"
+      left: "Left panel"
+      right: "Right panel"
+      left_width: "Left width"
+      right_width: "Right width"
+      open: "Open"
+      rail: "Rail"
+      hidden: "Hidden"
+      footer: "Footer"
+      under_content: "Under content"
+      full_row: "Full row"
+      expand: "Expand"
+      expand_left: "Expand left panel"
+      expand_right: "Expand right panel"
+      right_description: "Temporary panel for checking shell geometry with real page content."
+      footer_description: "Temporary footer for checking alignment and sticky panel boundaries."
     dsa_notice:
       choice_title: "It's Illegal"
       choice_description: "Submit a detailed report explaining why this content is illegal."

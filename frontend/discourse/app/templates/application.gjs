@@ -19,6 +19,7 @@ import ModalContainer from "discourse/components/modal-container";
 import NotificationConsentBanner from "discourse/components/notification-consent-banner";
 import OfflineIndicator from "discourse/components/offline-indicator";
 import PageLoadingSlider from "discourse/components/page-loading-slider";
+import PageShellPrototype from "discourse/components/page-shell-prototype";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import PwaInstallBanner from "discourse/components/pwa-install-banner";
@@ -45,132 +46,147 @@ export default <template>
     {{bodyClass @controller.upcomingChangeBodyClasses}}
 
     <DDocument />
-    <PageLoadingSlider />
-    <PluginOutlet
-      @connectorTagName="div"
-      @name="above-site-header"
-      @outletArgs={{lazyHash
-        currentPath=@controller.router._router.currentPath
-      }}
-    />
-
-    {{#if @controller.showSiteHeader}}
-      <GlimmerSiteHeader
-        @canSignUp={{@controller.canSignUp}}
-        @showCreateAccount={{routeAction "showCreateAccount"}}
-        @showLogin={{routeAction "showLogin"}}
-        @showSidebar={{@controller.showSidebar}}
-        @sidebarEnabled={{@controller.sidebarEnabled}}
-        @toggleSidebar={{@controller.toggleSidebar}}
-      />
-    {{/if}}
-
-    <SoftwareUpdatePrompt />
-
-    {{#if @controller.siteSettings.enable_offline_indicator}}
-      <OfflineIndicator />
-    {{/if}}
-
-    <WelcomeBanner @location="below_site_header" />
-
-    <PluginOutlet
-      @connectorTagName="div"
-      @name="below-site-header"
-      @outletArgs={{lazyHash
-        currentPath=@controller.router._router.currentPath
-      }}
-    />
-
-    {{#unless @controller.isCurrentAdminRoute}}
-      <BlockOutlet @name="hero-blocks" />
-    {{/unless}}
-
-    <div class="wrap" id="main-outlet-wrapper" role="main">
-      {{#if @controller.sidebarEnabled}}
-        <SidebarWrapper
-          @showSidebar={{@controller.showSidebar}}
-          @toggleSidebar={{@controller.toggleSidebar}}
+    <PageShellPrototype
+      @showFooter={{@controller.showFooter}}
+      @sidebarEnabled={{@controller.sidebarEnabled}}
+    >
+      <:beforeHeader>
+        <PageLoadingSlider />
+        <PluginOutlet
+          @connectorTagName="div"
+          @name="above-site-header"
+          @outletArgs={{lazyHash
+            currentPath=@controller.router._router.currentPath
+          }}
         />
-      {{/if}}
+      </:beforeHeader>
+      <:header>
+        {{#if @controller.showSiteHeader}}
+          <GlimmerSiteHeader
+            @canSignUp={{@controller.canSignUp}}
+            @showCreateAccount={{routeAction "showCreateAccount"}}
+            @showLogin={{routeAction "showLogin"}}
+            @showSidebar={{@controller.showSidebar}}
+            @sidebarEnabled={{@controller.sidebarEnabled}}
+            @toggleSidebar={{@controller.toggleSidebar}}
+          />
+        {{/if}}
+      </:header>
+      <:beforeBody>
+        <SoftwareUpdatePrompt />
 
-      <LoadingSliderFallbackSpinner />
+        {{#if @controller.siteSettings.enable_offline_indicator}}
+          <OfflineIndicator />
+        {{/if}}
 
-      <PluginOutlet @name="before-main-outlet" />
+        <WelcomeBanner @location="below_site_header" />
 
-      <div id="main-outlet">
-        {{#unless @controller.shouldHideScrollableContentAbove}}
-          <PluginOutlet @connectorTagName="div" @name="above-main-container" />
-          {{#unless @controller.isCurrentAdminRoute}}
-            <BlockOutlet @name="main-outlet-blocks" />
-          {{/unless}}
+        <PluginOutlet
+          @connectorTagName="div"
+          @name="below-site-header"
+          @outletArgs={{lazyHash
+            currentPath=@controller.router._router.currentPath
+          }}
+        />
 
-          {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner @location="above_main_container" />
-          {{/if}}
+        {{#unless @controller.isCurrentAdminRoute}}
+          <BlockOutlet @name="hero-blocks" />
+        {{/unless}}
+      </:beforeBody>
+      <:body>
+        {{#if @controller.sidebarEnabled}}
+          <SidebarWrapper
+            @showSidebar={{@controller.showSidebar}}
+            @toggleSidebar={{@controller.toggleSidebar}}
+          />
+        {{/if}}
 
-          <WelcomeBanner @location="above_topic_content" />
+        <LoadingSliderFallbackSpinner />
 
-          <div class="container" id="main-container">
-            {{#if @controller.showTop}}
-              <DCustomHtml @name="top" />
-            {{/if}}
-            <NotificationConsentBanner />
-            <PwaInstallBanner />
-            <GlobalNotice />
+        <PluginOutlet @name="before-main-outlet" />
+
+        <div
+          id="main-outlet"
+          role={{if @controller.pageShellPrototype.enabled "main"}}
+        >
+          {{#unless @controller.shouldHideScrollableContentAbove}}
             <PluginOutlet
               @connectorTagName="div"
-              @name="top-notices"
-              @outletArgs={{lazyHash
-                currentPath=@controller.router._router.currentPath
-              }}
+              @name="above-main-container"
             />
-          </div>
-        {{/unless}}
+            {{#unless @controller.isCurrentAdminRoute}}
+              <BlockOutlet @name="main-outlet-blocks" />
+            {{/unless}}
 
-        {{outlet}}
+            {{#if @controller.siteSettings.enable_site_owner_onboarding}}
+              <AdminOnboardingBanner @location="above_main_container" />
+            {{/if}}
 
-        {{#unless @controller.shouldHideScrollableContentBelow}}
-          <PluginOutlet
-            @name="main-outlet-bottom"
-            @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+            <WelcomeBanner @location="above_topic_content" />
+
+            <div class="container" id="main-container">
+              {{#if @controller.showTop}}
+                <DCustomHtml @name="top" />
+              {{/if}}
+              <NotificationConsentBanner />
+              <PwaInstallBanner />
+              <GlobalNotice />
+              <PluginOutlet
+                @connectorTagName="div"
+                @name="top-notices"
+                @outletArgs={{lazyHash
+                  currentPath=@controller.router._router.currentPath
+                }}
+              />
+            </div>
+          {{/unless}}
+
+          {{outlet}}
+
+          {{#unless @controller.shouldHideScrollableContentBelow}}
+            <PluginOutlet
+              @name="main-outlet-bottom"
+              @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+            />
+          {{/unless}}
+          <CardContainer />
+        </div>
+
+        <PluginOutlet @name="after-main-outlet" />
+
+        {{#if @controller.showPoweredBy}}
+          <PoweredByDiscourse />
+        {{/if}}
+
+        {{! Composer lives inside the grid so themes can place it in a grid
+          column (e.g. Horizon peek mode). It is position:fixed in its default
+          state, so its DOM location here does not affect normal positioning —
+          however this relies on #main-outlet-wrapper never establishing a containing
+          block (no transform/filter/contain/will-change/perspective). }}
+        {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+          <ComposerContainer />
+        {{/if}}
+      </:body>
+      <:footer>
+        <PluginOutlet
+          @connectorTagName="div"
+          @name="above-footer"
+          @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+        />
+        {{#if @controller.showFooter}}
+          <DCustomHtml
+            class="custom-footer-content"
+            @name="footer"
+            @triggerAppEvent={{true}}
           />
-        {{/unless}}
-        <CardContainer />
-      </div>
-
-      <PluginOutlet @name="after-main-outlet" />
-
-      {{#if @controller.showPoweredBy}}
-        <PoweredByDiscourse />
-      {{/if}}
-
-      {{! Composer lives inside the grid so themes can place it in a grid
-      column (e.g. Horizon peek mode). It is position:fixed in its default
-      state, so its DOM location here does not affect normal positioning —
-      however this relies on #main-outlet-wrapper never establishing a containing
-      block (no transform/filter/contain/will-change/perspective). }}
-      {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
-        <ComposerContainer />
-      {{/if}}
-    </div>
-
-    <PluginOutlet
-      @connectorTagName="div"
-      @name="above-footer"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
-    {{#if @controller.showFooter}}
-      <DCustomHtml
-        class="custom-footer-content"
-        @name="footer"
-        @triggerAppEvent={{true}}
-      />
-    {{/if}}
-    <PluginOutlet
-      @connectorTagName="div"
-      @name="below-footer"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
+        {{/if}}
+        <PluginOutlet
+          @connectorTagName="div"
+          @name="below-footer"
+          @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+        />
+      </:footer>
+    </PageShellPrototype>
 
     <ModalContainer />
     <DesignWizardPanel />

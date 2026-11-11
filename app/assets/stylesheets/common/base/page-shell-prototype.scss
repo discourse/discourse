@@ -1,0 +1,402 @@
+// Temporary geometry experiment. All rules require the prototype setting AND
+// the new composer grid. No transforms or containment on composer ancestors.
+body.page-shell-prototype-active {
+  .shell-prototype-controls {
+    padding: var(--space-2) var(--space-4);
+    background: var(--secondary);
+    border-block-end: 1px solid var(--primary-low);
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    &__fields {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      padding-block: var(--space-3);
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    select {
+      margin: 0;
+    }
+  }
+
+  .page-shell-prototype {
+    --shell-prototype-baseline: var(--d-max-width);
+    --shell-prototype-padding: 24px;
+    --shell-prototype-rail: 56px;
+    --shell-prototype-left: min(
+      var(--shell-prototype-left-width),
+      max(200px, 100vw - 448px)
+    );
+    --shell-prototype-right: var(--shell-prototype-right-width);
+    --shell-prototype-composer: 0px;
+    --shell-prototype-columns: var(--shell-prototype-left) minmax(0, 1fr)
+      var(--shell-prototype-composer) var(--shell-prototype-right);
+    display: grid;
+    grid-template-columns: var(--shell-prototype-columns);
+    inline-size: 100%;
+    max-inline-size: calc(
+      var(--shell-prototype-baseline) + 2 * var(--shell-prototype-padding) +
+        var(--shell-prototype-left) + var(--shell-prototype-right) +
+        var(--shell-prototype-composer)
+    );
+    margin-inline: auto;
+    min-block-size: 100dvh;
+    align-content: start;
+
+    &[data-width="full"] {
+      max-inline-size: none;
+    }
+
+    &[data-left="rail"] {
+      --shell-prototype-left: var(--shell-prototype-rail);
+    }
+
+    &[data-left="hidden"] {
+      --shell-prototype-left: 0px;
+    }
+
+    &[data-right="rail"] {
+      --shell-prototype-right: var(--shell-prototype-rail);
+    }
+
+    &[data-right="hidden"] {
+      --shell-prototype-right: 0px;
+    }
+
+    // Above-header outlets and pre-body notices stay in their original order.
+    > * {
+      grid-column: 1 / -1;
+      min-inline-size: 0;
+    }
+
+    > .d-header-wrap {
+      display: grid;
+      grid-template-columns: subgrid;
+      align-self: start;
+      gap: 0;
+    }
+
+    .d-header {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      align-items: stretch;
+      gap: 0;
+      height: auto;
+      min-block-size: 4em;
+
+      > .wrap {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        gap: 0;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        min-block-size: 4em;
+
+        .contents {
+          display: grid;
+          grid-template-columns: subgrid;
+          grid-column: 1 / -1;
+          grid-template-areas: none;
+          gap: 0;
+          align-items: center;
+          position: relative;
+        }
+      }
+    }
+
+    .page-shell-prototype__header-start {
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+      inline-size: max(var(--shell-prototype-left), 96px);
+      padding-inline: var(--space-1);
+      box-sizing: border-box;
+
+      .header-sidebar-toggle {
+        flex-shrink: 0;
+        margin: 0;
+
+        button {
+          margin-inline: 0;
+        }
+      }
+
+      .home-logo-wrapper-outlet {
+        min-inline-size: 0;
+        margin-inline: 0;
+        overflow: hidden;
+      }
+
+      .title {
+        min-width: 0;
+      }
+
+      #site-logo {
+        max-inline-size: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .page-shell-prototype__header-main {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+
+      // Reserve the larger chrome overhang on both sides, keeping search
+      // centered on the content even when either side is a rail or hidden.
+      padding-inline: max(
+        var(--shell-prototype-padding),
+        var(--shell-prototype-header-start-width, 96px) - var(
+            --shell-prototype-left
+          ),
+        var(--shell-prototype-header-end-width, 240px) - var(
+            --shell-prototype-right
+          )
+      );
+
+      .floating-search-input-wrapper,
+      .extra-info-wrapper {
+        min-inline-size: 0;
+        max-inline-size: var(--shell-prototype-baseline);
+        margin-inline: auto;
+      }
+    }
+
+    .d-header .contents > .panel {
+      grid-area: auto;
+      grid-column: 4;
+      grid-row: 1;
+      justify-self: end;
+      margin: 0;
+      padding-inline-end: var(--space-2);
+      inline-size: max-content;
+      max-inline-size: calc(100vw - 48px);
+    }
+
+    // The existing body grid remains the composer's direct host. Column 3 is
+    // reserved for peek mode; shell right content uses column 4.
+    #main-outlet-wrapper {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-areas:
+        "sidebar content composer shell-right"
+        "sidebar below-content composer shell-right"
+        "sidebar shell-footer composer shell-right";
+      grid-template-rows: 1fr auto auto;
+      gap: 0;
+      inline-size: 100%;
+      max-width: none;
+      min-inline-size: 0;
+      padding: 0;
+      margin: 0;
+
+      #main-outlet {
+        grid-area: content;
+        min-inline-size: 0;
+        inline-size: 100%;
+        max-width: calc(
+          var(--shell-prototype-baseline) + 2 * var(--shell-prototype-padding)
+        );
+        justify-self: center;
+        box-sizing: border-box;
+        padding-inline: var(--shell-prototype-padding);
+      }
+
+      .powered-by-discourse {
+        grid-area: below-content;
+      }
+    }
+
+    .page-shell-prototype__left-slot {
+      grid-area: sidebar;
+      min-inline-size: 0;
+
+      .sidebar-wrapper {
+        position: sticky;
+        top: var(--header-offset);
+        block-size: calc(100dvh - var(--header-offset));
+        inline-size: 100%;
+        overflow: hidden;
+      }
+    }
+
+    &[data-left="hidden"] .page-shell-prototype__left-slot {
+      display: none;
+    }
+
+    .page-shell-prototype__right-slot {
+      grid-area: shell-right;
+      min-inline-size: 0;
+    }
+
+    &[data-constrained-right] {
+      --shell-prototype-right: 0px;
+
+      .page-shell-prototype__right-slot {
+        display: none;
+      }
+    }
+
+    .page-shell-prototype__right {
+      position: sticky;
+      top: var(--header-offset);
+      block-size: calc(100dvh - var(--header-offset));
+      padding: var(--space-4);
+      border-inline-start: 1px solid var(--primary-low);
+      background: var(--secondary);
+      overflow: auto;
+      box-sizing: border-box;
+    }
+
+    &[data-right="rail"] .page-shell-prototype__right {
+      padding: var(--space-1);
+      overflow-wrap: anywhere;
+    }
+
+    .page-shell-prototype__footer {
+      grid-area: shell-footer;
+      min-inline-size: 0;
+    }
+
+    .page-shell-prototype__footer-sample {
+      padding: var(--space-6) var(--shell-prototype-padding);
+      max-inline-size: var(--shell-prototype-baseline);
+      margin-inline: auto;
+      border-block-start: 1px solid var(--primary-low);
+    }
+
+    &[data-footer="row"] {
+      .page-shell-prototype__left-slot,
+      .page-shell-prototype__right-slot {
+        grid-row: 1 / 3;
+      }
+
+      .page-shell-prototype__footer {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        display: grid;
+        grid-template-columns: subgrid;
+        background: var(--primary-very-low);
+
+        > * {
+          grid-column: 2;
+        }
+      }
+    }
+
+    &[data-footer="off"] .page-shell-prototype__footer {
+      display: none;
+    }
+
+    // Dashboard widgets need the space inside the main column, rather than
+    // viewport breakpoints which cannot see the two shell panels. This route
+    // container is not an ancestor of the grid-hosted composer.
+    .admin-contents {
+      container-type: inline-size;
+      container-name: shell-prototype-admin;
+    }
+  }
+
+  @container shell-prototype-admin (width < 600px) {
+    .db-section__subheader {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .db-section__metrics {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: var(--space-4);
+    }
+
+    .db-section__metric {
+      min-inline-size: 0;
+      flex: 1 1 7em;
+    }
+
+    .db-section__metric-label {
+      white-space: normal;
+    }
+
+    .db-section__row-block-title,
+    .db-section__row-block-title > a {
+      white-space: normal;
+    }
+
+    .db-section__row-block-title .db-link-arrow {
+      inset-inline-end: 0;
+    }
+  }
+
+  // Preserve viewport-fixed composer positioning while aligning it to the
+  // measured main column rather than the old one-sidebar breakpoint formula.
+  #main-outlet-wrapper #reply-control:not(.fullscreen) {
+    inset-inline-start: var(--shell-prototype-content-inline-start);
+    inset-inline-end: auto;
+    margin-inline: 0;
+    width: var(--shell-prototype-content-width);
+    max-width: var(--shell-prototype-content-width);
+  }
+
+  @media (width < 1100px) {
+    .page-shell-prototype[data-right] {
+      --shell-prototype-right: 0px;
+
+      .page-shell-prototype__right-slot {
+        display: none;
+      }
+    }
+  }
+
+  @media (width < 768px) {
+    .page-shell-prototype[data-left] {
+      --shell-prototype-left: 0px;
+      --shell-prototype-padding: 12px;
+
+      .page-shell-prototype__left-slot {
+        display: none;
+      }
+    }
+  }
+}
+
+// Horizon's new-grid peek composer keeps column 3. Its existing toggle and
+// sticky presentation are reused, while these scoped rules own the tracks.
+@media (width >= 1280px) {
+  html.composer-open:not(.fullscreen-composer)
+    body.page-shell-prototype-active.full-width-enabled.peek-mode-active {
+    .page-shell-prototype {
+      --shell-prototype-composer: clamp(30em, 36vw, 40em);
+
+      #main-outlet-wrapper {
+        grid-template-columns: subgrid;
+      }
+    }
+
+    #main-outlet-wrapper #reply-control:not(.fullscreen).hide-preview {
+      grid-column: 3;
+      grid-row: 1;
+      left: auto;
+      right: auto;
+      width: auto;
+      max-width: none;
+    }
+  }
+}

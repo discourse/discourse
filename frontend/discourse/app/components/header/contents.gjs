@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MobileTabBarBackButton from "discourse/components/mobile-tab-bar/back-button";
+import PageShellPrototypeRegion from "discourse/components/page-shell-prototype-region";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -14,6 +15,7 @@ import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;
+  @service pageShellPrototype;
   @service header;
   @service mobileTabBar;
   @service documentTitle;
@@ -33,7 +35,11 @@ export default class Contents extends Component {
     // Below a section's top level, the logo makes room for the back button
     return applyValueTransformer(
       "home-logo-minimized",
-      this.args.topicInfoVisible || this.mobileTabBar.isNestedPage,
+      this.args.topicInfoVisible ||
+        this.mobileTabBar.isNestedPage ||
+        (this.pageShellPrototype.enabled &&
+          (!this.args.sidebarEnabled ||
+            this.pageShellPrototype.left !== "open")),
       {
         topicInfo: this.args.topicInfo,
         sidebarEnabled: this.args.sidebarEnabled,
@@ -96,53 +102,64 @@ export default class Contents extends Component {
           sidebarIcon=this.sidebarIcon
         }}
       />
-      {{#if this.site.desktopView}}
-        {{#if @sidebarEnabled}}
-          <SidebarToggle
-            @icon={{this.sidebarIcon}}
-            @showSidebar={{@showSidebar}}
-            @toggleNavigationMenu={{@toggleNavigationMenu}}
-          />
-        {{/if}}
-      {{else if this.mobileTabBar.isNestedPage}}
-        <MobileTabBarBackButton />
-      {{/if}}
-
-      <div class="home-logo-wrapper-outlet">
-        <PluginOutlet @name="home-logo-wrapper">
-          {{#if this.pageTitle}}
-            <h1 class="mobile-tab-bar-title">{{this.pageTitle}}</h1>
-          {{else}}
-            <HomeLogo @minimized={{this.minimized}} />
+      <PageShellPrototypeRegion
+        class="page-shell-prototype__header-start"
+        @enabled={{this.pageShellPrototype.enabled}}
+      >
+        {{#if this.site.desktopView}}
+          {{#if @sidebarEnabled}}
+            <SidebarToggle
+              @icon={{this.sidebarIcon}}
+              @showSidebar={{@showSidebar}}
+              @toggleNavigationMenu={{@toggleNavigationMenu}}
+            />
           {{/if}}
-        </PluginOutlet>
-      </div>
+        {{else if this.mobileTabBar.isNestedPage}}
+          <MobileTabBarBackButton />
+        {{/if}}
 
-      {{#if @topicInfoVisible}}
-        <TopicInfo @topicInfo={{@topicInfo}} />
-      {{/if}}
+        <div class="home-logo-wrapper-outlet">
+          <PluginOutlet @name="home-logo-wrapper">
+            {{#if this.pageTitle}}
+              <h1 class="mobile-tab-bar-title">{{this.pageTitle}}</h1>
+            {{else}}
+              <HomeLogo @minimized={{this.minimized}} />
+            {{/if}}
+          </PluginOutlet>
+        </div>
 
-      {{#if this.showHeaderSearch}}
-        <HeaderSearch />
-      {{/if}}
+      </PageShellPrototypeRegion>
 
-      <div class="before-header-panel-outlet">
-        <PluginOutlet
-          @deprecatedArgs={{lazyHash
-            topic=(deprecatedOutletArgument
-              value=this.visibleTopic
-              message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
-              id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
-              since="3.3.0.beta4-dev"
-            )
-          }}
-          @name="before-header-panel"
-          @outletArgs={{lazyHash
-            topicInfo=@topicInfo
-            topicInfoVisible=@topicInfoVisible
-          }}
-        />
-      </div>
+      <PageShellPrototypeRegion
+        class="page-shell-prototype__header-main"
+        @enabled={{this.pageShellPrototype.enabled}}
+      >
+        {{#if @topicInfoVisible}}
+          <TopicInfo @topicInfo={{@topicInfo}} />
+        {{/if}}
+
+        {{#if this.showHeaderSearch}}
+          <HeaderSearch />
+        {{/if}}
+
+        <div class="before-header-panel-outlet">
+          <PluginOutlet
+            @deprecatedArgs={{lazyHash
+              topic=(deprecatedOutletArgument
+                value=this.visibleTopic
+                message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
+                id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+                since="3.3.0.beta4-dev"
+              )
+            }}
+            @name="before-header-panel"
+            @outletArgs={{lazyHash
+              topicInfo=@topicInfo
+              topicInfoVisible=@topicInfoVisible
+            }}
+          />
+        </div>
+      </PageShellPrototypeRegion>
       <div
         aria-label={{i18n "header_panel"}}
         class="panel"
