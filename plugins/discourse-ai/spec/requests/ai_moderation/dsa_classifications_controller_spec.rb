@@ -222,6 +222,25 @@ RSpec.describe DiscourseAi::AiModeration::DsaClassificationsController do
         )
       end
 
+      it "returns the selected rule when two rules have the same combined label" do
+        enable_dsa_reporting(
+          community_rules: [
+            { ground: "Advertising", explanation: "Spam: unsolicited promotions" },
+            { ground: "Advertising: Spam", explanation: "unsolicited promotions" },
+          ],
+        )
+
+        DiscourseAi::Decisions.with_canned_answers(
+          community_rule: "1. Advertising: Spam: unsolicited promotions",
+          category: "Scams and fraud",
+        ) { post "/discourse-ai/ai-moderation/dsa-classifications/#{reviewable.id}/suggest.json" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["community_rule"]).to eq(
+          DsaStatementOfRecord.community_rules.first["id"],
+        )
+      end
+
       it "rate limits suggestions" do
         RateLimiter.enable
         stub_const(described_class, :SUGGESTIONS_PER_MINUTE, 1) do

@@ -43,7 +43,9 @@ export default class DsaModerationDetails extends Component {
       ...attributes
       @data={{this.formData}}
       @onRegisterApi={{@onRegisterApi}}
+      @onSet={{@onSet}}
       @onSubmit={{@onSubmit}}
+      @validate={{@validate}}
       as |form|
     >
       <form.Field
@@ -68,16 +70,19 @@ export default class DsaModerationDetails extends Component {
         @name="category"
         @title={{i18n "dsa_statements.category"}}
         @tooltip={{component CategoryHelp}}
-        @type="custom"
+        @type="select"
         @validation="required"
         as |field|
       >
-        <field.Control>
-          <DsaClassificationSelect
-            @field={{field}}
-            @options={{@options.categories}}
-            @placeholder={{i18n "dsa_statements.category_prompt"}}
-          />
+        <field.Control
+          @nonePlaceholder={{i18n "dsa_statements.category_prompt"}}
+          as |select|
+        >
+          {{#each @options.categories as |category|}}
+            <select.Option
+              @value={{category.id}}
+            >{{category.name}}</select.Option>
+          {{/each}}
         </field.Control>
       </form.Field>
     </Form>

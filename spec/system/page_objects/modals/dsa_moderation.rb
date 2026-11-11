@@ -52,15 +52,7 @@ module PageObjects
       end
 
       def select_category(category)
-        page.driver.with_playwright_page do |browser|
-          browser.locator(
-            "#{full_modal_selector} [data-name='category'] .form-kit__control-menu-trigger",
-          ).click
-          browser
-            .locator(".form-kit__control-menu-content")
-            .get_by_role("button", name: category, exact: true)
-            .click
-        end
+        within(full_modal_selector) { select(category, from: "Category") }
       end
 
       def continue
@@ -132,11 +124,7 @@ module PageObjects
       end
 
       def has_selected_category?(category)
-        has_css?(
-          "#{full_modal_selector} [data-name='category'] .d-button-label",
-          text: category,
-          exact_text: true,
-        )
+        within(full_modal_selector) { has_select?("Category", selected: category) }
       end
 
       def has_focused_step?(label)

@@ -20,7 +20,11 @@ module DiscourseAi
           community_rules: DsaStatementOfRecord.community_rules,
           categories: DsaStatementOfRecord::CATEGORIES
         )
-          @rule_ids_by_label = community_rules.to_h { |rule| [rule_label(rule), rule_id(rule)] }
+          labels = community_rules.map { |rule| rule_label(rule) }
+          if labels.uniq.size != labels.size
+            labels = labels.each_with_index.map { |label, index| "#{index + 1}. #{label}" }
+          end
+          @rule_ids_by_label = labels.zip(community_rules.map { |rule| rule_id(rule) }).to_h
           @category_ids_by_label =
             I18n.with_locale(:en) do
               categories.index_by { |category| I18n.t("dsa_statements.categories.#{category}") }
