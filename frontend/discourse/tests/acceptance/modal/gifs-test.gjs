@@ -1,16 +1,10 @@
 import { getOwner } from "@ember/owner";
-import {
-  click,
-  fillIn,
-  find,
-  settled,
-  visit,
-  waitUntil,
-} from "@ember/test-helpers";
+import { click, fillIn, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import GifsModal from "discourse/components/modal/gifs";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -110,10 +104,9 @@ acceptance("Modal - GIFs", function (needs) {
       .exists({ count: 1 }, "renders the result returned by Klipy");
   });
 
-  test("scrolling the modal loads the next page of GIFs", async function (assert) {
-    const results = Array.from({ length: 40 }, (_, index) =>
-      gif(`GIF ${index}`, `/images/emoji/twitter/smile.png?gif=${index}`)
-    );
+  test("intersecting the sentinel in the modal loads the next page of GIFs", async function (assert) {
+    const observations = stubIntersectionObserver();
+    const results = [gif("first GIF", "/images/emoji/twitter/smile.png")];
     const positions = [];
 
     fetchStub.callsFake(async (url) => {
@@ -138,8 +131,15 @@ acceptance("Modal - GIFs", function (needs) {
       await settled();
       await fillIn(".gifs-modal input[name=query]", "hello");
 
-      const body = find(".gifs-modal .d-modal__body");
-      await waitUntil(() => body.scrollHeight > body.clientHeight);
+      const sentinel = () =>
+        observations.findLast(
+          ({ element }) => element === find(".gifs-modal .load-more-sentinel")
+        );
+      assert.strictEqual(
+        sentinel().options.root,
+        find(".gifs-modal .d-modal__body"),
+        "observes the sentinel within the scrollable modal body"
+      );
 
       assert.deepEqual(
         positions,
@@ -147,9 +147,7 @@ acceptance("Modal - GIFs", function (needs) {
         "only fetches the first page initially"
       );
 
-      body.scrollTop = body.scrollHeight;
-      await waitUntil(() => positions.length === 2);
-      await settled();
+      await sentinel().trigger();
 
       assert.deepEqual(
         positions,
@@ -158,10 +156,9 @@ acceptance("Modal - GIFs", function (needs) {
       );
       assert
         .dom(".gifs-modal .gifs-result")
-        .exists({ count: 41 }, "appends the next page to the existing results");
+        .exists({ count: 2 }, "appends the next page to the existing results");
 
-      body.scrollTop = body.scrollHeight;
-      await settled();
+      await sentinel().trigger();
       assert.strictEqual(positions.length, 2, "stops after the last page");
     } finally {
       disableLoadMoreObserver();
