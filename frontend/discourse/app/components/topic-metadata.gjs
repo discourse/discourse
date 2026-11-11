@@ -57,7 +57,7 @@ export default <template>
       @icon="check"
     />
     <DButton
-      class="btn-default cancel-edit"
+      class="btn-transparent cancel-edit"
       @action={{@onCancel}}
       @ariaLabel="composer.cancel"
       @icon="xmark"
