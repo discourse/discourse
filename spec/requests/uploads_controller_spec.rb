@@ -299,6 +299,27 @@ RSpec.describe UploadsController do
         message = response.parsed_body["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
+
+      it "rejects a GIF whose frame exceeds the megapixel limit when its logical screen is small" do
+        SiteSetting.max_image_megapixels = 5
+        file =
+          Rack::Test::UploadedFile.new(
+            file_from_fixtures("gif_frame_larger_than_logical_screen.gif"),
+          )
+
+        expect { post "/uploads.json", params: { file:, upload_type: "composer" } }.not_to change {
+          Upload.count
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: file.original_filename,
+          ),
+        )
+      end
     end
 
     context "when system user is logged in" do

@@ -275,6 +275,59 @@ RSpec.describe UploadCreator do
       end
     end
 
+    # gif_frame_larger_than_logical_screen.gif is a valid GIF89a with a 1x1
+    # logical screen and a 3000x3000 image descriptor;
+    # gif_later_frame_larger_than_logical_screen.gif has the oversized
+    # descriptor in a second frame.
+    context "when a GIF frame is larger than its logical screen" do
+      let(:filename) { "gif_frame_larger_than_logical_screen.gif" }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "rejects frames that exceed the megapixel limit" do
+        SiteSetting.max_image_megapixels = 5
+        expect(FastImage.size(file.path)).to eq([1, 1])
+
+        upload = described_class.new(file, filename).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: filename,
+          ),
+        )
+      end
+
+      it "rejects frames after the first that exceed the megapixel limit" do
+        SiteSetting.max_image_megapixels = 5
+        later_frame_filename = "gif_later_frame_larger_than_logical_screen.gif"
+
+        upload =
+          described_class.new(
+            file_from_fixtures(later_frame_filename),
+            later_frame_filename,
+          ).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: later_frame_filename,
+          ),
+        )
+      end
+
+      it "accepts frames that are within the megapixel limit" do
+        SiteSetting.max_image_megapixels = 150
+
+        upload = described_class.new(file, filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+      end
+    end
+
     context "when image is too big" do
       let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }
