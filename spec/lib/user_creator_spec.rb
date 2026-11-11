@@ -49,6 +49,29 @@ describe UserCreator do
       expect(created_user).not_to be_approved
     end
 
+    it "does not activate a configured developer email without mailbox control" do
+      Rails.configuration.stubs(:developer_emails).returns(["dev-cat@example.com"])
+
+      created_user =
+        described_class.create(
+          admin.guardian,
+          username: "dev_cat",
+          email: "dev-cat@example.com",
+          name: "Dev Cat",
+          password: "correct horse battery staple",
+          active: true,
+          approved: true,
+        )
+
+      expect(created_user).to be_persisted
+      expect(created_user).not_to be_active
+      expect(created_user).not_to be_email_confirmed
+      expect(
+        created_user.email_tokens.where(scope: EmailToken.scopes[:signup], confirmed: false),
+      ).to be_present
+      expect(Jobs::CriticalUserEmail.jobs.last["args"].first["type"]).to eq("signup")
+    end
+
     it "assigns an uploaded avatar through the existing avatar permission" do
       upload = Fabricate(:upload, user: admin)
 
