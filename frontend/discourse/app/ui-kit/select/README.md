@@ -201,7 +201,9 @@ page. Two consecutive pages that add no unique rows stop paging even if the sour
 
 The engine compares all own keys and their values with the current query's request snapshot,
 including the key count. A new object with equal entries reuses the settled list. Changed
-entries reload while open, or on the next open when closed. Open-list checks run after render
+entries reload while open, or on the next open when closed. A list counts as closed once a
+close is requested, so a pick that changes the context as it closes the panel waits for the
+next open. Open-list checks run after render
 and recheck the session and live context before acting. Retained content keeps the context of
 its displayed rows separately from the request being made.
 

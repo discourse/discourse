@@ -563,6 +563,76 @@ module(
       assert.strictEqual(offset, 0, "the re-query starts from the first page");
     });
 
+    test("a pick that closes the panel defers its context change to the next open", async function (assert) {
+      const picked = tracked(null);
+      const load = sinon.spy((filter, opts) =>
+        rowsFor({ categoryId: opts.context.picked ?? 1 })
+      );
+      const onChange = (value) => (picked.value = value);
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash picked=picked.value}}
+            @onChange={{onChange}}
+            @value={{null}}
+          />
+        </template>
+      );
+      await dSelect().search("cat");
+      const calls = load.callCount;
+      await dSelect().select("1-a");
+
+      assert.dom(".d-select__panel").doesNotExist("the pick closes the panel");
+      assert.strictEqual(
+        load.callCount,
+        calls,
+        "the closing pick does not query again"
+      );
+
+      await dSelect().open();
+
+      assert.strictEqual(
+        load.lastCall.args[1].context.picked,
+        "1-a",
+        "the next open queries with the new context"
+      );
+    });
+
+    test("a pick that keeps the panel open re-queries with the new context", async function (assert) {
+      const picked = tracked([]);
+      const load = sinon.spy((filter, opts) =>
+        rowsFor({ categoryId: opts.context.picked.length + 1 })
+      );
+      const onChange = (value) => (picked.value = value);
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash picked=picked.value}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{picked.value}}
+          />
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().select("1-a");
+
+      assert.dom(".d-select__panel").exists("the panel stays open");
+      assert.deepEqual(
+        load.lastCall.args[1].context.picked,
+        ["1-a"],
+        "the open list was asked again with the new context"
+      );
+      assert.true(
+        optionLabels().includes("Cat 2 A"),
+        "the open list shows the new context's rows"
+      );
+    });
+
     test("a context reload does not retry an unavailable chip", async function (assert) {
       const state = new ContextState();
       const load = (filter, opts) => rowsFor(opts.context);

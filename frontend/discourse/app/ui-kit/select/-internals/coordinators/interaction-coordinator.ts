@@ -81,6 +81,10 @@ export default class InteractionCoordinator {
 
   #isMultiple: () => boolean | undefined;
   #clearActive: () => void;
+
+  /** Set by a close request until the menu reports the close or opens again. */
+  #closeRequested = false;
+
   // The DMenu instance, captured on register so the engine can close the overlay and
   // the compat bridge can reach the trigger element.
   #menu: DMenuInstance | null = null;
@@ -152,6 +156,14 @@ export default class InteractionCoordinator {
 
   get triggerElement(): HTMLElement | null {
     return this.#menu?.triggerElement ?? null;
+  }
+
+  /**
+   * Whether a close was requested and the menu has not finished closing. The menu reports
+   * the close later, so a pick's own value change would otherwise reach a list on its way out.
+   */
+  get isClosing(): boolean {
+    return this.#closeRequested;
   }
 
   /** An empty strip unmounts only after removal has handed focus back. */
@@ -299,6 +311,7 @@ export default class InteractionCoordinator {
     // consumers can then treat `@onClose` as exactly one notification per close.
     const wasExpanded = this.isExpanded;
     this.isExpanded = false;
+    this.#closeRequested = false;
     this._stripLatched = false;
     this.#stripFocusRequested = false;
     if (this.filterInput === this.#capturedFilter) {
@@ -320,6 +333,7 @@ export default class InteractionCoordinator {
     // transition. The input still re-focuses on every click, which is the desired behavior.
     const wasExpanded = this.isExpanded;
     this.isExpanded = true;
+    this.#closeRequested = false;
     this.latchSelectionStrip();
     if (this.#presenter.isTypeahead) {
       this.#focusTriggerInput();
@@ -561,6 +575,7 @@ export default class InteractionCoordinator {
   }
 
   closeMenu(): void {
+    this.#closeRequested = true;
     this.#menu?.close();
   }
 

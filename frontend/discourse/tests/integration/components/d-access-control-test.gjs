@@ -1294,9 +1294,9 @@ module(
       await chooser.select("ada");
 
       assert.deepEqual(
-        params[0],
-        { term: "ada", acl_target: "TestTarget" },
-        "the typed term is searched for the target"
+        params,
+        [{ term: "ada", acl_target: "TestTarget" }],
+        "the typed term is searched once, for the target"
       );
       const [added] = state.onChangeCalls[0];
       assert.deepEqual(

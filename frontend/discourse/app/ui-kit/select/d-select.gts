@@ -443,7 +443,10 @@ export default class DSelect extends Component<DSelectSignature> {
     getArgs: () => this.args,
     getPresenter: () => this.presenter,
     getMultiple: () => this.args.multiple,
-    isLive: () => !this.isDestroying && this.interaction.isExpanded,
+    isLive: () =>
+      !this.isDestroying &&
+      this.interaction.isExpanded &&
+      !this.interaction.isClosing,
     session: () => this.interaction.session,
     clearQuery: () => {
       this.engine.setFilter("");
