@@ -12,10 +12,8 @@ navigating the markup. A component is correct only when it holds up across all o
 Two CSS rules are the most load-bearing — get them right by reflex:
 
 1. **Name classes with BEM** so themes can target and override cleanly.
-2. **Reuse Discourse's design tokens.** Before writing CSS, inspect existing tokens and
-   component styling APIs for color, typography, spacing and sizing. Use custom values only
-   when none fits. Wrapping a hardcoded value in a local custom property does not make it a
-   design token.
+2. **Reuse Discourse's design tokens and component APIs.** Read definitions before choosing
+   custom values. Colors must use the palette.
 
 These rules operationalize Discourse's documented frontend philosophy — **mobile-first,
 progressive enhancement (works without hover or JS), a themeable base layer, and a shared design
@@ -40,6 +38,22 @@ and its `.scss`.
   and regression verification.
 - [references/accessibility.md](references/accessibility.md) — screen-reader-only text, live-region
   announcements, contrast & forced-colors detail (the short a11y rules stay inline below).
+
+## Design tokens
+
+Read relevant definitions under `app/assets/stylesheets/` before writing CSS:
+
+| Values | File |
+| --- | --- |
+| Spacing, standard radii | `common/foundation/base.scss` |
+| Font sizes, line heights | `common/font-variables.scss` |
+| Weights, fixed radii, borders, colors | `common/tokens.scss` |
+| Component hooks | Component stylesheet, e.g. `common/components/buttons.scss`, `common/form-kit/_variables.scss` |
+
+Use fitting tokens for literals and local property initializers, even equivalent `em`/`rem`
+values, so themes can retune them. Standard corners use `--d-border-radius` or
+`--d-border-radius-large`. Keep local properties for unmatched repeated or computed geometry.
+Empty searches do not prove absence.
 
 ## BEM naming (block / element / modifier)
 
