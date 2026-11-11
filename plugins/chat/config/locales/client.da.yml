@@ -208,6 +208,7 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        muted_until_hint: "indtil %{until}"
         threading_enabled: "Aktiveret"
         threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"

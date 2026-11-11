@@ -197,6 +197,7 @@ pl_PL:
     ai_discord_search_agent: "Agent używany do wyszukiwania Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
+    ai_dsa_classification_decision_model: "Wybierz model używany do sugerowania reguł i kategorii społeczności podczas klasyfikacji DSA. Pozostaw puste, aby wyłączyć sugestie."
     ai_translation_locale_detector_decision_model: "Model decyzyjny, który wykrywa język treści przed jej przetłumaczeniem. Treści w języku, którego nie można poprawnie przetłumaczyć, są pozostawiane agentowi wykrywającemu ustawienia regionalne. Pozostaw puste pole, aby wykryć wszystkie języki za pomocą agenta."
     ai_translation_category_scope: "Wybierz kategorie, z których może korzystać tłumaczenie AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_translation_categories}}. Prywatne wiadomości są kontrolowane przez {{setting:ai_translation_personal_messages}}."
     ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
@@ -493,6 +494,9 @@ pl_PL:
         other_content_in_pm: "Prywatne wiadomości zawierające wpisy innych osób nie mogą być udostępniane publicznie"
         failed_to_share: "Nie udało się udostępnić konwersacji"
         conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
+    dsa_classification:
+      suggestion_failed: "AI nie mogła zaproponować klasyfikacji. Wybierz ją samodzielnie lub spróbuj ponownie."
+      credit_limit_exceeded: "AI wykorzystała wszystkie dzisiejsze punkty do sugerowania klasyfikacji. Wybierz klasyfikację samodzielnie."
     spam_detection:
       flag_reason: "Oflagowano jako spam przez <a href='%{url}'>AI Discourse</a>"
       silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
@@ -596,6 +600,9 @@ pl_PL:
         execution_failed: "Zadanie delegowane nie powiodło się."
         approval_unavailable: "Narzędzia wymagające zatwierdzenia nie są dostępne w przypadku przebiegów delegowanych."
       chat_tool_approval:
+        enable_mcp_theme_access_title: "Pozwól aplikacjom AI tworzyć motywy"
+        enable_mcp_theme_access_details: "Aplikacje, które połączysz z %{mcp_url}, takie jak Claude lub ChatGPT, będą mogły tworzyć i edytować motywy, w tym ich kod JavaScript, jako administrator, który je połączył. Zmiany w nich zaczną obowiązywać natychmiast i nie są sprawdzane tak, jak w przypadku Asystenta administratora. Aplikacje, które już połączyłeś, poproszą Cię o zatwierdzenie nowego dostępu. Możesz ponownie wyłączyć narzędzia motywu w sekcji [Możliwości MCP](%{settings_url})."
+        enable_mcp_theme_access_question: "Czy chcesz pozwolić aplikacjom AI tworzyć motywy?"
         create_tag_title: "Utwórz tag: %{name}"
         create_tag_question: "Chcesz utworzyć ten tag?"
         create_category_title: "Utwórz kategorię: %{name}"
@@ -906,6 +913,8 @@ pl_PL:
           name: "Wykonywanie kodu (natywne)"
           help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
+        theme_app_handoff: "Sprawdzanie, jak tworzyć motywy za pomocą aplikacji AI"
+        enable_mcp_theme_access: "Pozwól aplikacjom AI tworzyć motywy"
         load_discourse_website_page: "Załaduj stronę internetową Discourse"
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
@@ -957,6 +966,7 @@ pl_PL:
         search_settings: "Wyszukiwanie ustawień witryny"
         search_discourse_navigation: "Przeszukiwanie nawigacji witryny"
         read_site_setting: "Odczytaj ustawienia witryny"
+        list_upcoming_changes: "Wyświetl nadchodzące zmiany"
         change_site_setting: "Zmień ustawienia witryny"
         generate_appearance_change: "Budowanie palet"
         save_appearance_change: "Zapisz zmianę wyglądu"
@@ -971,6 +981,8 @@ pl_PL:
         researcher: "Badanie"
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
+        theme_app_handoff: "Wyjaśnij, jak tworzyć motywy za pomocą aplikacji AI za pośrednictwem serwera MCP"
+        enable_mcp_theme_access: "Pozwól aplikacjom AI tworzyć motywy za pośrednictwem serwera MCP"
         load_discourse_website_page: "Załaduj nazwaną stronę z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
@@ -1024,6 +1036,7 @@ pl_PL:
         search_settings: "Wyszukaj ustawienia witryny"
         search_discourse_navigation: "Znajdź zweryfikowane linki do dostępnych stron w tej witrynie"
         read_site_setting: "Odczytaj aktualną wartość ustawienia witryny"
+        list_upcoming_changes: "Wyświetl listę dostępnych nadchodzących zmian i stan ich wdrożenia"
         change_site_setting: "Zmień wartość ustawienia witryny"
         generate_appearance_change: "Twórz czytelne palety i wybieraj czcionki z kolorów marki lub strony internetowej"
         save_appearance_change: "Zapisz palety lub nowy motyw bez ich aktywacji"
@@ -1136,6 +1149,7 @@ pl_PL:
           many: "Znaleziono %{count} miejsc docelowych"
           other: "Znaleziono %{count} miejsc docelowych"
         read_site_setting: "Ustawienia witryny do odczytania %{setting_name}"
+        list_upcoming_changes: "Lista nadchodzących zmian"
         change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
         generate_appearance_change: "Zbudowane palety"
         list_appearance_changes: "Wymienione zmiany w wyglądzie"
@@ -1347,6 +1361,10 @@ pl_PL:
           invalid_value: "Nieprawidłowa wartość: %{error}"
           failed: "Nie udało się zmienić ustawień witryny."
         success: "Ustawienie witryny %{setting_name} zostało zmienione na „%{value}”."
+      list_upcoming_changes:
+        errors:
+          not_allowed: "Tylko administratorzy mogą przeglądać nadchodzące zmiany."
+          failed: "Nie udało się wczytać nadchodzących zmian."
       read_site_setting:
         errors:
           not_allowed: "Nie masz uprawnień do odczytu ustawień witryny."
@@ -1402,6 +1420,88 @@ pl_PL:
       fonts:
         base_font: "Czcionka"
         heading_font: "Czcionka nagłówków"
+    mcp_theme_access:
+      not_allowed: "Tylko administratorzy mogą zezwolić aplikacjom AI na tworzenie motywów."
+      unavailable: "Tworzenie motywów za pomocą aplikacji AI nie jest tutaj dostępne."
+      themes_unavailable: "Na tej stronie nie można tworzyć nowych motywów, więc aplikacje AI również nie mogą ich tworzyć."
+      server_locked: "Globalne ustawienie wyłącza serwer MCP, więc nie można go tu włączyć."
+      already_enabled: "Aplikacje AI mogą już tworzyć motywy na tej stronie."
+      approval_required: "Ta zmiana wymaga zatwierdzenia przez administratora."
+      failed: "Zmiany nie udało się wprowadzić."
+      enabled: "Aplikacje AI mogą teraz tworzyć motywy na tej stronie. Aby rozpocząć, połącz aplikację z serwerem MCP."
+      enabled_except_blocked: "Reszta jest włączona, ale aplikacje AI nie mogą jeszcze tworzyć motywów. Te narzędzia motywów są blokowane w trybie awaryjnym: %{tools}. Administrator może je odblokować w ramach możliwości MCP: %{url}"
+      "on": "Wł."
+      "off": "Wył."
+      none: "żadne"
+      request_placeholder: "(opisz, czego chcesz)"
+      blocked_tool: "%{tool} jest blokowany w trybie awaryjnym. Administrator może go odblokować w ramach możliwości MCP: %{url}"
+      changes:
+        server: "Serwer MCP"
+        tools: "Narzędzia, z których mogą korzystać aplikacje"
+        admin_scopes: "Dostęp administratorów"
+      setup:
+        server: "Włącz serwer MCP."
+        tools: "Zezwól aplikacjom na korzystanie z następujących narzędzi motywu: %{tools}."
+        admin_scopes: "Udziel administratorom dostępu do motywu."
+      starter_message: |-
+        Jestem administratorem witryny Discourse %{site_url}. Użyj jej serwera MCP do zbudowania motywu. Jej obecny domyślny motyw to „%{theme}”.
+
+        Czego chcę: %{request}
+
+        Proszę:
+        - Utwórz nowy motyw lub komponent motywu zamiast zmieniać domyślny motyw i nie ustawiaj go jako domyślnego.
+        - Użyj niestandardowych właściwości CSS i kolorów palety Discourse, takich jak var(--tertiary), zamiast kolorów zakodowanych na stałe, aby tryb ciemny nadal działał.
+        - Podaj mi identyfikator motywu po jego zapisaniu, abym mógł wyświetlić jego podgląd w %{site_url}/admin/themes/ID/preview przed udostępnieniem.
+      built_in:
+        welcome_banner: "Baner powitalny nad listą tematów: %{base_url}/admin/config/interface"
+        sidebar_sections: "Niestandardowe sekcje i linki paska bocznego, dostępne z przycisku + na pasku bocznym"
+        banner_topic: "Temat banera wyświetlany wszystkim z poziomu menu klucza administratora tematu"
+        global_notice: "Informacja na górze każdej strony: %{base_url}/admin/site_settings/category/all_results?filter=global_notice"
+        theme_components: "Gotowe elementy motywu, takie jak niestandardowe linki w nagłówku: %{base_url}/admin/config/customize/components"
+    mcp_app_setup:
+      none: "żadne"
+      notes:
+        approved_domains: "Aplikacje mogą logować się tylko z zatwierdzonych domen (%{domains}). Jeśli strona logowania aplikacji wskazuje, że jest prywatna, dodaj jej domenę, na przykład claude.ai lub chatgpt.com, w ustawieniach MCP: %{settings_url}"
+        pre_registered_only: "Aplikacje mogą się logować dopiero po zarejestrowaniu ich przez administratora w klientach MCP: %{clients_url}"
+      apps:
+        claude:
+          name: "Claude (internet lub komputer)"
+          steps: |-
+            1. W Claude przejdź do Ustawień, następnie do Łączników, a następnie do Dodaj łącznik niestandardowy.
+            2. Nadaj mu nazwę „%{name}” i wklej %{url}
+            3. Kliknij Dodaj, a następnie Połącz. Twoja witryna zostanie otwarta; zaloguj się, jeśli zostaniesz o to poproszony, i kliknij Zatwierdź.
+            W planie Claude Team lub Enterprise właściciel musi najpierw dodać łącznik dla swojej organizacji.
+        chatgpt:
+          name: "ChatGPT"
+          steps: |-
+            1. W ChatGPT przejdź do Ustawień, następnie do Zabezpieczeń i logowania, a następnie włącz tryb programisty.
+            2. Dodaj łącznik o nazwie „%{name}” z adresem URL %{url}
+            3. Połącz go. Twoja witryna zostanie otwarta; zaloguj się, jeśli zostaniesz o to poproszony, i kliknij Zatwierdź.
+            Administrator obszaru roboczego może wyłączyć tryb programisty dla wszystkich.
+        claude_code:
+          name: "Kod Claude'a"
+          steps: |-
+            1. Uruchom: claude mcp add --transport http my-community %{url}
+            2. Uruchom: claude mcp login my-community
+            3. Twoja witryna zostanie otwarta; zaloguj się, jeśli zostaniesz o to poproszony i kliknij Zatwierdź.
+        codex:
+          name: "Codex"
+          steps: |-
+            1. Uruchom: codex mcp add my-community --url %{url} --oauth-client-registration cimd
+            2. Twoja witryna się otworzy; zaloguj się, jeśli zostaniesz o to poproszony i kliknij Zatwierdź.
+            Sprawdź połączenie za pomocą: codex mcp list
+        cursor:
+          name: "Kursor"
+          steps: |-
+            1. Dodaj to do pliku ~/.cursor/mcp.json: {"mcpServers": {"my-community": {"url": "%{url}"}}}
+            2. Włącz serwer w ustawieniach MCP w programie Cursor.
+            3. Twoja witryna zostanie otwarta; zaloguj się, jeśli zostaniesz o to poproszony, i kliknij Zatwierdź.
+        vscode:
+          name: "Visual Studio Code"
+          steps: |-
+            1. Otwórz paletę poleceń i uruchom polecenie „MCP: Dodaj serwer”.
+            2. Wybierz HTTP i wklej %{url}
+            3. Twoja witryna zostanie otwarta. Zaloguj się, jeśli zostaniesz o to poproszony, i kliknij Zatwierdź.
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

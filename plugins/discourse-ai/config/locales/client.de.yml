@@ -242,6 +242,8 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      dsa_classification:
+        suggest: "Mit KI vorschlagen"
       copied: "Kopiert"
       ai_decoded_transcript:
         thinking: "Ich denke"
@@ -959,6 +961,8 @@ de:
         edit: "Bearbeiten"
         delete: "Löschen"
         test: "Test ausführen"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-Server"
         new: "Neuer MCP-Server"
@@ -1046,6 +1050,7 @@ de:
         type: "Typ"
         provider: "Anbieter"
         edit: "Bearbeiten"
+        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         select_type: "Auswählen"
         types:
           embedding: "Einbettung"
@@ -1285,7 +1290,6 @@ de:
         presets: "Wähle eine Voreinstellung aus …"
         configure_manually: "Manuell konfigurieren"
         edit: "Bearbeiten"
-        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         tests:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"

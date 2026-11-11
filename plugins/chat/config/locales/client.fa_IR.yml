@@ -280,6 +280,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        muted_until_hint: "تا %{until}"
         threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"

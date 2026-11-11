@@ -534,6 +534,12 @@ fi:
       fonts:
         base_font: "Leipätekstin fontti"
         heading_font: "Otsikon fontti"
+    mcp_theme_access:
+      "on": "Käytössä"
+      "off": "Pois käytöstä"
+      none: "ei valittu"
+    mcp_app_setup:
+      none: "ei valittu"
     reviewables:
       ai_tool_action:
         approve:

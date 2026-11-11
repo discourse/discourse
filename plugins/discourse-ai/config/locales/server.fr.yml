@@ -959,6 +959,14 @@ fr:
       fonts:
         base_font: "Police de contenu"
         heading_font: "Police de titre"
+    mcp_theme_access:
+      "on": "Activé"
+      "off": "Désactivé"
+      none: "jamais"
+      changes:
+        server: "Serveur MCP"
+    mcp_app_setup:
+      none: "jamais"
     reviewables:
       ai_tool_action:
         title: "Action d'un outil d'IA"

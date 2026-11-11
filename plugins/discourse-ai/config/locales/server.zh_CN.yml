@@ -1354,6 +1354,25 @@ zh_CN:
       fonts:
         base_font: "正文字体"
         heading_font: "标题字体"
+    mcp_theme_access:
+      approval_required: "此项更改需要管理员批准。"
+      failed: "无法进行更改。"
+      "on": "开"
+      "off": "关"
+      none: "无"
+      changes:
+        server: "MCP 服务器"
+    mcp_app_setup:
+      none: "无"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Codex"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"

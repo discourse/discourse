@@ -315,6 +315,10 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Zasugeruj za pomocą AI"
+        updated: "Klasyfikacja zaktualizowana"
+        no_suggestion: "AI nie mogła zasugerować klasyfikacji"
       copied: "Skopiowano"
       view_raw: "Wyświetl surowy"
       view_decoded: "Widok zdekodowany"
@@ -1293,6 +1297,7 @@ pl_PL:
           system_one: "System pierwszy"
           typesafe: "TypeSafe"
           open_ai: "Decyzje OpenAI"
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Serwery MCP"
         new: "Nowy serwer MCP"
@@ -1391,6 +1396,7 @@ pl_PL:
         type: "Typ"
         provider: "Dostawca"
         edit: "Edytuj"
+        seeded_warning: "To jest wstępnie skonfigurowane na twojej stronie i nie może być edytowane."
         choose_type: "Jaki rodzaj modelu chcesz dodać?"
         select_type: "Wybierz"
         types:
@@ -1693,7 +1699,6 @@ pl_PL:
           text-embedding-3-small: "Szybszy i tańszy model osadzania OpenAI"
           text-embedding-ada-002: "Poprzednia generacja modelu OpenAI została zastąpiona przez osadzanie tekstu w 3 małych czcionkach"
         edit: "Edytuj"
-        seeded_warning: "To jest wstępnie skonfigurowane na twojej stronie i nie może być edytowane."
         tests:
           title: "Przeprowadź test"
           running: "Przeprowadzam test..."

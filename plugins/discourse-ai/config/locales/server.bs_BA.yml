@@ -85,6 +85,10 @@ bs_BA:
       colors:
         light:
           header_background: "Header"
+    mcp_theme_access:
+      none: "nijedna"
+    mcp_app_setup:
+      none: "nijedna"
     reviewables:
       ai_tool_action:
         approve:

@@ -242,6 +242,9 @@ ko:
         auto_join_users_label: "자동으로 사용자 추가"
         follow: "가입"
         followed: "가입"
+        muted_until_hint: "%{until} 까지"
+        mute_options:
+          "off": "끄기"
         threading_enabled: "활성화"
         threading_disabled: "비활성"
         muted_on: "켜기"

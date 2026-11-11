@@ -633,6 +633,12 @@ pt_BR:
       fonts:
         base_font: "Fonte do corpo"
         heading_font: "Fonte do cabeçalho"
+    mcp_theme_access:
+      "on": "Ligado"
+      "off": "Desligado"
+      none: "nenhum(a)"
+    mcp_app_setup:
+      none: "nenhum(a)"
     reviewables:
       ai_tool_action:
         title: "Ação de ferramenta de IA"

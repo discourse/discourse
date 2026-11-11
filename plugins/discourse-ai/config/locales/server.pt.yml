@@ -104,6 +104,10 @@ pt:
       colors:
         light:
           header_background: "Cabeçalho"
+    mcp_theme_access:
+      none: "nenhuma"
+    mcp_app_setup:
+      none: "nenhuma"
     reviewables:
       ai_tool_action:
         approve:

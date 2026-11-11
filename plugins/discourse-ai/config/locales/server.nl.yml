@@ -835,6 +835,14 @@ nl:
       fonts:
         base_font: "Lettertype inhoud"
         heading_font: "Lettertype kop"
+    mcp_theme_access:
+      "on": "Aan"
+      "off": "Uit"
+      none: "geen"
+      changes:
+        server: "MCP-server"
+    mcp_app_setup:
+      none: "geen"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"

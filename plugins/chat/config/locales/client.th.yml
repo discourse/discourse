@@ -92,6 +92,7 @@ th:
       settings:
         follow: "เข้าร่วม"
         followed: "สมัครสมาชิกเมื่อ"
+        muted_until_hint: "จนกระทั่ง%{until}"
         threading_disabled: "ปิดใช้งานแล้ว"
         notifications: "การแจ้งเตือน"
         preview: "แสดงตัวอย่าง"

@@ -548,6 +548,9 @@ zh_TW:
         followed: "已加入"
         mute: "將頻道設為免打擾"
         unmute: "取消將頻道設為免打擾"
+        muted_until_hint: "直到%{until}"
+        mute_options:
+          "off": "關閉"
         threading_enabled: "已啟用"
         threading_disabled: "已禁用"
         muted_on: "開"

@@ -556,6 +556,9 @@ de:
         followed: "Beigetreten"
         mute: "Kanal stummschalten"
         unmute: "Stummschaltung des Kanals aufgeben"
+        muted_until_hint: "bis %{until}"
+        mute_options:
+          "off": "Aus"
         threading_enabled: "Aktiviert"
         threading_disabled: "Deaktiviert"
         muted_on: "An"

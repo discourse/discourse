@@ -20,6 +20,7 @@ ru:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Изменилась доступность чат-бота."
             chat_channel_status_change: "Изменение статуса канала чата"
             chat_channel_delete: "Удаление канала чата"
             chat_auto_remove_membership: "Участники автоматически удаляются из каналов"
@@ -46,6 +47,12 @@ ru:
           many: "%{formatted_number} сообщений чата"
           other: "%{formatted_number} сообщения чата"
     chat:
+      admin_onboarding:
+        start_posting:
+          title: "Начать чат"
+          description: "Отправьте своё первое сообщение в #%{channel}."
+          action: "Напишите сообщение"
+          completed: "Продолжайте общение"
       edit_category:
         tab_title: "Чат"
         channel: "Канал"
@@ -110,6 +117,8 @@ ru:
         open_channel_disabled_read_only: "Каналы, доступные только для чтения, нельзя будет открыть повторно."
         archive_channel: "Архивировать канал"
         delete_channel: "Удалить канал"
+        danger_zone:
+          leave_description: "Вы перестанете получать сообщения и уведомления с этого канала. Вы можете присоединиться снова в любое время."
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
@@ -398,6 +407,7 @@ ru:
           search: Искать
         remove_member: "Удалить"
         members_title: "%{channel} участников"
+        preferences_title: "%{channel} настройки"
       new_message_modal:
         title: Отправка сообщения
         add_user_long: <kbd>Shift + щелчок</kbd> или <kbd>Shift + Ввод</kbd><span>Добавить пользователя @%{username}</span>
@@ -569,6 +579,9 @@ ru:
         followed: "Подписан"
         mute: "Отключить канал"
         unmute: "Отключить звук канала"
+        muted_until_hint: "блокировка до %{until}"
+        mute_options:
+          "off": "Выключено"
         threading_enabled: "Включено"
         threading_disabled: "Отключено"
         muted_on: "Включено"
@@ -582,6 +595,9 @@ ru:
         history_label: "История"
         members_label: "Участники"
       admin:
+        bot_discoverability:
+          label: "Показать в чате"
+          description: "Пусть пользователи находят этого бота при начале личного сообщения в чате."
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"

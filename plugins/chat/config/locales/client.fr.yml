@@ -556,6 +556,9 @@ fr:
         followed: "Rejoint"
         mute: "Mettre le canal en sourdine"
         unmute: "Réactiver les notifications du canal"
+        muted_until_hint: "jusqu'à %{until}"
+        mute_options:
+          "off": "Désactivé"
         threading_enabled: "Activée"
         threading_disabled: "Désactivé"
         muted_on: "Activé"

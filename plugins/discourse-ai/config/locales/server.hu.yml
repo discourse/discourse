@@ -111,6 +111,12 @@ hu:
       fonts:
         base_font: "Törzs betűtípus"
         heading_font: "Fejléc betűkészlet"
+    mcp_theme_access:
+      "on": "Be"
+      "off": "Ki"
+      none: "egy sem"
+    mcp_app_setup:
+      none: "egy sem"
     reviewables:
       ai_tool_action:
         approve:

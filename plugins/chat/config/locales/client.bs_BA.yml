@@ -95,6 +95,7 @@ bs_BA:
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Omogućen"
         threading_disabled: "Neomogućen"
         notifications: "Obavijest"

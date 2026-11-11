@@ -209,6 +209,8 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "AI で提案"
       ai_decoded_transcript:
         thinking: "思考中"
         tool: "ツール"
@@ -702,6 +704,8 @@ ja:
         edit: "編集"
         delete: "削除"
         test: "テストを実行"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "名前"
         description: "説明"
@@ -725,6 +729,7 @@ ja:
         type: "タイプ"
         provider: "プロバイダー"
         edit: "編集"
+        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         select_type: "選択"
         types:
           embedding: "埋め込み"
@@ -922,7 +927,6 @@ ja:
         presets: "プリセットを選択..."
         configure_manually: "手動で構成"
         edit: "編集"
-        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         tests:
           title: "テストを実行"
           running: "テストを実行中…"

@@ -1207,6 +1207,7 @@ zh_CN:
     approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
     missing_session: "我们无法检测您的帐户是否已创建，请确保您已启用 Cookie。"
     activated: "抱歉，此帐户已被激活。"
+    email_change_not_allowed: "此帐户以前已激活，因此它只能使用其当前的电子邮件地址重新激活。"
     admin_confirm:
       title: "确认管理员帐户"
       description: "确定要将 <b>%{target_username} (%{target_email})</b> 设为管理员吗？"
@@ -3202,6 +3203,10 @@ zh_CN:
       other: "%{count} 个帖子被合并到现有话题中：%{topic_link}"
     existing_message_moderator_post:
       other: "%{count} 个帖子被合并到现有消息中：%{topic_link}"
+    new_topic_moderator_post_no_link:
+      other: "%{count} 个帖子被拆分为一个新话题。"
+    existing_topic_moderator_post_no_link:
+      other: "%{count} 个帖子被合并到现有话题中。"
   change_owner:
     post_revision_text: "已转让所有权"
   publish_page:

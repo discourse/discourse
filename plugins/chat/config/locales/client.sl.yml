@@ -154,6 +154,7 @@ sl:
       settings:
         follow: "Pridruži se"
         followed: "Pridružen"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Vključeno"
         threading_disabled: "Onemogočeno"
         notifications: "Obvestila"

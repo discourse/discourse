@@ -238,6 +238,8 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Voorstellen met AI"
       copied: "Gekopieerd"
       ai_decoded_transcript:
         thinking: "Denken"
@@ -853,6 +855,8 @@ nl:
         edit: "Bewerken"
         delete: "Verwijderen"
         test: "Test uitvoeren"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -940,6 +944,7 @@ nl:
         type: "Type"
         provider: "Provider"
         edit: "Bewerken"
+        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         select_type: "Selecteren"
         types:
           embedding: "Insluiting"
@@ -1151,7 +1156,6 @@ nl:
         presets: "Selecteer een preset..."
         configure_manually: "Handmatig configureren"
         edit: "Bewerken"
-        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         tests:
           title: "Test uitvoeren"
           running: "Test uitvoeren..."

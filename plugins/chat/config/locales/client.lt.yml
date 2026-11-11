@@ -648,6 +648,9 @@ lt:
         followed: "Prisijungė"
         mute: "Nutildyti kanalą"
         unmute: "Įjungti kanalo garsą"
+        muted_until_hint: "iki %{until}"
+        mute_options:
+          "off": "Išjungta"
         threading_enabled: "Galimas"
         threading_disabled: "Uždrausta"
         muted_on: "Įjungta"

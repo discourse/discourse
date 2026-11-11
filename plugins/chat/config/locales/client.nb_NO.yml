@@ -107,6 +107,7 @@ nb_NO:
         channel_wide_mentions_label: "Tillat @alle og @her omtaler"
         follow: "Bli medlem"
         followed: "Medlem fra"
+        muted_until_hint: "til %{until}"
         threading_enabled: "Aktivert"
         threading_disabled: "Deaktivert"
         notifications: "Varsler"

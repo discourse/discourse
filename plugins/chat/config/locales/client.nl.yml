@@ -508,6 +508,9 @@ nl:
         followed: "Lid sinds"
         mute: "Kanaal dempen"
         unmute: "Dempen kanaal opheffen"
+        muted_until_hint: "tot %{until}"
+        mute_options:
+          "off": "Uit"
         threading_enabled: "Ingeschakeld"
         threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"

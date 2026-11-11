@@ -1153,6 +1153,23 @@ uk:
       fonts:
         base_font: "Основний шрифт"
         heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Увімк"
+      "off": "Вимк."
+      none: "немає"
+      changes:
+        server: "Сервер MCP"
+    mcp_app_setup:
+      none: "немає"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Кодекс"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "Дія інструменту ШІ"

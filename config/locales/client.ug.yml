@@ -19,6 +19,7 @@ ug:
     code_editor:
       resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
       search:
+        find: "ئىزدە"
         replace: "ئالماشتۇر"
         next: "كېيىنكى"
         previous: "ئالدىنقى"
@@ -552,6 +553,11 @@ ug:
         selected: "تاللاندى"
         applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
+      colors:
+        modes:
+          both: "يورۇق ۋە قاراڭغۇ"
+          light: "يورۇقلا"
+          dark: "قاراڭغۇلا"
       fonts:
         base_font: "مەزمۇن"
         heading_font: "ماۋزۇ"
@@ -805,6 +811,8 @@ ug:
       category: "سەھىپە"
       category_prompt: "سەھىپە تاللىنىدۇ"
     review:
+      moderation_steps:
+        confirm: "جەزملەش مەشغۇلاتى"
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"
       back_to_queue: "ئۆچرەتكە قايت"
@@ -1043,6 +1051,7 @@ ug:
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
         target_deleted: "يازما ئۆچۈرۈلدى"
         target_deleted_by: "يازمىنى %{username} · %{relativeDate} دە ئۆچۈردى"
+        queued_post_deleted_by: "نەقىللىق يازمىنى %{username}· %{relativeDate} ئۆچۈردى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -1541,6 +1550,7 @@ ug:
       optional: (تاللاشچان)
     user:
       said: "%{username}:"
+      bot_account: "ئاپتوماتىك ھېساب"
       profile: "تەرجىمىھال"
       profile_possessive: "%{username} نىڭ تەرجىمىھالى"
       mute: "ئۈنسىز"
@@ -2969,6 +2979,7 @@ ug:
       reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
       sort_label: "تەرتىپى"
+      sort_trigger_label: "تەرتىپى: %{sort}"
     d_icon_grid_picker:
       search_label: "ئىزدەش سىنبەلگىسى"
       results_loaded:
