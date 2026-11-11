@@ -252,6 +252,12 @@ RSpec.describe "Blog publication", type: :request do
         "/posts" => "/",
         "/posts.rss" => "/feed.xml",
         "/posts.atom" => "/feed.xml",
+        "/rss" => "/feed.xml",
+        "/rss/" => "/feed.xml",
+        "/feed" => "/feed.xml",
+        "/feed/" => "/feed.xml",
+        "/page/1" => "/",
+        "/page/3/" => "/?page=3",
       }.each do |path, target|
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(301)

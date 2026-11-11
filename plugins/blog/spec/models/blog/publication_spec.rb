@@ -37,6 +37,10 @@ RSpec.describe Blog::Publication do
         /about.json
         /About
         /tag/story
+        /author/story
+        /page/2
+        /rss
+        /feed
         /review
         /session/story
         /assets/story

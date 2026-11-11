@@ -17,18 +17,23 @@ module Blog
 
     # Article paths share their first segment with the routes below in both hosting modes
     # (sites can switch modes), so articles may never claim them. A spec checks this covers every route.
+    # "author" has no route yet; it is held for author archives so imported paths can't take it.
     RESERVED_SEGMENTS = %w[
       about
+      author
       blog
       blog-custom.js
       blog-highlight
       blog-theme.css
+      feed
       feed.xml
+      page
       posts
       posts.atom
       posts.rss
       review
       robots.txt
+      rss
       session
       sitemap
       tag
@@ -61,9 +66,19 @@ module Blog
                   redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
                 :format => false
             get "/posts" => redirect { "#{Configuration.base_url}/" }, :format => false
-            %w[/posts.rss /posts.atom].each do |path|
+            # Feed and pagination URLs that other blog engines publish, kept for readers and links.
+            %w[/posts.rss /posts.atom /rss /feed].each do |path|
               get path => redirect { "#{Configuration.base_url}/feed.xml" }, :format => false
             end
+            get "/page/:page" =>
+                  redirect { |params, _|
+                    page = params[:page].to_i
+                    "#{Configuration.base_url}/#{"?page=#{page}" if page > 1}"
+                  },
+                :constraints => {
+                  page: /\d+/,
+                },
+                :format => false
             get "/robots.txt" => "articles#robots",
                 :defaults => {
                   format: "text",
