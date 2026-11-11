@@ -12,6 +12,8 @@ module DiscourseCaptcha
 
       @login_code_signup_captcha_verified = true if captcha_required
       super
+    ensure
+      SignupScore.reset
     end
 
     def complete_verified_login_code_signup
@@ -22,6 +24,8 @@ module DiscourseCaptcha
       end
 
       super
+    ensure
+      SignupScore.reset
     end
 
     def verified_login_code_signup_proof
