@@ -90,6 +90,7 @@ acceptance("Topic - Summary", function (needs) {
 
     const finalSummaryCooked =
       "In this post,  <a href='/t/-/1/1'>bianca</a> said some stuff.";
+    const finalSummaryResult = "In this post, bianca said some stuff.";
     await publishToMessageBus("/discourse-ai/summaries/topic/1", {
       done: true,
       ai_topic_summary: {
@@ -103,7 +104,9 @@ acceptance("Topic - Summary", function (needs) {
     });
 
     await click(".generated-summary a");
-    assert.dom(".ai-summary-modal").doesNotExist();
+    assert
+      .dom(".ai-summary-box .generated-summary p")
+      .hasText(finalSummaryResult, "Retains final summary after clicking link");
   });
 });
 

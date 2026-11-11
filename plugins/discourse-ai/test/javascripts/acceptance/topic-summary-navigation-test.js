@@ -75,7 +75,15 @@ for (const mobile of [false, true]) {
 
           const jump = sinon.spy(DiscourseURL, "jumpToPost");
           await click(".generated-summary a");
-          assert.dom(".ai-summary-modal").doesNotExist("closes the summary");
+          if (mobile) {
+            assert
+              .dom(".ai-summary-modal")
+              .doesNotExist("closes the mobile summary");
+          } else {
+            assert
+              .dom(".ai-summary-modal")
+              .exists("keeps the desktop summary open");
+          }
           assert.true(jump.calledWith(3), "jumps to the linked reply");
           assert.dom("#post_3").exists("loads the linked reply");
           assert.false(
