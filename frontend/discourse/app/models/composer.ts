@@ -81,7 +81,6 @@ export interface ComposerFields {
   originalTags?: ComposerTags | null;
   featuredLink?: string | null;
   metaData?: ComposerMetaData | null;
-  adminOnboardingTopicOption?: string | null;
   typingTime?: number;
   composerTotalOpened?: number;
   composerOpened?: Date | null;
@@ -136,7 +135,6 @@ export interface ComposerOpenOptions {
   original_text?: string | null;
   original_title?: string | null;
   original_tags?: ComposerTags | null;
-  adminOnboardingTopicOption?: string | null;
   reply_to_post_number?: number | null;
   reply_to_user?: ComposerReplyToUser | null;
   [key: string]: unknown;
@@ -220,7 +218,6 @@ const CLOSED = "closed",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
-    adminOnboardingTopicOption: "adminOnboardingTopicOption",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
@@ -1702,7 +1699,6 @@ export default class Composer extends RestModel {
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
       metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
-      adminOnboardingTopicOption: opts.adminOnboardingTopicOption ?? null,
       reply: opts.reply || this.reply || "",
     });
 
