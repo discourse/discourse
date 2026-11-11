@@ -426,11 +426,11 @@ RSpec.describe Email::Receiver do
       end
     end
 
-    context "when an inactive user forwards an active person's email to a category" do
+    context "when an inactive user with a group address forwards an active person's email to a category" do
       before { sender.update!(active: false) }
 
       it "rejects the email without creating a post" do
-        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        SiteSetting.forwarded_emails_behaviour = "quote"
         group.update!(incoming_email: sender.email)
         Fabricate(:user, email: "some@one.com", trust_level: TrustLevel[2])
         mail = Mail.read_from_string(email(:forwarded_email_1))
