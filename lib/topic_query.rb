@@ -920,11 +920,18 @@ class TopicQuery
       result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)
     end
 
-    if search = options[:search].presence
-      result =
-        result.where(
-          "topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})",
-        )
+    if (search = options[:search].presence) && search.length >= SiteSetting.min_search_term_length
+      result = result.where(<<~SQL, visible_post_types: Topic.visible_post_types(@guardian.user))
+            topics.id IN (
+              SELECT pp.topic_id
+              FROM post_search_data pd
+              JOIN posts pp ON pp.id = pd.post_id
+              WHERE pd.search_data @@ #{Search.ts_query(term: search.to_s)}
+                AND NOT pp.hidden
+                AND pp.deleted_at IS NULL
+                AND pp.post_type IN (:visible_post_types)
+            )
+          SQL
     end
 
     if state = options[:state]
