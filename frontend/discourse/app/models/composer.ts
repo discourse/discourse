@@ -703,7 +703,7 @@ export default class Composer extends RestModel {
   @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
     const options: {
-      userLink: { href: string; anchor: string } | null;
+      userLink: { href: string; anchor: string | null | undefined } | null;
       topicLink: { href: string; anchor: string } | null;
       postLink: { href: string; anchor: string } | null;
       userAvatar: string | null;
