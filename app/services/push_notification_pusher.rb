@@ -120,22 +120,31 @@ class PushNotificationPusher
   end
 
   def self.subscribe(user, push_params, send_confirmation)
-    return if revoked_endpoint?(push_params[:endpoint])
+    endpoint = push_params[:endpoint]
+    PushSubscription.validate_endpoint!(endpoint)
+    return if revoked_endpoint?(endpoint)
 
     data = push_params.to_json
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
+    by_endpoint = PushSubscription.with_endpoint(endpoint)
 
-    new_subscription =
-      if subscriptions_count > 1
-        subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
-        RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
-        PushSubscription.create!(user: user, data: data)
+    # overlapping registrations from an account switch must not both keep a row
+    subscription =
+      DistributedMutex.synchronize("push_subscription_#{Digest::SHA1.hexdigest(endpoint)}") do
+        # a browser endpoint delivers to whoever is signed in there now
+        by_endpoint.where.not(user_id: user.id).delete_all
+
+        existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
+        if existing
+          by_endpoint.where(user_id: user.id).where.not(id: existing.id).delete_all
+          existing.update!(data: data) if existing.data != data
+          existing
+        else
+          RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
+          created = PushSubscription.create!(user: user, data: data)
+          prune_subscriptions(user)
+          created
+        end
       end
-
-    prune_subscriptions(user) if new_subscription
 
     if send_confirmation == "true"
       message = {
@@ -147,13 +156,13 @@ class PushNotificationPusher
         tag: "#{Discourse.current_hostname}-subscription",
       }
 
-      if trusted?(new_subscription)
-        send_notification(user, new_subscription, message)
+      if trusted?(subscription)
+        send_notification(user, subscription, message)
       else
         Jobs::DeliverUntrustedPushNotifications.add(
           user_id: user.id,
           message: message,
-          subscription_id: new_subscription.id,
+          subscription_id: subscription.id,
         )
       end
     end
@@ -184,7 +193,10 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.where(user: user, data: subscription.to_json).delete_all
+    endpoint = subscription[:endpoint]
+    return if !endpoint.is_a?(String) || endpoint.blank?
+
+    PushSubscription.where(user: user).with_endpoint(endpoint).delete_all
   end
 
   def self.get_badge
