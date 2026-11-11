@@ -87,6 +87,7 @@ expectTypeOf(typeMetadata.visible).toEqualTypeOf<boolean>();
 // The new-category route stores a projection without these two.
 expectTypeOf(typeMetadata.description).toEqualTypeOf<string | undefined>();
 expectTypeOf(typeMetadata.icon).toEqualTypeOf<string | null | undefined>();
+expectTypeOf(typeMetadata.svg_icon).toEqualTypeOf<string | null | undefined>();
 expectTypeOf(typeMetadata.configuration_schema).not.toBeAny();
 expectTypeOf(typeMetadata["type_specific_extra"]).toEqualTypeOf<unknown>();
 

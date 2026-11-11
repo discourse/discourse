@@ -151,3 +151,7 @@ $solved-color: var(--success);
     --d-button-default-icon-color: var(--tertiary);
   }
 }
+
+.category-type-cards__card.--category-type-support {
+  --category-type-accent: var(--success);
+}

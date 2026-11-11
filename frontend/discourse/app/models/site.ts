@@ -175,6 +175,7 @@ export interface SiteAclEntry {
 export interface SiteCategoryType extends CategoryTypeMetadata {
   description: string;
   icon: string | null;
+  svg_icon: string | null;
 }
 
 /** The site banner; an empty object when no banner is set. */
