@@ -6,11 +6,11 @@
 
   &__list {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
 
     @container (width >= 40rem) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -22,7 +22,7 @@
     flex-direction: column;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-border-radius);
     transition:
       border-color 0.15s,
       background-color 0.15s;
@@ -127,6 +127,19 @@
     &.--unavailable {
       .category-type-cards__card-select {
         cursor: not-allowed;
+
+        // rows put the title beside the corner badge, cards keep it clear
+        @container (width < 40rem) {
+          padding-top: var(--space-8);
+        }
+      }
+
+      .category-type-cards__card-chevron {
+        visibility: hidden;
+      }
+
+      .category-type-cards__card-icon {
+        filter: grayscale(1);
       }
 
       &:hover,
@@ -159,11 +172,14 @@
 
   &__ask-admin-message {
     width: 100%;
+    min-width: 0;
+    white-space: normal;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: var(--space-3) var(--space-6);
+    font-size: var(--font-down-1);
     background-color: var(--tertiary-very-low);
     color: var(--tertiary);
     border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
