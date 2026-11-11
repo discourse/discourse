@@ -180,9 +180,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     permission can be granted to are listed disabled, with the reason beside the name. The
     legacy `DAccessControlGranteeChooser` is private to `DAccessControl` (#45992) and is
     deleted in the cleanup, along with the getters that only feed it.
-  - ☐ After a pick, the add box runs the grantee search once more. The pick changes
-    `@exclude`, and the engine reloads a closed list with its last query. Skipping that reload
-    while closed is an engine change, so it needs approval.
+  - ☐ After a pick, the add box runs the grantee search once more, and nothing shows the
+    result. The pick changes `@exclude` while the panel is still open, so the engine reloads
+    the open list with the typed query just before the panel closes. Treating a pick that
+    closes the panel as closed would defer that reload to the next open. That is an engine
+    change, so it needs approval.
   - ☑ Assign's category groups moved to `DSelectGroup` once the engine could hold values that
     can't be removed: the global groups are `@lockedValues` (2026-11-10).
   - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
