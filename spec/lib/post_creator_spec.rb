@@ -1635,7 +1635,11 @@ RSpec.describe PostCreator do
     it "creates a post for an accepted group inbox email" do
       user = Fabricate(:user, suspended_till: 1.year.from_now)
       topic =
-        Fabricate(:group_private_message_topic, user: user, recipient_group: Fabricate(:group))
+        Fabricate(
+          :group_private_message_topic,
+          user: user,
+          recipient_group: Fabricate(:group, incoming_email: "inbox@example.com"),
+        )
       Fabricate(:post, topic: topic, user: user)
       creator =
         PostCreator.new(

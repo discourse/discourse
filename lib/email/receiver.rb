@@ -353,9 +353,27 @@ module Email
     end
 
     def validate_user(user)
-      raise InactiveUserError if !user.active && !user.staged
-      raise SuspendedUserError if user.suspended?
-      raise SilencedUserError if user.silenced?
+      error = user_restriction_error(user)
+      raise error if error
+    end
+
+    def user_restriction_error(user)
+      return InactiveUserError if !user.active && !user.staged
+      return SuspendedUserError if user.suspended?
+      return SilencedUserError if user.silenced?
+      nil
+    end
+
+    def original_sender(user)
+      address, = Email::Receiver.extract_email_address_and_name(@mail[:from])
+      User.find_by_email(address) || @from_user || user
+    end
+
+    def validate_destination_user(user:, destination:)
+      if destination.is_a?(Category) ||
+           (destination.is_a?(Group) && destination.incoming_email.blank?)
+        validate_user(user)
+      end
     end
 
     def get_all_recipients(mail)
@@ -1022,6 +1040,7 @@ module Email
     end
 
     def create_group_post(group, user, body, elided)
+      validate_destination_user(user: user, destination: group)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
 
       # Incoming emails with matching message ids, and then cross references
@@ -1071,7 +1090,8 @@ module Email
           title: subject,
           archetype: Archetype.private_message,
           target_group_names: [group.name],
-          is_group_inbox_message: true,
+          is_group_message: true,
+          is_group_inbox_message: group.incoming_email.present?,
           skip_validations: true,
         )
       else
@@ -1171,7 +1191,11 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
-      validate_user(user) if destination.is_a?(Category)
+      sender = original_sender(user)
+      [user, sender].uniq.each do |destination_user|
+        validate_destination_user(user: destination_user, destination: destination)
+      end
+      user = sender if user_restriction_error(sender)
       case SiteSetting.forwarded_emails_behaviour
       when "create_replies"
         forwarded_email_create_replies(destination, user)
@@ -1191,7 +1215,7 @@ module Email
       embedded_user: nil
     )
       if destination.is_a?(Group)
-        topic_user = embedded_user&.call || user
+        topic_user = user_restriction_error(user) ? user : (embedded_user&.call || user)
         create_topic(
           user: topic_user,
           raw: raw,
@@ -1199,7 +1223,8 @@ module Email
           archetype: Archetype.private_message,
           target_usernames: [user.username],
           target_group_names: [destination.name],
-          is_group_inbox_message: true,
+          is_group_message: true,
+          is_group_inbox_message: destination.incoming_email.present?,
           skip_validations: true,
           created_at: date,
         )
@@ -1229,7 +1254,7 @@ module Email
 
       if forwarded_by_address && forwarded_by_name
         @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
-        validate_user(@forwarded_by_user) if destination.is_a?(Category)
+        validate_destination_user(user: @forwarded_by_user, destination: destination)
       end
 
       email_address, display_name =
@@ -1420,6 +1445,8 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:is_group_message] = options[:topic].private_message? &&
+        options[:topic].allowed_groups.exists?
       options[:is_group_inbox_message] = group_inbox_message?(options[:topic])
       post_action_type = post_action_for(options[:raw])
       notification_level = notification_level_for(options[:raw])
@@ -1452,7 +1479,8 @@ module Email
     end
 
     def group_inbox_message?(topic)
-      topic.present? && topic.private_message? && topic.allowed_groups.exists?
+      topic.present? && topic.private_message? &&
+        topic.allowed_groups.where.not(incoming_email: [nil, ""]).exists?
     end
 
     def create_post_action(user, post, type)
@@ -1515,7 +1543,7 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          opts = { for_group_message: options[:is_group_inbox_message] }
+          opts = { for_group_message: options[:is_group_message] }
           upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user.id)
           upload_sha = upload.original_sha1.presence || upload.sha1
           if upload.errors.empty?
@@ -1705,6 +1733,8 @@ module Email
     end
 
     def add_other_addresses(post, sender, mail_object)
+      return if user_restriction_error(original_sender(sender))
+
       max_staged_users_post = nil
 
       %i[to cc bcc].each do |d|

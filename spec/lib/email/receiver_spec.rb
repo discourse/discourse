@@ -186,6 +186,168 @@ RSpec.describe Email::Receiver do
         expect(IncomingEmail.last.post_id).to eq(post.id)
       end
 
+      it "rejects delivery to a group without an incoming email address" do
+        address = group.incoming_email
+        group.update!(incoming_email: nil, email_username: address)
+
+        expect { Email::Receiver.new(incoming_message(to: address)).process! }.to raise_error(
+          error,
+        ).and not_change(Post, :count)
+      end
+
+      it "rejects forwarded delivery to a group without an incoming email address" do
+        address = group.incoming_email
+        group.update!(incoming_email: nil, email_username: address)
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = address
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects reply keys for a group without an incoming email address" do
+        group.update!(incoming_email: nil)
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "rejects message references for a group without an incoming email address" do
+        group.update!(incoming_email: nil)
+        SiteSetting.find_related_post_with_key = false
+        message_id = "discourse/post/#{group_post.id}@#{Discourse.current_hostname}"
+        mail = incoming_message(to: "reply@example.com", reply_to: message_id)
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "keeps individual email recipients out of the group conversation" do
+        recipient = Fabricate(:user)
+        mail = Mail.new(incoming_message(to: [group.incoming_email, recipient.email]))
+        mail.cc = recipient.email
+        mail.bcc = recipient.email
+        Jobs.run_immediately!
+
+        post = Email::Receiver.new(mail.to_s).process!
+
+        expect(post.topic.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: post.topic, user: recipient)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+      end
+
+      it "keeps recipients of a forwarded email out of the group conversation" do
+        recipient = Fabricate(:user)
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = group.incoming_email
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).not_to include(recipient)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+      end
+
+      it "keeps recipients and embedded authors out when forwarding from a group address with quote" do
+        recipient = Fabricate(:user)
+        embedded_author = Fabricate(:user, email: "some@one.com")
+        address = group.incoming_email
+        group.update!(incoming_email: "#{address}|#{sender.email}")
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = address
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(TopicUser.exists?(topic: Topic.last, user: embedded_author)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+        expect(
+          embedded_author.notifications.where(
+            notification_type: Notification.types[:private_message],
+          ),
+        ).to be_empty
+      end
+
+      it "rejects forwarding from a group address without an incoming inbox with quote" do
+        group.update!(incoming_email: nil, email_username: sender.email)
+        Fabricate(:user, email: "some@one.com")
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = sender.email
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
+      it "keeps recipients and embedded authors out when forwarding from a group address with create_replies" do
+        recipient = Fabricate(:user)
+        embedded_author = Fabricate(:user, email: "some@one.com")
+        address = group.incoming_email
+        group.update!(incoming_email: "#{address}|#{sender.email}")
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = address
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(TopicUser.exists?(topic: Topic.last, user: embedded_author)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+        expect(
+          embedded_author.notifications.where(
+            notification_type: Notification.types[:private_message],
+          ),
+        ).to be_empty
+      end
+
+      it "rejects forwarding from a group address without an incoming inbox with create_replies" do
+        group.update!(incoming_email: nil, email_username: sender.email)
+        Fabricate(:user, email: "some@one.com")
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = sender.email
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change(
+                Post,
+                :count,
+              )
+      end
+
       it "replies to a group address in an existing conversation" do
         original =
           Fabricate(
@@ -736,6 +898,17 @@ RSpec.describe Email::Receiver do
       upload = post.uploads.first
 
       expect(post.raw).to include UploadMarkdown.new(upload).to_markdown
+    end
+
+    it "preserves group attachment permissions for an active sender without an incoming address" do
+      group.update!(incoming_email: nil, email_username: "team@bar.com")
+      Fabricate(:user, email: "discourse@bar.com")
+      SiteSetting.allow_all_attachments_for_group_messages = true
+
+      post = process(:attached_rb_file)
+
+      expect(post.uploads.count).to eq(1)
+      expect(post.raw).to include(UploadMarkdown.new(post.uploads.first).to_markdown)
     end
 
     it "reenables user's PM email notifications when user emails new topic to group" do
