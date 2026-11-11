@@ -5,6 +5,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
+  disabledReason,
   GroupOption,
   itemName,
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
@@ -88,6 +89,12 @@ export const UserOption: TOC<{
       {{#if (statusEmoji @item)}}
         <span class="d-user-option__status">
           {{~dEmoji (statusEmoji @item) alt="" skipTitle=true~}}
+        </span>
+      {{/if}}
+      {{#if (disabledReason @item)}}
+        <span class="d-user-option__reason">
+          {{~dIcon "ban"~}}
+          {{~disabledReason @item~}}
         </span>
       {{/if}}
       <span aria-hidden="true" class="d-user-option__decorations">

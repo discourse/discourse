@@ -35,13 +35,33 @@ import type {
 /** Which groups the picker offers, as the server's include flags. */
 type UserPickerGroups = "visible" | "mentionable" | "messageable";
 
+/** A record a search source answers with, user or group, as the user search serializes it. */
+type UserSearchRecord = {
+  id?: number;
+  name?: string;
+  full_name?: string | null;
+  automatic?: boolean;
+  /** Listed but not pickable. */
+  disabled?: boolean;
+  /** Why it can't be picked, drawn in its row. */
+  disabledReason?: string;
+};
+
+/** What a call-site loader answers with: the user search endpoint's shape. */
+export type UserSearchResponse = {
+  users?: (UserSearchRecord & {
+    username: string;
+    avatar_template?: string;
+    status?: { emoji?: string; description?: string } | null;
+  })[];
+  groups?: (UserSearchRecord & { name: string })[];
+};
+
 /** A search or lookup row, as `lib/user-search` returns it. */
-type UserSearchRow = {
+type UserSearchRow = UserSearchRecord & {
   type: UserPickType;
   value: string;
   username?: string;
-  name?: string;
-  full_name?: string | null;
   avatar_template?: string;
   status?: { emoji?: string; description?: string } | null;
 };
@@ -52,6 +72,12 @@ export type UserPickItem = SelectItem & {
   name: string;
   /** Absent for a name nothing resolved and for a call site's special rows. */
   type?: UserPickType;
+  /** The user's or group's own id, when its source sends it. */
+  recordId?: number;
+  /** Whether a group is one of the automatic groups. */
+  automatic?: boolean;
+  /** Why a disabled row can't be picked. */
+  disabledReason?: string;
 };
 
 /** The user picker's arguments and the engine's forwarded presentation contract. */
@@ -90,6 +116,16 @@ interface DSelectUserSignature {
     topicId?: number;
     /** Scopes the search to a category's users, listed before anything is typed. */
     categoryId?: number;
+    /**
+     * Answers searches in place of the user search, the empty query included, in its shape.
+     * The picker still applies `@exclude`, ranks the rows and draws them; the loader decides how
+     * many. A record with `disabled` is listed but can't be picked, showing its
+     * `disabledReason`. Held names are still looked up through the user search. Keep it
+     * stable and pass its inputs through `@loadContext`.
+     */
+    load?: (term: string) => UserSearchResponse | Promise<UserSearchResponse>;
+    /** The reactive inputs of `@load`; a changed entry reloads the list. */
+    loadContext?: Record<string, unknown>;
     /**
      * Extra search params; camelCase keys are sent snake_cased and unset ones aren't sent.
      * Customizations override it as the `searchOptions` option.
@@ -159,6 +195,12 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       categoryId: this.args.categoryId,
       searchOptions: JSON.stringify(this.args.searchOptions ?? {}),
       showStatus: this.args.showStatus,
+      ...Object.fromEntries(
+        Object.entries(this.args.loadContext ?? {}).map(([key, value]) => [
+          `load.${key}`,
+          value,
+        ])
+      ),
     };
   }
 
@@ -193,6 +235,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       searchOptions: opts.options?.searchOptions as
         | Record<string, unknown>
         | undefined,
+      load: this.args.load,
     })) as UserSearchRow[];
     return rows.map((row) => this.#item(row));
   }
@@ -262,10 +305,17 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   }
 
   #item(row: UserSearchRow): UserPickItem {
+    const source = {
+      recordId: row.id,
+      disabled: row.disabled,
+      disabledReason: row.disabledReason,
+    };
     if (row.type === "group") {
       return {
         id: row.value,
         type: "group",
+        automatic: row.automatic,
+        ...source,
         ...groupFields({
           name: row.name ?? row.value,
           full_name: row.full_name,
@@ -285,6 +335,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       fullName: row.name,
       statusEmoji: status?.emoji,
       description: status?.description,
+      ...source,
     };
   }
 

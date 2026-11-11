@@ -454,7 +454,7 @@ async function requestUsers(term, { url, limit, params }) {
  * @param {Record<string, unknown>} [options.searchOptions] - Extra params; camelCase keys are
  *   sent snake_cased, and unset ones aren't sent.
  * @param {string} [options.url]
- * @param {(term: string) => UserSearchResponse | Promise<UserSearchResponse>} [options.load] -
+ * @param {(term: string) => UserSearchResponse | PromiseLike<UserSearchResponse>} [options.load] -
  *   Answers in place of the request, empty term included; exclusion, ranking and rows still
  *   apply, and the source decides how many rows unless `limit` is given.
  * @param {number} [options.limit] - Defaults to 6 for the user search.

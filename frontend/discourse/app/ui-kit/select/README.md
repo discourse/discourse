@@ -847,9 +847,13 @@ exception to the kit's domain-free primitives. A recipe:
   forwards `@lockedValues`, in the keys its select holds (tag recipes take names). Its signature
   extends `SelectRecipeArgs` or `MultiSelectRecipeArgs` from `recipes/-internals/recipe-args.ts`,
   and the recipe test `recipe-args-test.gjs` checks that each of those arguments takes effect;
-- owns its source: it takes no `@items` or `@load`, because its rules (exclusion, caps, held
-  lookups) apply to the rows it loads. A customization changes the rows through `spec.load` or
-  `spec.content`;
+- owns its source, because its rules (exclusion, caps, held lookups) apply to every row it
+  lists. A call site with its own data passes it under DSelect's name for that kind of source,
+  `@items` for a local list or `@load` for a server, but in the recipe's own record type, never
+  DSelect items, and only the kind the recipe uses. The recipe runs its rules on those records
+  and documents which ones it leaves to the source. `DSelectGroup` and `DSelectTagFilter` take
+  `@items`, `DSelectUser` takes `@load`. A customization changes the rows through `spec.load`
+  or `spec.content`;
 - passes `@suppressFooter={{not (has-block "footer")}}` with a forwarded `:footer`. A forwarded
   block always counts as passed, so without it every recipe panel ends in an empty footer;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
@@ -1086,6 +1090,14 @@ The people family has two recipes, one per data source:
     keys are not sent. Customizations override it as the `searchOptions` option; the value is
     replaced, not merged, so an extension spreads `current.searchOptions`.
   - `@showStatus` shows each user's status in the rows.
+  - `@load(term)` answers searches in place of the user search, for a call site with its own
+    endpoint. It answers in the user search's shape, `{ users, groups }`, as a value or a
+    promise, the empty query included, so it decides what is listed before anything is typed.
+    The picker still applies `@exclude` and `@excludeCurrentUser`, ranks the rows and draws them;
+    the loader decides how many, with no cut at six. A record with `disabled: true` is listed but
+    can't be picked, and its `disabledReason` is drawn in its row beside the name. Picked items
+    carry the record's `id` as `recordId`, and a group's `automatic`. Held names are still looked
+    up through the user search. Keep `@load` stable and pass its inputs through `@loadContext`.
   - Held names are looked up together, in one request per value change, and keep the
     spelling they were given. A name nothing resolves stays as typed, with no `type`.
   - Names match in any case, as the server matches them: a held `sam` marks the `Sam` row
@@ -1100,8 +1112,8 @@ The people family has two recipes, one per data source:
   `@value` and `@onChange` use group ids, or names with `@emit="names"`; both follow it, since a
   name and a string id can't be told apart. `@automatic={{false}}` and `@everyone={{false}}`
   leave those groups out, `@exclude` lists group ids never offered, and `@only` lists the only
-  ones offered. `@items` replaces the site's groups for a call site with its own list (the
-  `@items` exception, as with `DSelectTagFilter`); the other filters still apply. Held names
+  ones offered. `@items` replaces the site's groups for a call site with its own list; the other
+  filters still apply. Held names
   match their groups in any case.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a user picker is named for what it offers,

@@ -83,6 +83,20 @@
   @include ellipsis;
 }
 
+.d-user-option__reason,
+.d-group-option__reason {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  flex-shrink: 0;
+  padding: var(--space-half) var(--space-1);
+  border-radius: var(--d-border-radius);
+  background: var(--primary-low);
+  color: var(--primary-very-high);
+  font-size: var(--font-down-3);
+  white-space: nowrap;
+}
+
 // A name nobody has is kept as typed, so the warning is what tells it from a real user.
 .d-unknown-option .d-icon {
   color: var(--danger);

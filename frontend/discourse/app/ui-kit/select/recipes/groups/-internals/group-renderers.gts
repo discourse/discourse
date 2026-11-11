@@ -14,6 +14,13 @@ export function itemName(item: SelectItem): string {
   return typeof item.name === "string" ? item.name : String(item.name ?? "");
 }
 
+/** Why a disabled row can't be picked, when its source gives a reason. */
+export function disabledReason(item: SelectItem): string | undefined {
+  return item.disabled && typeof item.disabledReason === "string"
+    ? item.disabledReason
+    : undefined;
+}
+
 /**
  * A group's row fields: its name labels it, and a full name that says something more
  * becomes the row's description.
@@ -43,5 +50,11 @@ export const GroupOption: TOC<{
       {{dIcon "users"}}
     {{/if}}
     <span class="d-group-option__name">{{itemName @item}}</span>
+    {{#if (disabledReason @item)}}
+      <span class="d-group-option__reason">
+        {{~dIcon "ban"~}}
+        {{~disabledReason @item~}}
+      </span>
+    {{/if}}
   </span>
 </template>;

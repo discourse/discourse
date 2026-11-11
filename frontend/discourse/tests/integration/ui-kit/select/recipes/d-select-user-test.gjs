@@ -676,6 +676,198 @@ module(
       assert.deepEqual(optionValues(), ["author", "bob"]);
     });
 
+    module("with a call-site loader", function () {
+      /** Groups g1 to g8, more than the user search's six rows. */
+      const MANY_GROUPS = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
+        id: 100 + n,
+        name: `g${n}`,
+        full_name: `Group ${n}`,
+      }));
+
+      /**
+       * A loader like an endpoint answering the user search's shape: groups and users whose
+       * name includes the term. Records every term it is asked.
+       */
+      function stubLoader({ users = [], groups = MANY_GROUPS } = {}) {
+        const terms = [];
+        const load = (term) => {
+          terms.push(term);
+          const matches = (text) =>
+            text?.toLowerCase().includes(term.toLowerCase());
+          return Promise.resolve({
+            users: users.filter((u) => matches(u.username) || matches(u.name)),
+            groups: groups.filter(
+              (g) => matches(g.name) || matches(g.full_name)
+            ),
+          });
+        };
+        return { load, terms };
+      }
+
+      test("lists the loader's rows before anything is typed, all of them, without the user search", async function (assert) {
+        const requests = stubUserSearch();
+        const { load, terms } = stubLoader();
+
+        await render(
+          <template>
+            <DSelectUser @includeGroups="visible" @load={{load}} />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+
+        assert.deepEqual(terms, [""], "the loader answers the empty query");
+        assert.deepEqual(requests, [], "the user search is not asked");
+        assert.deepEqual(
+          optionValues(),
+          MANY_GROUPS.map((group) => group.name),
+          "every row the loader answers is listed"
+        );
+        assert
+          .dom(".d-group-option .d-icon-users", optionNamed("g1"))
+          .exists("a group row is drawn as one");
+      });
+
+      test("searches the loader as typed, draws its users and leaves excluded names out", async function (assert) {
+        const { load, terms } = stubLoader({ users: USERS, groups: [] });
+
+        await render(
+          <template>
+            <DSelectUser @exclude={{array "ALICE"}} @load={{load}} />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        await select.search("a");
+
+        assert.strictEqual(terms.at(-1), "a");
+        assert.deepEqual(
+          optionValues(),
+          ["Sam", "eviltrout"],
+          "Alice is left out, and the rest keep the search's ranking"
+        );
+        assert
+          .dom(".d-user-option__name", optionNamed("Sam"))
+          .hasText("Sam Saffron", "a user row is drawn as one");
+      });
+
+      test("a disabled record shows its reason beside its full name and can't be picked", async function (assert) {
+        const onChange = sinon.spy();
+        const { load } = stubLoader({
+          groups: [
+            {
+              id: 4,
+              name: "anonymous_users",
+              full_name: "Anonymous users",
+              disabled: true,
+              disabledReason: "Not allowed",
+            },
+          ],
+        });
+
+        await render(
+          <template>
+            <DSelectUser
+              @includeGroups="visible"
+              @load={{load}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        const row = optionNamed("anonymous_users");
+
+        assert.dom(row).hasAttribute("aria-disabled", "true");
+        assert
+          .dom(".d-group-option__reason", row)
+          .hasText("Not allowed", "the reason is drawn in the row");
+        assert
+          .dom(".d-select__option-description", row)
+          .hasText("Anonymous users", "the full name stays");
+
+        await click(row);
+        assert.false(onChange.called, "the row is not picked");
+      });
+
+      test("emits each pick with its record id, and whether a group is automatic", async function (assert) {
+        const onChange = sinon.spy();
+        const { load } = stubLoader({
+          users: [{ id: 7, username: "bob", name: "Bob Ross" }],
+          groups: [{ id: 3, name: "staff", automatic: true }],
+        });
+
+        await render(
+          <template>
+            <DSelectUser
+              @includeGroups="visible"
+              @load={{load}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        await click(optionNamed("staff"));
+        const group = onChange.lastCall.args[1];
+        await select.open();
+        await select.search("bob");
+        await click(optionNamed("bob"));
+        const user = onChange.lastCall.args[1];
+
+        assert.deepEqual(
+          [group.type, group.recordId, group.automatic],
+          ["group", 3, true]
+        );
+        assert.deepEqual([user.type, user.recordId], ["user", 7]);
+      });
+
+      test("still looks held names up through the user search", async function (assert) {
+        const requests = stubUserSearch();
+        const { load, terms } = stubLoader();
+
+        await render(
+          <template><DSelectUser @load={{load}} @value="bob" /></template>
+        );
+
+        assert.dom(".d-select__trigger").includesText("bob");
+        assert.deepEqual(
+          requests.map((params) => params.usernames),
+          ["bob"],
+          "the held name is looked up"
+        );
+        assert.deepEqual(terms, [], "the loader answers searches only");
+      });
+
+      test("reloads when its load context changes", async function (assert) {
+        const scope = tracked("a");
+        const terms = [];
+        const load = (term) => {
+          terms.push(`${scope.value}:${term}`);
+          return { groups: [{ name: `${scope.value}-group` }] };
+        };
+
+        await render(
+          <template>
+            <DSelectUser
+              @includeGroups="visible"
+              @load={{load}}
+              @loadContext={{hash scope=scope.value}}
+            />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+        assert.deepEqual(optionValues(), ["a-group"]);
+
+        scope.value = "b";
+        await settled();
+
+        assert.deepEqual(optionValues(), ["b-group"], "the list reloads");
+        assert.deepEqual(terms, ["a:", "b:"]);
+      });
+    });
+
     test("carries both legacy names, since the old choosers answered to both", async function (assert) {
       stubUserSearch();
 
