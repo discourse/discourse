@@ -64,7 +64,7 @@ module ::Blog
         on_failed_policy(:requested_path_is_current) do |publication:|
           redirect_to(publication.url, status: :moved_permanently, allow_other_host: true)
         end
-        on_failure { raise Discourse::NotFound }
+        on_failure { redirect_to_permalink || raise(Discourse::NotFound) }
       end
     end
 
@@ -128,6 +128,20 @@ module ::Blog
     end
 
     private
+
+    # Lets a migration redirect old non-article URLs, like author pages, from the blog host.
+    # Relative targets are community paths, so they resolve against the community host.
+    def redirect_to_permalink
+      permalink = Permalink.find_by_url(request.fullpath)
+      return if !permalink || !guardian.can_see_permalink_target?(permalink)
+      return if permalink.target_url.blank?
+
+      redirect_to(
+        UrlHelper.absolute_without_cdn(permalink.target_url),
+        status: :moved_permanently,
+        allow_other_host: true,
+      )
+    end
 
     def blog_path
       @blog_path ||= Configuration.relative_path(request)

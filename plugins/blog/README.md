@@ -29,6 +29,9 @@ a deferred, interactive Discourse discussion below each article.
 - On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
   and `/posts.atom` redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
   both the `#discussion` and `#comments` fragment targets.
+- A blog path that is not an article falls back to core permalinks, so a migration can
+  redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
+  community), and relative targets resolve against the community host.
 - Excerpts, featured articles, author bylines, reading time, publication/updated
   dates, and card/social images from the topic's first image upload.
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and

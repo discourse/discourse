@@ -52,6 +52,13 @@ RSpec.describe "Blog under /blog", type: :request do
     expect(response).to redirect_to("#{Discourse.base_url}/blog/renamed-story")
   end
 
+  it "serves an article link with a trailing slash under the stored canonical path" do
+    get "/blog/first-story/"
+    expect(response.status).to eq(200)
+    html = Nokogiri.HTML5(response.body)
+    expect(html.at_css('link[rel="canonical"]')["href"]).to eq(publication.url)
+  end
+
   it "keeps the editor outside the public blog" do
     sign_in(admin)
     get "/blog-editor.json"

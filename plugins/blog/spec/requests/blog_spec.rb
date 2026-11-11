@@ -259,6 +259,36 @@ RSpec.describe "Blog publication", type: :request do
       end
     end
 
+    it "serves an article link with a trailing slash under the stored canonical path" do
+      get "https://blog.example.com#{publication.path}/"
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq(publication.url)
+    end
+
+    it "redirects other old links on the blog host through permalinks" do
+      Permalink.create!(url: "author/jo", external_url: "https://blog.example.com/")
+      Permalink.create!(url: "page/2", topic_id: publication.discussion_topic_id)
+      Permalink.create!(url: "private", topic_id: Fabricate(:topic, category: drafts).id)
+
+      %w[/author/jo /author/jo/].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("https://blog.example.com/")
+      end
+
+      get "https://blog.example.com/page/2"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(
+        "#{Discourse.base_url}#{publication.discussion_topic.relative_url}",
+      )
+
+      %w[/private /author/someone-else].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(404)
+      end
+    end
+
     it "preserves the configured blog host when it is not a database hostname alias" do
       RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(["test.localhost"])
 
