@@ -1477,6 +1477,7 @@ pl_PL:
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
     activated: "Przepraszamy, to konto zostało już aktywowane."
+    email_change_not_allowed: "To konto było już wcześniej aktywne, więc można je reaktywować tylko przy użyciu aktualnego adresu e-mail."
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy na pewno chcesz, aby <b>%{target_username} (%{target_email})</b> był administratorem?"
@@ -3505,6 +3506,16 @@ pl_PL:
       few: "%{count} posty zostały scalone z istniejącą wiadomością: %{topic_link}"
       many: "%{count} postów zostało scalonych z istniejącą wiadomością: %{topic_link}"
       other: "%{count} postów zostało scalonych z istniejącą wiadomością: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "Wpis został podzielony na nowy temat."
+      few: "%{count} wpisy zostały podzielone na nowy temat."
+      many: "%{count} wpisów zostało podzielonych na nowy temat."
+      other: "%{count} wpisów zostało podzielonych na nowy temat."
+    existing_topic_moderator_post_no_link:
+      one: "Wpis został scalony z istniejącym tematem."
+      few: "%{count} wpisy zostały scalone z istniejącym tematem."
+      many: "%{count} wpisów zostało scalonych z istniejącym tematem."
+      other: "%{count} wpisów zostało scalonych z istniejącym tematem."
   change_owner:
     post_revision_text: "Przeniesiono własność"
   publish_page:

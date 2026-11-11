@@ -835,6 +835,14 @@ tr_TR:
       fonts:
         base_font: "Gövde yazı tipi"
         heading_font: "Başlık yazı tipi"
+    mcp_theme_access:
+      "on": "Açık"
+      "off": "Kapalı"
+      none: "hiçbiri"
+      changes:
+        server: "MCP sunucusu"
+    mcp_app_setup:
+      none: "hiçbiri"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"

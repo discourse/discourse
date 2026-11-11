@@ -96,6 +96,7 @@ sw:
       settings:
         follow: "Jiunge"
         followed: "Alijiunga"
+        muted_until_hint: "mpaka %{until}"
         threading_enabled: "Imeruhusiwa"
         threading_disabled: "Imezuiwa"
         notifications: "Taarifa"

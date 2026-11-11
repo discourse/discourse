@@ -81,6 +81,10 @@ sq:
       colors:
         light:
           header_background: "Ballina"
+    mcp_theme_access:
+      none: "asnjë"
+    mcp_app_setup:
+      none: "asnjë"
     reviewables:
       ai_tool_action:
         approve:

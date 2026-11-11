@@ -1030,6 +1030,8 @@ zh_TW:
         edit: "編輯"
         delete: "刪除"
         test: "運行測試"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP 服務器"
         new: "新 MCP 服務器"
@@ -1114,6 +1116,7 @@ zh_TW:
         type: "類型"
         provider: "服務提供者"
         edit: "編輯"
+        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         select_type: "選擇"
         types:
           embedding: "嵌入"
@@ -1364,7 +1367,6 @@ zh_TW:
         presets: "選擇一個預設…"
         configure_manually: "手動配置"
         edit: "編輯"
-        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         tests:
           title: "運行測試"
           running: "正在運行測試…"

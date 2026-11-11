@@ -7,6 +7,7 @@
 ru:
   site_settings:
     discourse_automation_enabled: "Включить плагин «discourse-automation»"
+    discourse_automation_max_recursion_depth: "Максимальная глубина рекурсии автоматизации"
   discourse_automation:
     staff_action_logs:
       empty_value: "(пустой)"
@@ -45,6 +46,7 @@ ru:
         description: Автоматизация будет запущена при создании или изменении категории
       recurring:
         title: Повторение
+        invalid_interval: Интервал должен быть положительным числом.
       point_in_time:
         title: Момент времени
         description: Автоматизация будет запущена по достижении указанной даты

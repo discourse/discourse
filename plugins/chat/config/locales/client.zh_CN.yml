@@ -546,6 +546,8 @@ zh_CN:
         followed: "已加入"
         mute: "将频道设为免打扰"
         unmute: "取消将频道设为免打扰"
+        mute_options:
+          "off": "关"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"

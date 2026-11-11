@@ -961,6 +961,14 @@ de:
       fonts:
         base_font: "Textkörper-Schriftart"
         heading_font: "Überschrift-Schriftart"
+    mcp_theme_access:
+      "on": "An"
+      "off": "Aus"
+      none: "keine Erfassung"
+      changes:
+        server: "MCP-Server"
+    mcp_app_setup:
+      none: "keine Erfassung"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"

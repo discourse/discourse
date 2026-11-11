@@ -123,6 +123,10 @@ ro:
           header_background: "Antet"
       fonts:
         heading_font: "Font titlu"
+    mcp_theme_access:
+      none: "Niciuna"
+    mcp_app_setup:
+      none: "Niciuna"
     reviewables:
       ai_tool_action:
         approve:

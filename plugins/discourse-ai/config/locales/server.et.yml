@@ -88,6 +88,10 @@ et:
       colors:
         light:
           header_background: "Päis"
+    mcp_theme_access:
+      none: "mitte ükski"
+    mcp_app_setup:
+      none: "mitte ükski"
     reviewables:
       ai_tool_action:
         approve:

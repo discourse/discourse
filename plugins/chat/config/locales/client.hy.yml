@@ -104,6 +104,7 @@ hy:
       settings:
         follow: "Միանալ"
         followed: "Միացել է"
+        muted_until_hint: "մինչև %{until}"
         threading_disabled: "Անջատված"
         notifications: "Ծանուցումներ"
         preview: "Նախադիտում"

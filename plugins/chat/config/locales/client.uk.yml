@@ -670,6 +670,9 @@ uk:
         followed: "Приєднався(лась)"
         mute: "Вимкнути канал"
         unmute: "Увімкнути канал"
+        muted_until_hint: "Поки не буде %{until}"
+        mute_options:
+          "off": "Вимк."
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
         muted_on: "Увімк"

@@ -444,6 +444,9 @@ hu:
         followed: "Csatlakozott"
         mute: "Csatorna némítása"
         unmute: "Csatorna némításának feloldása"
+        muted_until_hint: "eddig: %{until}"
+        mute_options:
+          "off": "Ki"
         threading_enabled: "Bekapcsolva"
         threading_disabled: "Kikapcsolva"
         muted_on: "Be"

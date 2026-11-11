@@ -454,6 +454,9 @@ ja:
         followed: "参加中"
         mute: "チャンネルをミュート"
         unmute: "チャンネルのミュートを解除する"
+        muted_until_hint: "%{until} まで"
+        mute_options:
+          "off": "オフ"
         threading_enabled: "有効"
         threading_disabled: "無効"
         muted_on: "オン"

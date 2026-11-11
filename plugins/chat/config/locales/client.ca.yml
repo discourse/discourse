@@ -100,6 +100,7 @@ ca:
       settings:
         follow: "Registre"
         followed: "Registrat"
+        muted_until_hint: "fins a %{until}"
         threading_enabled: "Activat"
         threading_disabled: "Desactivat"
         notifications: "Notificacions"

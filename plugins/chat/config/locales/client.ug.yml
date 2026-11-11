@@ -469,6 +469,9 @@ ug:
         follow: "قوشۇل"
         followed: "قوشۇلدى"
         mute: "قانالنى ئۈنسىزلە"
+        muted_until_hint: "%{until} غىچە"
+        mute_options:
+          "off": "تاقاق"
         threading_enabled: "قوزغىتىلدى"
         threading_disabled: "چەكلەندى"
         muted_on: "ئوچۇق"

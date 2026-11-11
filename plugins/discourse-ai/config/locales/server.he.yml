@@ -580,6 +580,10 @@ he:
       fonts:
         base_font: "גופן גוף"
         heading_font: "גופן כותרת"
+    mcp_theme_access:
+      none: "ללא"
+    mcp_app_setup:
+      none: "ללא"
     reviewables:
       ai_tool_action:
         approve:

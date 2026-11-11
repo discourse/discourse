@@ -198,6 +198,8 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      dsa_classification:
+        suggest: "הצעה עם בינה מלאכותית"
       copied: "הועתק"
       ai_decoded_transcript:
         tool: "כלי"
@@ -657,6 +659,8 @@ he:
         edit: "עריכה"
         delete: "מחיקה"
         test: "הרצת בדיקה"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "שם"
         description: "תיאור"
@@ -680,6 +684,7 @@ he:
         type: "סוג"
         provider: "ספק"
         edit: "עריכה"
+        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         select_type: "בחירה"
         types:
           embedding: "שילוב (embedding)"
@@ -868,7 +873,6 @@ he:
         presets: "בחירת ערכה…"
         configure_manually: "הגדרה ידנית"
         edit: "עריכה"
-        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         tests:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"

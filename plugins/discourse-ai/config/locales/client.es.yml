@@ -238,6 +238,8 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugerir con IA"
       ai_decoded_transcript:
         thinking: "Pensando"
         tool: "Herramienta"
@@ -849,6 +851,8 @@ es:
         edit: "Editar"
         delete: "Eliminar"
         test: "Ejecutar prueba"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Servidores MCP"
         new: "Nuevo servidor MCP"
@@ -936,6 +940,7 @@ es:
         type: "Tipo"
         provider: "Proveedor"
         edit: "Editar"
+        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         select_type: "Seleccionar"
         types:
           embedding: "Incrustado"
@@ -1147,7 +1152,6 @@ es:
         presets: "Selecciona un preajuste..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         tests:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."

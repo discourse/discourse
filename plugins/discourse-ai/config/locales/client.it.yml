@@ -163,6 +163,8 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggerisci con l'IA"
       copied: "Copiato"
       ai_decoded_transcript:
         tool: "Strumento"
@@ -597,6 +599,8 @@ it:
         edit: "Modifica"
         delete: "Elimina"
         test: "Esegui test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"
@@ -620,6 +624,7 @@ it:
         type: "Tipo"
         provider: "Fornitore"
         edit: "Modifica"
+        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         select_type: "Seleziona"
         types:
           embedding: "Integrazione"
@@ -796,7 +801,6 @@ it:
         presets: "Seleziona una preimpostazione..."
         configure_manually: "Configura manualmente"
         edit: "Modifica"
-        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."

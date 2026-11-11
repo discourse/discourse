@@ -309,6 +309,8 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "通过 AI 提出建议"
       copied: "已复制"
       view_raw: "查看原始数据"
       view_decoded: "查看解码结果"
@@ -1180,6 +1182,7 @@ zh_CN:
           system_one: "系统一"
           typesafe: "类型安全"
           open_ai: "OpenAI决策"
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP 服务器"
         new: "新 MCP 服务器"
@@ -1269,6 +1272,7 @@ zh_CN:
         type: "类型"
         provider: "提供商"
         edit: "编辑"
+        seeded_warning: "此内容在您的站点上预先配置，无法编辑。"
         choose_type: "您想添加哪种类型的模型？"
         select_type: "选择"
         types:
@@ -1568,7 +1572,6 @@ zh_CN:
           text-embedding-3-small: "OpenAI 更快、更低成本的嵌入模型"
           text-embedding-ada-002: "OpenAI 的上一代模型已被 text-embedding-3-small 取代。"
         edit: "编辑"
-        seeded_warning: "此内容在您的站点上预先配置，无法编辑。"
         tests:
           title: "运行测试"
           running: "正在运行测试…"

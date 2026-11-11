@@ -242,6 +242,8 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      dsa_classification:
+        suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
       copied: "تم النسخ"
       ai_decoded_transcript:
         thinking: "التفكير"
@@ -1086,6 +1088,8 @@ ar:
         edit: "تعديل"
         delete: "حذف"
         test: "تشغيل الاختبار"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "خوادم MCP"
         new: "خادم MCP جديد"
@@ -1185,6 +1189,7 @@ ar:
         type: "النوع"
         provider: "مقدِّم الخدمة"
         edit: "تعديل"
+        seeded_warning: "تم تكوين هذا مسبقًا على موقعك ولا يمكن تعديله."
         select_type: "تحديد"
         types:
           embedding: "التضمين"
@@ -1428,7 +1433,6 @@ ar:
         presets: "حدِّد إعدادًا مسبقًا..."
         configure_manually: "التكوين يدويًا"
         edit: "تعديل"
-        seeded_warning: "تم تكوين هذا مسبقًا على موقعك ولا يمكن تعديله."
         tests:
           title: "تشغيل الاختبار"
           running: "جارٍ تشغيل الاختبار..."

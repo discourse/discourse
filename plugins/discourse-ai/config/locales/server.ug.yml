@@ -181,6 +181,12 @@ ug:
       fonts:
         base_font: "مەزمۇن خەت نۇسخىسى"
         heading_font: "ماۋزۇ خەت نۇسخىسى"
+    mcp_theme_access:
+      "on": "ئوچۇق"
+      "off": "تاقاق"
+      none: "يوق"
+    mcp_app_setup:
+      none: "يوق"
     reviewables:
       ai_tool_action:
         approve:

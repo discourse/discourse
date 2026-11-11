@@ -655,6 +655,7 @@ ar:
         followed: "انضم"
         mute: "كتم القناة"
         unmute: "إلغاء كتم صوت القناة"
+        muted_until_hint: "حتى %{until}"
         threading_enabled: "مفعَّلة"
         threading_disabled: "متوقفة"
         muted_on: "تشغيل"

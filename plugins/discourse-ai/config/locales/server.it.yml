@@ -534,6 +534,12 @@ it:
       fonts:
         base_font: "Carattere del corpo"
         heading_font: "Carattere dell'intestazione"
+    mcp_theme_access:
+      "on": "On"
+      "off": "Off"
+      none: "nessuna"
+    mcp_app_setup:
+      none: "nessuna"
     reviewables:
       ai_tool_action:
         approve:

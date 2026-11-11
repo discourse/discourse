@@ -191,6 +191,7 @@ vi:
       settings:
         follow: "Tham gia"
         followed: "Đã tham gia"
+        muted_until_hint: "đến %{until}"
         threading_enabled: "Đã bật"
         threading_disabled: "Vô hiệu hóa"
         notifications: "Thông báo"

@@ -35,10 +35,16 @@ zh_CN:
       resize: "调整代码编辑器大小"
     code_editor:
       resize: "调整代码编辑器大小"
+      tab_hint: "按下 Esc 键，然后按 Tab 键将焦点移出编辑器。"
+      completions: "完成"
       search:
+        find: "查找"
         replace: "替换"
         next: "下一步"
         previous: "上一步"
+        all: "选择所有匹配项"
+        match_case: "匹配大小写"
+        regexp: "正则表达式"
         close: "关闭"
         go: "开始"
       fold:

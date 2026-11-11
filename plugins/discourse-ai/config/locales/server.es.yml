@@ -835,6 +835,14 @@ es:
       fonts:
         base_font: "Tipo de letra para textos"
         heading_font: "Tipo de letra para encabezados"
+    mcp_theme_access:
+      "on": "Activado"
+      "off": "Desactivado"
+      none: "ninguna"
+      changes:
+        server: "Servidor MCP"
+    mcp_app_setup:
+      none: "ninguna"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"

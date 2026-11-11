@@ -154,6 +154,12 @@ el:
           header_background: "Header"
       fonts:
         heading_font: "Γραμματοσειρά επικεφαλίδας"
+    mcp_theme_access:
+      "on": "Ενεργό"
+      "off": "Ανενεργό"
+      none: "κανένα"
+    mcp_app_setup:
+      none: "κανένα"
     reviewables:
       ai_tool_action:
         approve:

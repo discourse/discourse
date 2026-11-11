@@ -163,6 +163,8 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      dsa_classification:
+        suggest: "Ehdota tekoälyllä"
       copied: "Kopioitiin"
       ai_decoded_transcript:
         tool: "Työkalu"
@@ -597,6 +599,8 @@ fi:
         edit: "Muokkaa"
         delete: "Poista"
         test: "Suorita testi"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nimi"
         description: "Kuvaus"
@@ -620,6 +624,7 @@ fi:
         type: "Tyyppi"
         provider: "Palveluntarjoaja"
         edit: "Muokkaa"
+        seeded_warning: "Tämä on valmiiksi määritetty sivustollesi, eikä sitä voi muokata."
         select_type: "Valitse"
         types:
           embedding: "Upottaminen"
@@ -796,7 +801,6 @@ fi:
         presets: "Valitse esiasetus..."
         configure_manually: "Määritä manuaalisesti"
         edit: "Muokkaa"
-        seeded_warning: "Tämä on valmiiksi määritetty sivustollesi, eikä sitä voi muokata."
         tests:
           title: "Suorita testi"
           running: "Suoritetaan testiä..."
