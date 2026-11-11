@@ -136,7 +136,7 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     query only on an add, and keeps the input focused; keep-selected-with-checkmark +
     `aria-multiselectable`; Backspace on the empty input removes the last chip (both desktop and
     modal inputs, composition-guarded); add/remove announced politely with the self-inflicted
-    refilter count suppressed (`#suppressNextCount`, leak-guarded); `removeItem` restores input
+    refilter count suppressed (`#suppressNextCount`, leak-guarded); `removeSelected` restores input
     focus. `.--multiple` SCSS (left-align, no double inset). New broad oracle
     `d-select-multi-flip-test.gjs` + updated `DSelect (multi typeahead)` module, all green.
   - ☑ **6b — chips arrow-roving** — `dRovingFocus selectionMode=focus tabStop=false
@@ -152,7 +152,7 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     nearest the input via `focusLast()`; arrows move; `onExit(forward)` returns to the input; the
     far edge stays. Backspace/Delete remove + move focus to the **previous** chip
     (`focusIndex(max(0, index-1))`, `nextRunloop`, Primer) with an input fallback; Enter/Space use
-    the button's native activation (→ `removeItem` → input). **Escape** is owned by float-kit's
+    the button's native activation (→ `removeSelected` → input). **Escape** is owned by float-kit's
     document-capture listener (closes the menu; focus stays on the chip); **ArrowDown/ArrowUp**
     from a chip jump to the input and open the list (the reopen gesture, keeps the
     `aria-activedescendant` model coherent). Static `tabindex=-1` on each remove button (desktop)

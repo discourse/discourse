@@ -43,7 +43,7 @@ export default class AssignedAdvancedSearch extends Component {
               @id="search-assigned-to"
               @includeGroups="visible"
               @onChange={{legacyPickOne this.onChangeAssigned}}
-              @searchOptions={{hash assignableGroups=true}}
+              @searchParams={{hash assignableGroups=true}}
               @value={{@searchedTerms.assigned}}
             />
           {{else}}

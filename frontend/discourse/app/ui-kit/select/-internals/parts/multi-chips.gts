@@ -220,7 +220,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       return undefined;
     }
     return this.args.engine.text(
-      this.args.triggerChipsInteractive ? "chipsHint" : "selectedItemsHint"
+      this.args.triggerChipsInteractive ? "chipsHint" : "selectedOptionsHint"
     );
   }
 
@@ -327,7 +327,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
 
   /** Focuses the input before removal so an unmounted button cannot drop focus to the body. */
   @action
-  removeItem(chip: SelectDescriptor, event?: MouseEvent): void {
+  removeSelected(chip: SelectDescriptor, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.args.presenter.isLocked || this.isLockedChip(chip)) {
       return;
@@ -464,7 +464,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                       aria-label={{if
                         (and this.capabilities.touch (not locked))
                         (@engine.text
-                          "removeItem"
+                          "removeSelected"
                           (hash item=(@engine.getSelectionLabel chip.item))
                         )
                       }}
@@ -484,7 +484,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                       class="d-select__chip-remove"
                       tabindex="-1"
                       type="button"
-                      {{on "click" (fn this.removeItem chip)}}
+                      {{on "click" (fn this.removeSelected chip)}}
                       {{on "keydown" (fn this.handleChipKeydown chip index)}}
                     >
                       <span

@@ -265,7 +265,7 @@ customization ports are done.
   2026-11-11, through a call-site `@load` on `DSelectUser` over the access control grantee
   search. Assign's category groups joined on 2026-11-10, when the engine gained
   `@lockedValues` for held values that can't be removed. `addUserSearchOption` reaches only the legacy pickers; extensions set
-  `searchOptions` through a customization instead.
+  `searchParams` through a customization instead.
   The topic pickers joined the same day through `DSelectTopic`, in form fields and in modals
   alike (move to topic or message, chat to topic, boards' "Add topic as card"), so a modal keeps
   its height as results come and go. The profile's featured topic became a field on the page. Held topics are looked up through `GET /topics/lookup`.
@@ -639,7 +639,7 @@ the handler still receives a one-item array. The composer recipients and the inv
 read `isGroup`, also accept the item's `type`; assign's assignee picker, the third reader, stays
 on select-kit. Option names map as follows: `filterPlaceholder` and `none` become the
 `searchPlaceholder` and `placeholder` texts, `includeGroups` with `includeMessageableGroups`
-becomes `@includeGroups`, `customSearchOptions` becomes `@searchOptions`, and automation's
+becomes `@includeGroups`, `customSearchOptions` becomes `@searchParams`, and automation's
 `modifyContent` contexts become `@specialItems`. Sites with their own group list (automation,
 category access and moderation, admin MCP, the AI agent editor and LLM quotas, data explorer,
 policy and the styleguide) pass `@items`.

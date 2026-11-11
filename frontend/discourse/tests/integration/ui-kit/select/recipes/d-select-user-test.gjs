@@ -645,7 +645,7 @@ module(
         api.registerValueTransformer("select-customizations", ({ value }) =>
           value.forKind("select-user", (spec) =>
             spec.config((current) => ({
-              searchOptions: { ...current.searchOptions, assignable: true },
+              searchParams: { ...current.searchParams, assignable: true },
             }))
           )
         )
@@ -653,7 +653,7 @@ module(
 
       await render(
         <template>
-          <DSelectUser @searchOptions={{hash canReview=true}} />
+          <DSelectUser @searchParams={{hash canReview=true}} />
         </template>
       );
       const select = new DSelect();

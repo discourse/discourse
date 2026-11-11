@@ -326,7 +326,7 @@ announcement is skipped. Nullish means "not set at this layer". Two exceptions:
 
 - `noResults: ""` drops the text and its role, but keeps the element that records the row count.
 - **Required texts** name a control or a group, so they can't be empty: `ariaLabel`, `clear`,
-  `clearAll`, `retry`, `removeItem`, `chipsLabel`, `stripLabel`, `footerLabel`, `labelWithValue`,
+  `clearAll`, `retry`, `removeSelected`, `chipsLabel`, `stripLabel`, `footerLabel`, `labelWithValue`,
   `labelWithCount`, `unresolvedValue`, `createItem`, `removeHint` and `loadError`, plus
   `noneLabel` and `loadingLabel` while their switch is on. An empty one asserts in development
   and falls back one layer in production. `ariaLabel` isn't checked under `@ariaLabelledBy`.
@@ -408,16 +408,16 @@ unknown key silently.
 | `createItem` | `d_select.create_item` | `label` | The create row. Required |
 | `clear` / `clearAll` | `d_select.clear` / `d_select.clear_all` | | Clear control, single / multiple. Required |
 | `chipsLabel` / `stripLabel` | `d_select.selected_items` / `d_select.selected_items_list` | | Chip list / selection strip. Required |
-| `removeItem` | `d_select.remove_item` | `item` | Touch remove buttons. Required |
+| `removeSelected` | `d_select.remove_item` | `item` | Touch remove buttons. Required |
 | `removeHint` | `d_select.remove_hint` | | Chip and strip remove hint. Required |
 | `lockedHint` | `d_select.locked_hint` | `item` | Hint on a chip, strip item or row that can't be removed. Required |
-| `chipsHint` / `selectedItemsHint` | `d_select.chips_hint` / `d_select.selected_items_hint` | | Input description beside chips |
+| `chipsHint` / `selectedOptionsHint` | `d_select.chips_hint` / `d_select.selected_items_hint` | | Input description beside chips |
 | `selectedCount` | `d_select.selected_count` | `count` | Compact count description |
 | `compactCount` / `moreChips` | `d_select.compact_count` / `d_select.more_chips` | `count` | Count with `@maxVisibleChips=0` / overflow badge |
 | `footerLabel` | `d_select.footer_label` | | Panel footer group. Required |
-| `itemSelected`, `itemAdded`, `itemRemoved` | `d_select.item_selected`, `item_added`, `item_removed` | `item` | Announced |
-| `itemsAdded`, `itemsNotAddedHeld`, `itemsNotAddedLimit` | `d_select.items_added`, `items_not_added_held`, `items_not_added_limit` | `count` | Announced bulk parts |
-| `itemsRemoved` | `d_select.items_removed` | `count` | Announced when a clear that keeps locked values removes several |
+| `optionSelected`, `optionAdded`, `optionRemoved` | `d_select.item_selected`, `item_added`, `item_removed` | `item` | Announced |
+| `optionsAdded`, `optionsNotAddedHeld`, `optionsNotAddedLimit` | `d_select.items_added`, `items_not_added_held`, `items_not_added_limit` | `count` | Announced bulk parts |
+| `optionsRemoved` | `d_select.items_removed` | `count` | Announced when a clear that keeps locked values removes several |
 | `bulkAddSummary` | `d_select.bulk_add_summary` | `added`, `not_added` | Announced, joins the parts |
 | `allAlreadySelected` | `d_select.all_already_selected` | | Announced when a bulk add adds nothing |
 | `selectionCleared`, `updatingSelection` | `d_select.selection_cleared`, `updating_selection` | | Announced |
@@ -1089,9 +1089,9 @@ The people family has two recipes, one per data source:
   - `@topicId` or `@categoryId` scope the search, and list that topic's or category's users
     before anything is typed. Otherwise a search starts at the first character, unless the
     call site passes `@specialItems`, which are listed on open and then above the matches.
-  - `@searchOptions` adds search parameters: camelCase keys are sent snake_cased, and unset
-    keys are not sent. Customizations override it as the `searchOptions` option; the value is
-    replaced, not merged, so an extension spreads `current.searchOptions`.
+  - `@searchParams` adds search parameters: camelCase keys are sent snake_cased, and unset
+    keys are not sent. Customizations override it as the `searchParams` config key; the value is
+    replaced, not merged, so an extension spreads `current.searchParams`.
   - `@showStatus` shows each user's status in the rows.
   - `@load(term)` answers searches in place of the user search, for a call site with its own
     endpoint. It answers in the user search's shape, `{ users, groups }`, as a value or a

@@ -61,7 +61,7 @@ export default <template>
               @ariaLabelledBy="review-filter-claimed-by-label"
               @clearable={{true}}
               @onChange={{legacyPickOne @controller.updateFilterClaimedBy}}
-              @searchOptions={{hash canReview=true}}
+              @searchParams={{hash canReview=true}}
               @value={{@controller.filterClaimedBy}}
             />
           {{else}}

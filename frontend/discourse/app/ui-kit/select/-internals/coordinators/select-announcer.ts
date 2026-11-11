@@ -429,7 +429,7 @@ export default class SelectAnnouncer {
   reconfirm(item: SelectRecord, origin: SelectionOrigin): void {
     if (!this.#engine.multiple && (origin.programmatic || origin.record)) {
       this.#say(
-        this.#engine.text("itemSelected", {
+        this.#engine.text("optionSelected", {
           item: this.#engine.getSelectionLabel(item),
         })
       );
@@ -499,7 +499,7 @@ export default class SelectAnnouncer {
       if (added !== undefined) {
         const item = this.#engine.resolveSingleSync(added);
         this.#say(
-          this.#engine.text("itemAdded", {
+          this.#engine.text("optionAdded", {
             item: item ? this.#engine.getSelectionLabel(item) : String(added),
           })
         );
@@ -520,7 +520,7 @@ export default class SelectAnnouncer {
     } else if (nextValues != null && this.#speaksSinglePick()) {
       const item = this.#engine.resolveSingleSync(nextValues);
       this.#say(
-        this.#engine.text("itemSelected", {
+        this.#engine.text("optionSelected", {
           item: item
             ? this.#engine.getSelectionLabel(item)
             : String(nextValues),
@@ -552,10 +552,10 @@ export default class SelectAnnouncer {
    * announcement, since its parts were never meant to be spoken alone.
    */
   #bulkSummary(added: number, held: number, limit: number): string {
-    let message = this.#engine.text("itemsAdded", { count: added });
+    let message = this.#engine.text("optionsAdded", { count: added });
     for (const [key, count] of [
-      ["itemsNotAddedHeld", held],
-      ["itemsNotAddedLimit", limit],
+      ["optionsNotAddedHeld", held],
+      ["optionsNotAddedLimit", limit],
     ] as const) {
       const part = count > 0 ? this.#engine.text(key, { count }) : "";
       if (!part) {
@@ -591,7 +591,7 @@ export default class SelectAnnouncer {
   /** Names a single removed value; counts several. */
   #sayRemoved(removed: readonly SelectId[]): void {
     if (removed.length > 1) {
-      this.#say(this.#engine.text("itemsRemoved", { count: removed.length }));
+      this.#say(this.#engine.text("optionsRemoved", { count: removed.length }));
       return;
     }
     const [value] = removed;
@@ -600,7 +600,7 @@ export default class SelectAnnouncer {
     }
     const item = this.#engine.resolveSingleSync(value);
     this.#say(
-      this.#engine.text("itemRemoved", {
+      this.#engine.text("optionRemoved", {
         item: item ? this.#engine.getSelectionLabel(item) : String(value),
       })
     );

@@ -128,9 +128,9 @@ interface DSelectUserSignature {
     loadContext?: Record<string, unknown>;
     /**
      * Extra search params; camelCase keys are sent snake_cased and unset ones aren't sent.
-     * Customizations override it as the `searchOptions` option.
+     * Customizations override it as the `searchParams` config key.
      */
-    searchOptions?: Record<string, unknown>;
+    searchParams?: Record<string, unknown>;
     /** Shows each user's status in the rows. */
     showStatus?: boolean;
     /** The picker's texts, over its defaults: the engine's, `groupType` and `emailType`. */
@@ -193,7 +193,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       includeStaged: this.args.includeStaged,
       topicId: this.args.topicId,
       categoryId: this.args.categoryId,
-      searchOptions: JSON.stringify(this.args.searchOptions ?? {}),
+      searchParams: JSON.stringify(this.args.searchParams ?? {}),
       showStatus: this.args.showStatus,
       ...Object.fromEntries(
         Object.entries(this.args.loadContext ?? {}).map(([key, value]) => [
@@ -232,7 +232,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       includeStaged: this.args.includeStaged,
       topicId: this.args.topicId,
       categoryId: this.args.categoryId,
-      searchOptions: opts.config?.searchOptions as
+      searchOptions: opts.config?.searchParams as
         | Record<string, unknown>
         | undefined,
       load: this.args.load,
@@ -382,7 +382,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
       @kind="select-user"
-      @kindConfig={{hash searchOptions=@searchOptions}}
+      @kindConfig={{hash searchParams=@searchParams}}
       @kindContext={{hash
         value=@value
         includeGroups=@includeGroups

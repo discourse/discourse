@@ -42,7 +42,7 @@ const REQUIRED = new Set([
   "clear",
   "clearAll",
   "retry",
-  "removeItem",
+  "removeSelected",
   "chipsLabel",
   "stripLabel",
   "footerLabel",
@@ -708,7 +708,7 @@ const USES = [
     { open: true }
   ),
   attr(
-    "removeItem",
+    "removeSelected",
     "touch chip remove button",
     "held",
     ".d-select__chip-remove",
@@ -716,7 +716,7 @@ const USES = [
     { touch: true }
   ),
   attr(
-    "removeItem",
+    "removeSelected",
     "touch strip remove button",
     "heldCompact",
     ".d-select__strip-remove",
@@ -745,7 +745,7 @@ const USES = [
     { hint: true }
   ),
   drawn(
-    "selectedItemsHint",
+    "selectedOptionsHint",
     "display-only input hint",
     "compact",
     ".d-select__chips > .sr-only[id^='d-select-chip-hint-']",
@@ -766,17 +766,17 @@ const USES = [
     { labelledValue: true }
   ),
   spoken("updatingSelection", "pending update announcement", "update"),
-  spoken("itemSelected", "programmatic selection announcement", "select"),
-  spoken("itemAdded", "addition announcement", "held", { action: "add" }),
-  spoken("itemsAdded", "bulk addition", "bulk"),
-  spoken("itemsNotAddedHeld", "bulk held part", "bulk"),
-  spoken("itemsNotAddedLimit", "bulk limit part", "bulk"),
+  spoken("optionSelected", "programmatic selection announcement", "select"),
+  spoken("optionAdded", "addition announcement", "held", { action: "add" }),
+  spoken("optionsAdded", "bulk addition", "bulk"),
+  spoken("optionsNotAddedHeld", "bulk held part", "bulk"),
+  spoken("optionsNotAddedLimit", "bulk limit part", "bulk"),
   spoken("bulkAddSummary", "bulk composed announcement", "bulk"),
   spoken("allAlreadySelected", "held-only bulk announcement", "already"),
-  spoken("itemRemoved", "chip removal announcement", "held", {
+  spoken("optionRemoved", "chip removal announcement", "held", {
     action: "remove",
   }),
-  spoken("itemsRemoved", "partial clear announcement", "partialClear", {
+  spoken("optionsRemoved", "partial clear announcement", "partialClear", {
     action: "clear",
   }),
   drawn(
@@ -1049,16 +1049,18 @@ function assertUse(assert, row, expected, announce) {
         maximum: i18n("d_select.max_reached", { count: 2 }),
         minimum: i18n("d_select.min_not_reached", { count: 3, selected: 1 }),
         updatingSelection: i18n("d_select.updating_selection"),
-        itemSelected: i18n("d_select.item_selected", { item: "Banana" }),
-        itemAdded: i18n("d_select.item_added", { item: "Banana" }),
-        itemsAdded: i18n("d_select.items_added", { count: 1 }),
-        itemsNotAddedHeld: i18n("d_select.items_not_added_held", { count: 1 }),
-        itemsNotAddedLimit: i18n("d_select.items_not_added_limit", {
+        optionSelected: i18n("d_select.item_selected", { item: "Banana" }),
+        optionAdded: i18n("d_select.item_added", { item: "Banana" }),
+        optionsAdded: i18n("d_select.items_added", { count: 1 }),
+        optionsNotAddedHeld: i18n("d_select.items_not_added_held", {
+          count: 1,
+        }),
+        optionsNotAddedLimit: i18n("d_select.items_not_added_limit", {
           count: 1,
         }),
         allAlreadySelected: i18n("d_select.all_already_selected"),
-        itemRemoved: i18n("d_select.item_removed", { item: "Apple" }),
-        itemsRemoved: i18n("d_select.items_removed", { count: 2 }),
+        optionRemoved: i18n("d_select.item_removed", { item: "Apple" }),
+        optionsRemoved: i18n("d_select.items_removed", { count: 2 }),
         resultsCount: i18n("d_select.results_count", { count: 3 }),
         resultsLoaded: i18n("d_select.results_loaded", { count: 3 }),
         maxLoaded: i18n("d_select.filter_to_narrow"),
@@ -1073,9 +1075,11 @@ function assertUse(assert, row, expected, announce) {
         );
       }
       const bulkParts = {
-        itemsAdded: i18n("d_select.items_added", { count: 1 }),
-        itemsNotAddedHeld: i18n("d_select.items_not_added_held", { count: 1 }),
-        itemsNotAddedLimit: i18n("d_select.items_not_added_limit", {
+        optionsAdded: i18n("d_select.items_added", { count: 1 }),
+        optionsNotAddedHeld: i18n("d_select.items_not_added_held", {
+          count: 1,
+        }),
+        optionsNotAddedLimit: i18n("d_select.items_not_added_limit", {
           count: 1,
         }),
       };
@@ -1250,15 +1254,15 @@ function assertValues(assert, row, calls) {
       minChars: { count: 3 },
       maximum: { count: 2 },
       minimum: { count: 3, selected: 1 },
-      removeItem: { item: "Apple" },
+      removeSelected: { item: "Apple" },
       selectedCount: { count: row.scenario === "captionCount" ? 2 : 1 },
-      itemSelected: { item: "Banana" },
-      itemAdded: { item: "Banana" },
-      itemsAdded: { count: 1 },
-      itemsNotAddedHeld: { count: 1 },
-      itemsNotAddedLimit: { count: 1 },
-      itemRemoved: { item: "Apple" },
-      itemsRemoved: { count: 2 },
+      optionSelected: { item: "Banana" },
+      optionAdded: { item: "Banana" },
+      optionsAdded: { count: 1 },
+      optionsNotAddedHeld: { count: 1 },
+      optionsNotAddedLimit: { count: 1 },
+      optionRemoved: { item: "Apple" },
+      optionsRemoved: { count: 2 },
       lockedHint: { item: "Apple" },
       unresolvedValue: { value: "404" },
       resultsCount: { count: 3 },

@@ -160,7 +160,11 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Pointer activation preserves focus; assistive activation restores a neighbor. */
   @action
-  removeItem(chip: SelectDescriptor, index: number, event: MouseEvent): void {
+  removeSelected(
+    chip: SelectDescriptor,
+    index: number,
+    event: MouseEvent
+  ): void {
     event.stopPropagation();
     this.#remove(chip, index, document.activeElement === event.currentTarget);
   }
@@ -250,7 +254,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                   aria-label={{if
                     (and this.capabilities.touch (not locked))
                     (@engine.text
-                      "removeItem"
+                      "removeSelected"
                       (hash item=(@engine.getSelectionLabel chip.item))
                     )
                   }}
@@ -275,7 +279,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                   {{on "pointerdown" this.preventPointerBlur}}
                   {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
                   {{on "mousedown" this.preventPointerBlur}}
-                  {{on "click" (fn this.removeItem chip index)}}
+                  {{on "click" (fn this.removeSelected chip index)}}
                   {{on "keydown" (fn this.handleKeydown chip index)}}
                 >
                   <span
