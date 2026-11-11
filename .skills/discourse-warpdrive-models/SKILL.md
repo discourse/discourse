@@ -55,7 +55,7 @@ A record is a proxy over the cache; reading a field the schema doesn't declare *
 
 5. Run the model's qunit tests plus acceptance tests for its screens.
 
-Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `bookmark.js` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
+Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `bookmark.ts` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
 
 ## Working with a converted model
 

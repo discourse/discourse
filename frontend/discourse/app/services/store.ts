@@ -33,6 +33,11 @@ import RestModel, {
 import ResultSet from "discourse/models/result-set";
 import type Reviewable from "discourse/models/reviewable";
 import type Site from "discourse/models/site";
+import type { default as Tag, TagCreateAttrs } from "discourse/models/tag";
+import type TagGroup from "discourse/models/tag-group";
+import type TagInfo from "discourse/models/tag-info";
+import type TagNotification from "discourse/models/tag-notification";
+import type TagSettings from "discourse/models/tag-settings";
 import type {
   default as Topic,
   TopicCreateAttrs,
@@ -63,6 +68,11 @@ export interface ModelRegistry {
   "published-page": PublishedPage;
   reviewable: Reviewable;
   site: Site;
+  tag: Tag;
+  "tag-group": TagGroup;
+  "tag-info": TagInfo;
+  "tag-notification": TagNotification;
+  "tag-settings": TagSettings;
   topic: Topic;
   "topic-details": TopicDetails;
   "topic-list": TopicList;
@@ -79,6 +89,7 @@ export interface ModelRegistry {
 export interface ModelCreateAttrsRegistry {
   bookmark: BookmarkCreateAttrs;
   post: PostCreateAttrs<Post>;
+  tag: TagCreateAttrs;
   topic: TopicCreateAttrs<Topic>;
   "topic-details": TopicDetailsCreateAttrs;
   user: UserCreateAttrs<User>;

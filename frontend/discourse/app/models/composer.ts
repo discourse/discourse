@@ -19,6 +19,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import type Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
 import type Post from "discourse/models/post";
@@ -140,11 +141,6 @@ export interface ComposerOpenOptions {
   reply_to_user?: ComposerReplyToUser | null;
   [key: string]: unknown;
 }
-
-/** TODO(typescript-pending): Archetype field forwarders omit id; remove when Archetype declares its fields. */
-type ComposerArchetype = NonNullable<Site["archetypes"]>[number] & {
-  id: string;
-};
 
 type TextOptions = { block?: boolean; space?: boolean; new_line?: boolean };
 
@@ -375,7 +371,7 @@ export default class Composer extends RestModel {
 
   @tracked _categoryId: number | null = null;
 
-  @tracked _archetypesOverride: ComposerArchetype[] | undefined;
+  @tracked _archetypesOverride: Archetype[] | undefined;
 
   @tracked _user!: User | null;
 
@@ -421,14 +417,14 @@ export default class Composer extends RestModel {
   }
 
   @computed("site.archetypes")
-  get archetypes(): ComposerArchetype[] | undefined {
+  get archetypes(): Archetype[] | undefined {
     if (this._archetypesOverride !== undefined) {
       return this._archetypesOverride;
     }
-    return this.site?.archetypes as ComposerArchetype[] | undefined;
+    return this.site?.archetypes;
   }
 
-  set archetypes(value: ComposerArchetype[] | undefined) {
+  set archetypes(value: Archetype[] | undefined) {
     this._archetypesOverride = value;
   }
 
