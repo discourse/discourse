@@ -17,9 +17,9 @@ class Admin::FormTemplatesController < Admin::StaffController
 
     if params[:id].present?
       template = FormTemplate.find(params[:id])
-      template.assign_attributes(name: params[:name], template: params[:template])
+      template.assign_attributes(template_params)
     else
-      template = FormTemplate.new(name: params[:name], template: params[:template])
+      template = FormTemplate.new(template_params)
     end
 
     begin
@@ -36,7 +36,7 @@ class Admin::FormTemplatesController < Admin::StaffController
     params.require(:template)
 
     begin
-      template = FormTemplate.create!(name: params[:name], template: params[:template])
+      template = FormTemplate.create!(template_params)
       render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
@@ -56,7 +56,7 @@ class Admin::FormTemplatesController < Admin::StaffController
     template = FormTemplate.find(params[:id])
 
     begin
-      template.update!(name: params[:name], template: params[:template])
+      template.update!(template_params)
       render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
@@ -71,6 +71,10 @@ class Admin::FormTemplatesController < Admin::StaffController
   end
 
   private
+
+  def template_params
+    params.permit(:name, :template, :output_template)
+  end
 
   def ensure_form_templates_enabled
     raise Discourse::InvalidAccess.new unless SiteSetting.enable_form_templates

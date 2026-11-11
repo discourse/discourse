@@ -577,6 +577,10 @@ export function applyDefaultHandlers() {
   pretender.delete("/drafts/:draft_key.json", success);
   pretender.post("/drafts.json", success);
 
+  pretender.post("/form-templates/render.json", () =>
+    response({ raw: "This is a rendered form submission." })
+  );
+
   pretender.get("/u/:username/staff-info.json", () => response({}));
 
   pretender.get("/post_action_users", () => {

@@ -6779,7 +6779,8 @@ CREATE TABLE public.form_templates (
     name character varying NOT NULL,
     template text NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    output_template text
 );
 
 
@@ -26656,6 +26657,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261028093149'),
 ('20261028093146'),
 ('20261026214816'),
+('20261022152814'),
 ('20261021180718'),
 ('20261021180714'),
 ('20261021063131'),
