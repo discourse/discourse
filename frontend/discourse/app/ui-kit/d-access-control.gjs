@@ -2,8 +2,10 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -19,6 +21,10 @@ import DAccessControlGranteeChooser, {
   granteeValue,
   groupGranteeResult,
 } from "./d-access-control-grantee-chooser.gjs";
+
+/** The add box's keyboard control, in either select implementation. */
+const CHOOSER_CONTROL =
+  ".d-access-control__chooser input.d-select__input, .d-access-control__chooser .select-kit-header";
 
 const EDIT_PERMISSION = "edit";
 const OWNER_PERMISSION = "owner";
@@ -81,6 +87,13 @@ export default class DAccessControl extends Component {
   @service a11y;
   @service site;
   @service siteSettings;
+
+  registerRoot = modifier((element) => {
+    this.#root = element;
+    return () => (this.#root = null);
+  });
+
+  #root = null;
 
   constructor() {
     super(...arguments);
@@ -174,7 +187,7 @@ export default class DAccessControl extends Component {
       const hydratedEntry = this.#hydrateDisplayName({ ...entry });
 
       return {
-        key: `${granteeValue(hydratedEntry.type, hydratedEntry.id)}:${hydratedEntry.permission}`,
+        key: granteeValue(hydratedEntry.type, hydratedEntry.id),
         id: hydratedEntry.id,
         permission: hydratedEntry.permission,
         display_name: hydratedEntry.display_name,
@@ -424,22 +437,33 @@ export default class DAccessControl extends Component {
 
   @action
   onRowPermissionChange(granteeType, granteeId, permission) {
+    const rows = this.rows;
+    const index = rows.findIndex(
+      (row) => row.type === granteeType && row.id === granteeId
+    );
+    const row = rows[index];
+
     if (permission === REMOVE_ACTION.id) {
-      const removed = this.rows.find(
-        (row) => row.type === granteeType && row.id === granteeId
-      );
       this.args.onChange(
         this.acl.filter(
           (entry) => !(entry.type === granteeType && entry.id === granteeId)
         )
       );
-      if (removed) {
+      if (row) {
         this.a11y.announce(
           i18n("access_control.manage.grantee_removed", {
-            name: removed.display_name,
+            name: row.display_name,
           })
         );
       }
+      // The removed row's button had focus; the nearest row keeps the reader in the list.
+      const neighbour = [
+        ...rows.slice(index + 1),
+        ...rows.slice(0, Math.max(index, 0)).reverse(),
+      ].find((candidate) => !candidate.permission_menu_disabled);
+      this.#focusAfterRender(
+        neighbour ? this.#rowButtonSelector(neighbour) : CHOOSER_CONTROL
+      );
       return;
     }
 
@@ -450,6 +474,16 @@ export default class DAccessControl extends Component {
     );
 
     this.args.onChange(next);
+    if (row) {
+      this.a11y.announce(
+        i18n("access_control.manage.grantee_permission_changed", {
+          name: row.display_name,
+          permission: this.#permissionName(permission),
+        })
+      );
+      // A new permission can move the row, and moving a node drops its focus.
+      this.#focusAfterRender(this.#rowButtonSelector(row));
+    }
   }
 
   /**
@@ -502,15 +536,19 @@ export default class DAccessControl extends Component {
 
   /** Tells screen readers who was added, since the new row appears away from the add box. */
   #announceAdded(grantee) {
-    const permission = this.buildPermissionOptions().find(
-      ({ id }) => id === grantee.permission
-    );
     this.a11y.announce(
       i18n("access_control.manage.grantee_added", {
         name: grantee.display_name,
-        permission: permission?.name ?? grantee.permission,
+        permission: this.#permissionName(grantee.permission),
       })
     );
+  }
+
+  /** Focuses the first match inside this control once the change has rendered. */
+  #focusAfterRender(selector) {
+    schedule("afterRender", () => {
+      this.#root?.querySelector(selector)?.focus();
+    });
   }
 
   /** A group record for the add box, disabled when no permission can be granted to it. */
@@ -542,8 +580,19 @@ export default class DAccessControl extends Component {
     return entry;
   }
 
+  #permissionName(permission) {
+    return (
+      this.buildPermissionOptions().find(({ id }) => id === permission)?.name ??
+      permission
+    );
+  }
+
+  #rowButtonSelector(row) {
+    return `.d-access-control__row[data-row-type="${row.type}"][data-row-id="${row.id}"] .d-access-control__permission`;
+  }
+
   <template>
-    <div class="d-access-control">
+    <div class="d-access-control" {{this.registerRoot}}>
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelectUser

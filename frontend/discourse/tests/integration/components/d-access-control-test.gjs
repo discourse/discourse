@@ -581,6 +581,72 @@ module("Integration | Component | DAccessControl", function (hooks) {
     );
   });
 
+  test("keeps focus on a row's permission button when its permission changes", async function (assert) {
+    const a11y = this.owner.lookup("service:a11y");
+    const state = controlledState([
+      { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      { type: "group", id: 1002, permission: "edit", display_name: "Beta" },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    const beta = ".d-access-control__row[data-row-id='1002']";
+    await selectPermission("view", beta);
+
+    assert
+      .dom(`${beta} .d-access-control__permission`)
+      .isFocused("focus stays on the row's button")
+      .hasText(i18n("access_control.manage.access_permission_viewer"));
+    assert.true(
+      a11y.announcementHistory.some(
+        ({ text }) => text === "Beta is now Viewer"
+      ),
+      "the change is announced"
+    );
+  });
+
+  test("moves focus to the next row after a removal, else the previous one", async function (assert) {
+    const state = controlledState([
+      { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      { type: "group", id: 1002, permission: "edit", display_name: "Beta" },
+      { type: "group", id: 1003, permission: "edit", display_name: "Gamma" },
+    ]);
+    const button = (id) =>
+      `.d-access-control__row[data-row-id='${id}'] .d-access-control__permission`;
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    await selectPermission(
+      "remove",
+      ".d-access-control__row[data-row-id='1002']"
+    );
+
+    assert.dom(button(1003)).isFocused("the next row takes focus");
+
+    await selectPermission(
+      "remove",
+      ".d-access-control__row[data-row-id='1003']"
+    );
+
+    assert
+      .dom(button(1001))
+      .isFocused("the previous row takes focus at the end");
+  });
+
   test("calls the onChange arg when a permission changes", async function (assert) {
     const state = controlledState([
       {
@@ -1273,6 +1339,28 @@ module(
         listedValues().includes("team_a"),
         "the added group is no longer offered"
       );
+    });
+
+    test("moves focus to the add box when the last grant is removed", async function (assert) {
+      const state = controlledState([
+        { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      ]);
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await selectPermission("remove");
+
+      assert.dom(".d-access-control__row").doesNotExist();
+      assert
+        .dom(".d-access-control__chooser input.d-select__input")
+        .isFocused("the add box takes focus");
     });
 
     test("announces each grantee it adds, with its permission", async function (assert) {
