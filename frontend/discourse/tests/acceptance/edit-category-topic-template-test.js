@@ -4,6 +4,11 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Admin - Edit category topic template", function (needs) {
+  const discussionType = {
+    id: "discussion",
+    name: "Discussion",
+    configuration_schema: {},
+  };
   let putData;
 
   needs.user({ admin: true });
@@ -29,6 +34,7 @@ acceptance("Admin - Edit category topic template", function (needs) {
           slug: "bug",
           can_edit: true,
           category_type_site_settings: {},
+          category_types: { discussion: discussionType },
           permissions: [],
         },
       });
@@ -43,6 +49,8 @@ acceptance("Admin - Edit category topic template", function (needs) {
           can_edit: true,
           category_type_site_settings: {},
           ...putData,
+          // The request sends type ids, but the response is keyed by type
+          category_types: { discussion: discussionType },
           permissions: [],
         },
       });
