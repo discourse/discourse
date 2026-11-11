@@ -2563,7 +2563,8 @@ CREATE TABLE public.browser_pageview_event_scores (
     ip_rotation_score smallint DEFAULT 0 NOT NULL,
     datacenter_asn_score smallint DEFAULT 0 NOT NULL,
     single_request_no_referrer_score smallint DEFAULT 0 NOT NULL,
-    stale_browser_score smallint DEFAULT 0 NOT NULL
+    stale_browser_score smallint DEFAULT 0 NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -2584,7 +2585,8 @@ CREATE TABLE public.browser_pageview_event_scores_backup (
     ip_rotation_score smallint NOT NULL,
     datacenter_asn_score smallint NOT NULL,
     single_request_no_referrer_score smallint NOT NULL,
-    stale_browser_score smallint NOT NULL
+    stale_browser_score smallint NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -24617,6 +24619,13 @@ CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search
 
 
 --
+-- Name: index_search_logs_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_session_id ON public.search_logs USING btree (session_id) WHERE (session_id IS NOT NULL);
+
+
+--
 -- Name: index_search_logs_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26643,6 +26652,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261110080540'),
+('20261109074217'),
 ('20261106020035'),
 ('20261105165644'),
 ('20261104164335'),

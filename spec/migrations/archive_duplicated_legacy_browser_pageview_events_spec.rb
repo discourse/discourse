@@ -27,7 +27,11 @@ RSpec.describe ArchiveDuplicatedLegacyBrowserPageviewEvents do
     duplicated_legacy = Fabricate(:browser_pageview_event, session_id: "duplicated-session")
     beacon = Fabricate(:browser_pageview_event, session_id: "duplicated-session")
     standalone_beacon = Fabricate(:browser_pageview_event, session_id: "beacon-session")
-    duplicated_score = BrowserPageviewEventScore.create!(event_id: duplicated_legacy.id)
+    duplicated_score =
+      BrowserPageviewEventScore.create!(
+        event_id: duplicated_legacy.id,
+        distributed_traffic_score: 60,
+      )
     standalone_legacy_score = BrowserPageviewEventScore.create!(event_id: standalone_legacy.id)
     beacon_score = BrowserPageviewEventScore.create!(event_id: beacon.id)
     DB.exec(

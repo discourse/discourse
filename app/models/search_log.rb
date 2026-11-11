@@ -132,19 +132,32 @@ class SearchLog < ActiveRecord::Base
 
   def self.flag_likely_crawlers!(window_start:, window_end:)
     DB.exec(<<~SQL, window_start: window_start, window_end: window_end)
-        UPDATE search_logs
-        SET likely_crawler = TRUE
-        WHERE NOT search_logs.likely_crawler
-          AND search_logs.session_id IS NOT NULL
-          AND search_logs.created_at >= :window_start
-          AND search_logs.created_at < :window_end
-          AND EXISTS (
-            SELECT 1
-            FROM browser_pageview_events event
-            WHERE event.session_id = search_logs.session_id
-              AND #{CrawlerScorer.likely_crawler_condition(table: "event")}
-          )
-      SQL
+      WITH affected_sessions AS (
+        SELECT session_id
+        FROM browser_pageview_events
+        WHERE created_at >= :window_start
+          AND created_at < :window_end
+          AND session_id IS NOT NULL
+        UNION
+        SELECT session_id
+        FROM search_logs
+        WHERE created_at >= :window_start
+          AND created_at < :window_end
+          AND session_id IS NOT NULL
+      ), classifications AS (
+        SELECT event.session_id, BOOL_OR(#{CrawlerScorer.likely_crawler_condition(table: "event")}) AS likely_crawler
+        FROM browser_pageview_events event
+        JOIN affected_sessions USING (session_id)
+        -- Missing scores can mean cleanup removed the classification evidence.
+        WHERE event.score IS NOT NULL
+        GROUP BY event.session_id
+      )
+      UPDATE search_logs
+      SET likely_crawler = classifications.likely_crawler
+      FROM classifications
+      WHERE search_logs.session_id = classifications.session_id
+        AND search_logs.likely_crawler IS DISTINCT FROM classifications.likely_crawler
+    SQL
   end
 
   def self.term_details(term, period = :weekly, search_type = :all)
@@ -264,5 +277,6 @@ end
 #
 #  index_search_logs_on_created_at                     (created_at)
 #  index_search_logs_on_created_at_excluding_crawlers  (created_at) WHERE ((NOT crawler) AND (NOT likely_crawler))
+#  index_search_logs_on_session_id                     (session_id) WHERE (session_id IS NOT NULL)
 #  index_search_logs_on_user_id_and_created_at         (user_id,created_at) WHERE (user_id IS NOT NULL)
 #
