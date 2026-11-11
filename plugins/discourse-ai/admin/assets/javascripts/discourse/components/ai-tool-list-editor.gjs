@@ -224,7 +224,6 @@ export default class AiToolListEditor extends Component {
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.tools.subheader_description"}}
         @learnMoreUrl="https://meta.discourse.org/t/ai-bot-custom-tools/314103"
-        @titleLabel={{i18n "discourse_ai.tools.short_title"}}
       >
         <:actions as |actions|>
           <actions.Default

@@ -56,6 +56,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(json["enabled_providers"].find { |h| h["name"] == "dummy" }).to eq(
           "name" => "dummy",
           "id" => "dummy",
+          "channel_count" => 0,
           "channel_parameters" => [],
         )
       end

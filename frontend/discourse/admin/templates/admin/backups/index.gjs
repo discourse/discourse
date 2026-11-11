@@ -11,7 +11,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DPageSubheader @titleLabel={{i18n "admin.backups.files_title"}}>
+  <DPageSubheader>
     <:actions as |actions|>
       <actions.Wrapped as |wrapped|>
         {{#if @controller.siteSettings.enable_backups}}

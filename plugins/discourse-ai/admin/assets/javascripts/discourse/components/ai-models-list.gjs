@@ -155,7 +155,6 @@ export default class AiModelsList extends Component {
     <section class="ai-models-list admin-detail">
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.models.description"}}
-        @titleLabel={{i18n "discourse_ai.models.short_title"}}
       >
         <:actions as |actions|>
           <actions.Primary

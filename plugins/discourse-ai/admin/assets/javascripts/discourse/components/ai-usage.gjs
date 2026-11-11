@@ -14,6 +14,7 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
@@ -33,6 +34,7 @@ const PRESET_PERIODS = ["day", "week", DEFAULT_PERIOD];
 const MAX_USERS_IN_SINGLE_TABLE = 24;
 
 export default class AiUsage extends Component {
+  @service adminPluginNavManager;
   @service currentUser;
   @service router;
 
@@ -610,11 +612,14 @@ export default class AiUsage extends Component {
   }
 
   <template>
+    <DBreadcrumbsItem
+      @label={{i18n "discourse_ai.usage.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-usage"
+    />
     <div class="ai-usage admin-detail">
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.usage.subheader_description"}}
         @learnMoreUrl="https://meta.discourse.org/t/-/348677"
-        @titleLabel={{i18n "discourse_ai.usage.short_title"}}
       />
       <div class="ai-usage__filters">
         <div class="ai-usage__filters-dates">

@@ -73,7 +73,7 @@
 .admin-plugin-config-page {
   &__main-area {
     .admin-detail {
-      padding-top: 15px;
+      padding-top: 0;
     }
 
     &.-without-inner-sidebar {
@@ -83,6 +83,10 @@
         width: 100%;
       }
     }
+  }
+
+  .d-page-header + .admin-plugin-config-page__content {
+    margin: var(--space-6) 0;
   }
 
   &__metadata {

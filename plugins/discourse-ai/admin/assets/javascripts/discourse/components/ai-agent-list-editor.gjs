@@ -271,7 +271,6 @@ export default class AiAgentListEditor extends Component {
         <DPageSubheader
           @descriptionLabel={{i18n "discourse_ai.ai_agent.agent_description"}}
           @learnMoreUrl="https://meta.discourse.org/t/ai-bot-agents/306099"
-          @titleLabel={{i18n "discourse_ai.ai_agent.short_title"}}
         >
           <:actions as |actions|>
             <actions.Default

@@ -13,11 +13,14 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def list_providers
+    channel_counts = DiscourseChatIntegration::Channel.group("value::json->>'provider'").count
+
     providers =
       DiscourseChatIntegration::Provider.enabled_providers.map do |provider_klass|
         {
           name: provider_klass::PROVIDER_NAME,
           id: provider_klass::PROVIDER_NAME,
+          channel_count: channel_counts.fetch(provider_klass::PROVIDER_NAME, 0),
           channel_parameters:
             (
               if defined?(provider_klass::CHANNEL_PARAMETERS)

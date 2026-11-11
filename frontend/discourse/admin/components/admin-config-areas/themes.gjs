@@ -96,9 +96,7 @@ export default class AdminConfigAreasThemes extends Component {
           "/admin/config/customize/theme-site-settings"
         )
       }}
-      @titleLabel={{i18n
-        "admin.config_areas.themes_and_components.themes.title"
-      }}
+      @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
     >
       <:actions as |actions|>
         <PluginOutlet

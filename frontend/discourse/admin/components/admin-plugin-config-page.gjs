@@ -39,10 +39,8 @@ export default class AdminPluginConfigPage extends Component {
   <template>
     <div class="admin-plugin-config-page">
       <DPageHeader
-        @descriptionLabel={{@plugin.about}}
         @headerActionComponent={{this.headerActionComponent}}
         @hideTabs={{this.hideTabs}}
-        @learnMoreUrl={{@plugin.linkUrl}}
         @titleLabel={{@plugin.nameTitleized}}
       >
         <:breadcrumbs>

@@ -17,6 +17,7 @@ import CategorySelector from "discourse/select-kit/components/category-selector"
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -27,6 +28,7 @@ import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progr
 import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton.gjs";
 
 export default class AiTranslations extends Component {
+  @service adminPluginNavManager;
   @service aiCredits;
   @service router;
   @service siteSettings;
@@ -559,11 +561,14 @@ export default class AiTranslations extends Component {
   }
 
   <template>
+    <DBreadcrumbsItem
+      @label={{i18n "discourse_ai.translations.title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-translations"
+    />
     <div class="ai-translations admin-detail">
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.translations.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
-        @titleLabel={{i18n "discourse_ai.translations.title"}}
       >
         <:actions as |actions|>
           <actions.Default

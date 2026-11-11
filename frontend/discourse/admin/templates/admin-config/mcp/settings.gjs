@@ -5,7 +5,6 @@ export default <template>
     @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
     @area="mcp"
     @filter={{@controller.filter}}
-    @path="/admin/config/mcp"
-    @showBreadcrumb={{false}}
+    @path="/admin/config/mcp/settings"
   />
 </template>

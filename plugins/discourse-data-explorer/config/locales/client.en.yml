@@ -26,6 +26,7 @@ en:
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
       view_query: "View"
       queries: "Queries"
+      queries_description: "Write and run SQL queries against your live database for up-to-the-minute reports, and save the ones you want to share with groups."
       back_to_queries: "Back to queries"
       query_details: "Query details"
       query_created: "Query created!"
