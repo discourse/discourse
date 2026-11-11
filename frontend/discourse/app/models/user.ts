@@ -497,6 +497,13 @@ export interface UserAccountAttrs {
   inviteCode?: string;
 }
 
+/** Contract for the `user-path` value transformer. */
+export interface UserPathTransformer {
+  value: string;
+  context: { user: User };
+  mutable: false;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default interface User extends UserFields, Evented {}
 

@@ -180,3 +180,138 @@ test("the language server resolves core imports from a plugin to core source", a
   });
   assert.deepEqual(diagnostics.items, []);
 });
+
+const REGISTRY_DIR = "plugins/chat/assets/javascripts/discourse";
+
+const REGISTRY_AUGMENT = {
+  uri: fileUri(`${REGISTRY_DIR}/registry-probe-augment.ts`),
+  languageId: "typescript",
+  lines: [
+    `declare module "discourse/lib/transformer" {`,
+    `  interface ValueTransformerRegistry {`,
+    `    "probe-typed": { value: string[]; context: { id: number }; mutable: false };`,
+    `  }`,
+    `}`,
+    `export {};`,
+  ],
+};
+
+const REGISTRY_JS = {
+  uri: fileUri(`${REGISTRY_DIR}/registry-probe.js`),
+  languageId: "javascript",
+  lines: [
+    `import { withPluginApi } from "discourse/lib/plugin-api";`,
+    `import { applyValueTransformer } from "discourse/lib/transformer";`,
+    `withPluginApi((api) => {`,
+    `  api.registerValueTransformer("", () => {});`,
+    `  api.registerBehaviorTransformer("", () => {});`,
+    `  api.registerValueTransformer("probe-typed", ({ value, context }) => [...value, String(context.id)]);`,
+    `  api.registerValueTransformer("plugin-only", ({ value }) => value);`,
+    `});`,
+    `export const probe = applyValueTransformer("", 1);`,
+  ],
+};
+
+const REGISTRY_TS = {
+  uri: fileUri(`${REGISTRY_DIR}/registry-probe-check.ts`),
+  languageId: "typescript",
+  lines: [
+    `import { applyValueTransformer } from "discourse/lib/transformer";`,
+    `export const ok = applyValueTransformer("probe-typed", ["a"], { id: 1 });`,
+    `export const bad = applyValueTransformer("probe-typed", 42, { id: 1 });`,
+  ],
+};
+
+function open(server, { uri, languageId, lines }) {
+  server.notify("textDocument/didOpen", {
+    textDocument: {
+      uri,
+      languageId,
+      version: 1,
+      text: lines.join("\n") + "\n",
+    },
+  });
+}
+
+/** Position just inside the first `""` on a probe line. */
+function insideEmptyString({ lines }, line) {
+  return { line, character: lines[line].indexOf('""') + 1 };
+}
+
+async function completionLabels(server, file, line) {
+  const result = await server.request("textDocument/completion", {
+    textDocument: { uri: file.uri },
+    position: insideEmptyString(file, line),
+  });
+  return (Array.isArray(result) ? result : (result?.items ?? [])).map(
+    (item) => item.label
+  );
+}
+
+async function hoverText(server, file, line, word) {
+  const result = await server.request("textDocument/hover", {
+    textDocument: { uri: file.uri },
+    position: { line, character: file.lines[line].indexOf(word) },
+  });
+  const contents = result?.contents;
+  return typeof contents === "string" ? contents : (contents?.value ?? "");
+}
+
+test("the transformer registry types hook names and callbacks for plugins", async (t) => {
+  const server = new LanguageServer();
+  t.after(() => server.close());
+
+  await server.request("initialize", {
+    processId: process.pid,
+    rootUri: pathToFileURL(ROOT).href,
+    capabilities: {},
+    initializationOptions: { runExternalCode: true },
+  });
+  server.notify("initialized", {});
+  open(server, REGISTRY_AUGMENT);
+  open(server, REGISTRY_JS);
+  open(server, REGISTRY_TS);
+
+  const valueRegistration = await completionLabels(server, REGISTRY_JS, 3);
+  assert.ok(valueRegistration.includes("topic-list-item-class"));
+  assert.ok(valueRegistration.includes("probe-typed"));
+  assert.ok(!valueRegistration.includes("create-account"));
+
+  const behaviorRegistration = await completionLabels(server, REGISTRY_JS, 4);
+  assert.ok(behaviorRegistration.includes("create-account"));
+  assert.ok(!behaviorRegistration.includes("topic-list-item-class"));
+
+  const valueApply = await completionLabels(server, REGISTRY_JS, 8);
+  assert.ok(valueApply.includes("topic-list-item-class"));
+
+  assert.match(
+    await hoverText(server, REGISTRY_JS, 5, "value"),
+    /value: string\[\]/
+  );
+  assert.match(
+    await hoverText(server, REGISTRY_JS, 5, "context"),
+    /context: \{\s*id: number;?\s*\}/
+  );
+  assert.match(
+    await hoverText(server, REGISTRY_JS, 6, "value"),
+    /value: unknown/
+  );
+
+  const jsDiagnostics = await server.request("textDocument/diagnostic", {
+    textDocument: { uri: REGISTRY_JS.uri },
+  });
+  assert.deepEqual(
+    jsDiagnostics.items.filter((item) => item.severity === 1),
+    []
+  );
+
+  const tsDiagnostics = await server.request("textDocument/diagnostic", {
+    textDocument: { uri: REGISTRY_TS.uri },
+  });
+  assert.deepEqual(
+    tsDiagnostics.items
+      .filter((item) => item.severity === 1)
+      .map((item) => item.range.start.line),
+    [2]
+  );
+});
