@@ -3,7 +3,9 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
 
-const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
+/** Searches the users and groups an access control list can grant to. */
+export const ACCESS_CONTROL_GRANTEE_SEARCH_URL =
+  "/access-control/grantees/search";
 
 export function granteeValue(type, id) {
   return `${type}:${id}`;
@@ -55,6 +57,12 @@ function userGranteeResult(user, isDisabled = false) {
  *
  * prioritizeGroupFullNameOrdering: for DAccessControl, we want to show the full
  * name before the group name in the search results.
+ *
+ * TODO (select-kit-replacement-cleanup): Delete this whole module with the legacy branch of
+ * `DAccessControl`, along with the getters there that only feed this component
+ * (`defaultAvailableGrantees`, `excludedGrantees`) and `groupGranteeResult`. Move
+ * `granteeValue` and `ACCESS_CONTROL_GRANTEE_SEARCH_URL` into `DAccessControl` first, since
+ * its new add box still uses them.
  */
 @selectKitOptions({
   excludedGrantees: undefined,
@@ -63,11 +71,6 @@ function userGranteeResult(user, isDisabled = false) {
   excludeGroupNameWhenMatchingFullName: true,
 })
 export default class DAccessControlGranteeChooser extends EmailGroupUserChooser {
-  /**
-   * TODO (select-kit-replacement-cleanup): Remove once the access control moves to the new
-   * select controls; until then this core chooser is not a third-party render.
-   */
-  skipLegacyRenderDeprecation = true;
   valueProperty = "value";
 
   async search(filter = "") {

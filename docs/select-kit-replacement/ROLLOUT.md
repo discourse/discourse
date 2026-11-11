@@ -41,8 +41,7 @@ Paths are relative to the repository root.
 ## Blast radius
 
 - **Core:** 154 files import select-kit, with 13 core subclasses: 10 `DropdownSelectBox` action
-  menus, `DAccessControlGranteeChooser` (reads `this.selectKit.options`,
-  `frontend/discourse/app/ui-kit/d-access-control-grantee-chooser.gjs:71`), and the site-text theme
+  menus, `DAccessControlGranteeChooser` (reads `this.selectKit.options`), and the site-text theme
   selector and its row. `ComboBox` alone has 76 invocations in 51 files.
 - **Core SCSS:** 80 files under `app/assets/stylesheets` reference `select-kit`, 27 of them in
   `common/select-kit/`. The rest are layout rules in the composer, modals, admin and sidebar.
@@ -259,11 +258,12 @@ customization ports are done.
   and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its
   `FutureDateInputSelector`, and `d-access-control`.
-  Status 2026-10-31: the user family has joined through `DSelectUser` and `DSelectGroup`. Three
+  Status 2026-10-31: the user family has joined through `DSelectUser` and `DSelectGroup`. Two
   sites stay on select-kit, opted out of the legacy-render notice, until the engine covers what
   they need: assign's assignee picker (opens on render, suggests on an empty query, uses its own
-  search URL), `DAccessControlGranteeChooser` (moves with `d-access-control`) and the workflows
-  group field (wave 5). Assign's category groups joined on 2026-11-10, when the engine gained
+  search URL) and the workflows group field (wave 5). `d-access-control`'s add box joined on
+  2026-11-11, through a call-site `@load` on `DSelectUser` over the access control grantee
+  search. Assign's category groups joined on 2026-11-10, when the engine gained
   `@lockedValues` for held values that can't be removed. `addUserSearchOption` reaches only the legacy pickers; extensions set
   `searchOptions` through a customization instead.
   The topic pickers joined the same day through `DSelectTopic`, in form fields and in modals

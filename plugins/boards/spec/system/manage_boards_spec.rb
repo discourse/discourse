@@ -356,6 +356,8 @@ describe "Manage Boards Boards" do
     end
 
     describe "for an existing board" do
+      let(:trust_level_4_group) { Group.find(Group::AUTO_GROUPS[:trust_level_4]) }
+
       fab!(:board) do
         Fabricate(
           :boards_board,
@@ -363,6 +365,13 @@ describe "Manage Boards Boards" do
           created_by: admin,
           additional_manage_groups: [manage_group],
         )
+      end
+
+      def open_board_settings
+        visit board.url
+        board_component = PageObjects::Components::BoardsBoard.new
+        board_component.open_board_menu
+        board_component.click_board_settings_menu_item
       end
 
       def open_add_column_modal
@@ -399,6 +408,30 @@ describe "Manage Boards Boards" do
         expect(page).to have_content(
           I18n.t("boards.errors.cannot_use_same_tag_multiple_times", tag_name: todo_tag.name),
         )
+      end
+
+      it "adds a group and a user to the board with the new select controls" do
+        open_board_settings
+
+        access_control.add_group(trust_level_4_group)
+        access_control.add_user(regular_user)
+        access_control.row(type: "group", id: trust_level_4_group.id).select_permission("manage")
+        boards_page.save_board_modal
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        acl = board.reload.permission_acl
+        expect(acl.permission_group_ids("manage")).to include(trust_level_4_group.id)
+        expect(acl.user_has_any_permission?(regular_user, %w[view edit manage])).to eq(true)
+      end
+
+      it "adds a group from board settings on mobile with the new select controls", mobile: true do
+        open_board_settings
+
+        access_control.add_group(trust_level_4_group)
+        access_control.row(type: "group", id: trust_level_4_group.id).select_permission("manage")
+        boards_page.save_board_modal
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
       end
 
       it "creates a column and a new tag with the new select controls" do

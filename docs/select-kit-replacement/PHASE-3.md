@@ -173,8 +173,16 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     shapes; the family's modules report legacy renders.
   - ☐ Sites that need what the engine lacks stay on select-kit, opted out of the notice:
     assign's assignee picker (open on render, suggestions on an empty query, its own search
-    URL), `DAccessControlGranteeChooser` (with the ui-kit wrappers below) and the workflows
-    group field (wave 5).
+    URL) and the workflows group field (wave 5).
+  - ☑ `DAccessControl`'s add box moved to `DSelectUser` (2026-11-11). It needed a recipe
+    source, not an engine change: `DSelectUser` takes a call-site `@load` that answers the
+    user search's shape, and still applies its exclusion and ranking to those rows. Groups no
+    permission can be granted to are listed disabled, with the reason beside the name. The
+    legacy `DAccessControlGranteeChooser` is private to `DAccessControl` (#45992) and is
+    deleted in the cleanup, along with the getters that only feed it.
+  - ☐ After a pick, the add box runs the grantee search once more. The pick changes
+    `@exclude`, and the engine reloads a closed list with its last query. Skipping that reload
+    while closed is an engine change, so it needs approval.
   - ☑ Assign's category groups moved to `DSelectGroup` once the engine could hold values that
     can't be removed: the global groups are `@lockedValues` (2026-11-10).
   - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
@@ -230,7 +238,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     saved on pick (2026-11-03); the profile update stores it under `can_feature_topic?`.
 - ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
-  `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.
+  `d-future-date-input` with `FutureDateInputSelector`, `d-access-control` (its add box
+  joined with the user family on 2026-11-11).
 
 ## Exit criteria
 

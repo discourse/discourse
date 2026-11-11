@@ -7,6 +7,7 @@ import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -1159,10 +1160,191 @@ module("Integration | Component | DAccessControl", function (hooks) {
             call.args[0] === "discourse.select-kit-rollout.legacy-render"
         ).length,
       0,
-      "the chooser stays on select-kit until the access control item moves"
+      "the add box is a new select control"
     );
   });
 });
+
+module(
+  "Integration | Component | DAccessControl | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    /** The add box's listed values, in order. */
+    function listedValues() {
+      return findAll(".d-select__panel [role='option']").map(
+        (row) => row.dataset.value
+      );
+    }
+
+    test("lists the groups that can still be added on open", async function (assert) {
+      const state = controlledState([
+        { type: "group", id: 42, permission: "edit" },
+      ]);
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await dSelect(".d-access-control__chooser").open();
+
+      assert.deepEqual(
+        listedValues(),
+        ["logged_in_users", "trust_level_0"],
+        "a granted group is left out, automatic groups first"
+      );
+    });
+
+    test("adds a group with the default permission", async function (assert) {
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("team_a");
+
+      assert.strictEqual(state.onChangeCalls.length, 1);
+      const [added] = state.onChangeCalls[0];
+      assert.deepEqual(
+        [added.id, added.type, added.name, added.display_name],
+        [42, "group", "team_a", "Team A"]
+      );
+      assert.strictEqual(added.permission, "edit");
+      assert.false(added.metadata.auto_group);
+      assert
+        .dom(".d-access-control__row .d-access-control__item-name")
+        .hasText("Team A", "the new row is drawn");
+
+      await chooser.open();
+      assert.false(
+        listedValues().includes("team_a"),
+        "the added group is no longer offered"
+      );
+    });
+
+    test("a read-only default group is added with the view permission", async function (assert) {
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("trust_level_0");
+
+      const [added] = state.onChangeCalls[0];
+      assert.strictEqual(added.permission, "view");
+      assert.true(added.metadata.auto_group);
+    });
+
+    test("searches the access control endpoint for the target and adds a user", async function (assert) {
+      const params = [];
+      pretender.get("/access-control/grantees/search", (request) => {
+        params.push(request.queryParams);
+        return response({
+          users: [
+            {
+              id: 7,
+              username: "ada",
+              name: "Ada Lovelace",
+              avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+            },
+          ],
+          groups: [],
+        });
+      });
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.search("ada");
+      await chooser.select("ada");
+
+      assert.deepEqual(
+        params[0],
+        { term: "ada", acl_target: "TestTarget" },
+        "the typed term is searched for the target"
+      );
+      const [added] = state.onChangeCalls[0];
+      assert.deepEqual(
+        [added.id, added.type, added.username, added.name],
+        [7, "user", "ada", "Ada Lovelace"]
+      );
+      assert.strictEqual(
+        added.avatar_template,
+        "/letter_avatar_proxy/v4/letter/a/{size}.png"
+      );
+      assert.strictEqual(added.display_name, "ada");
+      assert.strictEqual(added.permission, "edit");
+    });
+
+    test("a group no permission can be granted to is listed as disallowed", async function (assert) {
+      this.site.access_control = {
+        banned_acl: {
+          TestTarget: [
+            { type: "group", id: 42, permission: "view" },
+            { type: "group", id: 42, permission: "edit" },
+          ],
+        },
+      };
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await dSelect(".d-access-control__chooser").open();
+      const row = ".d-select__panel [role='option'][data-value='team_a']";
+
+      assert.dom(row).hasAttribute("aria-disabled", "true");
+      assert
+        .dom(`${row} .d-group-option__reason`)
+        .hasText(i18n("access_control.manage.disallowed"));
+
+      await click(row);
+      assert.strictEqual(state.onChangeCalls.length, 0, "it can't be added");
+    });
+  }
+);
 
 module("Integration | Component | DAccessControlField", function (hooks) {
   setupRenderingTest(hooks);

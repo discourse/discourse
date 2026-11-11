@@ -5,14 +5,17 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import DAccessControlGranteeChooser, {
+  ACCESS_CONTROL_GRANTEE_SEARCH_URL,
   granteeValue,
   groupGranteeResult,
 } from "./d-access-control-grantee-chooser.gjs";
@@ -76,6 +79,7 @@ function rowTypeSortOrder(type) {
 
 export default class DAccessControl extends Component {
   @service site;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -276,6 +280,27 @@ export default class DAccessControl extends Component {
       .map((group) => granteeValue("group", group.id));
   }
 
+  /** The group names and usernames already granted, which the add box leaves out. */
+  get grantedNames() {
+    return this.acl
+      .map((entry) =>
+        entry.type === "user"
+          ? entry.username
+          : (entry.name ??
+            (this.args.groups || []).find(({ id }) => id === entry.id)?.name)
+      )
+      .filter(Boolean);
+  }
+
+  /** What the add box's results depend on, besides the granted names. */
+  get granteeLoadContext() {
+    return {
+      aclTarget: this.args.aclTarget?.type,
+      available: this.availableGroups.map(({ id }) => id),
+      disabled: this.disabledGrantees,
+    };
+  }
+
   /**
    * If a transformPermissionOptions function is provided, it is passed all
    * default permissions and can change the name, description, or level of
@@ -298,8 +323,29 @@ export default class DAccessControl extends Component {
   }
 
   /**
+   * The add box's source: the groups that can still be added before anything is typed, then the
+   * access control search for the target.
+   */
+  @action
+  async loadGrantees(term) {
+    if (!term) {
+      return {
+        groups: this.availableGroups.map((group) => this.#granteeGroup(group)),
+      };
+    }
+
+    const results = await ajax(ACCESS_CONTROL_GRANTEE_SEARCH_URL, {
+      data: { term, acl_target: this.args.aclTarget?.type },
+    });
+    return {
+      users: results.users,
+      groups: results.groups?.map((group) => this.#granteeGroup(group)),
+    };
+  }
+
+  /**
    * Fired when a grantee is chosen from the DAccessControlGranteeChooser
-   * search results.
+   * search results, and by `onGranteePicked` for the new add box.
    */
   @action
   onGranteeChosen(_value, selectedGrantees) {
@@ -346,6 +392,32 @@ export default class DAccessControl extends Component {
     const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
+  }
+
+  /** Adds a grantee picked in the add box, in the shape the legacy chooser emitted. */
+  @action
+  onGranteePicked(_value, item) {
+    if (!item?.recordId) {
+      return;
+    }
+
+    this.onGranteeChosen(null, [
+      item.type === "group"
+        ? {
+            aclId: item.recordId,
+            aclType: "group",
+            id: item.id,
+            full_name: item.description,
+            automatic: item.automatic,
+          }
+        : {
+            aclId: item.recordId,
+            aclType: "user",
+            username: item.username,
+            name: item.fullName,
+            avatar_template: item.avatar_template,
+          },
+    ]);
   }
 
   @action
@@ -416,6 +488,20 @@ export default class DAccessControl extends Component {
     return permissionOptions;
   }
 
+  /** A group record for the add box, disabled when no permission can be granted to it. */
+  #granteeGroup(group) {
+    const disabled = this.disabledGrantees.includes(
+      granteeValue("group", group.id)
+    );
+    return {
+      ...group,
+      disabled,
+      disabledReason: disabled
+        ? i18n("access_control.manage.disallowed")
+        : undefined,
+    };
+  }
+
   #hydrateDisplayName(entry) {
     if (!isEmpty(entry.display_name)) {
       return entry;
@@ -433,25 +519,40 @@ export default class DAccessControl extends Component {
 
   <template>
     <div class="d-access-control">
-      <DAccessControlGranteeChooser
-        class="d-access-control__chooser"
-        @filterPlaceholder="access_control.manage.add_group"
-        @labelProperty="name"
-        @onChange={{this.onGranteeChosen}}
-        @options={{hash
-          aclTargetType=@aclTarget.type
-          customSearchOptions=(hash
-            defaultSearchResults=this.defaultAvailableGrantees
-          )
-          excludedGrantees=this.excludedGrantees
-          disabledGrantees=this.disabledGrantees
-          filterable=true
-          includeGroups=true
-          maximum=1
-          none="access_control.manage.add_group"
-        }}
-        @value={{null}}
-      />
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectUser
+          class="d-access-control__chooser"
+          @exclude={{this.grantedNames}}
+          @includeGroups="visible"
+          @load={{this.loadGrantees}}
+          @loadContext={{this.granteeLoadContext}}
+          @onChange={{this.onGranteePicked}}
+          @texts={{hash placeholder=(i18n "access_control.manage.add_group")}}
+          @value={{null}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <DAccessControlGranteeChooser
+          class="d-access-control__chooser"
+          @filterPlaceholder="access_control.manage.add_group"
+          @labelProperty="name"
+          @onChange={{this.onGranteeChosen}}
+          @options={{hash
+            aclTargetType=@aclTarget.type
+            customSearchOptions=(hash
+              defaultSearchResults=this.defaultAvailableGrantees
+            )
+            excludedGrantees=this.excludedGrantees
+            disabledGrantees=this.disabledGrantees
+            filterable=true
+            includeGroups=true
+            maximum=1
+            none="access_control.manage.add_group"
+          }}
+          @value={{null}}
+        />
+      {{/if}}
       {{#if (or this.rows.length (has-block "additionalRows"))}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
