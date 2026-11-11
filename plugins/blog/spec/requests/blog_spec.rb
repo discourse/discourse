@@ -269,6 +269,8 @@ RSpec.describe "Blog publication", type: :request do
     it "redirects other old links on the blog host through permalinks" do
       Permalink.create!(url: "author/jo", external_url: "https://blog.example.com/")
       Permalink.create!(url: "page/2", topic_id: publication.discussion_topic_id)
+      Permalink.create!(url: "forum", external_url: "/")
+      Permalink.create!(url: "tag/old-slug", external_url: "https://blog.example.com/tag/news")
       Permalink.create!(url: "private", topic_id: Fabricate(:topic, category: drafts).id)
 
       %w[/author/jo /author/jo/].each do |path|
@@ -283,7 +285,15 @@ RSpec.describe "Blog publication", type: :request do
         "#{Discourse.base_url}#{publication.discussion_topic.relative_url}",
       )
 
-      %w[/private /author/someone-else].each do |path|
+      get "https://blog.example.com/forum"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("#{Discourse.base_url}/")
+
+      get "https://blog.example.com/tag/old-slug"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("https://blog.example.com/tag/news")
+
+      %w[/private /author/someone-else /tag/unknown].each do |path|
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(404)
       end

@@ -44,7 +44,7 @@ module ::Blog
             )
           response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
         end
-        on_failure { raise Discourse::NotFound }
+        on_failure { redirect_to_permalink || raise(Discourse::NotFound) }
       end
     end
 
@@ -129,18 +129,17 @@ module ::Blog
 
     private
 
-    # Lets a migration redirect old non-article URLs, like author pages, from the blog host.
+    # Lets a migration redirect old URLs that match no article or tag, like author pages.
     # Relative targets are community paths, so they resolve against the community host.
     def redirect_to_permalink
       permalink = Permalink.find_by_url(request.fullpath)
       return if !permalink || !guardian.can_see_permalink_target?(permalink)
-      return if permalink.target_url.blank?
+      target = permalink.target_url
+      return if target.blank?
 
-      redirect_to(
-        UrlHelper.absolute_without_cdn(permalink.target_url),
-        status: :moved_permanently,
-        allow_other_host: true,
-      )
+      # The URL helper leaves a bare "/" relative, which would point at the blog's own root.
+      target = target == "/" ? "#{Discourse.base_url}/" : UrlHelper.absolute_without_cdn(target)
+      redirect_to(target, status: :moved_permanently, allow_other_host: true)
     end
 
     def blog_path
