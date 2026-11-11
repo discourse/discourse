@@ -74,7 +74,7 @@ export default class ListSelectExample extends Component {
             }}
             @value={{this.included}}
             @valueField="slug"
-            @valueItems={{this.tags}}
+            @valueRecords={{this.tags}}
             @virtualized={{false}}
           >
             <:listHeader as |state|>
@@ -110,7 +110,7 @@ export default class ListSelectExample extends Component {
               }}
               @value={{this.excluded}}
               @valueField="slug"
-              @valueItems={{this.tags}}
+              @valueRecords={{this.tags}}
               @virtualized={{false}}
             />
           {{/if}}

@@ -46,9 +46,9 @@ import type {
   SelectCoreTexts,
   SelectDescriptor,
   SelectEngineInit,
-  SelectItem as SelectItemModel,
   SelectItemRow,
   SelectKindTexts,
+  SelectRecord as SelectRecordModel,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -76,10 +76,10 @@ export interface DSelectSignature {
       text: string,
       context: SelectPasteContext
     ) =>
-      | readonly SelectItemModel[]
+      | readonly SelectRecordModel[]
       | null
       | undefined
-      | Promise<readonly SelectItemModel[] | null | undefined>;
+      | Promise<readonly SelectRecordModel[] | null | undefined>;
     /** The select's recipe or family, fixed at construction. */
     kind?: string;
     /**
@@ -124,12 +124,12 @@ export interface DSelectSignature {
     /** Maps an id to the key that decides identity, such as a lowercasing one for usernames. Ids match exactly without it. Read once. */
     normalizeKey?: SelectEngineInit["normalizeKey"];
     labelField?: string;
-    valueItems?: SelectEngineInit["valueItems"];
+    valueRecords?: SelectEngineInit["valueRecords"];
     resolveValue?: SelectEngineInit["resolveValue"];
     resolveValues?: SelectEngineInit["resolveValues"];
     allowCreate?: SelectEngineInit["allowCreate"];
     createItem?: SelectEngineInit["createItem"];
-    createUnresolvedItem?: SelectEngineInit["createUnresolvedItem"];
+    createUnresolvedRecord?: SelectEngineInit["createUnresolvedRecord"];
     specialItems?: SelectEngineInit["specialItems"];
     /**
      * Groups the options: a field name or `(item, options) => key`. A group with no header of
@@ -319,7 +319,7 @@ export interface DSelectSignature {
     /** Custom markup for an option and its resolved config snapshot. */
     item?: [
       /** The raw option item. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
       /** What the row is beyond its item: `create` marks the create row. */
@@ -333,7 +333,7 @@ export interface DSelectSignature {
      */
     selection?: [
       /** The resolved held item. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
@@ -345,12 +345,12 @@ export interface DSelectSignature {
     /**
      * Custom markup for a held value that cannot be resolved (deleted, restricted or never
      * existed); yields the fallback item. Without it the built-in label is used ("Unknown item
-     * (id)", or the name `@createUnresolvedItem` gives), even when `:selection` is supplied, so
+     * (id)", or the name `@createUnresolvedRecord` gives), even when `:selection` is supplied, so
      * the state is never lost in custom markup by accident.
      */
     unresolved?: [
       /** The fallback for an unresolved held id. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
@@ -361,14 +361,14 @@ export interface DSelectSignature {
      */
     groupHeader?: [
       /** The header item. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
     /** Draws a group footer of either kind, like `<:groupHeader>`. */
     groupFooter?: [
       /** The footer item. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];

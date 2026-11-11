@@ -13,7 +13,7 @@ export type HeldTag = TagObject | string | number;
 export type TagKey = number | `tag-name:${string}`;
 
 /** The engine-facing representation of a tag. */
-export interface TagItem {
+export interface TagRecord {
   id: TagKey;
   name: string;
   isNew?: boolean;
@@ -35,17 +35,17 @@ export function tagKey(tag: HeldTag): TagKey {
 }
 
 /** Creates an engine row whose key remains distinct from numeric tag ids. */
-export function createTagItem(name: string): TagItem & { isNew: true } {
+export function createTagRecord(name: string): TagRecord & { isNew: true } {
   return { id: `tag-name:${name.toLowerCase()}`, name, isNew: true };
 }
 
 /** Converts created rows to the consumer shape, preserving server rows by identity. */
-export function tagFromItem<T extends TagObject>(item: T): T | TagObject {
+export function tagFromRecord<T extends TagObject>(item: T): T | TagObject {
   return item.isNew ? { id: item.name, name: item.name, isNew: true } : item;
 }
 
 /** Builds an engine row from a held value without treating string names as ids. */
-export function tagItem(tag: HeldTag): TagItem {
+export function tagRecord(tag: HeldTag): TagRecord {
   if (typeof tag === "string") {
     return { id: tagKey(tag), name: tag };
   }
@@ -81,6 +81,6 @@ export function emitTags(
     if (!item) {
       throw new Error(`No tag found for selected key ${id}`);
     }
-    return tagFromItem(item);
+    return tagFromRecord(item);
   });
 }

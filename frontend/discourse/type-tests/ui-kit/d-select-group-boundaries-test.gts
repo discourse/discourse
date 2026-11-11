@@ -1,13 +1,13 @@
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
   renderSelectText,
-  type SelectItem,
+  type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 
 declare const items: Array<{ id: number; name: string; group: string }>;
 
 const textHeader = (key: unknown) => String(key);
-const actionFooter = (key: unknown, rows: readonly SelectItem[]) => ({
+const actionFooter = (key: unknown, rows: readonly SelectRecord[]) => ({
   id: `all:${String(key)}`,
   name: `All ${String(key)}`,
   onSelect: () => rows.length,

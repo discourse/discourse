@@ -2,8 +2,8 @@ import { searchForTerm } from "discourse/lib/search";
 import Topic from "discourse/models/topic";
 import type { TopicPickerArchetype } from "discourse/ui-kit/select/recipes/topics/-internals/topic-texts";
 import type {
-  SelectItem,
-  SelectItemId,
+  SelectId,
+  SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 
 /**
@@ -22,7 +22,7 @@ export async function searchTopics(
     /** The archetype searched; `null` searches every topic the term finds. */
     archetype?: TopicPickerArchetype | null;
   }
-): Promise<SelectItem[]> {
+): Promise<SelectRecord[]> {
   if (!filter && !additionalFilters) {
     return [];
   }
@@ -41,13 +41,13 @@ export async function searchTopics(
     params
   )) as { posts?: { topic: Topic }[] } | undefined;
   return (results?.posts?.map((post) => post.topic) ??
-    []) as unknown as SelectItem[];
+    []) as unknown as SelectRecord[];
 }
 
 /** Looks the held topic ids up together; anything but a topic id never reaches the server. */
 export async function findHeldTopics(
-  values: SelectItemId[]
-): Promise<SelectItem[]> {
+  values: SelectId[]
+): Promise<SelectRecord[]> {
   const ids = values.map(Number).filter((id) => Number.isInteger(id) && id > 0);
-  return (await Topic.findByIds(ids)) as unknown as SelectItem[];
+  return (await Topic.findByIds(ids)) as unknown as SelectRecord[];
 }

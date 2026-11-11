@@ -231,7 +231,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
           class="with-pending-value-items"
           @load={{load}}
           @value={{2}}
-          @valueItems={{pendingValueItems}}
+          @valueRecords={{pendingValueItems}}
         />
         {{! A client source resolves from its own list, so a missing id is data, not config. }}
         <DSelect class="client" @items={{ITEMS}} @value={{99}} />
@@ -391,7 +391,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   });
 
   test("an unresolved chip with a named fallback shows that name as-is", async function (assert) {
-    const createUnresolvedItem = (value) => ({
+    const createUnresolvedRecord = (value) => ({
       id: value,
       name: "Deleted user",
     });
@@ -399,7 +399,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @createUnresolvedItem={{createUnresolvedItem}}
+          @createUnresolvedRecord={{createUnresolvedRecord}}
           @items={{array}}
           @multiple={{true}}
           @resolveValues={{resolveNone}}
@@ -467,9 +467,9 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     );
   });
 
-  test("@valueItems seeds part of an async multi selection", async function (assert) {
+  test("@valueRecords seeds part of an async multi selection", async function (assert) {
     const resolvedValues = [];
-    const valueItems = { id: 1, name: "One" };
+    const valueRecords = { id: 1, name: "One" };
     const resolveValues = (values) => {
       resolvedValues.push(...values);
       return Promise.resolve(
@@ -484,7 +484,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
           @multiple={{true}}
           @resolveValues={{resolveValues}}
           @value={{array 1 2}}
-          @valueItems={{valueItems}}
+          @valueRecords={{valueRecords}}
         />
       </template>
     );
@@ -495,18 +495,18 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert.deepEqual(
       resolvedValues,
       [2],
-      "only the value missing from @valueItems is resolved"
+      "only the value missing from @valueRecords is resolved"
     );
   });
 
-  test("a custom createUnresolvedItem names the fallback on every surface", async function (assert) {
+  test("a custom createUnresolvedRecord names the fallback on every surface", async function (assert) {
     const resolveValue = () => Promise.reject(new Error("404"));
-    const createUnresolvedItem = (id) => ({ id, name: `Topic #${id}` });
+    const createUnresolvedRecord = (id) => ({ id, name: `Topic #${id}` });
 
     await render(
       <template>
         <DSelect
-          @createUnresolvedItem={{createUnresolvedItem}}
+          @createUnresolvedRecord={{createUnresolvedRecord}}
           @items={{array}}
           @resolveValue={{resolveValue}}
           @value={{123}}
@@ -522,16 +522,16 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       );
   });
 
-  test("a throwing createUnresolvedItem uses the default unavailable label", async function (assert) {
+  test("a throwing createUnresolvedRecord uses the default unavailable label", async function (assert) {
     const resolveValue = () => Promise.reject(new Error("404"));
-    const createUnresolvedItem = () => {
+    const createUnresolvedRecord = () => {
       throw new Error("builder failed");
     };
 
     await render(
       <template>
         <DSelect
-          @createUnresolvedItem={{createUnresolvedItem}}
+          @createUnresolvedRecord={{createUnresolvedRecord}}
           @items={{array}}
           @resolveValue={{resolveValue}}
           @value={{123}}

@@ -23,7 +23,7 @@ import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobo
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectDescriptor,
-  SelectItem,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -124,14 +124,14 @@ interface MultiChipsSignature {
     /** Custom markup for a selected item. */
     selection?: [
       /** The resolved selected item. */
-      item: SelectItem,
+      item: SelectRecord,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
       /** The unresolved fallback item. */
-      item: SelectItem,
+      item: SelectRecord,
     ];
   };
 }
@@ -439,13 +439,16 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @item={{chip.item}}
+                          @record={{chip.item}}
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
                       {{yield chip.item to="selection"}}
                     {{else}}
-                      <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
+                      <SelectionLabel
+                        @engine={{@engine}}
+                        @record={{chip.item}}
+                      />
                     {{/if}}
                   </span>
                   {{#if @triggerChipsInteractive}}

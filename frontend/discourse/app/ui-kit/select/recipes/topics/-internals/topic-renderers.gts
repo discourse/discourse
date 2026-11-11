@@ -3,15 +3,15 @@ import TopicStatus from "discourse/components/topic-status";
 import type Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
 /** A topic's title, or the name an unresolved held topic was given. */
-function topicTitle(item: SelectItem): string {
+function topicTitle(item: SelectRecord): string {
   return typeof item.title === "string" ? item.title : "";
 }
 
 /** The topic's category badge with its parents, when the site knows the category. */
-function categoryBadge(item: SelectItem) {
+function categoryBadge(item: SelectRecord) {
   const category = item.category as Category | undefined;
   return category
     ? dCategoryBadge(category, {
@@ -23,7 +23,7 @@ function categoryBadge(item: SelectItem) {
 }
 
 /** The badge of the topic's own category alone, for a one-line field. */
-function ownCategoryBadge(item: SelectItem) {
+function ownCategoryBadge(item: SelectRecord) {
   const category = item.category as Category | undefined;
   return category
     ? dCategoryBadge(category, { decorativeEmoji: true, hideParent: true })
@@ -34,15 +34,15 @@ function ownCategoryBadge(item: SelectItem) {
 export const TopicOption: TOC<{
   Args: {
     /** The topic. */
-    item: SelectItem;
+    record: SelectRecord;
   };
 }> = <template>
   <span class="d-topic-option">
-    <TopicStatus @disableActions={{true}} @topic={{@item}} />
+    <TopicStatus @disableActions={{true}} @topic={{@record}} />
     <span class="d-topic-option__title">
-      {{~dReplaceEmoji (topicTitle @item)~}}
+      {{~dReplaceEmoji (topicTitle @record)~}}
     </span>
-    {{#let (categoryBadge @item) as |badge|}}
+    {{#let (categoryBadge @record) as |badge|}}
       {{#if badge}}
         <span class="d-topic-option__category">
           {{~badge~}}
@@ -56,7 +56,7 @@ export const TopicOption: TOC<{
 export const TopicSelection: TOC<{
   Args: {
     /** The held topic. */
-    item: SelectItem;
+    record: SelectRecord;
     /** Draws the category badge beside the title, which tells similar titles apart. */
     withCategory?: boolean;
   };
@@ -64,9 +64,9 @@ export const TopicSelection: TOC<{
   {{#if @withCategory}}
     <span class="d-topic-selection">
       <span class="d-topic-selection__title">
-        {{~dReplaceEmoji (topicTitle @item)~}}
+        {{~dReplaceEmoji (topicTitle @record)~}}
       </span>
-      {{#let (ownCategoryBadge @item) as |badge|}}
+      {{#let (ownCategoryBadge @record) as |badge|}}
         {{#if badge}}
           <span class="d-topic-selection__category">
             {{~badge~}}
@@ -75,6 +75,6 @@ export const TopicSelection: TOC<{
       {{/let}}
     </span>
   {{else}}
-    {{~dReplaceEmoji (topicTitle @item)~}}
+    {{~dReplaceEmoji (topicTitle @record)~}}
   {{/if}}
 </template>;

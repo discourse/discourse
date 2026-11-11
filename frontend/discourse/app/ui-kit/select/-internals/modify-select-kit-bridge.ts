@@ -11,8 +11,8 @@ import {
   onChangeCallbackSources,
 } from "discourse/select-kit/lib/plugin-api";
 import SelectEngine, {
-  SelectItem,
-  SelectItemId,
+  SelectId,
+  SelectRecord,
   SelectUpdateScope,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -78,7 +78,7 @@ interface LegacySelectKit {
   readonly filter: string;
   readonly isLoading: boolean;
   close(): void;
-  select(value: SelectItemId, item?: SelectItem): void;
+  select(value: SelectId, item?: SelectRecord): void;
   /** Starts a new query using the current filter; accepts no filter argument. */
   triggerSearch(): void;
   set(key: string, val: unknown): void;
@@ -182,7 +182,7 @@ class LegacySelectKitComponent extends EmberObject {
   declare isLoading: boolean;
 
   /** The items entering the current legacy content run, after native content customizations. */
-  declare content: SelectItem[];
+  declare content: SelectRecord[];
   declare __getElement?: () => Element | null;
   declare __isDestroyed?: () => boolean;
 
@@ -215,10 +215,10 @@ class LegacySelectKitComponent extends EmberObject {
  * an id, not an item.
  */
 function adaptInjectedRows(
-  inputItems: SelectItem[],
-  resultItems: SelectItem[],
+  inputItems: SelectRecord[],
+  resultItems: SelectRecord[],
   facade: LegacySelectKitComponent
-): SelectItem[] {
+): SelectRecord[] {
   const original = new Set(inputItems);
   return resultItems.map((row) => {
     if (original.has(row) || typeof row?.onSelect !== "function") {
@@ -227,11 +227,11 @@ function adaptInjectedRows(
     // Injected by a legacy extension, so it was written for the facade, not the control.
     const legacyOnSelect = row.onSelect as unknown as (
       selectKit: LegacySelectKit,
-      item: SelectItem
+      item: SelectRecord
     ) => void;
     return {
       ...row,
-      onSelect: (_control: unknown, item: SelectItem) =>
+      onSelect: (_control: unknown, item: SelectRecord) =>
         legacyOnSelect(facade.selectKit, item),
     };
   });
@@ -281,8 +281,8 @@ function report(
  */
 export function applyLegacySelectKitContent(
   engine: SelectEngine,
-  items: SelectItem[]
-): SelectItem[] {
+  items: SelectRecord[]
+): SelectRecord[] {
   const targets = legacySelectKitIdentifiers(engine);
   if (!hasContentPluginApiCallbacks(targets)) {
     return items;
@@ -293,7 +293,7 @@ export function applyLegacySelectKitContent(
   for (const target of targets) {
     report(facade, "content", target, contentCallbackSources([target]));
   }
-  const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade, {
+  const result: SelectRecord[] = applyContentPluginApiCallbacks(items, facade, {
     bridgeOnly: true,
   });
 
@@ -317,7 +317,7 @@ export function applyLegacySelectKitContent(
 export function applyLegacySelectKitOnChange(
   engine: SelectEngine,
   value: SelectValue,
-  items: SelectItem | SelectItem[] | null
+  items: SelectRecord | SelectRecord[] | null
 ): void {
   const targets = legacySelectKitIdentifiers(engine);
   if (!hasOnChangePluginApiCallbacks(targets)) {

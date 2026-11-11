@@ -32,7 +32,7 @@ import {
   ITEMS,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
-import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
+import SelectOptionContent from "discourse/ui-kit/select/-internals/parts/select-option-content";
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectEngine, {
   renderSelectText,
@@ -3060,13 +3060,13 @@ module(
             unlock
           </button>
           <ul role="listbox">
-            <SelectItem
+            <SelectOptionContent
               @descriptor={{descriptor}}
               @engine={{engine}}
               @locked={{this.locked}}
             >
               {{descriptor.item.name}}
-            </SelectItem>
+            </SelectOptionContent>
           </ul>
         </template>
       }
@@ -3391,7 +3391,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   });
 
   test("an unresolved held id keeps its id and fallback name", async function (assert) {
-    const createUnresolvedItem = (value) => ({
+    const createUnresolvedRecord = (value) => ({
       id: value,
       name: `Missing ${value}`,
     });
@@ -3399,7 +3399,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
     await render(
       <template>
         <DSelect
-          @createUnresolvedItem={{createUnresolvedItem}}
+          @createUnresolvedRecord={{createUnresolvedRecord}}
           @items={{ITEMS}}
           @value={{99}}
           @variant="static"
@@ -3573,18 +3573,18 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("synchronous fallbacks and late value items share the selection label", async function (assert) {
     const items = tracked([]);
     const resolveValues = sinon.spy(() => []);
-    const createUnresolvedItem = (id) => ({ id, name: `Missing ${id}` });
+    const createUnresolvedRecord = (id) => ({ id, name: `Missing ${id}` });
     const held = [99, 1];
 
     await render(
       <template>
         <DSelect
-          @createUnresolvedItem={{createUnresolvedItem}}
+          @createUnresolvedRecord={{createUnresolvedRecord}}
           @items={{ITEMS}}
           @multiple={{true}}
           @resolveValues={{resolveValues}}
           @value={{held}}
-          @valueItems={{items.value}}
+          @valueRecords={{items.value}}
         />
       </template>
     );
@@ -4585,7 +4585,7 @@ module(
 );
 
 module(
-  "Integration | ui-kit | select | DSelect (@valueItems builder)",
+  "Integration | ui-kit | select | DSelect (@valueRecords builder)",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -4600,7 +4600,7 @@ module(
       );
       const kindTexts = { heldName: "none" };
       const calls = [];
-      const valueItems = (options) => {
+      const valueRecords = (options) => {
         calls.push(options);
         return [{ id: "none", name: renderSelectText(options, "heldName") }];
       };
@@ -4612,7 +4612,7 @@ module(
             @kind="held-builder-kind"
             @kindTexts={{kindTexts}}
             @value="none"
-            @valueItems={{valueItems}}
+            @valueRecords={{valueRecords}}
           />
         </template>
       );

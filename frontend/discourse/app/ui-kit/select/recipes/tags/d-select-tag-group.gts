@@ -11,7 +11,7 @@ import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
 import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
-import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
+import { tagRecordName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectCoreTexts,
   SelectTexts,
@@ -82,7 +82,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     return this.args.legacyKind ?? ["tag-group-chooser", "tag-chooser"];
   }
 
-  get valueItems() {
+  get valueRecords() {
     return this.#value.map((name) => ({ id: name, name }));
   }
 
@@ -140,21 +140,21 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selectionValue}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
       <:item as |item config row|>
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else}}
-          {{tagItemName item}}
+          {{tagRecordName item}}
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          {{tagItemName item}}
+          {{tagRecordName item}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

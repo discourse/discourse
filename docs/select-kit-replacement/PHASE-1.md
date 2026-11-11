@@ -82,14 +82,14 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   - ☑ `__unresolved` fallback — resolution never rejects/blanks a held value, whether the
     resolver rejects **or throws synchronously**; each unresolvable id becomes
     `{ [valueField]: id, __unresolved: true }`. Since 2026-10-06 every surface uses one rule,
-    `SelectEngine#getSelectionLabel`: a fallback named by `@createUnresolvedItem` shows its
+    `SelectEngine#getSelectionLabel`: a fallback named by `@createUnresolvedRecord` shows its
     own label, and the default reads "Unknown item (id)". Chips, triggers, the typeahead
     input, the trigger's accessible name and add/remove announcements all say those words.
     No icon, tooltip or screen-reader-only text adds to them, so sighted and screen-reader
     users get the same message (the old version read three different phrasings and announced
     "Removed 2"). `:selection`-block consumers still branch on `item.__unresolved`; the
     `:unresolved` block will default to this rule rather than to `:selection`.
-  - ☑ `@createUnresolvedItem` — `(value) => item` names the fallback (e.g. `Topic #123`)
+  - ☑ `@createUnresolvedRecord` — `(value) => item` names the fallback (e.g. `Topic #123`)
     on every surface, the plain input included, where a block can't reach. The engine owns
     the `__unresolved` marker regardless of what the builder returns.
   - ☑ Resolve caching policy — successes are cached; a failure caches its fallback so the
@@ -307,10 +307,10 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     spacer-vs-per-row spike concluded for per-row (only per-row composes with `@keepMounted`)
     and the spike components were deleted.
   - ☑ **Wire DSelect to the primitive** (`ab295dfffbc`). The listbox renders in owned-row mode,
-    yielding `SelectItem` rows (plus frontier skeletons during a server reveal) as direct
+    yielding `SelectRecord` rows (plus frontier skeletons during a server reveal) as direct
     children of the inner listbox; the `DLoadMore` sentinel is gone, replaced by `@onReachEnd`.
     The roving highlight moved from the modifier's imperative class to tracked state
-    (`SelectItem` `@active`, cleared on close) so it survives the windowed row re-render that
+    (`SelectRecord` `@active`, cleared on close) so it survives the windowed row re-render that
     the imperative toggle did not. The scroll viewport moved from the listbox to the outer
     `.d-virtual-list`. **Ownership boundary settled** the other way than assumed: `#describeList`
     keeps stamping `posInSet`/`setSize` from true engine totals rather than ceding them to the

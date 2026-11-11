@@ -27,7 +27,7 @@ import {
 } from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
 import type {
   SelectConfig,
-  SelectItem,
+  SelectRecord,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -72,12 +72,12 @@ interface DSelectTopicListSignature {
   Blocks: {
     /** Custom option content. */
     item?: [
-      /** The topic. */ item: SelectItem,
+      /** The topic. */ item: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** The held topic. */ item: SelectItem,
+      /** The held topic. */ item: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
   };
@@ -117,8 +117,8 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
     };
   }
 
-  get valueItems() {
-    return this.args.topics as SelectItem[] | undefined;
+  get valueRecords() {
+    return this.args.topics as SelectRecord[] | undefined;
   }
 
   @action
@@ -132,7 +132,7 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
   }
 
   @action
-  onChange(value: SelectValue, items: SelectItem | SelectItem[] | null) {
+  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
     emitTopicChange(
       this.args.onChange,
       this.args.multiple ?? true,
@@ -144,7 +144,7 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
   <template>
     <DSelectList
       ...attributes
-      @createUnresolvedItem={{unresolvedTopic}}
+      @createUnresolvedRecord={{unresolvedTopic}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @id={{@id}}
@@ -170,20 +170,20 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
       @resolveValues={{findHeldTopics}}
       @texts={{@texts}}
       @value={{@value}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
     >
       <:item as |item config|>
         {{#if (has-block "item")}}
           {{yield item config to="item"}}
         {{else}}
-          <TopicOption @item={{item}} />
+          <TopicOption @record={{item}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          <TopicSelection @item={{item}} />
+          <TopicSelection @record={{item}} />
         {{/if}}
       </:selection>
     </DSelectList>

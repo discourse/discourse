@@ -1001,8 +1001,8 @@ module(
         record("createItem", options);
         return { id: filter, name: filter, __create: true };
       };
-      const createUnresolvedItem = (value, options) => {
-        record("createUnresolvedItem", options);
+      const createUnresolvedRecord = (value, options) => {
+        record("createUnresolvedRecord", options);
         return { id: value, name: `Missing ${value}` };
       };
       const specialItems = (state, options) => {
@@ -1032,7 +1032,7 @@ module(
           <DSelect
             @allowCreate={{allowCreate}}
             @createItem={{createItem}}
-            @createUnresolvedItem={{createUnresolvedItem}}
+            @createUnresolvedRecord={{createUnresolvedRecord}}
             @filterBy={{filterBy}}
             @groupBy={{groupBy}}
             @groupFooter={{groupFooter}}
@@ -1051,7 +1051,7 @@ module(
       assert.deepEqual(seen, {
         allowCreate: "base+kind",
         createItem: "base+kind",
-        createUnresolvedItem: "base+kind",
+        createUnresolvedRecord: "base+kind",
         filterBy: "base+kind",
         groupBy: "base+kind",
         groupFooter: "base+kind",

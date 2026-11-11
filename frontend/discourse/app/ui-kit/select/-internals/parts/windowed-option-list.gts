@@ -7,11 +7,11 @@ import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordi
 import WindowedListCoordinator, {
   ListRow,
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
+import type { SelectListModifiers } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectOptionRow from "discourse/ui-kit/select/-internals/parts/select-option-row";
-import type { SelectOptionsModifiers } from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectEngine, {
-  SelectItem as SelectItemModel,
   type SelectItemRow,
+  SelectRecord as SelectRecordModel,
 } from "discourse/ui-kit/select/select-engine";
 
 interface WindowedOptionListSignature {
@@ -53,25 +53,25 @@ interface WindowedOptionListSignature {
     /** Composed rows for this resolved content. */
     items: readonly ListRow[];
     /** Shared modifiers from the async shell. */
-    modifiers: SelectOptionsModifiers;
+    modifiers: SelectListModifiers;
   };
   Blocks: {
     /** Custom markup for an item. */
     item?: [
       /** The item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** What the row is, beyond its item. */
       row: SelectItemRow,
     ];
     /** Custom markup for a group header. */
     groupHeader?: [
       /** The group-header item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
     ];
     /** Custom markup for a group footer. */
     groupFooter?: [
       /** The group-footer item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
     skeletonItem?: [];

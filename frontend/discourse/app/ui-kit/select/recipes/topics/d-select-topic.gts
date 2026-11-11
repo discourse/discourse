@@ -28,7 +28,7 @@ import {
   unresolvedTopic,
 } from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
 import type {
-  SelectItem,
+  SelectRecord,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -118,8 +118,8 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
     };
   }
 
-  get valueItems() {
-    return this.args.topics as SelectItem[] | undefined;
+  get valueRecords() {
+    return this.args.topics as SelectRecord[] | undefined;
   }
 
   @action
@@ -133,7 +133,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
   }
 
   @action
-  onChange(value: SelectValue, items: SelectItem | SelectItem[] | null) {
+  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
     emitTopicChange(this.args.onChange, !!this.args.multiple, value, items);
   }
 
@@ -143,7 +143,7 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
       @clearable={{@clearable}}
-      @createUnresolvedItem={{unresolvedTopic}}
+      @createUnresolvedRecord={{unresolvedTopic}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @id={{@id}}
@@ -172,21 +172,21 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{@value}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
       <:item as |item config row|>
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else}}
-          <TopicOption @item={{item}} />
+          <TopicOption @record={{item}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          <TopicSelection @item={{item}} @withCategory={{not @multiple}} />
+          <TopicSelection @record={{item}} @withCategory={{not @multiple}} />
         {{/if}}
       </:selection>
       <:footer as |state config|>

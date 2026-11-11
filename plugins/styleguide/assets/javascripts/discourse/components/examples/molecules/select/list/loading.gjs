@@ -35,7 +35,7 @@ export default class ListLoadingExample extends Component {
         )
       }}
       @value={{this.value}}
-      @valueItems={{TIMEZONES}}
+      @valueRecords={{TIMEZONES}}
       @virtualized={{false}}
     />
   </template>

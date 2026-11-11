@@ -11,10 +11,10 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
   SelectDescriptor,
-  SelectItem as SelectItemModel,
+  SelectRecord as SelectRecordModel,
 } from "discourse/ui-kit/select/select-engine";
 
-interface SelectItemSignature {
+interface SelectOptionContentSignature {
   Args: {
     engine: SelectEngine;
     descriptor: SelectDescriptor;
@@ -44,7 +44,7 @@ interface SelectItemSignature {
   };
   Element: HTMLLIElement;
   Blocks: {
-    default: [SelectItemModel];
+    default: [SelectRecordModel];
   };
 }
 
@@ -57,7 +57,7 @@ interface SelectItemSignature {
  * The engine owns `aria-selected` (the chosen-value state); the modifier owns the
  * roving highlight via `activeClass`. This part is internal to the select family.
  */
-export default class SelectItem extends Component<SelectItemSignature> {
+export default class SelectOptionContent extends Component<SelectOptionContentSignature> {
   /** TODO(typescript-pending): Remove the extension when the settings factory exposes runtime keys. */
   @service
   declare siteSettings: SiteSettingsService & {
@@ -82,7 +82,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
 
   /** The option label from the engine's configured label field. */
   get name(): string {
-    return this.args.engine.getItemLabel(this.args.descriptor.item);
+    return this.args.engine.getRecordLabel(this.args.descriptor.item);
   }
 
   get describedBy(): string | undefined {

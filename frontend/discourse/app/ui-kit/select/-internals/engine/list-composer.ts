@@ -4,8 +4,8 @@ import { makeArray } from "discourse/lib/helpers";
 import type SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import type {
   SelectDescriptor,
-  SelectItem,
-  SelectItemId,
+  SelectId,
+  SelectRecord,
   SelectSnapshot,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -14,11 +14,11 @@ import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
 
 /** One group of rows: a merged key for a client source, a consecutive run for a paged one. */
 interface GroupRun {
-  key: SelectItemId;
+  key: SelectId;
   identity: string;
   /** How many earlier runs share this key; 0 for the first and for every client group. */
   occurrence: number;
-  items: SelectItem[];
+  items: SelectRecord[];
 }
 
 /** What every row of one emitted group carries into its descriptor. */
@@ -29,8 +29,8 @@ interface GroupStamp {
 
 /** Grouped rows, with each row's group and the number of action boundaries among them. */
 interface GroupedRows {
-  rows: SelectItem[];
-  stamps: Map<SelectItem, GroupStamp>;
+  rows: SelectRecord[];
+  stamps: Map<SelectRecord, GroupStamp>;
   actions: number;
 }
 
@@ -41,18 +41,18 @@ export default class ListComposer {
   #getFilter: () => string;
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
-  #isSelected: (item: SelectItem) => boolean;
-  #isLockedValue: (value: SelectItemId) => boolean;
+  #isSelected: (item: SelectRecord) => boolean;
+  #isLockedValue: (value: SelectId) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
   #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
 
   /** Native content steps run before the compatibility bridge. */
   #applyContent: (
-    items: SelectItem[],
+    items: SelectRecord[],
     context: SelectContentContext
-  ) => SelectItem[];
-  #applyLegacyContent: (items: SelectItem[]) => SelectItem[];
+  ) => SelectRecord[];
+  #applyLegacyContent: (items: SelectRecord[]) => SelectRecord[];
 
   /** Records transformed option counts without invalidating the current render. */
   #noteVisible: (visible: number, input: number) => void;
@@ -71,17 +71,17 @@ export default class ListComposer {
     getFilter: () => string;
     getValue: () => SelectValue;
     getHasValue: () => boolean;
-    isSelected: (item: SelectItem) => boolean;
-    isLockedValue: (value: SelectItemId) => boolean;
+    isSelected: (item: SelectRecord) => boolean;
+    isLockedValue: (value: SelectId) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
-      items: SelectItem[],
+      items: SelectRecord[],
       context: SelectContentContext
-    ) => SelectItem[];
-    applyLegacyContent: (items: SelectItem[]) => SelectItem[];
+    ) => SelectRecord[];
+    applyLegacyContent: (items: SelectRecord[]) => SelectRecord[];
     /** Records the options left after content extensions, with the raw row count they came from. */
     noteVisible: (visible: number, input: number) => void;
     /** Whether the source may still add rows to this query, a page in flight or not. */
@@ -111,11 +111,11 @@ export default class ListComposer {
    * @returns The frozen list of normalized descriptors to render.
    */
   buildItems(
-    rawItems: SelectItem[] = [],
+    rawItems: SelectRecord[] = [],
     filter = this.#getFilter()
   ): readonly SelectDescriptor[] {
-    const loaded = makeArray(rawItems) as SelectItem[];
-    let items: SelectItem[] = [...loaded];
+    const loaded = makeArray(rawItems) as SelectRecord[];
+    let items: SelectRecord[] = [...loaded];
     // The source validates a measurement against the rows it holds, structural ones included.
     const rawCount = items.length;
     const inputCount = items.filter((item) => !this.#isStructural(item)).length;
@@ -150,7 +150,7 @@ export default class ListComposer {
 
     const createCandidate = this.#createItem(items, filter);
     const hideSelected = this.#args.hideSelected;
-    const include = (item: SelectItem) =>
+    const include = (item: SelectRecord) =>
       !hideSelected ||
       this.#isStructural(item) ||
       typeof item.onSelect === "function" ||
@@ -161,11 +161,11 @@ export default class ListComposer {
 
     const consumerSpecial = makeArray(
       this.#args.specialItems?.(this.#snapshot(), this.#args.config) ?? []
-    ) as SelectItem[];
+    ) as SelectRecord[];
     const visibleSpecial = consumerSpecial.filter(include);
     // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
     // specials and the source rows before grouping, which never reaches them.
-    const isSticky = (item: SelectItem) =>
+    const isSticky = (item: SelectRecord) =>
       !!item.sticky && !this.#isStructural(item);
     const sticky = [...visibleSpecial, ...items].filter(isSticky);
     items = items.filter((item) => !isSticky(item));
@@ -212,7 +212,7 @@ export default class ListComposer {
    *
    * @param items - The items to normalize.
    */
-  describeItems(items: SelectItem[]): readonly SelectDescriptor[] {
+  describeItems(items: SelectRecord[]): readonly SelectDescriptor[] {
     return Object.freeze(
       // Never cap-disabled: these describe the held selection for the trigger, and the cap only
       // ever closes off rows that are *not* selected.
@@ -229,11 +229,11 @@ export default class ListComposer {
    * footer is an option, so it is numbered and counted, but never by paging.
    */
   #describeList(
-    items: SelectItem[],
+    items: SelectRecord[],
     specialCount: number,
     sourceCount: number,
     inputCount: number,
-    createItem: SelectItem | null,
+    createItem: SelectRecord | null,
     grouped: GroupedRows
   ): readonly SelectDescriptor[] {
     const total = this.#getTotal();
@@ -294,7 +294,7 @@ export default class ListComposer {
     );
   }
 
-  #createItem(items: SelectItem[], filter: string): SelectItem | null {
+  #createItem(items: SelectRecord[], filter: string): SelectRecord | null {
     if (!filter || !this.#args.createItem) {
       return null;
     }
@@ -309,27 +309,27 @@ export default class ListComposer {
     if (
       items.some(
         (item) =>
-          String(this.#args.itemLabel(item) ?? "").toLowerCase() === term
+          String(this.#args.recordLabel(item) ?? "").toLowerCase() === term
       )
     ) {
       return null;
     }
     const item = this.#args.createItem(filter, this.#args.config);
-    const key = this.#args.valueKey(this.#args.itemValue(item));
+    const key = this.#args.valueKey(this.#args.recordValue(item));
     return items.some(
-      (loaded) => this.#args.valueKey(this.#args.itemValue(loaded)) === key
+      (loaded) => this.#args.valueKey(this.#args.recordValue(loaded)) === key
     )
       ? null
       : item;
   }
 
   #normalize(
-    item: SelectItem,
+    item: SelectRecord,
     index: number,
     atMaximum: boolean,
     isCreate = false
   ): SelectDescriptor {
-    const value = this.#args.itemValue(item);
+    const value = this.#args.recordValue(item);
     // An action row runs a callback and never becomes a value, so it cannot be the selection even
     // when its id collides with a held one — `isSelected` compares values and cannot tell the two
     // apart. The public `isSelected` is deliberately left alone: it answers a question about
@@ -375,7 +375,7 @@ export default class ListComposer {
    * Group rows and the none row take engine keys that follow what they stand for, not where they
    * sit, so they keep their DOM rows when earlier rows come and go.
    */
-  #rowKey(item: SelectItem, value: SelectItemId, index: number): string {
+  #rowKey(item: SelectRecord, value: SelectId, index: number): string {
     const kind = this.#boundaryTag(item);
     if (kind && Object.hasOwn(item, "groupKey")) {
       // The run count sits in the tag, before the separator, so no group key can mimic it.
@@ -392,7 +392,7 @@ export default class ListComposer {
   }
 
   /** A header of either kind is `h`, so a group's rows never share a key whatever it returns. */
-  #boundaryTag(item: SelectItem): string | null {
+  #boundaryTag(item: SelectRecord): string | null {
     if (item.__header || item.__groupHeader) {
       return "h";
     }
@@ -402,7 +402,7 @@ export default class ListComposer {
     return item.__divider ? "d" : null;
   }
 
-  #isStructural(item: SelectItem): boolean {
+  #isStructural(item: SelectRecord): boolean {
     return !!item.__header || !!item.__footer || !!item.__divider;
   }
 
@@ -413,7 +413,7 @@ export default class ListComposer {
    * silent clear (and would suppress the empty state). Selecting it routes through the normal
    * `select()` path, which emits `null` because the row's value field is `null`.
    */
-  #noneRow(): SelectItem | null {
+  #noneRow(): SelectRecord | null {
     if (this.#args.noneLabel == null || this.#getFilter() !== "") {
       return null;
     }
@@ -428,7 +428,7 @@ export default class ListComposer {
     return this.#args.groupBy != null;
   }
 
-  #groupKey(item: SelectItem): SelectItemId {
+  #groupKey(item: SelectRecord): SelectId {
     return typeof this.#args.groupBy === "function"
       ? this.#args.groupBy(item, this.#args.config)
       : item[this.#args.groupBy as string];
@@ -441,8 +441,8 @@ export default class ListComposer {
   #boundary(
     kind: "header" | "footer",
     group: GroupRun,
-    rows: readonly SelectItem[]
-  ): SelectItem | null {
+    rows: readonly SelectRecord[]
+  ): SelectRecord | null {
     const build =
       kind === "header" ? this.#args.groupHeader : this.#args.groupFooter;
     const result = build?.(group.key, rows, this.#args.config);
@@ -456,7 +456,7 @@ export default class ListComposer {
     }
     if (typeof result === "object" && typeof result.onSelect === "function") {
       const marker = kind === "header" ? "__groupHeader" : "__groupFooter";
-      const item: SelectItem = { ...result, [marker]: true, ...stamp };
+      const item: SelectRecord = { ...result, [marker]: true, ...stamp };
       // A boundary belongs to its group, so it never leads the list.
       delete item.sticky;
       return item;
@@ -470,8 +470,8 @@ export default class ListComposer {
 
   /** The run of the last loaded row grouping placed; rows injected after it never count. */
   #trailingRun(
-    loaded: SelectItem[],
-    runs: Map<SelectItem, GroupRun>
+    loaded: SelectRecord[],
+    runs: Map<SelectRecord, GroupRun>
   ): GroupRun | undefined {
     for (let index = loaded.length - 1; index >= 0; index--) {
       const run = runs.get(loaded[index]);
@@ -504,11 +504,11 @@ export default class ListComposer {
   /** Warns when a page changes a boundary's kind, which would shift rows already shown. */
   #noteBoundaries(
     group: GroupRun,
-    header: SelectItem | null,
-    footer: SelectItem | null | undefined,
+    header: SelectRecord | null,
+    footer: SelectRecord | null | undefined,
     extending: boolean
   ): void {
-    const kindOf = (row: SelectItem | null): BoundaryKind => {
+    const kindOf = (row: SelectRecord | null): BoundaryKind => {
       if (!row) {
         return "none";
       }
@@ -532,8 +532,8 @@ export default class ListComposer {
    * A paged source groups consecutive rows, so a later page only ever appends: it extends the
    * last run or starts new ones. A key that comes back later starts another run.
    */
-  #assignRuns(items: SelectItem[]): Map<SelectItem, GroupRun> {
-    const runs = new Map<SelectItem, GroupRun>();
+  #assignRuns(items: SelectRecord[]): Map<SelectRecord, GroupRun> {
+    const runs = new Map<SelectRecord, GroupRun>();
     const occurrences = new Map<string, number>();
     let current: GroupRun | undefined;
     for (const item of items) {
@@ -558,8 +558,8 @@ export default class ListComposer {
    * `runs`, a client source merges every row of a key into one group, in first-appearance order.
    */
   #groupItems(
-    options: SelectItem[],
-    runs: Map<SelectItem, GroupRun> | undefined,
+    options: SelectRecord[],
+    runs: Map<SelectRecord, GroupRun> | undefined,
     held: GroupRun | undefined,
     extending: boolean
   ): GroupedRows {
@@ -589,8 +589,8 @@ export default class ListComposer {
       }
     }
 
-    const out: SelectItem[] = [];
-    const stamps = new Map<SelectItem, GroupStamp>();
+    const out: SelectRecord[] = [];
+    const stamps = new Map<SelectRecord, GroupStamp>();
     let ordinal = 0;
     let actions = 0;
     for (const [source, group] of groups) {
@@ -607,7 +607,7 @@ export default class ListComposer {
         text: { header: !!header?.__header, footer: !!footer?.__footer },
       };
       const members = [header, ...group.items, footer].filter(
-        (row): row is SelectItem => !!row
+        (row): row is SelectRecord => !!row
       );
       if (!header && out.length > 0 && this.#args.groupDividers) {
         out.push({

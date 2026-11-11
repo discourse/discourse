@@ -7,12 +7,12 @@ import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordi
 import WindowedListCoordinator, {
   ListRow,
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
-import SelectItem from "discourse/ui-kit/select/-internals/parts/select-item";
+import SelectOptionContent from "discourse/ui-kit/select/-internals/parts/select-option-content";
 import SelectEngine, {
   type SelectDescriptor,
-  SelectItem as SelectItemModel,
-  selectItemLabel,
   type SelectItemRow,
+  SelectRecord as SelectRecordModel,
+  selectRecordLabel,
 } from "discourse/ui-kit/select/select-engine";
 
 /** The row state the `:item` block receives with its item. */
@@ -61,19 +61,19 @@ interface SelectOptionRowSignature {
     /** Custom markup for an item. */
     item?: [
       /** The item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
       /** What the row is, beyond its item. */
       row: SelectItemRow,
     ];
     /** Custom markup for a group header, text or action. */
     groupHeader?: [
       /** The group-header item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
     ];
     /** Custom markup for a group footer, text or action. */
     groupFooter?: [
       /** The group-footer item being rendered. */
-      item: SelectItemModel,
+      item: SelectRecordModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
     skeletonItem?: [];
@@ -118,7 +118,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                 {{/if}}
               {{/if}}
               <span hidden={{hasBlock}} id={{option.boundaryId}}>
-                {{selectItemLabel option.item "label"}}
+                {{selectRecordLabel option.item "label"}}
               </span>
             </li>
           {{/let}}
@@ -131,7 +131,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{@measure}}
           ></li>
         {{else if option}}
-          <SelectItem
+          <SelectOptionContent
             aria-disabled={{if
               (or @presenter.isLocked option.flags.disabled)
               "true"
@@ -165,31 +165,33 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                 name, so the name never depends on what the block draws. }}
             {{#if (and option.flags.groupHeader @hasGroupHeaderBlock)}}
               <span class="sr-only">
-                {{~selectItemLabel option.item @presenter.labelField~}}
+                {{~selectRecordLabel option.item @presenter.labelField~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.item to="groupHeader"~}}
               </span>
             {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
               <span class="sr-only">
-                {{~selectItemLabel option.item @presenter.labelField~}}
+                {{~selectRecordLabel option.item @presenter.labelField~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.item to="groupFooter"~}}
               </span>
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
-              {{selectItemLabel option.item @presenter.labelField}}
+              {{selectRecordLabel option.item @presenter.labelField}}
             {{else if @hasItemBlock}}
               {{yield option.item (itemRow option) to="item"}}
             {{else if option.flags.__create}}
               {{@engine.text
                 "createItem"
-                (hash label=(selectItemLabel option.item @presenter.labelField))
+                (hash
+                  label=(selectRecordLabel option.item @presenter.labelField)
+                )
               }}
             {{else}}
-              {{selectItemLabel option.item @presenter.labelField}}
+              {{selectRecordLabel option.item @presenter.labelField}}
             {{/if}}
-          </SelectItem>
+          </SelectOptionContent>
         {{else}}
           {{! Frontier placeholder for an in-flight reveal: presentation, no
               posinset, so pending rows never enter the option set. }}

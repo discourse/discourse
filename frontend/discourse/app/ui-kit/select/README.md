@@ -57,7 +57,7 @@ proposal, including for debounced local sources. The live `@minChars` gate still
 list below the minimum.
 
 Creation is suppressed when a loaded row's label matches the typed text case-insensitively,
-or when `valueKey(itemValue(createItem(filter)))` matches a loaded row's key. Comparing keys
+or when `valueKey(recordValue(createItem(filter)))` matches a loaded row's key. Comparing keys
 normalizes numeric and string ids. The typed text matching a row's raw value alone does not
 block creation; `@allowCreate` can impose additional rules.
 
@@ -243,9 +243,9 @@ entirely on `d-select.gts` and `select-engine.ts`.
   pointer session), `load-feedback.ts` (loading timers and skeleton sizing).
 - `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
   `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`),
-  the list (`select-options`, `windowed-option-list`, `select-option-row`, `select-item`),
+  the list (`select-list-body`, `windowed-option-list`, `select-option-row`, `select-option-content`),
   the shared panel body (`select-panel`), and the selection strip kept by the static and
-  capped variants (`selection-strip`). The options part owns the async shell
+  capped variants (`selection-strip`). The list body owns the async shell
   and yields composed rows, their resolved content and configured per-list modifiers to its
   body. The windowed body and shared row part keep their elements and modifier order.
   Parts receive the stable helper objects (`@engine`, `@presenter`, …) plus per-slot inputs;
@@ -899,7 +899,7 @@ Grouping (`-internals/engine/list-composer.ts`):
 Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
 
 - `@multiple` defaults to `false`. A recipe forwards it; it never flips the default.
-- `@valueItems` gives items for held ids already in hand; `@resolveValues` resolves the rest,
+- `@valueRecords` gives items for held ids already in hand; `@resolveValues` resolves the rest,
   synchronously or not. The engine normalizes `@value`'s shape and the emitted ids' types.
 - Two ids are the same option when their string forms match, so `5` and `"5"` match but `"sam"`
   and `"Sam"` don't. A domain whose ids match loosely passes `@normalizeKey`, such as a
@@ -1097,9 +1097,9 @@ The people family has two recipes, one per data source:
     endpoint. It answers in the user search's shape, `{ users, groups }`, as a value or a
     promise, the empty query included, so it decides what is listed before anything is typed.
     The picker still applies `@exclude` and `@excludeCurrentUser`, ranks the rows and draws them;
-    the loader decides how many, with no cut at six. A record with `disabled: true` is listed but
-    can't be picked, and its `disabledReason` is drawn in its row beside the name. Picked items
-    carry the record's `id` as `recordId`, and a group's `automatic`. Held names are still looked
+    the loader decides how many, with no cut at six. A search row with `disabled: true` is listed but
+    can't be picked, and its `disabledReason` is drawn in its row beside the name. Picked records
+    carry the search row's `id` as `sourceId`, and a group's `automatic`. Held names are still looked
     up through the user search. Keep `@load` stable and pass its inputs through `@loadContext`.
   - Held names are looked up together, in one request per value change, and keep the
     spelling they were given. A name nothing resolves stays as typed, with no `type`.
@@ -1193,7 +1193,7 @@ existing arguments keep their positions:
 - `@items` as a function is called as `items(options)`. A zero-argument function still works.
 - `@load`, `@resolveValue` and `@resolveValues` get `options` on their second argument.
 - `@onChange` gets `options` on its third argument, `{ origin, reason, options }`.
-- `allowCreate`, `createItem`, `createUnresolvedItem`, `specialItems` (after its snapshot),
+- `allowCreate`, `createItem`, `createUnresolvedRecord`, `specialItems` (after its snapshot),
   `filterBy`, `groupBy`, `groupHeader` and `groupFooter` get it as their last argument.
 - The `:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
   `:footer` blocks yield it as their
@@ -1225,10 +1225,10 @@ by mechanism.
   never needs to toggle `@debounce` itself.
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
-  named unresolved fallback (`@createUnresolvedItem`). A resolver may answer synchronously, so a
+  named unresolved fallback (`@createUnresolvedRecord`). A resolver may answer synchronously, so a
   consumer already holding the item just returns it; `@load` answers queries and is never asked
   "what is this id", so an async source that can mount holding a value needs a resolver.
-- `@valueItems`: already-resolved item(s) for the ids in `@value`, read reactively. It selects
+- `@valueRecords`: already-resolved item(s) for the ids in `@value`, read reactively. It selects
   nothing itself — entries are looked up BY `@value` — but unlike a resolver it may arrive after
   mount, so a consumer loading them itself refreshes every selection surface when they land.
 - Multi-select value-type coercion: each emitted id is normalized to its source item's native type
@@ -1338,7 +1338,7 @@ by mechanism.
   listbox and its options; our flat virtualizer can't window nested group containers, so the
   flat association is the sanctioned fallback — nested groups are a follow-up.)
   **Invariant:** all structural rows are engine-injected. The `__header`/`__footer`/`__divider`
-  fields on `SelectItem` (and the `__groupHeader`/`__groupFooter` stamps on action copies) are
+  fields on `SelectRecord` (and the `__groupHeader`/`__groupFooter` stamps on action copies) are
   engine plumbing with no public constructor — never supply them in `@items`,
   `@load`, or `@specialItems` (grouping discards upstream structural rows and derives its own
   structure); those inputs must be selectable options.
@@ -1426,7 +1426,7 @@ This works with async `@load` sources. Unlike DSelect's, neither state has a `cl
 action. Other blocks are `:item`, `:selection`, `:selectionLoading`,
 `:unresolved`, `:empty` and `:error`; see the typed signature in `d-select-list.gts` for
 their yielded values. Held values resolve through `@resolveValues`, `@resolveValue` or
-`@valueItems`, as in DSelect.
+`@valueRecords`, as in DSelect.
 
 Nothing takes focus on render. A row press first focuses this select's search and keeps
 it there, including when another select previously held focus. The search field and its

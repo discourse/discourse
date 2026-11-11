@@ -3,8 +3,8 @@ import type Topic from "discourse/models/topic";
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectItem,
-  type SelectItemId,
+  type SelectId,
+  type SelectRecord,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -16,9 +16,9 @@ export type TopicChangeHandler = (
 
 /** The stand-in for a held id no topic answers for, named by the `unresolved` text. */
 export function unresolvedTopic(
-  value: SelectItemId,
+  value: SelectId,
   config: SelectConfig
-): SelectItem {
+): SelectRecord {
   return {
     id: value,
     title: renderSelectText(config, "unresolved", { id: value }),
@@ -30,7 +30,7 @@ export function emitTopicChange(
   onChange: TopicChangeHandler | undefined,
   multiple: boolean,
   value: SelectValue,
-  items: SelectItem | SelectItem[] | null
+  items: SelectRecord | SelectRecord[] | null
 ): void {
   if (multiple) {
     onChange?.(

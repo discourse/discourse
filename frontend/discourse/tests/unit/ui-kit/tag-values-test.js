@@ -1,11 +1,11 @@
 import { module, test } from "qunit";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import {
-  createTagItem,
+  createTagRecord,
   emitTags,
-  tagFromItem,
-  tagItem,
+  tagFromRecord,
   tagKey,
+  tagRecord,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 
 module("Unit | ui-kit | select | recipes | tag values", function () {
@@ -32,42 +32,42 @@ module("Unit | ui-kit | select | recipes | tag values", function () {
   });
 
   test("a created item is keyed by name and flagged new", function (assert) {
-    assert.deepEqual(createTagItem("Foo"), {
+    assert.deepEqual(createTagRecord("Foo"), {
       id: "tag-name:foo",
       name: "Foo",
       isNew: true,
     });
   });
 
-  test("tagFromItem returns select-kit's shapes", function (assert) {
-    assert.deepEqual(tagFromItem(createTagItem("Foo")), {
+  test("tagFromRecord returns select-kit's shapes", function (assert) {
+    assert.deepEqual(tagFromRecord(createTagRecord("Foo")), {
       id: "Foo",
       name: "Foo",
       isNew: true,
     });
     const row = { id: 5, name: "five", count: 3 };
-    assert.strictEqual(tagFromItem(row), row, "a server row passes through");
+    assert.strictEqual(tagFromRecord(row), row, "a server row passes through");
   });
 
   test("keys round-trip through emitted tags", function (assert) {
-    for (const item of [{ id: 5, name: "five" }, createTagItem("New one")]) {
-      assert.strictEqual(tagKey(tagFromItem(item)), item.id, item.name);
+    for (const item of [{ id: 5, name: "five" }, createTagRecord("New one")]) {
+      assert.strictEqual(tagKey(tagFromRecord(item)), item.id, item.name);
     }
   });
 
-  test("tagItem turns a held tag into an engine item", function (assert) {
-    assert.deepEqual(tagItem("foo"), { id: "tag-name:foo", name: "foo" });
-    assert.deepEqual(tagItem(7), { id: 7, name: "7" });
-    assert.deepEqual(tagItem({ id: "5", name: "five" }), {
+  test("tagRecord turns a held tag into an engine item", function (assert) {
+    assert.deepEqual(tagRecord("foo"), { id: "tag-name:foo", name: "foo" });
+    assert.deepEqual(tagRecord(7), { id: 7, name: "7" });
+    assert.deepEqual(tagRecord({ id: "5", name: "five" }), {
       id: 5,
       name: "five",
     });
-    assert.deepEqual(tagItem({ id: "x", name: "X", isNew: true }), {
+    assert.deepEqual(tagRecord({ id: "x", name: "X", isNew: true }), {
       id: "tag-name:x",
       name: "X",
       isNew: true,
     });
-    assert.deepEqual(tagItem({ name: "Bar" }), {
+    assert.deepEqual(tagRecord({ name: "Bar" }), {
       id: "tag-name:bar",
       name: "Bar",
     });
@@ -76,7 +76,7 @@ module("Unit | ui-kit | select | recipes | tag values", function () {
   test("emitTags keeps held objects and converts the rest", function (assert) {
     const heldObject = { id: 5, name: "five", extra: true };
     const held = [heldObject, "foo", 9, "5"];
-    const created = createTagItem("Brand New");
+    const created = createTagRecord("Brand New");
     const row = { id: 11, name: "eleven" };
 
     const emitted = emitTags(

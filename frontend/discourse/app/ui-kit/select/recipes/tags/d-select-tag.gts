@@ -36,17 +36,17 @@ import {
   TAG_TEXTS,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-texts";
 import {
-  createTagItem,
+  createTagRecord,
   emitTags,
-  tagItem,
   type TagKey,
   tagKey,
   type TagObject,
+  tagRecord,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectConfig,
-  SelectItem,
   SelectLoadRequest,
+  SelectRecord,
   SelectTexts,
   SelectTextWrapper,
   SelectValue,
@@ -292,12 +292,12 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       'DSelectTag: @emit must be "names" or undefined',
       this.args.emit === undefined || this.args.emit === "names"
     );
-    const keys = this.#tags.map((tag) => this.#itemForTag(tag).id);
+    const keys = this.#tags.map((tag) => this.#recordForTag(tag).id);
     return this.args.multiple ? keys : (keys[0] ?? null);
   }
 
-  get valueItems() {
-    return this.#tags.map((tag) => this.#itemForTag(tag));
+  get valueRecords() {
+    return this.#tags.map((tag) => this.#recordForTag(tag));
   }
 
   /** The locked tags' engine ids, matched to the held tags by name so a known id still matches. */
@@ -306,7 +306,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase();
     const held = new Map(this.#tags.map((tag) => [nameOf(tag), tag]));
     return this.args.lockedValues?.map(
-      (tag) => this.#itemForTag(held.get(nameOf(tag)) ?? tag).id
+      (tag) => this.#recordForTag(held.get(nameOf(tag)) ?? tag).id
     );
   }
 
@@ -317,7 +317,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
   }
 
   @action
-  allowCreate(filter: string, items: SelectItem[], config: SelectConfig) {
+  allowCreate(filter: string, items: SelectRecord[], config: SelectConfig) {
     const name = cleanTagName(filter, this.siteSettings);
     const validation = this._validation.get(
       this.#validationKey(this.loadContext, name)
@@ -332,7 +332,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       (typeof maximum !== "number" || this.#tags.length < maximum) &&
       !items.some(
         (item) =>
-          this.#storedItemName(item).toLowerCase() === name.toLowerCase()
+          this.#storedRecordName(item).toLowerCase() === name.toLowerCase()
       ) &&
       !this.#tags.some(
         (tag) =>
@@ -345,7 +345,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
 
   @action
   createItem(filter: string) {
-    return { ...createTagItem(cleanTagName(filter, this.siteSettings)) };
+    return { ...createTagRecord(cleanTagName(filter, this.siteSettings)) };
   }
 
   /**
@@ -365,7 +365,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     const held = new Map(
       this.#tags.map((tag) => [
         storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase(),
-        this.#itemForTag(tag),
+        this.#recordForTag(tag),
       ])
     );
     const pasted = new Map<string, string>();
@@ -377,19 +377,19 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       }
     }
     const toItems = (
-      rows: SelectItem[],
+      rows: SelectRecord[],
       forbiddenNames: readonly string[] = []
     ) => {
       const found = new Map(
         this.#prepareItems(rows).map((row) => [
-          this.#storedItemName(row).toLowerCase(),
+          this.#storedRecordName(row).toLowerCase(),
           row,
         ])
       );
       const forbidden = new Set(
         forbiddenNames.map((name) => name.toLowerCase())
       );
-      return [...pasted].flatMap(([lower, name]): SelectItem[] => {
+      return [...pasted].flatMap(([lower, name]): SelectRecord[] => {
         const row = held.get(lower) ?? found.get(lower);
         if (row) {
           return row.disabled ? [] : [row];
@@ -419,15 +419,15 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
   }
 
   @action
-  onChange(ids: SelectValue, items: SelectItem | SelectItem[] | null) {
+  onChange(ids: SelectValue, items: SelectRecord | SelectRecord[] | null) {
     const keys = makeArray(ids) as TagKey[];
     const rows = makeArray(items);
-    const heldKeys = new Set(this.valueItems.map((item) => item.id));
+    const heldKeys = new Set(this.valueRecords.map((item) => item.id));
     if (this.#zeroCap && keys.some((id) => !heldKeys.has(id))) {
       return;
     }
     const held = this.#tags.map((tag) => {
-      const item = this.#itemForTag(tag);
+      const item = this.#recordForTag(tag);
       if (typeof tag === "string") {
         return { ...item, name: tag };
       }
@@ -464,10 +464,10 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return this.#prepareItems(result.items.map((item) => ({ ...item })));
   }
 
-  #itemForTag(
+  #recordForTag(
     tag: TagObject | string
-  ): SelectItem & { id: TagKey; name: string } {
-    const item = { ...(typeof tag === "object" ? tag : {}), ...tagItem(tag) };
+  ): SelectRecord & { id: TagKey; name: string } {
+    const item = { ...(typeof tag === "object" ? tag : {}), ...tagRecord(tag) };
     if (typeof item.id === "number" || item.isNew) {
       return item;
     }
@@ -477,10 +477,12 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return id === undefined ? item : { ...item, id };
   }
 
-  #prepareItems(items: SelectItem[]) {
+  #prepareItems(items: SelectRecord[]) {
     const excluded = this.#excludedNames;
     return items
-      .filter((item) => !excluded.has(this.#storedItemName(item).toLowerCase()))
+      .filter(
+        (item) => !excluded.has(this.#storedRecordName(item).toLowerCase())
+      )
       .map((item) =>
         this.#zeroCap && !this.#isHeld(item)
           ? { ...item, disabled: true }
@@ -488,18 +490,18 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       );
   }
 
-  #isHeld(item: SelectItem) {
-    const name = this.#storedItemName(item).toLowerCase();
+  #isHeld(item: SelectRecord) {
+    const name = this.#storedRecordName(item).toLowerCase();
     return this.#tags.some(
       (tag) =>
-        this.#itemForTag(tag).id === item.id ||
+        this.#recordForTag(tag).id === item.id ||
         storedName(
           typeof tag === "string" ? { name: tag } : tag
         ).toLowerCase() === name
     );
   }
 
-  #storedItemName(item: SelectItem) {
+  #storedRecordName(item: SelectRecord) {
     return storedName({
       name: String(item.name ?? ""),
       original_name:
@@ -544,7 +546,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selectedIds}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
       {{this.resolveHeldNames}}
     >
@@ -552,14 +554,14 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else}}
-          <TagOption @config={{config}} @item={{item}} @row={{row}} />
+          <TagOption @config={{config}} @record={{item}} @row={{row}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          <TagSelection @item={{item}} />
+          <TagSelection @record={{item}} />
         {{/if}}
       </:selection>
       <:footer as |state config|>

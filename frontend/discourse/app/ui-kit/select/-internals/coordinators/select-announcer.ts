@@ -7,8 +7,8 @@ import type A11y from "discourse/services/a11y";
 import { LOADING_FEEDBACK_DELAY } from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import type { SelectionOrigin } from "discourse/ui-kit/select/-internals/engine/selection-updates";
 import SelectEngine, {
-  type SelectItem,
-  type SelectItemId,
+  type SelectId,
+  type SelectRecord,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -426,7 +426,7 @@ export default class SelectAnnouncer {
   }
 
   /** Confirms programmatic intent even when the controlled value does not change. */
-  reconfirm(item: SelectItem, origin: SelectionOrigin): void {
+  reconfirm(item: SelectRecord, origin: SelectionOrigin): void {
     if (!this.#engine.multiple && (origin.programmatic || origin.record)) {
       this.#say(
         this.#engine.text("itemSelected", {
@@ -589,7 +589,7 @@ export default class SelectAnnouncer {
   }
 
   /** Names a single removed value; counts several. */
-  #sayRemoved(removed: readonly SelectItemId[]): void {
+  #sayRemoved(removed: readonly SelectId[]): void {
     if (removed.length > 1) {
       this.#say(this.#engine.text("itemsRemoved", { count: removed.length }));
       return;

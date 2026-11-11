@@ -7,12 +7,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   disabledReason,
   GroupOption,
-  itemName,
+  recordName,
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectItem,
+  type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -32,32 +32,32 @@ function typeText(config: SelectConfig | undefined, key: string) {
 }
 
 /** Narrows an item's type at the rendering boundary. */
-function isType(item: SelectItem, type: UserPickType): boolean {
+function isType(item: SelectRecord, type: UserPickType): boolean {
   return item.type === type;
 }
 
 /** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectItem): string | undefined {
+function actionIcon(item: SelectRecord): string | undefined {
   return typeof item.icon === "string" ? item.icon : undefined;
 }
 
 /** The status emoji drawn after a user, when the picker shows statuses. */
-function statusEmoji(item: SelectItem): string | undefined {
+function statusEmoji(item: SelectRecord): string | undefined {
   return typeof item.statusEmoji === "string" ? item.statusEmoji : undefined;
 }
 
 /** A user's full name, when the site sent one. */
-function fullName(item: SelectItem): string | undefined {
+function fullName(item: SelectRecord): string | undefined {
   return typeof item.fullName === "string" && item.fullName
     ? item.fullName
     : undefined;
 }
 
 /** A held user's avatar and username. */
-const UserIdentity: TOC<{ Args: { item: SelectItem } }> = <template>
-  {{dAvatar @item imageSize="tiny"}}
+const UserIdentity: TOC<{ Args: { record: SelectRecord } }> = <template>
+  {{dAvatar @record imageSize="tiny"}}
   <span class="d-user-option__username">
-    {{~formatUsername (itemName @item)~}}
+    {{~formatUsername (recordName @record)~}}
   </span>
 </template>;
 
@@ -68,49 +68,49 @@ const UserIdentity: TOC<{ Args: { item: SelectItem } }> = <template>
 export const UserOption: TOC<{
   Args: {
     /** The row, whose `type` says what it is. */
-    item: SelectItem;
+    record: SelectRecord;
   };
 }> = <template>
-  {{#if @item.onSelect}}
-    {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
-    {{itemName @item}}
-  {{else if (isType @item "user")}}
+  {{#if @record.onSelect}}
+    {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+    {{recordName @record}}
+  {{else if (isType @record "user")}}
     <span class="d-user-option">
-      {{dAvatar @item imageSize="tiny"}}
+      {{dAvatar @record imageSize="tiny"}}
       {{! One line of text, so the smaller name sits on the username's baseline. }}
       <span class="d-user-option__label">
         <span class="d-user-option__username">
-          {{~formatUsername (itemName @item)~}}
+          {{~formatUsername (recordName @record)~}}
         </span>
         {{! Keep the space before the name: without it screen readers run the two words together. }}
-        {{#if (fullName @item)~}}
-          <span class="d-user-option__name">{{fullName @item}}</span>
+        {{#if (fullName @record)~}}
+          <span class="d-user-option__name">{{fullName @record}}</span>
         {{~/if~}}
       </span>
-      {{#if (statusEmoji @item)}}
+      {{#if (statusEmoji @record)}}
         <span class="d-user-option__status">
-          {{~dEmoji (statusEmoji @item) alt="" skipTitle=true~}}
+          {{~dEmoji (statusEmoji @record) alt="" skipTitle=true~}}
         </span>
       {{/if}}
-      {{#if (disabledReason @item)}}
+      {{#if (disabledReason @record)}}
         <span class="d-user-option__reason">
           {{~dIcon "ban"~}}
-          {{~disabledReason @item~}}
+          {{~disabledReason @record~}}
         </span>
       {{/if}}
       <span aria-hidden="true" class="d-user-option__decorations">
-        {{~decorateUsernameSelector (itemName @item)~}}
+        {{~decorateUsernameSelector (recordName @record)~}}
       </span>
     </span>
-  {{else if (isType @item "group")}}
-    <GroupOption @icon={{true}} @item={{@item}} />
-  {{else if (isType @item "email")}}
+  {{else if (isType @record "group")}}
+    <GroupOption @icon={{true}} @record={{@record}} />
+  {{else if (isType @record "email")}}
     <span class="d-email-option">
       {{dIcon "envelope"}}
-      <span class="d-email-option__address">{{itemName @item}}</span>
+      <span class="d-email-option__address">{{recordName @record}}</span>
     </span>
   {{else}}
-    {{itemName @item}}
+    {{recordName @record}}
   {{/if}}
 </template>;
 
@@ -121,34 +121,34 @@ export const UserOption: TOC<{
 export const UserSelection: TOC<{
   Args: {
     /** The held value's item. */
-    item: SelectItem;
+    record: SelectRecord;
     /** The select's resolved config, which carries its texts. */
     config?: SelectConfig;
   };
 }> = <template>
-  {{#if (isType @item "user")}}
+  {{#if (isType @record "user")}}
     <span class="d-user-option --selection">
-      <UserIdentity @item={{@item}} />
+      <UserIdentity @record={{@record}} />
     </span>
-  {{else if (isType @item "group")}}
+  {{else if (isType @record "group")}}
     <span class="d-group-option --selection">
       {{dIcon "users"}}
-      <span class="d-group-option__name">{{itemName @item}}</span>
+      <span class="d-group-option__name">{{recordName @record}}</span>
       <span class="sr-only">{{typeText @config "groupType"}}</span>
     </span>
-  {{else if (isType @item "email")}}
+  {{else if (isType @record "email")}}
     <span class="d-email-option --selection">
       {{dIcon "envelope"}}
-      <span class="d-email-option__address">{{itemName @item}}</span>
+      <span class="d-email-option__address">{{recordName @record}}</span>
       <span class="sr-only">{{typeText @config "emailType"}}</span>
     </span>
-  {{else if (isType @item "unknown")}}
+  {{else if (isType @record "unknown")}}
     <span class="d-unknown-option --selection">
       {{dIcon "triangle-exclamation"}}
-      <span class="d-unknown-option__name">{{itemName @item}}</span>
+      <span class="d-unknown-option__name">{{recordName @record}}</span>
       <span class="sr-only">{{typeText @config "unknownType"}}</span>
     </span>
   {{else}}
-    {{itemName @item}}
+    {{recordName @record}}
   {{/if}}
 </template>;

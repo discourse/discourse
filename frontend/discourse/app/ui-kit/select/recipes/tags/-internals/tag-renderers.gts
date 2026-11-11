@@ -4,8 +4,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectItem,
   type SelectItemRow,
+  type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -28,22 +28,22 @@ function rowText(
 }
 
 /** The values of a row's count texts. */
-function countValues(item: SelectItem) {
+function countValues(item: SelectRecord) {
   return { count: tagCount(item) };
 }
 
 /** The values of the create row's text. */
-function createValues(item: SelectItem) {
-  return { label: tagItemName(item) };
+function createValues(item: SelectRecord) {
+  return { label: tagRecordName(item) };
 }
 
 /** Narrows optional source counts at the rendering boundary. */
-function tagCount(item: SelectItem): number {
+function tagCount(item: SelectRecord): number {
   return typeof item.count === "number" ? item.count : 0;
 }
 
 /** Narrows the optional synonym target supplied by tag search. */
-function synonymName(item: SelectItem): string | undefined {
+function synonymName(item: SelectRecord): string | undefined {
   const target = item.target_tag;
   return typeof target === "object" &&
     target !== null &&
@@ -54,12 +54,12 @@ function synonymName(item: SelectItem): string | undefined {
 }
 
 /** An item's display name, narrowed for templates. */
-export function tagItemName(item: SelectItem): string {
+export function tagRecordName(item: SelectRecord): string {
   return typeof item.name === "string" ? item.name : String(item.name ?? "");
 }
 
 /** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectItem): string | undefined {
+function actionIcon(item: SelectRecord): string | undefined {
   return typeof item.icon === "string" ? item.icon : undefined;
 }
 
@@ -67,25 +67,25 @@ function actionIcon(item: SelectItem): string | undefined {
 export const TagOption: TemplateOnlyComponent<{
   Args: {
     /** The tag row, including its optional count and synonym target. */
-    item: SelectItem;
+    record: SelectRecord;
     /** The select's resolved config, which carries its texts. */
     config?: SelectConfig;
     /** The row's state, which says whether it's the create row. */
     row: SelectItemRow;
   };
 }> = <template>
-  {{#if @item.onSelect}}
-    {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
-    {{tagItemName @item}}
+  {{#if @record.onSelect}}
+    {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+    {{tagRecordName @record}}
   {{else if @row.create}}
-    {{rowText @config "createItem" (createValues @item)}}
+    {{rowText @config "createItem" (createValues @record)}}
   {{else}}
     <span class="d-tag-option">
-      {{dDiscourseTag @item.name noHref=true tagName="span"}}
-      {{#if @item.count}}
+      {{dDiscourseTag @record.name noHref=true tagName="span"}}
+      {{#if @record.count}}
         {{#let
-          (rowText @config "tagCountBadge" (countValues @item))
-          (rowText @config "tagCount" (countValues @item))
+          (rowText @config "tagCountBadge" (countValues @record))
+          (rowText @config "tagCount" (countValues @record))
           as |badge spoken|
         }}
           {{#if badge}}
@@ -100,9 +100,9 @@ export const TagOption: TemplateOnlyComponent<{
           {{/if}}
         {{/let}}
       {{/if}}
-      {{#if @item.target_tag}}
+      {{#if @record.target_tag}}
         <span class="synonym-hint"><span aria-hidden="true">→</span>
-          {{synonymName @item~}}
+          {{synonymName @record~}}
         </span>
       {{/if}}
     </span>
@@ -113,8 +113,8 @@ export const TagOption: TemplateOnlyComponent<{
 export const TagSelection: TemplateOnlyComponent<{
   Args: {
     /** The held tag supplied by the engine. */
-    item: SelectItem;
+    record: SelectRecord;
   };
 }> = <template>
-  {{dDiscourseTag @item.name noHref=true tagName="span"}}
+  {{dDiscourseTag @record.name noHref=true tagName="span"}}
 </template>;

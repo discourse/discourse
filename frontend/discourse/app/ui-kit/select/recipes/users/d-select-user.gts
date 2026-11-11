@@ -25,9 +25,9 @@ import {
 } from "discourse/ui-kit/select/recipes/users/-internals/user-texts";
 import type {
   SelectConfig,
-  SelectItem,
-  SelectItemId,
+  SelectId,
   SelectLoadRequest,
+  SelectRecord,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -35,8 +35,8 @@ import type {
 /** Which groups the picker offers, as the server's include flags. */
 type UserPickerGroups = "visible" | "mentionable" | "messageable";
 
-/** A record a search source answers with, user or group, as the user search serializes it. */
-type UserSearchRecord = {
+/** An entry a search source answers with, user or group, as the user search serializes it. */
+type UserSearchEntry = {
   id?: number;
   name?: string;
   full_name?: string | null;
@@ -49,16 +49,16 @@ type UserSearchRecord = {
 
 /** What a call-site loader answers with: the user search endpoint's shape. */
 export type UserSearchResponse = {
-  users?: (UserSearchRecord & {
+  users?: (UserSearchEntry & {
     username: string;
     avatar_template?: string;
     status?: { emoji?: string; description?: string } | null;
   })[];
-  groups?: (UserSearchRecord & { name: string })[];
+  groups?: (UserSearchEntry & { name: string })[];
 };
 
 /** A search or lookup row, as `lib/user-search` returns it. */
-type UserSearchRow = UserSearchRecord & {
+type UserSearchRow = UserSearchEntry & {
   type: UserPickType;
   value: string;
   username?: string;
@@ -67,13 +67,13 @@ type UserSearchRow = UserSearchRecord & {
 };
 
 /** A held or picked value's item: the value, its label and what it is. */
-export type UserPickItem = SelectItem & {
+export type UserPickRecord = SelectRecord & {
   id: string;
   name: string;
   /** Absent for a name nothing resolved and for a call site's special rows. */
   type?: UserPickType;
   /** The user's or group's own id, when its source sends it. */
-  recordId?: number;
+  sourceId?: number;
   /** Whether a group is one of the automatic groups. */
   automatic?: boolean;
   /** Why a disabled row can't be picked. */
@@ -119,7 +119,7 @@ interface DSelectUserSignature {
     /**
      * Answers searches in place of the user search, the empty query included, in its shape.
      * The picker still applies `@exclude`, ranks the rows and draws them; the loader decides how
-     * many. A record with `disabled` is listed but can't be picked, showing its
+     * many. A search row with `disabled` is listed but can't be picked, showing its
      * `disabledReason`. Held names are still looked up through the user search. Keep it
      * stable and pass its inputs through `@loadContext`.
      */
@@ -141,7 +141,7 @@ interface DSelectUserSignature {
      */
     onChange?: (
       value: string[] | string | null,
-      items: UserPickItem[] | UserPickItem | null
+      items: UserPickRecord[] | UserPickRecord | null
     ) => void;
   };
   Element: HTMLElement;
@@ -218,7 +218,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   }
 
   @action
-  createUnresolvedItem(value: SelectItemId): UserPickItem {
+  createUnresolvedRecord(value: SelectId): UserPickRecord {
     return { id: String(value), name: String(value), type: "unknown" };
   }
 
@@ -237,21 +237,21 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
         | undefined,
       load: this.args.load,
     })) as UserSearchRow[];
-    return rows.map((row) => this.#item(row));
+    return rows.map((row) => this.#record(row));
   }
 
   @action
-  onChange(value: SelectValue, items: SelectItem | SelectItem[] | null) {
+  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
     if (this.args.multiple) {
       this.args.onChange?.(
         makeArray(value as string | string[]).map(String),
-        makeArray(items as UserPickItem | UserPickItem[] | null)
+        makeArray(items as UserPickRecord | UserPickRecord[] | null)
       );
       return;
     }
     this.args.onChange?.(
       value == null ? null : String(value as string),
-      (items as UserPickItem | null) ?? null
+      (items as UserPickRecord | null) ?? null
     );
   }
 
@@ -282,11 +282,11 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
 
   @action
   async resolveValues(
-    values: SelectItemId[],
+    values: SelectId[],
     opts: SelectLoadRequest
-  ): Promise<SelectItem[]> {
+  ): Promise<SelectRecord[]> {
     const names = values.map(String);
-    const special = new Map<string, SelectItem>(
+    const special = new Map<string, SelectRecord>(
       (opts.config ? this.#specialRows(opts.config) : []).map((item) => [
         String(item.id),
         item,
@@ -296,7 +296,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       names.filter((name) => !special.has(name))
     );
     return [
-      ...names.flatMap((name): SelectItem[] => {
+      ...names.flatMap((name): SelectRecord[] => {
         const item = special.get(name);
         return item ? [item] : [];
       }),
@@ -304,9 +304,9 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     ];
   }
 
-  #item(row: UserSearchRow): UserPickItem {
+  #record(row: UserSearchRow): UserPickRecord {
     const source = {
-      recordId: row.id,
+      sourceId: row.id,
       disabled: row.disabled,
       disabledReason: row.disabledReason,
     };
@@ -340,7 +340,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   }
 
   /** Items for names: special rows aside, addresses locally and the rest in one lookup. */
-  async #resolve(names: string[]): Promise<UserPickItem[]> {
+  async #resolve(names: string[]): Promise<UserPickRecord[]> {
     const lookup = names.filter((name) => !emailValid(name));
     const rows = lookup.length
       ? ((await findUsersByUsernames(lookup, {
@@ -348,17 +348,17 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
           includeStaged: this.args.includeStaged,
         })) as UserSearchRow[])
       : [];
-    const found = new Map(rows.map((row) => [row.value, this.#item(row)]));
+    const found = new Map(rows.map((row) => [row.value, this.#record(row)]));
     return names.map(
       (name) =>
         found.get(name) ??
         (this.args.emails && emailValid(name)
-          ? this.#item({ type: "email", value: name })
-          : this.createUnresolvedItem(name))
+          ? this.#record({ type: "email", value: name })
+          : this.createUnresolvedRecord(name))
     );
   }
 
-  #specialRows(config: SelectConfig): SelectItem[] {
+  #specialRows(config: SelectConfig): SelectRecord[] {
     return (
       this.args.specialItems?.(
         { filter: "", value: this.selectedValue, hasValue: true },
@@ -373,7 +373,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
       @clearable={{@clearable}}
-      @createUnresolvedItem={{this.createUnresolvedItem}}
+      @createUnresolvedRecord={{this.createUnresolvedRecord}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @icon={{@icon}}
@@ -411,18 +411,18 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else}}
-          <UserOption @item={{item}} />
+          <UserOption @record={{item}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          <UserSelection @config={{config}} @item={{item}} />
+          <UserSelection @config={{config}} @record={{item}} />
         {{/if}}
       </:selection>
       <:unresolved as |item|>
-        <UserSelection @item={{item}} />
+        <UserSelection @record={{item}} />
       </:unresolved>
       <:footer as |state config|>
         {{yield state config to="footer"}}

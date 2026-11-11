@@ -58,26 +58,26 @@ export type { SelectConfig };
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
  * value read out of an item is `unknown` rather than a fixed scalar type.
  */
-export type SelectItemId = unknown;
+export type SelectId = unknown;
 
 /**
  * The controlled value: a single id (or `null`) for single-select, or a (frozen) id
  * array for multi-select.
  */
-export type SelectValue = SelectItemId | readonly SelectItemId[] | null;
+export type SelectValue = SelectId | readonly SelectId[] | null;
 
 /**
  * A selectable item. Domain fields are addressed dynamically through `valueField` /
  * `labelField`, so they are exposed via the index signature; the few structural fields
  * the engine understands directly are declared explicitly.
  */
-export interface SelectItem {
+export interface SelectRecord {
   /**
    * Action-item hook: when present, activating the item runs this instead of selecting
    * it, and receives the select's {@link SelectControl}. A row injected through the
    * `modifySelectKit` compat bridge gets the legacy select-kit facade instead.
    */
-  onSelect?: (control: SelectControl, item: SelectItem) => void;
+  onSelect?: (control: SelectControl, item: SelectRecord) => void;
 
   /** Kept at the top of the list and visible while it scrolls. Structural rows ignore this. */
   sticky?: boolean;
@@ -149,9 +149,9 @@ export interface SelectDescriptor {
    */
   key: string;
   /** The row's id (raw, from `valueField`). */
-  value: SelectItemId;
+  value: SelectId;
   /** The raw model, passed through untouched to consumer blocks. */
-  item: SelectItem;
+  item: SelectRecord;
   /** Row state, centralized so the template and option component don't re-derive it. */
   flags: {
     /** Whether this row's value is part of the current selection. */
@@ -215,8 +215,8 @@ export interface SelectDescriptor {
   setSize?: number;
 }
 
-export function selectItemLabel(
-  item: SelectItem | null | undefined,
+export function selectRecordLabel(
+  item: SelectRecord | null | undefined,
   labelField = "name"
 ): string {
   return String(item?.[labelField] ?? "");
@@ -247,7 +247,7 @@ export interface SelectLoadRequest {
 /** A page from a server-backed source, with optional pagination metadata. */
 export interface SelectLoadResponse {
   /** The page returned for the requested offset. */
-  items: SelectItem[];
+  items: SelectRecord[];
   /** Opaque continuation value passed unchanged to the next request as `opts.cursor`. */
   cursor?: unknown;
   /**
@@ -269,7 +269,7 @@ export interface SelectLoadResponse {
 }
 
 /** Shapes accepted from a select item source. */
-export type SelectLoadResult = SelectItem[] | SelectLoadResponse;
+export type SelectLoadResult = SelectRecord[] | SelectLoadResponse;
 
 /** A frozen read-only view of the engine state passed to a `specialItems` builder. */
 export interface SelectSnapshot {
@@ -312,11 +312,11 @@ export interface SelectControl {
   /** Closes the overlay. */
   close(): void;
   /** Selects an item, exactly as picking its row would. */
-  select(item: SelectItem): void;
+  select(item: SelectRecord): void;
   /** Adds eligible items in one change; single-select chooses the first new item. */
-  selectMany(items: readonly SelectItem[]): void;
+  selectMany(items: readonly SelectRecord[]): void;
   /** Removes an item if held; single-select clears its held item. */
-  deselect(item: SelectItem): void;
+  deselect(item: SelectRecord): void;
   /** Clears a nonempty selection. */
   clear(): void;
   /** Starts a new query without superseding a pending update. */
@@ -337,11 +337,11 @@ export interface SelectUpdateScope {
   /** Whether this update still owns the live value. A pure read. */
   readonly current: boolean;
   /** Selects an item while current and unlocked. */
-  select(item: SelectItem): void;
+  select(item: SelectRecord): void;
   /** Adds eligible items in one change; single-select chooses the first new item. */
-  selectMany(items: readonly SelectItem[]): void;
+  selectMany(items: readonly SelectRecord[]): void;
   /** Removes a held item while current and unlocked. */
-  deselect(item: SelectItem): void;
+  deselect(item: SelectRecord): void;
   /** Clears a nonempty selection while current and unlocked. */
   clear(): void;
 }
@@ -351,17 +351,17 @@ export interface SelectUpdateScope {
  * item with `onSelect`), or nullish for none.
  */
 export type SelectGroupBoundaryBuilder = (
-  key: SelectItemId,
-  rows: readonly SelectItem[],
+  key: SelectId,
+  rows: readonly SelectRecord[],
   config: SelectConfig
-) => string | SelectItem | null | undefined;
+) => string | SelectRecord | null | undefined;
 
 /**
  * What a {@link SelectEngine} is constructed with.
  *
  * Function-valued options are invoked with an unspecified receiver — read the provided
  * arguments, never `this`. Where a callback acts on the select, it is handed a
- * {@link SelectControl} (see {@link SelectItem#onSelect}).
+ * {@link SelectControl} (see {@link SelectRecord#onSelect}).
  *
  * The `get*` reader options are the live counterparts of the plain option beside each:
  * they reflect runtime changes to the underlying `@arg`, while the plain static option
@@ -370,9 +370,9 @@ export type SelectGroupBoundaryBuilder = (
  * each default on read.
  */
 /** Builds the held items from the resolved config. */
-export type SelectValueItemsBuilder = (
+export type SelectValueRecordsBuilder = (
   config: SelectConfig
-) => SelectItem | SelectItem[];
+) => SelectRecord | SelectRecord[];
 
 export interface SelectEngineInit {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
@@ -411,7 +411,7 @@ export interface SelectEngineInit {
   getMinimum?: () => number | undefined;
 
   /** Live reader for {@link lockedValues}. */
-  getLockedValues?: () => readonly SelectItemId[] | undefined;
+  getLockedValues?: () => readonly SelectId[] | undefined;
 
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
   getArgs?: () => Readonly<SelectPresentationArgs>;
@@ -447,8 +447,8 @@ export interface SelectEngineInit {
     | Readonly<Record<string, SelectTextWrapper | undefined>>
     | undefined;
 
-  /** Live reader for {@link valueItems}. */
-  getValueItems?: () => SelectEngineInit["valueItems"];
+  /** Live reader for {@link valueRecords}. */
+  getValueRecords?: () => SelectEngineInit["valueRecords"];
 
   /** Live reader for {@link allowCreate}. */
   getAllowCreate?: () => SelectEngineInit["allowCreate"];
@@ -479,8 +479,8 @@ export interface SelectEngineInit {
    * or `load`, not both.
    */
   items?:
-    | SelectItem[]
-    | ((config: SelectConfig) => SelectItem[] | null | undefined);
+    | SelectRecord[]
+    | ((config: SelectConfig) => SelectRecord[] | null | undefined);
 
   /**
    * `(filter, { signal, offset, limit, page, cursor, context, config }) => items | { items, total?, hasMore?, cursor? }`,
@@ -518,7 +518,7 @@ export interface SelectEngineInit {
    */
   filterBy?:
     | string
-    | ((item: SelectItem, term: string, config: SelectConfig) => boolean);
+    | ((item: SelectRecord, term: string, config: SelectConfig) => boolean);
 
   /**
    * Minimum filter length before the list searches, 2 or more. Omitted, any input searches;
@@ -567,7 +567,7 @@ export interface SelectEngineInit {
    * Development builds assert when the list isn't an array, isn't held, or is given to a
    * single select.
    */
-  lockedValues?: readonly SelectItemId[];
+  lockedValues?: readonly SelectId[];
 
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
@@ -598,16 +598,16 @@ export interface SelectEngineInit {
    * come from a text (`renderSelectText(options, key)`). It is rebuilt when the options or what
    * it reads change.
    */
-  valueItems?: SelectItem | SelectItem[] | SelectValueItemsBuilder;
+  valueRecords?: SelectRecord | SelectRecord[] | SelectValueRecordsBuilder;
 
   /**
    * `(value, { signal, config }) => item | Promise<item>`, used to resolve a value id to its
    * display item when it isn't already known.
    */
   resolveValue?: (
-    value: SelectItemId,
+    value: SelectId,
     opts: SelectLoadRequest
-  ) => SelectItem | Promise<SelectItem | undefined> | undefined;
+  ) => SelectRecord | Promise<SelectRecord | undefined> | undefined;
 
   /**
    * Batch counterpart to `resolveValue` for multi-select:
@@ -616,9 +616,9 @@ export interface SelectEngineInit {
    * ids become fallbacks.
    */
   resolveValues?: (
-    values: SelectItemId[],
+    values: SelectId[],
     opts: SelectLoadRequest
-  ) => SelectItem[] | Promise<SelectItem[]>;
+  ) => SelectRecord[] | Promise<SelectRecord[]>;
 
   /**
    * Enables the create-on-the-fly item; a function `(filter, items, options) => boolean` gates it
@@ -626,13 +626,17 @@ export interface SelectEngineInit {
    */
   allowCreate?:
     | boolean
-    | ((filter: string, items: SelectItem[], config: SelectConfig) => boolean);
+    | ((
+        filter: string,
+        items: SelectRecord[],
+        config: SelectConfig
+      ) => boolean);
 
   /**
    * `(filter, config) => item` producing the synthetic "create" item. Name it by its value
    * text; the engine marks the row as create and supplies the "Create" wording.
    */
-  createItem?: (filter: string, config: SelectConfig) => SelectItem;
+  createItem?: (filter: string, config: SelectConfig) => SelectRecord;
 
   /**
    * `(value, config) => item` producing the fallback for a held id that could not be resolved,
@@ -640,10 +644,10 @@ export interface SelectEngineInit {
    * engine marks the result `__unresolved` regardless of what the builder returns.
    * Defaults to the id itself on `labelField`.
    */
-  createUnresolvedItem?: (
-    value: SelectItemId,
+  createUnresolvedRecord?: (
+    value: SelectId,
     config: SelectConfig
-  ) => SelectItem;
+  ) => SelectRecord;
 
   /**
    * `(snapshot, config) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
@@ -651,7 +655,7 @@ export interface SelectEngineInit {
   specialItems?: (
     snapshot: SelectSnapshot,
     config: SelectConfig
-  ) => SelectItem[];
+  ) => SelectRecord[];
 
   /**
    * Groups the filtered options by a field name or `(item, config) => key`. A group without a
@@ -660,7 +664,7 @@ export interface SelectEngineInit {
    * source that pages groups consecutive rows, so a later page only extends the last group or
    * adds new ones, and a key that comes back starts another group.
    */
-  groupBy?: string | ((item: SelectItem, config: SelectConfig) => SelectItemId);
+  groupBy?: string | ((item: SelectRecord, config: SelectConfig) => SelectId);
 
   /**
    * Whether a group without a header gets a divider before it. Defaults to true; false groups
@@ -696,7 +700,7 @@ export interface SelectEngineInit {
    */
   onChange?: (
     nextValue: SelectValue,
-    item: SelectItem | SelectItem[] | null,
+    item: SelectRecord | SelectRecord[] | null,
     change: {
       /** The programmatic intent behind this change, absent for hand picks. */
       origin?: SelectionOrigin;
@@ -708,7 +712,7 @@ export interface SelectEngineInit {
   ) => void;
 
   /** Called when a programmatic pick confirms an already held item. */
-  onReconfirm?: (item: SelectItem, origin: SelectionOrigin) => void;
+  onReconfirm?: (item: SelectRecord, origin: SelectionOrigin) => void;
 
   /** Called when a batch adds nothing because every eligible item was held or over the limit. */
   onBulkUnchanged?: (skipped: { held: number; limit: number }) => void;
@@ -763,7 +767,7 @@ class EngineControl implements SelectControl {
     }
   }
 
-  deselect(item: SelectItem): void {
+  deselect(item: SelectRecord): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.deselect(item, { programmatic: true });
     }
@@ -776,14 +780,14 @@ class EngineControl implements SelectControl {
     }
   }
 
-  select(item: SelectItem): void {
+  select(item: SelectRecord): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.select(item, { programmatic: true });
     }
   }
 
   /** Adds a batch while the select is alive. */
-  selectMany(items: readonly SelectItem[]): void {
+  selectMany(items: readonly SelectRecord[]): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.selectMany(items, { programmatic: true });
     }
@@ -903,7 +907,7 @@ export default class SelectEngine {
           resolveLoad: (filter) => this.#resolveLoad(filter),
           state: this.#state,
           getMaxLoaded: () => this.#args.maxLoaded,
-          keyOf: (item) => this.#args.valueKey(this.#args.itemValue(item)),
+          keyOf: (item) => this.#args.valueKey(this.#args.recordValue(item)),
         })
       : new LocalSource({
           filtered: () => this.filteredItems,
@@ -1009,7 +1013,7 @@ export default class SelectEngine {
   /** Whether any non-null id in the normalized selection currently resolves as unresolved. */
   get hasUnresolvedSelection(): boolean {
     const value = this.value;
-    const values = [...makeArray(value as SelectItemId | SelectItemId[])];
+    const values = [...makeArray(value as SelectId | SelectId[])];
     return this.#valueResolver.hasUnresolved(values);
   }
 
@@ -1145,7 +1149,7 @@ export default class SelectEngine {
     filter: string;
     nonce: number;
     reveal: number;
-    items: readonly SelectItem[];
+    items: readonly SelectRecord[];
   } {
     return {
       filter: this.#state.filter,
@@ -1162,7 +1166,7 @@ export default class SelectEngine {
    * server source.
    */
   @cached
-  get filteredItems(): readonly SelectItem[] {
+  get filteredItems(): readonly SelectRecord[] {
     // Copied AND frozen. With no filter `filterLocal` passes the consumer's own array
     // straight through, and `readonly` is erased at runtime — but copying alone is not
     // enough either, because `@cached` hands the same array to every reader in the render,
@@ -1243,15 +1247,15 @@ export default class SelectEngine {
   }
 
   /** Whether a held id is locked, matching by key; an unheld id never is. */
-  isLockedValue(value: SelectItemId): boolean {
+  isLockedValue(value: SelectId): boolean {
     return this.#selectionActions.isLockedValue(value);
   }
 
   /** Every id in `previous` that `next` no longer holds, matching by key, in held order. */
   removedValues(
-    previous: readonly SelectItemId[],
-    next: readonly SelectItemId[]
-  ): SelectItemId[] {
+    previous: readonly SelectId[],
+    next: readonly SelectId[]
+  ): SelectId[] {
     return this.#selectionActions.removedValues(previous, next);
   }
 
@@ -1260,11 +1264,11 @@ export default class SelectEngine {
    * `String(value)`.
    */
   diffValues(
-    previous: SelectItemId[],
-    next: SelectItemId[]
+    previous: SelectId[],
+    next: SelectId[]
   ): {
-    added: SelectItemId | undefined;
-    removed: SelectItemId | undefined;
+    added: SelectId | undefined;
+    removed: SelectId | undefined;
   } {
     return this.#selectionActions.diffValues(previous, next);
   }
@@ -1287,7 +1291,7 @@ export default class SelectEngine {
    * controlled value.
    */
   @bind
-  isSelected(item: SelectItem): boolean {
+  isSelected(item: SelectRecord): boolean {
     return this.#selectionActions.isSelected(item);
   }
 
@@ -1302,7 +1306,7 @@ export default class SelectEngine {
   loadItems(
     _context: unknown,
     opts: SelectLoadRequest = {}
-  ): SelectItem[] | Promise<SelectItem[]> {
+  ): SelectRecord[] | Promise<SelectRecord[]> {
     this.#assertSingleSource();
     return this.#source.rows(opts);
   }
@@ -1327,7 +1331,7 @@ export default class SelectEngine {
    */
   @bind
   buildItems(
-    rawItems: SelectItem[] = [],
+    rawItems: SelectRecord[] = [],
     filter = this.filter
   ): readonly SelectDescriptor[] {
     return this.#listComposer.buildItems(rawItems, filter);
@@ -1339,13 +1343,13 @@ export default class SelectEngine {
    * @param items - The items to normalize.
    */
   @bind
-  describeItems(items: SelectItem[]): readonly SelectDescriptor[] {
+  describeItems(items: SelectRecord[]): readonly SelectDescriptor[] {
     return this.#listComposer.describeItems(items);
   }
 
   /**
    * Resolves a value to its display item(s) for the trigger `DAsyncContent`. Returns
-   * synchronously (no skeleton) when every id is covered by `valueItems`,
+   * synchronously (no skeleton) when every id is covered by `valueRecords`,
    * the resolve cache, or the client list; otherwise returns a promise. A held id that
    * cannot resolve maps to a synthetic `__unresolved` fallback (never `undefined`, never a
    * rejection, whether the resolver throws or rejects); only an empty value (null single /
@@ -1362,10 +1366,10 @@ export default class SelectEngine {
     value: SelectValue,
     opts: SelectLoadRequest = {}
   ):
-    | SelectItem
-    | SelectItem[]
-    | Promise<SelectItem>
-    | Promise<SelectItem[]>
+    | SelectRecord
+    | SelectRecord[]
+    | Promise<SelectRecord>
+    | Promise<SelectRecord[]>
     | Promise<void>
     | undefined {
     // A paste only adds to the held items, so they stay drawn while it resolves.
@@ -1382,31 +1386,31 @@ export default class SelectEngine {
    *
    * @param value - The single value; an array or `null` yields `undefined`.
    */
-  resolveSingleSync(value: SelectValue): SelectItem | undefined {
+  resolveSingleSync(value: SelectValue): SelectRecord | undefined {
     return this.#valueResolver.resolveSingleSync(value);
   }
 
-  getItemLabel(item: SelectItem | null | undefined): string {
-    return selectItemLabel(item, this.#args.labelField);
+  getRecordLabel(item: SelectRecord | null | undefined): string {
+    return selectRecordLabel(item, this.#args.labelField);
   }
 
   /**
    * The text that stands for a held item on every surface: the trigger, chips, the typeahead
    * input, the accessible names built from them, and announcements. An unresolved item named by
-   * `createUnresolvedItem` keeps that name, which already explains itself; the default fallback
+   * `createUnresolvedRecord` keeps that name, which already explains itself; the default fallback
    * reads as an unknown item with its id, since nothing more is known about it.
    *
    * @param item - The held item, resolved or not.
    * @returns The label to show and announce.
    */
   @bind
-  getSelectionLabel(item: SelectItem | null | undefined): string {
-    if (item?.__unresolved && !this.isCustomUnresolvedItem(item)) {
+  getSelectionLabel(item: SelectRecord | null | undefined): string {
+    if (item?.__unresolved && !this.isCustomUnresolvedRecord(item)) {
       return this.text("unresolvedValue", {
         value: String(item[this.#args.valueField] ?? ""),
       });
     }
-    return this.getItemLabel(item);
+    return this.getRecordLabel(item);
   }
 
   getSingleSelectionLabel(value: SelectValue): string {
@@ -1414,7 +1418,7 @@ export default class SelectEngine {
       return "";
     }
 
-    return this.getItemLabel(this.#valueResolver.resolveOneSync(value));
+    return this.getRecordLabel(this.#valueResolver.resolveOneSync(value));
   }
 
   /**
@@ -1432,7 +1436,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether this fallback came from `createUnresolvedItem` rather than the built-in bare-id
+   * Whether this fallback came from `createUnresolvedRecord` rather than the built-in bare-id
    * default. Lets a trigger that can only render a string decide whether to append its own
    * "unavailable" wording: a named fallback ("Topic #123") already reads as one, a bare id
    * does not. Identity-based, so a builder that throws — caught, yielding the default — is
@@ -1440,8 +1444,8 @@ export default class SelectEngine {
    *
    * @param item - The item to test; only meaningful for an `__unresolved` fallback.
    */
-  isCustomUnresolvedItem(item: SelectItem): boolean {
-    return this.#valueResolver.isCustomUnresolvedItem(item);
+  isCustomUnresolvedRecord(item: SelectRecord): boolean {
+    return this.#valueResolver.isCustomUnresolvedRecord(item);
   }
 
   /**
@@ -1463,7 +1467,7 @@ export default class SelectEngine {
    * never becomes a value and does not close the overlay), otherwise toggles it.
    */
   @bind
-  activate(item: SelectItem): void {
+  activate(item: SelectRecord): void {
     this.#selectionActions.activate(item);
   }
 
@@ -1471,7 +1475,7 @@ export default class SelectEngine {
    * Toggles an item: for multi, selects or deselects; for single, selects it.
    */
   @bind
-  toggle(item: SelectItem): void {
+  toggle(item: SelectRecord): void {
     this.#selectionActions.toggle(item);
   }
 
@@ -1481,7 +1485,7 @@ export default class SelectEngine {
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
   @bind
-  select(item: SelectItem, origin?: SelectionOrigin): void {
+  select(item: SelectRecord, origin?: SelectionOrigin): void {
     this.#selectionActions.select(item, origin);
   }
 
@@ -1491,7 +1495,7 @@ export default class SelectEngine {
    * the first new eligible item. Even an empty batch supersedes older update intent.
    */
   @bind
-  selectMany(items: readonly SelectItem[], origin?: SelectionOrigin): void {
+  selectMany(items: readonly SelectRecord[], origin?: SelectionOrigin): void {
     this.#selectionActions.selectMany(items, origin);
   }
 
@@ -1499,7 +1503,7 @@ export default class SelectEngine {
    * Removes an item from the selection (emits the next value).
    */
   @bind
-  deselect(item: SelectItem, origin?: SelectionOrigin): void {
+  deselect(item: SelectRecord, origin?: SelectionOrigin): void {
     this.#selectionActions.deselect(item, origin);
   }
 
@@ -1542,7 +1546,7 @@ export default class SelectEngine {
    * @param text - The pasted plain text.
    */
   @bind
-  parsePaste(text: string): SelectItem[] | null {
+  parsePaste(text: string): SelectRecord[] | null {
     const names = text
       .split("|")
       .map((name) => name.trim())
@@ -1558,11 +1562,11 @@ export default class SelectEngine {
         const term = name.toLowerCase();
         const row =
           rows.find(
-            (item) => options.valueKey(options.itemValue(item)) === name
+            (item) => options.valueKey(options.recordValue(item)) === name
           ) ??
           rows.find(
             (item) =>
-              String(options.itemLabel(item) ?? "").toLowerCase() === term
+              String(options.recordLabel(item) ?? "").toLowerCase() === term
           );
         if (row) {
           return row;
@@ -1575,7 +1579,7 @@ export default class SelectEngine {
           ? options.createItem(name, this.config)
           : undefined;
       })
-      .filter((item): item is SelectItem => item !== undefined);
+      .filter((item): item is SelectRecord => item !== undefined);
   }
 
   /**
@@ -1698,7 +1702,7 @@ export default class SelectEngine {
         ? this.#args.items(this.config)
         : this.#args.items
     );
-    if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
+    if (local != null && (makeArray(local) as SelectRecord[]).length > 0) {
       this.#dualSourceWarned = true;
       // eslint-disable-next-line no-console
       console.warn(

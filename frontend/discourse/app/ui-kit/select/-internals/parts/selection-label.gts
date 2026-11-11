@@ -1,11 +1,11 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import SelectEngine, {
-  SelectItem,
+  SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 
 interface SelectionLabelSignature {
   Args: {
-    item: SelectItem;
+    record: SelectRecord;
     engine: SelectEngine;
   };
 }
@@ -23,12 +23,12 @@ interface SelectionLabelSignature {
  */
 const SelectionLabel: TemplateOnlyComponent<SelectionLabelSignature> =
   <template>
-    {{#if @item.__unresolved}}
+    {{#if @record.__unresolved}}
       <span class="d-select__unresolved">
-        {{~@engine.getSelectionLabel @item~}}
+        {{~@engine.getSelectionLabel @record~}}
       </span>
     {{else}}
-      {{@engine.getSelectionLabel @item}}
+      {{@engine.getSelectionLabel @record}}
     {{/if}}
   </template>;
 

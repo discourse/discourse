@@ -11,13 +11,13 @@ import {
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import type {
   SelectEngineInit,
-  SelectItem,
-  SelectItemId,
+  SelectId,
   SelectLegacyContext,
   SelectLoadRequest,
   SelectLoadResult,
+  SelectRecord,
   SelectValue,
-  SelectValueItemsBuilder,
+  SelectValueRecordsBuilder,
 } from "discourse/ui-kit/select/select-engine";
 
 /** The default `kindContext` and `instanceContext` data when none was provided. */
@@ -27,7 +27,7 @@ const EMPTY_CONTEXT: object = Object.freeze({});
  * The engine's live view over its constructor options. Each reactive input is exposed as a
  * getter that reads its thunk on every access (so a runtime change to the wired `@arg`
  * propagates) and falls back to the static option, then the default. Also hosts the pure
- * field-driven helpers (`valueKey`, `itemValue`, `itemLabel`, `dedupeValues`) so every
+ * field-driven helpers (`valueKey`, `recordValue`, `recordLabel`, `dedupeValues`) so every
  * collaborator applies `valueField`/`labelField` identically.
  */
 export default class SelectArgsView {
@@ -69,28 +69,31 @@ export default class SelectArgsView {
   #valueField: string;
   #normalizeKey?: SelectEngineInit["normalizeKey"];
   #labelField: string;
-  // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
+  // Whether the consumer declared `valueRecords` at all, as opposed to it merely being empty
   // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
   // mid-flight, and the misconfiguration assert must not fire on it.
-  #valueItemsDeclared: boolean;
+  #valueRecordsDeclared: boolean;
   #filterBy?: SelectEngineInit["filterBy"];
   #items?: SelectEngineInit["items"];
   #load?: (
     filter: string,
     opts: SelectLoadRequest
   ) => SelectLoadResult | Promise<SelectLoadResult>;
-  #readValueItems?: SelectEngineInit["getValueItems"];
-  #builtValueItems = new WeakMap<
-    SelectValueItemsBuilder,
-    WeakMap<object, ReturnType<typeof createCache<SelectItem | SelectItem[]>>>
+  #readValueRecords?: SelectEngineInit["getValueRecords"];
+  #builtValueRecords = new WeakMap<
+    SelectValueRecordsBuilder,
+    WeakMap<
+      object,
+      ReturnType<typeof createCache<SelectRecord | SelectRecord[]>>
+    >
   >();
-  #valueItems?: SelectEngineInit["valueItems"];
+  #valueRecords?: SelectEngineInit["valueRecords"];
   #resolveValue?: SelectEngineInit["resolveValue"];
   #resolveValues?: SelectEngineInit["resolveValues"];
   #readAllowCreate?: SelectEngineInit["getAllowCreate"];
   #allowCreate?: SelectEngineInit["allowCreate"];
   #createItem?: SelectEngineInit["createItem"];
-  #createUnresolvedItem?: SelectEngineInit["createUnresolvedItem"];
+  #createUnresolvedRecord?: SelectEngineInit["createUnresolvedRecord"];
   #specialItems?: SelectEngineInit["specialItems"];
   #groupBy?: SelectEngineInit["groupBy"];
   #groupDividers: boolean;
@@ -148,16 +151,16 @@ export default class SelectArgsView {
     this.#filterBy = opts.filterBy;
     this.#items = opts.items;
     this.#load = opts.load;
-    this.#readValueItems = opts.getValueItems;
-    this.#valueItems = opts.valueItems;
-    this.#valueItemsDeclared =
-      opts.getValueItems != null || opts.valueItems != null;
+    this.#readValueRecords = opts.getValueRecords;
+    this.#valueRecords = opts.valueRecords;
+    this.#valueRecordsDeclared =
+      opts.getValueRecords != null || opts.valueRecords != null;
     this.#resolveValue = opts.resolveValue;
     this.#resolveValues = opts.resolveValues;
     this.#readAllowCreate = opts.getAllowCreate;
     this.#allowCreate = opts.allowCreate;
     this.#createItem = opts.createItem;
-    this.#createUnresolvedItem = opts.createUnresolvedItem;
+    this.#createUnresolvedRecord = opts.createUnresolvedRecord;
     this.#specialItems = opts.specialItems;
     this.#groupBy = opts.groupBy;
     this.#groupDividers = opts.groupDividers ?? true;
@@ -281,18 +284,18 @@ export default class SelectArgsView {
     return this.#readLockedValues?.() ?? this.#lockedValues;
   }
 
-  get valueItems(): SelectItem | SelectItem[] | undefined {
-    const items = this.#readValueItems?.() ?? this.#valueItems;
+  get valueRecords(): SelectRecord | SelectRecord[] | undefined {
+    const items = this.#readValueRecords?.() ?? this.#valueRecords;
     if (typeof items !== "function") {
       return items;
     }
     // Built once per builder and config snapshot. The cache keeps tracking what the builder
     // reads, so a change there rebuilds it even while the snapshot stays the same.
     const options = this.#readResolvedOptions!();
-    let bySnapshot = this.#builtValueItems.get(items);
+    let bySnapshot = this.#builtValueRecords.get(items);
     if (!bySnapshot) {
       bySnapshot = new WeakMap();
-      this.#builtValueItems.set(items, bySnapshot);
+      this.#builtValueRecords.set(items, bySnapshot);
     }
     let cache = bySnapshot.get(options);
     if (!cache) {
@@ -337,8 +340,8 @@ export default class SelectArgsView {
     return this.#labelField;
   }
 
-  get valueItemsDeclared(): boolean {
-    return this.#valueItemsDeclared;
+  get valueRecordsDeclared(): boolean {
+    return this.#valueRecordsDeclared;
   }
 
   get filterBy(): SelectEngineInit["filterBy"] {
@@ -365,8 +368,8 @@ export default class SelectArgsView {
     return this.#createItem;
   }
 
-  get createUnresolvedItem(): SelectEngineInit["createUnresolvedItem"] {
-    return this.#createUnresolvedItem;
+  get createUnresolvedRecord(): SelectEngineInit["createUnresolvedRecord"] {
+    return this.#createUnresolvedRecord;
   }
 
   get specialItems(): SelectEngineInit["specialItems"] {
@@ -430,7 +433,7 @@ export default class SelectArgsView {
    * Two ids denote the same option iff their string forms match after `normalizeKey`, so a
    * bound "5" selects item id 5 (and vice-versa). Nullish never matches an id.
    */
-  valueKey(value: SelectItemId): string | null {
+  valueKey(value: SelectId): string | null {
     if (value == null) {
       return null;
     }
@@ -439,7 +442,7 @@ export default class SelectArgsView {
   }
 
   /** Removes duplicate normalized ids while preserving first-occurrence order. */
-  dedupeValues(values: SelectItemId[]): SelectItemId[] {
+  dedupeValues(values: SelectId[]): SelectId[] {
     const seen = new Set<string | null>();
     return values.filter((value) => {
       const key = this.valueKey(value);
@@ -459,7 +462,7 @@ export default class SelectArgsView {
    * @param raw - The bound value.
    * @returns The single held id, or `null`.
    */
-  singleValue(raw: SelectValue | undefined): SelectItemId | null {
+  singleValue(raw: SelectValue | undefined): SelectId | null {
     if (!Array.isArray(raw)) {
       return raw ?? null;
     }
@@ -471,11 +474,11 @@ export default class SelectArgsView {
     return raw[0] ?? null;
   }
 
-  itemValue(item: SelectItem | null | undefined): SelectItemId {
+  recordValue(item: SelectRecord | null | undefined): SelectId {
     return item?.[this.#valueField];
   }
 
-  itemLabel(item: SelectItem | null | undefined): unknown {
+  recordLabel(item: SelectRecord | null | undefined): unknown {
     return item?.[this.#labelField];
   }
 }

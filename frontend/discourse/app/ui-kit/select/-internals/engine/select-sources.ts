@@ -2,10 +2,10 @@ import { tracked } from "@glimmer/tracking";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectEngineInit,
-  SelectItem,
   SelectLoadRequest,
   SelectLoadResponse,
   SelectLoadResult,
+  SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
@@ -14,7 +14,7 @@ import type { UpdateRecord } from "./selection-updates.ts";
  * The full client-side item set (empty for a server source), used both for local
  * filtering and to resolve a value's display item without a fetch.
  */
-export function localItems(args: SelectArgsView): SelectItem[] {
+export function localItems(args: SelectArgsView): SelectRecord[] {
   if (args.isAsync) {
     return [];
   }
@@ -22,14 +22,14 @@ export function localItems(args: SelectArgsView): SelectItem[] {
   // non-array value — into a real array, so downstream array reads never see a non-array.
   const resolved =
     typeof args.items === "function" ? args.items(args.config) : args.items;
-  return makeArray(resolved) as SelectItem[];
+  return makeArray(resolved) as SelectRecord[];
 }
 
 /** The client list after `filterBy` — the one filter pass a `LocalSource` answers with. */
 export function filterLocal(
   args: SelectArgsView,
   filter: string
-): SelectItem[] {
+): SelectRecord[] {
   const all = localItems(args);
   if (!filter) {
     return all;
@@ -40,7 +40,7 @@ export function filterLocal(
 
 function matchesFilter(
   args: SelectArgsView,
-  item: SelectItem,
+  item: SelectRecord,
   term: string
 ): boolean {
   if (typeof args.filterBy === "function") {
@@ -125,7 +125,7 @@ export interface SelectSource {
   answersSynchronously(): boolean;
   /** Records a rendered source's transformed option count, built from `input` raw rows. */
   noteVisible(visible: number, input: number): void;
-  rows(opts: SelectLoadRequest): SelectItem[] | Promise<SelectItem[]>;
+  rows(opts: SelectLoadRequest): SelectRecord[] | Promise<SelectRecord[]>;
   total(): number | undefined;
   canRevealMore(): boolean;
   /** Whether later rows may still arrive for this query, whether or not a page is in flight. */
@@ -136,26 +136,26 @@ export interface SelectSource {
   revealPending(): boolean;
   queryPending(): boolean;
   revealMore(): boolean;
-  knownRows(): SelectItem[];
+  knownRows(): SelectRecord[];
   reset(): void;
   revealToken(): number;
-  reactiveItems(): readonly SelectItem[];
+  reactiveItems(): readonly SelectRecord[];
 }
 
 export class LocalSource implements SelectSource {
-  #filtered: () => readonly SelectItem[];
-  #all: () => SelectItem[];
+  #filtered: () => readonly SelectRecord[];
+  #all: () => SelectRecord[];
 
   constructor(opts: {
-    filtered: () => readonly SelectItem[];
-    all: () => SelectItem[];
+    filtered: () => readonly SelectRecord[];
+    all: () => SelectRecord[];
   }) {
     this.#filtered = opts.filtered;
     this.#all = opts.all;
   }
 
-  rows(): SelectItem[] {
-    return this.#filtered() as SelectItem[];
+  rows(): SelectRecord[] {
+    return this.#filtered() as SelectRecord[];
   }
 
   answersSynchronously(): boolean {
@@ -201,7 +201,7 @@ export class LocalSource implements SelectSource {
     return false;
   }
 
-  knownRows(): SelectItem[] {
+  knownRows(): SelectRecord[] {
     return this.#all();
   }
 
@@ -211,7 +211,7 @@ export class LocalSource implements SelectSource {
     return 0;
   }
 
-  reactiveItems(): readonly SelectItem[] {
+  reactiveItems(): readonly SelectRecord[] {
     return this.#all();
   }
 }
@@ -223,9 +223,9 @@ export class PagedSource implements SelectSource {
   /** Resolves the source for the first request of each query. */
   #resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
   #state: SelectState;
-  #keyOf: (item: SelectItem) => string | null;
+  #keyOf: (item: SelectRecord) => string | null;
   #getMaxLoaded: () => number | undefined;
-  #serverItems: SelectItem[] = [];
+  #serverItems: SelectRecord[] = [];
   #serverKeys = new Set<string>();
   #serverOffset = 0;
   #serverCursor?: unknown;
@@ -260,7 +260,7 @@ export class PagedSource implements SelectSource {
     /** Resolves a query's loader outside render, when its first request starts. */
     resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
     state: SelectState;
-    keyOf: (item: SelectItem) => string | null;
+    keyOf: (item: SelectRecord) => string | null;
     /** Reads the optional server row ceiling. */
     getMaxLoaded?: () => number | undefined;
   }) {
@@ -279,7 +279,7 @@ export class PagedSource implements SelectSource {
     return JSON.stringify([filter, nonce, reveal]);
   }
 
-  rows(opts: SelectLoadRequest): SelectItem[] | Promise<SelectItem[]> {
+  rows(opts: SelectLoadRequest): SelectRecord[] | Promise<SelectRecord[]> {
     return this.#loadServerItems(this.#state.filter, opts);
   }
 
@@ -379,7 +379,7 @@ export class PagedSource implements SelectSource {
     return true;
   }
 
-  knownRows(): SelectItem[] {
+  knownRows(): SelectRecord[] {
     return this.#serverItems;
   }
 
@@ -430,14 +430,14 @@ export class PagedSource implements SelectSource {
     return this.#state.reveal;
   }
 
-  reactiveItems(): readonly SelectItem[] {
+  reactiveItems(): readonly SelectRecord[] {
     return [];
   }
 
   #loadServerItems(
     filter: string,
     opts: SelectLoadRequest
-  ): SelectItem[] | Promise<SelectItem[]> {
+  ): SelectRecord[] | Promise<SelectRecord[]> {
     const maxLoaded = this.#getMaxLoaded();
     if (
       this.#serverRequest ||
@@ -499,7 +499,7 @@ export class PagedSource implements SelectSource {
     key: string,
     generation: number,
     signal?: AbortSignal
-  ): Promise<SelectItem[]> {
+  ): Promise<SelectRecord[]> {
     let settled = false;
     try {
       const response = await request;
@@ -575,7 +575,7 @@ export class PagedSource implements SelectSource {
     }
   }
 
-  #appendServerItems(items: SelectItem[]): boolean {
+  #appendServerItems(items: SelectRecord[]): boolean {
     const maxLoaded = this.#getMaxLoaded();
     for (const item of items) {
       const key = this.#keyOf(item);

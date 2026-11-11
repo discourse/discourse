@@ -1,21 +1,21 @@
 import type { TOC } from "@ember/component/template-only";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
 /** A group as the site and user search list it. */
-export interface GroupRecord {
+export interface GroupShape {
   id?: number;
   name: string;
   full_name?: string | null;
 }
 
 /** An item's display name, narrowed for templates. */
-export function itemName(item: SelectItem): string {
+export function recordName(item: SelectRecord): string {
   return typeof item.name === "string" ? item.name : String(item.name ?? "");
 }
 
 /** Why a disabled row can't be picked, when its source gives a reason. */
-export function disabledReason(item: SelectItem): string | undefined {
+export function disabledReason(item: SelectRecord): string | undefined {
   return item.disabled && typeof item.disabledReason === "string"
     ? item.disabledReason
     : undefined;
@@ -25,7 +25,7 @@ export function disabledReason(item: SelectItem): string | undefined {
  * A group's row fields: its name labels it, and a full name that says something more
  * becomes the row's description.
  */
-export function groupFields(group: GroupRecord): {
+export function groupFields(group: GroupShape): {
   name: string;
   description?: string;
 } {
@@ -40,7 +40,7 @@ export function groupFields(group: GroupRecord): {
 export const GroupOption: TOC<{
   Args: {
     /** The group row. */
-    item: SelectItem;
+    record: SelectRecord;
     /** Draws the group icon, which tells groups from users in a mixed list. */
     icon?: boolean;
   };
@@ -49,11 +49,11 @@ export const GroupOption: TOC<{
     {{#if @icon}}
       {{dIcon "users"}}
     {{/if}}
-    <span class="d-group-option__name">{{itemName @item}}</span>
-    {{#if (disabledReason @item)}}
+    <span class="d-group-option__name">{{recordName @record}}</span>
+    {{#if (disabledReason @record)}}
       <span class="d-group-option__reason">
         {{~dIcon "ban"~}}
-        {{~disabledReason @item~}}
+        {{~disabledReason @record~}}
       </span>
     {{/if}}
   </span>

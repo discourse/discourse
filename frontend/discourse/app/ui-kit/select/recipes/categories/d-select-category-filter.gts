@@ -15,19 +15,19 @@ import DSelect, {
 import type { SelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
-  categoryItem,
+  categoryRecord,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
 import type {
-  CategoryItem,
+  CategoryRecord,
   CategorySettings,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   renderSelectText,
   type SelectConfig,
   type SelectCoreTextKey,
-  type SelectItem,
   type SelectLoadRequest,
   type SelectLoadResult,
+  type SelectRecord,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -46,7 +46,7 @@ interface DSelectCategoryFilterSignature {
     /** Current category, caller-owned row, shortcut, or an empty level. */
     value?:
       | Category
-      | CategoryItem
+      | CategoryRecord
       | typeof ALL_CATEGORIES_ID
       | typeof NO_CATEGORIES_ID
       | null;
@@ -154,7 +154,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   /** The held filter's row, built from the options so a customized shortcut name reaches it. */
   @action
-  valueItems(config: SelectConfig): CategoryItem[] {
+  valueRecords(config: SelectConfig): CategoryRecord[] {
     const id = this.heldId;
     if (id === NO_CATEGORIES_ID) {
       return [{ id, name: renderSelectText(config, "noSubcategories") }];
@@ -164,7 +164,9 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       return [];
     }
     const category: Category | undefined = Category.findById(id);
-    return [category ? categoryItem(category) : { id, name: value.name ?? "" }];
+    return [
+      category ? categoryRecord(category) : { id, name: value.name ?? "" },
+    ];
   }
 
   /**
@@ -188,7 +190,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     });
     return continueWith(search, ({ categories, categoriesCount }) => ({
       items: categories.map((category) =>
-        categoryItem(category, this.#descriptions)
+        categoryRecord(category, this.#descriptions)
       ),
       total: categoriesCount,
     }));
@@ -205,7 +207,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
    * caller's loader or a customization can supply, cannot be routed, so its pick is dropped.
    */
   @action
-  onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
+  onChange(id: SelectValue, item: SelectRecord | SelectRecord[] | null) {
     if (id === ALL_CATEGORIES_ID || id === NO_CATEGORIES_ID) {
       this.args.onChange?.(id);
       return;
@@ -225,11 +227,11 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     }
   }
 
-  #shortcuts(query: string, config: SelectConfig): CategoryItem[] {
+  #shortcuts(query: string, config: SelectConfig): CategoryRecord[] {
     if (query) {
       return [];
     }
-    const shortcuts: CategoryItem[] = [];
+    const shortcuts: CategoryRecord[] = [];
     const held = this.heldId;
     if (held !== undefined && !this.args.editing) {
       shortcuts.push({
@@ -263,7 +265,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @specialItems={{this.specialItems}}
       @texts={{@texts}}
       @value={{this.heldId}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
       @variant="button"
     >
       <:item as |item config row|>
@@ -274,7 +276,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
             @ancestors={{not @parentCategory}}
             @counts={{true}}
             @countSubcategories={{@countSubcategories}}
-            @item={{item}}
+            @record={{item}}
           />
         {{/if}}
       </:item>
@@ -282,7 +284,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          <CategoryBadge @item={{item}} />
+          <CategoryBadge @record={{item}} />
         {{/if}}
       </:selection>
     </DSelect>

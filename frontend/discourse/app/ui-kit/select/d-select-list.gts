@@ -31,10 +31,10 @@ import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowe
 import type {
   SelectCoreTexts,
   SelectDescriptor,
-  SelectItem,
   SelectItemRow,
   SelectKindTexts,
   SelectLoadRequest,
+  SelectRecord,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -55,7 +55,7 @@ interface DSelectListSignature {
     /** Receives the replacement value or values, resolved item or items and change metadata. */
     onChange?: (
       next: SelectValue,
-      items: SelectItem[] | SelectItem | null,
+      items: SelectRecord[] | SelectRecord | null,
       change: Parameters<NonNullable<SelectHostArgs["onChange"]>>[2]
     ) => void;
     /** Local items, or a function of the resolved config. */
@@ -73,7 +73,7 @@ interface DSelectListSignature {
     /** Fallback display-label field. */
     labelField?: string;
     /** Already resolved held items. */
-    valueItems?: SelectHostArgs["valueItems"];
+    valueRecords?: SelectHostArgs["valueRecords"];
     /** Resolves one held value; used when `@resolveValues` is absent. */
     resolveValue?: SelectHostArgs["resolveValue"];
     /** Resolves held values in one batch. */
@@ -83,7 +83,7 @@ interface DSelectListSignature {
     /** Builds an item from the current query. */
     createItem?: SelectHostArgs["createItem"];
     /** Builds the fallback for an unavailable held value. */
-    createUnresolvedItem?: SelectHostArgs["createUnresolvedItem"];
+    createUnresolvedRecord?: SelectHostArgs["createUnresolvedRecord"];
     /** Parses pasted text into a selection batch. */
     parsePaste?: SelectHostArgs["parsePaste"];
     /** Query debounce in milliseconds; true uses the shared input delay. */
@@ -159,21 +159,21 @@ interface DSelectListSignature {
   Blocks: {
     /** Custom option content. */
     item?: [
-      /** Raw option. */ item: SelectItem,
+      /** Raw option. */ item: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
       /** What the row is beyond its item: `create` marks the create row. */
       row: SelectItemRow,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** Held item. */ item: SelectItem,
+      /** Held item. */ item: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Stands in for each held chip while held values resolve. */
     selectionLoading?: [];
     /** Content for unavailable held values. */
     unresolved?: [
-      /** Fallback item. */ item: SelectItem,
+      /** Fallback item. */ item: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom no-results content for a nonempty query. */
@@ -306,8 +306,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
       return this.host.resolveMulti(value, opts);
     }
     const held = this.engine.resolveSelection(value as SelectValue, opts) as
-      | SelectItem
-      | Promise<SelectItem | undefined>
+      | SelectRecord
+      | Promise<SelectRecord | undefined>
       | undefined;
     if (held instanceof Promise) {
       return held.then((item) =>

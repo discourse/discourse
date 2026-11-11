@@ -11,7 +11,7 @@ import LoadFeedbackTracker, {
 } from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import SelectEngine, {
   SelectDescriptor,
-  SelectItem as SelectItemModel,
+  SelectRecord as SelectRecordModel,
 } from "discourse/ui-kit/select/select-engine";
 
 // A row's estimated height before measurement (~2.4em option). Windowing refines it from
@@ -43,7 +43,7 @@ interface WindowedListCoordinatorInit {
 export default class WindowedListCoordinator {
   /**
    * The `key` of the currently roving-highlighted option, tracked so the `--active` class is
-   * rendered from state by each option (see {@link SelectItem}) instead of relying on the
+   * rendered from state by each option (see `SelectOptionContent`) instead of relying on the
    * modifier's imperative `classList` toggle — which the windowed list wipes when it
    * re-renders a row. The modifier still owns `aria-activedescendant` and navigation.
    */
@@ -61,7 +61,7 @@ export default class WindowedListCoordinator {
    * @param filter - The query that produced those rows.
    */
   buildListItems = (
-    rawItems: SelectItemModel[] | undefined,
+    rawItems: SelectRecordModel[] | undefined,
     filter: string | undefined
   ): readonly ListRow[] => {
     // The list source always resolves to an object carrying `rawItems`; the async

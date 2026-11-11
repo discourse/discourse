@@ -18,8 +18,8 @@ import DSelect, {
 } from "discourse/ui-kit/select/d-select";
 import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
-  tagItemName,
   TagOption,
+  tagRecordName,
   TagSelection,
 } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import {
@@ -30,7 +30,7 @@ import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectItem,
+  type SelectRecord,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -44,7 +44,7 @@ export const ALL_TAGS_ID = "all-tags";
 export const NO_TAG_ID = "no-tags";
 
 /** Tag filter rows may use names as keys in a call-site source. */
-type FilterTag = SelectItem & {
+type FilterTag = SelectRecord & {
   id: number | string;
   name: string;
   slug?: string;
@@ -217,7 +217,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   /** The held filter's row, built from the options so a customized shortcut name reaches it. */
   @action
-  valueItems(config: SelectConfig): SelectItem[] {
+  valueRecords(config: SelectConfig): SelectRecord[] {
     if (this.args.multiple) {
       // A tag model keeps its fields on getters, which a spread would drop.
       return this.#heldTags.map((tag) => ({
@@ -235,7 +235,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return id === undefined ? [] : [this.#tag!];
   }
 
-  isShortcut(item: SelectItem) {
+  isShortcut(item: SelectRecord) {
     return item.id === ALL_TAGS_ID || item.id === NO_TAG_ID;
   }
 
@@ -268,11 +268,11 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   /** The shortcuts lead browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot, config: SelectConfig): SelectItem[] {
+  specialItems(snapshot: SelectSnapshot, config: SelectConfig): SelectRecord[] {
     if (snapshot.filter || this.args.multiple) {
       return [];
     }
-    const shortcuts: SelectItem[] = [];
+    const shortcuts: SelectRecord[] = [];
     const held = this.heldId;
     if (held !== undefined) {
       shortcuts.push({
@@ -290,7 +290,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   @action
-  onChange(id: SelectValue, item: SelectItem | SelectItem[] | null) {
+  onChange(id: SelectValue, item: SelectRecord | SelectRecord[] | null) {
     if (this.args.multiple) {
       this.#onMultipleChange(item);
       return;
@@ -312,7 +312,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   /** Held tags keep their identity; new picks are emitted as their rows. */
-  #onMultipleChange(items: SelectItem | SelectItem[] | null) {
+  #onMultipleChange(items: SelectRecord | SelectRecord[] | null) {
     const held = new Map(this.#heldTags.map((tag) => [nameKey(tag), tag]));
     const tags = (Array.isArray(items) ? items : []).map((item) => {
       const { nameKey: key, ...row } = item;
@@ -323,7 +323,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
 
   #keyed(
     rows: readonly { name: string; original_name?: string }[]
-  ): SelectItem[] {
+  ): SelectRecord[] {
     return rows.map((row) =>
       this.args.multiple ? { ...row, nameKey: nameKey(row) } : { ...row }
     );
@@ -357,27 +357,27 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @texts={{@texts}}
       @value={{this.selection}}
       @valueField={{this.valueField}}
-      @valueItems={{this.valueItems}}
+      @valueRecords={{this.valueRecords}}
       @variant={{this.variant}}
     >
       <:item as |item config row|>
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else if (this.isShortcut item)}}
-          <span class="d-tag-drop__shortcut">{{tagItemName item}}</span>
+          <span class="d-tag-drop__shortcut">{{tagRecordName item}}</span>
         {{else}}
-          <TagOption @config={{config}} @item={{item}} @row={{row}} />
+          <TagOption @config={{config}} @record={{item}} @row={{row}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else if @multiple}}
-          <TagSelection @item={{item}} />
+          <TagSelection @record={{item}} />
         {{else}}
           <span class="d-tag-drop__selection">
             {{~! no whitespace around the tag ~}}
-            <TagSelection @item={{item}} />
+            <TagSelection @record={{item}} />
           </span>
         {{/if}}
       </:selection>

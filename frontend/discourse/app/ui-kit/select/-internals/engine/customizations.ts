@@ -23,7 +23,7 @@ import {
 import type {
   SelectControl,
   SelectEngineInit,
-  SelectItem,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -167,7 +167,7 @@ export interface SelectRowPresentation {
 /** State of the option row being presented. */
 export interface SelectRowContext extends SelectResolvedContext {
   /** The raw item behind the row. */
-  item: SelectItem;
+  item: SelectRecord;
   /** Whether the item is held. */
   selected: boolean;
   /** Whether activation is disabled. */
@@ -189,16 +189,16 @@ export interface SelectChangeContext extends SelectResolvedContext {
   /** The proposed value, coerced to the source's id types. */
   value: SelectValue;
   /** Best-effort resolved items, with the select's single/multiple arity. */
-  items: SelectItem | SelectItem[] | null;
+  items: SelectRecord | SelectRecord[] | null;
   /** The live select handle, shared with content callbacks. */
   control: SelectControl;
 }
 
 /** A content step replaces the list passed to the following step. */
 type Content = (
-  items: SelectItem[],
+  items: SelectRecord[],
   context: SelectContentContext
-) => SelectItem[];
+) => SelectRecord[];
 /** A row step mutates presentation; its return value is ignored. */
 type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
 /** A config step returns a partial over an immutable snapshot of the values so far. */
@@ -373,9 +373,9 @@ export default class SelectCustomizations {
 
   /** Chains valid arrays, retaining the previous list when a step fails. */
   applyContent(
-    items: SelectItem[],
+    items: SelectRecord[],
     context: SelectContentContext
-  ): SelectItem[] {
+  ): SelectRecord[] {
     for (const step of this.#steps.content) {
       const previous = items;
       items =

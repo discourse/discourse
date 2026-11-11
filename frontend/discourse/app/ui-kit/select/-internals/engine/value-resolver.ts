@@ -3,23 +3,23 @@ import { assert } from "@ember/debug";
 import { trackedMap } from "@ember/reactive/collections";
 import { makeArray } from "discourse/lib/helpers";
 import type {
-  SelectItem,
-  SelectItemId,
+  SelectId,
   SelectLoadRequest,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
 
 interface ValueResolverInit {
   args: SelectArgsView;
-  knownRows: () => SelectItem[];
+  knownRows: () => SelectRecord[];
 }
 
 /** A batch stays alive while any joined caller still needs its values. */
 type PendingResolution = {
   controller: AbortController;
   callers: Set<AbortSignal | undefined>;
-  promise: Promise<Map<string, SelectItem>>;
+  promise: Promise<Map<string, SelectRecord>>;
 };
 
 export default class ValueResolver {
@@ -28,7 +28,7 @@ export default class ValueResolver {
    * normalized value (see `SelectArgsView#valueKey`) so a string/number id mismatch is a
    * cache hit.
    */
-  #resolvedCache = trackedMap<string, SelectItem>();
+  #resolvedCache = trackedMap<string, SelectRecord>();
 
   /**
    * The same, for outcomes a synchronous resolver produced, which the trigger still has to
@@ -36,12 +36,12 @@ export default class ValueResolver {
    * render that already consumed `#resolvedCache`, so writing that tracked map here would
    * invalidate the very computation performing the write.
    */
-  #synchronousOutcomes = new Map<string, SelectItem>();
+  #synchronousOutcomes = new Map<string, SelectRecord>();
 
   #pending = new Map<string, PendingResolution>();
 
-  // Fallback items that were actually produced by `createUnresolvedItem`.
-  #customUnresolvedItems = new WeakSet<SelectItem>();
+  // Fallback items that were actually produced by `createUnresolvedRecord`.
+  #customUnresolvedRecords = new WeakSet<SelectRecord>();
 
   #args: SelectArgsView;
 
@@ -49,7 +49,7 @@ export default class ValueResolver {
   // source returns its untracked accumulator; without this rung it would refetch a value
   // whose row is already on screen. Read untracked on purpose — this runs during render,
   // and the fetch path already covers the case where the row has not landed yet.
-  #knownRows: () => SelectItem[];
+  #knownRows: () => SelectRecord[];
 
   constructor(opts: ValueResolverInit) {
     this.#args = opts.args;
@@ -60,10 +60,10 @@ export default class ValueResolver {
     value: SelectValue,
     opts: SelectLoadRequest = {}
   ):
-    | SelectItem
-    | SelectItem[]
-    | Promise<SelectItem>
-    | Promise<SelectItem[]>
+    | SelectRecord
+    | SelectRecord[]
+    | Promise<SelectRecord>
+    | Promise<SelectRecord[]>
     | undefined {
     if (!this.#args.multiple) {
       const single = this.#args.singleValue(value);
@@ -71,11 +71,11 @@ export default class ValueResolver {
         return undefined;
       }
       const resolved = this.#resolveMany([single], opts);
-      return this.#isPromise<SelectItem[]>(resolved)
+      return this.#isPromise<SelectRecord[]>(resolved)
         ? this.#firstOf(resolved)
         : resolved[0]!;
     }
-    const values = this.#args.dedupeValues(makeArray(value) as SelectItemId[]);
+    const values = this.#args.dedupeValues(makeArray(value) as SelectId[]);
     // Empty multi → undefined so the trigger shows its placeholder (not an empty list).
     if (values.length === 0) {
       return undefined;
@@ -83,7 +83,7 @@ export default class ValueResolver {
     return this.#resolveMany(values, opts);
   }
 
-  resolveSingleSync(value: SelectValue): SelectItem | undefined {
+  resolveSingleSync(value: SelectValue): SelectRecord | undefined {
     if (value == null || Array.isArray(value)) {
       return undefined;
     }
@@ -91,14 +91,14 @@ export default class ValueResolver {
   }
 
   /** Whether any non-null value currently resolves to an `__unresolved` fallback. */
-  hasUnresolved(values: SelectItemId[]): boolean {
+  hasUnresolved(values: SelectId[]): boolean {
     return values.some(
       (value) => value != null && !!this.resolveOneSync(value)?.__unresolved
     );
   }
 
-  isCustomUnresolvedItem(item: SelectItem): boolean {
-    return this.#customUnresolvedItems.has(item);
+  isCustomUnresolvedRecord(item: SelectRecord): boolean {
+    return this.#customUnresolvedRecords.has(item);
   }
 
   evictUnresolved(): void {
@@ -127,22 +127,22 @@ export default class ValueResolver {
     assert(
       `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
         `queries and is never asked what a given id is, so a select that can mount holding a ` +
-        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
+        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueRecords\`.`,
       !this.#args.load ||
         !!this.#args.resolveValue ||
         !!this.#args.resolveValues ||
-        this.#args.valueItemsDeclared
+        this.#args.valueRecordsDeclared
     );
   }
 
-  cacheResolved(item: SelectItem | null | undefined): void {
+  cacheResolved(item: SelectRecord | null | undefined): void {
     if (item) {
-      this.#cacheResolvedValue(this.#args.itemValue(item), item);
+      this.#cacheResolvedValue(this.#args.recordValue(item), item);
     }
   }
 
   /**
-   * The item to show for a value: `valueItems` → a real recorded outcome → client list →
+   * The item to show for a value: `valueRecords` → a real recorded outcome → client list →
    * the fallback left by an earlier failed attempt.
    *
    * An `__unresolved` fallback ranks LAST, so any real source that turns up later — an item
@@ -151,14 +151,17 @@ export default class ValueResolver {
    * missed would re-resolve, record again, invalidate the render that read it, and never
    * settle. "Failed" has to be a terminal answer; `reload` is what retries it.
    */
-  resolveOneSync(value: SelectItemId): SelectItem | undefined {
+  resolveOneSync(value: SelectId): SelectRecord | undefined {
     const key = this.#args.valueKey(value);
     if (key == null) {
       return undefined;
     }
     const recorded = this.#recordedOutcomes(key);
     return (
-      this.#matching(makeArray(this.#args.valueItems) as SelectItem[], key) ??
+      this.#matching(
+        makeArray(this.#args.valueRecords) as SelectRecord[],
+        key
+      ) ??
       recorded.find((item) => !item.__unresolved) ??
       this.#matching(this.#knownRows(), key) ??
       recorded[0]
@@ -167,7 +170,7 @@ export default class ValueResolver {
 
   // Narrows a resolved batch back to the single arity. `#resolveMany` always yields at least
   // one item per requested id, so index 0 is present.
-  async #firstOf(items: Promise<SelectItem[]>): Promise<SelectItem> {
+  async #firstOf(items: Promise<SelectRecord[]>): Promise<SelectRecord> {
     return (await items)[0]!;
   }
 
@@ -178,14 +181,14 @@ export default class ValueResolver {
    * rejects.
    */
   #resolveMany(
-    values: SelectItemId[],
+    values: SelectId[],
     opts: SelectLoadRequest
-  ): SelectItem[] | Promise<SelectItem[]> {
+  ): SelectRecord[] | Promise<SelectRecord[]> {
     const synced = values.map((v) => this.resolveOneSync(v));
     if (synced.every((item) => item != null)) {
-      return synced as SelectItem[];
+      return synced as SelectRecord[];
     }
-    let resolved = new Map<string, SelectItem>();
+    let resolved = new Map<string, SelectRecord>();
     if (opts.signal?.aborted) {
       return this.#assemble(values, synced, resolved);
     }
@@ -246,8 +249,8 @@ export default class ValueResolver {
    * every caller abandoned it: an aborted request knows nothing about the ids it was asked for.
    */
   #trackRequest(
-    values: SelectItemId[],
-    batch: Promise<Map<string, SelectItem>>,
+    values: SelectId[],
+    batch: Promise<Map<string, SelectRecord>>,
     controller: AbortController
   ): PendingResolution {
     const request: PendingResolution = {
@@ -285,7 +288,7 @@ export default class ValueResolver {
   #joinRequest(
     request: PendingResolution,
     signal: AbortSignal | undefined
-  ): Promise<Map<string, SelectItem>> {
+  ): Promise<Map<string, SelectRecord>> {
     request.callers.add(signal);
     return new Promise((resolve) => {
       const onAbort = () => {
@@ -306,9 +309,9 @@ export default class ValueResolver {
   }
 
   #rememberSynchronousOutcomes(
-    values: SelectItemId[],
-    synced: Array<SelectItem | undefined>,
-    items: SelectItem[]
+    values: SelectId[],
+    synced: Array<SelectRecord | undefined>,
+    items: SelectRecord[]
   ): void {
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
@@ -323,13 +326,13 @@ export default class ValueResolver {
    * Records the outcome of an async resolve: real items, so later reads hit the cache
    * instead of refetching, and `__unresolved` fallbacks, so a trigger can tell "resolved and
    * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
-   * remains a sync hit, but ranks after real valueItems/cache/list items; `reload()` evicts it
+   * remains a sync hit, but ranks after real valueRecords/cache/list items; `reload()` evicts it
    * when the caller explicitly retries.
    *
    * Only ever called from a promise continuation, i.e. a microtask after render, where
    * writing tracked state cannot dirty what the render already read.
    */
-  #cacheOutcome(values: SelectItemId[], items: SelectItem[]): void {
+  #cacheOutcome(values: SelectId[], items: SelectRecord[]): void {
     values.forEach((value, index) => {
       const item = items[index];
       if (item) {
@@ -345,16 +348,16 @@ export default class ValueResolver {
    * invalidate the very render doing the write. A value normally lands in one or the other;
    * both are read the same way, so neither store's ordering is load-bearing.
    */
-  #recordedOutcomes(key: string): SelectItem[] {
+  #recordedOutcomes(key: string): SelectRecord[] {
     return [
       this.#resolvedCache.get(key),
       this.#synchronousOutcomes.get(key),
     ].filter((item) => item != null);
   }
 
-  #matching(items: SelectItem[], key: string): SelectItem | undefined {
+  #matching(items: SelectRecord[], key: string): SelectRecord | undefined {
     return items.find(
-      (i) => this.#args.valueKey(this.#args.itemValue(i)) === key
+      (i) => this.#args.valueKey(this.#args.recordValue(i)) === key
     );
   }
 
@@ -362,9 +365,9 @@ export default class ValueResolver {
   // and never rejects. One batch call via `resolveValues` when given; otherwise per-id via
   // `resolveValue` (fans out — only when no batch resolver is supplied).
   #resolveBatch(
-    values: SelectItemId[],
+    values: SelectId[],
     opts: SelectLoadRequest
-  ): Map<string, SelectItem> | Promise<Map<string, SelectItem>> {
+  ): Map<string, SelectRecord> | Promise<Map<string, SelectRecord>> {
     const request = { ...opts, config: this.#args.config };
     if (this.#args.resolveValues) {
       const result = this.#attempt(() =>
@@ -373,7 +376,7 @@ export default class ValueResolver {
       return this.#isPromise(result)
         ? result.then(
             (items) => this.#toResolvedMap(items),
-            () => new Map<string, SelectItem>()
+            () => new Map<string, SelectRecord>()
           )
         : this.#toResolvedMap(result);
     }
@@ -389,7 +392,7 @@ export default class ValueResolver {
     return per.some((r) => this.#isPromise(r))
       ? Promise.all(per).then((pairs) => this.#pairsToMap(pairs))
       : this.#pairsToMap(
-          per as ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
+          per as ReadonlyArray<readonly [SelectId, SelectRecord | undefined]>
         );
   }
 
@@ -408,19 +411,19 @@ export default class ValueResolver {
   // whose id differs from the one requested leaves the requested id unresolved rather than
   // silently mis-pairing the two.
   #toResolvedMap(
-    items: SelectItem[] | null | undefined
-  ): Map<string, SelectItem> {
+    items: SelectRecord[] | null | undefined
+  ): Map<string, SelectRecord> {
     return this.#pairsToMap(
-      (makeArray(items) as SelectItem[]).map(
-        (item) => [this.#args.itemValue(item), item] as const
+      (makeArray(items) as SelectRecord[]).map(
+        (item) => [this.#args.recordValue(item), item] as const
       )
     );
   }
 
   #pairsToMap(
-    pairs: ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
-  ): Map<string, SelectItem> {
-    const map = new Map<string, SelectItem>();
+    pairs: ReadonlyArray<readonly [SelectId, SelectRecord | undefined]>
+  ): Map<string, SelectRecord> {
+    const map = new Map<string, SelectRecord>();
     for (const [value, item] of pairs) {
       const key = this.#args.valueKey(value);
       if (key != null && item) {
@@ -434,33 +437,33 @@ export default class ValueResolver {
   // still did not resolve with an `__unresolved` fallback. Order follows `values`, not the
   // response. Pure — caching the outcome is `#cacheOutcome`'s job, and only off-render.
   #assemble(
-    values: SelectItemId[],
-    synced: Array<SelectItem | undefined>,
-    resolved: Map<string, SelectItem>
-  ): SelectItem[] {
+    values: SelectId[],
+    synced: Array<SelectRecord | undefined>,
+    resolved: Map<string, SelectRecord>
+  ): SelectRecord[] {
     return values.map((v, index) => {
       const key = this.#args.valueKey(v);
       return (
         synced[index] ??
         (key == null ? undefined : resolved.get(key)) ??
-        this.#unresolvedItem(v)
+        this.#unresolvedRecord(v)
       );
     });
   }
 
-  // The fallback for a held id that could not be resolved. `createUnresolvedItem` names it
+  // The fallback for a held id that could not be resolved. `createUnresolvedRecord` names it
   // ("Topic #123"); the default shows the bare id. Either way the engine owns the
   // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
-  #unresolvedItem(value: SelectItemId): SelectItem {
+  #unresolvedRecord(value: SelectId): SelectRecord {
     // Catches a value set after mount that misses the cache. Here it runs inside the
     // trigger's async data source, which turns the throw into a rejection, so the common
     // case is also checked when the engine is built.
     if (DEBUG) {
       this.assertCanResolve(value);
     }
-    const built = this.#args.createUnresolvedItem
+    const built = this.#args.createUnresolvedRecord
       ? this.#attempt(() =>
-          this.#args.createUnresolvedItem!(value, this.#args.config)
+          this.#args.createUnresolvedRecord!(value, this.#args.config)
         )
       : undefined;
     if (built) {
@@ -469,10 +472,10 @@ export default class ValueResolver {
         [this.#args.valueField]: value,
         __unresolved: true,
       };
-      this.#customUnresolvedItems.add(item);
+      this.#customUnresolvedRecords.add(item);
       return item;
     }
-    const item: SelectItem = {
+    const item: SelectRecord = {
       [this.#args.valueField]: value,
       __unresolved: true,
     };
@@ -485,8 +488,8 @@ export default class ValueResolver {
   }
 
   #cacheResolvedValue(
-    value: SelectItemId,
-    item: SelectItem | null | undefined
+    value: SelectId,
+    item: SelectRecord | null | undefined
   ): void {
     const key = this.#args.valueKey(value);
     if (key == null || !item) {

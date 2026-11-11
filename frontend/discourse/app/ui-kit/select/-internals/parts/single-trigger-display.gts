@@ -7,8 +7,8 @@ import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
-  SelectItem,
   SelectLoadRequest,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -50,7 +50,7 @@ interface SingleTriggerDisplaySignature {
     resolveSelection: (
       value: unknown,
       request?: SelectLoadRequest
-    ) => SelectItem | Promise<SelectItem>;
+    ) => SelectRecord | Promise<SelectRecord>;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (
       ...ids: Array<string | undefined | false>
@@ -80,14 +80,14 @@ interface SingleTriggerDisplaySignature {
     /** Custom markup for the selected item. */
     selection?: [
       /** The resolved selected item. */
-      item: SelectItem,
+      item: SelectRecord,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
       /** The unresolved fallback item. */
-      item: SelectItem,
+      item: SelectRecord,
     ];
   };
 }
@@ -124,13 +124,16 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @item={{selected}}
+                          @record={{selected}}
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
                       {{yield selected to="selection"}}
                     {{else}}
-                      <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                      <SelectionLabel
+                        @engine={{@engine}}
+                        @record={{selected}}
+                      />
                     {{/if}}
                   {{/if}}
                 </:content>
@@ -163,7 +166,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @item={{selected}}
+                          @record={{selected}}
                         />
                       {{/if}}
                     {{else}}
@@ -253,12 +256,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 {{#if @hasUnresolvedBlock}}
                   {{yield selected to="unresolved"}}
                 {{else}}
-                  <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                  <SelectionLabel @engine={{@engine}} @record={{selected}} />
                 {{/if}}
               {{else if @hasSelectionBlock}}
                 {{yield selected to="selection"}}
               {{else}}
-                <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                <SelectionLabel @engine={{@engine}} @record={{selected}} />
               {{/if}}
             </span>
           {{/if}}

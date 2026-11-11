@@ -21,9 +21,9 @@ import WindowedListCoordinator, {
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import SelectEngine, {
-  type SelectItem as SelectItemModel,
-  selectItemLabel,
   type SelectLoadRequest,
+  type SelectRecord as SelectRecordModel,
+  selectRecordLabel,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Fixes the callback tuple before the template curries a lifecycle modifier. */
@@ -84,7 +84,7 @@ function placeholderRows(
         isSkeleton: true,
         label: row.isSkeleton
           ? row.label
-          : selectItemLabel(row.item, labelField),
+          : selectRecordLabel(row.item, labelField),
       }))
     : [{ key: engineKey("skeleton:empty"), isSkeleton: true }];
 }
@@ -93,7 +93,7 @@ function placeholderRows(
 function ignoreListbox(): void {}
 
 /** Per-list modifiers configured by the shared async shell. */
-export interface SelectOptionsModifiers {
+export interface SelectListModifiers {
   /** Reports the mounted listbox and its teardown. */
   register: ModifierLike<{ Element: HTMLElement }>;
   /** Releases list state on destruction. */
@@ -113,7 +113,7 @@ export interface SelectOptionsModifiers {
 export interface SelectListContent {
   /** Loader inputs for these displayed rows, retained independently of the next request. */
   context?: Readonly<Record<string, unknown>>;
-  rawItems: SelectItemModel[];
+  rawItems: SelectRecordModel[];
   /** The filter that produced these rows, retained with them for create checks during a reload. */
   readonly filter: string;
   /**
@@ -125,7 +125,7 @@ export interface SelectListContent {
   query: string;
 }
 
-interface SelectOptionsSignature {
+interface SelectListBodySignature {
   Args: {
     /** The headless selection engine. */
     engine: SelectEngine;
@@ -171,7 +171,7 @@ interface SelectOptionsSignature {
       /** Snapshot of the resolved source query. */
       content: SelectListContent | undefined,
       /** Configured per-list behavior, applied in body order. */
-      modifiers: SelectOptionsModifiers,
+      modifiers: SelectListModifiers,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
     skeletonItem?: [];
@@ -242,144 +242,147 @@ const LoadingList: TemplateOnlyComponent<LoadingListSignature> = <template>
   </ul>
 </template>;
 
-const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
-  {{#if @engine.pastePending}}
-    <LoadingList
-      @engine={{@engine}}
-      @feedback={{@feedback}}
-      @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
-      @staticBody={{@staticBody}}
-    >
-      <:skeletonItem>
-        {{yield to="skeletonItem"}}
-      </:skeletonItem>
-    </LoadingList>
-  {{else}}
-    <DAsyncContent
-      @asyncData={{@loadListContent}}
-      @context={{@engine.loadContext}}
-      @debounce={{@presenter.debounceFor}}
-      @retainWhileReloading={{or
-        @staticBody
-        @feedback.retainRowsWhileReloading
-      }}
-    >
-      <:loading>
-        <LoadingList
-          @engine={{@engine}}
-          @feedback={{@feedback}}
-          @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
-          @staticBody={{@staticBody}}
-        >
-          <:skeletonItem>
-            {{yield to="skeletonItem"}}
-          </:skeletonItem>
-        </LoadingList>
-      </:loading>
-
-      <:content as |content|>
-        {{#let
-          (placeholderRows
-            (@listbox.buildListItems content.rawItems content.filter)
-            @feedback
-            @presenter.labelField
-            @staticBody
-          )
-          as |items|
+const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
+  <template>
+    {{#if @engine.pastePending}}
+      <LoadingList
+        @engine={{@engine}}
+        @feedback={{@feedback}}
+        @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+        @staticBody={{@staticBody}}
+      >
+        <:skeletonItem>
+          {{yield to="skeletonItem"}}
+        </:skeletonItem>
+      </LoadingList>
+    {{else}}
+      <DAsyncContent
+        @asyncData={{@loadListContent}}
+        @context={{@engine.loadContext}}
+        @debounce={{@presenter.debounceFor}}
+        @retainWhileReloading={{or
+          @staticBody
+          @feedback.retainRowsWhileReloading
         }}
-          {{#if items.length}}
-            {{! The resolved query is a key as much as an argument: a query that lands
+      >
+        <:loading>
+          <LoadingList
+            @engine={{@engine}}
+            @feedback={{@feedback}}
+            @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+            @staticBody={{@staticBody}}
+          >
+            <:skeletonItem>
+              {{yield to="skeletonItem"}}
+            </:skeletonItem>
+          </LoadingList>
+        </:loading>
+
+        <:content as |content|>
+          {{#let
+            (placeholderRows
+              (@listbox.buildListItems content.rawItems content.filter)
+              @feedback
+              @presenter.labelField
+              @staticBody
+            )
+            as |items|
+          }}
+            {{#if items.length}}
+              {{! The resolved query is a key as much as an argument: a query that lands
           on the rows it already had changes neither count, so without it this never
           re-runs and a reader typing on hears nothing at all. }}
-            {{! The controller (query input, or the desktop-static trigger div) keeps
+              {{! The controller (query input, or the desktop-static trigger div) keeps
           focus and drives the highlight via aria-activedescendant. Static in the
           mobile modal roves the tabindex through the options instead, since its
           out-of-modal trigger cannot be the controller. Where the cursor lands on
           open is the presenter's entry convention; re-seed when async lands. }}
-            {{#let
-              (modifier
-                registerListbox
-                (or @onRegisterListbox ignoreListbox)
-                (if @presenter.usesActiveRoving @filterInput)
-              )
-              (modifier listRelease @listbox.releaseListbox)
-              (modifier recordOnEntry @feedback.recordRowCount items.length)
-              (modifier record @feedback.recordRowCount items.length)
-              (modifier
-                countOnEntry
-                @announcer.announceCountOnEntry
-                (@listbox.setSizeOf items)
-                @engine.total
-                content.query
-              )
-              (modifier
-                count
-                @announcer.announceCount
-                (@listbox.setSizeOf items)
-                @engine.total
-                content.query
-              )
-              (modifier
-                dRovingFocus
-                focusStrategy=(if
-                  @presenter.usesActiveRoving
-                  "active-descendant"
-                  "roving-tabindex"
+              {{#let
+                (modifier
+                  registerListbox
+                  (or @onRegisterListbox ignoreListbox)
+                  (if @presenter.usesActiveRoving @filterInput)
                 )
-                controllerElement=(if @presenter.usesActiveRoving @filterInput)
-                disabledItems="focusable"
-                itemSelector="[role=option]"
-                itemsKey=(@presenter.rovingItemsKey items)
-                resetKey=content.query
-                logicalCount=(@listbox.navigableCount items)
-                onActivate=@listbox.activateElement
-                onActiveChange=@listbox.trackActiveOption
-                onJump=@listbox.handleJump
-                onRegisterApi=(or
-                  @onRegisterRoving @listbox.registerListboxRoving
+                (modifier listRelease @listbox.releaseListbox)
+                (modifier recordOnEntry @feedback.recordRowCount items.length)
+                (modifier record @feedback.recordRowCount items.length)
+                (modifier
+                  countOnEntry
+                  @announcer.announceCountOnEntry
+                  (@listbox.setSizeOf items)
+                  @engine.total
+                  content.query
                 )
-                entryFocus=@presenter.entryFocus
-                fallbackSkipsMarked=@multiple
-              )
-              as |register release recordEntry recordUpdate countEntry countUpdate roving|
-            }}
-              {{yield
-                items
-                content
-                (hash
-                  register=register
-                  release=release
-                  recordOnEntry=recordEntry
-                  record=recordUpdate
-                  countOnEntry=countEntry
-                  count=countUpdate
-                  roving=roving
+                (modifier
+                  count
+                  @announcer.announceCount
+                  (@listbox.setSizeOf items)
+                  @engine.total
+                  content.query
                 )
-                to="body"
+                (modifier
+                  dRovingFocus
+                  focusStrategy=(if
+                    @presenter.usesActiveRoving
+                    "active-descendant"
+                    "roving-tabindex"
+                  )
+                  controllerElement=(if
+                    @presenter.usesActiveRoving @filterInput
+                  )
+                  disabledItems="focusable"
+                  itemSelector="[role=option]"
+                  itemsKey=(@presenter.rovingItemsKey items)
+                  resetKey=content.query
+                  logicalCount=(@listbox.navigableCount items)
+                  onActivate=@listbox.activateElement
+                  onActiveChange=@listbox.trackActiveOption
+                  onJump=@listbox.handleJump
+                  onRegisterApi=(or
+                    @onRegisterRoving @listbox.registerListboxRoving
+                  )
+                  entryFocus=@presenter.entryFocus
+                  fallbackSkipsMarked=@multiple
+                )
+                as |register release recordEntry recordUpdate countEntry countUpdate roving|
               }}
-            {{/let}}
+                {{yield
+                  items
+                  content
+                  (hash
+                    register=register
+                    release=release
+                    recordOnEntry=recordEntry
+                    record=recordUpdate
+                    countOnEntry=countEntry
+                    count=countUpdate
+                    roving=roving
+                  )
+                  to="body"
+                }}
+              {{/let}}
 
-            {{#if @engine.atCapWithMore}}
-              {{#let (@engine.text "maxLoaded") as |narrow|}}
-                {{#if narrow}}
-                  {{! Sits outside the listbox, which admits only list items. The text also
+              {{#if @engine.atCapWithMore}}
+                {{#let (@engine.text "maxLoaded") as |narrow|}}
+                  {{#if narrow}}
+                    {{! Sits outside the listbox, which admits only list items. The text also
               goes through the a11y service because a live region announces unreliably on
               the render that mounts it. }}
-                  <div
-                    class="d-select__narrow"
-                    role={{unless (eq @reportsActive false) "status"}}
-                    {{didInsert @announcer.announceNarrow}}
-                  >
-                    {{narrow}}
-                  </div>
-                {{/if}}
-              {{/let}}
-            {{/if}}
-          {{else if (or content.filter (not @hideEmptyQuery))}}
-            {{! Recorded here too, not only on the list: a query that found nothing is a
+                    <div
+                      class="d-select__narrow"
+                      role={{unless (eq @reportsActive false) "status"}}
+                      {{didInsert @announcer.announceNarrow}}
+                    >
+                      {{narrow}}
+                    </div>
+                  {{/if}}
+                {{/let}}
+              {{/if}}
+            {{else if (or content.filter (not @hideEmptyQuery))}}
+              {{! Recorded here too, not only on the list: a query that found nothing is a
             rendered state with a row count of zero, and leaving the previous count
             standing would size the next reload's skeleton to a list that is gone. }}
-            {{! The update hook is load-bearing, not belt-and-braces. The async content
+              {{! The update hook is load-bearing, not belt-and-braces. The async content
             wrapper reports the same render mode for both the resolved and the
             retained-pending phase, so Glimmer keeps this node mounted across two
             successive empty queries — an insert-only announcement would report the
@@ -388,35 +391,35 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
             Keyed on the resolved query, never the engine query, which advances on
             a keystroke or reload. That would report an empty result for a query still in
             flight, over rows that still belong to the previous one. }}
-            {{! An empty text keeps the element, without a role, because it still
+              {{! An empty text keeps the element, without a role, because it still
             records the row count and replaces a held result count. }}
-            {{#let (@engine.text "noResults") as |noResults|}}
-              <div
-                class="d-select__empty"
-                role={{if
-                  (and
-                    (not (eq @reportsActive false))
-                    (or @hasEmptyBlock noResults)
-                  )
-                  "status"
-                }}
-                {{didInsert @feedback.recordRowCount 0}}
-                {{didInsert @announcer.announceNoResults content.query}}
-                {{didUpdate @announcer.announceNoResults content.query}}
-              >
-                {{#if @hasEmptyBlock}}
-                  {{yield to="empty"}}
-                {{else}}
-                  {{noResults}}
-                {{/if}}
-              </div>
-            {{/let}}
-          {{/if}}
-        {{/let}}
-      </:content>
+              {{#let (@engine.text "noResults") as |noResults|}}
+                <div
+                  class="d-select__empty"
+                  role={{if
+                    (and
+                      (not (eq @reportsActive false))
+                      (or @hasEmptyBlock noResults)
+                    )
+                    "status"
+                  }}
+                  {{didInsert @feedback.recordRowCount 0}}
+                  {{didInsert @announcer.announceNoResults content.query}}
+                  {{didUpdate @announcer.announceNoResults content.query}}
+                >
+                  {{#if @hasEmptyBlock}}
+                    {{yield to="empty"}}
+                  {{else}}
+                    {{noResults}}
+                  {{/if}}
+                </div>
+              {{/let}}
+            {{/if}}
+          {{/let}}
+        </:content>
 
-      <:error as |error|>
-        {{! A muted, recoverable state matching the empty/min-chars language — not a
+        <:error as |error|>
+          {{! A muted, recoverable state matching the empty/min-chars language — not a
         heavy alert box, but still role=alert so the failure is announced (an inserted
         role=status is not reliably spoken).
 
@@ -425,29 +428,29 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
         would silently drop the alert role and the retry control, leaving the failure
         unannounced and unrecoverable. The reload action is still yielded, so a block
         that wants its own retry control can have one. }}
-        <div
-          class="d-select__error"
-          role={{unless (eq @reportsActive false) "alert"}}
-        >
-          {{#if @hasErrorBlock}}
-            {{yield error @engine.reload to="error"}}
-          {{else}}
-            <span class="d-select__error-message">
-              {{dIcon "triangle-exclamation"}}
-              {{@engine.text "loadError"}}
-            </span>
-            {{#if @presenter.retryable}}
-              <DButton
-                class="d-select__retry btn-flat"
-                @action={{@engine.reload}}
-                @translatedLabel={{@engine.text "retry"}}
-              />
+          <div
+            class="d-select__error"
+            role={{unless (eq @reportsActive false) "alert"}}
+          >
+            {{#if @hasErrorBlock}}
+              {{yield error @engine.reload to="error"}}
+            {{else}}
+              <span class="d-select__error-message">
+                {{dIcon "triangle-exclamation"}}
+                {{@engine.text "loadError"}}
+              </span>
+              {{#if @presenter.retryable}}
+                <DButton
+                  class="d-select__retry btn-flat"
+                  @action={{@engine.reload}}
+                  @translatedLabel={{@engine.text "retry"}}
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
-        </div>
-      </:error>
-    </DAsyncContent>
-  {{/if}}
-</template>;
+          </div>
+        </:error>
+      </DAsyncContent>
+    {{/if}}
+  </template>;
 
-export default SelectOptions;
+export default SelectListBody;

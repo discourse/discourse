@@ -2,8 +2,8 @@ import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type {
-  SelectItem,
-  SelectItemId,
+  SelectId,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectChangeContext } from "./customizations.ts";
@@ -27,12 +27,12 @@ export default class SelectionActions {
     origin: SelectionOrigin | undefined,
     value: SelectValue
   ) => boolean;
-  #runActionItem: (item: SelectItem) => void;
-  #cacheResolved: (item: SelectItem | null | undefined) => void;
-  #resolveOneSync: (value: SelectItemId) => SelectItem | undefined;
+  #runActionItem: (item: SelectRecord) => void;
+  #cacheResolved: (item: SelectRecord | null | undefined) => void;
+  #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
   #applyLegacyOnChange: (
     value: SelectValue,
-    payload: SelectItem | SelectItem[] | null
+    payload: SelectRecord | SelectRecord[] | null
   ) => void;
   #getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
 
@@ -49,12 +49,12 @@ export default class SelectionActions {
       origin: SelectionOrigin | undefined,
       value: SelectValue
     ) => boolean;
-    runActionItem: (item: SelectItem) => void;
-    cacheResolved: (item: SelectItem | null | undefined) => void;
-    resolveOneSync: (value: SelectItemId) => SelectItem | undefined;
+    runActionItem: (item: SelectRecord) => void;
+    cacheResolved: (item: SelectRecord | null | undefined) => void;
+    resolveOneSync: (value: SelectId) => SelectRecord | undefined;
     applyLegacyOnChange: (
       value: SelectValue,
-      payload: SelectItem | SelectItem[] | null
+      payload: SelectRecord | SelectRecord[] | null
     ) => void;
     getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
     /** Applies sealed per-select change declarations. */
@@ -184,8 +184,8 @@ export default class SelectionActions {
     }
     const held = this._selectedKeys;
     const keys = new Set<string | null>();
-    const unheld: SelectItemId[] = [];
-    for (const value of locked as SelectItemId[]) {
+    const unheld: SelectId[] = [];
+    for (const value of locked as SelectId[]) {
       const key = this.#args.valueKey(value);
       if (held.has(key)) {
         keys.add(key);
@@ -204,27 +204,27 @@ export default class SelectionActions {
   }
 
   @cached
-  get _singleValue(): SelectItemId | null {
+  get _singleValue(): SelectId | null {
     return this.#args.singleValue(this.#args.value);
   }
 
   @cached
-  get _valueArray(): readonly SelectItemId[] {
+  get _valueArray(): readonly SelectId[] {
     return Object.freeze(
-      this.#args.dedupeValues(makeArray(this.#args.value) as SelectItemId[])
+      this.#args.dedupeValues(makeArray(this.#args.value) as SelectId[])
     );
   }
 
   /** Whether a held value is locked, matching ids by their key. */
-  isLockedValue(value: SelectItemId): boolean {
+  isLockedValue(value: SelectId): boolean {
     return this.#lockedKeys.has(this.#args.valueKey(value));
   }
 
   /** Every value in `previous` whose key `next` no longer holds, in held order. */
   removedValues(
-    previous: readonly SelectItemId[],
-    next: readonly SelectItemId[]
-  ): SelectItemId[] {
+    previous: readonly SelectId[],
+    next: readonly SelectId[]
+  ): SelectId[] {
     const nextKeys = new Set(next.map((value) => this.#args.valueKey(value)));
     return previous.filter(
       (value) => !nextKeys.has(this.#args.valueKey(value))
@@ -236,11 +236,11 @@ export default class SelectionActions {
    * uses `String(value)`, including for nullish values, rather than the option identity key.
    */
   diffValues(
-    previous: SelectItemId[],
-    next: SelectItemId[]
+    previous: SelectId[],
+    next: SelectId[]
   ): {
-    added: SelectItemId | undefined;
-    removed: SelectItemId | undefined;
+    added: SelectId | undefined;
+    removed: SelectId | undefined;
   } {
     const previousKeys = new Set(previous.map(String));
     const nextKeys = new Set(next.map(String));
@@ -254,14 +254,14 @@ export default class SelectionActions {
    * Whether an item is currently selected, comparing its `valueField` id against the
    * controlled value.
    */
-  isSelected(item: SelectItem): boolean {
+  isSelected(item: SelectRecord): boolean {
     // The "none" row stands in for the empty selection, so it reads as selected exactly when
     // nothing else is. Single-select only, and resolved before the key lookup — its value is
     // `null`, which the comparison below would otherwise reject as unselectable.
     if (item.__none && !this.#args.multiple) {
       return !this.hasValue;
     }
-    const key = this.#args.valueKey(this.#args.itemValue(item));
+    const key = this.#args.valueKey(this.#args.recordValue(item));
     if (key == null) {
       return false;
     }
@@ -274,7 +274,7 @@ export default class SelectionActions {
    * Activates an item: runs its `onSelect` callback if present (an action item that
    * never becomes a value and does not close the overlay), otherwise toggles it.
    */
-  activate(item: SelectItem): void {
+  activate(item: SelectRecord): void {
     if (typeof item?.onSelect === "function") {
       this.#runActionItem(item);
       return;
@@ -285,7 +285,7 @@ export default class SelectionActions {
   /**
    * Toggles an item: for multi, selects or deselects; for single, selects it.
    */
-  toggle(item: SelectItem): void {
+  toggle(item: SelectRecord): void {
     if (this.#args.locked) {
       return;
     }
@@ -301,7 +301,7 @@ export default class SelectionActions {
    * emits `onChange`. For single-select it also requests the overlay to close (when
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
-  select(item: SelectItem, origin?: SelectionOrigin): void {
+  select(item: SelectRecord, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
     if (this.#args.locked) {
       return;
@@ -328,11 +328,11 @@ export default class SelectionActions {
     this.#cacheResolved(item);
     if (this.#args.multiple) {
       this.#emitChange(
-        [...this._valueArray, this.#args.itemValue(item)],
+        [...this._valueArray, this.#args.recordValue(item)],
         origin
       );
     } else {
-      this.#emitChange(this.#args.itemValue(item), origin);
+      this.#emitChange(this.#args.recordValue(item), origin);
       if (this.#args.closeOnSelect) {
         this.#args.requestClose?.();
       }
@@ -340,14 +340,14 @@ export default class SelectionActions {
   }
 
   /** Adds a batch without losing its update authority during middleware or deferred emits. */
-  selectMany(items: readonly SelectItem[], origin?: SelectionOrigin): void {
+  selectMany(items: readonly SelectRecord[], origin?: SelectionOrigin): void {
     this.#onIntent(origin);
     if (this.#args.locked) {
       return;
     }
 
     const seen = new Set<string>();
-    const additions: SelectItem[] = [];
+    const additions: SelectRecord[] = [];
     let held = 0;
     let limit = 0;
     const remaining = this.remaining;
@@ -361,7 +361,7 @@ export default class SelectionActions {
       ) {
         continue;
       }
-      const key = this.#args.valueKey(this.#args.itemValue(item));
+      const key = this.#args.valueKey(this.#args.recordValue(item));
       if (key == null) {
         continue;
       }
@@ -392,7 +392,7 @@ export default class SelectionActions {
     this.#emitChange(
       [
         ...this._valueArray,
-        ...additions.map((item) => this.#args.itemValue(item)),
+        ...additions.map((item) => this.#args.recordValue(item)),
       ],
       {
         ...(origin ?? { programmatic: true }),
@@ -404,7 +404,7 @@ export default class SelectionActions {
   /**
    * Removes an item from the selection (emits the next value).
    */
-  deselect(item: SelectItem, origin?: SelectionOrigin): void {
+  deselect(item: SelectRecord, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
     if (this.#args.locked) {
       return;
@@ -416,7 +416,7 @@ export default class SelectionActions {
       this.#emitChange(null, origin);
       return;
     }
-    const value = this.#args.itemValue(item);
+    const value = this.#args.recordValue(item);
     if (this.isLockedValue(value)) {
       return;
     }
@@ -515,7 +515,7 @@ export default class SelectionActions {
       return false;
     }
     const nextKeys = new Set(
-      (makeArray(nextValue) as SelectItemId[]).map((value) =>
+      (makeArray(nextValue) as SelectId[]).map((value) =>
         this.#args.valueKey(value)
       )
     );
@@ -524,16 +524,16 @@ export default class SelectionActions {
 
   // Best-effort synchronous resolution of a value to its item(s), from the escape
   // hatch / cache / client list — never async (this feeds the `onChange` payload).
-  #itemsFor(value: SelectValue): SelectItem[] {
-    const values: SelectItemId[] =
+  #itemsFor(value: SelectValue): SelectRecord[] {
+    const values: SelectId[] =
       value == null
         ? []
         : this.#args.multiple
-          ? (makeArray(value) as SelectItemId[])
+          ? (makeArray(value) as SelectId[])
           : [value];
     return values
       .map((v) => this.#resolveOneSync(v))
-      .filter((item): item is SelectItem => item != null);
+      .filter((item): item is SelectRecord => item != null);
   }
 
   // Multi-select only: re-emit each id in its resolved source item's native type, so a held
@@ -546,9 +546,9 @@ export default class SelectionActions {
     if (!this.#args.multiple || value == null) {
       return value;
     }
-    return (makeArray(value) as SelectItemId[]).map((id) => {
+    return (makeArray(value) as SelectId[]).map((id) => {
       const item = this.#resolveOneSync(id);
-      return item ? this.#args.itemValue(item) : id;
+      return item ? this.#args.recordValue(item) : id;
     });
   }
 }

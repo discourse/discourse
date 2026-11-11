@@ -20,8 +20,8 @@ import dRovingFocus, {
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectDescriptor,
-  SelectItem,
   SelectLoadRequest,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -58,9 +58,9 @@ interface SelectionStripSignature {
   };
   Blocks: {
     /** Consumer markup for a resolved held item. */
-    selection?: [/** The held item. */ item: SelectItem];
+    selection?: [/** The held item. */ item: SelectRecord];
     /** Consumer markup for an unavailable held item. */
-    unresolved?: [/** The fallback item. */ item: SelectItem];
+    unresolved?: [/** The fallback item. */ item: SelectRecord];
   };
 }
 
@@ -289,13 +289,16 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @item={{chip.item}}
+                          @record={{chip.item}}
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
                       {{yield chip.item to="selection"}}
                     {{else}}
-                      <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
+                      <SelectionLabel
+                        @engine={{@engine}}
+                        @record={{chip.item}}
+                      />
                     {{/if}}
                   </span>
                   <span class="sr-only" id="{{this.idPrefix}}-{{index}}-hint">

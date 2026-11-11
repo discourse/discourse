@@ -2,8 +2,8 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { CategoryItem } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import type { CategoryRecord } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
+import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
 /** A row's description: the category's plain-text description, cut to 200 characters. */
 export function categoryDescription(category: Category): string | undefined {
@@ -15,10 +15,10 @@ export function categoryDescription(category: Category): string | undefined {
 }
 
 /** Builds an engine row while keeping the site's model as the emitted value. */
-export function categoryItem(
+export function categoryRecord(
   category: Category,
   descriptions = false
-): CategoryItem {
+): CategoryRecord {
   // Rows come from the site or a search, so the category is saved and has both.
   return {
     id: category.id!,
@@ -32,23 +32,26 @@ export function categoryItem(
  * The category a row renders as a badge. Action rows render their icon and label instead,
  * except a family footer, which draws its own category.
  */
-function record(item: SelectItem, family?: boolean): Category | undefined {
+function categoryModel(
+  item: SelectRecord,
+  family?: boolean
+): Category | undefined {
   if (item.onSelect && !family) {
     return;
   }
   return (
-    (item as CategoryItem).category ??
+    (item as CategoryRecord).category ??
     Category.findById(item.id as number | string)
   );
 }
 
 /** Narrows shortcut and action labels for templates. */
-function name(item: SelectItem): string {
+function name(item: SelectRecord): string {
   return String(item.name ?? "");
 }
 
 /** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectItem): string | undefined {
+function actionIcon(item: SelectRecord): string | undefined {
   return typeof item.icon === "string" ? item.icon : undefined;
 }
 
@@ -68,7 +71,7 @@ function topicCount(
 export const CategoryBadge: TemplateOnlyComponent<{
   Args: {
     /** Resolved category or a named shortcut. */
-    item: SelectItem;
+    record: SelectRecord;
     /** Includes the category's ancestor badges. */
     ancestors?: boolean;
     /** Displays topic counts on an option. */
@@ -79,7 +82,7 @@ export const CategoryBadge: TemplateOnlyComponent<{
     family?: boolean;
   };
 }> = <template>
-  {{#let (record @item @family) as |category|}}
+  {{#let (categoryModel @record @family) as |category|}}
     {{#if category}}
       {{dCategoryBadge
         category
@@ -88,12 +91,12 @@ export const CategoryBadge: TemplateOnlyComponent<{
         decorativeEmoji=true
         hasSubcategories=@family
         hideParent=true
-        readOnly=@item.disabled
+        readOnly=@record.disabled
         topicCount=(topicCount category @counts @countSubcategories)
       }}
     {{else}}
-      {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
-      {{name @item}}
+      {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+      {{name @record}}
     {{/if}}
   {{/let}}
 </template>;

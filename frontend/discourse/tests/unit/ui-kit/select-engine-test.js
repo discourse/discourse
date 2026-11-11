@@ -701,9 +701,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 
   module("selected-value resolution", function () {
-    test("resolves synchronously from `valueItems`", function (assert) {
+    test("resolves synchronously from `valueRecords`", function (assert) {
       const item = { id: 5, name: "Five" };
-      const engine = new SelectEngine({ valueItems: item });
+      const engine = new SelectEngine({ valueRecords: item });
 
       assert.strictEqual(
         engine.resolveSelection(5),
@@ -821,7 +821,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       const calls = [];
       const engine = new SelectEngine({
         multiple: true,
-        valueItems: [{ id: 1, name: "One" }], // resolves synchronously via valueItems
+        valueRecords: [{ id: 1, name: "One" }], // resolves synchronously via valueRecords
         resolveValues: (values) => {
           calls.push(values);
           return Promise.resolve([{ id: 2, name: "Two" }]); // id 3 omitted
@@ -947,9 +947,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.false(Array.isArray(item), "single never yields an array");
     });
 
-    test("createUnresolvedItem names the fallback", function (assert) {
+    test("createUnresolvedRecord names the fallback", function (assert) {
       const engine = new SelectEngine({
-        createUnresolvedItem: (value) => ({
+        createUnresolvedRecord: (value) => ({
           id: value,
           name: `Topic #${value}`,
         }),
@@ -972,7 +972,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         multiple: true,
         value: [999],
         // Names the fallback but returns NO id/value field of its own.
-        createUnresolvedItem: (value) => ({ name: `Topic #${value}` }),
+        createUnresolvedRecord: (value) => ({ name: `Topic #${value}` }),
         resolveValues: () => Promise.reject(new Error("nope")),
       });
 

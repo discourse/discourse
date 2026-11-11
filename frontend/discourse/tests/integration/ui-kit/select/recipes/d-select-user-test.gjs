@@ -870,10 +870,10 @@ module(
         const user = onChange.lastCall.args[1];
 
         assert.deepEqual(
-          [group.type, group.recordId, group.automatic],
+          [group.type, group.sourceId, group.automatic],
           ["group", 3, true]
         );
-        assert.deepEqual([user.type, user.recordId], ["user", 7]);
+        assert.deepEqual([user.type, user.sourceId], ["user", 7]);
       });
 
       test("still looks held names up through the user search", async function (assert) {

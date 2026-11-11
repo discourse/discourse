@@ -32,8 +32,8 @@ option evicts its group-mates from the value at the moment of selection.
 
 ```ts
 // SelectEngineInit / DSelect args
-groupBy?: string | ((item: SelectItem) => SelectItemId);   // existing — same key space
-exclusiveGroups?: boolean | SelectItemId[] | ((key: SelectItemId) => boolean);
+groupBy?: string | ((item: SelectRecord) => SelectId);   // existing — same key space
+exclusiveGroups?: boolean | SelectId[] | ((key: SelectId) => boolean);
 // true            → every group is one-of
 // [keys]          → the listed group keys are one-of
 // (key) => bool   → dynamic predicate

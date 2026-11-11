@@ -15,19 +15,19 @@ import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-inte
 import {
   groupFields,
   GroupOption,
-  type GroupRecord,
-  itemName,
+  type GroupShape,
+  recordName,
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import type {
   SelectCoreTexts,
-  SelectItem,
+  SelectRecord,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 /** A group the picker offers; `automatic` decides whether `@automatic={{false}}` drops it. */
-type GroupSource = GroupRecord & { automatic?: boolean };
+type GroupSource = GroupShape & { automatic?: boolean };
 
 /** The group picker's arguments and the engine's forwarded presentation contract. */
 interface DSelectGroupSignature {
@@ -97,7 +97,7 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
   }
 
   @cached
-  get items(): SelectItem[] {
+  get items(): SelectRecord[] {
     const exclude = new Set(this.args.exclude ?? []);
     const only = this.args.only ? new Set(this.args.only) : undefined;
     const byName = this.args.emit === "names";
@@ -170,14 +170,14 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
         {{#if (has-block "item")}}
           {{yield item config row to="item"}}
         {{else}}
-          <GroupOption @item={{item}} />
+          <GroupOption @record={{item}} />
         {{/if}}
       </:item>
       <:selection as |item config|>
         {{#if (has-block "selection")}}
           {{yield item config to="selection"}}
         {{else}}
-          {{itemName item}}
+          {{recordName item}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

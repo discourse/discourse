@@ -37,7 +37,7 @@ export default class ListHeaderFooterExample extends Component {
       }}
       @value={{this.value}}
       @valueField="slug"
-      @valueItems={{this.tags}}
+      @valueRecords={{this.tags}}
       @virtualized={{false}}
     >
       <:listHeader as |state|>

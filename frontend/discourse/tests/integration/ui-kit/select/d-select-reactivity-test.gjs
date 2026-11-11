@@ -29,7 +29,7 @@ const EMPTY_ITEMS = [];
 
 class TestState {
   @tracked items = INITIAL_ITEMS;
-  @tracked valueItems = undefined;
+  @tracked valueRecords = undefined;
   @tracked valueItemsMulti = undefined;
   @tracked value = 1;
   @tracked multiple = false;
@@ -135,7 +135,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     );
   });
 
-  test("late @valueItems data refreshes every desktop selection surface", async function (assert) {
+  test("late @valueRecords data refreshes every desktop selection surface", async function (assert) {
     const state = new TestState();
     state.value = 2;
 
@@ -145,13 +145,13 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
           class="late-default"
           @items={{EMPTY_ITEMS}}
           @value={{state.value}}
-          @valueItems={{state.valueItems}}
+          @valueRecords={{state.valueRecords}}
         />
         <DSelect
           class="late-custom"
           @items={{EMPTY_ITEMS}}
           @value={{state.value}}
-          @valueItems={{state.valueItems}}
+          @valueRecords={{state.valueRecords}}
         >
           <:selection as |item|>
             {{~item.name~}}
@@ -161,7 +161,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
           class="late-button"
           @items={{EMPTY_ITEMS}}
           @value={{state.value}}
-          @valueItems={{state.valueItems}}
+          @valueRecords={{state.valueRecords}}
           @variant="button"
         />
         <DSelect
@@ -169,7 +169,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
           @items={{EMPTY_ITEMS}}
           @multiple={{true}}
           @value={{state.value}}
-          @valueItems={{state.valueItemsMulti}}
+          @valueRecords={{state.valueItemsMulti}}
         />
       </template>
     );
@@ -187,7 +187,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .dom(".late-multi .d-select__chip-label")
       .hasText("Unknown item (2)", "the chip starts unresolved");
 
-    state.valueItems = { id: 2, name: "Banana" };
+    state.valueRecords = { id: 2, name: "Banana" };
     state.valueItemsMulti = [{ id: 2, name: "Banana" }];
     await settled();
 
@@ -205,7 +205,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .hasText("Banana", "the chip resolves late");
   });
 
-  test("late @valueItems data refreshes the mobile selection surface", async function (assert) {
+  test("late @valueRecords data refreshes the mobile selection surface", async function (assert) {
     forceMobile();
     const state = new TestState();
     state.value = 2;
@@ -215,7 +215,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         <DSelect
           @items={{EMPTY_ITEMS}}
           @value={{state.value}}
-          @valueItems={{state.valueItems}}
+          @valueRecords={{state.valueRecords}}
         />
       </template>
     );
@@ -224,12 +224,12 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .dom(".d-select__presentation")
       .hasText("Unknown item (2)", "the mobile trigger starts unresolved");
 
-    state.valueItems = { id: 2, name: "Banana" };
+    state.valueRecords = { id: 2, name: "Banana" };
     await settled();
 
     assert
       .dom(".d-select__presentation")
-      .hasText("Banana", "the mobile trigger resolves late valueItems data");
+      .hasText("Banana", "the mobile trigger resolves late valueRecords data");
   });
 
   test("@multiple changes selection shape and the default close behavior", async function (assert) {

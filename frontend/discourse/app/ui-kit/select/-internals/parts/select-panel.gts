@@ -8,16 +8,16 @@ import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinator
 import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import type WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
-import SelectOptions, {
+import SelectListBody, {
   type SelectListContent,
-} from "discourse/ui-kit/select/-internals/parts/select-options";
+} from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
 import type WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import SelectEngine, {
   SelectDescriptor,
-  SelectItem,
   type SelectItemRow,
   SelectLoadRequest,
+  SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -168,28 +168,28 @@ interface SelectPanelSignature<State> {
     field?: [];
     /** Custom item content. */
     item?: [
-      /** The rendered item. */ item: SelectItem,
+      /** The rendered item. */ item: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
       /** What the row is, beyond its item. */ row: SelectItemRow,
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
-      /** The rendered item. */ item: SelectItem,
+      /** The rendered item. */ item: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom groupFooter content. */
     groupFooter?: [
-      /** The rendered item. */ item: SelectItem,
+      /** The rendered item. */ item: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom selection content. */
     selection?: [
-      /** The rendered item. */ item: SelectItem,
+      /** The rendered item. */ item: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom unresolved content. */
     unresolved?: [
-      /** The rendered item. */ item: SelectItem,
+      /** The rendered item. */ item: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom skeletonItem content. */
@@ -295,7 +295,7 @@ export default class SelectPanel<State> extends Component<
         {{/if}}
       {{/let}}
     {{else if @renderOptions}}
-      <SelectOptions
+      <SelectListBody
         @announcer={{@announcer}}
         @engine={{@engine}}
         @feedback={{@feedback}}
@@ -358,7 +358,7 @@ export default class SelectPanel<State> extends Component<
         <:error as |error retry|>
           {{~yield error retry to="error"~}}
         </:error>
-      </SelectOptions>
+      </SelectListBody>
     {{/if}}
     {{#if @hasFooterBlock}}
       {{! A labeled region pinned below the list (a sibling of the listbox, never inside it). }}

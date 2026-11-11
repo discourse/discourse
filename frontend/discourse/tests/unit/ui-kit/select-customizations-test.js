@@ -925,7 +925,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
         return [];
       },
       getValue: () => 2,
-      valueItems: { id: 2, name: "Two" },
+      valueRecords: { id: 2, name: "Two" },
       getLocked: () => {
         throw new Error("must not read locked");
       },

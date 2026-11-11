@@ -11,7 +11,7 @@ export default class ReviewersSelectExample extends Component {
   @tracked value = [101, 102, 103, 104, 105, 106, 999];
 
   @action
-  createUnresolvedItem(value) {
+  createUnresolvedRecord(value) {
     return {
       id: value,
       name: i18n("styleguide.sections.select.showcases.reviewers.deleted_name"),
@@ -31,7 +31,7 @@ export default class ReviewersSelectExample extends Component {
 
   <template>
     <DSelect
-      @createUnresolvedItem={{this.createUnresolvedItem}}
+      @createUnresolvedRecord={{this.createUnresolvedRecord}}
       @identifier="sg-reviewers"
       @labelField="username"
       @load={{reviewerApi.search}}

@@ -14,12 +14,12 @@ import type {
 } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
-import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-options";
+import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectEngine, {
   type SelectDescriptor,
   type SelectEngineInit,
-  type SelectItem as SelectItemModel,
   type SelectLoadRequest,
+  type SelectRecord as SelectRecordModel,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -56,12 +56,12 @@ export interface SelectHostArgs
       | "valueField"
       | "normalizeKey"
       | "labelField"
-      | "valueItems"
+      | "valueRecords"
       | "resolveValue"
       | "resolveValues"
       | "allowCreate"
       | "createItem"
-      | "createUnresolvedItem"
+      | "createUnresolvedRecord"
       | "specialItems"
       | "groupBy"
       | "groupDividers"
@@ -86,10 +86,10 @@ export interface SelectHostArgs
     text: string,
     context: SelectPasteContext
   ) =>
-    | readonly SelectItemModel[]
+    | readonly SelectRecordModel[]
     | null
     | undefined
-    | Promise<readonly SelectItemModel[] | null | undefined>;
+    | Promise<readonly SelectRecordModel[] | null | undefined>;
 }
 
 /** Hosting component callbacks; readers stay live across argument updates. */
@@ -225,15 +225,15 @@ export default class SelectHost {
       // Passed only when the consumer actually declared the arg. An arg that is present but
       // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is
       // what lets the engine tell that apart from "no identity mechanism was ever supplied".
-      getValueItems:
-        "valueItems" in this.#init.getArgs()
-          ? () => this.#init.getArgs().valueItems
+      getValueRecords:
+        "valueRecords" in this.#init.getArgs()
+          ? () => this.#init.getArgs().valueRecords
           : undefined,
       resolveValue: this.#init.getArgs().resolveValue,
       resolveValues: this.#init.getArgs().resolveValues,
       getAllowCreate: () => this.#init.getArgs().allowCreate,
       createItem: this.#init.getArgs().createItem,
-      createUnresolvedItem: this.#init.getArgs().createUnresolvedItem,
+      createUnresolvedRecord: this.#init.getArgs().createUnresolvedRecord,
       specialItems: this.#init.getArgs().specialItems,
       groupBy: this.#init.getArgs().groupBy,
       groupDividers: this.#init.getArgs().groupDividers,
@@ -355,10 +355,10 @@ export default class SelectHost {
       return resolved.then((items) =>
         items === undefined
           ? undefined
-          : this.engine.describeItems(items as SelectItemModel[])
+          : this.engine.describeItems(items as SelectRecordModel[])
       );
     }
-    return this.engine.describeItems(resolved as SelectItemModel[]);
+    return this.engine.describeItems(resolved as SelectRecordModel[]);
   }
 
   /**
@@ -371,16 +371,16 @@ export default class SelectHost {
   resolveSingle(
     value: unknown,
     opts?: SelectLoadRequest
-  ): SelectItemModel | Promise<SelectItemModel> {
+  ): SelectRecordModel | Promise<SelectRecordModel> {
     return this.engine.resolveSelection(value as SelectValue, opts) as
-      | SelectItemModel
-      | Promise<SelectItemModel>;
+      | SelectRecordModel
+      | Promise<SelectRecordModel>;
   }
 
   @action
   handleChange(
     nextValue: SelectValue,
-    payload: SelectItemModel | SelectItemModel[] | null,
+    payload: SelectRecordModel | SelectRecordModel[] | null,
     change: Parameters<NonNullable<SelectEngineInit["onChange"]>>[2]
   ): void {
     // This must be read before forwarding because the parent applies nextValue synchronously.
@@ -421,7 +421,7 @@ export default class SelectHost {
     return this.engine.update(
       (scope) => {
         const apply = (
-          items: readonly SelectItemModel[] | null | undefined
+          items: readonly SelectRecordModel[] | null | undefined
         ) => {
           if (items == null || !scope.current) {
             return;

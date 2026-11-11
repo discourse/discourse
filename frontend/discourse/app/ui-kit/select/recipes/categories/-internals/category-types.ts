@@ -1,6 +1,6 @@
 import type Category from "discourse/models/category";
 import type SiteSettingsService from "discourse/services/site-settings";
-import type { SelectItem } from "discourse/ui-kit/select/select-engine";
+import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
 /** A held category identity, normalized to its numeric site key. */
 export type CategoryValue = Category | number | string;
@@ -12,8 +12,8 @@ export interface CategorySettings extends SiteSettingsService {
   fixed_category_positions_on_create: boolean;
 }
 
-/** Select rows retain the site's record without copying model getters onto the row. */
-export interface CategoryItem extends SelectItem {
+/** Select records keep the site's category without copying model getters onto them. */
+export interface CategoryRecord extends SelectRecord {
   /** Numeric category key, or a distinct action/shortcut key. */
   id: number | string;
   /** Accessible row name, including translated action wording. */
