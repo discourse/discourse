@@ -32,6 +32,7 @@ export default class AiSummaryModal extends Component {
   @service messageBus;
   @service currentUser;
   @service modal;
+  @service site;
 
   @tracked text = "";
   @tracked summarizedOn = null;
@@ -143,6 +144,10 @@ export default class AiSummaryModal extends Component {
 
   @action
   handleSummaryClick(event) {
+    if (this.site.desktopView) {
+      return;
+    }
+
     const link = event.target.closest("a");
     if (
       !link ||
