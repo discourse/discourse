@@ -1632,6 +1632,25 @@ RSpec.describe PostCreator do
   end
 
   describe "suspended users" do
+    it "creates a post for an accepted incoming email without a group message flag" do
+      user = Fabricate(:user, suspended_till: 1.year.from_now)
+      topic =
+        Fabricate(:group_private_message_topic, user: user, recipient_group: Fabricate(:group))
+      Fabricate(:post, topic: topic, user: user)
+      creator =
+        PostCreator.new(
+          user,
+          topic_id: topic.id,
+          raw: "This post records an accepted incoming email.",
+          via_email: true,
+        )
+
+      post = creator.create
+
+      expect(post).to be_persisted
+      expect(post.via_email).to eq(true)
+    end
+
     it "rejects group replies submitted outside incoming email" do
       user = Fabricate(:user, suspended_till: 1.year.from_now)
       topic =
