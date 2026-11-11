@@ -372,6 +372,12 @@ export default function userSearch(options) {
  * @typedef {{ type: "user" | "group" | "email", value: string } & Record<string, unknown>} UserSearchRow
  */
 
+/**
+ * The user search endpoint's answer: users with a `username`, groups with a `name`, each with
+ * whatever other fields the source sends.
+ * @typedef {{ users?: ({ username: string } & Record<string, unknown>)[], groups?: ({ name: string } & Record<string, unknown>)[] }} UserSearchResponse
+ */
+
 const GROUP_SCOPE_OPTIONS = {
   visible: "includeGroups",
   mentionable: "includeMentionableGroups",
@@ -405,6 +411,34 @@ function toRow(result) {
 }
 
 /**
+ * Asks the user search endpoint, or another that answers its shape, holding the rate limit wait
+ * it advertises.
+ *
+ * @param {string} term
+ * @param {object} options
+ * @param {string} [options.url]
+ * @param {number} options.limit
+ * @param {object} options.params - Search params before they are snake_cased.
+ * @returns {Promise<UserSearchResponse>}
+ */
+async function requestUsers(term, { url, limit, params }) {
+  if (rateLimitedUntil > Date.now()) {
+    throw new Error("User search is rate limited");
+  }
+
+  try {
+    return await ajax(url || userPath("search/users"), {
+      data: { term, ...definedParams(buildSearchParams(params, limit)) },
+    });
+  } catch (error) {
+    if (isRateLimitError(error)) {
+      rateLimitedUntil = Date.now() + rateLimitWaitSeconds(error) * 1000;
+    }
+    throw error;
+  }
+}
+
+/**
  * Searches users (and groups or a typed email when asked) for a picker, ranked like
  * autocomplete. Every call sends its own request: callers debounce and drop superseded answers.
  * It shares autocomplete's rate limit wait, and rejects while it runs.
@@ -420,7 +454,10 @@ function toRow(result) {
  * @param {Record<string, unknown>} [options.searchOptions] - Extra params; camelCase keys are
  *   sent snake_cased, and unset ones aren't sent.
  * @param {string} [options.url]
- * @param {number} [options.limit]
+ * @param {(term: string) => UserSearchResponse | Promise<UserSearchResponse>} [options.load] -
+ *   Answers in place of the request, empty term included; exclusion, ranking and rows still
+ *   apply, and the source decides how many rows unless `limit` is given.
+ * @param {number} [options.limit] - Defaults to 6 for the user search.
  * @returns {Promise<UserSearchRow[]>}
  */
 export async function searchUsers({
@@ -433,53 +470,42 @@ export async function searchUsers({
   categoryId,
   searchOptions,
   url,
-  limit = 6,
+  load,
+  limit,
 } = {}) {
   term = term.replace(/^@/, "");
   if (
     skipSearch(term, emails) ||
-    (term === "" && !eagerCompleteSearch(term, topicId || categoryId))
+    (term === "" && !load && !eagerCompleteSearch(term, topicId || categoryId))
   ) {
     return [];
   }
 
-  if (rateLimitedUntil > Date.now()) {
-    throw new Error("User search is rate limited");
+  if (!load) {
+    limit ??= 6;
   }
-
-  const params = definedParams(
-    buildSearchParams(
-      {
-        topicId,
-        categoryId,
-        includeStagedUsers: includeStaged,
-        customUserSearchOptions: searchOptions,
-        ...groupScopeOptions(groups),
-      },
-      limit
-    )
-  );
-
-  let response;
-  try {
-    response = await ajax(url || userPath("search/users"), {
-      data: { term, ...params },
-    });
-  } catch (error) {
-    if (isRateLimitError(error)) {
-      rateLimitedUntil = Date.now() + rateLimitWaitSeconds(error) * 1000;
-    }
-    throw error;
-  }
+  const response = load
+    ? await load(term)
+    : await requestUsers(term, {
+        url,
+        limit,
+        params: {
+          topicId,
+          categoryId,
+          includeStagedUsers: includeStaged,
+          customUserSearchOptions: searchOptions,
+          ...groupScopeOptions(groups),
+        },
+      });
 
   // Applied before ranking, because ranking cuts to the limit and matches case sensitively.
   const excluded = new Set(exclude.map((name) => name.toLowerCase()));
   const results = organizeResults(
     {
-      users: response.users?.filter(
+      users: response?.users?.filter(
         (user) => !excluded.has(user.username.toLowerCase())
       ),
-      groups: response.groups?.filter(
+      groups: response?.groups?.filter(
         (group) => !excluded.has(group.name.toLowerCase())
       ),
     },

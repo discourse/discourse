@@ -617,6 +617,117 @@ module("Unit | Utility | user-search", function (hooks) {
       });
     });
 
+    test("searches a given loader instead of the user search, ranked and excluded", async function (assert) {
+      let requests = 0;
+      pretender.get("/u/search/users", () => {
+        requests++;
+        return response({ users: [] });
+      });
+      const terms = [];
+      const load = async (term) => {
+        terms.push(term);
+        return {
+          users: [
+            { id: 7, username: "testing", name: "Testing User" },
+            { id: 8, username: "test", name: "Test User" },
+            { id: 9, username: "tested", name: "Tested" },
+          ],
+          groups: [
+            {
+              id: 41,
+              name: "testers",
+              full_name: "Testers",
+              automatic: false,
+              disabled: true,
+              disabledReason: "Not allowed",
+            },
+          ],
+        };
+      };
+
+      const rows = await searchUsers({
+        term: "@test",
+        groups: "visible",
+        exclude: ["TESTED"],
+        load,
+      });
+
+      assert.strictEqual(requests, 0, "the user search is not asked");
+      assert.deepEqual(terms, ["test"], "the loader gets the cleaned term");
+      assert.deepEqual(
+        rows.map((row) => [row.type, row.value]),
+        [
+          ["user", "test"],
+          ["user", "testing"],
+          ["group", "testers"],
+        ],
+        "its rows are excluded and ranked like the user search's"
+      );
+      assert.deepEqual(
+        [rows[0].id, rows[2].id, rows[2].disabled, rows[2].disabledReason],
+        [8, 41, true, "Not allowed"],
+        "the loader's own fields reach the rows"
+      );
+    });
+
+    test("asks a given loader for an empty term, but not for a skipped one", async function (assert) {
+      const terms = [];
+      const load = (term) => {
+        terms.push(term);
+        return { groups: [{ id: 3, name: "staff" }] };
+      };
+
+      const empty = await searchUsers({ term: "", groups: "visible", load });
+      const skipped = await searchUsers({ term: "sam;", load });
+
+      assert.deepEqual(
+        empty.map((row) => row.value),
+        ["staff"],
+        "the loader answers the empty query"
+      );
+      assert.deepEqual(skipped, [], "a term the search skips stays skipped");
+      assert.deepEqual(terms, [""]);
+    });
+
+    test("lists every row a given loader answers unless a limit is passed", async function (assert) {
+      const names = ["g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8"];
+      const load = () => ({ groups: names.map((name) => ({ name })) });
+
+      const all = await searchUsers({ term: "", groups: "visible", load });
+      const limited = await searchUsers({
+        term: "",
+        groups: "visible",
+        load,
+        limit: 3,
+      });
+
+      assert.deepEqual(
+        all.map((row) => row.value),
+        names,
+        "the source decides how many"
+      );
+      assert.deepEqual(
+        limited.map((row) => row.value),
+        ["g1", "g2", "g3"]
+      );
+    });
+
+    test("searches a given loader while the user search's rate limit wait runs", async function (assert) {
+      pretender.get("/u/search/users", () => middlewareRateLimit(60));
+      await assert.rejects(searchUsers({ term: "ratelimited" }));
+
+      const rows = await searchUsers({
+        term: "sam",
+        load: () => ({ users: [{ username: "sam" }] }),
+      });
+
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        ["sam"],
+        "the wait belongs to the user search's endpoint"
+      );
+    });
+
     test("rejects while the advertised rate limit wait is running", async function (assert) {
       let requests = 0;
       pretender.get("/u/search/users", () => {
