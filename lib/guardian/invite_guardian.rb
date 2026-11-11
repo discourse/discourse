@@ -5,6 +5,13 @@ module InviteGuardian
     is_staff? || is_me?(user)
   end
 
+  # An invite key is a bearer credential: anyone holding it can redeem the
+  # invite and whatever it grants (groups, moderator). Only admins and the
+  # inviter may see it, which is narrower than can_see_invite_details?.
+  def can_see_invite_key?(user)
+    is_admin? || is_me?(user)
+  end
+
   def can_see_invite_emails?(user)
     is_staff? || is_me?(user)
   end
