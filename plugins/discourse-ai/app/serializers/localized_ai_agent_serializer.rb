@@ -10,6 +10,7 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :system,
              :priority,
              :tools,
+             :automatic_image_tools,
              :system_prompt,
              :allowed_group_ids,
              :temperature,
@@ -47,6 +48,10 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
   has_many :rag_uploads, serializer: UploadSerializer, embed: :object
   has_many :rag_document_sources, serializer: RagDocumentSourceSerializer, embed: :object
   has_one :default_llm, serializer: BasicLlmModelSerializer, embed: :object
+
+  def include_automatic_image_tools?
+    !object.automatic_image_tools.nil?
+  end
 
   def rag_uploads
     source_upload_ids = object.rag_document_sources.filter_map(&:upload_id).to_set

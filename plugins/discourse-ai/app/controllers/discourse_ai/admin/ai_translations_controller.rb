@@ -6,13 +6,7 @@ module DiscourseAi
       requires_plugin "discourse-ai"
 
       def show
-        supported_locales =
-          SiteSetting.content_localization_supported_locales.presence&.split("|") || []
-
-        result = base_result
-        result[:no_locales_configured] = true if supported_locales.empty?
-
-        render json: result
+        render json: base_result
       end
 
       def progress
@@ -38,14 +32,11 @@ module DiscourseAi
 
       def base_result
         {
-          translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
           enabled: DiscourseAi::Translation.enabled?,
           backfill_enabled: DiscourseAi::Translation.backfill_enabled?(target: Post),
           translation_enabled: SiteSetting.ai_translation_enabled,
           hourly_rate: SiteSetting.ai_translation_backfill_hourly_rate,
           backfill_start_date: SiteSetting.ai_translation_backfill_start_date.presence,
-          category_scope: SiteSetting.ai_translation_category_scope,
-          category_ids: DiscourseAi::Translation.category_ids,
         }
       end
     end

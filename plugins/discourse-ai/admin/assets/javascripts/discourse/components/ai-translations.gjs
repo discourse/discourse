@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
+import SiteSetting from "discourse/admin/models/site-setting";
+import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
@@ -22,6 +22,12 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import {
+  TRANSLATION_SETTING_GROUPS,
+  translationSettingDefinition,
+  translationSettingVisible,
+} from "../lib/ai-translation-settings.js";
+import { findSetting, saveSettings } from "../lib/site-settings-form.js";
 import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card.gjs";
 import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card.gjs";
 import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton.gjs";
@@ -38,42 +44,29 @@ export default class AiTranslations extends Component {
   @tracked loadingTargetDetails = {};
   @tracked targetDetailErrors = {};
   @tracked displayedTargetDetails = null;
-  @tracked
-  translationEnabled =
-    this.args.model?.translation_enabled &&
-    !this.args.model?.no_locales_configured;
-  @tracked enabled = this.args.model?.enabled;
-  // Pre-checked during first-time setup so enabling translations also surfaces the switcher;
-  // reflects the real setting once translations are already on.
-  @tracked
-  languageSwitcherRequested =
-    this.siteSettings.content_localization_language_switcher !== "none" ||
-    !this.translationEnabled;
-  @tracked
-  selectedLocales = this.siteSettings.content_localization_supported_locales
-    ? this.siteSettings.content_localization_supported_locales.split("|")
-    : [];
-  @tracked
-  originalLocales = this.siteSettings.content_localization_supported_locales
-    ? this.siteSettings.content_localization_supported_locales.split("|")
-    : [];
-  @tracked isSavingLocales = false;
-  @tracked isSavingCategories = false;
+  @tracked optimisticState = null;
+  @tracked formData;
   @tracked isTogglingTranslation = false;
   @tracked creditStatus = null;
-  @tracked creditCheckComplete = false;
-  @tracked categoryScope = this.args.model?.category_scope || "public";
-  @tracked originalCategoryScope = this.args.model?.category_scope || "public";
-  @tracked categories = [];
-  @tracked originalCategoryIds = this.args.model?.category_ids || [];
-  hourlyRate = this.args.model?.hourly_rate || 0;
+
+  settingGroups = TRANSLATION_SETTING_GROUPS;
   targetDetailRequests = new Map();
   targetDetailGeneration = 0;
+  #formApi;
 
   constructor() {
     super(...arguments);
+    // Preserve drafts and inline errors when readiness refreshes replace the route model.
+    this.formData = this.args.model.formData;
     this._checkCredits();
-    this._loadCategories();
+  }
+
+  // Readiness is the server's call (AI enabled, a model is available, locales
+  // are saved), so it is only overridden until a refresh replaces the model.
+  get #optimistic() {
+    return this.optimisticState?.model === this.args.model
+      ? this.optimisticState
+      : null;
   }
 
   get creditLimitReached() {
@@ -111,81 +104,55 @@ export default class AiTranslations extends Component {
     );
   }
 
-  get localesChanged() {
-    const current = [...this.selectedLocales].sort().join("|");
-    const original = [...this.originalLocales].sort().join("|");
-    return current !== original;
+  get enabled() {
+    return this.#optimistic?.enabled ?? this.args.model.enabled;
   }
 
-  get categoriesChanged() {
-    const current = [...this.categories.map((category) => category.id)]
-      .sort()
-      .join("|");
-    const original = [...this.originalCategoryIds].sort().join("|");
+  get translationEnabled() {
     return (
-      this.categoryScope !== this.originalCategoryScope || current !== original
-    );
-  }
-
-  get categoryScopeOptions() {
-    return [
-      "all",
-      "public",
-      "include",
-      "include_strict",
-      "exclude",
-      "exclude_strict",
-    ].map((value) => ({
-      value,
-      name: i18n(`category_scope.${value}`),
-    }));
-  }
-
-  get showCategorySelector() {
-    return ["include", "include_strict", "exclude", "exclude_strict"].includes(
-      this.categoryScope
+      this.#optimistic?.translationEnabled ??
+      this.args.model.translation_enabled
     );
   }
 
   get hasSavedLocales() {
-    return this.originalLocales.length > 0;
+    return Boolean(this.siteSettings.content_localization_supported_locales);
   }
 
   get isToggleDisabled() {
     return (
       this.isTogglingTranslation ||
-      !this.hasSavedLocales ||
-      this.selectedLocales.length === 0
+      (!this.translationEnabled && !this.hasSavedLocales)
     );
   }
 
   get toggleDisabledReason() {
-    if (this.hasSavedLocales && this.selectedLocales.length > 0) {
-      return null;
+    if (!this.translationEnabled && !this.hasSavedLocales) {
+      return i18n(
+        "discourse_ai.translations.admin_actions.enable_translations_disabled"
+      );
     }
+  }
 
-    return i18n(
-      "discourse_ai.translations.admin_actions.enable_translations_disabled"
+  get waitingForLanguages() {
+    return this.translationEnabled && !this.hasSavedLocales;
+  }
+
+  get hiddenFromReaders() {
+    return (
+      this.translationEnabled &&
+      this.hasSavedLocales &&
+      !this.siteSettings.content_localization_enabled
     );
   }
 
-  get languageSwitcherValue() {
-    return this.languageSwitcherRequested ? "all" : "none";
+  get hiddenFromReadersMessage() {
+    return trustHTML(i18n("discourse_ai.translations.hidden_from_readers"));
   }
 
-  get availableLocales() {
-    const locales = this.siteSettings.available_locales;
-    if (!locales) {
-      return [];
-    }
-
-    return locales;
-  }
-
-  get settingsUrl() {
-    return this.router.urlFor(
-      "adminPlugins.show.discourse-ai-features.edit",
-      this.args.model.translation_id
+  get localeDefinition() {
+    return translationSettingDefinition(
+      this.findSetting("content_localization_supported_locales")
     );
   }
 
@@ -220,189 +187,104 @@ export default class AiTranslations extends Component {
   }
 
   @action
-  navigateToLocalizationSettings() {
-    this.router.transitionTo("adminConfig.localization.settings", {
-      queryParams: { filter: "content_localization_supported_locales" },
-    });
+  findSetting(name) {
+    return findSetting(this.args.model.settings, name);
   }
 
   @action
-  updateSelectedLocales(locales) {
-    if (
-      this.siteSettings.content_localization_max_locales &&
-      locales.length > this.siteSettings.content_localization_max_locales
-    ) {
+  isSettingVisible(setting, data) {
+    return translationSettingVisible(this.args.model.settings, setting, data);
+  }
+
+  localeValues(value) {
+    return value ? value.split("|").filter(Boolean) : [];
+  }
+
+  @action
+  localeCount(value) {
+    return this.localeValues(value).length;
+  }
+
+  @action
+  updateLocales(field, locales) {
+    const max = this.siteSettings.content_localization_max_locales;
+    if (max && locales.length > max) {
       this.toasts.error(this.maxLocaleToast);
       return;
     }
-    this.selectedLocales = locales;
+    field.set(locales.join("|"));
   }
 
   @action
-  async saveLocales() {
-    this.isSavingLocales = true;
-    try {
-      // also enable content_localization_enabled when we're setting locales
-      if (this.selectedLocales.length > 0) {
-        await ajax("/admin/site_settings/content_localization_enabled", {
-          type: "PUT",
-          data: { content_localization_enabled: true },
-        });
-      }
+  registerFormApi(api) {
+    this.#formApi = api;
+  }
 
-      await ajax(
-        "/admin/site_settings/content_localization_supported_locales",
-        {
-          type: "PUT",
-          data: {
-            content_localization_supported_locales:
-              this.selectedLocales.join("|"),
-          },
+  @action
+  async save(data) {
+    const settings = this.args.model.settings;
+    const success = await saveSettings(
+      settings,
+      data,
+      this.#formApi,
+      (key, value) => {
+        if (key in this.siteSettings) {
+          this.siteSettings[key] = value;
         }
-      );
-      this.originalLocales = [...this.selectedLocales];
+      },
+      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+    );
 
-      if (this.translationEnabled) {
-        window.location.reload();
-      }
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.isSavingLocales = false;
-    }
-  }
-
-  @action
-  cancelLocales() {
-    this.selectedLocales = [...this.originalLocales];
-  }
-
-  @action
-  resetLocales() {
-    this.selectedLocales = [];
-  }
-
-  @action
-  updateCategoryScope(scope) {
-    this.categoryScope = scope;
-  }
-
-  @action
-  updateCategories(categories) {
-    this.categories = categories;
-  }
-
-  @action
-  async saveCategories() {
-    this.isSavingCategories = true;
-    try {
-      const ids = this.categories.map((category) => category.id);
-      await ajax("/admin/site_settings/bulk_update", {
-        type: "PUT",
-        data: {
-          settings: {
-            ai_translation_category_scope: { value: this.categoryScope },
-            ai_translation_categories: { value: ids.join("|") },
-          },
-        },
+    if (success) {
+      this.toasts.success({
+        data: { message: i18n("saved") },
+        duration: "short",
       });
-      this.originalCategoryScope = this.categoryScope;
-      this.originalCategoryIds = ids;
-
-      const expandedTargetType = this.expandedTargetType;
-      this._invalidateTargetDetails({ keepDisplayed: true });
-      this.overviewGeneration += 1;
-
-      if (expandedTargetType) {
-        await this._loadTargetDetails(expandedTargetType, { retry: true });
-      }
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.isSavingCategories = false;
-    }
-  }
-
-  @action
-  async cancelCategories() {
-    this.categoryScope = this.originalCategoryScope;
-    this.categories = await Category.asyncFindByIds(this.originalCategoryIds);
-  }
-
-  @action
-  resetCategories() {
-    this.categoryScope = "public";
-    this.categories = [];
-  }
-
-  @action
-  async toggleLanguageSwitcher(event) {
-    const previous = this.languageSwitcherRequested;
-    this.languageSwitcherRequested = event.target.checked;
-
-    // Not yet enabled: the value is applied together with the enable toggle.
-    if (!this.translationEnabled) {
-      return;
+    } else {
+      this.toasts.error({
+        data: {
+          message: i18n("discourse_ai.translations.settings_save_error"),
+        },
+        duration: "long",
+      });
     }
 
-    try {
-      await ajax(
-        "/admin/site_settings/content_localization_language_switcher",
-        {
-          type: "PUT",
-          data: {
-            content_localization_language_switcher: this.languageSwitcherValue,
-          },
-        }
-      );
-    } catch (e) {
-      this.languageSwitcherRequested = previous;
-      popupAjaxError(e);
+    // Some settings save even when others fail.
+    await this.#refreshModel();
+
+    const expandedTargetType = this.expandedTargetType;
+    this._invalidateTargetDetails({ keepDisplayed: this.enabled });
+    this.overviewGeneration += 1;
+    if (expandedTargetType) {
+      await this._loadTargetDetails(expandedTargetType, { retry: true });
     }
   }
 
   @action
   async toggleTranslationEnabled() {
-    if (this.isTogglingTranslation) {
-      return;
-    }
-
-    if (!this.translationEnabled && !this.hasSavedLocales) {
+    if (this.isToggleDisabled) {
       return;
     }
 
     this.isTogglingTranslation = true;
     try {
-      if (!this.translationEnabled && this.hasSavedLocales) {
-        await ajax("/admin/site_settings/bulk_update", {
-          type: "PUT",
-          data: {
-            settings: {
-              content_localization_enabled: { value: true },
-              content_localization_language_switcher: {
-                value: this.languageSwitcherValue,
-              },
-              ai_translation_enabled: { value: true },
-            },
-          },
-        });
-      } else {
-        await ajax("/admin/site_settings/ai_translation_enabled", {
-          type: "PUT",
-          data: { ai_translation_enabled: false },
-        });
-      }
-      this.translationEnabled = !this.translationEnabled;
-
-      if (this.translationEnabled && this.hasSavedLocales) {
-        this.enabled = true;
-      } else {
-        this.enabled = false;
+      const value = !this.translationEnabled;
+      await SiteSetting.update("ai_translation_enabled", value);
+      this.siteSettings.ai_translation_enabled = value;
+      // Readiness stays false until the server confirms it for the new value.
+      this.optimisticState = {
+        model: this.args.model,
+        translationEnabled: value,
+        enabled: false,
+      };
+      this.overviewGeneration += 1;
+      if (!value) {
         this.expandedTargetType = null;
         this._invalidateTargetDetails();
       }
-    } catch (e) {
-      popupAjaxError(e);
+      await this.#refreshModel();
+    } catch (error) {
+      popupAjaxError(error);
     } finally {
       this.isTogglingTranslation = false;
     }
@@ -410,40 +292,37 @@ export default class AiTranslations extends Component {
 
   @bind
   backfillStatusMessage(targets) {
-    if (
-      this.args.model?.backfill_enabled &&
-      this.args.model?.backfill_start_date &&
-      this.hourlyRate > 0
-    ) {
-      const posts = targets?.find(({ target_type }) => target_type === "post");
-      const totalRemaining = posts
-        ? posts.total_count - posts.translated_count
-        : 0;
+    const { backfill_enabled, backfill_start_date } = this.args.model;
 
-      if (totalRemaining && totalRemaining > 0) {
-        const formattedDate = new Date(
-          this.args.model.backfill_start_date
-        ).toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          timeZone: "UTC",
-        });
-
-        return trustHTML(
-          i18n("discourse_ai.translations.stats.backfill_message", {
-            date: formattedDate,
-            settingsUrl: this.settingsUrl,
-          })
-        );
-      }
-    }
-
-    if (!this.args.model?.backfill_enabled) {
+    if (!backfill_enabled) {
       return i18n("discourse_ai.translations.stats.backfill_disabled");
     }
 
-    return null;
+    const posts = targets?.find(({ target_type }) => target_type === "post");
+    const totalRemaining = posts
+      ? posts.total_count - posts.translated_count
+      : 0;
+
+    if (!backfill_start_date || totalRemaining <= 0) {
+      return null;
+    }
+
+    const formattedDate = new Date(backfill_start_date).toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      }
+    );
+
+    return trustHTML(
+      i18n("discourse_ai.translations.stats.backfill_message", {
+        date: formattedDate,
+        settingsUrl: "#ai-translations-backfill",
+      })
+    );
   }
 
   @bind
@@ -474,10 +353,21 @@ export default class AiTranslations extends Component {
     this._loadTargetDetails(this.expandedTargetType, { retry: true });
   }
 
-  async _loadCategories() {
-    const ids = this.args.model?.category_ids || [];
-    if (ids.length) {
-      this.categories = await Category.asyncFindByIds(ids);
+  async #refreshModel() {
+    const previousData = this.args.model.formData;
+    try {
+      await this.router.refresh();
+      for (const [name, value] of Object.entries(this.args.model.formData)) {
+        if (
+          value !== previousData[name] &&
+          this.#formApi?.get(name) === previousData[name]
+        ) {
+          await this.#formApi.set(name, value);
+          this.#formApi.commitField(name);
+        }
+      }
+    } catch {
+      // The settings were saved; a failed refresh only leaves stale readiness.
     }
   }
 
@@ -488,7 +378,6 @@ export default class AiTranslations extends Component {
     } catch {
       this.creditStatus = null;
     }
-    this.creditCheckComplete = true;
   }
 
   async _loadTargetDetails(targetType, { retry = false } = {}) {
@@ -566,18 +455,20 @@ export default class AiTranslations extends Component {
         @titleLabel={{i18n "discourse_ai.translations.title"}}
       >
         <:actions as |actions|>
-          <actions.Default
-            class="ai-translation-settings-button"
-            @label="discourse_ai.translations.admin_actions.translation_settings"
-            @route="adminPlugins.show.discourse-ai-features.edit"
-            @routeModels={{@model.translation_id}}
-          />
-          <actions.Default
-            class="ai-localization-settings-button"
-            @label="discourse_ai.translations.admin_actions.localization_settings"
-            @route="adminSiteSettingsCategory"
-            @routeModels="content_localization"
-          />
+          <actions.Wrapped>
+            <div class="ai-translations__toggle-container">
+              <DToggleSwitch
+                aria-describedby={{if
+                  this.toggleDisabledReason
+                  "ai-translations-toggle-hint"
+                }}
+                disabled={{this.isToggleDisabled}}
+                @label="discourse_ai.translations.admin_actions.enabled"
+                @state={{this.translationEnabled}}
+                {{on "click" this.toggleTranslationEnabled}}
+              />
+            </div>
+          </actions.Wrapped>
         </:actions>
       </DPageSubheader>
 
@@ -588,194 +479,135 @@ export default class AiTranslations extends Component {
         </div>
       {{/if}}
 
-      <div class="ai-translations__settings-panel settings">
-        <div class="ai-translations__settings-fields">
-          <div class="setting">
-            <div class="setting-label">
-              <label>{{i18n
-                  "discourse_ai.translations.supported_locales"
-                }}</label>
-            </div>
-            <div class="setting-value">
-              {{#if this.siteSettings.content_localization_max_locales}}
-                <div class="ai-translations__locale-info">
-                  <p class="ai-translations__locale-count">
-                    {{i18n
-                      "discourse_ai.translations.locale_count"
-                      count=this.selectedLocales.length
-                      max=this.siteSettings.content_localization_max_locales
-                    }}
-                  </p>
-                  <PluginOutlet
-                    @connectorTagName="div"
-                    @name="ai-translations-locale-info"
-                    @outletArgs={{lazyHash
-                      localesCount=this.selectedLocales.length
-                      maxLocales=this.siteSettings.content_localization_max_locales
-                    }}
-                  />
-                </div>
-              {{/if}}
-              <div class="ai-translations__locale-input-row">
-                <MultiSelect
-                  @content={{this.availableLocales}}
-                  @nameProperty="name"
-                  @onChange={{this.updateSelectedLocales}}
-                  @options={{hash allowAny=false}}
-                  @value={{this.selectedLocales}}
-                  @valueProperty="value"
-                />
-                {{#if this.localesChanged}}
-                  <div class="setting-controls">
-                    <DButton
-                      class="ok setting-controls__ok"
-                      @action={{this.saveLocales}}
-                      @ariaLabel="save"
-                      @icon="check"
-                      @isLoading={{this.isSavingLocales}}
-                    />
-                    <DButton
-                      class="cancel setting-controls__cancel"
-                      @action={{this.cancelLocales}}
-                      @ariaLabel="cancel"
-                      @icon="xmark"
-                      @isLoading={{this.isSavingLocales}}
-                    />
-                  </div>
-                {{else if this.selectedLocales.length}}
-                  <DButton
-                    class="btn-default undo setting-controls__undo"
-                    @action={{this.resetLocales}}
-                    @icon="arrow-rotate-left"
-                    @label="admin.settings.reset"
-                  />
-                {{/if}}
-              </div>
-            </div>
+      {{#if this.toggleDisabledReason}}
+        <p
+          class="ai-translations__toggle-hint"
+          id="ai-translations-toggle-hint"
+        >
+          {{this.toggleDisabledReason}}
+        </p>
+      {{/if}}
+
+      {{#if this.waitingForLanguages}}
+        <div class="alert alert-warning ai-translations__languages-notice">
+          {{i18n "discourse_ai.translations.waiting_for_languages"}}
+        </div>
+      {{/if}}
+
+      {{#if this.hiddenFromReaders}}
+        <div class="alert alert-info ai-translations__readers-notice">
+          {{this.hiddenFromReadersMessage}}
+        </div>
+      {{/if}}
+
+      <Form
+        class="ai-translations__settings-panel"
+        @data={{this.formData}}
+        @onRegisterApi={{this.registerFormApi}}
+        @onSubmit={{this.save}}
+        as |form data|
+      >
+        <form.Section
+          @title={{i18n "discourse_ai.translations.sections.languages"}}
+        >
+          <form.Field
+            class="ai-translations__locales"
+            @description={{this.localeDefinition.description}}
+            @format="large"
+            @labelFormat="full"
+            @name="content_localization_supported_locales"
+            @title={{this.localeDefinition.label}}
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <MultiSelect
+                @content={{this.siteSettings.available_locales}}
+                @nameProperty="name"
+                @onChange={{fn this.updateLocales field}}
+                @options={{hash allowAny=false}}
+                @value={{this.localeValues field.value}}
+                @valueProperty="value"
+              />
+            </field.Control>
+          </form.Field>
+          <div class="ai-translations__locale-info">
+            {{#if this.siteSettings.content_localization_max_locales}}
+              <p class="ai-translations__locale-count">
+                {{i18n
+                  "discourse_ai.translations.locale_count"
+                  count=(this.localeCount
+                    data.content_localization_supported_locales
+                  )
+                  max=this.siteSettings.content_localization_max_locales
+                }}
+              </p>
+            {{/if}}
+            <PluginOutlet
+              @connectorTagName="div"
+              @name="ai-translations-locale-info"
+              @outletArgs={{lazyHash
+                localesCount=(this.localeCount
+                  data.content_localization_supported_locales
+                )
+                maxLocales=this.siteSettings.content_localization_max_locales
+              }}
+            />
           </div>
-          <div class="setting">
-            <div class="setting-label">
-              <label>{{i18n "discourse_ai.translations.category_scope"}}</label>
-              <div class="desc ai-translations__category-scope-desc">{{i18n
-                  "discourse_ai.translations.category_scope_description"
-                }}</div>
-            </div>
-            <div class="setting-value">
-              <div class="ai-translations__category-input-row">
-                <div class="ai-translations__category-scope-row">
-                  <ComboBox
-                    @content={{this.categoryScopeOptions}}
-                    @nameProperty="name"
-                    @onChange={{this.updateCategoryScope}}
-                    @value={{this.categoryScope}}
-                    @valueProperty="value"
-                  />
-                  {{#unless this.showCategorySelector}}
-                    {{#if this.categoriesChanged}}
-                      <div class="setting-controls">
-                        <DButton
-                          class="ok setting-controls__ok"
-                          @action={{this.saveCategories}}
-                          @ariaLabel="save"
-                          @icon="check"
-                          @isLoading={{this.isSavingCategories}}
+        </form.Section>
+        {{#each this.settingGroups as |group|}}
+          {{#unless (eq group.key "languages")}}
+            {{#if (eq group.key "agents")}}
+              <details class="ai-translations__agents">
+                <summary>{{i18n
+                    "discourse_ai.translations.sections.agents"
+                  }}</summary>
+                <form.Section>
+                  {{#each group.settings as |name|}}
+                    {{#let (this.findSetting name) as |setting|}}
+                      {{#if (this.isSettingVisible setting data)}}
+                        <SettingDefinitionField
+                          @definition={{translationSettingDefinition setting}}
+                          @disabled={{setting.disabled}}
+                          @form={{form}}
                         />
-                        <DButton
-                          class="cancel setting-controls__cancel"
-                          @action={{this.cancelCategories}}
-                          @ariaLabel="cancel"
-                          @icon="xmark"
-                          @isLoading={{this.isSavingCategories}}
-                        />
-                      </div>
-                    {{else if this.categories.length}}
-                      <DButton
-                        class="btn-default undo setting-controls__undo"
-                        @action={{this.resetCategories}}
-                        @icon="arrow-rotate-left"
-                        @label="admin.settings.reset"
+                      {{/if}}
+                    {{/let}}
+                  {{/each}}
+                </form.Section>
+              </details>
+            {{else}}
+              <form.Section
+                id={{concat "ai-translations-" group.key}}
+                @title={{i18n
+                  (concat "discourse_ai.translations.sections." group.key)
+                }}
+              >
+                {{#each group.settings as |name|}}
+                  {{#let (this.findSetting name) as |setting|}}
+                    {{#if (this.isSettingVisible setting data)}}
+                      <SettingDefinitionField
+                        @definition={{translationSettingDefinition setting}}
+                        @disabled={{setting.disabled}}
+                        @form={{form}}
                       />
                     {{/if}}
-                  {{/unless}}
-                </div>
-                {{#if this.showCategorySelector}}
-                  <div class="ai-translations__category-selector-row">
-                    <CategorySelector
-                      @categories={{this.categories}}
-                      @onChange={{this.updateCategories}}
-                    />
-                    {{#if this.categoriesChanged}}
-                      <div class="setting-controls">
-                        <DButton
-                          class="ok setting-controls__ok"
-                          @action={{this.saveCategories}}
-                          @ariaLabel="save"
-                          @icon="check"
-                          @isLoading={{this.isSavingCategories}}
-                        />
-                        <DButton
-                          class="cancel setting-controls__cancel"
-                          @action={{this.cancelCategories}}
-                          @ariaLabel="cancel"
-                          @icon="xmark"
-                          @isLoading={{this.isSavingCategories}}
-                        />
-                      </div>
-                    {{else if this.categories.length}}
-                      <DButton
-                        class="btn-default undo setting-controls__undo"
-                        @action={{this.resetCategories}}
-                        @icon="arrow-rotate-left"
-                        @label="admin.settings.reset"
-                      />
-                    {{/if}}
-                  </div>
+                  {{/let}}
+                {{/each}}
+                {{#if (eq group.key "readers")}}
+                  <LinkTo
+                    class="ai-translations__more-settings"
+                    @route="adminConfig.localization.settings"
+                  >
+                    {{i18n "discourse_ai.translations.more_language_settings"}}
+                  </LinkTo>
                 {{/if}}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="setting ai-translations__language-switcher">
-          <label class="checkbox-label">
-            <input
-              checked={{this.languageSwitcherRequested}}
-              disabled={{not this.hasSavedLocales}}
-              type="checkbox"
-              {{on "input" this.toggleLanguageSwitcher}}
-            />
-            <span>{{i18n
-                "discourse_ai.translations.admin_actions.show_language_switcher"
-              }}</span>
-          </label>
-          <div class="desc">{{i18n
-              "discourse_ai.translations.admin_actions.show_language_switcher_description"
-            }}</div>
-        </div>
-        <div class="setting ai-translations__toggle-container">
-          {{#if this.toggleDisabledReason}}
-            <DTooltip
-              class="ai-translations__toggle-disabled-tooltip"
-              @content={{this.toggleDisabledReason}}
-            >
-              <:trigger>
-                <DToggleSwitch
-                  disabled={{this.isToggleDisabled}}
-                  @label="discourse_ai.translations.admin_actions.enable_translations"
-                  @state={{this.translationEnabled}}
-                  {{on "click" this.toggleTranslationEnabled}}
-                />
-              </:trigger>
-            </DTooltip>
-          {{else}}
-            <DToggleSwitch
-              disabled={{this.isToggleDisabled}}
-              @label="discourse_ai.translations.admin_actions.enable_translations"
-              @state={{this.translationEnabled}}
-              {{on "click" this.toggleTranslationEnabled}}
-            />
-          {{/if}}
-        </div>
-      </div>
+              </form.Section>
+            {{/if}}
+          {{/unless}}
+        {{/each}}
+        <form.Actions><form.Submit @label="save" /></form.Actions>
+      </Form>
 
       {{#if this.enabled}}
         <div class="ai-translations__overview">

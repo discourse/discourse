@@ -304,6 +304,10 @@ after_initialize do
       agent_klass: DiscourseDataExplorer::AiQueryGenerator,
       enabled_by_setting: "data_explorer_ai_queries_enabled",
       plugin: self,
+      entry_point: {
+        path: "/admin/plugins/discourse-data-explorer/queries/new",
+        label: "explorer.new_query",
+      },
     )
   end
 
