@@ -24,6 +24,8 @@ RSpec.describe Blog::PathFormat do
         "/news//{slug}",
         "/news {slug}",
         "/tag/{slug}",
+        "/news/../{slug}",
+        "/./{slug}",
         "/#{"a" * 100}/{slug}",
       ]
 

@@ -7,6 +7,7 @@ module ::Blog
     RESERVED_SEGMENTS =
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
     METADATA = %w[path excerpt featured published_at].freeze
+    MAX_PATH_LENGTH = 240
     PATH_PATTERN = %r{\A/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+(?:/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+)*\z}
 
     belongs_to :topic
@@ -22,7 +23,14 @@ module ::Blog
     has_many :paths, dependent: :destroy
 
     validates :topic_id, uniqueness: true
-    validates :path, presence: true, length: { maximum: 240 }, format: { with: PATH_PATTERN }
+    validates :path,
+              presence: true,
+              length: {
+                maximum: MAX_PATH_LENGTH,
+              },
+              format: {
+                with: PATH_PATTERN,
+              }
     validates :excerpt, length: { maximum: 1000 }, exclusion: { in: [nil] }
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
@@ -77,10 +85,14 @@ module ::Blog
       format = PathFormat.current
       slug = slug.presence || topic.id.to_s
       date ||= Time.current
-      path = format.render(slug:, id: topic.id, date:)
+      path = format.render(slug:, id: topic.id, date:, max_length: MAX_PATH_LENGTH)
       return path if !reserved_path?(path)
 
-      format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:)
+      format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:, max_length: MAX_PATH_LENGTH)
+    end
+
+    def self.traversal_path?(path)
+      path.to_s.split("/").intersect?(%w[. ..])
     end
 
     def self.reserved_path?(path)
@@ -304,7 +316,7 @@ module ::Blog
     end
 
     def available_path
-      if reserved_path? || path.to_s.split("/").intersect?(%w[. ..]) || !path_available?(path)
+      if reserved_path? || self.class.traversal_path?(path) || !path_available?(path)
         errors.add(:path, I18n.t("blog.errors.path_taken"))
       end
     end

@@ -144,6 +144,16 @@ RSpec.describe Blog::Publication do
       expect(described_class.new(topic:, path:)).to be_valid
     end
 
+    it "shortens a long slug to fit the format within the path limit" do
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      topic.update_columns(slug: "a" * 235)
+
+      path = described_class.default_path(topic)
+
+      expect(path).to eq("/2026/11/#{"a" * 231}")
+      expect(described_class.new(topic:, path:)).to be_valid
+    end
+
     it "renders a custom format with a fixed prefix and the topic id" do
       SiteSetting.blog_path_format = "/news/{id}-{slug}"
 

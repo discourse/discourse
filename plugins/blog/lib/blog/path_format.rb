@@ -23,22 +23,32 @@ module ::Blog
       return false if !tokens.intersect?(UNIQUE_TOKENS)
 
       sample = render(slug: "article", id: 1, date: Time.utc(2026, 1, 1))
-      sample.match?(Publication::PATH_PATTERN) && !Publication.reserved_path?(sample)
+      sample.match?(Publication::PATH_PATTERN) && !Publication.reserved_path?(sample) &&
+        !Publication.traversal_path?(sample)
     end
 
-    def dated?
-      @template.scan(TOKEN).flatten.intersect?(%w[year month day])
-    end
-
-    def render(slug:, id:, date:)
+    # A slug longer than max_length allows is shortened, sharing the room between
+    # every {slug} in the template.
+    def render(slug:, id:, date:, max_length: nil)
       date = date.utc
       values = {
         "year" => date.strftime("%Y"),
         "month" => date.strftime("%m"),
         "day" => date.strftime("%d"),
-        "slug" => slug.to_s,
         "id" => id.to_s,
       }
+      slug = slug.to_s
+      slugs = @template.scan(TOKEN).count(["slug"])
+      if max_length && slugs > 0
+        room = (max_length - expand(values.merge("slug" => "")).length) / slugs
+        slug = slug[0, room].sub(/-+\z/, "") if slug.length > room
+      end
+      expand(values.merge("slug" => slug))
+    end
+
+    private
+
+    def expand(values)
       @template.gsub(TOKEN) { values.fetch($1, $&) }
     end
   end
