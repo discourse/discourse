@@ -63,6 +63,7 @@ RSpec.describe "DSA classification suggestion" do
           end
           request.wait
 
+          expect(modal).to have_disabled_classification_fields
           expect(modal).to have_disabled_button("Silence")
 
           request.resume

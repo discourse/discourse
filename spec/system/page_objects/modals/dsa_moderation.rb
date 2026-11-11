@@ -79,6 +79,12 @@ module PageObjects
         within(full_modal_selector) { has_no_button?("Cancel", exact: true) }
       end
 
+      def has_disabled_classification_fields?
+        within(full_modal_selector) do
+          has_css?(".dsa-classification-select:disabled") && has_select?("Category", disabled: true)
+        end
+      end
+
       def has_disabled_button?(label)
         within(full_modal_selector) { has_button?(label, exact: true, disabled: true) }
       end

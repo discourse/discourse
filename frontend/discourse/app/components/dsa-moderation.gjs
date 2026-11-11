@@ -85,9 +85,9 @@ const Body = <template>
     {{/if}}
     <div hidden={{@flow.showContinue}}>
       <DsaModerationDetails
+        @disabled={{@flow.isUpdatingClassification}}
         @formId={{@flow.formId}}
         @onRegisterApi={{@flow.registerFormApi}}
-        @onSet={{@flow.recordClassificationChange}}
         @onSubmit={{@flow.classify}}
         @options={{@flow.options}}
         @validate={{@flow.validateClassification}}
@@ -111,7 +111,7 @@ const Footer = <template>
       class={{@submitClass}}
       type={{if @flow.enabled "submit" "button"}}
       @action={{unless @flow.enabled @flow.submit}}
-      @disabled={{or @disabled @flow.isSubmissionBlocked}}
+      @disabled={{or @disabled @flow.isUpdatingClassification}}
       @form={{if @flow.enabled @flow.formId}}
       @icon={{@submitIcon}}
       @isLoading={{@isLoading}}
@@ -122,11 +122,9 @@ const Footer = <template>
     <PluginOutlet
       @name="dsa-classification-footer"
       @outletArgs={{lazyHash
-        blockSubmission=@flow.blockSubmission
-        disabled=@disabled
-        fieldRevision=@flow.fieldRevision
-        getForm=@flow.getFormApi
+        disabled=(or @disabled @flow.isUpdatingClassification)
         reviewableId=@flow.reviewableId
+        updateClassification=@flow.updateClassification
       }}
     />
   {{/if}}
@@ -149,11 +147,10 @@ const Footer = <template>
 
 export default class DsaModeration extends Component {
   @tracked classificationStep = false;
-  @tracked submissionBlocks = 0;
+  @tracked classificationUpdate = null;
 
   formId = `dsa-moderation-${guidFor(this)}`;
-  #formApi;
-  #fieldRevisions = new Map();
+  #setClassification;
 
   get actionStepLabel() {
     return this.args.actionStepLabel ?? i18n("review.moderation_steps.action");
@@ -179,8 +176,8 @@ export default class DsaModeration extends Component {
     return this.args.reviewableId;
   }
 
-  get isSubmissionBlocked() {
-    return this.submissionBlocks > 0;
+  get isUpdatingClassification() {
+    return this.classificationUpdate !== null;
   }
 
   get showTitleHelp() {
@@ -196,23 +193,19 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  getFormApi() {
-    return this.#formApi;
-  }
-
-  @action
-  registerFormApi({ set }) {
-    this.#formApi = { set };
+  registerFormApi({ setProperties }) {
+    this.#setClassification = setProperties;
   }
 
   @action
   back() {
+    this.classificationUpdate = null;
     this.classificationStep = false;
   }
 
   @action
   classify(classification) {
-    if (this.isSubmissionBlocked) {
+    if (this.isUpdatingClassification) {
       return;
     }
 
@@ -236,31 +229,32 @@ export default class DsaModeration extends Component {
 
   @action
   validateClassification(_classification, { preventSubmit }) {
-    if (this.isSubmissionBlocked) {
+    if (this.isUpdatingClassification) {
       preventSubmit();
     }
   }
 
   @action
-  blockSubmission() {
-    this.submissionBlocks++;
-    let released = false;
-    return () => {
-      if (!released) {
-        released = true;
-        this.submissionBlocks--;
+  async updateClassification(load) {
+    if (this.isUpdatingClassification) {
+      return;
+    }
+
+    const update = Symbol();
+    this.classificationUpdate = update;
+    try {
+      const { community_rule, category } = await load();
+      if (!this.isDestroying && this.classificationUpdate === update) {
+        await this.#setClassification({
+          ...(community_rule && { community_rule }),
+          ...(category && { category }),
+        });
       }
-    };
-  }
-
-  @action
-  fieldRevision(field) {
-    return this.#fieldRevisions.get(field) ?? 0;
-  }
-
-  @action
-  recordClassificationChange(field) {
-    this.#fieldRevisions.set(field, this.fieldRevision(field) + 1);
+    } finally {
+      if (!this.isDestroying && this.classificationUpdate === update) {
+        this.classificationUpdate = null;
+      }
+    }
   }
 
   <template>

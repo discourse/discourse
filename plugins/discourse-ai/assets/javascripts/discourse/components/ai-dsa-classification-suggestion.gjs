@@ -20,64 +20,40 @@ export default class AiDsaClassificationSuggestion extends Component {
 
   @tracked loading = false;
 
-  #releaseSubmission;
-
-  willDestroy() {
-    super.willDestroy();
-    this.#releaseSubmission?.();
-  }
-
   @action
   async suggest() {
+    const { reviewableId, updateClassification } = this.args.outletArgs;
+    let hasSuggestion = false;
     this.loading = true;
-    this.#releaseSubmission = this.args.outletArgs.blockSubmission();
     try {
-      await this.#applySuggestion();
+      await updateClassification(async () => {
+        const classification = await ajax(
+          `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
+          { type: "POST" }
+        );
+        hasSuggestion = Object.values(classification).some(Boolean);
+        return classification;
+      });
+
+      if (!this.isDestroying) {
+        if (hasSuggestion) {
+          this.a11y.announce(i18n("discourse_ai.dsa_classification.updated"));
+        } else {
+          this.toasts.error({
+            duration: "short",
+            data: {
+              message: i18n("discourse_ai.dsa_classification.no_suggestion"),
+            },
+          });
+        }
+      }
     } catch (error) {
       if (!this.isDestroying) {
         popupAjaxError(error);
       }
     } finally {
-      this.#releaseSubmission?.();
-      this.#releaseSubmission = undefined;
       if (!this.isDestroying) {
         this.loading = false;
-      }
-    }
-  }
-
-  async #applySuggestion() {
-    const form = this.args.outletArgs.getForm();
-    const fields = ["community_rule", "category"];
-    const fieldRevision = this.args.outletArgs.fieldRevision;
-    const revisions = fields.map(fieldRevision);
-    const suggestion = await ajax(
-      `/discourse-ai/ai-moderation/dsa-classifications/${this.args.outletArgs.reviewableId}/suggest`,
-      { type: "POST" }
-    );
-    if (this.isDestroying) {
-      return;
-    }
-
-    if (!suggestion.community_rule && !suggestion.category) {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n("discourse_ai.dsa_classification.no_suggestion"),
-        },
-      });
-      return;
-    }
-
-    const updates = fields.flatMap((field, index) =>
-      suggestion[field] && fieldRevision(field) === revisions[index]
-        ? [form.set(field, suggestion[field])]
-        : []
-    );
-    if (updates.length) {
-      await Promise.all(updates);
-      if (!this.isDestroying) {
-        this.a11y.announce(i18n("discourse_ai.dsa_classification.updated"));
       }
     }
   }

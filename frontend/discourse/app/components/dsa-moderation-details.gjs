@@ -43,12 +43,12 @@ export default class DsaModerationDetails extends Component {
       ...attributes
       @data={{this.formData}}
       @onRegisterApi={{@onRegisterApi}}
-      @onSet={{@onSet}}
       @onSubmit={{@onSubmit}}
       @validate={{@validate}}
       as |form|
     >
       <form.Field
+        @disabled={{@disabled}}
         @format="full"
         @name="community_rule"
         @title={{i18n "dsa_statements.rule"}}
@@ -66,6 +66,7 @@ export default class DsaModerationDetails extends Component {
         </field.Control>
       </form.Field>
       <form.Field
+        @disabled={{@disabled}}
         @format="full"
         @name="category"
         @title={{i18n "dsa_statements.category"}}
