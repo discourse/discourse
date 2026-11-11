@@ -964,8 +964,6 @@ module Email
     end
 
     def process_destination(destination, user, body, elided)
-      validate_user(user) if user && destination.is_a?(Category)
-
       if SiteSetting.forwarded_emails_behaviour != "hide" && has_been_forwarded? &&
            process_forwarded_email(destination, user)
         return
@@ -977,11 +975,13 @@ module Email
         user ||= stage_from_user
         create_group_post(destination, user, body, elided)
       elsif destination.is_a?(Category)
+        validate_user(user) if user
         if (user.nil? || user.staged?) && !destination.email_in_allow_strangers
           raise StrangersNotAllowedError
         end
 
         user ||= stage_from_user
+        validate_user(user)
 
         if !user.staged? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
              !sent_to_mailinglist_mirror?
@@ -1171,6 +1171,7 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
+      validate_user(user) if destination.is_a?(Category)
       case SiteSetting.forwarded_emails_behaviour
       when "create_replies"
         forwarded_email_create_replies(destination, user)
@@ -1228,6 +1229,7 @@ module Email
 
       if forwarded_by_address && forwarded_by_name
         @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
+        validate_user(@forwarded_by_user) if destination.is_a?(Category)
       end
 
       email_address, display_name =
@@ -1394,7 +1396,6 @@ module Email
     end
 
     def create_topic(options = {})
-      validate_user(options[:user]) unless options[:is_group_message]
       enable_email_pm_setting(options[:user]) if options[:archetype] == Archetype.private_message
 
       create_post_with_attachments(options)
@@ -1420,7 +1421,10 @@ module Email
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
       options[:is_group_message] = group_message?(options[:topic])
-      validate_user(options[:user]) unless options[:is_group_message]
+      post_action_type = post_action_for(options[:raw])
+      notification_level = notification_level_for(options[:raw])
+      group_message_post = options[:is_group_message] && !post_action_type && !notification_level
+      validate_user(options[:user]) unless group_message_post || options[:bounce]
       if options[:bounce] && options[:topic].archetype != Archetype.private_message
         raise BouncedEmailError
       end
@@ -1430,9 +1434,9 @@ module Email
         enable_email_pm_setting(options[:user])
       end
 
-      if post_action_type = post_action_for(options[:raw])
+      if post_action_type
         create_post_action(options[:user], options[:post], post_action_type)
-      elsif notification_level = notification_level_for(options[:raw])
+      elsif notification_level
         TopicUser.change(
           options[:user].id,
           options[:post].topic_id,

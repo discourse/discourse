@@ -267,6 +267,35 @@ RSpec.describe Email::Receiver do
               )
       end
 
+      it "preserves account restrictions on likes sent by email" do
+        staff_post = Fabricate(:post, topic: group_topic)
+        key = Fabricate(:post_reply_key, user: sender, post: staff_post)
+        mail = Mail.new(incoming_message(to: "reply+#{key.reply_key}@bar.com"))
+        mail.body = "+1"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change(
+                PostAction,
+                :count,
+              )
+      end
+
+      it "preserves account restrictions on notification commands sent by email" do
+        sender.user_option.update!(email_messages_level: UserOption.email_level_types[:never])
+        TopicUser.change(
+          sender.id,
+          group_topic.id,
+          notification_level: NotificationLevels.all[:watching],
+        )
+        topic_user = TopicUser.find_by(user: sender, topic: group_topic)
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = Mail.new(incoming_message(to: "reply+#{key.reply_key}@bar.com"))
+        mail.body = "mute"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(error).and not_change {
+                topic_user.reload.notification_level
+              }.and not_change { sender.user_option.reload.email_messages_level }
+      end
+
       it "rejects new category topics" do
         mail = incoming_message(to: category.email_in)
 
@@ -334,6 +363,36 @@ RSpec.describe Email::Receiver do
       before { sender.update!(suspended_till: 1.year.from_now) }
 
       include_examples "restricted email sender", Email::Receiver::SuspendedUserError
+    end
+
+    it "checks the category forwarder when its group address unwraps an active author" do
+      SiteSetting.forwarded_emails_behaviour = "create_replies"
+      group.update!(incoming_email: sender.email)
+      sender.update!(active: false)
+      Fabricate(:user, email: "some@one.com", trust_level: TrustLevel[2])
+      mail = Mail.read_from_string(email(:forwarded_email_1))
+      mail.from = "Forwarder <#{sender.email}>"
+      mail.to = category.email_in
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::InactiveUserError,
+      ).and not_change(Post, :count)
+    end
+
+    it "preserves category forwarding by an active sender with an inactive embedded author" do
+      SiteSetting.forwarded_emails_behaviour = "create_replies"
+      sender.update!(trust_level: TrustLevel[2])
+      Group.refresh_automatic_groups_for_user!(sender)
+      original_author =
+        Fabricate(:user, email: "some@one.com", active: false, trust_level: TrustLevel[2])
+      mail = Mail.read_from_string(email(:forwarded_email_1))
+      mail.from = sender.email
+      mail.to = category.email_in
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to change(Topic, :count).by(1)
+
+      expect(Topic.last.first_post.user).to eq(original_author)
+      expect(IncomingEmail.last.error).to be_nil
     end
 
     it "validates the content of a suspended sender's group reply through a reply key" do
@@ -2479,6 +2538,28 @@ RSpec.describe Email::Receiver do
               ).strip,
             )
             expect(IncomingEmail.last.is_bounce).to eq(true)
+          end
+
+          it "records a system bounce whisper for a suspended staged recipient" do
+            user2.update!(suspended_till: 1.year.from_now)
+
+            expect { process(:hard_bounce_via_verp) }.to raise_error(
+              Email::Receiver::BouncedEmailError,
+            ).and change { topic.posts.where(post_type: Post.types[:whisper]).count }.by(1)
+
+            expect(Post.last.user).to eq(Discourse.system_user)
+            expect(IncomingEmail.last.error).to eq("Email::Receiver::BouncedEmailError")
+          end
+
+          it "records a system bounce whisper for a silenced staged recipient" do
+            user2.update!(silenced_till: 1.year.from_now)
+
+            expect { process(:hard_bounce_via_verp) }.to raise_error(
+              Email::Receiver::BouncedEmailError,
+            ).and change { topic.posts.where(post_type: Post.types[:whisper]).count }.by(1)
+
+            expect(Post.last.user).to eq(Discourse.system_user)
+            expect(IncomingEmail.last.error).to eq("Email::Receiver::BouncedEmailError")
           end
 
           it "updates the email log with the bounce error message" do
