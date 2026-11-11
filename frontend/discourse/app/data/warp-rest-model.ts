@@ -28,6 +28,21 @@ export type WarpRestModelClass = abstract new (
   ...args: never[]
 ) => WarpRestModel<unknown>;
 
+/** Subclasses can declare a singleRecordRoot matching their normalizer's single-record envelope. */
+type IngestResult<C extends WarpRestModelClass, P> = C extends {
+  singleRecordRoot: infer Root extends string;
+}
+  ? P extends null | undefined
+    ? InstanceType<C>
+    : Root extends keyof P
+      ? P[Root] extends object
+        ? InstanceType<C>
+        : [P[Root]] extends [null | undefined]
+          ? InstanceType<C>[]
+          : InstanceType<C> | InstanceType<C>[]
+      : InstanceType<C>[]
+  : InstanceType<C> | InstanceType<C>[];
+
 /** A request object built by the helpers in `discourse/data/builders/helpers`. */
 export interface WarpRequest {
   url: string;
@@ -106,11 +121,12 @@ export default class WarpRestModel<SaveResult = never> {
   /**
    * Synchronous ingest for preloaded payloads (PreloadStore, embedded sub-payloads).
    * Returns a list when the normalized document holds many records, and one wrapper otherwise.
+   * Subclasses may declare static singleRecordRoot to narrow rooted payloads without emitting a field.
    */
-  static createFromJson<C extends WarpRestModelClass>(
-    this: C,
-    json: RestPayload | null | undefined
-  ): InstanceType<C> | InstanceType<C>[];
+  static createFromJson<
+    C extends WarpRestModelClass,
+    P extends object | null | undefined,
+  >(this: C, json: P): IngestResult<C, P>;
 
   static createFromJson(json: RestPayload | null | undefined) {
     const store = warpStore();

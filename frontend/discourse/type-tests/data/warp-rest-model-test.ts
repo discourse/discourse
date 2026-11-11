@@ -68,6 +68,67 @@ expectTypeOf<Gizmo>().toExtend<typeof ingested>();
 Gizmo.createFromJson(null);
 Gizmo.createFromJson(undefined);
 
+/* A declared single-record root narrows ingest */
+
+class Gadget extends WarpRestModel {
+  declare static singleRecordRoot: "gadget";
+}
+
+class SpecialGadget extends Gadget {
+  declare special: boolean;
+}
+
+class Sprocket extends WarpRestModel {
+  declare static singleRecordRoot: "sprocket";
+}
+
+interface GadgetPayload {
+  gadget: { id: number };
+}
+
+interface GadgetListPayload {
+  gadgets: { id: number }[];
+}
+
+declare const gadgetPayload: GadgetPayload;
+declare const gadgetListPayload: GadgetListPayload;
+
+expectTypeOf(Gadget.createFromJson(gadgetPayload)).toEqualTypeOf<Gadget>();
+expectTypeOf(Gadget.createFromJson(gadgetListPayload)).toEqualTypeOf<
+  Gadget[]
+>();
+expectTypeOf(Gadget.createFromJson({ gadget: null })).toEqualTypeOf<Gadget[]>();
+// A missing payload still wraps a single (empty) record.
+expectTypeOf(Gadget.createFromJson(null)).toEqualTypeOf<Gadget>();
+expectTypeOf(
+  SpecialGadget.createFromJson(gadgetPayload)
+).toEqualTypeOf<SpecialGadget>();
+// Roots belong to their class.
+expectTypeOf(Sprocket.createFromJson(gadgetPayload)).toEqualTypeOf<
+  Sprocket[]
+>();
+expectTypeOf(Gizmo.createFromJson(gadgetPayload)).toEqualTypeOf<
+  Gizmo | Gizmo[]
+>();
+
+/** The root may or may not be present, so either shape can come back. */
+declare const maybeGadget: { gadget?: { id: number } | null };
+declare const loosePayload: Record<string, unknown>;
+expectTypeOf(Gadget.createFromJson(maybeGadget)).toEqualTypeOf<
+  Gadget | Gadget[]
+>();
+expectTypeOf(Gadget.createFromJson(loosePayload)).toEqualTypeOf<
+  Gadget | Gadget[]
+>();
+
+/** Open payloads that never carry the root say so. */
+declare const openListPayload: {
+  gadget?: never;
+  gadgets: { id: number }[];
+  [key: string]: unknown;
+};
+expectTypeOf(Gadget.createFromJson(openListPayload)).toEqualTypeOf<Gadget[]>();
+
 /* Request helpers are generic over the class */
 
 expectTypeOf(requestMany(Gizmo, request)).resolves.toExtend<Gizmo[]>();
