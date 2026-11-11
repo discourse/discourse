@@ -11,15 +11,11 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
   describe "#show" do
     context "when logged in as admin" do
-      fab!(:selected_category, :category)
-
       before do
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
-        SiteSetting.ai_translation_category_scope = "include"
-        SiteSetting.ai_translation_categories = selected_category.id.to_s
       end
 
       it "returns base configuration data without progress" do
@@ -31,7 +27,13 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(response.status).to eq(200)
         json = response.parsed_body
 
-        expect(json["translation_id"]).to eq(DiscourseAi::Configuration::Module::TRANSLATION_ID)
+        expect(json.keys).to contain_exactly(
+          "enabled",
+          "translation_enabled",
+          "hourly_rate",
+          "backfill_start_date",
+          "backfill_enabled",
+        )
         expect(json["enabled"]).to eq(true)
         expect(json["translation_enabled"]).to eq(true)
         expect(json["hourly_rate"]).to eq(100)
@@ -43,24 +45,14 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json).not_to have_key("posts_with_detected_locale")
       end
 
-      it "returns no_locales_configured when no locales are supported" do
+      it "keeps the AI flag enabled without supported locales or reader visibility" do
         SiteSetting.content_localization_supported_locales = ""
+        SiteSetting.content_localization_enabled = false
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["no_locales_configured"]).to eq(true)
-      end
-
-      it "does not include no_locales_configured when locales are set" do
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json).not_to have_key("no_locales_configured")
+        expect(response.parsed_body).to include("translation_enabled" => true, "enabled" => false)
       end
 
       it "returns translation_enabled field" do
@@ -104,30 +96,6 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["backfill_enabled"]).to eq(false)
-      end
-
-      it "returns category scope settings" do
-        other_category = Fabricate(:category)
-        SiteSetting.ai_translation_category_scope = "include"
-        SiteSetting.ai_translation_categories = "#{selected_category.id}|#{other_category.id}"
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_scope"]).to eq("include")
-        expect(response.parsed_body["category_ids"]).to contain_exactly(
-          selected_category.id,
-          other_category.id,
-        )
-      end
-
-      it "returns an empty array when no categories are configured" do
-        SiteSetting.ai_translation_categories = ""
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_ids"]).to eq([])
       end
 
       it "correctly indicates if feature is enabled" do

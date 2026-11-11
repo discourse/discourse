@@ -780,7 +780,6 @@ discourse_ai:
   ai_translation_verbose_logs:
     default: false
     client: false
-    hidden: true
     area: "ai-features/translation"
 
   inferred_concepts_enabled:
