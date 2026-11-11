@@ -205,7 +205,10 @@ RSpec.describe "Patreon group access", type: :request do
   end
 
   context "when a member creates a Discourse account" do
-    subject(:synchronize) { user }
+    subject(:synchronize) do
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
+      EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+    end
 
     before do
       post "/patreon/webhook", params: webhook_body, headers: webhook_headers

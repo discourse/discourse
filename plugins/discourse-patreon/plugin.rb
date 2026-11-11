@@ -56,13 +56,13 @@ after_initialize do
         }
   end
 
-  on(:user_created) do |user|
+  on(:user_confirmed_email) do |user|
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
     patreon_id = Patreon::Patron.all.key(user.email)
 
     if filters.present? && patreon_id.present?
       begin
-        Patreon::Patron.update_local_user(user, patreon_id, true)
+        Patreon::Patron.update_local_user(user, patreon_id)
         Patreon::Patron.sync_groups_by(patreon_id: patreon_id)
       rescue => e
         Rails.logger.warn(
