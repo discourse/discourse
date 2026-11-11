@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -106,6 +107,13 @@ export default class ChatThread extends Component {
       this.chatThreadComposer.focus();
     }
     this.loadMessages();
+  }
+
+  @action
+  onTargetMessageIdChange(_el, targetMessageId) {
+    if (targetMessageId) {
+      this.highlightOrFetchMessage(targetMessageId);
+    }
   }
 
   @action
@@ -525,10 +533,7 @@ export default class ChatThread extends Component {
     this.chatApi
       .sendMessage(this.args.thread.channel.id, {
         cooked: stagedMessage.cooked,
-        message: stagedMessage.message,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        staged_id: stagedMessage.id,
-        thread_id: this.args.thread.id,
+        ...this.#sendMessagePayload(stagedMessage),
       })
       .catch((error) => {
         stagedMessage.setSendError(error);
@@ -536,6 +541,17 @@ export default class ChatThread extends Component {
       .finally(() => {
         this.chatThreadPane.sending = false;
       });
+  }
+
+  #sendMessagePayload(message) {
+    return {
+      message: message.message,
+      in_reply_to_id: message.inReplyTo?.id ?? null,
+      upload_ids: message.uploads.map((upload) => upload.id),
+      staged_id: message.id,
+      thread_id: this.args.thread.id,
+      broadcast: message.broadcasted,
+    };
   }
 
   async #sendNewMessage(message) {
@@ -556,11 +572,7 @@ export default class ChatThread extends Component {
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
         {
-          message: message.message,
-          in_reply_to_id: null,
-          staged_id: message.id,
-          upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.id,
+          ...this.#sendMessagePayload(message),
           ...extractCurrentTopicInfo(this),
         }
       );
@@ -633,6 +645,7 @@ export default class ChatThread extends Component {
       }}
       data-id={{@thread.id}}
       {{didInsert this.setup}}
+      {{didUpdate this.onTargetMessageIdChange @targetMessageId}}
       {{willDestroy this.teardown}}
     >
       <ChatMessagesScroller

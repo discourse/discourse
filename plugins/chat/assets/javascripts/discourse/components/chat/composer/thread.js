@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposer from "../../chat-composer.gjs";
 
 export default class ChatComposerThread extends ChatComposer {
@@ -37,8 +36,36 @@ export default class ChatComposerThread extends ChatComposer {
     return i18n("chat.placeholder_thread");
   }
 
+  get showBroadcastOption() {
+    // threading-off implies the option off, enforced by UpdateChannel.
+    return Boolean(this.args.thread?.channel?.broadcastRepliesEnabled);
+  }
+
+  get broadcastChecked() {
+    return this.draft?.broadcasted ?? false;
+  }
+
+  get broadcastOptionLabel() {
+    const channel = this.args.thread?.channel;
+    if (channel?.isDirectMessageChannel) {
+      return i18n("chat.composer.broadcast_label_dm");
+    }
+    return i18n("chat.composer.broadcast_label", {
+      channelName: channel?.title,
+    });
+  }
+
   get lastMessage() {
     return this.args.thread.messagesManager.findLastMessage();
+  }
+
+  @action
+  toggleBroadcast() {
+    if (!this.draft) {
+      return;
+    }
+    this.draft.broadcasted = !this.draft.broadcasted;
+    this.persistDraft();
   }
 
   @debounce(2000)
@@ -60,6 +87,9 @@ export default class ChatComposerThread extends ChatComposer {
 
   @action
   resetDraft() {
+    if (this.draft) {
+      this.draft.editing = false;
+    }
     this.args.thread.resetDraft(this.currentUser);
   }
 
@@ -70,11 +100,13 @@ export default class ChatComposerThread extends ChatComposer {
   handleEscape(event) {
     if (this.draft.editing) {
       event.stopPropagation();
-      this.args.thread.draft = ChatMessage.createDraftMessage(
-        this.args.thread.channel,
-        { user: this.currentUser, thread: this.args.thread }
-      );
+      this.resetDraft();
+      return;
+    }
 
+    if (this.draft?.inReplyTo) {
+      event.stopPropagation();
+      this.draft.inReplyTo = null;
       return;
     }
 

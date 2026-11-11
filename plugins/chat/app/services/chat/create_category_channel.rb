@@ -27,6 +27,7 @@ module Chat
     #   @option params [Boolean] :auto_join_users
     #   @option params [Integer] :category_id
     #   @option params [Boolean] :threading_enabled
+    #   @option params [Boolean] :broadcast_replies_enabled
     #   @option params [String] :emoji
     #   @return [Service::Base::Context]
 
@@ -40,11 +41,14 @@ module Chat
       attribute :category_id, :integer
       attribute :auto_join_users, :boolean, default: false
       attribute :threading_enabled, :boolean, default: false
+      attribute :broadcast_replies_enabled, :boolean, default: false
       attribute :emoji, :string
 
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
         self.threading_enabled = threading_enabled.presence || false
+        self.broadcast_replies_enabled =
+          (broadcast_replies_enabled.presence || false) && threading_enabled
         self.emoji = emoji.presence
       end
 
@@ -88,7 +92,15 @@ module Chat
     def create_channel(category:, params:)
       category.create_chat_channel(
         user_count: 1,
-        **params.slice(:name, :slug, :description, :auto_join_users, :threading_enabled, :emoji),
+        **params.slice(
+          :name,
+          :slug,
+          :description,
+          :auto_join_users,
+          :threading_enabled,
+          :broadcast_replies_enabled,
+          :emoji,
+        ),
       )
     end
 

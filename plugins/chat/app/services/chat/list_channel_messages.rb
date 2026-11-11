@@ -96,10 +96,13 @@ module Chat
     end
 
     def fetch_messages(metadata:, guardian:)
+      target_message = metadata[:target_message]
+      target_message = nil if target_message&.thread_reply? && !target_message.broadcasted?
+
       messages = [
         metadata[:messages],
         metadata[:past_messages]&.reverse,
-        (metadata[:target_message] unless metadata[:target_message]&.thread_reply?),
+        target_message,
         metadata[:future_messages],
       ].flatten.compact
 

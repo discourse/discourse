@@ -70,6 +70,24 @@ export default class ChatMessageInfo extends Component {
     return this.args.interactive !== false;
   }
 
+  get broadcastLink() {
+    const { message, threadContext } = this.args;
+
+    if (!message?.broadcasted) {
+      return null;
+    }
+    if (threadContext) {
+      return { route: this.route, models: this.routeModels };
+    }
+    if (message.thread) {
+      return {
+        route: "chat.channel.thread.near-message",
+        models: [...message.thread.routeModels, message.id],
+      };
+    }
+    return null;
+  }
+
   get #user() {
     return this.args.message?.user;
   }
@@ -166,6 +184,29 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__bookmark">
             <BookmarkIcon @bookmark={{@message.bookmark}} />
           </span>
+        {{/if}}
+
+        {{#if this.broadcastLink}}
+          <LinkTo
+            class="chat-message-info__broadcast"
+            @models={{this.broadcastLink.models}}
+            @route={{this.broadcastLink.route}}
+          >
+            <span class="chat-message-info__broadcast__text">
+              {{i18n
+                (if
+                  @threadContext
+                  "chat.thread.broadcast_also_sent_to"
+                  "chat.thread.broadcast_sent_from_thread"
+                )
+              }}
+            </span>
+            {{#if @threadContext}}
+              <ChannelTitle @channel={{@message.channel}} />
+            {{else}}
+              {{dIcon "discourse-threads"}}
+            {{/if}}
+          </LinkTo>
         {{/if}}
 
         {{#if (and @message.pinned (not (eq @context "pinned")))}}

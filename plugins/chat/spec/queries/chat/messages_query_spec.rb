@@ -159,6 +159,11 @@ RSpec.describe Chat::MessagesQuery do
         expect(query[:future_messages]).to eq([thread.original_message])
       end
 
+      it "does include broadcasted thread replies in the channel stream" do
+        message_3.update!(thread: thread, broadcasted: true)
+        expect(query[:future_messages]).to contain_exactly(thread.original_message, message_3)
+      end
+
       context "when include_thread_messages is true" do
         let(:include_thread_messages) { true }
 

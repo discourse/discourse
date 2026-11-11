@@ -127,3 +127,17 @@
     margin-left: auto;
   }
 }
+
+// Thread composer option to also send a reply to the channel.
+.chat-composer__broadcast-option {
+  display: flex;
+  gap: 0.35em;
+  margin: 0.25rem 1rem 0;
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    margin-top: 0;
+  }
+}

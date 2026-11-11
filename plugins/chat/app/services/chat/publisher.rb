@@ -24,6 +24,7 @@ module Chat
         ]
       elsif message.thread_reply?
         targets = [thread_message_bus_channel(channel.id, message.thread_id)]
+        targets.unshift(root_message_bus_channel(channel.id)) if message.broadcasted?
         targets
       else
         [root_message_bus_channel(channel.id)]
@@ -42,21 +43,9 @@ module Chat
         serialize_message_with_type(chat_message, :sent).merge(staged_id: staged_id),
       )
 
-      if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
-        MessageBus.publish(
-          new_messages_message_bus_channel(chat_channel.id),
-          {
-            type: "channel",
-            channel_id: chat_channel.id,
-            thread_id: chat_message.thread_id,
-            message:
-              Chat::MessageSerializer.new(
-                chat_message,
-                { scope: anonymous_guardian, root: false },
-              ).as_json,
-          },
-          permissions(chat_channel),
-        )
+      if !chat_message.thread_reply? || chat_message.broadcasted? ||
+           !allow_publish_to_thread?(chat_channel, chat_message)
+        publish_new_message_indicator(chat_channel, chat_message)
       end
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
@@ -78,6 +67,24 @@ module Chat
 
         publish_thread_original_message_metadata!(chat_message.thread)
       end
+    end
+
+    # Drives channel-level unread badges for messages visible in the channel stream.
+    def self.publish_new_message_indicator(chat_channel, chat_message)
+      MessageBus.publish(
+        new_messages_message_bus_channel(chat_channel.id),
+        {
+          type: "channel",
+          channel_id: chat_channel.id,
+          thread_id: chat_message.thread_id,
+          message:
+            Chat::MessageSerializer.new(
+              chat_message,
+              { scope: anonymous_guardian, root: false },
+            ).as_json,
+        },
+        permissions(chat_channel),
+      )
     end
 
     def self.publish_thread_original_message_metadata!(thread)
@@ -182,7 +189,30 @@ module Chat
     end
 
     def self.publish_delete!(chat_channel, chat_message)
+      # A broadcasted reply lives in both streams; each recomputes its own latest.
+      if chat_message.broadcasted?
+        if allow_publish_to_thread?(chat_channel, chat_message)
+          publish_to_targets!(
+            [thread_message_bus_channel(chat_channel.id, chat_message.thread_id)],
+            chat_channel,
+            delete_payload(
+              chat_message,
+              chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id),
+            ),
+          )
+        end
+        publish_to_channel!(
+          chat_channel,
+          delete_payload(
+            chat_message,
+            chat_channel.latest_not_deleted_message_id(anchor_message_id: chat_message.id),
+          ),
+        )
+        return
+      end
+
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
+
       latest_not_deleted_message_id =
         if chat_message.thread_reply? && chat_channel.threading_enabled
           chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
@@ -192,18 +222,23 @@ module Chat
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        {
-          type: "delete",
-          deleted_id: chat_message.id,
-          deleted_at: chat_message.deleted_at,
-          deleted_by_id: chat_message.deleted_by_id,
-          latest_not_deleted_message_id: latest_not_deleted_message_id,
-        },
+        delete_payload(chat_message, latest_not_deleted_message_id),
       )
+    end
+
+    def self.delete_payload(chat_message, latest_not_deleted_message_id)
+      {
+        type: "delete",
+        deleted_id: chat_message.id,
+        deleted_at: chat_message.deleted_at,
+        deleted_by_id: chat_message.deleted_by_id,
+        latest_not_deleted_message_id: latest_not_deleted_message_id,
+      }
     end
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
       channel_permissions = permissions(chat_channel)
+      broadcasted_ids = Chat::Message.where(id: deleted_message_ids, broadcasted: true).pluck(:id)
       Chat::Thread
         .grouped_messages(message_ids: deleted_message_ids)
         .each do |group|
@@ -219,9 +254,11 @@ module Chat
 
           # Don't need to publish to the main channel if the messages deleted
           # were a part of the thread (except the original message ID, since
-          # that shows in the main channel).
+          # that shows in the main channel, and broadcasted replies, which
+          # also show in the main channel).
           deleted_message_ids =
-            deleted_message_ids - (group.thread_message_ids - [group.original_message_id])
+            deleted_message_ids -
+              ((group.thread_message_ids - [group.original_message_id]) - broadcasted_ids)
         end
 
       return if deleted_message_ids.empty?

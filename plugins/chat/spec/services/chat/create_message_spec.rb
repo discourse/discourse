@@ -264,6 +264,68 @@ RSpec.describe Chat::CreateMessage do
       end
     end
 
+    context "when broadcast is requested" do
+      let(:params) do
+        { chat_channel_id: channel.id, message: content, thread_id: thread.id, broadcast: true }
+      end
+
+      before { channel.update!(broadcast_replies_enabled: true) }
+
+      it "flags the new message as broadcasted" do
+        expect(result).to run_successfully
+        expect(result.message_instance.broadcasted?).to be(true)
+      end
+
+      it "treats the message as a channel message for last message bookkeeping" do
+        expect(result).to run_successfully
+        expect(channel.reload.last_message_id).to eq(result.message_instance.id)
+      end
+
+      context "when the channel has broadcast replies disabled" do
+        before { channel.update!(broadcast_replies_enabled: false) }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
+      end
+
+      context "when the message is not in a thread" do
+        let(:params) { { chat_channel_id: channel.id, message: content, broadcast: true } }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
+      end
+
+      context "when the channel is a direct message channel with broadcasts enabled" do
+        fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user]) }
+        fab!(:dm_thread) { Fabricate(:chat_thread, channel: dm_channel) }
+        let(:params) do
+          {
+            chat_channel_id: dm_channel.id,
+            message: content,
+            thread_id: dm_thread.id,
+            broadcast: true,
+          }
+        end
+
+        before do
+          SiteSetting.chat_enabled = true
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+          user.user_option.update!(allow_private_messages: true)
+          dm_channel.add(user)
+          dm_channel.update!(threading_enabled: true, broadcast_replies_enabled: true)
+        end
+
+        it "flags the new message as broadcasted" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(true)
+        end
+      end
+    end
+
     context "when user is silenced" do
       before { UserSilencer.new(user).silence }
 

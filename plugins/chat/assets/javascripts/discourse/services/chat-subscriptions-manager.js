@@ -193,44 +193,47 @@ export default class ChatSubscriptionsManager extends Service {
 
   _onNewChannelMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
-      channel.lastMessage = busData.message;
+      // Broadcasted thread replies can be older than the channel's newest
+      // message; never move lastMessage or the read marker backwards.
+      const messageId = busData.message.id;
+      if (!channel.lastMessage?.id || messageId > channel.lastMessage.id) {
+        channel.lastMessage = busData.message;
+      }
 
       if (!this.currentUser) {
         return;
       }
 
+      const lastReadMessageId =
+        channel.currentUserMembership.lastReadMessageId || 0;
+      const isNewer = messageId > lastReadMessageId;
       const user = busData.message.user;
-      if (user.id === this.currentUser.id) {
-        // User sent message, update tracking state to no unread
-        channel.currentUserMembership.lastReadMessageId =
-          channel.lastMessage.id;
+      // Own and ignored-user messages only advance the read marker.
+      if (
+        user.id === this.currentUser.id ||
+        this.currentUser.ignored_users.includes(user.username)
+      ) {
+        if (isNewer) {
+          channel.currentUserMembership.lastReadMessageId = messageId;
+        }
       } else {
-        // Ignored user sent message, update tracking state to no unread
-        if (this.currentUser.ignored_users.includes(user.username)) {
-          channel.currentUserMembership.lastReadMessageId =
-            channel.lastMessage.id;
-        } else {
-          if (
-            channel.lastMessage.id >
-            (channel.currentUserMembership.lastReadMessageId || 0)
-          ) {
-            channel.tracking.unreadCount++;
-          }
+        if (isNewer) {
+          channel.tracking.unreadCount++;
+        }
 
-          // Thread should be considered unread if not already.
-          if (busData.thread_id && channel.threadingEnabled) {
-            channel.threadsManager
-              .find(channel.id, busData.thread_id)
-              .then((thread) => {
-                if (thread.currentUserMembership) {
-                  channel.threadsManager.markThreadUnread(
-                    busData.thread_id,
-                    busData.message.created_at
-                  );
-                  this._updateActiveLastViewedAt(channel);
-                }
-              });
-          }
+        // Thread should be considered unread if not already.
+        if (busData.thread_id && channel.threadingEnabled) {
+          channel.threadsManager
+            .find(channel.id, busData.thread_id)
+            .then((thread) => {
+              if (thread.currentUserMembership) {
+                channel.threadsManager.markThreadUnread(
+                  busData.thread_id,
+                  busData.message.created_at
+                );
+                this._updateActiveLastViewedAt(channel);
+              }
+            });
         }
       }
     });

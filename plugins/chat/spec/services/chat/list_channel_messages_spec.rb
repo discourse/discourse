@@ -145,6 +145,18 @@ RSpec.describe Chat::ListChannelMessages do
         it "sets target_message to last_read_message_id" do
           expect(result.metadata[:target_message]).to eq(messages.second)
         end
+
+        context "when the last read message is a broadcasted thread reply" do
+          fab!(:broadcast_reply) do
+            Fabricate(:chat_message, chat_channel: channel, thread:, broadcasted: true)
+          end
+
+          before { channel.membership_for(user).update!(last_read_message: broadcast_reply) }
+
+          it "includes the broadcasted reply in the returned messages" do
+            expect(result.messages).to include(broadcast_reply)
+          end
+        end
       end
 
       it "returns messages" do
