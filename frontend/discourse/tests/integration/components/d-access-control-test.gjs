@@ -545,6 +545,42 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .hasText("Some Group", "keeps the remaining row");
   });
 
+  test("announces the grantee it removes", async function (assert) {
+    const a11y = this.owner.lookup("service:a11y");
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+      {
+        type: "group",
+        id: 1001,
+        permission: "edit",
+        display_name: "Another Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    await selectPermission("remove");
+
+    assert.true(
+      a11y.announcementHistory.some(
+        ({ text }) => text === "Removed Another Group"
+      ),
+      "the removed row is announced by the name it showed"
+    );
+  });
+
   test("calls the onChange arg when a permission changes", async function (assert) {
     const state = controlledState([
       {

@@ -425,11 +425,21 @@ export default class DAccessControl extends Component {
   @action
   onRowPermissionChange(granteeType, granteeId, permission) {
     if (permission === REMOVE_ACTION.id) {
+      const removed = this.rows.find(
+        (row) => row.type === granteeType && row.id === granteeId
+      );
       this.args.onChange(
         this.acl.filter(
           (entry) => !(entry.type === granteeType && entry.id === granteeId)
         )
       );
+      if (removed) {
+        this.a11y.announce(
+          i18n("access_control.manage.grantee_removed", {
+            name: removed.display_name,
+          })
+        );
+      }
       return;
     }
 
