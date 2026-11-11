@@ -7,19 +7,26 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AiDsaClassificationSuggestion extends Component {
+  static shouldRender(_outletArgs, { siteSettings }) {
+    return (
+      siteSettings.discourse_ai_enabled &&
+      !!siteSettings.ai_dsa_classification_decision_model
+    );
+  }
+
   @service a11y;
   @service toasts;
 
   @action
   async suggest() {
-    const form = this.args.getForm();
+    const form = this.args.outletArgs.getForm();
     const fields = ["community_rule", "category"];
     const previousValues = fields.map((field) => form.get(field));
-    this.args.onLoadingChange(true);
+    this.args.outletArgs.onLoadingChange(true);
 
     try {
       const suggestion = await ajax(
-        `/discourse-ai/ai-moderation/dsa-classifications/${this.args.reviewableId}/suggest`,
+        `/discourse-ai/ai-moderation/dsa-classifications/${this.args.outletArgs.reviewableId}/suggest`,
         { type: "POST" }
       );
       if (this.isDestroying) {
@@ -51,7 +58,7 @@ export default class AiDsaClassificationSuggestion extends Component {
       }
     } finally {
       if (!this.isDestroying) {
-        this.args.onLoadingChange(false);
+        this.args.outletArgs.onLoadingChange(false);
       }
     }
   }
@@ -60,9 +67,9 @@ export default class AiDsaClassificationSuggestion extends Component {
     <DButton
       class="btn-default"
       @action={{this.suggest}}
-      @disabled={{@disabled}}
+      @disabled={{@outletArgs.disabled}}
       @icon="discourse-sparkles"
-      @isLoading={{@loading}}
+      @isLoading={{@outletArgs.loading}}
       @label="discourse_ai.dsa_classification.suggest"
     />
   </template>

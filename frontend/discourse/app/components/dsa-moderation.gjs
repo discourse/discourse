@@ -6,8 +6,9 @@ import { guidFor } from "@ember/object/internals";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -115,13 +116,16 @@ const Footer = <template>
       @translatedLabel={{@submitLabel}}
     />
   {{/if}}
-  {{#if @flow.suggestionButton}}
-    <@flow.suggestionButton
-      @disabled={{@disabled}}
-      @getForm={{@flow.getFormApi}}
-      @loading={{@flow.suggestionLoading}}
-      @onLoadingChange={{@flow.setSuggestionLoading}}
-      @reviewableId={{@flow.reviewableId}}
+  {{#if (and @flow.enabled (not @flow.showContinue) @flow.reviewableId)}}
+    <PluginOutlet
+      @name="dsa-classification-footer"
+      @outletArgs={{lazyHash
+        disabled=@disabled
+        getForm=@flow.getFormApi
+        loading=@flow.suggestionLoading
+        onLoadingChange=@flow.setSuggestionLoading
+        reviewableId=@flow.reviewableId
+      }}
     />
   {{/if}}
   {{#if @flow.showBack}}
@@ -170,12 +174,6 @@ export default class DsaModeration extends Component {
 
   get reviewableId() {
     return this.args.reviewableId;
-  }
-
-  get suggestionButton() {
-    if (this.enabled && !this.showContinue && this.reviewableId) {
-      return applyValueTransformer("dsa-classification-suggestion", null);
-    }
   }
 
   get showTitleHelp() {
