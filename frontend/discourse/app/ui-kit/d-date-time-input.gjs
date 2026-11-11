@@ -49,16 +49,13 @@ export default class DDateTimeInput extends Component {
           : moment.tz(this.resolvedTimezone);
 
       this.args.onChange(
-        moment.tz(
-          {
-            year: date.year(),
-            month: date.month(),
-            day: date.date(),
-            hours: time.hours,
-            minutes: time.minutes,
-          },
-          this.resolvedTimezone
-        )
+        this.#atWallTime({
+          year: date.year(),
+          month: date.month(),
+          day: date.date(),
+          hours: time.hours,
+          minutes: time.minutes,
+        })
       );
     }
   }
@@ -71,17 +68,24 @@ export default class DDateTimeInput extends Component {
     }
 
     this.args.onChange?.(
-      moment.tz(
-        {
-          year: date.year(),
-          month: date.month(),
-          day: date.date(),
-          hours: this.hours || 0,
-          minutes: this.minutes || 0,
-        },
-        this.resolvedTimezone
-      )
+      this.#atWallTime({
+        year: date.year(),
+        month: date.month(),
+        day: date.date(),
+        hours: this.hours || 0,
+        minutes: this.minutes || 0,
+      })
     );
+  }
+
+  /**
+   * Without an explicit zone, use the browser's own rules. The bundled tz data
+   * only covers years near the present and gets DST offsets wrong outside them.
+   */
+  #atWallTime(fields) {
+    return this.args.timezone
+      ? moment.tz(fields, this.args.timezone)
+      : moment(fields);
   }
 
   <template>

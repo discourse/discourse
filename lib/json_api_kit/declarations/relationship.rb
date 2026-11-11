@@ -16,10 +16,6 @@ module JsonApiKit
         verify_readable_block
       end
 
-      def listing(params, guardian:, scoped_to:, edition:)
-        resource.all(params, guardian:, scoped_to:, edition:)
-      end
-
       def resolves?(path) = resource.resolves?(path)
 
       private
@@ -29,7 +25,7 @@ module JsonApiKit
       def verify_readable_block
         return unless readable.per_record?
         raise UnsupportedRule,
-              "#{name}: having both a guardian and a record for a relationship isn’t supported"
+              "#{name}: relationship readability blocks cannot accept a record argument."
       end
     end
   end

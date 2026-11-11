@@ -3,46 +3,26 @@
 module JsonApiKit
   module Declarations
     class Sort
-      SEPARATOR = "."
-
-      def self.for(name, ...)
-        return Related.new(name, ...) if name.to_s.include?(SEPARATOR)
-        new(name, ...)
+      class << self
+        def verify_direction!(direction)
+          unless direction.in?(%i[asc desc])
+            raise ArgumentError, "Unknown sort direction: #{direction.inspect}."
+          end
+        end
       end
 
       attr_reader :name
 
-      def initialize(name, column: nil, sql: nil, joins: [], nulls: nil)
+      def initialize(name, **options)
         @name = name.to_s
-        @column = column
-        @sql = sql
-        @joins = joins
-        @nulls = nulls
+        @options = options
       end
 
-      def key(schema:, direction:)
-        Pagination::Keyset::Key.new(
-          attribute,
-          model: schema.model,
-          direction:,
-          sql: sql_for(schema),
-          joins:,
-          nulls: placement(schema),
-        )
-      end
+      def key(builder:, direction:) = builder.sort_key(name, direction:, **options)
 
       private
 
-      attr_reader :column, :sql, :joins, :nulls
-
-      def attribute = (column || name.tr(SEPARATOR, "_")).to_sym
-
-      def sql_for(_schema) = sql
-
-      def placement(schema)
-        return nulls if nulls
-        :last if schema.nullable?(attribute)
-      end
+      attr_reader :options
     end
   end
 end

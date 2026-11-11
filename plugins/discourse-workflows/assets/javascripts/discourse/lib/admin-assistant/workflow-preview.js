@@ -284,27 +284,27 @@ export function extractWorkflowPreview(cooked) {
     ) {
       return null;
     }
+    const preview = {
+      name: configuration.name,
+      configuration,
+      shortened: payload.shortened === true,
+    };
     if (configuration.operations.length > MAX_PREVIEW_OPERATIONS) {
-      return { name: configuration.name, configuration, unavailable: true };
+      return { ...preview, unavailable: true };
     }
 
     const graph = graphFromOperations(configuration.operations);
     if (!graph) {
-      return { name: configuration.name, configuration, unavailable: true };
+      return { ...preview, unavailable: true };
     }
     if (
       graph.nodes.length > MAX_PREVIEW_NODES ||
       graph.connections.length > MAX_PREVIEW_CONNECTIONS
     ) {
-      return {
-        name: configuration.name,
-        configuration,
-        nodeCount: graph.nodes.length,
-        unavailable: true,
-      };
+      return { ...preview, nodeCount: graph.nodes.length, unavailable: true };
     }
 
-    return { name: configuration.name, configuration, ...graph };
+    return { ...preview, ...graph };
   } catch {
     return null;
   }

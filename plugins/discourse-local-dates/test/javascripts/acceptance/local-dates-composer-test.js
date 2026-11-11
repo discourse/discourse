@@ -177,4 +177,35 @@ acceptance("composer", function (needs) {
       .dom(".d-editor-input")
       .hasValue(/format=LTS/, "preserves LTS format in output");
   });
+
+  test("date modal - chosen extra timezones are written into the inserted markup", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
+
+    await click(".advanced-mode-btn");
+
+    const timezonesInput = selectKit(".timezones-input");
+    await timezonesInput.expand();
+    await timezonesInput.fillInFilter("Europe/Paris");
+    await timezonesInput.selectRowByValue("Europe/Paris");
+    if (!timezonesInput.isExpanded()) {
+      await timezonesInput.expand();
+    }
+    await timezonesInput.fillInFilter("America/Los_Angeles");
+    await timezonesInput.selectRowByValue("America/Los_Angeles");
+
+    await click(".discourse-local-dates-create-modal .btn-primary");
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        / timezones=Europe\/Paris\|America\/Los_Angeles\]/,
+        "inserts both chosen timezones in selection order"
+      );
+  });
 });

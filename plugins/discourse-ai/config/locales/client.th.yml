@@ -102,6 +102,8 @@ th:
             other: "%{count} โพส"
       spam:
         short_title: "ขยะ"
+        no_llm_selected: "ไม่มี"
+        no_decision_model_selected: "ไม่มี"
         last_seven_days: "7 วันที่ผ่านมา"
         enable: "เปิดใช้งาน"
         test_modal:

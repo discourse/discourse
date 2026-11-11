@@ -96,8 +96,6 @@ hu:
           other: "Biztos, hogy töröl %{count} üzenetet?"
       channel_settings:
         title: "Csatornabeállítások"
-        edit: "Szerkesztés"
-        add: "Hozzáadás"
         star_channel: "Csillagcsatorna"
         unstar_channel: "Csillag eltávolítása a csatornáról"
         close_channel: "Csatorna bezárása"
@@ -109,7 +107,6 @@ hu:
         join_channel: "Csatlakozás a csatornához"
         leave_channel: "Csatorna elhagyása"
         leave_groupchat_info: "Ha kilép ebből a csoportos csevegésből, többé nem lesz hozzáférése hozzá, és nem fog vele kapcsolatos értesítéseket kapni. Az újbóli csatlakozáshoz a csoportos csevegés egyik tagjának újbóli meghívására lesz szüksége."
-        notification_settings: "Értesítési beállítások"
         notification_settings_context: "Értesítések"
         join: "Belépés"
         leave: "Elhagyás"
@@ -300,21 +297,22 @@ hu:
       members_view:
         filter_placeholder: Tagok keresése
         add_member: Tag hozzáadása
-        back_to_settings: "Vissza a beállításokhoz"
       about_view:
         associated_topic: Kapcsolódó téma
         associated_category: Kapcsolódó kategória
-        title: Cím
         name: Név
         description: Leírás
       channel_info:
         back_to_all_channels: "Összes csatorna"
         back_to_channel: "Vissza"
+        nav_label: "Csatornainformációk"
         tabs:
           members: Tagok
+          preferences: Beállítások
           settings: Beállítások
           search: Keresés
         remove_member: "Eltávolítás"
+        members_title: "%{channel} tag"
       new_message_modal:
         title: Üzenet küldése
         add_user_long: <kbd>shift + kattintás</kbd> vagy <kbd>shift + enter</kbd><span>@%{username} hozzáadása</span>
@@ -334,15 +332,12 @@ hu:
         create_new_group_chat: "Csoportos csevegés létrehozása"
         group_with_too_many_members: "túl sok tagja van (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Csatorna szerkesztése
         input_placeholder: Név hozzáadása
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
         reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
-        title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
-        description: Mondja el az embereknek, hogy miről szól ez a csatorna
       direct_message_creator:
         add_to_channel: "Hozzáadás a csatornához"
         title: Új üzenet
@@ -438,7 +433,6 @@ hu:
         always: "Összes tevékenységnél"
       settings:
         channel_wide_mentions_label: "Az @all és @here megemlítések engedélyezése"
-        channel_wide_mentions_description: "Engedélyezi a felhasználóknak, hogy értesítsék a #%{channel} összes tagját az @all-al, vagy csak azokat, akik az adott pillanatban aktívak @here"
         channel_threading_label: "Szálkezelés"
         channel_threading_description: "Ha engedélyezve van a szálkezelés, akkor a csevegőüzenetekre adott válaszok egy külön beszélgetést hoznak létre, amely a fő csatorna mellett létezik."
         auto_join_users_label: "Felhasználók automatikus hozzáadása"
@@ -459,9 +453,6 @@ hu:
         save: "Mentés"
         saved: "Mentve"
         unfollow: "Elhagyás"
-        admin_title: "Adminisztrátor"
-        settings_title: "Beállítások"
-        info_title: "Csatornainformációk"
         category_label: "Kategória"
         history_label: "Előzmények"
         members_label: "Tagok"

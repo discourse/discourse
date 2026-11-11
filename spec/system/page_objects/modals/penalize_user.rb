@@ -29,6 +29,10 @@ module PageObjects
         find("input.suspend-reason").fill_in with: reason
       end
 
+      def has_suspend_reason?(reason)
+        has_field?(class: "suspend-reason", with: reason)
+      end
+
       def fill_in_silence_reason(reason)
         find("input.silence-reason").fill_in with: reason
       end

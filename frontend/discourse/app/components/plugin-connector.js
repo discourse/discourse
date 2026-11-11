@@ -1,23 +1,10 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
-import { afterRender } from "discourse/lib/decorators";
 import {
   buildArgsWithDeprecations,
   deprecatedArgumentValue,
 } from "discourse/lib/outlet-args";
-
-let _decorators = {};
-
-// Don't call this directly: use `plugin-api/decoratePluginOutlet`
-export function addPluginOutletDecorator(outletName, callback) {
-  _decorators[outletName] = _decorators[outletName] || [];
-  _decorators[outletName].push(callback);
-}
-
-export function resetDecorators() {
-  _decorators = {};
-}
 
 export default class PluginConnector extends Component {
   init() {
@@ -75,12 +62,6 @@ export default class PluginConnector extends Component {
     connectorClass?.setupComponent?.call(this, merged, this);
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    this._decoratePluginOutlets();
-  }
-
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
@@ -92,12 +73,5 @@ export default class PluginConnector extends Component {
     const connectorClass = this.connector.connectorClass;
     const action = connectorClass?.actions?.[name];
     return action ? action.call(this, ...args) : super.send(name, ...args);
-  }
-
-  @afterRender
-  _decoratePluginOutlets() {
-    (_decorators[this.connector.outletName] || []).forEach((dec) =>
-      dec(this.element, this.args)
-    );
   }
 }

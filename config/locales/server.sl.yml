@@ -2007,6 +2007,20 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Vsak dan"
+        every_weekday: "Vsak delavnik"
+        ordinals:
+          last: "zadnji"
+        weekdays:
+          sunday: "Nedelja"
+          monday: "Ponedeljek"
+          tuesday: "Torek"
+          wednesday: "Sreda"
+          thursday: "Četrtek"
+          friday: "Petek"
+          saturday: "Sobota"
     google_meet:
       meeting_code: "Koda:"
     github:

@@ -582,6 +582,14 @@ ja:
       assign:
         errors:
           not_found: "トピックが見つかりませんでした."
+    appearance_authoring:
+      default_theme: "デフォルトのテーマ"
+      colors:
+        light:
+          header_background: "ヘッダー"
+      fonts:
+        base_font: "本文のフォント"
+        heading_font: "見出しのフォント"
     reviewables:
       ai_tool_action:
         title: "AI ツールアクション"
@@ -629,6 +637,7 @@ ja:
     embeddings:
       delete_failed: "このモデルは使用中です。先に `ai embeddings selected model` を更新してください。"
       cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
+      missing_provider_param: "%{param} は空白にできません"
       configuration:
         disable_embeddings: "先に 'ai embeddings enabled' を無効にしてください。"
         choose_model: "先に 'ai embeddings selected model' を設定してください。"

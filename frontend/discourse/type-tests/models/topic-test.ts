@@ -222,7 +222,7 @@ interface ExpectedTopicFields {
   pm_with_non_human_user?: boolean;
   post_stream?: object;
   posted?: boolean;
-  posters?: ExpectedPoster[] & { firstObject?: ExpectedPoster };
+  posters?: ExpectedPoster[];
   posts_count?: number;
   published_page?: ExpectedPublishedPage;
   queued_posts_count?: number;
@@ -247,7 +247,23 @@ interface ExpectedTopicFields {
   unread_by_group_member?: boolean;
   unread_posts?: number;
   unseen?: boolean;
-  user_badges?: object | null;
+  /** `TopicView#user_badges`, sent when a theme asks for post user badges. */
+  user_badges?: {
+    users: Record<string, { id: number; badge_ids: number[] }>;
+    badges: Record<
+      string,
+      {
+        id: number;
+        name: string;
+        slug: string;
+        description: string;
+        icon: string | null;
+        image_url: string | null;
+        badge_grouping_id: number;
+        badge_type_id: number;
+      }
+    >;
+  } | null;
   user_id?: number | null;
   user_last_posted_at?: string | null;
   views?: number;
@@ -356,8 +372,6 @@ expectTypeOf(topic.searchContext).toEqualTypeOf<{
   type: "topic";
   id: number;
 }>();
-expectTypeOf(topic.totalUnread).toEqualTypeOf<number | undefined>();
-expectTypeOf(topic.displayNewPosts).toEqualTypeOf<number | undefined>();
 expectTypeOf(topic.viewsHeat).toEqualTypeOf<
   "heatmap-high" | "heatmap-med" | "heatmap-low" | null
 >();

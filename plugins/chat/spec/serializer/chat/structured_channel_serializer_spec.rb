@@ -128,6 +128,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             archive_status
             user_tracking_state
             user_has_threads
+            user_channel_mute
           ],
         )
       end
@@ -144,6 +145,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
               Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
               Chat::Publisher.user_tracking_state_message_bus_channel(user1.id),
               Chat::Publisher.user_has_threads_message_bus_channel(user1.id),
+              Chat::Publisher.user_channel_mute_message_bus_channel(user1.id),
               Chat::Publisher.new_messages_message_bus_channel(channel1.id),
               Chat::Publisher.new_mentions_message_bus_channel(channel1.id),
               Chat::Publisher.kick_users_message_bus_channel(channel1.id),

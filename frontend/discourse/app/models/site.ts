@@ -370,12 +370,9 @@ export default class Site extends RestModel {
     }
 
     if (result.archetypes) {
-      result.archetypes = (
-        result.archetypes as unknown as { site?: Site }[]
-      ).map((a) => {
+      result.archetypes = result.archetypes.map((a) => {
         a.site = result;
-        // TODO(typescript-pending): RestCompatModel.create is untyped; remove when it returns the subclass.
-        return Archetype.create(a) as Archetype;
+        return Archetype.create(a);
       });
     }
 
@@ -459,21 +456,6 @@ export default class Site extends RestModel {
       "discourse.static-viewport-initialization",
       () => !this.capabilities.viewport.sm
     );
-  }
-
-  @dependentKeyCompat
-  get isMobileDevice(): boolean {
-    deprecated(
-      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
-        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
-      {
-        id: "discourse.site.is-mobile-device",
-        since: "3.5.0.beta9-dev",
-        url: "https://meta.discourse.org/t/367810",
-      }
-    );
-
-    return this.mobileView;
   }
 
   @dependentKeyCompat
@@ -640,33 +622,6 @@ export default class Site extends RestModel {
     if (!tags) {
       return [];
     }
-    // TODO(typescript-pending): the store registry has no tag entry; remove when it does.
-    return tags.map(
-      (tag) =>
-        this.store.createRecord(
-          "tag",
-          tag as unknown as RestModelAttrs<RestModel>
-        ) as unknown as Tag
-    );
+    return tags.map((tag) => this.store.createRecord("tag", tag));
   }
-}
-
-/** The deprecated global namespace, present only on pages that still define it. */
-declare const Discourse: object | undefined;
-
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "Site", {
-    get() {
-      if (!warned) {
-        deprecated("Import the Site class instead of using Discourse.Site", {
-          since: "2.4.0",
-          id: "discourse.global.site",
-        });
-        warned = true;
-      }
-      return Site;
-    },
-  });
 }

@@ -150,24 +150,48 @@ RSpec.describe "Chat channel sidebar context menu" do
   end
 
   context "when muting and unmuting a channel" do
-    it "mutes an unmuted channel" do
+    it "mutes an unmuted channel until it is unmuted" do
       chat_page.visit_channel(channel_1)
 
-      chat_sidebar_page.open_notification_settings(channel_1)
-      chat_sidebar_page.toggle_mute_channel
+      chat_sidebar_page.mute_channel(channel_1)
 
-      expect(channel_1.membership_for(current_user).reload.muted).to eq(true)
+      membership = channel_1.membership_for(current_user).reload
+      expect(membership.muted).to eq(true)
+      expect(membership.muted_until).to be_nil
+    end
+
+    it "mutes a channel for a duration" do
+      chat_page.visit_channel(channel_1)
+
+      chat_sidebar_page.mute_channel(channel_1, "1_hour")
+
+      membership = channel_1.membership_for(current_user).reload
+      expect(membership.muted).to eq(true)
+      expect(membership.muted_until).to be_within(1.minute).of(1.hour.from_now)
+    end
+
+    it "shows when a channel muted for a duration unmutes" do
+      channel_1.membership_for(current_user).update!(muted: true, muted_until: 1.hour.from_now)
+
+      chat_page.visit_channel(channel_1)
+
+      menu = chat_sidebar_page.open_channel_hover_menu(channel_1)
+
+      expect(menu).to have_option(
+        ".chat-channel-sidebar-link-menu__unmute-channel .chat-channel-sidebar-link-menu__muted-until",
+      )
     end
 
     it "unmutes a muted channel" do
-      channel_1.membership_for(current_user).update!(muted: true)
+      channel_1.membership_for(current_user).update!(muted: true, muted_until: 1.hour.from_now)
 
       chat_page.visit_channel(channel_1)
 
-      chat_sidebar_page.open_notification_settings(channel_1)
-      chat_sidebar_page.toggle_mute_channel
+      chat_sidebar_page.unmute_channel(channel_1)
 
-      expect(channel_1.membership_for(current_user).reload.muted).to eq(false)
+      membership = channel_1.membership_for(current_user).reload
+      expect(membership.muted).to eq(false)
+      expect(membership.muted_until).to be_nil
     end
 
     it "doesn't show unread indicators when channel is muted" do
@@ -176,8 +200,7 @@ RSpec.describe "Chat channel sidebar context menu" do
 
       chat_page.visit_channel(channel_1)
 
-      chat_sidebar_page.open_notification_settings(channel_1)
-      chat_sidebar_page.toggle_mute_channel
+      chat_sidebar_page.mute_channel(channel_1)
 
       Fabricate(:chat_message_with_service, chat_channel: channel_1, user: other_user)
 

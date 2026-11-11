@@ -14,6 +14,7 @@ import {
   rememberedMode,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlLanguageOptions from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-language-options";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
 
@@ -50,6 +51,10 @@ export default class AdminPluginsExplorerNew extends Controller {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
     );
+  }
+
+  get sqlLanguageOptions() {
+    return sqlLanguageOptions(this.schema);
   }
 
   get groupOptions() {

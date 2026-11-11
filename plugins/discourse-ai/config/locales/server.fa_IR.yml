@@ -122,6 +122,11 @@ fa_IR:
       assign:
         errors:
           not_found: "موضوع پیدا نشد."
+    appearance_authoring:
+      default_theme: "پوسته پیش‌فرض"
+      colors:
+        light:
+          header_background: "سربرگ"
     reviewables:
       ai_tool_action:
         approve:

@@ -78,6 +78,10 @@ class InviteSerializer < ApplicationSerializer
     can_see_invite_details?
   end
 
+  def groups
+    object.groups.select { |group| scope.can_see_group?(group) }
+  end
+
   def expired
     object.expired?
   end

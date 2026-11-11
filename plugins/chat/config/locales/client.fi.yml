@@ -81,8 +81,6 @@ fi:
           other: "Haluatko varmasti poistaa nämä %{count} viestiä?"
       channel_settings:
         title: "Kanavan asetukset"
-        edit: "Muokkaa"
-        add: "Lisää"
         close_channel: "Sulje kanava"
         open_channel: "Avaa kanava"
         archive_channel: "Arkistoi kanava"
@@ -274,21 +272,22 @@ fi:
       members_view:
         filter_placeholder: Etsi jäseniä
         add_member: Lisää jäsen
-        back_to_settings: "Takaisin asetuksiin"
       about_view:
         associated_topic: Linkitetty ketju
         associated_category: Linkitetty alue
-        title: Otsikko
         name: Nimi
         description: Kuvaus
       channel_info:
         back_to_all_channels: "Kaikki kanavat"
         back_to_channel: "Takaisin"
+        nav_label: "Kanavan tiedot"
         tabs:
           members: Jäsenet
+          preferences: Asetukset
           settings: Asetukset
           search: Haku
         remove_member: "Poista"
+        members_title: "%{channel} jäsentä"
       new_message_modal:
         title: Lähetä viesti
         add_user_long: <kbd>vaihto + napsautus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
@@ -308,14 +307,11 @@ fi:
         create_new_group_chat: "Luo ryhmäkeskustelu"
         group_with_too_many_members: "sisältää liian monta jäsentä (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
         slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
       channel_edit_description_modal:
-        title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
-        description: Kerro ihmisille, mistä tässä kanavassa on kyse
       direct_message_creator:
         add_to_channel: "Lisää kanavalle"
         title: Uusi viesti
@@ -409,7 +405,6 @@ fi:
         always: "Kaikessa toiminnassa"
       settings:
         channel_wide_mentions_label: "Salli @all- ja @here-maininnat"
-        channel_wide_mentions_description: "Salli käyttäjien ilmoittaa kaikille kanavan #%{channel} käyttäjille @all-maininnalla tai niille, jotka ovat aktiivisia kyseisellä hetkellä, @here-maininnalla"
         channel_threading_label: "Ketjutus"
         channel_threading_description: "Kun ketjutus on käytössä, chat-viestin vastaukset luovat erillisen keskustelun, joka on olemassa pääkanavan rinnalla."
         auto_join_users_label: "Lisää käyttäjiä automaattisesti"
@@ -429,9 +424,6 @@ fi:
         save: "Tallenna"
         saved: "Tallennettu"
         unfollow: "Poistu"
-        admin_title: "Ylläpitäjä"
-        settings_title: "Asetukset"
-        info_title: "Kanavan tiedot"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Jäsenet"

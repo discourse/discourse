@@ -117,6 +117,8 @@ lv:
             other: "%{count} raksti"
       spam:
         short_title: "Spams"
+        no_llm_selected: "Nav"
+        no_decision_model_selected: "Nav"
         last_seven_days: "Pēdējās 7 dienas"
         enable: "Ieslēgt"
         test_modal:

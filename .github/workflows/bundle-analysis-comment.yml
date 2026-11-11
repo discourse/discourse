@@ -1,0 +1,50 @@
+name: Bundle analysis comment
+
+# Comments bundle-analysis.yml's report on the PR, even from forks. It runs from
+# the default branch and never runs PR code: it only renders the report, escaped.
+
+on:
+  workflow_run:
+    workflows: ["Bundle analysis"]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  comment:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    concurrency:
+      group: bundle-analysis-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: script/bundle_analysis
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: bundle-analysis
+          path: ${{ runner.temp }}/bundle-analysis
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const dir = `${process.env.GITHUB_WORKSPACE}/script/bundle_analysis`;
+            const { run } = await import(`${dir}/lib/comment.mjs`);
+            await run({
+              github,
+              context,
+              core,
+              artifactDir: `${process.env.RUNNER_TEMP}/bundle-analysis`,
+              budgetPath: `${dir}/budget.json`,
+            });

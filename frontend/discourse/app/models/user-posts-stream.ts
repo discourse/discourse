@@ -55,11 +55,9 @@ export default class UserPostsStream extends EmberObject {
     this.loading = true;
 
     try {
-      // TODO(typescript-pending): ajax lacks response types; remove the cast when this endpoint can be typed by ajax.
-      const result = (await ajax(this.url)) as
-        | (UserActionFields & Record<string, unknown>)[]
-        | null
-        | undefined;
+      const result = await ajax<
+        (UserActionFields & Record<string, unknown>)[] | null | undefined
+      >(this.url);
       if (result) {
         const posts = result.map((post) => UserAction.create(post));
         this.content.push(...posts);

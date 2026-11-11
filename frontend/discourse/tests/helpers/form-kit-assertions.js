@@ -1,6 +1,7 @@
 import { capitalize } from "@ember/string";
 import { isBlank } from "@ember/utils";
 import QUnit from "qunit";
+import { codeEditorValue } from "discourse/tests/helpers/code-editor-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class FieldsetHelper {
@@ -106,9 +107,9 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-textarea").value;
       }
       case "code": {
-        return this.element.querySelector(
-          ".form-kit__control-code .ace_text-input"
-        ).value;
+        return codeEditorValue(
+          this.element.querySelector(".form-kit__control-code")
+        );
       }
       case "composer": {
         return this.element.querySelector(

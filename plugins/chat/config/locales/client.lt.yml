@@ -106,8 +106,6 @@ lt:
           other: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
       channel_settings:
         title: "Kanalo nustatymai"
-        edit: "Redaguoti"
-        add: "Pridėti"
         star_channel: "Pažymėti kanalą"
         unstar_channel: "Pašalinti žvaigždutę nuo kanalo"
         close_channel: "Uždaryti kanalą"
@@ -116,10 +114,11 @@ lt:
         open_channel_disabled_read_only: "Tik skaityti skirtų kanalų negalima vėl atidaryti."
         archive_channel: "Archyvuoti kanalą"
         delete_channel: "Ištrinti kanalą"
+        danger_zone:
+          title: "Pavojinga zona"
         join_channel: "Prisijungti prie kanalo"
         leave_channel: "Išeiti iš kanalo"
         leave_groupchat_info: "Išėję iš šio grupinio pokalbio, nebeturėsite jo prieigos ir negausite su juo susijusių pranešimų. Norėdami vėl prisijungti, turėsite gauti pakartotinį grupės pokalbio nario kvietimą."
-        notification_settings: "Pranešimų nustatymai"
         notification_settings_context: "Pranešimai"
         join: "Prisijungti"
         leave: "Palikti"
@@ -432,21 +431,22 @@ lt:
       members_view:
         filter_placeholder: Rasti narius
         add_member: Pridėti narį
-        back_to_settings: "Atgal į nustatymus"
       about_view:
         associated_topic: Susijusi tema
         associated_category: Susijusi kategorija
-        title: Antraštė
         name: Vardas
         description: Aprašymas
       channel_info:
         back_to_all_channels: "Visi kanalai"
         back_to_channel: "Atgal"
+        nav_label: "Kanalo informacija"
         tabs:
           members: Nariai
+          preferences: Nustatymai
           settings: Nustatymai
           search: Paieška
         remove_member: "Pašalinti"
+        members_title: "%{channel} narių"
       new_message_modal:
         title: Siųsti žinutę
         add_user_long: <kbd>shift + spustelėti</kbd> arba <kbd>shift + enter</kbd><span>Pridėti @%{username}</span>
@@ -466,7 +466,6 @@ lt:
         create_new_group_chat: "Sukurti grupės pokalbį"
         group_with_too_many_members: "turi per daug narių (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Redaguoti kanalą
         input_placeholder: Pridėti pavadinimą
         slug_description: URL adrese vietoj kanalo pavadinimo naudojamas kanalo kodas
         name: Kanalo pavadinimas
@@ -474,9 +473,7 @@ lt:
         emoji: Kanalo jaustukas
         reset_emoji: Iš naujo nustatyti jaustuką
       channel_edit_description_modal:
-        title: Redaguoti aprašymą
         input_placeholder: Pridėti aprašymą
-        description: Papasakokite žmonėms, apie ką yra šis kanalas
       direct_message_creator:
         add_to_channel: "Pridėti prie kanalo"
         title: Nauja žinutė
@@ -640,7 +637,6 @@ lt:
         always: "Visai veiklai"
       settings:
         channel_wide_mentions_label: "Leisti @all ir @here paminėjimus"
-        channel_wide_mentions_description: "Leisti vartotojams išsiųsti pranešimus visiems #%{channel} nariams su @all arba tik tiems, kurie šiuo metu aktyvūs su @here"
         channel_threading_label: "Temos"
         channel_threading_description: "Kai įjungtos temos, atsakymai į pokalbio pranešimą sukurs atskirą pokalbį, kuris bus rodomas šalia pagrindinio kanalo."
         auto_join_users_label: "Automatiškai pridėti naudotojus"
@@ -661,9 +657,6 @@ lt:
         save: "Išsaugoti"
         saved: "Išsaugota"
         unfollow: "Palikti"
-        admin_title: "Administratorius"
-        settings_title: "Nustatymai"
-        info_title: "Kanalo informacija"
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Nariai"

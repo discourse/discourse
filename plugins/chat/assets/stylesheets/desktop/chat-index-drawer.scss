@@ -28,11 +28,6 @@
     &.--threads {
       margin-top: 0.25rem;
 
-      .c-unread-indicator {
-        width: 8px;
-        height: 8px;
-      }
-
       .chat-channel-title {
         gap: 0.5rem;
         color: var(--primary);
@@ -48,8 +43,8 @@
 .chat-drawer-container .c-channel-settings,
 .chat-drawer-container .c-channel-info__nav,
 .chat-drawer-container .c-channel-members,
-.chat-drawer-container .c-search,
-.chat-drawer-container .chat-message-creator-container {
+.chat-drawer-container .c-channel-preferences,
+.chat-drawer-container .c-search {
   padding: 1rem;
   width: auto;
 }

@@ -105,7 +105,7 @@ export default class Dropdown extends Component {
 
   @action
   onChangeValue(value) {
-    this.set("field.value", value);
+    set(this.args.field, "value", value);
   }
 
   <template>
@@ -115,6 +115,7 @@ export default class Dropdown extends Component {
       value=@field.value
       content=@field.choices
       nameProperty="label"
+      onChange=this.onChangeValue
       tabindex="9"
       options=(hash translatedNone=false)
     }}

@@ -201,6 +201,11 @@ module PageObjects
         has_css?("#{VISIBLE_DRAWER} .c-channel-settings")
       end
 
+      def has_channel_preferences?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .c-channel-preferences")
+      end
+
       def has_channel_members?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .c-channel-members")

@@ -5,6 +5,8 @@ import {
 import { Fragment, Node } from "prosemirror-model";
 import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation.ts";
 
+const LINKIFY_BOUNDARY = /^[*[\]]/;
+
 export default class Serializer {
   #afterSerializers;
 
@@ -14,7 +16,16 @@ export default class Serializer {
       state.write(state.inTable ? "<br>" : "\n");
 
     this.nodes.text = (state, node) => {
-      state.text(node.text, !state.inAutolink);
+      if (
+        state.out.length !== state.linkifyEnd ||
+        !LINKIFY_BOUNDARY.test(node.text)
+      ) {
+        state.text(node.text, !state.inAutolink);
+        return;
+      }
+
+      state.text(node.text[0], false);
+      state.text(node.text.slice(1));
     };
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};

@@ -401,6 +401,10 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
     raise Discourse::InvalidAccess if !can_review_target?(performed_by.guardian)
+    if params[:category_id].present? &&
+         !performed_by.guardian.can_move_topic_to_category?(params[:category_id])
+      raise Discourse::InvalidAccess
+    end
 
     (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
@@ -457,15 +461,11 @@ class Reviewable < ActiveRecord::Base
           )
 
         if attributes
-          DsaStatementOfRecord.create!(
-            reviewable_id: id,
-            payload:
-              attributes.merge(
-                application_date: Date.current.iso8601,
-                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
-                source_type: "SOURCE_VOLUNTARY",
-                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
-              ),
+          DsaStatementOfRecord.record!(
+            reviewable: self,
+            attributes:,
+            performed_by:,
+            classification: args[:dsa_classification],
           )
         end
       end
@@ -626,6 +626,12 @@ class Reviewable < ActiveRecord::Base
       SQL
   end
   private_class_method :exclude_private_messages_hidden_from
+
+  def self.created_solely_by(user)
+    where(created_by_id: user.id).where.not(
+      id: ReviewableScore.pending.where.not(user_id: user.id).select(:reviewable_id),
+    )
+  end
 
   def self.pending_count(user)
     list_for(user).count
@@ -948,7 +954,12 @@ class Reviewable < ActiveRecord::Base
     target_type == "User" ? target : target_created_by
   end
 
-  def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
+  def delete_user_actions(
+    actions,
+    bundle = nil,
+    require_reject_reason: false,
+    dsa_classification_required: false
+  )
     bundle ||=
       actions.add_bundle(
         "#{id}-reject_user",
@@ -961,7 +972,7 @@ class Reviewable < ActiveRecord::Base
     username = target_user&.username
     confirmable = !require_reject_reason && username.present?
 
-    actions.add(:delete_user, bundle: bundle) do |a|
+    actions.add(:delete_user, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
@@ -973,7 +984,7 @@ class Reviewable < ActiveRecord::Base
       end
     end
 
-    actions.add(:delete_user_block, bundle: bundle) do |a|
+    actions.add(:delete_user_block, bundle: bundle, dsa_classification_required:) do |a|
       a.icon = "ban"
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason

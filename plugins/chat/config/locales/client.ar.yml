@@ -108,8 +108,6 @@ ar:
           other: "هل تريد بالتأكيد حذف هذه الرسائل البالغ عددها ‎ %{count}‎؟"
       channel_settings:
         title: "إعدادات القناة"
-        edit: "تعديل"
-        add: "إضافة"
         star_channel: "ميّز القناة بنجمة"
         unstar_channel: "إزالة تمييز القناة"
         close_channel: "إغلاق القناة"
@@ -118,10 +116,11 @@ ar:
         open_channel_disabled_read_only: "لا يمكن إعادة فتح القنوات المخصصة للقراءة فقط."
         archive_channel: "أرشفة القناة"
         delete_channel: "حذف القناة"
+        danger_zone:
+          title: "منطقة الخطر"
         join_channel: "الانضمام إلى القناة"
         leave_channel: "مغادرة القناة"
         leave_groupchat_info: "بمغادرة هذه الدردشة الجماعية، ستفقد الوصول إليها إلى الأبد ولن تتلقى أي إشعارات متعلقة بها. للانضمام مرة أخرى، ستحتاج إلى إعادة دعوتك من قِبل أحد أعضاء الدردشة الجماعية."
-        notification_settings: "إعدادات الإشعارات"
         notification_settings_context: "الإشعارات"
         join: "الانضمام"
         leave: "مغادرة"
@@ -451,21 +450,22 @@ ar:
       members_view:
         filter_placeholder: العثور على أعضاء
         add_member: إضافة عضو
-        back_to_settings: "العودة إلى الإعدادات"
       about_view:
         associated_topic: الموضوع المرتبط
         associated_category: الفئة المرتبطة
-        title: العنوان
         name: الاسم
         description: الوصف
       channel_info:
         back_to_all_channels: "كل القنوات"
         back_to_channel: "العودة"
+        nav_label: "معلومات القناة"
         tabs:
           members: الأعضاء
+          preferences: التفضيلات
           settings: الإعدادات
           search: البحث
         remove_member: "إزالة"
+        members_title: "‎ %{channel}‎أعضاء"
       new_message_modal:
         title: إرسال رسالة
         add_user_long: <kbd>مفتاح Shift + نقرة</kbd> أو <kbd>مفتاح Shift + مفتاح Enter</kbd><span>أضِف @%{username}</span>
@@ -485,7 +485,6 @@ ar:
         create_new_group_chat: "إنشاء دردشة جماعية"
         group_with_too_many_members: "بها عدد كبير جدًا من الأعضاء (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: تعديل القناة
         input_placeholder: أضِف اسمًا
         slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
         name: اسم القناة
@@ -493,9 +492,7 @@ ar:
         emoji: الرمز التعبيري للقناة
         reset_emoji: إعادة تعيين الرمز التعبيري
       channel_edit_description_modal:
-        title: تعديل الوصف
         input_placeholder: أضِف وصفًا
-        description: أخبر الناس عن محتوى هذه القناة
       direct_message_creator:
         add_to_channel: "إضافة إلى القناة"
         title: رسالة جديدة
@@ -647,7 +644,6 @@ ar:
         always: "للنشاط بأكمله"
       settings:
         channel_wide_mentions_label: "السماح بإشارات @الكل و@هنا"
-        channel_wide_mentions_description: "السماح للمستخدمين بإرسال إشعارات إلى جميع أعضاء #%{channel} باستخدام @الكل، أو المستخدمين النشطين في الوقت الحالي فقط باستخدام @هنا"
         channel_threading_label: "سلاسل الدردشة"
         channel_threading_description: "عند تفعيل سلاسل الدردشة، ستؤدي الردود على رسالة الدردشة إلى إنشاء محادثة منفصلة، والتي ستكون موجودة بجانب القناة الرئيسية."
         auto_join_users_label: "إضافة المستخدمين تلقائيًا"
@@ -668,9 +664,6 @@ ar:
         save: "حفظ"
         saved: "تم الحفظ"
         unfollow: "مغادرة"
-        admin_title: "مسؤول"
-        settings_title: "الإعدادات"
-        info_title: "معلومات القناة"
         category_label: "الفئة"
         history_label: "السجل"
         members_label: "الأعضاء"

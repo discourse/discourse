@@ -499,7 +499,12 @@ class TopicUser < ActiveRecord::Base
           )
 SQL
 
-    DB.exec(sql, user_id: user_id, count: count)
+    DB.exec(
+      sql,
+      user_id: user_id,
+      count: count,
+      logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
+    )
   end
 
   def self.ensure_consistency!(topic_id = nil)

@@ -565,15 +565,22 @@ describe OAuth2BasicAuthenticator do
     end
 
     let(:access_token) do
-      {
-        "params" => {
+      OAuth2::AccessToken.new(
+        OAuth2::Client.new("Rails", "client-secret"),
+        "token",
+        {
+          "rails" => "Rails",
           "info" => {
             "name" => "Sammy the Shark",
             "email" => "sammy@digitalocean.com",
             "uuid" => "e028b1b918853eca7fba208a9d7e9d29a6e93c57",
+            "size" => "XL",
+            "verified" => false,
+            "count" => 42,
+            "emails" => [{ "value" => "sammy@digitalocean.com" }],
           },
         },
-      }
+      )
     end
 
     before(:each) do
@@ -590,6 +597,60 @@ describe OAuth2BasicAuthenticator do
       strategy.stubs(:access_token).returns(access_token)
       expect(strategy.info["name"]).to eq "Sammy the Shark"
       expect(strategy.info["email"]).to eq "sammy@digitalocean.com"
+    end
+
+    it "supports bare response keys and keys named after Ruby methods" do
+      strategy.stubs(:access_token).returns(access_token)
+      SiteSetting.oauth2_callback_user_id_path = "info.uuid"
+      SiteSetting.oauth2_callback_user_info_paths =
+        "name:params.info.size|email:info.email|verified:params.info.verified|count:params.info.count"
+
+      expect(strategy.uid).to eq(access_token.params["info"]["uuid"])
+      expect(strategy.info).to eq(
+        "name" => "XL",
+        "email" => "sammy@digitalocean.com",
+        "verified" => false,
+        "count" => 42,
+      )
+    end
+
+    it "returns nil for method calls in either callback path setting" do
+      strategy.stubs(:access_token).returns(access_token)
+      original_params = access_token.params.deep_dup
+
+      %w[
+        client.secret
+        client.id.constantize.name
+        params.rails.constantize.name
+        params.info.name.upcase
+        params.info.clear
+        params.info.emails.first.value
+        token
+      ].each do |path|
+        SiteSetting.oauth2_callback_user_id_path = path
+        SiteSetting.oauth2_callback_user_info_paths = "name:#{path}"
+
+        expect(strategy.uid).to be_nil, "Expected uid path #{path} to return nil"
+        expect(strategy.info).to eq("name" => nil), "Expected info path #{path} to return nil"
+        expect(access_token.params).to eq(original_params)
+      end
+    end
+
+    it "returns nil when a path is missing or continues beyond a scalar value" do
+      strategy.stubs(:access_token).returns(access_token)
+
+      %w[
+        params.missing.name
+        params.info.name.missing
+        params.info.verified.value
+        params.info.count.value
+      ].each do |path|
+        SiteSetting.oauth2_callback_user_id_path = path
+        SiteSetting.oauth2_callback_user_info_paths = "name:#{path}"
+
+        expect(strategy.uid).to be_nil
+        expect(strategy.info).to eq("name" => nil)
+      end
     end
 
     it "does apply user properties from access token callback in after_authenticate" do

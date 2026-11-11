@@ -677,9 +677,11 @@ class PostAlerter
 
     topic_title = topic.title
     # when sending a private message email, keep the original title
-    if topic.private_message? && modifications = post.revisions.map(&:modifications)
-      if first_title_modification = modifications.find { |m| m.has_key?("title") }
-        topic_title = first_title_modification["title"][0]
+    if topic.private_message?
+      title_revision = post.revisions.find { |revision| revision.modifications.has_key?("title") }
+
+      if title_revision && can_see_original_title?(user, post, title_revision)
+        topic_title = title_revision.modifications["title"][0]
       end
     end
 
@@ -1134,6 +1136,12 @@ class PostAlerter
   end
 
   private
+
+  def can_see_original_title?(user, post, title_revision)
+    guardian = Guardian.new(user)
+    guardian.can_see_post_revision?(title_revision) &&
+      guardian.can_view_post_version?(post, title_revision.number)
+  end
 
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches

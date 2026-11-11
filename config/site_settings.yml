@@ -42,14 +42,21 @@
 #                            `stable` status admins are warned that it will become permanent and they will no
 #                            longer be able to opt out. Set to false when that warning does not apply, for
 #                            example a change that only alters the default value of another site setting.
-#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
-#                            dropdown options the admin can pick for this upcoming change.
+#                          - group_setting: (optional setting name) use an existing group_list setting as
+#                            the audience instead of SiteSettingGroup. Must reference a core setting or one
+#                            from the change's own plugin. Cannot combine with allow_enabled_for.
+#                            The rollout boolean and audience are independent: toggling preserves the linked
+#                            setting, and audience edits update that setting using its normal validation,
+#                            mandatory_values, disallowed_groups, confirmation flow, and staff logging.
+#                            An empty list means no audience; anonymous access requires anonymous_users.
+#                            Linked audience restrictions still apply after auto-promotion and permanent status.
+#                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
 #                            Valid values: everyone, staff, specific_groups.
 #
-#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
-#                            the only value (it cannot combine with staff or specific_groups).
-#                            Omit the key to allow all four options (the default permissive
-#                            behavior).
+#                            `everyone` must be the only value and means the change can't be scoped to
+#                            groups; the admin UI then shows the impact role's groups as a locked audience,
+#                            so make the role match who the change affects. Omit the key to let admins
+#                            pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.
@@ -492,6 +499,11 @@ basic:
   push_notification_time_window_mins:
     default: 1
     min: 0
+    area: "notifications"
+  push_notification_trusted_hosts:
+    default: "fcm.googleapis.com|updates.push.services.mozilla.com|push.apple.com|notify.windows.com"
+    type: host_list
+    list_type: simple
     area: "notifications"
   push_notification_localization_max_wait_mins:
     default: 3
@@ -1672,11 +1684,6 @@ posting:
     default: 7
     max: 36500
     client: true
-    area: "posts_and_topics"
-  short_progress_text_threshold:
-    client: true
-    default: 10000
-    max: 99000
     area: "posts_and_topics"
   default_code_lang:
     client: true
@@ -4836,7 +4843,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
@@ -4846,7 +4853,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:
@@ -4878,37 +4885,38 @@ experimental:
   enable_form_templates:
     client: true
     default: true
-  dsa_notice_group:
-    default: "1"
-    type: group
-    hidden: true
-    area: "experimental"
   dsa_reporting_enabled:
     client: true
     default: false
-    hidden: true
     area: "experimental"
-  dsa_moderation_appeal_email:
-    default: ""
-    type: email
-    hidden: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    area: "experimental"
   dsa_community_rules:
     type: objects
     default: []
     area: "experimental"
     schema:
-      name: community_rule
+      name: Community rule
+      identifier: ground
       properties:
         ground:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500
         explanation:
           type: string
+          textarea: true
           required: true
           validations:
-            max_length: 2000
+            max_length: 500
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true

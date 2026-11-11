@@ -20,9 +20,14 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   });
 
   test("can remove a username", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     this.set("value", ["bob", "martin"]);
 
-    await render(<template><UserChooser @value={{this.value}} /></template>);
+    await render(
+      <template>
+        <UserChooser @onChange={{this.onChange}} @value={{this.value}} />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.deselectItemByValue("bob");

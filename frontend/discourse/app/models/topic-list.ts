@@ -6,8 +6,6 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import deprecated from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import type {
@@ -248,26 +246,6 @@ export default class TopicList extends RestModel {
     return json;
   }
 
-  static find(
-    filter: string,
-    params: TopicListParams
-  ): globalThis.Promise<TopicList> {
-    deprecated(
-      `TopicList.find is deprecated. Use \`findFiltered("topicList")\` on the \`store\` service instead.`,
-      {
-        id: "discourse.topic-list-find",
-        since: "3.1.0.beta5",
-      }
-    );
-
-    // TODO(typescript-pending): remove this lookup assertion when getOwnerWithFallback publishes typed service lookups.
-    const store = getOwnerWithFallback(this).lookup("service:store");
-    return (store as StoreService).findFiltered("topicList", {
-      filter,
-      params,
-    });
-  }
-
   /** Hide the category when it has no children. */
   static hideUniformCategory(list: TopicList, category: Category | undefined) {
     list.set("hideCategory", !displayCategoryInList(list.site, category));
@@ -346,9 +324,8 @@ export default class TopicList extends RestModel {
 
       this.set("loadingMore", true);
 
-      // TODO(typescript-pending): ajax does not publish response types; remove the payload annotation when its response is generic.
-      return ajax({ url: moreUrl }).then(
-        async (result: TopicListEnvelope | undefined) => {
+      return ajax<TopicListEnvelope | undefined>({ url: moreUrl }).then(
+        async (result) => {
           let topicsAdded = 0;
 
           if (result) {
@@ -384,11 +361,10 @@ export default class TopicList extends RestModel {
     try {
       const url = `/${this.filter}.json?topic_ids=${topic_ids.join(",")}`;
 
-      // TODO(typescript-pending): ajax does not publish response types; remove the assertion when its response is generic.
-      const result = (await ajax({
+      const result = await ajax<TopicListEnvelope>({
         url,
         data: this.params,
-      })) as TopicListEnvelope;
+      });
 
       // refresh dupes
       removeValuesFromArray(

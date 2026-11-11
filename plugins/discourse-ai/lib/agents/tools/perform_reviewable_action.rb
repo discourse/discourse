@@ -58,7 +58,12 @@ module DiscourseAi
             )
           end
 
-          reviewable = Reviewable.viewable_by(guardian.user).find_by(id: parameters[:reviewable_id])
+          # AI tool approvals require a person's decision, not another agent tool call.
+          reviewable =
+            Reviewable
+              .viewable_by(guardian.user)
+              .where.not(type: ReviewableAiToolAction.sti_name)
+              .find_by(id: parameters[:reviewable_id])
           if !reviewable
             return(
               error_response(

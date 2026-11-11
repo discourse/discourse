@@ -1,3 +1,7 @@
+blog:
+  - changed-files:
+      - any-glob-to-any-file: plugins/blog/**/*
+
 boards:
   - changed-files:
       - any-glob-to-any-file: plugins/boards/**/*

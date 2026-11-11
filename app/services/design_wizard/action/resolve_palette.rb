@@ -3,6 +3,13 @@
 class DesignWizard::Action::ResolvePalette < Service::ActionBase
   option :palette_id
 
+  # Whether resolving the palette creates one: a built-in palette the wizard
+  # hasn't saved yet.
+  def self.creates_palette?(palette_id)
+    palette_id.present? && palette_id.negative? &&
+      !ColorScheme.exists?(base_scheme_id: palette_id, via_wizard: true)
+  end
+
   def call
     return if palette_id.blank?
     return ColorScheme.find_by(id: palette_id) if palette_id.positive?

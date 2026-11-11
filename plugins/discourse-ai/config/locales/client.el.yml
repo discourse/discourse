@@ -203,6 +203,8 @@ el:
             label: "Μετάφραση"
       spam:
         short_title: "Ανεπιθύμητα"
+        no_llm_selected: "Κανένα"
+        no_decision_model_selected: "Κανένα"
         last_seven_days: "Τελευταίες 7 ημέρες"
         false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"

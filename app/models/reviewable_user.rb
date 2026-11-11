@@ -51,13 +51,30 @@ class ReviewableUser < Reviewable
           label: "reviewables.actions.confirm_spam.title",
         )
 
-      build_penalty_actions(actions, bundle:, silence: :silence_user, suspend: :suspend_user)
+      build_penalty_actions(
+        actions,
+        bundle:,
+        silence: :silence_user,
+        suspend: :suspend_user,
+        dsa_classification_required: true,
+      )
 
-      delete_user_actions(actions, bundle, require_reject_reason: false)
+      delete_user_actions(
+        actions,
+        bundle,
+        require_reject_reason: false,
+        dsa_classification_required: true,
+      )
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
-      build_action(actions, :remove_avatar, icon: "user-xmark", secondary: true)
+      build_action(
+        actions,
+        :remove_avatar,
+        icon: "user-xmark",
+        secondary: true,
+        dsa_classification_required: is_a_suspect_user?,
+      )
     end
 
     # Reviewed items must not offer approval in the queue, but approving an
@@ -218,6 +235,8 @@ class ReviewableUser < Reviewable
   private
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return if !is_a_suspect_user? && !target&.approved?
+
     case action_id
     when :suspend_user
       user = target.reload

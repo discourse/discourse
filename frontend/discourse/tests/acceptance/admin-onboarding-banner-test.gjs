@@ -19,14 +19,13 @@ const designWizardData = () => ({
       name: "Foundation",
       default: true,
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -60,7 +59,6 @@ const designWizardData = () => ({
         {
           key: "horizon",
           name: "Horizon",
-          dark_only: false,
           light: {
             id: 23,
             name: "Horizon",
@@ -83,7 +81,6 @@ const designWizardData = () => ({
         {
           key: "marigold",
           name: "Marigold",
-          dark_only: false,
           light: {
             id: 25,
             name: "Marigold",
@@ -590,19 +587,26 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("theme cards are left behind on the colors step");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
+      )
+      .exists({ count: 1 }, "the colors step shows the theme's light palettes");
 
-    await click(".design-wizard__swatch[data-pair-key='default']");
+    await click(
+      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+    );
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
 
     assert
-      .dom(".design-wizard__font-select")
-      .exists({ count: 2 }, "the colors step offers the font dropdowns");
+      .dom(".design-wizard__section")
+      .hasClass("--section-logo", "the colors step starts with the logo");
 
     await click(".design-wizard__next");
+    assert
+      .dom(".design-wizard__font-select")
+      .exists({ count: 2 }, "the last step offers the font dropdowns");
     assert
       .dom(".design-wizard__homepage-card")
       .exists({ count: 2 }, "the homepage step offers topics and categories");
@@ -610,20 +614,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__homepage-card.--selected")
       .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
     assert
-      .dom(".design-wizard__option-row[data-topic-page]")
-      .exists({ count: 3 }, "a topics homepage offers the topic page types");
+      .dom(".design-wizard__detail-group")
+      .doesNotExist("a topics homepage has no further choices");
     assert
-      .dom(".design-wizard__option-row[data-topic-page].--selected")
-      .hasAttribute("data-topic-page", "latest", "defaults to latest");
-    assert
-      .dom(".design-wizard__switch-row [role='switch']")
-      .exists(
-        { count: 1 },
-        "the homepage step offers the welcome banner switch"
-      );
-    assert
-      .dom(".design-wizard__option-row[data-search-experience]")
-      .exists({ count: 2 }, "the homepage step offers the search experiences");
+      .dom(".design-wizard__section")
+      .exists({ count: 2 }, "the last step offers the fonts and homepage");
 
     await click(".design-wizard__homepage-card[data-homepage='categories']");
     assert
@@ -636,17 +631,17 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "categories_boxes",
         "defaults to boxes with subcategories"
       );
-    assert
-      .dom(".design-wizard__option-row[data-topic-page]")
-      .doesNotExist("the topic page types are hidden for categories");
 
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("keeps onboarding visible on the categories preview");
     assert.dom(".design-wizard__next").doesNotExist("no next on the last step");
     assert.dom(".design-wizard__save").exists("the last step offers save");
 
     await click(".design-wizard__back");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
+      .dom(".design-wizard__palette-row[data-mode='light']")
+      .exists("back returns to the colors step");
 
     await click(".design-wizard__close");
     assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
@@ -654,12 +649,12 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
 
-    // previewing a categories homepage routed away from the banner's page
+    // closing without saving leaves the step incomplete
     await visit("/");
     step.isNotChecked();
   });
 
-  test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
+  test("the design wizard activates the stylesheet for the mode of the picked palette", async function (assert) {
     const darkLink = this.addSchemeLink(
       "dark-scheme",
       "data:text/css,design-wizard-dark",
@@ -674,7 +669,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     await withStep("select_theme", assert).clickAction();
     await click(".design-wizard__next");
-    await click(".design-wizard__color-mode:not(.--active)");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
 
     assert
       .dom(lightLink)
@@ -749,7 +746,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .exists({ count: 2 }, "a failed progress save does not advance the step");
     assert
-      .dom(".design-wizard__swatch")
+      .dom(".design-wizard__palette-row")
       .doesNotExist("the colors step is not reached");
     assert
       .dom(".design-wizard__next")
@@ -898,15 +895,21 @@ acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
     homepage_options: [{ id: "custom", path: "/tags", server_side: false }],
   });
 
-  test("shows the checklist on a registered homepage and hides it elsewhere", async function (assert) {
+  test("shows the checklist on homepage choices and hides it elsewhere", async function (assert) {
     await visit("/latest");
     setDefaultHomepage("custom");
     await visit("/tags");
 
     assert
       .dom(".admin-onboarding-banner")
-      .exists("shows onboarding outside discovery routes");
-    await visit("/categories");
+      .exists("shows onboarding on a registered homepage");
+    for (const homepagePath of ["/latest", "/categories"]) {
+      await visit(homepagePath);
+      assert
+        .dom(".admin-onboarding-banner")
+        .exists(`shows onboarding on ${homepagePath}`);
+    }
+    await visit("/about");
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("keeps onboarding off other pages");

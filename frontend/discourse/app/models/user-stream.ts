@@ -123,14 +123,14 @@ export default class UserStream extends RestModel {
 
     this.loading = true;
     try {
-      // TODO(typescript-pending): ajax lacks response types; remove the cast when this endpoint can be typed by ajax.
-      const result = (await ajax(findUrl)) as
+      const result = await ajax<
         | {
             user_actions?: (UserActionFields & Record<string, unknown>)[];
             categories?: CategoryFields[];
           }
         | null
-        | undefined;
+        | undefined
+      >(findUrl);
       if (result && result.user_actions) {
         const copy: UserAction[] = [];
 
