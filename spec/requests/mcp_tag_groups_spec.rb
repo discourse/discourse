@@ -433,18 +433,87 @@ describe "MCP tag groups" do
     expect(group.parent_tag).to eq(parent)
   end
 
+  it "resolves existing member and parent names without regard to case" do
+    SiteSetting.force_lowercase_tags = false
+    member = Fabricate(:tag, name: "member")
+    parent = Fabricate(:tag, name: "parent")
+    authorize
+    call_tool(
+      "discourse_create_tag_group",
+      name: "Existing tags",
+      tags: [{ name: "Member" }],
+      parent_tag: {
+        name: "Parent",
+      },
+      allow_tag_creation: true,
+    )
+    expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+    group = TagGroup.find_by!(name: "Existing tags")
+    expect(group.tags).to contain_exactly(member)
+    expect(group.parent_tag).to eq(parent)
+  end
+
+  it "creates named parents independently of the per-topic tag limit" do
+    SiteSetting.max_tags_per_topic = 0
+    authorize
+    call_tool(
+      "discourse_create_tag_group",
+      name: "Named parent",
+      parent_tag: {
+        name: "first-parent",
+      },
+      allow_tag_creation: true,
+    )
+    expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+    group = TagGroup.find_by!(name: "Named parent")
+    expect(group.parent_tag&.name).to eq("first-parent")
+
+    call_tool(
+      "discourse_update_tag_group",
+      tag_group_id: group.id,
+      parent_tag: {
+        name: "second-parent",
+      },
+      allow_tag_creation: true,
+    )
+    expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+    expect(group.reload.parent_tag&.name).to eq("second-parent")
+  end
+
   it "prefers an existing literal tag name over a cleaned synonym name" do
     literal = Fabricate(:tag, name: "alias tag", slug: "literal-tag")
+    parent = Fabricate(:tag, name: "parent alias", slug: "literal-parent")
     Fabricate(:tag, name: "alias-tag", target_tag_id: tag.id)
+    Fabricate(:tag, name: "parent-alias", target_tag_id: tag.id)
     authorize
     call_tool(
       "discourse_create_tag_group",
       name: "Literal names",
-      tags: [{ name: literal.name }],
+      tags: [{ name: literal.name.upcase }],
+      parent_tag: {
+        name: parent.name.upcase,
+      },
       allow_tag_creation: true,
     )
     expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
-    expect(TagGroup.find_by!(name: "Literal names").base_tags).to contain_exactly(literal)
+    group = TagGroup.find_by!(name: "Literal names")
+    expect(group.tags).to contain_exactly(literal)
+    expect(group.parent_tag).to eq(parent)
+  end
+
+  it "does not create a cleaned variant of an existing literal name on update" do
+    literal = Fabricate(:tag, name: "literal tag", slug: "literal-name")
+    authorize
+    expect {
+      call_tool(
+        "discourse_update_tag_group",
+        tag_group_id: tag_group.id,
+        tags: [{ name: literal.name.upcase }],
+        allow_tag_creation: true,
+      )
+    }.not_to change { Tag.count }
+    expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+    expect(tag_group.reload.tags).to contain_exactly(literal)
   end
 
   it "preserves existing names that current cleaning would remove" do

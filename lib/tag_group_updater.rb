@@ -67,6 +67,7 @@ class TagGroupUpdater
           DiscourseTagging.find_or_create_tags!(
             [parent["name"]],
             Guardian.new(Discourse.system_user),
+            unlimited: true,
           ).first
 
         result[:parent_tag_id] = tag.id if tag

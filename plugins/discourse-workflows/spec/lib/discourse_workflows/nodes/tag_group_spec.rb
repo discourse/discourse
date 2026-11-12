@@ -58,6 +58,9 @@ RSpec.describe DiscourseWorkflows::Nodes::TagGroup::V1 do
       expect(@result["tag_names"]).to eq(["existing"])
       expect(tag_group.reload.base_tags).to contain_exactly(tag)
       expect(Tag.find_by(id: removed_tag.id)).to eq(removed_tag)
+      expect(history_scope.last.new_value).to eq(
+        TagGroupSerializer.new(tag_group).to_json(root: false),
+      )
     end
 
     it "does not record changes for duplicate additions or absent removals" do

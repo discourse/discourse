@@ -61,32 +61,31 @@ module DiscourseMcp
         if (ids - canonical_ids.keys).present?
           raise ToolError, I18n.t("mcp.errors.tag_group_unknown_tags")
         end
-        target_ids_by_name = tags.to_h { |_id, name, target_id| [name.downcase, target_id] }
+        canonical_ids_by_name = tags.to_h { |id, name, target_id| [name.downcase, target_id || id] }
         if named_selectors.any? { |selector|
-             !target_ids_by_name.key?(selector["name"].downcase) &&
+             !canonical_ids_by_name.key?(selector["name"].downcase) &&
                DiscourseTagging.clean_tag(selector["name"]).blank?
            }
           raise ToolError, I18n.t("mcp.errors.tag_group_tags_unresolved")
         end
-        synonym_target_ids =
+        resolved_tag_ids =
           selectors
             .filter_map do |selector|
-              target_id =
+              resolved_id =
                 if selector.key?("id")
-                  resolved_id = canonical_ids.fetch(selector["id"])
-                  resolved_id if resolved_id != selector["id"]
+                  canonical_ids.fetch(selector["id"])
                 else
-                  target_ids_by_name.fetch(selector["name"].downcase) do
-                    target_ids_by_name[DiscourseTagging.clean_tag(selector["name"]).downcase]
+                  canonical_ids_by_name.fetch(selector["name"].downcase) do
+                    canonical_ids_by_name[DiscourseTagging.clean_tag(selector["name"]).downcase]
                   end
                 end
-              next unless target_id
-              selector.replace("id" => target_id)
-              target_id
+              next unless resolved_id
+              selector.replace("id" => resolved_id)
+              resolved_id
             end
             .uniq
-        if synonym_target_ids.present? &&
-             Tag.base_tags.where(id: synonym_target_ids).count != synonym_target_ids.length
+        if resolved_tag_ids.present? &&
+             Tag.base_tags.where(id: resolved_tag_ids).count != resolved_tag_ids.length
           raise ToolError, I18n.t("mcp.errors.tag_group_unknown_tags")
         end
         if attributes["permissions"]
