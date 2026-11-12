@@ -525,6 +525,36 @@ RSpec.describe InlineOneboxer do
     end
   end
 
+  describe "allowed_inline_onebox_domains matching" do
+    before do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for).and_return(nil)
+      RetrieveTitle.stubs(:crawl).returns("Example Title")
+    end
+
+    it "oneboxes an allowlisted host regardless of casing" do
+      onebox = InlineOneboxer.lookup("https://EXAMPLE.com/foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "oneboxes an allowlisted host requested as a trailing-dot FQDN" do
+      onebox = InlineOneboxer.lookup("https://example.com./foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "does not widen the exact allowlist to subdomains" do
+      expect(InlineOneboxer.lookup("https://dev.example.com/foo", skip_cache: true)).to be_nil
+    end
+
+    it "gives blocked_onebox_domains precedence over the allowlist" do
+      SiteSetting.blocked_onebox_domains = "example.com."
+      expect(InlineOneboxer.lookup("https://example.com/foo", skip_cache: true)).to be_nil
+    end
+  end
+
   describe "private GitHub repo" do
     let(:repo_url) { "https://github.com/discourse/discourse" }
     let(:api_uri) { "https://api.github.com/repos/discourse/discourse" }
