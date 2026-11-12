@@ -31,15 +31,18 @@ module Jobs
             )
             .merge(User.not_suspended)
 
+        screener =
+          ::UserCommScreener.new(acting_user: @creator, target_user_ids: members.map(&:user_id))
+
         if @is_direct_message_channel
-          ::UserCommScreener
-            .new(acting_user: @creator, target_user_ids: members.map(&:user_id))
-            .allowing_actor_communication
-            .each do |user_id|
-              send_notifications(members.find { |member| member.user_id == user_id })
-            end
+          screener.allowing_actor_communication.each do |user_id|
+            send_notifications(members.find { |member| member.user_id == user_id })
+          end
         else
-          members.each { |member| send_notifications(member) }
+          members.each do |member|
+            next if screener.ignoring_or_muting_actor?(member.user_id)
+            send_notifications(member)
+          end
         end
       end
 
