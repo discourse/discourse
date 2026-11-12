@@ -635,10 +635,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def same_ip_address_context(query)
-    I18n.t(
-      "user.destroy_reasons.same_ip_address_user",
-      username: query.same_ip_target_user.username,
-    )
+    if guardian.can_see_ip? && (ip = query.same_ip_address).present?
+      I18n.t("user.destroy_reasons.same_ip_address", ip_address: ip)
+    else
+      I18n.t(
+        "user.destroy_reasons.same_ip_address_user",
+        username: query.same_ip_target_user.username,
+      )
+    end
   end
 
   def refresh_browser(user)

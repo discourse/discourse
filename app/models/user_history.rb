@@ -492,25 +492,38 @@ class UserHistory < ActiveRecord::Base
     new_value_is_json?
   end
 
-  def context_contains_ip?
-    return false if context.blank?
+  def context_with_ips_masked(placeholder)
+    return context if context.blank?
 
-    ipv4_candidates = context.scan(IPV4_CANDIDATE_IN_CONTEXT)
-    return true if ipv4_candidates.any? { |candidate| valid_ip_address?(candidate) }
-
+    # IPv6 first, so an IPv4-mapped address is replaced whole.
     context
-      .scan(ADDRESS_RUN_IN_CONTEXT)
-      .any? { |run| run.include?(":") && valid_ipv6_address?(run) }
+      .gsub(ADDRESS_RUN_IN_CONTEXT) { |run| mask_ipv6_address(run, placeholder) }
+      .gsub(IPV4_CANDIDATE_IN_CONTEXT) do |candidate|
+        valid_ip_address?(candidate) ? placeholder : candidate
+      end
   end
 
   private
 
-  def valid_ipv6_address?(candidate)
-    # A compressed address needs at least two hex groups; otherwise the "::"
-    # in a class name like "Jobs::Base" reads as an address.
-    return false if candidate.scan(/\h+/).length < 2
+  def mask_ipv6_address(run, placeholder)
+    return run if run.exclude?(":")
 
-    valid_ip_address?(candidate.sub(/[.:]+\z/, ""))
+    core = run[/\h(?:.*\h)?/]
+    return run if core.nil?
+
+    # Surrounding punctuation belongs to the address only when it is the "::"
+    # compression marker, e.g. "2001:db8::" but not a sentence-final "::1."
+    leading, _, trailing = run.partition(core)
+    prefixes = leading.end_with?("::") ? ["::", ""] : [""]
+    suffixes = trailing.start_with?("::") ? ["::", ""] : [""]
+
+    address =
+      prefixes
+        .product(suffixes)
+        .map { |prefix, suffix| "#{prefix}#{core}#{suffix}" }
+        .find { |candidate| valid_ip_address?(candidate) }
+
+    address ? run.sub(address) { placeholder } : run
   end
 
   def valid_ip_address?(candidate)

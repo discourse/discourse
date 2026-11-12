@@ -2695,21 +2695,6 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       include_examples "deleting other accounts with same ip possible"
-
-      it "stores the same-IP reason without the IP address" do
-        ip_address = "42.42.42.42"
-        target_user = Fabricate(:user, ip_address: ip_address)
-        Fabricate(:user, ip_address: ip_address)
-
-        delete "/admin/users/delete-others-with-same-ip.json", params: { user_id: target_user.id }
-
-        expect(response.status).to eq(200)
-        contexts = UserHistory.where(action: UserHistory.actions[:delete_user]).pluck(:context)
-        expect(contexts).to all(
-          eq(I18n.t("user.destroy_reasons.same_ip_address_user", username: target_user.username)),
-        )
-        expect(contexts).to all(exclude(ip_address))
-      end
     end
 
     context "when logged in as a moderator" do
