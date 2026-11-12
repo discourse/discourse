@@ -20,9 +20,8 @@ module DiscourseMcp
           .where(scope: DiscourseMcp.registry.scopes)
           .distinct
           .pluck("group_users.user_id", "mcp_group_scopes.scope")
-          .union()
 
-      logged_in_user_group_scopes =
+      logged_in_users_pseudogroup_scopes =
         McpGroupScope
           .where(group_id: Group::AUTO_GROUPS[:logged_in_users])
           .where(scope: DiscourseMcp.registry.scopes)
@@ -30,7 +29,7 @@ module DiscourseMcp
 
       mcp_group_scopes.each { |user_id, scope| scopes_by_user_id[user_id] << scope }
 
-      logged_in_user_group_scopes.each do |scope|
+      logged_in_users_pseudogroup_scopes.each do |scope|
         eligible_users.each { |user| scopes_by_user_id[user.id] << scope }
       end
 
@@ -38,7 +37,7 @@ module DiscourseMcp
         if scopes.present? && !scopes.include?(DiscourseMcp::INITIAL_SCOPE)
           scopes << DiscourseMcp::INITIAL_SCOPE
         end
-        scopes.sort!
+        scopes.uniq!.sort!
       end
 
       scopes_by_user_id

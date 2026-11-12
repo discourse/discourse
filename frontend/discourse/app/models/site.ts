@@ -415,14 +415,6 @@ export default class Site extends RestModel {
     return map;
   }
 
-  get authenticatedGroups(): SiteGroup[] {
-    return (this.groups || []).filter(
-      (group) =>
-        group.id !== AUTO_GROUPS.anonymous_users.id &&
-        group.id !== AUTO_GROUPS.everyone.id
-    );
-  }
-
   @dependentKeyCompat
   get desktopView(): boolean {
     return !this.mobileView;
