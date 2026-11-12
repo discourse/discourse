@@ -73,55 +73,56 @@ module PageObjects
         toggle_switch.unchecked?
       end
 
-      def group_selector
-        PageObjects::Components::SelectKit.new(
-          "#{change_item_selector(@setting_name)} .email-group-user-chooser",
-        )
+      def group_selector_selector
+        "#{change_item_selector(@setting_name)} .upcoming-change__group-selector"
+      end
+
+      def group_chip_selector(group_name)
+        ".d-multi-select-trigger__selected-item[title='#{group_name}']"
       end
 
       def has_editable_audience?
-        find_item(@setting_name).has_css?(".email-group-user-chooser:not(.is-disabled)")
+        find_item(@setting_name).has_css?(".upcoming-change__group-selector:not(.--disabled)")
       end
 
       def has_locked_audience?(*group_names)
         item = find_item(@setting_name)
-        item.has_css?(".email-group-user-chooser.is-disabled") &&
+        item.has_css?(".upcoming-change__group-selector.--disabled") &&
           item.has_no_css?(".upcoming-change__save-groups") &&
           item.has_css?(
             ".upcoming-change__groups-description",
             text: I18n.t("admin_js.admin.upcoming_changes.audience_locked"),
           ) &&
           group_names.all? do |group_name|
-            item.has_css?(".selected-choice[data-value='#{group_name}'] .d-icon-lock")
+            item.has_css?("#{group_chip_selector(group_name)} .d-icon-lock")
           end
       end
 
       def open_group_selector
-        if group_selector.is_collapsed?
-          group_selector.collapsed_component.find(".select-kit-header").send_keys(:enter)
-        end
+        return if page.has_css?(".d-multi-select__content", wait: 0)
+        # The trigger's centre may land on a chip, which would remove it.
+        find("#{group_selector_selector} .d-multi-select-trigger__expand-btn").click
+        page.find(".d-multi-select__search-input")
       end
 
       def has_groups?(*group_names)
-        open_group_selector
         group_names.all? do |group_name|
-          find_item(@setting_name).has_css?(".selected-choice[data-value='#{group_name}']")
+          find_item(@setting_name).has_css?(group_chip_selector(group_name))
         end
       end
 
       def has_no_groups?
-        find_item(@setting_name).has_no_css?(".selected-choice")
+        find_item(@setting_name).has_no_css?(".d-multi-select-trigger__selected-item")
       end
 
       def add_group(group_name)
         open_group_selector
-        group_selector.search(group_name)
-        group_selector.select_row_by_value(group_name)
+        page.find(".d-multi-select__search-input").fill_in(with: group_name)
+        page.find(".d-multi-select__result[title='#{group_name}']").click
       end
 
       def remove_group(group_name)
-        open_group_selector
-        find_item(@setting_name).find(".selected-choice[data-value='#{group_name}']").click
+        find_item(@setting_name).find(group_chip_selector(group_name)).click
       end
 
       def save_groups
@@ -147,10 +148,7 @@ module PageObjects
       end
 
       def has_locked_group?(group_name)
-        open_group_selector
-        find_item(@setting_name).has_css?(
-          ".selected-choice[data-value='#{group_name}'] .d-icon-lock",
-        )
+        find_item(@setting_name).has_css?("#{group_chip_selector(group_name)} .d-icon-lock")
       end
     end
   end
