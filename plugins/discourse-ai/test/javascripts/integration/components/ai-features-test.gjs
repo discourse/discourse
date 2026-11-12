@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { click, fillIn, render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -150,16 +150,16 @@ module("Integration | Component | AiFeatures", function (hooks) {
       .dom("tr[data-module-name='bot']")
       .includesText("Off", "shows disabled modules as off");
 
-    await click(".ai-features__status-option[data-status='enabled']");
+    await select(".d-filter-controls__dropdown", "enabled");
 
     assert
       .dom(".ai-features-module-row")
       .exists({ count: 1 }, "filters to enabled modules");
     assert
-      .dom(".ai-features__status-option[data-status='enabled']")
-      .hasAria("pressed", "true");
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("enabled", "keeps the selected status");
 
-    await click(".ai-features__status-option[data-status='not enabled']");
+    await select(".d-filter-controls__dropdown", "not enabled");
 
     assert.dom(".ai-features-module-row").exists({ count: 1 });
     assert.dom("tr[data-module-name='bot']").exists();
@@ -450,7 +450,7 @@ module("Integration | Component | AiFeatures", function (hooks) {
       },
     ];
     await render(<template><AiFeatures @features={{features}} /></template>);
-    await fillIn(".ai-features__controls input", "FAST DECISIONS");
+    await fillIn(".admin-filter__input", "FAST DECISIONS");
     assert
       .dom(".ai-features-feature-row__groups")
       .doesNotExist("background classifiers do not display groups");
@@ -460,7 +460,7 @@ module("Integration | Component | AiFeatures", function (hooks) {
     assert
       .dom('[data-feature-name="sentiment"]')
       .exists("matches decision display name case insensitively");
-    await fillIn(".ai-features__controls input", "dedicated/emotions");
+    await fillIn(".admin-filter__input", "dedicated/emotions");
     assert
       .dom(".ai-features-feature-row")
       .exists({ count: 1 }, "only the matching dedicated capability remains");

@@ -168,16 +168,13 @@
 .ai-models-list {
   &__controls {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
     margin-block: var(--space-4);
 
     .filter-input-container {
       flex: 6 1 auto;
-    }
-
-    .d-native-select {
-      flex: 1 1 auto;
-      max-width: 16em;
     }
   }
 
