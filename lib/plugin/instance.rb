@@ -245,6 +245,18 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Adds per-request data to PreloadStore under "<plugin name>:<key>".
+  # The block receives the request's guardian and returns a JSON-serializable
+  # value, or nil to omit the entry. Disabled plugins are skipped.
+  def register_preloaded_data(key, &block)
+    raise ArgumentError, "register_preloaded_data requires a block" if !block
+
+    DiscoursePluginRegistry.register_preloaded_data_callback(
+      { key: "#{name}:#{key}", callback: block },
+      self,
+    )
+  end
+
   # Register a handler for an action initiated by an anonymous user, to be
   # replayed against their account after they authenticate. See AnonymousAction.
   def register_anonymous_action(type, &block)
