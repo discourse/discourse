@@ -4,7 +4,24 @@ require_relative "../spec_helper"
 
 RSpec.describe Patreon::Campaign do
   shared_examples "campaign sync" do
-    it "should update campaigns and group users data" do
+    let(:new_users) do
+      Patreon
+        .get("users")
+        .values
+        .map do |email|
+          user = Fabricate(:user, email: email)
+          email_token = user.email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
+          EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+          user.reload
+        end
+    end
+    let(:patreon_accounts) do
+      new_users.to_h { |user| [user.custom_fields["patreon_id"], user.email] }
+    end
+
+    it "updates campaigns and group membership data", :aggregate_failures do
+      freeze_time Time.utc(2017, 11, 20)
+
       expect { described_class.update! }.to change { Group.count }.by(1)
 
       expect(Group.find_by(name: "patrons")).to be_present
@@ -21,14 +38,10 @@ RSpec.describe Patreon::Campaign do
       expect(Patreon.get("reward-users")["0"].count).to eq(3)
       expect(Patreon.get("filters").count).to eq(1)
 
-      expect {
-        Patreon
-          .get("users")
-          .each do |id, email|
-            cf = Fabricate(:user, email: email).custom_fields
-            expect(cf["patreon_id"]).to eq(id)
-          end
-      }.to change { GroupUser.count }.by(3)
+      expect { new_users }.to change { GroupUser.count }.by(1)
+      non_declined_user = new_users.find { |user| user.custom_fields["patreon_id"] == "111111" }
+      expect(Group.find_by(name: "patrons").users).to contain_exactly(non_declined_user)
+      expect(patreon_accounts).to eq(Patreon.get("users"))
     end
   end
 
