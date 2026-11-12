@@ -46,7 +46,7 @@ module LocalizationGuardian
     return false if !@user.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
 
     tag = tag_or_tag_id.is_a?(Tag) ? tag_or_tag_id : Tag.find_by(id: tag_or_tag_id)
-    !hidden_tag_names.include?(tag.name)
+    !hidden_tag_names.include?(tag.name) && tag_in_accessible_category?(tag)
   end
 
   def can_localize_sidebar_section?(section_or_section_id)

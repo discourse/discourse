@@ -17,7 +17,7 @@ module TagGuardian
   end
 
   def can_edit_tag?(tag)
-    can_edit_tag_names? && can_see_tag?(tag)
+    can_edit_tag_names? && can_see_tag?(tag) && tag_in_accessible_category?(tag)
   end
 
   def can_tag_topics?
@@ -51,5 +51,14 @@ module TagGuardian
       else
         []
       end
+  end
+
+  private
+
+  # A tag restricted to categories can only be changed by users who can see one of them.
+  def tag_in_accessible_category?(tag)
+    return true if is_admin?
+
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.where(id: tag.id), self).exists?
   end
 end
