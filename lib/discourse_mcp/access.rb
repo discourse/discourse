@@ -37,7 +37,8 @@ module DiscourseMcp
         if scopes.present? && !scopes.include?(DiscourseMcp::INITIAL_SCOPE)
           scopes << DiscourseMcp::INITIAL_SCOPE
         end
-        scopes.uniq!.sort!
+        scopes.uniq!
+        scopes.sort!
       end
 
       scopes_by_user_id

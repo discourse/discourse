@@ -66,6 +66,27 @@ describe DiscourseMcp::Access do
     end
   end
 
+  describe ".eligible_scopes_by_user" do
+    it "returns sorted scopes when the user's group grants are unique" do
+      McpGroupScope.create!(group: group, scope: "mcp:profile:read")
+      McpGroupScope.create!(group: other_group, scope: "mcp:content:write")
+
+      expect(described_class.eligible_scopes_by_user([user])).to eq(
+        user.id => %w[mcp:content:write mcp:profile:read],
+      )
+    end
+
+    it "returns empty scopes for a user without grants alongside an eligible user" do
+      user_without_grants = Fabricate(:user)
+      McpGroupScope.create!(group: group, scope: "mcp:profile:read")
+
+      expect(described_class.eligible_scopes_by_user([user, user_without_grants])).to eq(
+        user.id => ["mcp:profile:read"],
+        user_without_grants.id => [],
+      )
+    end
+  end
+
   describe ".eligible_for_exposed_primitive?" do
     it "requires an enabled server and an exposed primitive covered by the user's scopes" do
       SiteSetting.mcp_server_enabled = true
