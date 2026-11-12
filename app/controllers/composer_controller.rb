@@ -13,9 +13,10 @@ class ComposerController < ApplicationController
       guardian.ensure_can_see!(@topic)
     end
 
-    # allowed_names is necessary just for new private messages.
+    # allowed_names is necessary just for new private messages. Existing topics use their stored
+    # recipients so a client can't vouch for users whose access comes from a hidden group.
     @allowed_names =
-      if params[:allowed_names].present?
+      if @topic.blank? && params[:allowed_names].present?
         if !params[:allowed_names].is_a?(Array)
           raise Discourse::InvalidParameters.new(:allowed_names)
         end
@@ -86,12 +87,18 @@ class ComposerController < ApplicationController
             !is_user_allowed?(user, topic_allowed_user_ids, topic_allowed_group_ids)
         # This would normally be handled by the previous if, but that does not work for new private messages.
         :private
-      elsif topic_muted_by.include?(user.id)
-        :muted_topic
       elsif @topic&.private_message? &&
             !is_user_allowed?(user, topic_allowed_user_ids, topic_allowed_group_ids)
-        # Admins can see the topic, but they will not be mentioned if they were not invited.
-        :not_allowed
+        if hidden_allowed_group_members?
+          # Members of allowed groups whose membership is hidden from the current user
+          # must be indistinguishable from users without access.
+          :private
+        else
+          # Admins can see the topic, but they will not be mentioned if they were not invited.
+          :not_allowed
+        end
+      elsif topic_muted_by.include?(user.id)
+        :muted_topic
       end
 
     # Non-staff users can see only basic information why the users cannot see the topic.
@@ -114,7 +121,10 @@ class ComposerController < ApplicationController
       .where(user_id: topic_allowed_user_ids)
       .or(
         GroupUser.where(
-          user_id: GroupUser.where(group_id: topic_allowed_group_ids).select(:user_id),
+          user_id:
+            GroupUser.where(
+              group_id: topic_allowed_group_ids & visible_group_ids_for_allowed_check,
+            ).select(:user_id),
         ),
       )
       .where(group:)
@@ -130,16 +140,27 @@ class ComposerController < ApplicationController
       end
   end
 
+  def hidden_allowed_group_members?
+    visible_group_ids = visible_group_ids_for_allowed_check
+    topic_allowed_group_ids.to_a.any? { |group_id| !visible_group_ids.include?(group_id) }
+  end
+
   def visible_group_ids_for_allowed_check
     @visible_group_ids_for_allowed_check ||=
       if @allowed_names.present?
         Group
+          .visible_groups(current_user)
           .members_visible_groups(current_user)
           .where("LOWER(name) IN (?)", @allowed_names)
           .pluck(:id)
           .to_set
       else
-        topic_allowed_group_ids || Set.new
+        Group
+          .visible_groups(current_user)
+          .members_visible_groups(current_user)
+          .where(id: topic_allowed_group_ids.to_a)
+          .pluck(:id)
+          .to_set
       end
   end
 
