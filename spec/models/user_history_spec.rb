@@ -186,4 +186,38 @@ RSpec.describe UserHistory do
       )
     end
   end
+
+  describe "#context_contains_ip?" do
+    it "detects IPv4 addresses inside free-form context" do
+      history = described_class.new(context: "Same IP address (42.42.42.42) as other users")
+
+      expect(history.context_contains_ip?).to eq(true)
+    end
+
+    it "detects IPv6 addresses inside free-form context" do
+      history = described_class.new(context: "Same IP address (2001:db8::1) as other users")
+
+      expect(history.context_contains_ip?).to eq(true)
+    end
+
+    it "does not treat class names, usernames or dates as addresses" do
+      history = described_class.new(context: "Same IP address as bob_smith")
+      expect(history.context_contains_ip?).to eq(false)
+
+      history.context = "Deleted while reviewing Jobs::Base failures"
+      expect(history.context_contains_ip?).to eq(false)
+
+      history.context = "Deleted while reviewing Service::Base failures"
+      expect(history.context_contains_ip?).to eq(false)
+
+      history.context = "Discourse::Plugin raised"
+      expect(history.context_contains_ip?).to eq(false)
+
+      history.context = "Inactive user since 2026-11-06"
+      expect(history.context_contains_ip?).to eq(false)
+
+      history.context = nil
+      expect(history.context_contains_ip?).to eq(false)
+    end
+  end
 end
