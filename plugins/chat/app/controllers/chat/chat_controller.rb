@@ -125,7 +125,10 @@ module Chat
       if params[:thread_id].present?
         thread = channel.threads.find_by(id: params[:thread_id])
         raise Discourse::NotFound if !thread || (!channel.threading_enabled? && !thread.force)
-        if thread.original_message&.trashed? && !guardian.can_moderate_chat?(channel.chatable)
+        # Retention can purge the original message while its replies survive.
+        original_message = thread.original_message
+        if !original_message ||
+             (original_message.trashed? && !guardian.can_moderate_chat?(channel.chatable))
           raise Discourse::NotFound
         end
       elsif params[:message_id].present?
