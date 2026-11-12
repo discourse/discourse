@@ -291,6 +291,27 @@ RSpec.describe UploadsController do
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
       end
 
+      it "rejects a GIF whose decoded canvas exceeds the megapixel limit with libvips" do
+        global_setting :enable_vips_image_processing, true
+        SiteSetting.max_image_megapixels = 5
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        file =
+          Rack::Test::UploadedFile.new(file_from_fixtures(filename), original_filename: filename)
+
+        expect { post "/uploads.json", params: { file:, upload_type: "composer" } }.not_to change {
+          Upload.count
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: filename,
+          ),
+        )
+      end
+
       it "returns an error when it could not determine the dimensions of an image" do
         post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
 
