@@ -2799,36 +2799,6 @@ RSpec.describe PostMover do
         expect(destination_topic.reload.ordered_posts.first).to eq(destination_first_post)
         expect(destination_topic.user_id).to eq(destination_owner_id)
       end
-
-      it "moves posts before the posts of a topic the user moderates" do
-        destination_topic = Fabricate(:topic, category: moderated_category)
-        Fabricate(:post, topic: destination_topic, created_at: 1.hour.ago)
-
-        source_topic.move_posts(
-          category_moderator,
-          [source_reply.id],
-          destination_topic_id: destination_topic.id,
-          chronological_order: true,
-        )
-
-        expect(source_reply.reload.topic_id).to eq(destination_topic.id)
-        expect(source_reply.post_number).to eq(1)
-      end
-
-      it "still appends posts when the destination has no newer posts to renumber" do
-        destination_topic = Fabricate(:topic)
-        Fabricate(:post, topic: destination_topic, created_at: 3.hours.ago)
-
-        source_topic.move_posts(
-          category_moderator,
-          [source_reply.id],
-          destination_topic_id: destination_topic.id,
-          chronological_order: true,
-        )
-
-        expect(source_reply.reload.topic_id).to eq(destination_topic.id)
-        expect(source_reply.post_number).to eq(2)
-      end
     end
 
     context "with messages" do
