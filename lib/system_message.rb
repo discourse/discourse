@@ -24,6 +24,18 @@ class SystemMessage
 
     params = defaults.merge(params)
 
+    if SiteSetting.dsa_reporting_enabled && (rule = params[:dsa_community_rule]) &&
+         params[:flag_reason].present?
+      reason_key =
+        if type.to_s == "flags_agreed_and_post_deleted_for_responders"
+          "system_messages.moderation_reason_for_responders"
+        else
+          "system_messages.moderation_reason"
+        end
+      reason = I18n.t(reason_key, **rule.symbolize_keys, locale: @recipient.effective_locale)
+      params[:flag_reason] = "#{params[:flag_reason]}\n\n#{reason}"
+    end
+
     if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
       params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
     end

@@ -683,7 +683,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, dsa_community_rule: nil)
     return if hidden?
 
     reason ||=
@@ -726,6 +726,7 @@ class Post < ActiveRecord::Base
     if user.present?
       options = {
         **Dsa::AppealInstructions.message_options,
+        dsa_community_rule:,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         flag_reason:

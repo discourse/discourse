@@ -48,14 +48,22 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+  def self.delete_with_replies(
+    performed_by,
+    post,
+    reviewable_id = nil,
+    defer_reply_flags: true,
+    dsa_community_rule: nil
+  )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id:, dsa_community_rule:).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
+      options.merge!(
+        { reviewable_id:, notify_responders: true, parent_post: post, dsa_community_rule: },
+      )
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -489,6 +497,7 @@ class PostDestroyer
         ),
       message_options: {
         **Dsa::AppealInstructions.message_options,
+        dsa_community_rule: @opts[:dsa_community_rule],
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,
