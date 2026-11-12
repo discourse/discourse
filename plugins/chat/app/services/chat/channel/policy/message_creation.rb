@@ -16,8 +16,7 @@ class Chat::Channel::Policy::MessageCreation < Service::PolicyBase
            !guardian.can_send_direct_message?(channel) || !guardian.allowing_direct_messages?
         return false
       end
-      if solo_chat? || channel.chatable.group? || guardian.user.is_system_user? ||
-           guardian.user.bot?
+      if solo_chat? || group_chat? || guardian.user.is_system_user? || guardian.user.bot?
         return true
       end
 
@@ -56,6 +55,10 @@ class Chat::Channel::Policy::MessageCreation < Service::PolicyBase
 
     def solo_chat?
       @solo_chat ||= channel.chatable.users.size === 1
+    end
+
+    def group_chat?
+      @group_chat ||= channel.chatable.group? && channel.chatable.users.size > 2
     end
   end
 

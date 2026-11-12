@@ -283,6 +283,58 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when the channel is a named two-person direct message" do
+      fab!(:recipient, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          group: true,
+          name: "Private chat",
+          users: [current_user, recipient],
+        )
+      end
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "enforces the recipient's communication restrictions" do
+        recipient.user_option.update!(allow_private_messages: false)
+
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          channel.chat_messages.count
+        }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.not_accepting_dms", username: recipient.username),
+        )
+      end
+    end
+
+    context "when the channel is a genuine multi-person group direct message" do
+      fab!(:recipient, :user)
+      fab!(:third_user, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          group: true,
+          name: "Group chat",
+          users: [current_user, recipient, third_user],
+        )
+      end
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "still allows messaging even when a recipient disallows direct messages" do
+        recipient.user_option.update!(allow_private_messages: false)
+
+        expect { post "/chat/#{channel.id}.json", params: params }.to change {
+          channel.chat_messages.count
+        }.by(1)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
     context "when a channel member has lost access to the channel's category" do
       fab!(:group)
       fab!(:private_category) { Fabricate(:private_category, group: group) }
