@@ -4,44 +4,40 @@ import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
 
-let activeContextKey = null;
-let checked = {};
-let foundUsers = {};
-let userReasons = {};
-let foundGroups = {};
-let groupReasons = {};
-let maxGroupMention;
+let cache = createCache();
 
-export function resetMentions() {
-  activeContextKey = null;
-  checked = {};
-  foundUsers = {};
-  userReasons = {};
-  foundGroups = {};
-  groupReasons = {};
-  maxGroupMention = null;
+function createCache(key = null) {
+  return {
+    key,
+    checked: {},
+    foundUsers: {},
+    userReasons: {},
+    foundGroups: {},
+    groupReasons: {},
+    maxGroupMention: null,
+  };
 }
 
-// Mention validation results depend on the composer's topic and PM
-// recipients, so cached answers must never be reused in a different
-// context (e.g. a `private` reason computed while composing a PM leaking
-// into a reply composer on a public topic).
+export function resetMentions() {
+  cache = createCache();
+}
+
 function contextKey({ topicId, allowedNames }) {
-  const allowed = allowedNames
-    ? [...allowedNames]
-        .map((name) => name.toLowerCase())
-        .sort()
-        .join(",")
-    : "";
+  const allowed = (allowedNames ?? [])
+    .map((name) => name.toLowerCase())
+    .sort()
+    .join(",");
   return `${topicId ?? ""}|${allowed}`;
 }
 
-function switchContext(context) {
+// Results depend on the topic and PM recipients, so they are never reused
+// across contexts.
+function cacheFor(context) {
   const key = contextKey(context);
-  if (key !== activeContextKey) {
-    resetMentions();
-    activeContextKey = key;
+  if (cache.key !== key) {
+    cache = createCache(key);
   }
+  return cache;
 }
 
 function replaceSpan(element, name, opts) {
@@ -54,7 +50,7 @@ function replaceSpan(element, name, opts) {
 
     if (!opts.reason && opts.details) {
       a.dataset.mentionableUserCount = opts.details.user_count;
-      a.dataset.maxMentions = maxGroupMention;
+      a.dataset.maxMentions = opts.maxGroupMention;
     }
   } else {
     a.href = userPath(name.toLowerCase());
@@ -74,28 +70,29 @@ function replaceSpan(element, name, opts) {
   element.replaceWith(a);
 }
 
-function updateFound(mentions, names) {
+function updateFound(mentions, names, found) {
   mentions.forEach((mention, index) => {
     const name = names[index];
     const lower = name.toLowerCase();
-    if (foundUsers[lower]) {
+    if (found.foundUsers[lower]) {
       replaceSpan(mention, name, {
-        reason: userReasons[lower],
+        reason: found.userReasons[lower],
       });
-    } else if (foundGroups[lower]) {
+    } else if (found.foundGroups[lower]) {
       replaceSpan(mention, name, {
         group: true,
-        details: foundGroups[lower],
-        reason: groupReasons[lower],
+        details: found.foundGroups[lower],
+        reason: found.groupReasons[lower],
+        maxGroupMention: found.maxGroupMention,
       });
-    } else if (checked[lower]) {
+    } else if (found.checked[lower]) {
       mention.classList.add("mention-tested");
     }
   });
 }
 
 export function linkSeenMentions(element, siteSettings, context = {}) {
-  switchContext(context);
+  const found = cacheFor(context);
 
   const mentions = [
     ...element.querySelectorAll("span.mention:not(.mention-tested)"),
@@ -106,43 +103,38 @@ export function linkSeenMentions(element, siteSettings, context = {}) {
   }
 
   const names = mentions.map((mention) => mention.innerText.slice(1));
-  updateFound(mentions, names);
+  updateFound(mentions, names, found);
 
   return uniqueItemsFromArray(names).filter(
     (name) =>
-      !checked[name.toLowerCase()] &&
+      !found.checked[name.toLowerCase()] &&
       name.length >= siteSettings.min_username_length
   );
 }
 
 export async function fetchUnseenMentions({ names, topicId, allowedNames }) {
-  switchContext({ topicId, allowedNames });
-  const contextKeyAtRequest = activeContextKey;
+  // Captured before the request so a late response cannot land in the cache
+  // of a context the composer has since moved to.
+  const found = cacheFor({ topicId, allowedNames });
 
   const response = await ajax("/composer/mentions", {
     data: { names, topic_id: topicId, allowed_names: allowedNames },
   });
 
-  // The composer may have moved to another context while this request was
-  // in flight; caching the answers then would leak them into that context.
-  if (activeContextKey !== contextKeyAtRequest) {
-    return response;
-  }
-
-  names.forEach((name) => (checked[name.toLowerCase()] = true));
+  names.forEach((name) => (found.checked[name.toLowerCase()] = true));
   response.users.forEach(
-    (username) => (foundUsers[username.toLowerCase()] = true)
+    (username) => (found.foundUsers[username.toLowerCase()] = true)
   );
   Object.entries(response.user_reasons).forEach(
-    ([username, reason]) => (userReasons[username.toLowerCase()] = reason)
+    ([username, reason]) => (found.userReasons[username.toLowerCase()] = reason)
   );
   Object.entries(response.groups).forEach(
-    ([name, details]) => (foundGroups[name.toLowerCase()] = details)
+    ([name, details]) => (found.foundGroups[name.toLowerCase()] = details)
   );
   Object.entries(response.group_reasons).forEach(
-    ([name, reason]) => (groupReasons[name.toLowerCase()] = reason)
+    ([name, reason]) => (found.groupReasons[name.toLowerCase()] = reason)
   );
-  maxGroupMention = response.max_users_notified_per_group_mention;
+  found.maxGroupMention = response.max_users_notified_per_group_mention;
 
   return response;
 }
