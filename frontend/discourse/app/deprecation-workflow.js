@@ -343,8 +343,6 @@ const workflows = [
     "discourse.plugin-outlet-classic-args-clash",
     "discourse.plugin-outlet-classic-hooks",
     "discourse.post-stream.first-post-id",
-    "discourse.qunit-helpers.jquery-selector",
-    "discourse.qunit-helpers.query-all",
     "discourse.register-connector-class-legacy",
     "discourse.resolver-resolutions",
     "discourse.select-kit-resolved-components",
