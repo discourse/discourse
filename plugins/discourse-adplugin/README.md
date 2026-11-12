@@ -55,7 +55,7 @@ git pull
 ./launcher rebuild app
 ```
 
-### Step 2 - Configure Your Settings to Display Your Advertisments
+### Step 2 - Configure Your Settings to Display Your Advertisements
 
 There are 2 easy steps for configuring your Discourse settings to enable advertisements to display in your Discourse forum.
 

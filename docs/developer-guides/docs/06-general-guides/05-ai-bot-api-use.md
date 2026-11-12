@@ -38,7 +38,7 @@ Content-Type: application/json
 | `agent_id`            | Integer | Optional\*                              | Identifier for the agent.                                                                                       |
 | `agent_name`          | String  | Optional\*                              | Alternative identifier for the agent.                                                                           |
 | `query`               | String  | **Yes**                                 | The user's prompt/question.                                                                                     |
-| `username`            | String  | Required if `user_unique_id` is omitted | Used incase the chat PM needs to be associated with an existing user.                                           |
+| `username`            | String  | Required if `user_unique_id` is omitted | Used in case the chat PM needs to be associated with an existing user.                                          |
 | `user_unique_id`      | String  | Required if `username` is omitted       | Identifies the end-user. Creates/reuses a staged user keyed by custom field `ai-stream-conversation-unique-id`. |
 | `preferred_username`  | String  | Optional\*                              | Username for the user (if `user_unique_id` is not used).                                                        |
 | `topic_id`            | Integer | Optional                                | Continue an existing PM conversation.                                                                           |

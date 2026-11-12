@@ -82,7 +82,7 @@ Link to other docs using a relative path to their markdown file, so the link wor
 See the [DModal API](12-dmodal-api.md) or [theme settings](../05-themes-components/09-theme-settings.md).
 ```
 
-The sync tool rewrites these to the corresponding Discourse topic. Heading fragments (`#some-heading`) are dropped, becasue Discourse anchors are generated differently. Relative links to files which aren't docs will fail validation.
+The sync tool rewrites these to the corresponding Discourse topic. Heading fragments (`#some-heading`) are dropped, because Discourse anchors are generated differently. Relative links to files which aren't docs will fail validation.
 
 ## Contributing
 
