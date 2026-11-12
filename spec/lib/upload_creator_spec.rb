@@ -275,56 +275,70 @@ RSpec.describe UploadCreator do
       end
     end
 
-    # gif_frame_larger_than_logical_screen.gif is a valid GIF89a with a 1x1
-    # logical screen and a 3000x3000 image descriptor;
-    # gif_later_frame_larger_than_logical_screen.gif has the oversized
-    # descriptor in a second frame.
-    context "when a GIF frame is larger than its logical screen" do
-      let(:filename) { "gif_frame_larger_than_logical_screen.gif" }
-      let(:file) { file_from_fixtures(filename) }
+    context "when checking GIF dimensions with libvips" do
+      before { global_setting :enable_vips_image_processing, true }
 
-      it "rejects frames that exceed the megapixel limit" do
-        SiteSetting.max_image_megapixels = 5
-        expect(FastImage.size(file.path)).to eq([1, 1])
+      it "stores decoded dimensions for a GIF within the megapixel limit" do
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        SiteSetting.max_image_megapixels = 10
 
-        upload = described_class.new(file, filename).create_for(user.id)
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload).to have_attributes(width: 3000, height: 3000)
+      end
+
+      it "rejects a GIF at the megapixel limit" do
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        SiteSetting.max_image_megapixels = 9
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
 
         expect(upload).not_to be_persisted
         expect(upload.errors.full_messages).to contain_exactly(
           I18n.t(
             "upload.images.larger_than_x_megapixels",
-            max_image_megapixels: 5,
+            max_image_megapixels: 9,
             original_filename: filename,
           ),
         )
       end
 
-      it "rejects frames after the first that exceed the megapixel limit" do
+      it "accepts later frames clipped to the decoded canvas" do
+        filename = "gif_later_frame_larger_than_logical_screen.gif"
         SiteSetting.max_image_megapixels = 5
-        later_frame_filename = "gif_later_frame_larger_than_logical_screen.gif"
 
-        upload =
-          described_class.new(
-            file_from_fixtures(later_frame_filename),
-            later_frame_filename,
-          ).create_for(user.id)
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload).to have_attributes(width: 1, height: 1, animated: true)
+      end
+
+      it "rejects a GIF when the dimension probe times out" do
+        DiscourseVips.stubs(:gif_dimensions).raises(DiscourseVips::OperationTimeout)
+        filename = "tiny_animated.gif"
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
 
         expect(upload).not_to be_persisted
         expect(upload.errors.full_messages).to contain_exactly(
-          I18n.t(
-            "upload.images.larger_than_x_megapixels",
-            max_image_megapixels: 5,
-            original_filename: later_frame_filename,
-          ),
+          I18n.t("upload.images.size_not_found"),
         )
       end
 
-      it "accepts frames that are within the megapixel limit" do
-        SiteSetting.max_image_megapixels = 150
+      it "rejects a GIF header without frame data" do
+        file = Tempfile.new(%w[header_only .gif])
+        file.binmode
+        file.write(File.binread(file_from_fixtures("tiny_animated.gif").path, 13))
+        file.flush
+        file.rewind
 
-        upload = described_class.new(file, filename).create_for(user.id)
+        upload = described_class.new(file, "header_only.gif").create_for(user.id)
 
-        expect(upload).to be_persisted
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t("upload.images.size_not_found"),
+        )
       end
     end
 

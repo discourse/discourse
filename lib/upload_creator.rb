@@ -228,7 +228,7 @@ class UploadCreator
             # use default 0, 0
           end
         else
-          w, h = @image_info.size
+          w, h = @image_dimensions
         end
 
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
@@ -309,24 +309,33 @@ class UploadCreator
   end
 
   def extract_image_info!
+    @image_dimensions = nil
     @image_info =
       begin
         image = FastImage.new(@file)
         image.type # eager load to rescue errors early
+        @image_dimensions =
+          if image.type == :gif && GlobalSetting.enable_vips_image_processing
+            DiscourseVips.gif_dimensions(
+              input_path: @file.path,
+              timeout: Upload::MAX_IDENTIFY_SECONDS,
+            )
+          else
+            image.size
+          end
         image
       rescue StandardError
         nil
       end
     @file.rewind
-    @max_pixels = nil
 
     if @image_info.nil?
-      @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
+      @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0 && @image_info.type.to_s != "svg"
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    elsif max_image_pixels > 0 && max_pixels >= max_image_pixels
+    elsif max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
@@ -429,7 +438,7 @@ class UploadCreator
   end
 
   def is_still_too_big?
-    if max_image_pixels > 0 && max_pixels >= max_image_pixels
+    if max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
@@ -538,8 +547,8 @@ class UploadCreator
       max_width = 850 * max_pixel_ratio
       width, height =
         ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
+          @image_dimensions[0],
+          @image_dimensions[1],
           max_width: max_width,
           max_height: max_width,
         )
@@ -554,8 +563,8 @@ class UploadCreator
       max_width = 590 * max_pixel_ratio
       width, height =
         ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
+          @image_dimensions[0],
+          @image_dimensions[1],
           max_width: max_width,
           max_height: max_width,
         )
@@ -608,13 +617,7 @@ class UploadCreator
   end
 
   def pixels
-    @image_info.size&.reduce(:*).to_i
-  end
-
-  # FastImage reports GIF dimensions from the logical screen descriptor, but
-  # decoders rasterize the frame descriptors, which can be much larger.
-  def max_pixels
-    @max_pixels ||= [pixels, gif_frame_pixels].max
+    @image_dimensions&.reduce(:*).to_i
   end
 
   def svg_allowlist_xpath
@@ -633,53 +636,6 @@ class UploadCreator
   end
 
   private
-
-  # Walks the GIF block structure to find the largest frame raster, because
-  # FastImage only reports the logical screen dimensions.
-  def gif_frame_pixels
-    return 0 unless @image_info&.type == :gif
-
-    @file.rewind
-    header = @file.read(13)
-    return 0 if header.nil? || header.bytesize < 13 || !header.start_with?("GIF8")
-
-    packed = header.getbyte(10)
-    @file.seek(3 * 2**((packed & 0x07) + 1), IO::SEEK_CUR) if packed & 0x80 != 0
-
-    frame_pixels = 0
-
-    loop do
-      case @file.read(1)&.unpack1("C")
-      when 0x21 # extension: introducer, label, then data sub-blocks
-        break if @file.read(1).nil?
-        break unless skip_gif_sub_blocks
-      when 0x2C # image descriptor: left, top, width, height, packed
-        descriptor = @file.read(9)
-        break if descriptor.nil? || descriptor.bytesize < 9
-
-        _left, _top, width, height, packed = descriptor.unpack("v4C")
-        frame_pixels = [frame_pixels, width * height].max
-        @file.seek(3 * 2**((packed & 0x07) + 1), IO::SEEK_CUR) if packed & 0x80 != 0
-        break if @file.read(1).nil? # LZW minimum code size
-        break unless skip_gif_sub_blocks
-      else # trailer or an unknown block, stop where decoders would
-        break
-      end
-    end
-
-    frame_pixels
-  ensure
-    @file.rewind if @file
-  end
-
-  def skip_gif_sub_blocks
-    loop do
-      size = @file.read(1)&.unpack1("C")
-      return false if size.nil?
-      return true if size.zero?
-      @file.seek(size, IO::SEEK_CUR)
-    end
-  end
 
   def convert_png_to_jpeg?
     return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100

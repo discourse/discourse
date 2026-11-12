@@ -291,21 +291,12 @@ RSpec.describe UploadsController do
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
       end
 
-      it "returns an error when it could not determine the dimensions of an image" do
-        post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
-
-        expect(response.status).to eq(422)
-        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
-        message = response.parsed_body["errors"]
-        expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
-      end
-
-      it "rejects a GIF whose frame exceeds the megapixel limit when its logical screen is small" do
+      it "rejects a GIF whose decoded canvas exceeds the megapixel limit with libvips" do
+        global_setting :enable_vips_image_processing, true
         SiteSetting.max_image_megapixels = 5
+        filename = "gif_frame_larger_than_logical_screen.gif"
         file =
-          Rack::Test::UploadedFile.new(
-            file_from_fixtures("gif_frame_larger_than_logical_screen.gif"),
-          )
+          Rack::Test::UploadedFile.new(file_from_fixtures(filename), original_filename: filename)
 
         expect { post "/uploads.json", params: { file:, upload_type: "composer" } }.not_to change {
           Upload.count
@@ -316,9 +307,18 @@ RSpec.describe UploadsController do
           I18n.t(
             "upload.images.larger_than_x_megapixels",
             max_image_megapixels: 5,
-            original_filename: file.original_filename,
+            original_filename: filename,
           ),
         )
+      end
+
+      it "returns an error when it could not determine the dimensions of an image" do
+        post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
+
+        expect(response.status).to eq(422)
+        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
+        message = response.parsed_body["errors"]
+        expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
     end
 
