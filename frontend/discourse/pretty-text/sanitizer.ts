@@ -1,13 +1,22 @@
 import xss from "xss";
 import escape from "discourse/lib/escape";
+import type AllowLister from "./allow-lister.ts";
+
+/**
+ * The xss default export also carries the module's named helpers, which its
+ * typings leave out.
+ */
+type XssWithHelpers = typeof xss & {
+  escapeAttrValue(value: string): string;
+};
 
 // Should match any <iframe> without a src attribute
 const IFRAME_REGEXP =
   /<iframe(?![^>]*\s+src\s*=)[^>]*>[\s\S]*?(<\/iframe\s*>|$)/gi;
 
-function attr(name, value) {
+function attr(name: string, value?: string | null) {
   if (value) {
-    return `${name}="${xss.escapeAttrValue(value)}"`;
+    return `${name}="${(xss as XssWithHelpers).escapeAttrValue(value)}"`;
   }
 
   return name;
@@ -15,7 +24,21 @@ function attr(name, value) {
 
 export { escape };
 
-export function hrefAllowed(href, extraHrefMatchers) {
+/**
+ * Checks whether a link url is safe to keep.
+ *
+ * Absolute, relative, anchor and `mailto:` urls are allowed, as are urls that
+ * match one of the extra matchers.
+ *
+ * @param href - The url to check.
+ * @param extraHrefMatchers - Extra patterns of allowed urls.
+ * @returns The url with its single quotes escaped, or `undefined` when it
+ *   isn't allowed.
+ */
+export function hrefAllowed(
+  href: string,
+  extraHrefMatchers?: RegExp[] | null
+): string | undefined {
   // escape single quotes
   href = href.replace(/'/g, "%27");
 
@@ -45,8 +68,13 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
-function sanitizeMediaSrc(tag, attrName, value, extraHrefMatchers) {
-  const srcAttrs = {
+function sanitizeMediaSrc(
+  tag: string,
+  attrName: string,
+  value: string,
+  extraHrefMatchers: RegExp[] | null
+) {
+  const srcAttrs: Record<string, string[]> = {
     img: ["src"],
     source: ["src", "srcset"],
     track: ["src"],
@@ -77,7 +105,11 @@ function sanitizeMediaSrc(tag, attrName, value, extraHrefMatchers) {
   }
 }
 
-function testDataAttribute(forTag, name, value) {
+function testDataAttribute(
+  forTag: Record<string, string[]>,
+  name: string,
+  value: string
+) {
   return Object.keys(forTag).find((k) => {
     const nameWithMatcher = `^${k.replace(/\*$/, "\\w+?")}`;
     const validValues = forTag[k];
@@ -89,7 +121,22 @@ function testDataAttribute(forTag, name, value) {
   });
 }
 
-export function isAllowListedAttr(forTag, name, value) {
+/**
+ * Checks whether a tag's allow list rules allow an attribute value.
+ *
+ * `data-*` attributes are allowed by a `data-*` rule or a matching wildcard
+ * rule, except for `data-html-*` ones.
+ *
+ * @param forTag - The allowed values of each attribute of the tag.
+ * @param name - The attribute name.
+ * @param value - The attribute value.
+ * @returns Whether the attribute is allowed.
+ */
+export function isAllowListedAttr(
+  forTag: Record<string, string[]>,
+  name: string,
+  value: string
+): boolean {
   const forAttr = forTag[name];
 
   return !!(
@@ -100,7 +147,17 @@ export function isAllowListedAttr(forTag, name, value) {
   );
 }
 
-export function sanitize(text, allowLister) {
+/**
+ * Removes the tags and attributes an allow list doesn't allow from HTML.
+ *
+ * @param text - The HTML to sanitize.
+ * @param allowLister - The allow lister with the allowed tags and attributes.
+ * @returns The sanitized HTML, or an empty string when there is no HTML.
+ */
+export function sanitize(
+  text: string | null | undefined,
+  allowLister: AllowLister
+): string {
   if (!text) {
     return "";
   }
@@ -111,7 +168,7 @@ export function sanitize(text, allowLister) {
   const allowList = allowLister.getAllowList(),
     allowedHrefSchemes = allowLister.getAllowedHrefSchemes(),
     allowedIframes = allowLister.getAllowedIframes();
-  let extraHrefMatchers = null;
+  let extraHrefMatchers: RegExp[] | null = null;
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
     extraHrefMatchers = [
@@ -122,7 +179,7 @@ export function sanitize(text, allowLister) {
     }
   }
 
-  let result = xss(text, {
+  const result = xss(text, {
     allowList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
@@ -138,7 +195,7 @@ export function sanitize(text, allowLister) {
           (tag === "iframe" &&
             name === "src" &&
             (() => {
-              let decoded;
+              let decoded: string;
               try {
                 decoded = decodeURIComponent(value);
               } catch {

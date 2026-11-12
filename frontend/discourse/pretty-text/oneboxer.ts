@@ -1,3 +1,5 @@
+import type { Timer } from "@ember/runloop";
+import type { ajax as discourseAjax, AjaxError } from "discourse/lib/ajax";
 import domFromString from "discourse/lib/dom-from-string";
 import discourseLater from "discourse/lib/later";
 import {
@@ -8,10 +10,20 @@ import {
   resetLocalCache,
   setFailedCache,
   setLocalCache,
-} from "./oneboxer-cache.js";
+} from "./oneboxer-cache.ts";
 
-let timeout;
-const loadingQueue = [];
+/** A link waiting for its onebox. */
+interface QueuedOnebox {
+  url: string;
+  refresh: boolean;
+  elem: HTMLAnchorElement;
+  categoryId?: number;
+  topicId?: number;
+  onResolve?: (html: string | null) => void;
+}
+
+let timeout: Timer | null | undefined;
+const loadingQueue: QueuedOnebox[] = [];
 
 export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
@@ -21,7 +33,7 @@ export function resetCache() {
   resetFailedCache();
 }
 
-function resolveSize(img) {
+function resolveSize(img: HTMLImageElement) {
   img.classList.add("size-resolved");
 
   if (img.width > 0 && img.width === img.height) {
@@ -30,12 +42,14 @@ function resolveSize(img) {
 }
 
 // Detect square images and apply smaller onebox-avatar class
-function applySquareGenericOnebox(elem) {
+function applySquareGenericOnebox(elem: Element) {
   if (!elem.classList.contains("allowlistedgeneric")) {
     return;
   }
 
-  let img = elem.querySelector(".onebox-body img.thumbnail");
+  const img = elem.querySelector<HTMLImageElement>(
+    ".onebox-body img.thumbnail"
+  );
 
   // already resolved... skip
   if (!img || img.classList.contains("size-resolved")) {
@@ -49,12 +63,12 @@ function applySquareGenericOnebox(elem) {
   }
 }
 
-function _handleLoadingOneboxImages() {
+function _handleLoadingOneboxImages(this: HTMLImageElement) {
   resolveSize(this);
   this.removeEventListener("load", _handleLoadingOneboxImages);
 }
 
-function loadNext(ajax) {
+function loadNext(ajax: typeof discourseAjax): Promise<void> | undefined {
   if (loadingQueue.length === 0) {
     timeout = null;
     return;
@@ -63,7 +77,7 @@ function loadNext(ajax) {
   let timeoutMs = 150;
   let removeLoading = true;
   const { url, refresh, elem, categoryId, topicId, onResolve } =
-    loadingQueue.shift();
+    loadingQueue.shift()!;
 
   // an earlier entry for the same url may have resolved while this one waited
   const cached = !refresh && lookupCache(url);
@@ -76,7 +90,7 @@ function loadNext(ajax) {
   }
 
   // Retrieve the onebox
-  return ajax("/onebox", {
+  return ajax<string>("/onebox", {
     dataType: "html",
     data: {
       url,
@@ -93,7 +107,7 @@ function loadNext(ajax) {
         elem.replaceWith(node);
         applySquareGenericOnebox(node);
       },
-      (result) => {
+      (result: Partial<AjaxError> | null | undefined) => {
         if (result?.jqXHR?.status === 429) {
           timeoutMs = 2000;
           removeLoading = false;
@@ -120,8 +134,15 @@ function loadNext(ajax) {
     });
 }
 
-// Perform a lookup of a onebox based an anchor element.
-// It will insert a loading indicator and remove it when the loading is complete or fails.
+/**
+ * Looks up the onebox of a link and replaces the link with it.
+ *
+ * It adds a loading class to the link and removes it when the lookup
+ * completes or fails.
+ *
+ * @returns The cached onebox HTML when it is used, the loading promise when
+ *   the load is synchronous, or `undefined` otherwise.
+ */
 export function load({
   elem,
   ajax,
@@ -131,7 +152,24 @@ export function load({
   offline = false,
   synchronous = false,
   onResolve,
-}) {
+}: {
+  /** The link to onebox. */
+  elem: HTMLAnchorElement;
+  /** The function that makes the request. */
+  ajax: typeof discourseAjax;
+  /** The id of the topic the link is posted in. */
+  topicId?: number;
+  /** The id of the category the link is posted in. */
+  categoryId?: number;
+  /** Whether to skip the caches and fetch the onebox again. Defaults to true. */
+  refresh?: boolean;
+  /** Whether to only use the cache, without a request. */
+  offline?: boolean;
+  /** Whether to load now instead of after a short delay. */
+  synchronous?: boolean;
+  /** Called with the onebox HTML, or with `null` when the request fails. */
+  onResolve?: (html: string | null) => void;
+}): string | Promise<void> | undefined {
   // If the onebox has loaded or is loading, return
 
   if (elem.dataset.oneboxLoaded) {

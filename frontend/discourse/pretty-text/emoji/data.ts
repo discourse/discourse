@@ -2204,7 +2204,7 @@ export const tonableEmojis = [
   "couple_with_heart_man_man",
   "couple_with_heart_woman_woman",
 ];
-export const aliases = {
+export const aliases: Record<string, string[]> = {
   x_ray: ["xray"],
   right_anger_bubble: ["anger_right"],
   ballot_box: ["ballot_box_with_ballot"],
@@ -2911,7 +2911,7 @@ export const aliases = {
   united_states: ["us", "flag_us"],
   united_kingdom: ["uk", "gb", "flag_gb"],
 };
-export const translations = {
+export const translations: Record<string, string> = {
   ":)": "slight_smile",
   ":-)": "slight_smile",
   "^_^": "slight_smile",
@@ -2939,7 +2939,7 @@ export const translations = {
   ":$": "blush",
   ":-$": "blush",
 };
-export const replacements = {
+export const replacements: Record<string, string> = {
   "😀": "grinning_face",
   "😃": "smiley",
   "😄": "grinning_face_with_smiling_eyes",
