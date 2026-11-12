@@ -384,6 +384,33 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when a watching user ignores the sender in a category channel" do
+      fab!(:watcher, :user)
+      fab!(:watcher_membership) do
+        Fabricate(
+          :user_chat_channel_membership,
+          user: watcher,
+          chat_channel: channel,
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        )
+      end
+
+      before do
+        Jobs.run_immediately!
+        Fabricate(:ignored_user, user: watcher, ignored_user: current_user)
+      end
+
+      it "does not publish a notification alert to the watcher" do
+        messages =
+          MessageBus.track_publish("/chat/notification-alert/#{watcher.id}") do
+            post "/chat/#{channel.id}.json", params: params
+          end
+
+        expect(response).to have_http_status(:ok)
+        expect(messages).to be_empty
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
