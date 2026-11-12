@@ -87,6 +87,22 @@ module DiscourseEvents
 
           expect(response.status).to eq(404)
         end
+
+        it "withholds Zoom credentials when the opening post is hidden" do
+          post.hide!(PostActionType.types[:spam])
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "withholds Zoom credentials when the event is soft-deleted" do
+          event.update_column(:deleted_at, Time.current)
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
       end
 
       context "when signed in" do
@@ -237,6 +253,15 @@ module DiscourseEvents
         expect(response.body).to include('"anonymous":true')
       end
 
+      it "withholds the meeting frame from guests when the opening post is hidden" do
+        event.update!(allow_anonymous_livestream: true)
+        post.hide!(PostActionType.types[:spam])
+
+        get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(404)
+      end
+
       context "when signed in" do
         before { sign_in(current_user) }
 
@@ -307,6 +332,42 @@ module DiscourseEvents
             expect(response.body).not_to include("/forum/forum")
           end
         end
+      end
+    end
+
+    describe "anonymous livestream chat" do
+      before do
+        SiteSetting.enable_public_channels = true
+        SiteSetting.chat_allowed_groups =
+          Group::AUTO_GROUPS.values_at(:anonymous_users, :trust_level_0).join("|")
+        event.update!(allow_anonymous_livestream: true)
+      end
+
+      it "withholds chat messages after the opening post is hidden" do
+        channel_id = topic.topic_chat_channel.chat_channel_id
+
+        get "/chat/api/channels/#{channel_id}/messages"
+        expect(response.status).to eq(200)
+
+        post.hide!(PostActionType.types[:spam])
+
+        get "/chat/api/channels/#{channel_id}/messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "allows thread reads until the opening post is hidden" do
+        channel = topic.topic_chat_channel.chat_channel
+        channel.update!(threading_enabled: true)
+        thread = Fabricate(:chat_thread, channel:)
+        path = "/chat/api/channels/#{channel.id}/threads/#{thread.id}/messages"
+
+        get path
+        expect(response.status).to eq(200)
+
+        post.hide!(PostActionType.types[:spam])
+
+        get path
+        expect(response.status).to eq(403)
       end
     end
 

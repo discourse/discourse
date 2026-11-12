@@ -15,6 +15,7 @@ class DiscourseEvents::Livestream::PrepareZoomJoin
   model :topic
   policy :can_see_topic
   model :event
+  policy :can_see_event
   policy :can_join_event
   policy :event_has_livestream
   policy :event_within_timeframe
@@ -43,6 +44,10 @@ class DiscourseEvents::Livestream::PrepareZoomJoin
 
   def fetch_event(topic:)
     topic.first_post&.event
+  end
+
+  def can_see_event(event:, guardian:)
+    guardian.authenticated? || guardian.can_see_livestream_event?(event)
   end
 
   def can_join_event(event:, guardian:)

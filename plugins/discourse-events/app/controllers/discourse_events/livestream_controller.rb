@@ -25,6 +25,7 @@ module DiscourseEvents
       raise Discourse::NotFound if !SiteSetting.livestream_zoom_enabled
       event = topic.first_post&.event
       raise Discourse::NotFound if !event
+      raise Discourse::NotFound if guardian.anonymous? && !guardian.can_see_livestream_event?(event)
 
       ensure_logged_in if !event.allow_anonymous_livestream?
 
