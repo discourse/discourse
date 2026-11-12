@@ -8,7 +8,12 @@ module ::Blog
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
     METADATA = %w[path excerpt featured published_at].freeze
     MAX_PATH_LENGTH = 240
-    PATH_PATTERN = %r{\A/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+(?:/(?:[a-zA-Z0-9_+.,-]|%2[bBcC])+)*\z}
+    # Encoded "+" and ",", and encoded UTF-8 bytes, so imported paths keep non-ASCII slugs.
+    # Other encoded ASCII stays out: it could hide a separator, a dot segment or a control character.
+    PATH_SEGMENT = /(?:[a-zA-Z0-9_+.,-]|%2[bBcC]|%[89a-fA-F]\h)+/
+    PATH_PATTERN = %r{\A(?:/#{PATH_SEGMENT})+\z}
+    # Invisible or unassigned characters would make a path display as something it isn't.
+    HIDDEN_PATH_CHARACTERS = /[\p{Cc}\p{Cf}\p{Co}\p{Cn}\p{Z}]/
 
     belongs_to :topic
     belongs_to :draft_topic, class_name: "Topic", optional: true
@@ -22,6 +27,9 @@ module ::Blog
     has_many :revisions, dependent: :destroy
     has_many :paths, dependent: :destroy
 
+    # Rails upper-cases percent-encoding in request paths, so stored paths must match.
+    normalizes :path, with: ->(path) { Publication.normalize_path(path) }
+
     validates :topic_id, uniqueness: true
     validates :path,
               presence: true,
@@ -34,6 +42,7 @@ module ::Blog
     validates :excerpt, length: { maximum: 1000 }, exclusion: { in: [nil] }
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
+    validate :decodable_path
     validate :valid_publication_date
     before_validation :initialize_topics, on: :create
     before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
@@ -84,12 +93,36 @@ module ::Blog
 
     def self.default_path(topic, date: nil, slug: topic.slug)
       format = PathFormat.current
-      slug = slug.presence || topic.id.to_s
+      slug = visible_slug(slug).presence || topic.id.to_s
       date ||= Time.current
       path = format.render(slug:, id: topic.id, date:, max_length: MAX_PATH_LENGTH)
       return path if !reserved_path?(path)
 
       format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:, max_length: MAX_PATH_LENGTH)
+    end
+
+    # Encoded topic slugs keep invisible characters from the title, which paths reject.
+    def self.visible_slug(slug)
+      return slug if !slug.to_s.include?("%")
+      decoded = URI.decode_uri_component(slug)
+      return "" if !decoded.valid_encoding?
+      CGI
+        .escape(decoded.gsub(HIDDEN_PATH_CHARACTERS, ""))
+        .squeeze("-")
+        .delete_prefix("-")
+        .delete_suffix("-")
+    rescue ArgumentError
+      ""
+    end
+
+    def self.normalize_path(path)
+      path.gsub(/%\h{2}/, &:upcase)
+    end
+
+    # Expects a path that already matches PATH_PATTERN.
+    def self.decodable_path?(path)
+      decoded = URI.decode_uri_component(path)
+      decoded.valid_encoding? && !decoded.match?(HIDDEN_PATH_CHARACTERS)
     end
 
     def self.traversal_path?(path)
@@ -341,6 +374,11 @@ module ::Blog
       if reserved_path? || self.class.traversal_path?(path) || !path_available?(path)
         errors.add(:path, I18n.t("blog.errors.path_taken"))
       end
+    end
+
+    def decodable_path
+      return if !path.to_s.match?(PATH_PATTERN) || self.class.decodable_path?(path)
+      errors.add(:path, :invalid)
     end
 
     def reserved_path?

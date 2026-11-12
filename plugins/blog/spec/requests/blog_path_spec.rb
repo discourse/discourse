@@ -105,6 +105,24 @@ RSpec.describe "Blog under /blog", type: :request do
     expect(response.parsed_body["blog_base_url"]).to eq("#{Discourse.base_url}/blog")
   end
 
+  it "serves articles at percent-encoded UTF-8 paths in either hex case" do
+    update_blog_metadata(publication, admin, path: "/2024/%e6%97%a5%e6%9c%ac")
+    publish_blog_draft(publication, admin)
+    expect(publication.reload.url).to eq("#{Discourse.base_url}/blog/2024/%E6%97%A5%E6%9C%AC")
+
+    %w[/blog/2024/%e6%97%a5%e6%9c%ac /blog/2024/%E6%97%A5%E6%9C%AC].each do |path|
+      get path
+      expect(response.status).to eq(200)
+      expect(response.body).to include("An article published under the forum.")
+    end
+
+    update_blog_metadata(publication, admin, path: "/2024/%e6%9c%88")
+    publish_blog_draft(publication, admin)
+
+    get "/blog/2024/%e6%97%a5%e6%9c%ac"
+    expect(response).to redirect_to("#{Discourse.base_url}/blog/2024/%E6%9C%88")
+  end
+
   describe "with a custom domain" do
     before { enable_blog!(category: category, drafts: drafts) }
 
