@@ -87,8 +87,8 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category-filter", (spec) =>
-              spec.option((presentation) =>
-                presentation.classes.push("x-category-filter")
+              spec.optionAttributes((attributes) =>
+                attributes.classes.push("x-category-filter")
               )
             );
           })

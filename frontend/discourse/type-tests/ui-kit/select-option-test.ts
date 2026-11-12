@@ -2,7 +2,7 @@ import { expectTypeOf } from "expect-type";
 import type {
   SelectChangeContext,
   SelectCustomizationSpec,
-  SelectOptionContext,
+  SelectOptionAttributesContext,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import {
   type SelectControl,
@@ -54,12 +54,16 @@ selectOption(fruit, { divider: "between" });
 // @ts-expect-error - read option.record
 const forgotten: SelectRecord = plain;
 
-/* Positive: content steps get options, presentation gets the option and its record, and a
+/* Positive: content steps get options, the attributes step gets the option and its record, and a
    change hands back records. */
 type ContentStep = Parameters<SelectCustomizationSpec["content"]>[0];
 expectTypeOf<Parameters<ContentStep>[0]>().toEqualTypeOf<SelectOption[]>();
-expectTypeOf<SelectOptionContext["option"]>().toEqualTypeOf<SelectOption>();
-expectTypeOf<SelectOptionContext["record"]>().toEqualTypeOf<SelectRecord>();
+expectTypeOf<
+  SelectOptionAttributesContext["option"]
+>().toEqualTypeOf<SelectOption>();
+expectTypeOf<
+  SelectOptionAttributesContext["record"]
+>().toEqualTypeOf<SelectRecord>();
 expectTypeOf<SelectChangeContext["records"]>().toEqualTypeOf<
   SelectRecord | SelectRecord[] | null
 >();

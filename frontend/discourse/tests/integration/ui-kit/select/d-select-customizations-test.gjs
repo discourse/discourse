@@ -87,15 +87,19 @@ module(
     test("row classes compose general to specific", async function (assert) {
       customize((selects) => {
         selects.forIdentifier("composer-tags", (spec) =>
-          spec.option((presentation) =>
-            presentation.classes.push("x-identifier")
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-identifier")
           )
         );
         selects.forKind("tag-chooser", (spec) =>
-          spec.option((presentation) => presentation.classes.push("x-kind"))
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-kind")
+          )
         );
         selects.forAll((spec) =>
-          spec.option((presentation) => presentation.classes.push("x-all"))
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-all")
+          )
         );
       });
 
@@ -169,11 +173,15 @@ module(
       customize((selects) => {
         selects.forKind("first-kind", (spec) => {
           setups++;
-          spec.option((presentation) => presentation.classes.push("x-first"));
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-first")
+          );
         });
         selects.forKind("second-kind", (spec) => {
           setups++;
-          spec.option((presentation) => presentation.classes.push("x-second"));
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-second")
+          );
         });
       });
 
@@ -767,9 +775,9 @@ module(
       ];
       customize((selects) =>
         selects.forKind("titled", (spec) =>
-          spec.option((presentation, context) => {
+          spec.optionAttributes((attributes, context) => {
             if (context.record.id === 2) {
-              presentation.title = "Ripe";
+              attributes.title = "Ripe";
             }
           })
         )
@@ -812,10 +820,10 @@ module(
       const runs = new Map();
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.option((presentation, context) => {
+          spec.optionAttributes((attributes, context) => {
             runs.set(context.record.id, (runs.get(context.record.id) ?? 0) + 1);
-            presentation.title = `Row ${context.record.id}`;
-            presentation.classes.push("x-row");
+            attributes.title = `Row ${context.record.id}`;
+            attributes.classes.push("x-row");
           })
         )
       );
@@ -1310,7 +1318,7 @@ module(
             seen.content = context.config;
             return items;
           });
-          spec.option((presentation, context) => {
+          spec.optionAttributes((attributes, context) => {
             seen.row = context.config;
           });
           spec.load((load, context) => {
@@ -1566,11 +1574,13 @@ module(
     test("forKind customizations match only the new kind", async function (assert) {
       customize((selects) => {
         selects.forKind("select-tag", (spec) =>
-          spec.option((presentation) => presentation.classes.push("x-new-kind"))
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-new-kind")
+          )
         );
         selects.forKind("mini-tag-chooser", (spec) =>
-          spec.option((presentation) =>
-            presentation.classes.push("x-legacy-kind")
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("x-legacy-kind")
           )
         );
       });
@@ -1626,7 +1636,7 @@ module(
     setupRenderingTest(hooks);
     setupLegacyBridgeCallbacks(hooks);
 
-    test("option presentation gets the option and its record", async function (assert) {
+    test("option attributes get the option and its record", async function (assert) {
       const selected = { id: 1, name: "Selected" };
       const disabled = { id: 2, name: "Disabled" };
       const options = [
@@ -1636,19 +1646,21 @@ module(
       const contexts = [];
       customize((selects) => {
         selects.forAll((spec) => {
-          spec.option((presentation, context) => {
+          spec.optionAttributes((attributes, context) => {
             contexts.push(context);
-            presentation.classes.push("opt-all");
-            presentation.title =
+            attributes.classes.push("opt-all");
+            attributes.title =
               context.option?.description ?? context.record?.name;
           });
         });
-        selects.forKind("opt-presentation", (spec) =>
-          spec.option((presentation) => presentation.classes.push("opt-kind"))
+        selects.forKind("opt-attributes", (spec) =>
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("opt-kind")
+          )
         );
         selects.forIdentifier("opt-instance", (spec) =>
-          spec.option((presentation) =>
-            presentation.classes.push("opt-instance")
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("opt-instance")
           )
         );
       });
@@ -1657,7 +1669,7 @@ module(
         <template>
           <DSelect
             @identifier="opt-instance"
-            @kind="opt-presentation"
+            @kind="opt-attributes"
             @options={{options}}
             @value={{1}}
             @virtualized={{false}}
@@ -1692,16 +1704,19 @@ module(
         disabledContext?.selected,
         "the other option is not selected"
       );
-      assert.true(contexts.length >= 2, "presentation ran for both records");
+      assert.true(
+        contexts.length >= 2,
+        "the attributes step ran for both records"
+      );
       assert
         .dom("[role='option'][data-value='1']")
-        .hasAttribute("title", "Chosen", "presentation sets the title");
+        .hasAttribute("title", "Chosen", "the attributes step sets the title");
       assert.deepEqual(
         [
           ...(findAll("[role='option'][data-value='1']")[0]?.classList ?? []),
         ].filter((name) => name.startsWith("opt-")),
         ["opt-all", "opt-kind", "opt-instance"],
-        "presentation classes compose in tier order"
+        "attribute classes compose in tier order"
       );
       assert
         .dom("[role='option'][data-value='2']")
@@ -1712,7 +1727,7 @@ module(
         );
     });
 
-    test("presentation cache reuses equal settings across new options", async function (assert) {
+    test("the attributes cache reuses equal settings across new options", async function (assert) {
       const record = { id: 1, name: "Stable" };
       const settings = {
         description: "Same",
@@ -1725,9 +1740,9 @@ module(
       let calls = 0;
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.option((presentation) => {
+          spec.optionAttributes((attributes) => {
             calls++;
-            presentation.title = `Evaluation ${calls}`;
+            attributes.title = `Evaluation ${calls}`;
           })
         )
       );
@@ -1753,28 +1768,28 @@ module(
       assert.strictEqual(
         calls,
         initialCalls,
-        "equal settings by value do not invoke presentation again"
+        "equal settings by value do not run the attributes step again"
       );
       assert
         .dom("[role='option']")
         .hasAttribute(
           "title",
           initialTitle,
-          "the cached presentation remains visible"
+          "the cached attributes remain visible"
         );
     });
 
     for (const setting of ["description", "position"]) {
-      test(`presentation cache invalidates changed ${setting} with the same record`, async function (assert) {
+      test(`the attributes cache invalidates changed ${setting} with the same record`, async function (assert) {
         const record = { id: 1, name: "Changing" };
         const original = selectOption(record, { description: "Before" });
         const options = tracked([original]);
         let calls = 0;
         customize((selects) =>
           selects.forAll((spec) =>
-            spec.option((presentation, context) => {
+            spec.optionAttributes((attributes, context) => {
               calls++;
-              presentation.title = `${context.option?.description}/${context.option?.position ?? "normal"}`;
+              attributes.title = `${context.option?.description}/${context.option?.position ?? "normal"}`;
             })
           )
         );
@@ -1790,7 +1805,7 @@ module(
           .hasAttribute(
             "title",
             "Before/normal",
-            "presentation reads the initial settings"
+            "the attributes step reads the initial settings"
           );
         const initialCalls = calls;
         const replacement = original.with(
@@ -1808,14 +1823,14 @@ module(
 
         assert.true(
           calls > initialCalls,
-          "the changed setting invokes presentation again"
+          "the changed setting runs the attributes step again"
         );
         assert
           .dom("[role='option']")
           .hasAttribute(
             "title",
             setting === "description" ? "After/normal" : "Before/end",
-            "the new presentation reaches the open list"
+            "the new attributes reach the open list"
           );
         assert
           .dom(".d-select__option-description")

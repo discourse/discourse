@@ -1197,8 +1197,8 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forIdentifier("test-select", (spec) =>
-              spec.option((presentation, context) => {
-                presentation.classes.push(
+              spec.optionAttributes((attributes, context) => {
+                attributes.classes.push(
                   "x-extra",
                   `x-item-${context.record.id}`
                 );
@@ -1227,7 +1227,7 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation, context) => {
+              spec.optionAttributes((attributes, context) => {
                 seen.push(context);
               })
             )
@@ -1290,9 +1290,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation, context) => {
+              spec.optionAttributes((attributes, context) => {
                 if (context.selected) {
-                  presentation.classes.push("is-held");
+                  attributes.classes.push("is-held");
                 }
               })
             )
@@ -1326,10 +1326,10 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation, context) => {
+              spec.optionAttributes((attributes, context) => {
                 disabledById[context.record.id] = context.disabled;
                 if (context.disabled) {
-                  presentation.classes.push("is-capped");
+                  attributes.classes.push("is-capped");
                 }
               })
             )
@@ -1358,7 +1358,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation) => presentation.classes.push("x-row"))
+              spec.optionAttributes((attributes) =>
+                attributes.classes.push("x-row")
+              )
             )
         );
       });
@@ -1405,7 +1407,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation) => presentation.classes.push("x-row"))
+              spec.optionAttributes((attributes) =>
+                attributes.classes.push("x-row")
+              )
             )
         );
       });
@@ -1445,13 +1449,13 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation, context) => {
+              spec.optionAttributes((attributes, context) => {
                 inputs.push({
-                  presentation,
-                  classes: presentation.classes,
-                  length: presentation.classes.length,
+                  attributes,
+                  classes: attributes.classes,
+                  length: attributes.classes.length,
                 });
-                presentation.classes.push(`x-item-${context.record.id}`);
+                attributes.classes.push(`x-item-${context.record.id}`);
               })
             )
         );
@@ -1471,9 +1475,9 @@ module(
         "each input starts empty"
       );
       assert.strictEqual(
-        new Set(inputs.map(({ presentation }) => presentation)).size,
+        new Set(inputs.map(({ attributes }) => attributes)).size,
         inputs.length,
-        "every call gets its own presentation"
+        "every call gets its own attributes"
       );
       assert.strictEqual(
         new Set(inputs.map(({ classes }) => classes)).size,
@@ -1501,7 +1505,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation) => presentation.classes.push("x-row"))
+              spec.optionAttributes((attributes) =>
+                attributes.classes.push("x-row")
+              )
             )
         );
       });
@@ -1531,9 +1537,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.option((presentation, context) => {
+              spec.optionAttributes((attributes, context) => {
                 if (context.record.id === 3) {
-                  presentation.classes.push(null, "", false);
+                  attributes.classes.push(null, "", false);
                 }
               })
             )

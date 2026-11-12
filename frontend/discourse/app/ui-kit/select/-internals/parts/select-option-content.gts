@@ -8,7 +8,7 @@ import { service } from "@ember/service";
 import type SiteSettingsService from "discourse/services/site-settings";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectOptionPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectOptionAttributes } from "discourse/ui-kit/select/-internals/engine/customizations";
 import { sameSettings } from "discourse/ui-kit/select/-internals/engine/select-option";
 import SelectEngine, {
   SelectRecord as SelectRecordModel,
@@ -70,15 +70,15 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
   lockedHintId = `d-select-option-locked-${guidFor(this)}`;
 
   /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
-  #presentation?: {
+  #attributes?: {
     engine: SelectEngine;
     descriptor: SelectRow;
-    cache: ReturnType<typeof createCache<SelectOptionPresentation>>;
+    cache: ReturnType<typeof createCache<SelectOptionAttributes>>;
   };
 
   /** Shares classes and title while tracking both callback dependencies and row input changes. */
-  get presentation(): SelectOptionPresentation {
-    return this.#resolvePresentation(this.args.engine, this.args.descriptor);
+  get customAttributes(): SelectOptionAttributes {
+    return this.#resolveAttributes(this.args.engine, this.args.descriptor);
   }
 
   /** The option label from the engine's configured label field. */
@@ -118,11 +118,11 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
   }
 
   /** Reuses the tracked computation across equivalent rows, comparing settings by value. */
-  #resolvePresentation(
+  #resolveAttributes(
     engine: SelectEngine,
     descriptor: SelectRow
-  ): SelectOptionPresentation {
-    const previous = this.#presentation;
+  ): SelectOptionAttributes {
+    const previous = this.#attributes;
     if (
       !previous ||
       previous.engine !== engine ||
@@ -134,17 +134,17 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
       previous.descriptor.flags.selected !== descriptor.flags.selected ||
       previous.descriptor.flags.disabled !== descriptor.flags.disabled
     ) {
-      this.#presentation = {
+      this.#attributes = {
         engine,
         descriptor,
-        cache: createCache(() => engine.optionPresentation(descriptor)),
+        cache: createCache(() => engine.optionAttributes(descriptor)),
       };
     }
-    return getValue(this.#presentation!.cache)!;
+    return getValue(this.#attributes!.cache)!;
   }
 
   <template>
-    {{#let this.presentation as |row|}}
+    {{#let this.customAttributes as |custom|}}
       <li
         aria-describedby={{this.describedBy}}
         aria-disabled={{if @descriptor.flags.disabled "true"}}
@@ -161,12 +161,12 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
           (if @descriptor.flags.none "--none")
           (if @descriptor.flags.groupHeader "--action-header")
           (if @descriptor.flags.groupFooter "--action-footer")
-          row.classes
+          custom.classes
         }}
         data-name={{this.name}}
         data-value={{this.value}}
         role="option"
-        title={{row.title}}
+        title={{custom.title}}
         ...attributes
         {{on "click" this.handleClick}}
       >

@@ -188,9 +188,9 @@ function initInlineCategorySuggester(api) {
               ...options,
             ];
           });
-          spec.option((presentation, { record }) => {
+          spec.optionAttributes((attributes, { record }) => {
             if (record.id === SUGGEST_ID) {
-              presentation.classes.push("ai-category-suggest-row");
+              attributes.classes.push("ai-category-suggest-row");
             }
           });
         });

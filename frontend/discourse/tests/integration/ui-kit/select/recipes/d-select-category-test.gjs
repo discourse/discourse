@@ -339,8 +339,8 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category", (spec) =>
-              spec.option((presentation) =>
-                presentation.classes.push("x-select-category")
+              spec.optionAttributes((attributes) =>
+                attributes.classes.push("x-select-category")
               )
             );
           })

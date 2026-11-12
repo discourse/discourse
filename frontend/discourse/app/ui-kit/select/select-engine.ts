@@ -7,7 +7,7 @@ import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
   type SelectConfig,
-  type SelectOptionPresentation,
+  type SelectOptionAttributes,
   type SelectPresentationArgs,
   type SelectResolvedContext,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
@@ -1409,14 +1409,14 @@ export default class SelectEngine {
   }
 
   /**
-   * Option presentation from render-time customizations. Each evaluation starts fresh
-   * so classes and titles cannot leak between options or renders.
+   * The classes and title the customizations' attributes steps add to an option's element. Each
+   * evaluation starts fresh so classes and titles cannot leak between options or renders.
    *
    * @param row - The option's rendered row.
    */
   @bind
-  optionPresentation(row: SelectRow): SelectOptionPresentation {
-    return this.#customizations.applyOption({
+  optionAttributes(row: SelectRow): SelectOptionAttributes {
+    return this.#customizations.applyOptionAttributes({
       option: row.option,
       record: row.record,
       selected: row.flags.selected,

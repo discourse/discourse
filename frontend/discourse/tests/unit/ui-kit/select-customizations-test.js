@@ -316,7 +316,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       const engine = new SelectEngine({});
       const spec = stored;
 
-      for (const method of ["content", "option", "load", "change"]) {
+      for (const method of ["content", "optionAttributes", "load", "change"]) {
         assert.throws(
           () => spec[method](() => {}),
           /sealed/,
@@ -649,29 +649,31 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       );
     });
 
-    test("a throwing presentation step keeps what it set, and later steps still run", function (assert) {
+    test("a throwing attributes step keeps what it set, and later steps still run", function (assert) {
       disableThrowingApplyExceptionOnTests();
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.option((presentation) => {
-            presentation.classes.push("partial");
-            throw new Error("presentation failed");
+          spec.optionAttributes((attributes) => {
+            attributes.classes.push("partial");
+            throw new Error("attributes failed");
           })
         );
         selects.forAll((spec) =>
-          spec.option((presentation) => presentation.classes.push("healthy"))
+          spec.optionAttributes((attributes) =>
+            attributes.classes.push("healthy")
+          )
         );
       });
       const engine = new SelectEngine({});
       const [descriptor] = engine.buildRows([{ id: 1, name: "Apple" }]);
 
       assert.deepEqual(
-        engine.optionPresentation(descriptor).classes,
+        engine.optionAttributes(descriptor).classes,
         ["partial", "healthy"],
         "partial mutations survive and the following step runs"
       );
       assert.deepEqual(
-        engine.optionPresentation(descriptor).classes,
+        engine.optionAttributes(descriptor).classes,
         ["partial", "healthy"],
         "a later evaluation starts fresh"
       );
@@ -680,7 +682,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         this.reported.every(
           (detail) =>
             detail.messageKey === "broken_transformer_alert" &&
-            detail.error.message === "presentation failed"
+            detail.error.message === "attributes failed"
         ),
         "as a broken customization"
       );
@@ -1069,13 +1071,13 @@ module(
     setupTest(hooks);
     setupLegacyBridgeCallbacks(hooks);
 
-    test("a presentation step gets the option and its record", function (assert) {
+    test("an attributes step gets the option and its record", function (assert) {
       let context;
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.option((presentation, received) => {
+          spec.optionAttributes((attributes, received) => {
             context = received;
-            presentation.title = "Presented";
+            attributes.title = "Presented";
           })
         )
       );
@@ -1084,11 +1086,11 @@ module(
       const [row] = engine.buildRows([
         selectOption(record, { disabled: true }),
       ]);
-      const presentation = engine.optionPresentation(row);
+      const attributes = engine.optionAttributes(row);
       assert.strictEqual(
-        presentation?.title,
+        attributes?.title,
         "Presented",
-        "the step's presentation is returned"
+        "the step's attributes are returned"
       );
       assert.strictEqual(
         context?.record,

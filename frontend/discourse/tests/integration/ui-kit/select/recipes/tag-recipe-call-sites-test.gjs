@@ -303,8 +303,8 @@ module(
                   spec.config(() => ({ texts: { placeholder: "tag level" } }))
                 );
                 value.forIdentifier("breadcrumb-tag-intersection", (spec) =>
-                  spec.option((presentation) =>
-                    presentation.classes.push("x-intersection")
+                  spec.optionAttributes((attributes) =>
+                    attributes.classes.push("x-intersection")
                   )
                 );
               }
@@ -346,8 +346,8 @@ module(
               "select-customizations",
               ({ value }) => {
                 value.forKind("select-tag-filter", (spec) =>
-                  spec.option((presentation) =>
-                    presentation.classes.push("x-filter")
+                  spec.optionAttributes((attributes) =>
+                    attributes.classes.push("x-filter")
                   )
                 );
               }

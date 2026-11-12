@@ -150,7 +150,7 @@ Paths are relative to the repository root.
   and the category components' own members. Reporting stays once per select per plugin. A ported
   plugin keeps its legacy callbacks for the flag-off branch, so the bridge needs a per-callback
   opt-out to avoid doubled rows; it is designed with the discourse-ai port in wave 1. Row
-  `classNames` is not bridged: its one known user moves to `spec.option` classes when it is
+  `classNames` is not bridged: its one known user moves to `spec.optionAttributes` classes when it is
   ported.
 - **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
   After `modifyClass` or `modifyClassStatic` applies a patch, it fires

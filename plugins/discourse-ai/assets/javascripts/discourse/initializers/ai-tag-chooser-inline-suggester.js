@@ -251,9 +251,9 @@ function initInlineTagSuggester(api) {
               : {}
           );
 
-          spec.option((presentation, { record }) => {
+          spec.optionAttributes((attributes, { record }) => {
             if (record.id === SUGGEST_ID || record.id === EXIT_ID) {
-              presentation.classes.push(
+              attributes.classes.push(
                 record.id === EXIT_ID ? "ai-tag-exit-row" : "ai-tag-suggest-row"
               );
             }

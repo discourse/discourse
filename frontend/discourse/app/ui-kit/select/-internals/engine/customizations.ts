@@ -190,17 +190,17 @@ export interface SelectConfigContext extends SelectCustomizationContext {
   control: SelectControl;
 }
 
-/** Presentation starts fresh for every option evaluation. */
-export interface SelectOptionPresentation {
+/** The attributes an attributes step adds to an option's element; fresh for every evaluation. */
+export interface SelectOptionAttributes {
   /** Classes appended to the core classes; falsy entries are ignored. */
   classes: (string | false | null | undefined | 0)[];
   /** An explicit tooltip; a record's own title is never used implicitly. */
   title: string | undefined;
 }
 
-/** State of the option being presented. */
-export interface SelectOptionContext extends SelectResolvedContext {
-  /** The option being presented, with its settings. */
+/** State of the option whose attributes are being set. */
+export interface SelectOptionAttributesContext extends SelectResolvedContext {
+  /** The option, with its settings. */
   option: SelectOption;
   /** The record behind the option. */
   record: SelectRecord;
@@ -235,10 +235,10 @@ type Content = (
   options: SelectOption[],
   context: SelectContentContext
 ) => SelectOptionLike[];
-/** A presentation step mutates presentation; its return value is ignored. */
-type Presentation = (
-  presentation: SelectOptionPresentation,
-  context: SelectOptionContext
+/** An attributes step mutates the option's attributes; its return value is ignored. */
+type OptionAttributes = (
+  attributes: SelectOptionAttributes,
+  context: SelectOptionAttributesContext
 ) => void;
 /** A config step returns a partial over an immutable snapshot of the values so far. */
 type Config = (
@@ -263,8 +263,8 @@ type Change = (
 export interface SelectCustomizationSpec {
   /** Appends a content step. */
   content(callback: Content): void;
-  /** Appends an option presentation step. */
-  option(callback: Presentation): void;
+  /** Appends a step adding classes and a title to each option's element. */
+  optionAttributes(callback: OptionAttributes): void;
   /** Appends a step resolving core and declared recipe config. */
   config(callback: Config): void;
   /** Appends a loader step. */
@@ -291,8 +291,8 @@ class Declarations {
   /** Content steps, in declaration order. */
   content: Content[] = [];
 
-  /** Option presentation steps, in declaration order. */
-  option: Presentation[] = [];
+  /** Option attributes steps, in declaration order. */
+  optionAttributes: OptionAttributes[] = [];
 
   /** Config steps, in declaration order. */
   config: Config[] = [];
@@ -441,16 +441,18 @@ export default class SelectCustomizations {
     return current;
   }
 
-  /** Keeps mutations made before a presentation step fails, then continues the remaining steps. */
-  applyOption(context: SelectOptionContext): SelectOptionPresentation {
-    const presentation: SelectOptionPresentation = {
+  /** Keeps mutations made before an attributes step fails, then continues the remaining steps. */
+  applyOptionAttributes(
+    context: SelectOptionAttributesContext
+  ): SelectOptionAttributes {
+    const attributes: SelectOptionAttributes = {
       classes: [],
       title: undefined,
     };
-    for (const step of this.#steps.option) {
-      withTransformerErrorHandling(() => step(presentation, context));
+    for (const step of this.#steps.optionAttributes) {
+      withTransformerErrorHandling(() => step(attributes, context));
     }
-    return presentation;
+    return attributes;
   }
 
   /**
@@ -751,7 +753,8 @@ export default class SelectCustomizations {
     const spec = new Proxy<SelectCustomizationSpec>(
       {
         content: (callback) => append(pending.content, callback),
-        option: (callback) => append(pending.option, callback),
+        optionAttributes: (callback) =>
+          append(pending.optionAttributes, callback),
         load: (callback) => append(pending.load, callback),
         change: (callback) => append(pending.change, callback),
         config: (callback) => append(pending.config, callback),
@@ -785,7 +788,7 @@ export default class SelectCustomizations {
     });
     if (succeeded) {
       this.#steps.content.push(...pending.content);
-      this.#steps.option.push(...pending.option);
+      this.#steps.optionAttributes.push(...pending.optionAttributes);
       this.#steps.config.push(...pending.config);
       this.#steps.configTiers.push(...pending.config.map(() => tier));
       this.#steps.load.push(...pending.load);

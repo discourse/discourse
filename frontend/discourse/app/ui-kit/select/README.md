@@ -785,7 +785,7 @@ Each method on `spec` appends a callback. Callbacks for the same point compose i
 | Method | Runs | Callback |
 |---|---|---|
 | `content(fn)` | when the list is built | `(options, ctx) => options`. Returns the next list. |
-| `option(fn)` | for each option | `(presentation, ctx) => void`. Mutates `presentation.classes` and `presentation.title`. |
+| `optionAttributes(fn)` | for each option | `(attributes, ctx) => void`. Mutates `attributes.classes` and `attributes.title`. |
 | `config(fn)` | when presentation is read | `(current, ctx) => partial`. Returns overrides. |
 | `load(fn)` | once per query, `@load` selects only | `(load, ctx) => load`. Must return a function. |
 | `change(fn)` | on each selection change | `(next, ctx)`. Call `next()` to continue. |
@@ -806,12 +806,14 @@ as pages add groups (40 + 2, then 40 + 5), and a reveal that only adds a footer 
 result. Paging never counts them. Legacy `modifySelectKit` content runs after every `content`
 callback.
 
-**`option`** gets a fresh `{ classes: [], title: undefined }` for each option. Classes are added
+**`optionAttributes`** gets a fresh `{ classes: [], title: undefined }` for each option and adds
+them to the option's element; it cannot change what the option is or does. Classes are added
 after the core classes, and falsy entries are ignored. `title` renders only when a callback sets
 it; a record's own `title` field is never a tooltip. It runs for the none, create and action
 options, but not for group headers, dividers, chips or the trigger. The context adds `option`
 (with its settings), `record`, `selected` and `disabled` (which includes selection-cap
-restrictions). It has no `control`. An option rebuilt with equal settings is not presented again.
+restrictions). It has no `control`. An option rebuilt with equal settings does not run the step
+again.
 
 **`config`** overrides presentation. The core keys are `caretIcon` (a string or
 `{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneOption`,
@@ -855,11 +857,11 @@ relies on:
 Both default to a frozen empty object, so `context.kindContext.scope` is always safe to read.
 Derived values such as labels are recipe config, not `kindContext`.
 
-`content`, `option`, `load` and `change` contexts also carry `config`, a frozen snapshot of the
+`content`, `optionAttributes`, `load` and `change` contexts also carry `config`, a frozen snapshot of the
 resolved core and recipe values. A change middleware and the emit it lets through share one
 snapshot, so a deferred `next()` emits the values the middleware saw.
 
-`content`, `option` and `config` run while the list renders, so they must be pure. They must not
+`content`, `optionAttributes` and `config` run while the list renders, so they must be pure. They must not
 write tracked state or call `update()` or any control or scope verbs. Those are for event time,
 such as an option's `onSelect`. A callback that reads tracked state runs again when that state
 changes. `load` runs outside render and may update its own state, such as leaving a mode when the
@@ -876,7 +878,7 @@ selectOption(
 
 Every setup and callback runs through the transformer error handling: a failure is reported and
 rethrown in tests. In production a failing setup is skipped, `content` and `load` keep the
-previous value, `option` keeps what was already set, `config` skips that result, and a failing
+previous value, `optionAttributes` keeps what was already set, `config` skips that result, and a failing
 `change` middleware falls through to `next()` unless it already called it. An error thrown by the
 consumer's `@onChange` is never treated as a broken customization: it reaches the caller.
 
