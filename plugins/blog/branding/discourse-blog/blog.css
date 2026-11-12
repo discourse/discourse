@@ -116,6 +116,10 @@
   margin: 0;
 }
 
+.discourse-journal__intro p + p {
+  margin-top: 0.6em;
+}
+
 .discourse-journal__listing {
   max-width: 1248px;
   padding-inline: 24px;

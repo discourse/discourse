@@ -1,7 +1,7 @@
 <header class="broadsheet__masthead">
   <p class="broadsheet__kicker">{{ page.eyebrow }}</p>
   <h1>{{ page.heading }}</h1>
-  {% if site.description != blank %}<p class="broadsheet__tagline">{{ site.description }}</p>{% endif %}
+  {% if page.description_html != blank %}<div class="broadsheet__tagline">{{ page.description_html }}</div>{% endif %}
 </header>
 <div class="broadsheet__listing">
   <div class="broadsheet__toolbar">
