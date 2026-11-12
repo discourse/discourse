@@ -157,14 +157,12 @@ class ReviewableUser < Reviewable
     self.class.transaction do
       scrubbed_at = Time.zone.now
       # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
-      history =
-        UserHistory.where(action: UserHistory.actions[:delete_user]).where(
-          created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes),
-        )
-
-      history
-        .where(reviewable_id: id)
-        .or(history.where(reviewable_id: nil).where("details LIKE ?", "id: #{target_id}\n%"))
+      # Match on the deleted user's ID, not the reviewable: the deletion may have been logged
+      # under another reviewable, such as a flagged post the user was deleted from.
+      UserHistory
+        .where(action: UserHistory.actions[:delete_user])
+        .where("details LIKE ?", "id: #{target_id}\n%")
+        .where(created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes))
         .update_all(
           details:
             I18n.t(

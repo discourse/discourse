@@ -1888,6 +1888,39 @@ RSpec.describe ReviewablesController do
         expect(matching_history.ip_address).not_to be_blank
       end
 
+      it "scrubs the deletion record when the user was deleted from another reviewable" do
+        suspect = Fabricate(:user, refresh_auto_groups: true)
+        account_reviewable =
+          ReviewableUser.needs_review!(
+            target: suspect,
+            created_by: Discourse.system_user,
+            reviewable_by_moderator: true,
+            payload: ReviewableUser.payload_for(suspect),
+          )
+        flag_reviewable =
+          PostActionCreator.spam(
+            Fabricate(:user, refresh_auto_groups: true),
+            Fabricate(:post, user: suspect),
+          ).reviewable
+
+        sign_in(admin)
+        put "/review/#{flag_reviewable.id}/perform/delete_user.json?version=#{flag_reviewable.version}"
+        expect(response.status).to eq(200)
+        expect(account_reviewable.reload).to be_rejected
+
+        history =
+          UserHistory.find_by!(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: flag_reviewable.id,
+          )
+
+        put "/review/#{account_reviewable.id}/scrub.json", params: { reason: "privacy request" }
+
+        expect(response.status).to eq(200)
+        expect(history.reload.details).not_to include(suspect.username)
+        expect(history.ip_address).to be_blank
+      end
+
       it "doesn't allow scrubbing of reviewables that haven't been rejected" do
         sign_in(admin)
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
