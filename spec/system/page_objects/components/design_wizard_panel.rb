@@ -14,6 +14,21 @@ module PageObjects
         has_no_css?(WIZARD_SELECTOR)
       end
 
+      def minimized?
+        has_css?("#{WIZARD_SELECTOR}:is(.--collapsed, .--minimized)", visible: :all)
+      end
+
+      def restore
+        find("#{WIZARD_SELECTOR}__expand, #{WIZARD_SELECTOR}__restore").click
+      end
+
+      def has_step?(step)
+        has_css?(
+          "#{WIZARD_SELECTOR}__title",
+          exact_text: I18n.t("js.design_wizard.steps.#{step}.title"),
+        )
+      end
+
       def has_site_sidebar?
         has_css?(".sidebar-sections")
       end

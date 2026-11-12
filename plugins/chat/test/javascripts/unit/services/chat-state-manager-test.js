@@ -152,11 +152,39 @@ module("Unit | Service | chat-state-manager", function (hooks) {
     assert.true(this.subject.isDrawerExpanded);
     assert.true(this.subject.isDrawerActive);
     assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
+    assert.false(
+      this.owner.lookup("service:design-wizard").minimized,
+      "opening chat leaves an inactive design wizard alone"
+    );
 
     this.subject.didOpenDrawer("/foo");
 
     assert.strictEqual(this.subject.lastKnownChatURL, "/foo");
     sinon.assert.calledTwice(stub);
+  });
+
+  test("opening the drawer minimizes an active design wizard and preserves progress", function (assert) {
+    const designWizard = this.owner.lookup("service:design-wizard");
+    designWizard.active = true;
+    designWizard.stepIndex = 1;
+    designWizard.themeId = 123;
+    sinon.stub(this.owner.lookup("service:chat"), "updatePresence");
+
+    this.subject.didOpenDrawer("/chat/c/general/1");
+
+    assert.true(this.subject.isDrawerExpanded, "the chat drawer is expanded");
+    assert.true(designWizard.minimized, "the design wizard is minimized");
+    assert.true(designWizard.active, "the design wizard remains active");
+    assert.strictEqual(
+      designWizard.stepIndex,
+      1,
+      "the current step is preserved"
+    );
+    assert.strictEqual(
+      designWizard.themeId,
+      123,
+      "the selected theme is preserved"
+    );
   });
 
   test("isDrawerCollapsed", function (assert) {
