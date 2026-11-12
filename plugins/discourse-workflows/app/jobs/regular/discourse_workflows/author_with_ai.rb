@@ -21,6 +21,10 @@ module Jobs
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
 
+      # Set when the run stopped because the LLM is out of AI credits, so callers that run
+      # the job inline can report it instead of a generic failure.
+      attr_reader :credit_limit_error
+
       def execute(args)
         @generation_id = args[:generation_id]
         @session = ::DiscourseWorkflows::AiAuthoringSession.find_by(id: args[:session_id])
@@ -51,6 +55,16 @@ module Jobs
         end
 
         finish(parsed)
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        # Retrying cannot help until the credits reset, so end the generation instead of
+        # asking the admin how to proceed.
+        @credit_limit_error = e
+        publish_error(
+          I18n.t(
+            "discourse_workflows.ai.error_credit_limit_exceeded",
+            reset_time: e.allocation&.formatted_reset_time.presence || "",
+          ),
+        )
       rescue => e
         Discourse.warn_exception(e, message: "discourse-workflows: AI authoring failed")
         begin
