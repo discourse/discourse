@@ -875,35 +875,31 @@ module(
         );
       });
 
-      test("@noneOption adds a row whose text a customization sets", async function (assert) {
+      test("@noneOption adds no option in multiple mode, where empty is the placeholder", async function (assert) {
         const held = [1, 2];
-        const onChange = sinon.spy();
-        withPluginApi((api) =>
-          api.registerValueTransformer("select-customizations", ({ value }) =>
-            value.forKind("select-category", (spec) =>
-              spec.config(() => ({ texts: { noneLabel: "No category" } }))
-            )
-          )
-        );
 
         await render(
           <template>
             <Host
               @multiple={{true}}
               @noneOption={{true}}
-              @onChange={{onChange}}
+              @texts={{hash noneLabel="No category"}}
               @value={{held}}
             />
           </template>
         );
         await select().open();
-        const row = findAll("[role='option']").find((option) =>
-          option.textContent.includes("No category")
-        );
 
-        assert.strictEqual(row?.dataset.value, "category-none");
-        await click(row);
-        assert.deepEqual(onChange.lastCall?.args[0], [], "it clears the value");
+        assert
+          .dom("[role='option']")
+          .exists("the list is open with the categories");
+        assert.false(
+          findAll("[role='option']").some((option) =>
+            option.textContent.includes("No category")
+          ),
+          "no option is labelled with the none text"
+        );
+        assert.dom("[role='option'].--none").doesNotExist();
       });
 
       test("@noneOption in single mode clears through the select's own row", async function (assert) {
@@ -2080,37 +2076,6 @@ module(
             "Category…",
             "empty control asks to choose"
           );
-      });
-
-      test("multiple noneLabel clears every held category", async function (assert) {
-        const value = [1, 2];
-        const onChange = sinon.spy();
-        await render(
-          <template>
-            <DSelectCategory
-              @multiple={{true}}
-              @noneOption={{true}}
-              @onChange={{onChange}}
-              @texts={{hash noneLabel="Any category"}}
-              @value={{value}}
-            />
-          </template>
-        );
-        await dSelect().open();
-        const clear = findAll("[role='option']").find((row) =>
-          row.textContent.includes("Any category")
-        );
-        assert.strictEqual(
-          clear?.getAttribute("role"),
-          "option",
-          "the selectable clear row is present"
-        );
-        await click(clear);
-        assert.deepEqual(
-          onChange.lastCall?.args[0],
-          [],
-          "the row clears all values"
-        );
       });
 
       test("lazy descendants walk every level and skip excluded categories", async function (assert) {

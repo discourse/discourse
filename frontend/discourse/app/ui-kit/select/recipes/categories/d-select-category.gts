@@ -222,23 +222,37 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return records.map((category) => categoryRecord(category));
   }
 
-  /** In multiple mode the select draws no none option of its own, so the recipe adds it. */
+  /**
+   * Options the search leaves out. A scope lists its family's children, so its root is pinned
+   * while browsing. Disabled categories are excluded from the search, so they are always
+   * offered as pinned options whenever they match, and are never grouped or given a footer.
+   */
   @action
   extraOptions(
     snapshot: SelectSnapshot,
     config: SelectConfig
   ): SelectOption<CategoryRecord>[] {
-    const options: SelectOption<CategoryRecord>[] = [];
-    if (this.args.multiple && config.noneOption && !snapshot.filter) {
-      options.push(
-        selectOption(
-          { id: "category-none", name: renderSelectText(config, "noneLabel") },
-          { onSelect: (control) => control.clear() }
-        )
-      );
-    }
-    options.push(...this.#pinned(snapshot.filter, config));
-    return options;
+    const root = snapshot.filter ? undefined : this.#familyId(this.args.scope);
+    const roots = Category.findByIds(root == null ? [] : [root]).filter(
+      this.#categoryAllowed()
+    );
+    const disabled = Category.findByIds(this.#disabledIds).filter((category) =>
+      Category.matchesSearch(category, snapshot.filter)
+    );
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
+    const readOnlyDescription =
+      renderSelectText(config, "readOnlyDescription") || undefined;
+    return [...new Set([...roots, ...disabled])].map((category) => {
+      const option = selectOption(categoryRecord(category), {
+        description: descriptions ? categoryDescription(category) : undefined,
+      });
+      return disabled.includes(category)
+        ? option.with({
+            disabled: true,
+            description: readOnlyDescription ?? null,
+          })
+        : option;
+    });
   }
 
   /**
@@ -299,35 +313,6 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   #familyId(value?: CategoryValue): number | undefined {
     const category: Category | undefined = Category.findById(this.#idOf(value));
     return category?.parent_category_id || category?.id;
-  }
-
-  /**
-   * Options the search leaves out. A scope lists its family's children, so its root is pinned
-   * while browsing. Disabled categories are excluded from the search, so they are always
-   * offered as pinned options whenever they match, and are never grouped or given a footer.
-   */
-  #pinned(query: string, config: SelectConfig): SelectOption<CategoryRecord>[] {
-    const root = query ? undefined : this.#familyId(this.args.scope);
-    const roots = Category.findByIds(root == null ? [] : [root]).filter(
-      this.#categoryAllowed()
-    );
-    const disabled = Category.findByIds(this.#disabledIds).filter((category) =>
-      Category.matchesSearch(category, query)
-    );
-    const descriptions = this.args.descriptions ?? !this.args.multiple;
-    const readOnlyDescription =
-      renderSelectText(config, "readOnlyDescription") || undefined;
-    return [...new Set([...roots, ...disabled])].map((category) => {
-      const option = selectOption(categoryRecord(category), {
-        description: descriptions ? categoryDescription(category) : undefined,
-      });
-      return disabled.includes(category)
-        ? option.with({
-            disabled: true,
-            description: readOnlyDescription ?? null,
-          })
-        : option;
-    });
   }
 
   #offersDescendants(query: string) {

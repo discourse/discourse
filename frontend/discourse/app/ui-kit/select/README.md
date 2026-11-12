@@ -1193,7 +1193,8 @@ The category family has two recipes:
     and stay listed while a search matches them. The composer passes the category a new topic
     started from but cannot be posted in.
   - The `placeholder` text is the trigger text with no value; it never names the control.
-    `@noneOption` adds a selectable "none" option instead, worded by the `noneLabel` text.
+    In single mode, `@noneOption` adds a selectable "none" option instead, worded by the
+    `noneLabel` text.
   - Without an `ariaLabel` text or `@ariaLabelledBy`, the control is named "Category"
     (`categories.category`), or "Categories" (`categories.categories`) when it can hold more than
     one: multiple, with `@maximum` other than 1.
