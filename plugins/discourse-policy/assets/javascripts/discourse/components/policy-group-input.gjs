@@ -41,9 +41,9 @@ export default class PolicyGroupInput extends Component {
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectGroup
         @emit="names"
-        @items={{this.groups}}
         @multiple={{true}}
         @onChange={{this.onChange}}
+        @options={{this.groups}}
         @value={{this.selectedGroups}}
       />
     {{else}}

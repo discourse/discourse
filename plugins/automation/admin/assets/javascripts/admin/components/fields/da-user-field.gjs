@@ -19,7 +19,7 @@ export default class UserField extends BaseField {
 
   /** The trigger's contexts, offered ahead of the users. */
   @action
-  contextItems() {
+  contextOptions() {
     const field = this.args.field;
     return field.acceptedContexts.map((context) => ({
       id: context,
@@ -56,8 +56,8 @@ export default class UserField extends BaseField {
             <DSelectUser
               @clearable={{true}}
               @disabled={{@field.isDisabled}}
+              @extraOptions={{this.contextOptions}}
               @onChange={{legacyPickOne this.onChangeUsername}}
-              @specialItems={{this.contextItems}}
               @texts={{hash ariaLabel=@label}}
               @value={{@field.metadata.value}}
             />

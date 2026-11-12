@@ -17,10 +17,10 @@ export default class PanelChipsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-panel-chips"
-      @items={{TEAM_MEMBERS}}
       @labelField="name"
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{TEAM_MEMBERS}}
       @panelChips={{true}}
       @texts={{hash
         ariaLabel=(i18n "styleguide.sections.select.panel_chips_label")

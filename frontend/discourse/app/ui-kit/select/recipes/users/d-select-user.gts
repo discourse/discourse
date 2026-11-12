@@ -12,7 +12,7 @@ import DSelect, {
   type DSelectSignature,
 } from "discourse/ui-kit/select/d-select";
 import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
-import { groupFields } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
+import { groupFullName } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import {
   UserOption,
   type UserPickType,
@@ -23,13 +23,16 @@ import {
   USER_TEXTS,
   userPickerName,
 } from "discourse/ui-kit/select/recipes/users/-internals/user-texts";
-import type {
-  SelectConfig,
-  SelectId,
-  SelectLoadRequest,
-  SelectRecord,
-  SelectTexts,
-  SelectValue,
+import {
+  recordOf,
+  type SelectConfig,
+  type SelectId,
+  type SelectLoadRequest,
+  type SelectOption,
+  selectOption,
+  type SelectRecord,
+  type SelectTexts,
+  type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Which groups the picker offers, as the server's include flags. */
@@ -76,7 +79,9 @@ export type UserPickRecord = SelectRecord & {
   sourceId?: number;
   /** Whether a group is one of the automatic groups. */
   automatic?: boolean;
-  /** Why a disabled row can't be picked. */
+  /** A user's name, or a group's full name when it says more than its name. */
+  fullName?: string;
+  /** Why the option can't be picked, when its source disabled it. */
   disabledReason?: string;
 };
 
@@ -94,7 +99,7 @@ interface DSelectUserSignature {
     | "maximum"
     | "maxVisibleChips"
     | "onClose"
-    | "specialItems"
+    | "extraOptions"
     | "variant"
     | MultiSelectRecipeArg
   > & {
@@ -136,16 +141,16 @@ interface DSelectUserSignature {
     /** The picker's texts, over its defaults: the engine's, `groupType` and `emailType`. */
     texts?: SelectTexts<SelectUserTextKey>;
     /**
-     * Receives the held values and their items, whose `type` tells a user from a group
+     * Receives the held values and their records, whose `type` tells a user from a group
      * or an address: arrays when multiple, otherwise one value or `null`.
      */
     onChange?: (
       value: string[] | string | null,
-      items: UserPickRecord[] | UserPickRecord | null
+      records: UserPickRecord[] | UserPickRecord | null
     ) => void;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /** Usernames, group names and addresses are one option in any case, as the server matches them. */
@@ -237,21 +242,21 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
         | undefined,
       load: this.args.load,
     })) as UserSearchRow[];
-    return rows.map((row) => this.#record(row));
+    return rows.map((row) => this.#option(row));
   }
 
   @action
-  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
+  onChange(value: SelectValue, records: SelectRecord | SelectRecord[] | null) {
     if (this.args.multiple) {
       this.args.onChange?.(
         makeArray(value as string | string[]).map(String),
-        makeArray(items as UserPickRecord | UserPickRecord[] | null)
+        makeArray(records as UserPickRecord | UserPickRecord[] | null)
       );
       return;
     }
     this.args.onChange?.(
       value == null ? null : String(value as string),
-      (items as UserPickRecord | null) ?? null
+      (records as UserPickRecord | null) ?? null
     );
   }
 
@@ -286,40 +291,53 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
     opts: SelectLoadRequest
   ): Promise<SelectRecord[]> {
     const names = values.map(String);
-    const special = new Map<string, SelectRecord>(
-      (opts.config ? this.#specialRows(opts.config) : []).map((item) => [
-        String(item.id),
-        item,
+    const extra = new Map<string, SelectRecord>(
+      (opts.config ? this.#extraRecords(opts.config) : []).map((record) => [
+        String(record.id),
+        record,
       ])
     );
     const resolved = await this.#resolve(
-      names.filter((name) => !special.has(name))
+      names.filter((name) => !extra.has(name))
     );
     return [
       ...names.flatMap((name): SelectRecord[] => {
-        const item = special.get(name);
-        return item ? [item] : [];
+        const record = extra.get(name);
+        return record ? [record] : [];
       }),
-      ...resolved.filter((item) => item.type !== "unknown"),
+      ...resolved
+        .map((option) => option.record)
+        .filter((record) => record.type !== "unknown"),
     ];
+  }
+
+  /**
+   * A search row as an option. The row's `disabled` is this picker's documented contract, so it
+   * becomes the setting here; a group describes itself with its full name, a user with its status.
+   */
+  #option(row: UserSearchRow): SelectOption<UserPickRecord> {
+    const record = this.#record(row);
+    const status = this.args.showStatus ? row.status : undefined;
+    return selectOption(record, {
+      disabled: row.disabled ? true : undefined,
+      description: row.type === "group" ? record.fullName : status?.description,
+    });
   }
 
   #record(row: UserSearchRow): UserPickRecord {
     const source = {
       sourceId: row.id,
-      disabled: row.disabled,
-      disabledReason: row.disabledReason,
+      disabledReason: row.disabled ? row.disabledReason : undefined,
     };
     if (row.type === "group") {
+      const name = row.name ?? row.value;
       return {
         id: row.value,
         type: "group",
         automatic: row.automatic,
         ...source,
-        ...groupFields({
-          name: row.name ?? row.value,
-          full_name: row.full_name,
-        }),
+        name,
+        fullName: groupFullName({ name, full_name: row.full_name }),
       };
     }
     if (row.type === "email") {
@@ -334,13 +352,12 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       avatar_template: row.avatar_template,
       fullName: row.name,
       statusEmoji: status?.emoji,
-      description: status?.description,
       ...source,
     };
   }
 
-  /** Items for names: special rows aside, addresses locally and the rest in one lookup. */
-  async #resolve(names: string[]): Promise<UserPickRecord[]> {
+  /** Options for names: addresses locally and the rest in one lookup. */
+  async #resolve(names: string[]): Promise<SelectOption<UserPickRecord>[]> {
     const lookup = names.filter((name) => !emailValid(name));
     const rows = lookup.length
       ? ((await findUsersByUsernames(lookup, {
@@ -348,22 +365,27 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
           includeStaged: this.args.includeStaged,
         })) as UserSearchRow[])
       : [];
-    const found = new Map(rows.map((row) => [row.value, this.#record(row)]));
+    const found = new Map(rows.map((row) => [row.value, this.#option(row)]));
     return names.map(
       (name) =>
         found.get(name) ??
-        (this.args.emails && emailValid(name)
-          ? this.#record({ type: "email", value: name })
-          : this.createUnresolvedRecord(name))
+        selectOption(
+          this.args.emails && emailValid(name)
+            ? this.#record({ type: "email", value: name })
+            : this.createUnresolvedRecord(name)
+        )
     );
   }
 
-  #specialRows(config: SelectConfig): SelectRecord[] {
+  /** The caller's extra options' records, which held names resolve against first. */
+  #extraRecords(config: SelectConfig): SelectRecord[] {
     return (
-      this.args.specialItems?.(
-        { filter: "", value: this.selectedValue, hasValue: true },
-        config
-      ) ?? []
+      this.args
+        .extraOptions?.(
+          { filter: "", value: this.selectedValue, hasValue: true },
+          config
+        )
+        .map((entry) => recordOf(entry) as SelectRecord) ?? []
     );
   }
 
@@ -376,6 +398,7 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @createUnresolvedRecord={{this.createUnresolvedRecord}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
+      @extraOptions={{@extraOptions}}
       @icon={{@icon}}
       @id={{@id}}
       @identifier={{@identifier}}
@@ -401,28 +424,27 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @onClose={{@onClose}}
       @parsePaste={{if @multiple this.parsePaste}}
       @resolveValues={{this.resolveValues}}
-      @specialItems={{@specialItems}}
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selectedValue}}
       @variant={{@variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
-          <UserOption @record={{item}} />
+          <UserOption @option={{option}} @record={{record}} />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          <UserSelection @config={{config}} @record={{item}} />
+          <UserSelection @config={{config}} @record={{record}} />
         {{/if}}
       </:selection>
-      <:unresolved as |item|>
-        <UserSelection @record={{item}} />
+      <:unresolved as |record|>
+        <UserSelection @record={{record}} />
       </:unresolved>
       <:footer as |state config|>
         {{yield state config to="footer"}}

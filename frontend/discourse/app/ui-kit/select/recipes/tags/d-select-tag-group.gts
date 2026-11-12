@@ -50,7 +50,7 @@ interface DSelectTagGroupSignature {
     ariaLabelledBy?: string;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /** Searches tag groups; held groups stay listed, marked selected. */
@@ -143,18 +143,18 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
-          {{tagRecordName item}}
+          {{tagRecordName record}}
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          {{tagRecordName item}}
+          {{tagRecordName record}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

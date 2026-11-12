@@ -26,7 +26,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
 import SelectHost, {
-  type SelectPasteContext,
+  type SelectHostArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 import VariantPresenter, {
   type SelectVariant,
@@ -44,11 +44,12 @@ import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
   SelectCoreTexts,
-  SelectDescriptor,
   SelectEngineInit,
-  SelectItemRow,
+  SelectGroupInfo,
   SelectKindTexts,
+  SelectOption,
   SelectRecord as SelectRecordModel,
+  SelectRow,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -68,18 +69,12 @@ export interface DSelectSignature {
      */
     maxVisibleChips?: number;
     /**
-     * Parses pasted text into a batch. Nullish results preserve native paste; arrays
-     * add eligible items and clear the original query. Async results lose authority
-     * to newer selection intent; newer typing and sessions keep their query.
+     * Parses pasted text into a batch of records or options. Nullish results preserve native
+     * paste; arrays add the pickable ones and clear the original query, so a disabled or action
+     * option is skipped. Async results lose authority to newer selection intent; newer typing
+     * and sessions keep their query.
      */
-    parsePaste?: (
-      text: string,
-      context: SelectPasteContext
-    ) =>
-      | readonly SelectRecordModel[]
-      | null
-      | undefined
-      | Promise<readonly SelectRecordModel[] | null | undefined>;
+    parsePaste?: SelectHostArgs["parsePaste"];
     /** The select's recipe or family, fixed at construction. */
     kind?: string;
     /**
@@ -115,7 +110,12 @@ export interface DSelectSignature {
      * one it was given.
      */
     instanceContext?: object;
-    items?: SelectEngineInit["items"];
+    /**
+     * What the user chooses among: records as they are, or records wrapped with `selectOption`
+     * for settings, or a function of the resolved config returning them. Settings are named
+     * arguments, never a hash here.
+     */
+    options?: SelectEngineInit["options"];
     load?: SelectEngineInit["load"];
     /** Loader inputs, compared by own keys to reload the list: arrays by their elements, other values by identity. */
     loadContext?: SelectEngineInit["loadContext"];
@@ -128,11 +128,12 @@ export interface DSelectSignature {
     resolveValue?: SelectEngineInit["resolveValue"];
     resolveValues?: SelectEngineInit["resolveValues"];
     allowCreate?: SelectEngineInit["allowCreate"];
-    createItem?: SelectEngineInit["createItem"];
+    createOption?: SelectEngineInit["createOption"];
     createUnresolvedRecord?: SelectEngineInit["createUnresolvedRecord"];
-    specialItems?: SelectEngineInit["specialItems"];
+    /** Options listed before the source's, never filtered by the query or seen by content steps. */
+    extraOptions?: SelectEngineInit["extraOptions"];
     /**
-     * Groups the options: a field name or `(item, options) => key`. A group with no header of
+     * Groups the options: a field name or `(record, config) => key`. A group with no header of
      * either kind gets an unlabeled divider, unless `@groupDividers` is false. A `@load` source
      * groups consecutive rows, so pages only append. Recomputed after filtering, so an empty
      * group draws nothing.
@@ -141,8 +142,8 @@ export interface DSelectSignature {
     /** False groups rows without drawing dividers between groups. Read once, like `@groupBy`. */
     groupDividers?: SelectEngineInit["groupDividers"];
     /**
-     * `(key, rows, options) => text | actionRow | null` builds a group's header: text renders
-     * a presentational header, an item with `onSelect` a navigable action row. The
+     * `(key, options, config) => text | actionOption | null` builds a group's header: text
+     * renders a presentational header, an option with `onSelect` a navigable action option. The
      * `<:groupHeader>` block draws either kind.
      */
     groupHeader?: SelectEngineInit["groupHeader"];
@@ -151,7 +152,7 @@ export interface DSelectSignature {
      * source shows its last group's footer once no more rows can load.
      */
     groupFooter?: SelectEngineInit["groupFooter"];
-    /** Receives the next value, resolved items, and metadata including the resolved config. */
+    /** Receives the next value, resolved records, and metadata including the resolved config. */
     onChange?: SelectEngineInit["onChange"];
     /**
      * A decorative trailing icon in a search field that is not the trigger: the `button` panel's
@@ -291,14 +292,14 @@ export interface DSelectSignature {
      */
     lockedValues?: SelectEngineInit["lockedValues"];
     /**
-     * Single-select only: adds a first-class "none" row to the top of the list, labeled with
-     * `texts.noneLabel`. Selecting it clears the value to `null`, and the row reads as selected
+     * Single-select only: adds a first-class "none" option to the top of the list, labeled with
+     * `texts.noneLabel`. Selecting it clears the value to `null`, and the option reads as selected
      * whenever nothing else is. It is a list affordance shown only while browsing (an active filter
      * query hides it, so a non-matching search still reaches the empty state), and after choosing
      * it the trigger shows the placeholder — `null` cannot encode "None" in the trigger. Ignored on
-     * multi-select, where the empty state is the placeholder rather than a row.
+     * multi-select, where the empty state is the placeholder rather than an option.
      */
-    noneRow?: boolean;
+    noneOption?: boolean;
     /**
      * Skips the `:footer` block even when one is passed. A recipe that forwards its caller's
      * footer passes `(not (has-block "footer"))`, since a forwarded block always counts as passed.
@@ -317,23 +318,23 @@ export interface DSelectSignature {
   Element: HTMLElement;
   Blocks: {
     /** Custom markup for an option and its resolved config snapshot. */
-    item?: [
-      /** The raw option item. */
-      item: SelectRecordModel,
+    option?: [
+      /** The record the option stands for. */
+      record: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
-      /** What the row is beyond its item: `create` marks the create row. */
-      row: SelectItemRow,
+      /** The option itself: its settings, and `create` for the create option. */
+      option: SelectOption,
     ];
     /**
-     * Custom markup for the selected item; yields the resolved item. On the button/static
+     * Custom markup for the selection; yields the resolved record. On the button/static
      * triggers it is the persistent selected display. On the typeahead it is the resting (closed)
      * display only: once the menu opens the built-in input shows the editable label text instead,
      * so the block is not a live-while-editing surface.
      */
     selection?: [
-      /** The resolved held item. */
-      item: SelectRecordModel,
+      /** The resolved held record. */
+      record: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
@@ -344,39 +345,43 @@ export interface DSelectSignature {
     selectionLoading?: [];
     /**
      * Custom markup for a held value that cannot be resolved (deleted, restricted or never
-     * existed); yields the fallback item. Without it the built-in label is used ("Unknown item
+     * existed); yields the fallback record. Without it the built-in label is used ("Unknown item
      * (id)", or the name `@createUnresolvedRecord` gives), even when `:selection` is supplied, so
      * the state is never lost in custom markup by accident.
      */
     unresolved?: [
       /** The fallback for an unresolved held id. */
-      item: SelectRecordModel,
+      record: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
     /**
-     * Draws a group header of either kind; yields its item. A text header's item carries its
-     * `label` and `groupKey`; an action header's item is the builder's row, stamped with
-     * `groupKey`. The engine supplies the row around it, and `:item` never receives it.
+     * Draws a group header of either kind; yields its record. A text header's record carries
+     * its `label`; an action header's record is the one the builder's option stands for. The
+     * engine supplies the row around it, and `:option` never receives it.
      */
     groupHeader?: [
-      /** The header item. */
-      item: SelectRecordModel,
+      /** The header's record. */
+      record: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
+      /** The group: its `key`, and `action` when the header is an action option. */
+      group: SelectGroupInfo,
     ];
     /** Draws a group footer of either kind, like `<:groupHeader>`. */
     groupFooter?: [
-      /** The footer item. */
-      item: SelectRecordModel,
+      /** The footer's record. */
+      record: SelectRecordModel,
       /** Resolved core and recipe values. */
       config: SelectConfig,
+      /** The group: its `key`, and `action` when the footer is an action option. */
+      group: SelectGroupInfo,
     ];
     /**
      * One placeholder row, shown while a page of rows loads (the first load, or more rows
-     * arriving at the end of the list). Repeated per row, so it should match the shape of `:item`.
+     * arriving at the end of the list). Repeated per row, so it should match the shape of `:option`.
      */
-    skeletonItem?: [];
+    skeleton?: [];
     /** Consumer override for the no-results state, replacing the default "No results found". */
     empty?: [];
     /** Content pinned between the search field and the results, outside the listbox. */
@@ -425,8 +430,8 @@ interface SelectState extends SelectPanelState {
  * - `static` — a short, unsearchable list whose listbox takes focus (the native-`<select>`
  *   replacement).
  *
- * Consumers pass a data source (`@items` or `@load`) and can override the label-field
- * fallback with `:item` and `:selection` blocks. Everything else — filtering, async state,
+ * Consumers pass a data source (`@options` or `@load`) and can override the label-field
+ * fallback with `:option` and `:selection` blocks. Everything else — filtering, async state,
  * keyboard, ARIA, positioning, mobile — is handled. Recipes wrap this with a domain source
  * and row markup.
  */
@@ -575,9 +580,7 @@ export default class DSelect extends Component<DSelectSignature> {
    * Separate lookups race: one landing re-renders the other, which aborts its own request.
    */
   @cached
-  get heldSelection(): TrackedAsyncData<
-    readonly SelectDescriptor[] | undefined
-  > {
+  get heldSelection(): TrackedAsyncData<readonly SelectRow[] | undefined> {
     return new TrackedAsyncData(this.host.resolveMulti(this.args.value));
   }
 
@@ -637,13 +640,20 @@ export default class DSelect extends Component<DSelectSignature> {
     );
   }
 
-  /** Returns strip focus to the connected query, or the static modal's options. */
+  /**
+   * Returns strip focus to the connected query, or the static modal's options, or, with no
+   * option to take it, the focusable container around the panel.
+   */
   @action
   focusAfterStrip(): void {
     if (this.interaction.filterInput?.isConnected) {
       this.interaction.focusInput();
-    } else {
-      this.listbox.focusFirstOption();
+      return;
+    }
+    // Runs while the removed chip still holds focus, so its panel is found from there.
+    const panel = document.activeElement?.closest(".d-select__panel");
+    if (!this.listbox.focusFirstOption()) {
+      panel?.parentElement?.closest<HTMLElement>("[tabindex]")?.focus();
     }
   }
 
@@ -877,10 +887,10 @@ export default class DSelect extends Component<DSelectSignature> {
             @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
             @hasGroupFooterBlock={{has-block "groupFooter"}}
             @hasGroupHeaderBlock={{has-block "groupHeader"}}
-            @hasItemBlock={{has-block "item"}}
             @hasListHeaderBlock={{has-block "listHeader"}}
+            @hasOptionBlock={{has-block "option"}}
             @hasSelectionBlock={{has-block "selection"}}
-            @hasSkeletonItemBlock={{has-block "skeletonItem"}}
+            @hasSkeletonBlock={{has-block "skeleton"}}
             @hasUnresolvedBlock={{has-block "unresolved"}}
             @hideSelectionMarker={{@hideSelected}}
             @hintRole="status"
@@ -1029,23 +1039,23 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/if}}
               {{/if}}
             </:field>
-            <:item as |item config row|>
-              {{~yield item config row to="item"~}}
-            </:item>
-            <:groupHeader as |item config|>
-              {{~yield item config to="groupHeader"~}}
+            <:option as |record config option|>
+              {{~yield record config option to="option"~}}
+            </:option>
+            <:groupHeader as |record config group|>
+              {{~yield record config group to="groupHeader"~}}
             </:groupHeader>
-            <:groupFooter as |item config|>
-              {{~yield item config to="groupFooter"~}}
+            <:groupFooter as |record config group|>
+              {{~yield record config group to="groupFooter"~}}
             </:groupFooter>
-            <:skeletonItem>
-              {{~yield to="skeletonItem"~}}
-            </:skeletonItem>
-            <:selection as |item config|>
-              {{~yield item config to="selection"~}}
+            <:skeleton>
+              {{~yield to="skeleton"~}}
+            </:skeleton>
+            <:selection as |record config|>
+              {{~yield record config to="selection"~}}
             </:selection>
-            <:unresolved as |item config|>
-              {{~yield item config to="unresolved"~}}
+            <:unresolved as |record config|>
+              {{~yield record config to="unresolved"~}}
             </:unresolved>
             <:empty>
               {{~yield to="empty"~}}
@@ -1074,7 +1084,7 @@ export default class DSelect extends Component<DSelectSignature> {
           <:content as |chips|>
             <ul class="sr-only" id={{this.heldLabelsId}}>
               {{#each chips key="key" as |chip|}}
-                <li>{{this.engine.getSelectionLabel chip.item}}</li>
+                <li>{{this.engine.getSelectionLabel chip.record}}</li>
               {{/each}}
             </ul>
           </:content>

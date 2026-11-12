@@ -113,7 +113,7 @@ const LOCALE_KEYS = {
   stillLoading: "still_loading",
   loadingMore: "loading_more",
   loadingComplete: "loading_complete",
-  createItem: "create_item",
+  createOption: "create_item",
   compactCount: "compact_count",
   moreChips: "more_chips",
   noneLabel: "none",
@@ -155,7 +155,7 @@ export const REQUIRED_SELECT_TEXTS: ReadonlySet<string> = new Set([
   "labelWithValue",
   "labelWithCount",
   "unresolvedValue",
-  "createItem",
+  "createOption",
   "removeHint",
   "lockedHint",
   "loadError",
@@ -199,7 +199,7 @@ export const REMOVED_TEXT_NAMES: Readonly<Record<string, string>> =
 
 /** The switch an old argument used to turn on along with its text. */
 const REMOVED_TEXT_SWITCHES: Readonly<Record<string, string>> = {
-  noneLabel: " and @noneRow={{true}}",
+  noneLabel: " and @noneOption={{true}}",
   loadingLabel: " and @loadingStatus={{true}}",
 };
 
@@ -606,7 +606,7 @@ export function selectTextResolver(
 let defaultResolver: SelectTextResolver | undefined;
 
 /**
- * Renders a text against a resolved config snapshot, as recipes receive it in `specialItems`,
+ * Renders a text against a resolved config snapshot, as recipes receive it in `extraOptions`,
  * group builders, blocks and customization callbacks. Returns `""` when the text is "no text".
  */
 export function renderSelectText(

@@ -348,10 +348,10 @@ module(
               <:selection as |item|>
                 <span class="custom-selection">Selected {{item.name}}</span>
               </:selection>
-              <:item as |item options row|>
+              <:option as |item options row|>
                 <span class="custom-item {{if row 'has-row'}}">Pick
                   {{item.name}}</span>
-              </:item>
+              </:option>
               <:footer>
                 <span class="custom-footer">Footer</span>
               </:footer>

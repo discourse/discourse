@@ -1011,9 +1011,9 @@ export default class UpsertCategoryGeneral extends Component {
                   {{#if this.siteSettings.enable_new_select_controls}}
                     <DSelectGroup
                       @disabled={{this.isParentRestricted}}
-                      @items={{this.availableAccessGroups}}
                       @multiple={{true}}
                       @onChange={{this.onChangeAccessGroups}}
+                      @options={{this.availableAccessGroups}}
                       @texts={{hash
                         ariaLabel=(i18n
                           "category.visibility.which_groups_can_access"

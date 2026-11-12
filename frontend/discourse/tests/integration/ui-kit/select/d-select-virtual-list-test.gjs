@@ -24,8 +24,9 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
-// A tracked `@items` holder, so a test can shrink a windowed list at runtime and prove the
+// A tracked `@options` holder, so a test can shrink a windowed list at runtime and prove the
 // render survives a window whose published virtual items briefly outrun the new item array.
 class ItemsHolder {
   @tracked items;
@@ -61,7 +62,7 @@ module(
     setupRenderingTest(hooks);
 
     test("the listbox is the inner container of a virtual-list viewport", async function (assert) {
-      await render(<template><DSelect @items={{CLIENT_ITEMS}} /></template>);
+      await render(<template><DSelect @options={{CLIENT_ITEMS}} /></template>);
       await openSelect();
 
       assert
@@ -86,7 +87,7 @@ module(
     test("listbox attributes are forwarded to the inner container", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{CLIENT_ITEMS}} @multiple={{true}} />
+          <DSelect @multiple={{true}} @options={{CLIENT_ITEMS}} />
         </template>
       );
       await openSelect();
@@ -107,7 +108,7 @@ module(
     });
 
     test("options retain engine-computed set metadata", async function (assert) {
-      await render(<template><DSelect @items={{CLIENT_ITEMS}} /></template>);
+      await render(<template><DSelect @options={{CLIENT_ITEMS}} /></template>);
       await openSelect();
 
       const options = findAll("ul[role='listbox'] > [role='option']");
@@ -145,7 +146,7 @@ module(
           id: index + 1,
           name: `Item ${index + 1}`,
         }));
-        await render(<template><DSelect @items={{items}} /></template>);
+        await render(<template><DSelect @options={{items}} /></template>);
         await openSelect();
 
         assert
@@ -160,7 +161,7 @@ module(
     });
 
     test("roving highlight remains wired to options in the inner listbox", async function (assert) {
-      await render(<template><DSelect @items={{CLIENT_ITEMS}} /></template>);
+      await render(<template><DSelect @options={{CLIENT_ITEMS}} /></template>);
       await openSelect();
 
       assert
@@ -182,7 +183,7 @@ module(
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
-          return { items: firstPage, total: 8 };
+          return { options: firstPage, total: 8 };
         }
 
         revealRequested = true;
@@ -225,7 +226,7 @@ module(
           );
       } finally {
         releaseReveal({
-          items: Array.from({ length: 4 }, (_, index) => ({
+          options: Array.from({ length: 4 }, (_, index) => ({
             id: index + 5,
             name: `Item ${index + 5}`,
           })),
@@ -235,7 +236,7 @@ module(
       }
     });
 
-    test("a :skeletonItem block replaces the placeholder rows of a pending reveal", async function (assert) {
+    test("a :skeleton block replaces the placeholder rows of a pending reveal", async function (assert) {
       let engine;
       let releaseReveal;
       let revealRequested = false;
@@ -243,7 +244,7 @@ module(
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
-          return { items: firstPage, total: 8 };
+          return { options: firstPage, total: 8 };
         }
 
         revealRequested = true;
@@ -253,9 +254,7 @@ module(
       await render(
         <template>
           <EngineProbe @debounce={{false}} @load={{load}}>
-            <:skeletonItem><span
-                class="custom-loading-row"
-              ></span></:skeletonItem>
+            <:skeleton><span class="custom-loading-row"></span></:skeleton>
           </EngineProbe>
         </template>
       );
@@ -281,7 +280,7 @@ module(
           .doesNotExist("the default bar is replaced");
       } finally {
         releaseReveal({
-          items: Array.from({ length: 4 }, (_, index) => ({
+          options: Array.from({ length: 4 }, (_, index) => ({
             id: index + 5,
             name: `Item ${index + 5}`,
           })),
@@ -292,7 +291,7 @@ module(
     });
 
     test("a resolved client source has no frontier skeletons", async function (assert) {
-      await render(<template><DSelect @items={{CLIENT_ITEMS}} /></template>);
+      await render(<template><DSelect @options={{CLIENT_ITEMS}} /></template>);
       await openSelect();
 
       assert
@@ -328,7 +327,7 @@ module("Integration | ui-kit | select | DSelect pressed row", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{items}} @multiple={{true}} />
+        <DSelect @multiple={{true}} @options={{items}} />
       </template>
     );
     await openSelect();
@@ -395,7 +394,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
           }
         </style>
         <div class={{if tall.value "tall-rows"}}>
-          <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+          <DSelect @options={{LOADED_ITEMS}} @variant="static" />
         </div>
       </template>
     );
@@ -421,7 +420,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+        <DSelect @options={{LOADED_ITEMS}} @variant="static" />
       </template>
     );
     await openSelect();
@@ -465,7 +464,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+        <DSelect @options={{LOADED_ITEMS}} @variant="static" />
       </template>
     );
     await openSelect();
@@ -515,7 +514,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{holder.items}} @variant="static" />
+        <DSelect @options={{holder.items}} @variant="static" />
       </template>
     );
     await openSelect();
@@ -551,7 +550,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+        <DSelect @options={{LOADED_ITEMS}} @variant="static" />
       </template>
     );
     await openSelect();
@@ -589,7 +588,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{LOADED_ITEMS}} />
+        <DSelect @options={{LOADED_ITEMS}} />
       </template>
     );
     await openSelect();
@@ -642,7 +641,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -679,7 +678,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -721,7 +720,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -778,7 +777,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           <DSelect
             @groupBy="group"
             @groupHeader={{identityLabel}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           />
         </template>
       );
@@ -801,7 +800,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -843,7 +842,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -888,7 +887,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{items}}
+          @options={{items}}
           @variant="static"
         />
       </template>
@@ -940,7 +939,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{items}}
+          @options={{items}}
           @value={{heldId}}
           @variant="static"
         />
@@ -972,7 +971,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         >
           <:groupHeader as |item|>
             <strong class="fancy-header">▸ {{item.label}} ◂</strong>
@@ -1024,7 +1023,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{items}}
+          @options={{items}}
           @variant="static"
         />
       </template>
@@ -1045,7 +1044,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
   test("groupBy without groupHeader renders splitters between groups", async function (assert) {
     await render(
-      <template><DSelect @groupBy="group" @items={{GROUPED_ITEMS}} /></template>
+      <template>
+        <DSelect @groupBy="group" @options={{GROUPED_ITEMS}} />
+      </template>
     );
     await openSelect();
 
@@ -1083,7 +1084,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{onlyVegetables}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -1107,20 +1108,19 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
   });
 
   test("the create row carries no group description", async function (assert) {
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: `new:${filter}`,
       name: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
+          @createOption={{createOption}}
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{GROUPED_ITEMS}}
+          @options={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -1155,7 +1155,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         <DSelect
           @groupBy="group"
           @groupHeader={{identityLabel}}
-          @items={{items}}
+          @options={{items}}
           @variant="static"
         />
       </template>
@@ -1205,12 +1205,11 @@ module(
     /** An action row for the whole group, with an optional description. */
     const bulkWith =
       (extra = {}) =>
-      (key) => ({
-        id: `all:${key}`,
-        name: `All ${key}`,
-        onSelect() {},
-        ...extra,
-      });
+      (key) =>
+        selectOption(
+          { id: `all:${key}`, name: `All ${key}` },
+          { onSelect() {}, ...extra }
+        );
     const bulk = bulkWith();
 
     /** The rows an option's description points at, resolved by id. */
@@ -1244,11 +1243,11 @@ module(
           <DSelect
             @groupBy="group"
             @groupFooter={{bulk}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           >
-            <:item as |item|>
+            <:option as |item|>
               <span class="custom-item">{{item.name}}</span>
-            </:item>
+            </:option>
             <:groupFooter as |item|>
               <span class="custom-footer">{{item.label}} + Subcategories</span>
             </:groupFooter>
@@ -1286,7 +1285,7 @@ module(
           <DSelect
             @groupBy="group"
             @groupFooter={{described}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           >
             <:groupFooter>
               <span class="custom-footer">+ Subcategories</span>
@@ -1317,11 +1316,11 @@ module(
           <DSelect
             @groupBy="group"
             @groupHeader={{bulk}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           >
-            <:item as |item|>
+            <:option as |item|>
               <span class="custom-item">{{item.name}}</span>
-            </:item>
+            </:option>
             <:groupHeader>
               <span class="custom-header">Everything</span>
             </:groupHeader>
@@ -1352,11 +1351,11 @@ module(
             @groupBy="group"
             @groupFooter={{bulk}}
             @groupHeader={{identityLabel}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           >
-            <:item as |item|>
+            <:option as |item|>
               <span class="custom-item">{{item.name}}</span>
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -1385,7 +1384,7 @@ module(
             @groupBy="group"
             @groupFooter={{ending}}
             @groupHeader={{identityLabel}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           >
             <:groupFooter as |item|>
               <em class="custom-footer">{{item.label}}!</em>
@@ -1418,17 +1417,15 @@ module(
 
     test("an action footer is reached by the keyboard and runs its action", async function (assert) {
       const picked = [];
-      const footer = (key) => ({
-        ...bulk(key),
-        onSelect: () => picked.push(key),
-      });
+      const footer = (key) =>
+        selectOption(bulk(key), { onSelect: () => picked.push(key) });
 
       await render(
         <template>
           <DSelect
             @groupBy="group"
             @groupFooter={{footer}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           />
         </template>
       );
@@ -1455,7 +1452,7 @@ module(
           <DSelect
             @groupBy="group"
             @groupHeader={{bulk}}
-            @items={{GROUPED_ITEMS}}
+            @options={{GROUPED_ITEMS}}
           />
         </template>
       );
@@ -1477,8 +1474,8 @@ module(
           <DSelect
             @groupBy="group"
             @groupFooter={{bulk}}
-            @items={{GROUPED_ITEMS}}
             @multiple={{true}}
+            @options={{GROUPED_ITEMS}}
             @value={{value}}
           />
         </template>
@@ -1513,7 +1510,7 @@ module(
             @groupBy="group"
             @groupFooter={{ending}}
             @groupHeader={{identityLabel}}
-            @items={{items}}
+            @options={{items}}
             @variant="static"
           />
         </template>
@@ -1558,7 +1555,7 @@ module(
             @groupBy="group"
             @groupFooter={{ending}}
             @groupHeader={{identityLabel}}
-            @items={{items}}
+            @options={{items}}
             @variant="static"
           />
         </template>
@@ -1606,7 +1603,7 @@ module(
             }
           </style>
           <DSelect
-            @items={{LOADED_ITEMS}}
+            @options={{LOADED_ITEMS}}
             @value={{HELD_INDEX}}
             @variant="static"
           />
@@ -1682,7 +1679,7 @@ module(
               overflow-y: auto;
             }
           </style>
-          <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+          <DSelect @options={{LOADED_ITEMS}} @variant="static" />
         </template>
       );
 
@@ -1743,7 +1740,10 @@ module("Integration | ui-kit | select | DSelect sticky rows", function (hooks) {
         id: index,
         name: `Item ${index}`,
       })),
-      { id: "act", name: "Sticky action", sticky: true, onSelect },
+      selectOption(
+        { id: "act", name: "Sticky action" },
+        { position: "sticky", onSelect }
+      ),
     ];
   }
 
@@ -1771,7 +1771,7 @@ module("Integration | ui-kit | select | DSelect sticky rows", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{items}} @variant="static" />
+        <DSelect @options={{items}} @variant="static" />
       </template>
     );
     await openSelect();
@@ -1891,7 +1891,7 @@ module(
 
     test("fix oracle: Enter activates the new create row after the virtual window changes", async function (assert) {
       const load = async (filter) => (filter ? [] : LOADED_ITEMS);
-      const createItem = (filter) => ({ id: filter, name: filter });
+      const createOption = (filter) => ({ id: filter, name: filter });
       const onChange = sinon.spy();
       await render(
         <template>
@@ -1904,7 +1904,7 @@ module(
           </style>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @load={{load}}
             @multiple={{true}}
             @onChange={{onChange}}

@@ -17,9 +17,9 @@ export default class KeyboardWalkthroughSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-keyboard-walkthrough"
-      @items={{USER_GROUPS}}
       @labelField="fullName"
       @onChange={{this.onChange}}
+      @options={{USER_GROUPS}}
       @placement="top-start"
       @texts={{hash
         placeholder=(i18n

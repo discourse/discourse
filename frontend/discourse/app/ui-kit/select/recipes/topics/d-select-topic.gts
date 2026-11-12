@@ -73,7 +73,7 @@ interface DSelectTopicSignature {
     onChange?: TopicChangeHandler;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /**
@@ -133,8 +133,8 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
   }
 
   @action
-  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
-    emitTopicChange(this.args.onChange, !!this.args.multiple, value, items);
+  onChange(value: SelectValue, records: SelectRecord | SelectRecord[] | null) {
+    emitTopicChange(this.args.onChange, !!this.args.multiple, value, records);
   }
 
   <template>
@@ -175,18 +175,18 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
-          <TopicOption @record={{item}} />
+          <TopicOption @record={{record}} />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          <TopicSelection @record={{item}} @withCategory={{not @multiple}} />
+          <TopicSelection @record={{record}} @withCategory={{not @multiple}} />
         {{/if}}
       </:selection>
       <:footer as |state config|>

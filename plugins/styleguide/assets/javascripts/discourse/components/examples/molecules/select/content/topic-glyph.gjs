@@ -26,9 +26,9 @@ export default class TopicGlyphSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-glyph"
-      @items={{this.items}}
       @labelField="label"
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.content.glyph_placeholder"
@@ -37,13 +37,13 @@ export default class TopicGlyphSelectExample extends Component {
       @value={{this.value}}
       @valueField="slug"
     >
-      <:item as |tag|>
+      <:option as |tag|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon "tag"}}
           <span class="select-examples__primary">{{tag.label}}</span>
           <span class="select-examples__meta">{{tag.usesLabel}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

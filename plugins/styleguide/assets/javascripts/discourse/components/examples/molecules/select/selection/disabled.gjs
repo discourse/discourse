@@ -20,9 +20,9 @@ export default class DisabledSelectExample extends Component {
     <DSelect
       @disabled={{true}}
       @identifier="sg-disabled"
-      @items={{this.items}}
       @labelField="title"
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_notification_level"

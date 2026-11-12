@@ -1,4 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import type { ModifierLike } from "@glint/template";
@@ -9,16 +10,12 @@ import WindowedListCoordinator, {
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import SelectOptionContent from "discourse/ui-kit/select/-internals/parts/select-option-content";
 import SelectEngine, {
-  type SelectDescriptor,
-  type SelectItemRow,
+  type SelectGroupInfo,
+  type SelectOption,
   SelectRecord as SelectRecordModel,
   selectRecordLabel,
+  type SelectRow,
 } from "discourse/ui-kit/select/select-engine";
-
-/** The row state the `:item` block receives with its item. */
-function itemRow(option: SelectDescriptor): SelectItemRow {
-  return Object.freeze({ create: !!option.flags.__create });
-}
 
 interface SelectOptionRowSignature {
   Args: {
@@ -36,10 +33,10 @@ interface SelectOptionRowSignature {
     hideSelectionMarker?: boolean;
     /** Whether the select accepts multiple values. */
     multiple?: boolean;
-    /** Whether the consumer supplied custom item markup. */
-    hasItemBlock: boolean;
+    /** Whether the consumer supplied custom option markup. */
+    hasOptionBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasSkeletonItemBlock: boolean;
+    hasSkeletonBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Whether the consumer supplied custom group-footer markup. */
@@ -58,26 +55,36 @@ interface SelectOptionRowSignature {
     measure: ModifierLike<{ Element: HTMLElement }>;
   };
   Blocks: {
-    /** Custom markup for an item. */
-    item?: [
-      /** The item being rendered. */
-      item: SelectRecordModel,
-      /** What the row is, beyond its item. */
-      row: SelectItemRow,
+    /** Custom markup for an option. */
+    option?: [
+      /** The record the option stands for. */
+      record: SelectRecordModel,
+      /** The option, with its settings. */
+      option: SelectOption,
     ];
     /** Custom markup for a group header, text or action. */
     groupHeader?: [
-      /** The group-header item being rendered. */
-      item: SelectRecordModel,
+      /** The header's record: the action option's, or `{ label }` for text. */
+      record: SelectRecordModel,
+      /** The group the header belongs to. */
+      group: SelectGroupInfo,
     ];
     /** Custom markup for a group footer, text or action. */
     groupFooter?: [
-      /** The group-footer item being rendered. */
-      item: SelectRecordModel,
+      /** The footer's record: the action option's, or `{ label }` for text. */
+      record: SelectRecordModel,
+      /** The group the footer belongs to. */
+      group: SelectGroupInfo,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    skeletonItem?: [];
+    skeleton?: [];
   };
+}
+
+/** The group a boundary row belongs to; the composer tags every boundary with one. */
+function groupOf(row: SelectRow): SelectGroupInfo {
+  assert("A group boundary row carries its group", row.group);
+  return row.group;
 }
 
 const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
@@ -112,13 +119,13 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             >
               {{#if hasBlock}}
                 {{#if option.flags.groupFooter}}
-                  {{yield option.item to="groupFooter"}}
+                  {{yield option.record (groupOf option) to="groupFooter"}}
                 {{else}}
-                  {{yield option.item to="groupHeader"}}
+                  {{yield option.record (groupOf option) to="groupHeader"}}
                 {{/if}}
               {{/if}}
               <span hidden={{hasBlock}} id={{option.boundaryId}}>
-                {{selectRecordLabel option.item "label"}}
+                {{selectRecordLabel option.record "label"}}
               </span>
             </li>
           {{/let}}
@@ -150,7 +157,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             @locked={{@presenter.isLocked}}
             @multiple={{@multiple}}
             @selectedIcon={{@selectedIcon}}
-            @stickyEnd={{@listbox.isLastSticky @items @index}}
+            @stickyLast={{@listbox.isLastSticky @items @index}}
             {{@place}}
             {{@measure}}
             {{! Keep focus in the trigger input on pointer-select so the input
@@ -160,36 +167,36 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
             {{on "mousedown" @onOptionMousedown}}
           >
-            {{! A group's action row is drawn by its group block, never the item
+            {{! A group's action row is drawn by its group block, never the option
                 block. The drawing is hidden and the builder's label is the
                 name, so the name never depends on what the block draws. }}
             {{#if (and option.flags.groupHeader @hasGroupHeaderBlock)}}
               <span class="sr-only">
-                {{~selectRecordLabel option.item @presenter.labelField~}}
+                {{~selectRecordLabel option.record @presenter.labelField~}}
               </span>
               <span aria-hidden="true">
-                {{~yield option.item to="groupHeader"~}}
+                {{~yield option.record (groupOf option) to="groupHeader"~}}
               </span>
             {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
               <span class="sr-only">
-                {{~selectRecordLabel option.item @presenter.labelField~}}
+                {{~selectRecordLabel option.record @presenter.labelField~}}
               </span>
               <span aria-hidden="true">
-                {{~yield option.item to="groupFooter"~}}
+                {{~yield option.record (groupOf option) to="groupFooter"~}}
               </span>
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
-              {{selectRecordLabel option.item @presenter.labelField}}
-            {{else if @hasItemBlock}}
-              {{yield option.item (itemRow option) to="item"}}
-            {{else if option.flags.__create}}
+              {{selectRecordLabel option.record @presenter.labelField}}
+            {{else if @hasOptionBlock}}
+              {{yield option.record option.option to="option"}}
+            {{else if option.flags.create}}
               {{@engine.text
-                "createItem"
+                "createOption"
                 (hash
-                  label=(selectRecordLabel option.item @presenter.labelField)
+                  label=(selectRecordLabel option.record @presenter.labelField)
                 )
               }}
             {{else}}
-              {{selectRecordLabel option.item @presenter.labelField}}
+              {{selectRecordLabel option.record @presenter.labelField}}
             {{/if}}
           </SelectOptionContent>
         {{else}}
@@ -202,8 +209,8 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{@place}}
             {{@measure}}
           >
-            {{#if @hasSkeletonItemBlock}}
-              {{yield to="skeletonItem"}}
+            {{#if @hasSkeletonBlock}}
+              {{yield to="skeleton"}}
             {{else}}
               <DSkeleton @variant="text" />
             {{/if}}

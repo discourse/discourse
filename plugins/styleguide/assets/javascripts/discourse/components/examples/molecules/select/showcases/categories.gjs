@@ -22,11 +22,11 @@ export default class CategoriesSelectExample extends Component {
 
   <template>
     <DSelect
+      @extraOptions={{@extraOptions}}
       @filterBy={{this.filter}}
       @identifier="sg-categories"
-      @items={{@items}}
       @onChange={{this.update}}
-      @specialItems={{@specialItems}}
+      @options={{@options}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.showcases.categories.placeholder"
@@ -40,7 +40,7 @@ export default class CategoriesSelectExample extends Component {
         {{dCategoryBadge category}}
       </:selection>
 
-      <:item as |category|>
+      <:option as |category|>
         <span class="select-showcases__category">
           <span class="select-showcases__category-status">
             {{dCategoryBadge
@@ -55,7 +55,7 @@ export default class CategoriesSelectExample extends Component {
             </span>
           {{/if}}
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import { delay, LOCALES, TAGS } from "../../../../../lib/select-fixtures.js";
 
@@ -11,29 +12,35 @@ export default class AsyncUpdateSelectExample extends Component {
   @tracked value = LOCALES[0].id;
   @tracked tags = [];
 
-  get items() {
+  get options() {
     return [
-      {
-        id: "suggest",
-        name: i18n("styleguide.sections.select.async_update_suggest"),
-        onSelect: this.suggest,
-      },
-      {
-        id: "validate",
-        name: i18n("styleguide.sections.select.async_update_clear"),
-        onSelect: this.clearIfInvalid,
-      },
+      selectOption(
+        {
+          id: "suggest",
+          name: i18n("styleguide.sections.select.async_update_suggest"),
+        },
+        { onSelect: this.suggest }
+      ),
+      selectOption(
+        {
+          id: "validate",
+          name: i18n("styleguide.sections.select.async_update_clear"),
+        },
+        { onSelect: this.clearIfInvalid }
+      ),
       ...LOCALES,
     ];
   }
 
-  get tagItems() {
+  get tagOptions() {
     return [
-      {
-        slug: "suggest",
-        label: i18n("styleguide.sections.select.async_update_suggest_tags"),
-        onSelect: this.suggestTags,
-      },
+      selectOption(
+        {
+          slug: "suggest",
+          label: i18n("styleguide.sections.select.async_update_suggest_tags"),
+        },
+        { onSelect: this.suggestTags }
+      ),
       ...TAGS,
     ];
   }
@@ -81,8 +88,8 @@ export default class AsyncUpdateSelectExample extends Component {
       <div class="select-examples__pair-item">
         <DSelect
           @identifier="sg-async-update"
-          @items={{this.items}}
           @onChange={{this.onChange}}
+          @options={{this.options}}
           @texts={{hash
             ariaLabel=(i18n
               "styleguide.sections.select.async_update_single_label"
@@ -97,10 +104,10 @@ export default class AsyncUpdateSelectExample extends Component {
       <div class="select-examples__pair-item">
         <DSelect
           @identifier="sg-async-update-tags"
-          @items={{this.tagItems}}
           @labelField="label"
           @multiple={{true}}
           @onChange={{this.onTagsChange}}
+          @options={{this.tagOptions}}
           @texts={{hash
             ariaLabel=(i18n
               "styleguide.sections.select.async_update_multi_label"

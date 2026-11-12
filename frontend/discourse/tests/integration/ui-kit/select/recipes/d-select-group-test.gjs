@@ -195,7 +195,7 @@ module(
     test("lists the call site's own groups instead of the site's", async function (assert) {
       const groups = [{ id: 40, name: "partners", full_name: "Partners" }];
 
-      await render(<template><DSelectGroup @items={{groups}} /></template>);
+      await render(<template><DSelectGroup @options={{groups}} /></template>);
       await new DSelect().open();
 
       assert.deepEqual(optionValues(), ["40"]);

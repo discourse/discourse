@@ -92,10 +92,10 @@ export default class AssignSettingsUpsert extends Component {
               {{! TODO (select-kit-replacement-cleanup) }}
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelectGroup
-                  @items={{this.assignableGroups}}
                   @lockedValues={{this.globalAssignAllowedGroupIds}}
                   @multiple={{true}}
                   @onChange={{field.set}}
+                  @options={{this.assignableGroups}}
                   @value={{this.additionalAssignAllowedGroupIds}}
                 />
               {{else}}

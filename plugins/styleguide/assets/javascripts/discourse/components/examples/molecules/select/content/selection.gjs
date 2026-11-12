@@ -17,10 +17,10 @@ export default class SelectionBlockSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
-      @items={{PEOPLE}}
       @labelField="name"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @texts={{hash
         placeholder=(i18n
           (if
@@ -32,7 +32,7 @@ export default class SelectionBlockSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:item as |person|>
+      <:option as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
             aria-hidden="true"
@@ -51,7 +51,7 @@ export default class SelectionBlockSelectExample extends Component {
             </span>
           </span>
         </span>
-      </:item>
+      </:option>
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg

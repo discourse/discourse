@@ -34,6 +34,7 @@ import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-g
 import {
   DEFAULT_SELECT_TEXTS,
   renderSelectText,
+  selectOption,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -49,7 +50,7 @@ const REQUIRED = new Set([
   "labelWithValue",
   "labelWithCount",
   "unresolvedValue",
-  "createItem",
+  "createOption",
   "removeHint",
   "lockedHint",
   "loadError",
@@ -93,7 +94,7 @@ async function mount(configuration = {}) {
   }
   const Select = configuration.list ? DSelectList : DSelect;
   const state = tracked({
-    items: ITEMS,
+    options: ITEMS,
     kind: "texts-kind",
     value: configuration.multiple || configuration.list ? [] : null,
     suppressFooter: !configuration.footer,
@@ -120,13 +121,12 @@ async function mount(configuration = {}) {
         @allowCreate={{state.value.allowCreate}}
         @ariaLabelledBy={{state.value.labelledBy}}
         @clearable={{state.value.clearable}}
-        @createItem={{state.value.createItem}}
+        @createOption={{state.value.createOption}}
         @debounce={{false}}
         @describedBy={{state.value.describedBy}}
         @disabled={{state.value.disabled}}
         @hideSelected={{state.value.hideSelected}}
         @identifier="texts-test"
-        @items={{state.value.items}}
         @kind={{state.value.kind}}
         @kindTexts={{state.value.kindTexts}}
         @kindTextWrappers={{state.value.wrappers}}
@@ -139,8 +139,9 @@ async function mount(configuration = {}) {
         @minChars={{state.value.minChars}}
         @minimum={{state.value.minimum}}
         @multiple={{state.value.multiple}}
-        @noneRow={{state.value.noneRow}}
+        @noneOption={{state.value.noneOption}}
         @onChange={{onChange}}
+        @options={{state.value.options}}
         @panelChips={{state.value.panelChips}}
         @readonly={{state.value.readonly}}
         @resolveValue={{state.value.resolveValue}}
@@ -264,7 +265,7 @@ const SCENARIOS = {
   },
   descriptionSearch: { mobile: true, describedBy: "texts-description" },
   staticList: { list: true, virtualized: false },
-  none: { noneRow: true },
+  none: { noneOption: true },
   footer: { footer: true },
   minChars: { minChars: 3 },
   maximum: { multiple: true, value: [1, 2], maximum: 2 },
@@ -284,27 +285,27 @@ const SCENARIOS = {
     lockedValues: [1],
     clearable: true,
   },
-  unresolvedInput: { items: [], value: 404, resolveValue: () => undefined },
+  unresolvedInput: { options: [], value: 404, resolveValue: () => undefined },
   unresolvedChip: {
-    items: [],
+    options: [],
     multiple: true,
     value: [404],
     resolveValue: () => undefined,
   },
   unresolvedStrip: {
-    items: [],
+    options: [],
     multiple: true,
     value: [404],
     maxVisibleChips: 0,
     resolveValue: () => undefined,
   },
-  create: { allowCreate: true, createItem: (name) => ({ id: name, name }) },
+  create: { allowCreate: true, createOption: (name) => ({ id: name, name }) },
   error: { load: () => Promise.reject(new Error("load failed")) },
-  maxLoaded: { load: () => ({ items: ITEMS, total: 30 }), maxLoaded: 3 },
+  maxLoaded: { load: () => ({ options: ITEMS, total: 30 }), maxLoaded: 3 },
   resultsCount: { variant: "button" },
   resultsLoaded: {
     variant: "button",
-    load: () => ({ items: ITEMS, hasMore: true }),
+    load: () => ({ options: ITEMS, hasMore: true }),
   },
 };
 
@@ -835,7 +836,7 @@ const USES = [
   spoken("stillLoading", "pending Enter announcement", "stillLoading"),
   spoken("loadingMore", "page loading announcement", "reveal"),
   spoken("loadingComplete", "page completion announcement", "reveal"),
-  drawn("createItem", "create row", "create", "[role='option'].--create", {
+  drawn("createOption", "create row", "create", "[role='option'].--create", {
     action: "create",
   }),
   drawn("compactCount", "bare chip count", "compact", ".d-select__chips-more"),
@@ -907,7 +908,7 @@ async function drive(row, configuration, observe) {
     }));
     const load = (_query, { offset = 0 }) => {
       if (offset === 0) {
-        return Promise.resolve({ items: initial, total: 41 });
+        return Promise.resolve({ options: initial, total: 41 });
       }
       requested.value = true;
       return pending.promise;
@@ -925,7 +926,7 @@ async function drive(row, configuration, observe) {
         await observe();
       }
     } finally {
-      pending.resolve({ items: [{ id: 41, name: "Last fruit" }], total: 41 });
+      pending.resolve({ options: [{ id: 41, name: "Last fruit" }], total: 41 });
       await settled();
     }
     if (row.key === "loadingComplete") {
@@ -949,7 +950,10 @@ async function drive(row, configuration, observe) {
     const multiple = ["bulk", "already"].includes(row.scenario);
     await mount({
       ...configuration,
-      items: [...ITEMS, { id: "run-action", name: "Run action", onSelect }],
+      options: [
+        ...ITEMS,
+        selectOption({ id: "run-action", name: "Run action" }, { onSelect }),
+      ],
       multiple,
       value: multiple ? [1] : null,
       maximum: row.scenario === "bulk" ? 2 : undefined,
@@ -1267,7 +1271,7 @@ function assertValues(assert, row, calls) {
       unresolvedValue: { value: "404" },
       resultsCount: { count: 3 },
       resultsLoaded: { count: 3 },
-      createItem: { label: "Pear" },
+      createOption: { label: "Pear" },
       compactCount: { count: 2 },
       moreChips: { count: 2 },
     }[row.key] ?? {};
@@ -1358,19 +1362,21 @@ async function mountRemoved(name, label, load) {
   switch (name) {
     case "ariaLabel":
       await render(
-        <template><DSelect @ariaLabel={{label}} @items={{ITEMS}} /></template>
+        <template><DSelect @ariaLabel={{label}} @options={{ITEMS}} /></template>
       );
       break;
     case "placeholder":
       await render(
-        <template><DSelect @items={{ITEMS}} @placeholder={{label}} /></template>
+        <template>
+          <DSelect @options={{ITEMS}} @placeholder={{label}} />
+        </template>
       );
       break;
     case "searchPlaceholder":
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @searchPlaceholder={{label}}
             @variant="button"
           />
@@ -1380,13 +1386,13 @@ async function mountRemoved(name, label, load) {
     case "noResultsLabel":
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @noResultsLabel={{label}} />
+          <DSelect @noResultsLabel={{label}} @options={{ITEMS}} />
         </template>
       );
       break;
     case "noneLabel":
       await render(
-        <template><DSelect @items={{ITEMS}} @noneLabel={{label}} /></template>
+        <template><DSelect @noneLabel={{label}} @options={{ITEMS}} /></template>
       );
       break;
     case "loadingLabel":
@@ -2272,16 +2278,15 @@ module("Integration | ui-kit | select | texts", function (hooks) {
     for (const mobile of [false, true]) {
       test(`a pending ${mobile ? "mobile modal" : "desktop"} input suppresses the held prompt`, async function (assert) {
         const pending = gate();
-        const action = {
-          id: "pending-action",
-          name: "Pending action",
-          onSelect: (control) => control.update(() => pending.promise),
-        };
+        const action = selectOption(
+          { id: "pending-action", name: "Pending action" },
+          { onSelect: (control) => control.update(() => pending.promise) }
+        );
         await mount({
           multiple: true,
           mobile,
           value: [1],
-          items: [...ITEMS, action],
+          options: [...ITEMS, action],
           texts: {
             addMorePlaceholder: "Held prompt",
             searchPlaceholder: "Search fallback",
@@ -2393,20 +2398,20 @@ module("Integration | ui-kit | select | texts", function (hooks) {
   });
 
   module("feature switches", function () {
-    test("noneRow toggles the none row and its default label", async function (assert) {
+    test("noneOption toggles the none row and its default label", async function (assert) {
       const state = await mount({ value: 1 });
       await click(".d-select__trigger");
       assert
         .dom("[role='option'][data-value='']")
         .doesNotExist("the row is off by default");
-      state.value = { ...state.value, noneRow: true };
+      state.value = { ...state.value, noneOption: true };
       await settled();
       assert
         .dom("[role='option'][data-value='']")
         .hasText("None", "the switch enables the contracted default");
       await click("[role='option'][data-value='']");
       assert.strictEqual(state.value.value, null, "the none row selects null");
-      state.value = { ...state.value, noneRow: false };
+      state.value = { ...state.value, noneOption: false };
       await settled();
       await click(".d-select__trigger");
       assert
@@ -2430,10 +2435,10 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         .exists({ count: ITEMS.length }, "only real items are drawn");
     });
 
-    test("noneRow is ignored for multiple selection", async function (assert) {
+    test("noneOption is ignored for multiple selection", async function (assert) {
       await mount({
         multiple: true,
-        noneRow: true,
+        noneOption: true,
         texts: { noneLabel: "No fruit" },
       });
       await click(".d-select__trigger");
@@ -2442,11 +2447,11 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         .doesNotExist("the engine none row remains single-select only");
     });
 
-    test("a customization can enable noneRow and customize its text", async function (assert) {
+    test("a customization can enable noneOption and customize its text", async function (assert) {
       customize((selects) =>
         selects.forIdentifier("texts-test", (spec) =>
           spec.config(() => ({
-            noneRow: true,
+            noneOption: true,
             texts: { noneLabel: "Customized none" },
           }))
         )
@@ -2512,7 +2517,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       await click(".d-select__trigger");
       assert
         .dom("[role='option'][data-value='']")
-        .doesNotExist("empty noneLabel with no noneRow is valid");
+        .doesNotExist("empty noneLabel with no noneOption is valid");
       assert
         .dom(".d-select__loading-status")
         .doesNotExist("empty loadingLabel with no loadingStatus is valid");
@@ -2567,7 +2572,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         () =>
           render(
             <template>
-              <DSelectList @items={{ITEMS}} @searchPlaceholder="Find" />
+              <DSelectList @options={{ITEMS}} @searchPlaceholder="Find" />
             </template>
           ),
         /@searchPlaceholder.*@texts/
@@ -2600,8 +2605,8 @@ module("Integration | ui-kit | select | texts", function (hooks) {
       );
       await render(
         <template>
-          <DSelect @identifier="first-texts-select" @items={{ITEMS}} />
-          <DSelect @identifier="second-texts-select" @items={{ITEMS}} />
+          <DSelect @identifier="first-texts-select" @options={{ITEMS}} />
+          <DSelect @identifier="second-texts-select" @options={{ITEMS}} />
         </template>
       );
       assert.strictEqual(
@@ -2668,14 +2673,14 @@ module("Integration | ui-kit | select | texts", function (hooks) {
           <template>
             <div class="first">
               <DSelect
-                @items={{ITEMS}}
                 @onChange={{onChange}}
+                @options={{ITEMS}}
                 @texts={{texts}}
                 @value={{state.value}}
               />
             </div>
             <div class="second">
-              <DSelect @items={{ITEMS}} @texts={{texts}} />
+              <DSelect @options={{ITEMS}} @texts={{texts}} />
             </div>
           </template>
         );
@@ -2830,7 +2835,7 @@ module("Integration | ui-kit | select | texts", function (hooks) {
           assert,
           () =>
             mount({
-              noneRow: key === "noneLabel",
+              noneOption: key === "noneLabel",
               loadingStatus: key === "loadingLabel",
               wrappers: { [key]: (final) => final },
             }),

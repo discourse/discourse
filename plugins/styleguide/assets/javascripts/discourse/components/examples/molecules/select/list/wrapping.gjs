@@ -18,8 +18,8 @@ export default class ListWrappingExample extends Component {
     <DSelectList
       class="select-examples__tag-list"
       @identifier="sg-list-wrapping"
-      @items={{LOCALES}}
       @onChange={{this.onChange}}
+      @options={{LOCALES}}
       @texts={{hash
         ariaLabel=(i18n "styleguide.sections.select.list_languages_label")
         searchPlaceholder=(i18n

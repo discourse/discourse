@@ -1285,8 +1285,8 @@ export default class AdminMcp extends Component {
                       @disabled={{field.disabled}}
                       @id={{field.id}}
                       @invalid={{if field.error true false}}
-                      @items={{this.availableAccessGroups}}
                       @onChange={{legacyPickOne field.set}}
+                      @options={{this.availableAccessGroups}}
                       @texts={{hash ariaLabel=field.title}}
                       @value={{field.value}}
                     />

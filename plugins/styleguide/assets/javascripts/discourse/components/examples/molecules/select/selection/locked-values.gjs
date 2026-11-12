@@ -21,11 +21,11 @@ export default class LockedValuesSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-locked-values"
-      @items={{USER_GROUPS}}
       @labelField="fullName"
       @lockedValues={{LOCKED}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{USER_GROUPS}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_groups"

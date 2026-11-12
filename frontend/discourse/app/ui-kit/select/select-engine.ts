@@ -14,8 +14,12 @@ import SelectCustomizations, {
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
 import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import {
+  type SelectOption,
+  type SelectOptionLike,
+} from "discourse/ui-kit/select/-internals/engine/select-option";
+import {
   filterLocal,
-  localItems,
+  localOptions,
   LocalSource,
   PagedSource,
   type SelectSource,
@@ -54,6 +58,17 @@ export {
 /** The frozen config snapshot recipes receive in their callbacks and blocks. */
 export type { SelectConfig };
 
+/** What the select lists, and how a record is given settings. */
+export {
+  recordOf,
+  selectOption,
+  type SelectOption,
+  type SelectOptionDivider,
+  type SelectOptionLike,
+  type SelectOptionPosition,
+  type SelectOptionSettings,
+} from "discourse/ui-kit/select/-internals/engine/select-option";
+
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
  * value read out of an item is `unknown` rather than a fixed scalar type.
@@ -67,81 +82,29 @@ export type SelectId = unknown;
 export type SelectValue = SelectId | readonly SelectId[] | null;
 
 /**
- * A selectable item. Domain fields are addressed dynamically through `valueField` /
- * `labelField`, so they are exposed via the index signature; the few structural fields
- * the engine understands directly are declared explicitly.
+ * The data an option stands for: what the caller passed, as it is. Its fields are addressed
+ * through `valueField` and `labelField`; none of them changes how the option behaves, which only
+ * its settings do (see {@link selectOption}).
  */
 export interface SelectRecord {
-  /**
-   * Action-item hook: when present, activating the item runs this instead of selecting
-   * it, and receives the select's {@link SelectControl}. A row injected through the
-   * `modifySelectKit` compat bridge gets the legacy select-kit facade instead.
-   */
-  onSelect?: (control: SelectControl, item: SelectRecord) => void;
-
-  /** Kept at the top of the list and visible while it scrolls. Structural rows ignore this. */
-  sticky?: boolean;
-
-  /** When true, the item cannot be activated (guards both pointer and keyboard). */
-  disabled?: boolean;
-
-  /** Visible secondary text, exposed as the option's description rather than its name. */
-  description?: string;
-
-  /** Marks the synthetic create-on-the-fly item. */
-  __create?: boolean;
-
-  /** Marks a synthetic fallback for a held value that could not be resolved. */
-  __unresolved?: boolean;
-
-  /**
-   * Marks a text group-header row (engine-injected when `groupHeader` returns text). A structural
-   * row: it is never selectable, navigable, or counted in the option set. Carries its `label`.
-   */
-  __header?: boolean;
-
-  /** Marks a text group-footer row, the footer counterpart of `__header`. */
-  __footer?: boolean;
-
-  /**
-   * Marks the engine's copy of an action row that `groupHeader` returned. It stays a navigable
-   * option; the marker routes it to the `<:groupHeader>` block.
-   */
-  __groupHeader?: boolean;
-
-  /** Marks the engine's copy of an action row that `groupFooter` returned. */
-  __groupFooter?: boolean;
-
-  /**
-   * Marks an engine-injected splitter before a group that has no header of either kind, except
-   * at the head of the list; consumers never set it.
-   */
-  __divider?: boolean;
-
-  /**
-   * Marks the synthetic single-select "none" row (engine-injected while `noneRow` is on). Selectable
-   * and navigable like any option, but its value field is `null`, so selecting it clears the
-   * selection.
-   */
-  __none?: boolean;
-
-  /** Arbitrary domain fields, addressed dynamically by `valueField` / `labelField`. */
   [key: string]: unknown;
 }
 
-/** What the `:item` block is told about the row it draws, beyond the item itself. */
-export interface SelectItemRow {
-  /** The row creates a new value from the query, as `@createItem` built it. */
-  readonly create: boolean;
+/** What a group's boundary rows know about the group they belong to. */
+export interface SelectGroupInfo {
+  /** The group's key, as `groupBy` returned it. */
+  readonly key: SelectId;
+  /** Whether the boundary is an action option rather than text. */
+  readonly action: boolean;
 }
 
 /**
- * The normalized render descriptor for one row, computed as the final step before render
- * (see {@link SelectEngine#buildItems}). It carries a stable `key` (never an index; models
- * need no `id`), the `value` (id) for selection, the untouched raw `item` yielded to
- * `:item` / `:selection`, and the row `flags` so components read state from one place.
+ * One rendered line, computed as the final step before render (see
+ * {@link SelectEngine#buildRows}): an option, or a line the engine draws between options. It
+ * carries a stable `key` (never an index; models need no `id`), the `value` for selection, the
+ * option and its record, and the row `flags` so components read state from one place.
  */
-export interface SelectDescriptor {
+export interface SelectRow {
   /**
    * Stable `{{#each}}` key: the normalized value for a record, or an engine key (prefixed
    * `__ds:`) for a row the engine builds, such as a group row, which follows its group rather
@@ -150,8 +113,12 @@ export interface SelectDescriptor {
   key: string;
   /** The row's id (raw, from `valueField`). */
   value: SelectId;
-  /** The raw model, passed through untouched to consumer blocks. */
-  item: SelectRecord;
+  /** The record the row stands for, passed untouched to consumer blocks. */
+  record: SelectRecord;
+  /** The option behind the row, with its settings. */
+  option: SelectOption;
+  /** The group a boundary row belongs to; absent on every other row. */
+  group?: SelectGroupInfo;
   /** Row state, centralized so the template and option component don't re-derive it. */
   flags: {
     /** Whether this row's value is part of the current selection. */
@@ -178,14 +145,14 @@ export interface SelectDescriptor {
     textBoundary: boolean;
     /** A divider row: structural like a header, but presentational and label-less. */
     divider: boolean;
-    /** An action row: it runs its `onSelect` and never becomes a value. */
+    /** An action option: it runs its `onSelect` and never becomes a value. */
     action: boolean;
-    /** Marks the synthetic create-on-the-fly row. */
-    __create: boolean;
-    /** True for an unresolved held value; false on list rows. */
-    __unresolved: boolean;
-    /** True for the injected single-select "none" row (a selectable row that clears the value). */
-    __none: boolean;
+    /** The option that creates a value from the query. */
+    create: boolean;
+    /** The fallback for a held value that could not be resolved; false on list rows. */
+    unresolved: boolean;
+    /** The single-select option that clears the value. */
+    none: boolean;
   };
   /**
    * Zero-based position among all list options, including disabled rows. Structural rows and
@@ -201,7 +168,7 @@ export interface SelectDescriptor {
   groupText?: { header: boolean; footer: boolean };
   /**
    * 1-based position in the whole result set, independent of how many rows are mounted.
-   * Stamped by {@link SelectEngine#buildItems} only; the trigger/chip path leaves it
+   * Stamped by {@link SelectEngine#buildRows} only; the trigger/chip path leaves it
    * undefined.
    */
   posInSet?: number;
@@ -246,8 +213,8 @@ export interface SelectLoadRequest {
 
 /** A page from a server-backed source, with optional pagination metadata. */
 export interface SelectLoadResponse {
-  /** The page returned for the requested offset. */
-  items: SelectRecord[];
+  /** The page returned for the requested offset: records, or records wrapped with settings. */
+  options: SelectOptionLike[];
   /** Opaque continuation value passed unchanged to the next request as `opts.cursor`. */
   cursor?: unknown;
   /**
@@ -268,10 +235,10 @@ export interface SelectLoadResponse {
   hasMore?: boolean;
 }
 
-/** Shapes accepted from a select item source. */
-export type SelectLoadResult = SelectRecord[] | SelectLoadResponse;
+/** Shapes accepted from a select source. */
+export type SelectLoadResult = SelectOptionLike[] | SelectLoadResponse;
 
-/** A frozen read-only view of the engine state passed to a `specialItems` builder. */
+/** A frozen read-only view of the engine state passed to an `extraOptions` builder. */
 export interface SelectSnapshot {
   filter: string;
   value: SelectValue;
@@ -311,12 +278,12 @@ export interface SelectControl {
   readonly pending: boolean;
   /** Closes the overlay. */
   close(): void;
-  /** Selects an item, exactly as picking its row would. */
-  select(item: SelectRecord): void;
-  /** Adds eligible items in one change; single-select chooses the first new item. */
-  selectMany(items: readonly SelectRecord[]): void;
-  /** Removes an item if held; single-select clears its held item. */
-  deselect(item: SelectRecord): void;
+  /** Selects a record, honouring the settings of an option passed instead. */
+  select(entry: SelectOptionLike): void;
+  /** Adds eligible entries in one change, skipping disabled and action options; single-select chooses the first new one. */
+  selectMany(entries: readonly SelectOptionLike[]): void;
+  /** Removes a record if held; single-select clears its held record. */
+  deselect(entry: SelectOptionLike): void;
   /** Clears a nonempty selection. */
   clear(): void;
   /** Starts a new query without superseding a pending update. */
@@ -336,32 +303,32 @@ export interface SelectUpdateScope {
   readonly signal: AbortSignal;
   /** Whether this update still owns the live value. A pure read. */
   readonly current: boolean;
-  /** Selects an item while current and unlocked. */
-  select(item: SelectRecord): void;
-  /** Adds eligible items in one change; single-select chooses the first new item. */
-  selectMany(items: readonly SelectRecord[]): void;
-  /** Removes a held item while current and unlocked. */
-  deselect(item: SelectRecord): void;
+  /** Selects a record while current and unlocked. */
+  select(entry: SelectOptionLike): void;
+  /** Adds eligible entries in one change; single-select chooses the first new one. */
+  selectMany(entries: readonly SelectOptionLike[]): void;
+  /** Removes a held record while current and unlocked. */
+  deselect(entry: SelectOptionLike): void;
   /** Clears a nonempty selection while current and unlocked. */
   clear(): void;
 }
 
 /**
- * Builds a group's header or footer from its key and surviving rows: text, an action row (an
- * item with `onSelect`), or nullish for none.
+ * Builds a group's header or footer from its key and surviving options: text, an action option,
+ * or nullish for none.
  */
 export type SelectGroupBoundaryBuilder = (
   key: SelectId,
-  rows: readonly SelectRecord[],
+  options: readonly SelectOption[],
   config: SelectConfig
-) => string | SelectRecord | null | undefined;
+) => string | SelectOption | null | undefined;
 
 /**
  * What a {@link SelectEngine} is constructed with.
  *
  * Function-valued options are invoked with an unspecified receiver — read the provided
  * arguments, never `this`. Where a callback acts on the select, it is handed a
- * {@link SelectControl} (see {@link SelectRecord#onSelect}).
+ * {@link SelectControl} (see {@link SelectOptionSettings#onSelect}).
  *
  * The `get*` reader options are the live counterparts of the plain option beside each:
  * they reflect runtime changes to the underlying `@arg`, while the plain static option
@@ -475,15 +442,15 @@ export interface SelectEngineInit {
   getInstanceContext?: () => object | undefined;
 
   /**
-   * A static array (or `(config) => array`) of items — the client-only source. Provide this
-   * or `load`, not both.
+   * A static array (or `(config) => array`) of records and options — the client-only source.
+   * Provide this or `load`, not both.
    */
-  items?:
-    | SelectRecord[]
-    | ((config: SelectConfig) => SelectRecord[] | null | undefined);
+  options?:
+    | SelectOptionLike[]
+    | ((config: SelectConfig) => SelectOptionLike[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit, page, cursor, context, config }) => items | { items, total?, hasMore?, cursor? }`,
+   * `(filter, { signal, offset, limit, page, cursor, context, config }) => options | { options, total?, hasMore?, cursor? }`,
    * synchronously or as a promise. Pagination starts without a limit so the source defines
    * its page size.
    *
@@ -513,12 +480,12 @@ export interface SelectEngineInit {
   onReloadList?: () => void;
 
   /**
-   * Client-filter field name or `(item, term, options) => boolean`. Defaults to a substring
+   * Client-filter field name or `(record, term, config) => boolean`. Defaults to a substring
    * match on `labelField`.
    */
   filterBy?:
     | string
-    | ((item: SelectRecord, term: string, config: SelectConfig) => boolean);
+    | ((record: SelectRecord, term: string, config: SelectConfig) => boolean);
 
   /**
    * Minimum filter length before the list searches, 2 or more. Omitted, any input searches;
@@ -621,27 +588,27 @@ export interface SelectEngineInit {
   ) => SelectRecord[] | Promise<SelectRecord[]>;
 
   /**
-   * Enables the create-on-the-fly item; a function `(filter, items, options) => boolean` gates it
-   * dynamically against the displayed query and its loaded rows.
+   * Enables the create-on-the-fly option; a function `(filter, records, config) => boolean`
+   * gates it dynamically against the displayed query and its loaded records.
    */
   allowCreate?:
     | boolean
     | ((
         filter: string,
-        items: SelectRecord[],
+        records: SelectRecord[],
         config: SelectConfig
       ) => boolean);
 
   /**
-   * `(filter, config) => item` producing the synthetic "create" item. Name it by its value
-   * text; the engine marks the row as create and supplies the "Create" wording.
+   * `(filter, config) => record` producing the record the create option stands for. Name it by
+   * its value text; the engine makes it the create option and supplies the "Create" wording.
    */
-  createItem?: (filter: string, config: SelectConfig) => SelectRecord;
+  createOption?: (filter: string, config: SelectConfig) => SelectOptionLike;
 
   /**
-   * `(value, config) => item` producing the fallback for a held id that could not be resolved,
-   * so a recipe can name it (e.g. `Topic #123`) instead of showing the bare id. The
-   * engine marks the result `__unresolved` regardless of what the builder returns.
+   * `(value, config) => record` producing the fallback for a held id that could not be resolved,
+   * so a recipe can name it (e.g. `Topic #123`) instead of showing the bare id. The engine copies
+   * the result and knows the copy as unresolved (see {@link SelectEngine#isUnresolvedRecord}).
    * Defaults to the id itself on `labelField`.
    */
   createUnresolvedRecord?: (
@@ -650,21 +617,25 @@ export interface SelectEngineInit {
   ) => SelectRecord;
 
   /**
-   * `(snapshot, config) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
+   * `(snapshot, config) => options` the select adds beside its source (e.g. an "uncategorized"
+   * option or an action). They lead the list, and no query filters them.
    */
-  specialItems?: (
+  extraOptions?: (
     snapshot: SelectSnapshot,
     config: SelectConfig
-  ) => SelectRecord[];
+  ) => SelectOptionLike[];
+
+  /** Adds the single-select option that clears the value, when no presentation arg says otherwise. */
+  noneOption?: boolean;
 
   /**
-   * Groups the filtered options by a field name or `(item, config) => key`. A group without a
+   * Groups the filtered options by a record field name or `(record, config) => key`. A group without a
    * header of either kind gets an unlabeled divider, except at the head of the list or when
    * `groupDividers` is false. A client source merges every row of a key into one group; a
    * source that pages groups consecutive rows, so a later page only extends the last group or
    * adds new ones, and a key that comes back starts another group.
    */
-  groupBy?: string | ((item: SelectRecord, config: SelectConfig) => SelectId);
+  groupBy?: string | ((record: SelectRecord, config: SelectConfig) => SelectId);
 
   /**
    * Whether a group without a header gets a divider before it. Defaults to true; false groups
@@ -674,12 +645,12 @@ export interface SelectEngineInit {
   groupDividers?: boolean;
 
   /**
-   * `(key, rows, options) => text | actionRow | null` builds a group's header. Text renders a
-   * presentational header; an item with `onSelect` renders a navigable action row. A group
-   * with no header of either kind gets an unlabeled divider instead (see `groupDividers`).
-   * `rows` are the group's surviving rows, frozen; for the last group of a source
-   * that pages, the rows loaded so far. Runs during render, so it must be pure, and it must
-   * return nullish for an `undefined` key.
+   * `(key, options, config) => text | actionOption | null` builds a group's header. Text renders
+   * a presentational header; an action option renders a navigable action row. A group with no
+   * header of either kind gets an unlabeled divider instead (see `groupDividers`). `options` are
+   * the group's surviving options, frozen; for the last group of a source that pages, the
+   * options loaded so far. Runs during render, so it must be pure, and it must return nullish
+   * for an `undefined` key.
    */
   groupHeader?: SelectGroupBoundaryBuilder;
 
@@ -767,9 +738,9 @@ class EngineControl implements SelectControl {
     }
   }
 
-  deselect(item: SelectRecord): void {
+  deselect(entry: SelectOptionLike): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.deselect(item, { programmatic: true });
+      this.#engine.deselect(entry, { programmatic: true });
     }
   }
 
@@ -780,16 +751,16 @@ class EngineControl implements SelectControl {
     }
   }
 
-  select(item: SelectRecord): void {
+  select(entry: SelectOptionLike): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.select(item, { programmatic: true });
+      this.#engine.select(entry, { programmatic: true });
     }
   }
 
   /** Adds a batch while the select is alive. */
-  selectMany(items: readonly SelectRecord[]): void {
+  selectMany(entries: readonly SelectOptionLike[]): void {
     if (!isDestroying(this.#engine)) {
-      this.#engine.selectMany(items, { programmatic: true });
+      this.#engine.selectMany(entries, { programmatic: true });
     }
   }
 
@@ -817,7 +788,7 @@ class EngineControl implements SelectControl {
 export default class SelectEngine {
   #state = new SelectState();
 
-  // Fires the `@items`+`@load` misconfiguration warning at most once per engine.
+  // Fires the `@options`+`@load` misconfiguration warning at most once per engine.
   #dualSourceWarned = false;
 
   #args: SelectArgsView;
@@ -857,7 +828,7 @@ export default class SelectEngine {
     this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
       args: this.#args,
-      knownRows: () => this.#source.knownRows(),
+      knownRecords: () => this.#source.knownRecords(),
     });
     this.#selectionActions = new SelectionActions({
       args: this.#args,
@@ -866,7 +837,8 @@ export default class SelectEngine {
       onIntent: (origin) => this.#selectionUpdates.handleIntent(origin),
       beforeEmit: (origin, value) =>
         this.#selectionUpdates.prepareEmit(origin, value),
-      runActionItem: (item) => item.onSelect!(this.#control, item),
+      runAction: (option) =>
+        option.settings.onSelect!(this.#control, option.record),
       getExtensionContext: () => ({
         ...this.#extensionContext(),
         control: this.#control,
@@ -885,18 +857,19 @@ export default class SelectEngine {
     registerDestructor(this, () => this.#selectionUpdates.supersede());
     this.#listComposer = new ListComposer({
       args: this.#args,
-      applyContent: (items, context) =>
-        this.#customizations.applyContent(items, context),
+      applyContent: (records, context) =>
+        this.#customizations.applyContent(records, context),
       getFilter: () => this.#state.filter,
       getValue: () => this.value,
       getHasValue: () => this.hasValue,
-      isSelected: (item) => this.isSelected(item),
+      isSelected: (entry) => this.isSelected(entry),
       isLockedValue: (value) => this.isLockedValue(value),
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
-      applyLegacyContent: (items) => applyLegacySelectKitContent(this, items),
+      applyLegacyContent: (records) =>
+        applyLegacySelectKitContent(this, records),
       getContentContext: () => ({
         ...this.#extensionContext(),
         control: this.#control,
@@ -907,11 +880,13 @@ export default class SelectEngine {
           resolveLoad: (filter) => this.#resolveLoad(filter),
           state: this.#state,
           getMaxLoaded: () => this.#args.maxLoaded,
-          keyOf: (item) => this.#args.valueKey(this.#args.recordValue(item)),
+          keyOf: (option) =>
+            this.#args.valueKey(this.#args.recordValue(option.record)),
+          wrap: (entries) => this.#args.wrapPage(entries),
         })
       : new LocalSource({
-          filtered: () => this.filteredItems,
-          all: () => localItems(this.#args),
+          filtered: () => this.filteredOptions,
+          all: () => localOptions(this.#args),
         });
     this.#customizations = new SelectCustomizations(
       {
@@ -926,7 +901,7 @@ export default class SelectEngine {
     );
     this.#args.attachResolvedOptions(() => this.config);
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
-    // check also runs per load for a live `items` source that turns non-empty later.
+    // check also runs per load for a live `options` source that turns non-empty later.
     this.#assertSingleSource();
     // Checked here, during render, because the resolver's own check runs inside an async
     // data source that turns a throw into a rejection instead of failing the render.
@@ -982,7 +957,7 @@ export default class SelectEngine {
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,
-        noneRow: args.noneRow,
+        noneOption: args.noneOption ?? this.#args.noneOptionDefault,
         loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
@@ -1139,39 +1114,38 @@ export default class SelectEngine {
    * changes when the filter, reload nonce, reveal cursor, or the effective local items
    * change, which is what makes the list re-fetch.
    *
-   * `items` is read synchronously here on purpose: a client source that changes must restart
+   * `options` is read synchronously here on purpose: a client source that changes must restart
    * the list even on the debounced path, where the async function runs outside the cached
    * computation and so cannot autotrack the source itself. Reading it in this `@cached` getter
-   * folds the items dependency into the context identity. Empty (and cheap) for a server source.
+   * folds the options dependency into the context identity. Empty (and cheap) for a server
+   * source.
    */
   @cached
   get loadContext(): {
     filter: string;
     nonce: number;
     reveal: number;
-    items: readonly SelectRecord[];
+    options: readonly SelectOption[];
   } {
     return {
       filter: this.#state.filter,
       nonce: this.#state.nonce,
       reveal: this.#source.revealToken(),
-      items: this.#source.reactiveItems(),
+      options: this.#source.reactiveOptions(),
     };
   }
 
   /**
    * The client list after `filterBy`. Deriving this is the engine's job, so it is exposed
-   * rather than recomputed by each caller — and it is `@cached` so `total` and `loadItems`
+   * rather than recomputed by each caller — and it is `@cached` so `total` and `loadOptions`
    * share one filter pass per render instead of each walking the list again. Empty for a
    * server source.
    */
   @cached
-  get filteredItems(): readonly SelectRecord[] {
-    // Copied AND frozen. With no filter `filterLocal` passes the consumer's own array
-    // straight through, and `readonly` is erased at runtime — but copying alone is not
-    // enough either, because `@cached` hands the same array to every reader in the render,
-    // so mutating it would corrupt what the engine itself reads next. Matches `buildItems`,
-    // which also yields a frozen projection.
+  get filteredOptions(): readonly SelectOption[] {
+    // Copied AND frozen: `@cached` hands the same array to every reader in the render, so
+    // mutating it would corrupt what the engine itself reads next. Matches `buildRows`, which
+    // also yields a frozen projection.
     return Object.freeze([...filterLocal(this.#args, this.#state.filter)]);
   }
 
@@ -1287,12 +1261,12 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether an item is currently selected, comparing its `valueField` id against the
-   * controlled value.
+   * Whether a record or option is currently selected, comparing its record's `valueField` id
+   * against the controlled value. The none option is selected while nothing is held.
    */
   @bind
-  isSelected(item: SelectRecord): boolean {
-    return this.#selectionActions.isSelected(item);
+  isSelected(entry: SelectOptionLike): boolean {
+    return this.#selectionActions.isSelected(entry);
   }
 
   /**
@@ -1300,13 +1274,13 @@ export default class SelectEngine {
    * list or the accumulated server pages, bounded by `maxLoaded` when configured.
    *
    * @param _context - Reactivity trigger only; unused.
-   * @returns Items, or a promise of items.
+   * @returns Options, or a promise of options.
    */
   @bind
-  loadItems(
+  loadOptions(
     _context: unknown,
     opts: SelectLoadRequest = {}
-  ): SelectRecord[] | Promise<SelectRecord[]> {
+  ): SelectOption[] | Promise<SelectOption[]> {
     this.#assertSingleSource();
     return this.#source.rows(opts);
   }
@@ -1322,36 +1296,43 @@ export default class SelectEngine {
   }
 
   /**
-   * Builds the final rendered item list from the source's resolved items: applies
-   * content customizations, groups the options, and prepends special and create items.
+   * Builds the rendered rows from the source's options: applies content customizations, groups
+   * the options, and adds the extra and create options.
    *
-   * @param rawItems - The items resolved by the source.
-   * @param filter - The query that produced these rows, retained for create checks during a reload.
-   * @returns The frozen list of normalized descriptors to render.
+   * @param options - The options the source resolved; a bare record is an option with no settings.
+   * @param filter - The query that produced them, retained for create checks during a reload.
+   * @returns The frozen rows to render.
    */
   @bind
-  buildItems(
-    rawItems: SelectRecord[] = [],
+  buildRows(
+    options: readonly SelectOptionLike[] = [],
     filter = this.filter
-  ): readonly SelectDescriptor[] {
-    return this.#listComposer.buildItems(rawItems, filter);
+  ): readonly SelectRow[] {
+    // The source's options arrive wrapped and unique; only a bare record still needs wrapping,
+    // so a growing list is never re-keyed on every build.
+    return this.#listComposer.buildRows(
+      options.map((entry) => this.#args.wrapEntry(entry)),
+      filter
+    );
   }
 
   /**
-   * Normalizes arbitrary items into the frozen descriptor shape used for rendering.
+   * Rows for held records, as the trigger and chips draw them.
    *
-   * @param items - The items to normalize.
+   * @param records - The held records.
    */
   @bind
-  describeItems(items: SelectRecord[]): readonly SelectDescriptor[] {
-    return this.#listComposer.describeItems(items);
+  describeRecords(records: SelectRecord[]): readonly SelectRow[] {
+    return this.#listComposer.describeRecords(records, (record) =>
+      this.isUnresolvedRecord(record)
+    );
   }
 
   /**
    * Resolves a value to its display item(s) for the trigger `DAsyncContent`. Returns
    * synchronously (no skeleton) when every id is covered by `valueRecords`,
    * the resolve cache, or the client list; otherwise returns a promise. A held id that
-   * cannot resolve maps to a synthetic `__unresolved` fallback (never `undefined`, never a
+   * cannot resolve maps to a synthetic unresolved fallback (never `undefined`, never a
    * rejection, whether the resolver throws or rejects); only an empty value (null single /
    * empty multi) yields `undefined`, so the trigger shows its placeholder.
    *
@@ -1380,7 +1361,7 @@ export default class SelectEngine {
   }
 
   /**
-   * The item to display for a single value without awaiting — including the `__unresolved`
+   * The item to display for a single value without awaiting — including the unresolved
    * fallback once an attempt has failed, so a trigger can tell "failed" (render the
    * fallback) from "still resolving" (`undefined`, render nothing).
    *
@@ -1405,7 +1386,11 @@ export default class SelectEngine {
    */
   @bind
   getSelectionLabel(item: SelectRecord | null | undefined): string {
-    if (item?.__unresolved && !this.isCustomUnresolvedRecord(item)) {
+    if (
+      item &&
+      this.isUnresolvedRecord(item) &&
+      !this.isCustomUnresolvedRecord(item)
+    ) {
       return this.text("unresolvedValue", {
         value: String(item[this.#args.valueField] ?? ""),
       });
@@ -1426,13 +1411,24 @@ export default class SelectEngine {
    * so classes and titles cannot leak between rows or renders.
    */
   @bind
-  rowPresentation(descriptor: SelectDescriptor): SelectRowPresentation {
+  rowPresentation(row: SelectRow): SelectRowPresentation {
     return this.#customizations.applyRow({
-      item: descriptor.item,
-      selected: descriptor.flags.selected,
-      disabled: descriptor.flags.disabled,
+      item: row.record,
+      selected: row.flags.selected,
+      disabled: row.flags.disabled,
       ...this.#extensionContext(),
     });
+  }
+
+  /**
+   * Whether a record is the engine's fallback for a held value that could not be resolved. Only
+   * the engine's own copies are; no field on a record can make it one.
+   *
+   * @param record - The record to test.
+   */
+  @bind
+  isUnresolvedRecord(record: SelectRecord): boolean {
+    return this.#valueResolver.isUnresolvedRecord(record);
   }
 
   /**
@@ -1442,7 +1438,7 @@ export default class SelectEngine {
    * does not. Identity-based, so a builder that throws — caught, yielding the default — is
    * correctly reported as NOT custom.
    *
-   * @param item - The item to test; only meaningful for an `__unresolved` fallback.
+   * @param item - The record to test; only meaningful for an unresolved fallback.
    */
   isCustomUnresolvedRecord(item: SelectRecord): boolean {
     return this.#valueResolver.isCustomUnresolvedRecord(item);
@@ -1463,48 +1459,52 @@ export default class SelectEngine {
   }
 
   /**
-   * Activates an item: runs its `onSelect` callback if present (an action item that
-   * never becomes a value and does not close the overlay), otherwise toggles it.
+   * Activates an option: runs its `onSelect` if it is an action (which never becomes a value
+   * and does not close the overlay), otherwise toggles its record.
    */
   @bind
-  activate(item: SelectRecord): void {
-    this.#selectionActions.activate(item);
+  activate(entry: SelectOptionLike): void {
+    this.#selectionActions.activate(entry);
   }
 
   /**
-   * Toggles an item: for multi, selects or deselects; for single, selects it.
+   * Toggles a record: for multi, selects or deselects; for single, selects it.
    */
   @bind
-  toggle(item: SelectRecord): void {
-    this.#selectionActions.toggle(item);
+  toggle(entry: SelectOptionLike): void {
+    this.#selectionActions.toggle(entry);
   }
 
   /**
-   * Selects an item: caches it for synchronous display, computes the next value, and
-   * emits `onChange`. For single-select it also requests the overlay to close (when
+   * Selects a record: caches it for synchronous display, computes the next value, and emits
+   * `onChange`. An option passed instead is honoured: a disabled one selects nothing, and an
+   * action can't be selected. For single-select it also requests the overlay to close (when
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
   @bind
-  select(item: SelectRecord, origin?: SelectionOrigin): void {
-    this.#selectionActions.select(item, origin);
+  select(entry: SelectOptionLike, origin?: SelectionOrigin): void {
+    this.#selectionActions.select(entry, origin);
   }
 
   /**
-   * Adds eligible items with one middleware run and emit, up to the remaining capacity.
-   * Skips held, duplicate, disabled, action and structural items. Single-select picks
-   * the first new eligible item. Even an empty batch supersedes older update intent.
+   * Adds eligible entries with one middleware run and emit, up to the remaining capacity.
+   * Skips held, duplicate, disabled, action and structural options. Single-select picks the
+   * first new eligible one. Even an empty batch supersedes older update intent.
    */
   @bind
-  selectMany(items: readonly SelectRecord[], origin?: SelectionOrigin): void {
-    this.#selectionActions.selectMany(items, origin);
+  selectMany(
+    entries: readonly SelectOptionLike[],
+    origin?: SelectionOrigin
+  ): void {
+    this.#selectionActions.selectMany(entries, origin);
   }
 
   /**
-   * Removes an item from the selection (emits the next value).
+   * Removes a record from the selection (emits the next value).
    */
   @bind
-  deselect(item: SelectRecord, origin?: SelectionOrigin): void {
-    this.#selectionActions.deselect(item, origin);
+  deselect(entry: SelectOptionLike, origin?: SelectionOrigin): void {
+    this.#selectionActions.deselect(entry, origin);
   }
 
   /** Removes the last held value from a multi-select selection. */
@@ -1539,14 +1539,14 @@ export default class SelectEngine {
 
   /**
    * The paste parser a multi-select uses when the call site passes none. Two or more
-   * `|`-separated names are matched against the rows the source knows, by value or by label
-   * ignoring case, and a name with no row is created where creation is allowed. Anything else
-   * is left to the browser.
+   * `|`-separated names are matched against the options the source knows, by value or by label
+   * ignoring case, and a name with no option is created where creation is allowed. A name that
+   * matches a disabled or action option adds nothing. Anything else is left to the browser.
    *
    * @param text - The pasted plain text.
    */
   @bind
-  parsePaste(text: string): SelectRecord[] | null {
+  parsePaste(text: string): SelectOption[] | null {
     const names = text
       .split("|")
       .map((name) => name.trim())
@@ -1554,32 +1554,37 @@ export default class SelectEngine {
     if (names.length < 2) {
       return null;
     }
-    const options = this.#args;
-    const rows = this.#source.knownRows().filter((row) => !row.onSelect);
-    const allowCreate = options.allowCreate;
+    const args = this.#args;
+    const known = this.#source.knownOptions();
+    const records = known.map((option) => option.record);
+    const allowCreate = args.allowCreate;
     return names
       .map((name) => {
         const term = name.toLowerCase();
-        const row =
-          rows.find(
-            (item) => options.valueKey(options.recordValue(item)) === name
+        const match =
+          known.find(
+            (option) => args.valueKey(args.recordValue(option.record)) === name
           ) ??
-          rows.find(
-            (item) =>
-              String(options.recordLabel(item) ?? "").toLowerCase() === term
+          known.find(
+            (option) =>
+              String(args.recordLabel(option.record) ?? "").toLowerCase() ===
+              term
           );
-        if (row) {
-          return row;
+        if (match) {
+          return match;
         }
         const creates =
           typeof allowCreate === "function"
-            ? allowCreate(name, rows, this.config)
+            ? allowCreate(name, records, this.config)
             : !!allowCreate;
-        return creates && options.createItem
-          ? options.createItem(name, this.config)
+        return creates && args.createOption
+          ? args.wrapEntry(args.createOption(name, this.config))
           : undefined;
       })
-      .filter((item): item is SelectRecord => item !== undefined);
+      .filter(
+        (option): option is SelectOption =>
+          option !== undefined && !option.disabled && !option.action
+      );
   }
 
   /**
@@ -1687,9 +1692,9 @@ export default class SelectEngine {
       });
   }
 
-  // `items` and `load` are mutually exclusive; the construction-time source kind wins.
+  // `options` and `load` are mutually exclusive; the construction-time source kind wins.
   // Warns once when both are supplied — checked here rather than only in the constructor
-  // because a live `items` source can turn non-empty after construction.
+  // because a live `options` source can turn non-empty after construction.
   #assertSingleSource(): void {
     if (this.#dualSourceWarned || !this.#args.isAsync) {
       return;
@@ -1698,15 +1703,15 @@ export default class SelectEngine {
     // options reads the recipe's context and presentation arguments, and a change to any of them
     // would cancel the page in flight.
     const local = untrack(() =>
-      typeof this.#args.items === "function"
-        ? this.#args.items(this.config)
-        : this.#args.items
+      typeof this.#args.options === "function"
+        ? this.#args.options(this.config)
+        : this.#args.options
     );
-    if (local != null && (makeArray(local) as SelectRecord[]).length > 0) {
+    if (local != null && (makeArray(local) as unknown[]).length > 0) {
       this.#dualSourceWarned = true;
       // eslint-disable-next-line no-console
       console.warn(
-        "DSelect: `@items` and `@load` are mutually exclusive; `@load` takes precedence and `@items` is ignored."
+        "DSelect: `@options` and `@load` are mutually exclusive; `@load` takes precedence and `@options` is ignored."
       );
     }
   }

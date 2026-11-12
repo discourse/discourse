@@ -8,7 +8,34 @@ import type {
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectChangeContext } from "./customizations.ts";
 import type SelectArgsView from "./select-args.ts";
+import {
+  entryRecord,
+  isSelectOption,
+  optionKind,
+  type SelectOption,
+  type SelectOptionLike,
+} from "./select-option.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
+
+/** The option an entry was passed as, if it was one. A bare record has no settings. */
+function optionOf(entry: SelectOptionLike): SelectOption | undefined {
+  return isSelectOption(entry) ? (entry as SelectOption) : undefined;
+}
+
+/** Whether an option can become a value: not disabled, not an action, not a drawn line. */
+function isPickable(option: SelectOption | undefined): boolean {
+  if (!option) {
+    return true;
+  }
+  const kind = optionKind(option);
+  return (
+    !option.disabled &&
+    !option.action &&
+    kind !== "text-header" &&
+    kind !== "text-footer" &&
+    kind !== "divider"
+  );
+}
 
 /** The held locked keys, and why the input breaks the contract when it does. */
 type LockedKeys = {
@@ -27,7 +54,7 @@ export default class SelectionActions {
     origin: SelectionOrigin | undefined,
     value: SelectValue
   ) => boolean;
-  #runActionItem: (item: SelectRecord) => void;
+  #runAction: (option: SelectOption) => void;
   #cacheResolved: (item: SelectRecord | null | undefined) => void;
   #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
   #applyLegacyOnChange: (
@@ -49,7 +76,7 @@ export default class SelectionActions {
       origin: SelectionOrigin | undefined,
       value: SelectValue
     ) => boolean;
-    runActionItem: (item: SelectRecord) => void;
+    runAction: (option: SelectOption) => void;
     cacheResolved: (item: SelectRecord | null | undefined) => void;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
     applyLegacyOnChange: (
@@ -66,7 +93,7 @@ export default class SelectionActions {
     this.#args = opts.args;
     this.#onIntent = opts.onIntent;
     this.#beforeEmit = opts.beforeEmit;
-    this.#runActionItem = opts.runActionItem;
+    this.#runAction = opts.runAction;
     this.#cacheResolved = opts.cacheResolved;
     this.#resolveOneSync = opts.resolveOneSync;
     this.#applyLegacyOnChange = opts.applyLegacyOnChange;
@@ -251,17 +278,17 @@ export default class SelectionActions {
   }
 
   /**
-   * Whether an item is currently selected, comparing its `valueField` id against the
-   * controlled value.
+   * Whether a record or option is currently selected, comparing its record's `valueField` id
+   * against the controlled value.
    */
-  isSelected(item: SelectRecord): boolean {
-    // The "none" row stands in for the empty selection, so it reads as selected exactly when
+  isSelected(entry: SelectOptionLike): boolean {
+    // The none option stands in for the empty selection, so it reads as selected exactly when
     // nothing else is. Single-select only, and resolved before the key lookup — its value is
     // `null`, which the comparison below would otherwise reject as unselectable.
-    if (item.__none && !this.#args.multiple) {
+    if (optionOf(entry)?.none && !this.#args.multiple) {
       return !this.hasValue;
     }
-    const key = this.#args.valueKey(this.#args.recordValue(item));
+    const key = this.#args.valueKey(this.#args.recordValue(entryRecord(entry)));
     if (key == null) {
       return false;
     }
@@ -271,42 +298,50 @@ export default class SelectionActions {
   }
 
   /**
-   * Activates an item: runs its `onSelect` callback if present (an action item that
-   * never becomes a value and does not close the overlay), otherwise toggles it.
+   * Activates an option: runs its `onSelect` if it is an action (which never becomes a value
+   * and does not close the overlay), otherwise toggles its record.
    */
-  activate(item: SelectRecord): void {
-    if (typeof item?.onSelect === "function") {
-      this.#runActionItem(item);
+  activate(entry: SelectOptionLike): void {
+    const option = optionOf(entry);
+    if (option?.action) {
+      this.#runAction(option);
       return;
     }
-    this.toggle(item);
+    this.toggle(entry);
   }
 
   /**
-   * Toggles an item: for multi, selects or deselects; for single, selects it.
+   * Toggles a record: for multi, selects or deselects; for single, selects it.
    */
-  toggle(item: SelectRecord): void {
+  toggle(entry: SelectOptionLike): void {
     if (this.#args.locked) {
       return;
     }
-    if (this.#args.multiple && this.isSelected(item)) {
-      this.deselect(item);
+    if (this.#args.multiple && this.isSelected(entry)) {
+      this.deselect(entry);
     } else {
-      this.select(item);
+      this.select(entry);
     }
   }
 
   /**
-   * Selects an item: caches it for synchronous display, computes the next value, and
-   * emits `onChange`. For single-select it also requests the overlay to close (when
+   * Selects a record: caches it for synchronous display, computes the next value, and emits
+   * `onChange`. An option passed instead is honoured: a disabled one selects nothing, and an
+   * action can't be selected. For single-select it also requests the overlay to close (when
    * `closeOnSelect`). Never mutates the value — the parent does, via `onChange`.
    */
-  select(item: SelectRecord, origin?: SelectionOrigin): void {
+  select(entry: SelectOptionLike, origin?: SelectionOrigin): void {
+    const option = optionOf(entry);
+    assert(
+      "DSelect: an action option runs its `onSelect` when picked; it can't be selected as a value.",
+      !option?.action
+    );
     this.#onIntent(origin);
-    if (this.#args.locked) {
+    if (this.#args.locked || option?.disabled) {
       return;
     }
-    if (this.isSelected(item)) {
+    const item = entryRecord(entry);
+    if (this.isSelected(entry)) {
       if (origin) {
         this.#args.onReconfirm?.(item, origin);
       }
@@ -340,7 +375,10 @@ export default class SelectionActions {
   }
 
   /** Adds a batch without losing its update authority during middleware or deferred emits. */
-  selectMany(items: readonly SelectRecord[], origin?: SelectionOrigin): void {
+  selectMany(
+    entries: readonly SelectOptionLike[],
+    origin?: SelectionOrigin
+  ): void {
     this.#onIntent(origin);
     if (this.#args.locked) {
       return;
@@ -351,16 +389,11 @@ export default class SelectionActions {
     let held = 0;
     let limit = 0;
     const remaining = this.remaining;
-    for (const item of items) {
-      if (
-        item.disabled ||
-        item.onSelect ||
-        item.__header ||
-        item.__footer ||
-        item.__divider
-      ) {
+    for (const entry of entries) {
+      if (!isPickable(optionOf(entry))) {
         continue;
       }
+      const item = entryRecord(entry);
       const key = this.#args.valueKey(this.#args.recordValue(item));
       if (key == null) {
         continue;
@@ -402,21 +435,21 @@ export default class SelectionActions {
   }
 
   /**
-   * Removes an item from the selection (emits the next value).
+   * Removes a record from the selection (emits the next value).
    */
-  deselect(item: SelectRecord, origin?: SelectionOrigin): void {
+  deselect(entry: SelectOptionLike, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
     if (this.#args.locked) {
       return;
     }
     if (!this.#args.multiple) {
-      if (origin && !this.isSelected(item)) {
+      if (origin && !this.isSelected(entry)) {
         return;
       }
       this.#emitChange(null, origin);
       return;
     }
-    const value = this.#args.recordValue(item);
+    const value = this.#args.recordValue(entryRecord(entry));
     if (this.isLockedValue(value)) {
       return;
     }

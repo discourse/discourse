@@ -1,53 +1,63 @@
 import { tracked } from "@glimmer/tracking";
-import { makeArray } from "discourse/lib/helpers";
+import { assert } from "@ember/debug";
 import type {
   SelectEngineInit,
   SelectLoadRequest,
-  SelectLoadResponse,
   SelectLoadResult,
   SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
+import { assertOptionsList } from "./select-args.ts";
+import type { SelectOption, SelectOptionLike } from "./select-option.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
 
+/** A page as the source holds it: options, with the paging facts the loader declared. */
+interface SelectLoadedPage {
+  options: readonly SelectOption[];
+  total?: number;
+  hasMore?: boolean;
+  cursor?: unknown;
+}
+
 /**
- * The full client-side item set (empty for a server source), used both for local
- * filtering and to resolve a value's display item without a fetch.
+ * The full client-side option set (empty for a server source), used both for local
+ * filtering and to resolve a value's record without a fetch.
  */
-export function localItems(args: SelectArgsView): SelectRecord[] {
+export function localOptions(args: SelectArgsView): readonly SelectOption[] {
   if (args.isAsync) {
     return [];
   }
-  // `makeArray` normalizes whatever the source yields — a thunk that returns null, or a
-  // non-array value — into a real array, so downstream array reads never see a non-array.
   const resolved =
-    typeof args.items === "function" ? args.items(args.config) : args.items;
-  return makeArray(resolved) as SelectRecord[];
+    typeof args.options === "function"
+      ? args.options(args.config)
+      : args.options;
+  assertOptionsList(resolved);
+  return args.wrapEntries(resolved);
 }
 
 /** The client list after `filterBy` — the one filter pass a `LocalSource` answers with. */
 export function filterLocal(
   args: SelectArgsView,
   filter: string
-): SelectRecord[] {
-  const all = localItems(args);
+): readonly SelectOption[] {
+  const all = localOptions(args);
   if (!filter) {
     return all;
   }
   const term = filter.toLowerCase();
-  return all.filter((item) => matchesFilter(args, item, term));
+  return all.filter((option) => matchesFilter(args, option.record, term));
 }
 
 function matchesFilter(
   args: SelectArgsView,
-  item: SelectRecord,
+  record: SelectRecord,
   term: string
 ): boolean {
   if (typeof args.filterBy === "function") {
-    return args.filterBy(item, term, args.config);
+    return args.filterBy(record, term, args.config);
   }
   const field = args.filterBy ?? args.labelField;
-  return String(item?.[field] ?? "")
+  return String(record?.[field] ?? "")
     .toLowerCase()
     .includes(term);
 }
@@ -125,7 +135,7 @@ export interface SelectSource {
   answersSynchronously(): boolean;
   /** Records a rendered source's transformed option count, built from `input` raw rows. */
   noteVisible(visible: number, input: number): void;
-  rows(opts: SelectLoadRequest): SelectRecord[] | Promise<SelectRecord[]>;
+  rows(opts: SelectLoadRequest): SelectOption[] | Promise<SelectOption[]>;
   total(): number | undefined;
   canRevealMore(): boolean;
   /** Whether later rows may still arrive for this query, whether or not a page is in flight. */
@@ -136,26 +146,29 @@ export interface SelectSource {
   revealPending(): boolean;
   queryPending(): boolean;
   revealMore(): boolean;
-  knownRows(): SelectRecord[];
+  /** The options the source holds now, for resolving values and parsing pastes. */
+  knownOptions(): readonly SelectOption[];
+  /** The records behind {@link knownOptions}. */
+  knownRecords(): SelectRecord[];
   reset(): void;
   revealToken(): number;
-  reactiveItems(): readonly SelectRecord[];
+  reactiveOptions(): readonly SelectOption[];
 }
 
 export class LocalSource implements SelectSource {
-  #filtered: () => readonly SelectRecord[];
-  #all: () => SelectRecord[];
+  #filtered: () => readonly SelectOption[];
+  #all: () => readonly SelectOption[];
 
   constructor(opts: {
-    filtered: () => readonly SelectRecord[];
-    all: () => SelectRecord[];
+    filtered: () => readonly SelectOption[];
+    all: () => readonly SelectOption[];
   }) {
     this.#filtered = opts.filtered;
     this.#all = opts.all;
   }
 
-  rows(): SelectRecord[] {
-    return this.#filtered() as SelectRecord[];
+  rows(): SelectOption[] {
+    return this.#filtered() as SelectOption[];
   }
 
   answersSynchronously(): boolean {
@@ -201,8 +214,12 @@ export class LocalSource implements SelectSource {
     return false;
   }
 
-  knownRows(): SelectRecord[] {
+  knownOptions(): readonly SelectOption[] {
     return this.#all();
+  }
+
+  knownRecords(): SelectRecord[] {
+    return this.#all().map((option) => option.record);
   }
 
   reset(): void {}
@@ -211,7 +228,7 @@ export class LocalSource implements SelectSource {
     return 0;
   }
 
-  reactiveItems(): readonly SelectRecord[] {
+  reactiveOptions(): readonly SelectOption[] {
     return this.#all();
   }
 }
@@ -223,9 +240,10 @@ export class PagedSource implements SelectSource {
   /** Resolves the source for the first request of each query. */
   #resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
   #state: SelectState;
-  #keyOf: (item: SelectRecord) => string | null;
+  #keyOf: (option: SelectOption) => string | null;
+  #wrap: (entries: readonly SelectOptionLike[]) => readonly SelectOption[];
   #getMaxLoaded: () => number | undefined;
-  #serverItems: SelectRecord[] = [];
+  #serverOptions: SelectOption[] = [];
   #serverKeys = new Set<string>();
   #serverOffset = 0;
   #serverCursor?: unknown;
@@ -260,13 +278,16 @@ export class PagedSource implements SelectSource {
     /** Resolves a query's loader outside render, when its first request starts. */
     resolveLoad: (filter: string) => NonNullable<SelectEngineInit["load"]>;
     state: SelectState;
-    keyOf: (item: SelectRecord) => string | null;
+    keyOf: (option: SelectOption) => string | null;
+    /** Wraps a page's entries as options when it arrives. */
+    wrap: (entries: readonly SelectOptionLike[]) => readonly SelectOption[];
     /** Reads the optional server row ceiling. */
     getMaxLoaded?: () => number | undefined;
   }) {
     this.#resolveLoad = opts.resolveLoad;
     this.#state = opts.state;
     this.#keyOf = opts.keyOf;
+    this.#wrap = opts.wrap;
     this.#getMaxLoaded = opts.getMaxLoaded ?? (() => undefined);
   }
 
@@ -279,8 +300,8 @@ export class PagedSource implements SelectSource {
     return JSON.stringify([filter, nonce, reveal]);
   }
 
-  rows(opts: SelectLoadRequest): SelectRecord[] | Promise<SelectRecord[]> {
-    return this.#loadServerItems(this.#state.filter, opts);
+  rows(opts: SelectLoadRequest): SelectOption[] | Promise<SelectOption[]> {
+    return this.#loadServerOptions(this.#state.filter, opts);
   }
 
   answersSynchronously(): boolean {
@@ -379,13 +400,17 @@ export class PagedSource implements SelectSource {
     return true;
   }
 
-  knownRows(): SelectRecord[] {
-    return this.#serverItems;
+  knownOptions(): readonly SelectOption[] {
+    return this.#serverOptions;
+  }
+
+  knownRecords(): SelectRecord[] {
+    return this.#serverOptions.map((option) => option.record);
   }
 
   /** Ignores retained rows both during a request and before its new rows reach the list. */
   noteVisible(visible: number, input: number): void {
-    if (this.#serverRequest || input !== this.#serverItems.length) {
+    if (this.#serverRequest || input !== this.#serverOptions.length) {
       return;
     }
     this.#visible = visible;
@@ -409,7 +434,7 @@ export class PagedSource implements SelectSource {
     // close, which restores the empty query) matches it again over discarded rows, and the reuse
     // short-circuit then answers `[]` synchronously with nothing left to re-ask.
     this.#state.serverSettledKey = null;
-    this.#serverItems = [];
+    this.#serverOptions = [];
     this.#serverKeys.clear();
     this.#serverOffset = 0;
     this.#serverCursor = undefined;
@@ -430,22 +455,22 @@ export class PagedSource implements SelectSource {
     return this.#state.reveal;
   }
 
-  reactiveItems(): readonly SelectRecord[] {
+  reactiveOptions(): readonly SelectOption[] {
     return [];
   }
 
-  #loadServerItems(
+  #loadServerOptions(
     filter: string,
     opts: SelectLoadRequest
-  ): SelectRecord[] | Promise<SelectRecord[]> {
+  ): SelectOption[] | Promise<SelectOption[]> {
     const maxLoaded = this.#getMaxLoaded();
     if (
       this.#serverRequest ||
       this.#state.serverExhausted ||
-      (maxLoaded != null && this.#serverItems.length >= maxLoaded) ||
+      (maxLoaded != null && this.#serverOptions.length >= maxLoaded) ||
       this.#state.serverSettledKey === this.#loadKey
     ) {
-      return this.#serverItems.slice(0, maxLoaded);
+      return this.#serverOptions.slice(0, maxLoaded);
     }
 
     const generation = this.#serverGeneration;
@@ -499,24 +524,24 @@ export class PagedSource implements SelectSource {
     key: string,
     generation: number,
     signal?: AbortSignal
-  ): Promise<SelectRecord[]> {
+  ): Promise<SelectOption[]> {
     let settled = false;
     try {
       const response = await request;
       if (signal?.aborted || generation !== this.#serverGeneration) {
-        return this.#serverItems.slice(0, this.#getMaxLoaded());
+        return this.#serverOptions.slice(0, this.#getMaxLoaded());
       }
 
-      const { items, total, hasMore, cursor } =
+      const { options, total, hasMore, cursor } =
         this.#unwrapLoadResult(response);
       const knownTotal = total ?? this.#state.serverTotal;
-      const before = this.#serverItems.length;
-      this.#serverPageSize ??= items.length || undefined;
-      const truncated = this.#appendServerItems(items);
-      this.#serverOffset += items.length;
+      const before = this.#serverOptions.length;
+      this.#serverPageSize ??= options.length || undefined;
+      const truncated = this.#appendServerOptions(options);
+      this.#serverOffset += options.length;
       this.#serverCursor = cursor;
       this.#serverPage++;
-      const added = this.#serverItems.length - before;
+      const added = this.#serverOptions.length - before;
 
       // Reachable only under `hasMore: true`, since silence now ends paging on its own. It is
       // the residual brake on a source that claims more forever: tolerating one barren page
@@ -526,7 +551,7 @@ export class PagedSource implements SelectSource {
       // Against *deduped* rows: the raw cursor outruns them whenever pages overlap, and
       // comparing it here would strand the tail.
       const ceilingReached =
-        knownTotal != null && this.#serverItems.length >= knownTotal;
+        knownTotal != null && this.#serverOptions.length >= knownTotal;
 
       // Silence means the set is complete, so only an affirmative signal buys another fetch.
       // An explicit `hasMore: false` is terminal whatever `total` says: a source may report 99
@@ -535,7 +560,7 @@ export class PagedSource implements SelectSource {
         hasMore === true ||
         (hasMore == null &&
           knownTotal != null &&
-          this.#serverItems.length < knownTotal);
+          this.#serverOptions.length < knownTotal);
 
       this.#state.serverTotal = knownTotal;
       // Silence is an assertion of completeness, so it may size the set. The extra guard is
@@ -547,10 +572,10 @@ export class PagedSource implements SelectSource {
       this.#state.serverTruncated = truncated;
       this.#state.serverExhausted =
         !moreDeclared || ceilingReached || this.#serverBarrenPages >= 2;
-      this.#state.serverLoadedCount = this.#serverItems.length;
+      this.#state.serverLoadedCount = this.#serverOptions.length;
       settled = true;
 
-      return this.#serverItems.slice(0, this.#getMaxLoaded());
+      return this.#serverOptions.slice(0, this.#getMaxLoaded());
     } finally {
       if (this.#serverRequest === request) {
         this.#serverRequest = undefined;
@@ -575,20 +600,20 @@ export class PagedSource implements SelectSource {
     }
   }
 
-  #appendServerItems(items: SelectRecord[]): boolean {
+  #appendServerOptions(options: readonly SelectOption[]): boolean {
     const maxLoaded = this.#getMaxLoaded();
-    for (const item of items) {
-      const key = this.#keyOf(item);
+    for (const option of options) {
+      const key = this.#keyOf(option);
       if (key != null && this.#serverKeys.has(key)) {
         continue;
       }
 
-      if (maxLoaded != null && this.#serverItems.length >= maxLoaded) {
+      if (maxLoaded != null && this.#serverOptions.length >= maxLoaded) {
         // One discarded unique row proves truncation without scanning the rest of the page.
         return true;
       }
 
-      this.#serverItems.push(item);
+      this.#serverOptions.push(option);
       if (key != null) {
         this.#serverKeys.add(key);
       }
@@ -597,7 +622,17 @@ export class PagedSource implements SelectSource {
     return false;
   }
 
-  #unwrapLoadResult(response: SelectLoadResult): SelectLoadResponse {
-    return Array.isArray(response) ? { items: response } : response;
+  #unwrapLoadResult(response: SelectLoadResult): SelectLoadedPage {
+    if (Array.isArray(response)) {
+      return { options: this.#wrap(response) };
+    }
+    assert(
+      "DSelect: a loader answers with records, or `{ options, total, hasMore, cursor }`; " +
+        "`{ items }` is the old shape.",
+      response == null ||
+        Array.isArray(response.options) ||
+        !("items" in (response as object))
+    );
+    return { ...response, options: this.#wrap(response?.options ?? []) };
   }
 }

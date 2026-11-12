@@ -15,9 +15,9 @@ export default class DefaultsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-defaults"
-      @items={{ACTIVITY_FILTERS}}
       @labelField="name"
       @onChange={{this.onChange}}
+      @options={{ACTIVITY_FILTERS}}
       @selectedIcon="check"
       @value={{this.value}}
     />

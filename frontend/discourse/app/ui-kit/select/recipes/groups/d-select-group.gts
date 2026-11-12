@@ -13,16 +13,18 @@ import DSelect, {
 } from "discourse/ui-kit/select/d-select";
 import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
-  groupFields,
+  groupFullName,
   GroupOption,
   type GroupShape,
   recordName,
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
-import type {
-  SelectCoreTexts,
-  SelectRecord,
-  SelectTexts,
-  SelectValue,
+import {
+  type SelectCoreTexts,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
+  type SelectTexts,
+  type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -61,17 +63,17 @@ interface DSelectGroupSignature {
     /** Ids of the only groups offered. */
     only?: readonly number[];
     /**
-     * Groups to offer instead of the site's, for a call site that loads its own list. The
-     * other filters still apply.
+     * Groups to offer instead of the site's, as records or options, for a call site that loads
+     * its own list. The other filters still apply, to action options too.
      */
-    items?: readonly GroupSource[];
+    options?: readonly SelectOptionLike<GroupSource>[];
     /** The picker's texts, over its defaults. */
     texts?: SelectCoreTexts;
     /** Receives the held ids or names: an array when multiple, otherwise one or `null`. */
     onChange?: (value: (number | string)[] | number | string | null) => void;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /** Group names are one option in any case, as the server matches them; ids are unaffected. */
@@ -96,23 +98,34 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
     assertNoRemovedTextArgs("DSelectGroup", args);
   }
 
+  /**
+   * The caller's groups, or the site's, as they are: a group describes itself with its full
+   * name, under the caller's own settings.
+   */
   @cached
-  get items(): SelectRecord[] {
+  get options(): SelectOption<GroupSource>[] {
     const exclude = new Set(this.args.exclude ?? []);
     const only = this.args.only ? new Set(this.args.only) : undefined;
-    const byName = this.args.emit === "names";
-    return (this.args.items ?? (this.site.groups as GroupSource[]))
+    return (this.args.options ?? (this.site.groups as GroupSource[]))
+      .map((entry) => selectOption(entry))
       .filter(
-        (group) =>
+        ({ record: group }) =>
           (this.args.automatic !== false || !group.automatic) &&
           (this.args.everyone !== false || group.name !== "everyone") &&
           !exclude.has(group.id!) &&
           (!only || only.has(group.id!))
       )
-      .map((group) => ({
-        id: byName ? group.name : group.id,
-        ...groupFields(group),
-      }));
+      .map((option) =>
+        option.with({
+          description: groupFullName(option.record),
+          ...option.settings,
+        })
+      );
+  }
+
+  /** Groups are held by id, or by name under `@emit="names"`. */
+  get valueField() {
+    return this.args.emit === "names" ? "name" : "id";
   }
 
   get legacyKind() {
@@ -149,7 +162,6 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
-      @items={{this.items}}
       @kind="select-group"
       @kindContext={{hash value=@value exclude=@exclude only=@only}}
       @kindTexts={{this.kindTexts}}
@@ -161,23 +173,25 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
       @normalizeKey={{caseInsensitiveKey}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
+      @options={{this.options}}
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selectedValue}}
+      @valueField={{this.valueField}}
       @variant={{@variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
-          <GroupOption @record={{item}} />
+          <GroupOption @option={{option}} @record={{record}} />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          {{recordName item}}
+          {{recordName record}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

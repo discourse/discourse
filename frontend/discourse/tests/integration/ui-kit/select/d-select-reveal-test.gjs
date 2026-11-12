@@ -48,7 +48,7 @@ module(
       // engine no longer bounds the client list (DVirtualList windows the DOM elsewhere).
       const items = buildItems(210);
 
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(<template><DSelect @options={{items}} /></template>);
       await openSelect();
 
       const options = findAll(OPTION_SELECTOR);
@@ -81,7 +81,7 @@ module(
     test("a fully rendered small client list keeps its set metadata", async function (assert) {
       const items = buildItems(3);
 
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(<template><DSelect @options={{items}} /></template>);
       await openSelect();
 
       assert
@@ -105,7 +105,7 @@ module(
       const announce = sinon.spy(a11y, "announce");
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
-        items: allItems.slice(offset, offset + 50),
+        options: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
@@ -154,7 +154,7 @@ module(
       );
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
-        items: allItems.slice(offset, offset + 50),
+        options: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
@@ -213,7 +213,7 @@ module(
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
           return Promise.resolve({
-            items: allItems.slice(0, 50),
+            options: allItems.slice(0, 50),
             total: allItems.length,
           });
         }
@@ -250,7 +250,10 @@ module(
         new KeyboardEvent("keydown", { key: "Escape", bubbles: true })
       );
 
-      releaseReveal({ items: allItems.slice(50, 100), total: allItems.length });
+      releaseReveal({
+        options: allItems.slice(50, 100),
+        total: allItems.length,
+      });
       await settled();
 
       await openSelect();
@@ -269,7 +272,7 @@ module(
     test("a filter change re-renders a client list without pinning a cap", async function (assert) {
       const items = buildItems(210);
 
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(<template><DSelect @options={{items}} /></template>);
       await openSelect();
       assert
         .dom(OPTION_SELECTOR)
@@ -313,14 +316,14 @@ module(
 
     test("the create row leads a set sized by what has loaded", async function (assert) {
       // A source actively mid-paging: it has told us more exists without saying how much.
-      const load = () => ({ items: buildItems(2), hasMore: true });
-      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      const load = () => ({ options: buildItems(2), hasMore: true });
+      const createOption = (filter) => ({ id: `new:${filter}`, name: filter });
 
       await render(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @debounce={{false}}
             @load={{load}}
           />
@@ -350,7 +353,7 @@ module(
     test("a partially-loaded server response reports the declared total as its set size", async function (assert) {
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
-        items: allItems.slice(offset, offset + 50),
+        options: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
@@ -383,8 +386,8 @@ module(
       const allItems = buildItems(5);
       const load = (_filter, { offset = 0 }) =>
         offset === 0
-          ? { items: allItems.slice(0, 3), hasMore: true }
-          : { items: allItems.slice(3, 5), hasMore: false };
+          ? { options: allItems.slice(0, 3), hasMore: true }
+          : { options: allItems.slice(3, 5), hasMore: false };
 
       await render(
         <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
@@ -426,8 +429,8 @@ module(
       const allItems = buildItems(5);
       const load = (_filter, { offset = 0 }) =>
         offset === 0
-          ? { items: allItems.slice(0, 3), hasMore: true }
-          : { items: allItems.slice(3, 5), hasMore: false };
+          ? { options: allItems.slice(0, 3), hasMore: true }
+          : { options: allItems.slice(3, 5), hasMore: false };
 
       await render(
         <template><EngineProbe @debounce={{false}} @load={{load}} /></template>
@@ -473,7 +476,7 @@ module(
       let engine;
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
-        items: allItems.slice(offset, offset + 50),
+        options: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
@@ -504,7 +507,7 @@ module(
       );
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
-        items: allItems.slice(offset, offset + 50),
+        options: allItems.slice(offset, offset + 50),
         total: allItems.length,
       });
 
@@ -544,7 +547,7 @@ module(
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
-          return { items: allItems.slice(0, 50), total: allItems.length };
+          return { options: allItems.slice(0, 50), total: allItems.length };
         }
 
         revealRequested = true;
@@ -588,7 +591,10 @@ module(
         "server reveal announces loading more through the a11y service"
       );
 
-      releaseReveal({ items: allItems.slice(50, 100), total: allItems.length });
+      releaseReveal({
+        options: allItems.slice(50, 100),
+        total: allItems.length,
+      });
       await settled();
 
       const busy = find("ul[role='listbox']").getAttribute("aria-busy");
@@ -628,7 +634,7 @@ module(
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
-          return { items: allItems.slice(0, 50), total: allItems.length };
+          return { options: allItems.slice(0, 50), total: allItems.length };
         }
         revealRequested = true;
         return revealPromise;
@@ -657,7 +663,7 @@ module(
         );
       } finally {
         releaseReveal({
-          items: allItems.slice(50, 100),
+          options: allItems.slice(50, 100),
           total: allItems.length,
         });
         await settled();
@@ -666,23 +672,22 @@ module(
 
     test("special and create rows keep flat positions around the source rows", async function (assert) {
       const items = buildItems(5);
-      const specialItems = () => [
+      const extraOptions = () => [
         { id: "all", name: "All items" },
         { id: "none", name: "No item" },
       ];
-      const createItem = (filter) => ({
+      const createOption = (filter) => ({
         id: `create-${filter}`,
         name: filter,
-        __create: true,
       });
 
       await render(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
-            @items={{items}}
-            @specialItems={{specialItems}}
+            @createOption={{createOption}}
+            @extraOptions={{extraOptions}}
+            @options={{items}}
           />
         </template>
       );
@@ -736,7 +741,7 @@ module(
       const items = buildItems(60);
       const trueCountMessage = i18n("d_select.results_count", { count: 60 });
 
-      await render(<template><EngineProbe @items={{items}} /></template>);
+      await render(<template><EngineProbe @options={{items}} /></template>);
       await openSelect();
 
       // Opening seeds a cursor, so the set size reaches the reader through the seeded row's own
@@ -778,7 +783,7 @@ module(
       const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
       const load = (_filter, { offset = 0 }) => {
         if (offset === 0) {
-          return { items: allItems.slice(0, 50), total: allItems.length };
+          return { options: allItems.slice(0, 50), total: allItems.length };
         }
         revealRequested = true;
         return revealPromise;
@@ -839,7 +844,7 @@ module(
         );
       } finally {
         releaseReveal({
-          items: allItems.slice(50, 100),
+          options: allItems.slice(50, 100),
           total: allItems.length,
         });
         await settled();
@@ -861,7 +866,7 @@ module(
       const items = buildItems(60);
       const message = i18n("d_select.results_count", { count: 60 });
 
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(<template><DSelect @options={{items}} /></template>);
       await openSelect();
       assert
         .dom(`${OPTION_SELECTOR}.--active`)
@@ -895,7 +900,7 @@ module(
       const load = () => {
         calls++;
         if (calls === 1) {
-          return { items: allItems.slice(0, 50), total: allItems.length };
+          return { options: allItems.slice(0, 50), total: allItems.length };
         }
         return new Promise((resolve) => (releaseQuery = resolve));
       };
@@ -923,7 +928,7 @@ module(
         "the retained previous rows are never announced as the new count"
       );
 
-      releaseQuery({ items: allItems.slice(0, 7), total: 7 });
+      releaseQuery({ options: allItems.slice(0, 7), total: 7 });
       await querying;
       await settled();
 
@@ -948,7 +953,7 @@ module(
         if (calls === 1) {
           // "Item 42" is unique in 1..500 only counting 42, 420-429 — take a small slice so the
           // outgoing list is short enough to be distinguishable from a viewport-filling default.
-          return { items: allItems.slice(0, 4), total: 4 };
+          return { options: allItems.slice(0, 4), total: 4 };
         }
         return new Promise((resolve) => (releaseQuery = resolve));
       };
@@ -970,7 +975,7 @@ module(
           "the skeleton matches the outgoing row count rather than filling the viewport"
         );
 
-      releaseQuery({ items: allItems.slice(0, 2), total: 2 });
+      releaseQuery({ options: allItems.slice(0, 2), total: 2 });
       await querying;
       await settled();
     });
@@ -981,7 +986,7 @@ module(
       const load = () => {
         calls++;
         if (calls === 1) {
-          return { items: [], total: 0 };
+          return { options: [], total: 0 };
         }
         return new Promise((resolve) => (releaseQuery = resolve));
       };
@@ -1005,7 +1010,7 @@ module(
           "an empty predecessor still gets a visible floor"
         );
 
-      releaseQuery({ items: buildItems(2), total: 2 });
+      releaseQuery({ options: buildItems(2), total: 2 });
       await querying;
       await settled();
     });
@@ -1017,7 +1022,7 @@ module(
       const load = () => {
         calls++;
         if (calls === 1) {
-          return { items: allItems.slice(0, 50), total: allItems.length };
+          return { options: allItems.slice(0, 50), total: allItems.length };
         }
         return new Promise((resolve) => (releaseQuery = resolve));
       };
@@ -1048,7 +1053,7 @@ module(
           "past the threshold no superseded row is left to click or arrow onto"
         );
 
-      releaseQuery({ items: allItems.slice(0, 7), total: 7 });
+      releaseQuery({ options: allItems.slice(0, 7), total: 7 });
       await querying;
       await settled();
 
@@ -1066,7 +1071,7 @@ class LoaderState {
 }
 
 function pageOf(items, offset) {
-  return { items: items.slice(offset, offset + 50), total: items.length };
+  return { options: items.slice(offset, offset + 50), total: items.length };
 }
 
 module("Integration | ui-kit | select | DSelect load timing", function (hooks) {
@@ -1290,7 +1295,7 @@ module(
       const load = () => {
         const items = pages[calls] ?? [];
         calls++;
-        return { items, hasMore: calls < pages.length };
+        return { options: items, hasMore: calls < pages.length };
       };
 
       await render(

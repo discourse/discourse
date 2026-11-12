@@ -6,6 +6,12 @@ import type {
   SelectPresentationArgs,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import {
+  isSelectOption,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
+} from "discourse/ui-kit/select/-internals/engine/select-option";
+import {
   renderSelectText,
   type SelectTexts,
 } from "discourse/ui-kit/select/-internals/engine/select-texts";
@@ -74,7 +80,16 @@ export default class SelectArgsView {
   // mid-flight, and the misconfiguration assert must not fire on it.
   #valueRecordsDeclared: boolean;
   #filterBy?: SelectEngineInit["filterBy"];
-  #items?: SelectEngineInit["items"];
+  #options?: SelectEngineInit["options"];
+
+  /** Each list the caller passed with the entries it was wrapped from, so it is wrapped again only when they change. */
+  #wrapped = new WeakMap<
+    readonly unknown[],
+    { entries: readonly unknown[]; options: readonly SelectOption[] }
+  >();
+
+  /** Records that looked like options which were never wrapped, warned about once per engine. */
+  #warnedUnwrapped = false;
   #load?: (
     filter: string,
     opts: SelectLoadRequest
@@ -92,9 +107,10 @@ export default class SelectArgsView {
   #resolveValues?: SelectEngineInit["resolveValues"];
   #readAllowCreate?: SelectEngineInit["getAllowCreate"];
   #allowCreate?: SelectEngineInit["allowCreate"];
-  #createItem?: SelectEngineInit["createItem"];
+  #createOption?: SelectEngineInit["createOption"];
   #createUnresolvedRecord?: SelectEngineInit["createUnresolvedRecord"];
-  #specialItems?: SelectEngineInit["specialItems"];
+  #extraOptions?: SelectEngineInit["extraOptions"];
+  #noneOption?: boolean;
   #groupBy?: SelectEngineInit["groupBy"];
   #groupDividers: boolean;
   #groupHeader?: SelectEngineInit["groupHeader"];
@@ -149,7 +165,8 @@ export default class SelectArgsView {
       typeof opts.groupBy !== "string" || opts.groupBy !== this.#valueField
     );
     this.#filterBy = opts.filterBy;
-    this.#items = opts.items;
+    this.#options = opts.options;
+    assertOptionsList(opts.options);
     this.#load = opts.load;
     this.#readValueRecords = opts.getValueRecords;
     this.#valueRecords = opts.valueRecords;
@@ -159,9 +176,10 @@ export default class SelectArgsView {
     this.#resolveValues = opts.resolveValues;
     this.#readAllowCreate = opts.getAllowCreate;
     this.#allowCreate = opts.allowCreate;
-    this.#createItem = opts.createItem;
+    this.#createOption = opts.createOption;
     this.#createUnresolvedRecord = opts.createUnresolvedRecord;
-    this.#specialItems = opts.specialItems;
+    this.#extraOptions = opts.extraOptions;
+    this.#noneOption = opts.noneOption;
     this.#groupBy = opts.groupBy;
     this.#groupDividers = opts.groupDividers ?? true;
     this.#groupHeader = opts.groupHeader;
@@ -208,13 +226,18 @@ export default class SelectArgsView {
     return this.#readMaxLoaded?.() ?? this.#maxLoaded;
   }
 
-  /** The single-select none row's label, or `null` while the row is off or the select is multiple. */
+  /** The single-select none option's label, or `null` while it is off or the select is multiple. */
   get noneLabel(): string | null {
-    const options = this.#readResolvedOptions?.();
-    if (this.multiple || !options?.noneRow) {
+    const config = this.#readResolvedOptions?.();
+    if (this.multiple || !config?.noneOption) {
       return null;
     }
-    return renderSelectText(options, "noneLabel");
+    return renderSelectText(config, "noneLabel");
+  }
+
+  /** Whether the none option is on when the presentation args don't say. */
+  get noneOptionDefault(): boolean | undefined {
+    return this.#noneOption;
   }
 
   /** The call site's live presentation args, before customizations. */
@@ -348,8 +371,8 @@ export default class SelectArgsView {
     return this.#filterBy;
   }
 
-  get items(): SelectEngineInit["items"] {
-    return this.#items;
+  get options(): SelectEngineInit["options"] {
+    return this.#options;
   }
 
   get load(): SelectEngineInit["load"] {
@@ -364,16 +387,16 @@ export default class SelectArgsView {
     return this.#resolveValues;
   }
 
-  get createItem(): SelectEngineInit["createItem"] {
-    return this.#createItem;
+  get createOption(): SelectEngineInit["createOption"] {
+    return this.#createOption;
   }
 
   get createUnresolvedRecord(): SelectEngineInit["createUnresolvedRecord"] {
     return this.#createUnresolvedRecord;
   }
 
-  get specialItems(): SelectEngineInit["specialItems"] {
-    return this.#specialItems;
+  get extraOptions(): SelectEngineInit["extraOptions"] {
+    return this.#extraOptions;
   }
 
   get groupBy(): SelectEngineInit["groupBy"] {
@@ -474,11 +497,145 @@ export default class SelectArgsView {
     return raw[0] ?? null;
   }
 
-  recordValue(item: SelectRecord | null | undefined): SelectId {
-    return item?.[this.#valueField];
+  recordValue(record: SelectRecord | null | undefined): SelectId {
+    return record?.[this.#valueField];
   }
 
-  recordLabel(item: SelectRecord | null | undefined): unknown {
-    return item?.[this.#labelField];
+  recordLabel(record: SelectRecord | null | undefined): unknown {
+    return record?.[this.#labelField];
+  }
+
+  /**
+   * One entry as an option: an option as it is, a record wrapped with no settings.
+   *
+   * @param entry - What a list, a builder or a loader returned.
+   */
+  wrapEntry(entry: SelectOptionLike): SelectOption {
+    if (isSelectOption(entry)) {
+      return entry as SelectOption;
+    }
+    this.#warnUnwrapped(entry);
+    return selectOption(entry as SelectRecord);
+  }
+
+  /**
+   * A list as options, one per value: a repeated non-null value keeps the first option. A list
+   * the caller passed is wrapped once and the result reused while it holds the same entries,
+   * so a list changed in place is wrapped again.
+   *
+   * @param entries - The records and options to wrap.
+   */
+  wrapEntries(
+    entries: readonly SelectOptionLike[] | null | undefined
+  ): readonly SelectOption[] {
+    if (entries == null) {
+      return [];
+    }
+    const cached = this.#wrapped.get(entries);
+    // Reading every entry also consumes a tracked list's contents, so an edit re-renders.
+    if (
+      cached &&
+      cached.entries.length === entries.length &&
+      entries.every((entry, index) => Object.is(entry, cached.entries[index]))
+    ) {
+      return cached.options;
+    }
+    const options = this.#wrapList(entries);
+    this.#wrapped.set(entries, { entries: [...entries], options });
+    return options;
+  }
+
+  /**
+   * A loaded page as options, without removing repeated values: the paged source does that
+   * across every page it holds, so keying the page here too would read each value twice.
+   *
+   * @param entries - The records and options one page returned.
+   */
+  wrapPage(entries: readonly SelectOptionLike[]): readonly SelectOption[] {
+    const records = DEBUG ? new Set<object>() : undefined;
+    return Object.freeze(
+      entries.map((entry) => {
+        const option = this.wrapEntry(entry);
+        if (DEBUG) {
+          this.#assertEntry(option, records!);
+        }
+        return option;
+      })
+    );
+  }
+
+  #wrapList(entries: readonly SelectOptionLike[]): readonly SelectOption[] {
+    const keys = new Set<string>();
+    const records = DEBUG ? new Set<object>() : undefined;
+    const options: SelectOption[] = [];
+    for (const entry of entries) {
+      const option = this.wrapEntry(entry);
+      if (DEBUG) {
+        this.#assertEntry(option, records!);
+      }
+      const key = this.valueKey(this.recordValue(option.record));
+      if (key != null) {
+        if (keys.has(key)) {
+          continue;
+        }
+        keys.add(key);
+      }
+      options.push(option);
+    }
+    return Object.freeze(options);
+  }
+
+  /** Development checks for a caller's entry, where the value and label fields are known. */
+  #assertEntry(option: SelectOption, records: Set<object>): void {
+    const record = option.record;
+    assert(
+      `DSelect: an option needs its \`${this.#valueField}\` or \`${this.#labelField}\` field. ` +
+        "An option spread into an object loses its record; pass the option, or `option.record`.",
+      record[this.#valueField] !== undefined ||
+        record[this.#labelField] !== undefined
+    );
+    if (records.has(record)) {
+      assert(
+        `DSelect: the same record is listed twice ("${String(this.recordLabel(record) ?? this.recordValue(record))}"). ` +
+          "Give one record one option.",
+        false
+      );
+    }
+    records.add(record);
+  }
+
+  /** A bare record shaped like an option almost always means one that should have been wrapped. */
+  #warnUnwrapped(entry: SelectOptionLike): void {
+    if (!DEBUG || this.#warnedUnwrapped) {
+      return;
+    }
+    const record = entry as SelectRecord;
+    if (typeof record?.onSelect === "function" || record?.sticky != null) {
+      this.#warnedUnwrapped = true;
+      warn(
+        "DSelect: a record carries `onSelect` or `sticky`, which are plain data on a record. " +
+          'Wrap it to give it settings: `selectOption(record, { onSelect })` or `{ position: "sticky" }`.',
+        false,
+        { id: "discourse.d-select.unwrapped-option" }
+      );
+    }
   }
 }
+
+/** Legacy select-kit takes a settings hash as `@options`; here it is the list. */
+function assertOptionsList(options: unknown): void {
+  if (
+    options == null ||
+    Array.isArray(options) ||
+    typeof options === "function"
+  ) {
+    return;
+  }
+  assert(
+    "DSelect: `@options` is the list of options (an array, or a function returning one), " +
+      `not ${Object.prototype.toString.call(options)}; settings are named arguments.`,
+    false
+  );
+}
+
+export { assertOptionsList };

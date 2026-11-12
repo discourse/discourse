@@ -15,6 +15,7 @@ import DSelect, {
 import type { SelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
+  categoryOption,
   categoryRecord,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
 import type {
@@ -71,7 +72,7 @@ interface DSelectCategoryFilterSignature {
     ) => void;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection">;
 }
 
 /** Narrows a topic list by category, leaving navigation to its caller. */
@@ -189,8 +190,8 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       treeOrder: query ? undefined : this.#treeOrder,
     });
     return continueWith(search, ({ categories, categoriesCount }) => ({
-      items: categories.map((category) =>
-        categoryRecord(category, this.#descriptions)
+      options: categories.map((category) =>
+        categoryOption(categoryRecord(category), this.#descriptions)
       ),
       total: categoriesCount,
     }));
@@ -198,21 +199,21 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
 
   /** Shortcuts lead the level while browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot, config: SelectConfig) {
+  extraOptions(snapshot: SelectSnapshot, config: SelectConfig) {
     return this.#shortcuts(snapshot.filter, config);
   }
 
   /**
-   * Emits the site's category or a shortcut id. A row the site does not know, which only a
+   * Emits the site's category or a shortcut id. A record the site does not know, which only a
    * caller's loader or a customization can supply, cannot be routed, so its pick is dropped.
    */
   @action
-  onChange(id: SelectValue, item: SelectRecord | SelectRecord[] | null) {
+  onChange(id: SelectValue, record: SelectRecord | SelectRecord[] | null) {
     if (id === ALL_CATEGORIES_ID || id === NO_CATEGORIES_ID) {
       this.args.onChange?.(id);
       return;
     }
-    if (!item || Array.isArray(item)) {
+    if (!record || Array.isArray(record)) {
       return;
     }
     const category = Category.findById(id as number | string);
@@ -253,6 +254,7 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       class={{if this.filtering "category-drop --filtering" "category-drop"}}
       ...attributes
       @caretIcon={{hash closed="angle-right" open="angle-down"}}
+      @extraOptions={{this.extraOptions}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-category-filter"
@@ -262,29 +264,29 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @load={{this.load}}
       @loadContext={{this.loadContext}}
       @onChange={{this.onChange}}
-      @specialItems={{this.specialItems}}
       @texts={{@texts}}
       @value={{this.heldId}}
       @valueRecords={{this.valueRecords}}
       @variant="button"
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
           <CategoryBadge
             @ancestors={{not @parentCategory}}
             @counts={{true}}
             @countSubcategories={{@countSubcategories}}
-            @record={{item}}
+            @option={{option}}
+            @record={{record}}
           />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          <CategoryBadge @record={{item}} />
+          <CategoryBadge @record={{record}} />
         {{/if}}
       </:selection>
     </DSelect>

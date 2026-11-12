@@ -29,10 +29,10 @@ export default class EventsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-events"
-      @items={{TIMEZONES}}
       @onChange={{this.onChange}}
       @onClose={{this.onClose}}
       @onShow={{this.onShow}}
+      @options={{TIMEZONES}}
       @placement="top-start"
       @texts={{hash
         placeholder=(i18n

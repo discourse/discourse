@@ -8,21 +8,21 @@ declare const onChange: (value: unknown) => void;
 // compile, and the string cap must be flagged.
 const Test = <template>
   <DSelect
-    @items={{items}}
     @maximum={{false}}
     @multiple={{true}}
     @onChange={{onChange}}
+    @options={{items}}
   />
   <DSelect
-    @items={{items}}
     @maximum={{3}}
     @multiple={{true}}
     @onChange={{onChange}}
+    @options={{items}}
   />
-  <DSelectList @items={{items}} @maximum={{false}} @onChange={{onChange}} />
+  <DSelectList @maximum={{false}} @onChange={{onChange}} @options={{items}} />
 
   {{! @glint-expect-error - @maximum is a number or false, not a string }}
-  <DSelect @items={{items}} @maximum="3" @onChange={{onChange}} />
+  <DSelect @maximum="3" @onChange={{onChange}} @options={{items}} />
 </template>;
 
 export default Test;

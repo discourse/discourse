@@ -8,7 +8,7 @@ import { TIMEZONES } from "../../../../../lib/select-fixtures.js";
 
 const hourCycle = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
-}).config().hourCycle;
+}).resolvedOptions().hourCycle;
 
 function localTimeIn(timeZone, now) {
   return new Intl.DateTimeFormat(undefined, {
@@ -61,10 +61,10 @@ export default class ComputedSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-computed"
-      @items={{TIMEZONES}}
       @onChange={{this.onChange}}
       @onClose={{this.onClose}}
       @onShow={{this.onShow}}
+      @options={{TIMEZONES}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.content.computed_placeholder"
@@ -72,7 +72,7 @@ export default class ComputedSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:item as |zone|>
+      <:option as |zone|>
         <span class="select-examples__row select-examples__row--glyph">
           <span class="select-examples__timezone-offset">{{zone.offset}}</span>
           <span class="select-examples__primary">{{zone.name}}</span>
@@ -80,7 +80,7 @@ export default class ComputedSelectExample extends Component {
             {{localTimeIn zone.timeZone this.now}}
           </span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

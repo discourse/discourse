@@ -671,7 +671,7 @@ module(
 
       await render(
         <template>
-          <DSelectUser @specialItems={{special}} @value="author" />
+          <DSelectUser @extraOptions={{special}} @value="author" />
         </template>
       );
 
@@ -684,7 +684,7 @@ module(
       const special = () => [{ id: "author", name: "Topic author" }];
 
       await render(
-        <template><DSelectUser @specialItems={{special}} /></template>
+        <template><DSelectUser @extraOptions={{special}} /></template>
       );
       const select = new DSelect();
       await select.open();

@@ -12,6 +12,7 @@ import {
 import {
   renderSelectText,
   type SelectConfig,
+  type SelectOption,
   type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -31,25 +32,27 @@ function typeText(config: SelectConfig | undefined, key: string) {
   return config ? renderSelectText(config, key) : i18n(TYPE_TEXT_KEYS[key]!);
 }
 
-/** Narrows an item's type at the rendering boundary. */
-function isType(item: SelectRecord, type: UserPickType): boolean {
-  return item.type === type;
+/** Narrows a record's type at the rendering boundary. */
+function isType(record: SelectRecord, type: UserPickType): boolean {
+  return record.type === type;
 }
 
 /** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectRecord): string | undefined {
-  return typeof item.icon === "string" ? item.icon : undefined;
+function actionIcon(record: SelectRecord): string | undefined {
+  return typeof record.icon === "string" ? record.icon : undefined;
 }
 
 /** The status emoji drawn after a user, when the picker shows statuses. */
-function statusEmoji(item: SelectRecord): string | undefined {
-  return typeof item.statusEmoji === "string" ? item.statusEmoji : undefined;
+function statusEmoji(record: SelectRecord): string | undefined {
+  return typeof record.statusEmoji === "string"
+    ? record.statusEmoji
+    : undefined;
 }
 
 /** A user's full name, when the site sent one. */
-function fullName(item: SelectRecord): string | undefined {
-  return typeof item.fullName === "string" && item.fullName
-    ? item.fullName
+function fullName(record: SelectRecord): string | undefined {
+  return typeof record.fullName === "string" && record.fullName
+    ? record.fullName
     : undefined;
 }
 
@@ -62,16 +65,18 @@ const UserIdentity: TOC<{ Args: { record: SelectRecord } }> = <template>
 </template>;
 
 /**
- * Default option content: a user, a group or an address. Other rows, such as a call site's
- * special rows, draw their name.
+ * Default option content: a user, a group or an address. Other options, such as a call site's
+ * extra options, draw their name.
  */
 export const UserOption: TOC<{
   Args: {
-    /** The row, whose `type` says what it is. */
+    /** The record, whose `type` says what it is. */
     record: SelectRecord;
+    /** The option drawn, which says whether it's an action or disabled. */
+    option?: SelectOption;
   };
 }> = <template>
-  {{#if @record.onSelect}}
+  {{#if @option.action}}
     {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
     {{recordName @record}}
   {{else if (isType @record "user")}}
@@ -92,10 +97,10 @@ export const UserOption: TOC<{
           {{~dEmoji (statusEmoji @record) alt="" skipTitle=true~}}
         </span>
       {{/if}}
-      {{#if (disabledReason @record)}}
+      {{#if (disabledReason @record @option)}}
         <span class="d-user-option__reason">
           {{~dIcon "ban"~}}
-          {{~disabledReason @record~}}
+          {{~disabledReason @record @option~}}
         </span>
       {{/if}}
       <span aria-hidden="true" class="d-user-option__decorations">
@@ -103,7 +108,7 @@ export const UserOption: TOC<{
       </span>
     </span>
   {{else if (isType @record "group")}}
-    <GroupOption @icon={{true}} @record={{@record}} />
+    <GroupOption @icon={{true}} @option={{@option}} @record={{@record}} />
   {{else if (isType @record "email")}}
     <span class="d-email-option">
       {{dIcon "envelope"}}
@@ -120,7 +125,7 @@ export const UserOption: TOC<{
  */
 export const UserSelection: TOC<{
   Args: {
-    /** The held value's item. */
+    /** The held value's record. */
     record: SelectRecord;
     /** The select's resolved config, which carries its texts. */
     config?: SelectConfig;

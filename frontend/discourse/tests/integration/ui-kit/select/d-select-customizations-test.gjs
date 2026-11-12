@@ -50,7 +50,7 @@ module(
         cursors.push(opts.cursor);
         pages.push(opts.page);
         return {
-          items: [{ id: cursors.length, name: `Item ${cursors.length}` }],
+          options: [{ id: cursors.length, name: `Item ${cursors.length}` }],
           hasMore: true,
           cursor: `after-${cursors.length}`,
         };
@@ -96,8 +96,8 @@ module(
         <template>
           <DSelect
             @identifier="composer-tags"
-            @items={{ITEMS}}
             @kind="tag-chooser"
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -130,8 +130,8 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="first" @items={{ITEMS}} @kind="toggler" />
-          <DSelect @identifier="second" @items={{ITEMS}} @kind="toggler" />
+          <DSelect @identifier="first" @kind="toggler" @options={{ITEMS}} />
+          <DSelect @identifier="second" @kind="toggler" @options={{ITEMS}} />
         </template>
       );
 
@@ -167,7 +167,7 @@ module(
       });
 
       await render(
-        <template><DSelect @items={{ITEMS}} @kind={{kind.value}} /></template>
+        <template><DSelect @kind={{kind.value}} @options={{ITEMS}} /></template>
       );
       kind.value = "second-kind";
       await settled();
@@ -189,7 +189,7 @@ module(
       );
 
       await render(
-        <template><DSelect @items={{ITEMS}} @kind="bridge-kind" /></template>
+        <template><DSelect @kind="bridge-kind" @options={{ITEMS}} /></template>
       );
       await click("[role='combobox']");
 
@@ -209,7 +209,7 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="bridge-identifier" @items={{ITEMS}} />
+          <DSelect @identifier="bridge-identifier" @options={{ITEMS}} />
         </template>
       );
       await click("[role='combobox']");
@@ -226,8 +226,8 @@ module(
         <template>
           <DSelect
             @identifier="named-menu"
-            @items={{ITEMS}}
             @kind="named-kind"
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -268,7 +268,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @variant="static" />
+          <DSelect @options={{ITEMS}} @value={{1}} @variant="static" />
         </template>
       );
       assert.dom(".d-select__caret").hasClass("d-icon-chevron-right");
@@ -284,7 +284,7 @@ module(
         <template>
           <DSelect
             @caretIcon="angles-down"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{1}}
             @variant="static"
           />
@@ -299,7 +299,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @variant="static" />
+          <DSelect @options={{ITEMS}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -311,7 +311,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @variant="static" />
+          <DSelect @options={{ITEMS}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -323,7 +323,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @variant="static" />
+          <DSelect @options={{ITEMS}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -337,14 +337,14 @@ module(
         <template>
           <div class="static-host">
             <DSelect
-              @items={{ITEMS}}
+              @options={{ITEMS}}
               @texts={{hash placeholder="From call site"}}
               @variant="static"
             />
           </div>
           <div class="typeahead-host">
             <DSelect
-              @items={{ITEMS}}
+              @options={{ITEMS}}
               @texts={{hash placeholder="From call site"}}
             />
           </div>
@@ -369,7 +369,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @multiple={{true}} @value={{none}} />
+          <DSelect @multiple={{true}} @options={{ITEMS}} @value={{none}} />
         </template>
       );
 
@@ -382,7 +382,7 @@ module(
       overrideOptions(() => ({ texts: { searchPlaceholder: "Find a fruit" } }));
 
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
 
@@ -395,7 +395,7 @@ module(
       overrideOptions(() => ({ searchIcon: "magnifying-glass" }));
 
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
 
@@ -425,7 +425,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @texts={{hash ariaLabel="Call site"}} />
+          <DSelect @options={{ITEMS}} @texts={{hash ariaLabel="Call site"}} />
         </template>
       );
       await click("[role='combobox']");
@@ -444,8 +444,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @noneRow={{true}}
+            @noneOption={{true}}
+            @options={{ITEMS}}
             @texts={{hash noneLabel="None"}}
           />
         </template>
@@ -455,13 +455,13 @@ module(
       assert.dom("[role='option'].--none").hasText("Nothing");
     });
 
-    test("noneRow adds a none row where the call site has none", async function (assert) {
+    test("noneOption adds a none row where the call site has none", async function (assert) {
       overrideOptions(() => ({
-        noneRow: true,
+        noneOption: true,
         texts: { noneLabel: "Nothing" },
       }));
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
 
       assert.dom("[role='option'].--none").hasText("Nothing");
@@ -475,13 +475,13 @@ module(
           <div class="static-host">
             <DSelect
               @clearable={{true}}
-              @items={{ITEMS}}
+              @options={{ITEMS}}
               @value={{1}}
               @variant="static"
             />
           </div>
           <div class="typeahead-host">
-            <DSelect @items={{ITEMS}} @value={{1}} />
+            <DSelect @options={{ITEMS}} @value={{1}} />
           </div>
         </template>
       );
@@ -507,7 +507,7 @@ module(
         <template>
           <DSelect
             @disabled={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{1}}
             @variant="static"
           />
@@ -524,7 +524,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @variant="static" />
+          <DSelect @options={{ITEMS}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -537,7 +537,7 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
             @variant="static"
@@ -556,7 +556,7 @@ module(
       try {
         await render(
           <template>
-            <DSelect @items={{ITEMS}} @value={{2}} @variant="static" />
+            <DSelect @options={{ITEMS}} @value={{2}} @variant="static" />
           </template>
         );
 
@@ -600,8 +600,8 @@ module(
         <template>
           <DSelect
             @identifier="fruit"
-            @items={{ITEMS}}
             @kind="picker"
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Call site"}}
           />
         </template>
@@ -644,7 +644,7 @@ module(
         <template>
           <DSelect
             @caretIcon="caret-down"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{1}}
             @variant="static"
           />
@@ -667,7 +667,7 @@ module(
         return { texts: { ariaLabel: label.value } };
       });
 
-      await render(<template><DSelect @items={{MANY}} /></template>);
+      await render(<template><DSelect @options={{MANY}} /></template>);
       await click("[role='combobox']");
       assert.true(calls >= 1, "the options were resolved");
       assert.true(
@@ -706,9 +706,9 @@ module(
           <DSelect
             @identifier="fruit"
             @instanceContext={{instanceContext}}
-            @items={{ITEMS}}
             @kind="picker"
             @kindContext={{kindContext}}
+            @options={{ITEMS}}
             @value={{2}}
           />
         </template>
@@ -734,7 +734,7 @@ module(
       });
 
       try {
-        await render(<template><DSelect @items={{ITEMS}} /></template>);
+        await render(<template><DSelect @options={{ITEMS}} /></template>);
 
         assert
           .dom("[role='combobox']")
@@ -765,8 +765,11 @@ module(
 
       await render(
         <template>
-          <div class="plain"><DSelect @items={{items}} /></div>
-          <div class="titled"><DSelect @items={{items}} @kind="titled" /></div>
+          <div class="plain"><DSelect @options={{items}} /></div>
+          <div class="titled"><DSelect
+              @kind="titled"
+              @options={{items}}
+            /></div>
         </template>
       );
       const [plain, titled] = document.querySelectorAll("[role='combobox']");
@@ -805,7 +808,7 @@ module(
         )
       );
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
 
       assert.dom("[role='option'][title].x-row").exists({ count: 3 });
@@ -859,13 +862,13 @@ module(
         <template>
           <DSelect
             @identifier="crumb"
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
+            @options={{ITEMS}}
           >
-            <:item as |item options|>
+            <:option as |item options|>
               {{~concat options.prefix " " item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -888,9 +891,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{itemsFor}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
+            @options={{itemsFor}}
           />
         </template>
       );
@@ -902,7 +905,7 @@ module(
     test("a zero-argument items function still works", async function (assert) {
       const itemsFor = () => ITEMS;
 
-      await render(<template><DSelect @items={{itemsFor}} /></template>);
+      await render(<template><DSelect @options={{itemsFor}} /></template>);
       await click("[role='combobox']");
 
       assert.dom("[role='option']").exists({ count: 3 });
@@ -967,10 +970,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -997,17 +1000,17 @@ module(
         record("allowCreate", options);
         return true;
       };
-      const createItem = (filter, options) => {
-        record("createItem", options);
-        return { id: filter, name: filter, __create: true };
+      const createOption = (filter, options) => {
+        record("createOption", options);
+        return { id: filter, name: filter };
       };
       const createUnresolvedRecord = (value, options) => {
         record("createUnresolvedRecord", options);
         return { id: value, name: `Missing ${value}` };
       };
-      const specialItems = (state, options) => {
+      const extraOptions = (state, options) => {
         snapshot = state;
-        record("specialItems", options);
+        record("extraOptions", options);
         return [];
       };
       const filterBy = (item, term, options) => {
@@ -1031,16 +1034,16 @@ module(
         <template>
           <DSelect
             @allowCreate={{allowCreate}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @createUnresolvedRecord={{createUnresolvedRecord}}
+            @extraOptions={{extraOptions}}
             @filterBy={{filterBy}}
             @groupBy={{groupBy}}
             @groupFooter={{groupFooter}}
             @groupHeader={{groupHeader}}
-            @items={{items}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
-            @specialItems={{specialItems}}
+            @options={{items}}
             @value={{99}}
           />
         </template>
@@ -1050,13 +1053,13 @@ module(
 
       assert.deepEqual(seen, {
         allowCreate: "base+kind",
-        createItem: "base+kind",
+        createOption: "base+kind",
         createUnresolvedRecord: "base+kind",
         filterBy: "base+kind",
         groupBy: "base+kind",
         groupFooter: "base+kind",
         groupHeader: "base+kind",
-        specialItems: "base+kind",
+        extraOptions: "base+kind",
       });
       assert.deepEqual(
         Object.keys(snapshot).sort(),
@@ -1078,15 +1081,15 @@ module(
               @groupBy="section"
               @groupFooter={{groupFooter}}
               @groupHeader={{groupHeader}}
-              @items={{items}}
               @kind="recipe"
               @kindConfig={{hash prefix="base"}}
+              @options={{items}}
               @value={{1}}
               @variant="static"
             >
-              <:item as |item options|>
+              <:option as |item options|>
                 <span class="x-item">{{options.prefix}}</span>
-              </:item>
+              </:option>
               <:selection as |item options|>
                 <span class="x-selection">{{options.prefix}}</span>
               </:selection>
@@ -1103,9 +1106,9 @@ module(
           </div>
           <div class="missing">
             <DSelect
-              @items={{items}}
               @kind="recipe"
               @kindConfig={{hash prefix="base"}}
+              @options={{items}}
               @value={{99}}
               @variant="static"
             >
@@ -1140,9 +1143,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{itemsFor}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
+            @options={{itemsFor}}
             @texts={{hash ariaLabel="Call site"}}
           />
         </template>
@@ -1159,13 +1162,13 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash prefix=prefix.value}}
+            @options={{ITEMS}}
           >
-            <:item as |item options|>
+            <:option as |item options|>
               {{~concat options.prefix " " item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -1193,13 +1196,13 @@ module(
         await render(
           <template>
             <DSelect
-              @items={{ITEMS}}
               @kind="recipe"
               @kindConfig={{hash prefix=null}}
+              @options={{ITEMS}}
             >
-              <:item as |item options|>
+              <:option as |item options|>
                 {{~concat options.prefix " " item.name~}}
-              </:item>
+              </:option>
             </DSelect>
           </template>
         );
@@ -1230,9 +1233,9 @@ module(
         await render(
           <template>
             <DSelect
-              @items={{ITEMS}}
               @kind="recipe"
               @kindConfig={{hash prefix="base"}}
+              @options={{ITEMS}}
             />
           </template>
         );
@@ -1252,7 +1255,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @kindConfig={{hash prefix="base"}} />
+          <DSelect @kindConfig={{hash prefix="base"}} @options={{ITEMS}} />
         </template>
       );
 
@@ -1273,9 +1276,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash ariaLabel="Mine"}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -1349,10 +1352,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -1384,7 +1387,7 @@ module(
         })
       );
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
       await click(optionWithText("Banana"));
 
@@ -1417,13 +1420,13 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
+            @options={{ITEMS}}
           >
-            <:item as |item options|>
+            <:option as |item options|>
               {{~concat options.prefix " " item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -1448,10 +1451,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{itemsFor}}
             @kind="recipe"
             @kindConfig={{hash prefix="base"}}
             @load={{load}}
+            @options={{itemsFor}}
           />
         </template>
       );
@@ -1518,24 +1521,24 @@ module(
         <template>
           <div class="one">
             <DSelect
-              @items={{ITEMS}}
               @kind="select-tag"
               @legacyKind="mini-tag-chooser"
+              @options={{ITEMS}}
             />
           </div>
           <div class="many">
             <DSelect
-              @items={{ITEMS}}
               @kind="select-tag-filter"
               @legacyKind={{MINI_AND_INTERSECTION}}
+              @options={{ITEMS}}
             />
           </div>
           <div class="list">
             <DSelectList
-              @items={{ITEMS}}
               @kind="select-tag"
               @legacyKind="tag-chooser"
               @onChange={{noop}}
+              @options={{ITEMS}}
             />
           </div>
         </template>
@@ -1560,9 +1563,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @kind="select-tag"
             @legacyKind="mini-tag-chooser"
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -1585,10 +1588,10 @@ module(
       await render(
         <template>
           <DSelectList
-            @items={{ITEMS}}
             @kind="select-tag"
             @legacyKind="mini-tag-chooser"
             @onChange={{noop}}
+            @options={{ITEMS}}
             @virtualized={{false}}
           />
         </template>

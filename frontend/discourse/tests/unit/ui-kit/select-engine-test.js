@@ -14,7 +14,9 @@ import {
   PagedSource,
   SelectState,
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  selectOption,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -39,7 +41,7 @@ module(
       const engine = new SelectEngine({ legacyKinds: ["old-select"] });
 
       assert.deepEqual(
-        engine.buildItems([]).map((item) => item.value),
+        engine.buildRows([]).map((item) => item.value),
         ["legacy"],
         "content reaches an alias-only select"
       );
@@ -76,7 +78,7 @@ module(
       for (let run = 1; run <= 2; run++) {
         assert.deepEqual(
           engine
-            .buildItems([{ id: "core", name: "Core" }])
+            .buildRows([{ id: "core", name: "Core" }])
             .map((item) => item.value),
           ["pre", "core", "app", "older"],
           "shared callbacks preserve the content stages"
@@ -201,6 +203,9 @@ module("Unit | ui-kit | SelectEngine | maximum diagnostics", function (hooks) {
 // Builds a controlled engine whose value is owned by a local variable that `onChange`
 // updates — simulating the parent's @value / @onChange loop. `engine.value` reads the
 // live variable, so the engine reflects "the parent" the way it does in a template.
+/** The records behind the options a source or `loadOptions` returned. */
+const recordsOf = (options) => options.map((option) => option.record);
+
 function controlled(opts = {}) {
   // Tracked like a component's `@value`, which is what `getValue` must read.
   const state = trackedObject({
@@ -349,17 +354,21 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     assert.false(multi.isSelected({ id: 3 }));
   });
 
-  test("activate runs an item's onSelect instead of selecting it", function (assert) {
+  test("activate runs an action option's onSelect instead of selecting it", function (assert) {
     let ran = 0;
     let received;
     const { engine, changes } = controlled();
-    engine.activate({
-      id: "act",
-      onSelect: (control) => {
-        ran++;
-        received = control;
-      },
-    });
+    engine.activate(
+      selectOption(
+        { id: "act" },
+        {
+          onSelect: (control) => {
+            ran++;
+            received = control;
+          },
+        }
+      )
+    );
 
     assert.strictEqual(ran, 1, "the action callback runs");
     assert.strictEqual(changes.length, 0, "an action item never emits a value");
@@ -373,7 +382,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   test("the control does nothing once the engine is destroyed", function (assert) {
     let closes = 0;
     const { engine, changes } = controlled({
-      items: [{ id: 1, name: "One" }],
+      options: [{ id: 1, name: "One" }],
       requestClose: () => closes++,
     });
     const control = engine.control;
@@ -398,7 +407,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     function flipped(value) {
       let multiple = true;
       const { engine } = controlled({
-        items,
+        options: items,
         value,
         getMultiple: () => multiple,
       });
@@ -445,11 +454,11 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     });
   });
 
-  module("buildItems", function () {
+  module("buildRows", function () {
     test("keeps already-selected items in multi-select, flagged selected", function (assert) {
       const { engine } = controlled({ multiple: true, value: [1] });
 
-      const items = engine.buildItems([{ id: 1 }, { id: 2 }]);
+      const items = engine.buildRows([{ id: 1 }, { id: 2 }]);
       assert.deepEqual(
         items.map((d) => d.value),
         [1, 2],
@@ -462,48 +471,46 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("describeItems normalizes items and reflects __unresolved", function (assert) {
+    test("describeRecords normalizes records and reflects unresolved fallbacks", function (assert) {
       const engine = new SelectEngine();
 
-      const [normal] = engine.describeItems([{ id: 5, name: "Five" }]);
+      const [normal] = engine.describeRecords([{ id: 5, name: "Five" }]);
       assert.strictEqual(normal.value, 5, "value comes from the id field");
       assert.strictEqual(normal.key, "5", "key is the normalized value");
       assert.strictEqual(
-        normal.item.name,
+        normal.record.name,
         "Five",
         "the raw item passes through"
       );
-      assert.false(
-        normal.flags.__unresolved,
-        "a normal item is not unresolved"
-      );
+      assert.false(normal.flags.unresolved, "a normal item is not unresolved");
 
-      const [unresolved] = engine.describeItems([
-        { id: 9, name: "Nine", __unresolved: true },
-      ]);
+      const [unresolved] = engine.describeRecords([engine.resolveSelection(9)]);
       assert.true(
-        unresolved.flags.__unresolved,
-        "an unresolved item's flag is reflected, not hardcoded false"
+        unresolved.flags.unresolved,
+        "an unresolved fallback's flag is reflected, not hardcoded false"
       );
     });
 
-    test("normalizes each row into a { key, value, item, flags } descriptor", function (assert) {
-      const apple = { id: 1, name: "Apple", disabled: true };
+    test("normalizes each option into a { key, value, record, option, flags } row", function (assert) {
+      const apple = { id: 1, name: "Apple" };
       const { engine } = controlled({ value: 2 });
 
-      const [first, second] = engine.buildItems([apple, { id: 2, name: "B" }]);
+      const [first, second] = engine.buildRows([
+        selectOption(apple, { disabled: true }),
+        { id: 2, name: "B" },
+      ]);
       assert.strictEqual(first.key, "1", "key is the normalized value");
       assert.strictEqual(first.value, 1, "value is the raw id");
       assert.strictEqual(
-        first.item,
+        first.record,
         apple,
-        "item is the raw model (by identity)"
+        "record is the raw model (by identity)"
       );
       assert.false(
         first.flags.selected,
         "an unselected row is not flagged selected"
       );
-      assert.true(first.flags.disabled, "disabled is lifted onto flags");
+      assert.true(first.flags.disabled, "the disabled setting reaches flags");
       assert.true(
         second.flags.selected,
         "the row matching @value is flagged selected"
@@ -513,35 +520,39 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     test("prepends a create item when allowed and there is no exact match", function (assert) {
       const engine = new SelectEngine({
         allowCreate: true,
-        createItem: (filter) => ({ id: filter, name: filter, __create: true }),
+        createOption: (filter) => ({
+          id: filter,
+          name: filter,
+          __create: true,
+        }),
       });
       engine.setFilter("new-tag");
 
-      const items = engine.buildItems([{ id: 1, name: "existing" }]);
-      assert.true(items[0].flags.__create, "the first item is the create item");
-      assert.strictEqual(items[0].item.name, "new-tag");
+      const items = engine.buildRows([{ id: 1, name: "existing" }]);
+      assert.true(items[0].flags.create, "the first item is the create item");
+      assert.strictEqual(items[0].record.name, "new-tag");
     });
 
     test("does not offer create when an exact match already exists", function (assert) {
       const engine = new SelectEngine({
         allowCreate: true,
-        createItem: (filter) => ({ id: filter, __create: true }),
+        createOption: (filter) => ({ id: filter, __create: true }),
       });
       engine.setFilter("apple");
 
-      const items = engine.buildItems([{ id: 1, name: "apple" }]);
+      const items = engine.buildRows([{ id: 1, name: "apple" }]);
       assert.false(
-        items.some((d) => d.flags.__create),
+        items.some((d) => d.flags.create),
         "no create item when the term already matches an item"
       );
     });
 
     test("prepends special items", function (assert) {
       const none = { id: null, name: "None", __special: true };
-      const engine = new SelectEngine({ specialItems: () => [none] });
+      const engine = new SelectEngine({ extraOptions: () => [none] });
 
-      const items = engine.buildItems([{ id: 1 }]);
-      assert.true(items[0].item.__special, "special items lead the list");
+      const items = engine.buildRows([{ id: 1 }]);
+      assert.true(items[0].record.__special, "special items lead the list");
       assert.deepEqual(
         items.map((d) => d.value),
         [null, 1]
@@ -550,9 +561,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 
   module("data source", function () {
-    test("loadItems filters a client (items) source by label substring", function (assert) {
+    test("loadOptions filters a client source by label substring", function (assert) {
       const engine = new SelectEngine({
-        items: [
+        options: [
           { id: 1, name: "Apple" },
           { id: 2, name: "Banana" },
         ],
@@ -560,14 +571,14 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("ban");
 
       assert.deepEqual(
-        engine.loadItems(engine.loadContext).map((i) => i.id),
+        engine.loadOptions(engine.loadContext).map((i) => i.record.id),
         [2],
         "only the matching item is returned, synchronously"
       );
       assert.false(engine.isAsync, "a client source is not async");
     });
 
-    test("loadItems delegates to load for a server source, forwarding the signal", async function (assert) {
+    test("loadOptions delegates to load for a server source, forwarding the signal", async function (assert) {
       const calls = [];
       const engine = new SelectEngine({
         load: (filter, opts) => {
@@ -578,7 +589,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("q");
 
       const controller = new AbortController();
-      engine.loadItems(engine.loadContext, { signal: controller.signal });
+      engine.loadOptions(engine.loadContext, { signal: controller.signal });
       await Promise.resolve();
 
       assert.strictEqual(calls[0][0], "q", "load receives the live filter");
@@ -603,7 +614,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("q");
 
       const closing = new AbortController();
-      const first = engine.loadItems(engine.loadContext, {
+      const first = engine.loadOptions(engine.loadContext, {
         signal: closing.signal,
       });
       await Promise.resolve();
@@ -621,7 +632,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       // The panel closes mid-flight, then reopens before the abort has settled.
       closing.abort();
       const reopened = new AbortController();
-      const second = engine.loadItems(engine.loadContext, {
+      const second = engine.loadOptions(engine.loadContext, {
         signal: reopened.signal,
       });
       await Promise.resolve();
@@ -642,7 +653,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       releases[1]([{ id: 2, name: "Fresh" }]);
 
       assert.deepEqual(
-        (await second).map((item) => item.id),
+        (await second).map((option) => option.record.id),
         [2],
         "the reopened panel receives the rows its own request returned"
       );
@@ -663,7 +674,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       });
 
       // The panel opens on the empty filter and its first page settles.
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.strictEqual(calls, 1, "opening issues the first request");
 
       // The reader types, then closes — which restores the empty filter. Both transitions reset
@@ -671,7 +682,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("q");
       engine.setFilter("");
 
-      const rows = await engine.loadItems(engine.loadContext);
+      const rows = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         calls,
@@ -679,7 +690,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "reopening re-asks rather than reusing an accumulator that was emptied"
       );
       assert.deepEqual(
-        rows.map((item) => item.id),
+        rows.map((option) => option.record.id),
         [1],
         "the reopened panel shows rows rather than an empty result"
       );
@@ -735,10 +746,11 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.strictEqual(calls, 1, "resolveValue is not called again");
     });
 
-    test("yields an __unresolved fallback for a held value that cannot resolve", function (assert) {
-      const item = new SelectEngine().resolveSelection(9);
+    test("yields an unresolved fallback for a held value that cannot resolve", function (assert) {
+      const engine = new SelectEngine();
+      const item = engine.resolveSelection(9);
       assert.true(
-        item.__unresolved,
+        engine.isUnresolvedRecord(item),
         "a held id with no resolver becomes a fallback, never undefined"
       );
       assert.strictEqual(
@@ -750,7 +762,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
     test("resolves a value from a client items source", function (assert) {
       const engine = new SelectEngine({
-        items: [
+        options: [
           { id: 1, name: "Apple" },
           { id: 2, name: "Banana" },
         ],
@@ -776,7 +788,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         },
       });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         engine.resolveSelection(2)?.name,
@@ -811,7 +823,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const item = await engine.resolveSelection(7);
       assert.true(
-        item.__unresolved,
+        engine.isUnresolvedRecord(item),
         "a rejected resolve degrades to a fallback"
       );
       assert.strictEqual(item.id, 7, "the fallback carries the value");
@@ -840,7 +852,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "items come back in the original value order"
       );
       assert.deepEqual(
-        items.map((i) => !!i.__unresolved),
+        items.map((i) => engine.isUnresolvedRecord(i)),
         [false, false, true],
         "the omitted id becomes a fallback; the rest resolve"
       );
@@ -854,7 +866,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const items = await engine.resolveSelection([4, 5]);
       assert.true(
-        items.every((i) => i.__unresolved),
+        items.every((i) => engine.isUnresolvedRecord(i)),
         "a batch rejection degrades to fallbacks, never rejects"
       );
     });
@@ -871,7 +883,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       });
 
       assert.true(
-        (await engine.resolveSelection(7)).__unresolved,
+        engine.isUnresolvedRecord(await engine.resolveSelection(7)),
         "the first, failing resolve degrades to a fallback"
       );
 
@@ -886,10 +898,10 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
     test("an item that lands later supersedes an earlier fallback", function (assert) {
       let items = [];
-      const engine = new SelectEngine({ items: () => items });
+      const engine = new SelectEngine({ options: () => items });
 
       assert.true(
-        engine.resolveSelection(3).__unresolved,
+        engine.isUnresolvedRecord(engine.resolveSelection(3)),
         "an id absent from the list starts as a fallback"
       );
 
@@ -910,7 +922,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       });
 
       assert.true(
-        engine.resolveSelection([4, 5]).every((i) => i.__unresolved),
+        engine
+          .resolveSelection([4, 5])
+          .every((i) => engine.isUnresolvedRecord(i)),
         "a synchronous throw degrades to fallbacks instead of escaping"
       );
     });
@@ -923,7 +937,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       });
 
       assert.true(
-        engine.resolveSelection(7).__unresolved,
+        engine.isUnresolvedRecord(engine.resolveSelection(7)),
         "a synchronous throw degrades to a fallback instead of escaping"
       );
     });
@@ -962,7 +976,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "the hook names the fallback"
       );
       assert.true(
-        item.__unresolved,
+        engine.isUnresolvedRecord(item),
         "the engine still marks it unresolved, whatever the hook returns"
       );
     });
@@ -978,7 +992,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const [chip] = await engine.resolveSelection([999]);
       assert.true(
-        chip.__unresolved,
+        engine.isUnresolvedRecord(chip),
         "the held id becomes an unresolved fallback"
       );
       assert.strictEqual(
@@ -989,7 +1003,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       // The engine stamps the held value onto the fallback, so its descriptor keys on
       // the value (not a positional __row key) and deselect can find it.
-      const [descriptor] = engine.describeItems([chip]);
+      const [descriptor] = engine.describeRecords([chip]);
       assert.strictEqual(
         descriptor.value,
         999,
@@ -1223,7 +1237,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const client = new SelectEngine({
         multiple: true,
-        items: [
+        options: [
           { id: 1, name: "One" },
           { id: 2, name: "Two" },
         ],
@@ -1257,7 +1271,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
     test("resolves a string value against a numeric client id", function (assert) {
       const engine = new SelectEngine({
-        items: [
+        options: [
           { id: 1, name: "Apple" },
           { id: 2, name: "Banana" },
         ],
@@ -1349,7 +1363,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
     test("resolves a held id from an item spelled differently", function (assert) {
       const engine = new SelectEngine({
-        items: [{ id: "Sam", name: "Sam Smith" }],
+        options: [{ id: "Sam", name: "Sam Smith" }],
         normalizeKey: lowercase,
       });
       assert.strictEqual(engine.resolveSelection("sam")?.name, "Sam Smith");
@@ -1373,11 +1387,11 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
   }
 
   test("a partially-loaded server source with a declared total is sized by it", async function (assert) {
-    const load = () => ({ items: rows(10), total: 900 });
+    const load = () => ({ options: rows(10), total: 900 });
     const engine = new SelectEngine({ load });
 
-    const loaded = await engine.loadItems(engine.loadContext);
-    const [first] = engine.buildItems(loaded);
+    const loaded = await engine.loadOptions(engine.loadContext);
+    const [first] = engine.buildRows(loaded);
 
     assert.strictEqual(
       engine.total,
@@ -1397,11 +1411,11 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
   });
 
   test("a complete server source reports its true setSize", async function (assert) {
-    const load = () => ({ items: rows(10), hasMore: false });
+    const load = () => ({ options: rows(10), hasMore: false });
     const engine = new SelectEngine({ load });
 
-    const loaded = await engine.loadItems(engine.loadContext);
-    const [first] = engine.buildItems(loaded);
+    const loaded = await engine.loadOptions(engine.loadContext);
+    const [first] = engine.buildRows(loaded);
 
     assert.strictEqual(
       first.setSize,
@@ -1416,10 +1430,10 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
   });
 
   test("a client source reports its full, known setSize", async function (assert) {
-    const engine = new SelectEngine({ items: rows(300) });
+    const engine = new SelectEngine({ options: rows(300) });
 
-    const loaded = engine.loadItems(engine.loadContext);
-    const [first] = engine.buildItems(loaded);
+    const loaded = engine.loadOptions(engine.loadContext);
+    const [first] = engine.buildRows(loaded);
 
     assert.strictEqual(
       loaded.length,
@@ -1442,7 +1456,7 @@ function recordingLoad(rowsFor) {
   const filters = [];
   const load = (filter) => {
     filters.push(filter);
-    return Promise.resolve({ items: rowsFor(filter), hasMore: false });
+    return Promise.resolve({ options: rowsFor(filter), hasMore: false });
   };
   return { load, filters };
 }
@@ -1462,10 +1476,10 @@ module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
     const engine = new SelectEngine({ load });
 
     engine.setFilter("12");
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
 
     engine.setFilter("123");
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
 
     assert.deepEqual(
       filters,
@@ -1475,7 +1489,7 @@ module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
 
     // Backspace: back to a filter whose key was already settled.
     engine.setFilter("12");
-    const items = await engine.loadItems(engine.loadContext);
+    const items = await engine.loadOptions(engine.loadContext);
 
     assert.deepEqual(
       filters,
@@ -1483,7 +1497,7 @@ module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
       "deleting back to a previously-loaded query fetches it again"
     );
     assert.deepEqual(
-      items.map((item) => item.id),
+      recordsOf(items).map((item) => item.id),
       ["12-a"],
       "and returns that query's rows rather than the emptied accumulator"
     );
@@ -1495,15 +1509,15 @@ module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
 
     for (const filter of ["1", "12", "123"]) {
       engine.setFilter(filter);
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
     }
 
     for (const filter of ["12", "1"]) {
       engine.setFilter(filter);
-      const items = await engine.loadItems(engine.loadContext);
+      const items = await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
-        items.map((item) => item.id),
+        recordsOf(items).map((item) => item.id),
         [`${filter}-a`],
         `after deleting back to "${filter}" the rows match the query`
       );
@@ -1525,7 +1539,8 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     const source = new PagedSource({
       resolveLoad: () => load,
       state,
-      keyOf: (item) => String(item.id),
+      keyOf: (option) => String(option.record.id),
+      wrap: (entries) => entries.map((entry) => selectOption(entry)),
     });
     return { source, state };
   }
@@ -1543,7 +1558,7 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     await Promise.resolve();
     assert.strictEqual(calls, 1, "the loader runs once the task yields");
     assert.deepEqual(
-      (await rows).map((item) => item.id),
+      recordsOf(await rows).map((item) => item.id),
       [1],
       "the deferred request still answers"
     );
@@ -1610,7 +1625,7 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     let result;
     let threw = false;
     try {
-      result = engine.loadItems(engine.loadContext);
+      result = engine.loadOptions(engine.loadContext);
     } catch {
       threw = true;
     }
@@ -1619,7 +1634,7 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     await assert.rejects(result, /boom/, "the rejection carries the error");
     assert.false(engine.serverPending, "the failed load reads as finished");
 
-    await engine.loadItems(engine.loadContext).catch(() => {});
+    await engine.loadOptions(engine.loadContext).catch(() => {});
     assert.strictEqual(
       calls,
       2,
@@ -1630,12 +1645,12 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
   test("serverQueryPending is true only while a new query is in flight", async function (assert) {
     const engine = new SelectEngine({
       load: (filter, { offset = 0 }) => ({
-        items: [{ id: `${filter}-${offset}`, name: "Row" }],
+        options: [{ id: `${filter}-${offset}`, name: "Row" }],
         hasMore: true,
       }),
     });
 
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.false(
       engine.serverQueryPending,
       "a settled list has no query in flight"
@@ -1644,14 +1659,14 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     engine.setFilter("q");
     assert.true(engine.serverQueryPending, "a new filter is a query in flight");
 
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.false(engine.serverQueryPending, "the query settled");
 
     engine.revealMore();
     assert.true(engine.serverPending, "the reveal is in flight");
     assert.false(engine.serverQueryPending, "a reveal is not a new query");
 
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     engine.reload();
     assert.true(engine.serverPending, "the reload is in flight");
     assert.false(engine.serverQueryPending, "a reload is not a new query");
@@ -1683,7 +1698,7 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
     const engine = new SelectEngine({
       load: (filter) => [{ id: filter || "row", name: "Row" }],
     });
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
 
     assert.false(engine.immediateLoadFeedback, "a settled list is not flagged");
 
@@ -1749,7 +1764,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   const C = { id: 3, name: "C" };
 
   test("an update is pending until its work settles, and a scope write emits once", async function (assert) {
-    const { engine, changes } = controlled({ items: [A, B] });
+    const { engine, changes } = controlled({ options: [A, B] });
     const gate = deferred();
 
     const done = engine.control.update(async (scope) => {
@@ -1775,7 +1790,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("a synchronous work applies its writes without ever becoming pending", function (assert) {
-    const { engine, changes } = controlled({ items: [A] });
+    const { engine, changes } = controlled({ options: [A] });
     let pendingInside;
 
     engine.control.update((scope) => {
@@ -1789,7 +1804,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("an update can clear, do nothing, or apply several writes", async function (assert) {
-    const single = controlled({ items: [A], value: 1 });
+    const single = controlled({ options: [A], value: 1 });
     await single.engine.control.update(async (scope) => scope.clear());
     assert.deepEqual(
       single.changes,
@@ -1797,15 +1812,19 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       "a single clear emits null"
     );
 
-    const multi = controlled({ items: [A, B, C], multiple: true, value: [1] });
+    const multi = controlled({
+      options: [A, B, C],
+      multiple: true,
+      value: [1],
+    });
     await multi.engine.control.update(async (scope) => scope.clear());
     assert.deepEqual(multi.changes.at(-1)[0], [], "a multi clear emits []");
 
-    const idle = controlled({ items: [A], value: 1 });
+    const idle = controlled({ options: [A], value: 1 });
     await idle.engine.control.update(async () => {});
     assert.strictEqual(idle.changes.length, 0, "an empty work emits nothing");
 
-    const both = controlled({ items: [A, B, C], multiple: true, value: [1] });
+    const both = controlled({ options: [A, B, C], multiple: true, value: [1] });
     await both.engine.control.update(async (scope) => {
       scope.select(B);
       scope.deselect(A);
@@ -1834,7 +1853,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       );
     });
 
-    const deferring = controlled({ items: [A, B, C], multiple: true });
+    const deferring = controlled({ options: [A, B, C], multiple: true });
     let writes = 0;
     await deferring.engine.control.update(async (scope) => {
       scope.select(A);
@@ -1847,7 +1866,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
     mode = "veto";
     let vetoedScope;
-    const vetoing = controlled({ items: [A, B], value: null });
+    const vetoing = controlled({ options: [A, B], value: null });
     await vetoing.engine.control.update(async (scope) => {
       vetoedScope = scope;
       scope.select(A);
@@ -1862,7 +1881,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("a rejecting or throwing work ends the update and rejects update() with its reason", async function (assert) {
-    const { engine } = controlled({ items: [A], value: 1 });
+    const { engine } = controlled({ options: [A], value: 1 });
     const failure = new Error("boom");
     const gate = deferred();
 
@@ -1895,7 +1914,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("a newer update supersedes the older one", async function (assert) {
-    const { engine, changes } = controlled({ items: [A, B] });
+    const { engine, changes } = controlled({ options: [A, B] });
     const first = deferred();
     const second = deferred();
     let firstScope;
@@ -1939,7 +1958,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     };
 
     for (const [name, act] of Object.entries(intents)) {
-      const { engine } = controlled({ items: [A, B], value: 1 });
+      const { engine } = controlled({ options: [A, B], value: 1 });
       const gate = deferred();
       let seen;
       const done = engine.control.update(async (scope) => {
@@ -1955,7 +1974,11 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       await done;
     }
 
-    const multi = controlled({ items: [A, B], multiple: true, value: [1, 2] });
+    const multi = controlled({
+      options: [A, B],
+      multiple: true,
+      value: [1, 2],
+    });
     const gate = deferred();
     let multiScope;
     const done = multi.engine.control.update(async (scope) => {
@@ -1974,7 +1997,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     gate.resolve();
     await done;
 
-    const empty = controlled({ items: [A] });
+    const empty = controlled({ options: [A] });
     const emptyGate = deferred();
     let emptyScope;
     const emptyDone = empty.engine.control.update(async (scope) => {
@@ -1995,7 +2018,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     let reentered = false;
     let engineRef;
     const { engine, changes } = controlled({
-      items: [A, B, C],
+      options: [A, B, C],
       afterChange: (value) => {
         if (value === 1 && !reentered) {
           reentered = true;
@@ -2025,7 +2048,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
   test("a parent change makes the scope stale, even before any write", async function (assert) {
     const { engine, changes, setValue } = controlled({
-      items: [A, B],
+      options: [A, B],
       value: 1,
     });
     const gate = deferred();
@@ -2044,7 +2067,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     assert.strictEqual(changes.length, 0, "a stale scope write emits nothing");
 
     const multi = controlled({
-      items: [A],
+      options: [A],
       multiple: true,
       value: ["a,b", "c"],
     });
@@ -2077,7 +2100,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       );
     });
 
-    const own = controlled({ items: [A, B] });
+    const own = controlled({ options: [A, B] });
     const gate = deferred();
     let ownScope;
     const ownDone = own.engine.control.update(async (scope) => {
@@ -2095,7 +2118,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       "a deferred change commits after a normal end"
     );
 
-    const stale = controlled({ items: [A, B] });
+    const stale = controlled({ options: [A, B] });
     const staleGate = deferred();
     const staleDone = stale.engine.control.update(async (scope) => {
       scope.select(A);
@@ -2116,7 +2139,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
   test("in a multi-select a manual add drops the async add", async function (assert) {
     const { engine, changes } = controlled({
-      items: [A, B, C],
+      options: [A, B, C],
       multiple: true,
       value: [1],
     });
@@ -2138,7 +2161,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("destroying the engine releases the display barrier before the work settles", async function (assert) {
-    const { engine, changes } = controlled({ items: [A], value: null });
+    const { engine, changes } = controlled({ options: [A], value: null });
     const gate = deferred();
     let seen;
 
@@ -2169,7 +2192,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   test("an update keeps writing when the parent declines its change", async function (assert) {
     const emitted = [];
     const engine = new SelectEngine({
-      items: [A, B],
+      options: [A, B],
       getValue: () => null,
       onChange: (nextValue) => emitted.push(nextValue),
     });
@@ -2188,7 +2211,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
   test("a locked select ignores direct and control mutations", function (assert) {
     const { engine, changes } = controlled({
-      items: [A, B, C],
+      options: [A, B, C],
       multiple: true,
       value: [1, 2],
       getLocked: () => true,
@@ -2208,7 +2231,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
   test("a locked single select ignores direct and control mutations", function (assert) {
     const { engine, changes } = controlled({
-      items: [A, B],
+      options: [A, B],
       value: 1,
       getLocked: () => true,
     });
@@ -2232,7 +2255,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
 
     let locked = false;
     const { engine, changes } = controlled({
-      items: [A, B],
+      options: [A, B],
       multiple: true,
       getLocked: () => locked,
     });
@@ -2257,7 +2280,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   test("scope writes are refused while the select is locked", async function (assert) {
     let locked = false;
     const { engine, changes } = controlled({
-      items: [A],
+      options: [A],
       getLocked: () => locked,
     });
 
@@ -2274,7 +2297,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("a control deselect of an item not held, or a clear of nothing, emits nothing", function (assert) {
-    const single = controlled({ items: [A, B], value: 1 });
+    const single = controlled({ options: [A, B], value: 1 });
     single.engine.control.deselect(B);
     assert.strictEqual(
       single.changes.length,
@@ -2289,7 +2312,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
       "deselecting the held item clears"
     );
 
-    const empty = controlled({ items: [A] });
+    const empty = controlled({ options: [A] });
     empty.engine.control.clear();
     assert.strictEqual(
       empty.changes.length,
@@ -2299,7 +2322,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 
   test("settled() waits for an update's work", async function (assert) {
-    const { engine } = controlled({ items: [A] });
+    const { engine } = controlled({ options: [A] });
     const gate = deferred();
 
     engine.control.update(async (scope) => {
@@ -2333,17 +2356,17 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
       );
     });
     const engine = new SelectEngine({
-      items: [
+      options: [
         { id: 1, name: "Apple" },
         { id: 2, name: "Banana" },
       ],
     });
 
-    engine.buildItems(await engine.loadItems(engine.loadContext));
+    engine.buildRows(await engine.loadOptions(engine.loadContext));
     engine.setFilter("a");
-    engine.buildItems(await engine.loadItems(engine.loadContext));
+    engine.buildRows(await engine.loadOptions(engine.loadContext));
     engine.reload();
-    engine.buildItems(await engine.loadItems(engine.loadContext));
+    engine.buildRows(await engine.loadOptions(engine.loadContext));
 
     assert.false(spy.called, "the customization never ran");
   });
@@ -2370,7 +2393,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
       getKindContext: () => kind,
       getInstanceContext: () => instance,
       load: (_filter, { offset = 0 }) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -2378,22 +2401,22 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
       }),
     });
 
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.strictEqual(contexts.length, 1, "the first query consults it");
 
     engine.revealMore();
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     engine.revealMore();
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.strictEqual(contexts.length, 1, "reveals reuse the query's loader");
 
     engine.setFilter("Item 1");
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.strictEqual(contexts.length, 2, "a new filter is a new query");
     assert.strictEqual(contexts[1].filter, "Item 1", "with that filter");
 
     engine.reload();
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.strictEqual(contexts.length, 3, "a reload is a new query");
 
     const [first] = contexts;
@@ -2420,7 +2443,8 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
         };
       },
       state: new SelectState(),
-      keyOf: (item) => String(item.id),
+      keyOf: (option) => String(option.record.id),
+      wrap: (entries) => entries.map((entry) => selectOption(entry)),
     });
     const rows = source.rows({});
     assert.deepEqual(calls, [], "neither callback runs synchronously");
@@ -2434,7 +2458,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
       "both run in order when the task yields"
     );
     assert.deepEqual(
-      await rows,
+      recordsOf(await rows),
       clientItems(2),
       "the deferred source answers normally"
     );
@@ -2456,7 +2480,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
     });
     const engine = new SelectEngine({ load: () => clientItems(2) });
     const abort = new AbortController();
-    const abandoned = engine.loadItems(engine.loadContext, {
+    const abandoned = engine.loadOptions(engine.loadContext, {
       signal: abort.signal,
     });
     abort.abort();
@@ -2467,7 +2491,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
       "abandoning before the microtask never resolves the loader"
     );
     assert.deepEqual(
-      await engine.loadItems(engine.loadContext),
+      recordsOf(await engine.loadOptions(engine.loadContext)),
       clientItems(2),
       "the replacement request still loads"
     );
@@ -2489,7 +2513,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
               return (_filter, { offset }) => {
                 offsets.push(offset);
                 const page = {
-                  items: [{ id: offset + 1, name: `Source ${prefix}` }],
+                  options: [{ id: offset + 1, name: `Source ${prefix}` }],
                   hasMore: true,
                 };
                 return offsets.length === 1
@@ -2504,28 +2528,28 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
     });
     const engine = new SelectEngine({ load: () => [] });
     const abort = new AbortController();
-    const abandoned = engine.loadItems(engine.loadContext, {
+    const abandoned = engine.loadOptions(engine.loadContext, {
       signal: abort.signal,
     });
     await Promise.resolve();
     abort.abort();
     release();
     await abandoned;
-    const retry = await engine.loadItems(engine.loadContext);
+    const retry = await engine.loadOptions(engine.loadContext);
     assert.strictEqual(
-      retry[0].name,
+      retry[0].record.name,
       "Source 1",
       "retry uses the original closure"
     );
     engine.revealMore();
-    const revealed = await engine.loadItems(engine.loadContext);
+    const revealed = await engine.loadOptions(engine.loadContext);
     assert.deepEqual(
       offsets,
       [0, 0, 1],
       "retry starts at zero and reveal advances"
     );
     assert.true(
-      revealed.every((item) => item.name === "Source 1"),
+      revealed.every((option) => option.record.name === "Source 1"),
       "reveals keep the same source"
     );
     assert.strictEqual(
@@ -2535,7 +2559,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
     );
     engine.control.reload();
     assert.strictEqual(
-      (await engine.loadItems(engine.loadContext))[0].name,
+      (await engine.loadOptions(engine.loadContext))[0].record.name,
       "Source 2",
       "reload resolves a new closure"
     );
@@ -2546,7 +2570,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
     let scope;
     const changes = [];
     const engine = new SelectEngine({
-      items: clientItems(2),
+      options: clientItems(2),
       onChange: (value) => changes.push(value),
     });
     const done = engine.control.update(async (currentScope) => {
@@ -2588,7 +2612,7 @@ module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
     });
     const engine = new SelectEngine({ load: () => [] });
     await assert.rejects(
-      engine.loadItems(engine.loadContext),
+      engine.loadOptions(engine.loadContext),
       /load customization must return a function/i,
       "invalid results have a development assertion"
     );
@@ -2605,7 +2629,7 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
   ];
 
   function names(descriptors) {
-    return descriptors.map((row) => row.item.name ?? row.item.label);
+    return descriptors.map((row) => row.record.name ?? row.record.label);
   }
 
   test("sticky rows are hoisted ahead of the none row and the specials, in order", async function (assert) {
@@ -2616,26 +2640,38 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
           selects.forAll((spec) =>
             spec.content((items) => [
               ...items,
-              { id: "late", name: "Late action", sticky: true, onSelect() {} },
-              { id: "plain", name: "Plain action", onSelect() {} },
+              selectOption(
+                { id: "late", name: "Late action" },
+                { position: "sticky", onSelect() {} }
+              ),
+              selectOption(
+                { id: "plain", name: "Plain action" },
+                { onSelect() {} }
+              ),
             ])
           )
       );
     });
     const engine = new SelectEngine({
-      items: [
+      options: [
         ROWS[0],
-        { id: "early", name: "Early action", sticky: true, onSelect() {} },
+        selectOption(
+          { id: "early", name: "Early action" },
+          { position: "sticky", onSelect() {} }
+        ),
         ROWS[1],
       ],
-      getArgs: () => ({ noneRow: true }),
-      specialItems: () => [
+      getArgs: () => ({ noneOption: true }),
+      extraOptions: () => [
         { id: "special", name: "Special" },
-        { id: "sticky-special", name: "Sticky special", sticky: true },
+        selectOption(
+          { id: "sticky-special", name: "Sticky special" },
+          { position: "sticky" }
+        ),
       ],
     });
 
-    const rows = engine.buildItems(await engine.loadItems(engine.loadContext));
+    const rows = engine.buildRows(await engine.loadOptions(engine.loadContext));
 
     assert.deepEqual(
       names(rows),
@@ -2678,13 +2714,13 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
       );
     });
     const engine = new SelectEngine({
-      items: ROWS,
+      options: ROWS,
       groupBy: "section",
       groupHeader: (key) => (key === "fruit" ? "Fruit" : "Vegetables"),
     });
 
-    const rows = engine.buildItems(await engine.loadItems(engine.loadContext));
-    const sticky = rows.find((row) => row.item.id === "act");
+    const rows = engine.buildRows(await engine.loadOptions(engine.loadContext));
+    const sticky = rows.find((row) => row.record.id === "act");
 
     assert.strictEqual(rows[0], sticky, "the sticky row comes first");
     assert.strictEqual(
@@ -2713,16 +2749,16 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
       );
     });
     const engine = new SelectEngine({
-      items: ROWS,
-      getArgs: () => ({ noneRow: true }),
+      options: ROWS,
+      getArgs: () => ({ noneOption: true }),
     });
 
-    const stickyRows = engine.buildItems(
-      await engine.loadItems(engine.loadContext)
+    const stickyRows = engine.buildRows(
+      await engine.loadOptions(engine.loadContext)
     );
     makeSticky = false;
-    const plainRows = engine.buildItems(
-      await engine.loadItems(engine.loadContext)
+    const plainRows = engine.buildRows(
+      await engine.loadOptions(engine.loadContext)
     );
 
     assert.deepEqual(
@@ -2745,7 +2781,7 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
   const B = { id: 2, name: "B" };
   const C = { id: 3, name: "C" };
 
-  test("batch filters structural and action rows, caches new items and runs middleware once", function (assert) {
+  test("batch skips disabled and action options, caches new records and runs middleware once", function (assert) {
     const middleware = sinon.spy((next) => next());
     withPluginApi((api) => {
       api.registerValueTransformer(
@@ -2762,10 +2798,8 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
     });
     engine.control.selectMany([
       A,
-      { ...B, disabled: true },
-      { ...B, __header: true },
-      { ...B, __divider: true },
-      { ...B, onSelect: action },
+      selectOption(B, { disabled: true }),
+      selectOption(B, { onSelect: action }),
       B,
       { ...B, id: "2" },
       C,
@@ -2782,7 +2816,7 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
       "one batch with only eligible items"
     );
     assert.strictEqual(middleware.callCount, 1, "one middleware invocation");
-    assert.strictEqual(action.callCount, 0, "action rows are skipped");
+    assert.strictEqual(action.callCount, 0, "action options are skipped");
     assert.strictEqual(engine.resolveSingleSync(2), B, "new items are cached");
     assert.strictEqual(
       engine.resolveSingleSync(3),
@@ -2793,7 +2827,7 @@ module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
 
   test("single select chooses the first new eligible item", function (assert) {
     const { engine, changes } = controlled({ value: 1 });
-    engine.selectMany([A, { ...B, disabled: true }, C, B]);
+    engine.selectMany([A, selectOption(B, { disabled: true }), C, B]);
     assert.deepEqual(
       changes,
       [[3, C]],
@@ -2893,11 +2927,11 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
     let maxLoaded = 3;
     const engine = new SelectEngine({
       getMaxLoaded: () => maxLoaded,
-      load: () => ({ items: [A, B, C, { id: 4, name: "Four" }] }),
+      load: () => ({ options: [A, B, C, { id: 4, name: "Four" }] }),
     });
 
     assert.strictEqual(
-      (await engine.loadItems(engine.loadContext)).length,
+      (await engine.loadOptions(engine.loadContext)).length,
       3,
       "the live reader caps the first query"
     );
@@ -2906,7 +2940,7 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
     maxLoaded = undefined;
     engine.reload();
     assert.strictEqual(
-      (await engine.loadItems(engine.loadContext)).length,
+      (await engine.loadOptions(engine.loadContext)).length,
       4,
       "removing the live cap restores every row on reload"
     );
@@ -2916,7 +2950,7 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
   test("an uncapped source remains revealable after each page settles", async function (assert) {
     const engine = new SelectEngine({
       load: (_query, { offset = 0 }) => ({
-        items: Array.from({ length: 60 }, (_, index) => ({
+        options: Array.from({ length: 60 }, (_, index) => ({
           id: offset + index,
           name: `Item ${offset + index}`,
         })),
@@ -2924,7 +2958,7 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
       }),
     });
     for (let index = 0; index < 6; index++) {
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.true(
         engine.canRevealMore,
         "the settled source still has more rows"
@@ -2940,18 +2974,18 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
     const engine = new SelectEngine({
       load: (query) => [{ id: 1, name: query || "Initial" }],
     });
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     engine.setFilter("Changed");
-    let rows = await engine.loadItems(engine.loadContext);
+    let rows = await engine.loadOptions(engine.loadContext);
     assert.deepEqual(
-      rows,
+      recordsOf(rows),
       [{ id: 1, name: "Changed" }],
       "a new query retains its own row"
     );
     engine.reload();
-    rows = await engine.loadItems(engine.loadContext);
+    rows = await engine.loadOptions(engine.loadContext);
     assert.deepEqual(
-      rows,
+      recordsOf(rows),
       [{ id: 1, name: "Changed" }],
       "reload also clears held keys"
     );
@@ -2964,17 +2998,17 @@ module("Unit | ui-kit | SelectEngine | maxLoaded and cursor", function (hooks) {
     const engine = new SelectEngine({
       load: (query, opts) => {
         cursors.push(opts.cursor);
-        return query ? { items: [B], hasMore: true, cursor } : gate.promise;
+        return query ? { options: [B], hasMore: true, cursor } : gate.promise;
       },
     });
-    const stale = engine.loadItems(engine.loadContext);
+    const stale = engine.loadOptions(engine.loadContext);
     await Promise.resolve();
     engine.setFilter("current");
-    await engine.loadItems(engine.loadContext);
-    gate.resolve({ items: [A], hasMore: true, cursor: "stale" });
+    await engine.loadOptions(engine.loadContext);
+    gate.resolve({ options: [A], hasMore: true, cursor: "stale" });
     await stale;
     engine.revealMore();
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     assert.strictEqual(
       cursors.at(-1),
       cursor,
@@ -2995,7 +3029,7 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
     let calls = 0;
     const engine = new SelectEngine({
       load: () =>
-        ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
+        ++calls === 1 ? { options: [A], hasMore: true } : gate.promise,
     });
     const announce = sinon.spy();
     const announcer = new SelectAnnouncer({
@@ -3006,9 +3040,9 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
       getShouldSuppressEntryCount: () => false,
       isRevealDue: () => due,
     });
-    await engine.loadItems(engine.loadContext);
+    await engine.loadOptions(engine.loadContext);
     engine.revealMore();
-    const pending = engine.loadItems(engine.loadContext);
+    const pending = engine.loadOptions(engine.loadContext);
     announcer.announceReveal();
     assert.false(announce.called, "a reveal says nothing before it is due");
     due = true;
@@ -3018,7 +3052,7 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
       "a reveal announces its start once it is due"
     );
     announcer.releaseSession();
-    gate.resolve({ items: [B], hasMore: false });
+    gate.resolve({ options: [B], hasMore: false });
     await pending;
     announcer.announceReveal();
     assert.false(
@@ -3034,7 +3068,7 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
       let calls = 0;
       const engine = new SelectEngine({
         load: () =>
-          ++calls === 1 ? { items: [A], hasMore: true } : gate.promise,
+          ++calls === 1 ? { options: [A], hasMore: true } : gate.promise,
       });
       const announce = sinon.spy();
       const announcer = new SelectAnnouncer({
@@ -3045,9 +3079,9 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
         getShouldSuppressEntryCount: () => false,
         isRevealDue: () => true,
       });
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      const pending = engine.loadItems(engine.loadContext);
+      const pending = engine.loadOptions(engine.loadContext);
       announcer.announceReveal();
       assert.true(
         announce.calledWith(i18n("d_select.loading_more")),
@@ -3061,7 +3095,7 @@ module("Unit | ui-kit | SelectAnnouncer | reveal reports", function (hooks) {
         }
       });
       assert.true(isSettled(), "the reveal report leaves no timer behind");
-      gate.resolve({ items: [B], hasMore: false });
+      gate.resolve({ options: [B], hasMore: false });
       await pending;
       if (cleanup === "close") {
         announcer.announceReveal();
@@ -3104,13 +3138,15 @@ module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
       items.slice(0, 50).map((i) => i.id)
     );
     const engine = new SelectEngine({
-      items,
+      options: items,
       getMultiple: () => true,
       getValue: () => value,
     });
 
     counter.reads = 0;
-    const descriptors = engine.buildItems(engine.loadItems(engine.loadContext));
+    const descriptors = engine.buildRows(
+      engine.loadOptions(engine.loadContext)
+    );
 
     assert.strictEqual(
       descriptors.filter((descriptor) => descriptor.flags.selected).length,
@@ -3127,7 +3163,7 @@ module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
     const items = rows(5);
     const value = trackedArray([1]);
     const engine = new SelectEngine({
-      items,
+      options: items,
       getMultiple: () => true,
       getValue: () => value,
     });
@@ -3147,7 +3183,7 @@ module("Unit | ui-kit | SelectEngine | held value reads", function (hooks) {
     const items = rows(5);
     const state = trackedObject({ value: [1, 2] });
     const engine = new SelectEngine({
-      items,
+      options: items,
       getMultiple: () => true,
       getValue: () => state.value,
     });
@@ -3185,7 +3221,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   }
 
   test("work receives a live signal, synchronous or not", async function (assert) {
-    const { engine } = controlled({ items: [A] });
+    const { engine } = controlled({ options: [A] });
     let syncSignal;
     engine.control.update((scope) => {
       syncSignal = scope.signal;
@@ -3201,7 +3237,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   });
 
   test("a newer update aborts the older one's signal", async function (assert) {
-    const { engine } = controlled({ items: [A, B] });
+    const { engine } = controlled({ options: [A, B] });
     const first = blockedUpdate(engine);
     const second = blockedUpdate(engine);
 
@@ -3219,7 +3255,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   });
 
   test("selection intent from outside the update aborts its signal", async function (assert) {
-    const { engine } = controlled({ items: [A, B], value: 1 });
+    const { engine } = controlled({ options: [A, B], value: 1 });
     const pending = blockedUpdate(engine);
 
     engine.select(B);
@@ -3230,7 +3266,11 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   });
 
   test("the update's own writes do not abort its signal", async function (assert) {
-    const { engine } = controlled({ items: [A, B], multiple: true, value: [] });
+    const { engine } = controlled({
+      options: [A, B],
+      multiple: true,
+      value: [],
+    });
     let signal;
     const gate = deferred();
     let abortedAfterWrite;
@@ -3249,7 +3289,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   });
 
   test("control.reload does not abort a pending update", async function (assert) {
-    const { engine } = controlled({ items: [A] });
+    const { engine } = controlled({ options: [A] });
     const pending = blockedUpdate(engine);
 
     engine.control.reload();
@@ -3260,7 +3300,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   });
 
   test("destroying the select aborts the signal of pending work", async function (assert) {
-    const { engine } = controlled({ items: [A] });
+    const { engine } = controlled({ options: [A] });
     const pending = blockedUpdate(engine);
 
     destroy(engine);
@@ -3277,7 +3317,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
       (engine) => engine.control.select(B),
       (engine) => destroy(engine),
     ]) {
-      const { engine, changes } = controlled({ items: [A, B] });
+      const { engine, changes } = controlled({ options: [A, B] });
       const gate = deferred();
       let reason;
       let aborts = 0;
@@ -3333,7 +3373,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
         (control) => control.clear(),
       ]) {
         const { engine } = controlled({
-          items: [A, B],
+          options: [A, B],
           multiple: true,
           value: [1],
           maximum: 1,
@@ -3365,7 +3405,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
   test("all own verbs keep the signal live across an await and while locked", async function (assert) {
     let locked = false;
     const { engine, changes } = controlled({
-      items: [A, B],
+      options: [A, B],
       multiple: true,
       value: [1],
       getLocked: () => locked,
@@ -3400,7 +3440,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
 
   test("reading a temporarily stale scope does not cancel its work", async function (assert) {
     const { engine, setValue, changes } = controlled({
-      items: [A, B],
+      options: [A, B],
       value: 1,
     });
     const gate = deferred();
@@ -3436,7 +3476,7 @@ module("Unit | ui-kit | SelectEngine | update signal", function (hooks) {
       (engine) => engine.control.update(() => {}),
       (engine) => engine.control.clear(),
     ]) {
-      const { engine } = controlled({ items: [A] });
+      const { engine } = controlled({ options: [A] });
       await engine.control.update((scope) => {
         assert.false(scope.signal?.aborted, "synchronous work starts live");
         cancel(engine);
@@ -3494,7 +3534,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [A.id, B.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value,
       lockedValues: [A.id],
     });
@@ -3509,7 +3549,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const lockedValues = [A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [...lockedValues, B.id],
       lockedValues,
     });
@@ -3526,7 +3566,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
   test("refuses toggling a selected locked row", function (assert) {
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [A.id, B.id],
       lockedValues: [A.id],
     });
@@ -3539,7 +3579,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
   test("refuses activating a selected locked row", function (assert) {
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [A.id, B.id],
       lockedValues: [A.id],
     });
@@ -3553,7 +3593,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [B.id, A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value,
       lockedValues: [A.id],
     });
@@ -3568,7 +3608,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const lockedValues = [A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [...lockedValues, B.id],
       lockedValues,
     });
@@ -3588,7 +3628,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const retained = value.filter((id) => lockedValues.includes(id));
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, D],
+      options: [A, B, D],
       value,
       lockedValues,
     });
@@ -3606,7 +3646,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [B.id, A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value,
       lockedValues: [...value].reverse(),
     });
@@ -3619,7 +3659,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
   test("protects programmatic EngineControl deselect", function (assert) {
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [A.id, B.id],
       lockedValues: [A.id],
     });
@@ -3629,19 +3669,21 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     assert.deepEqual(changes, [], "the programmatic removal emits nothing");
   });
 
-  test("protects clear through an action row's EngineControl", function (assert) {
+  test("protects clear through an action option's EngineControl", function (assert) {
     const lockedValues = [A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [...lockedValues, B.id],
       lockedValues,
     });
 
-    engine.activate({
-      id: "clear-action",
-      onSelect: (control) => control.clear(),
-    });
+    engine.activate(
+      selectOption(
+        { id: "clear-action" },
+        { onSelect: (control) => control.clear() }
+      )
+    );
 
     assert.deepEqual(
       changes.map(([value, items, change]) => [value, items, change.reason]),
@@ -3670,7 +3712,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [A.id, B.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C],
+      options: [A, B, C],
       value,
       lockedValues: [A.id],
     });
@@ -3694,7 +3736,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [A.id, B.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C],
+      options: [A, B, C],
       value,
       lockedValues: [A.id],
     });
@@ -3722,7 +3764,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const lockedValues = [A.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [...lockedValues, B.id],
       lockedValues,
     });
@@ -3741,7 +3783,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const locks = trackedObject({ value: [] });
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [A.id, B.id],
       getLockedValues: () => locks.value,
     });
@@ -3762,7 +3804,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const locks = trackedObject({ value: [A.id] });
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C],
+      options: [A, B, C],
       value,
       getLockedValues: () => locks.value,
     });
@@ -3794,7 +3836,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
       const locks = trackedObject({ value: [A.id] });
       const { engine, changes, setValue } = controlledWithChanges({
         multiple: true,
-        items: [A, B, C, D],
+        options: [A, B, C, D],
         value: [A.id],
         getLockedValues: () => locks.value,
       });
@@ -3821,7 +3863,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [String(C.id), B.id];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [B, C],
+      options: [B, C],
       value,
       lockedValues: [C.id],
     });
@@ -3841,7 +3883,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const lockedValues = ["Staff"];
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [staff, B],
+      options: [staff, B],
       value: [staff.id, B.id],
       lockedValues,
       normalizeKey: (key) => key.toLowerCase(),
@@ -3861,7 +3903,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const held = "staff";
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [staff, B],
+      options: [staff, B],
       value: [held],
       lockedValues: ["Staff"],
       normalizeKey: (key) => key.toLowerCase(),
@@ -3893,7 +3935,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     test(`refused ${name} supersedes an in-flight update at once`, async function (assert) {
       const { engine, changes } = controlledWithChanges({
         multiple: true,
-        items: [A, B],
+        options: [A, B],
         value: [A.id],
         lockedValues: [A.id],
       });
@@ -3936,7 +3978,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const maximum = value.length + 1;
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C, D],
+      options: [A, B, C, D],
       value,
       lockedValues: [...value],
       maximum,
@@ -3976,7 +4018,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const locks = trackedObject({ value: [B.id] });
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C],
+      options: [A, B, C],
       value,
       getLockedValues: () => locks.value,
     });
@@ -3998,7 +4040,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const locks = trackedObject({ value: [A.id] });
     const { engine, changes } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value: [A.id, B.id],
       lockedValues: [A.id],
       getLockedValues: () => locks.value,
@@ -4023,7 +4065,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
       () => {
         const { engine } = controlledWithChanges({
           multiple: true,
-          items: [A, B],
+          options: [A, B],
           value,
           lockedValues: value.join("|"),
         });
@@ -4039,7 +4081,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
       () => {
         const { engine } = controlledWithChanges({
           multiple: false,
-          items: [A],
+          options: [A],
           value: A.id,
           lockedValues: [A.id],
         });
@@ -4055,7 +4097,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
       () => {
         const { engine } = controlledWithChanges({
           multiple: true,
-          items: [A],
+          options: [A],
           value: [A.id],
           lockedValues: [undefined],
         });
@@ -4071,7 +4113,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
       () => {
         const { engine } = controlledWithChanges({
           multiple: true,
-          items: [A, B],
+          options: [A, B],
           value: [A.id],
           lockedValues: [B.id],
         });
@@ -4086,7 +4128,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const value = [A.id];
     const { engine, setValue } = controlledWithChanges({
       multiple: true,
-      items: [A, B],
+      options: [A, B],
       value,
       lockedValues: value,
     });
@@ -4105,7 +4147,7 @@ module("Unit | ui-kit | SelectEngine | locked values", function (hooks) {
     const unresolved = "unresolved";
     const { engine } = controlledWithChanges({
       multiple: true,
-      items: [A, B, C],
+      options: [A, B, C],
       value: [A.id, B.id, unresolved],
       lockedValues: [A.id, unresolved],
     });

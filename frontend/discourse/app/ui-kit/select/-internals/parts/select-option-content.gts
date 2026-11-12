@@ -10,14 +10,14 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
-  SelectDescriptor,
   SelectRecord as SelectRecordModel,
+  SelectRow,
 } from "discourse/ui-kit/select/select-engine";
 
 interface SelectOptionContentSignature {
   Args: {
     engine: SelectEngine;
-    descriptor: SelectDescriptor;
+    descriptor: SelectRow;
     multiple?: boolean;
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
@@ -33,7 +33,7 @@ interface SelectOptionContentSignature {
      */
     active?: boolean;
     /** The last sticky row, which draws the rule under the sticky zone. */
-    stickyEnd?: boolean;
+    stickyLast?: boolean;
     /**
      * When true, the whole control is disabled/read-only and no option may be activated,
      * regardless of the row's own flag. Closing the overlay on lock is asynchronous (it
@@ -50,8 +50,8 @@ interface SelectOptionContentSignature {
 
 /**
  * A single listbox option (`<li role="option">`) inside a `DSelect`. Clicking it
- * routes through the engine's `activate`, which runs an item's `onSelect` callback
- * (an action item) or toggles its selection — so pointer and keyboard share one path
+ * routes through the engine's `activate`, which runs an action option's `onSelect` or
+ * toggles its record's selection — so pointer and keyboard share one path
  * (the `dRovingFocus` `onActivate` in `DSelect` simply clicks the active element).
  *
  * The engine owns `aria-selected` (the chosen-value state); the modifier owns the
@@ -71,7 +71,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
   /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
   #presentation?: {
     engine: SelectEngine;
-    descriptor: SelectDescriptor;
+    descriptor: SelectRow;
     cache: ReturnType<typeof createCache<SelectRowPresentation>>;
   };
 
@@ -82,14 +82,16 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
 
   /** The option label from the engine's configured label field. */
   get name(): string {
-    return this.args.engine.getRecordLabel(this.args.descriptor.item);
+    return this.args.engine.getRecordLabel(this.args.descriptor.record);
   }
 
   get describedBy(): string | undefined {
     return (
       [
         this.args.describedBy,
-        this.args.descriptor.item.description ? this.descriptionId : undefined,
+        this.args.descriptor.option.description
+          ? this.descriptionId
+          : undefined,
         this.args.descriptor.flags.capDisabled ? this.args.limitId : undefined,
         this.args.descriptor.flags.locked ? this.lockedHintId : undefined,
       ]
@@ -111,19 +113,20 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
     if (this.args.locked || this.args.descriptor.flags.disabled) {
       return;
     }
-    this.args.engine.activate(this.args.descriptor.item);
+    this.args.engine.activate(this.args.descriptor.option);
   }
 
   /** Reuses the tracked computation across equivalent list descriptor wrappers. */
   #resolvePresentation(
     engine: SelectEngine,
-    descriptor: SelectDescriptor
+    descriptor: SelectRow
   ): SelectRowPresentation {
     const previous = this.#presentation;
     if (
       !previous ||
       previous.engine !== engine ||
-      previous.descriptor.item !== descriptor.item ||
+      previous.descriptor.record !== descriptor.record ||
+      previous.descriptor.option.settings !== descriptor.option.settings ||
       previous.descriptor.flags.selected !== descriptor.flags.selected ||
       previous.descriptor.flags.disabled !== descriptor.flags.disabled
     ) {
@@ -141,17 +144,17 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
       <li
         aria-describedby={{this.describedBy}}
         aria-disabled={{if @descriptor.flags.disabled "true"}}
-        aria-labelledby={{if @descriptor.item.description this.labelId}}
+        aria-labelledby={{if @descriptor.option.description this.labelId}}
         aria-selected={{if @descriptor.flags.selected "true" "false"}}
         class={{dConcatClass
           "d-select__option"
           (if @active "--active")
           (if @descriptor.flags.sticky "--sticky")
-          (if @stickyEnd "--sticky-end")
+          (if @stickyLast "--sticky-last")
           (if @descriptor.flags.selected "--selected")
           (if @descriptor.flags.locked "--locked")
-          (if @descriptor.flags.__create "--create")
-          (if @descriptor.flags.__none "--none")
+          (if @descriptor.flags.create "--create")
+          (if @descriptor.flags.none "--none")
           (if @descriptor.flags.groupHeader "--action-header")
           (if @descriptor.flags.groupFooter "--action-footer")
           row.classes
@@ -183,19 +186,19 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
             class="d-select__option-selected-icon --checkbox"
           }}
         {{/if}}
-        {{#if @descriptor.item.description}}
+        {{#if @descriptor.option.description}}
           <span class="d-select__option-content">
-            <span id={{this.labelId}}>{{yield @descriptor.item}}</span>
+            <span id={{this.labelId}}>{{yield @descriptor.record}}</span>
             <span
               class="d-select__option-description"
               dir={{if this.siteSettings.support_mixed_text_direction "auto"}}
               id={{this.descriptionId}}
             >
-              {{@descriptor.item.description}}
+              {{@descriptor.option.description}}
             </span>
           </span>
         {{else}}
-          {{yield @descriptor.item}}
+          {{yield @descriptor.record}}
         {{/if}}
         {{#if @descriptor.flags.locked}}
           {{! Hidden, so it stays out of the option's name and is read only as its description. }}

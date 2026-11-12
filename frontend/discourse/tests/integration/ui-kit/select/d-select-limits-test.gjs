@@ -27,7 +27,9 @@ import {
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  selectOption,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 class MultiLimitsStaticHost extends Component {
@@ -42,10 +44,10 @@ class MultiLimitsStaticHost extends Component {
   <template>
     <DSelect
       @identifier="test-multi-limits-static"
-      @items={{@items}}
       @maximum={{@maximum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{@options}}
       @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
       @variant="static"
@@ -53,9 +55,9 @@ class MultiLimitsStaticHost extends Component {
       <:selection as |item|>
         {{~item.name~}}
       </:selection>
-      <:item as |item|>
+      <:option as |item|>
         {{~item.name~}}
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }
@@ -82,19 +84,19 @@ class ReactiveMaximumHost extends Component {
   <template>
     <DSelect
       @identifier="test-reactive-maximum"
-      @items={{@items}}
       @maximum={{this.maximum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{@options}}
       @value={{this.value}}
       @variant="static"
     >
       <:selection as |item|>
         {{~item.name~}}
       </:selection>
-      <:item as |item|>
+      <:option as |item|>
         {{~item.name~}}
-      </:item>
+      </:option>
       <:footer>
         <button
           class="raise-maximum"
@@ -122,11 +124,11 @@ class FooterLimitsHost extends Component {
   <template>
     <DSelect
       @identifier="test-footer-limits"
-      @items={{ITEMS}}
       @maximum={{3}}
       @minimum={{2}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @value={{this.value}}
     >
       <:footer as |state|>
@@ -180,10 +182,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{2}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @value={{this.value}}
           />
         </template>
@@ -217,10 +219,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{2}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @value={{this.value}}
             @variant="static"
           />
@@ -249,16 +251,15 @@ module(
 
     test("the create-on-the-fly row is disabled and inert at @maximum", async function (assert) {
       const onChange = sinon.spy();
-      const createItem = (filter) => ({
+      const createOption = (filter) => ({
         id: filter,
         name: filter,
-        __create: true,
       });
       await render(
         <template>
           <MultiLimitsHost
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @maximum={{1}}
             @onChange={{onChange}}
             @value={{array 1}}
@@ -283,17 +284,16 @@ module(
     });
 
     test("at @maximum only unselected ordinary options become disabled", async function (assert) {
-      const actionItem = {
-        id: "action",
-        name: "Run action",
-        onSelect() {},
-      };
+      const actionItem = selectOption(
+        { id: "action", name: "Run action" },
+        { onSelect() {} }
+      );
       const items = [...ITEMS, actionItem];
       await render(
         <template>
           <MultiLimitsHost
-            @items={{items}}
             @maximum={{2}}
+            @options={{items}}
             @value={{array 1 2}}
           />
         </template>
@@ -330,13 +330,16 @@ module(
     test("an action row still runs at @maximum without changing the selection", async function (assert) {
       const onChange = sinon.spy();
       const onSelect = sinon.spy();
-      const items = [...ITEMS, { id: "action", name: "Run action", onSelect }];
+      const items = [
+        ...ITEMS,
+        selectOption({ id: "action", name: "Run action" }, { onSelect }),
+      ];
       await render(
         <template>
           <MultiLimitsHost
-            @items={{items}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1 2}}
           />
         </template>
@@ -377,9 +380,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @items={{items}}
             @maximum={{3}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1 2 3 4 5}}
           />
         </template>
@@ -409,9 +412,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @items={{items}}
             @maximum={{3}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1 2 3 4 5}}
           />
         </template>
@@ -696,10 +699,10 @@ module(
 
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{1}}
             @minimum={{3}}
             @onChange={{this.onChange}}
+            @options={{ITEMS}}
             @value={{this.value}}
           />
         </template>
@@ -927,9 +930,9 @@ module(
       await render(
         <template>
           <MultiLimitsStaticHost
-            @items={{ITEMS}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @value={{array 1 2}}
           />
         </template>
@@ -989,8 +992,8 @@ module(
       await render(
         <template>
           <MultiLimitsStaticHost
-            @items={{items}}
             @maximum={{3}}
+            @options={{items}}
             @value={{array 1 3 5}}
           />
         </template>
@@ -1043,8 +1046,8 @@ module(
       await render(
         <template>
           <MultiLimitsStaticHost
-            @items={{items}}
             @maximum={{2}}
+            @options={{items}}
             @value={{array 2 7}}
           />
         </template>
@@ -1081,7 +1084,7 @@ module(
         { id: 5, name: "Elderberry" },
       ];
       await render(
-        <template><ReactiveMaximumHost @items={{items}} /></template>
+        <template><ReactiveMaximumHost @options={{items}} /></template>
       );
       await click(".d-select__trigger");
 
@@ -1235,9 +1238,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{1}}
             @minimum={{3}}
+            @options={{ITEMS}}
             @value={{1}}
           />
         </template>
@@ -1255,10 +1258,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{2}}
             @minChars={{3}}
             @multiple={{true}}
+            @options={{ITEMS}}
             @value={{array 1 2}}
           />
         </template>
@@ -1335,12 +1338,10 @@ module(
 
     const REASONED = [
       { id: 1, name: "Apple" },
-      {
-        id: 2,
-        name: "Banana",
-        disabled: true,
-        description: "Requires the fruit tag",
-      },
+      selectOption(
+        { id: 2, name: "Banana" },
+        { disabled: true, description: "Requires the fruit tag" }
+      ),
       { id: 3, name: "Cherry" },
     ];
 
@@ -1350,8 +1351,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{REASONED}}
             @onChange={{onChange}}
+            @options={{REASONED}}
             @variant="static"
           />
         </template>
@@ -1381,7 +1382,7 @@ module(
       await render(
         <template>
           <form>
-            <DSelect @items={{REASONED}} @onChange={{onChange}} />
+            <DSelect @onChange={{onChange}} @options={{REASONED}} />
           </form>
         </template>
       );
@@ -1413,7 +1414,7 @@ module(
       await render(
         <template>
           <form>
-            <DSelect @items={{REASONED}} />
+            <DSelect @options={{REASONED}} />
           </form>
         </template>
       );
@@ -1432,7 +1433,7 @@ module(
 
     test("a disabled row's reason is its visible description", async function (assert) {
       await render(
-        <template><DSelect @items={{REASONED}} @variant="static" /></template>
+        <template><DSelect @options={{REASONED}} @variant="static" /></template>
       );
       await click(".d-select__trigger");
 
@@ -1455,11 +1456,11 @@ module(
     test("End reaches a disabled last row", async function (assert) {
       const items = [
         { id: 1, name: "Apple" },
-        { id: 2, name: "Banana", disabled: true },
+        selectOption({ id: 2, name: "Banana" }, { disabled: true }),
       ];
 
       await render(
-        <template><DSelect @items={{items}} @variant="static" /></template>
+        <template><DSelect @options={{items}} @variant="static" /></template>
       );
       await click(".d-select__trigger");
       await triggerKeyEvent("[role='combobox']", "keydown", "End");
@@ -1478,10 +1479,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{items}}
             @maximum={{1}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1}}
             @variant="static"
           />
@@ -1559,9 +1560,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{this.emptyValue}}
           />
@@ -1601,9 +1602,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{this.emptyValue}}
           />
@@ -1647,9 +1648,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{this.emptyValue}}
           />
@@ -1674,10 +1675,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{2}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{array 1}}
           />
@@ -1714,9 +1715,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{array 1}}
           />
@@ -1742,9 +1743,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @maximum={{1}}
             @multiple={{true}}
+            @options={{ITEMS}}
             @parsePaste={{parsePaste}}
             @value={{array 1}}
           />

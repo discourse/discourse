@@ -45,7 +45,7 @@ module("Integration | Lib | select-control", function (hooks) {
   test("returns the query input of a typeahead DSelect", async function (assert) {
     await render(
       <template>
-        <div class="host"><DSelect @items={{ITEMS}} @value={{1}} /></div>
+        <div class="host"><DSelect @options={{ITEMS}} @value={{1}} /></div>
       </template>
     );
 
@@ -64,7 +64,7 @@ module("Integration | Lib | select-control", function (hooks) {
       await render(
         <template>
           <div class="host">
-            <DSelect @items={{ITEMS}} @value={{1}} @variant={{variant}} />
+            <DSelect @options={{ITEMS}} @value={{1}} @variant={{variant}} />
           </div>
         </template>
       );
@@ -85,7 +85,7 @@ module("Integration | Lib | select-control", function (hooks) {
 
     await render(
       <template>
-        <div class="host"><DSelect @items={{ITEMS}} @value={{1}} /></div>
+        <div class="host"><DSelect @options={{ITEMS}} @value={{1}} /></div>
       </template>
     );
 

@@ -32,9 +32,9 @@ export default class KeyboardTranscriptSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-keyboard-transcript"
-      @items={{PEOPLE}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @placement="top-start"
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.add_people")

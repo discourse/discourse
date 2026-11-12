@@ -816,9 +816,9 @@ export default class AgentEditor extends Component {
                 @disabled={{field.disabled}}
                 @id={{field.id}}
                 @invalid={{if field.error true false}}
-                @items={{this.allGroups}}
                 @multiple={{true}}
                 @onChange={{field.set}}
+                @options={{this.allGroups}}
                 @texts={{hash ariaLabel=field.title}}
                 @value={{data.allowed_group_ids}}
               />

@@ -30,17 +30,17 @@ export function emitTopicChange(
   onChange: TopicChangeHandler | undefined,
   multiple: boolean,
   value: SelectValue,
-  items: SelectRecord | SelectRecord[] | null
+  records: SelectRecord | SelectRecord[] | null
 ): void {
   if (multiple) {
     onChange?.(
       makeArray(value as number | number[]).map(Number),
-      makeArray(items) as unknown as Topic[]
+      makeArray(records) as unknown as Topic[]
     );
     return;
   }
   onChange?.(
     value == null ? null : Number(value),
-    (items as unknown as Topic | null) ?? null
+    (records as unknown as Topic | null) ?? null
   );
 }

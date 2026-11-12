@@ -30,6 +30,9 @@ import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/
 import {
   renderSelectText,
   type SelectConfig,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
   type SelectRecord,
   type SelectSnapshot,
   type SelectTexts,
@@ -80,8 +83,8 @@ interface DSelectTagFilterSignature {
     maxVisibleChips?: number;
     /** Category limiting the available tags. */
     categoryId?: number;
-    /** Local tags replacing the site's top tags and server search. */
-    items?: readonly FilterTag[];
+    /** Local tags, as records or options, replacing the site's top tags and server search. */
+    options?: readonly SelectOptionLike<FilterTag>[];
     /** Receives a full tag row or a shortcut id; with `@multiple`, the held tags in order. */
     onChange?: (
       value: TagObject | TagObject[] | typeof ALL_TAGS_ID | typeof NO_TAG_ID
@@ -97,7 +100,7 @@ interface DSelectTagFilterSignature {
     ariaLabelledBy?: string;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /** Selects a tag, a shortcut or, with `@multiple`, several tags for a topic list without navigating. */
@@ -208,10 +211,24 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return this.args.multiple ? undefined : "button";
   }
 
+  /**
+   * The caller's records and what their settings say, compared by value, so options rebuilt
+   * the same don't reload and a changed setting does.
+   */
   get loadContext() {
+    const options = this.args.options?.map((entry) => selectOption(entry));
     return {
       categoryId: this.args.categoryId,
-      items: this.args.items,
+      records: options?.map((option) => option.record),
+      settings: options?.map((option) =>
+        JSON.stringify([
+          option.disabled,
+          option.description ?? null,
+          option.position ?? null,
+          option.divider ?? null,
+          option.action,
+        ])
+      ),
     };
   }
 
@@ -235,40 +252,62 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return id === undefined ? [] : [this.#tag!];
   }
 
-  isShortcut(item: SelectRecord) {
-    return item.id === ALL_TAGS_ID || item.id === NO_TAG_ID;
+  isShortcut(record: SelectRecord) {
+    return record.id === ALL_TAGS_ID || record.id === NO_TAG_ID;
   }
 
   @action
   async load(filter: string) {
-    if (filter && !this.args.items) {
+    if (filter && !this.args.options) {
       const result = await searchTags(filter, {
         context: { everyTag: true, categoryId: this.args.categoryId },
         siteSettings: this.siteSettings,
       });
-      return this.#keyed(result.items);
+      return result.items.map((row) =>
+        this.#option(row, this.#serverSettings(row))
+      );
     }
-    const tags =
-      this.args.items ??
+    // A tag shows its description; the caller's own settings come on top.
+    const options =
+      this.args.options?.map((entry) => {
+        const option = selectOption(entry);
+        return option.with({
+          description: this.#serverSettings(option.record).description,
+          ...option.settings,
+        });
+      }) ??
       topTags<FilterTag>({
         site: this.site,
         categoryId: this.args.categoryId,
-      });
+      }).map((tag) => selectOption(tag, this.#serverSettings(tag)));
     const term = filter.toLowerCase();
     const matches = term
-      ? tags.filter((tag) => tag.name.toLowerCase().includes(term))
-      : [...tags];
-    return this.#keyed(
-      sortTagRows(matches, {
+      ? options.filter(({ record }) => record.name.toLowerCase().includes(term))
+      : options;
+    // Sorted by the option, so a caller's disabled option sorts last like a refused row.
+    const sorted = sortTagRows(
+      matches.map((option) => ({
+        name: option.record.name,
+        original_name:
+          typeof option.record.original_name === "string"
+            ? option.record.original_name
+            : undefined,
+        disabled: option.disabled,
+        option,
+      })),
+      {
         alphabetical: this.siteSettings.tags_sort_alphabetically,
         exact: cleanTagName(filter, this.siteSettings),
-      })
+      }
+    );
+    return sorted.map(({ option }) =>
+      this.#option(option.record, option.settings)
     );
   }
 
   /** The shortcuts lead browsing and are left out of searches. */
   @action
-  specialItems(snapshot: SelectSnapshot, config: SelectConfig): SelectRecord[] {
+  extraOptions(snapshot: SelectSnapshot, config: SelectConfig): SelectRecord[] {
     if (snapshot.filter || this.args.multiple) {
       return [];
     }
@@ -290,42 +329,58 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   @action
-  onChange(id: SelectValue, item: SelectRecord | SelectRecord[] | null) {
+  onChange(id: SelectValue, record: SelectRecord | SelectRecord[] | null) {
     if (this.args.multiple) {
-      this.#onMultipleChange(item);
+      this.#onMultipleChange(record);
       return;
     }
     // A null id is DSelect's keyboard clear; a filter only clears through its "All tags" row.
     if (
       (typeof id !== "string" && typeof id !== "number") ||
-      !item ||
-      Array.isArray(item) ||
-      typeof item.name !== "string"
+      !record ||
+      Array.isArray(record) ||
+      typeof record.name !== "string"
     ) {
       return;
     }
     this.args.onChange?.(
       id === ALL_TAGS_ID || id === NO_TAG_ID
         ? id
-        : { ...item, id, name: item.name }
+        : { ...record, id, name: record.name }
     );
   }
 
   /** Held tags keep their identity; new picks are emitted as their rows. */
-  #onMultipleChange(items: SelectRecord | SelectRecord[] | null) {
+  #onMultipleChange(records: SelectRecord | SelectRecord[] | null) {
     const held = new Map(this.#heldTags.map((tag) => [nameKey(tag), tag]));
-    const tags = (Array.isArray(items) ? items : []).map((item) => {
-      const { nameKey: key, ...row } = item;
+    const tags = (Array.isArray(records) ? records : []).map((record) => {
+      const { nameKey: key, ...row } = record;
       return held.get(key as string) ?? (row as unknown as TagObject);
     });
     this.args.onChange?.(tags);
   }
 
-  #keyed(
-    rows: readonly { name: string; original_name?: string }[]
-  ): SelectRecord[] {
-    return rows.map((row) =>
-      this.args.multiple ? { ...row, nameKey: nameKey(row) } : { ...row }
+  /** What a server tag row does: it shows its description, and a refused row can't be picked. */
+  #serverSettings(tag: object) {
+    const row = tag as SelectRecord;
+    return {
+      description:
+        typeof row.description === "string" ? row.description : undefined,
+      disabled: row.disabled ? true : undefined,
+    };
+  }
+
+  /**
+   * A tag as the filter lists it. Holding several tags keys them by name, so that projection is
+   * the filter's own record, carrying the tag's settings.
+   */
+  #option(
+    tag: { name: string; original_name?: string },
+    settings: SelectOption["settings"]
+  ): SelectOption {
+    return selectOption(
+      this.args.multiple ? { ...tag, nameKey: nameKey(tag) } : tag,
+      settings
     );
   }
 
@@ -337,6 +392,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @ariaLabelledBy={{@ariaLabelledBy}}
       @caretIcon={{this.caretIcon}}
       @disabled={{@disabled}}
+      @extraOptions={{this.extraOptions}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @kind="select-tag-filter"
@@ -352,7 +408,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @searchIcon="magnifying-glass"
-      @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selection}}
@@ -360,24 +415,24 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @valueRecords={{this.valueRecords}}
       @variant={{this.variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
-        {{else if (this.isShortcut item)}}
-          <span class="d-tag-drop__shortcut">{{tagRecordName item}}</span>
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
+        {{else if (this.isShortcut record)}}
+          <span class="d-tag-drop__shortcut">{{tagRecordName record}}</span>
         {{else}}
-          <TagOption @config={{config}} @record={{item}} @row={{row}} />
+          <TagOption @config={{config}} @option={{option}} @record={{record}} />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else if @multiple}}
-          <TagSelection @record={{item}} />
+          <TagSelection @record={{record}} />
         {{else}}
           <span class="d-tag-drop__selection">
             {{~! no whitespace around the tag ~}}
-            <TagSelection @record={{item}} />
+            <TagSelection @record={{record}} />
           </span>
         {{/if}}
       </:selection>

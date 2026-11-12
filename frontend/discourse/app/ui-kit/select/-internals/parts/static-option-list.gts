@@ -12,7 +12,8 @@ import WindowedListCoordinator, {
 import type { SelectListModifiers } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectOptionRow from "discourse/ui-kit/select/-internals/parts/select-option-row";
 import SelectEngine, {
-  type SelectItemRow,
+  type SelectGroupInfo,
+  type SelectOption,
   SelectRecord as SelectRecordModel,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -42,10 +43,10 @@ interface StaticOptionListSignature {
     label?: string;
     /** Ids of the elements naming the listbox, used instead of `label`. */
     labelledBy?: string;
-    /** Whether the consumer supplied custom item markup. */
-    hasItemBlock: boolean;
+    /** Whether the consumer supplied custom option markup. */
+    hasOptionBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasSkeletonItemBlock: boolean;
+    hasSkeletonBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Whether the consumer supplied custom group-footer markup. */
@@ -58,25 +59,29 @@ interface StaticOptionListSignature {
     modifiers: SelectListModifiers;
   };
   Blocks: {
-    /** Custom markup for an item. */
-    item?: [
-      /** The item being rendered. */
-      item: SelectRecordModel,
-      /** What the row is, beyond its item. */
-      row: SelectItemRow,
+    /** Custom markup for an option. */
+    option?: [
+      /** The record the option stands for. */
+      record: SelectRecordModel,
+      /** The option, with its settings. */
+      option: SelectOption,
     ];
     /** Custom markup for a group header. */
     groupHeader?: [
-      /** The group-header item being rendered. */
-      item: SelectRecordModel,
+      /** The header's record. */
+      record: SelectRecordModel,
+      /** The group the header belongs to. */
+      group: SelectGroupInfo,
     ];
     /** Custom markup for a group footer. */
     groupFooter?: [
-      /** The group-footer item being rendered. */
-      item: SelectRecordModel,
+      /** The footer's record. */
+      record: SelectRecordModel,
+      /** The group the footer belongs to. */
+      group: SelectGroupInfo,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    skeletonItem?: [];
+    skeleton?: [];
   };
 }
 
@@ -137,8 +142,8 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
             @engine={{@engine}}
             @hasGroupFooterBlock={{false}}
             @hasGroupHeaderBlock={{false}}
-            @hasItemBlock={{@hasItemBlock}}
-            @hasSkeletonItemBlock={{false}}
+            @hasOptionBlock={{@hasOptionBlock}}
+            @hasSkeletonBlock={{false}}
             @hideSelectionMarker={{@hideSelectionMarker}}
             @index={{index}}
             @items={{@items}}
@@ -151,9 +156,9 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
             @presenter={{@presenter}}
             @selectedIcon={{@selectedIcon}}
           >
-            <:item as |item row|>
-              {{~yield item row to="item"~}}
-            </:item>
+            <:option as |record option|>
+              {{~yield record option to="option"~}}
+            </:option>
           </SelectOptionRow>
         {{/if}}
       {{/each}}

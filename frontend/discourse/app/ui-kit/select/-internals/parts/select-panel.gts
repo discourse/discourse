@@ -14,10 +14,11 @@ import SelectListBody, {
 import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
 import type WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import SelectEngine, {
-  SelectDescriptor,
-  type SelectItemRow,
+  type SelectGroupInfo,
   SelectLoadRequest,
+  type SelectOption,
   SelectRecord,
+  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -94,8 +95,8 @@ interface SelectPanelSignature<State> {
       value: unknown,
       request?: SelectLoadRequest
     ) =>
-      | readonly SelectDescriptor[]
-      | Promise<readonly SelectDescriptor[] | undefined>
+      | readonly SelectRow[]
+      | Promise<readonly SelectRow[] | undefined>
       | undefined;
     /** Returns navigation from the held strip to the query input. */
     returnToInput?: () => void;
@@ -141,13 +142,13 @@ interface SelectPanelSignature<State> {
     /** Explicit tab index for the option body. */
     tabIndex?: number;
     /** Whether the host supplies the item block. */
-    hasItemBlock: boolean;
+    hasOptionBlock: boolean;
     /** Whether the host supplies the groupHeader block. */
     hasGroupHeaderBlock: boolean;
     /** Whether the host supplies the groupFooter block. */
     hasGroupFooterBlock: boolean;
-    /** Whether the host supplies the skeletonItem block. */
-    hasSkeletonItemBlock: boolean;
+    /** Whether the host supplies the skeleton block. */
+    hasSkeletonBlock: boolean;
     /** Whether the host supplies the selection block. */
     hasSelectionBlock: boolean;
     /** Whether the host supplies the unresolved block. */
@@ -166,34 +167,36 @@ interface SelectPanelSignature<State> {
   Blocks: {
     /** Optional search field sharing this panel with its results. */
     field?: [];
-    /** Custom item content. */
-    item?: [
-      /** The rendered item. */ item: SelectRecord,
+    /** Custom option content. */
+    option?: [
+      /** The record the option stands for. */ record: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
-      /** What the row is, beyond its item. */ row: SelectItemRow,
+      /** The option, with its settings. */ option: SelectOption,
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
-      /** The rendered item. */ item: SelectRecord,
+      /** The header's record. */ record: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
+      /** The group the header belongs to. */ group: SelectGroupInfo,
     ];
     /** Custom groupFooter content. */
     groupFooter?: [
-      /** The rendered item. */ item: SelectRecord,
+      /** The footer's record. */ record: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
+      /** The group the footer belongs to. */ group: SelectGroupInfo,
     ];
     /** Custom selection content. */
     selection?: [
-      /** The rendered item. */ item: SelectRecord,
+      /** The held record. */ record: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom unresolved content. */
     unresolved?: [
-      /** The rendered item. */ item: SelectRecord,
+      /** The fallback record. */ record: SelectRecord,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
-    /** Custom skeletonItem content. */
-    skeletonItem?: [];
+    /** Custom skeleton content. */
+    skeleton?: [];
     /** Custom empty content. */
     empty?: [];
     /** Custom source-error content. */
@@ -302,7 +305,7 @@ export default class SelectPanel<State> extends Component<
         @filterInput={{@filterInput}}
         @hasEmptyBlock={{@hasEmptyBlock}}
         @hasErrorBlock={{@hasErrorBlock}}
-        @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+        @hasSkeletonBlock={{@hasSkeletonBlock}}
         @hideEmptyQuery={{@hideEmptyQuery}}
         @listbox={{@listbox}}
         @loadListContent={{@loadListContent}}
@@ -319,8 +322,8 @@ export default class SelectPanel<State> extends Component<
             @engine={{@engine}}
             @hasGroupFooterBlock={{@hasGroupFooterBlock}}
             @hasGroupHeaderBlock={{@hasGroupHeaderBlock}}
-            @hasItemBlock={{@hasItemBlock}}
-            @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+            @hasOptionBlock={{@hasOptionBlock}}
+            @hasSkeletonBlock={{@hasSkeletonBlock}}
             @hideSelectionMarker={{@hideSelectionMarker}}
             @items={{items}}
             @label={{@label}}
@@ -335,23 +338,23 @@ export default class SelectPanel<State> extends Component<
             @selectedIcon={{@selectedIcon}}
             @tabIndex={{@tabIndex}}
           >
-            <:item as |item row|>
-              {{~yield item this.config row to="item"~}}
-            </:item>
-            <:groupHeader as |item|>
-              {{~yield item this.config to="groupHeader"~}}
+            <:option as |record option|>
+              {{~yield record this.config option to="option"~}}
+            </:option>
+            <:groupHeader as |record group|>
+              {{~yield record this.config group to="groupHeader"~}}
             </:groupHeader>
-            <:groupFooter as |item|>
-              {{~yield item this.config to="groupFooter"~}}
+            <:groupFooter as |record group|>
+              {{~yield record this.config group to="groupFooter"~}}
             </:groupFooter>
-            <:skeletonItem>
-              {{~yield to="skeletonItem"~}}
-            </:skeletonItem>
+            <:skeleton>
+              {{~yield to="skeleton"~}}
+            </:skeleton>
           </@body>
         </:body>
-        <:skeletonItem>
-          {{~yield to="skeletonItem"~}}
-        </:skeletonItem>
+        <:skeleton>
+          {{~yield to="skeleton"~}}
+        </:skeleton>
         <:empty>
           {{~yield to="empty"~}}
         </:empty>

@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { action as emberAction } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import {
   click,
@@ -18,11 +19,14 @@ import { resetTagSourceCache } from "discourse/lib/tag-source";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { DSelect as SelectDriver } from "discourse/tests/helpers/d-select-helper";
+import dSelect, {
+  DSelect as SelectDriver,
+} from "discourse/tests/helpers/d-select-helper";
 import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const ROWS = [
@@ -88,11 +92,11 @@ module(
         await render(
           <template>
             <DSelectTagFilter>
-              <:item as |item options row|>
+              <:option as |item options row|>
                 <span class="custom-row {{if row 'has-row'}}">
                   {{~item.name~}}
                 </span>
-              </:item>
+              </:option>
             </DSelectTagFilter>
           </template>
         );
@@ -434,7 +438,7 @@ module(
           .hasAttribute("data-name", i18n("tagging.selector_no_tags"));
       });
 
-      test("@items filters a local list", async function (assert) {
+      test("@options filters a local list", async function (assert) {
         const requests = stubSearch();
         const items = [
           { id: 7, name: "local-one" },
@@ -442,7 +446,7 @@ module(
         ];
 
         await render(
-          <template><DSelectTagFilter @items={{items}} /></template>
+          <template><DSelectTagFilter @options={{items}} /></template>
         );
         await click(".d-select__trigger");
 
@@ -778,7 +782,7 @@ module(
           { id: 2, name: "second" },
         ];
         await render(
-          <template><DSelectTagFilter @items={{items}} /></template>
+          <template><DSelectTagFilter @options={{items}} /></template>
         );
         await click(".d-select__trigger");
         await fillIn(".d-select__panel input", "second");
@@ -984,8 +988,8 @@ module(
         await render(
           <template>
             <DSelectTagFilter
-              @items={{items}}
               @multiple={{true}}
+              @options={{items}}
               @value={{held}}
             />
           </template>
@@ -1128,6 +1132,106 @@ module(
 
         assert.dom(".sr-only", optionNamed("alpha")).hasText("5 uses");
       });
+    });
+
+    test("tag filter refreshes changed settings without reloading identical options", async function (assert) {
+      const bug = { id: 1, name: "bug" };
+      const ui = { id: 2, name: "ui" };
+      const records = [bug, ui];
+      const rebuild = (disabled) =>
+        records.map((record) =>
+          selectOption(record, { disabled: record === bug && disabled })
+        );
+      const options = tracked(rebuild(false));
+      const loads = [];
+      const changes = [];
+      const onChange = (tags) => changes.push(tags);
+      const bugRow = `[role='option'][data-value='${bug.name}']`;
+
+      class CountingTagFilter extends DSelectTagFilter {
+        @emberAction
+        load(filter) {
+          loads.push(filter);
+          return super.load(filter);
+        }
+      }
+
+      this.siteSettings.tagging_enabled = true;
+      this.siteSettings.max_tags_in_filter_list = 30;
+      this.siteSettings.max_tags_per_topic = 5;
+      await render(
+        <template>
+          <CountingTagFilter
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options.value}}
+          />
+        </template>
+      );
+      await dSelect().open();
+      assert
+        .dom(bugRow)
+        .doesNotHaveAttribute("aria-disabled", "bug starts enabled");
+      assert.strictEqual(
+        loads.length,
+        1,
+        "opening invokes the recipe loader once"
+      );
+
+      options.value = rebuild(false);
+      await settled();
+      assert.strictEqual(
+        loads.length,
+        1,
+        "identical records and settings do not reload"
+      );
+      assert
+        .dom("[role='option']")
+        .exists({ count: 2 }, "identical rebuilding retains both tags");
+
+      options.value = rebuild(true);
+      await settled();
+      assert
+        .dom(bugRow)
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "replacing tag options applies changed disabled settings without explicit reload"
+        );
+      await dSelect().select(bug.name);
+      assert.deepEqual(
+        changes,
+        [],
+        "the tag disabled by replacement cannot be picked"
+      );
+
+      const loadsAfterSettingsChange = loads.length;
+      options.value = rebuild(true);
+      await settled();
+      assert.strictEqual(
+        loads.length,
+        loadsAfterSettingsChange,
+        "identically rebuilt disabled options do not reload"
+      );
+      assert
+        .dom(bugRow)
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "identical rebuilding retains disabled settings"
+        );
+      await dSelect().select(bug.name);
+      assert.deepEqual(
+        changes,
+        [],
+        "identical rebuilding leaves the disabled tag unpickable"
+      );
+      await dSelect().select(ui.name);
+      assert.strictEqual(
+        changes.at(-1)?.[0]?.name,
+        ui.name,
+        "the enabled neighbouring tag is pickable"
+      );
     });
   }
 );

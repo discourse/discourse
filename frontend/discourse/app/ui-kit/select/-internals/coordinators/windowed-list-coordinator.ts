@@ -10,16 +10,16 @@ import LoadFeedbackTracker, {
   SkeletonRow,
 } from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import SelectEngine, {
-  SelectDescriptor,
-  SelectRecord as SelectRecordModel,
+  SelectOption,
+  SelectRow,
 } from "discourse/ui-kit/select/select-engine";
 
 // A row's estimated height before measurement (~2.4em option). Windowing refines it from
 // the real DOM; a reasonable estimate only reduces the initial scroll jump.
 const ROW_HEIGHT_ESTIMATE = 38;
 
-/** An engine descriptor with the DOM ids needed to render it. */
-interface OptionRow extends SelectDescriptor {
+/** An engine row with the DOM ids needed to render it. */
+interface OptionRow extends SelectRow {
   isSkeleton: false;
   // Ties an option to its group's text boundaries for `aria-describedby`: a text header or
   // footer carries `boundaryId`, and each option in the group lists those ids, header first, in
@@ -29,7 +29,7 @@ interface OptionRow extends SelectDescriptor {
   groupDescribedBy?: string;
 }
 
-/** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
+/** A rendered list row: a navigable engine row or a frontier skeleton. */
 export type ListRow = OptionRow | SkeletonRow;
 
 interface WindowedListCoordinatorInit {
@@ -50,43 +50,43 @@ export default class WindowedListCoordinator {
   @tracked activeOptionKey: string | null = null;
 
   /**
-   * The rows handed to the windowed list: the engine's descriptors, plus frontier skeleton
+   * The rows handed to the windowed list: the engine's rows, plus frontier skeleton
    * placeholders appended while a server source is fetching MORE rows at the tail (a reveal),
    * so the pending page reads as "more coming" in the list. Gated on `showRevealPlaceholder`,
    * which also carries the fast-source delay (no flash) and excludes a re-query (which
    * replaces the set rather than extending it). `buildItems` is recomputed per render on
    * purpose — its output reflects live selection/special state as well as the displayed query.
    *
-   * @param rawItems - The displayed source rows.
+   * @param options - The displayed source rows.
    * @param filter - The query that produced those rows.
    */
-  buildListItems = (
-    rawItems: SelectRecordModel[] | undefined,
+  buildListRows = (
+    options: SelectOption[] | undefined,
     filter: string | undefined
   ): readonly ListRow[] => {
-    // The list source always resolves to an object carrying `rawItems`; the async
+    // The list source always resolves to an object carrying `options`; the async
     // content wrapper's yield type just can't express that.
-    assert("The list content resolves before its rows are built", rawItems);
+    assert("The list content resolves before its rows are built", options);
     assert(
       "The list content carries its displayed filter",
       filter !== undefined
     );
 
     const listboxId = this.#getListboxId();
-    const items: OptionRow[] = this.#engine
-      .buildItems(rawItems, filter)
-      .map((descriptor) => {
-        const { groupOrdinal, groupText } = descriptor;
+    const rows: OptionRow[] = this.#engine
+      .buildRows(options, filter)
+      .map((row) => {
+        const { groupOrdinal, groupText } = row;
         if (groupOrdinal == null || !groupText) {
-          return { ...descriptor, isSkeleton: false };
+          return { ...row, isSkeleton: false };
         }
         const headerId = `${listboxId}-group-${groupOrdinal}`;
         const footerId = `${headerId}-footer`;
-        if (descriptor.flags.textBoundary) {
+        if (row.flags.textBoundary) {
           return {
-            ...descriptor,
+            ...row,
             isSkeleton: false,
-            boundaryId: descriptor.flags.groupFooter ? footerId : headerId,
+            boundaryId: row.flags.groupFooter ? footerId : headerId,
           };
         }
         const ids = [
@@ -94,15 +94,15 @@ export default class WindowedListCoordinator {
           groupText.footer && footerId,
         ].filter(Boolean);
         return {
-          ...descriptor,
+          ...row,
           isSkeleton: false,
           groupDescribedBy: ids.length ? ids.join(" ") : undefined,
         };
       });
     if (this.#feedback.showRevealPlaceholder) {
-      return [...items, ...this.#feedback.frontierSkeletons];
+      return [...rows, ...this.#feedback.frontierSkeletons];
     }
-    return items;
+    return rows;
   };
 
   /** Estimated row height for the windowing engine before a row is measured. */
@@ -278,9 +278,10 @@ export default class WindowedListCoordinator {
 
   /** Hands focus from an emptied static-modal strip to the first list option. */
   @action
-  focusFirstOption(): void {
-    this.#listboxRoving?.focusFirst();
+  focusFirstOption(): boolean {
+    const focused = this.#listboxRoving?.focusFirst() ?? false;
     this.handleJump(0, "backward");
+    return focused;
   }
 
   @action

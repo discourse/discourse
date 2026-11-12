@@ -24,9 +24,9 @@ export class Host extends Component {
   <template>
     <DSelect
       @identifier="test-select"
-      @items={{ITEMS}}
       @kind="test-select"
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
@@ -34,9 +34,9 @@ export class Host extends Component {
       <:selection as |item|>
         {{~item.name~}}
       </:selection>
-      <:item as |item|>
+      <:option as |item|>
         {{~item.name~}}
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }
@@ -44,8 +44,8 @@ export class Host extends Component {
 export class DefaultHost extends Component {
   @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
 
-  get items() {
-    return this.args.items ?? ITEMS;
+  get options() {
+    return this.args.options ?? ITEMS;
   }
 
   @action
@@ -55,10 +55,10 @@ export class DefaultHost extends Component {
 
   <template>
     <DSelect
-      @items={{this.items}}
       @labelField={{@labelField}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @options={{this.options}}
       @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
@@ -69,8 +69,8 @@ export class DefaultHost extends Component {
 export class MultiLimitsHost extends Component {
   @tracked value = this.args.value ?? [];
 
-  get items() {
-    return this.args.items ?? ITEMS;
+  get options() {
+    return this.args.options ?? ITEMS;
   }
 
   @action
@@ -83,23 +83,23 @@ export class MultiLimitsHost extends Component {
     <DSelect
       @allowCreate={{@allowCreate}}
       @clearable={{@clearable}}
-      @createItem={{@createItem}}
+      @createOption={{@createOption}}
       @identifier="test-multi-limits"
-      @items={{this.items}}
       @kind="test-multi-limits"
       @maximum={{@maximum}}
       @minimum={{@minimum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{this.options}}
       @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     >
       <:selection as |item|>
         {{~item.name~}}
       </:selection>
-      <:item as |item|>
+      <:option as |item|>
         {{~item.name~}}
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

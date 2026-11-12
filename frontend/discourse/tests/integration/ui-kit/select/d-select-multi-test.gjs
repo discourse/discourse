@@ -28,6 +28,7 @@ import {
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 class MultiHost extends Component {
@@ -41,18 +42,18 @@ class MultiHost extends Component {
   <template>
     <DSelect
       @identifier="test-multi"
-      @items={{ITEMS}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     >
       <:selection as |item|>
         {{~item.name~}}
       </:selection>
-      <:item as |item|>
+      <:option as |item|>
         {{~item.name~}}
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }
@@ -69,10 +70,10 @@ class MultiValueCoercionHost extends Component {
   <template>
     <DSelect
       @identifier="test-multi-value-coercion"
-      @items={{ITEMS}}
       @kind="test-multi-value-coercion"
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     />
@@ -248,8 +249,8 @@ module(
       await render(
         <template>
           <DefaultHost
-            @items={{spacedItems}}
             @multiple={{true}}
+            @options={{spacedItems}}
             @value={{array "bug fix"}}
           />
         </template>
@@ -300,8 +301,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
+            @options={{ITEMS}}
             @selectedIcon="star"
             @value={{array 1}}
           />
@@ -456,8 +457,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @onChange={{singleOnChange}}
+            @options={{ITEMS}}
             @texts={{hash placeholder="Pick one"}}
             @value="1"
           />
@@ -627,9 +628,9 @@ module(
         <DSelect
           @clearable={{true}}
           @identifier="test-select"
-          @items={{ITEMS}}
           @multiple={{true}}
           @onChange={{this.onChange}}
+          @options={{ITEMS}}
           @value={{this.value}}
           @variant="static"
         />
@@ -687,8 +688,8 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @multiple={{true}}
+            @options={{ITEMS}}
             @selectedIcon="star"
             @value={{array 1}}
           />
@@ -724,8 +725,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUITS}}
             @multiple={{true}}
+            @options={{FRUITS}}
             @texts={{hash placeholder="Pick fruit"}}
             @value={{empty}}
           />
@@ -743,7 +744,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{FRUITS}} @multiple={{true}} @value={{empty}} />
+          <DSelect @multiple={{true}} @options={{FRUITS}} @value={{empty}} />
         </template>
       );
 
@@ -759,8 +760,8 @@ module(
         await render(
           <template>
             <DSelect
-              @items={{FRUITS}}
               @multiple={{true}}
+              @options={{FRUITS}}
               @texts={{hash placeholder="Pick fruit"}}
               @value={{empty}}
               @variant={{variant}}
@@ -779,8 +780,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUITS}}
             @multiple={{true}}
+            @options={{FRUITS}}
             @texts={{hash placeholder="Pick fruit"}}
             @value={{held}}
           />
@@ -799,8 +800,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUITS}}
             @multiple={{true}}
+            @options={{FRUITS}}
             @texts={{hash placeholder="Pick fruit"}}
             @value={{empty}}
           />
@@ -842,7 +843,7 @@ const FRUIT = [
   { id: 1, name: "Apple" },
   { id: 2, name: "Banana" },
   { id: 3, name: "Cherry" },
-  { id: 4, name: "Damson", disabled: true },
+  selectOption({ id: 4, name: "Damson" }, { disabled: true }),
 ];
 
 /** The option whose text includes `name`. */
@@ -855,13 +856,14 @@ function optionNamed(name) {
 /** An action row that hands `batch` to `control.selectMany`. */
 function bulkRow(batch) {
   return () => [
-    {
-      id: "bulk",
-      name: "Add several",
-      onSelect(control) {
-        control.selectMany?.(batch);
-      },
-    },
+    selectOption(
+      { id: "bulk", name: "Add several" },
+      {
+        onSelect(control) {
+          control.selectMany?.(batch);
+        },
+      }
+    ),
   ];
 }
 
@@ -872,15 +874,15 @@ module(
 
     test("selectMany adds a batch in one change", async function (assert) {
       const onChange = sinon.spy();
-      const specialItems = bulkRow([FRUIT[0], FRUIT[1], FRUIT[2]]);
+      const extraOptions = bulkRow([FRUIT[0], FRUIT[1], FRUIT[2]]);
 
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
+            @extraOptions={{extraOptions}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @specialItems={{specialItems}}
+            @options={{FRUIT}}
             @value={{(array)}}
             @variant="button"
           />
@@ -895,15 +897,15 @@ module(
 
     test("selectMany skips held, disabled and repeated items", async function (assert) {
       const onChange = sinon.spy();
-      const specialItems = bulkRow([FRUIT[0], FRUIT[1], FRUIT[1], FRUIT[3]]);
+      const extraOptions = bulkRow([FRUIT[0], FRUIT[1], FRUIT[1], FRUIT[3]]);
 
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
+            @extraOptions={{extraOptions}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @specialItems={{specialItems}}
+            @options={{FRUIT}}
             @value={{array 1}}
             @variant="button"
           />
@@ -919,17 +921,17 @@ module(
     test("selectMany stops at the cap and says what was left out", async function (assert) {
       disableClearA11yAnnouncementsInTests();
       const onChange = sinon.spy();
-      const specialItems = bulkRow([FRUIT[1], FRUIT[2]]);
+      const extraOptions = bulkRow([FRUIT[1], FRUIT[2]]);
 
       await render(
         <template>
           <A11yLiveRegions />
           <DSelect
-            @items={{FRUIT}}
+            @extraOptions={{extraOptions}}
             @maximum={{2}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @specialItems={{specialItems}}
+            @options={{FRUIT}}
             @value={{array 1}}
             @variant="button"
           />
@@ -951,33 +953,35 @@ module(
     test("a batch that adds nothing still cancels an older update", async function (assert) {
       const gate = deferred();
       const onChange = sinon.spy();
-      const specialItems = () => [
-        {
-          id: "slow",
-          name: "Slow add",
-          onSelect(control) {
-            control.update(async (scope) => {
-              await gate.promise;
-              scope.select(FRUIT[2]);
-            });
-          },
-        },
-        {
-          id: "bulk",
-          name: "Add held",
-          onSelect(control) {
-            control.selectMany?.([FRUIT[0]]);
-          },
-        },
+      const extraOptions = () => [
+        selectOption(
+          { id: "slow", name: "Slow add" },
+          {
+            onSelect(control) {
+              control.update(async (scope) => {
+                await gate.promise;
+                scope.select(FRUIT[2]);
+              });
+            },
+          }
+        ),
+        selectOption(
+          { id: "bulk", name: "Add held" },
+          {
+            onSelect(control) {
+              control.selectMany?.([FRUIT[0]]);
+            },
+          }
+        ),
       ];
 
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
+            @extraOptions={{extraOptions}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @specialItems={{specialItems}}
+            @options={{FRUIT}}
             @value={{array 1}}
             @variant="button"
           />
@@ -1005,9 +1009,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
           />
@@ -1031,9 +1035,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
           />
@@ -1055,9 +1059,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
             @variant="button"
@@ -1102,9 +1106,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
             @variant="button"
@@ -1141,8 +1145,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{held}}
           />
@@ -1175,9 +1179,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{held}}
           />
@@ -1207,9 +1211,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
             @variant="button"
@@ -1236,9 +1240,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @value={{(array)}}
           />
         </template>
@@ -1259,9 +1263,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @value={{(array)}}
           />
         </template>
@@ -1279,9 +1283,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @value={{(array)}}
           />
         </template>
@@ -1296,17 +1300,17 @@ module(
 
     test("a name the select doesn't list is skipped unless creation is allowed", async function (assert) {
       const onChange = sinon.spy();
-      const createItem = (name) => ({ id: `new:${name}`, name });
+      const createOption = (name) => ({ id: `new:${name}`, name });
       const allowCreate = tracked(false);
 
       await render(
         <template>
           <DSelect
             @allowCreate={{allowCreate.value}}
-            @createItem={{createItem}}
-            @items={{FRUIT}}
+            @createOption={{createOption}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @value={{(array)}}
           />
         </template>
@@ -1354,8 +1358,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @variant="typeahead"
           />
         </template>
@@ -1375,9 +1379,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUIT}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @parsePaste={{parsePaste}}
             @value={{(array)}}
           />
@@ -1406,9 +1410,9 @@ class StripHost extends Component {
   <template>
     <A11yLiveRegions />
     <DSelect
-      @items={{ITEMS}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
       @variant={{@variant}}
@@ -1680,7 +1684,7 @@ module(
     test("Escape from a panel control returns focus to the typeahead input", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}}>
+          <DSelect @options={{ITEMS}}>
             <:footer>
               <button class="test-footer-btn" type="button">Act</button>
             </:footer>
@@ -1786,9 +1790,9 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
         <template>
           <DSelect
             @disabled={{eq locked "disabled"}}
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @readonly={{eq locked "readonly"}}
             @value={{array 1 2}}
           />
@@ -1853,9 +1857,9 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
       <template>
         <DSelect
           style="width: 250px"
-          @items={{items}}
           @multiple={{true}}
           @onChange={{change}}
+          @options={{items}}
           @panelChips={{true}}
           @value={{held.value}}
           @variant="button"
@@ -1900,7 +1904,7 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
   test("a mobile search field controls its list before virtual focus is seeded", async function (assert) {
     forceMobile();
     const warn = sinon.spy(console, "warn");
-    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await render(<template><DSelect @options={{ITEMS}} /></template>);
     await click(".d-select__trigger");
     assert.false(
       warn
@@ -1917,9 +1921,9 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
           @multiple={{true}}
           @onChange={{onChange}}
+          @options={{ITEMS}}
           @value={{array 1}}
           @variant="static"
         />
@@ -1961,9 +1965,9 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
           @multiple={{true}}
           @onChange={{onChange}}
+          @options={{ITEMS}}
           @panelChips={{true}}
           @value={{array 1}}
           @variant="button"
@@ -1984,13 +1988,13 @@ module("Integration | ui-kit | select | DSelect action rows", function (hooks) {
   setupRenderingTest(hooks);
 
   const ROWS = [
-    { id: "act", name: "Run an action", onSelect() {} },
+    selectOption({ id: "act", name: "Run an action" }, { onSelect() {} }),
     { id: 1, name: "Apple" },
   ];
 
   test("action rows carry no selection marker in a multi-select", async function (assert) {
     await render(
-      <template><DSelect @items={{ROWS}} @multiple={{true}} /></template>
+      <template><DSelect @multiple={{true}} @options={{ROWS}} /></template>
     );
     await click("[role='combobox']");
 
@@ -2005,7 +2009,7 @@ module("Integration | ui-kit | select | DSelect action rows", function (hooks) {
   test("action rows carry no selection marker with a custom selected icon", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ROWS}} @selectedIcon="check" @value={{1}} />
+        <DSelect @options={{ROWS}} @selectedIcon="check" @value={{1}} />
       </template>
     );
     await click("[role='combobox']");
@@ -2030,11 +2034,11 @@ module(
       { id: 2, name: "Banana", group: "Fruit" },
       { id: 3, name: "Carrot", group: "Vegetables" },
     ];
-    const addGroup = (key, rows) => ({
-      id: `all:${key}`,
-      name: `All ${key}`,
-      onSelect: (control) => control.selectMany(rows),
-    });
+    const addGroup = (key, options) =>
+      selectOption(
+        { id: `all:${key}`, name: `All ${key}` },
+        { onSelect: (control) => control.selectMany(options) }
+      );
 
     test("a footer whose group is all held says so and changes nothing", async function (assert) {
       disableClearA11yAnnouncementsInTests();
@@ -2061,9 +2065,9 @@ module(
             @groupBy="group"
             @groupFooter={{addGroup}}
             @identifier="zero-add"
-            @items={{PRODUCE}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{PRODUCE}}
             @value={{array 1 2}}
             @variant="button"
           />
@@ -2109,7 +2113,7 @@ module(
       await render(
         <template>
           <div style="width: 24em">
-            <DSelect @items={{FRUITS}} @multiple={{true}} @value={{held}} />
+            <DSelect @multiple={{true}} @options={{FRUITS}} @value={{held}} />
           </div>
         </template>
       );
@@ -2131,8 +2135,8 @@ module(
         <template>
           <div class="width-host" style="width: 60em">
             <DSelect
-              @items={{FRUITS}}
               @multiple={{true}}
+              @options={{FRUITS}}
               @texts={{hash addMorePlaceholder=LONG}}
               @value={{held}}
             />
@@ -2177,8 +2181,8 @@ module(
         <template>
           <div style="width: 16em">
             <DSelect
-              @items={{FRUITS}}
               @multiple={{true}}
+              @options={{FRUITS}}
               @texts={{hash addMorePlaceholder=text}}
               @value={{held}}
             />
@@ -2209,8 +2213,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUITS}}
             @multiple={{true}}
+            @options={{FRUITS}}
             @texts={{hash addMorePlaceholder=text.value}}
             @value={{held}}
           />
@@ -2242,7 +2246,7 @@ module(
       await render(
         <template>
           <div style="width: 24em">
-            <DSelect @items={{FRUITS}} @texts={{hash placeholder=LONG}} />
+            <DSelect @options={{FRUITS}} @texts={{hash placeholder=LONG}} />
           </div>
         </template>
       );
@@ -2263,8 +2267,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{FRUITS}}
             @multiple={{true}}
+            @options={{FRUITS}}
             @searchIcon="magnifying-glass"
             @texts={{hash addMorePlaceholder=text}}
             @value={{held}}
@@ -2337,10 +2341,10 @@ module(
           <A11yLiveRegions />
           <DSelect
             @clearable={{clearable}}
-            @items={{ITEMS}}
             @lockedValues={{locks.value}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
             @value={{held.value}}
           />
         </template>

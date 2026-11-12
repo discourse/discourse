@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import { topics } from "../../../../../lib/select-fixtures.js";
 
@@ -17,14 +18,15 @@ export default class StickySelectExample extends Component {
   }
 
   @action
-  specialItems() {
+  extraOptions() {
     return [
-      {
-        id: "suggest",
-        name: i18n("styleguide.sections.select.content.sticky_action"),
-        sticky: true,
-        onSelect: this.suggest,
-      },
+      selectOption(
+        {
+          id: "suggest",
+          name: i18n("styleguide.sections.select.content.sticky_action"),
+        },
+        { position: "sticky", onSelect: this.suggest }
+      ),
     ];
   }
 
@@ -36,10 +38,10 @@ export default class StickySelectExample extends Component {
 
   <template>
     <DSelect
+      @extraOptions={{this.extraOptions}}
       @identifier="sg-content-sticky"
-      @items={{this.items}}
       @onChange={{this.onChange}}
-      @specialItems={{this.specialItems}}
+      @options={{this.items}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_topic"

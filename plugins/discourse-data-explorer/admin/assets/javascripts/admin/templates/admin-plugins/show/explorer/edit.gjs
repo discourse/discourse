@@ -115,9 +115,9 @@ export default class QueriesEdit extends Component {
                   {{#if @controller.siteSettings.enable_new_select_controls}}
                     <DSelectGroup
                       @ariaLabelledBy="query-edit-allow-groups-label"
-                      @items={{@controller.groupOptions}}
                       @multiple={{true}}
                       @onChange={{@controller.updateGroupIds}}
+                      @options={{@controller.groupOptions}}
                       @value={{@controller.model.group_ids}}
                     />
                   {{else}}

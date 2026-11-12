@@ -31,7 +31,7 @@ export default class SelectShowcases extends Component {
   }
 
   @action
-  specialCategories() {
+  extraCategories() {
     return [
       this.store.createRecord("category", {
         id: 0,
@@ -82,8 +82,8 @@ export default class SelectShowcases extends Component {
         data-test-select-showcase="categories"
       >
         <CategoriesSelectExample
-          @items={{this.categories}}
-          @specialItems={{this.specialCategories}}
+          @extraOptions={{this.extraCategories}}
+          @options={{this.categories}}
         />
       </div>
     </StyleguideExample>

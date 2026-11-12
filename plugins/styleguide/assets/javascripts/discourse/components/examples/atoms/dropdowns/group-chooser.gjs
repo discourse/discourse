@@ -18,9 +18,9 @@ export default class GroupChooserExample extends Component {
     {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
     {{#if this.siteSettings.enable_new_select_controls}}
       <DSelectGroup
-        @items={{GROUPS}}
         @multiple={{true}}
         @onChange={{@onChange}}
+        @options={{GROUPS}}
         @value={{SELECTED}}
       />
     {{else}}

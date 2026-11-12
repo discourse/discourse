@@ -3,34 +3,57 @@ import { assert, warn } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import type {
-  SelectDescriptor,
   SelectId,
   SelectRecord,
+  SelectRow,
   SelectSnapshot,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectContentContext } from "./customizations.ts";
+import { optionsFromLegacyRows } from "./legacy-rows.ts";
 import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
+import {
+  engineOption,
+  optionKind,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
+} from "./select-option.ts";
 
-/** One group of rows: a merged key for a client source, a consecutive run for a paged one. */
+/** One group of options: a merged key for a client source, a consecutive run for a paged one. */
 interface GroupRun {
   key: SelectId;
   identity: string;
   /** How many earlier runs share this key; 0 for the first and for every client group. */
   occurrence: number;
-  items: SelectRecord[];
+  options: SelectOption[];
 }
 
-/** What every row of one emitted group carries into its descriptor. */
+/** What every row of one emitted group carries into its row. */
 interface GroupStamp {
   ordinal: number;
   text: { header: boolean; footer: boolean };
 }
 
-/** Grouped rows, with each row's group and the number of action boundaries among them. */
+/** A group's header or footer, and the group it belongs to. */
+interface Boundary {
+  side: "header" | "footer";
+  group: GroupRun;
+  action: boolean;
+}
+
+/** One line of the list before it is described: an option and where grouping placed it. */
+interface PlacedRow {
+  option: SelectOption;
+  stamp?: GroupStamp;
+  boundary?: Boundary;
+  /** The group a splitter leads. */
+  splitter?: GroupRun;
+}
+
+/** Grouped rows, and the number of action boundaries among them. */
 interface GroupedRows {
-  rows: SelectRecord[];
-  stamps: Map<SelectRecord, GroupStamp>;
+  rows: PlacedRow[];
   actions: number;
 }
 
@@ -41,7 +64,7 @@ export default class ListComposer {
   #getFilter: () => string;
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
-  #isSelected: (item: SelectRecord) => boolean;
+  #isSelected: (entry: SelectOptionLike) => boolean;
   #isLockedValue: (value: SelectId) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
@@ -49,10 +72,10 @@ export default class ListComposer {
 
   /** Native content steps run before the compatibility bridge. */
   #applyContent: (
-    items: SelectRecord[],
+    records: SelectRecord[],
     context: SelectContentContext
-  ) => SelectRecord[];
-  #applyLegacyContent: (items: SelectRecord[]) => SelectRecord[];
+  ) => SelectOptionLike[];
+  #applyLegacyContent: (records: SelectRecord[]) => SelectRecord[];
 
   /** Records transformed option counts without invalidating the current render. */
   #noteVisible: (visible: number, input: number) => void;
@@ -66,22 +89,25 @@ export default class ListComposer {
   #boundaryQuery?: string;
   #boundaryRows = 0;
 
+  /** The none option, kept while its label stays the same so its row never re-renders. */
+  #none?: { label: string; option: SelectOption };
+
   constructor(opts: {
     args: SelectArgsView;
     getFilter: () => string;
     getValue: () => SelectValue;
     getHasValue: () => boolean;
-    isSelected: (item: SelectRecord) => boolean;
+    isSelected: (entry: SelectOptionLike) => boolean;
     isLockedValue: (value: SelectId) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
-      items: SelectRecord[],
+      records: SelectRecord[],
       context: SelectContentContext
-    ) => SelectRecord[];
-    applyLegacyContent: (items: SelectRecord[]) => SelectRecord[];
+    ) => SelectOptionLike[];
+    applyLegacyContent: (records: SelectRecord[]) => SelectRecord[];
     /** Records the options left after content extensions, with the raw row count they came from. */
     noteVisible: (visible: number, input: number) => void;
     /** Whether the source may still add rows to this query, a page in flight or not. */
@@ -103,139 +129,200 @@ export default class ListComposer {
   }
 
   /**
-   * Builds the final rendered item list from the source's resolved items: applies
-   * content customizations, groups the options, and prepends special and create items.
+   * Builds the rendered rows from the source's options: applies content customizations,
+   * groups the options, and adds the extra and create options.
    *
-   * @param rawItems - The items resolved by the source.
-   * @param filter - The query that produced these rows, retained for create checks during a reload.
-   * @returns The frozen list of normalized descriptors to render.
+   * @param sourceOptions - The options the source resolved.
+   * @param filter - The query that produced them, retained for create checks during a reload.
+   * @returns The frozen rows to render.
    */
-  buildItems(
-    rawItems: SelectRecord[] = [],
+  buildRows(
+    sourceOptions: SelectOption[] = [],
     filter = this.#getFilter()
-  ): readonly SelectDescriptor[] {
-    const loaded = makeArray(rawItems) as SelectRecord[];
-    let items: SelectRecord[] = [...loaded];
-    // The source validates a measurement against the rows it holds, structural ones included.
-    const rawCount = items.length;
-    const inputCount = items.filter((item) => !this.#isStructural(item)).length;
+  ): readonly SelectRow[] {
+    const loaded = makeArray(sourceOptions) as SelectOption[];
+    // The source validates a measurement against the options it holds.
+    const rawCount = loaded.length;
 
-    items = this.#applyContent(items, {
-      filter: this.#getFilter(),
-      value: this.#getValue(),
-      ...this.#getContentContext(),
-    });
+    let options = this.#throughRecords(loaded, (records) =>
+      this.#applyContent(records, {
+        filter: this.#getFilter(),
+        value: this.#getValue(),
+        ...this.#getContentContext(),
+      })
+    );
 
     // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
     // their own stage, after native customizations, so ordering is deterministic and
     // does not depend on global registration order.
-    items = this.#applyLegacyContent(items);
+    options = this.#throughRecords(options, (records) =>
+      this.#applyLegacyContent(records)
+    );
+    this.#noteVisible(options.length, rawCount);
 
-    // The option count never includes structural rows (headers/dividers), whether they come
-    // from grouping below or an upstream injector.
-    const visibleCount = items.filter(
-      (item) => !this.#isStructural(item)
-    ).length;
-    this.#noteVisible(visibleCount, rawCount);
-
-    // Runs are found before held rows are hidden, so what is selected never renumbers them.
+    // Runs are found before held options are hidden, so what is selected never renumbers them.
     const runs =
       this.#shouldGroup() && this.#args.isAsync
-        ? this.#assignRuns(items)
+        ? this.#assignRuns(options)
         : undefined;
     // The next page may continue the last run, so its footer waits rather than move later.
     const held =
       runs && this.#canGrow() ? this.#trailingRun(loaded, runs) : undefined;
     const extending = runs ? this.#trackExtension(filter, rawCount) : false;
 
-    const createCandidate = this.#createItem(items, filter);
+    const createCandidate = this.#createOption(options, filter);
     const hideSelected = this.#args.hideSelected;
-    const include = (item: SelectRecord) =>
+    const include = (option: SelectOption) =>
       !hideSelected ||
-      this.#isStructural(item) ||
-      typeof item.onSelect === "function" ||
-      !this.#isSelected(item);
-    const createItem =
+      option.action ||
+      this.#isStructural(option) ||
+      !this.#isSelected(option);
+    const create =
       createCandidate && include(createCandidate) ? createCandidate : null;
-    items = items.filter(include);
+    options = options.filter(include);
 
-    const consumerSpecial = makeArray(
-      this.#args.specialItems?.(this.#snapshot(), this.#args.config) ?? []
-    ) as SelectRecord[];
-    const visibleSpecial = consumerSpecial.filter(include);
-    // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
-    // specials and the source rows before grouping, which never reaches them.
-    const isSticky = (item: SelectRecord) =>
-      !!item.sticky && !this.#isStructural(item);
-    const sticky = [...visibleSpecial, ...items].filter(isSticky);
-    items = items.filter((item) => !isSticky(item));
-    const sourceCount = items.filter(
-      (item) => !this.#isStructural(item)
-    ).length;
+    const allExtra = this.#extraOptions(options);
+    // One option per value: an extra option comes first, so it keeps its value.
+    const extraKeys = new Set(
+      allExtra.map((option) => this.#keyOf(option)).filter((key) => key != null)
+    );
+    if (extraKeys.size) {
+      options = options.filter((option) => {
+        const key = this.#keyOf(option);
+        return key == null || !extraKeys.has(key);
+      });
+    }
+    const extra = allExtra.filter(include);
+    // Sticky options lead the whole list, ahead of the none option, so they are hoisted out of
+    // both the extras and the source options before grouping, which never reaches them.
+    const isSticky = (option: SelectOption) => option.position === "sticky";
+    const sticky = [...extra, ...options].filter(isSticky);
+    options = options.filter((option) => !isSticky(option));
+    const sourceCount = options.length;
 
-    // Only source options are grouped; the create row belongs to no group.
+    // Only source options are grouped; the create option belongs to no group.
     const grouped: GroupedRows = this.#shouldGroup()
-      ? this.#groupItems(items, runs, held, extending)
-      : { rows: items, stamps: new Map(), actions: 0 };
+      ? this.#groupOptions(options, runs, held, extending)
+      : { rows: options.map((option) => ({ option })), actions: 0 };
 
-    const noneRow = this.#noneRow();
-    const scrollingSpecial = visibleSpecial.filter((item) => !isSticky(item));
-    // The none row leads the scrolling specials and flows through the same counting path below,
-    // keeping its `posInSet`/`setSize`/`logicalIndex` in lockstep with the rest of the set.
-    const specialItems = noneRow
-      ? [...sticky, noneRow, ...scrollingSpecial]
-      : [...sticky, ...scrollingSpecial];
-    const finalItems = createItem
-      ? [...specialItems, createItem, ...grouped.rows]
-      : [...specialItems, ...grouped.rows];
+    const none = this.#noneOption();
+    const scrollingExtra = extra.filter((option) => !isSticky(option));
+    // The none option leads the scrolling extras and flows through the same counting path
+    // below, keeping its `posInSet`/`setSize`/`logicalIndex` in lockstep with the rest.
+    const leading = none
+      ? [...sticky, none, ...scrollingExtra]
+      : [...sticky, ...scrollingExtra];
+    const rows: PlacedRow[] = [
+      ...leading.map((option) => ({ option })),
+      ...(create ? [{ option: create }] : []),
+      ...grouped.rows,
+    ];
 
-    // Only option rows count toward the set; a special that is itself structural (a seam
-    // escape hatch) is prepended but never numbered.
-    const specialCount = specialItems.filter(
-      (item) => !this.#isStructural(item)
-    ).length;
-
-    // Normalize as the final step: everything above operates on raw items (so the
-    // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
     return this.#describeList(
-      finalItems,
-      specialCount,
+      rows,
+      leading.length,
       sourceCount,
-      inputCount,
-      createItem,
+      rawCount,
+      create,
       grouped
     );
   }
 
   /**
-   * Normalizes arbitrary items into the frozen descriptor shape used for rendering.
+   * Rows for held records, as the trigger and chips draw them.
    *
-   * @param items - The items to normalize.
+   * @param records - The held records.
+   * @param isUnresolved - Whether a record is the engine's fallback for an unresolved value.
    */
-  describeItems(items: SelectRecord[]): readonly SelectDescriptor[] {
+  describeRecords(
+    records: SelectRecord[],
+    isUnresolved: (record: SelectRecord) => boolean
+  ): readonly SelectRow[] {
     return Object.freeze(
       // Never cap-disabled: these describe the held selection for the trigger, and the cap only
-      // ever closes off rows that are *not* selected.
-      items.map((item, index) => this.#normalize(item, index, false))
+      // ever closes off options that are *not* selected.
+      records.map((record, index) => {
+        const row = this.#describe(
+          { option: selectOption(record) },
+          index,
+          false
+        );
+        row.flags.unresolved = isUnresolved(record);
+        return row;
+      })
     );
   }
 
+  /** Runs a record-level step and maps what it returned back to options. */
+  #throughRecords(
+    options: SelectOption[],
+    step: (records: SelectRecord[]) => readonly SelectOptionLike[]
+  ): SelectOption[] {
+    const records = options.map((option) => option.record);
+    const result = step(records);
+    if (
+      result.length === records.length &&
+      result.every((record, index) => record === records[index])
+    ) {
+      return options;
+    }
+    return optionsFromLegacyRows(options, result, this.#args);
+  }
+
+  /** The value key an option is listed under, or `null` for a value-less option. */
+  #keyOf(option: SelectOption): string | null {
+    return this.#args.valueKey(this.#args.recordValue(option.record));
+  }
+
+  /** The extra options the select adds beside its source, wrapped, one per value. */
+  #extraOptions(sourceOptions: readonly SelectOption[]): SelectOption[] {
+    const entries = makeArray(
+      this.#args.extraOptions?.(this.#snapshot(), this.#args.config) ?? []
+    ) as SelectOptionLike[];
+    const keys = new Set<string>();
+    const extra = entries
+      .map((entry) => this.#args.wrapEntry(entry))
+      .filter((option) => {
+        const key = this.#keyOf(option);
+        if (key == null) {
+          return true;
+        }
+        if (keys.has(key)) {
+          return false;
+        }
+        keys.add(key);
+        return true;
+      });
+    if (DEBUG) {
+      const records = new Set<object>(sourceOptions.map((o) => o.record));
+      for (const option of extra) {
+        assert(
+          "DSelect: the same record is listed twice, as an extra option and in the list. " +
+            "Give one record one option.",
+          !records.has(option.record)
+        );
+        records.add(option.record);
+      }
+    }
+    return extra;
+  }
+
   /**
-   * Normalizes specials, create, then grouped source rows, and stamps each OPTION with its
-   * position in the whole result set. Positions come from the engine's own totals rather
-   * than the DOM index, so they stay correct while
-   * only a window is mounted, and they count options only: an interleaved header/divider
-   * shifts no option's `posInSet` and never enters `setSize`. A group's action header or
-   * footer is an option, so it is numbered and counted, but never by paging.
+   * Describes the leading options, create, then grouped source rows, and stamps each OPTION with
+   * its position in the whole result set. Positions come from the engine's own totals rather
+   * than the DOM index, so they stay correct while only a window is mounted, and they count
+   * options only: an interleaved header or divider shifts no option's `posInSet` and never enters
+   * `setSize`. A group's action header or footer is an option, so it is numbered and counted,
+   * but never by paging.
    */
   #describeList(
-    items: SelectRecord[],
-    specialCount: number,
+    rows: PlacedRow[],
+    leadingCount: number,
     sourceCount: number,
     inputCount: number,
-    createItem: SelectRecord | null,
+    create: SelectOption | null,
     grouped: GroupedRows
-  ): readonly SelectDescriptor[] {
+  ): readonly SelectRow[] {
     const total = this.#getTotal();
     // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
     // declares its total has already answered; withholding it until the last page lands would
@@ -254,7 +341,7 @@ export default class ListComposer {
         ? sourceCount
         : Math.max(total + sourceCount - inputCount, sourceCount);
     const setSize =
-      specialCount + sourceTotal + (createItem ? 1 : 0) + grouped.actions;
+      leadingCount + sourceTotal + (create ? 1 : 0) + grouped.actions;
 
     // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
     // deduped value array — so evaluating it per row would repeat that work for every option.
@@ -263,19 +350,16 @@ export default class ListComposer {
     let optionOrdinal = 0;
     let logicalIndex = 0;
     return Object.freeze(
-      items.map((item, index) => {
-        const descriptor = this.#normalize(
-          item,
-          index,
-          atMaximum,
-          item === createItem
-        );
-        const stamp = grouped.stamps.get(item);
-        const group = { groupOrdinal: stamp?.ordinal, groupText: stamp?.text };
-        if (descriptor.flags.textBoundary || descriptor.flags.divider) {
+      rows.map((placed, index) => {
+        const row = this.#describe(placed, index, atMaximum);
+        const group = {
+          groupOrdinal: placed.stamp?.ordinal,
+          groupText: placed.stamp?.text,
+        };
+        if (row.flags.textBoundary || row.flags.divider) {
           // A structural row carries no ARIA position and does not advance the option count.
           return {
-            ...descriptor,
+            ...row,
             ...group,
             logicalIndex: undefined,
             setSize: undefined,
@@ -284,7 +368,7 @@ export default class ListComposer {
         }
         const ordinal = optionOrdinal++;
         return {
-          ...descriptor,
+          ...row,
           ...group,
           logicalIndex: logicalIndex++,
           setSize,
@@ -294,192 +378,204 @@ export default class ListComposer {
     );
   }
 
-  #createItem(items: SelectRecord[], filter: string): SelectRecord | null {
-    if (!filter || !this.#args.createItem) {
+  #createOption(options: SelectOption[], filter: string): SelectOption | null {
+    if (!filter || !this.#args.createOption) {
       return null;
     }
+    const records = options.map((option) => option.record);
     const allowed =
       typeof this.#args.allowCreate === "function"
-        ? this.#args.allowCreate(filter, items, this.#args.config)
+        ? this.#args.allowCreate(filter, records, this.#args.config)
         : !!this.#args.allowCreate;
     if (!allowed) {
       return null;
     }
     const term = filter.toLowerCase();
     if (
-      items.some(
-        (item) =>
-          String(this.#args.recordLabel(item) ?? "").toLowerCase() === term
+      records.some(
+        (record) =>
+          String(this.#args.recordLabel(record) ?? "").toLowerCase() === term
       )
     ) {
       return null;
     }
-    const item = this.#args.createItem(filter, this.#args.config);
-    const key = this.#args.valueKey(this.#args.recordValue(item));
-    return items.some(
-      (loaded) => this.#args.valueKey(this.#args.recordValue(loaded)) === key
-    )
-      ? null
-      : item;
+    const built = this.#args.wrapEntry(
+      this.#args.createOption(filter, this.#args.config)
+    );
+    const key = this.#args.valueKey(this.#args.recordValue(built.record));
+    if (
+      records.some(
+        (record) => this.#args.valueKey(this.#args.recordValue(record)) === key
+      )
+    ) {
+      return null;
+    }
+    return engineOption("create", built.record, built.settings);
   }
 
-  #normalize(
-    item: SelectRecord,
-    index: number,
-    atMaximum: boolean,
-    isCreate = false
-  ): SelectDescriptor {
-    const value = this.#args.recordValue(item);
-    // An action row runs a callback and never becomes a value, so it cannot be the selection even
-    // when its id collides with a held one — `isSelected` compares values and cannot tell the two
-    // apart. The public `isSelected` is deliberately left alone: it answers a question about
-    // values, and `activate` short-circuits on `onSelect` before any path that consults it.
-    const selected =
-      this.#isSelected(item) && typeof item.onSelect !== "function";
-    const reasonDisabled = !!item.disabled;
+  #describe(placed: PlacedRow, index: number, atMaximum: boolean): SelectRow {
+    const { option, boundary } = placed;
+    const kind = optionKind(option);
+    const value = this.#args.recordValue(option.record);
+    const structural = this.#isStructural(option);
+    // An action option runs a callback and never becomes a value, so it cannot be the
+    // selection even when its id collides with a held one — `isSelected` compares values and
+    // cannot tell the two apart.
+    const selected = !structural && !option.action && this.#isSelected(option);
+    const reasonDisabled = option.disabled;
     const locked = selected && this.#isLockedValue(value);
-    const groupAction = !!item.__groupHeader || !!item.__groupFooter;
     const capDisabled =
-      atMaximum &&
-      !selected &&
-      !this.#isStructural(item) &&
-      (typeof item.onSelect !== "function" || groupAction);
+      atMaximum && !selected && !structural && (!option.action || !!boundary);
     return {
-      key: this.#rowKey(item, value, index),
+      key: this.#rowKey(placed, value, index),
       value,
-      item,
+      record: option.record,
+      option,
+      group: boundary
+        ? Object.freeze({ key: boundary.group.key, action: boundary.action })
+        : undefined,
       flags: {
         selected,
-        sticky: !!item.sticky && !this.#isStructural(item),
+        sticky: option.position === "sticky" && !structural && !boundary,
         // At the cap only rows that could actually grow the selection are closed off. A
-        // selected row stays open (deselecting it is how the user gets back under the cap), and
-        // so do action rows and structural rows, neither of which ever becomes a value. A
-        // group's action header or footer is the exception: it acts by adding the group.
+        // selected option stays open (deselecting it is how the user gets back under the cap),
+        // and so do action options and structural rows, neither of which ever becomes a value.
+        // A group's action header or footer is the exception: it acts by adding the group.
         disabled: reasonDisabled || capDisabled || locked,
         reasonDisabled,
         capDisabled,
         locked,
-        groupHeader: !!item.__header || !!item.__groupHeader,
-        groupFooter: !!item.__footer || !!item.__groupFooter,
-        textBoundary: !!item.__header || !!item.__footer,
-        divider: !!item.__divider,
-        action: typeof item.onSelect === "function",
-        __create: isCreate || !!item.__create,
-        __unresolved: !!item.__unresolved,
-        __none: !!item.__none,
+        groupHeader: boundary?.side === "header",
+        groupFooter: boundary?.side === "footer",
+        textBoundary: kind === "text-header" || kind === "text-footer",
+        divider: kind === "divider",
+        action: option.action,
+        create: option.create,
+        unresolved: false,
+        none: option.none,
       },
     };
   }
 
   /**
-   * Group rows and the none row take engine keys that follow what they stand for, not where they
-   * sit, so they keep their DOM rows when earlier rows come and go.
+   * Group rows and the none option take engine keys that follow what they stand for, not where
+   * they sit, so they keep their DOM rows when earlier rows come and go.
    */
-  #rowKey(item: SelectRecord, value: SelectId, index: number): string {
-    const kind = this.#boundaryTag(item);
-    if (kind && Object.hasOwn(item, "groupKey")) {
+  #rowKey(placed: PlacedRow, value: SelectId, index: number): string {
+    const group = placed.boundary?.group ?? placed.splitter;
+    if (group) {
+      const tag = placed.splitter
+        ? "d"
+        : placed.boundary!.side === "header"
+          ? "h"
+          : "f";
       // The run count sits in the tag, before the separator, so no group key can mimic it.
-      const tag = `${kind}${item.groupRun || ""}`;
-      return engineKey(`${tag}:${groupIdentity(item.groupKey)}`);
+      return engineKey(
+        `${tag}${group.occurrence || ""}:${groupIdentity(group.key)}`
+      );
     }
-    if (item.__none) {
+    if (placed.option.none) {
       return engineKey("none");
     }
     const key = this.#args.valueKey(value);
-    // A value-less row (a null-id special, or a structural row a loader returned) has no
-    // natural key; its position is stable within the ordered special/create prefix.
+    // A value-less row (a null-id extra option) has no natural key; its position is stable
+    // within the ordered leading options.
     return key == null ? engineKey(`row:${index}`) : recordKey(key);
   }
 
-  /** A header of either kind is `h`, so a group's rows never share a key whatever it returns. */
-  #boundaryTag(item: SelectRecord): string | null {
-    if (item.__header || item.__groupHeader) {
-      return "h";
-    }
-    if (item.__footer || item.__groupFooter) {
-      return "f";
-    }
-    return item.__divider ? "d" : null;
-  }
-
-  #isStructural(item: SelectRecord): boolean {
-    return !!item.__header || !!item.__footer || !!item.__divider;
+  #isStructural(option: SelectOption): boolean {
+    const kind = optionKind(option);
+    return (
+      kind === "text-header" || kind === "text-footer" || kind === "divider"
+    );
   }
 
   /**
-   * The synthetic single-select "none" row: a selectable option carrying a `null` value. Shown only
-   * while the filter is empty — a "none" row that survived filtering would sit at the top of a
+   * The single-select none option: a selectable option whose value is `null`. Shown only while
+   * the filter is empty — a none option that survived filtering would sit at the top of a
    * non-matching result and, being auto-highlighted, turn "type a non-match, press Enter" into a
    * silent clear (and would suppress the empty state). Selecting it routes through the normal
-   * `select()` path, which emits `null` because the row's value field is `null`.
+   * `select()` path, which emits `null` because its record's value field is `null`.
    */
-  #noneRow(): SelectRecord | null {
-    if (this.#args.noneLabel == null || this.#getFilter() !== "") {
+  #noneOption(): SelectOption | null {
+    const label = this.#args.noneLabel;
+    if (label == null || this.#getFilter() !== "") {
       return null;
     }
-    return {
-      [this.#args.valueField]: null,
-      [this.#args.labelField]: this.#args.noneLabel,
-      __none: true,
-    };
+    if (this.#none?.label !== label) {
+      this.#none = {
+        label,
+        option: engineOption(
+          "none",
+          Object.freeze({
+            [this.#args.valueField]: null,
+            [this.#args.labelField]: label,
+          })
+        ),
+      };
+    }
+    return this.#none.option;
   }
 
   #shouldGroup(): boolean {
     return this.#args.groupBy != null;
   }
 
-  #groupKey(item: SelectRecord): SelectId {
+  #groupKey(option: SelectOption): SelectId {
     return typeof this.#args.groupBy === "function"
-      ? this.#args.groupBy(item, this.#args.config)
-      : item[this.#args.groupBy as string];
+      ? this.#args.groupBy(option.record, this.#args.config)
+      : option.record[this.#args.groupBy as string];
   }
 
   /**
-   * Builds one boundary. Text becomes a presentational row and an action row becomes a stamped
-   * copy; anything else is a mistake, dropped after the development assertion.
+   * Builds one boundary. Text becomes a presentational row and an action option is placed as it
+   * is; anything else is a mistake, dropped after the development assertion.
    */
   #boundary(
-    kind: "header" | "footer",
+    side: "header" | "footer",
     group: GroupRun,
-    rows: readonly SelectRecord[]
-  ): SelectRecord | null {
+    options: readonly SelectOption[]
+  ): PlacedRow | null {
     const build =
-      kind === "header" ? this.#args.groupHeader : this.#args.groupFooter;
-    const result = build?.(group.key, rows, this.#args.config);
+      side === "header" ? this.#args.groupHeader : this.#args.groupFooter;
+    const result = build?.(group.key, options, this.#args.config);
     if (result == null) {
       return null;
     }
-    const stamp = { groupKey: group.key, groupRun: group.occurrence };
     if (typeof result === "string") {
-      const marker = kind === "header" ? "__header" : "__footer";
-      return { [marker]: true, ...stamp, label: result };
+      return {
+        option: engineOption(
+          side === "header" ? "text-header" : "text-footer",
+          Object.freeze({ label: result })
+        ),
+        boundary: { side, group, action: false },
+      };
     }
-    if (typeof result === "object" && typeof result.onSelect === "function") {
-      const marker = kind === "header" ? "__groupHeader" : "__groupFooter";
-      const item: SelectRecord = { ...result, [marker]: true, ...stamp };
-      // A boundary belongs to its group, so it never leads the list.
-      delete item.sticky;
-      return item;
+    const option =
+      typeof result === "object" ? this.#args.wrapEntry(result) : undefined;
+    if (option?.action) {
+      return { option, boundary: { side, group, action: true } };
     }
     assert(
-      `DSelect: \`@group${kind === "header" ? "Header" : "Footer"}\` must return text, an action row (an item with \`onSelect\`), or nothing`,
+      `DSelect: \`@group${side === "header" ? "Header" : "Footer"}\` must return text, an action option, or nothing`,
       false
     );
     return null;
   }
 
-  /** The run of the last loaded row grouping placed; rows injected after it never count. */
+  /** The run of the last loaded option grouping placed; options injected after it never count. */
   #trailingRun(
-    loaded: SelectRecord[],
+    loaded: SelectOption[],
     runs: Map<SelectRecord, GroupRun>
   ): GroupRun | undefined {
     for (let index = loaded.length - 1; index >= 0; index--) {
-      const run = runs.get(loaded[index]);
+      const run = runs.get(loaded[index].record);
       if (run) {
         return run;
       }
     }
-    // A customization that copies rows leaves none to find; holding the last run keeps it safe.
+    // A customization that copies records leaves none to find; holding the last run keeps it
+    // safe.
     return [...runs.values()].at(-1);
   }
 
@@ -504,15 +600,15 @@ export default class ListComposer {
   /** Warns when a page changes a boundary's kind, which would shift rows already shown. */
   #noteBoundaries(
     group: GroupRun,
-    header: SelectRecord | null,
-    footer: SelectRecord | null | undefined,
+    header: PlacedRow | null,
+    footer: PlacedRow | null | undefined,
     extending: boolean
   ): void {
-    const kindOf = (row: SelectRecord | null): BoundaryKind => {
+    const kindOf = (row: PlacedRow | null): BoundaryKind => {
       if (!row) {
         return "none";
       }
-      return row.__header || row.__footer ? "text" : "action";
+      return row.boundary?.action ? "action" : "text";
     };
     const id = `${group.occurrence}:${group.identity}`;
     const previous = this.#boundaryKinds.get(id);
@@ -529,102 +625,103 @@ export default class ListComposer {
   }
 
   /**
-   * A paged source groups consecutive rows, so a later page only ever appends: it extends the
-   * last run or starts new ones. A key that comes back later starts another run.
+   * A paged source groups consecutive options, so a later page only ever appends: it extends
+   * the last run or starts new ones. A key that comes back later starts another run. Runs are
+   * keyed by record, so a step that gives an option new settings never moves it to a new run.
    */
-  #assignRuns(items: SelectRecord[]): Map<SelectRecord, GroupRun> {
+  #assignRuns(options: SelectOption[]): Map<SelectRecord, GroupRun> {
     const runs = new Map<SelectRecord, GroupRun>();
     const occurrences = new Map<string, number>();
     let current: GroupRun | undefined;
-    for (const item of items) {
-      if (this.#isStructural(item) || item.sticky) {
+    for (const option of options) {
+      if (option.position === "sticky") {
         continue;
       }
-      const key = this.#groupKey(item);
+      const key = this.#groupKey(option);
       const identity = groupIdentity(key);
       if (current?.identity !== identity) {
         const occurrence = occurrences.get(identity) ?? 0;
         occurrences.set(identity, occurrence + 1);
-        current = { key, identity, occurrence, items: [] };
+        current = { key, identity, occurrence, options: [] };
       }
-      runs.set(item, current);
+      runs.set(option.record, current);
     }
     return runs;
   }
 
   /**
    * Wraps each group in its boundaries: a header or, failing one, a splitter (never at the head
-   * of the list) before its rows, and a footer after them unless the group is `held`. Without
-   * `runs`, a client source merges every row of a key into one group, in first-appearance order.
+   * of the list) before its options, and a footer after them unless the group is `held`.
+   * Without `runs`, a client source merges every option of a key into one group, in
+   * first-appearance order.
    */
-  #groupItems(
-    options: SelectRecord[],
+  #groupOptions(
+    options: SelectOption[],
     runs: Map<SelectRecord, GroupRun> | undefined,
     held: GroupRun | undefined,
     extending: boolean
   ): GroupedRows {
     const groups = new Map<string | GroupRun, GroupRun>();
-    for (const item of options) {
-      // Grouping addresses options only. A structural row that reached the source (e.g. an
-      // upstream transformer) is skipped rather than passed to `groupBy`, which would throw on
-      // a synthetic row or spawn an option-less phantom group.
-      if (this.#isStructural(item)) {
-        continue;
-      }
-      const run = runs?.get(item);
+    for (const option of options) {
+      const run = runs?.get(option.record);
       if (run) {
         if (!groups.has(run)) {
-          groups.set(run, { ...run, items: [] });
+          groups.set(run, { ...run, options: [] });
         }
-        groups.get(run)!.items.push(item);
+        groups.get(run)!.options.push(option);
         continue;
       }
-      const key = this.#groupKey(item);
+      const key = this.#groupKey(option);
       const identity = groupIdentity(key);
       const bucket = groups.get(identity);
       if (bucket) {
-        bucket.items.push(item);
+        bucket.options.push(option);
       } else {
-        groups.set(identity, { key, identity, occurrence: 0, items: [item] });
+        groups.set(identity, {
+          key,
+          identity,
+          occurrence: 0,
+          options: [option],
+        });
       }
     }
 
-    const out: SelectRecord[] = [];
-    const stamps = new Map<SelectRecord, GroupStamp>();
+    const out: PlacedRow[] = [];
     let ordinal = 0;
     let actions = 0;
     for (const [source, group] of groups) {
-      const rows = Object.freeze([...group.items]);
-      const header = this.#boundary("header", group, rows);
+      const members = Object.freeze([...group.options]);
+      const header = this.#boundary("header", group, members);
       const footer =
-        source === held ? undefined : this.#boundary("footer", group, rows);
+        source === held ? undefined : this.#boundary("footer", group, members);
       if (runs) {
         this.#noteBoundaries(group, header, footer, extending);
       }
 
       const stamp: GroupStamp = {
         ordinal: ordinal++,
-        text: { header: !!header?.__header, footer: !!footer?.__footer },
+        text: {
+          header: !!header && !header.boundary!.action,
+          footer: !!footer && !footer.boundary!.action,
+        },
       };
-      const members = [header, ...group.items, footer].filter(
-        (row): row is SelectRecord => !!row
-      );
       if (!header && out.length > 0 && this.#args.groupDividers) {
         out.push({
-          __divider: true,
-          groupKey: group.key,
-          groupRun: group.occurrence,
+          option: engineOption("divider", Object.freeze({})),
+          splitter: group,
         });
       }
-      for (const row of members) {
-        out.push(row);
-        stamps.set(row, stamp);
+      const placed: PlacedRow[] = [
+        ...(header ? [header] : []),
+        ...members.map((option) => ({ option })),
+        ...(footer ? [footer] : []),
+      ];
+      for (const row of placed) {
+        out.push({ ...row, stamp });
       }
-      actions += [header, footer].filter(
-        (row) => row && !this.#isStructural(row)
-      ).length;
+      actions += [header, footer].filter((row) => row?.boundary?.action).length;
     }
-    return { rows: out, stamps, actions };
+    return { rows: out, actions };
   }
 
   #warnIfChanged(

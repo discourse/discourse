@@ -193,9 +193,9 @@ export default <template>
                             @disabled={{field.disabled}}
                             @id={{field.id}}
                             @invalid={{if field.error true false}}
-                            @items={{@controller.groupOptions}}
                             @multiple={{true}}
                             @onChange={{field.set}}
+                            @options={{@controller.groupOptions}}
                             @texts={{hash ariaLabel=field.title}}
                             @value={{field.value}}
                           />
@@ -291,9 +291,9 @@ export default <template>
                           @disabled={{field.disabled}}
                           @id={{field.id}}
                           @invalid={{if field.error true false}}
-                          @items={{@controller.groupOptions}}
                           @multiple={{true}}
                           @onChange={{field.set}}
+                          @options={{@controller.groupOptions}}
                           @texts={{hash ariaLabel=field.title}}
                           @value={{field.value}}
                         />

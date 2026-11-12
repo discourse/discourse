@@ -27,7 +27,7 @@ export default class CategoryIdInput extends Component {
           @disabled={{@field.disabled}}
           @emit="ids"
           @invalid={{if @field.error true false}}
-          @noneRow={{true}}
+          @noneOption={{true}}
           @onChange={{@field.set}}
           @permission="create"
           @texts={{hash

@@ -9,18 +9,18 @@ declare const onChange: (value: unknown) => void;
 // The name is only ever spoken, so it is an `aria` argument, as on DButton.
 const Test = <template>
   <DSelect
-    @items={{items}}
     @onChange={{onChange}}
+    @options={{items}}
     @texts={{hash ariaLabel="Fruit"}}
   />
   <DSelect
     @ariaLabelledBy="fruit-caption"
-    @items={{items}}
     @onChange={{onChange}}
+    @options={{items}}
   />
   <DSelectList
-    @items={{items}}
     @onChange={{onChange}}
+    @options={{items}}
     @texts={{hash ariaLabel="Fruit"}}
   />
   <DSelectCategory
@@ -30,11 +30,11 @@ const Test = <template>
   />
 
   {{! @glint-expect-error - the name is @ariaLabel }}
-  <DSelect @items={{items}} @label="Fruit" @onChange={{onChange}} />
+  <DSelect @label="Fruit" @onChange={{onChange}} @options={{items}} />
   {{! @glint-expect-error - the caption id is @ariaLabelledBy }}
-  <DSelect @items={{items}} @labelledBy="caption" @onChange={{onChange}} />
+  <DSelect @labelledBy="caption" @onChange={{onChange}} @options={{items}} />
   {{! @glint-expect-error - the name is @ariaLabel }}
-  <DSelectList @items={{items}} @label="Fruit" @onChange={{onChange}} />
+  <DSelectList @label="Fruit" @onChange={{onChange}} @options={{items}} />
   {{! @glint-expect-error - the caption id is @ariaLabelledBy }}
   <DSelectCategory @labelledBy="caption" @onChange={{onChange}} />
 </template>;

@@ -18,9 +18,9 @@ export default class KeyboardClearingSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-keyboard-clearing"
-      @items={{TAGS}}
       @labelField="label"
       @onChange={{this.onChange}}
+      @options={{TAGS}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.choose_tag")
       }}

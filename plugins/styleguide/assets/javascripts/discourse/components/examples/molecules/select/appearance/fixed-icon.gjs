@@ -18,8 +18,8 @@ export default class FixedIconSelectExample extends Component {
     <DSelect
       @icon="globe"
       @identifier="sg-icon"
-      @items={{LOCALES}}
       @onChange={{this.onChange}}
+      @options={{LOCALES}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_language"

@@ -171,8 +171,8 @@ export default class DTemplatesFilterableList extends Component {
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
               <DSelectTagFilter
-                @items={{this.sortedAvailableTags}}
                 @onChange={{this.changeTagFilter}}
+                @options={{this.sortedAvailableTags}}
                 @value={{this.selectedTagObject}}
               />
             {{else}}

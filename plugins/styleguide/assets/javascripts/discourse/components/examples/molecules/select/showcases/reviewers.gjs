@@ -67,7 +67,7 @@ export default class ReviewersSelectExample extends Component {
         </span>
       </:unresolved>
 
-      <:item as |person|>
+      <:option as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
             aria-hidden="true"
@@ -89,7 +89,7 @@ export default class ReviewersSelectExample extends Component {
             </span>
           </span>
         </span>
-      </:item>
+      </:option>
 
       <:selectionLoading>
         <div class="select-examples__row select-examples__row--glyph">
@@ -98,7 +98,7 @@ export default class ReviewersSelectExample extends Component {
         </div>
       </:selectionLoading>
 
-      <:skeletonItem>
+      <:skeleton>
         <div class="select-examples__row select-examples__row--identity">
           <DSkeleton @size="2rem" @variant="circle" />
           <div class="select-examples__details">
@@ -106,7 +106,7 @@ export default class ReviewersSelectExample extends Component {
             <DSkeleton class="select-examples__secondary" @width="12rem" />
           </div>
         </div>
-      </:skeletonItem>
+      </:skeleton>
     </DSelect>
   </template>
 }

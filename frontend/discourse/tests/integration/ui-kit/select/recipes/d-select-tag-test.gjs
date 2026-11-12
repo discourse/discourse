@@ -1229,11 +1229,11 @@ module(
               @onChange={{onChange}}
               @value={{array (hash id=2 name="held")}}
             >
-              <:item as |item options row|>
+              <:option as |item options row|>
                 <span class="custom-row {{if row 'has-row'}}">
                   {{~item.name~}}
                 </span>
-              </:item>
+              </:option>
               <:selection as |item|>
                 <span class="custom-held">
                   {{~item.name~}}
@@ -1496,7 +1496,7 @@ module(
                 texts: {
                   tagCountBadge: ({ count }) => `(${count})`,
                   tagCount: ({ count }) => `${count} uses`,
-                  createItem: ({ label }) => `New tag ${label}`,
+                  createOption: ({ label }) => `New tag ${label}`,
                 },
               }))
             )

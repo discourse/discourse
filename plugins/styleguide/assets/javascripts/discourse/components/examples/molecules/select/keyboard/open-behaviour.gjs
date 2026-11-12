@@ -22,8 +22,8 @@ export default class OpenBehaviourSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
-      @items={{LOCALES}}
       @onChange={{this.onChange}}
+      @options={{LOCALES}}
       @texts={{hash
         ariaLabel=@label
         placeholder=(i18n

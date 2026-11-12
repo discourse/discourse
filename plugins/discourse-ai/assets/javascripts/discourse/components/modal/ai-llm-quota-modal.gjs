@@ -110,8 +110,8 @@ export default class AiLlmQuotaModal extends Component {
                   @disabled={{field.disabled}}
                   @id={{field.id}}
                   @invalid={{if field.error true false}}
-                  @items={{this.availableGroups}}
                   @onChange={{legacyPickOne (fn this.setGroupId field)}}
+                  @options={{this.availableGroups}}
                   @texts={{hash ariaLabel=field.title}}
                   @value={{data.group_id}}
                 />

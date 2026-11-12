@@ -177,7 +177,7 @@ class Host extends Component {
       @exclude={{@exclude}}
       @legacyKind={{@legacyKind}}
       @multiple={{@multiple}}
-      @noneRow={{@noneRow}}
+      @noneOption={{@noneOption}}
       @onChange={{this.onChange}}
       @permission={{@permission}}
       @prioritize={{@prioritize}}
@@ -202,11 +202,11 @@ module(
         await render(
           <template>
             <DSelectCategory>
-              <:item as |item options row|>
+              <:option as |item options row|>
                 <span class="custom-row {{if row 'has-row'}}">
                   {{~item.name~}}
                 </span>
-              </:item>
+              </:option>
             </DSelectCategory>
           </template>
         );
@@ -689,14 +689,14 @@ module(
         assert.deepEqual(optionValues(), ["9600"]);
       });
 
-      test("@noneRow adds a selectable row that clears the value", async function (assert) {
+      test("@noneOption adds a selectable row that clears the value", async function (assert) {
         const onChange = sinon.spy();
 
         await render(
           <template>
             <Host
               @multiple={{false}}
-              @noneRow={{true}}
+              @noneOption={{true}}
               @onChange={{onChange}}
               @texts={{hash noneLabel="Any category"}}
               @value={{2}}
@@ -872,7 +872,7 @@ module(
         );
       });
 
-      test("@noneRow adds a row whose text a customization sets", async function (assert) {
+      test("@noneOption adds a row whose text a customization sets", async function (assert) {
         const held = [1, 2];
         const onChange = sinon.spy();
         withPluginApi((api) =>
@@ -887,7 +887,7 @@ module(
           <template>
             <Host
               @multiple={{true}}
-              @noneRow={{true}}
+              @noneOption={{true}}
               @onChange={{onChange}}
               @value={{held}}
             />
@@ -903,14 +903,14 @@ module(
         assert.deepEqual(onChange.lastCall?.args[0], [], "it clears the value");
       });
 
-      test("@noneRow in single mode clears through the select's own row", async function (assert) {
+      test("@noneOption in single mode clears through the select's own row", async function (assert) {
         const onChange = sinon.spy();
 
         await render(
           <template>
             <Host
               @multiple={{false}}
-              @noneRow={{true}}
+              @noneOption={{true}}
               @onChange={{onChange}}
               @texts={{hash noneLabel="No category"}}
               @value={{2}}
@@ -2085,7 +2085,7 @@ module(
           <template>
             <DSelectCategory
               @multiple={{true}}
-              @noneRow={{true}}
+              @noneOption={{true}}
               @onChange={{onChange}}
               @texts={{hash noneLabel="Any category"}}
               @value={{value}}

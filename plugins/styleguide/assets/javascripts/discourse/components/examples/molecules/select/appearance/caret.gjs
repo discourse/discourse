@@ -18,9 +18,9 @@ export default class CaretSelectExample extends Component {
     <DSelect
       @caretIcon={{hash open="caret-up" closed="caret-down"}}
       @identifier="sg-caret"
-      @items={{TAGS}}
       @labelField="label"
       @onChange={{this.onChange}}
+      @options={{TAGS}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.choose_tag")
       }}

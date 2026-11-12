@@ -18,10 +18,10 @@ export default class ClearableMultipleSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-clearable-multi"
-      @items={{TAGS}}
       @labelField="label"
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{TAGS}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.choose_tags")
       }}

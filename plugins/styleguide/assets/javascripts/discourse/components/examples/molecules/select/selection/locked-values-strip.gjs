@@ -19,12 +19,12 @@ export default class LockedValuesStripSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-locked-strip"
-      @items={{USER_GROUPS}}
       @labelField="fullName"
       @lockedValues={{LOCKED}}
       @maxVisibleChips={{2}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{USER_GROUPS}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_groups"

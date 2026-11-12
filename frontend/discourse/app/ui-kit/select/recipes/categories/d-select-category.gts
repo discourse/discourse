@@ -14,6 +14,7 @@ import DSelect, {
 import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
+  categoryOption,
   categoryRecord,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
 import type {
@@ -27,7 +28,8 @@ import {
   type SelectControl,
   type SelectCoreTextKey,
   type SelectLoadRequest,
-  type SelectRecord,
+  type SelectOption,
+  selectOption,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -49,7 +51,7 @@ interface DSelectCategorySignature {
     | "icon"
     | "variant"
     | "onClose"
-    | "noneRow"
+    | "noneOption"
     | MultiSelectRecipeArg
   > & {
     /** Held ids, numeric strings or category records. */
@@ -97,7 +99,7 @@ interface DSelectCategorySignature {
     selectDescendants?: boolean;
   };
   Element: HTMLElement;
-  Blocks: Pick<DSelectSignature["Blocks"], "item" | "selection" | "footer">;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
 }
 
 /**
@@ -220,49 +222,54 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return records.map((category) => categoryRecord(category));
   }
 
-  /** In multiple mode the select draws no none row of its own, so the recipe adds it. */
+  /** In multiple mode the select draws no none option of its own, so the recipe adds it. */
   @action
-  specialItems(
+  extraOptions(
     snapshot: SelectSnapshot,
     config: SelectConfig
-  ): CategoryRecord[] {
-    const rows: CategoryRecord[] = [];
-    if (this.args.multiple && config.noneRow && !snapshot.filter) {
-      rows.push({
-        id: "category-none",
-        name: renderSelectText(config, "noneLabel"),
-        onSelect: (control) => control.clear(),
-      });
+  ): SelectOption<CategoryRecord>[] {
+    const options: SelectOption<CategoryRecord>[] = [];
+    if (this.args.multiple && config.noneOption && !snapshot.filter) {
+      options.push(
+        selectOption(
+          { id: "category-none", name: renderSelectText(config, "noneLabel") },
+          { onSelect: (control) => control.clear() }
+        )
+      );
     }
-    rows.push(...this.#pinned(snapshot.filter, config));
-    return rows;
+    options.push(...this.#pinned(snapshot.filter, config));
+    return options;
   }
 
   /**
    * A family's footer selects its key category and every level below it. It is offered only
-   * when the key category's row is shown, so it never acts on a family the search did not show.
+   * when the key category's option is shown, so it never acts on a family the search did not
+   * show, and never for a key category that can't be picked.
    */
   @action
   groupFooter(
     key: unknown,
-    rows: readonly SelectRecord[],
+    options: readonly SelectOption[],
     config: SelectConfig
-  ): CategoryRecord | null {
-    const row = key == null ? undefined : rows.find((item) => item.id === key);
-    const category = (row as CategoryRecord | undefined)?.category;
-    if (!category || row!.disabled) {
+  ): SelectOption<CategoryRecord> | null {
+    const option =
+      key == null ? undefined : options.find(({ record }) => record.id === key);
+    const category = (option?.record as CategoryRecord | undefined)?.category;
+    if (!category || option!.disabled) {
       return null;
     }
-    return {
-      id: `category-descendants-${category.id}`,
-      // Names the category's own topic count, as the badge it draws shows it.
-      name: renderSelectText(config, "familyFooter", {
-        category: category.displayName,
-        count: category.topic_count,
-      }),
-      category,
-      onSelect: (control) => this.#selectFamily(control, category),
-    };
+    return selectOption(
+      {
+        id: `category-descendants-${category.id}`,
+        // Names the category's own topic count, as the badge it draws shows it.
+        name: renderSelectText(config, "familyFooter", {
+          category: category.displayName,
+          count: category.topic_count,
+        }),
+        category,
+      },
+      { onSelect: (control) => this.#selectFamily(control, category) }
+    );
   }
 
   @action
@@ -295,11 +302,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   }
 
   /**
-   * Rows the search leaves out. A scope lists its family's children, so its root is pinned
+   * Options the search leaves out. A scope lists its family's children, so its root is pinned
    * while browsing. Disabled categories are excluded from the search, so they are always
-   * offered as pinned rows whenever they match, and are never grouped or given a footer.
+   * offered as pinned options whenever they match, and are never grouped or given a footer.
    */
-  #pinned(query: string, config: SelectConfig): CategoryRecord[] {
+  #pinned(query: string, config: SelectConfig): SelectOption<CategoryRecord>[] {
     const root = query ? undefined : this.#familyId(this.args.scope);
     const roots = Category.findByIds(root == null ? [] : [root]).filter(
       this.#categoryAllowed()
@@ -311,12 +318,13 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const readOnlyDescription =
       renderSelectText(config, "readOnlyDescription") || undefined;
     return [...new Set([...roots, ...disabled])].map((category) => {
-      const row = categoryRecord(category, descriptions);
-      if (disabled.includes(category)) {
-        row.disabled = true;
-        row.description = readOnlyDescription;
-      }
-      return row;
+      const option = categoryOption(categoryRecord(category), descriptions);
+      return disabled.includes(category)
+        ? option.with({
+            disabled: true,
+            description: readOnlyDescription ?? null,
+          })
+        : option;
     });
   }
 
@@ -359,12 +367,12 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return continueWith(
       search,
       ({ categories, categoriesCount, familyKeys }) => ({
-        items: categories.map((category) => {
-          const row = categoryRecord(category, descriptions);
+        options: categories.map((category) => {
+          const record = categoryRecord(category);
           if (groupFamilies && familyKeys?.[category.id!] === category.id) {
-            row.familyKey = category.id;
+            record.familyKey = category.id;
           }
-          return row;
+          return categoryOption(record, descriptions);
         }),
         total: categoriesCount,
       })
@@ -392,6 +400,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
+      @extraOptions={{this.extraOptions}}
       @groupBy="familyKey"
       @groupDividers={{false}}
       @groupFooter={{this.groupFooter}}
@@ -415,36 +424,36 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @multiple={{@multiple}}
-      @noneRow={{@noneRow}}
+      @noneOption={{@noneOption}}
       @onChange={{this.onChange}}
       @onClose={{@onClose}}
       @resolveValues={{this.resolveValues}}
-      @specialItems={{this.specialItems}}
       @suppressFooter={{not (has-block "footer")}}
       @texts={{@texts}}
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >
-      <:item as |item config row|>
-        {{#if (has-block "item")}}
-          {{yield item config row to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
           <CategoryBadge
             @ancestors={{true}}
             @counts={{true}}
-            @record={{item}}
+            @option={{option}}
+            @record={{record}}
           />
         {{/if}}
-      </:item>
-      <:groupFooter as |item|>
-        <CategoryBadge @counts={{true}} @family={{true}} @record={{item}} />
+      </:option>
+      <:groupFooter as |record|>
+        <CategoryBadge @counts={{true}} @family={{true}} @record={{record}} />
       </:groupFooter>
-      <:selection as |item config|>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
           <span class="d-category-selection">
-            <CategoryBadge @ancestors={{@showAncestors}} @record={{item}} />
+            <CategoryBadge @ancestors={{@showAncestors}} @record={{record}} />
           </span>
         {{/if}}
       </:selection>

@@ -580,9 +580,9 @@ export default class InvitePanel extends Component {
               {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
               {{#if this.siteSettings.enable_new_select_controls}}
                 <DSelectGroup
-                  @items={{this.allGroups}}
                   @multiple={{true}}
                   @onChange={{this.setGroupIds}}
+                  @options={{this.allGroups}}
                   @value={{this.groupIds}}
                 />
               {{else}}

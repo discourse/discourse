@@ -36,8 +36,8 @@ export default class EmojiSelectExample extends Component {
       @groupBy="group"
       @groupHeader={{this.groupHeader}}
       @identifier="sg-emoji"
-      @items={{this.items}}
       @onChange={{this.update}}
+      @options={{this.items}}
       @value={{this.value}}
       @variant="button"
     >
@@ -48,7 +48,7 @@ export default class EmojiSelectExample extends Component {
         </span>
       </:selection>
 
-      <:item as |item|>
+      <:option as |item|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dEmoji item.name}}
           <span class="select-examples__primary">{{item.name}}</span>
@@ -56,7 +56,7 @@ export default class EmojiSelectExample extends Component {
             :{{item.name}}:
           </code>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

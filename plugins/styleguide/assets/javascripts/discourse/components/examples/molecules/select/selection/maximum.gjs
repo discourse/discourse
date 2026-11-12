@@ -17,11 +17,11 @@ export default class MaximumSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-maximum"
-      @items={{USER_GROUPS}}
       @labelField="fullName"
       @maximum={{3}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{USER_GROUPS}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_groups"

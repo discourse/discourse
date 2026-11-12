@@ -4,6 +4,7 @@ import {
   applyMutableValueTransformer,
   withTransformerErrorHandling,
 } from "discourse/lib/transformer";
+import type { SelectOptionLike } from "discourse/ui-kit/select/-internals/engine/select-option";
 import {
   attachSelectTextResolver,
   DEFAULT_SELECT_TEXTS,
@@ -83,7 +84,7 @@ export interface SelectPresentationConfig {
   /** Whether a selection can offer a clear control. */
   clearable?: boolean;
   /** Adds a single-select "none" row that clears the value; off by default. */
-  noneRow?: boolean;
+  noneOption?: boolean;
   /** An additive lock: a later customization cannot remove it. */
   disabled?: boolean;
 }
@@ -115,7 +116,7 @@ const CORE_CONFIG_KEYS = new Set<keyof SelectPresentationConfig>([
   "icon",
   "showCaret",
   "clearable",
-  "noneRow",
+  "noneOption",
   "disabled",
 ]);
 
@@ -198,7 +199,7 @@ export interface SelectChangeContext extends SelectResolvedContext {
 type Content = (
   items: SelectRecord[],
   context: SelectContentContext
-) => SelectRecord[];
+) => SelectOptionLike[];
 /** A row step mutates presentation; its return value is ignored. */
 type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
 /** A config step returns a partial over an immutable snapshot of the values so far. */
@@ -373,14 +374,15 @@ export default class SelectCustomizations {
 
   /** Chains valid arrays, retaining the previous list when a step fails. */
   applyContent(
-    items: SelectRecord[],
+    records: SelectRecord[],
     context: SelectContentContext
-  ): SelectRecord[] {
+  ): SelectOptionLike[] {
+    let items: SelectOptionLike[] = records;
     for (const step of this.#steps.content) {
       const previous = items;
       items =
         withTransformerErrorHandling(() => {
-          const result = step(previous, context);
+          const result = step(previous as SelectRecord[], context);
           assert(
             "DSelect: content customization must return an array",
             Array.isArray(result)
@@ -490,7 +492,7 @@ export default class SelectCustomizations {
       );
       current = this.#configSnapshot(next, layers, wrappers, textInputs);
     });
-    const noneRow = !!current.noneRow;
+    const noneOption = !!current.noneOption;
     const loadingStatus = !!current.loadingStatus;
     let iconOnly = current.iconOnly;
     if (iconOnly && !selectTextResolver(current)!.explicit("ariaLabel")) {
@@ -506,12 +508,12 @@ export default class SelectCustomizations {
       iconOnly = false;
     }
     if (
-      noneRow !== current.noneRow ||
+      noneOption !== current.noneOption ||
       loadingStatus !== current.loadingStatus ||
       iconOnly !== current.iconOnly
     ) {
       current = this.#configSnapshot(
-        { ...current, noneRow, loadingStatus, iconOnly },
+        { ...current, noneOption, loadingStatus, iconOnly },
         layers,
         wrappers,
         textInputs
@@ -596,7 +598,7 @@ export default class SelectCustomizations {
     if (textInputs.labelledBy) {
       required.delete("ariaLabel");
     }
-    if (config.noneRow) {
+    if (config.noneOption) {
       required.add("noneLabel");
     }
     if (config.loadingStatus) {

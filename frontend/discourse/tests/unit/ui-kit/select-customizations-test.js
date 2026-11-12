@@ -34,14 +34,14 @@ function create(opts) {
 }
 
 function values(engine, items = []) {
-  return engine.buildItems(items).map((row) => row.value);
+  return engine.buildRows(items).map((row) => row.value);
 }
 
 /** A single select whose emitted changes are recorded. */
 function controlled(opts = {}) {
   const changes = [];
   const engine = new SelectEngine({
-    items: ITEMS,
+    options: ITEMS,
     getValue: () => null,
     onChange: (value) => changes.push(value),
     ...opts,
@@ -151,7 +151,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         onChange: () => trace.push("emit"),
       });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.deepEqual(
         trace,
         ["load-identifier", "load-kind", "load-all", "load-base"],
@@ -179,9 +179,9 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       const engine = new SelectEngine({ kind: "k" });
       assert.strictEqual(setups, 1, "construction runs the setup");
 
-      engine.buildItems(ITEMS);
+      engine.buildRows(ITEMS);
       engine.setFilter("a");
-      engine.buildItems(ITEMS);
+      engine.buildRows(ITEMS);
       assert.strictEqual(setups, 1, "building the list never runs it again");
 
       create({ kind: "k" });
@@ -415,7 +415,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
 
       create({
         load: () => [],
-        items: () => {
+        options: () => {
           order.push("items");
           return [];
         },
@@ -442,7 +442,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       });
       const engine = new SelectEngine({});
 
-      assert.throws(() => engine.buildItems([]), /content boom/);
+      assert.throws(() => engine.buildRows([]), /content boom/);
       assert.true(
         this.reported.some(
           (detail) =>
@@ -468,7 +468,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       const engine = new SelectEngine({});
 
       assert.throws(
-        () => engine.buildItems(ITEMS),
+        () => engine.buildRows(ITEMS),
         /must return an array/i,
         "development flags the mistake"
       );
@@ -503,7 +503,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
 
       const failing = new SelectEngine({ load });
       await assert.rejects(
-        failing.loadItems(failing.loadContext),
+        failing.loadOptions(failing.loadContext),
         /load boom/,
         "tests rethrow"
       );
@@ -511,7 +511,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       disableThrowingApplyExceptionOnTests();
       calls.length = 0;
       const engine = new SelectEngine({ load });
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.deepEqual(
         calls,
         ["wrapped", "base"],
@@ -621,7 +621,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         )
       );
       const engine = new SelectEngine({
-        items: ITEMS,
+        options: ITEMS,
         getValue: () => null,
         onChange: () => {
           throw new Error("consumer boom");
@@ -656,7 +656,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         );
       });
       const engine = new SelectEngine({});
-      const [descriptor] = engine.buildItems([{ id: 1, name: "Apple" }]);
+      const [descriptor] = engine.buildRows([{ id: 1, name: "Apple" }]);
 
       assert.deepEqual(
         engine.rowPresentation(descriptor).classes,
@@ -702,7 +702,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         },
       });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         calls,
@@ -746,22 +746,25 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
 module("Unit | ui-kit | select-customizations | options", function (hooks) {
   setupTest(hooks);
 
-  function noneRow(engine) {
-    return engine.buildItems(ITEMS).find((row) => row.flags.__none)?.item.name;
+  function noneOption(engine) {
+    return engine.buildRows(ITEMS).find((row) => row.flags.none)?.record.name;
   }
 
-  test("a customization's noneRow and noneLabel reach a headless engine", function (assert) {
+  test("a customization's noneOption and noneLabel reach a headless engine", function (assert) {
     customize((selects) =>
       selects.forAll((spec) =>
-        spec.config(() => ({ noneRow: true, texts: { noneLabel: "Nothing" } }))
+        spec.config(() => ({
+          noneOption: true,
+          texts: { noneLabel: "Nothing" },
+        }))
       )
     );
 
     assert.strictEqual(
-      noneRow(
+      noneOption(
         new SelectEngine({
-          items: ITEMS,
-          getArgs: () => ({ noneRow: true }),
+          options: ITEMS,
+          getArgs: () => ({ noneOption: true }),
           getTexts: () => ({ noneLabel: "None" }),
         })
       ),
@@ -769,12 +772,12 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       "it renames the call site's none row"
     );
     assert.strictEqual(
-      noneRow(new SelectEngine({ items: ITEMS })),
+      noneOption(new SelectEngine({ options: ITEMS })),
       "Nothing",
       "it adds a none row where there was none"
     );
     assert.strictEqual(
-      noneRow(new SelectEngine({ items: ITEMS, multiple: true })),
+      noneOption(new SelectEngine({ options: ITEMS, multiple: true })),
       undefined,
       "a multi-select still has no none row"
     );
@@ -792,13 +795,16 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       );
     });
     const withNoneRow = () =>
-      new SelectEngine({ items: ITEMS, getArgs: () => ({ noneRow: true }) });
+      new SelectEngine({
+        options: ITEMS,
+        getArgs: () => ({ noneOption: true }),
+      });
 
-    assert.throws(() => withNoneRow().buildItems(ITEMS), /options boom/);
+    assert.throws(() => withNoneRow().buildRows(ITEMS), /options boom/);
 
     disableThrowingApplyExceptionOnTests();
     assert.strictEqual(
-      noneRow(withNoneRow()),
+      noneOption(withNoneRow()),
       "After",
       "later callbacks still apply"
     );
@@ -879,12 +885,12 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       )
     );
     const engine = new SelectEngine({
-      getArgs: () => ({ noneRow: true }),
+      getArgs: () => ({ noneOption: true }),
       getTexts: () => ({ noneLabel: state.label }),
       getMultiple: () => state.multiple,
     });
     const noneLabel = () =>
-      engine.buildItems([]).find((row) => row.flags.__none)?.item.name;
+      engine.buildRows([]).find((row) => row.flags.none)?.record.name;
 
     assert.strictEqual(
       noneLabel(),
@@ -920,7 +926,7 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
       )
     );
     const engine = new SelectEngine({
-      items: () => {
+      options: () => {
         itemReads++;
         return [];
       },

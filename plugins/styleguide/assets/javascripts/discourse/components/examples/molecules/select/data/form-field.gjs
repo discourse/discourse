@@ -22,8 +22,8 @@ export default class FormFieldSelectExample extends Component {
             @id={{field.id}}
             @identifier="sg-form-locale"
             @invalid={{if field.error true false}}
-            @items={{LOCALES}}
             @onChange={{field.set}}
+            @options={{LOCALES}}
             @value={{field.value}}
           />
         </field.Control>
@@ -42,9 +42,9 @@ export default class FormFieldSelectExample extends Component {
             @id={{field.id}}
             @identifier="sg-form-locales"
             @invalid={{if field.error true false}}
-            @items={{LOCALES}}
             @multiple={{true}}
             @onChange={{field.set}}
+            @options={{LOCALES}}
             @value={{field.value}}
           />
         </field.Control>

@@ -27,6 +27,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 class NoneRowHost extends Component {
@@ -40,9 +41,9 @@ class NoneRowHost extends Component {
 
   <template>
     <DSelect
-      @items={{ITEMS}}
-      @noneRow={{true}}
+      @noneOption={{true}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash noneLabel="None" placeholder="Pick one"}}
       @value={{this.value}}
       @variant={{@variant}}
@@ -61,10 +62,10 @@ class NoneRowMultiHost extends Component {
 
   <template>
     <DSelect
-      @items={{ITEMS}}
       @multiple={{true}}
-      @noneRow={{true}}
+      @noneOption={{true}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash noneLabel="None" placeholder="Pick some"}}
       @value={{this.value}}
     />
@@ -371,7 +372,7 @@ module(
     test("a pointer selection moves the cursor without showing it", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @multiple={{true}} @value={{array}} />
+          <DSelect @multiple={{true}} @options={{ITEMS}} @value={{(array)}} />
         </template>
       );
       await click("[role='combobox']");
@@ -481,7 +482,7 @@ module(
     // from that preference instead silently retargeted Enter onto the second-best match.
     test("filtering a single-select keeps the cursor on a held top match", async function (assert) {
       await render(
-        <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
+        <template><DSelect @options={{ITEMS}} @value={{1}} /></template>
       );
 
       await click("[role='combobox']");
@@ -503,7 +504,10 @@ module(
       const onChange = sinon.spy();
       const onManage = sinon.spy();
       const items = [
-        { id: 1, name: "Manage notifications", onSelect: onManage },
+        selectOption(
+          { id: 1, name: "Manage notifications" },
+          { onSelect: onManage }
+        ),
         { id: 2, name: "Banana" },
         { id: 3, name: "Cherry pie" },
       ];
@@ -511,8 +515,8 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @items={{items}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1}}
           />
         </template>
@@ -567,7 +571,7 @@ module(
             @groupBy="section"
             @groupDividers={{false}}
             @identifier="test-select"
-            @items={{SECTIONED}}
+            @options={{SECTIONED}}
           />
         </template>
       );
@@ -583,7 +587,7 @@ module(
           <DSelect
             @groupBy="section"
             @identifier="test-select"
-            @items={{SECTIONED}}
+            @options={{SECTIONED}}
           />
         </template>
       );
@@ -617,7 +621,7 @@ module(
           <DSelect
             @groupBy="section"
             @identifier="test-select"
-            @items={{SECTIONED}}
+            @options={{SECTIONED}}
           />
         </template>
       );
@@ -640,7 +644,7 @@ module(
           <DSelect
             @groupBy="section"
             @identifier="test-select"
-            @items={{SECTIONED}}
+            @options={{SECTIONED}}
           />
         </template>
       );
@@ -665,14 +669,13 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       { id: 2, name: "Apricot", group: "Fruit" },
       { id: 3, name: "Maple", group: "Trees" },
     ];
-    const specialItems = () => [
+    const extraOptions = () => [
       { id: "action", name: "Browse all" },
-      { id: "sticky", name: "Pinned", sticky: true },
+      selectOption({ id: "sticky", name: "Pinned" }, { position: "sticky" }),
     ];
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: `new:${filter}`,
       name: filter,
-      __create: true,
     });
     const groupHeader = (group) => group;
 
@@ -680,12 +683,12 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
+          @createOption={{createOption}}
+          @extraOptions={{extraOptions}}
           @groupBy="group"
           @groupHeader={{groupHeader}}
-          @items={{items}}
-          @noneRow={{true}}
-          @specialItems={{specialItems}}
+          @noneOption={{true}}
+          @options={{items}}
           @texts={{hash noneLabel="None"}}
         />
       </template>
@@ -730,24 +733,23 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
 
   test("create and loaded rows keep prefix positions with an unloaded declared total", async function (assert) {
     const load = () => ({
-      items: [
+      options: [
         { id: 1, name: "Apple" },
         { id: 2, name: "Apricot" },
       ],
       total: 20,
       hasMore: true,
     });
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: `new:${filter}`,
       name: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
+          @createOption={{createOption}}
           @load={{load}}
         />
       </template>
@@ -778,19 +780,18 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
 
   test("duplicate checks use the built item's configured key rather than the typed value", async function (assert) {
     const items = [{ code: 5, text: "Apple" }];
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       code: "5",
       text: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{items}}
+          @createOption={{createOption}}
           @labelField="text"
+          @options={{items}}
           @valueField="code"
         />
       </template>
@@ -806,18 +807,17 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
 
   test("a source string value matching the query does not block a distinct create key", async function (assert) {
     const items = [{ id: "ap", name: "Apple" }];
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: `new:${filter}`,
       name: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{items}}
+          @createOption={{createOption}}
+          @options={{items}}
         />
       </template>
     );
@@ -829,24 +829,24 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
   });
 
   test("an item block overrides create wording while data-name stays the item label", async function (assert) {
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       code: `new:${filter}`,
       text: filter.toUpperCase(),
-      __create: true,
     });
+    const options = [{ code: "apple", text: "Apple" }];
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{ITEMS}}
+          @createOption={{createOption}}
           @labelField="text"
+          @options={{options}}
           @valueField="code"
         >
-          <:item as |item|>
+          <:option as |item|>
             {{~concat "Use " item.text~}}
-          </:item>
+          </:option>
         </DSelect>
       </template>
     );
@@ -863,18 +863,18 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
   });
 
   test("the item block is told which row is the create row", async function (assert) {
-    const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+    const createOption = (filter) => ({ id: `new:${filter}`, name: filter });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{ITEMS}}
+          @createOption={{createOption}}
+          @options={{ITEMS}}
         >
-          <:item as |item options row|>
+          <:option as |item options row|>
             {{~if row.create (concat "Create " item.name) item.name~}}
-          </:item>
+          </:option>
         </DSelect>
       </template>
     );
@@ -889,7 +889,7 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
   });
 
   test("the engine supplies create wording for an unmarked item with a configured label", async function (assert) {
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       code: `new:${filter}`,
       text: filter.toUpperCase(),
     });
@@ -899,9 +899,9 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{items}}
+          @createOption={{createOption}}
           @labelField="text"
+          @options={{items}}
           @valueField="code"
         />
       </template>
@@ -919,19 +919,18 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
 
   test("local debounce retains the displayed query for creation and duplicate checks", async function (assert) {
     const allowCreate = sinon.spy((filter) => filter === "ap");
-    const createItem = sinon.spy((filter) => ({
+    const createOption = sinon.spy((filter) => ({
       id: `new:${filter}`,
       name: filter,
-      __create: true,
     }));
 
     await render(
       <template>
         <DSelect
           @allowCreate={{allowCreate}}
-          @createItem={{createItem}}
+          @createOption={{createOption}}
           @debounce={{150}}
-          @items={{ITEMS}}
+          @options={{ITEMS}}
         />
       </template>
     );
@@ -941,7 +940,7 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       .hasAttribute("data-name", "ap", "the initial query offers creation");
 
     allowCreate.resetHistory();
-    createItem.resetHistory();
+    createOption.resetHistory();
     const typing = fillIn("[role='combobox']", "apple");
     try {
       await waitUntil(() => allowCreate.called);
@@ -956,9 +955,9 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
         allowCreate.args.every(([filter]) => filter === "ap"),
         "allowCreate sees only the displayed filter"
       );
-      assert.true(createItem.called, "the retained proposal is rebuilt");
+      assert.true(createOption.called, "the retained proposal is rebuilt");
       assert.true(
-        createItem.args.every(([filter]) => filter === "ap"),
+        createOption.args.every(([filter]) => filter === "ap"),
         "the factory sees only the displayed filter"
       );
     } finally {
@@ -978,11 +977,13 @@ module(
     hooks.afterEach(() => disableVirtualization());
 
     test("an item description follows the mixed text direction setting", async function (assert) {
-      const items = [{ id: 1, name: "Apple", description: "שלום world" }];
+      const items = [
+        selectOption({ id: 1, name: "Apple" }, { description: "שלום world" }),
+      ];
 
       this.siteSettings.support_mixed_text_direction = true;
       await render(
-        <template><DSelect @items={{items}} @variant="static" /></template>
+        <template><DSelect @options={{items}} @variant="static" /></template>
       );
       await click(".d-select__trigger");
 
@@ -996,11 +997,13 @@ module(
     });
 
     test("an item description has no direction override by default", async function (assert) {
-      const items = [{ id: 1, name: "Apple", description: "Fruit" }];
+      const items = [
+        selectOption({ id: 1, name: "Apple" }, { description: "Fruit" }),
+      ];
 
       this.siteSettings.support_mixed_text_direction = false;
       await render(
-        <template><DSelect @items={{items}} @variant="static" /></template>
+        <template><DSelect @options={{items}} @variant="static" /></template>
       );
       await click(".d-select__trigger");
 
@@ -1012,19 +1015,14 @@ module(
     test("group, item description and cap share the option description without changing its name", async function (assert) {
       const items = [
         { id: 1, name: "Apple", group: "Fruit" },
-        {
-          id: 2,
-          name: "Banana",
-          group: "Fruit",
-          description: "Requires permission",
-        },
-        {
-          id: 3,
-          name: "Cherry",
-          group: "Fruit",
-          disabled: true,
-          description: "Unavailable today",
-        },
+        selectOption(
+          { id: 2, name: "Banana", group: "Fruit" },
+          { description: "Requires permission" }
+        ),
+        selectOption(
+          { id: 3, name: "Cherry", group: "Fruit" },
+          { disabled: true, description: "Unavailable today" }
+        ),
       ];
       const groupHeader = (group) => group;
       const onChange = sinon.spy();
@@ -1033,14 +1031,14 @@ module(
           <DSelect
             @groupBy="group"
             @groupHeader={{groupHeader}}
-            @items={{items}}
             @maximum={{1}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 1}}
             @variant="static"
           >
-            <:item as |item|><strong>{{item.name}}</strong></:item>
+            <:option as |item|><strong>{{item.name}}</strong></:option>
           </DSelect>
         </template>
       );
@@ -1097,10 +1095,10 @@ module(
           <DSelect
             @groupBy="group"
             @groupHeader={{groupHeader}}
-            @items={{items}}
             @maximum={{1}}
             @multiple={{true}}
             @onChange={{onChange}}
+            @options={{items}}
             @value={{array 0}}
             @variant="static"
           />
@@ -1176,12 +1174,12 @@ class CompactStripHost extends Component {
     <DSelect
       @describedBy="u1f-help"
       @disabled={{@disabled}}
-      @items={{@items}}
       @load={{@load}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@cap.value}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{@options}}
       @resolveValues={{@resolveValues}}
       @texts={{hash ariaLabel="Fruit"}}
       @value={{this.value}}
@@ -1208,7 +1206,7 @@ module(
           <template>
             <CompactStripHost
               @cap={{cap}}
-              @items={{ITEMS}}
+              @options={{ITEMS}}
               @value={{array 1 2 3}}
               @variant={{variant}}
             />
@@ -1246,7 +1244,7 @@ module(
           <CompactStripHost
             @cap={{cap}}
             @disabled={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{array 1 2}}
             @variant="button"
           />
@@ -1271,7 +1269,7 @@ module(
         <template>
           <CompactStripHost
             @cap={{cap}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{array 1 2}}
           />
         </template>
@@ -1325,7 +1323,7 @@ module(
           <template>
             <CompactStripHost
               @cap={{cap}}
-              @items={{ITEMS}}
+              @options={{ITEMS}}
               @value={{array 1 2}}
             />
           </template>
@@ -1356,7 +1354,11 @@ module(
       const cap = tracked(0);
       await render(
         <template>
-          <CompactStripHost @cap={{cap}} @items={{ITEMS}} @value={{array 1}} />
+          <CompactStripHost
+            @cap={{cap}}
+            @options={{ITEMS}}
+            @value={{array 1}}
+          />
         </template>
       );
       await click(".d-select__input");
@@ -1407,7 +1409,7 @@ module(
       await render(
         <template>
           <CompactStripHost
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{array 1 2}}
             @variant="static"
           />

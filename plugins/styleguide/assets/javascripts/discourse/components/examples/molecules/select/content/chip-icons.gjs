@@ -16,18 +16,18 @@ export default class ChipIconsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-chip-icons"
-      @items={{USER_GROUPS}}
       @labelField="fullName"
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{USER_GROUPS}}
       @value={{this.value}}
     >
-      <:item as |group|>
+      <:option as |group|>
         <span class="select-examples__row">
           {{dIcon group.icon}}
           <span class="select-examples__primary">{{group.fullName}}</span>
         </span>
-      </:item>
+      </:option>
       <:selection as |group|>
         <span class="select-examples__chip">
           {{dIcon group.icon}}

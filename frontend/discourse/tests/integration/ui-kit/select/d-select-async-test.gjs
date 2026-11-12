@@ -28,6 +28,7 @@ import {
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
 const resolveNone = () => Promise.resolve([]);
 
@@ -47,13 +48,13 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <DSelect
           class="sync-resolve-value"
-          @items={{array}}
+          @options={{(array)}}
           @resolveValue={{resolveValue}}
           @value={{123}}
         />
         <DSelect
           class="sync-resolve-values"
-          @items={{array}}
+          @options={{(array)}}
           @resolveValues={{resolveValues}}
           @value={{456}}
         />
@@ -136,7 +137,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
 
       <template>
         <DSelect
-          @items={{array}}
+          @options={{(array)}}
           @resolveValue={{resolveValue}}
           @value={{this.value}}
         />
@@ -167,7 +168,11 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{7}} />
+        <DSelect
+          @options={{(array)}}
+          @resolveValue={{resolveValue}}
+          @value={{7}}
+        />
       </template>
     );
 
@@ -234,7 +239,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
           @valueRecords={{pendingValueItems}}
         />
         {{! A client source resolves from its own list, so a missing id is data, not config. }}
-        <DSelect class="client" @items={{ITEMS}} @value={{99}} />
+        <DSelect class="client" @options={{ITEMS}} @value={{99}} />
       </template>
     );
 
@@ -318,16 +323,14 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       .hasValue("One", "the picked value resolves from the loaded rows");
   });
 
-  test("a :skeletonItem block replaces each placeholder row of the first load", async function (assert) {
+  test("a :skeleton block replaces each placeholder row of the first load", async function (assert) {
     let resolveLoad;
     const load = () => new Promise((resolve) => (resolveLoad = resolve));
 
     await render(
       <template>
         <DSelect @load={{load}}>
-          <:skeletonItem><span
-              class="custom-loading-row"
-            ></span></:skeletonItem>
+          <:skeleton><span class="custom-loading-row"></span></:skeleton>
         </DSelect>
       </template>
     );
@@ -358,8 +361,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{array}}
           @multiple={{true}}
+          @options={{(array)}}
           @resolveValues={{resolveValues}}
           @value={{array 1 2}}
         />
@@ -400,8 +403,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <DSelect
           @createUnresolvedRecord={{createUnresolvedRecord}}
-          @items={{array}}
           @multiple={{true}}
+          @options={{(array)}}
           @resolveValues={{resolveNone}}
           @value={{array 2}}
         />
@@ -427,9 +430,9 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <A11yLiveRegions />
         <DSelect
-          @items={{array}}
           @multiple={{true}}
           @onChange={{this.onChange}}
+          @options={{(array)}}
           @resolveValues={{resolveNone}}
           @value={{this.value}}
         />
@@ -448,7 +451,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{array}}
+          @options={{(array)}}
           @resolveValues={{resolveNone}}
           @value={{7}}
           @variant="button"
@@ -480,8 +483,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{array}}
           @multiple={{true}}
+          @options={{(array)}}
           @resolveValues={{resolveValues}}
           @value={{array 1 2}}
           @valueRecords={{valueRecords}}
@@ -507,7 +510,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <DSelect
           @createUnresolvedRecord={{createUnresolvedRecord}}
-          @items={{array}}
+          @options={{(array)}}
           @resolveValue={{resolveValue}}
           @value={{123}}
         />
@@ -532,7 +535,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <DSelect
           @createUnresolvedRecord={{createUnresolvedRecord}}
-          @items={{array}}
+          @options={{(array)}}
           @resolveValue={{resolveValue}}
           @value={{123}}
         />
@@ -556,7 +559,11 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
 
     const renderPromise = render(
       <template>
-        <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}} />
+        <DSelect
+          @options={{(array)}}
+          @resolveValue={{resolveValue}}
+          @value={{2}}
+        />
       </template>
     );
     await waitFor("[role='combobox']");
@@ -610,9 +617,9 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
           <:selection as |item|>
             {{~item.name~}}
           </:selection>
-          <:item as |item|>
+          <:option as |item|>
             {{~item.name~}}
-          </:item>
+          </:option>
         </DSelect>
       </template>
     );
@@ -697,9 +704,9 @@ module(
                 {{on "click" retry}}
               >go</button>
             </:error>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -776,7 +783,11 @@ module(
       {
         name: "the desktop typeahead",
         Host: <template>
-          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValue={{resolveValue}}
+            @value={{2}}
+          >
             <:selectionLoading><span
                 class="custom-selection-loading"
               ></span></:selectionLoading>
@@ -786,7 +797,11 @@ module(
       {
         name: "the desktop typeahead with a :selection block",
         Host: <template>
-          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValue={{resolveValue}}
+            @value={{2}}
+          >
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
@@ -800,7 +815,11 @@ module(
         name: "the mobile typeahead",
         mobile: true,
         Host: <template>
-          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValue={{resolveValue}}
+            @value={{2}}
+          >
             <:selectionLoading><span
                 class="custom-selection-loading"
               ></span></:selectionLoading>
@@ -811,7 +830,7 @@ module(
         name: "the button trigger",
         Host: <template>
           <DSelect
-            @items={{array}}
+            @options={{(array)}}
             @resolveValue={{resolveValue}}
             @value={{2}}
             @variant="button"
@@ -826,8 +845,8 @@ module(
         name: "a chip",
         Host: <template>
           <DSelect
-            @items={{array}}
             @multiple={{true}}
+            @options={{(array)}}
             @resolveValues={{resolveValues}}
             @value={{array 2}}
           >
@@ -882,8 +901,8 @@ module(
         name: "a chip",
         Plain: <template>
           <DSelect
-            @items={{array}}
             @multiple={{true}}
+            @options={{(array)}}
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
@@ -894,8 +913,8 @@ module(
         </template>,
         Custom: <template>
           <DSelect
-            @items={{array}}
             @multiple={{true}}
+            @options={{(array)}}
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
@@ -912,7 +931,7 @@ module(
         name: "the button trigger",
         Plain: <template>
           <DSelect
-            @items={{array}}
+            @options={{(array)}}
             @resolveValues={{resolveNone}}
             @value={{2}}
             @variant="button"
@@ -924,7 +943,7 @@ module(
         </template>,
         Custom: <template>
           <DSelect
-            @items={{array}}
+            @options={{(array)}}
             @resolveValues={{resolveNone}}
             @value={{2}}
             @variant="button"
@@ -941,14 +960,22 @@ module(
       {
         name: "the desktop typeahead",
         Plain: <template>
-          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+          >
             <:selection as |item|><span class="custom-selection">
                 {{~item.name~}}
               </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
-          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+          >
             <:selection as |item|><span class="custom-selection">
                 {{~item.name~}}
               </span></:selection>
@@ -962,14 +989,22 @@ module(
         name: "the mobile typeahead",
         mobile: true,
         Plain: <template>
-          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+          >
             <:selection as |item|><span class="custom-selection">
                 {{~item.name~}}
               </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
-          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+          <DSelect
+            @options={{(array)}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+          >
             <:selection as |item|><span class="custom-selection">
                 {{~item.name~}}
               </span></:selection>
@@ -1025,22 +1060,23 @@ module("Integration | ui-kit | select | DSelect (async)", function () {
         let release;
         const gate = new Promise((resolve) => (release = resolve));
         const items = [
-          {
-            id: "suggest",
-            name: "Suggest",
-            onSelect(control) {
-              control.close();
-              control.update(async () => {
-                await gate;
-              });
-            },
-          },
+          selectOption(
+            { id: "suggest", name: "Suggest" },
+            {
+              onSelect(control) {
+                control.close();
+                control.update(async () => {
+                  await gate;
+                });
+              },
+            }
+          ),
         ];
         await render(
           <template>
             <DSelect
-              @items={{items}}
               @multiple={{multiple}}
+              @options={{items}}
               @texts={{hash placeholder="Pick a value"}}
             />
           </template>
@@ -1278,7 +1314,7 @@ module(
       const load = (_filter, opts) => {
         requests.push(opts.context);
         return {
-          items: Array.from({ length: 50 }, (_, i) => ({
+          options: Array.from({ length: 50 }, (_, i) => ({
             id: (opts.offset ?? 0) + i,
             name: `Row ${(opts.offset ?? 0) + i}`,
           })),
@@ -1413,7 +1449,7 @@ module(
           return pending;
         }
         return {
-          items: Array.from({ length: 50 }, (_, id) => ({
+          options: Array.from({ length: 50 }, (_, id) => ({
             id,
             name: `Row ${id}`,
           })),
@@ -1439,7 +1475,7 @@ module(
           "a reveal does not hold the visible row"
         );
       } finally {
-        resolve({ items: [], hasMore: false });
+        resolve({ options: [], hasMore: false });
         await settled();
       }
     });

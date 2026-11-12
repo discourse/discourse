@@ -22,8 +22,8 @@ import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
-  SelectDescriptor,
   SelectRecord,
+  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -90,7 +90,7 @@ interface MultiChipsSignature {
     /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
     hasUnresolvedBlock: boolean;
     /** The held values' chip descriptors, resolved once by the host and shared with its description. */
-    selection: TrackedAsyncData<readonly SelectDescriptor[] | undefined>;
+    selection: TrackedAsyncData<readonly SelectRow[] | undefined>;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (
       ...ids: Array<string | undefined | false>
@@ -243,13 +243,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   }
 
   /** Converts a held item's id to its chip attribute value. */
-  chipValue(chip: SelectDescriptor): string {
+  chipValue(chip: SelectRow): string {
     return String(chip.value ?? "");
   }
 
   /** Whether a held chip is locked, read live because chip descriptors are cached per value. */
   @action
-  isLockedChip(chip: SelectDescriptor): boolean {
+  isLockedChip(chip: SelectRow): boolean {
     return this.args.engine.isLockedValue(chip.value);
   }
 
@@ -277,7 +277,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   /** Keeps removal focus inside the field; native button activation returns to the input. */
   @action
   handleChipKeydown(
-    chip: SelectDescriptor,
+    chip: SelectRow,
     index: number,
     event: KeyboardEvent
   ): void {
@@ -321,19 +321,19 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           this.args.focusInput();
         }
       }
-      this.args.engine.deselect(chip.item);
+      this.args.engine.deselect(chip.record);
     }
   }
 
   /** Focuses the input before removal so an unmounted button cannot drop focus to the body. */
   @action
-  removeSelected(chip: SelectDescriptor, event?: MouseEvent): void {
+  removeSelected(chip: SelectRow, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.args.presenter.isLocked || this.isLockedChip(chip)) {
       return;
     }
     this.args.focusInput();
-    this.args.engine.deselect(chip.item);
+    this.args.engine.deselect(chip.record);
   }
 
   @action
@@ -423,7 +423,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
               {{#let (this.isLockedChip chip) as |locked|}}
                 <li
                   class="d-select__chip {{if locked '--locked'}}"
-                  data-name={{@engine.getSelectionLabel chip.item}}
+                  data-name={{@engine.getSelectionLabel chip.record}}
                   data-value={{this.chipValue chip}}
                 >
                   {{! Interactive chips are named through the remove button; display-only
@@ -433,21 +433,21 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     class="d-select__chip-label"
                     id="{{this.chipIdPrefix}}-{{index}}-label"
                   >
-                    {{#if chip.item.__unresolved}}
+                    {{#if chip.flags.unresolved}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield chip.item to="unresolved"}}
+                        {{yield chip.record to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @record={{chip.item}}
+                          @record={{chip.record}}
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield chip.item to="selection"}}
+                      {{yield chip.record to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}
-                        @record={{chip.item}}
+                        @record={{chip.record}}
                       />
                     {{/if}}
                   </span>
@@ -465,7 +465,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                         (and this.capabilities.touch (not locked))
                         (@engine.text
                           "removeSelected"
-                          (hash item=(@engine.getSelectionLabel chip.item))
+                          (hash item=(@engine.getSelectionLabel chip.record))
                         )
                       }}
                       aria-labelledby={{if
@@ -494,7 +494,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                         {{#if locked}}
                           {{@engine.text
                             "lockedHint"
-                            (hash item=(@engine.getSelectionLabel chip.item))
+                            (hash item=(@engine.getSelectionLabel chip.record))
                           }}
                         {{else}}
                           {{@engine.text "removeHint"}}

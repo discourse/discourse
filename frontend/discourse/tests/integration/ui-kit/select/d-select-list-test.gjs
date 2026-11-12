@@ -30,6 +30,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const FRUIT = [
@@ -283,18 +284,18 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
     });
 
     test("DSelectList tells the item block which row is the create row", async function (assert) {
-      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      const createOption = (filter) => ({ id: `new:${filter}`, name: filter });
       await render(
         <template>
           <DSelectList
             @allowCreate={{true}}
-            @createItem={{createItem}}
-            @items={{FRUIT}}
+            @createOption={{createOption}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
           >
-            <:item as |item options row|>
+            <:option as |item options row|>
               {{~if row.create (concat "Create " item.name) item.name~}}
-            </:item>
+            </:option>
           </DSelectList>
         </template>
       );
@@ -309,19 +310,19 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
     });
 
     test("DSelectList without windowing tells the item block which row is the create row", async function (assert) {
-      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      const createOption = (filter) => ({ id: `new:${filter}`, name: filter });
       await render(
         <template>
           <DSelectList
             @allowCreate={{true}}
-            @createItem={{createItem}}
-            @items={{FRUIT}}
+            @createOption={{createOption}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @virtualized={{false}}
           >
-            <:item as |item options row|>
+            <:option as |item options row|>
               {{~if row.create (concat "Create " item.name) item.name~}}
-            </:item>
+            </:option>
           </DSelectList>
         </template>
       );
@@ -341,8 +342,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -408,6 +409,66 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         "focus stays in the search"
       );
     });
+
+    test("DSelectList accepts mixed options and emits records", async function (assert) {
+      const apple = { id: "apple", name: "Apple" };
+      const pear = { id: "pear", name: "Pear" };
+      const options = [apple, selectOption(pear)];
+      const held = tracked([]);
+      const changes = [];
+      const seen = new Map();
+      const label = (record, config, option) => {
+        seen.set(record.id, [record, config, option]);
+        return record.name;
+      };
+      const onChange = (value, records) => {
+        changes.push([value, records]);
+        held.value = value;
+      };
+
+      await render(
+        <template>
+          <DSelectList
+            @onChange={{onChange}}
+            @options={{options}}
+            @value={{held.value}}
+            @virtualized={{false}}
+          >
+            <:option as |record config option|><span
+                class="fixture__list-option"
+              >{{label record config option}}</span></:option>
+          </DSelectList>
+        </template>
+      );
+
+      assert
+        .dom(".fixture__list-option")
+        .exists(
+          { count: options.length },
+          "the list uses the renamed option block too"
+        );
+      assert.strictEqual(
+        seen.get(pear.id)?.[0],
+        pear,
+        "the list block yields a record"
+      );
+      assert.strictEqual(
+        seen.get(pear.id)?.[2],
+        options[1],
+        "the list block also yields the option"
+      );
+      await dSelect().select(pear.id);
+      assert.deepEqual(
+        changes[0][0],
+        [pear.id],
+        "the persistent list emits values"
+      );
+      assert.strictEqual(
+        changes[0][1][0],
+        pear,
+        "the persistent list emits records"
+      );
+    });
   });
 
   module("panel field", function () {
@@ -419,9 +480,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <div dir={{extra.dir}}>
             <DSelectList
               @disabled={{extra.disabled}}
-              @items={{FRUIT}}
               @lockedValues={{extra.lockedValues}}
               @onChange={{setHeld}}
+              @options={{FRUIT}}
               @readonly={{extra.readonly}}
               @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
@@ -790,15 +851,15 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             class="default-placeholder"
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
           <DSelectList
             class="own-placeholder"
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit" searchPlaceholder="Find fruit"}}
             @value={{held.value}}
           />
@@ -954,8 +1015,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <label class="field-label">
             Pick fruit
             <DSelectList
-              @items={{FRUIT}}
               @onChange={{setHeld}}
+              @options={{FRUIT}}
               @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
             />
@@ -1011,8 +1072,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             @hideSelected={{true}}
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1441,9 +1502,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @maximum={{2}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1465,8 +1526,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1535,8 +1596,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           </div>
           <div class="test-b">
             <DSelectList
-              @items={{FRUIT}}
               @onChange={{setSecond}}
+              @options={{FRUIT}}
               @texts={{hash ariaLabel="Second"}}
               @value={{second.value}}
             />
@@ -1574,8 +1635,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1661,8 +1722,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           >
@@ -1683,8 +1744,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @searchIcon="magnifying-glass"
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
@@ -1708,8 +1769,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @suppressFooter={{true}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
@@ -1735,8 +1796,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             @disabled={{true}}
-            @items={{FRUIT}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1755,8 +1816,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @readonly={{true}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
@@ -1780,8 +1841,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -1806,8 +1867,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
           <DMenu @identifier="test-panel" @inline={{true}} @label="Open panel">
             <:content>
               <DSelectList
-                @items={{FRUIT}}
                 @onChange={{setHeld}}
+                @options={{FRUIT}}
                 @texts={{hash ariaLabel="Fruit"}}
                 @value={{held.value}}
               />
@@ -1834,16 +1895,16 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <div class="test-a">
             <DSelectList
-              @items={{FRUIT}}
               @onChange={{setFirst}}
+              @options={{FRUIT}}
               @texts={{hash ariaLabel="First"}}
               @value={{first.value}}
             />
           </div>
           <div class="test-b">
             <DSelectList
-              @items={{FRUIT}}
               @onChange={{setSecond}}
+              @options={{FRUIT}}
               @texts={{hash ariaLabel="Second"}}
               @value={{second.value}}
             />
@@ -1880,7 +1941,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         const load = async (filter, { offset = 0, limit = 50 }) => {
           offsets.push(offset);
           return {
-            items: many.slice(offset, offset + limit),
+            options: many.slice(offset, offset + limit),
             hasMore: offset + limit < many.length,
           };
         };
@@ -1920,8 +1981,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{many}}
             @onChange={{setHeld}}
+            @options={{many}}
             @texts={{hash ariaLabel="Items"}}
             @value={{held.value}}
             @virtualized={{false}}
@@ -1943,7 +2004,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       const held = tracked([]);
       const setHeld = (next) => (held.value = next);
       const warn = sinon.stub(console, "warn");
-      const load = async () => ({ items: FRUIT, hasMore: true });
+      const load = async () => ({ options: FRUIT, hasMore: true });
       await render(
         <template>
           <DSelectList
@@ -1976,8 +2037,8 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         await render(
           <template>
             <DSelectList
-              @items={{many}}
               @onChange={{setHeld}}
+              @options={{many}}
               @texts={{hash ariaLabel="Items"}}
               @value={{held.value}}
               @virtualized={{virtualized}}
@@ -2015,9 +2076,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @multiple={{false}}
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
             @virtualized={{extra.virtualized}}
@@ -2163,9 +2224,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await render(
         <template>
           <DSelectList
-            @items={{FRUIT}}
             @kind="test-list"
             @onChange={{setHeld}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />
@@ -2188,9 +2249,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <section class="test-host">
             <DSelectList
-              @items={{FRUIT}}
               @kind="test-list"
               @onChange={{setHeld}}
+              @options={{FRUIT}}
               @texts={{hash ariaLabel="Fruit"}}
               @value={{held.value}}
             />
@@ -2224,9 +2285,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         <template>
           <DSelectList
             @disabled={{true}}
-            @items={{FRUIT}}
             @kind="test-list"
             @onChange={{onChange}}
+            @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{held.value}}
           />

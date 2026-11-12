@@ -411,26 +411,26 @@ export default class DAccessControl extends Component {
 
   /** Adds a grantee picked in the add box, in the shape the legacy chooser emitted. */
   @action
-  onGranteePicked(_value, item) {
-    if (!item?.sourceId) {
+  onGranteePicked(_value, record) {
+    if (!record?.sourceId) {
       return;
     }
 
     this.onGranteeChosen(null, [
-      item.type === "group"
+      record.type === "group"
         ? {
-            aclId: item.sourceId,
+            aclId: record.sourceId,
             aclType: "group",
-            id: item.id,
-            full_name: item.description,
-            automatic: item.automatic,
+            id: record.id,
+            full_name: record.fullName,
+            automatic: record.automatic,
           }
         : {
-            aclId: item.sourceId,
+            aclId: record.sourceId,
             aclType: "user",
-            username: item.username,
-            name: item.fullName,
-            avatar_template: item.avatar_template,
+            username: record.username,
+            name: record.fullName,
+            avatar_template: record.avatar_template,
           },
     ]);
   }

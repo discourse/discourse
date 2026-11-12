@@ -25,10 +25,10 @@ export default class GroupsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-groups"
-      @items={{this.items}}
       @labelField="fullName"
       @multiple={{true}}
       @onChange={{this.update}}
+      @options={{this.items}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.showcases.groups.placeholder"
@@ -36,7 +36,7 @@ export default class GroupsSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:item as |group|>
+      <:option as |group|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon group.icon}}
           <span class="select-examples__primary">{{group.fullName}}</span>
@@ -47,7 +47,7 @@ export default class GroupsSelectExample extends Component {
           {{/if}}
           <span class="select-examples__meta">{{group.memberLabel}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

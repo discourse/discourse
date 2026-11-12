@@ -80,8 +80,8 @@ export default class BadgesSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-badges"
-      @items={{this.items}}
       @onChange={{this.update}}
+      @options={{this.items}}
       @value={{this.value}}
       @variant="button"
     >
@@ -94,7 +94,7 @@ export default class BadgesSelectExample extends Component {
         </span>
       </:selection>
 
-      <:item as |badge|>
+      <:option as |badge|>
         <span class="select-examples__row select-examples__row--glyph">
           <span class="select-showcases__badge-icon --{{badge.rarity}}">
             {{dIconOrImage badge}}
@@ -102,7 +102,7 @@ export default class BadgesSelectExample extends Component {
           <span class="select-examples__primary">{{badge.name}}</span>
           <span class="select-examples__meta">{{badge.grantLabel}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

@@ -19,9 +19,9 @@ export default class ReadonlySelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-readonly"
-      @items={{this.items}}
       @labelField="title"
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @readonly={{true}}
       @texts={{hash
         placeholder=(i18n

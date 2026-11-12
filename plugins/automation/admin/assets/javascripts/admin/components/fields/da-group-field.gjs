@@ -26,8 +26,8 @@ export default class GroupField extends BaseField {
             <DSelectGroup
               @clearable={{true}}
               @disabled={{@field.isDisabled}}
-              @items={{this.allGroups}}
               @onChange={{legacyPickOne this.setGroupField}}
+              @options={{this.allGroups}}
               @texts={{hash ariaLabel=@label}}
               @value={{@field.metadata.value}}
             />

@@ -48,7 +48,7 @@ module(
                 as |field|
               >
                 <field.Control>
-                  <DSelect @items={{ITEMS}} />
+                  <DSelect @options={{ITEMS}} />
                 </field.Control>
               </form.Field>
             </Form>
@@ -104,8 +104,8 @@ module(
             <form.Field @name="fruit" @title="Fruit" @type="custom" as |field|>
               <field.Control>
                 <DSelect
-                  @items={{ITEMS}}
                   @onChange={{field.set}}
+                  @options={{ITEMS}}
                   @value={{field.value}}
                 />
               </field.Control>
@@ -118,9 +118,9 @@ module(
             >
               <field.Control>
                 <DSelect
-                  @items={{ITEMS}}
                   @multiple={{true}}
                   @onChange={{field.set}}
+                  @options={{ITEMS}}
                   @value={{field.value}}
                 />
               </field.Control>
@@ -146,8 +146,8 @@ module(
             <form.Field @name="fruit" @title="Fruit" @type="custom" as |field|>
               <field.Control>
                 <DSelect
-                  @items={{ITEMS}}
                   @onChange={{field.set}}
+                  @options={{ITEMS}}
                   @value={{field.value}}
                   @variant="static"
                 />
@@ -161,9 +161,9 @@ module(
             >
               <field.Control>
                 <DSelect
-                  @items={{ITEMS}}
                   @multiple={{true}}
                   @onChange={{field.set}}
+                  @options={{ITEMS}}
                   @value={{field.value}}
                   @variant="button"
                 />

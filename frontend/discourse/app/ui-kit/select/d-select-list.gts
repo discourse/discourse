@@ -30,11 +30,11 @@ import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-op
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
   SelectCoreTexts,
-  SelectDescriptor,
-  SelectItemRow,
   SelectKindTexts,
   SelectLoadRequest,
+  SelectOption,
   SelectRecord,
+  SelectRow,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -47,19 +47,19 @@ interface DSelectListSignature {
   Args: {
     /**
      * Whether the list holds several values (the default) or one. With `false` a pick replaces
-     * the held value, `@value` is one value or `null`, and `@onChange` receives one item.
+     * the held value, `@value` is one value or `null`, and `@onChange` receives one record.
      */
     multiple?: boolean;
     /** Controlled held values: an array, or one value or `null` when `@multiple` is false. */
     value?: SelectValue;
-    /** Receives the replacement value or values, resolved item or items and change metadata. */
+    /** Receives the replacement value or values, resolved record or records and change metadata. */
     onChange?: (
       next: SelectValue,
-      items: SelectRecord[] | SelectRecord | null,
+      records: SelectRecord[] | SelectRecord | null,
       change: Parameters<NonNullable<SelectHostArgs["onChange"]>>[2]
     ) => void;
-    /** Local items, or a function of the resolved config. */
-    items?: SelectHostArgs["items"];
+    /** Local options (records, or records wrapped with `selectOption`), or a function of the resolved config. */
+    options?: SelectHostArgs["options"];
     /** Async query source, optionally paginating with total or hasMore. */
     load?: SelectHostArgs["load"];
     /** Reactive source inputs; a changed entry reloads the list, and arrays compare by their elements. */
@@ -72,16 +72,16 @@ interface DSelectListSignature {
     normalizeKey?: SelectHostArgs["normalizeKey"];
     /** Fallback display-label field. */
     labelField?: string;
-    /** Already resolved held items. */
+    /** Already resolved held records. */
     valueRecords?: SelectHostArgs["valueRecords"];
     /** Resolves one held value; used when `@resolveValues` is absent. */
     resolveValue?: SelectHostArgs["resolveValue"];
     /** Resolves held values in one batch. */
     resolveValues?: SelectHostArgs["resolveValues"];
-    /** Whether unmatched queries can create an item. */
+    /** Whether unmatched queries can create an option. */
     allowCreate?: SelectHostArgs["allowCreate"];
-    /** Builds an item from the current query. */
-    createItem?: SelectHostArgs["createItem"];
+    /** Builds the create option's record from the current query. */
+    createOption?: SelectHostArgs["createOption"];
     /** Builds the fallback for an unavailable held value. */
     createUnresolvedRecord?: SelectHostArgs["createUnresolvedRecord"];
     /** Parses pasted text into a selection batch. */
@@ -158,22 +158,22 @@ interface DSelectListSignature {
   Element: HTMLDivElement;
   Blocks: {
     /** Custom option content. */
-    item?: [
-      /** Raw option. */ item: SelectRecord,
+    option?: [
+      /** The option's record. */ record: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
-      /** What the row is beyond its item: `create` marks the create row. */
-      row: SelectItemRow,
+      /** The option itself: its settings, and `create` for the create option. */
+      option: SelectOption,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** Held item. */ item: SelectRecord,
+      /** Held record. */ record: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Stands in for each held chip while held values resolve. */
     selectionLoading?: [];
     /** Content for unavailable held values. */
     unresolved?: [
-      /** Fallback item. */ item: SelectRecord,
+      /** Fallback record. */ record: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom no-results content for a nonempty query. */
@@ -258,9 +258,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
   }
 
   @cached
-  get heldSelection(): TrackedAsyncData<
-    readonly SelectDescriptor[] | undefined
-  > {
+  get heldSelection(): TrackedAsyncData<readonly SelectRow[] | undefined> {
     return new TrackedAsyncData(this.resolveHeld(this.args.value));
   }
 
@@ -286,21 +284,21 @@ export default class DSelectList extends Component<DSelectListSignature> {
 
   @action
   handleChange(
-    ...[next, items, change]: Parameters<
+    ...[next, records, change]: Parameters<
       NonNullable<SelectHostArgs["onChange"]>
     >
   ): void {
-    this.args.onChange?.(next, items, change);
+    this.args.onChange?.(next, records, change);
   }
 
-  /** Resolves the held value to chip descriptors, one chip for a single held value. */
+  /** Resolves the held value to chip rows, one chip for a single held value. */
   @action
   resolveHeld(
     value: unknown,
     opts?: SelectLoadRequest
   ):
-    | readonly SelectDescriptor[]
-    | Promise<readonly SelectDescriptor[] | undefined>
+    | readonly SelectRow[]
+    | Promise<readonly SelectRow[] | undefined>
     | undefined {
     if (this.multiple) {
       return this.host.resolveMulti(value, opts);
@@ -310,11 +308,11 @@ export default class DSelectList extends Component<DSelectListSignature> {
       | Promise<SelectRecord | undefined>
       | undefined;
     if (held instanceof Promise) {
-      return held.then((item) =>
-        item === undefined ? undefined : this.engine.describeItems([item])
+      return held.then((record) =>
+        record === undefined ? undefined : this.engine.describeRecords([record])
       );
     }
-    return held === undefined ? undefined : this.engine.describeItems([held]);
+    return held === undefined ? undefined : this.engine.describeRecords([held]);
   }
 
   <template>
@@ -359,10 +357,10 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @hasFooterBlock={{and (has-block "footer") (not @suppressFooter)}}
         @hasGroupFooterBlock={{false}}
         @hasGroupHeaderBlock={{false}}
-        @hasItemBlock={{has-block "item"}}
         @hasListHeaderBlock={{has-block "listHeader"}}
+        @hasOptionBlock={{has-block "option"}}
         @hasSelectionBlock={{has-block "selection"}}
-        @hasSkeletonItemBlock={{false}}
+        @hasSkeletonBlock={{false}}
         @hasUnresolvedBlock={{has-block "unresolved"}}
         @hideEmptyQuery={{true}}
         @hideSelectionMarker={{@hideSelected}}
@@ -442,25 +440,25 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @triggerChipsInteractive={{true}}
             @value={{@value}}
           >
-            <:selection as |item|>
-              {{~yield item this.engine.config to="selection"~}}
+            <:selection as |record|>
+              {{~yield record this.engine.config to="selection"~}}
             </:selection>
             <:selectionLoading>
               {{~yield to="selectionLoading"~}}
             </:selectionLoading>
-            <:unresolved as |item|>
-              {{~yield item this.engine.config to="unresolved"~}}
+            <:unresolved as |record|>
+              {{~yield record this.engine.config to="unresolved"~}}
             </:unresolved>
           </MultiChips>
         </:field>
-        <:item as |item config row|>
-          {{~yield item config row to="item"~}}
-        </:item>
-        <:selection as |item config|>
-          {{~yield item config to="selection"~}}
+        <:option as |record config option|>
+          {{~yield record config option to="option"~}}
+        </:option>
+        <:selection as |record config|>
+          {{~yield record config to="selection"~}}
         </:selection>
-        <:unresolved as |item config|>
-          {{~yield item config to="unresolved"~}}
+        <:unresolved as |record config|>
+          {{~yield record config to="unresolved"~}}
         </:unresolved>
         <:empty>
           {{~yield to="empty"~}}

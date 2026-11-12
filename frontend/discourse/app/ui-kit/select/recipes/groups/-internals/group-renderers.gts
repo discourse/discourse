@@ -1,6 +1,9 @@
 import type { TOC } from "@ember/component/template-only";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
+import type {
+  SelectOption,
+  SelectRecord,
+} from "discourse/ui-kit/select/select-engine";
 
 /** A group as the site and user search list it. */
 export interface GroupShape {
@@ -9,38 +12,36 @@ export interface GroupShape {
   full_name?: string | null;
 }
 
-/** An item's display name, narrowed for templates. */
-export function recordName(item: SelectRecord): string {
-  return typeof item.name === "string" ? item.name : String(item.name ?? "");
+/** A record's display name, narrowed for templates. */
+export function recordName(record: SelectRecord): string {
+  return typeof record.name === "string"
+    ? record.name
+    : String(record.name ?? "");
 }
 
-/** Why a disabled row can't be picked, when its source gives a reason. */
-export function disabledReason(item: SelectRecord): string | undefined {
-  return item.disabled && typeof item.disabledReason === "string"
-    ? item.disabledReason
+/** Why a disabled option can't be picked, when its record gives a reason. */
+export function disabledReason(
+  record: SelectRecord,
+  option: SelectOption | undefined
+): string | undefined {
+  return option?.disabled && typeof record.disabledReason === "string"
+    ? record.disabledReason
     : undefined;
 }
 
-/**
- * A group's row fields: its name labels it, and a full name that says something more
- * becomes the row's description.
- */
-export function groupFields(group: GroupShape): {
-  name: string;
-  description?: string;
-} {
+/** A group's full name, when it says something more than its name; groups describe themselves with it. */
+export function groupFullName(group: GroupShape): string | undefined {
   const fullName = group.full_name?.trim();
-  return {
-    name: group.name,
-    description: fullName && fullName !== group.name ? fullName : undefined,
-  };
+  return fullName && fullName !== group.name ? fullName : undefined;
 }
 
 /** A group row, shared by the user and group pickers. */
 export const GroupOption: TOC<{
   Args: {
-    /** The group row. */
+    /** The group's record. */
     record: SelectRecord;
+    /** The option drawn; absent in the selection, which draws no reason. */
+    option?: SelectOption;
     /** Draws the group icon, which tells groups from users in a mixed list. */
     icon?: boolean;
   };
@@ -50,10 +51,10 @@ export const GroupOption: TOC<{
       {{dIcon "users"}}
     {{/if}}
     <span class="d-group-option__name">{{recordName @record}}</span>
-    {{#if (disabledReason @record)}}
+    {{#if (disabledReason @record @option)}}
       <span class="d-group-option__reason">
         {{~dIcon "ban"~}}
-        {{~disabledReason @record~}}
+        {{~disabledReason @record @option~}}
       </span>
     {{/if}}
   </span>

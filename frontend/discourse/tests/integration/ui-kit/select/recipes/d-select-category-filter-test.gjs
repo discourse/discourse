@@ -105,11 +105,11 @@ module(
         await render(
           <template>
             <DSelectCategoryFilter>
-              <:item as |item options row|>
+              <:option as |item options row|>
                 <span class="custom-row {{if row 'has-row'}}">
                   {{~item.name~}}
                 </span>
-              </:item>
+              </:option>
             </DSelectCategoryFilter>
           </template>
         );

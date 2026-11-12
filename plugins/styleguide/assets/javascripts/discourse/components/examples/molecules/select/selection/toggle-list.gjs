@@ -17,9 +17,9 @@ export default class ToggleListSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-toggle"
-      @items={{LOCALES}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{LOCALES}}
       @texts={{hash
         ariaLabel=(i18n "styleguide.sections.select.toggle_label")
         placeholder=(i18n

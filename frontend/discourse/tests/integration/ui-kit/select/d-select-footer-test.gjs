@@ -19,7 +19,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("the :footer block renders as a labeled region below the listbox", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -45,7 +45,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
     // be focusable, and focusing it (as the forward does) must keep the menu open.
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -70,7 +70,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("clicking the footer keeps the menu open", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -89,7 +89,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
     await render(
       <template>
         <button class="outside-btn" type="button">outside</button>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -113,7 +113,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("desktop: focus moving within the footer or back to the input keeps the menu open", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
             <button class="test-footer-btn2" type="button">Act2</button>
@@ -141,7 +141,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("Escape from the footer closes the menu", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -160,7 +160,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("ArrowDown from the input navigates options and never the footer", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}}>
+        <DSelect @options={{ITEMS}}>
           <:footer>
             <button class="test-footer-btn" type="button">Act</button>
           </:footer>
@@ -182,7 +182,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("the :footer block receives the dropdown state", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}} @value={{1}}>
+        <DSelect @options={{ITEMS}} @value={{1}}>
           <:footer as |state|>
             <span class="test-total">{{state.total}}</span>
             <span class="test-hasvalue">{{if state.hasValue "yes" "no"}}</span>
@@ -209,10 +209,10 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   });
 
   test("the yielded loadedCount shares total's population (excludes specials)", async function (assert) {
-    const specialItems = () => [{ id: 0, name: "None" }];
+    const extraOptions = () => [{ id: 0, name: "None" }];
     await render(
       <template>
-        <DSelect @items={{ITEMS}} @specialItems={{specialItems}}>
+        <DSelect @extraOptions={{extraOptions}} @options={{ITEMS}}>
           <:footer as |state|>
             <span class="test-total">{{state.total}}</span>
             <span class="test-loaded">{{state.loadedCount}}</span>
@@ -244,7 +244,7 @@ module(
     test("moving focus within the footer does NOT close the modal", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}}>
+          <DSelect @options={{ITEMS}}>
             <:footer>
               <button class="test-footer-btn" type="button">Act</button>
               <button class="test-footer-btn2" type="button">Act2</button>
@@ -272,7 +272,7 @@ module(
 
 /** A recipe that forwards its caller's footer, the way the tag recipes do. */
 const ForwardingSelect = <template>
-  <DSelect @items={{ITEMS}} @suppressFooter={{not (has-block "footer")}}>
+  <DSelect @options={{ITEMS}} @suppressFooter={{not (has-block "footer")}}>
     <:footer>
       {{~yield to="footer"~}}
     </:footer>
@@ -287,7 +287,7 @@ module(
     test("suppressFooter drops a passed footer", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @suppressFooter={{true}}>
+          <DSelect @options={{ITEMS}} @suppressFooter={{true}}>
             <:footer>
               <span class="test-footer">Footer</span>
             </:footer>
@@ -304,7 +304,7 @@ module(
     test("suppressFooter false keeps a passed footer", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @suppressFooter={{false}}>
+          <DSelect @options={{ITEMS}} @suppressFooter={{false}}>
             <:footer>
               <span class="test-footer">Footer</span>
             </:footer>
@@ -319,7 +319,7 @@ module(
     test("suppressFooter false never adds a footer that was not passed", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @suppressFooter={{false}} />
+          <DSelect @options={{ITEMS}} @suppressFooter={{false}} />
         </template>
       );
       await click("[role='combobox']");

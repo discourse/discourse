@@ -118,7 +118,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 </:loading>
                 <:content as |selected|>
                   {{#if selected}}
-                    {{#if selected.__unresolved}}
+                    {{#if (@engine.isUnresolvedRecord selected)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield selected to="unresolved"}}
                       {{else}}
@@ -160,7 +160,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 </:loading>
                 <:content as |selected|>
                   {{#if selected}}
-                    {{#if selected.__unresolved}}
+                    {{#if (@engine.isUnresolvedRecord selected)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield selected to="unresolved"}}
                       {{else}}
@@ -252,7 +252,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         <:content as |selected|>
           {{#if selected}}
             <span class="d-select__value">
-              {{#if selected.__unresolved}}
+              {{#if (@engine.isUnresolvedRecord selected)}}
                 {{#if @hasUnresolvedBlock}}
                   {{yield selected to="unresolved"}}
                 {{else}}

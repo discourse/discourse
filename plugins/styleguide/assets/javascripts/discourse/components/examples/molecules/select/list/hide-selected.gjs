@@ -19,9 +19,9 @@ export default class ListHideSelectedExample extends Component {
       class="select-examples__tag-list"
       @hideSelected={{true}}
       @identifier="sg-list-hide-selected"
-      @items={{PEOPLE}}
       @labelField="name"
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @texts={{hash
         ariaLabel=(i18n "styleguide.sections.select.list_people_label")
         searchPlaceholder=(i18n

@@ -28,9 +28,9 @@ export default class TagsSelectExample extends Component {
   }
 
   @action
-  createItem(filter) {
+  createOption(filter) {
     const label = filter.trim();
-    return { __create: true, label, slug: this.#slug(label) };
+    return { isNew: true, label, slug: this.#slug(label) };
   }
 
   @action
@@ -39,13 +39,13 @@ export default class TagsSelectExample extends Component {
   }
 
   @action
-  update(value, items) {
+  update(value, records) {
     this.value = value;
-    const createdItems = items.filter(
-      (item) => item.__create && !this.items.includes(item)
+    const created = records.filter(
+      (record) => record.isNew && !this.items.includes(record)
     );
-    if (createdItems.length > 0) {
-      this.items = [...this.items, ...createdItems];
+    if (created.length > 0) {
+      this.items = [...this.items, ...created];
     }
   }
 
@@ -61,12 +61,12 @@ export default class TagsSelectExample extends Component {
     <DSelect
       @allowCreate={{this.allowCreate}}
       @clearable={{true}}
-      @createItem={{this.createItem}}
+      @createOption={{this.createOption}}
       @identifier="sg-tags"
-      @items={{this.source}}
       @labelField="label"
       @multiple={{true}}
       @onChange={{this.update}}
+      @options={{this.source}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.showcases.tags.placeholder"
@@ -79,11 +79,11 @@ export default class TagsSelectExample extends Component {
       @valueField="slug"
       @variant="button"
     >
-      <:item as |tag|>
+      <:option as |tag config option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon (if tag.__create "plus" "tag")}}
+          {{dIcon (if option.create "plus" "tag")}}
           <span class="select-examples__primary">
-            {{#if tag.__create}}
+            {{#if option.create}}
               {{i18n
                 "styleguide.sections.select.showcases.tags.create"
                 tag=tag.label
@@ -92,11 +92,11 @@ export default class TagsSelectExample extends Component {
               {{tag.label}}
             {{/if}}
           </span>
-          {{#unless tag.__create}}
+          {{#unless option.create}}
             <span class="select-examples__meta">{{tag.count}}</span>
           {{/unless}}
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

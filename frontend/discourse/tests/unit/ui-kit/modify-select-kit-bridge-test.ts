@@ -9,8 +9,9 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import type { SelectCustomizationRegistry } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
-  type SelectDescriptor,
   type SelectEngineInit,
+  selectOption,
+  type SelectRow,
 } from "discourse/ui-kit/select/select-engine";
 
 const CONTENT_ID = "discourse.select-kit.modify-select-kit-content";
@@ -41,7 +42,7 @@ function firedFor(id: string) {
 
 // `buildItems` returns normalized descriptors, so the row id lives on `value`, not on the
 // raw model's `id`.
-function ids(descriptors: readonly SelectDescriptor[]) {
+function ids(descriptors: readonly SelectRow[]) {
   return descriptors.map((descriptor) => descriptor.value);
 }
 
@@ -81,7 +82,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       kind: opts.kind ?? "test-select",
       legacyKinds: opts.legacyKinds,
       identifier: opts.identifier,
-      items: opts.items ?? [],
+      options: opts.options ?? [],
       multiple: opts.multiple ?? false,
       onChange: opts.onChange ?? (() => {}),
       getValue: () => (opts.multiple ? [] : null),
@@ -104,7 +105,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this));
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(
       ids(items),
@@ -124,7 +125,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this));
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(ids(items), ["only"], "replace wins over the rest");
   });
@@ -143,7 +144,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       kind: "category-chooser",
       identifier: "composer-category",
     });
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(
       ids(items),
@@ -156,7 +157,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       identifier: "category-chooser",
     });
     assert.deepEqual(
-      ids(unnamed.buildItems([{ id: "core", name: "Core" }])),
+      ids(unnamed.buildRows([{ id: "core", name: "Core" }])),
       ["core"],
       "an identifier equal to the old name does not reach the bridge"
     );
@@ -179,7 +180,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       kind: "select-tag",
       legacyKinds: ["mini-tag-chooser"],
     });
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(
       ids(items).sort(),
@@ -201,9 +202,9 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     const engine = engineFor(getOwner(this), {
       kind: "select-tag",
       legacyKinds: ["tag-dropdown"],
-      items: [{ id: 7, name: "Seven" }],
+      options: [{ id: 7, name: "Seven" }],
     });
-    engine.buildItems([]);
+    engine.buildRows([]);
     engine.select({ id: 7, name: "Seven" });
 
     assert.strictEqual(calls.length, 1, "the onChange callback ran once");
@@ -221,7 +222,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       kind: "select-tag",
       legacyKinds: ["mini-tag-chooser"],
     });
-    engine.buildItems([]);
+    engine.buildRows([]);
     await settled();
 
     const [fired] = firedFor(CONTENT_ID);
@@ -245,7 +246,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       kind: "select-tag-filter",
       legacyKinds: ["tags-intersection-chooser", "mini-tag-chooser"],
     });
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(
       ids(items).sort(),
@@ -263,9 +264,9 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this), {
-      items: [{ id: 7, name: "Seven" }],
+      options: [{ id: 7, name: "Seven" }],
     });
-    engine.buildItems([]);
+    engine.buildRows([]);
     engine.select({ id: 7, name: "Seven" });
     await settled();
 
@@ -301,7 +302,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this), {
-      items: [{ id: 7, name: "Seven" }],
+      options: [{ id: 7, name: "Seven" }],
     });
     engine.select({ id: 7, name: "Seven" });
 
@@ -331,7 +332,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
 
     const engine = engineFor(getOwner(this));
     const actionRows = engine
-      .buildItems([])
+      .buildRows([])
       .filter((descriptor) => descriptor.value === "action");
     assert.strictEqual(
       actionRows.length,
@@ -339,8 +340,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       "the injected action row is built"
     );
 
-    // `activate` takes the raw model: `onSelect` lives there, not on the descriptor.
-    engine.activate(actionRows[0].item);
+    // `activate` takes the option: the legacy row's `onSelect` became its setting.
+    engine.activate(actionRows[0].option);
 
     assert.notStrictEqual(
       receivedFirstArg,
@@ -374,7 +375,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
 
     const engine = new SelectEngine({
       kind: "test-select",
-      items: [],
+      options: [],
       getValue: () => null,
       legacy: {
         owner: getOwner(this),
@@ -382,7 +383,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
         isDestroyed: () => false,
       },
     });
-    engine.buildItems([]);
+    engine.buildRows([]);
 
     assert.strictEqual(
       sawOwner,
@@ -408,8 +409,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this));
-    engine.buildItems([]);
-    engine.buildItems([]);
+    engine.buildRows([]);
+    engine.buildRows([]);
 
     assert.strictEqual(seen.size, 1, "the same facade instance is reused");
   });
@@ -429,7 +430,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     const element = document.createElement("div");
     const engine = new SelectEngine({
       kind: "test-select",
-      items: [],
+      options: [],
       getMultiple: () => multiple,
       getValue: () => (multiple ? [] : null),
       legacy: {
@@ -439,9 +440,9 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       },
     });
 
-    engine.buildItems([]);
+    engine.buildRows([]);
     multiple = true;
-    engine.buildItems([]);
+    engine.buildRows([]);
 
     assert.true(engine.multiple, "the flip is live on the engine");
     assert.strictEqual(
@@ -459,8 +460,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this));
-    engine.buildItems([]);
-    engine.buildItems([]);
+    engine.buildRows([]);
+    engine.buildRows([]);
     await settled();
 
     assert.strictEqual(
@@ -469,7 +470,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       "the bridge warns once, not per render"
     );
 
-    engineFor(getOwner(this)).buildItems([]);
+    engineFor(getOwner(this)).buildRows([]);
     await settled();
 
     assert.strictEqual(
@@ -490,8 +491,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     );
 
     const engine = engineFor(getOwner(this));
-    engine.buildItems([]);
-    engine.buildItems([]);
+    engine.buildRows([]);
+    engine.buildRows([]);
     await settled();
 
     assert.deepEqual(
@@ -514,7 +515,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     );
 
     const engine = engineFor(getOwner(this), {
-      items: [{ id: 1, name: "One" }],
+      options: [{ id: 1, name: "One" }],
     });
     engine.select({ id: 1, name: "One" });
     await settled();
@@ -531,7 +532,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       api.modifySelectKit("test-select").appendContent(() => {});
     });
 
-    engineFor(getOwner(this)).buildItems([]);
+    engineFor(getOwner(this)).buildRows([]);
     await settled();
 
     assert.strictEqual(firedFor(CONTENT_ID).length, 1, "it is reported");
@@ -544,7 +545,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
 
   test("does not warn or fire when no legacy callbacks are registered", async function (assert) {
     const engine = engineFor(getOwner(this));
-    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+    const items = engine.buildRows([{ id: "core", name: "Core" }]);
 
     assert.deepEqual(ids(items), ["core"], "content is untouched");
     await settled();
@@ -565,7 +566,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
         });
     });
     const engine = engineFor(getOwner(this));
-    engine.buildItems([]);
+    engine.buildRows([]);
     const updates = sinon.spy(engine, "update");
 
     facade!.selectKit.set("isLoading", true);
@@ -600,7 +601,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = new SelectEngine({
-      items: [{ id: 3, name: "Three" }],
+      options: [{ id: 3, name: "Three" }],
       getValue: () => null,
       onChange: (value) => (changedTo = value),
     });
@@ -629,7 +630,10 @@ module(
             selects.forAll((spec) =>
               spec.content((items) => [
                 ...items,
-                { id: "native", name: "Native", sticky: true },
+                selectOption(
+                  { id: "native", name: "Native" },
+                  { position: "sticky" }
+                ),
               ])
             )
         );
@@ -643,15 +647,20 @@ module(
       const element = document.createElement("div");
       const engine = new SelectEngine({
         kind: "sticky-select",
-        getArgs: () => ({ noneRow: true }),
-        specialItems: () => [{ id: "special", name: "Special", sticky: true }],
+        getArgs: () => ({ noneOption: true }),
+        extraOptions: () => [
+          selectOption(
+            { id: "special", name: "Special" },
+            { position: "sticky" }
+          ),
+        ],
         legacy: {
           owner: getOwner(this),
           getElement: () => element,
           isDestroyed: () => false,
         },
       });
-      const rows = engine.buildItems([{ id: "core", name: "Core" }]);
+      const rows = engine.buildRows([{ id: "core", name: "Core" }]);
       assert.deepEqual(
         ids(rows),
         ["special", "pre", "native", "post", null, "core"],

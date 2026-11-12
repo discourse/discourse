@@ -25,19 +25,19 @@ export default class ValueIconSelectExample extends Component {
     <DSelect
       @icon={{this.icon}}
       @identifier="sg-icon-follows"
-      @items={{this.items}}
       @labelField="title"
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @value={{this.value}}
       @valueField="level"
       @variant="static"
     >
-      <:item as |level|>
+      <:option as |level|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon level.icon}}
           <span class="select-examples__primary">{{level.title}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

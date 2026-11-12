@@ -27,6 +27,7 @@ import {
 } from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
 import type {
   SelectConfig,
+  SelectOption,
   SelectRecord,
   SelectTexts,
   SelectValue,
@@ -71,13 +72,14 @@ interface DSelectTopicListSignature {
   Element: HTMLDivElement;
   Blocks: {
     /** Custom option content. */
-    item?: [
-      /** The topic. */ item: SelectRecord,
+    option?: [
+      /** The topic. */ record: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
+      /** The option itself, with its settings. */ option: SelectOption,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** The held topic. */ item: SelectRecord,
+      /** The held topic. */ record: SelectRecord,
       /** Resolved config. */ config: SelectConfig,
     ];
   };
@@ -132,12 +134,12 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
   }
 
   @action
-  onChange(value: SelectValue, items: SelectRecord | SelectRecord[] | null) {
+  onChange(value: SelectValue, records: SelectRecord | SelectRecord[] | null) {
     emitTopicChange(
       this.args.onChange,
       this.args.multiple ?? true,
       value,
-      items
+      records
     );
   }
 
@@ -172,18 +174,18 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
       @value={{@value}}
       @valueRecords={{this.valueRecords}}
     >
-      <:item as |item config|>
-        {{#if (has-block "item")}}
-          {{yield item config to="item"}}
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
         {{else}}
-          <TopicOption @record={{item}} />
+          <TopicOption @record={{record}} />
         {{/if}}
-      </:item>
-      <:selection as |item config|>
+      </:option>
+      <:selection as |record config|>
         {{#if (has-block "selection")}}
-          {{yield item config to="selection"}}
+          {{yield record config to="selection"}}
         {{else}}
-          <TopicSelection @record={{item}} />
+          <TopicSelection @record={{record}} />
         {{/if}}
       </:selection>
     </DSelectList>

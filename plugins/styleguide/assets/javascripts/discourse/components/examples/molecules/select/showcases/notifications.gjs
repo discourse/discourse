@@ -40,9 +40,9 @@ export default class NotificationsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-notifications"
-      @items={{this.items}}
       @labelField="title"
       @onChange={{this.update}}
+      @options={{this.items}}
       @placement="top-start"
       @value={{this.value}}
       @valueField="level"
@@ -55,12 +55,12 @@ export default class NotificationsSelectExample extends Component {
         </span>
       </:selection>
 
-      <:item as |level|>
+      <:option as |level|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon level.icon}}
           <span class="select-examples__primary">{{level.title}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
 
     <output class="styleguide-example__result" data-test-notification-event>

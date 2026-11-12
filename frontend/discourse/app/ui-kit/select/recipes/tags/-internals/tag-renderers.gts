@@ -4,14 +4,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectItemRow,
+  type SelectOption,
   type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 /** The translations a row's texts default to when it's drawn without the select's options. */
 const ROW_TEXT_KEYS: Readonly<Record<string, string>> = {
-  createItem: "d_select.create_item",
+  createOption: "d_select.create_item",
   tagCountBadge: "tagging.tag_count_badge",
   tagCount: "tagging.tag_count_hidden",
 };
@@ -28,23 +28,23 @@ function rowText(
 }
 
 /** The values of a row's count texts. */
-function countValues(item: SelectRecord) {
-  return { count: tagCount(item) };
+function countValues(record: SelectRecord) {
+  return { count: tagCount(record) };
 }
 
 /** The values of the create row's text. */
-function createValues(item: SelectRecord) {
-  return { label: tagRecordName(item) };
+function createValues(record: SelectRecord) {
+  return { label: tagRecordName(record) };
 }
 
 /** Narrows optional source counts at the rendering boundary. */
-function tagCount(item: SelectRecord): number {
-  return typeof item.count === "number" ? item.count : 0;
+function tagCount(record: SelectRecord): number {
+  return typeof record.count === "number" ? record.count : 0;
 }
 
 /** Narrows the optional synonym target supplied by tag search. */
-function synonymName(item: SelectRecord): string | undefined {
-  const target = item.target_tag;
+function synonymName(record: SelectRecord): string | undefined {
+  const target = record.target_tag;
   return typeof target === "object" &&
     target !== null &&
     "name" in target &&
@@ -53,14 +53,16 @@ function synonymName(item: SelectRecord): string | undefined {
     : undefined;
 }
 
-/** An item's display name, narrowed for templates. */
-export function tagRecordName(item: SelectRecord): string {
-  return typeof item.name === "string" ? item.name : String(item.name ?? "");
+/** A record's display name, narrowed for templates. */
+export function tagRecordName(record: SelectRecord): string {
+  return typeof record.name === "string"
+    ? record.name
+    : String(record.name ?? "");
 }
 
 /** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectRecord): string | undefined {
-  return typeof item.icon === "string" ? item.icon : undefined;
+function actionIcon(record: SelectRecord): string | undefined {
+  return typeof record.icon === "string" ? record.icon : undefined;
 }
 
 /** Default option content shared with forwarding recipes. */
@@ -70,15 +72,15 @@ export const TagOption: TemplateOnlyComponent<{
     record: SelectRecord;
     /** The select's resolved config, which carries its texts. */
     config?: SelectConfig;
-    /** The row's state, which says whether it's the create row. */
-    row: SelectItemRow;
+    /** The option drawn, which says whether it's an action or the create option; absent in the selection. */
+    option?: SelectOption;
   };
 }> = <template>
-  {{#if @record.onSelect}}
+  {{#if @option.action}}
     {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
     {{tagRecordName @record}}
-  {{else if @row.create}}
-    {{rowText @config "createItem" (createValues @record)}}
+  {{else if @option.create}}
+    {{rowText @config "createOption" (createValues @record)}}
   {{else}}
     <span class="d-tag-option">
       {{dDiscourseTag @record.name noHref=true tagName="span"}}

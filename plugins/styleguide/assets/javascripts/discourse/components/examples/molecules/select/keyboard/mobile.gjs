@@ -17,9 +17,9 @@ export default class MobileSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-keyboard-mobile"
-      @items={{TEAM_MEMBERS}}
       @labelField="name"
       @onChange={{this.onChange}}
+      @options={{TEAM_MEMBERS}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.find_person")
       }}

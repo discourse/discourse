@@ -22,7 +22,7 @@ import WindowedListCoordinator, {
 import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import SelectEngine, {
   type SelectLoadRequest,
-  type SelectRecord as SelectRecordModel,
+  type SelectOption,
   selectRecordLabel,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -84,7 +84,7 @@ function placeholderRows(
         isSkeleton: true,
         label: row.isSkeleton
           ? row.label
-          : selectRecordLabel(row.item, labelField),
+          : selectRecordLabel(row.record, labelField),
       }))
     : [{ key: engineKey("skeleton:empty"), isSkeleton: true }];
 }
@@ -113,7 +113,7 @@ export interface SelectListModifiers {
 export interface SelectListContent {
   /** Loader inputs for these displayed rows, retained independently of the next request. */
   context?: Readonly<Record<string, unknown>>;
-  rawItems: SelectRecordModel[];
+  options: SelectOption[];
   /** The filter that produced these rows, retained with them for create checks during a reload. */
   readonly filter: string;
   /**
@@ -157,7 +157,7 @@ interface SelectListBodySignature {
     /** Whether the select accepts multiple values. */
     multiple?: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasSkeletonItemBlock: boolean;
+    hasSkeletonBlock: boolean;
     /** Whether the consumer supplied custom empty-state markup. */
     hasEmptyBlock: boolean;
     /** Whether the consumer supplied custom error-state markup. */
@@ -174,7 +174,7 @@ interface SelectListBodySignature {
       modifiers: SelectListModifiers,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    skeletonItem?: [];
+    skeleton?: [];
     /** Custom markup for the empty state. */
     empty?: [];
     /** Custom markup for the error state. */
@@ -192,9 +192,9 @@ interface LoadingListSignature {
     engine: SelectEngine;
     feedback: LoadFeedbackTracker;
     staticBody?: boolean;
-    hasSkeletonItemBlock: boolean;
+    hasSkeletonBlock: boolean;
   };
-  Blocks: { skeletonItem: [] };
+  Blocks: { skeleton: [] };
 }
 
 /** The list while rows are loading, or while a paste resolves. */
@@ -231,8 +231,8 @@ const LoadingList: TemplateOnlyComponent<LoadingListSignature> = <template>
             {{! An empty label gives the placeholder a row's line height and a varied width. }}
             <span class="d-select__placeholder-label"></span>
           {{/if}}
-          {{#if @hasSkeletonItemBlock}}
-            {{yield to="skeletonItem"}}
+          {{#if @hasSkeletonBlock}}
+            {{yield to="skeleton"}}
           {{else}}
             <DSkeleton @variant="text" />
           {{/if}}
@@ -248,12 +248,12 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
       <LoadingList
         @engine={{@engine}}
         @feedback={{@feedback}}
-        @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+        @hasSkeletonBlock={{@hasSkeletonBlock}}
         @staticBody={{@staticBody}}
       >
-        <:skeletonItem>
-          {{yield to="skeletonItem"}}
-        </:skeletonItem>
+        <:skeleton>
+          {{yield to="skeleton"}}
+        </:skeleton>
       </LoadingList>
     {{else}}
       <DAsyncContent
@@ -269,19 +269,19 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
           <LoadingList
             @engine={{@engine}}
             @feedback={{@feedback}}
-            @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
+            @hasSkeletonBlock={{@hasSkeletonBlock}}
             @staticBody={{@staticBody}}
           >
-            <:skeletonItem>
-              {{yield to="skeletonItem"}}
-            </:skeletonItem>
+            <:skeleton>
+              {{yield to="skeleton"}}
+            </:skeleton>
           </LoadingList>
         </:loading>
 
         <:content as |content|>
           {{#let
             (placeholderRows
-              (@listbox.buildListItems content.rawItems content.filter)
+              (@listbox.buildListRows content.options content.filter)
               @feedback
               @presenter.labelField
               @staticBody

@@ -58,7 +58,7 @@ const LOCALES = {
   stillLoading: "still_loading",
   loadingMore: "loading_more",
   loadingComplete: "loading_complete",
-  createItem: "create_item",
+  createOption: "create_item",
 };
 
 const VALUES = {
@@ -89,7 +89,7 @@ async function snapshot(context, configuration = {}) {
   await render(hbs`
     <this.Select
       @identifier="texts-unit"
-      @items={{this.configuration.value.items}}
+      @options={{this.configuration.value.options}}
       @kind="texts-unit-kind"
       @kindTexts={{this.configuration.value.kindTexts}}
       @kindTextWrappers={{this.configuration.value.wrappers}}

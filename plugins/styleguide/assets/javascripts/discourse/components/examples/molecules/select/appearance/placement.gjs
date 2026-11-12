@@ -17,9 +17,9 @@ export default class PlacementSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-placement"
-      @items={{PEOPLE}}
       @offset={{16}}
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @placement="top"
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.assign_to")

@@ -85,8 +85,8 @@ export default class SelectHero extends Component {
           </span>
           <DSelect
             @identifier="sg-hero-category"
-            @items={{this.categories}}
             @onChange={{this.updateCategory}}
+            @options={{this.categories}}
             @texts={{hash
               ariaLabel=(i18n "styleguide.sections.select.hero.category")
               placeholder=(i18n "styleguide.sections.select.hero.category")
@@ -98,9 +98,9 @@ export default class SelectHero extends Component {
             <:selection as |item|>
               {{~dCategoryBadge item~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~dCategoryBadge item~}}
-            </:item>
+            </:option>
           </DSelect>
         </div>
 
@@ -110,10 +110,10 @@ export default class SelectHero extends Component {
           </span>
           <DSelect
             @identifier="sg-hero-tags"
-            @items={{this.tagItems}}
             @labelField="label"
             @multiple={{true}}
             @onChange={{this.updateTags}}
+            @options={{this.tagItems}}
             @texts={{hash
               ariaLabel=(i18n "styleguide.sections.select.hero.tags")
               placeholder=(i18n "styleguide.sections.select.hero.tags")
@@ -122,13 +122,13 @@ export default class SelectHero extends Component {
             @valueField="slug"
           >
             {{! No selection block: the chip is a tag name, which is exactly the default. }}
-            <:item as |item|>
+            <:option as |item|>
               <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon "tag"}}
                 <span class="select-examples__primary">{{item.label}}</span>
                 <span class="select-examples__meta">{{item.countLabel}}</span>
               </span>
-            </:item>
+            </:option>
           </DSelect>
         </div>
 
@@ -138,9 +138,9 @@ export default class SelectHero extends Component {
           </span>
           <DSelect
             @identifier="sg-hero-notifications"
-            @items={{this.notificationLevels}}
             @labelField="title"
             @onChange={{this.updateNotification}}
+            @options={{this.notificationLevels}}
             @texts={{hash
               ariaLabel=(i18n "styleguide.sections.select.hero.notifications")
             }}
@@ -155,11 +155,11 @@ export default class SelectHero extends Component {
                 {{dIcon item.icon}}{{item.title}}
               </span>
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon item.icon}}{{item.title}}
               </span>
-            </:item>
+            </:option>
           </DSelect>
         </div>
       </div>

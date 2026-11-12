@@ -18,9 +18,9 @@ export default class StatusIconSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-status-icons"
-      @items={{PEOPLE}}
       @labelField="name"
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.message_someone"
@@ -28,7 +28,7 @@ export default class StatusIconSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:item as |person|>
+      <:option as |person|>
         <span class="select-examples__row">
           <span class="select-examples__primary">{{person.name}}</span>
           {{#if person.status}}
@@ -38,7 +38,7 @@ export default class StatusIconSelectExample extends Component {
             </span>
           {{/if}}
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }

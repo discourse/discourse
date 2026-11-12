@@ -28,10 +28,10 @@ export default class WholePickerSelectExample extends Component {
       @groupBy="team"
       @groupHeader={{this.groupHeader}}
       @identifier="sg-content-picker"
-      @items={{TEAM_MEMBERS}}
       @labelField="name"
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{TEAM_MEMBERS}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.content.picker_placeholder"
@@ -45,7 +45,7 @@ export default class WholePickerSelectExample extends Component {
           {{group.label}}
         </span>
       </:groupHeader>
-      <:item as |person|>
+      <:option as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
             aria-hidden="true"
@@ -64,7 +64,7 @@ export default class WholePickerSelectExample extends Component {
             </span>
           </span>
         </span>
-      </:item>
+      </:option>
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg

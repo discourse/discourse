@@ -18,8 +18,8 @@ export default class ClearableSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-clearable"
-      @items={{PEOPLE}}
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.assign_to")
       }}

@@ -44,20 +44,20 @@ export default class IconOnlySelectExample extends Component {
         @icon={{this.icon}}
         @iconOnly={{true}}
         @identifier="sg-icon-only"
-        @items={{this.items}}
         @onChange={{this.onChange}}
+        @options={{this.items}}
         @texts={{hash
           ariaLabel=(i18n "styleguide.sections.select.icon_only_label")
         }}
         @value={{this.value}}
         @variant="static"
       >
-        <:item as |alignment|>
+        <:option as |alignment|>
           <span class="select-examples__row select-examples__row--glyph">
             {{dIcon alignment.icon}}
             <span class="select-examples__primary">{{alignment.name}}</span>
           </span>
-        </:item>
+        </:option>
       </DSelect>
       <p
         class="select-examples__aligned --{{this.value}}"

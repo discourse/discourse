@@ -35,6 +35,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -145,10 +146,10 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @kind="test-select"
             @maximum={{maximum.value}}
             @multiple={{multiple.value}}
+            @options={{ITEMS}}
             @value={{held.value}}
             @variant="button"
           />
@@ -210,9 +211,9 @@ module(
           <DSelect
             @identifier="context-select"
             @instanceContext={{instance}}
-            @items={{ITEMS}}
             @kind="context-kind"
             @kindContext={{kind}}
+            @options={{ITEMS}}
             @value={{2}}
           />
         </template>
@@ -259,7 +260,7 @@ module(
         );
       });
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
 
       assert.true("kind" in seen, "the kind key is present");
@@ -300,7 +301,7 @@ module(
 
       await render(
         <template>
-          <DSelect @instanceContext={{state.instance}} @items={{ITEMS}} />
+          <DSelect @instanceContext={{state.instance}} @options={{ITEMS}} />
         </template>
       );
       await click("[role='combobox']");
@@ -329,7 +330,7 @@ module(
         );
       });
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
       assert.dom("[role='listbox']").includesText("Row Tracked");
 
@@ -364,10 +365,10 @@ module(
           <DSelect
             @identifier="change-select"
             @instanceContext={{instance}}
-            @items={{ITEMS}}
             @kind="change-kind"
             @kindContext={{kind}}
             @onChange={{onChange}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -414,7 +415,7 @@ module(
       });
 
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
       await fillIn(".d-select__filter", "an");
@@ -433,23 +434,25 @@ module(
       let received;
       const items = [
         ...ITEMS,
-        {
-          id: "pick",
-          name: "Pick banana",
-          onSelect: (control) => {
-            received = control;
-            control.select(ITEMS[1]);
-          },
-        },
-        {
-          id: "dismiss",
-          name: "Dismiss",
-          onSelect: (control) => control.close(),
-        },
+        selectOption(
+          { id: "pick", name: "Pick banana" },
+          {
+            onSelect: (control) => {
+              received = control;
+              control.select(ITEMS[1]);
+            },
+          }
+        ),
+        selectOption(
+          { id: "dismiss", name: "Dismiss" },
+          { onSelect: (control) => control.close() }
+        ),
       ];
 
       await render(
-        <template><DSelect @items={{items}} @onChange={{onChange}} /></template>
+        <template>
+          <DSelect @onChange={{onChange}} @options={{items}} />
+        </template>
       );
       await click("[role='combobox']");
       await click(optionWithText("Pick banana"));
@@ -480,17 +483,16 @@ module(
       let stored;
       const items = [
         ...ITEMS,
-        {
-          id: "keep",
-          name: "Keep control",
-          onSelect: (control) => (stored = control),
-        },
+        selectOption(
+          { id: "keep", name: "Keep control" },
+          { onSelect: (control) => (stored = control) }
+        ),
       ];
 
       await render(
         <template>
           {{#if state.show}}
-            <DSelect @items={{items}} @onChange={{onChange}} />
+            <DSelect @onChange={{onChange}} @options={{items}} />
           {{/if}}
         </template>
       );
@@ -519,16 +521,17 @@ function deferred() {
 
 /** An action row that (optionally) closes the select and starts an update running `work`. */
 function updateRow(name, work, { close = true } = {}) {
-  return {
-    id: `row-${name}`,
-    name,
-    onSelect: (control) => {
-      if (close) {
-        control.close();
-      }
-      control.update(work).catch(() => {});
-    },
-  };
+  return selectOption(
+    { id: `row-${name}`, name },
+    {
+      onSelect: (control) => {
+        if (close) {
+          control.close();
+        }
+        control.update(work).catch(() => {});
+      },
+    }
+  );
 }
 
 /**
@@ -575,9 +578,9 @@ class AsyncUpdateHost extends Component {
     <DSelect
       @icon={{@icon}}
       @iconOnly={{@iconOnly}}
-      @items={{@items}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @options={{@options}}
       @showCaret={{@showCaret}}
       @texts={{hash ariaLabel=@label placeholder="Pick one"}}
       @value={{this.value}}
@@ -596,8 +599,8 @@ class AsyncUpdateSelectionHost extends Component {
 
   <template>
     <DSelect
-      @items={{@items}}
       @onChange={{this.onChange}}
+      @options={{@options}}
       @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
     >
@@ -637,7 +640,7 @@ module(
       const items = suggestItems(gate, ITEMS[1]);
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await duringUpdate(gate, click(optionWithText("Suggest")), () => {
@@ -681,7 +684,7 @@ module(
 
       await render(
         <template>
-          <AsyncUpdateSelectionHost @items={{items}} @value={{1}} />
+          <AsyncUpdateSelectionHost @options={{items}} @value={{1}} />
         </template>
       );
       await click("[role='combobox']");
@@ -720,7 +723,7 @@ module(
 
       await render(
         <template>
-          <AsyncUpdateHost @items={{items}} @value={{1}} @variant="button" />
+          <AsyncUpdateHost @options={{items}} @value={{1}} @variant="button" />
         </template>
       );
       await click(".d-select__trigger");
@@ -753,8 +756,8 @@ module(
           <AsyncUpdateHost
             @icon="gear"
             @iconOnly={{true}}
-            @items={{items}}
             @label="Fruit"
+            @options={{items}}
             @showCaret={{false}}
             @value={{1}}
             @variant="button"
@@ -782,8 +785,8 @@ module(
       await render(
         <template>
           <AsyncUpdateHost
-            @items={{items}}
             @multiple={{true}}
+            @options={{items}}
             @value={{value}}
           />
         </template>
@@ -823,7 +826,7 @@ module(
 
         await render(
           <template>
-            <AsyncUpdateHost @items={{items}} @multiple={{multiple}} />
+            <AsyncUpdateHost @multiple={{multiple}} @options={{items}} />
           </template>
         );
         await click("[role='combobox']");
@@ -875,7 +878,9 @@ module(
         ];
 
         await render(
-          <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+          <template>
+            <AsyncUpdateHost @options={{items}} @value={{1}} />
+          </template>
         );
         await click("[role='combobox']");
         await duringUpdate(gate, click(optionWithText("Suggest")));
@@ -905,7 +910,7 @@ module(
       const items = suggestItems(gate, ITEMS[1]);
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       const pending = [];
@@ -933,8 +938,8 @@ module(
       await render(
         <template>
           <AsyncUpdateHost
-            @items={{items}}
             @multiple={{true}}
+            @options={{items}}
             @value={{value}}
           />
         </template>
@@ -971,7 +976,7 @@ module(
       const items = suggestItems(gate, ITEMS[1]);
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await fillIn("input[role='combobox']", "Sugg");
       await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
@@ -988,7 +993,7 @@ module(
       const items = suggestItems(gate, ITEMS[1]);
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
@@ -1015,7 +1020,7 @@ module(
       ];
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await click(optionWithText("Set"));
@@ -1053,7 +1058,7 @@ module(
       });
 
       await render(
-        <template><AsyncUpdateHost @items={{ITEMS}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{ITEMS}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await click(optionWithText("Banana"));
@@ -1079,8 +1084,8 @@ module(
       await render(
         <template>
           <AsyncUpdateHost
-            @items={{items}}
             @multiple={{true}}
+            @options={{items}}
             @value={{value}}
           />
         </template>
@@ -1102,7 +1107,7 @@ module(
       const items = [...ITEMS, updateRow("Check", async () => {})];
 
       await render(
-        <template><AsyncUpdateHost @items={{items}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{items}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await click(optionWithText("Check"));
@@ -1137,7 +1142,7 @@ module(
       });
 
       await render(
-        <template><AsyncUpdateHost @items={{ITEMS}} @value={{1}} /></template>
+        <template><AsyncUpdateHost @options={{ITEMS}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
       await duringUpdate(gate, click(requireOption("Suggest")), async () => {
@@ -1166,7 +1171,7 @@ module(
       await render(
         <template>
           {{#if visibility.show}}
-            <AsyncUpdateHost @items={{items}} @value={{1}} />
+            <AsyncUpdateHost @options={{items}} @value={{1}} />
           {{/if}}
         </template>
       );
@@ -1237,9 +1242,9 @@ module(
           <DSelect
             @identifier="item-class-select"
             @instanceContext={{instance}}
-            @items={{items}}
             @kind="item-class-kind"
             @kindContext={{kind}}
+            @options={{items}}
           />
         </template>
       );
@@ -1364,7 +1369,7 @@ module(
             @groupBy="section"
             @groupHeader={{groupHeader}}
             @identifier="test-select"
-            @items={{sectioned}}
+            @options={{sectioned}}
           />
         </template>
       );
@@ -1397,20 +1402,19 @@ module(
             )
         );
       });
-      const createItem = (filter) => ({
+      const createOption = (filter) => ({
         id: filter,
         name: filter,
-        __create: true,
       });
 
       await render(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @identifier="test-select"
-            @items={{ITEMS}}
-            @noneRow={{true}}
+            @noneOption={{true}}
+            @options={{ITEMS}}
             @texts={{hash noneLabel="None"}}
           />
         </template>
@@ -1446,7 +1450,7 @@ module(
         );
       });
 
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       await click("[role='combobox']");
       await fillIn("[role='combobox']", "a");
       await fillIn("[role='combobox']", "");
@@ -1480,7 +1484,10 @@ module(
     });
 
     test("item classes apply to action rows but not to chips or the trigger", async function (assert) {
-      const items = [...ITEMS, { id: "action", name: "Action", onSelect() {} }];
+      const items = [
+        ...ITEMS,
+        selectOption({ id: "action", name: "Action" }, { onSelect() {} }),
+      ];
       const held = [1];
       withPluginApi((api) => {
         api.registerValueTransformer(
@@ -1494,7 +1501,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{items}} @multiple={{true}} @value={{held}} />
+          <DSelect @multiple={{true}} @options={{items}} @value={{held}} />
         </template>
       );
       await click("[role='combobox']");
@@ -1583,7 +1590,7 @@ module(
       const items = numbered(5);
 
       await render(
-        <template><DSelect @items={{items}} @variant="button" /></template>
+        <template><DSelect @options={{items}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
 
@@ -1617,7 +1624,7 @@ module(
           <DSelect
             @groupBy="section"
             @groupHeader={{groupHeader}}
-            @items={{items}}
+            @options={{items}}
             @variant="button"
           />
         </template>
@@ -1653,7 +1660,7 @@ module(
       const items = numbered(3);
 
       await render(
-        <template><DSelect @items={{items}} @variant="button" /></template>
+        <template><DSelect @options={{items}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
 
@@ -1681,7 +1688,7 @@ module(
         );
       });
       const load = (_filter, { offset = 0 }) => ({
-        items: numbered(20, offset),
+        options: numbered(20, offset),
         total: 100,
       });
 
@@ -1711,8 +1718,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{items}}
-            @noneRow={{true}}
+            @noneOption={{true}}
+            @options={{items}}
             @texts={{hash noneLabel="None"}}
             @variant="button"
           />
@@ -1734,7 +1741,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{items.value}} @variant="button" />
+          <DSelect @options={{items.value}} @variant="button" />
         </template>
       );
       await click(".d-select__trigger");
@@ -1771,7 +1778,7 @@ module(
         );
       });
       const load = (_filter, { offset = 0 }) => ({
-        items: numbered(20, offset),
+        options: numbered(20, offset),
         total: 100,
       });
 
@@ -1804,13 +1811,13 @@ module(
     test("a set holding only the create row announces its one option", async function (assert) {
       const announce = spyAnnounce(this);
       const items = [];
-      const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
+      const createOption = (filter) => ({ id: `new:${filter}`, name: filter });
       await render(
         <template>
           <EngineProbe
             @allowCreate={{true}}
-            @createItem={{createItem}}
-            @items={{items}}
+            @createOption={{createOption}}
+            @options={{items}}
             @variant="button"
           />
         </template>
@@ -1831,11 +1838,11 @@ module(
       let release;
       const load = (_filter, { offset = 0 }) =>
         offset === 0
-          ? { items: items.slice(0, 10), hasMore: true }
+          ? { options: items.slice(0, 10), hasMore: true }
           : new Promise((resolve) => {
               release = () =>
                 resolve({
-                  items: items.slice(offset, offset + 10),
+                  options: items.slice(offset, offset + 10),
                   hasMore: true,
                 });
             });
@@ -1911,7 +1918,7 @@ function registerSuggester({ suggest } = {}) {
     calls.original.push({ filter, offset });
     const term = filter.toLowerCase();
     return {
-      items: ORIGINAL_ROWS.filter((row) =>
+      options: ORIGINAL_ROWS.filter((row) =>
         row.name.toLowerCase().includes(term)
       ),
       hasMore: false,
@@ -1919,7 +1926,7 @@ function registerSuggester({ suggest } = {}) {
   };
   const suggestLoad = (filter, { offset = 0 } = {}) => {
     calls.suggest.push({ filter, offset });
-    return suggest ? suggest() : { items: SUGGESTED_ROWS, hasMore: false };
+    return suggest ? suggest() : { options: SUGGESTED_ROWS, hasMore: false };
   };
 
   withPluginApi((api) => {
@@ -2095,7 +2102,7 @@ module(
       );
       let size = 60;
       const load = (_filter, { offset = 0 }) => ({
-        items: Array.from({ length: size }, (_, i) => ({
+        options: Array.from({ length: size }, (_, i) => ({
           id: offset + i + 1,
           name: `Row ${offset + i + 1}`,
         })),
@@ -2131,7 +2138,8 @@ module(
       const { original } = registerSuggester({
         suggest: () =>
           new Promise((resolve) => {
-            release = () => resolve({ items: SUGGESTED_ROWS, hasMore: false });
+            release = () =>
+              resolve({ options: SUGGESTED_ROWS, hasMore: false });
           }),
       });
 
@@ -2305,10 +2313,10 @@ class ContractHost extends Component {
     <A11yLiveRegions />
     <DSelect
       @identifier="contract-select"
-      @items={{ITEMS}}
       @kind="contract-select"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @options={{ITEMS}}
       @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
     />

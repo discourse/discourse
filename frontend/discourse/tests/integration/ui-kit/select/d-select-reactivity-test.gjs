@@ -19,6 +19,7 @@ import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
 const INITIAL_ITEMS = [
   { id: 1, name: "Apple" },
@@ -45,11 +46,13 @@ function optionLabels() {
 module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("a plain reactive @items array updates an open client list", async function (assert) {
+  test("a plain reactive @options array updates an open client list", async function (assert) {
     const state = new TestState();
 
     await render(
-      <template><DSelect @items={{state.items}} @variant="button" /></template>
+      <template>
+        <DSelect @options={{state.items}} @variant="button" />
+      </template>
     );
     await click(".d-select__trigger");
 
@@ -72,12 +75,16 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     );
   });
 
-  test("changing @items restarts a debounced list", async function (assert) {
+  test("changing @options restarts a debounced list", async function (assert) {
     const state = new TestState();
 
     await render(
       <template>
-        <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
+        <DSelect
+          @debounce={{true}}
+          @options={{state.items}}
+          @variant="button"
+        />
       </template>
     );
     await click(".d-select__trigger");
@@ -98,14 +105,18 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     );
   });
 
-  test("@items replacements after a debounced re-filter each restart the list", async function (assert) {
+  test("@options replacements after a debounced re-filter each restart the list", async function (assert) {
     // A re-filter runs the source from the debounce timer, outside autotracking, so only
     // loadContext's own dependency on the effective items can restart the list afterwards.
     const state = new TestState();
 
     await render(
       <template>
-        <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
+        <DSelect
+          @debounce={{true}}
+          @options={{state.items}}
+          @variant="button"
+        />
       </template>
     );
     await click(".d-select__trigger");
@@ -143,13 +154,13 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       <template>
         <DSelect
           class="late-default"
-          @items={{EMPTY_ITEMS}}
+          @options={{EMPTY_ITEMS}}
           @value={{state.value}}
           @valueRecords={{state.valueRecords}}
         />
         <DSelect
           class="late-custom"
-          @items={{EMPTY_ITEMS}}
+          @options={{EMPTY_ITEMS}}
           @value={{state.value}}
           @valueRecords={{state.valueRecords}}
         >
@@ -159,15 +170,15 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         </DSelect>
         <DSelect
           class="late-button"
-          @items={{EMPTY_ITEMS}}
+          @options={{EMPTY_ITEMS}}
           @value={{state.value}}
           @valueRecords={{state.valueRecords}}
           @variant="button"
         />
         <DSelect
           class="late-multi"
-          @items={{EMPTY_ITEMS}}
           @multiple={{true}}
+          @options={{EMPTY_ITEMS}}
           @value={{state.value}}
           @valueRecords={{state.valueItemsMulti}}
         />
@@ -213,7 +224,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{EMPTY_ITEMS}}
+          @options={{EMPTY_ITEMS}}
           @value={{state.value}}
           @valueRecords={{state.valueRecords}}
         />
@@ -241,9 +252,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{state.items}}
           @multiple={{state.multiple}}
           @onChange={{onChange}}
+          @options={{state.items}}
           @value={{state.value}}
         />
       </template>
@@ -282,7 +293,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{state.items}} @minChars={{state.minChars}} />
+        <DSelect @minChars={{state.minChars}} @options={{state.items}} />
       </template>
     );
     await fillIn("[role='combobox']", "ap");
@@ -308,18 +319,17 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
   test("@allowCreate toggles the create row for the current filter", async function (assert) {
     const state = new TestState();
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: filter,
       name: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{state.allowCreate}}
-          @createItem={{createItem}}
-          @items={{state.items}}
+          @createOption={{createOption}}
+          @options={{state.items}}
         />
       </template>
     );
@@ -347,7 +357,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .doesNotExist("disabling creation removes the proposal again");
   });
 
-  test("providing both @items and @load reports the conflict", async function (assert) {
+  test("providing both @options and @load reports the conflict", async function (assert) {
     const warnStub = sinon.stub(console, "warn");
     const items = [{ id: "local", name: "Local result" }];
     const load = () => [{ id: "remote", name: "Remote result" }];
@@ -358,8 +368,8 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         <template>
           <DSelect
             @debounce={{false}}
-            @items={{items}}
             @load={{load}}
+            @options={{items}}
             @variant="button"
           />
         </template>
@@ -375,7 +385,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     warnStub.restore();
 
     assert.true(
-      /(?:items.*load|load.*items)/i.test(diagnostic),
+      /(?:options.*load|load.*options)/i.test(diagnostic),
       "a dev assertion or warning identifies the conflicting sources"
     );
   });
@@ -387,8 +397,8 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{state.items}}
           @labelField={{state.labelField}}
+          @options={{state.items}}
           @variant="button"
         />
       </template>
@@ -673,27 +683,28 @@ module(
         contexts.push(opts.context?.categoryId);
         return rowsFor(opts.context);
       };
-      const specialItems = () => [
-        {
-          id: "act",
-          name: "Act later",
-          onSelect(control) {
-            control.update(async (scope) => {
-              await gate.promise;
-              scope.select({ id: "late", name: "Late" });
-            });
-          },
-        },
+      const extraOptions = () => [
+        selectOption(
+          { id: "act", name: "Act later" },
+          {
+            onSelect(control) {
+              control.update(async (scope) => {
+                await gate.promise;
+                scope.select({ id: "late", name: "Late" });
+              });
+            },
+          }
+        ),
       ];
 
       await render(
         <template>
           <DSelect
+            @extraOptions={{extraOptions}}
             @load={{load}}
             @loadContext={{hash categoryId=state.categoryId}}
             @multiple={{true}}
             @onChange={{onChange}}
-            @specialItems={{specialItems}}
             @variant="button"
           />
         </template>
@@ -938,7 +949,9 @@ module(
       ];
 
       await render(
-        <template><DSelect @items={{items}} @onChange={{onChange}} /></template>
+        <template>
+          <DSelect @onChange={{onChange}} @options={{items}} />
+        </template>
       );
       await click("[role='combobox']");
       await fillIn("[role='combobox']", "ban");

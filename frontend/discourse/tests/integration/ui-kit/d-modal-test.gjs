@@ -36,16 +36,16 @@ module("Integration | ui-kit | DModal", function (hooks) {
           <:body>
             <DSelect
               class="first-select"
-              @items={{FRUITS}}
               @multiple={{true}}
               @onChange={{onChange}}
+              @options={{FRUITS}}
               @value={{(array)}}
             />
             <DSelect
               class="second-select"
-              @items={{FRUITS}}
               @multiple={{true}}
               @onChange={{onChange}}
+              @options={{FRUITS}}
               @value={{(array)}}
             />
           </:body>
@@ -919,7 +919,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <template>
           <DModal @inline={{true}}>
             <:body>
-              <DSelect @items={{FRUITS}} @onChange={{this.onChange}} />
+              <DSelect @onChange={{this.onChange}} @options={{FRUITS}} />
             </:body>
             <:footer>
               <DButton
@@ -948,7 +948,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <template>
           <DModal @inline={{true}}>
             <:body>
-              <DSelect @items={{FRUITS}} @onChange={{this.onChange}} />
+              <DSelect @onChange={{this.onChange}} @options={{FRUITS}} />
             </:body>
             <:footer>
               <DButton
@@ -976,8 +976,8 @@ module("Integration | ui-kit | DModal", function (hooks) {
           <DModal @inline={{true}}>
             <:body>
               <DSelect
-                @items={{FRUITS}}
                 @onChange={{this.onChange}}
+                @options={{FRUITS}}
                 @variant="static"
               />
             </:body>
@@ -1007,8 +1007,8 @@ module("Integration | ui-kit | DModal", function (hooks) {
           <DModal @inline={{true}}>
             <:body>
               <DSelect
-                @items={{FRUITS}}
                 @onChange={{this.onChange}}
+                @options={{FRUITS}}
                 @variant="static"
               />
             </:body>
@@ -1037,8 +1037,8 @@ module("Integration | ui-kit | DModal", function (hooks) {
           <DModal @inline={{true}}>
             <:body>
               <DSelect
-                @items={{FRUITS}}
                 @onChange={{this.onChange}}
+                @options={{FRUITS}}
                 @variant="button"
               />
             </:body>
@@ -1075,7 +1075,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <template>
           <DModal @closeModal={{this.closeModal}} @inline={{true}}>
             <:body>
-              <DSelectList @items={{FRUITS}} @onChange={{this.onChange}} />
+              <DSelectList @onChange={{this.onChange}} @options={{FRUITS}} />
             </:body>
           </DModal>
         </template>
@@ -1117,7 +1117,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <template>
           <DModal @closeModal={{this.closeModal}} @inline={{true}}>
             <:body>
-              <DSelectList @items={{FRUITS}} @onChange={{this.onChange}} />
+              <DSelectList @onChange={{this.onChange}} @options={{FRUITS}} />
             </:body>
           </DModal>
         </template>

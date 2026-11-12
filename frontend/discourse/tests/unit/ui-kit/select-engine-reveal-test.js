@@ -2,7 +2,9 @@ import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  selectOption,
+} from "discourse/ui-kit/select/select-engine";
 
 // The cap a consumer opts into with `maxLoaded`. A server source has no row ceiling by
 // default, and a client source renders its whole filtered list while `DVirtualList` owns
@@ -36,49 +38,49 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
   module("client source", function () {
     test("renders the whole filtered list, not a bounded window", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         5000,
         "the full client list renders — DVirtualList owns the render window now"
       );
     });
 
-    test("filteredItems is a frozen projection, not a handle on engine state", function (assert) {
+    test("filteredOptions is a frozen projection, not a handle on engine state", function (assert) {
       // `readonly` is erased at runtime. Copying alone is not enough either: @cached returns
       // the same array to every reader in a render, so a mutable copy could still be spliced
       // out from under the engine.
       const items = clientItems(5);
-      const engine = new SelectEngine({ items });
+      const engine = new SelectEngine({ options: items });
 
       assert.true(
-        Object.isFrozen(engine.filteredItems),
+        Object.isFrozen(engine.filteredOptions),
         "the projection is frozen"
       );
       assert.throws(
-        () => engine.filteredItems.splice(0, 1),
+        () => engine.filteredOptions.splice(0, 1),
         /read only|not extensible|frozen/i,
         "mutating it fails loudly rather than corrupting state"
       );
       assert.strictEqual(items.length, 5, "the consumer's array is untouched");
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         5,
         "the engine still sees every item"
       );
     });
 
     test("a short list renders whole and cannot reveal more", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(3) });
+      const engine = new SelectEngine({ options: clientItems(3) });
 
-      assert.strictEqual(engine.loadItems(engine.loadContext).length, 3);
+      assert.strictEqual(engine.loadOptions(engine.loadContext).length, 3);
       assert.false(engine.canRevealMore, "nothing left to reveal");
       assert.false(engine.atCapWithMore, "not pinned at the cap");
     });
 
     test("a large client list never reveals and never caps", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       assert.false(
         engine.canRevealMore,
@@ -89,7 +91,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "revealMore is an inert no-op for a client source"
       );
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         5000,
         "the rendered set is unchanged by the no-op reveal"
       );
@@ -100,7 +102,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     });
 
     test("total is the full filtered length and stays reactive to the filter", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       assert.strictEqual(engine.total, 5000, "the whole client list");
 
@@ -119,38 +121,38 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
       assert.false(engine.canRevealMore, "nothing left to reveal");
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         1,
         "the rendered set narrows with the filter"
       );
     });
 
     test("changing the filter re-renders the full filtered list", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       engine.setFilter("Item");
 
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         5000,
         "every row matches the term, so the whole filtered list renders"
       );
     });
 
     test("reload re-renders the full list", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       engine.reload();
 
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         5000,
         "a retry re-renders the whole list, not a bounded prefix"
       );
     });
 
     test("a client reveal leaves loadContext identity intact; a new filter invalidates it", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       const before = engine.loadContext;
       engine.revealMore();
@@ -172,17 +174,17 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     test("loadItems and loadContext follow the live items thunk, never a buffered copy", function (assert) {
       // A tracked source, so replacing the array actually invalidates the @cached reads — a
       // plain variable reassignment would not, which is the point of the reactivity net.
-      const source = trackedObject({ items: clientItems(3) });
-      const engine = new SelectEngine({ items: () => source.items });
+      const source = trackedObject({ options: clientItems(3) });
+      const engine = new SelectEngine({ options: () => source.options });
 
       const before = engine.loadContext;
       assert.strictEqual(
-        engine.loadItems(before).length,
+        engine.loadOptions(before).length,
         3,
         "the initial live corpus"
       );
 
-      source.items = clientItems(7);
+      source.options = clientItems(7);
 
       assert.notStrictEqual(
         before,
@@ -190,7 +192,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "a changed source invalidates the context so the list re-fetches"
       );
       assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
+        engine.loadOptions(engine.loadContext).length,
         7,
         "loadItems reflects the live thunk — a buffered LocalSource would still report 3"
       );
@@ -204,7 +206,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         calls.map((c) => c.offset),
@@ -220,12 +222,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
     test("unwraps the { items, total } shape before returning", async function (assert) {
       const { load } = recordingLoad(() => ({
-        items: clientItems(10),
+        options: clientItems(10),
         total: 900,
       }));
       const engine = new SelectEngine({ load });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.true(Array.isArray(result), "an array reaches the render path");
       assert.strictEqual(result.length, 10);
@@ -236,10 +238,10 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => clientItems(10));
       const engine = new SelectEngine({ load });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
-        result.map((i) => i.id),
+        result.map((i) => i.record.id),
         clientItems(10).map((i) => i.id)
       );
     });
@@ -249,7 +251,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // page while the cursor must still advance by the full 10, or the source is asked for
       // the same rows forever.
       const { load, calls } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => {
+        options: Array.from({ length: 10 }, (_, i) => {
           const id = offset + i + 1 - (offset > 0 ? 5 : 0);
           return { id, name: `Item ${id}` };
         }),
@@ -257,11 +259,11 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         calls.map((c) => c.offset),
@@ -269,7 +271,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "the cursor tracks rows fetched, not rows kept"
       );
 
-      const ids = result.map((i) => i.id);
+      const ids = result.map((i) => i.record.id);
       assert.deepEqual(
         ids,
         [...new Set(ids)],
@@ -279,7 +281,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
     test("appends across reveals instead of replacing", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -287,20 +289,28 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(result.length, 20, "both pages are present");
-      assert.strictEqual(result[0].id, 1, "the first page is still at the top");
-      assert.strictEqual(result[19].id, 20, "the second page is appended");
+      assert.strictEqual(
+        result[0].record.id,
+        1,
+        "the first page is still at the top"
+      );
+      assert.strictEqual(
+        result[19].record.id,
+        20,
+        "the second page is appended"
+      );
     });
 
     test("caps the RETURNED slice, not just the decision to fetch", async function (assert) {
       // 60-row pages: the accumulator reaches 180 (under the cap, so another page is
       // fetched) and that page would take it to 240.
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 60 }, (_, i) => ({
+        options: Array.from({ length: 60 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -310,7 +320,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
       let result;
       for (let i = 0; i < 6; i++) {
-        result = await engine.loadItems(engine.loadContext);
+        result = await engine.loadOptions(engine.loadContext);
         engine.revealMore();
       }
 
@@ -325,7 +335,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // Pinned at the cap AND the total says that is everything: no more exist, so the
       // "narrow your search" hint would be a lie.
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 50 }, (_, i) => ({
+        options: Array.from({ length: 50 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -334,7 +344,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
       for (let i = 0; i < 6; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         engine.revealMore();
       }
 
@@ -349,7 +359,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // a flag raised synchronously inside loadItems (which runs during render and so
       // could never invalidate a consumer that already read it).
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -357,7 +367,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "settled after the first page");
 
       assert.true(engine.revealMore(), "the reveal is accepted");
@@ -366,12 +376,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "pending flips on from the reveal alone, before loadItems is called"
       );
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "cleared once the page lands");
     });
 
     test("a client source is never reported as pending", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
+      const engine = new SelectEngine({ options: clientItems(5000) });
 
       assert.false(engine.serverPending, "no server, nothing in flight");
     });
@@ -380,7 +390,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // Page shape says nothing: the second page here is the same length as the first, which
       // under the old contract left the source revealable. Only the declaration ends it.
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -388,9 +398,9 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.true(engine.revealMore(), "the first page declared more");
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.false(engine.canRevealMore, "exhausted, so the sentinel is off");
       assert.false(engine.atCapWithMore, "no narrow hint when nothing is left");
@@ -398,7 +408,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
     test("reaching the reported total marks the source exhausted", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -406,16 +416,16 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.false(engine.canRevealMore, "the whole set has been loaded");
     });
 
     test("changing the filter discards the accumulated pages", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -423,13 +433,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      const accumulated = await engine.loadItems(engine.loadContext);
+      const accumulated = await engine.loadOptions(engine.loadContext);
       assert.strictEqual(accumulated.length, 20, "two pages accumulated");
 
       engine.setFilter("new search");
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         calls.at(-1).offset,
@@ -445,7 +455,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
     test("reload discards the accumulated pages", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: Array.from({ length: 10 }, (_, i) => ({
+        options: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
         })),
@@ -453,13 +463,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      const accumulated = await engine.loadItems(engine.loadContext);
+      const accumulated = await engine.loadOptions(engine.loadContext);
       assert.strictEqual(accumulated.length, 20, "two pages accumulated");
 
       engine.reload();
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(calls.at(-1).offset, 0, "a retry re-pages from zero");
       assert.strictEqual(
@@ -476,7 +486,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
           controller.abort();
         }
         return {
-          items: Array.from({ length: 10 }, (_, i) => ({
+          options: Array.from({ length: 10 }, (_, i) => ({
             id: offset + i + 1,
             name: `Item ${offset + i + 1}`,
           })),
@@ -485,16 +495,16 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       });
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext, {
+      await engine.loadOptions(engine.loadContext, {
         signal: controller.signal,
       });
       engine.revealMore();
-      const result = await engine.loadItems(engine.loadContext, {
+      const result = await engine.loadOptions(engine.loadContext, {
         signal: controller.signal,
       });
 
       assert.true(Array.isArray(result), "an array is still returned");
-      const ids = result.map((i) => i.id);
+      const ids = result.map((i) => i.record.id);
       assert.deepEqual(ids, [...new Set(ids)], "no duplicated rows");
 
       // The assertions above are satisfied by simply returning the first page, so they say
@@ -516,7 +526,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => clientItems(10));
       const engine = new SelectEngine({ load });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(result.length, 10, "resolves without an options bag");
     });
@@ -531,7 +541,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
       const engine = new SelectEngine({ load });
 
-      const pending = engine.loadItems(engine.loadContext);
+      const pending = engine.loadOptions(engine.loadContext);
       assert.false(
         engine.revealMore(),
         "refuses to queue a second page mid-flight"
@@ -556,18 +566,18 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       let gate = new Promise((resolve) => (release = resolve));
       const engine = new SelectEngine({
         load: () =>
-          gate.then(() => ({ items: clientItems(10), hasMore: true })),
+          gate.then(() => ({ options: clientItems(10), hasMore: true })),
       });
 
       release();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "settled after the first page");
 
       gate = new Promise((resolve) => (release = resolve));
       assert.true(engine.revealMore(), "the reveal is accepted");
       assert.true(engine.serverPending, "in flight once a reveal is requested");
 
-      const inFlight = engine.loadItems(engine.loadContext);
+      const inFlight = engine.loadOptions(engine.loadContext);
       release();
       await inFlight;
 
@@ -580,13 +590,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => clientItems(10));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "settled");
 
       engine.setFilter("abc");
       assert.true(engine.serverPending, "a new query is a pending reload");
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "settled again");
     });
 
@@ -598,7 +608,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
       engine.setFilter("q");
       try {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
       } catch {
         // DAsyncContent owns surfacing the rejection; the engine must still settle.
       }
@@ -618,10 +628,10 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         load: () =>
           fail
             ? Promise.reject(new Error("boom"))
-            : Promise.resolve({ items: clientItems(10), hasMore: true }),
+            : Promise.resolve({ options: clientItems(10), hasMore: true }),
       });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.false(engine.serverPending, "settled after the first page");
 
       fail = true;
@@ -631,7 +641,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "pending while the reveal is in flight"
       );
 
-      await engine.loadItems(engine.loadContext).catch(() => {});
+      await engine.loadOptions(engine.loadContext).catch(() => {});
 
       assert.false(
         engine.serverPending,
@@ -653,14 +663,14 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       let call = 0;
       const load = () =>
         Promise.resolve({
-          items: pages[Math.min(call++, pages.length - 1)],
+          options: pages[Math.min(call++, pages.length - 1)],
           total: 20,
         });
       const engine = new SelectEngine({ load });
 
       let result = [];
       for (let i = 0; i < 12; i++) {
-        result = await engine.loadItems(engine.loadContext);
+        result = await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -686,10 +696,10 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       });
 
       engine.setFilter("q");
-      await engine.loadItems(engine.loadContext).catch(() => {});
+      await engine.loadOptions(engine.loadContext).catch(() => {});
 
       let secondRejected = false;
-      await engine.loadItems(engine.loadContext).then(
+      await engine.loadOptions(engine.loadContext).then(
         () => {},
         () => (secondRejected = true)
       );
@@ -714,7 +724,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 6; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -743,7 +753,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       let call = 0;
       const load = () =>
         Promise.resolve({
-          items: pages[Math.min(call++, pages.length - 1)].map((id) => ({
+          options: pages[Math.min(call++, pages.length - 1)].map((id) => ({
             id,
             name: `Item ${id}`,
           })),
@@ -753,7 +763,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
       let result = [];
       for (let i = 0; i < 12; i++) {
-        result = await engine.loadItems(engine.loadContext);
+        result = await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -779,12 +789,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // Redundant with omitting the field, and deliberately still legal: a cursor API can
       // forward its own flag straight through without having to strip the false case.
       const { load, calls } = recordingLoad((offset) => ({
-        items: uniquePage(offset, 50),
+        options: uniquePage(offset, 50),
         hasMore: false,
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.false(
         engine.canRevealMore,
@@ -799,14 +809,14 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // not exhausted, but page shape alone cannot tell that from a genuine last page.
       const { load } = recordingLoad((offset) =>
         offset === 0
-          ? { items: uniquePage(0, 20), hasMore: true }
-          : { items: uniquePage(offset, 18), hasMore: true }
+          ? { options: uniquePage(0, 20), hasMore: true }
+          : { options: uniquePage(offset, 18), hasMore: true }
       );
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.true(engine.revealMore(), "the first reveal is accepted");
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.true(
         engine.canRevealMore,
@@ -819,13 +829,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // start and fires the moment anything lets it. Only the source's own declaration keeps
       // that from becoming a second fetch and a second loading placeholder.
       const { load, calls } = recordingLoad(() => ({
-        items: [{ id: 1, name: "only" }],
+        options: [{ id: 1, name: "only" }],
         hasMore: false,
       }));
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 4; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -838,12 +848,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // A cursor source that pages to completion knows its size only in retrospect. Without
       // this the set size stays -1 forever, even once every row is in hand.
       const { load } = recordingLoad(() => ({
-        items: uniquePage(0, 7),
+        options: uniquePage(0, 7),
         hasMore: false,
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         engine.total,
@@ -858,13 +868,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // identical rows forever: the accumulator stays flat, so the cap guard never arms,
       // and every reveal mints a fresh load key past the per-key guard.
       const { load, calls } = recordingLoad(() => ({
-        items: clientItems(20),
+        options: clientItems(20),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 8; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -880,14 +890,14 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     test("hasMore:true never pages past a reported total", async function (assert) {
       // The other safety clause: a source cannot claim more rows than it said exist.
       const { load, calls } = recordingLoad((offset) => ({
-        items: uniquePage(offset, 10),
+        options: uniquePage(offset, 10),
         total: 20,
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 8; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -907,13 +917,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // stop would announce "20 results" — a paging stop condition promoted into a factual
       // claim to assistive tech, from the one source already proven untrustworthy.
       const { load, calls } = recordingLoad(() => ({
-        items: clientItems(20),
+        options: clientItems(20),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 6; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -936,12 +946,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // consulting truncation the user gets exactly 200 rows with no hint, no total and no
       // sentinel: 100 results gone with zero signal.
       const { load } = recordingLoad(() => ({
-        items: uniquePage(0, 300),
+        options: uniquePage(0, 300),
         hasMore: false,
       }));
       const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         result.length,
@@ -960,13 +970,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // "99 matched, you may see 5, no more pages" is a legitimate permission-filtered
       // shape. Letting the reported total win claims a sixth option that does not exist.
       const { load } = recordingLoad(() => ({
-        items: uniquePage(0, 5),
+        options: uniquePage(0, 5),
         total: 99,
         hasMore: false,
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         engine.total,
@@ -980,7 +990,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // "the page was longer than the room left". 250 rows whose last 50 repeat ids already
       // held lose nothing, so the derived total survives.
       const { load } = recordingLoad(() => ({
-        items: [
+        options: [
           ...uniquePage(0, MAX_RENDERED),
           ...uniquePage(0, 50).map((item) => ({ ...item })),
         ],
@@ -988,7 +998,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       }));
       const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         engine.total,
@@ -1008,7 +1018,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       let call = 0;
       const load = () =>
         Promise.resolve({
-          items: pages[Math.min(call++, pages.length - 1)].map((id) => ({
+          options: pages[Math.min(call++, pages.length - 1)].map((id) => ({
             id,
             name: `Item ${id}`,
           })),
@@ -1017,7 +1027,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 6; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         if (!engine.revealMore()) {
           break;
         }
@@ -1032,12 +1042,12 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
 
     test("a new query drops the previous query's declared completeness", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: uniquePage(offset, 6),
+        options: uniquePage(offset, 6),
         hasMore: false,
       }));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.strictEqual(engine.total, 6, "settled and complete");
 
       engine.setFilter("q");
@@ -1047,7 +1057,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         "a new filter knows nothing about its own result count yet"
       );
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.strictEqual(engine.total, 6, "the new query settles complete too");
 
       engine.reload();
@@ -1065,7 +1075,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => uniquePage(0, 250));
       const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(result.length, MAX_RENDERED, "the cap holds");
       assert.false(engine.canRevealMore, "there is no second page to ask for");
@@ -1086,7 +1096,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => uniquePage(0, MAX_RENDERED));
       const engine = new SelectEngine({ load, maxLoaded: MAX_RENDERED });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(result.length, MAX_RENDERED, "every row is mounted");
       assert.false(engine.atCapWithMore, "nothing was dropped, so no hint");
@@ -1100,7 +1110,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load, calls } = recordingLoad(() => uniquePage(0, 10));
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(calls.length, 1, "one fetch, no probing");
       assert.false(engine.canRevealMore, "nothing left to reveal");
@@ -1111,7 +1121,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       const { load } = recordingLoad(() => []);
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(
         engine.total,
@@ -1159,14 +1169,14 @@ module(
 
     /** Loads, renders the settled rows, then asks for more, as the listbox does. */
     async function settleBuildAndReveal(engine) {
-      const rows = await engine.loadItems(engine.loadContext);
-      const descriptors = engine.buildItems(rows);
+      const rows = await engine.loadOptions(engine.loadContext);
+      const descriptors = engine.buildRows(rows);
       return { revealed: engine.revealMore(), descriptors };
     }
 
     test("two reveals with no visible growth stop paging", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         hasMore: true,
       }));
       hideRows((item) => item.id > 10);
@@ -1190,24 +1200,9 @@ module(
       assert.false(engine.canRevealMore, "paging stays stopped");
     });
 
-    test("two barren reveals stop paging when pages carry structural rows", async function (assert) {
-      const { load, calls } = recordingLoad((offset) => ({
-        items: [...page(offset, 1), { __divider: true }],
-        hasMore: true,
-      }));
-      hideRows((item) => item.id > 1);
-      const engine = new SelectEngine({ load });
-
-      assert.true(
-        await pageUntilRefused(engine),
-        "a reveal is refused although every page holds a divider"
-      );
-      assert.strictEqual(calls.length, 3, "three loads, then no more");
-    });
-
     test("a single barren reveal is tolerated and growth keeps paging", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         hasMore: offset < 40,
       }));
       // Every page keeps half its rows, except the second, which loses all of them.
@@ -1230,7 +1225,7 @@ module(
 
     test("a new filter or a reload pages again after the brake trips", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         hasMore: true,
       }));
       hideRows((item) => item.id > 10);
@@ -1259,7 +1254,7 @@ module(
 
     test("a tripped brake sizes the set by the rows shown", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         total: 100,
         hasMore: true,
       }));
@@ -1272,8 +1267,8 @@ module(
           break;
         }
       }
-      const descriptors = engine.buildItems(
-        await engine.loadItems(engine.loadContext)
+      const descriptors = engine.buildRows(
+        await engine.loadOptions(engine.loadContext)
       );
 
       assert.strictEqual(
@@ -1290,14 +1285,14 @@ module(
 
     test("reveals without a build in between never trip the brake", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         hasMore: true,
       }));
       hideRows((item) => item.id > 10);
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 5; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         engine.revealMore();
       }
 
@@ -1309,20 +1304,20 @@ module(
 
     test("a render of the rows from before a reveal settled is not a measurement", async function (assert) {
       const { load, calls } = recordingLoad((offset) => ({
-        items: page(offset, 10),
+        options: page(offset, 10),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
-      const firstPage = await engine.loadItems(engine.loadContext);
-      engine.buildItems(firstPage);
+      const firstPage = await engine.loadOptions(engine.loadContext);
+      engine.buildRows(firstPage);
       const results = [];
       for (let i = 0; i < 4; i++) {
         results.push(engine.revealMore());
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         // The list can re-render rows it already had after a request clears and before the new
         // rows arrive. Such a render shows nothing about the page that just landed.
-        engine.buildItems(firstPage);
+        engine.buildRows(firstPage);
       }
 
       assert.deepEqual(
@@ -1346,9 +1341,9 @@ module(
             selects.forAll((spec) => spec.content((rows) => rows.slice(0, 1)))
         );
       });
-      const engine = new SelectEngine({ items });
+      const engine = new SelectEngine({ options: items });
       engine.setFilter("Apple");
-      const retained = await engine.loadItems(engine.loadContext);
+      const retained = await engine.loadOptions(engine.loadContext);
       engine.setFilter("");
 
       assert.strictEqual(
@@ -1357,40 +1352,9 @@ module(
         "the source already answers the new query"
       );
       assert.deepEqual(
-        engine.buildItems(retained).map((row) => row.setSize),
+        engine.buildRows(retained).map((row) => row.setSize),
         [1],
         "the rows still shown describe their own set"
-      );
-    });
-
-    test("structural rows do not count toward the paged net change", async function (assert) {
-      withPluginApi((api) => {
-        api.registerValueTransformer(
-          "select-customizations",
-          ({ value: selects }) =>
-            selects.forAll((spec) =>
-              spec.content((items) => [...items, { id: 2, name: "Banana" }])
-            )
-        );
-      });
-      const engine = new SelectEngine({
-        load: () => ({
-          items: [
-            { id: 1, name: "Apple" },
-            { __header: true, label: "Fruit" },
-            { __divider: true },
-          ],
-          total: 100,
-          hasMore: true,
-        }),
-      });
-      const rows = engine.buildItems(
-        await engine.loadItems(engine.loadContext)
-      );
-      assert.deepEqual(
-        rows.filter((row) => row.setSize != null).map((row) => row.setSize),
-        [101, 101],
-        "only the added option adjusts the declared total"
       );
     });
 
@@ -1408,13 +1372,13 @@ module(
       });
       const engine = new SelectEngine({
         load: (_filter, { offset }) => ({
-          items: [{ id: offset + 1, name: `Item ${offset + 1}` }],
+          options: [{ id: offset + 1, name: `Item ${offset + 1}` }],
           hasMore: true,
         }),
       });
       const reveals = [];
       for (let i = 0; i < 5; i++) {
-        engine.buildItems(await engine.loadItems(engine.loadContext));
+        engine.buildRows(await engine.loadOptions(engine.loadContext));
         reveals.push(engine.revealMore());
       }
       assert.deepEqual(
@@ -1434,18 +1398,28 @@ module(
     test("hoisting source options preserves the declared asynchronous total", async function (assert) {
       const engine = new SelectEngine({
         load: () => ({
-          items: [
-            { id: 1, name: "Action", sticky: true },
+          options: [
+            selectOption({ id: 1, name: "Action" }, { position: "sticky" }),
             { id: 2, name: "Result" },
           ],
           total: 100,
           hasMore: true,
         }),
-        getArgs: () => ({ noneRow: true }),
-        specialItems: () => [{ id: "special", name: "Special", sticky: true }],
+        getArgs: () => ({ noneOption: true }),
+        extraOptions: () => [
+          selectOption(
+            { id: "special", name: "Special" },
+            { position: "sticky" }
+          ),
+        ],
       });
-      const rows = engine.buildItems(
-        await engine.loadItems(engine.loadContext)
+      const rows = engine.buildRows(
+        await engine.loadOptions(engine.loadContext)
+      );
+      assert.deepEqual(
+        rows.map((row) => row.flags.sticky),
+        [true, true, false, false],
+        "the sticky options lead"
       );
       assert.deepEqual(
         rows.map((row) => row.setSize),
@@ -1462,12 +1436,17 @@ module(
     test("server pages containing only sticky actions still make visible progress", async function (assert) {
       const engine = new SelectEngine({
         load: (_filter, { offset }) => ({
-          items: [{ id: offset, name: `Action ${offset}`, sticky: true }],
+          options: [
+            selectOption(
+              { id: offset, name: `Action ${offset}` },
+              { position: "sticky" }
+            ),
+          ],
           hasMore: true,
         }),
       });
       for (let page = 0; page < 4; page++) {
-        engine.buildItems(await engine.loadItems(engine.loadContext));
+        engine.buildRows(await engine.loadOptions(engine.loadContext));
         assert.true(
           engine.canRevealMore,
           `page ${page} is visible growth before hoisting`
@@ -1492,14 +1471,14 @@ module(
 
     test("keeps paging past 200 rows when no maxLoaded is set", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: page(offset, 60),
+        options: page(offset, 60),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
       let result;
       for (let i = 0; i < 6; i++) {
-        result = await engine.loadItems(engine.loadContext);
+        result = await engine.loadOptions(engine.loadContext);
         if (i < 5) {
           engine.revealMore();
         }
@@ -1521,7 +1500,7 @@ module(
       const { load } = recordingLoad(() => page(0, 250));
       const engine = new SelectEngine({ load });
 
-      const result = await engine.loadItems(engine.loadContext);
+      const result = await engine.loadOptions(engine.loadContext);
 
       assert.strictEqual(result.length, 250, "no row is discarded");
       assert.false(engine.atCapWithMore, "nothing was clipped");
@@ -1530,14 +1509,14 @@ module(
 
     test("maxLoaded restores the cap and the narrow hint", async function (assert) {
       const { load } = recordingLoad((offset) => ({
-        items: page(offset, 60),
+        options: page(offset, 60),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load, maxLoaded: 120 });
 
       let result;
       for (let i = 0; i < 4; i++) {
-        result = await engine.loadItems(engine.loadContext);
+        result = await engine.loadOptions(engine.loadContext);
         engine.revealMore();
       }
 
@@ -1552,18 +1531,18 @@ module(
         cursors.push(opts.cursor);
         const index = cursors.length;
         return Promise.resolve({
-          items: page((index - 1) * 10, 10),
+          options: page((index - 1) * 10, 10),
           hasMore: true,
           cursor: `after-${index}`,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         cursors,
@@ -1577,22 +1556,22 @@ module(
       const load = (_filter, opts = {}) => {
         cursors.push(opts.cursor);
         return Promise.resolve({
-          items: page(cursors.length * 10, 10),
+          options: page(cursors.length * 10, 10),
           hasMore: true,
           cursor: `after-${cursors.length}`,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       engine.setFilter("q");
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       engine.reload();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         cursors,
@@ -1609,19 +1588,19 @@ module(
           return Promise.reject(new Error("offline"));
         }
         return Promise.resolve({
-          items: page(cursors.length * 10, 10),
+          options: page(cursors.length * 10, 10),
           hasMore: true,
           cursor: `after-${cursors.length}`,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await assert.rejects(engine.loadItems(engine.loadContext), /offline/);
+      await assert.rejects(engine.loadOptions(engine.loadContext), /offline/);
 
       assert.true(engine.revealMore(), "the failed reveal can be retried");
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         cursors,
@@ -1636,15 +1615,15 @@ module(
         pages.push(opts.page);
         // The second page repeats the first, so it adds nothing but still settles.
         const offset = pages.length === 2 ? 0 : (pages.length - 1) * 10;
-        return Promise.resolve({ items: page(offset, 10), hasMore: true });
+        return Promise.resolve({ options: page(offset, 10), hasMore: true });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(pages, [1, 2, 3], "each settled page advances by one");
     });
@@ -1654,21 +1633,21 @@ module(
       const load = (_filter, opts = {}) => {
         pages.push(opts.page);
         return Promise.resolve({
-          items: page(pages.length * 10, 10),
+          options: page(pages.length * 10, 10),
           hasMore: true,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       engine.setFilter("q");
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       engine.reload();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(pages, [1, 2, 1, 1], "a new query starts again");
     });
@@ -1681,17 +1660,17 @@ module(
           return Promise.reject(new Error("offline"));
         }
         return Promise.resolve({
-          items: page(pages.length * 10, 10),
+          options: page(pages.length * 10, 10),
           hasMore: true,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await assert.rejects(engine.loadItems(engine.loadContext), /offline/);
+      await assert.rejects(engine.loadOptions(engine.loadContext), /offline/);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(pages, [1, 2, 2], "a failure is not counted");
     });
@@ -1705,26 +1684,26 @@ module(
           return new Promise((resolve) => (release = resolve));
         }
         return Promise.resolve({
-          items: page(pages.length * 10, 10),
+          options: page(pages.length * 10, 10),
           hasMore: true,
         });
       };
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
       const controller = new AbortController();
-      const aborted = engine.loadItems(engine.loadContext, {
+      const aborted = engine.loadOptions(engine.loadContext, {
         signal: controller.signal,
       });
       await Promise.resolve();
       await Promise.resolve();
       controller.abort();
-      await engine.loadItems(engine.loadContext);
-      release({ items: page(10, 10), hasMore: true });
+      await engine.loadOptions(engine.loadContext);
+      release({ options: page(10, 10), hasMore: true });
       await aborted;
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         pages,
@@ -1742,21 +1721,21 @@ module(
           return new Promise((resolve) => (release = resolve));
         }
         return Promise.resolve({
-          items: page(pages.length * 10, 10),
+          options: page(pages.length * 10, 10),
           hasMore: true,
         });
       };
       const engine = new SelectEngine({ load });
 
-      const stale = engine.loadItems(engine.loadContext);
+      const stale = engine.loadOptions(engine.loadContext);
       await Promise.resolve();
       await Promise.resolve();
       engine.setFilter("current");
-      await engine.loadItems(engine.loadContext);
-      release({ items: page(0, 10), hasMore: true });
+      await engine.loadOptions(engine.loadContext);
+      release({ options: page(0, 10), hasMore: true });
       await stale;
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
 
       assert.deepEqual(
         pages,
@@ -1775,7 +1754,7 @@ module(
       const load = (_filter, opts = {}) => {
         pages.push(opts.page);
         const response = {
-          items: page((opts.page - 1) * 10, 10),
+          options: page((opts.page - 1) * 10, 10),
           hasMore: true,
         };
         if (pages.length === held) {
@@ -1791,7 +1770,7 @@ module(
     /** Aborts the held request once the loader has received it. */
     async function abandon(engine, gate) {
       const controller = new AbortController();
-      const request = engine.loadItems(engine.loadContext, {
+      const request = engine.loadOptions(engine.loadContext, {
         signal: controller.signal,
       });
       for (let tick = 0; !gate.release && tick < 50; tick++) {
@@ -1806,12 +1785,12 @@ module(
       const { load, pages, gate } = heldLoad(2);
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
       const { request: abandoned } = await abandon(engine, gate);
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       gate.release();
       await abandoned;
 
@@ -1828,7 +1807,7 @@ module(
       const engine = new SelectEngine({ load });
 
       const { request: abandoned } = await abandon(engine, gate);
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       gate.release();
       await abandoned;
 
@@ -1839,7 +1818,7 @@ module(
       const { load, pages, gate } = heldLoad(2);
       const engine = new SelectEngine({ load });
 
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       engine.revealMore();
       const { request: abandoned } = await abandon(engine, gate);
       gate.release();
@@ -1850,7 +1829,7 @@ module(
         "the abandoned request ends its load instead of leaving it pending"
       );
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      await engine.loadOptions(engine.loadContext);
       assert.deepEqual(pages, [1, 2, 2], "the reveal asks again for its page");
     });
 
@@ -1865,13 +1844,13 @@ module(
           name: `Item ${offset + i + 1}`,
         }));
       const { load } = recordingLoad((offset) => ({
-        items: countedPage(offset),
+        options: countedPage(offset),
         hasMore: true,
       }));
       const engine = new SelectEngine({ load });
 
       for (let i = 0; i < 10; i++) {
-        await engine.loadItems(engine.loadContext);
+        await engine.loadOptions(engine.loadContext);
         engine.revealMore();
       }
 
@@ -1902,7 +1881,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
       value: counted(items.slice(0, 50).map((item) => item.id)),
     });
     const engine = new SelectEngine({
-      items,
+      options: items,
       multiple: true,
       getValue: () => state.value,
     });
@@ -1911,8 +1890,8 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     for (let rebuild = 0; rebuild < 5; rebuild++) {
       engine.setFilter(rebuild % 2 ? "Item" : "");
       engine.reload();
-      const descriptors = engine.buildItems(
-        engine.loadItems(engine.loadContext)
+      const descriptors = engine.buildRows(
+        engine.loadOptions(engine.loadContext)
       );
       assert.strictEqual(
         descriptors.filter((row) => row.flags.selected).length,
@@ -1933,7 +1912,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     for (let rebuild = 0; rebuild < 5; rebuild++) {
       assert.deepEqual(
         engine
-          .buildItems(items)
+          .buildRows(items)
           .filter((row) => row.flags.selected)
           .map((row) => row.value),
         [900, 901],
@@ -1953,7 +1932,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
       },
     }));
     const engine = new SelectEngine({
-      items,
+      options: items,
       multiple: true,
       getValue: () => value,
     });
@@ -1961,7 +1940,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     conversions = 0;
     for (let rebuild = 0; rebuild < 3; rebuild++) {
       assert.strictEqual(
-        engine.buildItems(items).filter((row) => row.flags.selected).length,
+        engine.buildRows(items).filter((row) => row.flags.selected).length,
         50,
         "object ids match rows by their string form"
       );
@@ -1981,7 +1960,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     const value = trackedArray([1, 2]);
     const changes = [];
     const engine = new SelectEngine({
-      items,
+      options: items,
       multiple: true,
       hideSelected: true,
       getValue: () => value,
@@ -1989,14 +1968,14 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     });
     const before = engine.value;
     assert.deepEqual(
-      engine.buildItems(items).map((row) => row.value),
+      engine.buildRows(items).map((row) => row.value),
       [3, 4, 5],
       "held rows start hidden"
     );
 
     value.splice(0, 1, 3);
     assert.deepEqual(
-      engine.buildItems(items).map((row) => row.value),
+      engine.buildRows(items).map((row) => row.value),
       [1, 4, 5],
       "a same-length splice changes the hidden set"
     );
@@ -2031,7 +2010,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
       "truncating the tracked collection clears the selection"
     );
     assert.deepEqual(
-      engine.buildItems(items).map((row) => row.value),
+      engine.buildRows(items).map((row) => row.value),
       [1, 2, 3, 4, 5],
       "truncating releases every hidden row"
     );
@@ -2042,7 +2021,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     const state = trackedObject({ value: trackedArray([1]) });
     const changes = [];
     const engine = new SelectEngine({
-      items,
+      options: items,
       multiple: true,
       maximum: 2,
       minimum: 2,
@@ -2071,7 +2050,7 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     let multiple = true;
     const value = [2];
     const engine = new SelectEngine({
-      items: clientItems(5),
+      options: clientItems(5),
       getMultiple: () => multiple,
       getValue: () => value,
     });
@@ -2097,9 +2076,10 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
       multiple: true,
     });
     const engine = new SelectEngine({
-      items,
+      options: items,
       getMultiple: () => state.multiple,
       getValue: () => state.value,
+      getArgs: () => ({ noneOption: true }),
     });
     assert.deepEqual(
       engine.value,
@@ -2119,8 +2099,14 @@ module("Unit | ui-kit | SelectEngine | held value reuse", function (hooks) {
     state.value = null;
     assert.strictEqual(engine.value, null, "an empty single selection is null");
     assert.true(
+      engine.isSelected(
+        engine.buildRows([]).find((row) => row.option.none).option
+      ),
+      "the none option represents empty single selection"
+    );
+    assert.false(
       engine.isSelected({ __none: true, id: null }),
-      "the none row represents empty single selection"
+      "a record shaped like the none option is only a record"
     );
     state.multiple = true;
     assert.deepEqual(engine.value, [], "empty multi mode exposes an array");

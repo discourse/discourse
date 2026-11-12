@@ -19,8 +19,8 @@ export default class DividerSelectExample extends Component {
     <DSelect
       @groupBy="offsetMinutes"
       @identifier="sg-divided"
-      @items={{TIMEZONES}}
       @onChange={{this.onChange}}
+      @options={{TIMEZONES}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.content.divided_placeholder"

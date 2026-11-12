@@ -19,9 +19,9 @@ import dRovingFocus, {
 } from "discourse/ui-kit/modifiers/d-roving-focus";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
-  SelectDescriptor,
   SelectLoadRequest,
   SelectRecord,
+  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -36,8 +36,8 @@ interface SelectionStripSignature {
       value: unknown,
       request?: SelectLoadRequest
     ) =>
-      | readonly SelectDescriptor[]
-      | Promise<readonly SelectDescriptor[] | undefined>
+      | readonly SelectRow[]
+      | Promise<readonly SelectRow[] | undefined>
       | undefined;
     /** Whether mutation is disabled. */
     locked: boolean;
@@ -84,7 +84,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
   /** Scrolls a chip added since the last render into the strip's view, so a pick is seen. */
   revealAdded = createModifier<{
     Element: HTMLElement;
-    Args: { Positional: [chips: readonly SelectDescriptor[] | undefined] };
+    Args: { Positional: [chips: readonly SelectRow[] | undefined] };
   }>((element, [chips = []]) => {
     const previous = this.#keys;
     this.#keys = new Set(chips.map((chip) => chip.key));
@@ -132,11 +132,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Handles removal keys before the roving group's activation handler. */
   @action
-  handleKeydown(
-    chip: SelectDescriptor,
-    index: number,
-    event: KeyboardEvent
-  ): void {
+  handleKeydown(chip: SelectRow, index: number, event: KeyboardEvent): void {
     if (event.isComposing) {
       return;
     }
@@ -160,31 +156,27 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Pointer activation preserves focus; assistive activation restores a neighbor. */
   @action
-  removeSelected(
-    chip: SelectDescriptor,
-    index: number,
-    event: MouseEvent
-  ): void {
+  removeSelected(chip: SelectRow, index: number, event: MouseEvent): void {
     event.stopPropagation();
     this.#remove(chip, index, document.activeElement === event.currentTarget);
   }
 
   /** Converts a held item's id to its attribute value. */
-  chipValue(chip: SelectDescriptor): string {
+  chipValue(chip: SelectRow): string {
     return String(chip.value ?? "");
   }
 
   /** Whether a held item is locked, read live because its descriptor is resolved once. */
   @action
-  isLockedChip(chip: SelectDescriptor): boolean {
+  isLockedChip(chip: SelectRow): boolean {
     return this.args.engine.isLockedValue(chip.value);
   }
 
-  #remove(chip: SelectDescriptor, index: number, restoreFocus: boolean): void {
+  #remove(chip: SelectRow, index: number, restoreFocus: boolean): void {
     if (this.args.locked || this.isLockedChip(chip)) {
       return;
     }
-    const item = chip.item;
+    const item = chip.record;
     // Move before the final chip unmounts, so focus never falls through to body.
     const isLast = makeArray(this.args.value).length === 1;
     if (isLast && restoreFocus) {
@@ -245,7 +237,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
             {{#let (this.isLockedChip chip) as |locked|}}
               <li
                 class="d-select__strip-item {{if locked '--locked'}}"
-                data-name={{@engine.getSelectionLabel chip.item}}
+                data-name={{@engine.getSelectionLabel chip.record}}
                 data-value={{this.chipValue chip}}
               >
                 <button
@@ -255,7 +247,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     (and this.capabilities.touch (not locked))
                     (@engine.text
                       "removeSelected"
-                      (hash item=(@engine.getSelectionLabel chip.item))
+                      (hash item=(@engine.getSelectionLabel chip.record))
                     )
                   }}
                   aria-labelledby={{if
@@ -287,21 +279,21 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     class="d-select__strip-label"
                     id="{{this.idPrefix}}-{{index}}-label"
                   >
-                    {{#if chip.item.__unresolved}}
+                    {{#if chip.flags.unresolved}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield chip.item to="unresolved"}}
+                        {{yield chip.record to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
-                          @record={{chip.item}}
+                          @record={{chip.record}}
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield chip.item to="selection"}}
+                      {{yield chip.record to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}
-                        @record={{chip.item}}
+                        @record={{chip.record}}
                       />
                     {{/if}}
                   </span>
@@ -309,7 +301,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     {{~#if locked~}}
                       {{~@engine.text
                         "lockedHint"
-                        (hash item=(@engine.getSelectionLabel chip.item))
+                        (hash item=(@engine.getSelectionLabel chip.record))
                       ~}}
                     {{~else~}}
                       {{~@engine.text "removeHint"~}}

@@ -9,10 +9,11 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
+import { entryRecord, type SelectOptionLike } from "./select-option.ts";
 
 interface ValueResolverInit {
   args: SelectArgsView;
-  knownRows: () => SelectRecord[];
+  knownRecords: () => SelectRecord[];
 }
 
 /** A batch stays alive while any joined caller still needs its values. */
@@ -40,20 +41,23 @@ export default class ValueResolver {
 
   #pending = new Map<string, PendingResolution>();
 
-  // Fallback items that were actually produced by `createUnresolvedRecord`.
+  /** The engine's fallbacks for values that could not be resolved; only its own copies. */
+  #unresolvedRecords = new WeakSet<SelectRecord>();
+
+  // Fallback records that were actually produced by `createUnresolvedRecord`.
   #customUnresolvedRecords = new WeakSet<SelectRecord>();
 
   #args: SelectArgsView;
 
-  // The rows already in hand for the current source, whichever kind it is. A paginated
+  // The records already in hand for the current source, whichever kind it is. A paginated
   // source returns its untracked accumulator; without this rung it would refetch a value
   // whose row is already on screen. Read untracked on purpose — this runs during render,
   // and the fetch path already covers the case where the row has not landed yet.
-  #knownRows: () => SelectRecord[];
+  #knownRecords: () => SelectRecord[];
 
   constructor(opts: ValueResolverInit) {
     this.#args = opts.args;
-    this.#knownRows = opts.knownRows;
+    this.#knownRecords = opts.knownRecords;
   }
 
   resolveSelection(
@@ -90,11 +94,16 @@ export default class ValueResolver {
     return this.resolveOneSync(value);
   }
 
-  /** Whether any non-null value currently resolves to an `__unresolved` fallback. */
+  /** Whether any non-null value currently resolves to an unresolved fallback. */
   hasUnresolved(values: SelectId[]): boolean {
-    return values.some(
-      (value) => value != null && !!this.resolveOneSync(value)?.__unresolved
-    );
+    return values.some((value) => {
+      const record = value == null ? undefined : this.resolveOneSync(value);
+      return !!record && this.isUnresolvedRecord(record);
+    });
+  }
+
+  isUnresolvedRecord(record: SelectRecord): boolean {
+    return this.#unresolvedRecords.has(record);
   }
 
   isCustomUnresolvedRecord(item: SelectRecord): boolean {
@@ -103,12 +112,12 @@ export default class ValueResolver {
 
   evictUnresolved(): void {
     for (const [key, item] of [...this.#resolvedCache.entries()]) {
-      if (item.__unresolved) {
+      if (this.isUnresolvedRecord(item)) {
         this.#resolvedCache.delete(key);
       }
     }
     for (const [key, item] of this.#synchronousOutcomes) {
-      if (item.__unresolved) {
+      if (this.isUnresolvedRecord(item)) {
         this.#synchronousOutcomes.delete(key);
       }
     }
@@ -116,7 +125,7 @@ export default class ValueResolver {
 
   /**
    * Asserts that a held value can be resolved at all. A server source that was never given a
-   * way to answer "what is this id" can only ever fabricate the `__unresolved` fallback, so
+   * way to answer "what is this id" can only ever fabricate the unresolved fallback, so
    * the trigger shows the value as unavailable for the life of the page. It looks correct in the
    * session that picked the value, because the cache still holds it, and breaks on the next
    * load. That is why it fails loudly rather than degrading. Stripped from production builds.
@@ -145,7 +154,7 @@ export default class ValueResolver {
    * The item to show for a value: `valueRecords` → a real recorded outcome → client list →
    * the fallback left by an earlier failed attempt.
    *
-   * An `__unresolved` fallback ranks LAST, so any real source that turns up later — an item
+   * An unresolved fallback ranks LAST, so any real source that turns up later — an item
    * landing in the client list, a re-resolve — supersedes it instead of being masked by it.
    * But it is still a hit, deliberately: a resolve records its outcome, and a read that
    * missed would re-resolve, record again, invalidate the render that read it, and never
@@ -159,11 +168,13 @@ export default class ValueResolver {
     const recorded = this.#recordedOutcomes(key);
     return (
       this.#matching(
-        makeArray(this.#args.valueRecords) as SelectRecord[],
+        (makeArray(this.#args.valueRecords) as SelectOptionLike[]).map(
+          entryRecord
+        ),
         key
       ) ??
-      recorded.find((item) => !item.__unresolved) ??
-      this.#matching(this.#knownRows(), key) ??
+      recorded.find((item) => !this.isUnresolvedRecord(item)) ??
+      this.#matching(this.#knownRecords(), key) ??
       recorded[0]
     );
   }
@@ -176,7 +187,7 @@ export default class ValueResolver {
 
   /**
    * Ordered items for `values`: the sync ladder for what is already known, the pending request
-   * for ids already being fetched, one batch call for the rest, and an `__unresolved` fallback
+   * for ids already being fetched, one batch call for the rest, and an unresolved fallback
    * for whatever still doesn't resolve. Order follows the bound ids, not the response. Never
    * rejects.
    */
@@ -324,7 +335,7 @@ export default class ValueResolver {
 
   /**
    * Records the outcome of an async resolve: real items, so later reads hit the cache
-   * instead of refetching, and `__unresolved` fallbacks, so a trigger can tell "resolved and
+   * instead of refetching, and unresolved fallbacks, so a trigger can tell "resolved and
    * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
    * remains a sync hit, but ranks after real valueRecords/cache/list items; `reload()` evicts it
    * when the caller explicitly retries.
@@ -384,10 +395,10 @@ export default class ValueResolver {
       const result = this.#attempt(() => this.#args.resolveValue?.(v, request));
       return this.#isPromise(result)
         ? result.then(
-            (item) => [v, item] as const,
+            (item) => [v, item && entryRecord(item)] as const,
             () => [v, undefined] as const
           )
-        : ([v, result] as const);
+        : ([v, result && entryRecord(result)] as const);
     });
     return per.some((r) => this.#isPromise(r))
       ? Promise.all(per).then((pairs) => this.#pairsToMap(pairs))
@@ -414,9 +425,10 @@ export default class ValueResolver {
     items: SelectRecord[] | null | undefined
   ): Map<string, SelectRecord> {
     return this.#pairsToMap(
-      (makeArray(items) as SelectRecord[]).map(
-        (item) => [this.#args.recordValue(item), item] as const
-      )
+      (makeArray(items) as SelectOptionLike[]).map((entry) => {
+        const record = entryRecord(entry);
+        return [this.#args.recordValue(record), record] as const;
+      })
     );
   }
 
@@ -434,7 +446,7 @@ export default class ValueResolver {
   }
 
   // Builds the ordered array from the sync hits and the batch results, filling any id that
-  // still did not resolve with an `__unresolved` fallback. Order follows `values`, not the
+  // still did not resolve with an unresolved fallback. Order follows `values`, not the
   // response. Pure — caching the outcome is `#cacheOutcome`'s job, and only off-render.
   #assemble(
     values: SelectId[],
@@ -453,7 +465,7 @@ export default class ValueResolver {
 
   // The fallback for a held id that could not be resolved. `createUnresolvedRecord` names it
   // ("Topic #123"); the default shows the bare id. Either way the engine owns the
-  // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
+  // unresolved marker, so a builder cannot hand back something that reads as resolved.
   #unresolvedRecord(value: SelectId): SelectRecord {
     // Catches a value set after mount that misses the cache. Here it runs inside the
     // trigger's async data source, which turns the throw into a rejection, so the common
@@ -467,18 +479,20 @@ export default class ValueResolver {
         )
       : undefined;
     if (built) {
+      // A copy, so the hook's own object is never marked and a later real resolution
+      // returning it reads as resolved.
       const item = {
-        ...built,
+        ...entryRecord(built),
         [this.#args.valueField]: value,
-        __unresolved: true,
       };
+      this.#unresolvedRecords.add(item);
       this.#customUnresolvedRecords.add(item);
       return item;
     }
     const item: SelectRecord = {
       [this.#args.valueField]: value,
-      __unresolved: true,
     };
+    this.#unresolvedRecords.add(item);
     // Show the value as the label so an unresolved row renders the id, not a blank — unless
     // the label field IS the value field, where it is already present (keeping the raw type).
     if (this.#args.labelField !== this.#args.valueField) {
@@ -496,8 +510,10 @@ export default class ValueResolver {
       return;
     }
     if (
-      item.__unresolved &&
-      this.#recordedOutcomes(key).some((cached) => !cached.__unresolved)
+      this.isUnresolvedRecord(item) &&
+      this.#recordedOutcomes(key).some(
+        (cached) => !this.isUnresolvedRecord(cached)
+      )
     ) {
       return;
     }

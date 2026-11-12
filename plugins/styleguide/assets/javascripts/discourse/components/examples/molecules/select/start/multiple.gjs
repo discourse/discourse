@@ -17,9 +17,9 @@ export default class MultipleSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-multi"
-      @items={{PEOPLE}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @options={{PEOPLE}}
       @texts={{hash
         placeholder=(i18n "styleguide.sections.select.placeholders.add_people")
       }}

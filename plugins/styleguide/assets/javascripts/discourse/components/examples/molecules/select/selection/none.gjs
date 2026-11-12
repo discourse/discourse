@@ -17,9 +17,9 @@ export default class NoneSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-none"
-      @items={{TIMEZONES}}
-      @noneRow={{true}}
+      @noneOption={{true}}
       @onChange={{this.onChange}}
+      @options={{TIMEZONES}}
       @texts={{hash
         noneLabel=(i18n "styleguide.sections.select.none_label")
         placeholder=(i18n

@@ -17,8 +17,8 @@ export default class StaticSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-static"
-      @items={{ACTIVITY_FILTERS}}
       @onChange={{this.onChange}}
+      @options={{ACTIVITY_FILTERS}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.filter_activity"

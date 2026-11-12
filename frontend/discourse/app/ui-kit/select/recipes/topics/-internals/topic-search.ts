@@ -8,7 +8,7 @@ import type {
 
 /**
  * Searches topics: nothing without a term or filters; with a term, titles, a pasted URL or an
- * id, restricted to the archetype when one is given. The topic models are the select's items,
+ * id, restricted to the archetype when one is given. The topic models are the select's records,
  * as both lookups answer them.
  */
 export async function searchTopics(

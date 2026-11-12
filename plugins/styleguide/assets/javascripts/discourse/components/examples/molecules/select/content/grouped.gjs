@@ -25,8 +25,8 @@ export default class GroupedSelectExample extends Component {
       @groupBy="script"
       @groupHeader={{this.groupHeader}}
       @identifier="sg-grouped"
-      @items={{LOCALES}}
       @onChange={{this.onChange}}
+      @options={{LOCALES}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.content.grouped_placeholder"

@@ -52,10 +52,10 @@ export default class GroupsField extends BaseField {
           {{#if this.siteSettings.enable_new_select_controls}}
             <DSelectGroup
               @disabled={{@field.isDisabled}}
-              @items={{this.allGroups}}
               @maximum={{this.maximum}}
               @multiple={{true}}
               @onChange={{this.setGroupField}}
+              @options={{this.allGroups}}
               @texts={{hash ariaLabel=@label}}
               @value={{@field.metadata.value}}
             />

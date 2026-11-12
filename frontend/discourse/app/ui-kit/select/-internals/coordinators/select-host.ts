@@ -16,10 +16,11 @@ import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordina
 import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectEngine, {
-  type SelectDescriptor,
   type SelectEngineInit,
   type SelectLoadRequest,
+  type SelectOptionLike,
   type SelectRecord as SelectRecordModel,
+  type SelectRow,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -49,7 +50,7 @@ export interface SelectHostArgs
       | "maximum"
       | "minimum"
       | "lockedValues"
-      | "items"
+      | "options"
       | "load"
       | "loadContext"
       | "filterBy"
@@ -60,9 +61,9 @@ export interface SelectHostArgs
       | "resolveValue"
       | "resolveValues"
       | "allowCreate"
-      | "createItem"
+      | "createOption"
       | "createUnresolvedRecord"
-      | "specialItems"
+      | "extraOptions"
       | "groupBy"
       | "groupDividers"
       | "groupHeader"
@@ -86,10 +87,10 @@ export interface SelectHostArgs
     text: string,
     context: SelectPasteContext
   ) =>
-    | readonly SelectRecordModel[]
+    | readonly SelectOptionLike[]
     | null
     | undefined
-    | Promise<readonly SelectRecordModel[] | null | undefined>;
+    | Promise<readonly SelectOptionLike[] | null | undefined>;
 }
 
 /** Hosting component callbacks; readers stay live across argument updates. */
@@ -209,11 +210,11 @@ export default class SelectHost {
       getLockedValues: () => this.#init.getArgs().lockedValues,
       getMinimum: () => this.#init.getArgs().minimum,
       getArgs: () => this.#init.getArgs(),
-      items: (config) => {
+      options: (config) => {
         const args = this.#init.getArgs();
-        return typeof args.items === "function"
-          ? args.items(config)
-          : args.items;
+        return typeof args.options === "function"
+          ? args.options(config)
+          : args.options;
       },
       load: this.#init.getArgs().load,
       getLoadContext: () => this.#init.getArgs().loadContext,
@@ -232,9 +233,9 @@ export default class SelectHost {
       resolveValue: this.#init.getArgs().resolveValue,
       resolveValues: this.#init.getArgs().resolveValues,
       getAllowCreate: () => this.#init.getArgs().allowCreate,
-      createItem: this.#init.getArgs().createItem,
+      createOption: this.#init.getArgs().createOption,
       createUnresolvedRecord: this.#init.getArgs().createUnresolvedRecord,
-      specialItems: this.#init.getArgs().specialItems,
+      extraOptions: this.#init.getArgs().extraOptions,
       groupBy: this.#init.getArgs().groupBy,
       groupDividers: this.#init.getArgs().groupDividers,
       groupHeader: this.#init.getArgs().groupHeader,
@@ -300,7 +301,7 @@ export default class SelectHost {
     context: unknown,
     opts?: SelectLoadRequest
   ): SelectListContent | Promise<SelectListContent> {
-    const rawItems = this.engine.loadItems(context, opts);
+    const options = this.engine.loadOptions(context, opts);
     const report = (content: SelectListContent): SelectListContent => {
       if (!isDestroying(this) && !opts?.signal?.aborted) {
         this.query = content.filter;
@@ -309,11 +310,11 @@ export default class SelectHost {
     };
     // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
     // here, so the query read on resolution is the one these rows were fetched for.
-    if (rawItems instanceof Promise) {
-      return rawItems.then((items) =>
+    if (options instanceof Promise) {
+      return options.then((loaded) =>
         report(
           Object.freeze({
-            rawItems: items,
+            options: loaded,
             filter: this.engine.filter,
             query: this.engine.queryKey,
             context: this.engine.requestLoadContext,
@@ -322,7 +323,7 @@ export default class SelectHost {
       );
     }
     const content = Object.freeze({
-      rawItems,
+      options,
       filter: this.engine.filter,
       query: this.engine.queryKey,
       context: this.engine.requestLoadContext,
@@ -335,8 +336,8 @@ export default class SelectHost {
   /**
    * Resolves the bound ids to chip descriptors for the multi trigger. Narrows to the
    * array form; an empty value returns `undefined` (→ `:empty`). Uncached ids resolve in a
-   * single batch, and any id that can't resolve becomes an `__unresolved` fallback chip
-   * (never a hole). Normalizing to descriptors here (not in the template) means the chips
+   * single batch, and any id that can't resolve becomes an unresolved fallback chip
+   * (never a hole). Normalizing to rows here (not in the template) means the chips
    * are built once per value change and stay referentially stable across re-renders.
    */
   @action
@@ -344,28 +345,28 @@ export default class SelectHost {
     value: unknown,
     opts?: SelectLoadRequest
   ):
-    | readonly SelectDescriptor[]
-    | Promise<readonly SelectDescriptor[] | undefined>
+    | readonly SelectRow[]
+    | Promise<readonly SelectRow[] | undefined>
     | undefined {
     const resolved = this.engine.resolveSelection(value as SelectValue, opts);
     if (resolved == null) {
       return undefined;
     }
     if (resolved instanceof Promise) {
-      return resolved.then((items) =>
-        items === undefined
+      return resolved.then((records) =>
+        records === undefined
           ? undefined
-          : this.engine.describeItems(items as SelectRecordModel[])
+          : this.engine.describeRecords(records as SelectRecordModel[])
       );
     }
-    return this.engine.describeItems(resolved as SelectRecordModel[]);
+    return this.engine.describeRecords(resolved as SelectRecordModel[]);
   }
 
   /**
    * Resolves the single bound value to its one display item for the trigger
    * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
    * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
-   * comes back as an `__unresolved` fallback item rather than `undefined`.
+   * comes back as an unresolved fallback record rather than `undefined`.
    */
   @action
   resolveSingle(
@@ -421,12 +422,12 @@ export default class SelectHost {
     return this.engine.update(
       (scope) => {
         const apply = (
-          items: readonly SelectRecordModel[] | null | undefined
+          entries: readonly SelectOptionLike[] | null | undefined
         ) => {
-          if (items == null || !scope.current) {
+          if (entries == null || !scope.current) {
             return;
           }
-          scope.selectMany(items);
+          scope.selectMany(entries);
           // Middleware may synchronously replace the selection intent or edit the query.
           if (
             scope.current &&

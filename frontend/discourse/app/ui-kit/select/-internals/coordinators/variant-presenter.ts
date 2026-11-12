@@ -489,7 +489,7 @@ export default class VariantPresenter
   get fallbackSelectionLabel(): string {
     const value = this.#engine.value;
     const resolved = this.#engine.resolveSingleSync(value);
-    if (resolved?.__unresolved) {
+    if (resolved && this.#engine.isUnresolvedRecord(resolved)) {
       return this.#engine.getSelectionLabel(resolved);
     }
     return this.#engine.getSingleSelectionLabel(value);

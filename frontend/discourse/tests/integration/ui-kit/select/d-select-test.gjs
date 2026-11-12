@@ -36,6 +36,7 @@ import SelectOptionContent from "discourse/ui-kit/select/-internals/parts/select
 import DSelect from "discourse/ui-kit/select/d-select";
 import SelectEngine, {
   renderSelectText,
+  selectOption,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -45,22 +46,22 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
   test("trigger frame preserves the DOM structure across variants", async function (assert) {
     await render(
       <template>
-        <DSelect class="frame-typeahead" @items={{ITEMS}} @value={{1}} />
+        <DSelect class="frame-typeahead" @options={{ITEMS}} @value={{1}} />
         <DSelect
           class="frame-multi"
-          @items={{ITEMS}}
           @multiple={{true}}
+          @options={{ITEMS}}
           @value={{array 1 2}}
         />
         <DSelect
           class="frame-button"
-          @items={{ITEMS}}
+          @options={{ITEMS}}
           @value={{1}}
           @variant="button"
         />
         <DSelect
           class="frame-static"
-          @items={{ITEMS}}
+          @options={{ITEMS}}
           @value={{1}}
           @variant="static"
         />
@@ -98,10 +99,10 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
   test("empty variants use the same field height", async function (assert) {
     await render(
       <template>
-        <DSelect class="layout-typeahead" @items={{ITEMS}} />
-        <DSelect class="layout-button" @items={{ITEMS}} @variant="button" />
-        <DSelect class="layout-static" @items={{ITEMS}} @variant="static" />
-        <DSelect class="layout-multi" @items={{ITEMS}} @multiple={{true}} />
+        <DSelect class="layout-typeahead" @options={{ITEMS}} />
+        <DSelect class="layout-button" @options={{ITEMS}} @variant="button" />
+        <DSelect class="layout-static" @options={{ITEMS}} @variant="static" />
+        <DSelect class="layout-multi" @multiple={{true}} @options={{ITEMS}} />
       </template>
     );
 
@@ -166,7 +167,7 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     await render(
       <template>
         <div style="width: 24rem;">
-          <DSelect @items={{ITEMS}} @variant="button" />
+          <DSelect @options={{ITEMS}} @variant="button" />
         </div>
       </template>
     );
@@ -192,7 +193,7 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
     await render(
       <template>
         <div style="width: 500px;">
-          <DSelect @items={{ITEMS}} @variant="button" />
+          <DSelect @options={{ITEMS}} @variant="button" />
         </div>
       </template>
     );
@@ -314,7 +315,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{items}} @value="banana" @valueField="slug" />
+        <DSelect @options={{items}} @value="banana" @valueField="slug" />
       </template>
     );
 
@@ -340,8 +341,8 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{items}}
           @labelField="title"
+          @options={{items}}
           @texts={{hash placeholder="Pick one"}}
           @value={{1}}
         >
@@ -501,7 +502,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
   test("a select without a selection block needs no description", async function (assert) {
     await render(
-      <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
+      <template><DSelect @options={{ITEMS}} @value={{1}} /></template>
     );
 
     assert
@@ -598,8 +599,8 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
         >flip</button>
         <DSelect
           @identifier="test-select"
-          @items={{ITEMS}}
           @multiple={{this.multiple}}
+          @options={{ITEMS}}
           @value={{array 2}}
         />
       </template>
@@ -615,13 +616,13 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
   test("auto-highlight skips a disabled first match", async function (assert) {
     const items = [
-      { id: 1, name: "Apple", disabled: true },
+      selectOption({ id: 1, name: "Apple" }, { disabled: true }),
       { id: 2, name: "Apricot" },
     ];
 
     await render(
       <template>
-        <DSelect @identifier="test-select" @items={{items}} />
+        <DSelect @identifier="test-select" @options={{items}} />
       </template>
     );
     await fillIn("[role='combobox']", "ap");
@@ -1140,7 +1141,7 @@ module(
         <template>
           <DSelect
             class="kt"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Fruit"}}
             @value={{2}}
           />
@@ -1166,7 +1167,7 @@ module(
     ]) {
       test(`${name} opens the modal with focus in its query input`, async function (assert) {
         await render(
-          <template><DSelect class="kt" @items={{ITEMS}} /></template>
+          <template><DSelect class="kt" @options={{ITEMS}} /></template>
         );
 
         await focus(".kt");
@@ -1181,7 +1182,7 @@ module(
 
     test("Escape closes the modal and returns focus to the root", async function (assert) {
       await render(
-        <template><DSelect class="kt" @items={{ITEMS}} /></template>
+        <template><DSelect class="kt" @options={{ITEMS}} /></template>
       );
 
       await focus(".kt");
@@ -1202,7 +1203,7 @@ module(
           <DSelect
             class="kt"
             @disabled={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{2}}
           />
         </template>
@@ -1223,7 +1224,7 @@ module(
         <template>
           <DSelect
             class="kt"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @readonly={{true}}
             @value={{2}}
           />
@@ -1249,7 +1250,7 @@ module(
             @describedBy="fruit-help"
             @id="fruit-field"
             @invalid={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -1297,7 +1298,7 @@ module(
             class="kt"
             @icon="gear"
             @iconOnly={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
           />
@@ -1309,7 +1310,7 @@ module(
     });
 
     test("ArrowUp opens the modal and focuses its query input", async function (assert) {
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
 
       await focus(".d-select");
       await triggerKeyEvent(".d-select", "keydown", "ArrowUp");
@@ -1321,7 +1322,7 @@ module(
     });
 
     test("aria-controls references the listbox only while open", async function (assert) {
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
 
       assert
         .dom(".d-select")
@@ -1362,9 +1363,9 @@ module(
             <template>
               <DSelect
                 @clearable={{false}}
-                @items={{ITEMS}}
                 @multiple={{multiple}}
                 @onChange={{onChange}}
+                @options={{ITEMS}}
                 @value={{value.value}}
               />
             </template>
@@ -1402,7 +1403,7 @@ module(
     test("a desktop typeahead root stays a plain wrapper around its input", async function (assert) {
       await render(
         <template>
-          <DSelect class="kt" @id="fruit-field" @items={{ITEMS}} />
+          <DSelect class="kt" @id="fruit-field" @options={{ITEMS}} />
         </template>
       );
 
@@ -1423,7 +1424,7 @@ module(
             class="kt"
             @icon="gear"
             @iconOnly={{true}}
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Settings"}}
             @value={{2}}
           />
@@ -1570,7 +1571,7 @@ module(
     // reader had moved on from and could no longer see a reason for.
     test("closing clears the panel filter so the next open starts whole", async function (assert) {
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
 
       await click(".d-select__trigger");
@@ -1748,13 +1749,17 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
 
   test("keyboard opening skips a disabled first option", async function (assert) {
     const items = [
-      { id: 1, name: "Apple", disabled: true },
+      selectOption({ id: 1, name: "Apple" }, { disabled: true }),
       { id: 2, name: "Banana" },
     ];
 
     await render(
       <template>
-        <DSelect @identifier="test-select" @items={{items}} @variant="static" />
+        <DSelect
+          @identifier="test-select"
+          @options={{items}}
+          @variant="static"
+        />
       </template>
     );
     await focus(".d-select__trigger");
@@ -2036,7 +2041,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{minChars.value}} />
+          <DSelect @minChars={{minChars.value}} @options={{ITEMS}} />
         </template>
       );
       await click("[role='combobox']");
@@ -2057,7 +2062,7 @@ module(
       setupOnerror((error) => messages.push(error.message));
 
       await render(
-        <template><DSelect @items={{ITEMS}} @minChars={{0}} /></template>
+        <template><DSelect @minChars={{0}} @options={{ITEMS}} /></template>
       );
       await click("[role='combobox']");
 
@@ -2096,7 +2101,7 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @variant="button"
           />
         </template>
@@ -2151,16 +2156,16 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash placeholder="Choose an option"}}
             @value={{1}}
           >
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -2213,20 +2218,19 @@ module(
     });
 
     test("a create-enabled select offers no create row below @minChars", async function (assert) {
-      const createItem = (filter) => ({
+      const createOption = (filter) => ({
         id: filter,
         name: filter,
-        __create: true,
       });
 
       await render(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @identifier="test-select"
-            @items={{ITEMS}}
             @minChars={{3}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -2245,19 +2249,18 @@ module(
     });
 
     test("a create-enabled select offers a create row when the source has no matches", async function (assert) {
-      const createItem = (filter) => ({
+      const createOption = (filter) => ({
         id: filter,
         name: filter,
-        __create: true,
       });
 
       await render(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createItem}}
+            @createOption={{createOption}}
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -2278,7 +2281,11 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+          <DSelect
+            @identifier="test-select"
+            @minChars={{3}}
+            @options={{ITEMS}}
+          />
         </template>
       );
 
@@ -2304,7 +2311,11 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+          <DSelect
+            @identifier="test-select"
+            @minChars={{3}}
+            @options={{ITEMS}}
+          />
         </template>
       );
 
@@ -2321,7 +2332,11 @@ module(
     test("below @minChars the combobox advertises no listbox reference", async function (assert) {
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+          <DSelect
+            @identifier="test-select"
+            @minChars={{3}}
+            @options={{ITEMS}}
+          />
         </template>
       );
 
@@ -2347,8 +2362,8 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @minChars={{3}}
+            @options={{ITEMS}}
             @variant="button"
           />
         </template>
@@ -2371,7 +2386,7 @@ module(
           <DSelect
             @debounce={{true}}
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @variant="button"
           />
         </template>
@@ -2398,7 +2413,11 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
+          <DSelect
+            @identifier="test-select"
+            @minChars={{3}}
+            @options={{ITEMS}}
+          />
         </template>
       );
 
@@ -2430,9 +2449,9 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @onClose={{onClose}}
             @onShow={{onShow}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -2458,7 +2477,7 @@ module(
     test("a consumer :empty block replaces the default text but keeps the status live-region", async function (assert) {
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}}>
+          <DSelect @identifier="test-select" @options={{ITEMS}}>
             <:empty><span class="custom-empty">No luck</span></:empty>
           </DSelect>
         </template>
@@ -2488,8 +2507,8 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @onShow={{onShow}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -2507,7 +2526,7 @@ module(
     test("without an :empty block the default no-results still shows", async function (assert) {
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} />
+          <DSelect @identifier="test-select" @options={{ITEMS}} />
         </template>
       );
 
@@ -2523,7 +2542,7 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @placement="bottom-end"
           />
         </template>
@@ -2547,7 +2566,11 @@ module(
       // gap (offset 10) is only a few pixels.
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} @offset={{200}} />
+          <DSelect
+            @identifier="test-select"
+            @offset={{200}}
+            @options={{ITEMS}}
+          />
         </template>
       );
 
@@ -2586,9 +2609,9 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @onChange={{this.onChange}}
             @onShow={{this.onShow}}
+            @options={{ITEMS}}
             @value={{this.value}}
           />
           <p class="repro-count">{{this.count}}</p>
@@ -2621,16 +2644,16 @@ module(
         <template>
           <DSelect
             class="callback-button"
-            @items={{ITEMS}}
             @onClose={{buttonOnClose}}
             @onShow={{buttonOnShow}}
+            @options={{ITEMS}}
             @variant="button"
           />
           <DSelect
             class="callback-static"
-            @items={{ITEMS}}
             @onClose={{staticOnClose}}
             @onShow={{staticOnShow}}
+            @options={{ITEMS}}
             @variant="static"
           />
         </template>
@@ -2677,7 +2700,7 @@ module(
     test("the consumer :empty block stays hidden while results are available", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @variant="button">
+          <DSelect @options={{ITEMS}} @variant="button">
             <:empty><span class="unexpected-empty">No matches</span></:empty>
           </DSelect>
         </template>
@@ -2699,8 +2722,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @offset={{200}}
+            @options={{ITEMS}}
             @placement="top-end"
             @variant="button"
           />
@@ -2729,14 +2752,14 @@ module(
 
     test("auto-highlighting the first option on open does not call scrollIntoView", async function (assert) {
       // The overlay is portalled and positioned by floating-ui asynchronously. A synchronous
-      // `@items` source renders the options immediately, before that positioning, so the
+      // `@options` source renders the options immediately, before that positioning, so the
       // first option is still at the portal root (top of page). `scrollIntoView` on it would
       // scroll the whole page there; the roving highlight must scroll within the listbox only.
       const spy = sinon.spy(HTMLElement.prototype, "scrollIntoView");
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{ITEMS}} />
+          <DSelect @identifier="test-select" @options={{ITEMS}} />
         </template>
       );
       spy.resetHistory();
@@ -2761,7 +2784,7 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
+          <DSelect @identifier="test-select" @options={{many}} @value={{30}} />
         </template>
       );
       spy.resetHistory();
@@ -2792,7 +2815,7 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
+          <DSelect @identifier="test-select" @options={{many}} @value={{30}} />
         </template>
       );
 
@@ -2815,7 +2838,7 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{many}} />
+          <DSelect @identifier="test-select" @options={{many}} />
         </template>
       );
 
@@ -2850,7 +2873,7 @@ module(
 
       await render(
         <template>
-          <DSelect @identifier="test-select" @items={{many}} />
+          <DSelect @identifier="test-select" @options={{many}} />
         </template>
       );
 
@@ -2887,7 +2910,7 @@ module(
       // if it were not cleared on close, a reopened list would render a stale `--active` with
       // no matching aria-activedescendant.
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
 
       await click(".d-select__trigger");
@@ -2912,7 +2935,7 @@ module(
         <template>
           <DSelect
             class="lbl-static"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Category"}}
             @value={{1}}
             @variant="static"
@@ -2920,13 +2943,13 @@ module(
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
           <DSelect
             class="lbl-button"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @texts={{hash ariaLabel="Category"}}
             @value={{1}}
             @variant="button"
@@ -2934,9 +2957,9 @@ module(
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -2965,7 +2988,7 @@ module(
         <template>
           <DSelect
             class="ro-btn"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @readonly={{true}}
             @value={{1}}
             @variant="button"
@@ -2973,9 +2996,9 @@ module(
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       );
@@ -3009,16 +3032,16 @@ module(
           <DSelect
             @disabled={{this.locked}}
             @identifier="test-select"
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @value={{1}}
             @variant="static"
           >
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       }
@@ -3045,7 +3068,7 @@ module(
         getValue: () => state.value,
         onChange: (next) => (state.value = next),
       });
-      const descriptor = engine.buildItems(ITEMS)[1];
+      const descriptor = engine.buildRows(ITEMS)[1];
 
       class LockedItemHost extends Component {
         @tracked locked = true;
@@ -3065,7 +3088,7 @@ module(
               @engine={{engine}}
               @locked={{this.locked}}
             >
-              {{descriptor.item.name}}
+              {{descriptor.record.name}}
             </SelectOptionContent>
           </ul>
         </template>
@@ -3101,17 +3124,17 @@ module(
         <template>
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @multiple={{true}}
             @onChange={{this.onChange}}
+            @options={{ITEMS}}
             @value={{this.value}}
           >
             <:selection as |item|>
               {{~item.name~}}
             </:selection>
-            <:item as |item|>
+            <:option as |item|>
               {{~item.name~}}
-            </:item>
+            </:option>
           </DSelect>
         </template>
       }
@@ -3152,7 +3175,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
+          <DSelect @onChange={{onChange}} @options={{ITEMS}} @value={{2}} />
         </template>
       );
 
@@ -3172,7 +3195,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
+          <DSelect @onChange={{onChange}} @options={{ITEMS}} @value={{2}} />
         </template>
       );
 
@@ -3201,8 +3224,8 @@ module(
           <input class="elsewhere" />
           <DSelect
             @identifier="test-select"
-            @items={{ITEMS}}
             @kind="test-select"
+            @options={{ITEMS}}
             @value={{2}}
           />
         </template>
@@ -3241,7 +3264,7 @@ module("Integration | ui-kit | select | DSelect (refilter)", function (hooks) {
         ? ALL.filter((item) => item.name.includes(filter))
         : ALL;
       return Promise.resolve({
-        items: matched.slice(offset, offset + limit),
+        options: matched.slice(offset, offset + limit),
         total: matched.length,
       });
     };
@@ -3289,7 +3312,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   }
 
   test("options carry their value and name", async function (assert) {
-    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await render(<template><DSelect @options={{ITEMS}} /></template>);
     await click("[role='combobox']");
 
     assert
@@ -3307,8 +3330,8 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @noneRow={{true}}
+          @noneOption={{true}}
+          @options={{ITEMS}}
           @texts={{hash noneLabel="None"}}
         />
       </template>
@@ -3322,18 +3345,17 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   });
 
   test("a create row carries the typed text as its value", async function (assert) {
-    const createItem = (filter) => ({
+    const createOption = (filter) => ({
       id: filter,
       name: filter,
-      __create: true,
     });
 
     await render(
       <template>
         <DSelect
           @allowCreate={{true}}
-          @createItem={{createItem}}
-          @items={{ITEMS}}
+          @createOption={{createOption}}
+          @options={{ITEMS}}
         />
       </template>
     );
@@ -3349,8 +3371,8 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("the root carries the held value and name", async function (assert) {
     await render(
       <template>
-        <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
-        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+        <div class="held"><DSelect @options={{ITEMS}} @value={{2}} /></div>
+        <div class="empty"><DSelect @options={{ITEMS}} /></div>
       </template>
     );
 
@@ -3369,7 +3391,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{ITEMS}} @multiple={{true}} @value={{held}} />
+        <DSelect @multiple={{true}} @options={{ITEMS}} @value={{held}} />
       </template>
     );
 
@@ -3400,7 +3422,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
       <template>
         <DSelect
           @createUnresolvedRecord={{createUnresolvedRecord}}
-          @items={{ITEMS}}
+          @options={{ITEMS}}
           @value={{99}}
           @variant="static"
         />
@@ -3417,7 +3439,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
     const held = tracked(1);
 
     await render(
-      <template><DSelect @items={{ITEMS}} @value={{held.value}} /></template>
+      <template><DSelect @options={{ITEMS}} @value={{held.value}} /></template>
     );
     assert.dom(".d-select").hasAttribute("data-value", "1");
 
@@ -3432,8 +3454,8 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("the root and its panel share a link that is unique per select", async function (assert) {
     await render(
       <template>
-        <div class="first"><DSelect @items={{ITEMS}} /></div>
-        <div class="second"><DSelect @items={{ITEMS}} /></div>
+        <div class="first"><DSelect @options={{ITEMS}} /></div>
+        <div class="second"><DSelect @options={{ITEMS}} /></div>
       </template>
     );
     const first = find(".first .d-select").dataset.selectId;
@@ -3456,11 +3478,14 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
 
     await render(
       <template>
-        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+        <div class="empty"><DSelect @options={{ITEMS}} /></div>
         <div class="error">
           <DSelect @debounce={{false}} @load={{failing}} @variant="button" />
         </div>
-        <div class="minimum"><DSelect @items={{ITEMS}} @minChars={{2}} /></div>
+        <div class="minimum"><DSelect
+            @minChars={{2}}
+            @options={{ITEMS}}
+          /></div>
       </template>
     );
 
@@ -3486,7 +3511,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("the mobile modal's panel carries the link", async function (assert) {
     forceMobile();
 
-    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await render(<template><DSelect @options={{ITEMS}} /></template>);
     await click(".d-select__trigger");
     const link = find(".d-select").dataset.selectId;
 
@@ -3505,9 +3530,9 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{items}}
           @labelField="title"
           @multiple={{true}}
+          @options={{items}}
           @value={{held.value}}
           @valueField="key"
         />
@@ -3580,8 +3605,8 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
       <template>
         <DSelect
           @createUnresolvedRecord={{createUnresolvedRecord}}
-          @items={{ITEMS}}
           @multiple={{true}}
+          @options={{ITEMS}}
           @resolveValues={{resolveValues}}
           @value={{held}}
           @valueRecords={{items.value}}
@@ -3700,7 +3725,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("default unresolved labels match the displayed selection", async function (assert) {
     await render(
       <template>
-        <DSelect @items={{ITEMS}} @value={{99}} @variant="static" />
+        <DSelect @options={{ITEMS}} @value={{99}} @variant="static" />
       </template>
     );
     assert
@@ -3786,7 +3811,7 @@ module(
         test(`open and close a ${variant} select`, async function (assert) {
           await render(
             <template>
-              <DSelect @items={{ITEMS}} @variant={{variant}} />
+              <DSelect @options={{ITEMS}} @variant={{variant}} />
             </template>
           );
           const select = dSelect(".d-select");
@@ -3808,10 +3833,10 @@ module(
         await render(
           <template>
             <div class="first">
-              <DSelect @items={{ITEMS}} @onChange={{first}} />
+              <DSelect @onChange={{first}} @options={{ITEMS}} />
             </div>
             <div class="second">
-              <DSelect @items={{ITEMS}} @onChange={{second}} />
+              <DSelect @onChange={{second}} @options={{ITEMS}} />
             </div>
           </template>
         );
@@ -3827,7 +3852,7 @@ module(
 
         await render(
           <template>
-            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+            <DSelect @onChange={{onChange}} @options={{ITEMS}} />
           </template>
         );
         await dSelect(".d-select").select(2);
@@ -3844,8 +3869,8 @@ module(
             <DSelect
               @groupBy="section"
               @groupHeader={{groupHeader}}
-              @items={{SECTIONED}}
               @onChange={{onChange}}
+              @options={{SECTIONED}}
             />
           </template>
         );
@@ -3877,7 +3902,7 @@ module(
 
       test("search uses the panel filter on a button select", async function (assert) {
         await render(
-          <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+          <template><DSelect @options={{ITEMS}} @variant="button" /></template>
         );
 
         await dSelect(".d-select").search("ban");
@@ -3895,7 +3920,7 @@ module(
 
         await render(
           <template>
-            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+            <DSelect @onChange={{onChange}} @options={{ITEMS}} />
           </template>
         );
         const select = dSelect(".d-select");
@@ -3913,9 +3938,9 @@ module(
         await render(
           <template>
             <DSelect
-              @items={{ITEMS}}
               @multiple={{true}}
               @onChange={{onChange}}
+              @options={{ITEMS}}
               @value={{held}}
             />
           </template>
@@ -3932,8 +3957,8 @@ module(
           <template>
             <DSelect
               @clearable={{true}}
-              @items={{ITEMS}}
               @onChange={{onChange}}
+              @options={{ITEMS}}
               @value={{2}}
               @variant="static"
             />
@@ -3947,7 +3972,7 @@ module(
       test("a typeahead resolves from the id on its input, and an element works as a root", async function (assert) {
         await render(
           <template>
-            <DSelect @id="fruit-picker" @items={{ITEMS}} @value={{2}} />
+            <DSelect @id="fruit-picker" @options={{ITEMS}} @value={{2}} />
           </template>
         );
 
@@ -3968,9 +3993,9 @@ module(
       test("selection checks pass on the held state", async function (assert) {
         await render(
           <template>
-            <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
+            <div class="held"><DSelect @options={{ITEMS}} @value={{2}} /></div>
             <div class="empty">
-              <DSelect @items={{ITEMS}} @variant="button" />
+              <DSelect @options={{ITEMS}} @variant="button" />
             </div>
           </template>
         );
@@ -3983,7 +4008,7 @@ module(
 
       test("selection checks fail with a message that names the select", async function (assert) {
         await render(
-          <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+          <template><DSelect @options={{ITEMS}} @value={{2}} /></template>
         );
 
         const results = captured(assert, () => {
@@ -4004,10 +4029,13 @@ module(
       });
 
       test("option checks read the open panel", async function (assert) {
-        const items = [...ITEMS, { id: 4, name: "Durian", disabled: true }];
+        const items = [
+          ...ITEMS,
+          selectOption({ id: 4, name: "Durian" }, { disabled: true }),
+        ];
 
         await render(
-          <template><DSelect @items={{items}} @value={{2}} /></template>
+          <template><DSelect @options={{items}} @value={{2}} /></template>
         );
         await dSelect(".d-select").open();
 
@@ -4034,7 +4062,7 @@ module(
       });
 
       test("option checks fail on a closed select instead of opening it", async function (assert) {
-        await render(<template><DSelect @items={{ITEMS}} /></template>);
+        await render(<template><DSelect @options={{ITEMS}} /></template>);
 
         const results = captured(assert, () =>
           assert.dSelect(".d-select").hasOption(1)
@@ -4055,8 +4083,8 @@ module(
 
         await render(
           <template>
-            <div class="first"><DSelect @items={{ITEMS}} /></div>
-            <div class="second"><DSelect @items={{other}} /></div>
+            <div class="first"><DSelect @options={{ITEMS}} /></div>
+            <div class="second"><DSelect @options={{other}} /></div>
           </template>
         );
         await dSelect(".first .d-select").open();
@@ -4083,12 +4111,12 @@ module(
         await render(
           <template>
             <div class="locked">
-              <DSelect @disabled={{true}} @items={{ITEMS}} />
+              <DSelect @disabled={{true}} @options={{ITEMS}} />
             </div>
             <div class="clearable">
               <DSelect
                 @clearable={{true}}
-                @items={{ITEMS}}
+                @options={{ITEMS}}
                 @value={{1}}
                 @variant="static"
               />
@@ -4120,7 +4148,9 @@ module(
     for (const variant of ["typeahead", "button", "static"]) {
       test(`repeated open and close are harmless for ${variant}`, async function (assert) {
         await render(
-          <template><DSelect @items={{ITEMS}} @variant={{variant}} /></template>
+          <template>
+            <DSelect @options={{ITEMS}} @variant={{variant}} />
+          </template>
         );
         const select = dSelect();
         await select.close();
@@ -4136,7 +4166,7 @@ module(
     test("close works on mobile", async function (assert) {
       forceMobile();
       await render(
-        <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+        <template><DSelect @options={{ITEMS}} @value={{2}} /></template>
       );
       const select = dSelect();
       assert.dSelect().hasLabel("Banana");
@@ -4148,7 +4178,7 @@ module(
     });
 
     test("every closed option check records one named failure", async function (assert) {
-      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await render(<template><DSelect @options={{ITEMS}} /></template>);
       const results = [];
       const original = assert.pushResult;
       assert.pushResult = (result) => results.push(result);
@@ -4190,7 +4220,7 @@ module(
       ];
       await render(
         <template>
-          <DefaultHost @items={{items}} @value={{value}} @variant="button" />
+          <DefaultHost @options={{items}} @value={{value}} @variant="button" />
         </template>
       );
       assert.dSelect().hasValue(value);
@@ -4212,8 +4242,8 @@ module(
       const other = [{ id: 9, name: "Other" }];
       await render(
         <template>
-          <div class="first"><DSelect @items={{ITEMS}} /></div>
-          <div class="second"><DSelect @items={{other}} /></div>
+          <div class="first"><DSelect @options={{ITEMS}} /></div>
+          <div class="second"><DSelect @options={{other}} /></div>
         </template>
       );
       await dSelect(".first .d-select").open();
@@ -4249,7 +4279,7 @@ module(
     test("labels read custom visible content rather than the name hook", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{2}} @variant="button">
+          <DSelect @options={{ITEMS}} @value={{2}} @variant="button">
             <:selection>Chosen fruit</:selection>
           </DSelect>
         </template>
@@ -4268,13 +4298,12 @@ function deferredLoad() {
 }
 
 /** A create item named only by the typed text; the engine supplies the "Create" wording. */
-const createTyped = (filter) => ({ id: filter, name: filter, __create: true });
+const createTyped = (filter) => ({ id: filter, name: filter });
 
 /** A create item whose id can never collide with a source row's id. */
 const createKeyed = (filter) => ({
   id: `new:${filter}`,
   name: filter,
-  __create: true,
 });
 
 module(
@@ -4292,8 +4321,8 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createKeyed}}
-            @items={{items}}
+            @createOption={{createKeyed}}
+            @options={{items}}
           />
         </template>
       );
@@ -4318,9 +4347,9 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createKeyed}}
-            @items={{items}}
+            @createOption={{createKeyed}}
             @onChange={{onChange}}
+            @options={{items}}
           />
         </template>
       );
@@ -4339,8 +4368,8 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createKeyed}}
-            @items={{ITEMS}}
+            @createOption={{createKeyed}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -4359,8 +4388,8 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createKeyed}}
-            @items={{items}}
+            @createOption={{createKeyed}}
+            @options={{items}}
           />
         </template>
       );
@@ -4378,8 +4407,8 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createTyped}}
-            @items={{items}}
+            @createOption={{createTyped}}
+            @options={{items}}
           />
         </template>
       );
@@ -4395,8 +4424,8 @@ module(
         <template>
           <DSelect
             @allowCreate={{true}}
-            @createItem={{createKeyed}}
-            @items={{ITEMS}}
+            @createOption={{createKeyed}}
+            @options={{ITEMS}}
           />
         </template>
       );
@@ -4418,7 +4447,7 @@ module(
         <template>
           <DSelect
             @allowCreate={{allowCreate}}
-            @createItem={{createKeyed}}
+            @createOption={{createKeyed}}
             @load={{load}}
           />
         </template>
@@ -4463,7 +4492,7 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
+            @options={{ITEMS}}
             @searchIcon="magnifying-glass"
             @variant="button"
           />
@@ -4500,7 +4529,7 @@ module(
 
     test("kind modifier: the overlay names its kind for styling", async function (assert) {
       await render(
-        <template><DSelect @items={{ITEMS}} @kind="fruit" /></template>
+        <template><DSelect @kind="fruit" @options={{ITEMS}} /></template>
       );
       await click("[role='combobox']");
 
@@ -4509,7 +4538,7 @@ module(
 
     test("searchIcon is absent unless asked for", async function (assert) {
       await render(
-        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        <template><DSelect @options={{ITEMS}} @variant="button" /></template>
       );
       await click(".d-select__trigger");
 
@@ -4522,8 +4551,8 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @multiple={{true}}
+            @options={{ITEMS}}
             @panelChips={{true}}
             @searchIcon="magnifying-glass"
             @value={{held}}
@@ -4549,7 +4578,7 @@ module(
     test("searchIcon never decorates a desktop typeahead trigger", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+          <DSelect @options={{ITEMS}} @searchIcon="magnifying-glass" />
         </template>
       );
       await click("[role='combobox']");
@@ -4562,7 +4591,7 @@ module(
       forceMobile();
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @searchIcon="magnifying-glass" />
+          <DSelect @options={{ITEMS}} @searchIcon="magnifying-glass" />
         </template>
       );
       await click(".d-select__trigger");
@@ -4608,9 +4637,9 @@ module(
         <template>
           <DSelect
             @identifier="held-builder"
-            @items={{ITEMS}}
             @kind="held-builder-kind"
             @kindTexts={{kindTexts}}
+            @options={{ITEMS}}
             @value="none"
             @valueRecords={{valueRecords}}
           />

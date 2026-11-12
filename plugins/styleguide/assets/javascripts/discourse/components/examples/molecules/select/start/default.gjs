@@ -23,8 +23,8 @@ export default class DefaultSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-default"
-      @items={{this.items}}
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @texts={{hash
         placeholder=(i18n
           "styleguide.sections.select.placeholders.choose_status"

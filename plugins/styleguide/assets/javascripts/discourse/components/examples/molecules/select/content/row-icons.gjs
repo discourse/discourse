@@ -18,17 +18,17 @@ export default class RowIconsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-row-icons"
-      @items={{this.items}}
       @labelField="title"
       @onChange={{this.onChange}}
+      @options={{this.items}}
       @value={{this.value}}
     >
-      <:item as |visibility|>
+      <:option as |visibility|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon visibility.icon}}
           <span class="select-examples__primary">{{visibility.title}}</span>
         </span>
-      </:item>
+      </:option>
     </DSelect>
   </template>
 }
