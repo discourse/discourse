@@ -272,6 +272,10 @@ class InviteRedeemer
   # existing users redeeming the invite.
   def grant_moderator_from_invite
     return if !invite.moderator? || !invite.invited_by&.staff?
+    # The API can set both admin and moderator on one invite. Those are granted
+    # and logged in create_admin_grant_confirmation, so skip them here to avoid
+    # logging the same grant twice.
+    return if InviteRedeemer.admin_invite_grantable?(invite)
 
     invited_user.grant_moderation! if !invited_user.moderator?
     StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)

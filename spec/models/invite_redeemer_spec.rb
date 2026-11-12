@@ -822,6 +822,33 @@ RSpec.describe InviteRedeemer do
       end
     end
 
+    context "with an invite that grants admin and moderator" do
+      fab!(:invite) do
+        Fabricate(
+          :invite,
+          email: "future-admin@example.com",
+          admin: true,
+          moderator: true,
+          invited_by: admin,
+        )
+      end
+
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      it "logs the grant_moderation staff action only once" do
+        expect {
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: "futureadmin",
+            name: "Future Admin",
+          ).redeem
+        }.to change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }.by(
+          1,
+        )
+      end
+    end
+
     context "with a moderator invite" do
       fab!(:invite) do
         Fabricate(:invite, email: "future-mod@example.com", moderator: true, invited_by: admin)
