@@ -1861,6 +1861,58 @@ RSpec.describe InvitesController do
       end
     end
 
+    context "with a staff invite created through a granular API key" do
+      fab!(:api_key, refind: false) do
+        Fabricate(
+          :api_key,
+          user: admin,
+          api_key_scopes: [Fabricate.build(:api_key_scope, resource: "invites", action: "create")],
+        )
+      end
+
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      def create_invite(params)
+        post "/invites.json",
+             params: params,
+             headers: {
+               "Api-Key": api_key.key,
+               "Api-Username": admin.username,
+             }
+        expect(response.status).to eq(200)
+        Invite.last
+      end
+
+      it "records a grant_moderation staff action when the moderator invite is redeemed" do
+        invite = create_invite(email: "future-mod@example.com", is_moderator: "true")
+
+        expect(invite.moderator).to eq(true)
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        }.to change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }.by(
+          1,
+        )
+
+        invited_user = User.find_by_email(invite.email)
+        expect(invited_user.moderator).to eq(true)
+
+        log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
+        expect(log.target_user_id).to eq(invited_user.id)
+        expect(log.acting_user_id).to eq(admin.id)
+      end
+
+      it "does not record a grant_moderation staff action when a member invite is redeemed" do
+        invite = create_invite(email: "future-member@example.com")
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+        }.not_to change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
+
+        expect(User.find_by_email(invite.email).moderator).to eq(false)
+      end
+    end
+
     context "with an invite link" do
       fab!(:invite) do
         Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required])

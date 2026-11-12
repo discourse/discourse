@@ -272,8 +272,12 @@ class InviteRedeemer
   # existing users redeeming the invite.
   def grant_moderator_from_invite
     return if !invite.moderator? || !invite.invited_by&.staff?
+    # An invite that also grants admin logs the moderation grant in
+    # create_admin_grant_confirmation, so this must not log it again.
+    return if InviteRedeemer.admin_invite_grantable?(invite)
 
     invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
   end
 
   # Admin invites grant moderator right away; full admin requires the inviter
