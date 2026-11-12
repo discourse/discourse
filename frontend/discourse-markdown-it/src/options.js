@@ -33,6 +33,7 @@ export default function buildOptions(state) {
     hashtagTypesInPriorityOrder,
     hashtagIcons,
     hashtagLookup,
+    hashtagLookupLimit,
     allowedIframes,
   } = state;
 
@@ -86,6 +87,7 @@ export default function buildOptions(state) {
     hashtagTypesInPriorityOrder,
     hashtagIcons,
     hashtagLookup,
+    hashtagLookupLimit,
   };
 
   return { options, siteSettings, state };
