@@ -32,6 +32,11 @@ class ApplicationLayoutPreloader
       preload_current_user_data
     end
 
+    DiscoursePluginRegistry.preloaded_data_callbacks.each do |registration|
+      value = registration[:callback].call(@guardian)
+      store_preloaded(registration[:key], MultiJson.dump(value)) unless value.nil?
+    end
+
     @preloaded
   end
 

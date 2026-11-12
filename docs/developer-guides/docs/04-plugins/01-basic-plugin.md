@@ -79,6 +79,28 @@ Let's step through how this worked:
 
 4. The `initialize()` function is called when the application loads. In our case, all it does is execute our `alert()` code.
 
+### Preloading data for the frontend
+
+Use `register_preloaded_data` in `plugin.rb` to include data in the initial HTML response without an additional request:
+
+```ruby
+after_initialize do
+  register_preloaded_data("visibility") do |guardian|
+    { can_access: guardian.authenticated? }
+  end
+end
+```
+
+Core prefixes the key with the plugin's `# name:` metadata. For the `basic-plugin` above, read the parsed value in a frontend initializer with:
+
+```js
+import PreloadStore from "discourse/lib/preload-store";
+
+const visibility = PreloadStore.get("basic-plugin:visibility");
+```
+
+The block runs for each page load that renders the application layout, receives the request's Guardian, and returns a JSON-serializable value. These values are separate from the cached anonymous site payload. Return `nil` to omit an entry; `false` is included. Disabled plugins' blocks are skipped. Scope sensitive data to the requesting user through the Guardian.
+
 You're now an official Discourse plugin developer!
 
 ---
