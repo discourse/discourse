@@ -26,6 +26,7 @@ export function resetChatDrawerStateCallbacks() {
 export default class ChatStateManager extends Service {
   @service chat;
   @service chatChannelsManager;
+  @service designWizard;
   @service router;
   @service site;
   @service chatDrawerRouter;
@@ -133,6 +134,10 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
+    if (this.designWizard.active) {
+      this.designWizard.setMinimized(true);
+    }
+
     withPluginApi((api) => {
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||

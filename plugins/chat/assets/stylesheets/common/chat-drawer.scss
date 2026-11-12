@@ -3,6 +3,10 @@
   padding-bottom: var(--composer-height, 0);
 }
 
+.chat-drawer-expanded .design-wizard__restore {
+  display: none;
+}
+
 .chat-drawer-resizer {
   position: absolute;
   top: -5px;
