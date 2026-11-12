@@ -34,12 +34,75 @@ RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
     end
 
     context "when topic posts were rebaked because they had secure uploads" do
+      it "keeps only previously shared artifacts that remain in rebaked content" do
+        SiteSetting.ai_artifact_security = "strict"
+        context = conversation.context
+        context.last["artifact_ids"] = [123, 456]
+        conversation.update!(context: context)
+        post_2.update!(
+          cooked:
+            "<div class='ai-artifact' data-ai-artifact-id='456'></div>" \
+              "<div class='ai-artifact' data-ai-artifact-id='789'></div>",
+        )
+        allow_any_instance_of(TopicUploadSecurityManager).to receive(:run).and_return([post_2])
+
+        run_job
+
+        saved_post = conversation.reload.context.last
+        expect(saved_post["artifact_ids"]).to eq([456])
+        expect(saved_post["cooked"]).to include(AiArtifact.url(456))
+        expect(conversation.publishes_artifact?(instance_double(AiArtifact, id: 123))).to eq(false)
+        expect(conversation.publishes_artifact?(instance_double(AiArtifact, id: 456))).to eq(true)
+        expect(conversation.publishes_artifact?(instance_double(AiArtifact, id: 789))).to eq(false)
+      end
+
       it "updates the conversation cooked post content after rebaking" do
         post_2.update!(raw: "some new rebaked content")
         TopicUploadSecurityManager.any_instance.expects(:run).returns([post_2])
         original_context = conversation.context
         run_job
         expect(conversation.reload.context).not_to eq(original_context)
+      end
+
+      it "uses the latest saved artifact list when the share changes during rebaking" do
+        SiteSetting.ai_artifact_security = "strict"
+        context = conversation.context
+        context.last["artifact_ids"] = [456]
+        conversation.update!(context: context)
+        post_2.update!(cooked: "<div class='ai-artifact' data-ai-artifact-id='456'></div>")
+        allow_any_instance_of(TopicUploadSecurityManager).to receive(:run) do
+          refreshed_context = conversation.reload.context
+          refreshed_context.last.delete("artifact_ids")
+          refreshed_context.last["username"] = "updated"
+          conversation.update!(context: refreshed_context)
+          [post_2]
+        end
+
+        run_job
+
+        expect(conversation.reload.context.last).to include(
+          "artifact_ids" => [],
+          "username" => "updated",
+        )
+      end
+
+      it "preserves an artifact shared after the post was rebaked" do
+        SiteSetting.ai_artifact_security = "strict"
+        post_2.update!(cooked: "<div class='ai-artifact' data-ai-artifact-id='123'></div>")
+        allow_any_instance_of(TopicUploadSecurityManager).to receive(:run) do
+          rebaked_post = Post.find(post_2.id)
+          post_2.update!(cooked: "<div class='ai-artifact' data-ai-artifact-id='456'></div>")
+          context = conversation.reload.context
+          context.last["cooked"] = AiArtifact.iframe_for(456)
+          context.last["artifact_ids"] = [456]
+          conversation.update!(context: context)
+          [rebaked_post]
+        end
+
+        run_job
+
+        expect(conversation.reload.context.last["artifact_ids"]).to eq([456])
+        expect(conversation.context.last["cooked"]).to include(AiArtifact.url(456))
       end
     end
   end

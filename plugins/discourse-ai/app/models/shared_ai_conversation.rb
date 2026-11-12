@@ -118,6 +118,13 @@ class SharedAiConversation < ActiveRecord::Base
     end
   end
 
+  def publishes_artifact?(artifact)
+    context.any? do |context_post|
+      artifact_ids = context_post["artifact_ids"]
+      artifact_ids.is_a?(Array) && artifact_ids.include?(artifact.id)
+    end
+  end
+
   def target_topic(with_deleted: false)
     return if target_type != "Topic"
 
@@ -205,12 +212,14 @@ class SharedAiConversation < ActiveRecord::Base
         llm_name ||= legacy_llm_name if ai_response && legacy_participant&.id == post.user_id
         llm_name ||= unknown_model if ai_response && agent_id.blank?
         agent_name = agent_names[agent_id] if ai_response
+        artifact_ids = []
 
         {
           id: post.id,
           user_id: post.user_id,
           created_at: post.created_at,
-          cooked: cook_artifacts(post),
+          cooked: cook_artifacts(post, artifact_ids: artifact_ids),
+          artifact_ids: artifact_ids,
           agent: agent_name,
           llm_name: llm_name,
           username: include_usernames ? post.user&.username : nil,
@@ -230,7 +239,7 @@ class SharedAiConversation < ActiveRecord::Base
     { llm_name: llm_name, title: topic.title, excerpt: excerpt(posts), context: mapped_posts }
   end
 
-  def self.cook_artifacts(post)
+  def self.cook_artifacts(post, artifact_ids: nil)
     html = post.cooked
     return html if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
 
@@ -241,7 +250,10 @@ class SharedAiConversation < ActiveRecord::Base
         id = node["data-ai-artifact-id"].to_i
         version = node["data-ai-artifact-version"]
         version_number = version.to_i if version
-        node.replace(AiArtifact.iframe_for(id, version_number)) if id > 0
+        if id > 0
+          artifact_ids << id if artifact_ids
+          node.replace(AiArtifact.iframe_for(id, version_number))
+        end
       end
 
     doc.to_s
