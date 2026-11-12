@@ -39,6 +39,11 @@ module ::Blog
       }
     end
 
+    def description
+      return SiteSetting.blog_description if tag_description_cooked.blank?
+      Nokogiri::HTML5.fragment(tag_description_cooked).text.squish
+    end
+
     private
 
     def site
@@ -63,6 +68,8 @@ module ::Blog
         "title" => @title,
         "heading" => heading,
         "eyebrow" => @tag ? I18n.t("blog.tagged", tag: @tag.name) : I18n.t("blog.from_the_blog"),
+        "description" => description,
+        "description_html" => description_html,
         "archive" => @archive,
         "query" => @query,
         "preview_token" => @preview_token,
@@ -74,6 +81,18 @@ module ::Blog
     def heading
       return I18n.t("blog.archive") if @archive
       @tag&.name || SiteSetting.blog_title
+    end
+
+    def description_html
+      if tag_description_cooked.present?
+        TemplateRenderer::Html.new(ArticleHtml.render(tag_description_cooked))
+      elsif SiteSetting.blog_description.present?
+        TemplateRenderer::Html.new("<p>#{ERB::Util.html_escape(SiteSetting.blog_description)}</p>")
+      end
+    end
+
+    def tag_description_cooked
+      @tag&.description_cooked
     end
 
     def page_url(number)

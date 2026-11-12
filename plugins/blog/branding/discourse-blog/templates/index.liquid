@@ -1,6 +1,6 @@
 <header class="discourse-journal__intro">
   <h1>{{ page.heading }}</h1>
-  <p>{{ site.description }}</p>
+  {% if page.description_html != blank %}<div class="discourse-journal__description">{{ page.description_html }}</div>{% endif %}
 </header>
 <div class="discourse-journal__listing">
   <div class="discourse-journal__toolbar">

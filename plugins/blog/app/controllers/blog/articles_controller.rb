@@ -30,7 +30,6 @@ module ::Blog
         on_success do |params:, tag:, listing:|
           @archive = params.archive
           @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
-          @description = SiteSetting.blog_description
           @canonical_url = "#{Configuration.base_url}#{blog_path}"
           @canonical_url += "?page=#{params.page}" if params.page > 1
           @template_variables =
@@ -42,6 +41,7 @@ module ::Blog
               archive: @archive,
               tag:,
             )
+          @description = @template_variables.description
           response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
         end
         on_failure { raise Discourse::NotFound }

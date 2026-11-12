@@ -329,6 +329,13 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(200)
       expect(response.body).to include(publication.url)
 
+      Tag.find_by(name: "field-notes").update!(description: "Dispatches from **the field**.")
+      get "https://blog.example.com/tag/field-notes"
+      expect(response.body).to include("<strong>the field</strong>")
+      expect(response.body).to include(
+        '<meta name="description" content="Dispatches from the field.">',
+      )
+
       get "https://blog.example.com/tag/some-other-tag"
       expect(response.status).to eq(404)
     end
