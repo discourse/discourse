@@ -258,14 +258,25 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ The upcoming change group control (`upcoming-change-group-control.gjs`, #45142, merged
     in `ebd1d84f27e`) branches on the flag to `DSelectGroup` (2026-11-10): `@emit="names"`,
     `@everyone`, `@exclude` and `@lockedValues` for the groups that can't be removed. Its
-    system spec runs in both modes. #45929 (open) moves the legacy branch to `DMultiSelect`;
-    when it lands, keep the flag branch and drop whichever legacy control it leaves.
+    system spec runs in both modes. #45929 moved the legacy branch to `DMultiSelect`; the
+    merge in `1d0e7629f72` kept the flag branch and dropped `EmailGroupUserChooser`.
   - ☐ The DSA statement's community rule field (`dsa-moderation-details.gjs`, merged in
     `ebd1d84f27e`): a FormKit custom field that picks one rule, shown with its explanation,
-    from a `DMenu` with a `DDropdownMenu`.
+    from a `DMenu` with a `DDropdownMenu`. #45679 moved it into a shared
+    `dsa-classification-select.gjs` (merged in `1d0e7629f72`).
+  - ☐ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
+    `1d0e7629f72`): a select-kit `GroupChooser`, for `DSelectGroup` behind the flag.
   - Checked in `ebd1d84f27e` and not ad-hoc: the blog plugin's `DMenu`s are action menus, and
     the new `ComboBox` in discourse-ai's spam settings is the generic select-kit control,
     covered by the long tail.
+- ☐ Decide how `DAccessControl` confirms a removal to screen readers (found 2026-11-12). Not a
+  `DSelect` issue. VoiceOver reads the row that takes focus first and speaks "Removed {name}"
+  after it, which lands late. Rejected: an assertive announcement (it cuts off the new row's
+  readout), moving focus after the announcement (focus falls to the page and the message is
+  lost), and `ariaNotify()` (not in every supported browser). Moving focus about 1.2 s later
+  put the message first, at the cost of a wait for every keyboard user. The open idea is an
+  Undo row that takes focus, named "Undo removing {name}", so the confirmation is the focused
+  element; it needs a design decision on when the row goes away.
 
 `DSelectTopicList` stays (decided 2026-11-10): it has no callers since the pickers inside modals
 moved to `DSelectTopic` (2026-11-03), and a use case for it is planned.
