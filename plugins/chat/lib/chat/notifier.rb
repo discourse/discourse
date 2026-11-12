@@ -256,9 +256,27 @@ module Chat
       end
 
       inaccessible[:welcome_to_join] = inaccessible[:welcome_to_join].concat(
-        grouped[:welcome_to_join],
+        reject_hidden_group_members(grouped[:welcome_to_join]),
       )
       inaccessible[:unreachable] = inaccessible[:unreachable].concat(grouped[:unreachable])
+    end
+
+    # The invitation notice is sent back to the message creator, so it must not
+    # surface users whose membership in the mentioned groups is hidden from them.
+    def reject_hidden_group_members(users)
+      return users if users.empty? || hidden_member_groups.empty?
+
+      visible_member_ids =
+        GroupUser
+          .where(
+            group_id: (@parsed_mentions.groups_to_mention - hidden_member_groups).map(&:id),
+            user_id: users.map(&:id),
+          )
+          .distinct
+          .pluck(:user_id)
+          .to_set
+
+      users.select { |user| visible_member_ids.include?(user.id) }
     end
 
     def notify_creator_of_inaccessible_mentions(inaccessible)
