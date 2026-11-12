@@ -4313,7 +4313,7 @@ uncategorized:
     area: "posts_and_topics"
 
   concord_in_wizard:
-    default: false
+    default: true
     hidden: true
   enable_site_owner_onboarding:
     client: true
