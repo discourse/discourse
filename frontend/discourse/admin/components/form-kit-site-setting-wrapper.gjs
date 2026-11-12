@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import CategoryList from "discourse/admin/components/site-settings/category-list";
 import Color from "discourse/admin/components/site-settings/color";
 import FontList from "discourse/admin/components/site-settings/font-list";
@@ -18,6 +19,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import DFloatingControlBar from "discourse/ui-kit/d-floating-control-bar";
 import { i18n } from "discourse-i18n";
 
 class PrimaryActions extends Component {
@@ -105,7 +107,15 @@ class PrimaryActions extends Component {
 }
 
 export default class FormKitSiteSettingWrapper extends Component {
+  @tracked floatingBarWidthSource = null;
+
   formApi = null;
+
+  // The form is narrower than the column the bar should span; its container
+  // shares the form's left edge, so matching it keeps the bar inside the column
+  trackWidthSource = modifier((element) => {
+    this.floatingBarWidthSource = element.parentElement;
+  });
 
   @cached
   get formData() {
@@ -127,6 +137,11 @@ export default class FormKitSiteSettingWrapper extends Component {
   @action
   onRegisterApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  async discard() {
+    await this.formApi?.reset();
   }
 
   @action
@@ -279,6 +294,7 @@ export default class FormKitSiteSettingWrapper extends Component {
       @data={{this.formData}}
       @onRegisterApi={{this.onRegisterApi}}
       @onSubmit={{this.save}}
+      {{this.trackWidthSource}}
       as |form|
     >
       {{#each @settings as |setting|}}
@@ -418,32 +434,19 @@ export default class FormKitSiteSettingWrapper extends Component {
       {{/each}}
 
       {{#if form.dirtyCount}}
-        <form.Actions
-          class="site-settings-form__floating-actions admin-changes-banner"
-          @floatContainerClass="admin-detail"
-          @floating={{true}}
-        >
-          <div class="admin-changes-banner__message">
-            {{trustHTML
-              (i18n "admin.site_settings.dirty_banner" count=form.dirtyCount)
-            }}
-          </div>
-          <div class="site-settings-form__floating-buttons">
-            <form.Reset
-              @translatedLabel={{i18n
-                "admin.site_settings.discard"
-                count=form.dirtyCount
-              }}
-            />
-            <form.Submit
-              @translatedLabel={{i18n
-                "admin.site_settings.save"
-                count=form.dirtyCount
-              }}
-            />
-          </div>
-        </form.Actions>
-
+        <DFloatingControlBar
+          @discardLabel={{i18n
+            "admin.site_settings.discard"
+            count=form.dirtyCount
+          }}
+          @label={{trustHTML
+            (i18n "admin.site_settings.dirty_banner" count=form.dirtyCount)
+          }}
+          @onDiscard={{this.discard}}
+          @onSave={{form.submit}}
+          @saveLabel={{i18n "admin.site_settings.save" count=form.dirtyCount}}
+          @widthSource={{this.floatingBarWidthSource}}
+        />
       {{/if}}
     </Form>
   </template>
