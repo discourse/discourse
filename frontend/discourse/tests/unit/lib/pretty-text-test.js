@@ -13,7 +13,10 @@ import {
   extractDataAttribute,
   unhoistForCooked,
 } from "discourse-markdown-it/engine";
-import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
+import {
+  parseBBCodeTag,
+  QUOTATION_MARKS,
+} from "discourse-markdown-it/features/bbcode-block";
 
 const rawOpts = {
   siteSettings: {
@@ -1293,6 +1296,26 @@ eviltrout</p>
       "[b]strong [b]stronger[/b][/b]",
       '<span class="bbcode-b">strong <span class="bbcode-b">stronger</span></span>',
       "accepts nested bbcode tags"
+    );
+  });
+
+  test("bbcode opening tags start at the supplied offset", function (assert) {
+    const input = "[]][[b]bold[/b]";
+
+    assert.strictEqual(
+      parseBBCodeTag(input, 0, input.length),
+      null,
+      "does not accept a later opening tag at an earlier offset"
+    );
+    assert.deepEqual(
+      parseBBCodeTag(input, 4, input.length),
+      { tag: "b", length: "[b]".length, attrs: {} },
+      "accepts the opening tag at its actual offset"
+    );
+    assert.cookedPara(
+      input,
+      '[]][<span class="bbcode-b">bold</span>',
+      "cooks the opening tag once the parser reaches its offset"
     );
   });
 
