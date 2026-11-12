@@ -33,18 +33,9 @@ RSpec.describe ActiveSupportTypeExtensions::Array do
     end
 
     context "when 'value' has mixed separators" do
-      let(:value) { "1,2,3|4" }
-
-      it "splits only on one of the separators" do
-        expect(casted_value).to eq(["1,2,3", 4])
-      end
-    end
-
-    context "when 'value' has several occurrences of both separators" do
-      let(:value) { "1,2,3|4,5" }
-
       it "splits on the separator that comes last" do
-        expect(casted_value).to eq(["1,2,3|4", 5])
+        expect(type.cast("1,2,3|4")).to eq(["1,2,3", 4])
+        expect(type.cast("1,2,3|4,5")).to eq(["1,2,3|4", 5])
       end
     end
 
