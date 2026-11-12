@@ -21,7 +21,6 @@ class TagGroupUpdater
     params = ActionController::Parameters.new(attributes.to_h)
     result =
       params.permit(
-        :id,
         :name,
         :one_per_topic,
         tags: %i[id name slug],
