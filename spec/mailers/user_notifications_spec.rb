@@ -1698,6 +1698,33 @@ RSpec.describe UserNotifications do
       )
     end
 
+    it "doesn't include hidden group member counts in the recipient's participant list" do
+      hidden_members_group =
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user), Fabricate(:user)],
+        )
+      hidden_members_group.reload
+      topic.allowed_users = [user]
+      topic.allowed_groups = [hidden_members_group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      expect(mail.body.to_s).not_to include(
+        "[#{hidden_members_group.name} (#{hidden_members_group.user_count})]",
+      )
+      expect(mail.body.to_s).to include(
+        "[#{hidden_members_group.name}](#{hidden_members_group.full_url})",
+      )
+    end
+
     it "renders participant names as text" do
       SiteSetting.prioritize_username_in_ux = false
       group = Fabricate(:group, full_name: "Help](https://evil.example) <img src=x> \\[x")

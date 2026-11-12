@@ -766,6 +766,19 @@ describe Chat::Notifier do
         )
       end
 
+      it "doesn't signal when a group with hidden members exceeds the notification limit" do
+        group.update!(members_visibility_level: Group.visibility_levels[:owners])
+        SiteSetting.max_users_notified_per_group_mention = (group.reload.user_count - 1)
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            described_class.new(msg, msg.created_at).notify_new
+          end
+
+        expect(messages).to be_empty
+      end
+
       it "sends a message to the client signaling the group has too many members" do
         SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
