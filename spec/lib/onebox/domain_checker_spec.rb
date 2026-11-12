@@ -33,5 +33,19 @@ RSpec.describe Onebox::DomainChecker do
       it { expect(described_class.is_blocked?("api.cat.org")).to be(true) }
       it { expect(described_class.is_blocked?("dev.api.cat.org")).to be(true) }
     end
+
+    describe "matches regardless of a trailing root-label dot in the hostname" do
+      it { expect(described_class.is_blocked?("api.cat.org.")).to be(true) }
+      it { expect(described_class.is_blocked?("dev.api.cat.org.")).to be(true) }
+      it { expect(described_class.is_blocked?("api.dog.org.")).to be(false) }
+      it { expect(described_class.is_blocked?("xapi.cat.org.")).to be(false) }
+    end
+
+    describe "matches regardless of a trailing root-label dot in the blocked entry" do
+      before { SiteSetting.blocked_onebox_domains = "api.cat.org." }
+
+      it { expect(described_class.is_blocked?("api.cat.org")).to be(true) }
+      it { expect(described_class.is_blocked?("dev.api.cat.org")).to be(true) }
+    end
   end
 end

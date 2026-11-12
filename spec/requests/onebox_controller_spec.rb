@@ -175,6 +175,30 @@ RSpec.describe OneboxController do
       end
     end
 
+    describe "blocked domains" do
+      before { SiteSetting.blocked_onebox_domains = "wikipedia.com" }
+
+      it "does not onebox a blocked domain" do
+        blocked_url = "http://wikipedia.com/amazing"
+        stub_request(:head, blocked_url)
+        stub_request(:get, blocked_url).to_return(status: 200, body: html)
+
+        get "/onebox.json", params: { url: blocked_url, refresh: "true" }
+
+        expect(response.body).not_to include("Onebox1")
+      end
+
+      it "does not onebox a blocked domain requested as a trailing-dot FQDN" do
+        blocked_url = "http://wikipedia.com./amazing"
+        stub_request(:head, blocked_url)
+        stub_request(:get, blocked_url).to_return(status: 200, body: html)
+
+        get "/onebox.json", params: { url: blocked_url, refresh: "true" }
+
+        expect(response.body).not_to include("Onebox1")
+      end
+    end
+
     describe "local onebox" do
       it "does not cache local oneboxes" do
         post = create_post
