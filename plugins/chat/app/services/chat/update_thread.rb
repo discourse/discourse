@@ -50,7 +50,8 @@ module Chat
     end
 
     def can_edit_thread(guardian:, thread:)
-      guardian.can_edit_thread?(thread)
+      guardian.can_post_in_chatable?(thread.channel.chatable) &&
+        guardian.can_modify_channel_message?(thread.channel) && guardian.can_edit_thread?(thread)
     end
 
     def threading_enabled_for_channel(thread:)
