@@ -37,6 +37,7 @@ RSpec.describe ReviewableActionBuilder do
         user_actions,
         :approve_user,
         icon: "user-plus",
+        label: "reviewables.actions.answer_no.title",
         button_class: "btn-primary",
         client_action: "go",
         confirm: true,
@@ -45,6 +46,8 @@ RSpec.describe ReviewableActionBuilder do
 
       action = user_actions.to_a.first
       expect(action.icon).to eq("user-plus")
+      expect(action.label).to eq("reviewables.actions.answer_no.title")
+      expect(action.completed_message).to eq("reviewables.actions.approve_user.complete")
       expect(action.button_class).to eq("btn-primary")
       expect(action.client_action).to eq("go")
       expect(action.confirm_message).to eq("reviewables.actions.approve_user.confirm")

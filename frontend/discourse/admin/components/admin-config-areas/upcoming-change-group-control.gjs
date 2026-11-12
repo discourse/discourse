@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import Group from "discourse/models/group";
 import DButton from "discourse/ui-kit/d-button";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeGroupControl extends Component {
@@ -14,6 +15,14 @@ export default class UpcomingChangeGroupControl extends Component {
 
   get groups() {
     return this._draftGroups ?? this.args.groups;
+  }
+
+  get selection() {
+    const lockedGroups = this.args.lockedGroups || [];
+    return this.groups.map((name) => ({
+      name,
+      preventRemoval: lockedGroups.includes(name),
+    }));
   }
 
   get dirty() {
@@ -46,12 +55,35 @@ export default class UpcomingChangeGroupControl extends Component {
   }
 
   @action
-  groupsChanged(groups) {
+  compareGroups(a, b) {
+    return a.name === b.name;
+  }
+
+  @action
+  groupsChanged(selection) {
     if (!this.disabled) {
       this._draftGroups = [
-        ...new Set([...(this.args.lockedGroups || []), ...groups]),
+        ...new Set([
+          ...(this.args.lockedGroups || []),
+          ...selection.map((group) => group.name),
+        ]),
       ];
     }
+  }
+
+  @action
+  async loadGroups(term) {
+    const groups = await Group.findAll({
+      term,
+      ignore_automatic: false,
+      include_pseudogroups: true,
+      include_everyone: this.args.includeEveryone,
+    });
+    return groups.filter(
+      (group) =>
+        (group.id !== 0 || this.args.includeEveryone) &&
+        !this.args.disallowedGroups?.includes(group.id)
+    );
   }
 
   @action
@@ -77,21 +109,25 @@ export default class UpcomingChangeGroupControl extends Component {
       }}
     >
       <div class="upcoming-change__group-controls">
-        <EmailGroupUserChooser
+        <DMultiSelect
+          class="upcoming-change__group-selector"
+          @compareFn={{this.compareGroups}}
+          @disabled={{this.disabled}}
+          @label={{i18n "admin.upcoming_changes.select_groups"}}
+          @loadFn={{this.loadGroups}}
+          @matchTriggerWidth={{true}}
           @onChange={{this.groupsChanged}}
-          @options={{hash
-            disabled=this.disabled
-            groupsOnly=true
-            useHeaderFilter=true
-            fullWidthWrap=true
-            lockedValues=@lockedGroups
-            excludedGroupIds=@disallowedGroups
-            includeEveryone=@includeEveryone
-            none="admin.upcoming_changes.select_groups"
-            headerAriaLabel=(i18n "admin.upcoming_changes.select_groups")
-          }}
-          @value={{this.groups}}
-        />
+          @placement="bottom-start"
+          @selection={{this.selection}}
+        >
+          <:selection as |group|>
+            {{group.name}}
+            {{#if group.preventRemoval}}
+              {{dIcon "lock"}}
+            {{/if}}
+          </:selection>
+          <:result as |group|>{{group.name}}</:result>
+        </DMultiSelect>
         {{#unless @locked}}
           <DButton
             class={{dConcatClass

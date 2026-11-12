@@ -37,6 +37,10 @@ RSpec.describe Blog::Publication do
         /about.json
         /About
         /tag/story
+        /author/story
+        /page/2
+        /rss
+        /feed
         /review
         /session/story
         /assets/story
@@ -72,6 +76,35 @@ RSpec.describe Blog::Publication do
       paths.each do |path|
         publication = described_class.new(topic: topic, path: path)
         expect(publication).to be_valid, "Expected #{path.inspect} to be accepted"
+      end
+    end
+
+    it "accepts percent-encoded UTF-8 and stores it in upper case" do
+      publication = described_class.new(topic:, path: "/2024/%e6%97%a5%e6%9c%ac-%2b")
+
+      expect(publication).to be_valid
+      expect(publication.path).to eq("/2024/%E6%97%A5%E6%9C%AC-%2B")
+    end
+
+    it "rejects encoded ASCII, invalid UTF-8, and invisible or unassigned characters" do
+      %w[
+        /%41story
+        /%20story
+        /%7Estory
+        /%E6story
+        /%FFstory
+        /%C3%28story
+        /%C0%AE%C0%AE
+        /%E2%80%AEstory
+        /%E2%80%8Bstory
+        /%C2%A0story
+        /%E3%80%80story
+        /%EE%80%80story
+        /%F4%8F%BF%BFstory
+      ].each do |path|
+        publication = described_class.new(topic:, path:)
+        expect(publication).not_to be_valid, "Expected #{path.inspect} to be rejected"
+        expect(publication.errors[:path]).to be_present
       end
     end
 
@@ -180,6 +213,30 @@ RSpec.describe Blog::Publication do
 
       expect(path).to eq("/about-#{topic.id}/#{topic.id}")
       expect(described_class.new(topic:, path:)).to be_valid
+    end
+
+    it "builds valid paths from encoded slugs, shortening them between characters" do
+      SiteSetting.slug_generation_method = "encoded"
+      topic.update!(title: "日本の記事について " * 12)
+
+      path = described_class.default_path(topic)
+
+      expect(path).to start_with("/%E6%97%A5%E6%9C%AC")
+      expect(path.length).to be <= described_class::MAX_PATH_LENGTH
+      expect(described_class.new(topic:, path:)).to be_valid
+    end
+
+    it "drops invisible characters that encoded slugs keep from the title" do
+      {
+        "bonjour%C2%A0" => "/bonjour",
+        "%E6%97%A5%E2%80%8B%E6%9C%AC" => "/%E6%97%A5%E6%9C%AC",
+        "%E2%80%8B-%E2%80%AE" => "/#{topic.id}",
+      }.each do |slug, path|
+        topic.update_columns(slug:)
+
+        expect(described_class.default_path(topic)).to eq(path)
+        expect(described_class.new(topic:, path:)).to be_valid
+      end
     end
 
     it "shortens a long slug to fit the format within the path limit" do

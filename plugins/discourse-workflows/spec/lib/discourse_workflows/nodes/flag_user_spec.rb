@@ -124,9 +124,9 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
 
       reviewable = ReviewableUser.find_by(target: target).reload
 
-      expect(reviewable.actions_for(moderator.guardian).to_a.map(&:server_action)).to eq(
-        %w[approve_user delete_user delete_user_block],
-      )
+      expect(
+        reviewable.actions_for(moderator.guardian).to_a.map(&:server_action),
+      ).to contain_exactly("approve_user", "delete_user", "delete_user_block")
     end
   end
 

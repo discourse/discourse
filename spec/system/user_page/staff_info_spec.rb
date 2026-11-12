@@ -56,7 +56,7 @@ describe "Viewing user staff info as an admin" do
 
       expect(page).to have_current_path(%r{/review})
       expect(page).to have_current_path(/flagged_by=#{user.username}/)
-      expect(page).to have_current_path(/status=approved/)
+      expect(page).to have_current_path(/status=problem_confirmed/)
     end
   end
 

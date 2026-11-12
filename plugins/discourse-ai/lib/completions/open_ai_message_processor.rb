@@ -8,6 +8,14 @@ module DiscourseAi::Completions
                 :stop_reason,
                 :reasoning_tokens
 
+    # An unparseable call degrades to empty parameters so the tool's own
+    # validation reports it to the model instead of aborting the completion.
+    def self.parse_tool_arguments(arguments)
+      ToolArgumentsParser.parse(arguments)
+    rescue JSON::ParserError
+      {}
+    end
+
     def initialize(partial_tool_calls: false)
       @tools = {}
       @current_tool_key = nil
@@ -34,7 +42,7 @@ module DiscourseAi::Completions
           id = tool_call.dig(:id)
           name = tool_call.dig(:function, :name)
           arguments = tool_call.dig(:function, :arguments)
-          parameters = ToolArgumentsParser.parse(arguments)
+          parameters = self.class.parse_tool_arguments(arguments)
           result << ToolCall.new(id: id, name: name, parameters: parameters)
         end
       end
@@ -155,7 +163,9 @@ module DiscourseAi::Completions
       end
 
       def finish
-        @tool.parameters = ToolArgumentsParser.parse(@arguments) if @arguments.present?
+        if @arguments.present?
+          @tool.parameters = OpenAiMessageProcessor.parse_tool_arguments(@arguments)
+        end
         @tool.partial = false
         @tool
       end

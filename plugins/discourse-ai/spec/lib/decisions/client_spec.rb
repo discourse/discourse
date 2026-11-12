@@ -757,6 +757,211 @@ RSpec.describe DiscourseAi::Decisions::Client do
     end
   end
 
+  describe "#decide with Gemini" do
+    let(:gemini_body) do
+      {
+        answers: {
+          urgent: {
+            type: "noul",
+            noul: 0.2,
+            confidence: 0.9,
+          },
+          team: {
+            type: "choice",
+            choice: "returns",
+            probabilities: {
+              billing: 0.3,
+              returns: 0.7,
+            },
+            confidence: 0.6,
+          },
+          severity: {
+            type: "score",
+            score: 0.1,
+            legend: {
+              "0" => "low",
+              "1" => "medium",
+              "2" => "high",
+            },
+            probabilities: {
+              "0" => 0.9,
+              "1" => 0.1,
+              "2" => 0.0,
+            },
+            confidence: 0.85,
+          },
+        },
+        usage: {
+          total_input_tokens: 120,
+          total_output_tokens: 0,
+          total_tokens: 120,
+        },
+      }
+    end
+
+    before do
+      decision_model.update!(
+        provider: "gemini",
+        name: "gemini-decision-1",
+        url: "https://generativelanguage.googleapis.com/v1beta/decisions",
+        vision_enabled: true,
+        ai_secret: Fabricate(:ai_secret, secret: "AIza-test-key"),
+      )
+    end
+
+    it "sends typed questions with the API key header and parses answers and usage" do
+      request =
+        stub_request(:post, decision_model.url).with(
+          headers: {
+            "X-Goog-Api-Key" => "AIza-test-key",
+          },
+          body: {
+            model: "gemini-decision-1",
+            input: "Help!",
+            questions: {
+              urgent: {
+                type: "noul",
+                instructions: "Urgent?",
+              },
+              team: {
+                type: "choice",
+                instructions: "Who?",
+                criteria: {
+                  billing: "",
+                  returns: "",
+                },
+              },
+              severity: {
+                type: "score",
+                instructions: "How bad?",
+                criteria: %w[low medium high],
+              },
+            },
+          }.to_json,
+        ).to_return(body: gemini_body.to_json)
+
+      result = client.decide("Help!", questions:, feature_name: "test")
+
+      expect(request).to have_been_requested.once
+      expect(result["urgent"].probability).to eq(0.2)
+      expect(result["team"]).to have_attributes(
+        choice: "returns",
+        probabilities: {
+          "billing" => 0.3,
+          "returns" => 0.7,
+        },
+        confidence: 0.6,
+      )
+      expect(result["severity"]).to have_attributes(
+        score: 0.1,
+        level: "low",
+        probabilities: {
+          "low" => 0.9,
+          "medium" => 0.1,
+          "high" => 0.0,
+        },
+        confidence: 0.85,
+      )
+      expect(result).to have_attributes(input_tokens: 120, output_tokens: 0)
+      log = AiApiAuditLog.find(result.audit_log_id)
+      expect(log.provider_id).to eq(AiApiAuditLog::Provider::GeminiDecisions)
+      expect(log).to have_attributes(request_tokens: 120, response_tokens: 0)
+    end
+
+    it "sends images as content blocks and redacts them from the audit log" do
+      image = "data:image/png;base64,AAAA"
+      request =
+        stub_request(:post, decision_model.url)
+          .with do |req|
+            JSON.parse(req.body)["input"] ==
+              [
+                { "type" => "text", "text" => '["Help!"]' },
+                { "type" => "image", "data" => "AAAA", "mime_type" => "image/png" },
+              ]
+          end
+          .to_return(body: gemini_body.to_json)
+
+      result = client.decide(["Help!"], questions:, images: [image], feature_name: "test")
+
+      expect(request).to have_been_requested.once
+      payload = JSON.parse(AiApiAuditLog.find(result.audit_log_id).raw_request_payload)
+      expect(payload.dig("input", 1, "data")).to eq("[redacted image/png, 3 Bytes]")
+    end
+
+    it "does not send registered or validation-bypassing custom headers" do
+      DiscourseAi::RequestHeaders.register { |_context| { "X-Test-Feature" => "x" } }
+      decision_model.update_columns(custom_headers: [{ name: "X-Custom-Key", value: "secret" }])
+      request =
+        stub_request(:post, decision_model.url)
+          .with { |req| (req.headers.keys & %w[X-Test-Feature X-Custom-Key]).empty? }
+          .to_return(body: gemini_body.to_json)
+
+      client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(request).to have_been_requested.once
+    end
+
+    it "rejects choices longer than Gemini option keys allow" do
+      expect {
+        client.decide(
+          "Hello",
+          questions: [
+            { name: "team", type: "choice", instructions: "Who?", choices: ["a" * 129, "b"] },
+          ],
+          feature_name: "test",
+        )
+      }.to raise_error(DiscourseAi::Decisions::InvalidRequest, /at most 128/)
+    end
+
+    it "surfaces Gemini errors without leaking the key" do
+      stub_request(:post, decision_model.url).to_return(
+        status: 400,
+        body: { error: { code: "safety", message: "Blocked for AIza-test-key" } }.to_json,
+      )
+
+      expect { client.decide("Hello", questions:, feature_name: "test") }.to raise_error(
+        DiscourseAi::Decisions::RequestFailed,
+        "Request failed with status 400: Blocked for [redacted]",
+      )
+    end
+
+    it "rejects malformed answers" do
+      malformed = [
+        gemini_body.deep_dup.tap { |body| body[:answers].delete(:urgent) },
+        gemini_body.deep_dup.tap { |body| body[:answers][:team][:probabilities].delete(:billing) },
+        gemini_body.deep_dup.tap { |body| body[:answers][:severity][:probabilities].delete("2") },
+        gemini_body.deep_dup.tap { |body| body[:answers][:urgent][:noul] = nil },
+        gemini_body.deep_dup.tap { |body| body[:answers] = [] },
+      ]
+      malformed.each do |body|
+        stub_request(:post, decision_model.url).to_return(body: body.to_json)
+        expect { client.decide("Hello", questions:, feature_name: "test") }.to raise_error(
+          DiscourseAi::Decisions::RequestFailed,
+          /malformed response/,
+        )
+      end
+    end
+
+    it "returns score refusals without discarding other answers" do
+      gemini_body[:answers][:severity] = { type: "refusal", reason: "Cannot answer" }
+      stub_request(:post, decision_model.url).to_return(body: gemini_body.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "test")
+
+      expect(result.refusals.map(&:name)).to eq(["severity"])
+      expect(result["team"].choice).to eq("returns")
+    end
+
+    it "keeps answers when the response has no usage" do
+      gemini_body.delete(:usage)
+      stub_request(:post, decision_model.url).to_return(body: gemini_body.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "test")
+
+      expect(result).to have_attributes(input_tokens: nil, output_tokens: nil)
+    end
+  end
+
   describe "#decide with OpenAI" do
     let(:open_ai_body) do
       {

@@ -572,7 +572,6 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "remains available when Concord is installed and selected as the default" do
-      SiteSetting.concord_in_wizard = true
       concord =
         Fabricate(
           :theme,

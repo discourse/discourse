@@ -285,6 +285,7 @@ html {
     background: dark-light-choose($primary-very-low, $secondary-very-high);
   }
 
+  .reviewable .status span.no-problem-found,
   .reviewable .status span.approved {
     color: var(--success-hover);
   }
