@@ -24,7 +24,7 @@ RSpec.describe Category::HierarchicalSearch do
     subject(:result) { described_class.call(guardian:, params:) }
 
     fab!(:user)
-    fab!(:category)
+    fab!(:category) { Fabricate(:category, name: "Harbor") }
 
     let(:guardian) { Guardian.new(user) }
     let(:params) { { term: "test" } }
@@ -35,6 +35,24 @@ RSpec.describe Category::HierarchicalSearch do
       let(:params) { { page: -1 } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "with a search term longer than 250 characters" do
+      let(:params) { { term: "#{category.name.ljust(250)}ignored" } }
+
+      it "returns matches for the first 250 characters" do
+        expect(result.categories).to eq([category])
+      end
+    end
+
+    context "with a search term containing more than 25 words" do
+      fab!(:quiet_harbor) { Fabricate(:category, name: "Quiet Harbor") }
+
+      let(:params) { { term: [*Array.new(24, category.name), "Quiet", "ignored"].join(" ") } }
+
+      it "returns matches for the first 25 words" do
+        expect(result.categories).to eq([quiet_harbor])
+      end
     end
 
     context "when everything's ok" do
