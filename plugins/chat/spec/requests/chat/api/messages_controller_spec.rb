@@ -375,6 +375,35 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         )
       end
 
+      context "when mentioning a group whose member list is hidden from the sender" do
+        fab!(:hidden_group_member) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:hidden_members_group) do
+          Fabricate(
+            :public_group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            members_visibility_level: Group.visibility_levels[:staff],
+            users: [hidden_group_member],
+          )
+        end
+
+        it "does not reveal hidden group members in the invitation notice" do
+          Jobs.run_immediately!
+
+          messages =
+            MessageBus.track_publish("/chat/#{chat_channel.id}") do
+              post "/chat/#{chat_channel.id}.json",
+                   params: {
+                     message: "hello @#{hidden_members_group.name}",
+                   }
+            end
+
+          expect(response.status).to eq(200)
+
+          notices = messages.select { |m| m.data[:type] == "notice" }
+          expect(notices).to be_empty
+        end
+      end
+
       context "when the user is staff" do
         fab!(:user, :admin)
 
