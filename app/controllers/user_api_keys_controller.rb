@@ -82,8 +82,8 @@ class UserApiKeysController < ApplicationController
     scopes = params[:scopes].split(",").uniq
     expires_at = requested_expires_at(parse_expires_in_seconds!)
     issuing_credential = request.env[Auth::DefaultCurrentUserProvider::AUTHENTICATED_CREDENTIAL_ENV]
-    if scopes.include?("one_time_password") && issuing_credential.is_a?(UserApiKey) &&
-         issuing_credential.user_api_key_client_id == @client&.id
+    if scopes.include?("one_time_password") && issuing_credential.is_a?(UserApiKey) && @client &&
+         issuing_credential.user_api_key_client_id == @client.id
       raise Discourse::InvalidAccess
     end
 

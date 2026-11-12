@@ -174,6 +174,35 @@ RSpec.describe "User API key OTP revocation" do
     expect(UserApiKey.where(user_id: user.id, user_api_key_client_id: key.client.id).count).to eq(1)
   end
 
+  it "allows a clientless key to authorize a new client with an OTP" do
+    user = Fabricate(:user, refresh_auto_groups: true)
+    key =
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+      )
+    key.update_columns(user_api_key_client_id: nil)
+
+    post "/user-api-key.json",
+         params:
+           otp_args.merge(
+             scopes: "read,one_time_password",
+             client_id: SecureRandom.hex,
+             nonce: SecureRandom.hex,
+           ),
+         headers: {
+           "User-Api-Key" => key.key,
+         }
+    expect(response.status).to eq(200)
+    redirect_url = URI.parse(response.parsed_body.fetch("redirect_url"))
+    encrypted_otp = CGI.parse(redirect_url.query).fetch("oneTimePassword").first
+    token = private_key.private_decrypt(Base64.decode64(encrypted_otp))
+
+    post "/session/otp/#{token}"
+    expect(response.status).to eq(302)
+  end
+
   it "rejects an old unbound OTP" do
     user = Fabricate(:user)
     token = SecureRandom.hex
