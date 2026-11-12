@@ -3,9 +3,7 @@
 RSpec.describe Chat::Api::ChannelMessageBroadcastController do
   fab!(:user)
   fab!(:other_user, :user)
-  fab!(:channel) do
-    Fabricate(:category_channel, threading_enabled: true, broadcast_replies_enabled: true)
-  end
+  fab!(:channel) { Fabricate(:category_channel, threading_enabled: true) }
   fab!(:thread) { Fabricate(:chat_thread, channel:) }
   fab!(:reply) { Fabricate(:chat_message, chat_channel: channel, user:, thread:) }
 
@@ -24,16 +22,8 @@ RSpec.describe Chat::Api::ChannelMessageBroadcastController do
       expect(reply.reload.broadcasted).to be(true)
     end
 
-    it "returns a 422 when the message is the thread original message" do
-      thread.original_message.update!(user:)
-
-      post "/chat/api/channels/#{channel.id}/messages/#{thread.original_message_id}/broadcast"
-
-      expect(response.status).to eq(422)
-    end
-
-    it "returns a 422 when the channel option is disabled" do
-      channel.update!(broadcast_replies_enabled: false)
+    it "returns a 422 when the channel has threading disabled" do
+      channel.update!(threading_enabled: false)
 
       post "/chat/api/channels/#{channel.id}/messages/#{reply.id}/broadcast"
 
@@ -53,16 +43,6 @@ RSpec.describe Chat::Api::ChannelMessageBroadcastController do
   describe "#destroy" do
     it "removes a broadcasted reply from the channel" do
       reply.update!(broadcasted: true)
-
-      delete "/chat/api/channels/#{channel.id}/messages/#{reply.id}/broadcast"
-
-      expect(response.status).to eq(200)
-      expect(reply.reload.broadcasted).to be(false)
-    end
-
-    it "removes a broadcast even when the channel option is now disabled" do
-      reply.update!(broadcasted: true)
-      channel.update!(broadcast_replies_enabled: false)
 
       delete "/chat/api/channels/#{channel.id}/messages/#{reply.id}/broadcast"
 

@@ -178,7 +178,7 @@ export default class ChatMessageInteractor {
     if (this.message.broadcasted) {
       return true;
     }
-    if (!channel?.broadcastRepliesEnabled) {
+    if (!channel?.threadingEnabled) {
       return false;
     }
 

@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsController < Chat::ApiController
-  CHANNEL_EDITABLE_PARAMS = %i[
-    name
-    description
-    slug
-    threading_enabled
-    broadcast_replies_enabled
-    emoji
-  ]
+  CHANNEL_EDITABLE_PARAMS = %i[name description slug threading_enabled emoji]
   CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
   def index
@@ -76,7 +69,6 @@ class Chat::Api::ChannelsController < Chat::ApiController
         :description,
         :auto_join_users,
         :threading_enabled,
-        :broadcast_replies_enabled,
         :emoji,
       )
 

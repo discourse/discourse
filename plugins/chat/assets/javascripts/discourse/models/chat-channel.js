@@ -71,7 +71,6 @@ export default class ChatChannel {
   @tracked archive;
   @tracked tracking;
   @tracked threadingEnabled;
-  @tracked broadcastRepliesEnabled;
   @tracked draft;
   @tracked newestMessage;
   @tracked pinnedMessagesCount;
@@ -102,7 +101,6 @@ export default class ChatChannel {
     this.status = args.status;
     this.description = args.description;
     this.threadingEnabled = args.threading_enabled;
-    this.broadcastRepliesEnabled = args.broadcast_replies_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
     this.currentUserMembership = args.current_user_membership;

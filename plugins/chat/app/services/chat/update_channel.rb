@@ -31,7 +31,6 @@ module Chat
     #   @option params [String,nil] :slug
     #   @option params [String,nil] :emoji
     #   @option params [Boolean] :threading_enabled
-    #   @option params [Boolean] :broadcast_replies_enabled
     #   @option params [Boolean] :auto_join_users Only valid for {CategoryChannel}. Whether active users with permission to see the category should automatically join the channel.
     #   @option params [Boolean] :allow_channel_wide_mentions Allow the use of @here and @all in the channel.
     #   @return [Service::Base::Context]
@@ -43,7 +42,6 @@ module Chat
       attribute :description, :string
       attribute :slug, :string
       attribute :threading_enabled, :boolean, default: false
-      attribute :broadcast_replies_enabled, :boolean, default: false
       attribute :auto_join_users, :boolean, default: false
       attribute :allow_channel_wide_mentions, :boolean, default: true
       attribute :emoji, :string
@@ -55,7 +53,6 @@ module Chat
             .slice(:name, :description, :slug, :emoji)
             .transform_values(&:presence),
         )
-        self.broadcast_replies_enabled = false if !threading_enabled
       end
     end
     step :update_channel

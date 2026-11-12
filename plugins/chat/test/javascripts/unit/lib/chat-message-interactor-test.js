@@ -255,7 +255,6 @@ module("Unit | chat-message-interactor", function (hooks) {
       meta: { can_moderate: true },
     });
     channel.threadingEnabled = true;
-    channel.broadcastRepliesEnabled = true;
     const message = this.chatFabricators.message({ channel });
     message.user.id = this.currentUser.id + 1000;
     message.threadId = 42;
@@ -273,7 +272,6 @@ module("Unit | chat-message-interactor", function (hooks) {
     updateCurrentUser({ admin: false });
     const channel = this.chatFabricators.channel();
     channel.threadingEnabled = true;
-    channel.broadcastRepliesEnabled = true;
     const message = this.chatFabricators.message({ channel });
     message.user.id = this.currentUser.id + 1000;
     message.threadId = 42;

@@ -3442,8 +3442,7 @@ CREATE TABLE public.chat_channels (
     messages_count integer DEFAULT 0 NOT NULL,
     threading_enabled boolean DEFAULT false NOT NULL,
     last_message_id bigint,
-    emoji character varying,
-    broadcast_replies_enabled boolean DEFAULT false NOT NULL
+    emoji character varying
 );
 
 
@@ -26637,7 +26636,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20261109191046'),
 ('20261109184113'),
 ('20261106020035'),
 ('20261105165644'),

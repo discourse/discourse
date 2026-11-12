@@ -139,39 +139,6 @@ RSpec.describe Chat::UpdateChannel do
         end
       end
 
-      describe "broadcast_replies_enabled" do
-        context "when enabling broadcast replies on a channel without threading" do
-          before { params[:broadcast_replies_enabled] = true }
-
-          it "does not enable the option" do
-            result
-            expect(channel.reload.broadcast_replies_enabled).to eq(false)
-          end
-        end
-
-        context "when disabling threading on a channel with broadcast replies on" do
-          before do
-            channel.update!(threading_enabled: true, broadcast_replies_enabled: true)
-            params[:threading_enabled] = false
-          end
-
-          it "turns the option off alongside" do
-            expect { result }.to change { channel.reload.broadcast_replies_enabled }.to(false)
-          end
-        end
-
-        context "when both stay enabled" do
-          before do
-            params[:threading_enabled] = true
-            params[:broadcast_replies_enabled] = true
-          end
-
-          it "enables the option" do
-            expect { result }.to change { channel.reload.broadcast_replies_enabled }.to(true)
-          end
-        end
-      end
-
       describe "#update_site_settings" do
         before do
           SiteSetting.chat_threads_enabled = false

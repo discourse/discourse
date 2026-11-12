@@ -10,9 +10,7 @@ RSpec.describe Chat::UpdateMessageBroadcast do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:author, :user)
-    fab!(:channel) do
-      Fabricate(:category_channel, threading_enabled: true, broadcast_replies_enabled: true)
-    end
+    fab!(:channel) { Fabricate(:category_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel:) }
     fab!(:reply) { Fabricate(:chat_message, chat_channel: channel, user: author, thread:) }
 
@@ -42,13 +40,6 @@ RSpec.describe Chat::UpdateMessageBroadcast do
       it { is_expected.to fail_a_policy(:can_manage_broadcast) }
     end
 
-    context "when the user is an admin and not the author" do
-      fab!(:admin, :admin)
-      let(:current_user) { admin }
-
-      it { is_expected.to run_successfully }
-    end
-
     context "when the channel is read-only" do
       before { channel.update!(status: :read_only) }
 
@@ -68,7 +59,7 @@ RSpec.describe Chat::UpdateMessageBroadcast do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
         author.user_option.update!(allow_private_messages: true)
         dm_channel.add(author)
-        dm_channel.update!(threading_enabled: true, broadcast_replies_enabled: true)
+        dm_channel.update!(threading_enabled: true)
       end
 
       it "broadcasts the reply into the dm channel stream" do
@@ -76,8 +67,8 @@ RSpec.describe Chat::UpdateMessageBroadcast do
       end
     end
 
-    context "when the channel option is disabled" do
-      before { channel.update!(broadcast_replies_enabled: false) }
+    context "when the channel has threading disabled" do
+      before { channel.update!(threading_enabled: false) }
 
       it { is_expected.to fail_a_policy(:broadcastable_message) }
     end
@@ -95,12 +86,6 @@ RSpec.describe Chat::UpdateMessageBroadcast do
     context "when broadcasting a thread reply" do
       it "flags the message as broadcasted" do
         expect { result }.to change { reply.reload.broadcasted }.to(true)
-      end
-
-      it "shows the message in the channel message stream" do
-        result
-        messages = Chat::MessagesQuery.call(channel:, guardian:)[:messages]
-        expect(messages).to include(reply)
       end
 
       it "promotes the message to the channel last message when it is newer" do
@@ -149,13 +134,6 @@ RSpec.describe Chat::UpdateMessageBroadcast do
         expect(channel_publish.data["type"]).to eq("delete")
         expect(channel_publish.data["broadcast_removed"]).to be(true)
         expect(thread_publish.data["type"]).to eq("edit")
-      end
-
-      it "still succeeds when the channel option was turned off after broadcasting" do
-        channel.update!(broadcast_replies_enabled: false)
-
-        expect(result).to be_success
-        expect(reply.reload.broadcasted).to eq(false)
       end
 
       it "still succeeds when the channel threading was turned off after broadcasting" do

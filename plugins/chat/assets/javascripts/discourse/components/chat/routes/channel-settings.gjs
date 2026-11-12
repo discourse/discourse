@@ -141,7 +141,6 @@ export default class ChatRouteChannelSettings extends Component {
       auto_join_users: channel.autoJoinUsers,
       allow_channel_wide_mentions: channel.allowChannelWideMentions,
       threading_enabled: channel.threadingEnabled,
-      broadcast_replies_enabled: channel.broadcastRepliesEnabled,
     };
   }
 
@@ -235,9 +234,6 @@ export default class ChatRouteChannelSettings extends Component {
       channel.emoji = result.channel.emoji;
       channel.description = result.channel.description;
       channel.threadingEnabled = result.channel.threading_enabled;
-      channel.broadcastRepliesEnabled =
-        result.channel.threading_enabled &&
-        result.channel.broadcast_replies_enabled;
 
       if (channel.isCategoryChannel) {
         channel.autoJoinUsers = result.channel.auto_join_users;
@@ -307,7 +303,7 @@ export default class ChatRouteChannelSettings extends Component {
         @onRegisterApi={{this.registerChannelFormApi}}
         @onSubmit={{this.onSubmitChannelForm}}
         @validate={{this.validateChannelForm}}
-        as |form transientData|
+        as |form|
       >
         {{#if this.canEditChannel}}
           <form.Field
@@ -457,21 +453,6 @@ export default class ChatRouteChannelSettings extends Component {
               {{i18n "chat.settings.channel_threading_description"}}
             </field.Control>
           </form.Field>
-
-          {{#if transientData.threading_enabled}}
-            <form.Field
-              class="--large"
-              @name="broadcast_replies_enabled"
-              @showOptional={{false}}
-              @title={{i18n "chat.settings.channel_broadcast_replies_label"}}
-              @type="checkbox"
-              as |field|
-            >
-              <field.Control>
-                {{i18n "chat.settings.channel_broadcast_replies_description"}}
-              </field.Control>
-            </form.Field>
-          {{/if}}
         {{/if}}
 
         {{#if this.hasEditableChannelFields}}

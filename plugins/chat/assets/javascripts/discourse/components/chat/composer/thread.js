@@ -37,8 +37,7 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   get showBroadcastOption() {
-    // threading-off implies the option off, enforced by UpdateChannel.
-    return Boolean(this.args.thread?.channel?.broadcastRepliesEnabled);
+    return Boolean(this.args.thread?.channel?.threadingEnabled);
   }
 
   get broadcastChecked() {

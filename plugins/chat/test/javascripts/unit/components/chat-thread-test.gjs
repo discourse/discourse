@@ -98,11 +98,12 @@ module("Unit | Components | ChatThread", function (hooks) {
     );
   });
 
-  test("broadcast option follows the channel setting and toggles the draft", async function (assert) {
+  test("broadcast option follows channel threading and toggles the draft", async function (assert) {
     const channel = this.fabricators.channel({ id: 1 });
     channel.currentUserMembership = UserChatChannelMembership.create({
       following: true,
     });
+    channel.threadingEnabled = false;
     const thread = this.fabricators.thread({ id: 1, channel });
     this.thread = thread;
 
@@ -113,7 +114,7 @@ module("Unit | Components | ChatThread", function (hooks) {
     );
     assert.dom(".chat-composer__broadcast-option").doesNotExist();
 
-    channel.broadcastRepliesEnabled = true;
+    channel.threadingEnabled = true;
     await settled();
     assert.dom(".chat-composer__broadcast-option").exists();
     assert.dom(".chat-composer__broadcast-option input").isNotChecked();
@@ -121,23 +122,5 @@ module("Unit | Components | ChatThread", function (hooks) {
     await click(".chat-composer__broadcast-option input");
     assert.true(thread.draft.broadcasted, "toggling marks the staged draft");
     assert.dom(".chat-composer__broadcast-option input").isChecked();
-  });
-
-  test("broadcast option renders in direct message channels", async function (assert) {
-    const channel = this.fabricators.directMessageChannel({ id: 1 });
-    channel.currentUserMembership = UserChatChannelMembership.create({
-      following: true,
-    });
-    channel.broadcastRepliesEnabled = true;
-    const thread = this.fabricators.thread({ id: 1, channel });
-    this.thread = thread;
-
-    await render(
-      <template>
-        <ChatThread @targetMessageId={{null}} @thread={{this.thread}} />
-      </template>
-    );
-
-    assert.dom(".chat-composer__broadcast-option").exists();
   });
 });

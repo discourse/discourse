@@ -182,7 +182,7 @@ module Chat
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,
-        broadcasted: params.broadcast && channel.broadcast_replies_enabled? && thread.present?,
+        broadcasted: params.broadcast && channel.threading_enabled? && thread.present?,
       )
     end
 

@@ -53,7 +53,6 @@ export default class ChatModalCreateChannel extends Component {
     emoji: null,
     auto_join_users: false,
     threading_enabled: false,
-    broadcast_replies_enabled: false,
   };
   #generateSlugHandler = null;
 
@@ -107,7 +106,6 @@ export default class ChatModalCreateChannel extends Component {
       chatable_id: data.chatable_id,
       auto_join_users: data.auto_join_users,
       threading_enabled: data.threading_enabled,
-      broadcast_replies_enabled: data.broadcast_replies_enabled,
       emoji: data.emoji,
     };
 
@@ -282,7 +280,7 @@ export default class ChatModalCreateChannel extends Component {
           @data={{this.formData}}
           @onRegisterApi={{this.registerApi}}
           @onSubmit={{this.onSubmit}}
-          as |form transientData|
+          as |form|
         >
           <form.Field
             @format="full"
@@ -401,20 +399,6 @@ export default class ChatModalCreateChannel extends Component {
               {{i18n "chat.settings.channel_threading_description"}}
             </field.Control>
           </form.Field>
-
-          {{#if transientData.threading_enabled}}
-            <form.Field
-              @format="full"
-              @name="broadcast_replies_enabled"
-              @title={{i18n "chat.create_channel.broadcast_replies.label"}}
-              @type="checkbox"
-              as |field|
-            >
-              <field.Control>
-                {{i18n "chat.settings.channel_broadcast_replies_description"}}
-              </field.Control>
-            </form.Field>
-          {{/if}}
         </Form>
       </:body>
       <:footer>

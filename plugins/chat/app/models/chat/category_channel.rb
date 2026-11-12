@@ -38,7 +38,6 @@ end
 #  id                          :bigint           not null, primary key
 #  allow_channel_wide_mentions :boolean          default(TRUE), not null
 #  auto_join_users             :boolean          default(FALSE), not null
-#  broadcast_replies_enabled   :boolean          default(FALSE), not null
 #  chatable_type               :string           not null
 #  delete_after_seconds        :integer
 #  deleted_at                  :datetime

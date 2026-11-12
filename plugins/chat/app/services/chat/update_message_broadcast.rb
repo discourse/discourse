@@ -47,10 +47,10 @@ module Chat
     end
 
     def broadcastable_message(message:, channel:, params:)
-      # Undo must work even after the channel's options changed; only
-      # enabling requires the channel to currently accept broadcasts.
+      # Undo must work even after threading was turned off; only
+      # enabling requires the channel to currently support threads.
       return message.broadcasted? if !params.broadcast
-      channel.broadcast_replies_enabled? && message.thread_reply?
+      channel.threading_enabled? && message.thread_reply?
     end
 
     def apply_broadcast(message:, params:)

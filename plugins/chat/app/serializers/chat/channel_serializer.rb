@@ -24,7 +24,6 @@ module Chat
                :current_user_membership,
                :meta,
                :threading_enabled,
-               :broadcast_replies_enabled,
                :pinned_messages_count
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
