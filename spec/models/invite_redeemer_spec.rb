@@ -430,6 +430,32 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
       end
 
+      it "assigns signup fields while preserving hidden staged fields" do
+        visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+        hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+        staged_user = Fabricate(:staged, email: invite.email)
+        staged_user.custom_fields["user_field_#{hidden_field.id}"] = "provisioned"
+        staged_user.save_custom_fields
+
+        user =
+          described_class.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            password: password,
+            user_custom_fields: {
+              visible_field.id.to_s => "visible",
+              hidden_field.id.to_s => "replacement",
+            },
+          ).redeem
+
+        expect(user.id).to eq(staged_user.id)
+        expect(user.reload.user_fields).to eq(
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "provisioned",
+        )
+      end
+
       it "can set custom fields with field_type confirm properly" do
         optional_field_1 = Fabricate(:user_field, field_type: "confirm", required: false)
         optional_field_2 = Fabricate(:user_field, field_type: "confirm", required: false)
