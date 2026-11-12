@@ -40,6 +40,22 @@ RSpec.describe ActiveSupportTypeExtensions::Array do
       end
     end
 
+    context "when 'value' has several occurrences of both separators" do
+      let(:value) { "1,2,3|4,5" }
+
+      it "splits on the separator that comes last" do
+        expect(casted_value).to eq(["1,2,3|4", 5])
+      end
+    end
+
+    context "when 'value' is a long string of values separated by the same separator" do
+      let(:value) { "1," * 100 }
+
+      it "splits it" do
+        expect(casted_value).to eq([1] * 100)
+      end
+    end
+
     context "when 'value' is an array" do
       let(:value) { %w[existing array] }
 
