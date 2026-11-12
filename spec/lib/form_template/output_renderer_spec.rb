@@ -52,6 +52,23 @@ RSpec.describe FormTemplate::OutputRenderer do
       expect(described_class.render(values, "{{ answers.seats }}").bytesize).to eq(322)
     end
 
+    it "limits ranges built from answers before looping over them" do
+      values.answers["seats"] = "1000000000"
+      values.answers["description"] = "1000000000"
+
+      expect {
+        described_class.render(values, "{% for i in (1..answers.seats) %}{% endfor %}")
+      }.to raise_error(Liquid::MemoryError)
+      expect {
+        described_class.render(values, "{% for i in (1..answers.description) %}{% endfor %}")
+      }.to raise_error(Liquid::MemoryError)
+
+      values.answers["seats"] = "3"
+      expect(
+        described_class.render(values, "{% for i in (1..answers.seats) %}{{ i }}{% endfor %}"),
+      ).to eq("123")
+    end
+
     it "does not interpret answer content" do
       values.answers["description"] = "{{ answers.games | join: '' }} {% if true %}x{% endif %}"
       expect(described_class.render(values, "{{ answers.description }}")).to eq(
