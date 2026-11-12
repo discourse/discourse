@@ -28,9 +28,11 @@ a deferred, interactive Discourse discussion below each article.
   `/blog/archive/YYYY/MM/DD/...` paths are supported;
   other editorial and asset paths remain reserved. Paths cannot contain queries,
   fragments, traversal segments, or encoded separators.
-- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
-  and `/posts.atom` redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
-  both the `#discussion` and `#comments` fragment targets.
+- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`,
+  `/posts.atom`, `/rss` and `/feed` (the Ghost and WordPress feed URLs) redirect permanently to the
+  RSS feed at `/feed.xml`, and Ghost's `/page/N` pagination redirects to `/?page=N`. The `author`
+  segment is reserved for future author archives. Article discussions retain both the
+  `#discussion` and `#comments` fragment targets.
 - A blog path that is not an article falls back to core permalinks, so a migration can
   redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
   community), and relative targets resolve against the community host.
