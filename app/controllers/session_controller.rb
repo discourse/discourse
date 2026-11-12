@@ -40,6 +40,9 @@ class SessionController < ApplicationController
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
   LOGIN_CODE_SIGNUP_KEY_PREFIX = "login-code-signup-"
   LOGIN_CODE_USERNAME_STEP_KEY = "login-code-username-step"
+  # Only InvitesController#sso may write this key. Nothing else in the session
+  # is proof that the user chose to redeem an invite.
+  DISCOURSE_CONNECT_INVITE_KEY = "discourse-connect-invite-key"
   GENERATED_USERNAME_SIGNUP_KEY_PREFIX = "login-code-generated-username-"
   GENERATED_USERNAME_SIGNUP_INDEX_KEY = "login-code-generated-username-ids"
   GENERATED_USERNAME_ATTEMPTS = 5
@@ -1547,12 +1550,16 @@ class SessionController < ApplicationController
   end
 
   # the invite_key will be present if set in InvitesController
-  # when the user visits an /invites/xxxx link; however we do
+  # when the user continues from an /invites/xxxx page; however we do
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
   def validate_invitation!(sso)
-    return unless invite_key = server_session["invite-key"]
+    # the invite key is only good for one attempt, otherwise a failure would
+    # block every later login instead of letting the user retry from the invite page
+    invite_key = server_session[DISCOURSE_CONNECT_INVITE_KEY]
+    return if invite_key.blank?
+    server_session.delete(DISCOURSE_CONNECT_INVITE_KEY)
 
     base_url = Discourse.base_url
     site_name = SiteSetting.title
@@ -1584,8 +1591,6 @@ class SessionController < ApplicationController
       email: sso.email,
       redeeming_user:,
     ).redeem
-
-    server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e

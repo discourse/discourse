@@ -22,8 +22,8 @@ class InvitesController < ApplicationController
   skip_before_action :redirect_to_login_if_required
   skip_before_action :redirect_to_profile_if_required
 
-  before_action :ensure_invites_allowed, only: %i[show perform_accept_invitation]
-  before_action :ensure_new_registrations_allowed, only: %i[show perform_accept_invitation]
+  before_action :ensure_invites_allowed, only: %i[show sso perform_accept_invitation]
+  before_action :ensure_new_registrations_allowed, only: %i[show sso perform_accept_invitation]
 
   def show
     expires_now
@@ -50,6 +50,24 @@ class InvitesController < ApplicationController
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
+  end
+
+  # DiscourseConnect sites can only redeem an invite once the user returns from
+  # the SSO provider, so the invite key has to be kept in the session for that
+  # round trip. This has to be a POST so that an image in a post (or any other
+  # GET of the invite URL) cannot attach the invite to the reader's session.
+  def sso
+    raise Discourse::NotFound if !SiteSetting.enable_discourse_connect
+
+    RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
+
+    invite = Invite.find_by(invite_key: params[:id])
+    raise Discourse::NotFound if invite.blank?
+
+    return redirect_to path("/invites/#{invite.invite_key}") if !invite.redeemable?
+
+    server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+    redirect_to path("/session/sso")
   end
 
   def create_multiple
@@ -644,8 +662,6 @@ class InvitesController < ApplicationController
       info[:email] = current_user.email
       info[:username] = current_user.username
     end
-
-    server_session["invite-key"] = invite.invite_key
 
     respond_to do |format|
       format.html { store_preloaded("invite_info", MultiJson.dump(info)) }
