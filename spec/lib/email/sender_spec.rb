@@ -891,6 +891,12 @@ RSpec.describe Email::Sender do
         .tap { |upload| upload.update!(secure: true, access_control_post_id: secret_message.id) }
     end
 
+    fab!(:visible_upload) do
+      UploadCreator.new(file_from_fixtures("large.pdf", "pdf"), "visible.pdf").create_for(
+        Discourse.system_user.id,
+      )
+    end
+
     fab!(:leaky_reply) do
       reply =
         Fabricate(
@@ -899,7 +905,7 @@ RSpec.describe Email::Sender do
           user: Fabricate(:user, refresh_auto_groups: true),
           raw: "Nothing to see here #{UploadMarkdown.new(secret_upload).attachment_markdown}",
         )
-      reply.uploads << secret_upload
+      reply.uploads << secret_upload << visible_upload
       reply
     end
 
@@ -917,11 +923,9 @@ RSpec.describe Email::Sender do
     end
 
     it "does not attach the secure upload the recipient cannot access" do
-      expect(post.user.guardian.can_see_upload?(secret_upload)).to eq(false)
-
       Email::Sender.new(leaky_message, :valid_type, post.user).send
 
-      expect(leaky_message.attachments.map(&:filename)).not_to include("secret.pdf")
+      expect(leaky_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
     end
   end
 

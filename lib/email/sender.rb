@@ -353,10 +353,6 @@ module Email
 
     private
 
-    def recipient_guardian
-      @recipient_guardian ||= Guardian.new(find_user)
-    end
-
     def digest_posts
       Post.where(id: header_value("X-Discourse-Post-Ids")&.split(","))
     end
@@ -365,21 +361,15 @@ module Email
       max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
       return if max_email_size == 0
 
+      recipient_guardian = Guardian.new(find_user)
       email_size = 0
       posts.each do |post|
         next unless DiscoursePluginRegistry.apply_modifier(:should_add_email_attachments, post)
 
         post.uploads.each do |original_upload|
-          optimized_1X = original_upload.optimized_images.first
+          next if original_upload.secure? && !recipient_guardian.can_see_upload?(original_upload)
 
-          # Don't attach uploads the recipient isn't allowed to see. A post can
-          # reference a secure upload whose access-controlling post lives in a
-          # topic or PM the recipient cannot access, and attaching it anyway
-          # would leak the protected file.
-          if original_upload.access_control_post_id.present? &&
-               !recipient_guardian.can_see_upload?(original_upload)
-            next
-          end
+          optimized_1X = original_upload.optimized_images.first
 
           if FileHelper.is_supported_image?(original_upload.original_filename)
             next if !should_attach_image?(original_upload, optimized_1X)
