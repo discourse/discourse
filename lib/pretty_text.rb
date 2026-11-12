@@ -264,6 +264,7 @@ module PrettyText
           .map { |t| "'#{t}'" }
           .join(",")
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
+      buffer << "__optInput.hashtagLookupLimit = #{HashtagAutocompleteService::HASHTAGS_PER_REQUEST};\n"
       buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
 
       buffer << "__pluginFeatures = __loadPluginFeatures();"
