@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Manage Boards Boards" do
+  include ThemeScreenshotMarker
+
   with_select_controls(false)
 
   fab!(:admin)
@@ -34,6 +36,16 @@ describe "Manage Boards Boards" do
 
       expect(boards_page.board_settings_modal).to be_closed
       expect(PageObjects::Components::BoardsBoard.new).to have_name("Self-lockout Board")
+    end
+
+    it "offers Remove with the grantee's permissions" do
+      boards_page.visit_page
+      boards_page.click_new_board
+      screenshot_marker(label: "board-access-control", only: :desktop)
+
+      row = access_control.row(type: "group", id: manage_group.id)
+      expect(row).to have_available_permission("remove")
+      screenshot_marker(label: "board-access-control-open", only: :desktop)
     end
 
     it "supports the full board lifecycle" do
