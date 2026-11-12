@@ -155,7 +155,7 @@ class PostValidator < ActiveModel::Validator
     max = SiteSetting.max_quotes_per_post
     return if max <= 0
 
-    count = post.raw.to_s.scan(/\[quote[=\]]/i).size
+    count = post.raw.to_s.scan(/\[quote[=\]\t\v\f\p{Z}\uFEFF]/i).size
     post.errors.add(:base, I18n.t(:too_many_quotes, count: max)) if count > max
   end
 
