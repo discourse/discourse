@@ -163,6 +163,56 @@ RSpec.describe ApplicationLayoutPreloader do
     context "with an active theme" do
       let(:theme_id) { theme.id }
 
+      it "preloads tag objects beside unchanged source-name selections" do
+        tag = Fabricate(:tag, name: "support", locale: "en")
+        Fabricate(:tag_localization, tag:, locale: "es", name: "ayuda")
+        SiteSetting.content_localization_enabled = true
+        component.set_field(target: :settings, name: :yaml, value: <<~YAML)
+          tag_objects:
+            default: "author setting"
+          styles:
+            type: objects
+            default:
+              - tags: [support]
+            schema:
+              name: style
+              properties:
+                tags:
+                  type: tags
+        YAML
+        component.save!
+
+        I18n.with_locale(:es) do
+          expect(activated_themes.fetch(component.id.to_s)).to eq(
+            "name" => component.name,
+            "settings" => {
+              "tag_objects" => "author setting",
+              "styles" => [
+                { "tags" => [tag.name], "tag_objects" => [{ "id" => tag.id, "name" => tag.name }] },
+              ],
+            },
+          )
+        end
+      end
+
+      it "leaves legacy tag lists unchanged" do
+        tag = Fabricate(:tag, name: "support")
+        component.set_field(target: :settings, name: :yaml, value: <<~YAML)
+          selected_tags:
+            type: list
+            list_type: tag
+            default: support
+        YAML
+        component.save!
+
+        expect(activated_themes.fetch(component.id.to_s)).to eq(
+          "name" => component.name,
+          "settings" => {
+            "selected_tags" => tag.name,
+          },
+        )
+      end
+
       it "serializes the active theme and components" do
         expect(activated_themes).to eq(
           theme.id.to_s => {
