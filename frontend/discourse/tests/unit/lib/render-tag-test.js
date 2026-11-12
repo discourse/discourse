@@ -20,6 +20,69 @@ module("Unit | Utility | render-tag", function (hooks) {
     );
   });
 
+  test("renders stable IDs alongside source or localized tag names", function (assert) {
+    for (const name of ["cat", "猫"]) {
+      const div = document.createElement("div");
+      div.innerHTML = renderTag({ id: 123, name, slug: "cat" });
+
+      assert
+        .dom(".discourse-tag", div)
+        .hasAttribute("data-tag-id", "123")
+        .hasAttribute("data-tag-name", name)
+        .hasAttribute("href", "/tag/cat/123")
+        .hasText(name);
+    }
+  });
+
+  test("includes IDs when rendering tags without links", function (assert) {
+    for (const params of [{ noHref: true }, { tagName: "span" }]) {
+      const div = document.createElement("div");
+      div.innerHTML = renderTag({ id: 123, name: "猫", slug: "cat" }, params);
+
+      assert
+        .dom(".discourse-tag", div)
+        .hasAttribute("data-tag-id", "123")
+        .hasAttribute("data-tag-name", "猫")
+        .doesNotHaveAttribute("href")
+        .hasText("猫");
+    }
+  });
+
+  test("accepts an explicit ID without changing a name-only tag link", function (assert) {
+    const div = document.createElement("div");
+    div.innerHTML = renderTag("cat", { tagId: 123 });
+
+    assert
+      .dom(".discourse-tag", div)
+      .hasAttribute("data-tag-id", "123")
+      .hasAttribute("data-tag-name", "cat")
+      .hasAttribute("href", "/tag/cat")
+      .hasText("cat");
+  });
+
+  test("does not add an ID for tag objects without one", function (assert) {
+    const div = document.createElement("div");
+    div.innerHTML = renderTag({ name: "cat" });
+
+    assert
+      .dom(".discourse-tag", div)
+      .doesNotHaveAttribute("data-tag-id")
+      .hasAttribute("data-tag-name", "cat")
+      .hasAttribute("href", "/tag/cat")
+      .hasText("cat");
+  });
+
+  test("escapes the ID attribute", function (assert) {
+    const id = "123' onclick='alert(1)";
+    const div = document.createElement("div");
+    div.innerHTML = renderTag({ id, name: "cat" }, { noHref: true });
+
+    assert
+      .dom(".discourse-tag", div)
+      .hasAttribute("data-tag-id", id)
+      .doesNotHaveAttribute("onclick");
+  });
+
   test("renderTag with extraClass", function (assert) {
     const result = renderTag("foo", {
       extraClass: "ins del",
