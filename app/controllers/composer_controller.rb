@@ -149,12 +149,14 @@ class ComposerController < ApplicationController
     @visible_group_ids_for_allowed_check ||=
       if @allowed_names.present?
         Group
+          .visible_groups(current_user)
           .members_visible_groups(current_user)
           .where("LOWER(name) IN (?)", @allowed_names)
           .pluck(:id)
           .to_set
       else
         Group
+          .visible_groups(current_user)
           .members_visible_groups(current_user)
           .where(id: topic_allowed_group_ids.to_a)
           .pluck(:id)
