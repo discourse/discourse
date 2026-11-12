@@ -388,7 +388,7 @@ class Guardian
   end
 
   def can_activate?(target)
-    is_staff? && target && not(target.active?)
+    is_staff? && target && not(target.active?) && !Developer.configured_email?(target.email)
   end
 
   def can_suspend?(user)
