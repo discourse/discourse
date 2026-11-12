@@ -1022,7 +1022,10 @@ export default class CodeLoginForm extends Component {
       return;
     }
 
-    const user = User.create(result.user);
+    const user = User.create({
+      id: result.user.id,
+      username: result.user.username,
+    });
     try {
       await updateCsrfToken();
       if (selection.file && result.can_upload_avatar) {
