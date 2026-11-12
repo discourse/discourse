@@ -130,12 +130,15 @@ export interface DSelectSignature {
     allowCreate?: SelectEngineInit["allowCreate"];
     createOption?: SelectEngineInit["createOption"];
     createUnresolvedRecord?: SelectEngineInit["createUnresolvedRecord"];
-    /** Options listed before the source's, never filtered by the query or seen by content steps. */
+    /**
+     * Options listed before the source's, or after every option with `position: "end"`; never
+     * filtered by the query or seen by content steps.
+     */
     extraOptions?: SelectEngineInit["extraOptions"];
     /**
      * Groups the options: a field name or `(record, config) => key`. A group with no header of
      * either kind gets an unlabeled divider, unless `@groupDividers` is false. A `@load` source
-     * groups consecutive rows, so pages only append. Recomputed after filtering, so an empty
+     * groups consecutive options, so pages only append. Recomputed after filtering, so an empty
      * group draws nothing.
      */
     groupBy?: SelectEngineInit["groupBy"];
@@ -149,7 +152,7 @@ export interface DSelectSignature {
     groupHeader?: SelectEngineInit["groupHeader"];
     /**
      * Builds a group's footer, like `@groupHeader`, drawn by `<:groupFooter>`. A `@load`
-     * source shows its last group's footer once no more rows can load.
+     * source shows its last group's footer once no more options can load.
      */
     groupFooter?: SelectEngineInit["groupFooter"];
     /** Receives the next value, resolved records, and metadata including the resolved config. */
@@ -190,9 +193,9 @@ export interface DSelectSignature {
      */
     loadingStatus?: boolean;
     /**
-     * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
-     * check); single-select renders it only when this arg is set, so an ordinary single-select has
-     * no icon column.
+     * Icon marking the selected option(s) in the list. Multi-select always shows it (defaulting
+     * to a check); single-select renders it only when this arg is set, so an ordinary
+     * single-select has no icon column.
      */
     selectedIcon?: string;
     /**
@@ -264,9 +267,9 @@ export interface DSelectSignature {
     /**
      * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
      * is disabled (navigable, with activation blocked) and the limit message
-     * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
-     * under it (a row the consumer marked `disabled` stays disabled either way, though its chip
-     * remains removable); action rows stay enabled too, since they never become a value. Ignored
+     * appears. The cap never *newly* disables a selected option, so deselecting one is the way back
+     * under it (an option given `disabled` stays disabled either way, though its chip remains
+     * removable); action options stay enabled too, since they never become a value. Ignored
      * on a single-select. Pass `false` for no cap; numbers below `1` (including `0` and
      * negatives) and `NaN` also mean no cap but warn once per select in development.
      *
@@ -433,7 +436,7 @@ interface SelectState extends SelectPanelState {
  * Consumers pass a data source (`@options` or `@load`) and can override the label-field
  * fallback with `:option` and `:selection` blocks. Everything else — filtering, async state,
  * keyboard, ARIA, positioning, mobile — is handled. Recipes wrap this with a domain source
- * and row markup.
+ * and option markup.
  */
 export default class DSelect extends Component<DSelectSignature> {
   @service declare a11y: A11y;

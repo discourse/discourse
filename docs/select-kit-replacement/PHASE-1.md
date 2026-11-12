@@ -31,13 +31,13 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   - ☑ `combobox-query-input.gts` (arity-agnostic query input: Tab `stopPropagation`, open on
     type/click/ArrowDown, Escape, IME composition gating, combobox ARIA).
   - ☑ Composite typeahead trigger (non-button `div` host; query reset on `@onClose`;
-    pointer-blur guard for action rows). Without a custom `:selection` block, the input displays
+    pointer-blur guard for action options). Without a custom `:selection` block, the input displays
     the resolved label until the first edit and restores it on close. A keyboard focus (Tab-in)
     selects the label for overtype; a pointer press keeps the caret where the click landed, and
     the label is never re-selected after a selection. Rich custom selection markup remains a
     sibling and is hidden while editing. The caret is decorative; clicking anywhere in the
     trigger opens the control.
-  - ☑ `:item` and `:selection` are optional. All variants, multi chips, and mobile fall back
+  - ☑ `:option` and `:selection` are optional. All variants, multi chips, and mobile fall back
     to `@labelField` (default `name`), while either block can still override its corresponding
     presentation independently. Resolved labels are held in a reactive engine cache so an
     async label can populate an already-mounted input without remounting it.
@@ -46,8 +46,8 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     border, text/placeholder colors, focus treatment, and inline inset. The dropdown content
     and panel both fill the matched trigger width.
   - ☑ `pnpm lint:types` + `bin/lint` green.
-  - ☑ Tests green (rendered-DOM integration: typing, keyboard, focus/ARIA, Escape/blur, action-row
-    keep-open, optional-block fallbacks, stable async resolution, cross-variant sizing/colors,
+  - ☑ Tests green (rendered-DOM integration: typing, keyboard, focus/ARIA, Escape/blur,
+    action-option keep-open, optional-block fallbacks, stable async resolution, cross-variant sizing/colors,
     matched dropdown width, and the mobile arm).
   - ☑ Open affordance decision — use the whole `DMenu` trigger as the click target; use its
     `DModal` surface on mobile and keep the input in the host trigger on desktop.
@@ -71,42 +71,43 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     still shows after a tap-then-close: focus returns from the modal's text input, which the
     browser treats as keyboard focus, as it does on desktop.
 - ◐ **Trigger & list state model** (Decision 1b):
-  - ☑ Item **normalization** — `buildItems` returns `{ key, value, item, flags }` descriptors
-    (final render step; raw items unchanged upstream). The listbox keys on `descriptor.key`
+  - ☑ Row **normalization**: `buildRows` returns `SelectRow`s, `{ key, value, record, option,
+    flags }` (final render step; records unchanged upstream). The listbox keys on `row.key`
     (no `id` assumption; `key="id"` removed) and the option reads state from `flags`
-    (`selected`/`disabled`/`__create`); `group`/`__unresolved` flags reserved.
+    (`selected`, `disabled`, `create`, `unresolved`, `none` and the rest).
   - ☑ Batch `@resolveValues`, one chokepoint for both arities — single is a batch of one,
-    narrowed back to a bare item. Precedence: `@resolveValues` (either arity) → per-id
-    `@resolveValue` (single: one call; multi: documented fan-out) → `__unresolved` fallback.
+    narrowed back to a single record. Precedence: `@resolveValues` (either arity) → per-id
+    `@resolveValue` (single: one call; multi: documented fan-out) → unresolved fallback.
     `@resolveValue` stays as single-select sugar.
-  - ☑ `__unresolved` fallback — resolution never rejects/blanks a held value, whether the
-    resolver rejects **or throws synchronously**; each unresolvable id becomes
-    `{ [valueField]: id, __unresolved: true }`. Since 2026-10-06 every surface uses one rule,
+  - ☑ Unresolved fallback: resolution never rejects/blanks a held value, whether the
+    resolver rejects **or throws synchronously**; each unresolvable id becomes a record the
+    engine makes, `{ [valueField]: id }`, and knows by identity (`engine.isUnresolvedRecord`).
+    No field on a record marks it. Since 2026-10-06 every surface uses one rule,
     `SelectEngine#getSelectionLabel`: a fallback named by `@createUnresolvedRecord` shows its
     own label, and the default reads "Unknown item (id)". Chips, triggers, the typeahead
     input, the trigger's accessible name and add/remove announcements all say those words.
     No icon, tooltip or screen-reader-only text adds to them, so sighted and screen-reader
     users get the same message (the old version read three different phrasings and announced
-    "Removed 2"). `:selection`-block consumers still branch on `item.__unresolved`; the
-    `:unresolved` block will default to this rule rather than to `:selection`.
-  - ☑ `@createUnresolvedRecord` — `(value) => item` names the fallback (e.g. `Topic #123`)
-    on every surface, the plain input included, where a block can't reach. The engine owns
-    the `__unresolved` marker regardless of what the builder returns.
+    "Removed 2"). A `:selection` block only receives resolved records; the fallback goes to
+    `:unresolved`, which defaults to this rule rather than to `:selection`.
+  - ☑ `@createUnresolvedRecord`: `(value) => record` names the fallback (e.g. `Topic #123`)
+    on every surface, the plain input included, where a block can't reach. The engine copies
+    what the builder returns and knows the copy as unresolved, whatever its fields.
   - ☑ Resolve caching policy — successes are cached; a failure caches its fallback so the
     trigger can tell "failed" from "still resolving", and `reload()` evicts fallbacks so
     they retry. The fallback ranks LAST in the sync ladder (escape hatch → resolved cache →
-    client list → fallback), so an item landing later supersedes it. **A cached fallback
+    client list → fallback), so a record landing later supersedes it. **A cached fallback
     must stay a cache hit**: the resolve writes this tracked cache, so a read that missed
     would re-resolve, re-write, invalidate the render that read it and never settle. The
     original "no tracked-cache write during resolve" note was preventing exactly that loop.
-  - ☑ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` (now `:skeletonItem`) blocks and the skeleton
+  - ☑ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` (now `:skeleton`) blocks and the skeleton
     taxonomy (2026-10-06). `:loadingItem` is one placeholder row, repeated for the first load
     and for rows arriving at the end of the list. `:selectionLoading` replaces the placeholder
     in every chip and in all four single-trigger branches (mobile typeahead, desktop typeahead
     with and without `:selection`, button and static). Neither yields anything yet; adding a
-    parameter later is backward compatible. `:unresolved` yields the fallback item, and without
+    parameter later is backward compatible. `:unresolved` yields the fallback record, and without
     it every surface uses the built-in label (not `:selection`, which now only ever receives
-    resolved items). The styleguide reviewers picker uses all three. The
+    resolved records). The styleguide reviewers picker uses all three. The
     "input-holds-only-query composite trigger" once listed here is also done. It is RFC
     Decision 1b's split: with a `:selection` block, the rich markup renders beside the input
     and the input carries only the query. `ad80441c0c7` refined it so that focusing the field
@@ -188,13 +189,13 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   before adding or moving any announcement.
 
 - ☐ **Post-showcase UX follow-ups** — address after the concurrent implementation work lands:
-  - Selecting an already-selected item does not close the dropdown. Define and implement
+  - Selecting an already-selected option does not close the dropdown. Define and implement
     consistent re-selection behavior across variants.
-  - Created items need a stable, discoverable position in long or paginated lists. Prefer
+  - Created options need a stable, discoverable position in long or paginated lists. Prefer
     staging them at the top, but do not make the create action the default while ordinary
     matches remain. Research select-kit's current ordering and activation behavior before
     settling the interaction.
-  - Decide whether removing a newly created item's chip should also remove that staged item
+  - Decide whether removing a newly created option's chip should also remove that staged option
     from the open list. The current preference is yes for the lifetime of the open list;
     validate that against established multi-select UX before implementing it.
   - Decide whether a multi-select typeahead should retain an input placeholder when it already

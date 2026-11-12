@@ -2,12 +2,21 @@
 
 A headless selection engine (`select-engine.ts`) plus two public components
 (`d-select.gts` and `d-select-list.gts`) that together replace the legacy select family. The engine owns state,
-filtering, paging, value resolution, and the normalized render descriptors; the component
+filtering, paging, value resolution, and the rows it renders; the component
 renders a WAI-ARIA combobox/listbox around a virtualized option list and forwards keyboard,
 pointer, and overlay behavior. Consumers stay controlled: the parent owns `@value` and applies
 what `@onChange` reports.
 
-See the arg reference in `d-select.gts` (`Args` block) and the option reference in
+DSelect lists **options**, the things the user chooses among (see
+["Naming collection arguments"](../../../../../docs/developer-guides/docs/03-code-internals/02-ui-kit.md#naming-collection-arguments)
+in the ui-kit guide for why it's `@options` and not `@items`). Pass your **records** as they
+are, and each becomes an option. To give one settings, wrap it:
+`selectOption(record, { disabled: true })`. A wrapped record is still an option, the way
+`<option disabled>` is still an option. Everything DSelect hands back (`@onChange`,
+`:selection`, the first argument of `:option`) is a record. How the select is set up is its
+**config**. Rows (options, dividers and group headers as drawn) are internal.
+
+See the arg reference in `d-select.gts` (`Args` block) and the engine's inputs in
 `select-engine.ts` (`SelectEngineInit`).
 
 Direct `SelectEngine` consumers must have `getValue` read tracked state when the value can
@@ -20,11 +29,11 @@ frozen, de-duplicated array in multi mode.
 
 ### Test and styling hooks
 
-These attributes are a stable contract for tests and styling. Option rows expose
-`data-value` as the descriptor value converted to a string and `data-name` as the configured
-label. The none row has an empty value; a create row uses the item returned by `@createItem`
-for its value and name. Resolved chips expose their held item's `data-value` and `data-name`;
-loading skeleton chips carry neither attribute.
+These attributes are a stable contract for tests and styling. Options expose
+`data-value` as their record's value converted to a string and `data-name` as the configured
+label. The none option has an empty value; the create option uses the record `@createOption`
+returns for its value and name. Resolved chips expose their held record's `data-value` and
+`data-name`; loading skeleton chips carry neither attribute.
 
 The `.d-select` root always exposes `data-value` and `data-name` as comma-separated held ids
 and selection labels in held order, or empty strings when nothing is held. Unresolved ids
@@ -44,26 +53,145 @@ Tests drive a select through these hooks with `dSelect()` (actions) and `assert.
 (checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`
 in system specs.
 
-## Creating items
+## Options and records
 
-`@allowCreate` and `@createItem` enable creation from the query. The create row always comes
-after sticky, none and special rows, before the source rows and their group headers. With
-ordinary source rows, typing a partial match and pressing Enter creates the typed text
-(for example, "jav" creates "jav"), matching the legacy select behavior.
+```js
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
-The create row, its `@allowCreate` check and its duplicate checks use the query whose rows
-are on screen. While a new query is pending, retained rows keep the previous query's create
-proposal, including for debounced local sources. The live `@minChars` gate still hides the
-list below the minimum.
+const options = [
+  { id: 1, name: "Apple" },
+  selectOption({ id: 2, name: "Banana" }, { disabled: true }),
+];
+```
 
-Creation is suppressed when a loaded row's label matches the typed text case-insensitively,
-or when `valueKey(recordValue(createItem(filter)))` matches a loaded row's key. Comparing keys
-normalizes numeric and string ids. The typed text matching a row's raw value alone does not
-block creation; `@allowCreate` can impose additional rules.
+An option's settings are what it does beyond standing for its record:
 
-`@createItem` should name the item by its value text, without a "Create" prefix. The engine
-renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name` hook
-remains the item label, and a consumer `:item` block overrides the row's content.
+- `disabled`: the option is listed and reachable with the arrow keys, but can't be picked.
+- `description`: secondary text drawn under the option's name and referenced through
+  `aria-describedby`, never part of its name.
+- `position`: `"sticky"` or `"end"` (see [Position](#position)).
+- `divider`: `"before"` or `"after"` (see [Dividers](#dividers)).
+- `onSelect(control, record)`: makes the option an action. Picking it runs the callback with
+  the select's [control](#the-control) and the record it was written for, and selects nothing.
+  It keeps the overlay open unless it calls `control.close()`.
+
+`option.with(settings)` returns an option for the same record with the settings merged, where
+`undefined` keeps a setting and `null` clears it; `selectOption(option, settings)` does the
+same. `option.settings` holds what an option was given, so a recipe that builds its own record
+from a caller's carries them over with `selectOption(ownRecord, option.settings)`. An
+`onSelect` stays bound to the record it was written for, so it still receives the caller's
+record. An unknown setting, or a `position` or `divider` value other than those above, asserts
+in development.
+
+Read an option's state through `option.disabled`, `option.description`, `option.position`,
+`option.divider` and `option.action` (whether it has an `onSelect`), and tell the engine's own
+options apart through `option.create` and `option.none`.
+
+### Reading records
+
+Customizations and blocks receive options, so read a record's data through `option.record`:
+`option.record.name`, never `option.name`. In typed code a forgotten `.record` fails to
+compile, because a `SelectOption` is not a `SelectRecord`. In JavaScript nothing catches it:
+`option.name` is simply `undefined`. There is no development guard for it, because test
+tooling reads arbitrary keys off objects. `recordOf(entry)`, exported from `select-engine.ts`,
+returns the record behind an entry, wrapped or not.
+
+A listed record is never copied or mutated, so `option.record` is the object you passed.
+
+### Records never carry behaviour
+
+A record's own fields never change what its option does. A bare record is an option with no
+settings: its value and its label, nothing else. A `disabled`, `description`, `onSelect` or
+`sticky` field on a record is plain data; only `selectOption` settings make an option disabled,
+described, positioned or an action. Development builds warn once per select when a bare record
+carries an `onSelect` function or a `sticky` field, since that almost always means an option
+that should have been wrapped.
+
+The same holds wherever an option-like is accepted: `@options`, a loader's `{ options }`,
+`@extraOptions`, `@createOption`, content and load steps, group builders, `@parsePaste` and the
+control's `select` and `selectMany`. Development builds also assert when an entry has neither
+its value nor its label field (an option spread into a plain object loses its record), when
+the same record object is listed twice, when a loader still answers `{ items }`, and when
+`@options` is neither an array nor a function. A repeated non-null value keeps the first
+option.
+
+### Position
+
+`position` here is the option setting. A record field of the same name, such as a category's
+numeric `position`, is data and moves nothing.
+
+- `"sticky"` options lead the list, ahead of the none option and the extra options, and stay in
+  view while the list scrolls. They stay outside groups and keep their relative order. They
+  remain options in the same listbox and take part in keyboard navigation.
+- `"end"` options follow everything else, after the last group and its footer, and take the
+  last indices. While a paged source can still grow and other options are shown, they wait
+  for its last page. They are still counted in `aria-setsize`, as a pinned sticky option is,
+  so the size never jumps when they appear. With an empty query and nothing else to show,
+  they show, so the list stays mounted and can page. Under a query they never show alone, so
+  typing a non-match reaches the empty state and Enter can't run an end action.
+
+An option's index is its place among the options (`aria-posinset`); dividers and text group
+headers and footers take none. Positioned options can come from `@options`, a loader,
+`@extraOptions` or a content step. An `@options` entry is filtered by the query like any other;
+extra options and options a content step returns are not. Positioned options are never grouped
+and never hold back a group's footer. A group's action header or footer stays where its group
+puts it, whatever its `position`.
+
+### Dividers
+
+`divider: "before"` or `"after"` draws one rule between an option and its neighbour on that
+side. A gap holds at most one rule: a group's splitter wins, then the next option's
+`"before"`, then the previous option's `"after"`. No rule is drawn at either edge of the list,
+at the seam after the last sticky option (which draws its own edge), or before a text group
+header (which draws its own border); one is drawn before an action header. A rule exists only
+while its option is shown, stays pinned with the sticky options when it sits between two of
+them, and takes no index. Dividers are presentational: the keyboard and the pointer pass over
+them.
+
+`@extraOptions` is a function of the filter snapshot and the config, so an end action with a
+rule above it reads:
+
+```js
+@action
+extraOptions(snapshot, config) {
+  return [
+    selectOption(
+      { id: "remove", name: i18n("my_theme.remove") },
+      {
+        position: "end",
+        divider: "before",
+        onSelect: (control) => {
+          control.close();
+          this.args.onRemove();
+        },
+      }
+    ),
+  ];
+}
+```
+
+## Creating options
+
+`@allowCreate` and `@createOption` enable creation from the query. The create option always
+comes after the sticky, none and extra options, before the source's options and their group
+headers. With ordinary source options, typing a partial match and pressing Enter creates the
+typed text (for example, "jav" creates "jav"), matching the legacy select behavior.
+
+The create option, its `@allowCreate` check and its duplicate checks use the query whose
+options are on screen. While a new query is pending, retained options keep the previous
+query's create proposal, including for debounced local sources. The live `@minChars` gate still
+hides the list below the minimum.
+
+Creation is suppressed when a loaded option's label matches the typed text case-insensitively,
+or when the key of the record `@createOption(filter)` returns matches a loaded option's key.
+Comparing keys normalizes numeric and string ids. The typed text matching an option's raw value
+alone does not block creation; `@allowCreate` can impose additional rules.
+
+`@createOption(filter, config)` returns the record the create option stands for, or that record
+wrapped with settings. Name the record by its value text, without a "Create" prefix: the engine
+makes it the create option and renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name`
+hook remains the record's label, and a consumer `:option` block overrides the option's
+content.
 
 ## Compact triggers
 
@@ -87,15 +215,15 @@ requests already in flight, so the same ids are never fetched twice.
 id (so `3` locks `"3"`, and `@normalizeKey` applies). It is for values the caller always keeps,
 such as groups a setting requires.
 
-- Removing a locked value does nothing, from a chip, the strip, a row, the keyboard, an action
-  row, a customization or `control.update()`. Every change is checked again when it commits, so a
+- Removing a locked value does nothing, from a chip, the strip, an option, the keyboard, an
+  action option, a customization or `control.update()`. Every change is checked again when it commits, so a
   change deferred by `change` middleware can't drop a value locked meanwhile.
 - "Clear all", `clear()` and Backspace or Delete on a static root remove the other values and keep
   the locked ones, with `reason: "clear"`. With only locked values held, the clear button hides and
   clearing does nothing. A partial clear is announced by what it removed.
 - Locked chips and strip items show a lock in place of ×, keep their button and its class so
-  arrows still reach them, and carry `aria-disabled="true"` and a `--locked` modifier. Their held
-  rows stay selected but disabled, described by the locked hint.
+  arrows still reach them, and carry `aria-disabled="true"` and a `--locked` modifier. Their
+  options stay selected but disabled, described by the locked hint.
 - The list must be part of `@value`. The select never adds a locked value: the caller keeps it in
   its value, as the legacy `mandatoryValues` callers already do. Development builds assert when the
   list isn't an array, isn't held, or is given to a single select; production behaves as if only
@@ -105,12 +233,12 @@ such as groups a setting requires.
 
 Wherever the list stays visible (a button select's popup, the mobile modal, and
 `DSelectList`), the panel has a search field. Held chips sit inside it, before the caret,
-where the rows alone cannot show every held item: in the mobile modal, which covers the
+where the options alone cannot show every held value: in the mobile modal, which covers the
 trigger; for an async source, whose loaded page may lack them; with `@hideSelected`; and
 always in `DSelectList`, which has no trigger. Elsewhere, such as a local desktop popup, the
-selected rows and the trigger's chips already show them, so the field holds only the input.
+selected options and the trigger's chips already show them, so the field holds only the input.
 `@panelChips={{true}}` opts such a popup into field chips. While a panel lists the held
-items, a button or static trigger shrinks to one line reading "N selected" instead of
+values, a button or static trigger shrinks to one line reading "N selected" instead of
 repeating them. The field is a single Tab stop. Its input is a search field (`type="search"`, no role) that drives the
 listbox through `aria-activedescendant`, with `aria-autocomplete="list"` and
 `aria-controls` while a listbox is rendered. Only the desktop typeahead trigger, whose list
@@ -119,12 +247,12 @@ opens and closes, keeps `role="combobox"`.
 From the input:
 
 - Up/Down, PageUp/PageDown and Enter move through and pick results. While the list is open,
-  Enter never reaches a form around the select, even on a disabled row or an empty list.
-- Home/End and Left/Right move the caret and clear the active row, so screen readers read
-  the text again. Up or Down brings the row back.
+  Enter never reaches a form around the select, even on a disabled option or an empty list.
+- Home/End and Left/Right move the caret and clear the active option, so screen readers read
+  the text again. Up or Down brings the option back.
 - Left at the start of the input enters the chips (Right in right-to-left pages).
-- Backspace on an empty query removes the last held item, or clears a single value. When the
-  last item can't be removed (see "Held values that can't be removed"), it focuses that chip
+- Backspace on an empty query removes the last held value, or clears a single value. When the
+  last one can't be removed (see "Held values that can't be removed"), it focuses that chip
   instead, or opens the strip at it. A multi-select field without chips leaves the selection
   alone on both keys, so nothing is removed out of sight.
 - Escape closes a popup or modal. In `DSelectList` it clears a non-empty query and
@@ -140,7 +268,7 @@ From a chip:
 - Tab and Shift+Tab leave the whole field.
 
 Adds and removals are announced (“Added X”, “Removed X”). While a chip has focus, no
-result row shows as active. Locked or read-only chips keep focus but carry
+result option shows as active. Locked or read-only chips keep focus but carry
 `aria-disabled="true"` and cannot be removed. Keyboard chip names lead with the label and
 include the removal hint; touch names say “Remove X”. A chip that can't be removed is named
 by its label and the locked hint on every device.
@@ -148,7 +276,7 @@ by its label and the locked hint on every device.
 Touch screen readers ignore `aria-activedescendant`. When a session starts on iOS or Android
 and the latest interaction carried no key or pointer press (a screen reader's double-tap
 or focus move), that session moves real focus through the results instead: the input
-points at no row, no row is pre-activated, and a pick does not pull focus back to the
+points at no option, no option is pre-activated, and a pick does not pull focus back to the
 input. The shared `ui-kit/-internals/interaction-modality` tracker records that signal.
 
 The input keeps a minimum width and wraps onto its own line rather than shrinking. The
@@ -161,9 +289,9 @@ wraps. Clicking a label that wraps the field focuses the input, never a chip.
 Two surfaces keep a separate selection strip instead:
 
 - **The static variant** has no search. In the modal or with a server source it keeps a
-  strip; a desktop static list with local `@items` shows held items as checked rows
+  strip; a desktop static list with local `@options` shows held values as checked options
   instead.
-- **A capped desktop typeahead** (`@maxVisibleChips`) lists every held item in a strip
+- **A capped desktop typeahead** (`@maxVisibleChips`) lists every held value in a strip
   in its panel. Left at the start of the input opens the panel and focuses the strip's
   last chip; Tab from the input enters the strip, and Up/Down or Shift+Tab return to the
   input. The strip scrolls within `--d-select-strip-max-height` (default `8em`).
@@ -185,8 +313,9 @@ retry of one query uses the same snapshot. An array entry compares by its elemen
 may derive an equal array on every render (`@exclude` rebuilt after each pick) without reloading;
 an array changed in place still counts. Other values, including nested ones, compare by identity.
 
-`@load(query, opts)` returns an item array or `{ items, total?, hasMore?, cursor? }`.
-Paged sources receive the raw row `opts.offset`, a page-size `opts.limit` hint, and a 1-based
+`@load(query, opts)` returns an array of records or options, or
+`{ options, total?, hasMore?, cursor? }`.
+Paged sources receive the raw source `opts.offset`, a page-size `opts.limit` hint, and a 1-based
 `opts.page` for an endpoint that pages by number. `opts.page` counts settled pages, barren ones
 included; a failed or abandoned page is asked again under the same number.
 The engine passes an opaque response `cursor` unchanged as the next request's `opts.cursor`.
@@ -194,11 +323,11 @@ Only a successful, current-query page advances it; a failed page keeps the previ
 and a filter change or reload clears it, as it restarts `opts.page` at 1. A `spec.load` wrapper
 must forward `(query, opts)` and preserve the response metadata, including `cursor`.
 
-Server lists have no row ceiling by default. Set `@maxLoaded` to stop at that many unique
-loaded rows and show the filter-to-narrow hint when results remain or rows were discarded.
+Server lists have no ceiling by default. Set `@maxLoaded` to stop at that many unique
+loaded options and show the filter-to-narrow hint when results remain or options were discarded.
 Virtualization bounds mounted rows independently of the number loaded. A response with
 `hasMore: false` ends paging; otherwise `hasMore: true` or a larger `total` permits another
-page. Two consecutive pages that add no unique rows stop paging even if the source claims more.
+page. Two consecutive pages that add no unique options stop paging even if the source claims more.
 
 The engine compares all own keys and their values with the current query's request snapshot,
 including the key count. A new object with equal entries reuses the settled list. Changed
@@ -213,7 +342,7 @@ increments the reload nonce so an already-settled answer cannot be reused. It al
 announcement deduplication and the non-typeahead roving seed. It preserves pending `update()`
 authority and unavailable held-value fallbacks. Explicit `control.reload()` performs the same
 list reload and additionally evicts unavailable fallbacks so their resolution is retried;
-successfully resolved held items stay cached.
+successfully resolved held records stay cached.
 
 While a server query or context reload is pending, keyboard activation is held, including the
 debounce window and the skeleton before any row is mounted. Each Enter press politely announces
@@ -227,13 +356,14 @@ Both public modules are facades over focused collaborators in `-internals/`, org
 kind. Consumers and tests never import from `-internals/`; the public API surface lives
 entirely on `d-select.gts` and `select-engine.ts`.
 
-- `-internals/engine/` — the headless layer behind `SelectEngine`, which stays the single
+- `-internals/engine/`: the headless layer behind `SelectEngine`, which stays the single
   stable identity (the legacy bridge and plugin hooks key on the engine instance):
   `select-sources.ts` (reactive state + local/paged sources), `select-args.ts` (live
-  readers of the call-site args, with cross-argument defaults), `list-composer.ts` (the ordered `buildItems`
-  compiler and descriptor stamping), `selection-actions.ts` (selection operations, limits,
-  and change-emission ordering), `value-resolver.ts` (value→item resolution and its caches).
-- `-internals/coordinators/` — non-rendering component-side classes, constructed once and
+  readers of the call-site args, with cross-argument defaults), `list-composer.ts` (the
+  ordered `buildRows` compiler and row stamping), `select-option.ts` (`selectOption` and the
+  option class), `selection-actions.ts` (selection operations, limits, and change-emission
+  ordering), `value-resolver.ts` (value→record resolution and its caches).
+- `-internals/coordinators/`: non-rendering component-side classes, constructed once and
   configured with thunks (never holding a component reference):
   `select-host.ts` (engine construction, selection, source context and helper ownership),
   `select-presenter-base.ts` (shared presentation and the options presenter contract),
@@ -241,7 +371,7 @@ entirely on `d-select.gts` and `select-engine.ts`.
   announcement arbitration), `windowed-list-coordinator.ts` (windowing, keeping rows mounted,
   sticky rows, and jump navigation), `interaction-coordinator.ts` (open/close, focus, and
   pointer session), `load-feedback.ts` (loading timers and skeleton sizing).
-- `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
+- `-internals/parts/`: the rendering subcomponents: trigger pieces (`trigger-frame`,
   `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`),
   the list (`select-list-body`, `windowed-option-list`, `select-option-row`, `select-option-content`),
   the shared panel body (`select-panel`), and the selection strip kept by the static and
@@ -250,9 +380,9 @@ entirely on `d-select.gts` and `select-engine.ts`.
   body. The windowed body and shared row part keep their elements and modifier order.
   Parts receive the stable helper objects (`@engine`, `@presenter`, …) plus per-slot inputs;
   they add no wrapper DOM.
-- `-internals/modifiers/` — element-attached behavior (`keep-above-keyboard.ts`, the iOS
+- `-internals/modifiers/`: element-attached behavior (`keep-above-keyboard.ts`, the iOS
   keyboard-occlusion correction).
-- `-internals/modify-select-kit-bridge.ts` — the deprecated legacy compatibility bridge,
+- `-internals/modify-select-kit-bridge.ts`: the deprecated legacy compatibility bridge,
   slated for removal.
 
 ### Why the panel is portaled
@@ -261,7 +391,7 @@ The overlay is a `DMenu`, so on desktop float-kit teleports the panel into a por
 the document root rather than rendering it beside the trigger. That is deliberate and worth not
 undoing: the portal is what lets the panel escape the `overflow` clipping and stacking context of
 whatever contains the field, and a combobox has to work inside modals, the composer, the sidebar,
-admin tables and chat. The component this replaces rendered its list inline and paid for it —
+admin tables and chat. The component this replaces rendered its list inline and paid for it:
 `position: fixed` by default on desktop, per-call-site strategy overrides, a `transform`
 containing-block hack on one table container, and a recurring tail of "dropdown is cut off" fixes.
 
@@ -278,7 +408,7 @@ panel's own controls and, off the end of them, continues from the trigger.
 
 Two things to know when testing this area. float-kit renders floats **in place** under tests
 (`DFloatPortal`, `@inline ?? isTesting()`), so a component test sees no portal unless it forces
-one with `@inline={{false}}` plus an outlet — which is worth doing, since `tab()` dispatches a
+one with `@inline={{false}}` plus an outlet, which is worth doing, since `tab()` dispatches a
 cancelable keydown and so does exercise the real handling. What no component test can reach is a
 browser adopting a scroll container as a tab stop: such an element reports `tabIndex === -1` and
 matches no focusable selector, so `tab()` skips it whether or not it was suppressed. That one
@@ -288,7 +418,7 @@ assertion needs a real browser.
 
 Every text a select or a recipe draws or speaks can be set by the call site and overridden by a
 customization: names, placeholders, panel messages, announcements, button labels and counts.
-Item data (names, descriptions, row titles) is not a text.
+A record's data (names, titles) and an option's `description` setting are not texts.
 
 ### Setting a text
 
@@ -296,7 +426,7 @@ Item data (names, descriptions, row titles) is not a text.
 every other:
 
 ```gjs
-<DSelect @items={{fruits}} @texts={{hash ariaLabel="Fruit" noResults="No fruit matches"}} />
+<DSelect @options={{fruits}} @texts={{hash ariaLabel="Fruit" noResults="No fruit matches"}} />
 ```
 
 Every text accepts the same three forms:
@@ -324,10 +454,10 @@ the layer below, so a function can decorate the default or hand back to it.
 rendered, an attribute (`placeholder`, `aria-label`, `aria-describedby`) is omitted, and an
 announcement is skipped. Nullish means "not set at this layer". Two exceptions:
 
-- `noResults: ""` drops the text and its role, but keeps the element that records the row count.
+- `noResults: ""` drops the text and its role, but keeps the element that records the result count.
 - **Required texts** name a control or a group, so they can't be empty: `ariaLabel`, `clear`,
   `clearAll`, `retry`, `removeSelected`, `chipsLabel`, `stripLabel`, `footerLabel`, `labelWithValue`,
-  `labelWithCount`, `unresolvedValue`, `createItem`, `removeHint` and `loadError`, plus
+  `labelWithCount`, `unresolvedValue`, `createOption`, `removeHint`, `lockedHint` and `loadError`, plus
   `noneLabel` and `loadingLabel` while their switch is on. An empty one asserts in development
   and falls back one layer in production. `ariaLabel` isn't checked under `@ariaLabelledBy`.
 
@@ -340,7 +470,7 @@ From lowest to highest, per entry:
 1. the engine's default (`DEFAULT_SELECT_TEXTS`);
 2. the recipe's `@kindTexts`, one object or a list of layers, lowest first (see below);
 3. the call site's `@texts`;
-4. the `texts` key of `options` customizations: `forAll`, then `forKind`, then `forIdentifier`,
+4. the `texts` key of `config` customizations: `forAll`, then `forKind`, then `forIdentifier`,
    each in registration order (`spec.config(() => ({ texts: { noResults: "…" } }))`).
 
 A recipe built on another can pass `@kindTexts` as a list, inner recipe first. Each layer stays
@@ -362,12 +492,12 @@ A customization's callback reads the merged entries so far as `current.texts`. A
 [Tag recipes](#tag-recipes)). A function that throws or returns another type, or two texts that
 read each other, assert in development and fall back one layer in production.
 
-`@noneRow` and `@loadingStatus` are switches, also core option keys. They turn on the none row
-and the loading status line, and `noneLabel` and `loadingLabel` word them, so a `forAll`
+`@noneOption` and `@loadingStatus` are switches, also core config keys. They turn on the none
+option and the loading status line, and `noneLabel` and `loadingLabel` word them, so a `forAll`
 rewording never turns a feature on.
 
-A recipe reads its texts with `renderSelectText(options, key, values)`, from the `options` that
-`@specialItems`, the group builders and the blocks receive. The engine reads its own with
+A recipe reads its texts with `renderSelectText(config, key, values)`, from the `config` that
+`@extraOptions`, the group builders and the blocks receive. The engine reads its own with
 `engine.text(key, values)`. Both are exported from `select-engine.ts`, with the `SelectText`,
 `SelectTexts`, `SelectTextContext` and `SelectTextWrapper` types.
 
@@ -393,24 +523,24 @@ unknown key silently.
 | `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Trigger name while a value is held. Required |
 | `labelWithCount` | `d_select.label_with_count` | `label`, `count` | Compact multi trigger name. Required |
 | `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held |
-| `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another item can be added |
+| `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another value can be added |
 | `searchPlaceholder` | `d_select.search_placeholder` "Search…" | | Panel and modal search field |
 | `noResults` | `d_select.no_results` | | Empty state, drawn and announced |
 | `minChars` | `d_select.min_chars` | `count` | Drawn and announced below `@minChars` |
 | `maximum` | `d_select.max_reached` | `count` | Limit line at `@maximum`, announced |
 | `minimum` | `d_select.min_not_reached` | `count`, `selected` | Limit line below `@minimum`, announced |
 | `maxLoaded` | `d_select.filter_to_narrow` | | Hint at `@maxLoaded`, announced |
-| `noneLabel` | `d_select.none` "None" | | The none row, with `@noneRow` |
+| `noneLabel` | `d_select.none` "None" | | The none option, with `@noneOption` |
 | `loadingLabel` | `d_select.loading` "Loading…" | | Loading status, with `@loadingStatus` |
 | `loadError` | `d_select.load_error` | | Error box. Required |
 | `retry` | `d_select.retry` | | Retry button. Required |
 | `unresolvedValue` | `d_select.unresolved_value` | `value` | A held id no source resolved. Required |
-| `createItem` | `d_select.create_item` | `label` | The create row. Required |
+| `createOption` | `d_select.create_item` | `label` | The create option. Required |
 | `clear` / `clearAll` | `d_select.clear` / `d_select.clear_all` | | Clear control, single / multiple. Required |
 | `chipsLabel` / `stripLabel` | `d_select.selected_items` / `d_select.selected_items_list` | | Chip list / selection strip. Required |
 | `removeSelected` | `d_select.remove_item` | `item` | Touch remove buttons. Required |
 | `removeHint` | `d_select.remove_hint` | | Chip and strip remove hint. Required |
-| `lockedHint` | `d_select.locked_hint` | `item` | Hint on a chip, strip item or row that can't be removed. Required |
+| `lockedHint` | `d_select.locked_hint` | `item` | Hint on a chip, strip item or option that can't be removed. Required |
 | `chipsHint` / `selectedOptionsHint` | `d_select.chips_hint` / `d_select.selected_items_hint` | | Input description beside chips |
 | `selectedCount` | `d_select.selected_count` | `count` | Compact count description |
 | `compactCount` / `moreChips` | `d_select.compact_count` / `d_select.more_chips` | `count` | Count with `@maxVisibleChips=0` / overflow badge |
@@ -466,52 +596,56 @@ engine keys through `@kindTexts`.
 `DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).
 
-## Custom row content
+## Custom option content
 
-Named blocks control what the component renders: `:item`, `:selection`, `:selectionLoading`,
-`:unresolved`, `:groupHeader`, `:groupFooter`, `:skeletonItem`, `:empty`, `:listHeader`,
+Named blocks control what the component renders: `:option`, `:selection`, `:selectionLoading`,
+`:unresolved`, `:groupHeader`, `:groupFooter`, `:skeleton`, `:empty`, `:listHeader`,
 `:footer` and `:error`.
 
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
-field to display, `@selectedIcon` marks the chosen row, `@icon` puts a glyph in the trigger, and
-`@texts` rewords the empty state (`noResults`). A block that reproduces one of those is not neutral:
-it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
+field to display, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
+and `@texts` rewords the empty state (`noResults`). A block that reproduces one of those is not
+neutral: it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
 
 ### What each block replaces
 
-Every block lands **inside** markup the component keeps, so you supply content, not structure — the
-option's `role`, its selected and disabled state, its ARIA position, the group header's label id,
-the empty state's `role="status"` and the error state's `role="alert"` are all still handled for
-you.
+Every block lands **inside** markup the component keeps, so you supply content, not structure:
+the option's `role`, its selected and disabled state, its ARIA position, the group header's
+label id, the empty state's `role="status"` and the error state's `role="alert"` are all still
+handled for you.
 
-`:error` is yielded `reload` alongside the error, so a block that wants its own recovery control
+`:error` is yielded a `retry` action alongside the error, so a block that wants its own recovery control
 can render one; the component's retry is shown only when no block is supplied.
 
-`:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and `:footer`
-also yield the select's resolved options, so a recipe can render values extensions override (see
-[Recipes](#recipes)). It comes after the block's own values, and for `:item` before the row's
-state.
+`:option`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
+`:footer` also yield the select's resolved config, so a recipe can render values extensions
+override (see [Recipes](#recipes)). It comes after the block's own values, and for `:option`
+and the group blocks before their third parameter.
 
-`:groupHeader` and `:groupFooter` draw every header and footer row, text or action, and `:item`
-never receives one. Tell the kinds apart by `onSelect`, which only an action row carries; both
-carry `groupKey`, so one block can draw group-specific content for either.
+`:groupHeader` and `:groupFooter` draw every header and footer, text or action, and `:option`
+never receives one. They yield `(record, config, group)`. A text header's or footer's record
+carries its `label`; an action header's or footer's record is the one the builder's option
+stands for. `group.key` is the group's key and `group.action` tells an action header or footer
+from a text one, so one block can draw group-specific content for either kind.
 
-`:item` draws every other option row, including the create row and action rows such as a
-recipe's shortcuts, so a block that draws records must handle both. Its third parameter, `row`,
-says what the row is: `row.create` marks the create row, which should name what it creates, as
-the `createItem` text does. An action row carries `onSelect`. A recipe forwards all three
-parameters, so a caller's block can tell the rows apart without knowing the recipe's own item
-fields.
+`:option` draws every other option, including the create option and action options such as a
+recipe's shortcuts, so a block that draws records must handle both. It yields
+`(record, config, option)`: `option.create` marks the create option, which should name what it
+creates, as the `createOption` text does, and `option.action` marks an action option. A recipe
+forwards all three parameters, so a caller's block can tell the options apart without knowing
+the recipe's record fields.
 
 ```gjs
-<:item as |item options row|>
-  {{#if row.create}}
-    {{renderSelectText options "createItem" (hash label=item.name)}}
+<:option as |record config option|>
+  {{#if option.create}}
+    {{renderSelectText config "createOption" (hash label=record.name)}}
   {{else}}
-    {{item.name}}
+    {{record.name}}
   {{/if}}
-</:item>
-``` `@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
+</:option>
+```
+
+`@groupHeader` (the builder) and `<:groupHeader>` (the block) share a name across separate
 namespaces, and `<:groupFooter>` is unrelated to the panel's `<:footer>`.
 
 ### Blocks that interact
@@ -519,40 +653,41 @@ namespaces, and `<:groupFooter>` is unrelated to the panel's `<:footer>`.
 Two behaviours only appear once blocks are used together, and both are easy to get wrong:
 
 - **`:footer` outlives the list.** It is a sibling of the async content rather than part of it,
-  so it renders in every panel state — while loading, when populated, when empty, and when the
+  so it renders in every panel state: while loading, when populated, when empty, and when the
   source has failed. Gate its contents on the yielded `total`/`loadedCount` rather than assuming
-  there are rows, or a footer will read "12 results" underneath "Nothing matches".
+  there are options, or a footer will read "12 results" underneath "Nothing matches".
 - **A `:groupHeader` or `:groupFooter` does not replace the option description.** Each option is
   `aria-describedby` a dedicated label span holding the builder's text for its group's text
   header, then its text footer; arbitrary custom markup, counts, and hints remain visible in the
-  row without being repeated for every option. Keep a text footer short and about the group, since
+  option without being repeated for every option. Keep a text footer short and about the group, since
   it is what repeats, and never end it with a bare number, which runs into the spoken position.
-- **A group block never names an action row.** For an action header or footer, the builder's
-  label (through `@labelField`) is the option's spoken name and the block's drawing is hidden
+- **A group block never names an action option.** For an action header or footer, the label of
+  the builder's record (through `@labelField`) is the option's spoken name and the block's drawing is hidden
   from screen readers. So the label must contain the words the drawing shows (WCAG 2.5.3, label
   in name), and counts or hints in the drawing must not carry meaning the label lacks.
 
 ### Accessibility rules for block content
 
 - Icons rendered through the icon helper are `aria-hidden` by default. Do not give one an
-  `aria-label` in a row whose text already names it.
-- Avatars and other decorative images need an empty `alt`, or the row's name is doubled.
+  `aria-label` in an option whose text already names it.
+- Avatars and other decorative images need an empty `alt`, or the option's name is doubled.
 - In an interactive multi-select chip, the accessible name is built from what `:selection`
   renders (the label span is hidden and pulled back in by the remove button). Display-only
   chips expose the label directly. An icon-only or image-only chip is
   announced as a bare remove button.
 - Never render a trailing bare number; it is announced as part of the option's name ("performance
   871"). Use a phrase, or hide the visual figure and supply one.
-- No interactive content in `:item`, `:groupHeader` or `:groupFooter`. In a text header or
+- No interactive content in `:option`, `:groupHeader` or `:groupFooter`. In a text header or
   footer (`role="presentation"`) it cannot be reached from the keyboard; inside an option it is
-  flattened into the name, and a click on it reaches the row's handler, so it runs the row's
-  action. An action belongs in an action row returned by `@groupHeader` or `@groupFooter`.
+  flattened into the name, and a click on it reaches the option's handler, so it runs the
+  option's action. An action belongs in an action option returned by `@groupHeader` or
+  `@groupFooter`.
 - **Naming the control:** use the `ariaLabel` text, or `@ariaLabelledBy` with the id of a caption already
   on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
   list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
-  happens to come first (a chip's remove control, or the clear control) — without it, clicking a
+  happens to come first (a chip's remove control, or the clear control). Without it, clicking a
   field's caption would silently drop a selection. The sink then forwards the activation on as a
   focus, so a caption puts the caret in the field without opening the panel. It is also why
   adding a control to the trigger needs no click guard of its own.
@@ -658,12 +793,11 @@ change what an option does with `option.with(settings)`, where `undefined` keeps
 `null` clears it. A returned record becomes an option with no settings: nothing is carried over
 from an input with the same value, and fields on the record (`disabled`, `description`,
 `onSelect`, `sticky`) are data, never settings. Give an option `position: "sticky"` to keep an
-action such as "Suggest" visible at the top while the list scrolls. Sticky options lead the none
-option and extra options, stay outside groups, and keep their relative order. A result that is not
+action such as "Suggest" visible at the top while the list scrolls (see [Position](#position)). A result that is not
 an array is a development assertion and otherwise leaves the list unchanged. Content changes are reflected in
 `aria-setsize` and the announced count. On paged sources, the set is the declared total plus the
-customizations' net change. Two reveals in a row that add no visible rows stop paging for that
-query. The set is then sized by the rows shown, and the footer's `total` becomes undefined.
+customizations' net change. Two reveals in a row that add no visible options stop paging for that
+query. The set is then sized by the options shown, and the footer's `total` becomes undefined.
 Otherwise, footer `total` and `loadedCount` remain source counts. A group's action header or
 footer is an option too, so `aria-setsize` counts every one shown: with a declared total it grows
 as pages add groups (40 + 2, then 40 + 5), and a reveal that only adds a footer announces one more
@@ -678,20 +812,20 @@ options, but not for group headers, dividers, chips or the trigger. The context 
 restrictions). It has no `control`. An option rebuilt with equal settings is not presented again.
 
 **`config`** overrides presentation. The core keys are `caretIcon` (a string or
-`{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneRow`,
+`{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneOption`,
 `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
 (see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
 arguments. Every key is last-wins except `disabled`, which can add a lock but never lift one, and
 `texts`, which merges per entry. `iconOnly` needs an `ariaLabel` text above the engine's default:
 without one it is ignored with a warning. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
-per change in what they read, not once per row. The context has `value` and `control`, and no
+per change in what they read, not once per option. The context has `value` and `control`, and no
 `config`, because config cannot depend on itself.
 
 **`load`** receives the loader for a new query and returns the one to use. The loader it receives
 answers with options, so a step reads the settings the steps inside it gave; a record it returns
 becomes an option with no settings. Remote work a
-customization adds belongs here rather than in a row's `onSelect`: a pending loader shows the
+customization adds belongs here rather than in an option's `onSelect`: a pending loader shows the
 loading skeleton (with `loadingStatus` on, `loadingLabel` captions it, with a spinner, in place of one skeleton row), its
 `signal` cancels a superseded request, and a rejection shows the error state. It runs when the
 query's first page starts, outside render, and the returned loader handles every reveal of that
@@ -717,7 +851,7 @@ relies on:
   being edited. A recipe forwards the one it was given.
 
 Both default to a frozen empty object, so `context.kindContext.scope` is always safe to read.
-Derived values such as labels are recipe options, not `kindContext`.
+Derived values such as labels are recipe config, not `kindContext`.
 
 `content`, `option`, `load` and `change` contexts also carry `config`, a frozen snapshot of the
 resolved core and recipe values. A change middleware and the emit it lets through share one
@@ -725,11 +859,16 @@ snapshot, so a deferred `next()` emits the values the middleware saw.
 
 `content`, `option` and `config` run while the list renders, so they must be pure. They must not
 write tracked state or call `update()` or any control or scope verbs. Those are for event time,
-such as a row's `onSelect`. A callback that reads tracked state runs again when that state
+such as an option's `onSelect`. A callback that reads tracked state runs again when that state
 changes. `load` runs outside render and may update its own state, such as leaving a mode when the
-query has a filter. Read `control.pending` in `content` to return a reactive loading row, for
-example with `name: control.pending ? i18n("suggesting") : i18n("suggest")` and
-`disabled: control.pending`.
+query has a filter. Read `control.pending` in `content` to return a reactive loading option:
+
+```js
+selectOption(
+  { id: "suggest", name: control.pending ? i18n("suggesting") : i18n("suggest") },
+  { disabled: control.pending, onSelect: suggest }
+);
+```
 
 ### Errors
 
@@ -741,40 +880,43 @@ consumer's `@onChange` is never treated as a broken customization: it reaches th
 
 ### The control
 
-`control` is the select's handle. Action rows receive it as `onSelect(control, item)`, and the
-`content`, `options`, `load` and `change` contexts carry it. It is the same frozen object for the
-select's whole life. It exposes:
+`control` is the select's handle. Action options receive it as `onSelect(control, record)`, and
+the `content`, `config`, `load` and `change` contexts carry it. It is the same frozen object for
+the select's whole life. It exposes:
 
 - `value`, `filter`, and tracked `pending` (whether async update work is in flight).
 - `close()` to close the overlay.
-- `select(item)` to set a single value or add a multi value.
-- `selectMany(items)` to add a batch with one `change` middleware run and one `@onChange`.
-  It skips disabled, action, structural, already-held and duplicate items, and truncates to
-  the remaining `@maximum` capacity. It caches added items for display. Empty and locked
+- `select(entry)` to set a single value or add a multi value. The entry is a record or an
+  option, and the select honours exactly what it is given: a bare record is an option with no
+  settings, a disabled option selects nothing, and an action option asserts.
+- `selectMany(entries)` to add a batch with one `change` middleware run and one `@onChange`.
+  It skips disabled and action options, already-held and duplicate values, and truncates to
+  the remaining `@maximum` capacity. It caches added records for display. Empty and locked
   batches emit nothing; even an all-held or fully capped batch supersedes older update work.
-  A batch that adds nothing because its items were held or over the limit emits no change,
+  A batch that adds nothing because its entries were held or over the limit emits no change,
   but is announced ("All already selected", or the skipped count with its reason), pastes
   included.
-  On a single-select it selects the first new eligible item.
-- `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
-  A locked value stays.
+  On a single-select it selects the first new eligible entry.
+- `deselect(entry)` to remove a multi value, or clear a single value only if that record is
+  held. A locked value stays.
 - `clear()` to clear a nonempty selection, keeping its locked values.
 - `reload()` to start a new query, even with the same filter. It does not supersede a pending
   `update()`. Its loading state waits out the usual delay, so a fast answer never flashes a
   skeleton. `reload({ immediate: true })` shows it at once, for a reload that switches what the
-  list shows (a toggle into or out of suggestions), where the rows on screen are already wrong.
-  A loader that can answer synchronously (cached results) shows no loading state either way.
+  list shows (a toggle into or out of suggestions), where the options on screen are already
+  wrong. A loader that can answer synchronously (cached results) shows no loading state either
+  way.
 - `update(work)` to run synchronous or asynchronous work with a selection update scope.
 
-The scope has an `AbortSignal` named `signal`, a pure `current` reader, and `select(item)`,
-`selectMany(items)`, `deselect(item)`, and `clear()` verbs. Pass `scope.signal` to cancellable
+The scope has an `AbortSignal` named `signal`, a pure `current` reader, and `select(entry)`,
+`selectMany(entries)`, `deselect(entry)`, and `clear()` verbs. Pass `scope.signal` to cancellable
 requests so the engine can stop them when the update is superseded or the select is destroyed.
 The signal is live during synchronous and asynchronous work and aborts with an `AbortError`
 reason. The update's own scope writes and `control.reload()` do not abort it.
 It has no `close()`, `reload()`, or `update()`. Inside `work`, call the scope's selection verbs.
 Calling `control.select()`, `control.selectMany()`, `control.deselect()`, or `control.clear()` expresses external
 selection intent and supersedes your own update. Scope writes use the normal selection rules,
-including caps, `change` customizations, resolved-item caching, `@onChange`, and close-on-select;
+including caps, `change` customizations, resolved-record caching, `@onChange`, and close-on-select;
 they do nothing while locked or after the scope loses authority.
 
 ```js
@@ -782,8 +924,8 @@ onSelect: (control) => {
   const filter = control.filter;
   control.update(async (scope) => {
     control.close();
-    const item = await suggest(filter, { signal: scope.signal });
-    if (item) scope.select(item);
+    const record = await suggest(filter, { signal: scope.signal });
+    if (record) scope.select(record);
     else if (scope.current) noSuggestionsToast();
   }).catch((error) => {
     if (error.name !== "AbortError") popupAjaxError(error);
@@ -806,32 +948,34 @@ supersedes the scope. Once work ends, its scope is no longer current. A deferred
 
 While async work is pending, the trigger shows selection loading feedback and a spinner.
 Synchronous work has no loading flash. Programmatic single sets and re-picks are announced;
-multi adds and removals keep their item announcements, and clear announces "Selection cleared".
+multi adds and removals keep their per-value announcements, and clear announces "Selection cleared".
 A batch announces one combined polite message: “3 added”, with “2 not added: already selected”
-and/or “1 not added: over the limit” when applicable. Repeated batch items count as already
-selected. Disabled, action and structural rows are silently skipped. Bulk feedback replaces
-single-item feedback and suppresses the trailing result count.
+and/or “1 not added: over the limit” when applicable. Repeated batch entries count as already
+selected. Disabled and action options are silently skipped. Bulk feedback replaces
+single-value feedback and suppresses the trailing result count.
 No-change and superseded work announce no outcome, so extensions should announce their own
 no-change result alongside a toast. Control methods do nothing once the select is destroyed.
 
 ### Parsing pastes
 
 `@parsePaste(text, context)` receives plain clipboard text and a snapshot of `{ filter,
-options, value }`. It runs on the desktop and mobile typeahead query inputs and the button
+config, value }`. It runs on the desktop and mobile typeahead query inputs and the button
 variant's filter. Return `null` or `undefined` to leave native paste untouched (for example,
-for a single token), or an array of items to prevent native paste and call `selectMany`.
+for a single token), or an array of records or options to prevent native paste and call
+`selectMany`, which skips disabled and action options.
 An accepted array clears the original query, including when the batch adds nothing.
 
 Without `@parsePaste`, a multi-select parses pastes itself, as select-kit did: two or more
-`|`-separated names are matched against the rows the source knows (every `@items` row, or the
-rows `@load` has returned so far), by value or by label ignoring case. A name with no row is
-created where `@allowCreate` allows it, and is skipped otherwise. A single name pastes as text.
+`|`-separated names are matched against the options the source knows (every `@options` entry,
+or the options `@load` has returned so far), by value or by label ignoring case. A name that
+matches a disabled or action option adds nothing. A name with no option is created where
+`@allowCreate` allows it, and is skipped otherwise. A single name pastes as text.
 
 ```gjs
 <DSelect
-  @items={{this.items}}
   @multiple={{true}}
   @onChange={{this.onChange}}
+  @options={{this.options}}
   @parsePaste={{this.parsePaste}}
   @value={{this.value}}
 />
@@ -844,7 +988,7 @@ synchronous parsers. Query cleanup rechecks the scope after middleware and only 
 same query in the same open session. Newer typing is preserved even if the batch still lands.
 An asynchronous nullish result makes no selection change and leaves the query intact.
 
-While a promise is pending, the open list shows its loading state, so no row can be picked
+While a promise is pending, the open list shows its loading state, so no option can be picked
 even if the user types; the typed text stays. The held chips stay drawn, followed by one
 placeholder chip (`engine.pastePending`). Removing a chip, like any other selection change,
 cancels the paste. Other asynchronous updates still draw every chip as a placeholder.
@@ -857,39 +1001,42 @@ exception to the kit's domain-free primitives. A recipe:
 
 - sets `@kind`, and passes `@kindContext` with its raw state;
 - forwards the call site's `@identifier`, `@instanceContext`, `@legacyKind` and `@onChange`, and
-  its `:item`, `:selection` and `:footer` blocks. A recipe that can hold several values also
+  its `:option`, `:selection` and `:footer` blocks. A recipe that can hold several values also
   forwards `@lockedValues`, in the keys its select holds (tag recipes take names). Its signature
   extends `SelectRecipeArgs` or `MultiSelectRecipeArgs` from `recipes/-internals/recipe-args.ts`,
   and the recipe test `recipe-args-test.gjs` checks that each of those arguments takes effect;
-- owns its source, because its rules (exclusion, caps, held lookups) apply to every row it
+- owns its source, because its rules (exclusion, caps, held lookups) apply to every option it
   lists. A call site with its own data passes it under DSelect's name for that kind of source,
-  `@items` for a local list or `@load` for a server, but in the recipe's own record type, never
-  DSelect items, and only the kind the recipe uses. The recipe runs its rules on those records
-  and documents which ones it leaves to the source. `DSelectGroup` and `DSelectTagFilter` take
-  `@items`, `DSelectUser` takes `@load`. A customization changes the rows through `spec.load`
-  or `spec.content`;
+  `@options` for a local list or `@load` for a server, as the recipe's domain type (groups,
+  tags), wrapped with `selectOption` where an entry needs settings, and only the kind the recipe
+  uses. The recipe runs its rules on those records, lists them as they are wherever it can so
+  `option.record` is what the caller passed, and documents which rules it leaves to the source.
+  A recipe that must build its own record from a caller's carries the caller's settings over
+  with `option.settings`. `DSelectGroup` and `DSelectTagFilter` take `@options`, `DSelectUser`
+  takes `@load`. A customization changes the options through `spec.load` or `spec.content`;
 - passes `@suppressFooter={{not (has-block "footer")}}` with a forwarded `:footer`. A forwarded
   block always counts as passed, so without it every recipe panel ends in an empty footer;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
 
 #### What the engine already does
 
-A recipe states its domain's rules and renders its rows. Before writing anything else, check this
+A recipe states its domain's rules and renders its options. Before writing anything else, check this
 list; if a need is missing from it and from the domain's model, ask before adding code.
 
 Sources (`-internals/engine/select-sources.ts`):
 
-- `@items` is a client source (`LocalSource`); `@load` is a server source (`PagedSource`), even
+- `@options` is a client source (`LocalSource`); `@load` is a server source (`PagedSource`), even
   when it answers synchronously.
 - A `@load` that returns a plain array has returned the complete set. Return
-  `{ items, total, hasMore, cursor }` only to page: the engine keeps the offset, the page number and
+  `{ options, total, hasMore, cursor }` only to page: the engine keeps the offset, the page number and
   the cursor, hands them back as `opts.offset`/`opts.page`/`opts.cursor`, and asks again on a
   reveal. A recipe never counts pages itself.
 - Without `hasMore`, `total` decides whether more pages remain, and sizes the list for
   `aria-setsize`. An explicit `hasMore` wins, and `hasMore: false` ends paging. Return only the
-  counted records: a row that belongs after a record, such as an action on its family, is a
-  group footer the engine adds (see Grouping below), never a row in the page.
-- Rows are de-duplicated by key across pages, and a response for a superseded query or reveal is
+  counted records: an option that belongs after a record, such as an action on its family, is a
+  group footer the engine adds (see Grouping below), never an option in the page, and an action
+  that belongs after everything is an `@extraOptions` entry with `position: "end"`.
+- Options are de-duplicated by key across pages, and a response for a superseded query or reveal is
   dropped, so a loader never checks its `signal` or compares results.
 - Rendering is windowed, so a long array costs only the rows on screen.
 - A filter change waits the input delay only for a loader that answered with a promise
@@ -899,48 +1046,51 @@ Sources (`-internals/engine/select-sources.ts`):
 
 Grouping (`-internals/engine/list-composer.ts`):
 
-- `@groupBy` groups the rows. A client source merges every row of a key; a `@load` source groups
-  consecutive rows, so pages only append. Rows with no key form their own `undefined` group, and
+- `@groupBy` groups the options. A client source merges every option of a key; a `@load` source
+  groups consecutive options, so pages only append. Options with no key form their own
+  `undefined` group, and
   the builders return nothing for it. `@groupDividers={{false}}` drops the splitters between
   groups.
-- `@groupHeader` and `@groupFooter` build each group's boundaries from its key and rows: text, an
-  action row, or nothing. The engine keys, positions and describes them, and holds a paged
-  source's last footer back until no more rows can load.
+- `@groupHeader` and `@groupFooter` build each group's boundaries from its key and options: text,
+  an action option (`selectOption(record, { onSelect })`), or nothing. The engine keys, positions
+  and describes them, and holds a paged source's last footer back until no more options can load.
 
 Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
 
 - `@multiple` defaults to `false`. A recipe forwards it; it never flips the default.
-- `@valueRecords` gives items for held ids already in hand; `@resolveValues` resolves the rest,
+- `@valueRecords` gives records for held ids already in hand; `@resolveValues` resolves the rest,
   synchronously or not. The engine normalizes `@value`'s shape and the emitted ids' types.
 - Two ids are the same option when their string forms match, so `5` and `"5"` match but `"sam"`
   and `"Sam"` don't. A domain whose ids match loosely passes `@normalizeKey`, such as a
   lowercasing one for usernames. It applies to selection, de-duplication and held-value
   resolution; emitted values keep their own spelling. Most domains need exact keys, so it has
   no default.
-- `@specialItems` adds recipe-owned rows ahead of the source's, from a snapshot of the filter
-  and value. They are not de-duplicated against the source, so the source must leave them out.
-- `@noneRow` adds the single-select "none" row, worded by the `noneLabel` text; `@maximum` and `@minimum` cap the selection
+- `@extraOptions` adds recipe-owned options ahead of the source's (or at the end, with
+  `position: "end"`), from a snapshot of the filter and value. No query filters them and no
+  content step sees them. A source option with an extra option's value is dropped, so the
+  extra option keeps it; the same record object in both asserts in development.
+- `@noneOption` adds the single-select "none" option, worded by the `noneLabel` text; `@maximum` and `@minimum` cap the selection
   and announce the limit.
-- Held rows stay listed and marked as selected, which keeps the selection reachable for
+- Held options stay listed and marked as selected, which keeps the selection reachable for
   assistive technology. `@hideSelected` exists, but is not a default to copy from the old
   component.
-- A row with `onSelect` is an action: `control.update(async (scope) => …)` runs its work, and
+- An option with an `onSelect` setting is an action: `control.update(async (scope) => …)` runs its work, and
   `scope.selectMany` is a no-op once a later change supersedes it (`SelectUpdateScope` in
   `select-engine.ts`).
 
 Presentation:
 
 - `@caretIcon={{hash open closed}}` sets the caret, and customizations override it as the core
-  `caretIcon` option (`-internals/coordinators/variant-presenter.ts`,
+  `caretIcon` config key (`-internals/coordinators/variant-presenter.ts`,
   `-internals/engine/customizations.ts`). A recipe never tracks open state to draw its own.
 - `@texts` (`ariaLabel`, `placeholder`), `@ariaLabelledBy`, `@id` and `@describedBy` name and
   describe the control. A recipe sets its own defaults through `@kindTexts` and forwards `@texts`
   untouched (see [Texts](#texts)).
-- `@kindConfig` declares only rules the engine has no option for.
+- `@kindConfig` declares only rules the engine has no argument for.
 
 Shared helpers outside the engine: `makeArray` (`lib/helpers.ts`) normalizes one-or-many values,
 `removeAccents` (`lib/utilities.js`) folds accents, and the `ui-kit/helpers/` badges
-(`dCategoryBadge`, `dDiscourseTag`) render domain rows. A domain model's statics, such as
+(`dCategoryBadge`, `dDiscourseTag`) render domain records. A domain model's statics, such as
 `Category.findByIds`, `findByIdsOrLoad`, `asyncFindByIds`, `search`, `searchCategories`,
 `matchesSearch` and `asyncFindDescendants`, answer lookups and searches; a recipe calls them instead of wrapping them in a `lib/*-source`
 module.
@@ -962,12 +1112,12 @@ The tag family has three recipes, split by what the pick is for:
   `NO_TAG_ID`, nothing or `ALL_TAGS_ID` (both filter nothing; the ids are exported by the
   module), or several tags with `@multiple` for intersections. It is named "Filter by: tags", and
   with nothing filtered it shows the `placeholder` text, "tags" by default. While browsing it offers the
-  "remove filter" (emitting `ALL_TAGS_ID`) and "no tags" shortcuts as `@specialItems`, then the
+  "remove filter" (emitting `ALL_TAGS_ID`) and "no tags" shortcuts as `@extraOptions`, then the
   top tags, and never navigates: the call site turns the pick into a URL. A single filter clears
-  only through its "remove filter" row; Backspace leaves it alone, since a stray key would
-  otherwise change the page. With `@multiple` it holds tags in order and matches them to rows by
+  only through its "remove filter" option; Backspace leaves it alone, since a stray key would
+  otherwise change the page. With `@multiple` it holds tags in order and matches them to options by
   name, since an intersection URL holds them by name; it browses and searches as the single
-  filter does, with no shortcuts, no tag cap and no name lookup. `@items` replaces the top tags
+  filter does, with no shortcuts, no tag cap and no name lookup. `@options` replaces the top tags
   and the server search with the caller's own tags. The breadcrumbs pass
   `breadcrumb-tag` and `breadcrumb-tag-intersection`.
 - **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name, one unless
@@ -1015,8 +1165,9 @@ chain then falls back to the minimum or the prompt. The server counts the group'
 against the ids the search sends (at most 100), so tags held by name are missing from the count
 until their names resolve.
 
-The default tag row draws the create row with the `createItem` text (`d_select.create_item`). A custom `:item` block
-owns that wording too; its third parameter's `row.create` tells the create row from existing tags.
+The default tag option draws the create option with the `createOption` text (`d_select.create_item`). A custom
+`:option` block owns that wording too; its third parameter's `option.create` tells the create option from
+existing tags.
 
 #### Category recipes
 
@@ -1034,17 +1185,17 @@ The category family has two recipes:
     with several lists passes each list only the categories the other lists hold.
   - `@scope` and `@prioritize` are the composer's rules. While browsing, they act one level up:
     the category's parent and that parent's children.
-  - `@disabledCategories` are shown only as disabled rows at the top, described as read-only,
+  - `@disabledCategories` are shown only as disabled options at the top, described as read-only,
     and stay listed while a search matches them. The composer passes the category a new topic
     started from but cannot be posted in.
   - The `placeholder` text is the trigger text with no value; it never names the control.
-    `@noneRow` adds a selectable "none" row instead, worded by the `noneLabel` text.
+    `@noneOption` adds a selectable "none" option instead, worded by the `noneLabel` text.
   - Without an `ariaLabel` text or `@ariaLabelledBy`, the control is named "Category"
     (`categories.category`), or "Categories" (`categories.categories`) when it can hold more than
     one: multiple, with `@maximum` other than 1.
   - `@descriptions` defaults to single mode. `@showAncestors` adds ancestor badges to chips.
   - `@selectDescendants` (the default when multiple) groups a search of two or more characters
-    by family and follows each family's category with a footer row that adds the category and
+    by family and follows each family's category with a footer option that adds the category and
     every level below it, before the rest of the family. The footer draws the category's badge
     with its topic count and "+ Subcategories", and its label speaks the same words. A family
     gets a footer only when its own category is among the results, is not disabled, and has a
@@ -1066,7 +1217,7 @@ the same rules and order: browsing lists each category after its parent, sibling
 and keeps each family together. A preloaded site answers synchronously with every match at once,
 for the engine to window, so typing never waits for the input delay; a lazy site pages by
 `opts.page`. The scope's own category and the read-only categories, which the search leaves out,
-are special rows. Held ids resolve through `Category.asyncFindByIds`, and a family's footer walks
+are extra options. Held ids resolve through `Category.asyncFindByIds`, and a family's footer walks
 the tree through `Category.asyncFindDescendants`.
 
 The drop browses and searches through `Category.searchCategories` on every site. A search spans
@@ -1090,44 +1241,45 @@ The people family has two recipes, one per data source:
 - **`DSelectUser`** (kind `select-user`) picks users from the server's user search, and groups
   or email addresses when asked. `@value` takes usernames, group names or addresses, as one
   string or an array; it holds one unless `@multiple={{true}}`. `@onChange` emits the held
-  values and their items, whose `type` (`"user"`, `"group"` or `"email"`) tells them apart:
+  values and their records, whose `type` (`"user"`, `"group"` or `"email"`) tells them apart:
   arrays when multiple, otherwise one value or `null`. The rules:
   - `@includeGroups` offers groups: the visible ones (`"visible"`), those the user can mention
     (`"mentionable"`) or those they can message (`"messageable"`). `@emails` offers a valid
-    typed address as a row.
+    typed address as an option.
   - `@exclude` lists usernames and group names never offered, in any case.
     `@excludeCurrentUser` adds the current user. `@includeStaged` includes staged users.
   - `@topicId` or `@categoryId` scope the search, and list that topic's or category's users
     before anything is typed. Otherwise a search starts at the first character, unless the
-    call site passes `@specialItems`, which are listed on open and then above the matches.
+    call site passes `@extraOptions`, which are listed on open and then above the matches.
   - `@searchParams` adds search parameters: camelCase keys are sent snake_cased, and unset
     keys are not sent. Customizations override it as the `searchParams` config key; the value is
     replaced, not merged, so an extension spreads `current.searchParams`.
-  - `@showStatus` shows each user's status in the rows.
+  - `@showStatus` shows each user's status in the options.
   - `@load(term)` answers searches in place of the user search, for a call site with its own
     endpoint. It answers in the user search's shape, `{ users, groups }`, as a value or a
     promise, the empty query included, so it decides what is listed before anything is typed.
-    The picker still applies `@exclude` and `@excludeCurrentUser`, ranks the rows and draws them;
+    The picker still applies `@exclude` and `@excludeCurrentUser`, ranks the results and draws them;
     the loader decides how many, with no cut at six. A search row with `disabled: true` is listed but
-    can't be picked, and its `disabledReason` is drawn in its row beside the name. Picked records
+    can't be picked, and its `disabledReason` is drawn in its option beside the name. An entry may
+    be an option, whose settings apply on top of the picker's. Picked records
     carry the search row's `id` as `sourceId`, and a group's `automatic`. Held names are still looked
     up through the user search. Keep `@load` stable and pass its inputs through `@loadContext`.
   - Held names are looked up together, in one request per value change, and keep the
     spelling they were given. A name nothing resolves stays as typed, with no `type`.
-  - Names match in any case, as the server matches them: a held `sam` marks the `Sam` row
-    selected, and picking that row removes it rather than adding a second chip.
+  - Names match in any case, as the server matches them: a held `sam` marks the `Sam` option
+    selected, and picking that option removes it rather than adding a second chip.
   - With `@multiple`, pasting a list that has a comma, a newline or an `@` adds every name in
     it at once. The list is split on commas and whitespace, and a leading `@` is dropped. A
     single plain name is typed as usual.
-  - Rows show the avatar, the username (through `formatUsername`) and the name. In a list that
+  - Options show the avatar, the username (through `formatUsername`) and the name. In a list that
     mixes users with groups or addresses, groups get a group icon and addresses an envelope,
     and chips speak a type word after a group or an address (`groupType`, `emailType`).
 - **`DSelectGroup`** (kind `select-group`) picks from the site's groups, filtered locally.
   `@value` and `@onChange` use group ids, or names with `@emit="names"`; both follow it, since a
   name and a string id can't be told apart. `@automatic={{false}}` and `@everyone={{false}}`
   leave those groups out, `@exclude` lists group ids never offered, and `@only` lists the only
-  ones offered. `@items` replaces the site's groups for a call site with its own list; the other
-  filters still apply. Held names
+  ones offered. `@options` replaces the site's groups for a call site with its own list, as group
+  records or options; the other filters still apply, to action options too. Held names
   match their groups in any case.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a user picker is named for what it offers,
@@ -1140,7 +1292,7 @@ Until cleanup, `DSelectUser` defaults `@legacyKind` to both `user-chooser` and
 
 #### Topic recipes
 
-The topic family has two recipes over one source, the site search, with shared rows, texts and
+The topic family has two recipes over one source, the site search, with shared renderers, texts and
 held lookups in `recipes/topics/-internals/`:
 
 - **`DSelectTopic`** (kind `select-topic`) is the trigger form, for form fields, modals
@@ -1152,7 +1304,7 @@ held lookups in `recipes/topics/-internals/`:
 
 Both take `@exclude`, topic ids never offered, such as the topic being worked on. A single held
 topic shows the badge of its own category beside its title, which tells similar titles apart
-(rows also show the parent); chips show the title alone.
+(options also show the parent); chips show the title alone.
 
 Both search as the topic chooser did:
 
@@ -1165,8 +1317,8 @@ Both search as the topic chooser did:
   answers every topic the viewer can see, muted or not, unlike a topic list. `@topics` passes
   topics already in hand, which need no lookup. A held id nothing answers for is named by the
   `unresolved` text, "Topic #%{id}".
-- Rows show the topic's status icons, its title with emoji, and its category badge with its
-  parents. Held items show the title.
+- Options show the topic's status icons, its title with emoji, and its category badge with its
+  parents. Held topics show the title.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a topic picker is named "Topic" or "Topics",
 or "Message" or "Messages" for messages. Its field invites a title, URL or ID, since a topic is
@@ -1189,28 +1341,29 @@ their base values:
 />
 ```
 
-- Declare a key only for a rule the engine has no option for. The caret, for one, is the core
+- Declare a key only for a rule the engine has no argument for. The caret, for one, is the core
   `caretIcon` (`@caretIcon={{hash open="angle-down" closed="angle-right"}}`), which extensions
   already override.
 - `@kindConfig` requires `@kind`, and a key named like a core key asserts. A `null` value counts
   as absent, but the key stays declared.
 - The keys are fixed when the select is created; their values stay live.
-- Extensions override them with the same `spec.options` as core keys, through `forKind` (or
+- Extensions override them with the same `spec.config` as core keys, through `forKind` (or
   `forIdentifier` for one call site). `current` starts from the recipe's base value.
 
-The resolved options, core and recipe keys together, reach the recipe as a new last argument, so
-existing arguments keep their positions:
+The resolved config, core and recipe keys together, reaches the recipe as a new last argument,
+so existing arguments keep their positions:
 
-- `@items` as a function is called as `items(options)`. A zero-argument function still works.
-- `@load`, `@resolveValue` and `@resolveValues` get `options` on their second argument.
-- `@onChange` gets `options` on its third argument, `{ origin, reason, options }`.
-- `allowCreate`, `createItem`, `createUnresolvedRecord`, `specialItems` (after its snapshot),
-  `filterBy`, `groupBy`, `groupHeader` and `groupFooter` get it as their last argument.
-- The `:item`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
-  `:footer` blocks yield it as their
-  last parameter.
+- `@options` as a function is called as `options(config)`. A zero-argument function still works.
+- `@load`, `@resolveValue` and `@resolveValues` get `config` on their second argument.
+- `@onChange` gets `config` on its third argument, `{ origin, reason, config }`.
+- `allowCreate`, `createOption`, `createUnresolvedRecord`, `extraOptions` (after its snapshot),
+  `valueRecords` as a function, `filterBy`, `groupBy`, `groupHeader` and `groupFooter` get it
+  as their last argument.
+- The `:selection`, `:unresolved`, `:listHeader` and `:footer` blocks yield it as their last
+  parameter, and `:option`, `:groupHeader` and `:groupFooter` as their second, before the
+  option or the group.
 
-Code outside `DSelect`, such as markup around it, cannot read the resolved values.
+Code outside `DSelect`, such as markup around it, cannot read the resolved config.
 
 Use `@multiple={{false}}` for single fields. A call site that stores an array adapts between
 the recipe's single value and its array boundary; FormKit's tag chooser does this when its
@@ -1225,38 +1378,43 @@ by mechanism.
 ### Covered
 
 - Single and multiple selection, with chips and per-chip removal (`@multiple`).
-- A first-class "none" row on single-select (`@noneRow`, worded by `noneLabel`): a selectable list row that clears the
-  value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
+- A first-class "none" option on single-select (`@noneOption`, worded by `noneLabel`): a selectable
+  option that clears the value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
   filtered out under an active query so a non-matching search still reaches the empty state.
-- Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and an
-  optional server row ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;
+- Client (`@options`) and server (`@load`) sources; true pagination with tail reveal and an
+  optional server ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;
   `@filterBy` field or predicate; `@minChars` gate (2 or more: any one character already searches); `@debounce` (filter changes only; reveals
   and reloads fetch at once). By default a server source waits the input delay, unless its
   loader last answered without a promise; a synchronous `@load` filters at once, so a recipe
   never needs to toggle `@debounce` itself.
-- Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
+- Create-on-the-fly (`@allowCreate` + `@createOption`); the select's own extra options
+  (`@extraOptions`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
   named unresolved fallback (`@createUnresolvedRecord`). A resolver may answer synchronously, so a
-  consumer already holding the item just returns it; `@load` answers queries and is never asked
+  consumer already holding the record just returns it; `@load` answers queries and is never asked
   "what is this id", so an async source that can mount holding a value needs a resolver.
-- `@valueRecords`: already-resolved item(s) for the ids in `@value`, read reactively. It selects
-  nothing itself — entries are looked up BY `@value` — but unlike a resolver it may arrive after
+- `@valueRecords`: already-resolved record(s) for the ids in `@value`, read reactively. It selects
+  nothing itself (entries are looked up BY `@value`), but unlike a resolver it may arrive after
   mount, so a consumer loading them itself refreshes every selection surface when they land.
-- Multi-select value-type coercion: each emitted id is normalized to its source item's native type
+- Multi-select value-type coercion: each emitted id is normalized to its source record's native type
   (so a URL-typed `"5"` and a freshly-picked `3` never emit as a mixed `["5", 3]`); an unresolved id
   passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).
-- Per-item `disabled`: arrow keys, Home/End and PageUp/PageDown reach every option, including
-  item-disabled and cap-disabled rows. They keep `aria-disabled="true"` and cannot be activated
-  by Enter or click. Entry seeding and typeahead auto-highlight still skip disabled rows.
-- Per-item `description` (string): visible secondary text inside the option, referenced through
-  `aria-describedby` alongside its group header. It is excluded from the option's accessible
-  name and also renders with a custom `:item` block.
-- Per-item action rows (`onSelect(control, item)`, which run instead of
-  selecting and keep the overlay open unless the row calls `control.close()`).
-- Per-item `sticky: true` for leading rows that stay visible while scrolling, such as a
-  "Suggest" action. They remain options in the same listbox and participate in keyboard
-  navigation. Use `:footer` for bottom actions.
-- Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
+- Per-option settings through `selectOption(record, settings)` (see
+  [Options and records](#options-and-records)):
+  - `disabled`: arrow keys, Home/End and PageUp/PageDown reach every option, including disabled
+    and cap-disabled ones. They keep `aria-disabled="true"` and cannot be activated by Enter or
+    click. Entry seeding and typeahead auto-highlight still skip disabled options.
+  - `description` (string): visible secondary text inside the option, referenced through
+    `aria-describedby` alongside its group header. It is excluded from the option's accessible
+    name and also renders with a custom `:option` block.
+  - `onSelect(control, record)` for action options, which run instead of selecting and keep the
+    overlay open unless the action calls `control.close()`.
+  - `position: "sticky"` for leading options that stay visible while scrolling, such as a
+    "Suggest" action, and `position: "end"` for options after every other one, such as a
+    "Remove" action. Both remain options in the same listbox and take part in keyboard
+    navigation. Use `:footer` for content outside the listbox.
+  - `divider: "before"` or `"after"` for a rule beside an option.
+- Selected-option indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
   icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved `ariaLabel` text for
@@ -1266,10 +1424,10 @@ by mechanism.
   search field that is not the trigger (the `button` panel's field, the mobile modal's, and
   DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
-- Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
-  `:selection` block is the resting/closed display — once the menu opens the built-in input shows
+- Custom option and selection markup (`:option` / `:selection` blocks; on the typeahead variant the
+  `:selection` block is the resting/closed display: once the menu opens the built-in input shows
   the editable label text, so it is not a live-while-editing surface); empty state
-  (the `noResults` text / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeletonItem` block
+  (the `noResults` text / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeleton` block
   for one placeholder row); a muted source-error state with an optional retry (`@retryable`) and an
   `:error` consumer block.
 - A fixed `:footer` block below the option list (labels, links, action buttons), keyboard-reachable,
@@ -1277,59 +1435,62 @@ by mechanism.
   yield live state `{filter, query, pending, showingSkeleton, value, hasValue, total, loadedCount,
   maximum, minimum, atMaximum, belowMinimum, remaining, close}` so their content can react (e.g. a
   "plus N more" from `total - loadedCount`). The search fields are described under `DSelectList`.
-- `@hideSelected` omits held options from the results without reloading. Held items stay reachable
-  as chips; a local static list shows its strip of held items instead. `@panelChips` lists held
-  items in the panel even where the rows already show them (see "The panel field").
+- `@hideSelected` omits held options from the results without reloading. Held records stay reachable
+  as chips; a local static list shows its strip of held records instead. `@panelChips` lists held
+  records in the panel even where the options already show them (see "The panel field").
 - Selection limits (`@maximum` / `@minimum`, multi-select). `@maximum` is a hard cap enforced at the
   engine's single `select()` chokepoint (so pointer, keyboard, create-on-the-fly, and the compat
   bridge are all covered) and reinforced by disabling every unselected option at the cap. Action
-  rows stay open at the cap because they never become a value, except a group's action header
-  or footer, which acts by adding rows and so closes like an option; a value
+  options stay open at the cap because they never become a value, except a group's action header
+  or footer, which acts by adding options and so closes like any other; a value
   seeded over the cap is displayed and removable, never trimmed. Pass `@maximum={{false}}` for no
   cap. Numbers below 1 and NaN also mean no cap, with a once-per-select development warning.
-  `@minimum` is advisory (message + state only, never blocks removal — the consuming form owns
+  `@minimum` is advisory (message + state only, never blocks removal; the consuming form owns
   submit-time enforcement). Values in `@lockedValues` count toward `@maximum`, so a cap they
   fill leaves nothing to remove. A built-in limit message renders in a dedicated top zone of the panel
   (never stacking with the footer or an error body). Cap-disabled options also reference this message through `aria-describedby`,
-  alongside any item description and group header. The limit state is exposed on the engine and
+  alongside any option description and group header. The limit state is exposed on the engine and
   yielded to `:footer`.
 - Customization through one `select-customizations` transformer targeting `@kind` or
-  `@identifier` (content, rows, presentation options, loading and change, see
-  [Extension points](#extension-points)); recipe options through `@kindConfig`; plus richer
+  `@identifier` (content, options, config, loading and change, see
+  [Extension points](#extension-points)); recipe config through `@kindConfig`; plus richer
   screen-reader announcements than the legacy family.
-- Groups via `@groupBy` (a field name or `(item, options) => key`). Grouping runs after filtering
-  on every render, so an empty group draws nothing and boundaries are always recomputed. A client
-  (`@items`) source merges every row of a key into one group, in first-appearance order. A `@load`
-  source groups consecutive rows instead, so a later page only ever appends: it extends the last
-  group or starts new ones, and a key that comes back later starts another group. Return a
-  family's rows together to keep it in one group. Groups are found before held rows are hidden,
-  so selecting never renumbers them.
+- Groups via `@groupBy` (a field name or `(record, config) => key`). Grouping runs after
+  filtering on every render, so an empty group draws nothing and boundaries are always
+  recomputed. A client (`@options`) source merges every option of a key into one group, in
+  first-appearance order. A `@load` source groups consecutive options instead, so a later page
+  only ever appends: it extends the last group or starts new ones, and a key that comes back
+  later starts another group. Return a family's records together to keep it in one group. Groups
+  are found before held options are hidden, so selecting never renumbers them. Positioned
+  options are never grouped.
 
   Each group may have a header and a footer, built by `@groupHeader` and `@groupFooter` from
-  `(key, rows, options)`, where `rows` are the group's surviving rows, frozen. Either builder
-  returns text (a `role="presentation"` row), an action row (an item with `onSelect`, rendered as
-  a navigable option and copied without `sticky`), or nothing; anything else is a development
-  assertion. Builders run during render, so they must be pure, and they return nothing for an
+  `(key, options, config)`, where `options` are the group's surviving options, frozen. Either
+  builder returns text (a `role="presentation"` row), an action option
+  (`selectOption(record, { onSelect })`, placed as it is and rendered as a navigable option), or
+  nothing; anything else, a bare record included, is a development assertion. Builders run during render, so they must be pure, and they return nothing for an
   `undefined` key. A group with no header of either kind gets an unlabeled splitter instead, a
   purely visual rule that is suppressed at the head of the list. `@groupDividers={{false}}` turns
   splitters off, for groups whose footers already mark where each one ends; positions, set sizes
   and footers are unchanged. Like `@groupBy`, it is read once when the select is built.
 
-  For a `@load` source, the last group's footer waits until no more rows can load (the source is
-  exhausted, either brake stopped paging, or `@maxLoaded` was reached), so a page that continues
-  that group adds rows above a footer that is not there yet instead of pushing one down. Its
-  builder is not called until then, and after a `@maxLoaded` stop its `rows` hold only the loaded
-  part. A header on that group sees only the rows loaded so far, so a whole-group action belongs
-  in a footer. Across pages a builder must keep each boundary's presence and kind, changing only
-  its contents; a development warning flags a change, since it would shift rows already shown.
+  For a `@load` source, the last group's footer waits until no more options can load (the source
+  is exhausted, either brake stopped paging, or `@maxLoaded` was reached), so a page that
+  continues that group adds options above a footer that is not there yet instead of pushing one
+  down. Its builder is not called until then, and after a `@maxLoaded` stop its `options` hold
+  only the loaded part. A header on that group sees only the options loaded so far, so a
+  whole-group action belongs in a footer. Across pages a builder must keep each boundary's
+  presence and kind, changing only its contents; a development warning flags a change, since it
+  would shift rows already shown.
 
-  After a search the cursor starts on the first activatable row. An action header leading the
+  After a search the cursor starts on the first activatable option. An action header leading the
   results is therefore where it starts, and Enter runs it; use a footer when Enter should pick a
-  record. An action footer is where it starts only when every row before it is held or disabled.
+  record. An action footer is where it starts only when every option before it is held or
+  disabled, and so is an end option, which never shows alone under a query.
 
   Each option in a group with a text header or text footer references their id-bearing label
   spans through `aria-describedby`, header first. A group with neither carries no group
-  description, and action rows name their group themselves: so an action header, or an action
+  description, and action options name their group themselves: so an action header, or an action
   footer without a text header, must name its group. Use a text header when the options need the
   group's name. The window extension keeps a group's text header and footer mounted while any of
   its rows are mounted, so descriptions resolve for every published window and the description
@@ -1338,44 +1499,44 @@ by mechanism.
   `:groupFooter` renders, keeping arbitrary block markup out of option descriptions. The engine
   still rejects a string `@groupBy` that names the value field outright.
 
-  The previous mechanism resolved ID references on every rendered frame; keeping headers mounted
-  guarantees them for every published window. During the one-runloop transient after an items change (the
-  same stale-window interval covered by the `{{#if descriptor}}` row guard), a regrouped option
+  Keeping headers mounted guarantees ID references for every published window. During the
+  one-runloop transient after an options change (the same stale-window interval covered by the
+  row part's `{{#if @descriptor}}` guard), a regrouped option
   can briefly reference a header outside the stale mounted set. Assistive technology treats that
   unresolvable ID reference as no description for that runloop.
   `aria-posinset`/`aria-setsize` stay global across groups: per-group numbering carries no
   meaning without nested `role="group"` semantics, which a windowed flat list cannot preserve.
   (The APG-sanctioned structure nests a `role="group"` with `aria-labelledby` between the
   listbox and its options; our flat virtualizer can't window nested group containers, so the
-  flat association is the sanctioned fallback — nested groups are a follow-up.)
-  **Invariant:** all structural rows are engine-injected. The `__header`/`__footer`/`__divider`
-  fields on `SelectRecord` (and the `__groupHeader`/`__groupFooter` stamps on action copies) are
-  engine plumbing with no public constructor — never supply them in `@items`,
-  `@load`, or `@specialItems` (grouping discards upstream structural rows and derives its own
-  structure); those inputs must be selectable options.
+  flat association is the sanctioned fallback; nested groups are a follow-up.)
+  **Invariant:** the engine builds its own options (the none and create options, unresolved
+  fallbacks, text group headers and footers, and dividers) as kinds no setting and no record
+  field can produce, so a caller's record is never mistaken for one. Grouping derives all
+  structure itself, and a group's action header or footer is the builder's own option, never a
+  copy. `@options`, `@load` and `@extraOptions` list only options a user can pick or run.
 
 ### Missing (scheduled)
 
-- **Nested `role="group"` grouping semantics** — the APG-sanctioned optgroup structure (a
+- **Nested `role="group"` grouping semantics**: the APG-sanctioned optgroup structure (a
   `role="group"` + `aria-labelledby` wrapping each group's options, kept even under virtualization,
   which is what a windowed listbox has to preserve for the structure to mean anything). Requires
   the windowing primitive to position nested group containers; the current flat list uses the
   `aria-describedby` fallback instead.
-- **Group-exclusive (radio) selection** — a multi-select where picking an option evicts its
+- **Group-exclusive (radio) selection**: a multi-select where picking an option evicts its
   group-mates from the value. Designed, not implemented: see
   `docs/select-kit-replacement/RADIO-GROUPS-DESIGN.md`.
-- **Misc knobs** — hidden native form input; hidden-value exclusion; autofocus / open-on-render;
+- **Misc knobs**: hidden native form input; hidden-value exclusion; autofocus / open-on-render;
   a consumer keydown boundary hook; filter icon.
 
 ### Deferred decisions
 
-- **Engine visibility** — `SelectEngine` stays a public headless entry point for now. Whether
-  to narrow the sanctioned surface (keep this module exporting only the types and item
+- **Engine visibility**: `SelectEngine` stays a public headless entry point for now. Whether
+  to narrow the sanctioned surface (keep this module exporting only the types and record
   helpers, move the class behind `-internals/engine/`) is deferred until a second renderer
   with real requirements exists: an internal class can be promoted later with one deliberate
   re-export, while a public one cannot be demoted once external code imports it. Revisit in a
   follow-up before external consumers appear.
-- **`DIconGridPicker` as the first headless consumer** — the most concrete candidate for a
+- **`DIconGridPicker` as the first headless consumer**: the most concrete candidate for a
   second engine renderer: it currently re-implements filtering and result-count announcements
   by hand and shares the roving-focus and announcement infrastructure already, while its grid
   rendering stays its own concern. A spike porting it onto the engine would answer the
@@ -1383,23 +1544,23 @@ by mechanism.
 
 ### Deferred / out of scope
 
-- **Grid / multi-column layout** — a two-dimensional picker is a separate primitive, not a linear
+- **Grid / multi-column layout**: a two-dimensional picker is a separate primitive, not a linear
   select.
-- **Full component overrides** — swapping the trigger, filter, or per-row component wholesale is
-  intentionally not offered; customization is the headless engine plus the `:item` / `:selection`
-  blocks.
-- **Legacy compatibility bridge** — `-internals/modify-select-kit-bridge.ts` is a migration aid,
+- **Full component overrides**: swapping the trigger, filter, or per-option component wholesale
+  is intentionally not offered; customization is the headless engine plus the `:option` /
+  `:selection` blocks.
+- **Legacy compatibility bridge**: `-internals/modify-select-kit-bridge.ts` is a migration aid,
   deprecated, and slated for removal, not a kept API.
 
 ## DSelectList
 
 Use `DSelectList` for a persistent search and selection surface inside a panel, or for
 several independent selects inside one `DMenu`. It is multi by default: pass an array to
-`@value` and replace it with the array from `@onChange(next, items, change)`. With
+`@value` and replace it with the array from `@onChange(next, records, change)`. With
 `@multiple={{false}}` it holds one value: `@value` is that value or `null`, a pick replaces it
-and `@onChange` receives the new value and its item, or `null` when the held chip is removed.
-The held item still shows as a chip in the search field, its row stays marked selected, and
-pressing that row again changes nothing. `@maximum` keeps its multi meaning, so a list that
+and `@onChange` receives the new value and its record, or `null` when the held chip is removed.
+The held record still shows as a chip in the search field, its option stays marked selected, and
+pressing that option again changes nothing. `@maximum` keeps its multi meaning, so a list that
 must hold one value at a time uses this mode rather than `@maximum={{1}}`, which refuses a
 second pick until the first is removed. It shares
 DSelect's sources, creation, paste parsing, customizations, selection limits and value
@@ -1415,12 +1576,12 @@ an inert `li.d-select__option.--placeholder` containing a text skeleton in the s
 `ul.d-select__options`, marked `aria-busy="true"`. Its first load uses the same row
 markup. Virtualized lists keep the separate skeleton list.
 
-`@hideSelected` leaves held items as chips in the search field and omits them from
+`@hideSelected` leaves held records as chips in the search field and omits them from
 results.
-Removing a chip restores its row without another source request. Rows then drop the
+Removing a chip restores its option without another source request. Options then drop the
 selection marker, which could only ever read unselected. The `:listHeader`
 block sits between the search field and results, outside the listbox. It yields the same live
-state and resolved options as `:footer`, so a suggested-results heading can show only
+state and resolved config as `:footer`, so a suggested-results heading can show only
 when `state.query` is empty. Four fields describe a search, the same way in DSelect:
 
 - `state.filter` is the text in the search field right now.
@@ -1434,12 +1595,12 @@ when `state.query` is empty. Four fields describe a search, the same way in DSel
   search that finished. Placeholder rows added below results for the next page do not count.
 
 This works with async `@load` sources. Unlike DSelect's, neither state has a `close`
-action. Other blocks are `:item`, `:selection`, `:selectionLoading`,
+action. Other blocks are `:option`, `:selection`, `:selectionLoading`,
 `:unresolved`, `:empty` and `:error`; see the typed signature in `d-select-list.gts` for
 their yielded values. Held values resolve through `@resolveValues`, `@resolveValue` or
 `@valueRecords`, as in DSelect.
 
-Nothing takes focus on render. A row press first focuses this select's search and keeps
+Nothing takes focus on render. An option press first focuses this select's search and keeps
 it there, including when another select previously held focus. The search field and its
 chips follow [the panel field](#the-panel-field) model. In a static list PageUp/PageDown
 jump to the first/last option, since every row is mounted. Tab visits the search field,
@@ -1453,7 +1614,7 @@ a query re-seeds it. List-state speech is restricted to the focused select, with
 second ownership check for deferred reports. Adds and removals always speak, and so does a
 single list's pick ("Selected Apple"), since no trigger reads the new value back. Empty
 and error content remains visible while unfocused without live-region roles. An
-empty query with no rows renders and speaks no empty-result message.
+empty query with no options renders and speaks no empty-result message.
 
 `@texts` (`ariaLabel`, and `searchPlaceholder`, default “Search…”), `@searchIcon` (a trailing glyph), `@id`, `@describedBy`, `@invalid`,
 `@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only

@@ -41,7 +41,7 @@ there are and where you are (`aria-posinset` / `aria-setsize`), open or closed
 (`aria-expanded`), the control's name and value. Every one of those we narrate ourselves is a
 fact we then have to keep in sync, in one voice, in one order.
 
-An event has no home in markup: an item added while its chip is not focused, more rows
+An event has no home in markup: a value added while its chip is not focused, more rows
 arriving under a stationary cursor, a load failing. Those earn a live region.
 
 This rule is the outcome of the cycle, not its premise. The original plan argued at length
@@ -320,8 +320,8 @@ the race the suite is otherwise blind to.
    cursor move is acceptable when the same channel is already carrying counts and reveals.
 
    **Start with the cheap half: stop saying "not selected" on every row.** K3 has two halves, and
-   only the silent one is a platform gap. The noisy one is ours — `select-item.gts` emits
-   `aria-selected` on every option in every variant (`if … "true" "false"`, which
+   only the silent one is a platform gap. The noisy one is ours — `select-option-content.gts`
+   emits `aria-selected` on every option in every variant (`if … "true" "false"`, which
    forces the attribute even when false), so arrowing a single-select narrates "not selected" row
    after row for a state that cannot be true of more than one of them. Dropping it for
    single-select variants is one argument, and it may be the whole remaining win in K3.
@@ -517,18 +517,19 @@ the race the suite is otherwise blind to.
   the end of. Spec-literal says `aria-setsize` is the complete set; the reachable-set reading
   disagrees. Untested either way — do not assume the current behaviour there is deliberate.
   Since `0bcbcb240ad` this arises only with an opt-in `@maxLoaded`; `MAX_RENDERED` is gone.
-- **A skipped row still occupies a position.** On the notification picker VoiceOver reads
+- **A skipped option still occupies a position.** On the notification picker VoiceOver reads
   "Watching, 4 of 6", and one ArrowDown lands on "Manage notification settings, 6 of 6" — the
   reader hears a position vanish and reasonably concludes the list misbehaved. The set size is
   wrong for two independent reasons, and `#isStructural`
-  (`select-engine.ts`) is the common cause: it treats only headers and dividers as
-  non-options, so both of these are counted.
-  1. **A disabled row is counted but unreachable.** `dRovingFocus`'s `#isUsable` skips
+  (`-internals/engine/list-composer.ts`) is the common cause: it treats only text headers,
+  text footers and dividers as non-options, so both of these are counted.
+  1. **A disabled option is counted but unreachable.** `dRovingFocus`'s `#isUsable` skips
      `aria-disabled="true"`, so the position exists and nothing can land on it.
-  2. **An action row is counted as a choice.** A row carrying `onSelect` is a command, not a
-     value, yet it occupies the last position — so the size claims one more choice than exists.
+  2. **An action option is counted as a choice.** An option with an `onSelect` setting is a
+     command, not a value, yet it occupies the last position — so the size claims one more
+     choice than exists.
 
-  The fork on (1): hide the disabled row from the set, or make it navigable and announce it as
+  The fork on (1): hide the disabled option from the set, or make it navigable and announce it as
   unavailable. Prefer **navigable**. Hiding it removes the row from the accessibility tree while
   leaving it on screen, so a reader cannot learn that an option they can see exists — and when a
   row is disabled conditionally, its existence is the actionable part. Renumbering to cover only
@@ -537,7 +538,7 @@ the race the suite is otherwise blind to.
   select, and native `<select>` does skip disabled options — check what browsers actually report
   for `aria-posinset` there rather than assuming native is the reference.
 
-  (2) is a separate decision about the action-row API, not a numbering fix: a command in the
+  (2) is a separate decision about the action option API, not a numbering fix: a command in the
   option set is arguably in the wrong place entirely, and the footer slot already exists for
   controls that are not choices.
 - **C3** — the active-option outline and the trigger focus ring were both

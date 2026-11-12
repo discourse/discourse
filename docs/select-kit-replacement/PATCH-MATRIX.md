@@ -11,17 +11,17 @@ A family joins only once the ports for its rows are done.
 
 | Kind | Sites | Targets today | Supported route | Status |
 |---|---|---|---|---|
-| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` through `forKind`: `caretIcon` for the category drop (kind `select-category-filter`), the tag drop (kind `select-tag-filter`) and the dropdowns | Available |
-| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.options` returning `iconOnly`; the recipe, the call site or the customization sets an `ariaLabel` text. The category drop (kind `select-category-filter`) draws the core caret, so `iconOnly` needs no other option there | Available |
-| Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | `spec.options` returning `{ texts: { placeholder } }`, through `forIdentifier("breadcrumb-category")` (or `forKind("select-category-filter")`), narrowed to the parent with `kindContext.parentCategory`. An empty level holds nothing, so the placeholder is what it shows. The title change is dropped on purpose: DSelect draws no title, and the visible text already says it | Available |
-| Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `spec.options` returning `disabled`, through `forIdentifier` | Available |
-| Row tooltips | 1 | every select-kit row | `spec.row` setting `title` | Available |
+| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.config` through `forKind`: `caretIcon` for the category drop (kind `select-category-filter`), the tag drop (kind `select-tag-filter`) and the dropdowns | Available |
+| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.config` returning `iconOnly`; the recipe, the call site or the customization sets an `ariaLabel` text. The category drop (kind `select-category-filter`) draws the core caret, so `iconOnly` needs no other config there | Available |
+| Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | `spec.config` returning `{ texts: { placeholder } }`, through `forIdentifier("breadcrumb-category")` (or `forKind("select-category-filter")`), narrowed to the parent with `kindContext.parentCategory`. An empty level holds nothing, so the placeholder is what it shows. The title change is dropped on purpose: DSelect draws no title, and the visible text already says it | Available |
+| Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `spec.config` returning `disabled`, through `forIdentifier` | Available |
+| Option tooltips | 1 | every select-kit row | `spec.option` setting `title` | Available |
 | Filtering the category list | 2 | `category-chooser` | `spec.content` through `forKind("select-category")`, or `forIdentifier("composer-category")` and `forIdentifier("topic-edit-category")` for those two choosers, whose `instanceContext` carries the composer model or the topic (the current-category variant reads it) | Available |
-| Shortcut rows with their own change routing | 1 | `category-drop` | `spec.content` for the rows and `spec.change` (without calling `next()`) for the routing, through `forKind("select-category-filter")`; the recipe has no shortcut or URL options, since the call site owns routing | Available |
+| Shortcut rows with their own change routing | 1 | `category-drop` | `spec.content` for the options and `spec.change` (without calling `next()`) for the routing, through `forKind("select-category-filter")`; the recipe has no shortcut or URL options, since the call site owns routing | Available |
 | Reordering notification levels | 1 | `notifications-button` (group settings); the same patch also overrides opening the menu | Depends on the notification-level route (open decision, `ROLLOUT.md`) | Open |
 
 Every route is a setup on the `select-customizations` value transformer, registered with
-`forKind` (what the select is) or `forIdentifier` (one call site). `spec.options` overrides
+`forKind` (what the select is) or `forIdentifier` (one call site). `spec.config` overrides
 presentation that only a call site could set before. The contract is in the DSelect README
 (`frontend/discourse/app/ui-kit/select/README.md`, Extension points).
 

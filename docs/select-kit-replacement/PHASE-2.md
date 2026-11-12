@@ -31,18 +31,18 @@ facade and codemod plan this phase used to carry is superseded.
   `isLoading` that drives the pending state, and facade `content` and `value`. The per-callback
   opt-out moves to wave 1 with the discourse-ai port; per-use telemetry is dropped, since
   reporting once per select per plugin already measures use. Row `classNames` is not bridged:
-  callers move to `spec.row` classes when they are ported.
+  callers move to `spec.option` classes when they are ported.
 - ☑ **Patch replacement matrix** ([`PATCH-MATRIX.md`](PATCH-MATRIX.md)), from a verified audit
   (see `ROLLOUT.md`, blast radius). Its per-repo list names customer repos, so it is kept outside
   the repository.
 - ☑ **Customization API:** one `select-customizations` transformer targeting `@kind` or
   `@identifier` replaces the four per-point transformers (`2a8637024a4`).
-- ☑ **Presentation options:** `spec.options` overrides a select's caret icon, icon-only trigger,
-  placeholders, label, none-row label, disabled state and more, which only call sites could set
+- ☑ **Presentation config:** `spec.config` overrides a select's caret icon, icon-only trigger,
+  placeholders, label, none-option label, disabled state and more, which only call sites could set
   before (`dc9d88ce4b5`).
-- ☑ **Row titles:** `spec.row` sets a row's `title`; an item's own `title` is never a tooltip
-  (`dc9d88ce4b5`).
-- ☑ **Recipe options:** recipes declare overridable values with `@kindConfig` (`aef9c15d75c`).
+- ☑ **Option titles:** `spec.option` sets an option's `title`; a record's own `title` is never a
+  tooltip (`dc9d88ce4b5`).
+- ☑ **Recipe config:** recipes declare overridable values with `@kindConfig` (`aef9c15d75c`).
 - ☑ **Test infrastructure:** tests branch with the flag instead of one test driving both
   implementations (see `ROLLOUT.md`, Verification). DSelect has stable `data-value`/`data-name`
   hooks and a `data-select-id` panel link (`1acddc9ddf5`); QUnit gets `dSelect()` and

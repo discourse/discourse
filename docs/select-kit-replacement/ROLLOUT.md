@@ -150,7 +150,7 @@ Paths are relative to the repository root.
   and the category components' own members. Reporting stays once per select per plugin. A ported
   plugin keeps its legacy callbacks for the flag-off branch, so the bridge needs a per-callback
   opt-out to avoid doubled rows; it is designed with the discourse-ai port in wave 1. Row
-  `classNames` is not bridged: its one known user moves to `spec.row` classes when it is
+  `classNames` is not bridged: its one known user moves to `spec.option` classes when it is
   ported.
 - **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
   After `modifyClass` or `modifyClassStatic` applies a patch, it fires
@@ -203,8 +203,8 @@ Based on the WAI-ARIA APG menu button and select-only combobox patterns:
 
 - **DSelect** when the control holds a current value that the list chooses among and the trigger
   reflects it: settings, filters, notification levels, breadcrumbs. Use the static variant for
-  short fixed lists and the typeahead when filtering helps. Command rows inside a value select are
-  action rows.
+  short fixed lists and the typeahead when filtering helps. Command options inside a value select
+  are action options.
 - **DMenu** when the items run one-off commands and the trigger label is fixed.
 - **Toggle sets** are a `DSelect` with `@multiple`.
 
@@ -307,8 +307,8 @@ customization ports are done.
   Requested 2026-10-23. **Done 2026-10-30:** every text DSelect or a recipe draws or speaks is a
   key in one `@texts` hash, and customizations set it under `texts` (README, "Texts"). The old
   `@ariaLabel`, `@placeholder`, `@searchPlaceholder`, `@noResultsLabel`, `@noneLabel` and
-  `@loadingLabel` arguments are gone; the none row and the loading status are switches
-  (`@noneRow`, `@loadingStatus`). New strings: `d_select.none`, `d_select.loading`,
+  `@loadingLabel` arguments are gone; the none option and the loading status are switches
+  (`@noneOption`, `@loadingStatus`). New strings: `d_select.none`, `d_select.loading`,
   `d_select.compact_count`, `d_select.more_chips`, `tagging.tag_count_badge`,
   `tagging.add_more_tags`, `tagging.choose_more_required`, `tagging.choose_more_required_group`,
   `tagging.required_tags_progress`, `tagging.max_tags_reached` and
@@ -603,7 +603,7 @@ Former single choosers pass `@emit="ids"` and `@permission="create"`; advanced s
 parent-category field pass `@permission="see"`. Former selectors pass `@multiple={{true}}` and
 keep emitting category records, and their blocked categories become `@exclude` ids, minus the
 list's own held categories. Empty-value text is a translated
-`@placeholder`; a field keeps a selectable none row only where the legacy chooser inserted one.
+`@placeholder`; a field keeps a selectable none option only where the legacy chooser inserted one.
 
 Breadcrumb levels use `DSelectCategoryFilter`, which reads each level through the shared search;
 the `@categories` a page passes to `BreadCrumbs` only shapes the legacy drop. The caller routes
@@ -622,7 +622,7 @@ The parent-category field drops its caret icon options and the report category f
 
 The composer and topic-edit choosers take `@identifier` (`composer-category`,
 `topic-edit-category`) and an `@instanceContext` carrying the composer model, or the topic and its
-buffered state, so customizations can target them through `select-customizations`. A row that
+buffered state, so customizations can target them through `select-customizations`. An option that
 picks asynchronously closes the list and runs `control.update`; a later pick, reopening the list
 or destroying the control aborts its signal.
 
@@ -636,13 +636,13 @@ User, email-group-user and group pickers branch to `DSelectUser` and `DSelectGro
 `enable_new_select_controls` is on. Each new branch writes what the legacy one wrote: a site
 whose picker held one item renders a single select and wraps its handler in `legacyPickOne`, so
 the handler still receives a one-item array. The composer recipients and the invite panel, which
-read `isGroup`, also accept the item's `type`; assign's assignee picker, the third reader, stays
-on select-kit. Option names map as follows: `filterPlaceholder` and `none` become the
+read `isGroup`, also accept the record's `type`; assign's assignee picker, the third reader, stays
+on select-kit. Select-kit option names map as follows: `filterPlaceholder` and `none` become the
 `searchPlaceholder` and `placeholder` texts, `includeGroups` with `includeMessageableGroups`
 becomes `@includeGroups`, `customSearchOptions` becomes `@searchParams`, and automation's
-`modifyContent` contexts become `@specialItems`. Sites with their own group list (automation,
+`modifyContent` contexts become `@extraOptions`. Sites with their own group list (automation,
 category access and moderation, admin MCP, the AI agent editor and LLM quotas, data explorer,
-policy and the styleguide) pass `@items`.
+policy and the styleguide) pass `@options`.
 
 A caption with an id is passed as `@ariaLabelledBy`. FormKit custom fields pass the field's
 `id`, `describedBy`, error state and `disabled`, with their title as the `ariaLabel` text, so a
@@ -690,15 +690,15 @@ holds the survey to do first, the red flags and the review gate that these lesso
   "loading" row, and `reload()` calls around the request. DSelect's customization points already
   own that lifecycle. Remote work belongs in `spec.load`: a pending loader shows the skeleton, its
   `signal` cancels a superseded request, and a rejection gets the error state with retry. A
-  toggle row only flips a flag and calls `control.reload()`. `content` adds rows, `options`
+  toggle option only flips a flag and calls `control.reload()`. `content` adds options, `config`
   presents (`loadingStatus` and the `loadingLabel` text name a slow load). The rewrite needed two state values instead of a
   state machine.
-- **Never stand in for a pending load with rows.** A fake loading row hides the real loading
+- **Never stand in for a pending load with options.** A fake loading option hides the real loading
   state and races it. If the list is waiting, its loader is pending.
 - **Do not collapse the list before the skeleton arrives.** The skeleton mirrors the rows on
-  screen when a reload starts, so a customization that drops rows on click shrinks the panel and
-  then sizes the skeleton to the shrunk list. Swap a row in place instead of removing it.
-- **Refilter in `content`, not by reloading.** Hiding rows that depend on the selection (held
+  screen when a reload starts, so a customization that drops options on click shrinks the panel and
+  then sizes the skeleton to the shrunk list. Swap an option in place instead of removing it.
+- **Refilter in `content`, not by reloading.** Hiding options that depend on the selection (held
   tags leaving a suggestion list) is a `content` filter on tracked state, which re-runs on its
   own when the selection changes. A `change` middleware that reloads after every pick re-runs
   the loader for nothing, and asks the server again unless the results are cached.

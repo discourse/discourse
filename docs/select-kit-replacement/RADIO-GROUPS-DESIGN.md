@@ -21,7 +21,7 @@ option evicts its group-mates from the value at the moment of selection.
 - Multi-select only (`@multiple={{true}}`). Single-select is trivially exclusive already, and
   the option is rejected with a debug assertion elsewhere.
 - Selecting an option whose group key `K` is exclusive removes every held value whose resolved
-  item shares `K`, then appends the new value. One `onChange` emission carrying the final
+  record shares `K`, then appends the new value. One `onChange` emission carrying the final
   array — never an intermediate "removed" emission followed by an "added" one.
 - Deselection is unchanged. Toggling an already-selected exclusive option deselects it like
   any other row.
@@ -32,7 +32,7 @@ option evicts its group-mates from the value at the moment of selection.
 
 ```ts
 // SelectEngineInit / DSelect args
-groupBy?: string | ((item: SelectRecord) => SelectId);   // existing — same key space
+groupBy?: string | ((record: SelectRecord, config: SelectConfig) => SelectId);   // existing — same key space
 exclusiveGroups?: boolean | SelectId[] | ((key: SelectId) => boolean);
 // true            → every group is one-of
 // [keys]          → the listed group keys are one-of
@@ -40,7 +40,7 @@ exclusiveGroups?: boolean | SelectId[] | ((key: SelectId) => boolean);
 ```
 
 `exclusiveGroups` requires `groupBy`; passing it without one fires a debug assertion.
-Exclusivity is deliberately **not** a per-item marker: it is a property of the key space, and
+Exclusivity is deliberately **not** a per-option setting: it is a property of the key space, and
 reusing the `groupBy` key means the visual grouping and the exclusion partition can never
 disagree. A consumer that wants exclusion without visible boundaries can supply `groupBy`
 with `groupLabel` omitted on an unsorted list — but the partition and the presentation are
@@ -53,13 +53,13 @@ create-on-the-fly, and the compat bridge all funnel through it, which is the sam
 that placed `maximum` there. Two collaborators move to make that possible:
 
 - The group-key function becomes shared: extract `ListComposer.#groupKey` into
-  `SelectArgsView.itemGroupKey(item)` so the composer and the selection actions read one
+  `SelectArgsView.recordGroupKey(record)` so the composer and the selection actions read one
   definition and cannot drift.
 - The exclusivity predicate (normalized from `boolean | keys[] | fn`) is exposed on the
-  options view beside it.
+  args view beside it.
 
-In `select()`, the multi branch becomes: resolve each held value to its item, drop the ones
-sharing the new item's group key, append, emit. Value→item resolution needs no new plumbing:
+In `select()`, the multi branch becomes: resolve each held value to its record, drop the ones
+sharing the new record's group key, append, emit. Value→record resolution needs no new plumbing:
 `SelectionActions` already receives a `resolveOneSync` callback (the value resolver's cache +
 client corpus; the engine exposes the same seam to the announcer as `resolveSingleSync`).
 **An unresolvable held value is never evicted** — its group is unknowable, and silently
@@ -90,12 +90,12 @@ announcement, not rely on the existing branches.
 - **Seeded duplicates**: a `@value` seeded with two same-group ids is never trimmed on mount —
   the same principle as a value seeded over `@maximum` (displayed and removable, never
   destroyed). The rule is enforced on the next selection in that group.
-- **Create-on-the-fly**: a created item gets its group key from `itemGroupKey` like any other
-  item; a nullish key means non-exclusive.
-- **Server sources**: exclusion works — it keys off items, not off the rendered list — even
+- **Create-on-the-fly**: a created option's record gets its group key from `recordGroupKey`
+  like any other record; a nullish key means non-exclusive.
+- **Server sources**: exclusion works — it keys off records, not off the rendered list — even
   though *visual* grouping stays client-only. Document the asymmetry: a paged picker can
   enforce one-per-group while drawing no boundaries.
-- **Controlled-value races**: the compat bridge routes its `select(value, item)` through
+- **Controlled-value races**: the compat bridge routes its `select(value, record)` through
   `engine.select()`, so it gets eviction for free — the chokepoint really is single. What can
   land over the rule is the same race `maximum` documents: a consumer that applies the emitted
   value asynchronously or merges it additively can hold two same-group values until the next

@@ -253,8 +253,8 @@ so target it by kind: `.d-select__content.--kind-select-category-filter` and
 their `data-value` (`all-categories`, `no-categories`), the tag filter's shortcut rows use
 `.d-tag-drop__shortcut`, and its keep-typing hint is `.d-select__narrow`. Use the theme's color
 variables for both light and dark palettes. Caret customizations target the
-`select-category-filter` or `select-tag-filter` kind through `select-customizations` and return a
-`caretIcon` option, `{ closed, open }`.
+`select-category-filter` or `select-tag-filter` kind through `select-customizations` and return
+a `caretIcon` config value, `{ closed, open }`, from `spec.config`.
 
 Clicking on either of these, opens up a drop down menu.
 
