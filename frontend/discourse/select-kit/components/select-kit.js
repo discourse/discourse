@@ -2,7 +2,6 @@
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { getOwner } from "@ember/owner";
 import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
@@ -159,20 +158,10 @@ export function pluginApiIdentifiers(identifiers) {
 }
 
 export function resolveComponent(context, component) {
-  const owner = getOwner(context);
-
   if (typeof component === "string") {
-    deprecated(
-      `[${component}] SelectKit components should be imported and passed by reference, not as a string`,
-      {
-        id: "discourse.select-kit-resolved-components",
-      }
+    throw new Error(
+      `[${component}] SelectKit components must be imported and passed by reference, not as a string`
     );
-    const result = owner.resolveRegistration(`component:${component}`);
-    if (!result) {
-      throw new Error(`Component not found: ${component}`);
-    }
-    return result;
   }
 
   return component;
