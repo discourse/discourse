@@ -36,6 +36,7 @@ class Auth::DefaultCurrentUserProvider
   USER_API_CLIENT_ID = "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV = "_DISCOURSE_API"
   USER_API_KEY_ENV = "_DISCOURSE_USER_API"
+  AUTHENTICATED_CREDENTIAL_ENV = "_DISCOURSE_AUTHENTICATED_CREDENTIAL"
   TOKEN_COOKIE = ENV["DISCOURSE_TOKEN_COOKIE"] || "_t"
   PATH_INFO = "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN = 10
@@ -153,6 +154,7 @@ class Auth::DefaultCurrentUserProvider
 
         current_user = @user_token.try(:user)
         current_user.authenticated_with_oauth = @user_token.authenticated_with_oauth if current_user
+        @env[AUTHENTICATED_CREDENTIAL_ENV] = @user_token if current_user
       end
 
       if !current_user
@@ -211,6 +213,7 @@ class Auth::DefaultCurrentUserProvider
 
       current_user = user_api_key_obj.user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
+      @env[AUTHENTICATED_CREDENTIAL_ENV] = user_api_key_obj
 
       user_api_key_obj.update_last_used(@env[USER_API_CLIENT_ID]) if can_write?
 
@@ -282,6 +285,7 @@ class Auth::DefaultCurrentUserProvider
         impersonate: opts[:impersonate],
         authenticated_with_oauth: opts[:authenticated_with_oauth],
       )
+    @env[AUTHENTICATED_CREDENTIAL_ENV] = @user_token
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
@@ -429,6 +433,8 @@ class Auth::DefaultCurrentUserProvider
           api_key.update_last_used!
         end
       end
+
+      @env[AUTHENTICATED_CREDENTIAL_ENV] = api_key if user
 
       user
     end

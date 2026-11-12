@@ -560,15 +560,16 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
+    user = UserApiKey::OneTimePassword.user_for(params[:token])
+    @otp_username = user&.username
 
-    if otp_username && user = User.find_by_username(otp_username)
-      if current_user&.username == otp_username
-        Discourse.redis.del "otp_#{params[:token]}"
+    if user
+      if current_user&.id == user.id
+        UserApiKey::OneTimePassword.delete(params[:token])
         return redirect_to path("/")
       elsif request.post?
         log_on_user(user, replay_anonymous_action: true)
-        Discourse.redis.del "otp_#{params[:token]}"
+        UserApiKey::OneTimePassword.delete(params[:token])
         return redirect_to path("/")
       else
         # Display the form
