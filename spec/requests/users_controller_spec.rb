@@ -2105,6 +2105,54 @@ RSpec.describe UsersController do
       end
     end
 
+    context "when signup includes plugin custom fields for a staged account" do
+      before do
+        UsersController.any_instance.unstub(:honeypot_value)
+        UsersController.any_instance.unstub(:challenge_value)
+        Plugin::Instance.new.register_editable_user_custom_field("signup_preference")
+      end
+
+      after { DiscoursePluginRegistry.reset! }
+
+      it "preserves required hidden fields while updating allowed preferences" do
+        hidden_field =
+          Fabricate(:user_field, show_on_signup: false, editable: false, requirement: "on_signup")
+        visible_field = Fabricate(:user_field, show_on_signup: true)
+        staged_user = Fabricate(:staged)
+        hidden_key = "user_field_#{hidden_field.id}"
+        staged_user.custom_fields[hidden_key] = "provisioned"
+        staged_user.custom_fields["signup_preference"] = "old preference"
+        staged_user.save_custom_fields
+
+        post "/u.json",
+             params:
+               honeypot_magic(
+                 email: staged_user.email,
+                 username: "signup_user",
+                 password: "strongpassword",
+                 user_fields: {
+                   hidden_field.id => "forged",
+                   visible_field.id => "visible value",
+                 },
+                 custom_fields: {
+                   :signup_preference => "new preference",
+                   hidden_key => "forged",
+                 },
+               )
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(User.find_by_email(staged_user.email).id).to eq(staged_user.id)
+        expect(staged_user.reload).not_to be_staged
+        expect(staged_user).to be_from_staged
+        expect(staged_user.custom_fields).to include(
+          hidden_key => "provisioned",
+          "user_field_#{visible_field.id}" => "visible value",
+          "signup_preference" => "new preference",
+        )
+      end
+    end
+
     context "when taking over a staged account" do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns("abc")

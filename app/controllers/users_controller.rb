@@ -739,6 +739,9 @@ class UsersController < ApplicationController
     end
 
     user ||= User.new
+    if new_user_params[:custom_fields]
+      new_user_params[:custom_fields] = user.custom_fields.merge(new_user_params[:custom_fields])
+    end
     user.attributes = new_user_params
 
     # Handle API approval and
