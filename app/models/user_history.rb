@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ipaddr"
+
 # UserHistory stores information about actions that users have taken,
 # like deleting users, changing site settings, dismissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
@@ -20,6 +22,12 @@ class UserHistory < ActiveRecord::Base
   MAX_DETAILS_LENGTH = 110_000
 
   MAX_JSON_LENGTH = 300_000
+
+  # Candidates for an address embedded in free-form context text, e.g.
+  # "Same IP address (203.0.113.7) as other users". IPAddr does the final
+  # validation of each candidate.
+  IPV4_CANDIDATE_IN_CONTEXT = /(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?!\d)/
+  ADDRESS_RUN_IN_CONTEXT = /(?<!\w)[\h:.]+(?!\w)/
 
   validates :details, length: { maximum: MAX_DETAILS_LENGTH }
   validates :context, length: { maximum: MAX_CONTEXT_LENGTH }
@@ -474,6 +482,34 @@ class UserHistory < ActiveRecord::Base
 
   def previous_value_is_json?
     new_value_is_json?
+  end
+
+  def context_contains_ip?
+    return false if context.blank?
+
+    ipv4_candidates = context.scan(IPV4_CANDIDATE_IN_CONTEXT)
+    return true if ipv4_candidates.any? { |candidate| valid_ip_address?(candidate) }
+
+    context
+      .scan(ADDRESS_RUN_IN_CONTEXT)
+      .any? { |run| run.include?(":") && valid_ipv6_address?(run) }
+  end
+
+  private
+
+  def valid_ipv6_address?(candidate)
+    # A compressed address needs at least two hex groups; otherwise the "::"
+    # in a class name like "Jobs::Base" reads as an address.
+    return false if candidate.scan(/\h+/).length < 2
+
+    valid_ip_address?(candidate.sub(/[.:]+\z/, ""))
+  end
+
+  def valid_ip_address?(candidate)
+    IPAddr.new(candidate)
+    true
+  rescue IPAddr::Error
+    false
   end
 end
 
