@@ -82,12 +82,8 @@ function permissionOptionDescription(permission) {
 }
 
 function rowNames() {
-  return findAll(".d-access-control__item-name").map((row) =>
-    [...row.childNodes]
-      .find(
-        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
-      )
-      .textContent.trim()
+  return findAll(".d-access-control__item-name > [aria-hidden='true']").map(
+    (name) => name.textContent.trim()
   );
 }
 
@@ -538,6 +534,48 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert
       .dom(".d-access-control__item-name")
       .hasText("Some Group", "keeps the remaining row");
+  });
+
+  // VoiceOver read the visible name between two copies of the select's name
+  // ("Permission for Some Group Some Group Permission for Some Group").
+  test("speaks each grantee's name once, through its permission select", async function (assert) {
+    const accessibleName = await loadAccessibleName();
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+        mandatory: true,
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__item-name > [aria-hidden='true']")
+      .hasText("Some Group", "the visible name is hidden from assistive tech");
+    assert.true(
+      accessibleName(find(".d-access-control__permission")).startsWith(
+        i18n("access_control.manage.grantee_permission", {
+          name: "Some Group",
+        })
+      ),
+      "the permission select still names the grantee"
+    );
+    assert.strictEqual(
+      find(".d-access-control__tooltip").closest("[aria-hidden]"),
+      null,
+      "the mandatory badge stays reachable"
+    );
   });
 
   test("names each row's permission select after its grantee, with Remove last", async function (assert) {

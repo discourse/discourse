@@ -639,7 +639,9 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
                 <span class="d-access-control__item-name">
-                  {{row.display_name}}
+                  {{! The permission select is named after the grantee; read beside it,
+                    the visible name made VoiceOver say it twice. }}
+                  <span aria-hidden="true">{{row.display_name}}</span>
                   {{#if row.mandatory}}
                     <DTooltip
                       @content={{i18n
