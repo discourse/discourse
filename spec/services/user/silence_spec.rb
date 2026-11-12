@@ -82,6 +82,15 @@ RSpec.describe User::Silence do
 
         expect(post.reload).to be_trashed
       end
+
+      it "ignores a post authored by someone other than the silenced users" do
+        post = Fabricate(:post)
+        params.merge!(post_id: post.id, post_action: "delete")
+
+        result
+
+        expect(post.reload).not_to be_trashed
+      end
     end
   end
 end

@@ -77,6 +77,15 @@ RSpec.describe User::Suspend do
         expect(post.reload).to be_trashed
       end
 
+      it "ignores a post authored by someone other than the suspended users" do
+        post = Fabricate(:post)
+        params.merge!(post_id: post.id, post_action: "delete")
+
+        result
+
+        expect(post.reload).not_to be_trashed
+      end
+
       it "exposes the full reason in the result object" do
         expect(result[:full_reason]).to eq("spam\n\nit was spam")
       end
