@@ -1,6 +1,8 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
+import LoginMethod from "discourse/models/login-method";
 import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -309,6 +311,20 @@ acceptance(
       assert
         .dom(".accept-invitation")
         .doesNotExist("does not show the Accept Invite button");
+    });
+
+    test("continuing sends the invite key with a POST", async function (assert) {
+      preloadInvite({ link: true });
+
+      sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
+        assert.strictEqual(url, "/invites/my-valid-invite-token/sso");
+        return Promise.resolve({ submit: () => assert.step("submitted") });
+      });
+
+      await visit("/invites/my-valid-invite-token");
+      await click(".discourse-connect");
+
+      assert.verifySteps(["submitted"]);
     });
   }
 );
