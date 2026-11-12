@@ -523,6 +523,29 @@ RSpec.describe Category do
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
     end
+
+    it "excludes restricted categories that no longer have any access groups" do
+      restricted_category = Fabricate(:category_with_definition)
+      access_group = Fabricate(:group)
+      restricted_category.set_permissions(access_group => :full)
+      restricted_category.save!
+      access_group.destroy!
+
+      expect(restricted_category.reload.read_restricted).to eq(true)
+      expect(restricted_category.category_groups).to be_empty
+      expect(Category.secured(user_guardian)).not_to include(restricted_category)
+      expect(Category.post_create_allowed(user_guardian)).not_to include(restricted_category)
+      expect(Category.topic_create_allowed(user_guardian)).not_to include(restricted_category)
+    end
+
+    it "still allows posting in a public category without any access group records" do
+      public_category = Fabricate(:category_with_definition)
+
+      expect(public_category.read_restricted).to eq(false)
+      expect(public_category.category_groups).to be_empty
+      expect(Category.post_create_allowed(user_guardian)).to include(public_category)
+      expect(Category.topic_create_allowed(user_guardian)).to include(public_category)
+    end
   end
 
   describe "with_parents" do

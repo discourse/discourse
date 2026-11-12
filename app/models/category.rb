@@ -510,7 +510,8 @@ class Category < ActiveRecord::Base
       permissions = permission_types.map { |p| CategoryGroup.permission_types[p] }
       where(
         "(:staged AND LENGTH(COALESCE(email_in, '')) > 0 AND email_in_allow_strangers)
-          OR categories.id NOT IN (SELECT category_id FROM category_groups)
+          OR (NOT categories.read_restricted
+              AND categories.id NOT IN (SELECT category_id FROM category_groups))
           OR categories.id IN (
                 SELECT category_id
                   FROM category_groups
