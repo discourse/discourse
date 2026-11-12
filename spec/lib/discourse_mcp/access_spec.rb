@@ -53,6 +53,17 @@ describe DiscourseMcp::Access do
 
       expect(described_class.eligible_scopes(user)).to be_empty
     end
+
+    context "when there is a group scope for logged_in_users" do
+      it "includes the scope for an eligible logged in user" do
+        McpGroupScope.create!(
+          group_id: Group::AUTO_GROUPS[:logged_in_users],
+          scope: "mcp:profile:read",
+        )
+
+        expect(described_class.eligible_scopes(user)).to include("mcp:profile:read")
+      end
+    end
   end
 
   describe ".eligible_for_exposed_primitive?" do

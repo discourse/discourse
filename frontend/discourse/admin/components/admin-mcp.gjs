@@ -193,7 +193,7 @@ export default class AdminMcp extends Component {
   }
 
   get groupOptions() {
-    return (this.site.groups || []).map((group) => ({
+    return this.site.authenticatedGroups.map((group) => ({
       id: group.id.toString(),
       name: group.name,
     }));
