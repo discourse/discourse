@@ -590,6 +590,12 @@ ja:
       fonts:
         base_font: "本文のフォント"
         heading_font: "見出しのフォント"
+    mcp_theme_access:
+      "on": "オン"
+      "off": "オフ"
+      none: "なし"
+    mcp_app_setup:
+      none: "なし"
     reviewables:
       ai_tool_action:
         title: "AI ツールアクション"

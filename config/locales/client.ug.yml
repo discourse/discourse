@@ -16,6 +16,17 @@ ug:
       any_domain: "خالىغان تور دائىرىسىدىن كەلگەن CIMD"
     ace_editor:
       resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
+    code_editor:
+      resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
+      search:
+        find: "ئىزدە"
+        replace: "ئالماشتۇر"
+        next: "كېيىنكى"
+        previous: "ئالدىنقى"
+        close: "تاقا"
+        go: "باشلا"
+      fold:
+        to: "كىمگە"
     user_api_key:
       authorize: "دەلىللە"
       deny: "ۋاز كەچ"
@@ -542,6 +553,11 @@ ug:
         selected: "تاللاندى"
         applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
+      colors:
+        modes:
+          both: "يورۇق ۋە قاراڭغۇ"
+          light: "يورۇقلا"
+          dark: "قاراڭغۇلا"
       fonts:
         base_font: "مەزمۇن"
         heading_font: "ماۋزۇ"
@@ -795,6 +811,8 @@ ug:
       category: "سەھىپە"
       category_prompt: "سەھىپە تاللىنىدۇ"
     review:
+      moderation_steps:
+        confirm: "جەزملەش مەشغۇلاتى"
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"
       back_to_queue: "ئۆچرەتكە قايت"
@@ -1033,6 +1051,7 @@ ug:
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
         target_deleted: "يازما ئۆچۈرۈلدى"
         target_deleted_by: "يازمىنى %{username} · %{relativeDate} دە ئۆچۈردى"
+        queued_post_deleted_by: "نەقىللىق يازمىنى %{username}· %{relativeDate} ئۆچۈردى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -1531,6 +1550,7 @@ ug:
       optional: (تاللاشچان)
     user:
       said: "%{username}:"
+      bot_account: "ئاپتوماتىك ھېساب"
       profile: "تەرجىمىھال"
       profile_possessive: "%{username} نىڭ تەرجىمىھالى"
       mute: "ئۈنسىز"
@@ -2603,7 +2623,6 @@ ug:
         } چېكىدىن ئېشىپ كەتتى.
     learn_more: "مول بىلىم…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مول بىلىم…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>قايتۇرما ئىنكاس…</a>"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
     last_post: يوللانغان ۋاقىت
@@ -2960,6 +2979,7 @@ ug:
       reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
       sort_label: "تەرتىپى"
+      sort_trigger_label: "تەرتىپى: %{sort}"
     d_icon_grid_picker:
       search_label: "ئىزدەش سىنبەلگىسى"
       results_loaded:
@@ -5550,23 +5570,22 @@ ug:
         name: "ئىسمى"
         plugin: "قىستۇرما"
         metadata: "تەپسىلىي سانلىق مەلۇمات"
-        enabled: "قوزغىتىلدى"
-        enabled_for: "قوزغىتىلدى ..."
+        enabled: "قوزغىتىلدى؟"
         show_image: "سۈرەتنى كۆرسەت"
-        edit_groups: "قوشۇلىدىغان گۇرۇپپا تاللاشنى تەھرىرلەيدۇ"
+        feedback: "قايتۇرما ئىنكاس"
         groups_updated: "گۇرۇپپا يېڭىلاندى!"
         save_groups: "گۇرۇپپا ۋاقلا"
         add_groups_to_enable: "بۇ ئىقتىدارنى قوزغىتىش ئۈچۈن گۇرۇپپىغا قوشىدۇ"
         no_changes_to_save: "ساقلايدىغان ئۆزگەرتىش يوق"
         select_groups: "گۇرۇپپا تاللا…"
         opt_in_groups: "قوشۇلىدىغان گۇرۇپپىنى تاللايدۇ"
+        settings: "تەڭشەك"
         opt_in_groups_instructions: "كىرىدىغان گۇرۇپپىنى تاللاش مۇئەييەن ئىشلەتكۈچى گۇرۇپپىسى رەسمىي ئۆزگىرىش ئېلان قىلىنىشتىن ئىلگىرى سىناشقا ئىشلىتەلەيدۇ. ئەسكەرتىش ئۆزگىرىش مۇقىم ھالەتكە كىرگەندىن كېيىن ھەممە ئىشلەتكۈچى ئۆزگىرىشنى قوللىنىدۇ."
         enabled_for_throttle: "بۇ ئۆزگىرىشنى بەك تېز قوزغاتتىڭىز. ئازراق كۈتۈپ ئاندىن قايتا سىناڭ."
         change_enabled_for_success: "%{enabledFor} نىڭ ئۆزگەرتىشىنى قوزغاتتىڭىز"
         preview: "ئالدىن كۆزەت"
         enabled_for_options:
           no_one: "ھېچكىم"
-          everyone: "ھەممەيلەن"
           specific_groups: "مۇئەييەن گۇرۇپپا"
           specific_groups_with_group_names:
             one: "گۇرۇپپا %{groupNames}"

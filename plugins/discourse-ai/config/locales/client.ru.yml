@@ -233,6 +233,8 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Подсказки от AI"
       copied: "Скопировано"
       ai_decoded_transcript:
         tool: "Инструмент"
@@ -774,6 +776,8 @@ ru:
         edit: "Изменить"
         delete: "Удалить"
         test: "Выполнить тест"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -802,6 +806,7 @@ ru:
         type: "Тип"
         provider: "Поставщик"
         edit: "Изменить"
+        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         select_type: "Выбрать"
         types:
           embedding: "Встраивание"
@@ -1004,7 +1009,6 @@ ru:
         presets: "Выберите пресет..."
         configure_manually: "Настроить вручную"
         edit: "Изменить"
-        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         tests:
           title: "Выполнить тест"
           running: "Запуск теста..."

@@ -22,6 +22,8 @@ zh_TW:
         edit: 編輯
         activate: 啟動
         preview: 預覽
+        customize: 客製化
+        customized_theme_name: "%{name}（自訂）"
         import: 導入
         export: 導出
         active: 啟用
@@ -35,6 +37,7 @@ zh_TW:
         change:
           title: 標題
           body: 內文
+          tags: 標簽
       review:
         label: 標籤
         create: 建立連結

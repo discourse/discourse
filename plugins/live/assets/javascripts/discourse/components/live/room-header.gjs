@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { optionalRequire } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar" with {
+  discourseImport: "optional",
+};
 import roomIcon, { roomBadge } from "../../lib/live/room-icon.js";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
@@ -57,10 +59,6 @@ const RoomActions = <template>
 export default class LiveRoomHeader extends Component {
   @service modal;
 
-  chatNavbar = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat/navbar"
-  );
-
   get icon() {
     return roomIcon(this.args.room);
   }
@@ -84,8 +82,8 @@ export default class LiveRoomHeader extends Component {
 
   <template>
     <header class="live-room-header">
-      {{#if this.chatNavbar}}
-        <this.chatNavbar as |navbar|>
+      {{#if ChatNavbar}}
+        <ChatNavbar as |navbar|>
           <RoomTitle
             @badge={{this.badge}}
             @icon={{this.icon}}
@@ -100,7 +98,7 @@ export default class LiveRoomHeader extends Component {
               @room={{@room}}
             />
           </navbar.Actions>
-        </this.chatNavbar>
+        </ChatNavbar>
       {{else}}
         <div class="live-room-header__fallback">
           <RoomTitle

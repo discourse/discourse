@@ -12,6 +12,15 @@ de:
       title: "Illegale Inhalte melden"
       email: "E-Mail-Adresse"
       resend_email_code: "Code erneut senden"
+    code_editor:
+      search:
+        replace: "Ersetzen"
+        next: "Weiter"
+        previous: "Zurück"
+        close: "Schließen"
+        go: "Los"
+      fold:
+        to: "bis"
     user_api_key:
       title: '„%{application_name}“ autorisieren'
       authorize: "Autorisieren"
@@ -2712,7 +2721,6 @@ de:
         } überschritten.
     learn_more: "Mehr erfahren …"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Mehr erfahren …</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -6192,24 +6200,23 @@ de:
         name: "Name"
         plugin: "Plug-in"
         metadata: "Metadaten"
-        enabled: "Aktiviert"
-        enabled_for: "Aktiviert für …"
+        enabled: "Aktiviert?"
         show_image: "Bild anzeigen"
-        edit_groups: "Gruppenweise Aktivierung bearbeiten"
+        feedback: "Feedback"
+        toggle: "%{name} aktivieren"
         groups_updated: "Gruppen aktualisiert!"
         save_groups: "Gruppen speichern"
         add_groups_to_enable: "Gruppen hinzufügen, um diese Funktion zu aktivieren"
         no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
-        show_related_settings: "Verwandte Einstellungen anzeigen …"
+        settings: "Einstellungen"
         opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „stabil“ erreicht."
         enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
         depends_on_notice: "Diese Änderung erfordert, dass %{dependencyLinks} aktiviert wird."
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
-        permanent_soon_notice: "Diese Änderung wird bald dauerhaft. Du wirst keine Möglichkeit mehr haben, sie zu deaktivieren."
         permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
         no_changes: "Derzeit gibt es keine bevorstehenden Änderungen."
         preview: "Vorschau"
@@ -6217,7 +6224,6 @@ de:
         default_warning_short: "Der Standardwert für diese Einstellung hat sich geändert. Erfahre mehr darüber auf der Seite mit den <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>bevorstehenden Änderungen</a>."
         enabled_for_options:
           no_one: "Keinen"
-          everyone: "Jeden"
           staff: "Nur %{staffGroupName}"
           specific_groups: "Bestimmte Gruppe(n)"
           specific_groups_with_group_names:

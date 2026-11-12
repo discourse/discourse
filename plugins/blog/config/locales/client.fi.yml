@@ -22,6 +22,8 @@ fi:
         edit: Muokkaa
         activate: Aktivoi
         preview: Esikatselu
+        customize: Mukauta
+        customized_theme_name: "%{name} (mukautettu)"
         import: Tuo
         export: Vie
         active: Aktiivinen
@@ -34,6 +36,7 @@ fi:
         change:
           title: otsikko
           body: leipäteksti
+          tags: tunnisteet
       review:
         create: Luo linkki
         copy: Kopioi

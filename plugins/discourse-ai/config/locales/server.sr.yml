@@ -75,6 +75,10 @@ sr:
       colors:
         light:
           header_background: "Zaglavlje"
+    mcp_theme_access:
+      none: "ništa"
+    mcp_app_setup:
+      none: "ništa"
     reviewables:
       ai_tool_action:
         approve:

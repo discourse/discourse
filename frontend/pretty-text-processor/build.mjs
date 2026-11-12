@@ -32,11 +32,11 @@ const bundle = await rolldown({
         },
         ...DISCOURSE_MODULES.map((m) => ({
           find: `discourse/${m}`,
-          replacement: `${FRONTEND}discourse/app/${m}.js`,
+          replacement: `${FRONTEND}discourse/app/${m}`,
         })),
         {
           find: /^pretty-text\//,
-          replacement: `${FRONTEND}pretty-text/addon/`,
+          replacement: `${FRONTEND}discourse/pretty-text/`,
         },
       ],
     }),
@@ -76,7 +76,7 @@ const bundle = await rolldown({
       },
     },
   ],
-  resolve: { extensions: [".js", ".mjs", ".cjs", ".json"] },
+  resolve: { extensions: [".js", ".ts", ".mjs", ".cjs", ".json"] },
   tsconfig: false,
 });
 

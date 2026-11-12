@@ -15,6 +15,17 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  it "preserves the sender date when creating a topic by email" do
+    Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true)
+    mail = Mail.read_from_string(email(:new_user))
+
+    Email::Receiver.new(mail.to_s).process!
+
+    expect(Post.last.post_number).to eq(1)
+    expect(Post.last.created_at).to eq_time(mail.date)
+    expect(Post.last.topic.created_at).to eq_time(mail.date)
+  end
+
   describe "MIME structure depth" do
     it "raises a MaxMimeDepthExceededError when the message is nested too deeply" do
       expect {
@@ -132,6 +143,363 @@ RSpec.describe Email::Receiver do
 
   it "strips null bytes from the subject" do
     expect { process(:null_byte_in_subject) }.to raise_error(Email::Receiver::BadDestinationAddress)
+  end
+
+  describe "#process!" do
+    fab!(:sender) { Fabricate(:user, email: "sender@example.com", refresh_auto_groups: true) }
+    fab!(:group) { Fabricate(:group, incoming_email: "support@example.com") }
+    fab!(:category) { Fabricate(:category, email_in: "category@example.com") }
+    fab!(:group_topic) do
+      Fabricate(:group_private_message_topic, user: sender, recipient_group: group)
+    end
+    fab!(:group_post) { Fabricate(:post, topic: group_topic, user: sender) }
+    fab!(:category_post) do
+      Fabricate(:post, user: sender, topic: Fabricate(:topic, category: category))
+    end
+    fab!(:private_post) do
+      Fabricate(:post, user: sender, topic: Fabricate(:private_message_topic, user: sender))
+    end
+
+    before { configure_reply_by_email }
+
+    def incoming_message(to:, reply_to: nil)
+      Mail
+        .new do
+          from "sender@example.com"
+          self.to = to
+          subject "Account support request"
+          date Time.current
+          in_reply_to reply_to if reply_to
+          body "Please help me resolve the issue with my account."
+        end
+        .to_s
+    end
+
+    shared_examples "a restricted email sender" do |restriction_error|
+      context "when emailing a configured group inbox" do
+        it "creates a private conversation with the group" do
+          post = Email::Receiver.new(incoming_message(to: group.incoming_email)).process!
+
+          expect(post).to be_persisted
+          expect(post.user).to eq(sender)
+          expect(post.topic).to be_private_message
+          expect(post.topic.allowed_groups).to contain_exactly(group)
+          expect(IncomingEmail.last.post_id).to eq(post.id)
+        end
+      end
+
+      context "when replying to a group inbox conversation" do
+        it "adds the email to the existing conversation" do
+          key = Fabricate(:post_reply_key, user: sender, post: group_post)
+          mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+          expect { Email::Receiver.new(mail).process! }.to change { group_topic.posts.count }.by(
+            1,
+          ).and not_change(Topic, :count)
+        end
+      end
+
+      context "when emailing a category" do
+        it "rejects the email without creating a post" do
+          mail = incoming_message(to: category.email_in)
+
+          expect { Email::Receiver.new(mail).process! }.to raise_error(
+            restriction_error,
+          ).and not_change(Post, :count)
+        end
+      end
+    end
+
+    context "when the sender is inactive" do
+      before { sender.update!(active: false) }
+
+      include_examples "a restricted email sender", Email::Receiver::InactiveUserError
+    end
+
+    context "when the sender is silenced" do
+      before { sender.update!(silenced_till: 1.year.from_now) }
+
+      include_examples "a restricted email sender", Email::Receiver::SilencedUserError
+    end
+
+    context "when the sender is suspended" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      include_examples "a restricted email sender", Email::Receiver::SuspendedUserError
+    end
+
+    context "when a suspended user emails a group without a configured incoming address" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without creating a conversation" do
+        address = group.incoming_email
+        group.update!(incoming_email: nil, email_username: address)
+
+        expect { Email::Receiver.new(incoming_message(to: address)).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change(Post, :count)
+      end
+    end
+
+    context "when a suspended user replies after the group's incoming address is removed" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without adding a reply" do
+        group.update!(incoming_email: nil)
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change(Post, :count)
+      end
+    end
+
+    context "when a suspended user replies to a category topic" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without adding a reply" do
+        key = Fabricate(:post_reply_key, user: sender, post: category_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change(Post, :count)
+      end
+    end
+
+    context "when a suspended user replies to an individual private conversation" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without adding a reply" do
+        key = Fabricate(:post_reply_key, user: sender, post: private_post)
+        mail = incoming_message(to: "reply+#{key.reply_key}@bar.com")
+
+        expect { Email::Receiver.new(mail).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change(Post, :count)
+      end
+    end
+
+    context "when a suspended user copies another person on an email to a group inbox" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "creates the conversation without adding or notifying that person" do
+        recipient = Fabricate(:user)
+        mail = Mail.new(incoming_message(to: [group.incoming_email, recipient.email]))
+        mail.cc = recipient.email
+        mail.bcc = recipient.email
+        Jobs.run_immediately!
+
+        post = Email::Receiver.new(mail.to_s).process!
+
+        expect(post.topic.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: post.topic, user: recipient)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+      end
+    end
+
+    context "when a suspended user forwards another person's email using create_replies" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "creates the conversation as the sender without adding the original writer or copied recipients" do
+        recipient = Fabricate(:user)
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = group.incoming_email
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+        expect(Topic.last.first_post.user).to eq(sender)
+      end
+    end
+
+    context "when a suspended user's address matches a group address and forwarding uses create_replies" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "creates the conversation as the suspended sender without adding other participants" do
+        recipient = Fabricate(:user)
+        embedded_author = Fabricate(:user, email: "some@one.com")
+        address = group.incoming_email
+        group.update!(incoming_email: "#{address}|#{sender.email}")
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = address
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(TopicUser.exists?(topic: Topic.last, user: embedded_author)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+        expect(
+          embedded_author.notifications.where(
+            notification_type: Notification.types[:private_message],
+          ),
+        ).to be_empty
+        expect(Topic.last.first_post.user).to eq(sender)
+      end
+    end
+
+    context "when a suspended user's address matches a group address and forwarding uses quote" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "creates the conversation as the suspended sender without adding other participants" do
+        recipient = Fabricate(:user)
+        embedded_author = Fabricate(:user, email: "some@one.com")
+        address = group.incoming_email
+        group.update!(incoming_email: "#{address}|#{sender.email}")
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = address
+        mail.cc = recipient.email
+        Jobs.run_immediately!
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(Topic.last.allowed_users).to contain_exactly(sender)
+        expect(TopicUser.exists?(topic: Topic.last, user: recipient)).to eq(false)
+        expect(TopicUser.exists?(topic: Topic.last, user: embedded_author)).to eq(false)
+        expect(
+          recipient.notifications.where(notification_type: Notification.types[:private_message]),
+        ).to be_empty
+        expect(
+          embedded_author.notifications.where(
+            notification_type: Notification.types[:private_message],
+          ),
+        ).to be_empty
+        expect(Topic.last.first_post.user).to eq(sender)
+      end
+    end
+
+    context "when a suspended user emails a like command to a group conversation" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without creating a like" do
+        staff_post = Fabricate(:post, topic: group_topic)
+        key = Fabricate(:post_reply_key, user: sender, post: staff_post)
+        mail = Mail.new(incoming_message(to: "reply+#{key.reply_key}@bar.com"))
+        mail.body = "+1"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change(PostAction, :count)
+      end
+    end
+
+    context "when a suspended user emails a mute command to a group conversation" do
+      before { sender.update!(suspended_till: 1.year.from_now) }
+
+      it "rejects the email without changing notification preferences" do
+        sender.user_option.update!(email_messages_level: UserOption.email_level_types[:never])
+        TopicUser.change(
+          sender.id,
+          group_topic.id,
+          notification_level: NotificationLevels.all[:watching],
+        )
+        topic_user = TopicUser.find_by(user: sender, topic: group_topic)
+        key = Fabricate(:post_reply_key, user: sender, post: group_post)
+        mail = Mail.new(incoming_message(to: "reply+#{key.reply_key}@bar.com"))
+        mail.body = "mute"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::SuspendedUserError,
+        ).and not_change { topic_user.reload.notification_level }.and not_change {
+                      sender.user_option.reload.email_messages_level
+                    }
+      end
+    end
+
+    context "when an inactive user with a group address forwards an active person's email to a category" do
+      before { sender.update!(active: false) }
+
+      it "rejects the email without creating a post" do
+        SiteSetting.forwarded_emails_behaviour = "quote"
+        group.update!(incoming_email: sender.email)
+        Fabricate(:user, email: "some@one.com", trust_level: TrustLevel[2])
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = "Forwarder <#{sender.email}>"
+        mail.to = category.email_in
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::InactiveUserError,
+        ).and not_change(Post, :count)
+      end
+    end
+
+    context "when an active user forwards an inactive person's email to a category" do
+      it "creates the post with the original writer as its author" do
+        SiteSetting.forwarded_emails_behaviour = "create_replies"
+        sender.update!(trust_level: TrustLevel[2])
+        Group.refresh_automatic_groups_for_user!(sender)
+        original_author =
+          Fabricate(:user, email: "some@one.com", active: false, trust_level: TrustLevel[2])
+        mail = Mail.read_from_string(email(:forwarded_email_1))
+        mail.from = sender.email
+        mail.to = category.email_in
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to change(Topic, :count).by(1)
+
+        expect(Topic.last.first_post.user).to eq(original_author)
+        expect(IncomingEmail.last.error).to be_nil
+      end
+    end
+
+    context "when delivery fails for a suspended staged recipient" do
+      fab!(:recipient) do
+        Fabricate(:staged, email: "linux-admin@b-s-c.co.jp", suspended_till: 1.year.from_now)
+      end
+      fab!(:topic) do
+        Fabricate(
+          :topic,
+          archetype: Archetype.private_message,
+          category_id: nil,
+          user: sender,
+          allowed_users: [sender, recipient],
+        )
+      end
+      fab!(:post) { Fabricate(:post, topic: topic, user: sender) }
+
+      before do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
+        bounce_key = "14b08c855160d67f2e0c2f8ef36e251e"
+        Fabricate(:post_reply_key, reply_key: bounce_key, user: recipient, post: post)
+        Fabricate(
+          :email_log,
+          to_address: recipient.email,
+          user: recipient,
+          bounce_key: bounce_key,
+          post: post,
+        )
+      end
+
+      it "records the delivery failure as a system whisper" do
+        expect { process(:hard_bounce_via_verp) }.to raise_error(
+          Email::Receiver::BouncedEmailError,
+        ).and change { topic.posts.where(post_type: Post.types[:whisper]).count }.by(1)
+
+        expect(Post.last.user).to eq(Discourse.system_user)
+        expect(IncomingEmail.last.error).to eq("Email::Receiver::BouncedEmailError")
+      end
+    end
   end
 
   describe "bounces to VERP" do
@@ -258,14 +626,6 @@ RSpec.describe Email::Receiver do
     it "handles email with no subject" do
       expect { process(:no_subject) }.to change(Topic, :count)
       expect(Topic.last.title).to eq("This topic needs a title")
-    end
-
-    it "rejects email from a suspended sender" do
-      Fabricate(:user, email: "one@foo.com", suspended_till: 1.year.from_now)
-
-      expect { process(:email_reply_1) }.to raise_error(
-        Email::Receiver::SuspendedUserError,
-      ).and not_change(Topic, :count)
     end
 
     it "bounds the body of posts created without validations" do
@@ -849,6 +1209,93 @@ RSpec.describe Email::Receiver do
                   Topic.count
                 }
         end
+      end
+    end
+
+    context "when the referenced message belongs to another group's private message" do
+      fab!(:other_group) { Fabricate(:group, allow_unknown_sender_topic_replies: false) }
+      fab!(:sender) { Fabricate(:user, email: "sender@foo.com") }
+      fab!(:other_group_post) do
+        Fabricate(
+          :group_private_message_post,
+          recipients: other_group,
+          raw: "Confidential conversation",
+        )
+      end
+
+      let(:message_id) { "discourse/post/#{other_group_post.id}@#{Discourse.current_hostname}" }
+
+      before { group.update!(allow_unknown_sender_topic_replies: true) }
+
+      def reply_to_referenced_message(message_id)
+        <<~MAIL
+          From: #{sender.email}
+          To: team@bar.com
+          Subject: Re: Support request
+          Date: #{Time.current.rfc2822}
+          Message-ID: <outside-reply@example.com>
+          In-Reply-To: <#{message_id}>
+          Content-Type: text/plain; charset=UTF-8
+
+          This reply references another group's conversation.
+        MAIL
+      end
+
+      it "starts a new topic in the receiving group for an IncomingEmail reference" do
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(Topic.last.posts.first.user).to eq(sender)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "starts a new topic in the receiving group for an EmailLog reference" do
+        Fabricate(
+          :email_log,
+          user: sender,
+          post: other_group_post,
+          topic_id: other_group_post.topic_id,
+          message_id: message_id,
+          to_address: sender.email,
+          email_type: "user_private_message",
+        )
+
+        expect { Email::Receiver.new(reply_to_referenced_message(message_id)).process! }.to change {
+          Topic.count
+        }.by(1).and change { Post.count }.by(1)
+
+        expect(Topic.last.allowed_groups).to contain_exactly(group)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(false)
+        expect(other_group_post.topic.posts.count).to eq(1)
+      end
+
+      it "threads the reply when the topic is also allowed to the receiving group" do
+        other_group_post.topic.topic_allowed_groups.create!(group: group)
+        Fabricate(
+          :incoming_email,
+          post: other_group_post,
+          topic: other_group_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        expect {
+          Email::Receiver.new(reply_to_referenced_message(message_id)).process!
+        }.to not_change { Topic.count }.and change { Post.count }.by(1)
+
+        expect(other_group_post.topic.posts.count).to eq(2)
+        expect(other_group_post.topic.topic_allowed_users.exists?(user_id: sender.id)).to eq(true)
       end
     end
   end
@@ -1469,6 +1916,39 @@ RSpec.describe Email::Receiver do
 
       let!(:post_reply_key) do
         Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
+
+      it "uses receipt time for replies and their topic activity and close timer" do
+        now = freeze_time Time.zone.now.round
+        admin = Fabricate(:admin)
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          nil,
+          by_user: admin,
+          based_on_last_post: true,
+          duration_minutes: 1440,
+        )
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to change { topic.posts.count }.by(1)
+
+        reply = topic.posts.order(:post_number).last
+        expect(reply.created_at).to eq_time(now)
+        expect(topic.reload.last_posted_at).to eq_time(now)
+        expect(topic.bumped_at).to eq_time(now)
+        expect(topic.public_topic_timer.reload.execute_at).to eq_time(now + 24.hours)
+      end
+
+      it "preserves historical reply dates during imports" do
+        mail = Mail.read_from_string(email(:reply_user_matching))
+        mail.date = 2.days.ago
+
+        expect { Email::Receiver.new(mail.to_s, import_mode: true).process! }.to change {
+          topic.posts.count
+        }.by(1)
+
+        expect(topic.posts.order(:post_number).last.created_at).to eq_time(mail.date)
       end
 
       context "when the email address isn't matching the one we sent the notification to" do

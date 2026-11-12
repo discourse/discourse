@@ -11,6 +11,15 @@ ja:
       go_back: "戻る"
       title: "違法コンテンツの報告"
       email: "メールアドレス"
+    code_editor:
+      search:
+        replace: "置換"
+        next: "次へ"
+        previous: "変更前"
+        close: "閉じる"
+        go: "開始"
+      fold:
+        to: "終了:"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"
@@ -5191,16 +5200,16 @@ ja:
         name: "名前"
         plugin: "プラグイン"
         metadata: "メタデータ"
-        enabled: "有効"
-        enabled_for: "次を対象に有効化..."
+        enabled: "有効ですか？"
         show_image: "画像を表示"
-        edit_groups: "オプトイングループを編集"
+        feedback: "フィードバック"
         groups_updated: "グループが更新されました！"
         save_groups: "グループを保存"
         add_groups_to_enable: "この機能を有効にするグループを追加する"
         no_changes_to_save: "保存する変更はありません"
         select_groups: "グループを選択…"
         opt_in_groups: "オプトイングループ"
+        settings: "設定"
         opt_in_groups_instructions: "オプトイングループを使用すると、全ユーザーを対象に変更がリリースされる前に特定のユーザーグループがその変更をテストできるようになります。ただし、変更が安定ステータスに進むとこのグループは無効になります。"
         enabled_for_throttle: "この変更を有効にする対象ユーザーの変更が早すぎます。数秒待ってからもう一度お試しください。"
         change_enabled_for_success: "この変更を %{enabledFor} に対して有効にしました"
@@ -5211,7 +5220,6 @@ ja:
         preview: "プレビュー"
         enabled_for_options:
           no_one: "対象者なし"
-          everyone: "全員"
           specific_groups: "特定のグループ"
           specific_groups_with_group_names:
             other: "グループ %{groupNames}"

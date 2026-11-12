@@ -25,13 +25,19 @@ module DiscourseEvents
           minimal: raw_event[:minimal],
           closed: raw_event[:closed] || false,
           chat_enabled: raw_event[:"chat-enabled"]&.downcase == "true",
-          livestream: raw_event[:livestream]&.downcase == "true",
+          livestream: is_livestream,
+          allow_anonymous_livestream:
+            is_livestream && raw_event[:"allow-anonymous-livestream"]&.downcase == "true",
           recording_url: raw_event[:recording],
           max_attendees: raw_event[:"max-attendees"]&.to_i,
           all_day: all_day?,
           custom_fields: custom_fields,
           host_user_ids: host_user_ids,
         }
+      end
+
+      def is_livestream
+        raw_event[:livestream]&.downcase == "true"
       end
 
       def starts_at

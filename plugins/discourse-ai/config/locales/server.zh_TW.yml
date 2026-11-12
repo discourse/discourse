@@ -1054,6 +1054,14 @@ zh_TW:
           header_background: "頁首"
       fonts:
         heading_font: "標題字型"
+    mcp_theme_access:
+      "on": "開"
+      "off": "關"
+      none: "無"
+      changes:
+        server: "MCP 服務器"
+    mcp_app_setup:
+      none: "無"
     reviewables:
       ai_tool_action:
         title: "AI 工具動作"

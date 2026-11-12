@@ -213,6 +213,8 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugestão com IA"
       copied: "Copiou"
       ai_decoded_transcript:
         thinking: "Pensando"
@@ -739,6 +741,8 @@ pt_BR:
         edit: "Editar"
         delete: "Excluir"
         test: "Executar teste"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -761,6 +765,7 @@ pt_BR:
         type: "Tipo"
         provider: "Provedor"
         edit: "Editar"
+        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         select_type: "Selecionar"
         types:
           embedding: "Incorporar"
@@ -961,7 +966,6 @@ pt_BR:
         presets: "Selecione uma predefinição..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         tests:
           title: "Executar teste"
           running: "Executando teste..."

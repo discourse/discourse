@@ -20,6 +20,7 @@ module DiscourseEvents
         :closed,
         :"chat-enabled",
         :livestream,
+        :"allow-anonymous-livestream",
         :"max-attendees",
         :"all-day",
         :image,

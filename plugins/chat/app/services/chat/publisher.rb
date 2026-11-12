@@ -118,6 +118,22 @@ module Chat
       )
     end
 
+    def self.user_channel_mute_message_bus_channel(user_id)
+      "/chat/user-channel-mute/#{user_id}"
+    end
+
+    def self.publish_user_channel_mute!(membership)
+      MessageBus.publish(
+        user_channel_mute_message_bus_channel(membership.user_id),
+        {
+          channel_id: membership.chat_channel_id,
+          muted: membership.muted,
+          muted_until: membership.muted_until,
+        },
+        user_ids: [membership.user_id],
+      )
+    end
+
     def self.publish_processed!(chat_message)
       chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)

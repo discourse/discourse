@@ -238,6 +238,8 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      dsa_classification:
+        suggest: "YZ ile öner"
       copied: "Kopyalandı"
       ai_decoded_transcript:
         thinking: "Düşünme"
@@ -853,6 +855,8 @@ tr_TR:
         edit: "Düzenle"
         delete: "Sil"
         test: "Testi çalıştır"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"
@@ -940,6 +944,7 @@ tr_TR:
         type: "Tür"
         provider: "Sağlayıcı"
         edit: "Düzenle"
+        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         select_type: "Seç"
         types:
           embedding: "Gömme"
@@ -1151,7 +1156,6 @@ tr_TR:
         presets: "Ön ayar seçin..."
         configure_manually: "Manuel olarak yapılandırın"
         edit: "Düzenle"
-        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         tests:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."

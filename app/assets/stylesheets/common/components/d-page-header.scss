@@ -33,7 +33,8 @@ $mobile-breakpoint: 700px;
         flex-direction: column;
       }
 
-      button {
+      button,
+      a.btn {
         margin-left: var(--space-2);
 
         @media (max-width: $mobile-breakpoint) {

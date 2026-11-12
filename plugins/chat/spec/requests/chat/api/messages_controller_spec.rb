@@ -256,6 +256,76 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         sign_in(user)
       end
 
+      context "when posting to a restricted category channel" do
+        fab!(:readonly_user, :user)
+        fab!(:readonly_group) { Fabricate(:group, users: [readonly_user]) }
+        fab!(:posting_group) { Fabricate(:group, users: [user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: posting_group,
+            permission_type: CategoryGroup.permission_types[:create_post],
+          )
+        end
+        fab!(:chat_channel) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+
+        before do
+          # Both groups are chat-allowed so category permission is the only difference.
+          SiteSetting.chat_allowed_groups = "#{posting_group.id}|#{readonly_group.id}"
+          readonly_user.user_option.update!(chat_enabled: true)
+          CategoryGroup.create!(
+            category: category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+
+        it "does not deliver restricted messages to readonly category members" do
+          chat_message_bus_channel = Chat::Publisher.root_message_bus_channel(chat_channel.id)
+          last_message_id = MessageBus.last_id(chat_message_bus_channel)
+
+          sign_in(readonly_user)
+          get "/chat/api/channels/#{chat_channel.id}/messages"
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+
+          sign_in(user)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message_id"]).to be_present
+
+          sign_in(readonly_user)
+          post "/message-bus/#{SecureRandom.hex}/poll",
+               params: {
+                 chat_message_bus_channel => last_message_id,
+               },
+               headers: {
+                 "HTTP_DONT_CHUNK" => "true",
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.body).not_to include(message)
+
+          sign_in(user)
+          post "/message-bus/#{SecureRandom.hex}/poll",
+               params: {
+                 chat_message_bus_channel => last_message_id,
+               },
+               headers: {
+                 "HTTP_DONT_CHUNK" => "true",
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(message)
+        end
+      end
+
       context "when current user is silenced" do
         before { UserSilencer.new(user).silence }
 
@@ -285,6 +355,23 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
           I18n.t("chat.errors.channel_new_message_disallowed.closed"),
+        )
+      end
+
+      it "keeps quoted messages intact when a wildcard censored word matches their HTML" do
+        Fabricate(:watched_word, word: "darn*", action: WatchedWord.actions[:censor])
+
+        post "/chat/#{chat_channel.id}.json", params: { message: <<~MD }
+          [chat quote="alice;1;2026-01-01T00:00:00Z"]
+          ![a style=position:fixed;inset:0 b](http://example.com/darn)
+          [/chat]
+        MD
+
+        expect(response.status).to eq(200)
+        image = Nokogiri::HTML5.fragment(Chat::Message.last.cooked).at_css("img")
+        expect(image.to_h).to eq(
+          "src" => "http://example.com/darn",
+          "alt" => "a style=position:fixed;inset:0 b",
         )
       end
 

@@ -11,6 +11,15 @@ el:
       go_back: "Μετάβαση πίσω"
       title: "Αναφορά παράνομου περιεχομένου"
       email: "Διεύθυνση email"
+    code_editor:
+      search:
+        replace: "Αντικατάσταση"
+        next: "Επόμενο"
+        previous: "Προηγούμενο"
+        close: "Κλείσιμο"
+        go: "Εμπρός"
+      fold:
+        to: "προς"
     user_api_key:
       title: 'Εξουσιοδότηση "%{application_name}"'
       authorize: "Εξουσιοδότηση"
@@ -2586,7 +2595,6 @@ el:
         }.
     learn_more: "Μάθετε περισσότερα…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Μάθετε περισσότερα…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Ανατροφοδότηση…</a>"
     mute: Σίγαση
     unmute: Άρση σίγασης
     last_post: Ανάρτησε
@@ -5771,25 +5779,24 @@ el:
         name: "Όνομα"
         plugin: "Πρόσθετο"
         metadata: "Μεταδεδομένα"
-        enabled: "Ενεργοποιημένα"
-        enabled_for: "Ενεργοποιημένο για..."
+        enabled: "Ενεργοποιημένο;"
         show_image: "Εμφάνιση εικόνας"
+        feedback: "Ανατροφοδότηση"
+        toggle: "Ενεργοποίηση %{name}"
         groups_updated: "Οι ομάδες ενημερώθηκαν!"
         save_groups: "Αποθήκευση ομάδων"
         add_groups_to_enable: "Προσθέστε ομάδες για να ενεργοποιήσετε αυτήν τη λειτουργία"
         no_changes_to_save: "Δεν υπάρχουν αλλαγές για αποθήκευση"
         select_groups: "Επιλέξτε ομάδες…"
-        show_related_settings: "Εμφάνιση σχετικών ρυθμίσεων..."
+        settings: "Ρυθμίσεις"
         change_enabled_for_success: "Έχετε ενεργοποιήσει αυτήν την αλλαγή για %{enabledFor}"
         change_disabled: "Έχετε εξαιρεθεί από αυτήν την αλλαγή"
         permanent_notice: "Αυτή η αλλαγή είναι πλέον μόνιμη και σύντομα θα καταργηθεί. Δεν μπορείτε πλέον να εξαιρεθείτε."
-        permanent_soon_notice: "Αυτή η αλλαγή θα γίνει σύντομα μόνιμη. Δεν θα μπορείτε πλέον να εξαιρεθείτε."
         permanent_no_group_selection: "Κ/Α, οι μόνιμες αλλαγές ισχύουν για όλες τις ομάδες."
         no_changes: "Δεν υπάρχουν επερχόμενες αλλαγές αυτήν τη στιγμή."
         preview: "Προεπισκόπηση"
         enabled_for_options:
           no_one: "Κανέναν"
-          everyone: "Όλοι"
           staff: "%{staffGroupName} μόνο"
           specific_groups: "Συγκεκριμένη/ες ομάδα/ες"
           specific_groups_with_group_names:

@@ -1401,6 +1401,7 @@ en:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
+    email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
@@ -2488,6 +2489,7 @@ en:
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
     google_oauth2_hd_groups: 'Retrieve users'' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target="_blank" href="https://meta.discourse.org/t/226850">this Meta topic</a>.'
+    google_oauth2_hd_groups_allowed: "Only allow users who belong to at least one of these Google groups to log in with Google. Enter each group's ID or email address. Requires {{setting:google_oauth2_hd}}, {{setting:google_oauth2_hd_groups_service_account_admin_email}}, and {{setting:google_oauth2_hd_groups_service_account_json}}. Group lookup failures deny login. Leave blank to allow any user in the hosted domain."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -3277,7 +3279,7 @@ en:
     nested_replies_hot_preload_depth_penalty: "Priority subtracted for each level of depth when choosing nested replies to pre-expand in hot view."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
-    nested_replies_backfill_batch_size: "Number of topics to process per nested reply stats backfill batch."
+    nested_replies_backfill_batch_size: "Maximum number of topics to inspect per nested reply stats backfill batch. Set to 0 to disable automatic backfill. Explicit stats preparation still processes at least one topic per batch."
     nested_replies_stats_maintenance_enabled: "Maintain nested reply statistics even while nested replies are disabled."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
@@ -3374,6 +3376,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      google_oauth2_hd_groups_allowed: "You must configure the Google OAuth2 hosted domain and group service account settings before adding allowed groups."
       discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
       auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
@@ -3605,6 +3608,12 @@ en:
     existing_message_moderator_post:
       one: "A post was merged into an existing message: %{topic_link}"
       other: "%{count} posts were merged into an existing message: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "A post was split to a new topic."
+      other: "%{count} posts were split to a new topic."
+    existing_topic_moderator_post_no_link:
+      one: "A post was merged into an existing topic."
+      other: "%{count} posts were merged into an existing topic."
 
   change_owner:
     post_revision_text: "Ownership transferred"
@@ -6528,7 +6537,6 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
-    admin_onboarding_topic_option: "Selected option: %{option}\nOption ID: %{option_id}"
     redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
@@ -6802,6 +6810,10 @@ en:
     mute_error: "Sorry, you can't mute that user."
     error: "Sorry, you cannot change the notification level for that user."
     invalid_value: '"%{value}" is not a valid notification level.'
+
+  google_oauth2:
+    not_in_allowed_group: "Authentication failed. You are not a member of a permitted Google group."
+    group_lookup_failed: "Authentication failed. Your Google group membership could not be verified."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

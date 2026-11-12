@@ -1,34 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin onboarding banner locale keys" do
-  # OnboardingStep#buttonLabel switches between `action` and `completed`, so a
-  # step missing either one renders the raw key in the banner.
-  let(:steps) do
-    File
-      .read("frontend/discourse/app/components/admin-onboarding/banner.gjs")
-      .scan(/static name = "(\w+)"/)
-      .flatten
-  end
-
   let(:banner) do
     YAML.load_file("config/locales/client.en.yml").dig("en", "js", "admin_onboarding_banner")
   end
 
-  it "finds the steps defined by the banner" do
-    expect(steps).to include("select_theme")
-  end
-
-  it "defines every topic option recorded by the staff action log" do
-    options = banner.fetch("start_posting").fetch("icebreakers")
-    expect(options.keys).to contain_exactly(*UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS)
-    expect(options.values).to all(include("title", "description"))
-    # "write_your_own" opens an empty composer, so it has no body to prefill.
-    expect(options.except("write_your_own").values).to all(include("body"))
-  end
-
+  # OnboardingStep#buttonLabel switches between `action` and `completed`, so a
+  # step missing either one renders the raw key in the banner.
   it "defines title, description, action and completed for every step" do
     missing =
-      steps.each_with_object({}) do |step, hash|
+      UserHistory::ADMIN_ONBOARDING_STEPS.each_with_object({}) do |step, hash|
         absent = %w[title description action completed] - (banner[step]&.keys || [])
         hash[step] = absent if absent.present?
       end

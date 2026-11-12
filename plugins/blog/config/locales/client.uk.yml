@@ -23,6 +23,8 @@ uk:
         edit: Редагувати
         activate: Активувати
         preview: Попередній перегляд
+        customize: Customize
+        customized_theme_name: "%{name} (користувацький)"
         import: Імпорт
         export: Експорт
         active: Активний
@@ -36,6 +38,7 @@ uk:
         change:
           title: назва
           body: тіло
+          tags: теґи
       review:
         label: Мітка
         create: Створити посилання

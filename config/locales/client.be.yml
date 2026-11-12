@@ -6,6 +6,12 @@
 
 be:
   js:
+    code_editor:
+      search:
+        next: "Далей"
+        close: "Закрыць"
+      fold:
+        to: "каму"
     user_api_key:
       authorize: "Аўтарызаваць"
       deny: "Скасаваць"
@@ -2094,9 +2100,8 @@ be:
           title: "Убудовы"
       upcoming_changes:
         name: "Назва"
+        settings: "Налады"
         preview: "Перадпрагляд"
-        enabled_for_options:
-          everyone: "Усе"
         impact_roles:
           admins: "Адміністратары"
           moderators: "Мадэратары"

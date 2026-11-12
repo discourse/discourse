@@ -533,6 +533,7 @@ pl_PL:
         no_sender_detected_error: "Zdarza się, kiedy nie można znaleźć prawidłowego adresu e‐mail w nagłówku Od."
         from_reply_by_address_error: "Zdarza się, gdy nagłówek From pasuje do odpowiedzi według adresu e-mail."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
+        suspended_user_error: "Dzieje się tak, gdy nadawca został zawieszony."
         silenced_user_error: "Dzieje się, gdy wysyłający został uciszony."
         bad_destination_address: "Zdarza się, gdy żaden z adresów e-mail w polach Do / DW nie odpowiada skonfigurowanemu adresowi poczty przychodzącej."
         strangers_not_allowed_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie jest członkiem."
@@ -1476,6 +1477,7 @@ pl_PL:
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
     missing_session: "Nie wiemy, czy twoje konto zostało utworzone, upewnij się, że masz włączone pliki cookies."
     activated: "Przepraszamy, to konto zostało już aktywowane."
+    email_change_not_allowed: "To konto było już wcześniej aktywne, więc można je reaktywować tylko przy użyciu aktualnego adresu e-mail."
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy na pewno chcesz, aby <b>%{target_username} (%{target_email})</b> był administratorem?"
@@ -3504,6 +3506,16 @@ pl_PL:
       few: "%{count} posty zostały scalone z istniejącą wiadomością: %{topic_link}"
       many: "%{count} postów zostało scalonych z istniejącą wiadomością: %{topic_link}"
       other: "%{count} postów zostało scalonych z istniejącą wiadomością: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "Wpis został podzielony na nowy temat."
+      few: "%{count} wpisy zostały podzielone na nowy temat."
+      many: "%{count} wpisów zostało podzielonych na nowy temat."
+      other: "%{count} wpisów zostało podzielonych na nowy temat."
+    existing_topic_moderator_post_no_link:
+      one: "Wpis został scalony z istniejącym tematem."
+      few: "%{count} wpisy zostały scalone z istniejącym tematem."
+      many: "%{count} wpisów zostało scalonych z istniejącym tematem."
+      other: "%{count} wpisów zostało scalonych z istniejącym tematem."
   change_owner:
     post_revision_text: "Przeniesiono własność"
   publish_page:
@@ -4322,6 +4334,16 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja konto powiązane z tym adresem email nie jest aktywne. Proszę aktywować konto przed wysyłaniem emaili.
+    email_reject_suspended_user:
+      title: "E-mail odrzuca zawieszonego użytkownika"
+      subject_template: "[%{email_prefix}] Problem z e-mailem — zawieszony użytkownik"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – zawieszony użytkownik"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana do %{destination} (zatytułowana %{former_title}) nie zadziałała.
+
+        Konto powiązane z tym adresem e-mail jest zawieszone. Zawieszone konta nie mogą tworzyć postów ani wysyłać wiadomości e-mail.
+
+        Jeśli uważasz, że to błąd, [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_silenced_user:
       title: "E-mail odrzucony: wyciszony użytkownik"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - wyciszony użytkownik"

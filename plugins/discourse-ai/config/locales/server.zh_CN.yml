@@ -1354,6 +1354,25 @@ zh_CN:
       fonts:
         base_font: "正文字体"
         heading_font: "标题字体"
+    mcp_theme_access:
+      approval_required: "此项更改需要管理员批准。"
+      failed: "无法进行更改。"
+      "on": "开"
+      "off": "关"
+      none: "无"
+      changes:
+        server: "MCP 服务器"
+    mcp_app_setup:
+      none: "无"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Codex"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -1402,6 +1421,8 @@ zh_CN:
         set_llm_first: "首先设置%{setting}"
         model_unreachable: "我们无法从此模型获得回答。请先检查您的设置。"
         empty_response: "模型返回了空回答。"
+        test_timeout:
+          other: "模型在 %{count} 秒内未响应。服务器可能过载，请稍后再试。"
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_agent_response_format: "所选智能体必须具有包含名为“spam”的布尔字段的响应格式。"
         must_select_model: "必须先选择一个 LLM"

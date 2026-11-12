@@ -10,6 +10,15 @@ cs:
       choice_title: "Je to nezákonné"
       title: "Nahlásit protizákonný obsah"
       email: "E-mailová adresa"
+    code_editor:
+      search:
+        replace: "Nahradit"
+        next: "Další"
+        previous: "Předchozí"
+        close: "Zavřít"
+        go: "Přejít"
+      fold:
+        to: "do"
     user_api_key:
       title: 'Autorizovat „%{application_name}“'
       authorize: "Autorizovat"
@@ -6011,16 +6020,16 @@ cs:
         name: "Název"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Zapnuto"
-        enabled_for: "Povoleno pro..."
+        enabled: "Zapnuto?"
         show_image: "Zobrazit obrázek"
-        edit_groups: "Úprit opt-in skupiny"
+        feedback: "Zpětná vazba"
         groups_updated: "Skupiny aktualizovány!"
         save_groups: "Uložit skupiny"
         add_groups_to_enable: "Pro povolení této funkce přidejte skupiny"
         no_changes_to_save: "Žádné změny k uložení"
         select_groups: "Vyberte skupiny…"
         opt_in_groups: "Opt-in skupiny"
+        settings: "Nastavení"
         opt_in_groups_instructions: "Opt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude zveřejněna pro všechny. Vemte na vědomí, že tyto skupiny budou irelevantní, jakmile změna přejde do stavu Stabilní."
         enabled_for_throttle: "Upravili jste pro koho je tato změna povolena příliš rychle. Počkejte prosím pár vteřin před dalším pokusem."
         change_enabled_for_success: "Tuto změnu jste povolili pro %{enabledFor}"
@@ -6031,7 +6040,6 @@ cs:
         preview: "Náhled"
         enabled_for_options:
           no_one: "Nikdo"
-          everyone: "Všichni"
           specific_groups: "Specifické skupiny"
           specific_groups_with_group_names:
             one: "skupinu %{groupNames}"

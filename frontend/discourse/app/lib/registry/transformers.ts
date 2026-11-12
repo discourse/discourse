@@ -45,7 +45,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-new-bot-options",
   "admin-new-bot-params",
   "admin-onboarding-banner-location",
-  "admin-onboarding-start-posting-options",
   "admin-onboarding-steps",
   "admin-plugin-icon",
   "admin-reports-show-query-params",

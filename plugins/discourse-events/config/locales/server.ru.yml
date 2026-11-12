@@ -43,15 +43,33 @@ ru:
         ```
     discourse_post_event_reminder:
       title: "Напоминание о мероприятии"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### Гости
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [Перейти к теме мероприятия](%{event_url})
   site_settings:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
+    discourse_events_enabled: "Включить плагин discourse-calendar. Это добавит поддержку тега [calendar][/calendar] в первой публикации темы."
     discourse_post_event_enabled: "Включает функции событий. Примечание: также необходимо включить {{setting:discourse_events_enabled}}."
     displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
     display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."
     use_local_event_date: "Использовать локальную дату после заголовка темы вместо прошедшего времени."
     discourse_post_event_allowed_on_groups: "Группы, которым разрешено создавать мероприятия."
     discourse_post_event_allowed_custom_fields: "Разрешает событиям устанавливать собственные значения пользовательских полей."
+    discourse_post_event_allowed_custom_fields_invalid: "Недопустимы следующие имена пользовательских полей: %{names}. Имена должны начинаться и заканчиваться буквой или цифрой и использовать одинарные точки, дефисы или подчеркивания в качестве разделителей (например: dress_code, live-stream, q.and.a)."
     discourse_post_event_edit_notifications_time_extension: "Продлить на указанное здесь количество минут период после окончания мероприятия, когда приглашённые всё ещё получают уведомление об изменении исходной записи."
     holiday_calendar_topic_id: "Идентификатор темы календаря праздников и отсутствия сотрудников."
     holiday_status_emoji: Эмодзи для статуса «праздники».
@@ -73,6 +91,11 @@ ru:
     sidebar_show_upcoming_events: "Показывать ссылку на предстоящие мероприятия на боковой панели в разделе «Еще»."
     calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
     enable_events_category_type_setup: "Включает опцию типа категории «События» при настройке создания категории."
+    livestream_allowed_hosts: "Платформы, которые можно использовать для прямой трансляции мероприятий."
+    livestream_allowed_hosts_invalid: "Эти записи не являются хостами: %{hosts}. Введите сам хост (например, zoom.us), что позволит использовать все URL-адреса на нем и его поддоменах."
+    livestream_zoom_enabled: "Включите возможность встраивания видео в Zoom для тем прямых трансляций."
+    livestream_zoom_sdk_key: "Идентификатор клиента Zoom Meeting SDK."
+    livestream_embeddable_chat_allowed_paths: "Разрешенные пути для встраиваемого чата прямой трансляции."
     livestream_enable_modal_chat_on_mobile: "Отображение чата прямой трансляции в модальном окне на мобильных устройствах."
   discourse_events:
     reminder:
@@ -80,12 +103,19 @@ ru:
         before: "Мероприятие «%{title}» вот-вот начнется"
         ongoing: "Мероприятие «%{title}» продолжается"
         after: "Мероприятие «%{title}» закончилось"
+      location: |-
+        #### Местоположение
+
+        %{location}
       guest: "- %{name}"
+      roles:
+        organizer: "Организатор"
       additional_guests:
         one: "  и ещё %{count}"
         few: "  и ещё %{count}"
         many: "  и ещё %{count}"
         other: "  и ещё %{count}"
+      join_event: "[Присоединиться к мероприятию](%{url})"
     category_type:
       default_calendar_view:
         label: "Стандартный вид календаря"
@@ -111,6 +141,16 @@ ru:
       all_events_feed_name: "%{site_title} - Все события"
       my_events_feed_name: "%{site_title} - Мои события"
     invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "Этот канал посвящен мероприятию [%{title}](%{url}) — посетите тему для получения подробной информации и подтверждения участия."
+        transcript_heading: "Расшифровка чата"
+        transcript_heading_dated: "Расшифровка чата для %{date}"
+        transcript_edit_reason: "Добавлена расшифровка чата прямой трансляции."
+      zoom:
+        frame_title: "Вебинар в Zoom"
+        frame_join: "Присоединяйтесь к вебинару"
+        frame_joining: "Подключение…"
     calendar_must_be_in_first_post: "Тег календаря может быть использован только в первой публикации темы."
     more_than_one_calendar: "В записи не может быть более одного календаря."
     more_than_two_dates: "Запись в теме календаря не может содержать более двух дат."
@@ -120,6 +160,13 @@ ru:
   discourse_post_event:
     event_excerpt:
       date_format: "%d.%m.%Y"
+    filter:
+      description:
+        event: "Отображение тем с помощью события"
+        event_any_of: "Отображение тем, содержащих событие в любом из указанных состояний (разделенных запятыми)."
+        event_any: "Отображение тем с помощью события"
+        event_upcoming: "Отображаются темы, содержащие событие, которое еще не началось."
+        event_attending_me: "Мероприятия, на которые вы собираетесь"
     notifications:
       before_event_reminder: "Мероприятие «%{title}» вот-вот начнется."
       after_event_reminder: "Мероприятие «%{title}» закончилось."
@@ -138,6 +185,7 @@ ru:
           max_attendees_reached: "Это мероприятие заполнено."
           start_must_be_present_and_a_valid_date: "В мероприятии должна быть установлена правильная дата начала."
           end_must_be_a_valid_date: "Дата окончания должна быть правильной."
+          invalid_max_attendees: "Максимальное количество участников должно быть в диапазоне от 1 до %{maximum}."
           invalid_timezone: "Часовой пояс не распознан."
           acting_user_not_allowed_to_create_event: "Текущему пользователю не разрешено создавать мероприятия."
           acting_user_not_allowed_to_act_on_this_event: "Текущий пользователь не имеет права работать с этим мероприятием."
@@ -146,6 +194,14 @@ ru:
           custom_field_is_invalid: "Настраиваемое поле `%{field}` не допускается."
           name:
             length: "Название мероприятия должно содержать столько символов: от %{minimum} до %{maximum}."
+          description:
+            length: "Описание события ограничено %{maximum} символами."
+          url:
+            length: "URL события ограничен %{maximum} символами."
+          location:
+            length: "Описание места проведения мероприятия не должно превышать %{maximum} символов."
+          recording:
+            length: "Ссылка на запись события ограничена %{maximum} символами."
   discourse_push_notifications:
     popup:
       event_reminder: "Напоминание о мероприятии"

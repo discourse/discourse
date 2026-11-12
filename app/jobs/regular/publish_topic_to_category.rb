@@ -10,6 +10,7 @@ module Jobs
       return if category.blank?
       return unless guardian.can_set_topic_timer?(topic)
       return unless guardian.can_create_topic_on_category?(category)
+      return unless guardian.can_edit?(topic)
       return if topic.private_message? && !guardian.can_convert_topic?(topic)
 
       TopicTimer.transaction { TopicPublisher.new(topic, user, category.id).publish! }

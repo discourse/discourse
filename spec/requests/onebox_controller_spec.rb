@@ -81,6 +81,53 @@ RSpec.describe OneboxController do
       end
     end
 
+    describe "hotlinked media policy" do
+      let(:url) { "https://example.com/preview-with-image" }
+      let(:image_url) { "https://images.example.com/thumbnail.jpg" }
+      let(:html) { <<~HTML }
+          <html><head>
+            <meta property="og:title" content="Image preview">
+            <meta property="og:description" content="A useful summary">
+            <meta property="og:image" content="#{image_url}">
+          </head></html>
+        HTML
+
+      before do
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
+
+      it "honors the current hotlink policy for fresh and cached previews" do
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("img", with: { src: image_url })
+
+        SiteSetting.block_hotlinked_media = true
+        2.times do
+          get "/onebox.json", params: { url: url }
+          expect(response.status).to eq(200)
+          expect(response.body).not_to have_tag("img[src]")
+          expect(response.body).to have_tag("h3", text: "Image preview")
+        end
+        expect(Oneboxer.cached_onebox(url)).to have_tag("img", with: { src: image_url })
+
+        stub_request(:get, url).to_return(
+          body: %(<html><head><link rel="icon" href="#{image_url}"></head></html>),
+        )
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.body).to have_tag("aside.preview-error")
+        expect(response.body).not_to have_tag("img[src]")
+
+        SiteSetting.block_hotlinked_media_exceptions = "https://images.example.com"
+        get "/onebox.json", params: { url: url }
+        expect(response.body).to have_tag("img", with: { src: image_url })
+
+        SiteSetting.block_hotlinked_media = false
+        get "/onebox.json", params: { url: url }
+        expect(response.body).to have_tag("img", with: { src: image_url })
+      end
+    end
+
     describe "only 1 outgoing preview per user" do
       it "returns 429" do
         Oneboxer.preview_onebox!(user.id)

@@ -14,6 +14,26 @@ RSpec.describe "Admin AI agent configuration" do
     sign_in(admin)
   end
 
+  it "shows the post illustrator's automatic tools instead of a stored selection" do
+    image_tool =
+      Fabricate(
+        :ai_tool,
+        name: "Image generator",
+        parameters: [{ name: "prompt", type: "string", description: "Prompt" }],
+        script: "function invoke() { upload.create(); chain.setCustomRaw(); }",
+      )
+    illustrator_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostIllustrator]
+
+    visit "/admin/plugins/discourse-ai/ai-agents/#{illustrator_id}/edit"
+
+    expect(page).to have_css(".ai-automatic-image-tools")
+    expect(page).to have_link(
+      image_tool.name,
+      href: "/admin/plugins/discourse-ai/ai-tools/#{image_tool.id}/edit",
+    )
+    expect(form).to have_no_field_with_name("tools")
+  end
+
   it "lets admins require uploaded document search on every reply" do
     agent = Fabricate(:ai_agent)
     agent_editor_page.visit_edit(agent)

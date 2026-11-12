@@ -33,6 +33,7 @@ module DiscourseEvents
       attributes :watching_invitee
       attributes :chat_enabled
       attributes :livestream
+      attributes :allow_anonymous_livestream
       attributes :livestream_onebox
       attributes :livestream_url
       # TODO (martin) We need to merge this and the event channel ID which

@@ -227,40 +227,6 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
-  translation: [
-    {
-      key: "settings",
-      titleKey: "discourse_ai.features.translation.setting_groups.settings",
-      settings: ["ai_translation_enabled"],
-    },
-    {
-      key: "agents",
-      titleKey: "discourse_ai.features.translation.setting_groups.agents",
-      settings: [
-        "ai_translation_locale_detector_agent",
-        "ai_translation_locale_detector_decision_model",
-        "ai_translation_post_raw_translator_agent",
-        "ai_translation_topic_title_translator_agent",
-        "ai_translation_short_text_translator_agent",
-      ],
-    },
-    {
-      key: "backfill_and_limits",
-      titleKey:
-        "discourse_ai.features.translation.setting_groups.backfill_and_limits",
-      settings: [
-        "ai_translation_backfill_hourly_rate",
-        "ai_translation_category_scope",
-        "ai_translation_categories",
-        "ai_translation_personal_messages",
-        "ai_translation_include_bot_content",
-        "ai_translation_backfill_start_date",
-
-        "ai_translation_verbose_logs",
-      ],
-    },
-  ],
-
   discord: [
     {
       key: "settings",

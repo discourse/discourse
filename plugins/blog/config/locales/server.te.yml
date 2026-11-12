@@ -18,3 +18,5 @@ te:
     replies:
       one: "%{count} ప్రత్యుత్తరం"
       other: "%{count} ప్రత్యుత్తరాలు"
+    themes:
+      default: అప్రమేయ

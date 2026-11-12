@@ -23,6 +23,8 @@ de:
         edit: Bearbeiten
         activate: Aktivieren
         preview: Vorschau
+        customize: Anpassen
+        customized_theme_name: "%{name} (benutzerdefiniert)"
         import: Importieren
         export: Exportieren
         active: Aktiv
@@ -35,6 +37,7 @@ de:
         change:
           title: titel
           body: body
+          tags: Schlagwörter
       review:
         create: Link erstellen
         copy: Kopieren

@@ -552,6 +552,12 @@ sk:
       fonts:
         base_font: "Písmo tela"
         heading_font: "Písmo nadpisu"
+    mcp_theme_access:
+      "on": "Zapnuté"
+      "off": "Vypnuté"
+      none: "žiadne"
+    mcp_app_setup:
+      none: "žiadne"
     reviewables:
       ai_tool_action:
         approve:

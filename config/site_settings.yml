@@ -803,6 +803,12 @@ login:
     default: false
     validator: GoogleOauth2HdGroupsValidator
     area: "authenticators"
+  google_oauth2_hd_groups_allowed:
+    default: ""
+    type: list
+    list_type: simple
+    validator: GoogleOauth2HdGroupsAllowedValidator
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
@@ -2195,7 +2201,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
@@ -4843,7 +4849,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
@@ -4853,7 +4859,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:

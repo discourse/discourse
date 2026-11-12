@@ -23,10 +23,10 @@ const IMPORTS = [
     source: "frontend/discourse/app/lib/later.ts",
   },
   {
-    specifier: "discourse/lib/get-url",
-    binding: "getURL",
-    name: "getURL",
-    source: "frontend/discourse/app/lib/get-url.js",
+    specifier: "discourse/lib/escape",
+    binding: "escapeHTML",
+    name: "escapeHTML",
+    source: "frontend/discourse/app/lib/escape.js",
   },
   {
     specifier: "discourse/ui-kit/d-button",

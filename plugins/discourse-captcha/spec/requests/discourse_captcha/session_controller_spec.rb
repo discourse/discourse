@@ -127,6 +127,76 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to eq(existing_user.id)
     end
 
+    context "when using reCAPTCHA v3" do
+      let(:email) { "new.person@example.com" }
+      let(:login_code) { EmailLoginCode.generate!(email:) }
+
+      before do
+        SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+        SiteSetting.recaptcha_v3_site_key = "site-key"
+        SiteSetting.recaptcha_v3_secret_key = "secret-key"
+        stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "captcha-token"),
+        ).to_return(status: 200, body: '{"success":true,"score":0.9,"action":"signup"}')
+      end
+
+      it "stores the signup score on the account created from a login code" do
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code: login_code.code,
+               username: "chosen_username",
+             }
+
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(
+          User.find_by_email(email).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to eq("0.9")
+      end
+
+      it "does not carry the score of a failed signup over to another account" do
+        allow_any_instance_of(ActionDispatch::Executor).to receive(:call) do |middleware, env|
+          middleware.instance_variable_get(:@app).call(env)
+        end
+        Fabricate(:user, username: "chosen_username")
+
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code: login_code.code,
+               username: "chosen_username",
+             }
+
+        expect(User.find_by_email(email)).to be_nil
+        expect(
+          Fabricate(:user).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to be_nil
+      ensure
+        DiscourseCaptcha::SignupScore.reset
+      end
+
+      it "stores the signup score on the account created after approval signup details" do
+        SiteSetting.must_approve_users = true
+        post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+        signup_token = response.parsed_body["signup_token"]
+
+        post "/captcha/recaptcha_v3/create.json", params: { token: "captcha-token" }
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "approval-person",
+               name: "Approval Person",
+             }
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(
+          User.find_by_email(email).custom_fields[DiscourseCaptcha::SignupScore::CUSTOM_FIELD],
+        ).to eq("0.9")
+      end
+    end
+
     context "when an approval signup requires account details" do
       fab!(:user_field, :user_field)
 

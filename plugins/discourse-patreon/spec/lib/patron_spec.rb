@@ -56,6 +56,16 @@ RSpec.describe Patreon::Patron do
     expect(local_users.count).to eq(1)
   end
 
+  it "establishes only one binding when multiple verified emails match different patrons" do
+    user = Fabricate(:user, email: patrons["111111"])
+    user.user_emails.create!(email: patrons["111112"])
+
+    local_users = described_class.get_local_users
+
+    expect(local_users).to contain_exactly([user.id, user.reload.custom_fields["patreon_id"]])
+    expect(patrons.keys).to include(user.custom_fields["patreon_id"])
+  end
+
   describe "sync groups" do
     let(:patreon_user_info) { Fabricate(:patreon_user_info, provider_uid: "111112") }
     let(:group1) { Fabricate(:group) }
@@ -77,6 +87,62 @@ RSpec.describe Patreon::Patron do
       described_class.sync_groups_by(patreon_id: patreon_user_info.provider_uid)
       expect(group1.users.to_a).to eq([patreon_user_info.user])
       expect(group2.users.to_a).to eq([patreon_user_info.user])
+    end
+
+    it "does not bind or group an inactive account whose unverified email matches a patron" do
+      inactive = Fabricate(:user, email: "foo@bar.com", active: false)
+
+      described_class.sync_groups
+
+      expect(group1.users).not_to include(inactive)
+      expect(inactive.reload.custom_fields["patreon_id"]).to be_blank
+    end
+
+    it "does not match an inactive account by email when syncing by Patreon ID" do
+      inactive = Fabricate(:user, email: "foo@bar.com", active: false)
+
+      described_class.sync_groups_by(patreon_id: "111111")
+
+      expect(group1.users).not_to include(inactive)
+      expect(inactive.reload.custom_fields["patreon_id"]).to be_blank
+    end
+
+    shared_examples "durable Patreon bindings" do
+      it "preserves a proven binding after an unrelated email change" do
+        user = Fabricate(:user, email: patrons["111112"])
+        described_class.sync_groups_by(patreon_id: "111112")
+        user.reload.update!(email: "changed@example.com")
+
+        synchronize
+
+        expect(user.reload.custom_fields["patreon_id"]).to eq("111112")
+        expect(group1.users).to contain_exactly(user)
+        expect(group2.users).to contain_exactly(user)
+      end
+
+      it "preserves a proven binding after changing to another patron's email" do
+        user = Fabricate(:user, email: patrons["111111"])
+        described_class.sync_groups_by(patreon_id: "111111")
+        user.reload.update!(email: patrons["111112"])
+
+        synchronize
+
+        expect(user.reload.custom_fields["patreon_id"]).to eq("111111")
+        expect(group1.users).to contain_exactly(user)
+        expect(group2.users).to be_empty
+      end
+    end
+
+    describe ".sync_groups" do
+      subject(:synchronize) { described_class.sync_groups }
+
+      include_examples "durable Patreon bindings"
+    end
+
+    describe ".sync_groups_by" do
+      subject(:synchronize) { described_class.sync_groups_by(patreon_id: "111112") }
+
+      include_examples "durable Patreon bindings"
     end
   end
 end

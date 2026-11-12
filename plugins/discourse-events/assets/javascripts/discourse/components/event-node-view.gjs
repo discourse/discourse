@@ -25,6 +25,7 @@ const CLEARABLE_ATTRS = [
   "minimal",
   "chatEnabled",
   "livestream",
+  "allowAnonymousLivestream",
   "allDay",
   "allowedGroups",
   "reminders",

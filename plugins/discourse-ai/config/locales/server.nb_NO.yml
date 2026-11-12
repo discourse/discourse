@@ -91,6 +91,10 @@ nb_NO:
       colors:
         light:
           header_background: "Hode"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
     reviewables:
       ai_tool_action:
         approve:

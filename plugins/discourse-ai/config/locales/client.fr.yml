@@ -242,6 +242,8 @@ fr:
               description: "Autoriser l'étiquetage des publications créées par l'utilisateur système"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggérer avec l'IA"
       copied: "Copié "
       ai_decoded_transcript:
         thinking: "Raisonnement"
@@ -959,6 +961,8 @@ fr:
         edit: "Modifier"
         delete: "Supprimer"
         test: "Lancer le test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Serveurs MCP"
         new: "Nouveau serveur MCP"
@@ -1046,6 +1050,7 @@ fr:
         type: "Type"
         provider: "Fournisseur"
         edit: "Modifier"
+        seeded_warning: "Cela est préconfiguré sur votre site et ne peut pas être modifié."
         select_type: "Sélectionner"
         types:
           embedding: "Intégration"
@@ -1285,7 +1290,6 @@ fr:
         presets: "Sélectionnez un préréglage..."
         configure_manually: "Configurer manuellement"
         edit: "Modifier"
-        seeded_warning: "Cela est préconfiguré sur votre site et ne peut pas être modifié."
         tests:
           title: "Lancer le test"
           running: "Exécution du test..."

@@ -297,7 +297,9 @@ module Oneboxer
   end
 
   def self.onebox_cache_key(url)
-    "onebox__#{url}"
+    policy =
+      "#{Digest::SHA1.hexdigest(PrettyText.allowed_src_pattern.source)}__" if SiteSetting.block_hotlinked_media
+    "onebox__#{policy}#{url}"
   end
 
   def self.onebox_failed_cache_key(url)
@@ -537,7 +539,9 @@ module Oneboxer
     return cached if cached
 
     result = compute_external_onebox(url, available_strategies)
-    Discourse.cache.write(key, result, expires_in: external_onebox_ttl(result))
+    if key == onebox_cache_key(url)
+      Discourse.cache.write(key, result, expires_in: external_onebox_ttl(result))
+    end
     result
   end
 
@@ -594,6 +598,14 @@ module Oneboxer
       content_type: fd.content_type,
     }
 
+    if SiteSetting.block_hotlinked_media
+      onebox_options[:preview_transformers] = [
+        lambda do |env|
+          PrettyText.sanitize_hotlinked_media(env[:node]) if env[:node_name] == "#document-fragment"
+        end,
+      ]
+    end
+
     onebox_options[:cookie] = fd.cookie if fd.cookie
 
     preview_result = Onebox.preview(uri.to_s, onebox_options)
@@ -640,6 +652,11 @@ module Oneboxer
   def self.preview_error_onebox(args, is_fragment = false)
     args[:title] ||= args[:link] if args[:link]
     args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
+
+    if SiteSetting.block_hotlinked_media && args[:favicon] &&
+         !args[:favicon].match?(PrettyText.allowed_src_pattern)
+      args.delete(:favicon)
+    end
 
     template_name = is_fragment ? "preview_error_fragment_onebox" : "preview_error_onebox"
     Mustache.render(template(template_name), args)

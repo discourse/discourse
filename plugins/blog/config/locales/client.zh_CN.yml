@@ -78,7 +78,6 @@ zh_CN:
         saved: 博客身份已保存。重新加载博客即可查看更改。
         identity_tab: 身份
         identity_description: 所有博客主题共享的名称、简介和“关于”内容。
-        themes_index_description: 选择要编辑的主题。草稿更改在您激活之前将保持私密状态。
         thumbnail:
           journal: 日记
           headline: 保持好奇心。
@@ -89,8 +88,6 @@ zh_CN:
         preview_short: 预览草稿
         new_theme_short: 新主题
         git_source: Git 源
-        no_themes: 尚未保存任何主题
-        no_themes_description: 您可以根据现有设计创建主题，也可以从 Git 导入主题。
         themes: 主题
         themes_description: 保留多个设计稿并进行迭代，而无需更改实时博客的显示内容。读者看到的是最后激活的快照，而不是您的草稿编辑或 Git 更新。
         theme_name: 主题名称
@@ -99,8 +96,10 @@ zh_CN:
         preview: 预览
         theme_actions: 主题操作
         local_edits_badge: 本地编辑
+        customize: 自定义
+        customized_theme_name: "%{name}（自定义）"
         new_theme_name: 新博客主题
-        new_theme: 来自 active design 的新主题
+        start_from: 从
         import: 导入
         import_description: "从 Git 仓库或 ZIP 文件导入主题。导入操作会创建新的草稿，而不会更改当前主题。"
         import_source: 从
@@ -122,7 +121,6 @@ zh_CN:
         save_before_activate: 请在激活此草稿之前保存更改。
         activate_theme: 激活已保存的草稿
         activate_confirm: "启用 %{name}？这将替换读者看到的界面设计。您保存的其他主题仍然可用。"
-        activated: 主题已激活。实时博客现在使用此已保存的版本。
         pull_git: 从 Git 拉取最新版本
         pull_confirm: 拉取最新提交？这将替换已保存的草稿，包括本地编辑。当前设计不会改变。
         local_edits: 此草稿自上次从 Git 导入以来已进行本地修改。
@@ -187,6 +185,7 @@ zh_CN:
           path: 路径
           excerpt: 摘录
           featured: 精选标签
+          tags: 标签
           published_at: 发布日期
         show_diff: 显示差异
         hide_diff: 隐藏差异

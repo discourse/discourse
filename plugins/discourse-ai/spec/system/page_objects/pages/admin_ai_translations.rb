@@ -66,20 +66,20 @@ module PageObjects
         self
       end
 
-      def language_switcher_checkbox
-        page.find(".ai-translations__language-switcher input[type='checkbox']")
+      def has_toggle_on?
+        page.has_css?(".ai-translations__toggle-container [role='switch'][aria-checked='true']")
+      end
+
+      def has_toggle_off?
+        page.has_css?(".ai-translations__toggle-container [role='switch'][aria-checked='false']")
+      end
+
+      def has_no_toggle_disabled?
+        page.has_css?(".ai-translations__toggle-container [role='switch']:not([disabled])")
       end
 
       def has_locale_selector?
-        page.has_css?(".ai-translations__settings-panel .multi-select")
-      end
-
-      def has_translation_settings_button?
-        page.has_css?(".ai-translation-settings-button")
-      end
-
-      def has_localization_settings_button?
-        page.has_css?(".ai-localization-settings-button")
+        page.has_css?(".ai-translations__locales .multi-select")
       end
     end
   end

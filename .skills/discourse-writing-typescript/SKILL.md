@@ -22,7 +22,8 @@ off, so `.js`/`.gjs` files are not checked, but the `@discourse/types` declarati
 
 **Converting an existing `.js`/`.gjs` file?** Read
 [references/js-to-ts-conversion.md](references/js-to-ts-conversion.md) first (the faithful-port
-rules, rename mechanics, scope triage, and the runtime pitfall), and apply
+rules, the tests to add before renaming, rename mechanics, scope triage, and the runtime
+pitfall), and apply
 [references/conversion-completeness.md](references/conversion-completeness.md) before
 claiming any file or subsystem converted.
 
@@ -368,6 +369,11 @@ on template imports). Reword to plain prose. JS-body `//` and `/* */` are fine.
   `(element: El, args: PositionalTuple)`; the extra positionals arrive as **one tuple in the
   2nd param**. So `{{didInsert this.announce count}}` is `announce(el: HTMLElement, [count]:
   [number])` (destructure the tuple), not `announce(el, count)`.
+- **Defaulted destructuring of an optional tuple element:** in
+  `[fn, { a, b } = {}]: XSignature["Args"]["Positional"]`, `lint:types` can report `a` and
+  `b` as implicitly `any` (TS7031). Type the default with an erased assertion instead of
+  changing the code: `{ a, b } = {} as XOptions`. Seen on the TypeScript 7 build that
+  `lint:types` runs; not checked on older compilers.
 - **DOM element types:** `querySelector` returns `Element` (no `.focus()`/`.tabIndex`); use
   `el.querySelector<HTMLElement>(sel)`. Type element params as `HTMLElement` /
   `HTMLInputElement` where you call element methods, not `Element`.

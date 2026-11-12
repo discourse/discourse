@@ -387,6 +387,17 @@ RSpec.describe UserAvatarsController do
       expect(response.status).to eq(200)
     end
 
+    it "renders blank when the optimized image is outside of the store directories" do
+      SiteSetting.avatar_sizes = "50"
+      upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+      Fabricate(:optimized_image, upload:, width: 50, height: 50, url: "/other/x.png")
+
+      get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
+
+      expect(response.status).to eq(200)
+    end
+
     it "serves the correct image when the upload id changed" do
       SiteSetting.avatar_sizes = "50"
       SiteSetting.unicode_usernames = true

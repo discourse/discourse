@@ -18,6 +18,7 @@ ca:
         theme_name: Nom de l'aparença
         edit: Edita
         preview: Previsualitza
+        customize: Personalitza
         import: Importa
         export: Exporta
         active: Actiu
@@ -30,6 +31,7 @@ ca:
         change:
           title: títol
           body: cos
+          tags: etiquetes
       review:
         copy: Còpia
         open: Obre

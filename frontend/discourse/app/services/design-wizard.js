@@ -7,7 +7,7 @@ import {
   restoreColorSchemeLinks,
   showColorMode,
 } from "discourse/admin/lib/color-scheme-manager";
-import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
+import { completeOnboardingStep } from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -43,9 +43,6 @@ export const PALETTE_MODES = Object.freeze({
   light: "light",
   dark: "dark",
 });
-// mirrors the onboarding step's own completion key so a wizard finished
-// after its caller was torn down still marks the step complete
-const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
 
 /**
  * Drives the design wizard panel while the current page acts as the live
@@ -565,7 +562,9 @@ export default class DesignWizardService extends Service {
         if (this.#onComplete) {
           await this.#onComplete();
         } else {
-          await this.#completeStepWithoutCaller();
+          // a wizard finished after its caller was torn down must still mark
+          // the step complete
+          await completeOnboardingStep(this.keyValueStore, SELECT_THEME_STEP);
         }
       }
 
@@ -635,17 +634,6 @@ export default class DesignWizardService extends Service {
       return false;
     } finally {
       this.saving = false;
-    }
-  }
-
-  // the durable half of the step's own markAsCompleted, for when the caller is
-  // gone; awaited so the reload can't cancel the audit write in flight
-  async #completeStepWithoutCaller() {
-    const alreadyCompleted = !!this.keyValueStore.get(STEP_COMPLETED_KEY);
-    this.keyValueStore.set({ key: STEP_COMPLETED_KEY, value: true });
-
-    if (!alreadyCompleted) {
-      await logOnboardingEvent("step_completed", SELECT_THEME_STEP);
     }
   }
 

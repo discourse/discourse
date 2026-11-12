@@ -135,6 +135,12 @@ cs:
       fonts:
         base_font: "Písmo obsahu"
         heading_font: "Písmo nadpisů"
+    mcp_theme_access:
+      "on": "Zapnuto"
+      "off": "Vypnuto"
+      none: "žádný"
+    mcp_app_setup:
+      none: "žádný"
     reviewables:
       ai_tool_action:
         approve:

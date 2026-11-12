@@ -33,7 +33,7 @@ module Onebox
             <a href='#{escaped_url}' target='_blank' rel='noopener'>
               <span class='outer-box' style='max-width:#{og.image_width}px'>
                 <span class='inner-box'>
-                  <span class='album-title'>#{album_title}</span>
+                  <span class='album-title'>#{ERB::Util.html_escape(album_title)}</span>
                 </span>
               </span>
               <img src='#{og.secure_image_url}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>

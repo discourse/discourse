@@ -19,3 +19,5 @@ ro:
       one: "%{count} răspuns"
       few: "%{count} de răspunsuri"
       other: "%{count} răspunsuri"
+    themes:
+      default: Implicit

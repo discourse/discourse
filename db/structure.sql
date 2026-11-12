@@ -5240,7 +5240,8 @@ CREATE TABLE public.discourse_post_event_events (
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
     livestream boolean DEFAULT false NOT NULL,
-    recording_url character varying(1000)
+    recording_url character varying(1000),
+    allow_anonymous_livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -13163,7 +13164,8 @@ CREATE TABLE public.user_chat_channel_memberships (
     last_viewed_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     notification_level integer DEFAULT 1 NOT NULL,
     starred boolean DEFAULT false NOT NULL,
-    last_viewed_pins_at timestamp(6) without time zone
+    last_viewed_pins_at timestamp(6) without time zone,
+    muted_until timestamp(6) without time zone
 );
 
 
@@ -25738,6 +25740,13 @@ CREATE INDEX index_user_badges_on_user_id ON public.user_badges USING btree (use
 
 
 --
+-- Name: index_user_chat_channel_memberships_on_muted_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_chat_channel_memberships_on_muted_until ON public.user_chat_channel_memberships USING btree (muted_until) WHERE (muted_until IS NOT NULL);
+
+
+--
 -- Name: index_user_chat_channel_memberships_on_user_id_and_starred; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26639,8 +26648,11 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261110093228'),
 ('20261110093224'),
+('20261109060019'),
 ('20261106020035'),
 ('20261105165644'),
+('20261104164335'),
+('20261104164326'),
 ('20261104011110'),
 ('20261102174233'),
 ('20261030215104'),

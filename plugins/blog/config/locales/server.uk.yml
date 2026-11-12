@@ -20,3 +20,5 @@ uk:
       few: "%{count} відповіді"
       many: "%{count} відповідей"
       other: "%{count} відповідь"
+    themes:
+      default: Стандартна

@@ -106,6 +106,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                          |                                                                                        |
 | `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                        | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
 | `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                       |                                                                                        |
+| `DFloatingControlBar`                                   | A bar pinned to the bottom of the page offering to save or discard unsaved changes.                                            |                                                                                        |
 
 ## Loading, empty, and feedback states
 

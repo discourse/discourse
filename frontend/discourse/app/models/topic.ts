@@ -217,7 +217,23 @@ export interface TopicFields {
   unread_by_group_member?: boolean;
   unread_posts?: number;
   unseen?: boolean;
-  user_badges?: object | null;
+  /** Sent only when a theme asks for post user badges. */
+  user_badges?: {
+    users: Record<string, { id: number; badge_ids: number[] }>;
+    badges: Record<
+      string,
+      {
+        id: number;
+        name: string;
+        slug: string;
+        description: string;
+        icon: string | null;
+        image_url: string | null;
+        badge_grouping_id: number;
+        badge_type_id: number;
+      }
+    >;
+  } | null;
   user_id?: number | null;
   user_last_posted_at?: string | null;
   views?: number;
@@ -723,12 +739,11 @@ export default class Topic extends RestModel {
   declare appEvents: AppEventsService;
 
   /** Backing instance for details. */
-  // TODO(typescript-pending): store has no topicDetails registry entry; remove when TopicDetails is typed.
   @tracked
   _details = this.store.createRecord("topicDetails", {
     id: this.id,
     topic: this,
-  }) as unknown as TopicDetails;
+  });
 
   @computed("lastPoster.user")
   get lastPosterUser(): TopicBasicUser | undefined {
@@ -749,13 +764,11 @@ export default class Topic extends RestModel {
   }
 
   @computed("details.allowed_groups")
-  get allowedGroups(): object[] | undefined {
-    // TODO(typescript-pending): TopicDetails forwarders are undeclared; remove when TopicDetails is typed.
-    return (this.details as TopicDetails & { allowed_groups?: object[] })
-      ?.allowed_groups;
+  get allowedGroups(): TopicDetails["allowed_groups"] {
+    return this.details?.allowed_groups;
   }
 
-  set allowedGroups(value: object[] | undefined) {
+  set allowedGroups(value: TopicDetails["allowed_groups"]) {
     set(this, "details.allowed_groups", value);
   }
 
@@ -779,11 +792,7 @@ export default class Topic extends RestModel {
     }
 
     // we need to ensure that details is an instance of TopicDetails
-    // TODO(typescript-pending): store has no topicDetails registry entry; remove when TopicDetails is typed.
-    this._details = this.store.createRecord(
-      "topicDetails",
-      value as RestPayload
-    ) as unknown as TopicDetails;
+    this._details = this.store.createRecord("topicDetails", value);
   }
 
   @computed("category_id", "site.categoriesById.[]")
@@ -837,12 +846,7 @@ export default class Topic extends RestModel {
 
   @computed("details.can_edit", "details.can_edit_tags")
   get canEditTags(): boolean | undefined {
-    // TODO(typescript-pending): TopicDetails forwarders are undeclared; remove when TopicDetails is typed.
-    return (
-      (this.details as TopicDetails & { can_edit?: boolean })?.can_edit ||
-      (this.details as TopicDetails & { can_edit_tags?: boolean })
-        ?.can_edit_tags
-    );
+    return this.details?.can_edit || this.details?.can_edit_tags;
   }
 
   @computed("last_read_post_number", "highest_post_number")
@@ -1138,9 +1142,8 @@ export default class Topic extends RestModel {
 
   @computed("archetype")
   get archetypeObject(): Archetype | undefined {
-    // TODO(typescript-pending): Archetype omits its id field; remove when Archetype is typed.
     return Site.currentProp("archetypes")!.find(
-      (item) => (item as Archetype & { id: string }).id === this.archetype
+      (item) => item.id === this.archetype
     );
   }
 
@@ -1246,11 +1249,7 @@ export default class Topic extends RestModel {
     this.set(
       "bookmarks",
       this.bookmarks.filter((bookmark) => {
-        // TODO(typescript-pending): Bookmark forwarders omit payload fields; remove when Bookmark is typed.
-        if (
-          (bookmark as TopicBookmarkData).id === id &&
-          (bookmark as TopicBookmarkData).bookmarkable_type === "Topic"
-        ) {
+        if (bookmark.id === id && bookmark.bookmarkable_type === "Topic") {
           this.appEvents.trigger(
             "bookmarks:changed",
             null,
@@ -1258,7 +1257,7 @@ export default class Topic extends RestModel {
           );
         }
 
-        return (bookmark as TopicBookmarkData).id !== id;
+        return bookmark.id !== id;
       })
     );
     this.set("bookmarked", this.bookmarks.length > 0);
@@ -1268,13 +1267,9 @@ export default class Topic extends RestModel {
   clearBookmarks(): number[] {
     this.toggleProperty("bookmarked");
 
-    // TODO(typescript-pending): Bookmark forwarders omit payload fields; remove when Bookmark is typed.
     const postIds = this.bookmarks
-      .filter(
-        (bookmark) =>
-          (bookmark as TopicBookmarkData).bookmarkable_type === "Post"
-      )
-      .map((bookmark) => (bookmark as TopicBookmarkData).bookmarkable_id);
+      .filter((bookmark) => bookmark.bookmarkable_type === "Post")
+      .map((bookmark) => bookmark.bookmarkable_id!);
     postIds.forEach((postId) => {
       const loadedPost = this.postStream.findLoadedPost(postId);
       if (loadedPost) {

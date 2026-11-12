@@ -41,12 +41,6 @@ en:
 
     chat:
       homepage_option: "Chat channel"
-      admin_onboarding:
-        start_posting:
-          title: "Start chatting"
-          description: "Send your first message in #%{channel}."
-          action: "Write a message"
-          completed: "Keep chatting"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"
@@ -617,6 +611,15 @@ en:
         followed: "Joined"
         mute: "Mute channel"
         unmute: "Unmute channel"
+        muted_until_hint: "until %{until}"
+        mute_options:
+          "off": "Off"
+          15_minutes: "For 15 minutes"
+          1_hour: "For 1 hour"
+          8_hours: "For 8 hours"
+          24_hours: "For 24 hours"
+          until_unmuted: "Until I turn it back on"
+          current: "Until %{until}"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
         muted_on: "On"

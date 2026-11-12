@@ -100,10 +100,9 @@ export default class AiModelsList extends Component {
         description: decisionModel.seeded
           ? i18n("discourse_ai.decision_models.seeded_description")
           : null,
-        editRoute: decisionModel.seeded
-          ? null
-          : "adminPlugins.show.discourse-ai-decision-models.edit",
+        editRoute: "adminPlugins.show.discourse-ai-decision-models.edit",
         editModel: decisionModel.id,
+        seeded: decisionModel.seeded,
         creditAllocation: decisionModel.credit_allocation,
       })
     );
@@ -256,7 +255,7 @@ export default class AiModelsList extends Component {
                           />
                         </:trigger>
                         <:content>
-                          {{i18n "discourse_ai.embeddings.seeded_warning"}}
+                          {{i18n "discourse_ai.models.seeded_warning"}}
                         </:content>
                       </DTooltip>
                     {{else if row.editRoute}}

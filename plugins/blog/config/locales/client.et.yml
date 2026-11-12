@@ -17,6 +17,7 @@ et:
         theme_name: Teema nimi
         edit: Muuda
         preview: Eelvaade
+        customize: Kohanda
         import: Impordi
         export: Ekspordi
         active: Aktiivne
@@ -29,6 +30,7 @@ et:
         change:
           title: pealkiri
           body: sisu
+          tags: sildid
       review:
         copy: Kopeeri
         open: Ava

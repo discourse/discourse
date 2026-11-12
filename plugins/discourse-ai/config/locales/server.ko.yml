@@ -95,6 +95,12 @@ ko:
       fonts:
         base_font: "본문 글꼴"
         heading_font: "제목 글꼴"
+    mcp_theme_access:
+      "on": "켜기"
+      "off": "끄기"
+      none: "없음"
+    mcp_app_setup:
+      none: "없음"
     reviewables:
       ai_tool_action:
         approve:

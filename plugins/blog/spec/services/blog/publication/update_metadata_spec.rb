@@ -78,5 +78,26 @@ RSpec.describe Blog::Publication::UpdateMetadata do
         )
       end
     end
+
+    context "with a dated path format" do
+      let(:metadata) { { path: "/2026/11/#{topic.slug}", published_at: "2025-03-14" } }
+
+      before do
+        freeze_time Time.utc(2026, 11, 6)
+        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      end
+
+      it "moves a draft's generated path to its publication date" do
+        result
+        expect(Blog::Publication.find_by(topic:).path).to eq("/2025/03/#{topic.slug}")
+      end
+
+      it "keeps a published article's path when its date changes" do
+        publish_blog_draft(publication, acting_user)
+
+        result
+        expect(publication.reload.editorial_metadata["path"]).to eq("/2026/11/#{topic.slug}")
+      end
+    end
   end
 end

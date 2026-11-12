@@ -67,6 +67,7 @@ export default class DsaModerationAction extends Component {
       @nextStepLabel={{this.nextStepLabel}}
       @onSubmit={{this.submit}}
       @options={{@model.options}}
+      @reviewableId={{@model.reviewable.id}}
       as |flow|
     >
       <DModal

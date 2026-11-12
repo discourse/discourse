@@ -100,6 +100,7 @@ export interface CategoryTypeMetadata {
   visible: boolean;
   description?: string;
   icon?: string | null;
+  svg_icon?: string | null;
   configuration_schema: Record<string, Record<string, unknown>[]>;
   [key: string]: unknown;
 }

@@ -698,6 +698,12 @@ ru:
       fonts:
         base_font: "Шрифт текста"
         heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Включено"
+      "off": "Выключено"
+      none: "нет"
+    mcp_app_setup:
+      none: "нет"
     reviewables:
       ai_tool_action:
         title: "Действие инструмента ИИ"

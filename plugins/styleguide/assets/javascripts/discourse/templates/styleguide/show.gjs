@@ -6,7 +6,7 @@ export default <template>
   would re-fire its didReceiveAttrs hook and re-run the whole section wrapper's setup rather than
   only swapping the group's body. Sections that ignore these args are unaffected. }}
   <StyleguideSection @section={{@controller.section}}>
-    {{#let @controller.section.component as |SectionComponent|}}
+    {{#let @controller.component as |SectionComponent|}}
       <SectionComponent
         @dummy={{@controller.dummy}}
         @dummyAction={{@controller.dummyAction}}
