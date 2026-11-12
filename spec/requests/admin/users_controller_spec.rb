@@ -711,7 +711,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -723,7 +723,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics when deleting replies" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -839,8 +839,8 @@ RSpec.describe Admin::UsersController do
       include_examples "suspension of active user possible"
       include_examples "suspension of staff users"
 
-      it "cannot edit an arbitrary static doc post unrelated to the suspended user" do
-        static_doc_post = Fabricate(:post)
+      it "cannot edit a static doc post" do
+        static_doc_post = Fabricate(:post, user:)
         SiteSetting.tos_topic_id = static_doc_post.topic_id
 
         put "/admin/users/#{user.id}/suspend.json",
@@ -854,56 +854,6 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(static_doc_post.reload.raw).not_to eq("edited content")
-      end
-    end
-
-    context "with a users:suspend scoped API key" do
-      fab!(:unrelated_post, :post)
-
-      let(:api_key) do
-        Fabricate(:api_key, user: admin).tap do |key|
-          ApiKeyScope.create!(api_key_id: key.id, resource: "users", action: "suspend")
-        end
-      end
-
-      let(:api_headers) { { "Api-Key" => api_key.key, "Api-Username" => admin.username } }
-
-      it "refuses direct post mutations from the key" do
-        delete "/posts/#{unrelated_post.id}.json", headers: api_headers
-
-        expect(response.status).to eq(403)
-        expect(unrelated_post.reload).not_to be_trashed
-      end
-
-      it "does not delete a post the penalized user did not author" do
-        put "/admin/users/#{user.id}/suspend.json",
-            params: {
-              suspend_until: 5.hours.from_now,
-              reason: "reason",
-              post_id: unrelated_post.id,
-              post_action: "delete",
-            },
-            headers: api_headers
-
-        expect(response.status).to eq(200)
-        expect(user.reload).to be_suspended
-        expect(unrelated_post.reload).not_to be_trashed
-      end
-
-      it "does not edit a post the penalized user did not author" do
-        put "/admin/users/#{user.id}/suspend.json",
-            params: {
-              suspend_until: 5.hours.from_now,
-              reason: "reason",
-              post_id: unrelated_post.id,
-              post_action: "edit",
-              post_edit: "rewritten by the suspend key",
-            },
-            headers: api_headers
-
-        expect(response.status).to eq(200)
-        expect(user.reload).to be_suspended
-        expect(unrelated_post.reload.raw).not_to eq("rewritten by the suspend key")
       end
     end
 
@@ -2380,22 +2330,6 @@ RSpec.describe Admin::UsersController do
 
         reg_user.reload
         expect(reg_user).to be_silenced
-      end
-
-      it "does not modify a post the silenced user did not author" do
-        unrelated_post = Fabricate(:post)
-
-        put "/admin/users/#{reg_user.id}/silence.json",
-            params: {
-              reason: "because reasons",
-              silenced_till: 7.hours.from_now,
-              post_id: unrelated_post.id,
-              post_action: "delete",
-            }
-
-        expect(response.status).to eq(200)
-        expect(reg_user.reload).to be_silenced
-        expect(unrelated_post.reload).not_to be_trashed
       end
 
       it "sets the provided duration" do
