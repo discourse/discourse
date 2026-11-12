@@ -1,5 +1,9 @@
 import { trackedMap } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
+import {
+  type SelectOption,
+  selectOption,
+} from "discourse/ui-kit/select/select-engine";
 
 /** A server tag row with the optional reason that prevents selection. */
 export interface TagRow {
@@ -105,11 +109,8 @@ export async function searchTags(
     },
   });
   rememberTagIds(result.results);
-  const items = result.results.map((row) =>
-    row.disabled ? { ...row, description: row.title } : row
-  );
   return {
-    items: sortTagRows(items, {
+    items: sortTagRows(result.results, {
       alphabetical:
         !!siteSettings.tags_sort_alphabetically &&
         !context.prioritizeRecentTags,
@@ -299,4 +300,20 @@ async function lookUpNames(names: string[]): Promise<void> {
       missingNames.add(name);
     }
   }
+}
+
+/**
+ * Lists a tag as an option: it shows the tag's description, and a tag the server refuses can't
+ * be picked and shows the server's reason instead.
+ *
+ * @param tag - A search row, or any tag carrying the server's fields.
+ */
+export function tagOption<T extends object>(tag: T): SelectOption<T> {
+  const row = tag as Partial<TagRow>;
+  const description = row.disabled ? row.title : row.description;
+  return selectOption(tag, {
+    disabled: row.disabled ? true : undefined,
+    description:
+      typeof description === "string" && description ? description : undefined,
+  });
 }

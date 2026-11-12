@@ -308,21 +308,21 @@ export default class SelectArgsView {
   }
 
   get valueRecords(): SelectRecord | SelectRecord[] | undefined {
-    const items = this.#readValueRecords?.() ?? this.#valueRecords;
-    if (typeof items !== "function") {
-      return items;
+    const source = this.#readValueRecords?.() ?? this.#valueRecords;
+    if (typeof source !== "function") {
+      return source;
     }
     // Built once per builder and config snapshot. The cache keeps tracking what the builder
     // reads, so a change there rebuilds it even while the snapshot stays the same.
     const options = this.#readResolvedOptions!();
-    let bySnapshot = this.#builtValueRecords.get(items);
+    let bySnapshot = this.#builtValueRecords.get(source);
     if (!bySnapshot) {
       bySnapshot = new WeakMap();
-      this.#builtValueRecords.set(items, bySnapshot);
+      this.#builtValueRecords.set(source, bySnapshot);
     }
     let cache = bySnapshot.get(options);
     if (!cache) {
-      cache = createCache(() => items(options));
+      cache = createCache(() => source(options));
       bySnapshot.set(options, cache);
     }
     return getValue(cache);
@@ -454,7 +454,7 @@ export default class SelectArgsView {
 
   /**
    * Two ids denote the same option iff their string forms match after `normalizeKey`, so a
-   * bound "5" selects item id 5 (and vice-versa). Nullish never matches an id.
+   * bound "5" selects record id 5 (and vice-versa). Nullish never matches an id.
    */
   valueKey(value: SelectId): string | null {
     if (value == null) {

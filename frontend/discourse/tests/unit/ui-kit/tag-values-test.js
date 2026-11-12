@@ -81,7 +81,7 @@ module("Unit | ui-kit | select | recipes | tag values", function () {
 
     const emitted = emitTags(
       [5, "tag-name:foo", 9, "tag-name:5", 11, created.id],
-      { held, items: [row, created] }
+      { held, records: [row, created] }
     );
 
     assert.strictEqual(

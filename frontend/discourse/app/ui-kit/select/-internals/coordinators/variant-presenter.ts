@@ -347,10 +347,10 @@ export default class VariantPresenter
   }
 
   /**
-   * Whether the panel lists held items, as field chips or a static strip. It does where its list
-   * cannot show every held item (a modal covers the trigger, an async page may lack them, or
+   * Whether the panel lists held records, as field chips or a static strip. It does where its list
+   * cannot show every held record (a modal covers the trigger, an async page may lack them, or
    * `@hideSelected` drops their rows) and when the consumer opts in; elsewhere the selected rows
-   * already show them. Independent of the value, so picking the first item never remounts the
+   * already show them. Independent of the value, so picking the first record never remounts the
    * field.
    */
   get panelListsSelection(): boolean {
@@ -434,7 +434,7 @@ export default class VariantPresenter
 
   /**
    * The reconcile key for a non-typeahead surface, where re-running on every render would reset
-   * the user's arrow position. Typeahead keys on its freshly rebuilt items array instead (it
+   * the user's arrow position. Typeahead keys on its freshly rebuilt records array instead (it
    * re-seeds on each keystroke), but a `button`/`static` list only needs to re-reconcile when the
    * entry policy changes: the filter, reload nonce, or cap state. Reconciliation preserves a
    * surviving cursor even when the cap disables its row.
@@ -540,7 +540,7 @@ export default class VariantPresenter
   }
 
   /**
-   * The prompt after held items, or `null` while no further item can be added. A bound that
+   * The prompt after held records, or `null` while no further record can be added. A bound that
    * doesn't apply (no `minimum`, or uncapped `maximum`) is left out of the values, because a
    * translation can't render a missing bound.
    */

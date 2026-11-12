@@ -16,6 +16,7 @@ import {
   resolveTagNames,
   searchTags,
   storedName,
+  tagOption,
   type TagSearchContext,
   type TagSearchResult,
 } from "discourse/lib/tag-source";
@@ -47,7 +48,6 @@ import {
   type SelectConfig,
   type SelectLoadRequest,
   type SelectOption,
-  selectOption,
   type SelectOptionLike,
   type SelectRecord,
   type SelectTexts,
@@ -439,7 +439,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     });
     const tags = emitTags(keys, {
       held,
-      items: rows as unknown as TagObject[],
+      records: rows as unknown as TagObject[],
     });
     const result = this.args.emit === "names" ? tags.map(storedName) : tags;
     this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
@@ -492,13 +492,8 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return (rows as readonly SelectRecord[])
       .filter((row) => !excluded.has(this.#storedRecordName(row).toLowerCase()))
       .map((row) =>
-        selectOption(row, {
-          description:
-            typeof row.description === "string" ? row.description : undefined,
-          disabled:
-            !!row.disabled || (this.#zeroCap && !this.#isHeld(row))
-              ? true
-              : undefined,
+        tagOption(row).with({
+          disabled: this.#zeroCap && !this.#isHeld(row) ? true : undefined,
         })
       );
   }

@@ -7,6 +7,7 @@ import { makeArray } from "discourse/lib/helpers";
 import { findUsersByUsernames, searchUsers } from "discourse/lib/user-search";
 import { emailValid } from "discourse/lib/utilities";
 import type User from "discourse/models/user";
+import { isSelectOption } from "discourse/ui-kit/select/-internals/engine/select-option";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import DSelect, {
   type DSelectSignature,
@@ -30,6 +31,8 @@ import {
   type SelectLoadRequest,
   type SelectOption,
   selectOption,
+  type SelectOptionLike,
+  type SelectOptionSettings,
   type SelectRecord,
   type SelectTexts,
   type SelectValue,
@@ -50,14 +53,23 @@ type UserSearchEntry = {
   disabledReason?: string;
 };
 
-/** What a call-site loader answers with: the user search endpoint's shape. */
+/** A user entry, as the user search serializes it. */
+type UserSearchUser = UserSearchEntry & {
+  username: string;
+  avatar_template?: string;
+  status?: { emoji?: string; description?: string } | null;
+};
+
+/** A group entry, as the user search serializes it. */
+type UserSearchGroup = UserSearchEntry & { name: string };
+
+/**
+ * What a call-site loader answers with: the user search endpoint's shape. An entry may be an
+ * option, whose settings the picker keeps on top of its own.
+ */
 export type UserSearchResponse = {
-  users?: (UserSearchEntry & {
-    username: string;
-    avatar_template?: string;
-    status?: { emoji?: string; description?: string } | null;
-  })[];
-  groups?: (UserSearchEntry & { name: string })[];
+  users?: SelectOptionLike<UserSearchUser>[];
+  groups?: SelectOptionLike<UserSearchGroup>[];
 };
 
 /** A search or lookup row, as `lib/user-search` returns it. */
@@ -125,7 +137,8 @@ interface DSelectUserSignature {
      * Answers searches in place of the user search, the empty query included, in its shape.
      * The picker still applies `@exclude`, ranks the rows and draws them; the loader decides how
      * many. A search row with `disabled` is listed but can't be picked, showing its
-     * `disabledReason`. Held names are still looked up through the user search. Keep it
+     * `disabledReason`. An entry may be an option, whose settings apply on top of the
+     * picker's. Held names are still looked up through the user search. Keep it
      * stable and pass its inputs through `@loadContext`.
      */
     load?: (term: string) => UserSearchResponse | Promise<UserSearchResponse>;
@@ -228,7 +241,11 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
   }
 
   @action
-  async load(filter: string, opts: SelectLoadRequest) {
+  async load(
+    filter: string,
+    opts: SelectLoadRequest
+  ): Promise<SelectOption<UserPickRecord>[]> {
+    const callerSettings = new Map<string, SelectOptionSettings>();
     const rows = (await searchUsers({
       term: filter,
       groups: this.args.includeGroups,
@@ -240,9 +257,13 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       searchOptions: opts.config?.searchParams as
         | Record<string, unknown>
         | undefined,
-      load: this.args.load,
+      load: this.args.load && this.#unwrappingLoad(callerSettings),
     })) as UserSearchRow[];
-    return rows.map((row) => this.#option(row));
+    return rows.map((row) => {
+      const option = this.#option(row);
+      const settings = callerSettings.get(`${row.type}:${row.value}`);
+      return settings ? option.with(settings) : option;
+    });
   }
 
   @action
@@ -309,6 +330,34 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
         .map((option) => option.record)
         .filter((record) => record.type !== "unknown"),
     ];
+  }
+
+  /**
+   * The caller's loader, answering with records: the search builds rows from entries, so an
+   * option's settings are kept aside by what it stands for and given back to its row.
+   */
+  #unwrappingLoad(settings: Map<string, SelectOptionSettings>) {
+    const load = this.args.load!;
+    const unwrap = <T extends object>(
+      entries: SelectOptionLike<T>[] | undefined,
+      key: (record: T) => string
+    ): T[] | undefined =>
+      entries?.map((entry) => {
+        if (!isSelectOption(entry)) {
+          return entry as T;
+        }
+        const record = entry.record as T;
+        settings.set(key(record), entry.settings as SelectOptionSettings);
+        return record;
+      });
+    return async (term: string) => {
+      const response = await load(term);
+      return {
+        ...response,
+        users: unwrap(response?.users, (user) => `user:${user.username}`),
+        groups: unwrap(response?.groups, (group) => `group:${group.name}`),
+      };
+    };
   }
 
   /**

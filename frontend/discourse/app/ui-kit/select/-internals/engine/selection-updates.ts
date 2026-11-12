@@ -16,11 +16,11 @@ export type SelectionOrigin = (
 ) & {
   /** Counts for one combined bulk-add announcement. */
   bulk?: {
-    /** Items added after filtering and truncation. */
+    /** Options added after filtering and truncation. */
     added: number;
-    /** Already-held or repeated items. */
+    /** Already-held or repeated options. */
     held: number;
-    /** Eligible items excluded by the selection cap. */
+    /** Eligible options excluded by the selection cap. */
     limit: number;
   };
 };
@@ -33,7 +33,7 @@ export class UpdateRecord {
   readonly done: Promise<void>;
   readonly scope: SelectUpdateScope;
 
-  /** Adds pasted items, so the open list holds its rows back until it ends. */
+  /** Adds pasted options, so the open list holds its rows back until it ends. */
   readonly paste: boolean;
   keys: Set<string>;
   asynchronous = false;
@@ -204,12 +204,14 @@ export default class SelectionUpdates {
       get current() {
         return current();
       },
-      select: (item) =>
-        this.#write(record, () => this.#actions.select(item, { record })),
-      selectMany: (items) =>
-        this.#write(record, () => this.#actions.selectMany(items, { record })),
-      deselect: (item) =>
-        this.#write(record, () => this.#actions.deselect(item, { record })),
+      select: (entry) =>
+        this.#write(record, () => this.#actions.select(entry, { record })),
+      selectMany: (entries) =>
+        this.#write(record, () =>
+          this.#actions.selectMany(entries, { record })
+        ),
+      deselect: (entry) =>
+        this.#write(record, () => this.#actions.deselect(entry, { record })),
       clear: () => this.#write(record, () => this.#actions.clear({ record })),
     });
   }

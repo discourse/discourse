@@ -70,8 +70,8 @@ export {
 } from "discourse/ui-kit/select/-internals/engine/select-option";
 
 /**
- * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
- * value read out of an item is `unknown` rather than a fixed scalar type.
+ * A single record's value id. Items carry arbitrary, dynamically-keyed fields, so the
+ * value read out of a record is `unknown` rather than a fixed scalar type.
  */
 export type SelectId = unknown;
 
@@ -127,7 +127,7 @@ export interface SelectRow {
     sticky: boolean;
     /** Whether the row cannot be activated (guards both pointer and keyboard). */
     disabled: boolean;
-    /** Whether the consumer marked the item disabled. */
+    /** Whether the consumer marked the record disabled. */
     reasonDisabled: boolean;
     /** Whether the selection cap prevents adding this option. */
     capDisabled: boolean;
@@ -183,10 +183,10 @@ export interface SelectRow {
 }
 
 export function selectRecordLabel(
-  item: SelectRecord | null | undefined,
+  record: SelectRecord | null | undefined,
   labelField = "name"
 ): string {
-  return String(item?.[labelField] ?? "");
+  return String(record?.[labelField] ?? "");
 }
 
 /** What a source (`load` / `resolveValue`) call is asked for. */
@@ -336,7 +336,7 @@ export type SelectGroupBoundaryBuilder = (
  * non-reactive consumers. A component wires these to its live args; the engine re-applies
  * each default on read.
  */
-/** Builds the held items from the resolved config. */
+/** Builds the held records from the resolved config. */
 export type SelectValueRecordsBuilder = (
   config: SelectConfig
 ) => SelectRecord | SelectRecord[];
@@ -380,7 +380,7 @@ export interface SelectEngineInit {
   /** Live reader for {@link lockedValues}. */
   getLockedValues?: () => readonly SelectId[] | undefined;
 
-  /** Live raw presentation args, read before any items, resolved selection, or lock state. */
+  /** Live raw presentation args, read before any records, resolved selection, or lock state. */
   getArgs?: () => Readonly<SelectPresentationArgs>;
 
   /** Recipe config keys and base values; keys are fixed at construction. Requires `kind`. */
@@ -536,7 +536,7 @@ export interface SelectEngineInit {
    */
   lockedValues?: readonly SelectId[];
 
-  /** Field holding an item's value. Defaults to `"id"`. */
+  /** Field holding a record's value. Defaults to `"id"`. */
   valueField?: string;
 
   /**
@@ -548,28 +548,28 @@ export interface SelectEngineInit {
    */
   normalizeKey?: (key: string) => string;
 
-  /** Field holding an item's label. Defaults to `"name"`. */
+  /** Field holding a record's label. Defaults to `"name"`. */
   labelField?: string;
 
   /**
-   * Already-resolved item(s) for the ids in `value`, so the trigger displays them without a
+   * Already-resolved record(s) for the ids in `value`, so the trigger displays them without a
    * fetch. It selects nothing on its own: every entry is looked up BY `value`, so supplying
    * this without a matching `value` shows the placeholder.
    *
-   * Unlike a resolver, it is read reactively, so items may arrive after mount — a consumer
+   * Unlike a resolver, it is read reactively, so records may arrive after mount — a consumer
    * loading them itself can hand them over when they land and every selection surface
    * refreshes. A resolver cannot do that: its outcome is cached, including the failure, and
    * only `reload()` retries it.
    *
-   * A function receives the resolved config and returns the items, so a held item's name can
+   * A function receives the resolved config and returns the records, so a held record's name can
    * come from a text (`renderSelectText(options, key)`). It is rebuilt when the options or what
    * it reads change.
    */
   valueRecords?: SelectRecord | SelectRecord[] | SelectValueRecordsBuilder;
 
   /**
-   * `(value, { signal, config }) => item | Promise<item>`, used to resolve a value id to its
-   * display item when it isn't already known.
+   * `(value, { signal, config }) => record | Promise<record>`, used to resolve a value id to its
+   * display record when it isn't already known.
    */
   resolveValue?: (
     value: SelectId,
@@ -578,7 +578,7 @@ export interface SelectEngineInit {
 
   /**
    * Batch counterpart to `resolveValue` for multi-select:
-   * `(values, { signal, config }) => items | Promise<items>`. The engine calls it once for the uncached
+   * `(values, { signal, config }) => records | Promise<records>`. The engine calls it once for the uncached
    * ids (cached / seeded ids are skipped) so N chips never mean N requests. Omitted or errored
    * ids become fallbacks.
    */
@@ -661,31 +661,31 @@ export interface SelectEngineInit {
    */
   groupFooter?: SelectGroupBoundaryBuilder;
 
-  /** Whether choosing an item closes the overlay. Defaults to `!multiple`. */
+  /** Whether choosing a record closes the overlay. Defaults to `!multiple`. */
   closeOnSelect?: boolean;
 
   /**
-   * `(nextValue, item|items, change) => void`, where `nextValue` is the id(s) and the second arg
-   * is the resolved item(s), each matching the arity. The parent applies `nextValue` to
+   * `(nextValue, record|records, change) => void`, where `nextValue` is the id(s) and the second arg
+   * is the resolved record(s), each matching the arity. The parent applies `nextValue` to
    * `@value`. The third argument carries origin, clear metadata, and the resolved config.
    */
   onChange?: (
     nextValue: SelectValue,
-    item: SelectRecord | SelectRecord[] | null,
+    records: SelectRecord | SelectRecord[] | null,
     change: {
       /** The programmatic intent behind this change, absent for hand picks. */
       origin?: SelectionOrigin;
-      /** Marks a clear, which keeps any locked values, from removing an item. */
+      /** Marks a clear, which keeps any locked values, from removing a record. */
       reason?: "clear";
       /** The config snapshot shared with the change middleware. */
       config: SelectConfig;
     }
   ) => void;
 
-  /** Called when a programmatic pick confirms an already held item. */
-  onReconfirm?: (item: SelectRecord, origin: SelectionOrigin) => void;
+  /** Called when a programmatic pick confirms an already held record. */
+  onReconfirm?: (record: SelectRecord, origin: SelectionOrigin) => void;
 
-  /** Called when a batch adds nothing because every eligible item was held or over the limit. */
+  /** Called when a batch adds nothing because every eligible record was held or over the limit. */
   onBulkUnchanged?: (skipped: { held: number; limit: number }) => void;
 
   /** Called when asynchronous work becomes pending; the reader checks its authority. */
@@ -776,9 +776,9 @@ class EngineControl implements SelectControl {
  * the parent owns the value (`@value`), which the engine reads live via a `getValue`
  * thunk and never stores. The engine owns only internal UI state — the filter, a
  * reload nonce, and a resolved-item cache — plus the selection *logic*: it derives
- * `isSelected`/display from the value, builds the rendered item list (content
- * customizations + create-on-the-fly + special items), resolves a value id to its
- * display item(s), and emits `onChange(nextValue, item|items)` for the parent to apply.
+ * `isSelected`/display from the value, builds the rendered record list (content
+ * customizations + create-on-the-fly + special records), resolves a value id to its
+ * display record(s), and emits `onChange(nextValue, record|records)` for the parent to apply.
  *
  * It renders nothing: `DSelect` and its internal parts drive the DOM from this public
  * API. Consumers and tests never touch the engine directly — they use `DSelect`'s args
@@ -843,7 +843,7 @@ export default class SelectEngine {
         ...this.#extensionContext(),
         control: this.#control,
       }),
-      cacheResolved: (item) => this.#valueResolver.cacheResolved(item),
+      cacheResolved: (record) => this.#valueResolver.cacheResolved(record),
       resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
       applyLegacyOnChange: (value, payload) =>
         applyLegacySelectKitOnChange(this, value, payload),
@@ -1037,7 +1037,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether the selection has reached {@link maximum}. At the cap no further item can be
+   * Whether the selection has reached {@link maximum}. At the cap no further record can be
    * added, and every unselected ordinary option reports itself disabled.
    */
   get atMaximum(): boolean {
@@ -1054,7 +1054,7 @@ export default class SelectEngine {
     return this.#selectionActions.selectedCount;
   }
 
-  /** How many more items may still be added, or `undefined` when uncapped. */
+  /** How many more records may still be added, or `undefined` when uncapped. */
   get remaining(): number | undefined {
     return this.#selectionActions.remaining;
   }
@@ -1113,7 +1113,7 @@ export default class SelectEngine {
 
   /**
    * A stable-until-invalidated context object for the list `DAsyncContent`. Its identity
-   * changes when the filter, reload nonce, reveal cursor, or the effective local items
+   * changes when the filter, reload nonce, reveal cursor, or the effective local records
    * change, which is what makes the list re-fetch.
    *
    * `options` is read synchronously here on purpose: a client source that changes must restart
@@ -1331,14 +1331,14 @@ export default class SelectEngine {
   }
 
   /**
-   * Resolves a value to its display item(s) for the trigger `DAsyncContent`. Returns
+   * Resolves a value to its display record(s) for the trigger `DAsyncContent`. Returns
    * synchronously (no skeleton) when every id is covered by `valueRecords`,
    * the resolve cache, or the client list; otherwise returns a promise. A held id that
    * cannot resolve maps to a synthetic unresolved fallback (never `undefined`, never a
    * rejection, whether the resolver throws or rejects); only an empty value (null single /
    * empty multi) yields `undefined`, so the trigger shows its placeholder.
    *
-   * Both arities share one path: single is a batch of one, narrowed back to a bare item so
+   * Both arities share one path: single is a batch of one, narrowed back to a bare record so
    * the trigger never sees a one-element array. Whatever the sync ladder doesn't already
    * know resolves in a single call.
    *
@@ -1355,7 +1355,7 @@ export default class SelectEngine {
     | Promise<SelectRecord[]>
     | Promise<void>
     | undefined {
-    // A paste only adds to the held items, so they stay drawn while it resolves.
+    // A paste only adds to the held records, so they stay drawn while it resolves.
     const done = this.#selectionUpdates.pastePending
       ? undefined
       : this.#selectionUpdates.done;
@@ -1363,7 +1363,7 @@ export default class SelectEngine {
   }
 
   /**
-   * The item to display for a single value without awaiting — including the unresolved
+   * The record to display for a single value without awaiting — including the unresolved
    * fallback once an attempt has failed, so a trigger can tell "failed" (render the
    * fallback) from "still resolving" (`undefined`, render nothing).
    *
@@ -1373,31 +1373,31 @@ export default class SelectEngine {
     return this.#valueResolver.resolveSingleSync(value);
   }
 
-  getRecordLabel(item: SelectRecord | null | undefined): string {
-    return selectRecordLabel(item, this.#args.labelField);
+  getRecordLabel(record: SelectRecord | null | undefined): string {
+    return selectRecordLabel(record, this.#args.labelField);
   }
 
   /**
-   * The text that stands for a held item on every surface: the trigger, chips, the typeahead
-   * input, the accessible names built from them, and announcements. An unresolved item named by
+   * The text that stands for a held record on every surface: the trigger, chips, the typeahead
+   * input, the accessible names built from them, and announcements. An unresolved record named by
    * `createUnresolvedRecord` keeps that name, which already explains itself; the default fallback
-   * reads as an unknown item with its id, since nothing more is known about it.
+   * reads as an unknown record with its id, since nothing more is known about it.
    *
-   * @param item - The held item, resolved or not.
+   * @param record - The held record, resolved or not.
    * @returns The label to show and announce.
    */
   @bind
-  getSelectionLabel(item: SelectRecord | null | undefined): string {
+  getSelectionLabel(record: SelectRecord | null | undefined): string {
     if (
-      item &&
-      this.isUnresolvedRecord(item) &&
-      !this.isCustomUnresolvedRecord(item)
+      record &&
+      this.isUnresolvedRecord(record) &&
+      !this.isCustomUnresolvedRecord(record)
     ) {
       return this.text("unresolvedValue", {
-        value: String(item[this.#args.valueField] ?? ""),
+        value: String(record[this.#args.valueField] ?? ""),
       });
     }
-    return this.getRecordLabel(item);
+    return this.getRecordLabel(record);
   }
 
   getSingleSelectionLabel(value: SelectValue): string {
@@ -1443,10 +1443,10 @@ export default class SelectEngine {
    * does not. Identity-based, so a builder that throws — caught, yielding the default — is
    * correctly reported as NOT custom.
    *
-   * @param item - The record to test; only meaningful for an unresolved fallback.
+   * @param record - The record to test; only meaningful for an unresolved fallback.
    */
-  isCustomUnresolvedRecord(item: SelectRecord): boolean {
-    return this.#valueResolver.isCustomUnresolvedRecord(item);
+  isCustomUnresolvedRecord(record: SelectRecord): boolean {
+    return this.#valueResolver.isCustomUnresolvedRecord(record);
   }
 
   /**
@@ -1594,7 +1594,7 @@ export default class SelectEngine {
 
   /**
    * Resets the source and forces a re-fetch even when the filter is unchanged. Also
-   * drops failed value-resolution fallbacks so they are attempted again; successful items
+   * drops failed value-resolution fallbacks so they are attempted again; successful records
    * stay cached.
    */
   @bind
@@ -1625,7 +1625,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Asks the overlay to close (wired by the component). Used by action items and the
+   * Asks the overlay to close (wired by the component). Used by action records and the
    * compat bridge's `selectKit.close()`.
    */
   @bind

@@ -6,13 +6,13 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
 /** A topic's title, or the name an unresolved held topic was given. */
-function topicTitle(item: SelectRecord): string {
-  return typeof item.title === "string" ? item.title : "";
+function topicTitle(record: SelectRecord): string {
+  return typeof record.title === "string" ? record.title : "";
 }
 
 /** The topic's category badge with its parents, when the site knows the category. */
-function categoryBadge(item: SelectRecord) {
-  const category = item.category as Category | undefined;
+function categoryBadge(record: SelectRecord) {
+  const category = record.category as Category | undefined;
   return category
     ? dCategoryBadge(category, {
         ancestors: category.predecessors,
@@ -23,8 +23,8 @@ function categoryBadge(item: SelectRecord) {
 }
 
 /** The badge of the topic's own category alone, for a one-line field. */
-function ownCategoryBadge(item: SelectRecord) {
-  const category = item.category as Category | undefined;
+function ownCategoryBadge(record: SelectRecord) {
+  const category = record.category as Category | undefined;
   return category
     ? dCategoryBadge(category, { decorativeEmoji: true, hideParent: true })
     : undefined;

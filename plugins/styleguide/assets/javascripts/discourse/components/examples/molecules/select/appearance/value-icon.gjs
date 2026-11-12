@@ -13,7 +13,10 @@ export default class ValueIconSelectExample extends Component {
   }
 
   get icon() {
-    return this.items.find((item) => item.level === this.value)?.icon ?? "bell";
+    return (
+      this.items.find(({ record }) => record.level === this.value)?.record
+        .icon ?? "bell"
+    );
   }
 
   @action

@@ -40,8 +40,10 @@ export function createTagRecord(name: string): TagRecord & { isNew: true } {
 }
 
 /** Converts created rows to the consumer shape, preserving server rows by identity. */
-export function tagFromRecord<T extends TagObject>(item: T): T | TagObject {
-  return item.isNew ? { id: item.name, name: item.name, isNew: true } : item;
+export function tagFromRecord<T extends TagObject>(record: T): T | TagObject {
+  return record.isNew
+    ? { id: record.name, name: record.name, isNew: true }
+    : record;
 }
 
 /** Builds an engine row from a held value without treating string names as ids. */
@@ -62,10 +64,10 @@ export function tagRecord(tag: HeldTag): TagRecord {
 /** Emits selected values in order, preferring held objects so consumer metadata survives. */
 export function emitTags(
   ids: readonly TagKey[],
-  { held, items }: { held: readonly HeldTag[]; items: readonly TagObject[] }
+  { held, records }: { held: readonly HeldTag[]; records: readonly TagObject[] }
 ): TagObject[] {
   const heldByKey = new Map(held.map((tag) => [tagKey(tag), tag]));
-  const itemsById = new Map(items.map((item) => [item.id, item]));
+  const recordsById = new Map(records.map((record) => [record.id, record]));
   return ids.map((id) => {
     const tag = heldByKey.get(id);
     if (typeof tag === "string") {
@@ -77,10 +79,10 @@ export function emitTags(
     if (tag) {
       return tag;
     }
-    const item = itemsById.get(id);
-    if (!item) {
+    const record = recordsById.get(id);
+    if (!record) {
       throw new Error(`No tag found for selected key ${id}`);
     }
-    return tagFromRecord(item);
+    return tagFromRecord(record);
   });
 }

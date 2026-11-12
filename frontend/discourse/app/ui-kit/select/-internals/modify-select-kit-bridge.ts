@@ -81,7 +81,7 @@ interface LegacySelectKit {
   readonly filter: string;
   readonly isLoading: boolean;
   close(): void;
-  select(value: SelectId, item?: SelectRecord): void;
+  select(value: SelectId, record?: SelectRecord): void;
   /** Starts a new query using the current filter; accepts no filter argument. */
   triggerSearch(): void;
   set(key: string, val: unknown): void;
@@ -129,12 +129,12 @@ function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
     close() {
       engine.requestClose();
     },
-    // Old signature: `select(value, item)`. The engine selects by item, so synthesize a
-    // minimal item from the value when the caller passes only an id. While `isLoading`
+    // Old signature: `select(value, record)`. The engine selects by record, so synthesize a
+    // minimal record from the value when the caller passes only an id. While `isLoading`
     // holds an update, the write goes through its scope, so a hand pick made meanwhile
     // wins and the late write is dropped.
-    select(value, item) {
-      const target = item ?? { id: value };
+    select(value, record) {
+      const target = record ?? { id: value };
       if (loading) {
         loading.scope.select(target);
       } else {
@@ -184,7 +184,7 @@ class LegacySelectKitComponent extends EmberObject {
   declare selectKit: LegacySelectKit;
   declare isLoading: boolean;
 
-  /** The items entering the current legacy content run, after native content customizations. */
+  /** The records entering the current legacy content run, after native content customizations. */
   declare content: SelectRecord[];
   declare __getElement?: () => Element | null;
   declare __isDestroyed?: () => boolean;
@@ -296,17 +296,17 @@ export function applyLegacySelectKitContent(
 
 /**
  * Runs legacy onChange callbacks after a selection change, reconstructing the old
- * `(component, value, items)` signature. A side effect only — it never alters the value.
+ * `(component, value, records)` signature. A side effect only — it never alters the value.
  *
  * @param value - The next value (id or id array).
- * @param items - The resolved item(s), already matching the arity (a single item for
+ * @param records - The resolved record(s), already matching the arity (a single record for
  *   single-select, an array for multi) — passed through as-is to preserve the legacy
  *   callback signature.
  */
 export function applyLegacySelectKitOnChange(
   engine: SelectEngine,
   value: SelectValue,
-  items: SelectRecord | SelectRecord[] | null
+  records: SelectRecord | SelectRecord[] | null
 ): void {
   const targets = legacySelectKitIdentifiers(engine);
   if (!hasOnChangePluginApiCallbacks(targets)) {
@@ -318,5 +318,5 @@ export function applyLegacySelectKitOnChange(
     report(facade, "onChange", target, onChangeCallbackSources([target]));
   }
 
-  applyOnChangePluginApiCallbacks(value, items, facade, { bridgeOnly: true });
+  applyOnChangePluginApiCallbacks(value, records, facade, { bridgeOnly: true });
 }

@@ -8,6 +8,7 @@ import {
   searchTags,
   sortTagRows,
   storedName,
+  tagOption,
   topTags,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
@@ -264,7 +265,7 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         siteSettings: this.siteSettings,
       });
       return result.items.map((row) =>
-        this.#option(row, this.#serverSettings(row))
+        this.#option(row, tagOption<object>(row).settings)
       );
     }
     // A tag shows its description; the caller's own settings come on top.
@@ -272,14 +273,14 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       this.args.options?.map((entry) => {
         const option = selectOption(entry);
         return option.with({
-          description: this.#serverSettings(option.record).description,
+          description: tagOption(option.record).description,
           ...option.settings,
         });
       }) ??
       topTags<FilterTag>({
         site: this.site,
         categoryId: this.args.categoryId,
-      }).map((tag) => selectOption(tag, this.#serverSettings(tag)));
+      }).map((tag) => tagOption(tag));
     const term = filter.toLowerCase();
     const matches = term
       ? options.filter(({ record }) => record.name.toLowerCase().includes(term))
@@ -358,16 +359,6 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       return held.get(key as string) ?? (row as unknown as TagObject);
     });
     this.args.onChange?.(tags);
-  }
-
-  /** What a server tag row does: it shows its description, and a refused row can't be picked. */
-  #serverSettings(tag: object) {
-    const row = tag as SelectRecord;
-    return {
-      description:
-        typeof row.description === "string" ? row.description : undefined,
-      disabled: row.disabled ? true : undefined,
-    };
   }
 
   /**

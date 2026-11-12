@@ -1,4 +1,5 @@
 import { trustHTML } from "@ember/template";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -30,8 +31,8 @@ import { i18n } from "discourse-i18n";
  *   PAGE_SIZE === 50 over 5000      d_select_cursor_source_spec: the first response must be
  *                                   incomplete, so the source reports setsize -1 while paging
  *   PEOPLE has username "maya"      d_select_showcases_spec: chip label assertion
- *   Taylor Kim is disabled AND      d_select_showcases_spec: asserts a disabled option exists
- *   not pre-selected
+ *   Taylor Kim is away AND not      d_select_showcases_spec: the reviewer source lists an away
+ *   pre-selected                    person as a disabled option
  *   TAGS excludes "architecture"    d_select_showcases_spec: the create-a-tag flow needs it to
  *                                   be genuinely absent
  *   LOCALES spans >= 2 scripts      smoke_test_spec: `.d-select__group-header` minimum: 2
@@ -142,8 +143,8 @@ export const PEOPLE = [
     name: "Taylor Kim",
     title: "Support",
     avatarColors: ["#5E6B78", "#E4B897", "#2D4658"],
-    // Not pre-selected, and disabled: the showcases spec asserts a disabled option renders.
-    disabled: true,
+    // Not pre-selected, and away: the reviewer source lists an away person as disabled.
+    away: true,
   },
   {
     id: 108,
@@ -192,8 +193,8 @@ export const PEOPLE = [
 
 /* Deliberately uneven: four, three and one. Equal groups make a header look decorative, because
    a reader cannot tell the grouping from the ordering. Taylor is the sole support member and is
-   disabled, so the smallest group is also the one that proves a disabled row still renders
-   under a header. */
+   away, so listed disabled, and the smallest group is also the one that proves a disabled option
+   still renders under a header. */
 export const TEAM_MEMBERS = [
   { ...PEOPLE[0], team: "design" },
   { ...PEOPLE[7], team: "design" },
@@ -203,7 +204,9 @@ export const TEAM_MEMBERS = [
   { ...PEOPLE[4], team: "engineering" },
   { ...PEOPLE[10], team: "engineering" },
   { ...PEOPLE[6], team: "support" },
-];
+].map((member) =>
+  selectOption(member, { disabled: member.away ? true : undefined })
+);
 
 /** Team labels, translated. A function rather than a constant so `i18n` runs at render.
  *  Keyed under the section rather than under a group, because more than one group renders it. */
@@ -480,90 +483,49 @@ export const TIMEZONES = [
       left.name.localeCompare(right.name)
   );
 
-/**
- * Notification levels, translated, with one disabled row and one action row.
- *
- * A function rather than a constant because the titles and descriptions are translated.
- *
- * @param {Function} [onManage] - invoked by the action row, which selects nothing.
- */
-/** Topic visibility levels, each with its own glyph and a one-line consequence. */
+/** Topic visibility levels as options, each with its own glyph and a one-line consequence. */
 export function topicVisibilities() {
   const t = (key) => i18n(`styleguide.sections.select.topic_visibility.${key}`);
 
   return [
-    {
-      id: "public",
-      icon: "globe",
-      title: t("public"),
-      description: t("public_description"),
-    },
-    {
-      id: "unlisted",
-      icon: "eye-slash",
-      title: t("unlisted"),
-      description: t("unlisted_description"),
-    },
-    {
-      id: "members",
-      icon: "users",
-      title: t("members"),
-      description: t("members_description"),
-    },
-    {
-      id: "private",
-      icon: "lock",
-      title: t("private"),
-      description: t("private_description"),
-    },
-  ];
+    ["public", "globe"],
+    ["unlisted", "eye-slash"],
+    ["members", "users"],
+    ["private", "lock"],
+  ].map(([id, icon]) =>
+    selectOption(
+      { id, icon, title: t(id) },
+      { description: t(`${id}_description`) }
+    )
+  );
 }
 
+/**
+ * Notification levels as options, translated, with one disabled option and one action.
+ *
+ * A function rather than a constant because the titles and descriptions are translated.
+ *
+ * @param {Function} [onManage] - run by the action, which selects nothing.
+ */
 export function notificationLevels(onManage) {
   // Keyed under the section, not a group: the hero, several examples and the notification picker
   // all render these, so they are data rather than one card's copy.
   const t = (key) =>
     i18n(`styleguide.sections.select.notification_levels.${key}`);
 
+  const level = (name, icon, settings = {}) =>
+    selectOption(
+      { level: name, icon, title: t(name) },
+      { description: t(`${name}_description`), ...settings }
+    );
+
   return [
-    {
-      level: "muted",
-      icon: "d-muted",
-      title: t("muted"),
-      description: t("muted_description"),
-    },
-    {
-      level: "normal",
-      icon: "d-regular",
-      title: t("normal"),
-      description: t("normal_description"),
-    },
-    {
-      level: "tracking",
-      icon: "d-tracking",
-      title: t("tracking"),
-      description: t("tracking_description"),
-    },
-    {
-      level: "watching",
-      icon: "d-watching",
-      title: t("watching"),
-      description: t("watching_description"),
-    },
-    {
-      level: "mentions",
-      icon: "at",
-      title: t("mentions"),
-      description: t("mentions_description"),
-      disabled: true,
-    },
-    {
-      level: "manage",
-      icon: "gear",
-      title: t("manage"),
-      description: t("manage_description"),
-      onSelect: onManage,
-    },
+    level("muted", "d-muted"),
+    level("normal", "d-regular"),
+    level("tracking", "d-tracking"),
+    level("watching", "d-watching"),
+    level("mentions", "at", { disabled: true }),
+    level("manage", "gear", { onSelect: onManage }),
   ];
 }
 
@@ -728,6 +690,7 @@ function matches(item, filter, fields = ["name"]) {
  * @param {number} [options.resolveDelayMs]
  * @param {"total"|"hasMore"|"none"} [options.report] - how the source describes what remains.
  * @param {number} [options.searchDelayMs]
+ * @param {Function} [options.settings] - the option settings a search lists each record with.
  */
 function createDataSource({
   items,
@@ -738,6 +701,7 @@ function createDataSource({
   resolveDelayMs = 0,
   report = "total",
   searchDelayMs = 750,
+  settings,
 }) {
   let requests = 0;
 
@@ -753,18 +717,25 @@ function createDataSource({
     }
 
     const filtered = items.filter((item) => matches(item, filter, fields));
+    const list = (records) =>
+      settings
+        ? records.map((record) => selectOption(record, settings(record)))
+        : records;
 
     if (report === "none") {
-      return filtered;
+      return list(filtered);
     }
 
     const page = filtered.slice(offset, offset + limit);
 
     if (report === "hasMore") {
-      return { items: page, hasMore: offset + page.length < filtered.length };
+      return {
+        options: list(page),
+        hasMore: offset + page.length < filtered.length,
+      };
     }
 
-    return { items: page, total: filtered.length };
+    return { options: list(page), total: filtered.length };
   };
 
   const findItem = (value) => items.find((item) => item.id === value);
@@ -868,6 +839,7 @@ export const reviewerApi = createDataSource({
   report: "none",
   resolveDelayMs: 500,
   searchDelayMs: 650,
+  settings: (person) => ({ disabled: person.away ? true : undefined }),
 });
 
 export const timezoneApi = createDataSource({

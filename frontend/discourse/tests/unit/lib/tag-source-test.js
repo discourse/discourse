@@ -9,6 +9,7 @@ import {
   searchTagGroups,
   searchTags,
   sortTagRows,
+  tagOption,
   topTags,
 } from "discourse/lib/tag-source";
 import cleanParity from "discourse/tests/fixtures/tag-clean-parity.json";
@@ -79,7 +80,7 @@ module("Unit | lib | tag-source", function (hooks) {
     assert.strictEqual(params.filterForInput, undefined);
   });
 
-  test("a disabled row's reason becomes its description", async function (assert) {
+  test("a disabled row is listed as it came, and its reason describes its option", async function (assert) {
     pretender.get("/tags/filter/search", () =>
       response({
         results: [
@@ -103,14 +104,41 @@ module("Unit | lib | tag-source", function (hooks) {
       siteSettings: SETTINGS,
     });
 
-    assert.true(result.items[0].disabled);
-    assert.strictEqual(result.items[0].description, "Requires parent");
+    const [row] = result.items;
+    assert.true(row.disabled, "the row keeps the server's fields");
+    assert.strictEqual(row.description, undefined, "the row is not rewritten");
+    const option = tagOption(row);
+    assert.strictEqual(option.record, row, "the option stands for the row");
+    assert.true(option.disabled, "a refused tag can't be picked");
+    assert.strictEqual(
+      option.description,
+      "Requires parent",
+      "the refusal reason describes the option"
+    );
     assert.strictEqual(result.forbidden, "nope");
     assert.deepEqual(result.requiredTagGroup, {
       name: "Kind",
       min_count: 1,
       remaining_count: 1,
     });
+  });
+
+  test("a tag's option shows the tag's own description", function (assert) {
+    const tag = { id: 1, name: "rock", description: "Loud music" };
+    const option = tagOption(tag);
+    assert.strictEqual(option.record, tag, "the option stands for the tag");
+    assert.strictEqual(option.description, "Loud music");
+    assert.false(option.disabled, "an allowed tag can be picked");
+    assert.strictEqual(
+      tagOption({ id: 2, name: "pop", description: "" }).description,
+      undefined,
+      "an empty description draws nothing"
+    );
+    assert.strictEqual(
+      tagOption({ id: 3, name: "jazz", disabled: true }).description,
+      undefined,
+      "a refusal without a reason draws nothing"
+    );
   });
 
   test("a failed search rejects", async function (assert) {

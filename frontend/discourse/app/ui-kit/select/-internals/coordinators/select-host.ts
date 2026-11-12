@@ -241,7 +241,7 @@ export default class SelectHost {
       groupHeader: this.#init.getArgs().groupHeader,
       groupFooter: this.#init.getArgs().groupFooter,
       onChange: this.handleChange,
-      onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
+      onReconfirm: (record, origin) => this.announcer.reconfirm(record, origin),
       onBulkUnchanged: (skipped) => this.announcer.bulkUnchanged(skipped),
       onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
       requestClose: () => this.#init.requestClose(),
@@ -363,7 +363,7 @@ export default class SelectHost {
   }
 
   /**
-   * Resolves the single bound value to its one display item for the trigger
+   * Resolves the single bound value to its one display record for the trigger
    * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
    * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
    * comes back as an unresolved fallback record rather than `undefined`.

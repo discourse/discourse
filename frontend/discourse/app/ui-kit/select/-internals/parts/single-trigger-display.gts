@@ -46,7 +46,7 @@ interface SingleTriggerDisplaySignature {
     hasSelectionLoadingBlock: boolean;
     /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
     hasUnresolvedBlock: boolean;
-    /** Resolves the bound selection into its display item. */
+    /** Resolves the bound selection into its display record. */
     resolveSelection: (
       value: unknown,
       request?: SelectLoadRequest
@@ -77,17 +77,17 @@ interface SingleTriggerDisplaySignature {
     shouldCorrectKeyboardOcclusion: () => boolean;
   };
   Blocks: {
-    /** Custom markup for the selected item. */
+    /** Custom markup for the selected record. */
     selection?: [
-      /** The resolved selected item. */
-      item: SelectRecord,
+      /** The resolved selected record. */
+      record: SelectRecord,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
-      /** The unresolved fallback item. */
-      item: SelectRecord,
+      /** The unresolved fallback record. */
+      record: SelectRecord,
     ];
   };
 }

@@ -55,7 +55,7 @@ export default class SelectionActions {
     value: SelectValue
   ) => boolean;
   #runAction: (option: SelectOption) => void;
-  #cacheResolved: (item: SelectRecord | null | undefined) => void;
+  #cacheResolved: (record: SelectRecord | null | undefined) => void;
   #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
   #applyLegacyOnChange: (
     value: SelectValue,
@@ -77,7 +77,7 @@ export default class SelectionActions {
       value: SelectValue
     ) => boolean;
     runAction: (option: SelectOption) => void;
-    cacheResolved: (item: SelectRecord | null | undefined) => void;
+    cacheResolved: (record: SelectRecord | null | undefined) => void;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
     applyLegacyOnChange: (
       value: SelectValue,
@@ -136,7 +136,7 @@ export default class SelectionActions {
   }
 
   /**
-   * Whether the selection has reached {@link maximum}. At the cap no further item can be
+   * Whether the selection has reached {@link maximum}. At the cap no further record can be
    * added, and every unselected ordinary option reports itself disabled.
    */
   get atMaximum(): boolean {
@@ -159,7 +159,7 @@ export default class SelectionActions {
     return this._valueArray.length;
   }
 
-  /** How many more items may still be added, or `undefined` when uncapped. */
+  /** How many more records may still be added, or `undefined` when uncapped. */
   get remaining(): number | undefined {
     const maximum = this.#args.maximum;
     return maximum == null
@@ -340,10 +340,10 @@ export default class SelectionActions {
     if (this.#args.locked || option?.disabled) {
       return;
     }
-    const item = entryRecord(entry);
+    const record = entryRecord(entry);
     if (this.isSelected(entry)) {
       if (origin) {
-        this.#args.onReconfirm?.(item, origin);
+        this.#args.onReconfirm?.(record, origin);
       }
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
@@ -353,21 +353,21 @@ export default class SelectionActions {
       }
       return;
     }
-    // The item is known to be unselected here, so this rejects genuine additions only. It is
+    // The record is known to be unselected here, so this rejects genuine additions only. It is
     // the single chokepoint every add reaches — pointer, keyboard, create-on-the-fly, and the
     // compat bridge — so the cap cannot be walked around, and rejecting before the resolve
     // cache leaves no trace of a selection that never happened.
     if (this.#atMaximum) {
       return;
     }
-    this.#cacheResolved(item);
+    this.#cacheResolved(record);
     if (this.#args.multiple) {
       this.#emitChange(
-        [...this._valueArray, this.#args.recordValue(item)],
+        [...this._valueArray, this.#args.recordValue(record)],
         origin
       );
     } else {
-      this.#emitChange(this.#args.recordValue(item), origin);
+      this.#emitChange(this.#args.recordValue(record), origin);
       if (this.#args.closeOnSelect) {
         this.#args.requestClose?.();
       }
@@ -393,25 +393,25 @@ export default class SelectionActions {
       if (!isPickable(optionOf(entry))) {
         continue;
       }
-      const item = entryRecord(entry);
-      const key = this.#args.valueKey(this.#args.recordValue(item));
+      const record = entryRecord(entry);
+      const key = this.#args.valueKey(this.#args.recordValue(record));
       if (key == null) {
         continue;
       }
-      if (this.isSelected(item) || seen.has(key)) {
+      if (this.isSelected(record) || seen.has(key)) {
         held++;
         continue;
       }
       seen.add(key);
       if (!this.#args.multiple) {
-        this.select(item, origin);
+        this.select(record, origin);
         return;
       }
       if (remaining !== undefined && additions.length >= remaining) {
         limit++;
         continue;
       }
-      additions.push(item);
+      additions.push(record);
     }
     if (additions.length === 0) {
       if (held + limit > 0) {
@@ -419,13 +419,13 @@ export default class SelectionActions {
       }
       return;
     }
-    for (const item of additions) {
-      this.#cacheResolved(item);
+    for (const record of additions) {
+      this.#cacheResolved(record);
     }
     this.#emitChange(
       [
         ...this._valueArray,
-        ...additions.map((item) => this.#args.recordValue(item)),
+        ...additions.map((record) => this.#args.recordValue(record)),
       ],
       {
         ...(origin ?? { programmatic: true }),
@@ -498,7 +498,7 @@ export default class SelectionActions {
   }
 
   /**
-   * Emits the next value plus the best-effort resolved item(s) for it. Controlled: the engine
+   * Emits the next value plus the best-effort resolved record(s) for it. Controlled: the engine
    * never stores the value; the parent applies `nextValue` to `@value`.
    */
   #emitChange(
@@ -506,7 +506,7 @@ export default class SelectionActions {
     origin?: SelectionOrigin,
     reason?: "clear"
   ): void {
-    // Coerce ids to their source item's native type up front, so the payload, the
+    // Coerce ids to their source record's native type up front, so the payload, the
     // change customization context, and the legacy bridge all emit one consistent,
     // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
     // native one.
@@ -569,9 +569,9 @@ export default class SelectionActions {
       .filter((record): record is SelectRecord => record != null);
   }
 
-  // Multi-select only: re-emit each id in its resolved source item's native type, so a held
+  // Multi-select only: re-emit each id in its resolved source record's native type, so a held
   // parent/URL-typed id (a string `"5"`) and a freshly-picked native id (`3`) never leave as a
-  // mixed-type array. An id that resolves to no known item passes through unchanged — its type is
+  // mixed-type array. An id that resolves to no known record passes through unchanged — its type is
   // unknowable — and order is preserved. Single-select already emits the native id, so its value
   // is returned untouched. Matching is by string form, so coercion never changes which option is
   // selected, only the emitted type.
@@ -580,8 +580,8 @@ export default class SelectionActions {
       return value;
     }
     return (makeArray(value) as SelectId[]).map((id) => {
-      const item = this.#resolveOneSync(id);
-      return item ? this.#args.recordValue(item) : id;
+      const record = this.#resolveOneSync(id);
+      return record ? this.#args.recordValue(record) : id;
     });
   }
 }

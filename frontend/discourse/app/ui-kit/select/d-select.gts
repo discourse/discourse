@@ -251,14 +251,14 @@ export interface DSelectSignature {
     /** Optional server row ceiling with a filter-to-narrow hint. Uncapped by default. */
     maxLoaded?: number;
     /**
-     * Omits held options from the results without reloading; held items stay reachable as chips
+     * Omits held options from the results without reloading; held records stay reachable as chips
      * (a static list shows its strip instead).
      */
     hideSelected?: boolean;
     /**
-     * Lists held items in the panel (chips in its search field, or a static list's strip) even
+     * Lists held records in the panel (chips in its search field, or a static list's strip) even
      * when the list can show them all. They are always listed in the mobile modal, for an async
-     * source and with `@hideSelected`, where rows alone cannot show every held item.
+     * source and with `@hideSelected`, where rows alone cannot show every held record.
      */
     panelChips?: boolean;
     /**
@@ -345,7 +345,7 @@ export interface DSelectSignature {
     selectionLoading?: [];
     /**
      * Custom markup for a held value that cannot be resolved (deleted, restricted or never
-     * existed); yields the fallback record. Without it the built-in label is used ("Unknown item
+     * existed); yields the fallback record. Without it the built-in label is used ("Unknown record
      * (id)", or the name `@createUnresolvedRecord` gives), even when `:selection` is supplied, so
      * the state is never lost in custom markup by accident.
      */
@@ -800,14 +800,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
-              <:selection as |item|>
-                {{~yield item this.engine.config to="selection"~}}
+              <:selection as |record|>
+                {{~yield record this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
-              <:unresolved as |item|>
-                {{~yield item this.engine.config to="unresolved"~}}
+              <:unresolved as |record|>
+                {{~yield record this.engine.config to="unresolved"~}}
               </:unresolved>
             </MultiChips>
           {{else}}
@@ -841,14 +841,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerFocused={{this.interaction.triggerFocused}}
               @value={{@value}}
             >
-              <:selection as |item|>
-                {{~yield item this.engine.config to="selection"~}}
+              <:selection as |record|>
+                {{~yield record this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
-              <:unresolved as |item|>
-                {{~yield item this.engine.config to="unresolved"~}}
+              <:unresolved as |record|>
+                {{~yield record this.engine.config to="unresolved"~}}
               </:unresolved>
             </SingleTriggerDisplay>
           {{/if}}
@@ -984,11 +984,11 @@ export default class DSelect extends Component<DSelectSignature> {
                     @triggerChipsInteractive={{true}}
                     @value={{@value}}
                   >
-                    <:selection as |item|>
-                      {{~yield item this.engine.config to="selection"~}}
+                    <:selection as |record|>
+                      {{~yield record this.engine.config to="selection"~}}
                     </:selection>
-                    <:unresolved as |item|>
-                      {{~yield item this.engine.config to="unresolved"~}}
+                    <:unresolved as |record|>
+                      {{~yield record this.engine.config to="unresolved"~}}
                     </:unresolved>
                     <:selectionLoading>
                       {{~yield to="selectionLoading"~}}

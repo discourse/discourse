@@ -426,11 +426,11 @@ export default class SelectAnnouncer {
   }
 
   /** Confirms programmatic intent even when the controlled value does not change. */
-  reconfirm(item: SelectRecord, origin: SelectionOrigin): void {
+  reconfirm(record: SelectRecord, origin: SelectionOrigin): void {
     if (!this.#engine.multiple && (origin.programmatic || origin.record)) {
       this.#say(
         this.#engine.text("optionSelected", {
-          item: this.#engine.getSelectionLabel(item),
+          item: this.#engine.getSelectionLabel(record),
         })
       );
     }
@@ -497,10 +497,12 @@ export default class SelectAnnouncer {
       );
 
       if (added !== undefined) {
-        const item = this.#engine.resolveSingleSync(added);
+        const record = this.#engine.resolveSingleSync(added);
         this.#say(
           this.#engine.text("optionAdded", {
-            item: item ? this.#engine.getSelectionLabel(item) : String(added),
+            item: record
+              ? this.#engine.getSelectionLabel(record)
+              : String(added),
           })
         );
         if (this.#engine.filter !== "") {
@@ -518,18 +520,18 @@ export default class SelectAnnouncer {
       // re-read. So the one single-select transition that needs saying out loud is this one.
       this.#say(this.#engine.text("selectionCleared"));
     } else if (nextValues != null && this.#speaksSinglePick()) {
-      const item = this.#engine.resolveSingleSync(nextValues);
+      const record = this.#engine.resolveSingleSync(nextValues);
       this.#say(
         this.#engine.text("optionSelected", {
-          item: item
-            ? this.#engine.getSelectionLabel(item)
+          item: record
+            ? this.#engine.getSelectionLabel(record)
             : String(nextValues),
         })
       );
     } else if (origin && nextValues != null) {
-      const item = this.#engine.resolveSingleSync(nextValues);
-      if (item) {
-        this.reconfirm(item, origin);
+      const record = this.#engine.resolveSingleSync(nextValues);
+      if (record) {
+        this.reconfirm(record, origin);
       }
     }
   }
@@ -598,10 +600,10 @@ export default class SelectAnnouncer {
     if (value === undefined) {
       return;
     }
-    const item = this.#engine.resolveSingleSync(value);
+    const record = this.#engine.resolveSingleSync(value);
     this.#say(
       this.#engine.text("optionRemoved", {
-        item: item ? this.#engine.getSelectionLabel(item) : String(value),
+        item: record ? this.#engine.getSelectionLabel(record) : String(value),
       })
     );
   }

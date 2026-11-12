@@ -25,7 +25,7 @@ type PendingResolution = {
 
 export default class ValueResolver {
   /**
-   * value → resolved item, so a re-render or reopen never re-fetches a label. Keyed by the
+   * value → resolved record, so a re-render or reopen never re-fetches a label. Keyed by the
    * normalized value (see `SelectArgsView#valueKey`) so a string/number id mismatch is a
    * cache hit.
    */
@@ -106,18 +106,18 @@ export default class ValueResolver {
     return this.#unresolvedRecords.has(record);
   }
 
-  isCustomUnresolvedRecord(item: SelectRecord): boolean {
-    return this.#customUnresolvedRecords.has(item);
+  isCustomUnresolvedRecord(record: SelectRecord): boolean {
+    return this.#customUnresolvedRecords.has(record);
   }
 
   evictUnresolved(): void {
-    for (const [key, item] of [...this.#resolvedCache.entries()]) {
-      if (this.isUnresolvedRecord(item)) {
+    for (const [key, record] of [...this.#resolvedCache.entries()]) {
+      if (this.isUnresolvedRecord(record)) {
         this.#resolvedCache.delete(key);
       }
     }
-    for (const [key, item] of this.#synchronousOutcomes) {
-      if (this.isUnresolvedRecord(item)) {
+    for (const [key, record] of this.#synchronousOutcomes) {
+      if (this.isUnresolvedRecord(record)) {
         this.#synchronousOutcomes.delete(key);
       }
     }
@@ -144,17 +144,17 @@ export default class ValueResolver {
     );
   }
 
-  cacheResolved(item: SelectRecord | null | undefined): void {
-    if (item) {
-      this.#cacheResolvedValue(this.#args.recordValue(item), item);
+  cacheResolved(record: SelectRecord | null | undefined): void {
+    if (record) {
+      this.#cacheResolvedValue(this.#args.recordValue(record), record);
     }
   }
 
   /**
-   * The item to show for a value: `valueRecords` → a real recorded outcome → client list →
+   * The record to show for a value: `valueRecords` → a real recorded outcome → client list →
    * the fallback left by an earlier failed attempt.
    *
-   * An unresolved fallback ranks LAST, so any real source that turns up later — an item
+   * An unresolved fallback ranks LAST, so any real source that turns up later — a record
    * landing in the client list, a re-resolve — supersedes it instead of being masked by it.
    * But it is still a hit, deliberately: a resolve records its outcome, and a read that
    * missed would re-resolve, record again, invalidate the render that read it, and never
@@ -173,20 +173,20 @@ export default class ValueResolver {
         ),
         key
       ) ??
-      recorded.find((item) => !this.isUnresolvedRecord(item)) ??
+      recorded.find((record) => !this.isUnresolvedRecord(record)) ??
       this.#matching(this.#knownRecords(), key) ??
       recorded[0]
     );
   }
 
   // Narrows a resolved batch back to the single arity. `#resolveMany` always yields at least
-  // one item per requested id, so index 0 is present.
-  async #firstOf(items: Promise<SelectRecord[]>): Promise<SelectRecord> {
-    return (await items)[0]!;
+  // one record per requested id, so index 0 is present.
+  async #firstOf(records: Promise<SelectRecord[]>): Promise<SelectRecord> {
+    return (await records)[0]!;
   }
 
   /**
-   * Ordered items for `values`: the sync ladder for what is already known, the pending request
+   * Ordered records for `values`: the sync ladder for what is already known, the pending request
    * for ids already being fetched, one batch call for the rest, and an unresolved fallback
    * for whatever still doesn't resolve. Order follows the bound ids, not the response. Never
    * rejects.
@@ -196,7 +196,7 @@ export default class ValueResolver {
     opts: SelectLoadRequest
   ): SelectRecord[] | Promise<SelectRecord[]> {
     const synced = values.map((v) => this.resolveOneSync(v));
-    if (synced.every((item) => item != null)) {
+    if (synced.every((record) => record != null)) {
       return synced as SelectRecord[];
     }
     let resolved = new Map<string, SelectRecord>();
@@ -246,8 +246,8 @@ export default class ValueResolver {
         resolved.clear();
       } else {
         for (const batch of batches) {
-          for (const [key, item] of batch) {
-            resolved.set(key, item);
+          for (const [key, record] of batch) {
+            resolved.set(key, record);
           }
         }
       }
@@ -322,32 +322,32 @@ export default class ValueResolver {
   #rememberSynchronousOutcomes(
     values: SelectId[],
     synced: Array<SelectRecord | undefined>,
-    items: SelectRecord[]
+    records: SelectRecord[]
   ): void {
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
-      const item = items[index];
-      if (synced[index] == null && key != null && item) {
-        this.#synchronousOutcomes.set(key, item);
+      const record = records[index];
+      if (synced[index] == null && key != null && record) {
+        this.#synchronousOutcomes.set(key, record);
       }
     });
   }
 
   /**
-   * Records the outcome of an async resolve: real items, so later reads hit the cache
+   * Records the outcome of an async resolve: real records, so later reads hit the cache
    * instead of refetching, and unresolved fallbacks, so a trigger can tell "resolved and
    * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
-   * remains a sync hit, but ranks after real valueRecords/cache/list items; `reload()` evicts it
+   * remains a sync hit, but ranks after real valueRecords/cache/list records; `reload()` evicts it
    * when the caller explicitly retries.
    *
    * Only ever called from a promise continuation, i.e. a microtask after render, where
    * writing tracked state cannot dirty what the render already read.
    */
-  #cacheOutcome(values: SelectId[], items: SelectRecord[]): void {
+  #cacheOutcome(values: SelectId[], records: SelectRecord[]): void {
     values.forEach((value, index) => {
-      const item = items[index];
-      if (item) {
-        this.#cacheResolvedValue(value, item);
+      const record = records[index];
+      if (record) {
+        this.#cacheResolvedValue(value, record);
       }
     });
   }
@@ -363,16 +363,16 @@ export default class ValueResolver {
     return [
       this.#resolvedCache.get(key),
       this.#synchronousOutcomes.get(key),
-    ].filter((item) => item != null);
+    ].filter((record) => record != null);
   }
 
-  #matching(items: SelectRecord[], key: string): SelectRecord | undefined {
-    return items.find(
+  #matching(records: SelectRecord[], key: string): SelectRecord | undefined {
+    return records.find(
       (i) => this.#args.valueKey(this.#args.recordValue(i)) === key
     );
   }
 
-  // Resolves ids to a key→item map, containing only what genuinely resolved. Never throws
+  // Resolves ids to a key→record map, containing only what genuinely resolved. Never throws
   // and never rejects. One batch call via `resolveValues` when given; otherwise per-id via
   // `resolveValue` (fans out — only when no batch resolver is supplied).
   #resolveBatch(
@@ -386,7 +386,7 @@ export default class ValueResolver {
       );
       return this.#isPromise(result)
         ? result.then(
-            (items) => this.#toResolvedMap(items),
+            (records) => this.#toResolvedMap(records),
             () => new Map<string, SelectRecord>()
           )
         : this.#toResolvedMap(result);
@@ -395,7 +395,7 @@ export default class ValueResolver {
       const result = this.#attempt(() => this.#args.resolveValue?.(v, request));
       return this.#isPromise(result)
         ? result.then(
-            (item) => [v, item && entryRecord(item)] as const,
+            (entry) => [v, entry && entryRecord(entry)] as const,
             () => [v, undefined] as const
           )
         : ([v, result && entryRecord(result)] as const);
@@ -418,14 +418,14 @@ export default class ValueResolver {
     }
   }
 
-  // Keys the batch response by each item's OWN id, so a resolver that answers with an item
+  // Keys the batch response by each record's OWN id, so a resolver that answers with a record
   // whose id differs from the one requested leaves the requested id unresolved rather than
   // silently mis-pairing the two.
   #toResolvedMap(
-    items: SelectRecord[] | null | undefined
+    records: SelectRecord[] | null | undefined
   ): Map<string, SelectRecord> {
     return this.#pairsToMap(
-      (makeArray(items) as SelectOptionLike[]).map((entry) => {
+      (makeArray(records) as SelectOptionLike[]).map((entry) => {
         const record = entryRecord(entry);
         return [this.#args.recordValue(record), record] as const;
       })
@@ -436,10 +436,10 @@ export default class ValueResolver {
     pairs: ReadonlyArray<readonly [SelectId, SelectRecord | undefined]>
   ): Map<string, SelectRecord> {
     const map = new Map<string, SelectRecord>();
-    for (const [value, item] of pairs) {
+    for (const [value, record] of pairs) {
       const key = this.#args.valueKey(value);
-      if (key != null && item) {
-        map.set(key, item);
+      if (key != null && record) {
+        map.set(key, record);
       }
     }
     return map;
@@ -481,44 +481,44 @@ export default class ValueResolver {
     if (built) {
       // A copy, so the hook's own object is never marked and a later real resolution
       // returning it reads as resolved.
-      const item = {
+      const record = {
         ...entryRecord(built),
         [this.#args.valueField]: value,
       };
-      this.#unresolvedRecords.add(item);
-      this.#customUnresolvedRecords.add(item);
-      return item;
+      this.#unresolvedRecords.add(record);
+      this.#customUnresolvedRecords.add(record);
+      return record;
     }
-    const item: SelectRecord = {
+    const record: SelectRecord = {
       [this.#args.valueField]: value,
     };
-    this.#unresolvedRecords.add(item);
+    this.#unresolvedRecords.add(record);
     // Show the value as the label so an unresolved row renders the id, not a blank — unless
     // the label field IS the value field, where it is already present (keeping the raw type).
     if (this.#args.labelField !== this.#args.valueField) {
-      item[this.#args.labelField] = String(value ?? "");
+      record[this.#args.labelField] = String(value ?? "");
     }
-    return item;
+    return record;
   }
 
   #cacheResolvedValue(
     value: SelectId,
-    item: SelectRecord | null | undefined
+    record: SelectRecord | null | undefined
   ): void {
     const key = this.#args.valueKey(value);
-    if (key == null || !item) {
+    if (key == null || !record) {
       return;
     }
     if (
-      this.isUnresolvedRecord(item) &&
+      this.isUnresolvedRecord(record) &&
       this.#recordedOutcomes(key).some(
         (cached) => !this.isUnresolvedRecord(cached)
       )
     ) {
       return;
     }
-    if (this.#resolvedCache.get(key) !== item) {
-      this.#resolvedCache.set(key, item);
+    if (this.#resolvedCache.get(key) !== record) {
+      this.#resolvedCache.set(key, record);
     }
   }
 

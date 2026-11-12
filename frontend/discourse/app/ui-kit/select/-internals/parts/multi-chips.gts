@@ -53,7 +53,7 @@ interface MultiChipsSignature {
     /** Whether the input claims the listbox through aria-owns. */
     ariaOwns: boolean;
     /**
-     * Whether an expanded overlay that repeats the held items replaces the chips with a count.
+     * Whether an expanded overlay that repeats the held records replaces the chips with a count.
      * The chips stay laid out but hidden, so the field keeps its height and the overlay stays put.
      */
     summarizeWhileExpanded?: boolean;
@@ -121,17 +121,17 @@ interface MultiChipsSignature {
     shouldCorrectKeyboardOcclusion?: () => boolean;
   };
   Blocks: {
-    /** Custom markup for a selected item. */
+    /** Custom markup for a selected record. */
     selection?: [
-      /** The resolved selected item. */
-      item: SelectRecord,
+      /** The resolved selected record. */
+      record: SelectRecord,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
-      /** The unresolved fallback item. */
-      item: SelectRecord,
+      /** The unresolved fallback record. */
+      record: SelectRecord,
     ];
   };
 }
@@ -242,7 +242,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     );
   }
 
-  /** Converts a held item's id to its chip attribute value. */
+  /** Converts a held record's id to its chip attribute value. */
   chipValue(chip: SelectRow): string {
     return String(chip.value ?? "");
   }
@@ -453,8 +453,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                   </span>
                   {{#if @triggerChipsInteractive}}
                     <button
-                      {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
-                    Backspace or Delete to remove") so it reads as a selected item rather
+                      {{! Name leads with the record, then how to remove it (e.g. "Orange, Press
+                    Backspace or Delete to remove") so it reads as a selected record rather
                     than a bare action. A locked chip says it can't be removed instead, on
                     touch too, where it is not a remove action. }}
                       aria-disabled={{if

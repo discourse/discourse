@@ -9,6 +9,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const USERS = [
@@ -808,6 +809,58 @@ module(
 
         await click(row);
         assert.false(onChange.called, "the row is not picked");
+      });
+
+      test("a loader's options keep their settings on the rows the picker draws", async function (assert) {
+        const onChange = sinon.spy();
+        const removed = [];
+        const team = { id: 7, name: "team", full_name: "The team" };
+        const load = () =>
+          Promise.resolve({
+            users: [
+              selectOption(
+                { username: "bob", name: "Bob Ross" },
+                { disabled: true }
+              ),
+              { username: "alice", name: "Alice" },
+            ],
+            groups: [
+              selectOption(team, {
+                description: "Everyone on call",
+                onSelect: (control, record) => removed.push(record),
+              }),
+            ],
+          });
+
+        await render(
+          <template>
+            <DSelectUser
+              @includeGroups="visible"
+              @load={{load}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+        const select = new DSelect();
+        await select.open();
+
+        assert
+          .dom(optionNamed("Bob Ross"))
+          .hasAttribute("aria-disabled", "true", "the caller's setting holds");
+        assert
+          .dom(optionNamed("Alice"))
+          .doesNotHaveAttribute("aria-disabled", "a bare row keeps none");
+        assert
+          .dom(".d-select__option-description", optionNamed("team"))
+          .hasText("Everyone on call", "the caller's description wins");
+
+        await click(optionNamed("team"));
+        assert.deepEqual(
+          removed,
+          [team],
+          "the action gets the caller's record"
+        );
+        assert.false(onChange.called, "the action picks nothing");
       });
 
       test("reads a disabled group's name and reason as separate words", async function (assert) {
