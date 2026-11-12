@@ -99,7 +99,7 @@ class UserCreator
       else
         user.update!(approved: false, approved_by_id: nil, approved_at: nil)
       end
-      if attributes.fetch(:active, true) && !Developer.configured_email?(user.email)
+      if attributes.fetch(:active, true) && guardian.can_activate?(user)
         activate(user)
       else
         send_activation_email(user)

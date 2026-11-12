@@ -2153,27 +2153,26 @@ RSpec.describe Admin::UsersController do
 
       before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
 
-      shared_examples "developer email activation denied" do
-        it "does not activate the account" do
-          put "/admin/users/#{developer_user.id}/activate.json"
+      it "prevents a moderator from activating the account" do
+        sign_in(moderator)
 
-          expect(response.status).to eq(403)
-          expect(developer_user.reload).not_to be_active
-          expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
-          expect(email_domain_group.users.reload).not_to include(developer_user)
-        end
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
       end
 
-      context "when logged in as a moderator" do
-        before { sign_in(moderator) }
+      it "prevents an admin from activating the account" do
+        sign_in(admin)
 
-        include_examples "developer email activation denied"
-      end
+        put "/admin/users/#{developer_user.id}/activate.json"
 
-      context "when logged in as an admin" do
-        before { sign_in(admin) }
-
-        include_examples "developer email activation denied"
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
       end
     end
   end
