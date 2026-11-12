@@ -35,8 +35,10 @@ class UploadSecurity
     category_logo
     category_logo_dark
     category_background
+    category_background_dark
     group_flair
     badge_image
+    branding
     site_setting
   ]
 

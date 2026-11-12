@@ -229,18 +229,20 @@ module Chat
         can_flag_in_chat_channel?(chat_message.chat_channel)
     end
 
+    def chat_flag_types
+      @chat_flag_types ||= PostActionType.flag_types
+    end
+
     def can_flag_message_as?(chat_message, flag_type_id, opts)
-      if flag_type_id == ReviewableScore.types[:illegal] && SiteSetting.dsa_reporting_enabled
-        return false
-      end
+      return false if flag_type_id == chat_flag_types[:illegal] && SiteSetting.dsa_reporting_enabled
 
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
-      if can_only_flag_chat_messages_as_illegal? && flag_type_id != ReviewableScore.types[:illegal]
+      if can_only_flag_chat_messages_as_illegal? && flag_type_id != chat_flag_types[:illegal]
         return false
       end
 
-      if flag_type_id == ReviewableScore.types[:notify_user]
+      if flag_type_id == chat_flag_types[:notify_user]
         is_warning = ActiveRecord::Type::Boolean.new.deserialize(opts[:is_warning])
 
         return false if is_warning && !is_staff?

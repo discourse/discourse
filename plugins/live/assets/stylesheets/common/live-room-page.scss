@@ -1170,3 +1170,33 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     opacity: 1;
   }
 }
+
+// Tiles carry per-participant view-transition names (see followLayout in
+// LiveRoomPage); these classes time every tile's move together.
+.live-room-page .live-video-tile {
+  view-transition-class: live-tile;
+}
+
+.live-room-page__presentation-main .live-video-tile {
+  view-transition-class: live-tile live-stage-tile;
+}
+
+::view-transition-group(*.live-tile) {
+  z-index: 2;
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+// The stage tile travels the furthest; keep the other tiles moving over it
+// rather than disappearing underneath.
+::view-transition-group(*.live-stage-tile) {
+  z-index: 1;
+}
+
+// Fill the moving box so the old and new snapshots stay aligned while they
+// crossfade, instead of each keeping its own aspect and ghosting.
+::view-transition-old(*.live-tile),
+::view-transition-new(*.live-tile) {
+  height: 100%;
+  object-fit: cover;
+}

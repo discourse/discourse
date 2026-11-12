@@ -9,13 +9,27 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { optionalRequire } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatPendingThreadComposer from "discourse/plugins/chat/discourse/components/chat/composer/pending-thread" with {
+  discourseImport: "optional",
+};
+import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar" with {
+  discourseImport: "optional",
+};
+// Chat's own loading skeleton doubles as the panel's loading state, so the hand-off to the
+// thread's identical skeleton reads as one continuous load instead of a spinner flashing into
+// a skeleton.
+import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skeleton" with {
+  discourseImport: "optional",
+};
+import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread" with {
+  discourseImport: "optional",
+};
 
 export default class LiveChatPanel extends Component {
   @service chat;
@@ -36,19 +50,6 @@ export default class LiveChatPanel extends Component {
   @tracked composerSelection = null;
   @tracked uploadDropZone = null;
 
-  // Cross-plugin components must be resolved at runtime in compiled bundles.
-  chatThread = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-thread"
-  );
-  chatPendingComposer = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat/composer/pending-thread"
-  );
-  chatSkeleton = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-skeleton"
-  );
-  chatNavbar = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat/navbar"
-  );
   pane = trackedObject({ sending: false });
 
   #queuedState = null;
@@ -299,8 +300,8 @@ export default class LiveChatPanel extends Component {
       class={{dConcatClass "live-chat" (if this.unavailable "is-unavailable")}}
       {{didInsert this.loadSession}}
     >
-      {{#if this.chatNavbar}}
-        <this.chatNavbar as |navbar|>
+      {{#if ChatNavbar}}
+        <ChatNavbar as |navbar|>
           {{#if (and this.site.mobileView @onClose)}}
             <DButton
               class="btn-transparent no-text c-navbar__back-button"
@@ -331,7 +332,7 @@ export default class LiveChatPanel extends Component {
               />
             {{/if}}
           </navbar.Actions>
-        </this.chatNavbar>
+        </ChatNavbar>
       {{/if}}
 
       {{! eslint-disable ember/template-no-invalid-interactive }}
@@ -340,14 +341,14 @@ export default class LiveChatPanel extends Component {
         {{on "keydown" this.interceptEscape capture=true}}
       >
         {{#if this.loading}}
-          {{#if this.chatSkeleton}}
-            <this.chatSkeleton />
+          {{#if ChatSkeleton}}
+            <ChatSkeleton />
           {{else}}
             <DConditionalLoadingSpinner @condition={{true}} />
           {{/if}}
-        {{else if (and this.chatThread this.thread)}}
+        {{else if (and ChatThread this.thread)}}
           {{#each (array this.thread) key="id" as |thread|}}
-            <this.chatThread
+            <ChatThread
               @channel={{this.channel}}
               @composerSelection={{this.composerSelection}}
               @initialDraft={{this.initialDraft}}
@@ -365,7 +366,7 @@ export default class LiveChatPanel extends Component {
               </div>
             </:tip>
           </DEmptyState>
-        {{else if (and this.chatPendingComposer this.draft)}}
+        {{else if (and ChatPendingThreadComposer this.draft)}}
           <div class="live-chat__pending" {{didInsert this.registerDropZone}}>
             <DEmptyState
               @svgContent={{dIcon "d-chat"}}
@@ -383,7 +384,7 @@ export default class LiveChatPanel extends Component {
                 @label="live.chat.retry"
               />
             {{/if}}
-            <this.chatPendingComposer
+            <ChatPendingThreadComposer
               @channel={{this.channel}}
               @disabled={{this.activationError}}
               @draft={{this.draft}}

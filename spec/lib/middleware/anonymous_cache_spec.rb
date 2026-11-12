@@ -439,6 +439,44 @@ RSpec.describe Middleware::AnonymousCache do
       expect(status).to eq(413)
       expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
     end
+
+    it "returns 413 for GET request with a whitespace-prefixed payload" do
+      status, headers, _ =
+        middleware.call(
+          env.tap do |environment|
+            environment[Rack::RACK_INPUT].write(%(  {"injected":true}))
+            environment[Rack::RACK_INPUT].rewind
+          end,
+        )
+
+      expect(status).to eq(413)
+      expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
+    end
+
+    it "does not let a whitespace-prefixed GET body poison the shared anonymous cache" do
+      global_setting :anon_cache_store_threshold, 1
+
+      app =
+        Middleware::AnonymousCache.new(
+          lambda do |environment|
+            input = environment[Rack::RACK_INPUT]
+            input.rewind
+            [200, {}, ["body=#{input.read}"]]
+          end,
+        )
+
+      attacker_env =
+        env("ANON_CACHE_DURATION" => 10).tap do |environment|
+          environment[Rack::RACK_INPUT].write("  poisoned-content")
+          environment[Rack::RACK_INPUT].rewind
+        end
+
+      attacker_status, _, _ = app.call(attacker_env)
+      expect(attacker_status).to eq(413)
+
+      _, _, victim_body = app.call(env("ANON_CACHE_DURATION" => 10))
+      expect(victim_body.join).not_to include("poisoned-content")
+    end
   end
 
   describe "crawler blocking" do

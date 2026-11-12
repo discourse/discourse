@@ -163,6 +163,8 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Navrhnúť s AI"
       copied: "Skopírované"
       ai_decoded_transcript:
         tool: "Nástroj"
@@ -329,6 +331,8 @@ sk:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
         select_llm: "Vyberte si LLM"
+        no_llm_selected: "Žiadny"
+        no_decision_model_selected: "Žiadny"
         custom_instructions: "Vlastné pokyny"
         custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
         last_seven_days: "Posledných 7 dní"
@@ -599,6 +603,8 @@ sk:
         edit: "Upraviť"
         delete: "Odstrániť"
         test: "Spustiť test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Meno"
         description: "Popis"
@@ -621,6 +627,7 @@ sk:
         type: "Typ"
         provider: "Poskytovateľ"
         edit: "Upraviť"
+        seeded_warning: "Toto je predkonfigurované na vašej stránke a nie je možné to upravovať."
         select_type: "Vyberte"
         types:
           embedding: "Vkladám"
@@ -798,7 +805,6 @@ sk:
         presets: "Vyberte predvoľbu..."
         configure_manually: "Konfigurovať manuálne"
         edit: "Upraviť"
-        seeded_warning: "Toto je predkonfigurované na vašej stránke a nie je možné to upravovať."
         tests:
           title: "Spustiť test"
           running: "Spustenie testu..."
@@ -830,6 +836,7 @@ sk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Vlastné"
         provider_fields:
@@ -933,10 +940,7 @@ sk:
           uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
           scroll_to_bottom: "Prejdite nadol"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Prehľad nálad"
           analysis: "Analýza nálad"
         sentiment_analysis:
           share_chart: "Skopírujte odkaz na graf"

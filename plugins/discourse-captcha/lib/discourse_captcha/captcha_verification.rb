@@ -14,9 +14,11 @@ module DiscourseCaptcha
       captcha_token = captcha_provider.fetch_captcha_token(server_session)
       return :captcha_verification_failed if captcha_token.blank?
 
-      captcha_provider.validate_captcha_response(
-        captcha_provider.send_captcha_verification(captcha_token),
-      )
+      response_json =
+        captcha_provider.validate_captcha_response(
+          captcha_provider.send_captcha_verification(captcha_token),
+        )
+      SignupScore.recaptcha_v3_score = captcha_provider.signup_score(response_json)
       nil
     rescue StandardError => e
       Rails.logger.warn("Captcha verification error: #{e.class} - #{e.message}")

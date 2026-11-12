@@ -16,6 +16,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   def value=(objects)
     objects = JSON.parse(objects) if objects.is_a?(::String)
     objects = remove_disallowed_groups(objects)
+    objects = normalize_tag_ids(objects)
     ensure_is_valid_value!(objects)
     objects = SchemaSettingsObjectValidator.normalize_uploads(schema:, objects:)
     record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
@@ -32,8 +33,6 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def remove_disallowed_groups(objects)
-    return objects if objects.blank?
-
     remove_disallowed_groups_from_objects(objects.deep_dup, schema[:properties])
   end
 
@@ -56,7 +55,48 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
   private
 
+  def normalize_tag_ids(objects, properties: schema[:properties], tag_names: nil)
+    unless tag_names
+      tag_ids =
+        SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "tags").grep(
+          ::Integer,
+        )
+      return objects if tag_ids.empty?
+
+      tag_names = Tag.where(id: tag_ids).pluck(:id, :name).to_h
+    end
+
+    objects.each do |object|
+      properties.each do |property_name, property_attributes|
+        key = object_key(object, property_name)
+        next if key.nil?
+
+        value = object[key]
+        case property_attributes[:type]
+        when "tags"
+          if value.is_a?(Array)
+            object[key] = value.map { |tag| tag.is_a?(::Integer) ? tag_names.fetch(tag, tag) : tag }
+          end
+        when "objects"
+          if value.is_a?(Array)
+            normalize_tag_ids(
+              value,
+              properties: property_attributes[:schema][:properties],
+              tag_names:,
+            )
+          end
+        end
+      end
+    end
+
+    objects
+  end
+
   def remove_disallowed_groups_from_objects(objects, properties)
+    unless ThemeSettingsValidator.is_valid_value_type?(objects, type)
+      raise Discourse::InvalidParameters, I18n.t("themes.settings_errors.objects.invalid_objects")
+    end
+
     objects.each do |object|
       properties.each do |property_name, property_attributes|
         key = object_key(object, property_name)
@@ -70,7 +110,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
           object[key] = Array(object[key]).reject { |id| disallowed_ids.include?(id) }
         when "objects"
           nested_objects = object[key]
-          if nested_objects.is_a?(Array)
+          if !nested_objects.nil?
             remove_disallowed_groups_from_objects(
               nested_objects,
               property_attributes[:schema][:properties],

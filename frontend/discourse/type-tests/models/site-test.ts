@@ -153,6 +153,7 @@ interface ExpectedCategoryType {
   title: string;
   description: string;
   icon: string | null;
+  svg_icon: string | null;
   available: boolean;
   visible: boolean;
   configuration_schema: Record<string, Record<string, unknown>[]>;
@@ -294,7 +295,6 @@ expectTypeOf(site.topicCountDesc).toEqualTypeOf<string[]>();
 expectTypeOf(site.isReadOnly).toEqualTypeOf<boolean | undefined>();
 expectTypeOf(site.desktopView).toEqualTypeOf<boolean>();
 expectTypeOf(site.mobileView).toEqualTypeOf<boolean>();
-expectTypeOf(site.isMobileDevice).toEqualTypeOf<boolean>();
 expectTypeOf(site.categoriesByCount).toEqualTypeOf<Category[]>();
 expectTypeOf(site.categoriesById).toEqualTypeOf<Map<number, Category>>();
 expectTypeOf(site.categoriesByParentId).toEqualTypeOf<

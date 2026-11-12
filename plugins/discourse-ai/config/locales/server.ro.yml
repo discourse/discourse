@@ -116,6 +116,17 @@ ro:
       assign:
         errors:
           not_found: "Subiectul nu a fost găsit."
+    appearance_authoring:
+      default_theme: "Temă implicită"
+      colors:
+        light:
+          header_background: "Antet"
+      fonts:
+        heading_font: "Font titlu"
+    mcp_theme_access:
+      none: "Niciuna"
+    mcp_app_setup:
+      none: "Niciuna"
     reviewables:
       ai_tool_action:
         approve:

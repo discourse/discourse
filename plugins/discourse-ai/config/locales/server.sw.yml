@@ -82,6 +82,14 @@ sw:
       assign:
         errors:
           not_found: "Mada haijapatikana."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Kichwa"
+    mcp_theme_access:
+      none: "bila"
+    mcp_app_setup:
+      none: "bila"
     reviewables:
       ai_tool_action:
         approve:

@@ -172,6 +172,33 @@ describe DiscourseAutomation::Scriptable do
         expect(output).to eq("hello #{SiteSetting.title}")
       end
 
+      it "keeps %%KEY%% values as-is" do
+        input = "hello %%COOL_CAT%%"
+        map = { cool_cat: '{{site_title}} %%SITE_TITLE%% {{#x \\0' }
+        output = automation.scriptable.utils.apply_placeholders(input, map)
+        expect(output).to eq("hello #{map[:cool_cat]}")
+      end
+
+      it "renders only placeholder keys" do
+        input = "hello {{cool_cat.length}}"
+        map = { cool_cat: "siberian cat" }
+        output = automation.scriptable.utils.apply_placeholders(input, map)
+        expect(output).to eq("hello ")
+      end
+
+      it "supports %%KEY%% keys that aren't valid Mustache tags" do
+        map = { "mr._x" => "a", "birth_(dd/mm)" => "b", "âge" => "c", "pays_d'origine" => "d" }
+        input = "%%MR._X%% %%BIRTH_(DD/MM)%% %%ÂGE%% %%PAYS_D'ORIGINE%%"
+        output = automation.scriptable.utils.apply_placeholders(input, map)
+        expect(output).to eq("a b c d")
+      end
+
+      it "doesn't add rendering keys to the given map" do
+        map = { cool_cat: "siberian cat" }
+        automation.scriptable.utils.apply_placeholders("%%COOL_CAT%% %%REPORT=likes%%", map)
+        expect(map.keys).to contain_exactly(:cool_cat, :site_title)
+      end
+
       context "when using the REPORT key" do
         context "with no filters specified" do
           it "replaces REPORT key" do
@@ -209,6 +236,15 @@ describe DiscourseAutomation::Scriptable do
             output = automation.scriptable.utils.apply_placeholders(input, {})
             expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-15|1|\n")
           end
+        end
+
+        it "keeps the report as-is" do
+          freeze_time DateTime.parse("2022-02-15")
+          search_log = Fabricate(:search_log, term: "{{site_title}} search", created_at: 1.day.ago)
+          input = "hello %%REPORT=trending_search%%"
+
+          output = automation.scriptable.utils.apply_placeholders(input, {})
+          expect(output).to end_with("|#{search_log.term}|1|0|\n")
         end
       end
     end

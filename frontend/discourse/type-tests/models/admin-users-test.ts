@@ -104,6 +104,10 @@ expectTypeOf(admin.tl3_requirements?.requirements_met).toEqualTypeOf<
 >();
 expectTypeOf(admin.can_grant_admin).toEqualTypeOf<boolean | undefined>();
 expectTypeOf(admin.api_key_count).toEqualTypeOf<number | undefined>();
+// Only admins listing bots get the creator, and only for bots with a recorded creator.
+expectTypeOf(admin.bot_creator).toEqualTypeOf<
+  { username: string; avatar_template: string; url: string } | undefined
+>();
 // The admin template edits these in place.
 admin.trust_level = 2;
 admin.primary_group_id = null;

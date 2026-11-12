@@ -457,7 +457,6 @@ uk:
         agent_not_allowed: "Запитаний субагент не дозволений."
         unavailable_agent: "Запитаний субагент недоступний або не має доступу."
         missing_model: "Запитаний субагент не має доступної мовної моделі."
-        call_limit: "Досягнуто ліміту делегованих викликів."
         completion_limit: "Досягнуто ліміту завершення делегування."
         cancelled: "Делеговане завдання скасовано."
         execution_failed: "Делеговане завдання не вдалося виконати."
@@ -1146,6 +1145,31 @@ uk:
         errors:
           page_not_found: "Сторінка веб-сайту Discourse '%{page_name}' недоступна."
           fetch_failed: "Не вдалося завантажити сторінку «%{page_name}» з офіційного вебсайту Discourse."
+    appearance_authoring:
+      default_theme: "Стандартна тема"
+      colors:
+        light:
+          header_background: "Шапка"
+      fonts:
+        base_font: "Основний шрифт"
+        heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Увімк"
+      "off": "Вимк."
+      none: "немає"
+      changes:
+        server: "Сервер MCP"
+    mcp_app_setup:
+      none: "немає"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Кодекс"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "Дія інструменту ШІ"
@@ -1217,6 +1241,7 @@ uk:
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
       secret_required: "Необхідно вибрати обліковий запис"
       secret_not_found: "Вибраний обліковий запис не існує"
+      missing_provider_param: "%{param} не може бути пустим"
       configuration:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
         choose_model: "Спочатку встановіть 'ai embeddings selected model'."

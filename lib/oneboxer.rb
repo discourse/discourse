@@ -6,6 +6,7 @@ Dir["#{Rails.root.join("lib/onebox/engine/*_onebox.rb")}"].sort.each { |f| requi
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
+  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   AUDIO_REGEX = /\A\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)\z/i
   VIDEO_REGEX = /\A\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)\z/i
 
@@ -137,7 +138,7 @@ module Oneboxer
 
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(doc, extra_paths: [])
-    onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
+    onebox_links = doc.css(["a.#{ONEBOX_CSS_CLASS}", *extra_paths].join(", "))
     if onebox_links.present?
       onebox_links.each { |link| yield(link["href"], link) if link["href"].present? }
     end
@@ -185,12 +186,21 @@ module Oneboxer
     video
   ]
 
-  def self.apply(string_or_doc, extra_paths: nil)
+  def self.apply(string_or_doc, extra_paths: nil, limit: nil)
     doc = string_or_doc
     doc = Loofah.html5_fragment(doc) if doc.is_a?(String)
     changed = false
+    candidates = 0
 
-    each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
+    each_onebox_link(doc, extra_paths:) do |url, element|
+      if limit && candidates >= limit
+        element.remove_class("#{ONEBOX_CSS_CLASS} #{INLINE_ONEBOX_LOADING_CSS_CLASS}")
+        changed = true
+        next
+      end
+
+      candidates += 1
+
       onebox, _ = yield(url, element)
       next if onebox.blank?
 
@@ -287,7 +297,9 @@ module Oneboxer
   end
 
   def self.onebox_cache_key(url)
-    "onebox__#{url}"
+    policy =
+      "#{Digest::SHA1.hexdigest(PrettyText.allowed_src_pattern.source)}__" if SiteSetting.block_hotlinked_media
+    "onebox__#{policy}#{url}"
   end
 
   def self.onebox_failed_cache_key(url)
@@ -527,7 +539,9 @@ module Oneboxer
     return cached if cached
 
     result = compute_external_onebox(url, available_strategies)
-    Discourse.cache.write(key, result, expires_in: external_onebox_ttl(result))
+    if key == onebox_cache_key(url)
+      Discourse.cache.write(key, result, expires_in: external_onebox_ttl(result))
+    end
     result
   end
 
@@ -584,6 +598,14 @@ module Oneboxer
       content_type: fd.content_type,
     }
 
+    if SiteSetting.block_hotlinked_media
+      onebox_options[:preview_transformers] = [
+        lambda do |env|
+          PrettyText.sanitize_hotlinked_media(env[:node]) if env[:node_name] == "#document-fragment"
+        end,
+      ]
+    end
+
     onebox_options[:cookie] = fd.cookie if fd.cookie
 
     preview_result = Onebox.preview(uri.to_s, onebox_options)
@@ -630,6 +652,11 @@ module Oneboxer
   def self.preview_error_onebox(args, is_fragment = false)
     args[:title] ||= args[:link] if args[:link]
     args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
+
+    if SiteSetting.block_hotlinked_media && args[:favicon] &&
+         !args[:favicon].match?(PrettyText.allowed_src_pattern)
+      args.delete(:favicon)
+    end
 
     template_name = is_fragment ? "preview_error_fragment_onebox" : "preview_error_onebox"
     Mustache.render(template(template_name), args)

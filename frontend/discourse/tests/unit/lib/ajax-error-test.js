@@ -4,6 +4,7 @@ import sinon from "sinon";
 import { ajax } from "discourse/lib/ajax";
 import {
   extractError,
+  extractErrorInfo,
   isRateLimitError,
   rateLimitWaitSeconds,
 } from "discourse/lib/ajax-error";
@@ -154,6 +155,39 @@ module("Unit | Lib | ajax-error", function (hooks) {
       extractError(await ajaxError("/controller-limit")),
       i18n("generic_error_with_reason", { error: SERVER_MESSAGE }),
       "prefers the localized message from the server"
+    );
+  });
+
+  test("extractErrorInfo skips the prefix when requested by the server", async function (assert) {
+    const message = "You've reached the maximum of <strong>1 boards</strong>.";
+    pretender.get("/board-limit", () =>
+      response(403, {
+        errors: [message],
+        html_message: true,
+        skip_error_prefix: true,
+      })
+    );
+
+    const error = extractErrorInfo(await ajaxError("/board-limit"));
+
+    assert.strictEqual(
+      error.message,
+      message,
+      "shows the server message directly"
+    );
+    assert.true(error.html, "preserves HTML rendering");
+  });
+
+  test("extractError keeps multiple errors when skipping the prefix", async function (assert) {
+    const errors = ["First error", "Second error"];
+    pretender.get("/multiple-errors", () =>
+      response(422, { errors, skip_error_prefix: true })
+    );
+
+    assert.strictEqual(
+      extractError(await ajaxError("/multiple-errors")),
+      i18n("multiple_errors", { errors: "1) First error 2) Second error" }),
+      "keeps all error messages"
     );
   });
 

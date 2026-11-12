@@ -198,6 +198,8 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      dsa_classification:
+        suggest: "הצעה עם בינה מלאכותית"
       copied: "הועתק"
       ai_decoded_transcript:
         tool: "כלי"
@@ -383,6 +385,8 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        no_llm_selected: "ללא"
+        no_decision_model_selected: "ללא"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -655,6 +659,8 @@ he:
         edit: "עריכה"
         delete: "מחיקה"
         test: "הרצת בדיקה"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "שם"
         description: "תיאור"
@@ -678,6 +684,7 @@ he:
         type: "סוג"
         provider: "ספק"
         edit: "עריכה"
+        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         select_type: "בחירה"
         types:
           embedding: "שילוב (embedding)"
@@ -866,7 +873,6 @@ he:
         presets: "בחירת ערכה…"
         configure_manually: "הגדרה ידנית"
         edit: "עריכה"
-        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         tests:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"
@@ -892,6 +898,7 @@ he:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "מותאם"
         provider_fields:
@@ -991,10 +998,7 @@ he:
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
           editing_post: "רשומה נערכת"
       sentiments:
-        dashboard:
-          title: "רגש"
         sidebar:
-          overview: "סקירת הבעה"
           analysis: "ניתוח הבעות"
         sentiment_analysis:
           share_chart: "העתקת קישור לתרשים"

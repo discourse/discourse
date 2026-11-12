@@ -131,7 +131,7 @@ RSpec.describe UserStat do
   describe ".update_first_unread" do
     fab!(:user) { Fabricate(:user, last_seen_at: Time.zone.now) }
 
-    [false, true].each do |enabled|
+    shared_examples "finding the first unread logged in category topic" do |enabled:|
       it "includes logged-in pseudogroup topics with granular permissions #{enabled}" do
         freeze_time
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
@@ -155,6 +155,14 @@ RSpec.describe UserStat do
         expected = post.topic.reload.updated_at
         expect(user.user_stat.reload.first_unread_at).to eq_time(expected)
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "finding the first unread logged in category topic", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "finding the first unread logged in category topic", enabled: true
     end
   end
 
@@ -386,6 +394,27 @@ RSpec.describe UserStat do
         group_ids: [Group::AUTO_GROUPS[:staff]],
       )
       update_pending_posts
+    end
+  end
+
+  describe "trigger_badges" do
+    fab!(:user)
+
+    it "queues a badge grant for the user when present" do
+      stat = user.user_stat
+
+      BadgeGranter.expects(:queue_badge_grant).with(Badge::Trigger::UserChange, user:)
+
+      stat.save!
+    end
+
+    it "does not raise when the user row is gone" do
+      stat = user.user_stat
+      User.where(id: user.id).delete_all
+      stat.reload
+      expect(stat.user).to be_nil
+
+      expect { stat.save! }.not_to raise_error
     end
   end
 end

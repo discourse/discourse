@@ -561,6 +561,8 @@ zh_TW:
         short_title: "垃圾資訊"
         title: "配置垃圾資訊處理"
         select_llm: "選擇 LLM"
+        no_llm_selected: "無"
+        no_decision_model_selected: "無"
         select_agent: "選擇智能體"
         custom_instructions: "自訂指令"
         custom_instructions_help: "特定于您的網站的自訂指令，幫助指導 AI 識別垃圾資訊，例如“更積極地掃描非英語貼文”。"
@@ -1028,6 +1030,8 @@ zh_TW:
         edit: "編輯"
         delete: "刪除"
         test: "運行測試"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP 服務器"
         new: "新 MCP 服務器"
@@ -1112,6 +1116,7 @@ zh_TW:
         type: "類型"
         provider: "服務提供者"
         edit: "編輯"
+        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         select_type: "選擇"
         types:
           embedding: "嵌入"
@@ -1362,7 +1367,6 @@ zh_TW:
         presets: "選擇一個預設…"
         configure_manually: "手動配置"
         edit: "編輯"
-        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         tests:
           title: "運行測試"
           running: "正在運行測試…"
@@ -1394,6 +1398,7 @@ zh_TW:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "自訂"
         provider_fields:
@@ -1520,10 +1525,7 @@ zh_TW:
           streaming_below: "下方新增內容"
           editing_post: "正在編輯貼文"
       sentiments:
-        dashboard:
-          title: "情緒"
         sidebar:
-          overview: "情緒概述"
           analysis: "情緒分析"
         sentiment_analysis:
           share_chart: "復制圖表連結"

@@ -213,6 +213,8 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugestão com IA"
       copied: "Copiou"
       ai_decoded_transcript:
         thinking: "Pensando"
@@ -433,6 +435,8 @@ pt_BR:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhum"
+        no_decision_model_selected: "Nenhum"
         custom_instructions: "Instruções personalizadas"
         custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
@@ -737,6 +741,8 @@ pt_BR:
         edit: "Editar"
         delete: "Excluir"
         test: "Executar teste"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -759,6 +765,7 @@ pt_BR:
         type: "Tipo"
         provider: "Provedor"
         edit: "Editar"
+        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         select_type: "Selecionar"
         types:
           embedding: "Incorporar"
@@ -959,7 +966,6 @@ pt_BR:
         presets: "Selecione uma predefinição..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         tests:
           title: "Executar teste"
           running: "Executando teste..."
@@ -991,6 +997,7 @@ pt_BR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizados(as)"
         provider_fields:
@@ -1097,10 +1104,7 @@ pt_BR:
           scroll_to_bottom: "Rolar para a parte inferior"
           editing_post: "Editando postagem"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Visão geral de sentimento"
           analysis: "Análise de sentimento"
         sentiment_analysis:
           share_chart: "Copiar link para o gráfico"

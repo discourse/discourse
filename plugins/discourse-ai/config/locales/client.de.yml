@@ -242,6 +242,8 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      dsa_classification:
+        suggest: "Mit KI vorschlagen"
       copied: "Kopiert"
       ai_decoded_transcript:
         thinking: "Ich denke"
@@ -569,6 +571,8 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        no_llm_selected: "Keine Erfassung"
+        no_decision_model_selected: "Keine Erfassung"
         select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
@@ -957,6 +961,8 @@ de:
         edit: "Bearbeiten"
         delete: "Löschen"
         test: "Test ausführen"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-Server"
         new: "Neuer MCP-Server"
@@ -1044,6 +1050,7 @@ de:
         type: "Typ"
         provider: "Anbieter"
         edit: "Bearbeiten"
+        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         select_type: "Auswählen"
         types:
           embedding: "Einbettung"
@@ -1283,7 +1290,6 @@ de:
         presets: "Wähle eine Voreinstellung aus …"
         configure_manually: "Manuell konfigurieren"
         edit: "Bearbeiten"
-        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         tests:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
@@ -1315,6 +1321,7 @@ de:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Benutzerdefiniert"
         provider_fields:
@@ -1439,10 +1446,7 @@ de:
           streaming_below: "Neuer Inhalt unten"
           editing_post: "Beitrag wird bearbeitet "
       sentiments:
-        dashboard:
-          title: "Stimmung"
         sidebar:
-          overview: "Stimmungsübersicht"
           analysis: "Stimmungsanalyse"
         sentiment_analysis:
           share_chart: "Link zur Tabelle kopieren"

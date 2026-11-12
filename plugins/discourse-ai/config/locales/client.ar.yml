@@ -242,6 +242,8 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      dsa_classification:
+        suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
       copied: "تم النسخ"
       ai_decoded_transcript:
         thinking: "التفكير"
@@ -665,6 +667,8 @@ ar:
         short_title: "عشوائي"
         title: "إعدادات التعامل مع المحتوى العشوائي"
         select_llm: "تحديد نموذج اللغة الكبير"
+        no_llm_selected: "لا يوجد"
+        no_decision_model_selected: "لا يوجد"
         select_agent: "اختر الوكيل"
         custom_instructions: "التعليمات المُخصَّصة"
         custom_instructions_help: "تعليمات مُخصَّصة خاصة بموقعك للمساعدة على توجيه الذكاء الاصطناعي في تحديد المحتوى العشوائي؛ على سبيل المثال، \"كُن أكثر شراسة في مسح المنشورات غير المكتوبة باللغة العربية\"."
@@ -1084,6 +1088,8 @@ ar:
         edit: "تعديل"
         delete: "حذف"
         test: "تشغيل الاختبار"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "خوادم MCP"
         new: "خادم MCP جديد"
@@ -1183,6 +1189,7 @@ ar:
         type: "النوع"
         provider: "مقدِّم الخدمة"
         edit: "تعديل"
+        seeded_warning: "تم تكوين هذا مسبقًا على موقعك ولا يمكن تعديله."
         select_type: "تحديد"
         types:
           embedding: "التضمين"
@@ -1426,7 +1433,6 @@ ar:
         presets: "حدِّد إعدادًا مسبقًا..."
         configure_manually: "التكوين يدويًا"
         edit: "تعديل"
-        seeded_warning: "تم تكوين هذا مسبقًا على موقعك ولا يمكن تعديله."
         tests:
           title: "تشغيل الاختبار"
           running: "جارٍ تشغيل الاختبار..."
@@ -1458,6 +1464,7 @@ ar:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "مخصَّصة"
         provider_fields:
@@ -1589,10 +1596,7 @@ ar:
           streaming_below: "محتوى جديد بالأسفل"
           editing_post: "تعديل المنشور"
       sentiments:
-        dashboard:
-          title: "المشاعر"
         sidebar:
-          overview: "نظرة عامة على المشاعر"
           analysis: "تحليل المشاعر"
         sentiment_analysis:
           share_chart: "نسخ الرابط إلى الرسم البياني"

@@ -127,6 +127,14 @@ id:
       assign:
         errors:
           not_found: "Tidak ada topik."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Header"
+    mcp_theme_access:
+      none: "Tak ada"
+    mcp_app_setup:
+      none: "Tak ada"
     reviewables:
       ai_tool_action:
         approve:

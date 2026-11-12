@@ -310,6 +310,10 @@ en:
 
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Suggest with AI"
+        updated: "Classification updated"
+        no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
       view_raw: "View raw"
       view_decoded: "View decoded"
@@ -395,30 +399,73 @@ en:
         description: "Configure AI features for your site, including their agents, models, and access permissions where supported."
         back: "Back to AI features"
         settings_save_error: "Some settings could not be saved."
-        disabled: "(disabled)"
-        agent:
-          one: "Agent:"
-          other: "Agents:"
-        groups: "Groups:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          module: "Module"
+          status: "Status"
+          enabled: "Enabled"
+          feature: "Feature"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Groups"
+          who_can_use: "Who can use"
+        who_can_use:
+          edit: "Edit who can use %{name}"
+          no_one: "No one"
+          no_one_warning: "With no groups, no one can use this feature."
+          shared: "Also changes who can use: %{features}"
+        status:
+          "on": "On"
+          "off": "Off"
+          needs_setup: "Needs setup"
+          on_with_features:
+            one: "On · %{enabled} of %{count} feature"
+            other: "On · %{enabled} of %{count} features"
+          on_with_languages:
+            one: "On · %{count} language"
+            other: "On · %{count} languages"
+          on_with_chatbot_agents:
+            one: "On · %{count} chatbot agent"
+            other: "On · %{count} chatbot agents"
+        chatbot:
+          available_in: "Available in"
+          column: "Chatbot"
+          toggle: "Use %{name} as a chatbot"
+          any_llm: "Chosen by the user"
+          new_agent: "New agent"
+          manage_agents: "Manage agents"
+          places:
+            personal_messages: "Personal messages"
+            topic_mentions: "Topic @mentions"
+            chat_direct_messages: "Chat messages"
+            chat_channel_mentions: "Chat @mentions"
+            none: "Not available"
+        status_notes:
+          no_languages: "No languages selected"
+          no_llm: "No language model available"
+          hidden_from_readers: "Hidden from readers"
+          no_image_generation_tool: "Add tool"
+          no_embedding_model: "Add model"
+          no_embedding_model_selected: "No model selected"
+          missing: "Missing: %{items}"
+        setup_items:
+          app_id: "application ID"
+          public_key: "public key"
+          allowed_servers: "allowed servers"
+          agent: "an agent with a bot user"
+        agentless_notes:
+          forum_search: "Forum search, no AI model"
+        toggle: "Enable %{name}"
+        set_up: "Set up"
         no_llm: "No LLM selected"
         no_agent: "Not set"
         no_groups: "None"
-        backend: "Backend:"
         backends:
           agent: "LLM agent"
           decision_model: "Decision model"
           classification_model: "Dedicated classification endpoint"
-        decision_model: "Decision model:"
-        classification_model: "Model:"
         not_configured: "Not configured"
+        decision_model: "Decision model"
         edit: "Settings"
-        expand_list:
-          one: "(%{count} more)"
-          other: "(%{count} more)"
-        collapse_list: "(show less)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -482,8 +529,13 @@ en:
             ask_ai_reports: "Ask AI reports"
         embeddings:
           name: "Embeddings"
-          description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
-          hyde: "HyDE"
+          description: "Finds content by meaning. Powers related topics and AI search."
+          related_topics: "Related topics"
+          semantic_search: "AI search results"
+          quick_search: "AI results in quick search"
+          hyde: "Better search queries (HyDE)"
+          add_model: "Add embedding model"
+          no_models: "You need an embedding model first."
           setting_groups:
             model_settings: "Model Settings"
             related_topics: "Related Topics"
@@ -496,7 +548,7 @@ en:
             settings: "Basic Settings"
         discord:
           name: "Discord integration"
-          description: "Adds the ability to search Discord channels"
+          description: "Lets people search this forum from Discord"
           search: "Discord search"
           setting_groups:
             settings: "Basic Settings"
@@ -554,10 +606,6 @@ en:
             one: "Scheduled translation for %{count} untranslated post."
             other: "Scheduled translation for %{count} untranslated posts."
           schedule_topic_error: "Failed to schedule translations. Please try again."
-          setting_groups:
-            settings: "Basic Settings"
-            agents: "Agents"
-            backfill_and_limits: "Backfill & Limits"
 
         spam:
           name: "Spam"
@@ -582,11 +630,85 @@ en:
       translations:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
-        supported_locales: "Supported languages"
+        sections:
+          languages: "Languages"
+          scope: "What to translate"
+          backfill: "Existing content"
+          readers: "Readers"
+          agents: "Agents and models"
+          advanced: "Advanced"
+        hidden_from_readers: 'Translations are being generated but are hidden from readers. Update the <a href="#ai-translations-readers">Readers settings</a> to make them visible.'
+        more_language_settings: "More language settings"
+        waiting_for_languages: "Translation is on, but nothing is translated until you select at least one language."
+        settings:
+          content_localization_supported_locales:
+            label: "Translate into"
+            description: "Content is translated into these languages. Your site's default language is always included."
+          ai_translation_category_scope:
+            label: "Categories"
+            description: "Which categories to translate. Personal messages are set separately."
+          ai_translation_categories:
+            label: "Selected categories"
+            description: "The categories included or excluded above."
+          ai_translation_personal_messages:
+            label: "Personal messages"
+            description: "Which personal messages to translate."
+            choices:
+              none: "None"
+              group: "Group messages only"
+              all: "All"
+          ai_translation_include_bot_content:
+            label: "Translate content written by bots"
+            description: "Also translate posts by bot accounts."
+          ai_translation_backfill_start_date:
+            label: "Translate existing content since"
+            description: "Posts and topics created on or after this date (UTC) are translated in the background. Leave blank to translate only new content."
+          ai_translation_backfill_hourly_rate:
+            label: "Existing content per hour"
+            description: "How many existing posts and topics to translate each hour. Set to 0 to pause."
+          content_localization_enabled:
+            label: "Show translations to readers"
+            description: "Readers see content in their preferred language when a translation exists."
+          content_localization_language_switcher:
+            label: "Language switcher"
+            description: "Who can pick a language from the header."
+            choices:
+              none: "Nobody"
+              anonymous: "Anonymous visitors"
+              all: "Everyone"
+          allow_user_locale:
+            label: "Let users choose their language"
+            description: "Signed-in users can set their preferred language. Required for the language switcher and language links."
+          set_locale_from_param:
+            label: "Language links"
+            description: "Anyone can open a page in a language by adding it to the address, for example ?tl=es."
+          content_localization_crawler_param:
+            label: "Let search engines index translations"
+            description: "Serve translated content to search engines that follow language links."
+          content_localization_use_default_locale_when_unsupported:
+            label: "Fall back to the default language"
+            description: "Readers whose language is not selected above see content in your site's default language."
+          ai_translation_locale_detector_agent:
+            label: "Language detection agent"
+            description: "Detects which language content is written in."
+          ai_translation_locale_detector_decision_model:
+            label: "Language detection decision model"
+            description: "Detects languages it can place confidently before the language detection agent is asked. Leave blank to use only the agent."
+          ai_translation_post_raw_translator_agent:
+            label: "Post translation agent"
+            description: "Translates posts."
+          ai_translation_topic_title_translator_agent:
+            label: "Topic title translation agent"
+            description: "Translates topic titles."
+          ai_translation_short_text_translator_agent:
+            label: "Short text translation agent"
+            description: "Translates categories, tags and other short text."
+          ai_translation_verbose_logs:
+            label: "Verbose logs"
+            description: "Writes detailed translation job logs for troubleshooting."
+        settings_save_error: "Some settings could not be saved. Please check the errors below."
         max_locales_reached: "You can only select up to %{max} languages."
         locale_count: "%{count}/%{max} selected"
-        category_scope: "Categories"
-        category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
         cached_results_notice: "Showing cached results from %{relative_time}."
         model_progress:
           loading: "Loading translation progress"
@@ -664,12 +786,8 @@ en:
                 one: "The tag is fully translated."
                 other: "All %{count} tags are fully translated."
         admin_actions:
-          translation_settings: "AI settings"
-          localization_settings: "App language settings"
-          enable_translations: "Enable automatic translations"
+          enabled: "Enabled"
           enable_translations_disabled: "You must add a supported language to enable translations"
-          show_language_switcher: "Show a language switcher in the header"
-          show_language_switcher_description: "Lets everyone pick a language and see your site in it."
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
@@ -712,6 +830,10 @@ en:
         short_title: "Spam"
         title: "Configure spam handling"
         select_llm: "Select LLM"
+        no_llm_selected: "None"
+        select_decision_model: "Select decision model"
+        no_decision_model_selected: "None"
+        decision_model_help: "A decision model rates every post on its own when it is confident and leaves unsure posts to the LLM. Without an LLM, the decision model decides every post."
         select_agent: "Select agent"
         custom_instructions: "Custom instructions"
         custom_instructions_help: "Custom instructions specific to your site to help guide the AI in identifying spam, e.g. 'Be more aggressive about scanning posts not in English'."
@@ -736,6 +858,8 @@ en:
           result: "Result"
           reason: "Reasoning"
           llm: "LLM"
+          decision_model: "Decision model"
+          spam_probability: "Spam probability"
           scan_history: "Scan History"
           sent_message: "Sent Message"
           system_prompt: "System Prompt"
@@ -904,6 +1028,8 @@ en:
             finite: "Payloads kept %{detailed} days, summaries %{summary} days, then deleted"
 
       ai_agent:
+        automatic_image_tools: "Automatically uses all enabled image-generation tools"
+        no_image_tools: "No enabled image-generation tools."
         new_bot_option:
           label: "AI agent"
           description: "Creates the bot together with its language model, prompt, tools, and permissions."
@@ -1240,6 +1366,7 @@ en:
           system_one: "System One"
           typesafe: "TypeSafe"
           open_ai: "OpenAI Decisions"
+          CDCK: "CDCK"
 
       mcp_servers:
         short_title: "MCP servers"
@@ -1334,6 +1461,7 @@ en:
         type: "Type"
         provider: "Provider"
         edit: "Edit"
+        seeded_warning: "This is pre-configured on your site and cannot be edited."
         choose_type: "What kind of model do you want to add?"
         select_type: "Select"
         types:
@@ -1640,12 +1768,12 @@ en:
           bge-large-en: "Open-source English-only model, self-hosted"
           bge-m3: "Open-source multilingual model for longer content, self-hosted"
           multilingual-e5-large: "Open-source multilingual model, self-hosted"
+          cohere-embed-v4: "Cohere's multilingual model, hosted on AWS Bedrock"
           gemini-embedding-001: "Google's hosted multilingual model"
           text-embedding-3-large: "OpenAI's most accurate embedding model"
           text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
           text-embedding-ada-002: "OpenAI's previous-generation model, superseded by text-embedding-3-small"
         edit: "Edit"
-        seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
           title: "Run test"
           running: "Running test..."
@@ -1653,6 +1781,7 @@ en:
           failure: "Attempting to generate an embedding resulted in: %{error}"
         hints:
           dimensions_warning: "Once saved, this value can't be changed."
+          bedrock_api_key: "A Bedrock API key, or the secret access key when an access key ID is set. Leave empty to use an IAM role or the server's AWS credentials."
           matryoshka_dimensions: "Defines the size of nested embeddings used for hierarchical or multi-layered representation of data, similar to how nested dolls fit within each other."
           embed_prompt: "Task instruction prefix when generating embeddings of forum content. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
           search_prompt: "Task instruction prefix when generating embeddings of search queries. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
@@ -1678,10 +1807,15 @@ en:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Custom"
         provider_fields:
           model_name: "Model name"
+          model_id: "Model ID or inference profile"
+          region: "AWS region"
+          access_key_id: "AWS access key ID"
+          role_arn: "IAM role ARN"
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:

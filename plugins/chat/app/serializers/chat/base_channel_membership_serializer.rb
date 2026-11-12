@@ -4,6 +4,7 @@ module Chat
   class BaseChannelMembershipSerializer < ApplicationSerializer
     attributes :following,
                :muted,
+               :muted_until,
                :notification_level,
                :chat_channel_id,
                :last_read_message_id,
@@ -25,11 +26,11 @@ module Chat
     end
 
     def include_has_unseen_pins?
-      SiteSetting.chat_pinned_messages && scope&.authenticated?
+      scope&.authenticated?
     end
 
     def include_last_viewed_pins_at?
-      SiteSetting.chat_pinned_messages && scope&.authenticated?
+      scope&.authenticated?
     end
   end
 end

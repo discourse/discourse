@@ -127,6 +127,81 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
     expect { tool.invoke }.not_to change { DiscourseWorkflows::Workflow.count }
   end
 
+  describe "#compact_approval_details" do
+    let(:long_operations) do
+      operations.map do |operation|
+        next operation if operation["op"] != "add_node"
+
+        operation.deep_merge("node" => { "parameters" => { "message" => "Long message. " * 80 } })
+      end
+    end
+    let(:draft_attributes) { { name: "Manual log", operations: long_operations } }
+
+    def preview_payload(details)
+      code = Nokogiri::HTML5.fragment(PrettyText.cook(details)).at_css("pre code")
+      JSON.parse(code.text)
+    end
+
+    def graph(payload)
+      payload
+        .dig("configuration", "operations")
+        .map do |operation|
+          operation.slice("op", "client_id", "from", "to").merge(
+            operation.fetch("node", {}).slice("name", "type"),
+          )
+        end
+    end
+
+    it "uses compact JSON when the formatted preview does not fit" do
+      details = tool.compact_approval_details(max_length: tool.details.length - 1)
+      payload = preview_payload(details)
+
+      expect(details.length).to be < tool.details.length
+      expect(payload).not_to have_key("shortened")
+      expect(payload["configuration"]).to eq(draft_attributes.deep_stringify_keys)
+    end
+
+    it "shortens long setting values but keeps the graph" do
+      details = tool.compact_approval_details(max_length: 1_200)
+      payload = preview_payload(details)
+      message = payload.dig("configuration", "operations", 1, "node", "parameters", "message")
+
+      expect(details.length).to be <= 1_200
+      expect(payload["shortened"]).to eq(true)
+      expect(message).to end_with("...")
+      expect(message.length).to be < long_operations.dig(1, "node", "parameters", "message").length
+      expect(graph(payload)).to eq(graph("configuration" => draft_attributes.deep_stringify_keys))
+    end
+
+    it "drops settings when shortened values still do not fit" do
+      details = tool.compact_approval_details(max_length: 500)
+      payload = preview_payload(details)
+
+      expect(details.length).to be <= 500
+      expect(payload["shortened"]).to eq(true)
+      expect(payload.dig("configuration", "operations", 1, "node")).to eq(
+        "type" => "action:log",
+        "name" => "Log",
+      )
+      expect(graph(payload)).to eq(graph("configuration" => draft_attributes.deep_stringify_keys))
+    end
+
+    it "falls back to a shortened notice when even the graph does not fit" do
+      details = tool.compact_approval_details(max_length: 120)
+
+      expect(details.length).to be <= 120
+      expect(details).to start_with(
+        I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened"),
+      )
+    end
+
+    it "never includes the draft token" do
+      [1_200, 500, 120].each do |max_length|
+        expect(tool.compact_approval_details(max_length:)).not_to include(token)
+      end
+    end
+  end
+
   it "rejects secret-bearing script validation metadata in signed drafts" do
     tool.parameters[:draft_token] = DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(
       draft_attributes.merge(

@@ -7,26 +7,49 @@
 ru:
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_boards: "Для корректной работы требуется включение досок."
+      nodes:
+        "action:create_board_column": "Создать столбец доски"
+        "action:create_board": "Создать доску"
+        "trigger:card_moved": "Карточка перемещена"
+      node_descriptions:
+        "action:create_board_column": "Создайте столбец на доске с необязательными значком, цветом, тегом и сортировкой по умолчанию."
+        "action:create_board": "Создайте доску с правами доступа и, при необходимости, ограничениями по тегам и категориям."
+        "trigger:card_moved": "Срабатывает при перемещении карты из одного столбца в другой на игровом поле."
       create_board_column:
+        board_id: "Доска"
+        board_id_description: "Выберите доску или используйте идентификатор доски, полученный на предыдущем шаге."
         title: "Название"
         icon: "Значок"
         color: "Цвет"
         tag_name: "Теги"
         default_sort_priority: "Приоритет"
+        default_sort_recency: "Новизна"
       create_board:
         name: "Название"
         slug: "Slug (текстовый идентификатор)"
         tag_names: "Теги"
         category_ids: "Категории"
+        acl_description: "Выберите, кто сможет просматривать, редактировать и управлять доской."
+      card_moved:
+        board_id: "Доска"
+        board_id_description: "Выберите доску, чтобы ограничить срабатывание этого триггера, или оставьте поле пустым для всех досок."
+        board_id_placeholder: "Все доски"
     boards:
       status:
         all: "Все"
         open: "Открытые"
         archived: "Архивные"
+      topic_pill:
+        title: "Эта тема находится в колонке %{column} на форуме %{board}."
+        multiple_title: "Эта тема находится на нескольких досках"
       board:
         remove_card: "Отозвать"
         new_topic: "Новая тема..."
         title: "Название"
+        notes: "Примечания"
+        notes_placeholder: "Добавить примечания..."
         tags: "Теги"
         assigned_to: "Назначен ответственный"
         view_topic: "Просмотреть тему"
@@ -47,11 +70,15 @@ ru:
           many: "Владельцы"
           other: "Владельцы"
       manage:
+        board: "доска"
+        title: "Доски"
         name: "Название"
         slug: "Slug (текстовый идентификатор)"
         constraint_categories: "Категории"
         constraint_tags: "Теги"
         advanced_settings: "Расширенные настройки"
+        get_started: "Досок пока нет. Создайте свою первую доску."
+        no_columns: "Столбцы не настроены"
         columns:
           remove: "Отозвать"
           column_title: "Название"
@@ -64,3 +91,11 @@ ru:
           move_to_status_closed: "Закрытое"
           show_advanced: "Показать расширенные параметры"
           hide_advanced: "Скрыть расширенные параметры"
+    keyboard_shortcuts_help:
+      boards:
+        title: "Доски"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          boards: "Доски"

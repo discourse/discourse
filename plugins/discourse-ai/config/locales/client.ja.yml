@@ -209,6 +209,8 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "AI で提案"
       ai_decoded_transcript:
         thinking: "思考中"
         tool: "ツール"
@@ -419,6 +421,8 @@ ja:
         short_title: "迷惑"
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
+        no_llm_selected: "なし"
+        no_decision_model_selected: "なし"
         custom_instructions: "カスタム指示"
         custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
@@ -700,6 +704,8 @@ ja:
         edit: "編集"
         delete: "削除"
         test: "テストを実行"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "名前"
         description: "説明"
@@ -723,6 +729,7 @@ ja:
         type: "タイプ"
         provider: "プロバイダー"
         edit: "編集"
+        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         select_type: "選択"
         types:
           embedding: "埋め込み"
@@ -920,7 +927,6 @@ ja:
         presets: "プリセットを選択..."
         configure_manually: "手動で構成"
         edit: "編集"
-        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         tests:
           title: "テストを実行"
           running: "テストを実行中…"
@@ -952,6 +958,7 @@ ja:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "カスタム"
         provider_fields:
@@ -1055,10 +1062,7 @@ ja:
           scroll_to_bottom: "一番下にスクロール"
           editing_post: "投稿を編集中"
       sentiments:
-        dashboard:
-          title: "センチメント"
         sidebar:
-          overview: "センチメントの概要"
           analysis: "センチメント分析"
         sentiment_analysis:
           share_chart: "チャートへのリンクをコピー"

@@ -72,7 +72,7 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       get "/admin/plugins/discourse-ai/ai-decision-models.json"
 
       serialized = response.parsed_body["ai_decision_models"].first
-      expect(serialized).to include("seeded" => true, "url" => "********")
+      expect(serialized).to include("seeded" => true, "url" => "********", "provider" => "CDCK")
       expect(serialized).not_to have_key("custom_headers")
       expect(serialized["credit_allocation"]).to include(
         "daily_credits" => 1000,
@@ -296,6 +296,15 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
           custom_type: "delete_ai_decision_model",
         ).count,
       ).to eq(1)
+    end
+
+    it "refuses to delete a decision model used for spam detection" do
+      AiModerationSetting.create!(setting_type: :spam, decision_model:)
+
+      delete "/admin/plugins/discourse-ai/ai-decision-models/#{decision_model.id}.json"
+
+      expect(response.status).to eq(409)
+      expect(DecisionModel.exists?(decision_model.id)).to eq(true)
     end
   end
 

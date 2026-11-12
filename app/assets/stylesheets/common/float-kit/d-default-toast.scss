@@ -1,11 +1,19 @@
 .fk-d-default-toast {
+  // The close button's footprint: an icon plus the button's own padding.
+  --fk-d-default-toast-close-size: calc(1em + (2 * 0.65em));
+  position: relative;
   display: flex;
   flex: 1 1 auto;
   padding: 0.5rem;
 
   &__close-container {
-    width: calc(40px - 0.5rem);
-    height: calc(1em + (2 * 0.65em));
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+  }
+
+  &:has(.fk-d-default-toast__progress-bar) &__close-container {
+    top: 5px;
   }
 
   &__icon-container {
@@ -72,6 +80,9 @@
     flex-direction: column;
     width: 100%;
     min-height: calc(1em + (2 * 0.65em));
+
+    // Keeps text clear of the close button, which sits over this corner.
+    padding-inline-end: calc(var(--fk-d-default-toast-close-size) - 0.5rem);
   }
 
   &__progress-bar {
@@ -98,7 +109,6 @@
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 1rem;
     margin-bottom: -0.5rem;
 
     .btn {

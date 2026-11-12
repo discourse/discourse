@@ -30,6 +30,7 @@ class ReviewableUserSerializer < ReviewableSerializer
   def attributes(*args)
     data = super
     data[:payload]&.delete("email") if !include_email?
+    data[:payload]&.delete("name") if !SiteSetting.enable_names? && !scope.is_admin?
     data
   end
 

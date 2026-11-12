@@ -204,6 +204,8 @@ pt:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhuma"
+        no_decision_model_selected: "Nenhuma"
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:

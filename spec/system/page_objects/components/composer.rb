@@ -26,6 +26,10 @@ module PageObjects
         page.has_no_css?(RICH_EDITOR)
       end
 
+      def has_no_onebox_images?(url:)
+        page.has_no_css?("#{RICH_EDITOR} .onebox[data-onebox-src='#{url}'] img[src]", visible: :all)
+      end
+
       def has_no_animated_images?
         page.has_no_css?("#{RICH_EDITOR} .composer-image-node img") do |image|
           image.evaluate_script("getComputedStyle(this).animationName") != "none"
@@ -96,6 +100,14 @@ module PageObjects
 
       def has_footer_toolbar?
         page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
+      end
+
+      def has_uncollapsed_footer_toolbar?
+        page.has_css?("#{@composer_id} .composer-footer__toolbar", wait: 2) do |toolbar|
+          panel = page.find("#{@composer_id} .composer-footer .submit-panel", wait: false)
+          toolbar.evaluate_script("this.getBoundingClientRect().width") >=
+            panel.evaluate_script("this.getBoundingClientRect().width")
+        end
       end
 
       def has_title_below_category_row?

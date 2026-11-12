@@ -5,7 +5,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, type AjaxError } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
@@ -100,6 +100,7 @@ export interface CategoryTypeMetadata {
   visible: boolean;
   description?: string;
   icon?: string | null;
+  svg_icon?: string | null;
   configuration_schema: Record<string, Record<string, unknown>[]>;
   [key: string]: unknown;
 }
@@ -458,10 +459,9 @@ export default class Category extends RestModel {
       data.include_permissions = true;
     }
 
-    // TODO(typescript-pending): ajax does not type response payloads yet.
-    const result = (await ajax("/categories/find", { data })) as {
+    const result = await ajax<{
       categories: CategoryFields[];
-    };
+    }>("/categories/find", { data });
 
     const categories = result["categories"].map(
       (category: CategoryFields | Category) => {
@@ -481,10 +481,12 @@ export default class Category extends RestModel {
   static async asyncFindBySlugPathWithID(
     slugPathWithID: string
   ): Promise<Category | undefined> {
-    // TODO(typescript-pending): ajax does not type response payloads yet.
-    const result = (await ajax("/categories/find", {
-      data: { slug_path_with_id: slugPathWithID },
-    })) as { categories: CategoryFields[] };
+    const result = await ajax<{ categories: CategoryFields[] }>(
+      "/categories/find",
+      {
+        data: { slug_path_with_id: slugPathWithID },
+      }
+    );
 
     const categories = result["categories"].map((category) =>
       Site.current().updateCategory(category)
@@ -1329,17 +1331,15 @@ export default class Category extends RestModel {
 
 const categoryMultiCache = new MultiCache(async (ids: number[]) => {
   try {
-    // TODO(typescript-pending): ajax does not type response payloads yet.
-    const { categories } = (await ajax("/categories/find", {
-      data: { ids },
-    })) as { categories: CategoryFields[] };
+    const { categories } = await ajax<{ categories: CategoryFields[] }>(
+      "/categories/find",
+      {
+        data: { ids },
+      }
+    );
     return new Map(categories.map((category) => [category.id, category]));
   } catch (error) {
-    // TODO(typescript-pending): ajax rejects with its jqXHR wrapper; remove when errors are typed.
-    if (
-      (error as { jqXHR?: { status?: number } }).jqXHR?.status ===
-      HTTP_NOT_FOUND
-    ) {
+    if ((error as AjaxError).jqXHR?.status === HTTP_NOT_FOUND) {
       return new Map();
     }
 

@@ -12,7 +12,7 @@ RSpec.describe "constants match ruby" do
 
   it "has the correct values" do
     parse("discourse/app/lib/constants.js")
-    parse("pretty-text/addon/emoji/version.js")
+    parse("discourse/pretty-text/emoji/version.js")
 
     priorities = ctx.eval("SEARCH_PRIORITIES")
     Searchable::PRIORITIES.each { |key, value| expect(priorities[key.to_s]).to eq(value) }

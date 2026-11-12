@@ -30,6 +30,22 @@ RSpec.describe ThemeSettingsManager::Objects do
     expect(theme.reload.settings[:objects_setting].value).to eq(new_value)
   end
 
+  it "rejects invalid root and nested object shapes before saving" do
+    setting = theme_setting[:objects_setting]
+    previous_value = setting.value
+    [
+      true,
+      1,
+      "{}",
+      "[1]",
+      [{ "name" => "Section", "links" => [1] }],
+      [{ "links" => {} }],
+    ].each do |value|
+      expect { setting.value = value }.to raise_error(Discourse::InvalidParameters)
+      expect(theme.reload.settings[:objects_setting].value).to eq(previous_value)
+    end
+  end
+
   it "removes disallowed group ids before saving groups properties" do
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
       objects_setting:
@@ -94,6 +110,98 @@ RSpec.describe ThemeSettingsManager::Objects do
       Discourse::InvalidParameters,
       "The property at JSON Pointer '/0/links/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be at most 20 characters long.",
     )
+  end
+
+  describe "tag properties" do
+    fab!(:tag) { Fabricate(:tag, name: "cat") }
+    fab!(:other_tag) { Fabricate(:tag, name: "dog") }
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        tag_styles:
+          type: objects
+          default: []
+          schema:
+            name: tag style
+            properties:
+              tags:
+                type: tags
+              position:
+                type: integer
+              children:
+                type: objects
+                schema:
+                  name: child
+                  properties:
+                    tags:
+                      type: tags
+      YAML
+      theme.save!
+    end
+
+    it "stores mixed IDs and source names as names in root and nested properties without mutating input" do
+      numeric_name_tag = Fabricate(:tag, name: tag.id.to_s)
+      objects = [
+        {
+          tags: [tag.id, numeric_name_tag.name, tag.name],
+          position: other_tag.id,
+          children: [{ "tags" => [other_tag.name, other_tag.id] }],
+        },
+      ]
+      original_objects = objects.deep_dup
+
+      theme.update_setting(:tag_styles, objects)
+
+      expected = [
+        {
+          "tags" => [tag.name, numeric_name_tag.name, tag.name],
+          "position" => other_tag.id,
+          "children" => [{ "tags" => [other_tag.name, other_tag.name] }],
+        },
+      ]
+      expect(theme.reload.theme_settings.find_by!(name: "tag_styles").json_value).to eq(expected)
+      expect(theme.settings[:tag_styles].value).to eq(expected)
+      expect(objects).to eq(original_objects)
+    end
+
+    it "rejects invalid tag values without changing the saved selection" do
+      theme.update_setting(:tag_styles, [{ tags: [tag.name] }])
+      setting = theme.reload.settings[:tag_styles]
+
+      [
+        [99_999_999],
+        [10**100],
+        [0],
+        [-1],
+        [tag.id.to_f],
+        [true],
+        [nil],
+        [{ id: tag.id }],
+        [[tag.id]],
+        tag.id,
+      ].each do |tags|
+        expect { setting.value = [{ tags: }] }.to raise_error(Discourse::InvalidParameters)
+        expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => [tag.name] }])
+      end
+    end
+
+    it "batches tag lookups across objects and nested properties" do
+      objects = Array.new(5) { { tags: [tag.id], children: [{ tags: [other_tag.id] }] } }
+      setting = theme.settings[:tag_styles]
+
+      queries = track_sql_queries { setting.value = objects }
+
+      expect(queries.grep(/FROM "tags"/).size).to eq(2)
+    end
+
+    it "does not add an ID lookup for source-name-only submissions" do
+      setting = theme.settings[:tag_styles]
+      objects = [{ tags: [tag.name] }]
+
+      queries = track_sql_queries { setting.value = objects }
+
+      expect(queries.grep(/FROM "tags"/).size).to eq(1)
+    end
   end
 
   describe "#categories" do

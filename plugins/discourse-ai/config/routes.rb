@@ -102,6 +102,14 @@ DiscourseAi::Engine.routes.draw do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
   end
 
+  scope module: :ai_moderation,
+        path: "/ai-moderation/dsa-classifications",
+        defaults: {
+          format: :json,
+        } do
+    post ":reviewable_id/suggest" => "dsa_classifications#suggest"
+  end
+
   scope module: :translation, path: "/translate", defaults: { format: :json } do
     post "/posts/:post_id" => "translation#translate"
     post "/topics/:topic_id" => "translation#schedule_topic"

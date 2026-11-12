@@ -114,7 +114,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show summary my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect badges]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -194,6 +194,7 @@ class UsersController < ApplicationController
         :primary_email,
         :user_status,
       )
+    users = users.where(active: true) if !guardian.is_staff?
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
 
@@ -249,6 +250,8 @@ class UsersController < ApplicationController
     end
 
     if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      ensure_external_ids_allowed!
+
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
@@ -556,6 +559,8 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      raise Discourse::NotFound unless guardian.can_see_profile?(inviter)
+
       can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
@@ -655,7 +660,10 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = target_user&.email
-    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
+    if !email && !SiteSetting.hide_email_address_taken?
+      email = params.permit(:email)[:email]
+      raise ActionController::ParameterMissing, :email if params.key?(:email) && email.nil?
+    end
     result = checker.check_username(username, email)
     result[:avatar_template] = User.default_template(username) if result[:available]
     render json: result
@@ -770,6 +778,10 @@ class UsersController < ApplicationController
       else
         user_params.except(:timezone, :title, :primary_group_id, :flair_group_id)
       end
+
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+      ensure_external_ids_allowed!
+    end
 
     user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
 
@@ -1195,8 +1207,12 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
-      # Log in the user unless they need to be approved
-      if Guardian.new(@user).can_access_forum?
+      # Log in the user unless they need to be approved or have a second factor
+      if !Guardian.new(@user).can_access_forum?
+        @needs_approval = true
+      elsif @user.totp_or_backup_codes_enabled? || @user.security_keys_enabled?
+        @redirect_to = path("/login")
+      else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
         log_on_user(@user, replay_anonymous_action: true)
 
@@ -1225,8 +1241,6 @@ class UsersController < ApplicationController
               payload = cookies.delete(:sso_payload)
           @redirect_to = session_sso_provider_url + "?" + payload
         end
-      else
-        @needs_approval = true
       end
     else
       return render_json_error(I18n.t("activation.already_done"))
@@ -1258,8 +1272,22 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new
     end
 
+    if @user.seen_before? ||
+         UserHistory.exists?(
+           action: UserHistory.actions[:deactivate_user],
+           target_user_id: @user.id,
+         )
+      raise Discourse::InvalidAccess.new(
+              nil,
+              nil,
+              custom_message: "activation.email_change_not_allowed",
+            )
+    end
+
     User.transaction do
       @user.lock!
+      raise Discourse::InvalidAccess.new if @user.active?
+
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
 
       primary_email = @user.primary_email
@@ -1928,7 +1956,10 @@ class UsersController < ApplicationController
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.where(user_id: user.id).each(&:destroy!)
+      UserAuthToken.transaction do
+        UserAuthToken.where(user_id: user.id).each(&:destroy!)
+        PushNotificationPusher.clear_subscriptions(user)
+      end
     end
 
     render json: success_json
@@ -2153,6 +2184,20 @@ class UsersController < ApplicationController
 
   def clean_custom_field_values(field)
     UserCreator.clean_custom_field_values(field, params.dig(:user_fields, field.id.to_s))
+  end
+
+  def ensure_external_ids_allowed!
+    raise Discourse::InvalidAccess if !full_access_api_key?
+  end
+
+  def full_access_api_key?
+    return false if !is_api?
+
+    key_value =
+      request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY] ||
+        request[Auth::DefaultCurrentUserProvider::API_KEY]
+
+    ApiKey.active.with_key(key_value).first&.api_key_scopes&.blank? == true
   end
 
   def password_reset_find_user(token, committing_change:)

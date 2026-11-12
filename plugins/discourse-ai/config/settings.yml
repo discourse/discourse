@@ -684,6 +684,11 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_dsa_classification_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
   ai_rag_images_enabled:
     default: false
     hidden: true
@@ -698,6 +703,11 @@ discourse_ai:
     default: "-27"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/translation"
+  ai_translation_locale_detector_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
     area: "ai-features/translation"
   ai_translation_post_raw_translator_agent:
     default: "-28"
@@ -770,7 +780,6 @@ discourse_ai:
   ai_translation_verbose_logs:
     default: false
     client: false
-    hidden: true
     area: "ai-features/translation"
 
   inferred_concepts_enabled:

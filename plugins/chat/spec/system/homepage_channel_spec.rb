@@ -73,7 +73,6 @@ RSpec.describe "Chat channel as the homepage" do
     fab!(:other_channel, :category_channel)
     fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
 
-    let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
     let(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
     before do
@@ -83,7 +82,7 @@ RSpec.describe "Chat channel as the homepage" do
       other_channel.add(current_user)
     end
 
-    it "lets the owner see the checklist under the channel header on the Chat homepage but not another channel" do
+    it "lets the owner see the checklist under the channel header on the Chat homepage and other channels" do
       visit("/")
 
       expect(channel_page.messages).to have_message(id: message_1.id)
@@ -102,27 +101,8 @@ RSpec.describe "Chat channel as the homepage" do
       sidebar.open_channel(other_channel)
 
       expect(channel_page.messages).to have_message(id: other_message.id)
-      expect(banner).to be_not_visible
+      expect(channel_page).to have_onboarding_banner_below_header
       expect_composer_in_viewport
-    end
-
-    it "lets the owner tick off chatting by sending a first message in the homepage channel" do
-      visit("/")
-
-      expect(banner).to have_step(
-        "start_posting",
-        title: I18n.t("js.chat.admin_onboarding.start_posting.title"),
-        description:
-          I18n.t("js.chat.admin_onboarding.start_posting.description", channel: channel_1.title),
-      )
-      expect(banner.step_not_completed?("start_posting")).to eq(true)
-
-      banner.click_step_action("start_posting")
-      expect(channel_page.composer).to be_focused
-
-      channel_page.send_message("Hello everyone")
-
-      expect(banner.step_completed?("start_posting")).to eq(true)
     end
 
     it "raises the checklist only once messages run beneath it" do
@@ -139,7 +119,6 @@ RSpec.describe "Chat channel as the homepage" do
     end
 
     it "keeps the pinned message bar and channel notices clear of the checklist" do
-      SiteSetting.chat_pinned_messages = true
       Fabricate(
         :chat_pinned_message,
         chat_message: message_1,

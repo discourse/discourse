@@ -238,6 +238,8 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      dsa_classification:
+        suggest: "YZ ile öner"
       copied: "Kopyalandı"
       ai_decoded_transcript:
         thinking: "Düşünme"
@@ -475,6 +477,8 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        no_llm_selected: "Hiçbiri"
+        no_decision_model_selected: "Hiçbiri"
         select_agent: "Ajanı seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
@@ -851,6 +855,8 @@ tr_TR:
         edit: "Düzenle"
         delete: "Sil"
         test: "Testi çalıştır"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"
@@ -938,6 +944,7 @@ tr_TR:
         type: "Tür"
         provider: "Sağlayıcı"
         edit: "Düzenle"
+        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         select_type: "Seç"
         types:
           embedding: "Gömme"
@@ -1149,7 +1156,6 @@ tr_TR:
         presets: "Ön ayar seçin..."
         configure_manually: "Manuel olarak yapılandırın"
         edit: "Düzenle"
-        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         tests:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."
@@ -1181,6 +1187,7 @@ tr_TR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Özel"
         provider_fields:
@@ -1300,10 +1307,7 @@ tr_TR:
           scroll_to_bottom: "En alta kaydır"
           editing_post: "Gönderi düzenleniyor"
       sentiments:
-        dashboard:
-          title: "Duyarlılık"
         sidebar:
-          overview: "Duyarlılığa genel bakış"
           analysis: "Duyarlılık analizi"
         sentiment_analysis:
           share_chart: "Bağlantıyı grafiğe kopyala"

@@ -15,10 +15,11 @@ module PrettyText
     "\u2068",
     "\u2069",
   ].freeze
-  DANGEROUS_BIDI_REGEXP = Regexp.new(DANGEROUS_BIDI_CHARACTERS.join("|")).freeze
+  DANGEROUS_BIDI_REGEXP = Regexp.new("(#{DANGEROUS_BIDI_CHARACTERS.join("|")})").freeze
 
   BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
   BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
+  NO_ONEBOX_LIMIT = "none"
 
   VIMEO_PLAYER_HOST = "player.vimeo.com"
   VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
@@ -183,6 +184,13 @@ module PrettyText
 
     opts[:hashtag_context] ||= "topic-composer"
 
+    watched_words_replace = WordWatcher.regexps_for_action(:replace)
+    if opts[:sanitize] == false && watched_words_replace.present?
+      # HTML replacements are raw HTML, so they can only be used when the
+      # cooked output is sanitized
+      watched_words_replace = watched_words_replace.transform_values { |attrs| attrs.except(:html) }
+    end
+
     # Any addition here must also be added to buildOptions in discourse-markdown-it.
     opt_input = {
       siteSettings: SiteSetting.client_settings_hash,
@@ -192,12 +200,13 @@ module PrettyText
       customEmojiTranslation: Plugin::CustomEmoji.translations,
       emojiDenyList: Emoji.denied,
       censoredRegexp: WordWatcher.serialized_regexps_for_action(:censor),
-      watchedWordsReplace: WordWatcher.regexps_for_action(:replace),
+      watchedWordsReplace: watched_words_replace,
       watchedWordsLink: WordWatcher.regexps_for_action(:link),
       additionalOptions: Site.markdown_additional_options,
       avatar_sizes: SiteSetting.avatar_sizes,
       hashtagTypesInPriorityOrder:
         HashtagAutocompleteService.ordered_types_for_context(opts[:hashtag_context]),
+      hashtagLookupLimit: HashtagAutocompleteService::HASHTAGS_PER_REQUEST,
       hashtagIcons: HashtagAutocompleteService.data_source_icon_map,
     }
 
@@ -208,8 +217,9 @@ module PrettyText
     opt_input[:topicId] = opts[:topic_id].to_i if opts[:topic_id]
     opt_input[:postId] = opts[:post_id].to_i if opts[:post_id]
     opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
+    opt_input[:oneboxLimit] = opts[:onebox_limit] if opts[:onebox_limit]
     opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
-    # Be careful disabling sanitization. We allow for custom emails
+    # keeps any HTML from the input, so only for input that is already safe
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false
 
     protect do
@@ -290,21 +300,35 @@ module PrettyText
   def self.strip_hidden_unicode_bidirectional_characters(doc)
     return if !DANGEROUS_BIDI_REGEXP.match?(doc.content)
 
+    title = I18n.t("post.hidden_bidi_character")
+
+    # Rewrites text nodes only, never serialized HTML, so attributes and escaped
+    # text can't be reparsed as markup
     doc
-      .css("code,pre")
-      .each do |code_tag|
-        next if !DANGEROUS_BIDI_REGEXP.match?(code_tag.content)
+      .xpath(".//text()[ancestor::code or ancestor::pre]")
+      .each do |text_node|
+        next if !DANGEROUS_BIDI_REGEXP.match?(text_node.content)
 
-        DANGEROUS_BIDI_CHARACTERS.each do |bidi|
-          next if !code_tag.content.include?(bidi)
+        fragment = doc.document.fragment
+        text_node
+          .content
+          .split(DANGEROUS_BIDI_REGEXP)
+          .each do |part|
+            next if part.empty?
 
-          formatted = "&lt;U+#{bidi.ord.to_s(16).upcase}&gt;"
-          code_tag.inner_html =
-            code_tag.inner_html.gsub(
-              bidi,
-              "<span class=\"bidi-warning\" title=\"#{I18n.t("post.hidden_bidi_character")}\">#{formatted}</span>",
-            )
-        end
+            fragment << if DANGEROUS_BIDI_CHARACTERS.include?(part)
+              doc.document.create_element(
+                "span",
+                "<U+#{part.ord.to_s(16).upcase}>",
+                class: "bidi-warning",
+                title:,
+              )
+            else
+              doc.document.create_text_node(part)
+            end
+          end
+
+        text_node.replace(fragment)
       end
   end
 

@@ -233,6 +233,8 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Подсказки от AI"
       copied: "Скопировано"
       ai_decoded_transcript:
         tool: "Инструмент"
@@ -471,6 +473,8 @@ ru:
         short_title: "Спам"
         title: "Настройте обработку спама"
         select_llm: "Выберите LLM"
+        no_llm_selected: "Нет"
+        no_decision_model_selected: "Нет"
         select_agent: "Выберите агента"
         custom_instructions: "Пользовательские инструкции"
         custom_instructions_help: "Пользовательские инструкции для вашего сайта помогут AI выявить спам, например, «Более придирчиво проверяй публикации не на английском языке»."
@@ -772,6 +776,8 @@ ru:
         edit: "Изменить"
         delete: "Удалить"
         test: "Выполнить тест"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -800,6 +806,7 @@ ru:
         type: "Тип"
         provider: "Поставщик"
         edit: "Изменить"
+        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         select_type: "Выбрать"
         types:
           embedding: "Встраивание"
@@ -1002,7 +1009,6 @@ ru:
         presets: "Выберите пресет..."
         configure_manually: "Настроить вручную"
         edit: "Изменить"
-        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         tests:
           title: "Выполнить тест"
           running: "Запуск теста..."
@@ -1034,6 +1040,7 @@ ru:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Другое"
         provider_fields:
@@ -1141,10 +1148,7 @@ ru:
           scroll_to_bottom: "Прокрутка вниз"
           editing_post: "Редактирование поста"
       sentiments:
-        dashboard:
-          title: "Настроение"
         sidebar:
-          overview: "Обзор настроений"
           analysis: "Анализ настроений"
         sentiment_analysis:
           share_chart: "Копировать ссылку на диаграмму"

@@ -22,6 +22,7 @@ export default <template>
     @id={{@model.theme.id}}
     @routeToRedirect="adminCustomizeThemes.show"
     @schema={{@model.setting.objects_schema}}
+    @sendTagIds={{true}}
     @setting={{@model.setting}}
   />
 </template>

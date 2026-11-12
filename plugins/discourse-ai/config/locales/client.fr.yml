@@ -242,6 +242,8 @@ fr:
               description: "Autoriser l'étiquetage des publications créées par l'utilisateur système"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggérer avec l'IA"
       copied: "Copié "
       ai_decoded_transcript:
         thinking: "Raisonnement"
@@ -569,6 +571,8 @@ fr:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"
         select_llm: "Sélectionner le LLM"
+        no_llm_selected: "Jamais"
+        no_decision_model_selected: "Jamais"
         select_agent: "Sélectionner un agent"
         custom_instructions: "Instructions personnalisées"
         custom_instructions_help: "Des instructions personnalisées spécifiques à votre site pour aider l'IA à identifier le contenu indésirable, par exemple « Faites preuve d'agressivité dans l'analyse des publications qui ne sont pas en anglais »."
@@ -957,6 +961,8 @@ fr:
         edit: "Modifier"
         delete: "Supprimer"
         test: "Lancer le test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Serveurs MCP"
         new: "Nouveau serveur MCP"
@@ -1044,6 +1050,7 @@ fr:
         type: "Type"
         provider: "Fournisseur"
         edit: "Modifier"
+        seeded_warning: "Cela est préconfiguré sur votre site et ne peut pas être modifié."
         select_type: "Sélectionner"
         types:
           embedding: "Intégration"
@@ -1283,7 +1290,6 @@ fr:
         presets: "Sélectionnez un préréglage..."
         configure_manually: "Configurer manuellement"
         edit: "Modifier"
-        seeded_warning: "Cela est préconfiguré sur votre site et ne peut pas être modifié."
         tests:
           title: "Lancer le test"
           running: "Exécution du test..."
@@ -1315,6 +1321,7 @@ fr:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personnalisé"
         provider_fields:
@@ -1439,10 +1446,7 @@ fr:
           streaming_below: "Nouveau contenu ci-dessous"
           editing_post: "Modification de la publication"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Aperçu du sentiment"
           analysis: "Analyse du sentiment"
         sentiment_analysis:
           share_chart: "Copier le lien vers le graphique"

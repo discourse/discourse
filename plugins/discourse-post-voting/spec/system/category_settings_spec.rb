@@ -6,7 +6,7 @@ RSpec.describe "Post Voting Category Settings" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }

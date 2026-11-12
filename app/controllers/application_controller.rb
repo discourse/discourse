@@ -624,9 +624,8 @@ class ApplicationController < ActionController::Base
   end
 
   def rate_limit_second_factor!(user)
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
+    rate_limit_second_factor_by_ip!
+    rate_limit_second_factor_by_account!(user)
   end
 
   def login_method
@@ -635,6 +634,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_second_factor_by_ip!
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def rate_limit_second_factor_by_account!(user)
+    return if params[:second_factor_token].blank? || user.blank?
+    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+  end
 
   # This method is intended to be a no-op.
   # The only reason this `before_action` callback continues to exist is for backwards compatibility purposes which we cannot easily
@@ -669,6 +678,7 @@ class ApplicationController < ActionController::Base
   #   type    - a machine-readable description of the error
   #   status  - HTTP status code to return
   #   headers - extra headers for the response
+  #   skip_error_prefix - display a single error without the client's generic prefix
   def render_json_error(obj, opts = {})
     opts = { status: opts } if opts.is_a?(Integer)
     opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
@@ -830,7 +840,11 @@ class ApplicationController < ActionController::Base
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
-      return if request.path == path("/") && !cookies[:authentication_data]
+      # Only the login landing page is public; other routes at the root still require login.
+      if request.path == path("/") && !cookies[:authentication_data] &&
+           controller_name == "home_page" && action_name == "blank"
+        return
+      end
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")
@@ -846,6 +860,9 @@ class ApplicationController < ActionController::Base
     # - one_time_password scope is allowed
     if !current_user && params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect)
       begin
+        # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit
+        # length instead of parsing one, so reject non-strings before it.
+        raise OpenSSL::PKey::RSAError if !params[:user_api_public_key].is_a?(String)
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")
@@ -1002,12 +1019,15 @@ class ApplicationController < ActionController::Base
 
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
-      if SiteSetting.allow_index_in_robots_txt
-        response.headers["X-Robots-Tag"] = "noindex"
-      else
-        response.headers["X-Robots-Tag"] = "noindex, nofollow"
-      end
+      response.headers["X-Robots-Tag"] = noindex_header_value
     end
+  end
+
+  # "noindex", or "noindex, nofollow" when the whole site is kept out of
+  # search engines, so a page-level noindex never drops the site-wide
+  # directive.
+  def noindex_header_value
+    SiteSetting.allow_index_in_robots_txt ? "noindex" : "noindex, nofollow"
   end
 
   def add_noindex_header_to_non_canonical
@@ -1016,6 +1036,29 @@ class ApplicationController < ActionController::Base
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
     end
+  end
+
+  # Whether search engines are told not to index a topic. Core only keeps
+  # unlisted topics out; the `topic_noindex` modifier receives that decision
+  # and the topic, so a plugin can send noindex for other topics too. It runs
+  # on every request that reaches the controller, so a topic that is flagged
+  # or moved follows once the anonymous cache (one minute) has expired.
+  def topic_noindex?(topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
+  end
+
+  # Sends that decision on a response that reproduces the topic: its page in
+  # any format, or the raw text of its posts.
+  def add_topic_noindex_header(topic)
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic && topic_noindex?(topic)
+  end
+
+  # Whether search engines are told not to index a topic list that loads a
+  # category: its own pages, `?category=` lists and tag pages within it.
+  # Core indexes them all; the `category_noindex` modifier receives `false`
+  # and the category, so a plugin can send noindex for a category.
+  def category_noindex?(category)
+    DiscoursePluginRegistry.apply_modifier(:category_noindex, false, category)
   end
 
   def set_cross_origin_opener_policy_header
@@ -1098,7 +1141,11 @@ class ApplicationController < ActionController::Base
       links.push(*@asset_preload_links)
     end
 
-    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
+    return if links.blank?
+
+    # The header may already carry other links, such as a Markdown alternate.
+    name = GlobalSetting.early_hint_header_name
+    response.headers[name] = [response.headers[name], *links].compact.join(", ")
   end
 
   def spa_boot_request?

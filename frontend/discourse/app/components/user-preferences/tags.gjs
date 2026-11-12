@@ -1,9 +1,13 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function updateTags(model, field, tags) {
+  model.set(field, tags);
+}
 
 const Tags = <template>
   {{#if @siteSettings.tagging_enabled}}
@@ -16,6 +20,7 @@ const Tags = <template>
         <TagChooser
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
+          @onChange={{fn updateTags @model "watched_tags"}}
           @options={{hash allowAny=false}}
           @tags={{@model.watched_tags}}
           @unlimitedTagCount={{true}}
@@ -30,6 +35,7 @@ const Tags = <template>
         <TagChooser
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
+          @onChange={{fn updateTags @model "tracked_tags"}}
           @options={{hash allowAny=false}}
           @tags={{@model.tracked_tags}}
           @unlimitedTagCount={{true}}
@@ -46,6 +52,7 @@ const Tags = <template>
         <TagChooser
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
+          @onChange={{fn updateTags @model "watching_first_post_tags"}}
           @options={{hash allowAny=false}}
           @tags={{@model.watching_first_post_tags}}
           @unlimitedTagCount={{true}}
@@ -62,6 +69,7 @@ const Tags = <template>
         <TagChooser
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
+          @onChange={{fn updateTags @model "muted_tags"}}
           @options={{hash allowAny=false}}
           @tags={{@model.muted_tags}}
           @unlimitedTagCount={{true}}

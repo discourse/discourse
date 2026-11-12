@@ -104,10 +104,11 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
+    channel = channel_from_params
     render_serialized(
-      channel_from_params,
+      channel,
       Chat::ChannelSerializer,
-      membership: channel_from_params.membership_for(current_user),
+      membership: current_user && channel.membership_for(current_user),
       root: "channel",
       include_extra_info: true,
     )
@@ -136,11 +137,19 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   private
 
+  def allow_anonymous_public_chat_access?
+    action_name == "show" && anonymous_public_chat_access_enabled?
+  end
+
   def channel_from_params
     @channel ||=
       begin
         channel = Chat::Channel.find(params.require(:channel_id))
-        guardian.ensure_can_join_chat_channel!(channel)
+        if allow_anonymous_public_chat_access?
+          raise Discourse::NotFound if !guardian.can_preview_anonymous_public_chat_channel?(channel)
+        else
+          guardian.ensure_can_join_chat_channel!(channel)
+        end
         channel
       end
   end

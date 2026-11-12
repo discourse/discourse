@@ -47,6 +47,18 @@ RSpec.describe UserApiKeyClientsController do
       end
     end
 
+    context "with a non-string public_key" do
+      before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
+
+      it "returns a 400 without generating an RSA keypair" do
+        post "/user-api-key-client.json",
+             params: args.merge(scopes: "user_status", public_key: 4_096),
+             as: :json
+        expect(response.status).to eq(400)
+        expect(UserApiKeyClient.where(client_id: args[:client_id]).exists?).to eq(false)
+      end
+    end
+
     context "with only empty/blank scope tokens" do
       it "rejects scopes that resolve to an empty list after splitting" do
         post "/user-api-key-client.json", params: args.merge(scopes: ",")
@@ -88,6 +100,17 @@ RSpec.describe UserApiKeyClientsController do
             )
           expect(client.present?).to eq(true)
           expect(client.scopes.map(&:name)).to match_array(["user_status"])
+        end
+
+        it "stores a repeated scope only once" do
+          SiteSetting.allow_user_api_key_client_scopes = "user_status|notifications"
+
+          post "/user-api-key-client.json",
+               params: args.merge(scopes: "user_status,notifications,user_status")
+          expect(response.status).to eq(200)
+
+          client = UserApiKeyClient.find_by(client_id: args[:client_id])
+          expect(client.scopes.map(&:name)).to contain_exactly("user_status", "notifications")
         end
 
         context "if the client is already registered" do

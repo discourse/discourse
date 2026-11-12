@@ -4,18 +4,27 @@ module DiscourseAi
   module Discoveries
     class Synthesis
       Result =
-        Struct.new(:answerable, :source_refs, :title, :answer, :follow_up, keyword_init: true)
+        Struct.new(
+          :answerable,
+          :source_refs,
+          :title,
+          :answer,
+          :follow_up,
+          :no_answer_reason,
+          keyword_init: true,
+        )
       PLACEHOLDER_ANSWERS = %w[true false null undefined none].freeze
       SOURCE_REFERENCE_PATTERN =
         /[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\))(?:[ \t]*,[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\)))*/i
       SOURCES_SECTION_PATTERN =
         /\n{2,}(?:\#{1,6}\s*)?(?:\*\*|__)?(?:sources|references)\s*:?(?:\*\*|__)?\s*\n.*\z/im
 
-      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
+      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil, feature_context: {})
         @user = user
         @ai_agent = ai_agent
         @llm_model = llm_model
         @cancel_manager = cancel_manager
+        @feature_context = feature_context
       end
 
       def call(
@@ -26,11 +35,7 @@ module DiscourseAi
         summary_detail: :balanced,
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
-        if candidates.empty?
-          return(
-            Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
-          )
-        end
+        return empty_result(:no_candidates) if candidates.empty?
         related_count = normalized_related_count(related_count)
         original_query_locale = normalized_original_query_locale(original_query_locale)
 
@@ -63,7 +68,7 @@ module DiscourseAi
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"", follow_up: +"" }
 
-        bot.reply(context) do |partial, _, type|
+        bot.reply(context, llm_args: { feature_context: @feature_context }) do |partial, _, type|
           next if type != :structured_output
 
           answerable = partial.read_buffered_property(:answerable)
@@ -99,10 +104,9 @@ module DiscourseAi
             answer: answer_without_source_references(values[:answer]),
             follow_up: values[:follow_up].to_s.strip,
           )
-        if !result.answerable || result.source_refs.empty? ||
-             !self.class.meaningful_answer?(result.answer)
-          return empty_result
-        end
+        return empty_result(:abstained) if !result.answerable
+        return empty_result(:unresolved_sources) if result.source_refs.empty?
+        return empty_result(:empty_answer) if !self.class.meaningful_answer?(result.answer)
 
         result
       end
@@ -136,8 +140,15 @@ module DiscourseAi
           .first(related_count)
       end
 
-      def empty_result
-        Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
+      def empty_result(no_answer_reason)
+        Result.new(
+          answerable: false,
+          source_refs: [],
+          title: "",
+          answer: "",
+          follow_up: "",
+          no_answer_reason:,
+        )
       end
 
       def answer_without_source_references(answer)

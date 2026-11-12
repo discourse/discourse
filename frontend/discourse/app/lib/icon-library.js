@@ -1,4 +1,3 @@
-import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
@@ -168,14 +167,6 @@ registerIconRenderer({
       html = `<span class="svg-icon-title" title="${escape(
         i18n(params.title)
       )}">${html}</span>`;
-    }
-
-    if (params.translatedtitle) {
-      deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
-        since: "2.9.0.beta6",
-        id: "discourse.icon-renderer-translatedtitle",
-      });
-      params.translatedTitle = params.translatedtitle;
     }
 
     if (params.translatedTitle) {

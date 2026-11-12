@@ -375,6 +375,7 @@ zh_CN:
       new_event: "新活动"
       onebox:
         all_day: "全天"
+        all_day_range: "全天 · %{start} → %{end}"
       notifications:
         before_event_reminder: "活动即将开始"
         after_event_reminder: "活动已结束"

@@ -76,7 +76,7 @@ const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
 const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
 const SAVE_BTN = ".schema-setting-editor__footer .btn-primary";
 
-function renderEditor(setting) {
+function renderEditor(setting, { sendTagIds = false } = {}) {
   return render(
     <template>
       <DialogHolder />
@@ -84,6 +84,7 @@ function renderEditor(setting) {
         @id="1"
         @routeToRedirect="adminCustomizeThemes.show"
         @schema={{setting.objects_schema}}
+        @sendTagIds={{sendTagIds}}
         @setting={{setting}}
       />
     </template>
@@ -359,6 +360,44 @@ module(
       assert
         .dom(inputFields.fields.id.errorElement)
         .hasText(i18n("admin.customize.schema.fields.required"));
+    });
+
+    test("string fields with textarea enabled", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "item",
+          properties: {
+            description: {
+              type: "string",
+              textarea: true,
+              validations: { max_length: 500 },
+            },
+          },
+        },
+        value: [{ description: "First line\nSecond line" }],
+      });
+      const textarea = '.schema-field[data-name="description"] textarea';
+
+      await renderEditor(setting);
+
+      assert
+        .dom(textarea)
+        .hasValue("First line\nSecond line", "renders the multiline string");
+      assert
+        .dom(textarea)
+        .hasAttribute(
+          "maxlength",
+          "500",
+          "retains the configured length limit"
+        );
+
+      await fillIn(textarea, "Updated first line\nUpdated second line");
+
+      assert.deepEqual(
+        await captureSavedValue(this.owner),
+        [{ description: "Updated first line\nUpdated second line" }],
+        "saves the edited string with its line breaks"
+      );
     });
 
     test("input fields of type integer", async function (assert) {
@@ -812,6 +851,70 @@ module(
       await click(TOP_LEVEL_ADD_BTN);
 
       assert.dom(tree.nodes[1].textElement).hasText("category 2");
+    });
+
+    test("submits tag IDs alongside existing names and retains localized labels between objects", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          identifier: "tags",
+          properties: {
+            name: { type: "string" },
+            tags: { type: "tags" },
+          },
+        },
+        value: [
+          { name: "first", tags: ["dog", "123"] },
+          { name: "second", tags: [] },
+        ],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting, { sendTagIds: true });
+
+      let tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      await tags.expand();
+      await tags.selectRowByValue(1);
+      await tags.collapse();
+
+      assert.strictEqual(tags.header().name(), "dog,123,猫");
+      assert.dom(tree.nodes[0].textElement).hasText("dog,123,猫");
+
+      setting.set("metadata", { property_descriptions: {} });
+      await click(tree.nodes[1].element);
+      await click(tree.nodes[0].element);
+
+      tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      assert.strictEqual(tags.header().name(), "dog,123,猫");
+
+      assert.deepEqual(await captureSavedValue(this.owner), [
+        { name: "first", tags: ["dog", "123", 1] },
+        { name: "second", tags: [] },
+      ]);
+    });
+
+    test("keeps tag name submissions when ID submissions are not enabled", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          properties: { tags: { type: "tags" } },
+        },
+        value: [{ tags: [] }],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting);
+
+      const tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      await tags.expand();
+      await tags.selectRowByValue(1);
+      await tags.collapse();
+
+      assert.deepEqual(await captureSavedValue(this.owner), [{ tags: ["猫"] }]);
     });
 
     test("input fields of type tags which is required", async function (assert) {

@@ -238,6 +238,8 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Voorstellen met AI"
       copied: "Gekopieerd"
       ai_decoded_transcript:
         thinking: "Denken"
@@ -475,6 +477,8 @@ nl:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
         select_llm: "Selecteer LLM"
+        no_llm_selected: "Geen"
+        no_decision_model_selected: "Geen"
         select_agent: "Selecteer agent"
         custom_instructions: "Aangepaste instructies"
         custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
@@ -851,6 +855,8 @@ nl:
         edit: "Bewerken"
         delete: "Verwijderen"
         test: "Test uitvoeren"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -938,6 +944,7 @@ nl:
         type: "Type"
         provider: "Provider"
         edit: "Bewerken"
+        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         select_type: "Selecteren"
         types:
           embedding: "Insluiting"
@@ -1149,7 +1156,6 @@ nl:
         presets: "Selecteer een preset..."
         configure_manually: "Handmatig configureren"
         edit: "Bewerken"
-        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         tests:
           title: "Test uitvoeren"
           running: "Test uitvoeren..."
@@ -1181,6 +1187,7 @@ nl:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Aangepast"
         provider_fields:
@@ -1300,10 +1307,7 @@ nl:
           scroll_to_bottom: "Naar beneden scrollen"
           editing_post: "Bericht bewerken "
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Sentimentoverzicht"
           analysis: "Sentimentanalyse"
         sentiment_analysis:
           share_chart: "Link naar grafiek kopiëren"

@@ -132,7 +132,7 @@ module DiscourseAi
                 output_thinking: output_thinking,
               )
 
-          client = build_sdk_client
+          client = build_sdk_client(cancel_manager)
 
           begin
             if @streaming_mode
@@ -320,14 +320,29 @@ module DiscourseAi
           tokenizer.size(prompt.system_prompt.to_s + " " + prompt.messages.to_s)
         end
 
-        def build_sdk_client
+        def build_sdk_client(cancel_manager = nil)
           require "aws-sdk-bedrockruntime" unless defined?(Aws::BedrockRuntime)
 
           region = llm_model.lookup_custom_param("region")
-          client_options = { region: region, http_read_timeout: TIMEOUT }
+          http_options = { http_read_timeout: TIMEOUT }
           # AWS SDK already retries modeled throttling, 5xx, and networking failures
           # by default. Keep Bedrock Converse on SDK-managed retries to avoid
           # double-retrying request streams in Discourse's HTTP retry loop.
+
+          if cancel_manager&.remaining_seconds
+            # Blocking SDK calls can't be interrupted, so the deadline has to
+            # bound every connection phase, and retries would multiply it.
+            timeout = cancel_manager.bound_timeout(TIMEOUT)
+            http_options = {
+              http_open_timeout: timeout,
+              http_read_timeout: timeout,
+              ssl_timeout: timeout,
+              retry_limit: 0,
+              max_attempts: 1,
+            }
+          end
+
+          client_options = { region: region, **http_options }
 
           role_arn = llm_model.lookup_custom_param("role_arn")
           access_key_id = llm_model.lookup_custom_param("access_key_id")
@@ -337,7 +352,7 @@ module DiscourseAi
             client_options[:credentials] = Aws::AssumeRoleCredentials.new(
               role_arn: role_arn,
               role_session_name: "discourse-bedrock-converse-#{Process.pid}",
-              client: Aws::STS::Client.new(region: region),
+              client: Aws::STS::Client.new(region: region, **http_options),
             )
           elsif access_key_id.present?
             client_options[:credentials] = Aws::Credentials.new(access_key_id, llm_model.api_key)

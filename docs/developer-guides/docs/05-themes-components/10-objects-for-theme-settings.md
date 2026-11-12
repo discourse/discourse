@@ -62,7 +62,16 @@ links:
 
 The above schema definition states that the `link` object has a `name` property of type `string` which means that only string values will be accepted for the property. Currently the following types are supported:
 
-- `string`: Value of property is stored as a string.
+- `string`: Value of property is stored as a string. Set `textarea: true` to use an expanding text area:
+
+  ```yaml
+  description:
+    type: string
+    textarea: true
+    validations:
+      max_length: 500
+  ```
+
 - `integer`: Value of property is stored as an integer.
 - `float`: Value of property is stored as a float.
 - `boolean`: Value of property is `true` or `false`.
@@ -86,6 +95,8 @@ The above schema definition states that the `link` object has a `name` property 
 - `groups`: Value of property is an array of valid group ids.
 - `tags`: Value of property is an array of valid tag names.
 - `icon`: Value of property is the name of a single icon from the Discourse icon set. Selected icons are automatically added to the sprite sheet, so they can be rendered without being registered separately.
+
+When updating an objects theme setting through the API, `tags` arrays can contain source tag names, integer tag IDs, or both. IDs are resolved to source names before validation and storage. Themes still receive arrays of source names. Numeric strings are treated as names, not IDs, and defaults must use names.
 
 With the schema defined, the default value of the setting can now be set by defining a array in yaml like so:
 

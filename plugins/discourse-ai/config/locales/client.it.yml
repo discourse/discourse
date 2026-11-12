@@ -163,6 +163,8 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggerisci con l'IA"
       copied: "Copiato"
       ai_decoded_transcript:
         tool: "Strumento"
@@ -328,6 +330,8 @@ it:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
         select_llm: "Seleziona LLM"
+        no_llm_selected: "Nessuna"
+        no_decision_model_selected: "Nessuna"
         custom_instructions: "Istruzioni personalizzate"
         custom_instructions_help: "Istruzioni personalizzate specifiche per il tuo sito per aiutare l'intelligenza artificiale a identificare lo spam, ad esempio \"Sii più aggressivo nell'analizzare i post in una lingua diversa dall'italiano\"."
         last_seven_days: "Ultimi 7 giorni"
@@ -595,6 +599,8 @@ it:
         edit: "Modifica"
         delete: "Elimina"
         test: "Esegui test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"
@@ -618,6 +624,7 @@ it:
         type: "Tipo"
         provider: "Fornitore"
         edit: "Modifica"
+        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         select_type: "Seleziona"
         types:
           embedding: "Integrazione"
@@ -794,7 +801,6 @@ it:
         presets: "Seleziona una preimpostazione..."
         configure_manually: "Configura manualmente"
         edit: "Modifica"
-        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."
@@ -826,6 +832,7 @@ it:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizzato"
         provider_fields:
@@ -928,10 +935,7 @@ it:
           uploads_in_progress: "Impossibile caricare mentre sono in corso altri caricamenti"
           scroll_to_bottom: "Scorri fino in fondo"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Panoramica del sentimento"
           analysis: "Analisi del sentimento"
         sentiment_analysis:
           share_chart: "Copia il link al grafico"

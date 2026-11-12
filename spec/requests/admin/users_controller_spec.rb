@@ -1539,14 +1539,24 @@ RSpec.describe Admin::UsersController do
         expect(another_user.primary_group_id).to eq(nil)
       end
 
-      it "remove user's primary group" do
+      it "removes the user's primary group and matching title" do
+        group.update!(primary_group: true, title: "Group title")
         group.add(another_user)
+        expect(another_user.reload.primary_group_id).to eq(group.id)
 
         put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
 
         expect(response.status).to eq(200)
         another_user.reload
         expect(another_user.primary_group_id).to eq(nil)
+        expect(another_user.title).to eq(nil)
+      end
+
+      it "allows clearing an already empty primary group" do
+        put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+        expect(response.status).to eq(200)
+        expect(another_user.reload.primary_group_id).to eq(nil)
       end
 
       it "updates user's title when it matches the previous primary group title" do
@@ -1604,6 +1614,31 @@ RSpec.describe Admin::UsersController do
 
       context "when moderators_manage_groups site setting is disabled" do
         before { SiteSetting.moderators_manage_groups = false }
+
+        it "preserves the primary group and title when the moderator cannot manage the group" do
+          group.update!(primary_group: true, title: "Group title")
+          group.add(another_user)
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+
+        it "allows a moderator who owns the group to remove it as primary group" do
+          group.update!(primary_group: true)
+          group.add(another_user)
+          group.add_owner(moderator)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(response.status).to eq(200)
+          expect(another_user.reload.primary_group_id).to eq(nil)
+        end
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)
@@ -2105,6 +2140,39 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         expect(reg_user.active).to eq(false)
+      end
+    end
+
+    context "when the user has a configured developer email" do
+      fab!(:developer_user) do
+        Fabricate(:inactive_user, username: "dev_account", email: "dev@example.com")
+      end
+      fab!(:email_domain_group) do
+        Fabricate(:group, automatic_membership_email_domains: "example.com")
+      end
+
+      before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
+
+      it "prevents a moderator from activating the account" do
+        sign_in(moderator)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
+      end
+
+      it "prevents an admin from activating the account" do
+        sign_in(admin)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
       end
     end
   end
@@ -3222,6 +3290,14 @@ RSpec.describe Admin::UsersController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "rejects self-merges without enqueueing a job" do
+        expect do
+          post "/admin/users/#{user.id}/merge.json", params: { target_username: user.username }
+        end.not_to change { Jobs::MergeUser.jobs.size }
+
+        expect(response.status).to eq(403)
+      end
 
       it "merges the source user into the target user" do
         Jobs.run_immediately!

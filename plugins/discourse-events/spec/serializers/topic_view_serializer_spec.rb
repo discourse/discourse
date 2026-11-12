@@ -291,6 +291,17 @@ RSpec.describe TopicViewSerializer do
       )
     end
 
+    it "is withheld from guests when the opening post is hidden" do
+      create_event(livestream: true).update!(allow_anonymous_livestream: true)
+      first_post.hide!(PostActionType.types[:spam])
+
+      json = parsed_json_for(nil)
+      opening_post = json.dig("post_stream", "posts").find { |post| post["id"] == first_post.id }
+
+      expect(json.keys).not_to include("chat_channel_id")
+      expect(opening_post["event"]).to be_nil
+    end
+
     it "is still included once the event is expired" do
       create_event(livestream: true)
 

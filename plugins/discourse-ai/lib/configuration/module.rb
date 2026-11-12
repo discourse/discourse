@@ -74,12 +74,17 @@ module DiscourseAi
               DISCORD,
               enabled_by_setting: "ai_discord_search_enabled",
               features: DiscourseAi::Configuration::Feature.discord_features,
+              extra_check: -> { DiscourseAi::Discord.missing_setup.empty? },
+              setup_check: -> { DiscourseAi::Discord.missing_setup.empty? },
+              status_lookup: -> { DiscourseAi::Discord.admin_status },
             ),
             new(
               INFERENCE_ID,
               INFERENCE,
               enabled_by_setting: "inferred_concepts_enabled",
               features: DiscourseAi::Configuration::Feature.inference_features,
+              # Nothing displays the concepts yet, so admins would pay for output they cannot see.
+              visible: false,
             ),
             new(
               AI_HELPER_ID,
@@ -98,12 +103,24 @@ module DiscourseAi
               TRANSLATION,
               enabled_by_setting: "ai_translation_enabled",
               features: DiscourseAi::Configuration::Feature.translation_features,
+              extra_check: -> { DiscourseAi::Translation.enabled? },
+              setup_check: -> { SiteSetting.content_localization_supported_locales.present? },
+              status_lookup: -> { DiscourseAi::Translation.admin_status },
             ),
             new(
               BOT_ID,
               BOT,
               enabled_by_setting: "ai_bot_enabled",
               features: DiscourseAi::Configuration::Feature.bot_features,
+              status_lookup: -> do
+                if SiteSetting.ai_bot_enabled
+                  {
+                    state: "on",
+                    label_key: "on_with_chatbot_agents",
+                    count: DiscourseAi::Configuration::Feature.lookup_bot_agent_ids.size,
+                  }
+                end
+              end,
             ),
             new(
               SPAM_ID,
@@ -116,7 +133,13 @@ module DiscourseAi
               EMBEDDINGS,
               enabled_by_setting: "ai_embeddings_enabled",
               features: DiscourseAi::Configuration::Feature.embeddings_features,
-              extra_check: -> { SiteSetting.ai_embeddings_semantic_search_enabled },
+              extra_check: -> { DiscourseAi::Embeddings.enabled? },
+              status_lookup: -> { DiscourseAi::Embeddings.admin_status },
+              model_names_lookup: -> do
+                EmbeddingDefinition.where(
+                  id: SiteSetting.ai_embeddings_selected_model.presence,
+                ).pluck(:display_name)
+              end,
             ),
             new(
               ADMIN_DASHBOARD_ID,
@@ -141,6 +164,7 @@ module DiscourseAi
               AUTOMATION_REPORTS_ID,
               AUTOMATION_REPORTS,
               enabled_by_setting: "discourse_automation_enabled",
+              toggleable: false,
               features: DiscourseAi::Configuration::Feature.ai_automation_report_scripts,
               extra_check: -> { has_scripts?(["llm_report"]) },
             )
@@ -148,6 +172,7 @@ module DiscourseAi
               AUTOMATION_TRIAGE_ID,
               AUTOMATION_TRIAGE,
               enabled_by_setting: "discourse_automation_enabled",
+              toggleable: false,
               features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
               extra_check: -> { has_scripts?(%w[llm_triage llm_agent_triage]) },
             )
@@ -168,6 +193,7 @@ module DiscourseAi
                     module_id,
                     mod_name.to_s,
                     enabled_by_setting: e[:enabled_by_setting],
+                    metadata_lookup: -> { e[:entry_point] ? { entry_point: e[:entry_point] } : {} },
                   )
                 end
               base_modules << new(
@@ -203,7 +229,11 @@ module DiscourseAi
         enabled_by_setting: nil,
         features: [],
         extra_check: nil,
-        visible: true
+        visible: true,
+        toggleable: true,
+        setup_check: nil,
+        status_lookup: nil,
+        model_names_lookup: nil
       )
         @id = id
         @name = name
@@ -211,12 +241,35 @@ module DiscourseAi
         @features = features
         @extra_check = extra_check
         @visible = visible
+        @toggleable = toggleable
+        @setup_check = setup_check
+        @status_lookup = status_lookup
+        @model_names_lookup = model_names_lookup
       end
 
       attr_reader :id, :name, :enabled_by_setting, :features
 
       def visible?
         @visible
+      end
+
+      # Whether the module's own prerequisites for being enabled are in place.
+      def setup_complete?
+        @setup_check.nil? || @setup_check.call
+      end
+
+      # A summary that replaces the generic on/off status in the admin features list.
+      def status
+        @status_lookup&.call
+      end
+
+      # The models shown for the module, when they are not the LLMs its features use.
+      def model_names
+        @model_names_lookup&.call
+      end
+
+      def toggle_setting
+        enabled_by_setting.presence if @toggleable
       end
 
       def enabled?

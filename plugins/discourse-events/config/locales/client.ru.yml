@@ -33,9 +33,28 @@ ru:
               label: ID темы
     discourse_events:
       title: "События"
+      livestream:
+        zoom:
+          join: "Присоединяйтесь к Zoom"
+          frame_title: "Вебинар в Zoom"
+          open_in_zoom: "Открыть в Zoom"
+          load_error: "Вы покинули вебинар, или нам не удается загрузить Zoom на этой странице."
+          too_early: "Вы сможете присоединиться к вебинару ближе к началу мероприятия."
+          view_topic: "Посмотреть тему мероприятия"
+        chat:
+          rsvp_to_event: "Зарегистрируйтесь на мероприятие, чтобы начать общение."
+          rsvp_to_event_with_link: "Зарегистрируйтесь на <a href='%{url}'>мероприятие</a> , чтобы начать общение."
+          rsvp_body: "Общайтесь с другими участниками до, во время и после мероприятия."
+      calendar_prompt:
+        title: "Добавить это событие в свой календарь?"
+        subscribed: 'Это событие будет добавлено в ваш <a href="%{calendarUrl}">календарь, на который вы подписаны</a>.'
+        subscribe: "Подпишись на свои мероприятия"
+        subscribe_with_preferences: "Подписаться на события или изменить настройки уведомлений"
       preferences:
         reminders:
+          title: "Напоминания о мероприятиях"
           preferences:
+            personal_message: "Отправить личное сообщение"
             notification: "Уведомления"
             none: "Нет"
         all_events_description: "Все события форума"
@@ -336,12 +355,18 @@ ru:
       search: "Поиск…"
       group_availability: "доступность %{group}"
     discourse_workflows:
+      nodes:
+        "trigger:event_participation_changed": "Изменение условий участия в мероприятии"
+      node_descriptions:
+        "trigger:event_participation_changed": "Срабатывает, когда пользователь добавляет, изменяет или отзывает своё подтверждение участия."
       post_event:
         topic_id: "ID темы"
+        topic_id_description: "Запуск происходит только для событий в этой теме. Оставьте поле пустым, чтобы запускать все события."
     discourse_post_event:
       new_event: "Новое событие"
       onebox:
         all_day: "Весь день"
+        all_day_range: "Весь день · %{start} → %{end}"
       notifications:
         before_event_reminder: "Мероприятие скоро начнется"
         after_event_reminder: "Мероприятие закончилось"
@@ -373,6 +398,9 @@ ru:
       edit_event: "Изменить мероприятие"
       export_event: "Экспорт мероприятия"
       created_by: "Создано"
+      created_and_hosted_by: "Создано и размещено"
+      hosted_by: "Ведущий:"
+      co_hosted_by: "Совместно организован"
       other_hosts:
         one: "и ещё %{count}"
         few: "и ещё %{count}"
@@ -400,8 +428,11 @@ ru:
         description_private: "Закрытые мероприятия принимают только имена групп для массовых приглашений."
         download_sample_csv: "Загрузить пример CSV-файла"
         send_bulk_invites: "Отправить приглашения"
+        add_attendee: "Добавить участника"
         group_selector_placeholder: "Выберите группу..."
         user_selector_placeholder: "Выберите пользователя..."
+        attendance_label: "Посещаемость"
+        recurring: "Обязательно посетите это мероприятие и все последующие мероприятия."
         inline_title: "Массовое приглашение"
         csv_title: "Массовое приглашение через CSV-файл"
       upcoming_events:
@@ -468,13 +499,24 @@ ru:
             private:
               title: "Закрытое"
               description: "К закрытому мероприятию могут присоединиться только приглашенные пользователи."
+      recording:
+        watch: "Посмотреть запись"
+        add: "Добавить ссылку на запись"
       recording_modal:
+        add_title: "Добавить запись"
+        edit_title: "Редактировать запись"
+        label: "Ссылка на запись"
         save: "Сохранить"
+        remove: "Удалить запись"
+        edit_reason: "Ссылка на запись обновлена."
+        no_event: "Информация о мероприятии в опубликованном сообщении отсутствовала."
       composer:
         name_placeholder: "Название события"
         end_date_placeholder: "Дата окончания"
         location_or_url_placeholder: "Добавить местоположение или URL"
+        location_placeholder: "Добавить местоположение"
         url_placeholder: "Добавить URL"
+        recording_placeholder: "Добавить ссылку на запись"
         max_attendees_placeholder: "Неограниченное количество участников"
         no_rsvps_label: "Не ведется учет посещаемости"
         description_placeholder: "Добавить описание события"
@@ -482,6 +524,8 @@ ru:
         create_event_button: "Создать мероприятие"
         action_title: "Создать новое событие"
         all_day: "Весь день"
+        livestream: "Прямая трансляция"
+        livestream_chat_disabled: "Включите чат для создания каналов прямых трансляций."
         reminder:
           units:
             minutes:
@@ -515,6 +559,7 @@ ru:
           desc: "Создать новое событие в этой категории"
         create_topic:
           label: "Создать тему"
+          desc: "Вместо мероприятия создайте отдельную тему для обсуждения."
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"

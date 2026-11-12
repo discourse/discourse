@@ -10,6 +10,7 @@
 register_asset "stylesheets/common/topic-voting.scss"
 
 register_svg_icon "check-to-slot"
+register_svg_icon "lightbulb"
 register_svg_icon "vote-up"
 register_svg_icon "vote-up-filled"
 

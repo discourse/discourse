@@ -30,13 +30,15 @@ export default class DToast extends Component<DToastSignature> {
   get duration() {
     const duration = this.args.toast.options.duration;
 
-    if (duration === "long") {
+    if (duration === "extra-long") {
+      return 15000;
+    } else if (duration === "long") {
       return 5000;
     } else if (duration === "short") {
       return 3000;
     } else {
       deprecated(
-        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short`, `long` or `extra-long` instead.",
         { id: "float-kit.d-toast.duration" }
       );
 

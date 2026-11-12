@@ -25,6 +25,7 @@ import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state"
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
   scrollListToTop,
@@ -241,7 +242,11 @@ export default class ChatThread extends Component {
     this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
       this,
       this.args.thread,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
   }
 
@@ -304,20 +309,37 @@ export default class ChatThread extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const [messages, meta] = this.processMessages(this.args.thread, result);
     if (!messages?.length) {
       return;
     }
 
-    this.messagesManager.addMessages(messages);
+    if (direction === FUTURE) {
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
+    }
     this.args.thread.details = meta;
 
-    if (direction === FUTURE) {
-      this.scrollToMessageId(messages[0].id, {
-        position: "end",
-        behavior: "auto",
-      });
-    } else if (direction === PAST) {
+    if (direction === PAST) {
       this.scrollToMessageId(messages.at(-1).id);
     }
 
@@ -377,6 +399,7 @@ export default class ChatThread extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+    this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
       this.chatNewMessageAnnouncer.notify(message, {
@@ -385,12 +408,21 @@ export default class ChatThread extends Component {
       });
     }
 
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
       shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
         isAtLiveEdge: this.paneState.isAtLiveEdge,
         isOwnMessage,
       }),
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
       isOwnMessage,

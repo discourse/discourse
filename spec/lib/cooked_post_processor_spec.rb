@@ -95,7 +95,7 @@ RSpec.describe CookedPostProcessor do
             class: "inline-onebox",
           },
           text: title,
-          count: 2,
+          count: 1,
         )
 
         expect(cpp.html).to have_tag("aside.onebox a", text: title, count: 1)
@@ -119,6 +119,92 @@ RSpec.describe CookedPostProcessor do
           text: not_oneboxed_url,
           count: 1,
         )
+      end
+    end
+
+    describe "when post has more oneboxes than max_oneboxes_per_post" do
+      let(:inline_url) { "https://example.com/inline" }
+      let(:first_url) { "https://example.com/first" }
+      let(:second_url) { "https://example.com/second" }
+
+      before do
+        SiteSetting.max_oneboxes_per_post = 1
+        SiteSetting.enable_inline_onebox_on_all_domains = true
+        Oneboxer.stubs(:cached_onebox).returns(nil)
+        Oneboxer.stubs(:onebox).returns(nil)
+        InlineOneboxer.stubs(:lookup).returns(nil)
+        InlineOneboxer.stubs(:lookup).with(inline_url, anything).returns(title: "Inline title")
+      end
+
+      def onebox_html(url)
+        "<aside class='onebox' data-onebox-src='#{url}'><article>#{url}</article></aside>"
+      end
+
+      def processed_html(post)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
+        cpp.post_process
+        cpp.html
+      end
+
+      it "gives the slot to the first onebox even when a later one is cached" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        post = Fabricate(:post, raw: "See #{inline_url} here\n\n#{first_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("a.inline-onebox", text: "Inline title")
+        expect(html).not_to have_tag("aside.onebox")
+        expect(html).not_to have_tag("a.onebox")
+      end
+
+      it "counts a cached embed that is not an aside" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns("<div class='video-onebox'></div>")
+        Oneboxer.stubs(:onebox).with(second_url, anything).returns(onebox_html(second_url))
+        post = Fabricate(:post, raw: "#{first_url}\n\n#{second_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("div.video-onebox")
+        expect(html).not_to have_tag("aside.onebox")
+      end
+
+      it "gives a repeated onebox its own slot" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        post = Fabricate(:post, raw: "#{first_url}\n\n#{first_url}\n\n#{second_url}")
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: first_url)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
+      end
+
+      it "counts oneboxes already rendered in raw HTML posts" do
+        Oneboxer.stubs(:onebox).with(second_url, anything).returns(onebox_html(second_url))
+        post = Fabricate(:post, cook_method: Post.cook_methods[:raw_html], raw: <<~RAW)
+          #{onebox_html(first_url)}
+          <p><a class="onebox" href="#{second_url}">#{second_url}</a></p>
+        RAW
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
+      end
+
+      it "limits oneboxes written as raw HTML" do
+        Oneboxer.stubs(:cached_onebox).with(first_url).returns(onebox_html(first_url))
+        Oneboxer.stubs(:cached_onebox).with(second_url).returns(onebox_html(second_url))
+        post = Fabricate(:post, raw: <<~RAW)
+          <a class="onebox" href="#{first_url}">#{first_url}</a>
+
+          <a class="onebox" href="#{second_url}">#{second_url}</a>
+        RAW
+
+        html = processed_html(post)
+
+        expect(html).to have_tag("aside.onebox", count: 1)
+        expect(html).to have_tag("a", without: { class: "onebox" }, text: second_url)
       end
     end
 
@@ -2093,6 +2179,22 @@ RSpec.describe CookedPostProcessor do
       end
     end
 
+    context "with a quote of a private message the author cannot see" do
+      let!(:pm) { Fabricate(:private_message_post, raw: "the private contents of this post") }
+      let(:cp) { Fabricate(:post, raw: <<~MARKDOWN) }
+            [quote="#{pm.user.username}, post: #{pm.post_number}, topic:#{pm.topic_id}"]
+            the private contents of this post
+            [/quote]
+            test
+          MARKDOWN
+
+      it "marks the quote as not found and never as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css("aside.quote.quote-modified")).to be_blank
+        expect(cpp.doc.css("aside.quote.quote-post-not-found")).to be_present
+      end
+    end
+
     context "with external discourse instance quote" do
       let(:cp) { Fabricate(:post, user: user_with_auto_groups, raw: <<~MARKDOWN.strip) }
         [quote="random_guy_not_from_our_discourse, post:2004, topic:401"]
@@ -2146,6 +2248,29 @@ RSpec.describe CookedPostProcessor do
       [/quote]
 
       and this is the third reply
+      RAW
+
+    let(:link) { "https://example.com/a-link" }
+
+    let(:raw4) { <<~RAW.strip }
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the “first” post
+      [/quote]
+
+      and **this** is the third reply #{link}
+      RAW
+
+    # The second "[/quote]" is inert text inside the code block once cooked, but a
+    # greedy cut up to it would leave the links below it live markup.
+    let(:raw5) { <<~RAW.strip }
+      [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+      this is the “first” post
+      [/quote]
+
+      ```
+      [/quote]
+      https://spam.example.com/offer
+      ```
       RAW
 
     before { SiteSetting.remove_full_quote = true }
@@ -2259,6 +2384,60 @@ RSpec.describe CookedPostProcessor do
 
       CookedPostProcessor.new(reply2).remove_full_quote_on_direct_reply
       expect(reply2.raw).to eq("quoting a post with a quote")
+    end
+
+    it "removes the quote when the reply links or formats text below it" do
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw4)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq("and **this** is the third reply #{link}")
+    end
+
+    it "removes the quote when a code block follows it" do
+      code = "```ruby\nputs \"hi\"\n```"
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: <<~RAW.strip)
+            [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
+            this is the “first” post
+            [/quote]
+
+            #{code}
+          RAW
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(code)
+    end
+
+    it "does nothing when removing the quote would change the rest of the post" do
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw5)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(raw5)
+      expect(reply.revisions.count).to eq(0)
+    end
+
+    it "does nothing when the quoted post has no text" do
+      textless =
+        Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: "![](/images/wizard.png)")
+      # A quote of a post whose cooked text is empty matches on empty text, so the
+      # guards pass with nothing in the quote to compare against.
+      raw = <<~RAW.strip
+        [quote="#{textless.user.username}, post:#{textless.post_number}, topic:#{topic.id}"]
+        [/quote]
+
+        ```
+        [/quote]
+        https://spam.example.com/offer
+        ```
+      RAW
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
+
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
+
+      expect(reply.raw).to eq(raw)
+      expect(reply.revisions.count).to eq(0)
     end
   end
 
@@ -2445,8 +2624,8 @@ RSpec.describe CookedPostProcessor do
   describe "#html" do
     it "escapes html entities in attributes per html5" do
       post = Fabricate(:post, user: user_with_auto_groups, raw: '<img alt="&<something>">')
-      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;<something>"></p>')
-      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;<something>"></p>')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;&lt;something&gt;"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;&lt;something&gt;"></p>')
     end
   end
 
