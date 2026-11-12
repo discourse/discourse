@@ -25,6 +25,7 @@ export default class SchemaSettingNewEditor extends Component {
   @autoTrackedArray history = [];
 
   schema = this.args.schema;
+  tagRecords = new Map();
   data = trackedArray(
     cloneJSON(this.args.setting.value).map((object) =>
       this.#prepareObject(object, this.schema)
@@ -114,6 +115,15 @@ export default class SchemaSettingNewEditor extends Component {
         )
         .filter(Boolean)
         .join(", ");
+    } else if (
+      this.args.sendTagIds &&
+      schema.properties[schema.identifier]?.type === "tags"
+    ) {
+      title = title?.map((tag) =>
+        typeof tag === "number"
+          ? this.tagRecords.get(tag)?.name || String(tag)
+          : tag
+      );
     }
 
     return title || `${schema.name} ${index + 1}`;
@@ -296,8 +306,10 @@ export default class SchemaSettingNewEditor extends Component {
               @label={{field.label}}
               @name={{field.name}}
               @onValueChange={{fn this.inputFieldChanged field}}
+              @sendTagIds={{@sendTagIds}}
               @setting={{@setting}}
               @spec={{field.spec}}
+              @tagRecords={{this.tagRecords}}
               @value={{get this.activeObject field.name}}
             />
           {{/each}}
