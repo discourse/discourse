@@ -22,8 +22,10 @@ a deferred, interactive Discourse discussion below each article.
 - Private working topics, frozen approved revisions, and preserved public discussions.
 - Durable paths, including historical date-based paths; automatic 301 aliases when
   changing an article path. Topic title edits never change the published path.
-  Imported paths retain case, plus signs, underscores, dots, commas, and encoded
-  plus/comma characters. Dated `/blog/archive/YYYY/MM/DD/...` paths are supported;
+  Imported paths retain case, plus signs, underscores, dots, commas, encoded
+  plus/comma characters, and percent-encoded UTF-8 such as `/%E6%97%A5%E6%9C%AC`
+  (stored with upper-case hex, as requests arrive). Dated
+  `/blog/archive/YYYY/MM/DD/...` paths are supported;
   other editorial and asset paths remain reserved. Paths cannot contain queries,
   fragments, traversal segments, or encoded separators.
 - On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
