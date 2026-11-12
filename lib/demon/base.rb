@@ -96,7 +96,7 @@ class Demon::Base
   end
 
   def stop
-    @started = false
+    cancel_replacement
 
     if @pid
       Process.kill(stop_signal, @pid)
@@ -167,14 +167,16 @@ class Demon::Base
   def start
     return if @pid || @started
 
-    if existing = already_running?
-      # should not happen ... so kill violently
-      log("Attempting to kill pid #{existing}")
-      Process.kill("TERM", existing)
-    end
-
     @started = true
-    run
+    return if @replacement&.alive?
+
+    if existing = already_running?
+      log("Stopping previous #{self.class.prefix} pid #{existing}")
+      Process.kill("TERM", existing)
+      @replacement = Thread.new { replace(existing) }
+    else
+      run
+    end
   end
 
   def run
@@ -187,6 +189,7 @@ class Demon::Base
         establish_app
         after_fork
       end
+    Discourse.resume_after_fork if defined?(Discourse)
 
     write_pid_file
   end
@@ -207,7 +210,41 @@ class Demon::Base
     false
   end
 
+  def self.running?(pid)
+    return alive?(pid) if !File.directory?("/proc")
+
+    stat = File.read("/proc/#{pid}/stat")
+    stat[stat.rindex(")") + 2] != "Z"
+  rescue SystemCallError
+    false
+  end
+
   private
+
+  def cancel_replacement
+    @started = false
+    @replacement&.join
+  end
+
+  def replace(existing)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + stop_timeout
+    killed = false
+    while @started && Demon::Base.running?(existing)
+      if !killed && Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        log("Previous #{self.class.prefix} pid #{existing} did not stop, killing", level: :warn)
+        begin
+          Process.kill("KILL", existing)
+        rescue Errno::ESRCH
+        end
+        killed = true
+      end
+      sleep 0.1
+    end
+
+    run if @started
+  rescue Exception => e
+    log_error(e)
+  end
 
   def verbose(msg)
     puts msg if @verbose
