@@ -51,8 +51,11 @@ class RouteMatcher
     # message_bus is not a rails route, special handling
     return true if actions.include?("message_bus") && request.fullpath =~ %r{\A/message-bus/.*/poll}
 
-    # logster is not a rails route, special handling
-    return true if actions.include?(Logster::Web) && request.fullpath =~ %r{\A/logs/.*\.json\z}
+    # logster is not a rails route, special handling. Only its read endpoints are
+    # allowed, matched on the path so that a query string can't change the match.
+    if actions.include?(Logster::Web)
+      return request.path.match?(%r{\A/logs/(messages|show/\h+)\.json\z})
+    end
 
     recognized_params = path_params_from_request(request)
     actions.include? "#{recognized_params[:controller]}##{recognized_params[:action]}"
