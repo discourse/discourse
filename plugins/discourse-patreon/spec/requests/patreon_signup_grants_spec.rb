@@ -65,4 +65,113 @@ RSpec.describe "Patreon group grants during signup" do
     expect(group.users.reload).not_to include(user)
     expect(user.custom_fields["patreon_id"]).to be_blank
   end
+
+  context "with DiscourseConnect" do
+    before do
+      SiteSetting.discourse_connect_url = "https://sso.example.com"
+      SiteSetting.discourse_connect_secret = "discourse-connect-secret"
+      SiteSetting.enable_discourse_connect = true
+    end
+
+    def discourse_connect_login(require_activation: false)
+      discourse_connect = DiscourseConnect.new(server_session:)
+      discourse_connect.nonce = SecureRandom.hex
+      discourse_connect.register_nonce("/")
+
+      payload = DiscourseConnectBase.new
+      payload.nonce = discourse_connect.nonce
+      payload.sso_secret = SiteSetting.discourse_connect_secret
+      payload.external_id = "patron"
+      payload.email = patron_email
+      payload.username = "patron"
+      payload.require_activation = require_activation
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(payload.payload)
+    end
+
+    it "grants patron groups during trusted login" do
+      discourse_connect_login
+
+      expect(response.status).to eq(302)
+      user = User.find_by!(username: "patron")
+      expect(session[:current_user_id]).to eq(user.id)
+      expect(user.custom_fields["patreon_id"]).to eq(patreon_id)
+      expect(group.users).to contain_exactly(user)
+      expect(other_group.users).to be_empty
+    end
+
+    it "defers grants until confirmation when the provider requires activation" do
+      discourse_connect_login(require_activation: true)
+
+      expect(response.status).to eq(302)
+      user = User.find_by!(username: "patron")
+      expect(session[:current_user_id]).to be_nil
+      expect(user.active?).to eq(false)
+      expect(user.custom_fields["patreon_id"]).to be_blank
+      expect(group.users).to be_empty
+
+      user.activate
+
+      expect(user.reload.custom_fields["patreon_id"]).to eq(patreon_id)
+      expect(group.users).to contain_exactly(user)
+    end
+  end
+
+  it "leaves inactive accounts unbound when a login event is emitted" do
+    signup(patron_email)
+    user = User.find_by!(username: "mallory")
+
+    DiscourseEvent.trigger(:user_logged_in, user)
+
+    expect(user.reload.custom_fields["patreon_id"]).to be_blank
+    expect(group.users).to be_empty
+  end
+
+  it "preserves an existing owner's binding when another account confirms the patron email" do
+    owner = Fabricate(:user)
+    owner.custom_fields["patreon_id"] = patreon_id
+    owner.save_custom_fields
+    Patreon::Patron.sync_groups_by(patreon_id:)
+    signup(patron_email)
+    user = User.find_by!(username: "mallory")
+
+    user.activate
+
+    expect(user.reload.custom_fields["patreon_id"]).to be_blank
+    expect(owner.reload.custom_fields["patreon_id"]).to eq(patreon_id)
+    expect(group.users).to contain_exactly(owner)
+  end
+
+  it "prefers a Patreon associated account when another account confirms the patron email" do
+    owner = Fabricate(:user)
+    Fabricate(
+      :user_associated_account,
+      user: owner,
+      provider_name: "patreon",
+      provider_uid: patreon_id,
+    )
+    signup(patron_email)
+    user = User.find_by!(username: "mallory")
+
+    user.activate
+
+    expect(user.reload.custom_fields["patreon_id"]).to be_blank
+    expect(owner.reload.custom_fields["patreon_id"]).to eq(patreon_id)
+    expect(group.users).to contain_exactly(owner)
+  end
+
+  it "allows login even when the cached patron data is malformed" do
+    user = Fabricate(:user, email: patron_email)
+    Patreon.set("users", {})
+    user.activate
+    Patreon.set("users", [])
+
+    post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["error"]).to be_nil
+    expect(session[:current_user_id]).to eq(user.id)
+    expect(user.reload.custom_fields["patreon_id"]).to be_blank
+    expect(group.users).to be_empty
+  end
 end
