@@ -230,22 +230,25 @@ he:
         none: "ללא"
       features:
         short_title: "יכולות"
-        disabled: "(כבוי)"
-        groups: "קבוצות:"
-        llm:
-          one: "LLM/מש״ג:"
-          two: "LLMים:"
-          other: "LLMים:"
+        table:
+          status: "מצב"
+          enabled: "פעיל"
+          feature: "יכולת"
+          llm: "LLM"
+          groups: "קבוצות"
+        who_can_use:
+          no_one: "אף אחד"
+        chatbot:
+          column: "בוט שיחה"
+          places:
+            personal_messages: "הודעות פרטיות"
+            chat_direct_messages: "הודעות צ׳אט"
+            none: "לא זמין"
+        set_up: "הגדרה"
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
         no_groups: "ללא"
-        classification_model: "מודל:"
         edit: "הגדרות"
-        expand_list:
-          one: "(עוד %{count})"
-          two: "(עוד %{count})"
-          other: "(עוד %{count})"
-        collapse_list: "(להציג פחות)"
         bot:
           bot: "בוט שיחה"
           name: "בוט"
@@ -275,13 +278,12 @@ he:
           ask_ai: "לשאול בינה מלאכותית"
         embeddings:
           name: "הטמעות"
-          hyde: "HyDE"
+          related_topics: "נושאים קשורים"
           setting_groups:
             related_topics: "נושאים קשורים"
             semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
-          description: "הוספת היכולת לחפש בערוצי Discord"
           search: "חיפוש ב־Discord"
         inference:
           description: "סיווג נושאים ופוסטים לפי תחומי עניין / תוויות."
@@ -331,8 +333,20 @@ he:
       translations:
         title: "תרגומים"
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
-        supported_locales: "שפות נתמכות"
-        category_scope: "קטגוריות"
+        sections:
+          advanced: "מתקדם"
+        settings:
+          ai_translation_category_scope:
+            label: "קטגוריות"
+          ai_translation_personal_messages:
+            label: "הודעות פרטיות"
+            choices:
+              none: "ללא"
+              all: "הכול"
+          content_localization_language_switcher:
+            choices:
+              none: "אף אחד"
+              all: "כולם"
         model_progress:
           detail:
             columns:
@@ -349,7 +363,7 @@ he:
             tag:
               title: "תגיות"
         admin_actions:
-          enable_translations: "הפעלת תרגומים אוטומטיים"
+          enabled: "פעיל"
         stats:
           title: "סטטיסטיקת תרגום"
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."

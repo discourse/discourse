@@ -113,14 +113,15 @@ id:
       llm_selector:
         none: "Tidak ada"
       features:
-        disabled: "(dinonaktifkan)"
-        groups: "Grup:"
+        table:
+          status: "Status"
+          enabled: "Diaktifkan"
+          groups: "Grup"
+        chatbot:
+          places:
+            none: "Tidak tersedia"
         no_groups: "Tidak ada"
-        classification_model: "Model:"
         edit: "Pengaturan"
-        expand_list:
-          other: "(%{count} lainnya)"
-        collapse_list: "(tampilkan lebih sedikit)"
         nav:
           enabled: "Diaktifkan"
         filters:
@@ -139,7 +140,17 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
-        category_scope: "Kategori"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategori"
+          ai_translation_personal_messages:
+            choices:
+              none: "Tidak ada"
+              all: "Semua"
+          content_localization_language_switcher:
+            choices:
+              none: "Tak seorangpun"
+              all: "Semua orang"
         model_progress:
           detail:
             columns:
@@ -154,6 +165,8 @@ id:
               title: "Kategori"
             tag:
               title: "Label"
+        admin_actions:
+          enabled: "Diaktifkan"
         stats:
           eta_minutes:
             other: "%{count} menit"

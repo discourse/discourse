@@ -166,17 +166,25 @@ lt:
         none: "Nieko"
       features:
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
-        disabled: "(uždrausta)"
-        groups: "Grupės:"
+        table:
+          status: "Statusas"
+          enabled: "Įgalinta"
+          feature: "Funkcija"
+          groups: "Grupės"
+        who_can_use:
+          no_one: "Niekas"
+        status:
+          "on": "Įjungta"
+          "off": "Išjungta"
+        chatbot:
+          places:
+            personal_messages: "Asmeninės žinutės"
+            chat_direct_messages: "Pokalbių žinutės"
+            none: "Nepasiekiamas"
+        toggle: "Įjungti %{name}"
+        set_up: "Nustatymai"
         no_groups: "Nieko"
-        classification_model: "Modelis:"
         edit: "Nustatymai"
-        expand_list:
-          one: "(%{count} daugiau)"
-          few: "(%{count}daugiau)"
-          many: "(%{count}daugiau)"
-          other: "(%{count} daugiau)"
-        collapse_list: "(rodyti mažiau)"
         bot:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -247,9 +255,6 @@ lt:
           post_raw_translator: "Neapdoroto įrašo vertėjas"
           topic_title_translator: "Temos pavadinimo vertėjas"
           short_text_translator: "Trumpų tekstų vertėjas"
-          setting_groups:
-            settings: "Pagrindiniai nustatymai"
-            backfill_and_limits: "Užpildymas ir apribojimai"
         spam:
           name: "Šlamštas"
           description: "Naudodamas pasirinktą LLM, identifikuoja galimą šlamštą ir pažymi jį svetainės moderatoriams, kad jie galėtų jį patikrinti peržiūros eilėje."
@@ -261,7 +266,21 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
-        category_scope: "Kategorijos"
+        sections:
+          languages: "Kalbos"
+          advanced: "Išplėstinis"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorijos"
+          ai_translation_personal_messages:
+            label: "Asmeninės žinutės"
+            choices:
+              none: "Nėra"
+              all: "Visi"
+          content_localization_language_switcher:
+            choices:
+              none: "Niekas"
+              all: "Visi"
         model_progress:
           detail:
             retry: "Bandykite dar kartą"
@@ -277,6 +296,8 @@ lt:
               title: "Kategorijos"
             tag:
               title: "Žymos"
+        admin_actions:
+          enabled: "Įgalinta"
         stats:
           eta_minutes:
             one: "%{count} minutė"

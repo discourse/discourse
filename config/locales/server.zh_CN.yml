@@ -143,6 +143,19 @@ zh_CN:
       theme_not_found: "主题未找到"
       theme_update_failed: "主题无法更新"
       theme_update_required: "至少提供一个主题字段以供更新"
+      theme_confirmation_required: "请确认此主题操作后再继续。"
+      theme_name_mismatch: "主题名称已更改。请在继续操作前再次阅读主题。"
+      theme_delete_failed: "主题无法删除。默认主题和系统主题无法删除。"
+      theme_install_source_required: "请提供一个仓库 URL 或 base64 主题存档。"
+      theme_install_options_invalid: "仅提供适用于所选主题源的选项"
+      theme_repository_migrations_required: "仓库安装会运行主题迁移。请勿禁用迁移，并确认它们可以运行。"
+      theme_component_migrations_required: "导入主题组件需要进行迁移。启用并确认迁移，或选择不导入组件。"
+      theme_not_remote: "该主题没有 Git 仓库。"
+      theme_remote_mismatch: "仓库 URL 已更改。请在继续操作前再次阅读主题。"
+      theme_setting_value_invalid: "设置主题时需要提供值，还原主题时则省略该值。"
+      theme_setting_type_invalid: "主题设置 %{name} 需要一个类型为 %{type} 的值"
+      theme_setting_not_found: "该主题未声明此设置"
+      theme_translation_not_found: "该主题未声明一个或多个翻译键"
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
@@ -354,6 +367,7 @@ zh_CN:
       resolve_group_membership_requires_group_list: "resolve_group_membership 需要 list_type: group"
       resolve_group_membership_requires_groups_property: "resolve_group_membership 只能与 object schema 中的 type: groups 一起使用。无效属性：%{property}"
       objects:
+        invalid_objects: "值必须是一个对象数组。"
         humanize_required: "JSON 指针 '%{property_json_pointer}' 处的属性必须存在。"
         required: "必须存在"
         humanize_invalid_type: "JSON 指针 '%{property_json_pointer}' 处的属性必须是%{type}类型。"
@@ -444,6 +458,7 @@ zh_CN:
         no_sender_detected_error: "当我们在“发件人”标头中找不到有效的电子邮件地址时，就会发生这种情况。"
         from_reply_by_address_error: "当“发件人”标头与回复电子邮件地址时，就会发生这种情况。"
         inactive_user_error: "当发件人不活跃时，就会发生这种情况。"
+        suspended_user_error: "当发件人被暂停使用时会发生这种情况。"
         silenced_user_error: "当发件人被禁言时，就会发生这种情况。"
         bad_destination_address: "当“收件人/抄送”字段中的电子邮件地址均不与已配置的传入电子邮件地址匹配时，就会发生这种情况。"
         strangers_not_allowed_error: "当用户尝试在他们不属于的类别中创建新话题时，就会发生这种情况。"
@@ -2896,7 +2911,6 @@ zh_CN:
     nested_replies_hot_preload_depth_penalty: "在热度视图中选择预展开的嵌套回复时，每向下延伸一级扣除的优先级数值。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
     nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
-    nested_replies_backfill_batch_size: "每个嵌套回复统计信息回填批次要处理的话题数。"
     nested_replies_stats_maintenance_enabled: "即使嵌套回复已禁用，也应保留嵌套回复统计信息。"
     nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
@@ -3956,6 +3970,16 @@ zh_CN:
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您与此电子邮件地址关联的帐户未被激活，请先激活您的帐户，然后再发送电子邮件。
+    email_reject_suspended_user:
+      title: "电子邮件被拒：停用用户"
+      subject_template: "[%{email_prefix}] 电子邮件问题 -- 已暂停用户"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 -- 用户已暂停"
+      text_body_template: |
+        抱歉，您发送至 %{destination} （标题为 %{former_title}）的电子邮件未能成功送达。
+
+        与此电子邮件地址关联的帐户已被暂停。被暂停的帐户无法创建帖子或发送电子邮件。
+
+        如果您认为这是一个错误，请[联系工作人员](%{base_url}/about。
     email_reject_silenced_user:
       title: "电子邮件被拒：被禁言的用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁言的用户"
@@ -5614,7 +5638,6 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
-    admin_onboarding_topic_option: "已选选项： %{option}\n选项 ID： %{option_id}"
     redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"

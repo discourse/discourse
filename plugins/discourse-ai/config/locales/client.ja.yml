@@ -241,18 +241,28 @@ ja:
       features:
         short_title: "機能"
         settings_save_error: "一部の設定を保存できませんでした。"
-        disabled: "(無効)"
-        groups: "グループ:"
-        llm:
-          other: "LLM:"
+        table:
+          status: "ステータス"
+          enabled: "有効"
+          feature: "機能"
+          llm: "LLM"
+          groups: "グループ"
+        who_can_use:
+          no_one: "対象者なし"
+        status:
+          "on": "オン"
+          "off": "オフ"
+        chatbot:
+          column: "チャットボット"
+          places:
+            personal_messages: "個人メッセージ"
+            chat_direct_messages: "チャットメッセージ"
+            none: "使用できません"
+        set_up: "セットアップ"
         no_llm: "LLM が選択されていません"
         no_agent: "未設定"
         no_groups: "なし"
-        classification_model: "モデル:"
         edit: "設定"
-        expand_list:
-          other: "(他 %{count})"
-        collapse_list: "(表示を減らす)"
         bot:
           bot: "チャットボット"
           name: "ボット"
@@ -294,8 +304,7 @@ ja:
             access_control: "アクセス制御"
         embeddings:
           name: "埋め込み"
-          description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
-          hyde: "HyDE"
+          related_topics: "関連トピック"
           setting_groups:
             model_settings: "モデル設定"
             related_topics: "関連トピック"
@@ -305,7 +314,6 @@ ja:
             settings: "基本設定"
         discord:
           name: "Discord 統合"
-          description: "Discord チャンネルを検索する機能を追加します"
           search: "Discord 検索"
           setting_groups:
             settings: "基本設定"
@@ -350,9 +358,6 @@ ja:
           schedule_topic_success:
             other: "%{count} 件の未翻訳投稿の翻訳をスケジュールしました。"
           schedule_topic_error: "翻訳をスケジュールできませんでした。もう一度お試しください。"
-          setting_groups:
-            settings: "基本設定"
-            backfill_and_limits: "バックフィルと制限"
         spam:
           name: "迷惑"
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
@@ -371,8 +376,20 @@ ja:
       translations:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
-        supported_locales: "サポートされている言語"
-        category_scope: "カテゴリ"
+        sections:
+          advanced: "高度"
+        settings:
+          ai_translation_category_scope:
+            label: "カテゴリ"
+          ai_translation_personal_messages:
+            label: "個人メッセージ"
+            choices:
+              none: "なし"
+              all: "すべて"
+          content_localization_language_switcher:
+            choices:
+              none: "なし"
+              all: "全員"
         model_progress:
           detail:
             retry: "再試行"
@@ -390,7 +407,7 @@ ja:
             tag:
               title: "タグ"
         admin_actions:
-          enable_translations: "自動翻訳を有効にする"
+          enabled: "有効"
         stats:
           title: "翻訳の統計"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"

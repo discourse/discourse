@@ -16,6 +16,9 @@ ar:
         preview_archive: أرشفة
         desktop: سطح المكتب
         mobile: الجوَّال
+        save: حفظ
+        path_formats:
+          custom: مخصَّصة
         back_to_themes: الرجوع إلى قائمة السمات
         new_theme_short: سمة جديدة
         themes: السمتان

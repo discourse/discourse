@@ -27,6 +27,10 @@ he:
               label: מזהה נושא
     discourse_events:
       title: "אירועים"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "הרשמה"
       preferences:
         reminders:
           preferences:

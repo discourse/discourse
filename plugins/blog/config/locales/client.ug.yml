@@ -15,6 +15,9 @@ ug:
         preview_archive: ئارخىپ
         desktop: ئۈستەل يۈزى
         mobile: كۆچمە
+        save: ساقلا
+        path_formats:
+          custom: ئىختىيارى
         back_to_themes: ئۆرنەككە قايت
         new_theme_short: يېڭى ئۆرنەك
         themes: ئۆرنەك

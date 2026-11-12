@@ -14,6 +14,9 @@ pt:
         preview_archive: Arquivo
         desktop: Desktop
         mobile: Móvel
+        save: Guardar
+        path_formats:
+          custom: Personalizar
         themes: Temas
         theme_name: Nome do tema
         edit: Editar

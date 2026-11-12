@@ -27,6 +27,10 @@ sk:
               label: ID témy
     discourse_events:
       title: "Udalosti"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrácia"
       preferences:
         reminders:
           preferences:

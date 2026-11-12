@@ -280,9 +280,6 @@ lv:
       pill: "Saistītās ziņas"
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Atpakaļ"
     design_wizard:
       back: "Atpakaļ"
       next: "Nākamais"

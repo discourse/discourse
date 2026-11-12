@@ -10,6 +10,9 @@ sr:
       admin:
         overridden: Posebna
         preview_archive: Arhiviraj
+        save: Sačuvaj
+        path_formats:
+          custom: Posebna
         edit: Izmeni
         customize: Prilagođavanje
         export: Izvoz

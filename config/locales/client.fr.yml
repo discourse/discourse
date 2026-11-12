@@ -542,21 +542,11 @@ fr:
         title: "Personnalisez votre site"
         show_light_screenshot: "Afficher une capture d'écran claire"
         show_dark_screenshot: "Afficher une capture d'écran sombre"
+      create_category:
+        action: "Créer une catégorie"
       invite_collaborators:
         title: "Inviter des collaborateurs"
         action: "Créer une invitation"
-      start_posting:
-        title: "Commencer à publier"
-        action: "Découvrir des idées"
-        choose_option: "Comment souhaitez-vous commencer ?"
-        predefined_topics: "Modèles d'activités pour briser la glace"
-        predefined_topics_description: "Choisissez parmi une sélection de sujets de conversation pour lancer les discussions."
-        use_predefined: "Parcourir les modèles"
-        back: "Retour"
-        icebreakers:
-          introduce_yourself:
-            title: "Présentez-vous"
-            body: "Bienvenue dans la communauté ! Faisons connaissance. Présentez-vous et parlez-nous un peu de vos centres d'intérêt. Je commence : j'ai une passion pour la technologie et j'adore partager mes connaissances !"
     design_wizard:
       title: "Personnalisez votre site"
       back: "Retour"

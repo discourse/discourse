@@ -76,18 +76,24 @@ cs:
       llm_selector:
         none: "Žádný"
       features:
-        disabled: "(vypnuto)"
-        groups: "Skupiny:"
+        table:
+          status: "Stav"
+          enabled: "Zapnuto"
+          feature: "Funkce"
+          groups: "Skupiny"
+        who_can_use:
+          no_one: "Nikdo"
+        status:
+          "on": "Zapnuto"
+          "off": "Vypnuto"
+        chatbot:
+          places:
+            personal_messages: "Soukromé zprávy"
+            chat_direct_messages: "Zprávy v chatu"
+            none: "Není k dispozici"
         no_agent: "Nenastaveno"
         no_groups: "Žádná"
-        classification_model: "Model:"
         edit: "Nastavení"
-        expand_list:
-          one: "(%{count} další)"
-          few: "(%{count} další)"
-          many: "(%{count} další)"
-          other: "(%{count} další)"
-        collapse_list: "(zobrazit méně)"
         nav:
           enabled: "Zapnuto"
         filters:
@@ -101,6 +107,8 @@ cs:
         search:
           name: "Vyhledávání"
           ask_ai: "Zeptejte se AI"
+        embeddings:
+          related_topics: "Související témata"
         ai_helper:
           proofread: Korektura textu
           explain: "Vysvětlit"
@@ -116,7 +124,20 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
-        category_scope: "Kategorie"
+        sections:
+          advanced: "Pokročilé"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorie"
+          ai_translation_personal_messages:
+            label: "Soukromé zprávy"
+            choices:
+              none: "Žádný"
+              all: "Vše"
+          content_localization_language_switcher:
+            choices:
+              none: "Nikdo"
+              all: "Všichni"
         model_progress:
           detail:
             retry: "Zkuste znovu"
@@ -133,6 +154,8 @@ cs:
               title: "Kategorie"
             tag:
               title: "Štítky"
+        admin_actions:
+          enabled: "Zapnuto"
         stats:
           eta_minutes:
             one: "%{count} minutu"

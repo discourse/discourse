@@ -431,8 +431,8 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
-      start_posting:
-        back: "Quay lại"
+      create_category:
+        action: "Tạo chuyên mục"
     design_wizard:
       back: "Quay lại"
       next: "Kế tiếp"

@@ -275,23 +275,30 @@ tr_TR:
         short_title: "Özellikler"
         back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
-        disabled: "(devre Dışı)"
-        agent:
-          one: "Ajan:"
-          other: "Ajanlar:"
-        groups: "Gruplar:"
-        llm:
-          one: "LLM:"
-          other: "LLM'ler:"
+        table:
+          status: "Durum"
+          enabled: "Etkin mi"
+          feature: "Özellik"
+          agent: "Ajan"
+          llm: "LLM"
+          groups: "Gruplar"
+        who_can_use:
+          no_one: "Hiç kimse"
+        status:
+          "on": "Açık"
+          "off": "Kapalı"
+        chatbot:
+          column: "Sohbet botu"
+          new_agent: "Yeni ajan"
+          places:
+            personal_messages: "Kişisel mesajlar"
+            chat_direct_messages: "Sohbet mesajları"
+            none: "Uygun değil"
+        set_up: "Kur"
         no_llm: "LLM seçilmedi"
         no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
-        classification_model: "Model:"
         edit: "Ayarlar"
-        expand_list:
-          one: "(%{count} tane Daha)"
-          other: "(%{count} tane Daha)"
-        collapse_list: "(daha az göster)"
         bot:
           bot: "Sohbet botu"
           name: "Bot"
@@ -335,8 +342,7 @@ tr_TR:
             access_control: "Erişim Kontrolü"
         embeddings:
           name: "Gömmeler"
-          description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
-          hyde: "HyDE"
+          related_topics: "İlgili konular"
           setting_groups:
             model_settings: "Model Ayarları"
             related_topics: "İlgili Konular"
@@ -346,7 +352,6 @@ tr_TR:
             settings: "Temel Ayarlar"
         discord:
           name: "Discord entegrasyonu"
-          description: "Discord kanallarında arama yapma özelliğini ekler"
           search: "Discord araması"
           setting_groups:
             settings: "Temel Ayarlar"
@@ -397,10 +402,6 @@ tr_TR:
             one: "%{count} çevrilmemiş gönderi için planlanmış çeviri."
             other: "%{count} çevrilmemiş gönderi için planlanmış çeviri."
           schedule_topic_error: "Çevirilerin planlanması başarısız oldu. Lütfen tekrar deneyin."
-          setting_groups:
-            settings: "Temel Ayarlar"
-            agents: "Ajanlar"
-            backfill_and_limits: "Dolgu ve Sınırlar"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
@@ -419,8 +420,20 @@ tr_TR:
       translations:
         title: "Çeviriler"
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
-        supported_locales: "Desteklenen diller"
-        category_scope: "Kategoriler"
+        sections:
+          advanced: "Gelişmiş"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategoriler"
+          ai_translation_personal_messages:
+            label: "Kişisel mesajlar"
+            choices:
+              none: "Hiçbiri"
+              all: "Tümü"
+          content_localization_language_switcher:
+            choices:
+              none: "Hiç kimse"
+              all: "Herkes"
         cached_results_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
         model_progress:
           detail:
@@ -439,7 +452,7 @@ tr_TR:
             tag:
               title: "Etiketler"
         admin_actions:
-          enable_translations: "Otomatik çevirileri etkinleştir"
+          enabled: "Etkin mi"
         stats:
           title: "Çeviri istatistikleri"
           backfill_disabled: "Dolgu devre dışıdır, yalnızca yeni gönderiler çevrilecektir."

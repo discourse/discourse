@@ -62,12 +62,17 @@ te:
       llm_selector:
         none: "ఏదీ లేదు"
       features:
+        table:
+          status: "స్థితి"
+          enabled: "ప్రారంభించబడింది"
+          groups: "సమూహాలు"
+        chatbot:
+          places:
+            personal_messages: "వ్యక్తిగత సందేశాలు"
+            none: "అందుబాటులో లేదు"
         no_agent: "సెట్ చేయబడలేదు"
         no_groups: "ఏదీ లేదు"
         edit: "అమరికలు"
-        expand_list:
-          one: "(మరో %{count})"
-          other: "(మరో %{count})"
         nav:
           enabled: "ప్రారంభించబడింది"
         filters:
@@ -84,7 +89,20 @@ te:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
-        category_scope: "వర్గాలు"
+        sections:
+          advanced: "అధునాతన"
+        settings:
+          ai_translation_category_scope:
+            label: "వర్గాలు"
+          ai_translation_personal_messages:
+            label: "వ్యక్తిగత సందేశాలు"
+            choices:
+              none: "ఏదీ లేదు"
+              all: "అన్నీ"
+          content_localization_language_switcher:
+            choices:
+              none: "ఎవరూకాదు"
+              all: "అందరూ"
         model_progress:
           detail:
             columns:
@@ -99,6 +117,8 @@ te:
               title: "వర్గాలు"
             tag:
               title: "ట్యాగులు"
+        admin_actions:
+          enabled: "ప్రారంభించబడింది"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"

@@ -510,21 +510,11 @@ tr_TR:
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
+      create_category:
+        action: "Kategori oluştur"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         action: "Davet oluştur"
-      start_posting:
-        title: "Paylaşmaya Başla"
-        action: "Fikirleri gör"
-        choose_option: "Nasıl başlamak istersiniz?"
-        predefined_topics: "Buz kırıcı şablonlar"
-        predefined_topics_description: "Sohbet başlatıcılar koleksiyonundan seçim yapın ve tartışmaları başlatın"
-        use_predefined: "Şablonlara göz atın"
-        back: "Geri"
-        icebreakers:
-          introduce_yourself:
-            title: "Kendinizi tanıtın"
-            body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
     design_wizard:
       back: "Geri"
       next: "Sonraki"

@@ -408,9 +408,6 @@ sk:
       title: "Nové a neprečítané témy"
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Späť"
     design_wizard:
       back: "Späť"
       next: "Ďalej"

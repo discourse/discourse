@@ -13,6 +13,10 @@ hy:
             topic_id:
               label: Թեմայի ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Գրանցվել"
       preferences:
         reminders:
           preferences:

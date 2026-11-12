@@ -8,6 +8,8 @@ ug:
   js:
     dsa_notice:
       choice_title: "قانۇنسىز"
+      choice_description: "بۇ مەزمۇننىڭ نېمىشقا قانۇنسىز ئىكەنلىكىنى چۈشەندۈرۈپ تەپسىلىي دوكلات يوللاڭ."
+      go_back: "قايت"
       title: "قانۇنسىز مەزمۇننى مەلۇم قىلىدۇ"
       email: "ئېلخەت ئادرېسى"
     mcp_oauth_client_id_metadata_policy:
@@ -523,11 +525,6 @@ ug:
         description: "دەسلەپكى ئەزالار بۇنى جانلاندۇرىدۇ."
         action: "تەكلىپ قۇر"
         completed: "تېخىمۇ كۆپ تەكلىپ"
-      start_posting:
-        title: "يوللاشنى باشلا"
-        description: "كىشىلەرگە سۆھبەت تېمىسى تەمىنلەيدۇ."
-        completed: "تېخىمۇ كۆپ ئىدىيە كۆرسەت"
-        back: "كەينى"
     design_wizard:
       title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
       step_label: "%{index}-قەدەمگە يۆتكەل"
@@ -554,7 +551,10 @@ ug:
         applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
       colors:
+        light_palette: "يورۇق رەڭ تۈسى"
+        dark_palette: "قاراڭغۇ رەڭ تۈسى"
         modes:
+          label: "رەڭ ھالىتى"
           both: "يورۇق ۋە قاراڭغۇ"
           light: "يورۇقلا"
           dark: "قاراڭغۇلا"
@@ -811,7 +811,10 @@ ug:
       category: "سەھىپە"
       category_prompt: "سەھىپە تاللىنىدۇ"
     review:
+      continue_to_editor: "تەھرىرلەشنى داۋاملاشتۇر"
       moderation_steps:
+        label: "تەھقىقلەش باسقۇچى"
+        action: "مەشغۇلات تەپسىلاتى"
         confirm: "جەزملەش مەشغۇلاتى"
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"

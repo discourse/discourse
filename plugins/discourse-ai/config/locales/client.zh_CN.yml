@@ -311,6 +311,8 @@ zh_CN:
       title: "AI"
       dsa_classification:
         suggest: "通过 AI 提出建议"
+        updated: "分类已更新"
+        no_suggestion: "人工智能无法给出分类建议。"
       copied: "已复制"
       view_raw: "查看原始数据"
       view_decoded: "查看解码结果"
@@ -391,27 +393,38 @@ zh_CN:
         description: "为您的网站配置 AI 功能，包括其代理、模型和访问权限（如果支持）。"
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
-        disabled: "（已禁用）"
-        agent:
-          other: "智能体："
-        groups: "群组："
-        llm:
-          other: "LLM："
+        table:
+          status: "状态"
+          enabled: "已启用"
+          feature: "功能"
+          agent: "智能体"
+          llm: "LLM"
+          groups: "群组"
+        who_can_use:
+          no_one: "没有人"
+        status:
+          "on": "开"
+          "off": "关"
+        chatbot:
+          column: "聊天机器人"
+          new_agent: "新建智能体"
+          manage_agents: "管理智能体"
+          places:
+            personal_messages: "个人信息"
+            chat_direct_messages: "聊天消息"
+            none: "不可用"
+        toggle: "启用 %{name}"
+        set_up: "设置"
         no_llm: "未选择 LLM"
         no_agent: "未设置"
         no_groups: "无"
-        backend: "后端："
         backends:
           agent: "LLM代理"
           decision_model: "决策模型"
           classification_model: "专用分类端点"
-        decision_model: "决策模型:"
-        classification_model: "模型："
         not_configured: "未配置"
+        decision_model: "决策模型"
         edit: "设置"
-        expand_list:
-          other: "（其他 %{count} 个）"
-        collapse_list: "（收起）"
         bot:
           bot: "聊天机器人"
           name: "机器人"
@@ -473,8 +486,7 @@ zh_CN:
             ask_ai_reports: "询问 AI 报告"
         embeddings:
           name: "嵌入向量"
-          description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
-          hyde: "HyDE"
+          related_topics: "相关话题"
           setting_groups:
             model_settings: "模型设置"
             related_topics: "相关话题"
@@ -487,7 +499,6 @@ zh_CN:
             settings: "基本设置"
         discord:
           name: "Discord 集成"
-          description: "增加了搜索 Discord 频道的功能"
           search: "Discord 搜索"
           setting_groups:
             settings: "基本设置"
@@ -541,10 +552,6 @@ zh_CN:
           schedule_topic_success:
             other: "已安排翻译 %{count} 个未翻译的帖子。"
           schedule_topic_error: "无法安排翻译。请重试。"
-          setting_groups:
-            settings: "基本设置"
-            agents: "智能体"
-            backfill_and_limits: "回填与限制"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -563,11 +570,23 @@ zh_CN:
       translations:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
-        supported_locales: "支持的语言"
+        sections:
+          languages: "语言"
+          advanced: "高级"
+        settings:
+          ai_translation_category_scope:
+            label: "类别"
+          ai_translation_personal_messages:
+            label: "个人信息"
+            choices:
+              none: "无"
+              all: "所有"
+          content_localization_language_switcher:
+            choices:
+              none: "没有人"
+              all: "所有人"
         max_locales_reached: "您最多只能选择 %{max} 种语言。"
         locale_count: "%{count}/%{max} 已选择"
-        category_scope: "类别"
-        category_scope_description: "选择自动翻译应用于所有类别、公开类别还是所选类别中的内容。"
         cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
         model_progress:
           loading: "正在加载翻译进度"
@@ -629,12 +648,8 @@ zh_CN:
               all_translated:
                 other: "所有 %{count} 个标签已翻译完毕。"
         admin_actions:
-          translation_settings: "AI 设置"
-          localization_settings: "应用语言设置"
-          enable_translations: "启用自动翻译"
+          enabled: "已启用"
           enable_translations_disabled: "您必须添加受支持的语言才能启用翻译功能。"
-          show_language_switcher: "在标题栏显示语言切换器。"
-          show_language_switcher_description: "让每个人都能选择一种语言，并用这种语言查看您的网站。"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"

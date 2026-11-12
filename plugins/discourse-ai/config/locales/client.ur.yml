@@ -93,14 +93,23 @@ ur:
       llm_selector:
         none: "کوئی نہیں"
       features:
-        disabled: "(غیر فعال)"
-        groups: "گروپس:"
+        table:
+          status: "حیثیت"
+          enabled: "فعال شدہ"
+          feature: "خصوصیت"
+          llm: "ایل ایل ایم"
+          groups: "گروپس"
+        who_can_use:
+          no_one: "کچھ نہیں"
+        chatbot:
+          places:
+            personal_messages: "ذاتی پیغامات"
+            chat_direct_messages: "گفتگو کے پیغامات"
+            none: "دستیاب نہیں"
+        toggle: "%{name} فعال ہے"
         no_agent: "سیٹ نہیں"
         no_groups: "کوئی نہیں"
         edit: "سیٹِنگ"
-        expand_list:
-          one: "(%{count} مزید)"
-          other: "(%{count} مزید)"
         nav:
           enabled: "فعال شدہ"
         filters:
@@ -113,6 +122,8 @@ ur:
             emotion: "جذبات"
         search:
           name: "تلاش کریں"
+        embeddings:
+          related_topics: "متعلقہ موضوعات"
         admin_dashboard:
           highlights: "نمایاں نکات"
         ai_helper:
@@ -128,7 +139,20 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
-        category_scope: "زمرہ جات"
+        sections:
+          advanced: "اعلی درجے کی"
+        settings:
+          ai_translation_category_scope:
+            label: "زمرہ جات"
+          ai_translation_personal_messages:
+            label: "ذاتی پیغامات"
+            choices:
+              none: "کوئی نہیں"
+              all: "تمام"
+          content_localization_language_switcher:
+            choices:
+              none: "کوئی نہیں"
+              all: "ہر ایک"
         model_progress:
           detail:
             retry: "دوبارہ کوشش"
@@ -145,6 +169,8 @@ ur:
               title: "زمرہ جات"
             tag:
               title: "ٹیگز"
+        admin_actions:
+          enabled: "فعال شدہ"
         stats:
           eta_minutes:
             one: "%{count} منٹ"

@@ -502,9 +502,6 @@ ro:
       title: "Subiecte noi și necitite"
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Înapoi"
     design_wizard:
       back: "Înapoi"
       next: "Următorul"

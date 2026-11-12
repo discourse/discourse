@@ -194,20 +194,26 @@ fi:
         none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
-        disabled: "(pois käytöstä)"
-        groups: "Ryhmät:"
-        llm:
-          one: "LLM:"
-          other: "LLM:t:"
+        table:
+          status: "Tila"
+          enabled: "Käytössä"
+          feature: "Ominaisuus"
+          llm: "LLM"
+          groups: "Ryhmät"
+        status:
+          "on": "Käytössä"
+          "off": "Pois käytöstä"
+        chatbot:
+          column: "Chatbotti"
+          places:
+            personal_messages: "Henkilökohtaiset viestit"
+            chat_direct_messages: "Chat-viestit"
+            none: "Ei saatavilla"
+        set_up: "Määritä"
         no_llm: "LLM:ää ei ole valittu"
         no_agent: "Ei asetettu"
         no_groups: "Ei valittu"
-        classification_model: "Malli:"
         edit: "Asetukset"
-        expand_list:
-          one: "(%{count} muuta)"
-          other: "(%{count} muuta)"
-        collapse_list: "(näytä vähemmän)"
         bot:
           bot: "Chatbotti"
           name: "Botti"
@@ -237,13 +243,11 @@ fi:
           ask_ai: "Kysy tekoälyltä"
         embeddings:
           name: "Upotukset"
-          description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
-          hyde: "HyDE"
+          related_topics: "Liittyvät ketjut"
           setting_groups:
             related_topics: "Liittyvät ketjut"
         discord:
           name: "Discord-integraatio"
-          description: "Lisää mahdollisuuden hakea Discord-kanavia"
           search: "Discord-haku"
         inference:
           name: "Päätellyt käsitteet"
@@ -292,7 +296,20 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
-        category_scope: "Kategoriat"
+        sections:
+          advanced: "Lisäasetukset"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategoriat"
+          ai_translation_personal_messages:
+            label: "Henkilökohtaiset viestit"
+            choices:
+              none: "Ei valittu"
+              all: "Kaikki"
+          content_localization_language_switcher:
+            choices:
+              none: "Ei kukaan"
+              all: "Kaikki"
         model_progress:
           detail:
             retry: "Yritä uudelleen"
@@ -309,6 +326,8 @@ fi:
               title: "Alueet"
             tag:
               title: "Tunnisteet"
+        admin_actions:
+          enabled: "Käytössä"
         stats:
           eta_minutes:
             one: "%{count} minuutti"

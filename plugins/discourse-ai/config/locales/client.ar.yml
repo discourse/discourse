@@ -299,35 +299,29 @@ ar:
         short_title: "الميزات"
         back: "العودة إلى ميزات الذكاء الاصطناعي"
         settings_save_error: "تعذّر حفظ بعض الإعدادات."
-        disabled: "(متوقفة)"
-        agent:
-          zero: "الوكلاء:"
-          one: "الوكيل:"
-          two: "الوكيلان:"
-          few: "الوكلاء:"
-          many: "الوكلاء:"
-          other: "الوكلاء:"
-        groups: "المجموعات:"
-        llm:
-          zero: "نماذج اللغة الكبيرة:"
-          one: "نموذج اللغة الكبيرة:"
-          two: "نموذجا اللغة الكبيران:"
-          few: "نماذج اللغة الكبيرة:"
-          many: "نماذج اللغة الكبيرة:"
-          other: "نماذج اللغة الكبيرة:"
+        table:
+          status: "الحالة"
+          enabled: "مفعَّلة"
+          feature: "الميزة"
+          agent: "الوكيل"
+          llm: "نموذج اللغة الكبير"
+          groups: "المجموعات"
+        who_can_use:
+          no_one: "لا أحد"
+        chatbot:
+          column: "روبوت الدردشة"
+          new_agent: "وكيل جديد"
+          manage_agents: "إدارة الوكلاء"
+          places:
+            personal_messages: "الرسائل الشخصية"
+            chat_direct_messages: "رسائل الدردشة"
+            none: "غير متاح"
+        toggle: "تفعيل %{name}"
+        set_up: "إعداد"
         no_llm: "لم يتم تحديد نموذج اللغة الكبير (LLM)"
         no_agent: "غير معيَّن"
         no_groups: "لا يوجد"
-        classification_model: "النموذج:"
         edit: "الإعدادان"
-        expand_list:
-          zero: "(%{count} أكثر)"
-          one: "(%{count} أكثر)"
-          two: "(%{count} أكثر)"
-          few: "(%{count} أكثر)"
-          many: "(%{count} أكثر)"
-          other: "(%{count} أكثر)"
-        collapse_list: "(عرض أقل)"
         bot:
           bot: "روبوت الدردشة"
           name: "روبوت"
@@ -372,8 +366,7 @@ ar:
             access_control: "التحكم في الوصول"
         embeddings:
           name: "التضمينات"
-          description: "يدعم ميزات مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي عن طريق إنشاء تمثيلات دلالية للنصوص"
-          hyde: "HyDE"
+          related_topics: "الموضوعات ذات الصلة"
           setting_groups:
             model_settings: "إعدادات النموذج"
             related_topics: "الموضوعات ذات الصلة"
@@ -386,7 +379,6 @@ ar:
             settings: "الإعدادات الأساسية"
         discord:
           name: "التكامل مع Discord"
-          description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"
           search: "البحث في Discord"
           setting_groups:
             settings: "الإعدادات الأساسية"
@@ -444,10 +436,6 @@ ar:
             many: "الترجمة المجدولة لعدد %{count} منشورًا غير مترجم."
             other: "الترجمة المجدولة لعدد %{count} منشور غير مترجم."
           schedule_topic_error: "فشل جدولة الترجمات. الرجاء المحاولة مرة أخرى."
-          setting_groups:
-            settings: "الإعدادات الأساسية"
-            agents: "الوكلاء"
-            backfill_and_limits: "الملء الرجعي والحدود"
         spam:
           name: "عشوائي"
           description: "يحدِّد المحتوى العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويبلغ عنه مشرفو الموقع لفحصه في قائمة انتظار المراجعة"
@@ -466,9 +454,20 @@ ar:
       translations:
         title: "الترجمات"
         description: "تفعيل الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
-        supported_locales: "اللغات المدعومة"
-        category_scope: "الفئات"
-        category_scope_description: "اختيار ما إذا كانت الترجمات التلقائية تنطبق على المحتوى في جميع الفئات أو الفئات العامة أو الفئات المحدَّدة."
+        sections:
+          advanced: "متقدمة"
+        settings:
+          ai_translation_category_scope:
+            label: "الفئات"
+          ai_translation_personal_messages:
+            label: "الرسائل الشخصية"
+            choices:
+              none: "لا يوجد"
+              all: "الكل"
+          content_localization_language_switcher:
+            choices:
+              none: "لا أحد"
+              all: "الجميع"
         cached_results_notice: "يتم عرض النتائج المخزَّنة مؤقتًا منذ %{relative_time}."
         model_progress:
           loading: "جارٍ تحميل تقدُّم الترجمة"
@@ -610,9 +609,7 @@ ar:
                 many: "تمت ترجمة جميع الوسوم وعددها %{count} بالكامل."
                 other: "تمت ترجمة جميع الوسوم وعددها %{count} بالكامل."
         admin_actions:
-          translation_settings: "إعدادات الذكاء الاصطناعي"
-          localization_settings: "إعدادات لغة التطبيق"
-          enable_translations: "تفعيل الترجمات الآلية"
+          enabled: "مفعَّلة"
         stats:
           title: "إحصائيات الترجمة"
           backfill_disabled: "تم إيقاف ميزة الترجمة الرجعية، وستتم ترجمة المنشورات الجديدة فقط."

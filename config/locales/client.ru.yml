@@ -583,21 +583,11 @@ ru:
       pm_title: "Похожие сообщения"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
+      create_category:
+        action: "Создать категорию"
       invite_collaborators:
         title: "Пригласить соавторов"
         action: "Создать приглашение"
-      start_posting:
-        title: "Начать публикацию"
-        action: "Посмотреть идеи"
-        choose_option: "С чего бы вы хотели начать?"
-        predefined_topics: "Шаблоны для начала разговора"
-        predefined_topics_description: "Выберите из подборки тем для начала разговора, чтобы завязать беседу."
-        use_predefined: "Просмотрите шаблоны"
-        back: "Назад"
-        icebreakers:
-          introduce_yourself:
-            title: "Представьтесь"
-            body: "Добро пожаловать в сообщество! Давайте познакомимся. Пожалуйста, представьтесь и расскажите немного о своих интересах. Я начну: я увлечен технологиями и люблю обучать других!"
     design_wizard:
       back: "Назад"
       next: "Далее"

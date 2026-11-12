@@ -446,19 +446,6 @@ pt:
       title: "Tópicos Novos e Não Lidos"
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Anterior"
-        category_unavailable: "Esta categoria não está disponível para publicação."
-        icebreakers:
-          plan_categories:
-            title: "Por que categorias devemos começar?"
-            body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
-          plan_invites:
-            body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
-          write_your_own:
-            title: "Escreva o seu próprio"
-            description: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"

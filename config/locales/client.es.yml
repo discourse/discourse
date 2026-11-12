@@ -497,21 +497,11 @@ es:
       pm_title: "Mensajes sugeridos"
     admin_onboarding_banner:
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
+      create_category:
+        action: "Crear categoría"
       invite_collaborators:
         title: "Invitar colaboradores"
         action: "Crear invitación"
-      start_posting:
-        title: "Empezar a publicar"
-        action: "Ver ideas"
-        choose_option: "¿Cómo te gustaría empezar?"
-        predefined_topics: "Plantillas para romper el hielo"
-        predefined_topics_description: "Elige entre una colección de temas para iniciar conversaciones y dar pie a debates"
-        use_predefined: "Explorar plantillas"
-        back: "Atrás"
-        icebreakers:
-          introduce_yourself:
-            title: "Preséntate"
-            body: "¡Os doy la bienvenida a la comunidad! Vamos a conocernos. Presentaos y hablad un poco de vuestros intereses. Empiezo yo: ¡me apasiona la tecnología y me encanta enseñar a los demás!"
     design_wizard:
       back: "Atrás"
       next: "Siguiente"

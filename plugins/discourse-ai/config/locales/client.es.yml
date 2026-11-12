@@ -274,23 +274,30 @@ es:
         short_title: "Características"
         back: "Volver a las características de IA"
         settings_save_error: "Algunos ajustes no se han podido guardar."
-        disabled: "(desactivado)"
-        agent:
-          one: "Agente:"
-          other: "Agentes:"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Estado"
+          enabled: "Activado"
+          feature: "Característica"
+          agent: "Agente"
+          llm: "LLM"
+          groups: "Grupos"
+        who_can_use:
+          no_one: "Nadie"
+        status:
+          "on": "Activado"
+          "off": "Desactivado"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nuevo agente"
+          places:
+            personal_messages: "Mensajes personales"
+            chat_direct_messages: "Mensajes de chat"
+            none: "No disponible"
+        set_up: "Configurar"
         no_llm: "No hay LLM seleccionados"
         no_agent: "No establecido"
         no_groups: "Ninguna"
-        classification_model: "Modelo:"
         edit: "Ajustes"
-        expand_list:
-          one: "(%{count} más)"
-          other: "(%{count} más)"
-        collapse_list: "(mostrar menos)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -334,8 +341,7 @@ es:
             access_control: "Control de acceso"
         embeddings:
           name: "Incrustaciones"
-          description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
-          hyde: "HyDE"
+          related_topics: "Temas relacionados"
           setting_groups:
             model_settings: "Ajustes del modelo"
             related_topics: "Temas relacionados"
@@ -345,7 +351,6 @@ es:
             settings: "Ajustes básicos"
         discord:
           name: "Integración de Discord"
-          description: "Añade la posibilidad de buscar canales de Discord"
           search: "Búsqueda de Discord"
           setting_groups:
             settings: "Ajustes básicos"
@@ -396,10 +401,6 @@ es:
             one: "Traducción programada para %{count} publicación no traducida."
             other: "Traducción programada para %{count} publicaciones no traducidas."
           schedule_topic_error: "Error al programar las traducciones. Inténtalo de nuevo."
-          setting_groups:
-            settings: "Ajustes básicos"
-            agents: "Agentes"
-            backfill_and_limits: "Relleno y límites"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -418,8 +419,20 @@ es:
       translations:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
-        supported_locales: "Idiomas compatibles"
-        category_scope: "Categorías"
+        sections:
+          advanced: "Avanzado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorías"
+          ai_translation_personal_messages:
+            label: "Mensajes personales"
+            choices:
+              none: "Ninguna"
+              all: "Todo"
+          content_localization_language_switcher:
+            choices:
+              none: "Nadie"
+              all: "Todos"
         cached_results_notice: "Mostrando resultados en caché de %{relative_time}."
         model_progress:
           detail:
@@ -438,7 +451,7 @@ es:
             tag:
               title: "Etiquetas"
         admin_actions:
-          enable_translations: "Activar traducciones automáticas"
+          enabled: "Activado"
         stats:
           title: "Estadísticas de traducción"
           backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."

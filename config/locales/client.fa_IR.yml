@@ -382,9 +382,6 @@ fa_IR:
       title: "موضوعات جدید و خوانده نشده"
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
-    admin_onboarding_banner:
-      start_posting:
-        back: "بازگشت"
     design_wizard:
       back: "بازگشت"
       next: "بعدی"

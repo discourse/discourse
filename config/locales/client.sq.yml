@@ -320,9 +320,6 @@ sq:
       title: "Tema të reja dhe të palexuara"
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Kthehu mbrapa"
     design_wizard:
       back: "Kthehu mbrapa"
       next: "Vazhdo përpara"

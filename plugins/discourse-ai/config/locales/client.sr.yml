@@ -58,15 +58,15 @@ sr:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(isključeno)"
-        groups: "Grupe:"
+        table:
+          status: "Status"
+          enabled: "Omogućeno"
+          groups: "Grupe"
+        chatbot:
+          places:
+            none: "Nije dostupno"
         no_groups: "Ništa"
         edit: "Podešavanje"
-        expand_list:
-          one: "(još %{count} članova)"
-          few: "(još %{count} člana)"
-          other: "(još %{count} članova)"
-        collapse_list: "(pokaži manje)"
         nav:
           enabled: "Omogućeno"
         filters:
@@ -86,7 +86,17 @@ sr:
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Niko"
+              all: "Svi"
         model_progress:
           detail:
             columns:
@@ -101,6 +111,8 @@ sr:
               title: "Kategorije"
             tag:
               title: "Tagovi"
+        admin_actions:
+          enabled: "Omogućeno"
         stats:
           eta_hours:
             one: "%{count} сат"

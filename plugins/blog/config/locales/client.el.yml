@@ -15,6 +15,9 @@ el:
         preview_archive: Αρχείο
         desktop: Για υπολογιστές
         mobile: Mobile
+        save: Αποθήκευση
+        path_formats:
+          custom: Προσαρμοσμένο
         back_to_themes: Πίσω στα θέματα
         new_theme_short: Νέο θέμα
         themes: Θέματα

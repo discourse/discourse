@@ -1446,7 +1446,6 @@ vi:
     nested_replies_hot_max_pending_topics: "Số lượng bài viết tối đa chờ trong hàng đợi tính điểm nổi bật phản hồi phân cấp."
     nested_replies_hot_max_queue_age_minutes: "Thời gian tối đa (tính theo phút) một yêu cầu tính điểm nổi bật phản hồi phân cấp có thể chờ trong hàng đợi trước khi bị hủy."
     nested_replies_hot_preload_depth_penalty: "Mức độ ưu tiên bị trừ cho mỗi cấp độ sâu khi chọn mở rộng trước các phản hồi phân cấp ở chế độ xem nổi bật."
-    nested_replies_backfill_batch_size: "Số lượng bài viết được xử lý trong mỗi đợt bổ sung dữ liệu thống kê phản hồi phân cấp."
     nested_replies_stats_maintenance_enabled: "Duy trì dữ liệu thống kê phản hồi phân cấp ngay cả khi tính năng này đã bị tắt."
     enable_invite_modal_with_roles: "Bật quy trình mời thành viên giao diện mới, cho phép quản trị viên mời trực tiếp ai đó làm quản trị viên. Người được mời sẽ trở thành điều hành viên ngay khi đăng ký và chính thức lên quản trị viên sau khi người mời xác nhận qua thư điện tử (Email)."
     errors:

@@ -45,12 +45,6 @@ zh_CN:
           other: "%{formatted_number} 条聊天消息"
     chat:
       homepage_option: "聊天频道"
-      admin_onboarding:
-        start_posting:
-          title: "开始聊天"
-          description: "请将您的第一条消息发送至 #%{channel}。"
-          action: "写一条消息"
-          completed: "继续聊天"
       edit_category:
         tab_title: "聊天"
         channel: "频道"
@@ -105,6 +99,7 @@ zh_CN:
           other: "确定要删除 %{count} 条消息吗？"
       channel_settings:
         title: "频道设置"
+        page_title: "%{channel} 设置"
         star_channel: "收藏频道"
         unstar_channel: "取消收藏频道"
         close_channel: "关闭频道"
@@ -115,6 +110,16 @@ zh_CN:
         delete_channel: "删除频道"
         danger_zone:
           title: "危险区域"
+          archive_title: "存档频道"
+          archive_description: "将频道的消息移至一个主题中，并将频道设置为只读。"
+          close_title: "关闭频道"
+          close_description: "阻止成员发送新消息。您可以随时重新开启频道。"
+          open_title: "重新打开频道"
+          open_description: "允许成员再次在频道发送消息。"
+          delete_title: "删除频道"
+          delete_description: "一旦删除，此频道及其所有消息将无法恢复。"
+          leave_title: "离开频道"
+          leave_description: "您将停止接收来自频道的消息和通知。您可以随时重新加入。"
         join_channel: "加入频道"
         leave_channel: "离开频道"
         leave_groupchat_info: "离开此群组聊天后，您将无法再访问它，也不会收到与之相关的通知。要重新加入，需要群组聊天成员再次向您发送邀请。"
@@ -402,6 +407,7 @@ zh_CN:
           search: 搜索
         remove_member: "移除"
         members_title: "%{channel} 位成员"
+        preferences_title: "%{channel} 偏好设置"
       new_message_modal:
         title: 发送消息
         add_user_long: <kbd>shift + 点击</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
@@ -546,8 +552,15 @@ zh_CN:
         followed: "已加入"
         mute: "将频道设为免打扰"
         unmute: "取消将频道设为免打扰"
+        muted_until_hint: "直到 %{until}"
         mute_options:
           "off": "关"
+          15_minutes: "15分钟"
+          1_hour: "1小时"
+          8_hours: "8小时"
+          24_hours: "24小时"
+          until_unmuted: "直到我把它重新打开"
+          current: "直到 %{until}"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"

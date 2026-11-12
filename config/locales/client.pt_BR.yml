@@ -510,21 +510,11 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
+      create_category:
+        action: "Criar categoria"
       invite_collaborators:
         title: "Convidar colaboradores"
         action: "Criar convite"
-      start_posting:
-        title: "Comece a postar"
-        action: "Ver ideias"
-        choose_option: "Como você gostaria de começar?"
-        predefined_topics: "Modelos para quebrar o gelo"
-        predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
-        use_predefined: "Navegar pelos modelos"
-        back: "Voltar"
-        icebreakers:
-          introduce_yourself:
-            title: "Apresente-se"
-            body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
     design_wizard:
       back: "Voltar"
       next: "Próximo"
