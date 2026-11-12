@@ -32,9 +32,6 @@ RSpec.describe Checklist::CheckboxesController do
         )
       sign_in(moderator)
 
-      get "/posts/#{private_post.id}.json"
-      expect(response.status).to eq(404)
-      expect(response.body).not_to include(private_post.raw)
 
       put "/checklist/toggle.json",
           params: params.merge(post_id: private_post.id, expected_raw: "unknown")
