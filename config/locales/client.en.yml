@@ -1207,6 +1207,10 @@ en:
       statuses:
         pending:
           title: "Pending"
+        problem_confirmed:
+          title: "Problem confirmed"
+        no_problem_found:
+          title: "No problem found"
         approved:
           title: "Approved"
         approved_flag:
@@ -1240,6 +1244,9 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
+        something_wrong_with_post: "Is there something wrong with this post?"
+        something_wrong_with_topic: "Is there something wrong with this topic?"
+        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1290,6 +1297,8 @@ en:
         reviewed: "Reviewed"
         approved_by: "Approved by %{username} · %{relativeDate}"
         rejected_by: "Rejected by %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem confirmed by %{username} · %{relativeDate}"
+        no_problem_found_by: "No problem found by %{username} · %{relativeDate}"
         ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"

@@ -3234,6 +3234,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
+    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -6619,6 +6620,12 @@ en:
         watched_word: "This post included a Watched Word. Check the %{link} for more."
 
     actions:
+      answer_yes:
+        title: "Yes"
+        delete_post_title: "Yes, delete post"
+        keep_post_deleted_title: "Yes, keep post deleted"
+      answer_no:
+        title: "No"
       agree:
         title: "Yes"
       agree_and_keep:
@@ -6715,6 +6722,7 @@ en:
         complete: "Post approved."
       approve_post:
         title: "Yes"
+        action_title: "Approve post"
         complete: "Post approved."
       approve_post_closed:
         title: "Yes"
