@@ -517,6 +517,12 @@ eviltrout</p>
       '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
       "will not create a script tag within an attribute"
     );
+
+    assert.cooked(
+      `<aside class="quote group-a&#32;pswp">x</aside>`,
+      "<aside>x</aside>",
+      "does not allow a character reference to smuggle extra quote classes"
+    );
   });
 
   test("Incomplete quotes", function (assert) {
@@ -893,6 +899,12 @@ eviltrout</p>
       "```ruby\n<header>hello</header>\n```",
       '<pre data-code-wrap="ruby"><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
       "escapes code in the code block"
+    );
+
+    assert.cooked(
+      `<code class="lang-js&#32;lazy-video-container">not a video</code>`,
+      "<p><code>not a video</code></p>",
+      "does not allow a character reference to smuggle extra code classes"
     );
 
     assert.cooked(
