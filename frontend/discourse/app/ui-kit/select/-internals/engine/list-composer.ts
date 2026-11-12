@@ -49,6 +49,10 @@ interface PlacedRow {
   boundary?: Boundary;
   /** The group a splitter leads. */
   splitter?: GroupRun;
+  /** A rule an option asked for: its key follows the owner, and it pins with sticky options. */
+  divider?: { key: string; sticky: boolean };
+  /** Where the row sat before rules were drawn, so a rule coming or going never rekeys it. */
+  at?: number;
 }
 
 /** Grouped rows, and the number of action boundaries among them. */
@@ -193,11 +197,14 @@ export default class ListComposer {
       });
     }
     const extra = allExtra.filter(include);
-    // Sticky options lead the whole list, ahead of the none option, so they are hoisted out of
-    // both the extras and the source options before grouping, which never reaches them.
+    // Positioned options are hoisted out of both the extras and the source options before
+    // grouping, which never reaches them: sticky ones lead the whole list, ahead of the none
+    // option, and end ones follow everything else.
     const isSticky = (option: SelectOption) => option.position === "sticky";
+    const isEnd = (option: SelectOption) => option.position === "end";
     const sticky = [...extra, ...options].filter(isSticky);
-    options = options.filter((option) => !isSticky(option));
+    const end = [...extra, ...options].filter(isEnd);
+    options = options.filter((option) => option.position == null);
     const sourceCount = options.length;
 
     // Only source options are grouped; the create option belongs to no group.
@@ -206,7 +213,7 @@ export default class ListComposer {
       : { rows: options.map((option) => ({ option })), actions: 0 };
 
     const none = this.#noneOption();
-    const scrollingExtra = extra.filter((option) => !isSticky(option));
+    const scrollingExtra = extra.filter((option) => option.position == null);
     // The none option leads the scrolling extras and flows through the same counting path
     // below, keeping its `posInSet`/`setSize`/`logicalIndex` in lockstep with the rest.
     const leading = none
@@ -217,10 +224,12 @@ export default class ListComposer {
       ...(create ? [{ option: create }] : []),
       ...grouped.rows,
     ];
+    const endOptions = this.#endOptions(end, rows, filter);
+    rows.push(...endOptions.shown.map((option) => ({ option })));
 
     return this.#describeList(
-      rows,
-      leading.length,
+      this.#placeDividers(rows, sticky.length),
+      leading.length + endOptions.counted,
       sourceCount,
       rawCount,
       create,
@@ -251,6 +260,85 @@ export default class ListComposer {
         return row;
       })
     );
+  }
+
+  /**
+   * The end options this build shows, and how many the set size counts. While the source can
+   * still grow they wait for its last option, still counted, as a pinned sticky option is, so
+   * the size never jumps. With nothing else to show they show under an empty query, so the list
+   * stays mounted and can page, and never under a query, where Enter would run the only option
+   * left.
+   */
+  #endOptions(
+    end: SelectOption[],
+    rows: PlacedRow[],
+    filter: string
+  ): { shown: SelectOption[]; counted: number } {
+    if (!rows.some((row) => !this.#isStructural(row.option))) {
+      const shown = filter === "" ? end : [];
+      return { shown, counted: shown.length };
+    }
+    return { shown: this.#canGrow() ? [] : end, counted: end.length };
+  }
+
+  /**
+   * Draws the rules options asked for, at most one per gap: a group's splitter wins, then the
+   * next option's "before", then the previous option's "after". A rule needs an option on both
+   * sides, so none sits at either edge; none sits at the sticky seam, which the last sticky
+   * option draws itself, or before a text group header, which draws its own. A rule between two
+   * sticky options pins with them.
+   */
+  #placeDividers(rows: PlacedRow[], stickyCount: number): PlacedRow[] {
+    const out: PlacedRow[] = [];
+    rows.forEach((row, index) => {
+      const previous = out.at(-1);
+      if (
+        previous &&
+        !previous.splitter &&
+        !previous.divider &&
+        !row.splitter &&
+        !this.#seamBetween(index - 1, index, stickyCount) &&
+        !(row.boundary?.side === "header" && !row.boundary.action)
+      ) {
+        const owner = this.#dividerOwner(previous, row, index);
+        if (owner) {
+          const ownerKey = this.#rowKey(
+            owner.row,
+            this.#args.recordValue(owner.row.option.record),
+            owner.index
+          );
+          out.push({
+            option: engineOption("divider", Object.freeze({})),
+            divider: {
+              key: engineKey(`${owner.tag}:${ownerKey}`),
+              sticky: index < stickyCount,
+            },
+          });
+        }
+      }
+      out.push({ ...row, at: index });
+    });
+    return out;
+  }
+
+  /** The option a rule between `previous` and `next` belongs to, and where it sits. */
+  #dividerOwner(
+    previous: PlacedRow,
+    next: PlacedRow,
+    index: number
+  ): { row: PlacedRow; index: number; tag: "db" | "da" } | null {
+    if (next.option.divider === "before") {
+      return { row: next, index, tag: "db" };
+    }
+    if (previous.option.divider === "after") {
+      return { row: previous, index: index - 1, tag: "da" };
+    }
+    return null;
+  }
+
+  /** Whether the gap before `index` is where the sticky options end. */
+  #seamBetween(previous: number, index: number, stickyCount: number): boolean {
+    return previous < stickyCount && index >= stickyCount;
   }
 
   /** Runs a record-level step and maps what it returned back to options. */
@@ -308,8 +396,9 @@ export default class ListComposer {
   }
 
   /**
-   * Describes the leading options, create, then grouped source rows, and stamps each OPTION with
-   * its position in the whole result set. Positions come from the engine's own totals rather
+   * Describes the leading options, create, the grouped source rows and the end options, with
+   * `besideSourceCount` options counted outside the source (leading and end, shown or held),
+   * and stamps each OPTION with its position in the whole result set. Positions come from the engine's own totals rather
    * than the DOM index, so they stay correct while only a window is mounted, and they count
    * options only: an interleaved header or divider shifts no option's `posInSet` and never enters
    * `setSize`. A group's action header or footer is an option, so it is numbered and counted,
@@ -317,7 +406,7 @@ export default class ListComposer {
    */
   #describeList(
     rows: PlacedRow[],
-    leadingCount: number,
+    besideSourceCount: number,
     sourceCount: number,
     inputCount: number,
     create: SelectOption | null,
@@ -341,7 +430,7 @@ export default class ListComposer {
         ? sourceCount
         : Math.max(total + sourceCount - inputCount, sourceCount);
     const setSize =
-      leadingCount + sourceTotal + (create ? 1 : 0) + grouped.actions;
+      besideSourceCount + sourceTotal + (create ? 1 : 0) + grouped.actions;
 
     // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
     // deduped value array — so evaluating it per row would repeat that work for every option.
@@ -436,7 +525,9 @@ export default class ListComposer {
         : undefined,
       flags: {
         selected,
-        sticky: option.position === "sticky" && !structural && !boundary,
+        sticky: placed.divider
+          ? placed.divider.sticky
+          : option.position === "sticky" && !structural && !boundary,
         // At the cap only rows that could actually grow the selection are closed off. A
         // selected option stays open (deselecting it is how the user gets back under the cap),
         // and so do action options and structural rows, neither of which ever becomes a value.
@@ -462,6 +553,9 @@ export default class ListComposer {
    * they sit, so they keep their DOM rows when earlier rows come and go.
    */
   #rowKey(placed: PlacedRow, value: SelectId, index: number): string {
+    if (placed.divider) {
+      return placed.divider.key;
+    }
     const group = placed.boundary?.group ?? placed.splitter;
     if (group) {
       const tag = placed.splitter
@@ -480,7 +574,9 @@ export default class ListComposer {
     const key = this.#args.valueKey(value);
     // A value-less row (a null-id extra option) has no natural key; its position is stable
     // within the ordered leading options.
-    return key == null ? engineKey(`row:${index}`) : recordKey(key);
+    return key == null
+      ? engineKey(`row:${placed.at ?? index}`)
+      : recordKey(key);
   }
 
   #isStructural(option: SelectOption): boolean {
@@ -634,7 +730,7 @@ export default class ListComposer {
     const occurrences = new Map<string, number>();
     let current: GroupRun | undefined;
     for (const option of options) {
-      if (option.position === "sticky") {
+      if (option.position != null) {
         continue;
       }
       const key = this.#groupKey(option);
