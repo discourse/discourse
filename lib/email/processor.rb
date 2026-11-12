@@ -51,6 +51,9 @@ module Email
           return nil
         when Email::Receiver::FromReplyByAddressError
           return nil
+        when Email::Receiver::AuthenticationFailedError
+          # Do not send rejection mail to an unauthenticated sender address.
+          return nil
         when Email::Receiver::EmptyEmailError
           :email_reject_empty
         when Email::Receiver::NoBodyDetectedError
