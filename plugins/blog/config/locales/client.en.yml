@@ -203,6 +203,8 @@ en:
           body: body
           path: path
           excerpt: excerpt
+          meta_description: meta description
+          canonical_url: canonical URL
           featured: featured flag
           tags: tags
           published_at: publication date
@@ -210,7 +212,7 @@ en:
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, date, featured
+        settings_hint: Path, excerpt, search, date, featured
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -320,6 +322,15 @@ en:
       excerpt_hint:
         A short introduction for article cards and search previews. Leave
         blank to generate an excerpt from the article.
+      meta_description: Meta description
+      meta_description_hint:
+        The summary search engines and link previews show. Leave blank to use
+        the excerpt.
+      canonical_url: Canonical URL
+      canonical_url_hint:
+        For an article first published elsewhere, the original's full URL, so
+        search engines credit that page instead. Leave blank for this article's
+        own URL.
       date: Publication date
       date_hint:
         Leave blank to use the first publication time. For imported articles,

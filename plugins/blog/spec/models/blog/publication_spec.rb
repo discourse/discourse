@@ -303,4 +303,35 @@ RSpec.describe Blog::Publication do
       expect(publication.path).to eq("/2026/11/#{topic.slug}")
     end
   end
+
+  describe "search metadata" do
+    it "accepts an absolute http or https canonical URL, without surrounding spaces" do
+      publication =
+        described_class.new(topic:, path: "/story", canonical_url: " https://example.com/a ")
+
+      expect(publication).to be_valid
+      expect(publication.canonical_url).to eq("https://example.com/a")
+    end
+
+    it "rejects canonical URLs that aren't absolute http or https addresses" do
+      [
+        "/relative",
+        "example.com/a",
+        "ftp://example.com/a",
+        "javascript:alert(1)",
+        "https://",
+        "http://exa mple.com",
+      ].each do |canonical_url|
+        publication = described_class.new(topic:, path: "/story", canonical_url:)
+        expect(publication).not_to be_valid, "Expected #{canonical_url.inspect} to be rejected"
+        expect(publication.errors[:canonical_url]).to be_present
+      end
+    end
+
+    it "limits the meta description" do
+      expect(
+        described_class.new(topic:, path: "/story", meta_description: "a" * 501),
+      ).not_to be_valid
+    end
+  end
 end

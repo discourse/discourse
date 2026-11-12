@@ -294,8 +294,9 @@ to change.
 3. For an existing public article, the public discussion topic shows a banner
    with **Edit privately**, which creates a private working copy and links to it.
    The existing public discussion and its replies keep their IDs.
-4. **Article settings** (path, excerpt, date, featured) are edited inline in the
-   panel. **Save settings** stages metadata without changing the live article.
+4. **Article settings** (path, excerpt, meta description, canonical URL, date,
+   featured) are edited inline in the panel. **Save settings** stages metadata
+   without changing the live article.
 5. **Publish** (or **Publish correction** once live) requires confirmation and
    freezes the current draft and settings as a revision, approves it, and copies
    only that frozen article into a separate public discussion (or updates its
