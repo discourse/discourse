@@ -11,6 +11,19 @@ module("Unit | Utility | render-tags", function (hooks) {
 
   hooks.afterEach(() => clearTagsHtmlCallbacks());
 
+  test("preserves tag IDs in topic lists alongside name-only tags", function (assert) {
+    const topic = EmberObject.create({
+      visibleListTags: [{ id: 123, name: "猫", slug: "cat" }, "dog"],
+    });
+    const div = document.createElement("div");
+    div.innerHTML = renderTags(topic, { mode: "list" });
+
+    assert.dom('[data-tag-name="猫"]', div).hasAttribute("data-tag-id", "123");
+    assert
+      .dom('[data-tag-name="dog"]', div)
+      .doesNotHaveAttribute("data-tag-id");
+  });
+
   test("renderTags with tagClasses param", function (assert) {
     const topic = EmberObject.create({
       tags: ["cat", "dog"],

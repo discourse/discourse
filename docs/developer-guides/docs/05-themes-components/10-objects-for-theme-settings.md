@@ -98,6 +98,8 @@ The above schema definition states that the `link` object has a `name` property 
 
 When updating an objects theme setting through the API, `tags` arrays can contain source tag names, integer tag IDs, or both. IDs are resolved to source names before validation and storage. Themes still receive arrays of source names. Numeric strings are treated as names, not IDs, and defaults must use names.
 
+The default frontend tag renderer includes `data-tag-id` for tag objects with an ID, or for tag names rendered with the `tagId` option. The existing `data-tag-name` attribute is unchanged. The ID stays the same across locales even when the displayed name changes. Name-only rendering calls without an ID omit `data-tag-id`. Theme settings still contain source names, so their values cannot be matched directly against `data-tag-id`.
+
 With the schema defined, the default value of the setting can now be set by defining a array in yaml like so:
 
 ```yaml
