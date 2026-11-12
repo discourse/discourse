@@ -46,6 +46,7 @@ import SettingUpload from "discourse/admin/components/site-settings/upload";
 import SettingUploadedImageList from "discourse/admin/components/site-settings/uploaded-image-list";
 import SettingUrlList from "discourse/admin/components/site-settings/url-list";
 import SettingValueList from "discourse/admin/components/site-settings/value-list";
+import { settingAnchorId } from "discourse/admin/lib/setting-anchor";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
@@ -117,6 +118,7 @@ export default class SiteSettingComponent extends Component {
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+  linkableSetting = false;
 
   /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
@@ -153,6 +155,20 @@ export default class SiteSettingComponent extends Component {
       settingName?.includes("default_categories") ||
       settingName?.includes("default_tags")
     );
+  }
+
+  get settingAnchorId() {
+    return settingAnchorId(this.setting.setting);
+  }
+
+  get settingLinkHref() {
+    return `#${encodeURIComponent(this.settingAnchorId)}`;
+  }
+
+  get settingLinkLabel() {
+    return i18n("admin.customize.theme.setting_link_label", {
+      name: this.settingName,
+    });
   }
 
   get defaultTheme() {
@@ -715,27 +731,40 @@ export default class SiteSettingComponent extends Component {
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
         {{if this.isDisabledByDependency 'disabled-by-dependency'}}
-        {{if @inline 'inline-dependent-setting'}}"
+        {{if @inline 'inline-dependent-setting'}}
+        {{if this.linkableSetting 'linkable'}}"
       data-setting={{this.setting.setting}}
+      id={{if this.linkableSetting this.settingAnchorId}}
       ...attributes
     >
       <div class="setting-label">
-        <h3>
-          {{this.settingName}}
+        <div class="setting-label__heading">
+          <h3>
+            {{this.settingName}}
 
-          {{#if this.staffLogFilter}}
-            <LinkTo
-              class="staff-action-log-link"
-              title={{i18n "admin.settings.history"}}
-              @query={{hash filters=this.staffLogFilter force_refresh=true}}
-              @route="adminLogs.staffActionLogs"
-            >
-              <span class="history-icon">
-                {{dIcon "clock-rotate-left"}}
-              </span>
-            </LinkTo>
+            {{#if this.staffLogFilter}}
+              <LinkTo
+                class="staff-action-log-link"
+                title={{i18n "admin.settings.history"}}
+                @query={{hash filters=this.staffLogFilter force_refresh=true}}
+                @route="adminLogs.staffActionLogs"
+              >
+                <span class="history-icon">
+                  {{dIcon "clock-rotate-left"}}
+                </span>
+              </LinkTo>
+            {{/if}}
+          </h3>
+
+          {{#if this.linkableSetting}}
+            <a
+              aria-label={{this.settingLinkLabel}}
+              class="setting-link"
+              href={{this.settingLinkHref}}
+              title={{this.settingLinkLabel}}
+            >{{dIcon "link"}}</a>
           {{/if}}
-        </h3>
+        </div>
 
         <PluginOutlet
           @name="site-setting-after-label"

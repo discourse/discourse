@@ -1,6 +1,11 @@
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import {
+  settingAnchorId,
+  settingNameFromFragment,
+} from "discourse/admin/lib/setting-anchor";
+import discourseLater from "discourse/lib/later";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -8,11 +13,13 @@ import { i18n } from "discourse-i18n";
 export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
   @service dialog;
 
+  #arrivalSetting = null;
+
   async model() {
     return this.modelFor("adminCustomizeThemes.show");
   }
 
-  setupController(controller, model) {
+  setupController(controller, model, transition) {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
@@ -28,11 +35,28 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       parentThemesSaved: false,
       userLocale: parentController.get("model.extras.locale"),
     });
+
+    // Only a fresh page load (the app's first transition) jumps to a setting
+    // named in the URL's hash. Hash links followed inside the app are scrolled
+    // by DiscourseURL, and later transitions must not reuse an earlier hash.
+    this.#arrivalSetting = transition?.from
+      ? null
+      : settingNameFromFragment(window.location.hash);
   }
 
   @action
   didTransition() {
-    scrollTop();
+    const name = this.#arrivalSetting;
+    this.#arrivalSetting = null;
+    if (!name) {
+      scrollTop();
+      return;
+    }
+
+    // Wait a runloop: the route-scroll-manager service scrolls to the top
+    // (or the remembered position) in this transition's afterRender queue,
+    // after ours, and would undo the scroll to the setting.
+    next(() => this.#arriveAtSetting(name));
   }
 
   @action
@@ -83,6 +107,26 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
         },
       });
     }
+  }
+
+  #arriveAtSetting(name) {
+    const row = document.getElementById(settingAnchorId(name));
+    if (!row) {
+      return;
+    }
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    row.scrollIntoView({
+      block: "center",
+      behavior: reduce ? "auto" : "smooth",
+    });
+    const heading = row.querySelector(".setting-label h3");
+    heading?.setAttribute("tabindex", "-1");
+    heading?.focus({ preventScroll: true });
+    row.classList.add("--highlighted");
+    discourseLater(() => row.classList.remove("--highlighted"), 2000);
   }
 
   #leave(transition) {

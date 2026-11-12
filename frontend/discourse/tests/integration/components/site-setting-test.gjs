@@ -37,6 +37,19 @@ function renderSetting(props) {
 module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("plain site settings have no theme anchor", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      value: true,
+      type: "bool",
+    });
+
+    assert.dom(".setting").doesNotHaveClass("linkable");
+    assert.dom(".setting").doesNotHaveAttribute("id");
+    assert.dom(".setting-link").doesNotExist();
+    assert.dom(".setting-label h3").doesNotHaveAttribute("tabindex");
+  });
+
   test("displays host-list setting value", async function (assert) {
     await renderSetting({
       setting: "blocked_onebox_domains",
