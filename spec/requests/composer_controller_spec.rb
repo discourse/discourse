@@ -291,6 +291,31 @@ RSpec.describe ComposerController do
         )
       end
 
+      it "ignores allowed_names for an existing topic" do
+        get "/composer/mentions.json",
+            params: {
+              names: [member.username, user.username],
+              topic_id: topic.id,
+              allowed_names: [member.username, user.username],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          member.username_lower => "private",
+          user.username_lower => "private",
+        )
+      end
+
+      it "warns that a mentioned group is not invited when its overlap with the recipients is hidden" do
+        mentioned_group =
+          Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone], users: [member])
+
+        get "/composer/mentions.json", params: { names: [mentioned_group.name], topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["group_reasons"]).to eq(mentioned_group.name => "not_allowed")
+      end
+
       it "warns only about outsiders when the members are visible" do
         recipient_group.update!(members_visibility_level: Group.visibility_levels[:public])
 
