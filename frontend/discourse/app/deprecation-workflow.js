@@ -347,7 +347,6 @@ const workflows = [
     "discourse.resolver-resolutions",
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
-    "discourse.user.userOptions",
   ].map((matchId) => ({ handler: "notify-admin", matchId })),
 
   // used in system specs
