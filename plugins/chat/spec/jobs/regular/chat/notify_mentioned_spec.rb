@@ -127,6 +127,27 @@ describe Jobs::Chat::NotifyMentioned do
       expect(created_notification).to be_nil
     end
 
+    it "does nothing when the user can no longer access the channel" do
+      group = Fabricate(:group, users: [user_1, user_2])
+      private_channel = Fabricate(:private_category_channel, group: group)
+      [user_1, user_2].each do |u|
+        Fabricate(:user_chat_channel_membership, chat_channel: private_channel, user: u)
+      end
+      message = create_chat_message(channel: private_channel)
+      Fabricate(:here_chat_mention, chat_message: message)
+      group.group_users.where(user: user_2).delete_all
+
+      PostAlerter.expects(:push_notification).never
+
+      desktop_notification =
+        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+      expect(desktop_notification).to be_nil
+
+      created_notification =
+        Notification.where(user: user_2, notification_type: Notification.types[:chat_mention]).last
+      expect(created_notification).to be_nil
+    end
+
     it "does nothing if user is included in the already_notified_user_ids" do
       message = create_chat_message
 
