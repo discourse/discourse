@@ -283,6 +283,55 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when a channel member has lost access to the channel's category" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:channel) { Fabricate(:category_channel, chatable: private_category) }
+      fab!(:removed_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+      let(:message) { "@all this is a secret message" }
+
+      before do
+        Jobs.run_immediately!
+        group.add(current_user)
+        group.add(removed_user)
+        channel.add(removed_user)
+        GroupUser.where(group: group, user: removed_user).delete_all
+      end
+
+      it "does not send channel-wide mention notifications to the removed user" do
+        messages =
+          MessageBus.track_publish("/chat/notification-alert/#{removed_user.id}") do
+            post "/chat/#{channel.id}.json", params: params
+          end
+
+        expect(response.status).to eq(200)
+        expect(messages).to be_empty
+        expect(
+          Notification.where(
+            user: removed_user,
+            notification_type: Notification.types[:chat_mention],
+          ),
+        ).to be_empty
+      end
+
+      it "still notifies members who retain access" do
+        other_member = Fabricate(:user, refresh_auto_groups: true)
+        group.add(other_member)
+        channel.add(other_member)
+
+        post "/chat/#{channel.id}.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user: other_member,
+            notification_type: Notification.types[:chat_mention],
+          ),
+        ).to exist
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
