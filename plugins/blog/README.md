@@ -145,9 +145,9 @@ embedding host then includes that port, for example `blog.dev.localhost:8443`.
 
 ### Backups and hostname changes
 
-Back up uploads as well as the database. Enable `include_thumbnails_in_backups`
-when preserving published revisions: their frozen HTML can reference optimized
-images that are not regenerated simply by rendering the article.
+Back up uploads as well as the database. Enable `include_thumbnails_in_backups`:
+published articles keep the HTML they were approved with, and a restore without
+thumbnails regenerates them by rebaking posts, which does not change articles.
 
 A backup carries blog settings, themes, publications, and revisions, but not plugin
 source, DNS, TLS, or reverse-proxy configuration. Restore onto a compatible
@@ -155,11 +155,14 @@ Discourse build with this plugin installed. Before exposing a restored site, set
 the correct blog origin and exact embedding host, and verify both reader and
 editorial permissions.
 
-For a hostname-changing restore, also remap absolute URLs inside
-`blog_revisions.data`. These snapshots use JSONB; core's text-column
-hostname remapping does not update them. Perform this as an explicit, backed-up
-restore operation, not by republishing or rebaking live articles. Verify canonicals,
-feeds, sitemap, article images, and embedded discussions before reopening traffic.
+Published articles store their HTML in text columns, so hostname remaps (`discourse
+remap` or a restore onto a new hostname) and upload migrations to S3 update them like
+posts. Rebakes do not: a refetched onebox or other re-rendered content stays out of an
+article until it is published again or an admin runs `bin/rake blog:refresh_articles`,
+which copies each discussion post's current HTML into its article. Run it after rebaking
+posts in bulk, such as after an import, once Sidekiq has finished post-processing them.
+Verify canonicals, feeds, sitemap, article images, and embedded discussions before
+reopening traffic.
 
 ### Local demo provisioning
 

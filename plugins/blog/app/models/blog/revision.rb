@@ -20,9 +20,13 @@ module ::Blog
         "raw" => post.raw,
         "cooked" => post.cooked,
         "author_name" => source.user&.name.presence || source.user&.username,
-        "image_url" => upload && !upload.secure? ? upload.url : "",
+        "image_url" => image_url_for(upload),
         "tags" => source.tags.visible(Guardian.new).pluck(:name),
       )
+    end
+
+    def self.image_url_for(upload)
+      upload && !upload.secure? ? upload.url : ""
     end
 
     def title

@@ -110,6 +110,44 @@ RSpec.describe Blog::Publication do
     end
   end
 
+  describe "#article" do
+    include_context "with blog editorial setup"
+
+    fab!(:topic) { Fabricate(:topic, category: drafts, user: writer) }
+    fab!(:first_post) do
+      Fabricate(
+        :post,
+        topic:,
+        user: writer,
+        raw: "Read the guide at https://old.example.com/guide today.",
+      )
+    end
+
+    let(:discussion_post) { publication.discussion_topic.first_post }
+
+    before { publish_blog_draft(publication, acting_user) }
+
+    it "follows a hostname remap of the database" do
+      DbHelper.remap("old.example.com", "new.example.com")
+
+      expect(publication.reload.article.cooked).to include("https://new.example.com/guide")
+    end
+
+    it "keeps the approved HTML when the discussion post is rebaked" do
+      published_cooked = publication.article.cooked
+      discussion_post.update_columns(raw: "Content that changed after approval.")
+      CookedPostProcessor.new(discussion_post.reload).post_process
+
+      expect(publication.reload.article.cooked).to eq(published_cooked)
+    end
+
+    it "shows the revision snapshot until the live HTML is captured" do
+      publication.update_columns(cooked: nil)
+
+      expect(publication.article.cooked).to eq(publication.published_revision.cooked)
+    end
+  end
+
   describe ".default_path" do
     before { freeze_time Time.utc(2026, 11, 6, 23, 30) }
 
