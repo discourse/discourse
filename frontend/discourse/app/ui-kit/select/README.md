@@ -583,25 +583,30 @@ deprecated `modifySelectKit` bridge and legacy root classes; it does not match `
 
 ```js
 import { trackedObject } from "@ember/reactive/collections";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
 api.registerValueTransformer("select-customizations", ({ value: selects }) => {
   selects.forKind("select-tag", (spec) => {
     // One state object per select: setup runs once for each matching select.
     const state = trackedObject({ suggesting: false });
 
-    spec.content((items, { filter }) => {
+    spec.content((options, { filter }) => {
       if (filter) {
-        return items;
+        return options;
       }
-      const toggle = {
-        id: "suggestion-mode",
-        name: i18n(state.suggesting ? "back" : "suggest"),
-        onSelect(control) {
-          state.suggesting = !state.suggesting;
-          control.reload();
+      const toggle = selectOption(
+        {
+          id: "suggestion-mode",
+          name: i18n(state.suggesting ? "back" : "suggest"),
         },
-      };
-      return [toggle, ...items];
+        {
+          onSelect(control) {
+            state.suggesting = !state.suggesting;
+            control.reload();
+          },
+        }
+      );
+      return [toggle, ...options];
     });
 
     spec.load((load, { filter }) => {
@@ -621,7 +626,7 @@ api.registerValueTransformer("select-customizations", ({ value: selects }) => {
 ```
 
 In this example `loadSuggestions` follows the same contract as `@load`, and the translation keys
-name the Suggest and Back rows.
+name the Suggest and Back options.
 
 ### Setup
 
@@ -642,17 +647,20 @@ Each method on `spec` appends a callback. Callbacks for the same point compose i
 
 | Method | Runs | Callback |
 |---|---|---|
-| `content(fn)` | when the list is built | `(items, ctx) => items`. Returns the next list. |
-| `row(fn)` | for each option row | `(row, ctx) => void`. Mutates `row.classes` and `row.title`. |
-| `options(fn)` | when presentation is read | `(current, ctx) => partial`. Returns overrides. |
+| `content(fn)` | when the list is built | `(options, ctx) => options`. Returns the next list. |
+| `option(fn)` | for each option | `(presentation, ctx) => void`. Mutates `presentation.classes` and `presentation.title`. |
+| `config(fn)` | when presentation is read | `(current, ctx) => partial`. Returns overrides. |
 | `load(fn)` | once per query, `@load` selects only | `(load, ctx) => load`. Must return a function. |
 | `change(fn)` | on each selection change | `(next, ctx)`. Call `next()` to continue. |
 
-**`content`** returns a new list. Set `sticky: true` on an option to keep an action such as
-"Suggest" visible at the top while the list scrolls. Sticky options lead the none row and
-specials, stay outside groups, and keep their relative order. Headers and dividers ignore
-`sticky`, and bottom actions belong in `:footer`. A result that is not an array is a development
-assertion and otherwise leaves the list unchanged. Content changes are reflected in
+**`content`** gets options and returns the next list. Read a record through `option.record`, and
+change what an option does with `option.with(settings)`, where `undefined` keeps a setting and
+`null` clears it. A returned record becomes an option with no settings: nothing is carried over
+from an input with the same value, and fields on the record (`disabled`, `description`,
+`onSelect`, `sticky`) are data, never settings. Give an option `position: "sticky"` to keep an
+action such as "Suggest" visible at the top while the list scrolls. Sticky options lead the none
+option and extra options, stay outside groups, and keep their relative order. A result that is not
+an array is a development assertion and otherwise leaves the list unchanged. Content changes are reflected in
 `aria-setsize` and the announced count. On paged sources, the set is the declared total plus the
 customizations' net change. Two reveals in a row that add no visible rows stop paging for that
 query. The set is then sized by the rows shown, and the footer's `total` becomes undefined.
@@ -662,13 +670,14 @@ as pages add groups (40 + 2, then 40 + 5), and a reveal that only adds a footer 
 result. Paging never counts them. Legacy `modifySelectKit` content runs after every `content`
 callback.
 
-**`row`** gets a fresh `{ classes: [], title: undefined }` for each row. Classes are added after
-the core classes, and falsy entries are ignored. `title` renders only when a callback sets it; an
-item's own `title` field is never a tooltip. Rows include none, create and action rows, but not
-group headers, dividers, chips or the trigger. The context adds `item` (the raw row item),
-`selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
+**`option`** gets a fresh `{ classes: [], title: undefined }` for each option. Classes are added
+after the core classes, and falsy entries are ignored. `title` renders only when a callback sets
+it; a record's own `title` field is never a tooltip. It runs for the none, create and action
+options, but not for group headers, dividers, chips or the trigger. The context adds `option`
+(with its settings), `record`, `selected` and `disabled` (which includes selection-cap
+restrictions). It has no `control`. An option rebuilt with equal settings is not presented again.
 
-**`options`** overrides presentation. The core keys are `caretIcon` (a string or
+**`config`** overrides presentation. The core keys are `caretIcon` (a string or
 `{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneRow`,
 `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
 (see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
@@ -677,9 +686,11 @@ arguments. Every key is last-wins except `disabled`, which can add a lock but ne
 without one it is ignored with a warning. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per row. The context has `value` and `control`, and no
-`options`, because options cannot depend on themselves.
+`config`, because config cannot depend on itself.
 
-**`load`** receives the loader for a new query and returns the one to use. Remote work a
+**`load`** receives the loader for a new query and returns the one to use. The loader it receives
+answers with options, so a step reads the settings the steps inside it gave; a record it returns
+becomes an option with no settings. Remote work a
 customization adds belongs here rather than in a row's `onSelect`: a pending loader shows the
 loading skeleton (with `loadingStatus` on, `loadingLabel` captions it, with a spinner, in place of one skeleton row), its
 `signal` cancels a superseded request, and a rejection shows the error state. It runs when the
@@ -691,7 +702,7 @@ entry or `control.reload()`; otherwise it applies at the next query.
 **`change`** wraps the controlled `@onChange`. Not calling `next()` vetoes the change, and calling
 it later defers it. A deferred `next()` still checks whether the change was superseded, and a
 second call does nothing. A middleware may be async, for example to `await next()` and then
-`control.reload()`. The context adds `value` and `items`, the change being made, and `control`.
+`control.reload()`. The context adds `value` and `records`, the change being made, and `control`.
 Legacy `modifySelectKit` `onChange` callbacks run as soon as the middleware chain returns, so a
 deferred `next()` emits after them.
 
@@ -708,11 +719,11 @@ relies on:
 Both default to a frozen empty object, so `context.kindContext.scope` is always safe to read.
 Derived values such as labels are recipe options, not `kindContext`.
 
-`content`, `row`, `load` and `change` contexts also carry `options`, a frozen snapshot of the
+`content`, `option`, `load` and `change` contexts also carry `config`, a frozen snapshot of the
 resolved core and recipe values. A change middleware and the emit it lets through share one
 snapshot, so a deferred `next()` emits the values the middleware saw.
 
-`content`, `row` and `options` run while the list renders, so they must be pure. They must not
+`content`, `option` and `config` run while the list renders, so they must be pure. They must not
 write tracked state or call `update()` or any control or scope verbs. Those are for event time,
 such as a row's `onSelect`. A callback that reads tracked state runs again when that state
 changes. `load` runs outside render and may update its own state, such as leaving a mode when the
@@ -724,7 +735,7 @@ example with `name: control.pending ? i18n("suggesting") : i18n("suggest")` and
 
 Every setup and callback runs through the transformer error handling: a failure is reported and
 rethrown in tests. In production a failing setup is skipped, `content` and `load` keep the
-previous value, `row` keeps what was already set, `options` skips that result, and a failing
+previous value, `option` keeps what was already set, `config` skips that result, and a failing
 `change` middleware falls through to `next()` unless it already called it. An error thrown by the
 consumer's `@onChange` is never treated as a broken customization: it reaches the caller.
 

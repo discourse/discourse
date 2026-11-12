@@ -396,7 +396,9 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-tag-group", (spec) =>
-              spec.row((row) => row.classes.push("x-select-tag-group"))
+              spec.option((presentation) =>
+                presentation.classes.push("x-select-tag-group")
+              )
             );
           })
         );

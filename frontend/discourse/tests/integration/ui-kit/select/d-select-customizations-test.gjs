@@ -4,6 +4,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import {
   click,
   fillIn,
+  findAll,
   render,
   settled,
   setupOnerror,
@@ -20,8 +21,10 @@ import {
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import { isSelectOption } from "discourse/ui-kit/select/-internals/engine/select-option";
 import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 
 /** Registers one `select-customizations` callback that receives the registry. */
 function customize(register) {
@@ -84,12 +87,16 @@ module(
     test("row classes compose general to specific", async function (assert) {
       customize((selects) => {
         selects.forIdentifier("composer-tags", (spec) =>
-          spec.row((row) => row.classes.push("x-identifier"))
+          spec.option((presentation) =>
+            presentation.classes.push("x-identifier")
+          )
         );
         selects.forKind("tag-chooser", (spec) =>
-          spec.row((row) => row.classes.push("x-kind"))
+          spec.option((presentation) => presentation.classes.push("x-kind"))
         );
-        selects.forAll((spec) => spec.row((row) => row.classes.push("x-all")));
+        selects.forAll((spec) =>
+          spec.option((presentation) => presentation.classes.push("x-all"))
+        );
       });
 
       await render(
@@ -115,15 +122,19 @@ module(
       customize((selects) =>
         selects.forKind("toggler", (spec) => {
           const state = trackedObject({ on: false });
-          spec.content((items) => [
-            {
-              id: "toggle",
-              name: state.on ? "Toggle is on" : "Toggle is off",
-              onSelect() {
-                state.on = !state.on;
+          spec.content((options) => [
+            selectOption(
+              {
+                id: "toggle",
+                name: state.on ? "Toggle is on" : "Toggle is off",
               },
-            },
-            ...items,
+              {
+                onSelect() {
+                  state.on = !state.on;
+                },
+              }
+            ),
+            ...options,
           ]);
         })
       );
@@ -158,11 +169,11 @@ module(
       customize((selects) => {
         selects.forKind("first-kind", (spec) => {
           setups++;
-          spec.row((row) => row.classes.push("x-first"));
+          spec.option((presentation) => presentation.classes.push("x-first"));
         });
         selects.forKind("second-kind", (spec) => {
           setups++;
-          spec.row((row) => row.classes.push("x-second"));
+          spec.option((presentation) => presentation.classes.push("x-second"));
         });
       });
 
@@ -627,15 +638,16 @@ module(
         selects.forAll((spec) => {
           const state = trackedObject({ suggesting: false });
           spec.config(() => (state.suggesting ? { caretIcon: "spinner" } : {}));
-          spec.content((items) => [
-            {
-              id: "toggle",
-              name: "Toggle",
-              onSelect() {
-                state.suggesting = !state.suggesting;
-              },
-            },
-            ...items,
+          spec.content((options) => [
+            selectOption(
+              { id: "toggle", name: "Toggle" },
+              {
+                onSelect() {
+                  state.suggesting = !state.suggesting;
+                },
+              }
+            ),
+            ...options,
           ]);
         })
       );
@@ -755,9 +767,9 @@ module(
       ];
       customize((selects) =>
         selects.forKind("titled", (spec) =>
-          spec.row((row, context) => {
-            if (context.item.id === 2) {
-              row.title = "Ripe";
+          spec.option((presentation, context) => {
+            if (context.record.id === 2) {
+              presentation.title = "Ripe";
             }
           })
         )
@@ -800,10 +812,10 @@ module(
       const runs = new Map();
       customize((selects) =>
         selects.forAll((spec) =>
-          spec.row((row, context) => {
-            runs.set(context.item.id, (runs.get(context.item.id) ?? 0) + 1);
-            row.title = `Row ${context.item.id}`;
-            row.classes.push("x-row");
+          spec.option((presentation, context) => {
+            runs.set(context.record.id, (runs.get(context.record.id) ?? 0) + 1);
+            presentation.title = `Row ${context.record.id}`;
+            presentation.classes.push("x-row");
           })
         )
       );
@@ -1298,7 +1310,7 @@ module(
             seen.content = context.config;
             return items;
           });
-          spec.row((row, context) => {
+          spec.option((presentation, context) => {
             seen.row = context.config;
           });
           spec.load((load, context) => {
@@ -1404,15 +1416,16 @@ module(
               ? { texts: { placeholder: "Suggesting" }, prefix: "suggest" }
               : { texts: { placeholder: "Browsing" }, prefix: "browse" }
           );
-          spec.content((items) => [
-            {
-              id: "toggle",
-              name: "Toggle",
-              onSelect() {
-                state.suggesting = !state.suggesting;
-              },
-            },
-            ...items,
+          spec.content((options) => [
+            selectOption(
+              { id: "toggle", name: "Toggle" },
+              {
+                onSelect() {
+                  state.suggesting = !state.suggesting;
+                },
+              }
+            ),
+            ...options,
           ]);
         })
       );
@@ -1553,10 +1566,12 @@ module(
     test("forKind customizations match only the new kind", async function (assert) {
       customize((selects) => {
         selects.forKind("select-tag", (spec) =>
-          spec.row((row) => row.classes.push("x-new-kind"))
+          spec.option((presentation) => presentation.classes.push("x-new-kind"))
         );
         selects.forKind("mini-tag-chooser", (spec) =>
-          spec.row((row) => row.classes.push("x-legacy-kind"))
+          spec.option((presentation) =>
+            presentation.classes.push("x-legacy-kind")
+          )
         );
       });
 
@@ -1600,6 +1615,432 @@ module(
       assert.true(
         Boolean(optionWithText("Legacy row")),
         "the legacy callback's row is listed"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect select-customizations | options and records",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("option presentation gets the option and its record", async function (assert) {
+      const selected = { id: 1, name: "Selected" };
+      const disabled = { id: 2, name: "Disabled" };
+      const options = [
+        selectOption(selected, { description: "Chosen" }),
+        selectOption(disabled, { disabled: true }),
+      ];
+      const contexts = [];
+      customize((selects) => {
+        selects.forAll((spec) => {
+          spec.option((presentation, context) => {
+            contexts.push(context);
+            presentation.classes.push("opt-all");
+            presentation.title =
+              context.option?.description ?? context.record?.name;
+          });
+        });
+        selects.forKind("opt-presentation", (spec) =>
+          spec.option((presentation) => presentation.classes.push("opt-kind"))
+        );
+        selects.forIdentifier("opt-instance", (spec) =>
+          spec.option((presentation) =>
+            presentation.classes.push("opt-instance")
+          )
+        );
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="opt-instance"
+            @kind="opt-presentation"
+            @options={{options}}
+            @value={{1}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      const selectedContext = contexts.find(
+        (context) => context.record === selected
+      );
+      const disabledContext = contexts.find(
+        (context) => context.record === disabled
+      );
+      assert.strictEqual(
+        selectedContext?.option?.record,
+        selected,
+        "context option holds the exact caller record"
+      );
+      assert.strictEqual(
+        selectedContext?.option?.description,
+        "Chosen",
+        "context option carries settings"
+      );
+      assert.true(selectedContext?.selected, "the context reports selection");
+      assert.false(
+        selectedContext?.disabled,
+        "the selected option remains enabled"
+      );
+      assert.true(disabledContext?.disabled, "the context reports disabled");
+      assert.false(
+        disabledContext?.selected,
+        "the other option is not selected"
+      );
+      assert.true(contexts.length >= 2, "presentation ran for both records");
+      assert
+        .dom("[role='option'][data-value='1']")
+        .hasAttribute("title", "Chosen", "presentation sets the title");
+      assert.deepEqual(
+        [
+          ...(findAll("[role='option'][data-value='1']")[0]?.classList ?? []),
+        ].filter((name) => name.startsWith("opt-")),
+        ["opt-all", "opt-kind", "opt-instance"],
+        "presentation classes compose in tier order"
+      );
+      assert
+        .dom("[role='option'][data-value='2']")
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "the disabled setting reaches the DOM"
+        );
+    });
+
+    test("presentation cache reuses equal settings across new options", async function (assert) {
+      const record = { id: 1, name: "Stable" };
+      const settings = {
+        description: "Same",
+        position: "sticky",
+        divider: "after",
+        onSelect() {},
+      };
+      const original = selectOption(record, settings);
+      const options = tracked([original]);
+      let calls = 0;
+      customize((selects) =>
+        selects.forAll((spec) =>
+          spec.option((presentation) => {
+            calls++;
+            presentation.title = `Evaluation ${calls}`;
+          })
+        )
+      );
+
+      await render(
+        <template>
+          <DSelect @options={{options.value}} @virtualized={{false}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const initialCalls = calls;
+      assert.true(initialCalls > 0, "the first option was presented");
+      const initialTitle = findAll("[role='option']")[0]?.getAttribute("title");
+      const rebuilt = original.with({ description: "Same" });
+      assert.notStrictEqual(
+        rebuilt.settings,
+        original.settings,
+        "the fixture rebuilds the settings object"
+      );
+      options.value = [rebuilt];
+      await settled();
+
+      assert.strictEqual(
+        calls,
+        initialCalls,
+        "equal settings by value do not invoke presentation again"
+      );
+      assert
+        .dom("[role='option']")
+        .hasAttribute(
+          "title",
+          initialTitle,
+          "the cached presentation remains visible"
+        );
+    });
+
+    for (const setting of ["description", "position"]) {
+      test(`presentation cache invalidates changed ${setting} with the same record`, async function (assert) {
+        const record = { id: 1, name: "Changing" };
+        const original = selectOption(record, { description: "Before" });
+        const options = tracked([original]);
+        let calls = 0;
+        customize((selects) =>
+          selects.forAll((spec) =>
+            spec.option((presentation, context) => {
+              calls++;
+              presentation.title = `${context.option?.description}/${context.option?.position ?? "normal"}`;
+            })
+          )
+        );
+
+        await render(
+          <template>
+            <DSelect @options={{options.value}} @virtualized={{false}} />
+          </template>
+        );
+        await click("[role='combobox']");
+        assert
+          .dom("[role='option']")
+          .hasAttribute(
+            "title",
+            "Before/normal",
+            "presentation reads the initial settings"
+          );
+        const initialCalls = calls;
+        const replacement = original.with(
+          setting === "description"
+            ? { description: "After" }
+            : { position: "end" }
+        );
+        assert.strictEqual(
+          replacement.record,
+          record,
+          "the invalidation does not depend on changing records"
+        );
+        options.value = [replacement];
+        await settled();
+
+        assert.true(
+          calls > initialCalls,
+          "the changed setting invokes presentation again"
+        );
+        assert
+          .dom("[role='option']")
+          .hasAttribute(
+            "title",
+            setting === "description" ? "After/normal" : "Before/end",
+            "the new presentation reaches the open list"
+          );
+        assert
+          .dom(".d-select__option-description")
+          .hasText(
+            setting === "description" ? "After" : "Before",
+            "the description follows the same option"
+          );
+      });
+    }
+
+    test("tracked content changes while open without a render error", async function (assert) {
+      const first = Object.freeze({ id: 1, name: "First" });
+      const second = Object.freeze({ id: 2, name: "Second" });
+      const source = [first, second];
+      const phase = tracked(1);
+      const errors = [];
+      const seen = [];
+      setupOnerror((error) => errors.push(error.message));
+      customize((selects) =>
+        selects.forAll((spec) =>
+          spec.content((options) => {
+            seen.push(options);
+            return options
+              .map((entry) => selectOption(entry))
+              .filter((option) => option.record.id === phase.value)
+              .map((option) =>
+                option.with({ description: `Phase ${phase.value}` })
+              );
+          })
+        )
+      );
+      const changes = [];
+      const onChange = (value, record) => changes.push([value, record]);
+
+      await render(
+        <template>
+          <DSelect
+            @onChange={{onChange}}
+            @options={{source}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      assert
+        .dom("[data-value='1']")
+        .includesText("Phase 1", "the first tracked state is shown");
+      phase.value = 2;
+      await settled();
+
+      assert
+        .dom("[role='listbox']")
+        .exists("the list stays open during the change");
+      assert
+        .dom("[data-value='1']")
+        .doesNotExist("the previous content is removed");
+      assert
+        .dom("[data-value='2']")
+        .includesText("Phase 2", "the new tracked content is shown");
+      assert.true(seen.length > 1, "tracked state rebuilds content");
+      assert.true(
+        seen.every((options) => options.every(isSelectOption)),
+        "every host content evaluation receives options"
+      );
+      assert.deepEqual(errors, [], "there is no backtracking or render error");
+      await click("[data-value='2']");
+      assert.deepEqual(
+        changes,
+        [[2, second]],
+        "the rebuilt option emits the original record"
+      );
+    });
+
+    test("native content keeps explicit actions and treats bare fields as data", async function (assert) {
+      const calls = [];
+      const bare = Object.freeze({
+        id: 1,
+        name: "Bare data",
+        disabled: true,
+        sticky: true,
+        description: "Hidden data",
+        onSelect() {
+          calls.push("bare");
+        },
+      });
+      const actionRecord = Object.freeze({ id: 2, name: "Deliberate action" });
+      const action = selectOption(actionRecord, {
+        description: "Explicit description",
+        onSelect: (control, record) => calls.push(record),
+      });
+      customize((selects) =>
+        selects.forAll((spec) => spec.content(() => [bare, action]))
+      );
+      const onChange = (value, record) => calls.push([value, record]);
+
+      await render(
+        <template>
+          <DSelect
+            @onChange={{onChange}}
+            @options={{null}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      assert
+        .dom("[data-value='1']")
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "a bare disabled field is inert"
+        );
+      assert
+        .dom("[data-value='1']")
+        .doesNotHaveClass("--sticky", "a bare sticky field is inert");
+      assert
+        .dom("[data-value='1'] .d-select__option-description")
+        .doesNotExist("a bare description is not displayed");
+      assert
+        .dom("[data-value='2'] .d-select__option-description")
+        .hasText(
+          "Explicit description",
+          "an option keeps its explicit description"
+        );
+      await click("[data-value='2']");
+      assert.deepEqual(
+        calls,
+        [actionRecord],
+        "only the explicit action runs with its original record"
+      );
+      assert.dom("[role='listbox']").exists("the action leaves the list open");
+      await click("[data-value='1']");
+      assert.deepEqual(
+        calls,
+        [actionRecord, [1, bare]],
+        "the bare result selects a value instead of running its method"
+      );
+    });
+
+    test("legacy copies keep native settings and injected actions retain their receiver", async function (assert) {
+      const native = Object.freeze({ id: 1, name: "Native" });
+      const options = [
+        selectOption(native, { description: "Native setting", disabled: true }),
+      ];
+      const calls = [];
+      const errors = [];
+      setupOnerror((error) => errors.push(error.message));
+      const action = Object.freeze({
+        id: 2,
+        name: "Legacy action",
+        sticky: true,
+        description: "Legacy setting",
+        onSelect(selectKit, record) {
+          calls.push({ receiver: this, record, setter: selectKit.set });
+        },
+      });
+      withPluginApi((api) =>
+        api.modifySelectKit("opt-bridge").replaceContent((facade, content) => {
+          assert.strictEqual(
+            content[0],
+            native,
+            "legacy callbacks receive records"
+          );
+          assert.strictEqual(
+            facade.content[0],
+            native,
+            "the facade holds records too"
+          );
+          return [{ ...content[0] }, action];
+        })
+      );
+      const changes = [];
+      const onChange = (...args) => changes.push(args);
+
+      await render(
+        <template>
+          <DSelect
+            @kind="opt-bridge"
+            @onChange={{onChange}}
+            @options={{options}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      assert
+        .dom("[data-value='1'] .d-select__option-description")
+        .hasText(
+          "Native setting",
+          "a unique-key copy keeps the native description"
+        );
+      assert
+        .dom("[data-value='1']")
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "a unique-key copy keeps native disabled"
+        );
+      assert
+        .dom("[data-value='2']")
+        .hasClass("--sticky", "legacy sticky is translated");
+      assert
+        .dom("[data-value='2'] .d-select__option-description")
+        .hasText("Legacy setting", "legacy description is translated");
+      await click("[data-value='2']");
+      assert.strictEqual(calls.length, 1, "the legacy action ran once");
+      assert.strictEqual(
+        calls[0]?.receiver,
+        action,
+        "the row is the legacy action receiver"
+      );
+      assert.strictEqual(
+        calls[0]?.record,
+        action,
+        "the action argument is the original row"
+      );
+      assert.strictEqual(
+        typeof calls[0]?.setter,
+        "function",
+        "the first action argument is the legacy facade"
+      );
+      assert.deepEqual(changes, [], "the action does not emit a selection");
+      assert.deepEqual(
+        errors,
+        [],
+        "legacy callbacks and actions do not raise render errors"
       );
     });
   }

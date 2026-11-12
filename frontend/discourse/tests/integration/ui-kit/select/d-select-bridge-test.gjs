@@ -1197,8 +1197,11 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forIdentifier("test-select", (spec) =>
-              spec.row((row, context) => {
-                row.classes.push("x-extra", `x-item-${context.item.id}`);
+              spec.option((presentation, context) => {
+                presentation.classes.push(
+                  "x-extra",
+                  `x-item-${context.record.id}`
+                );
               })
             )
         );
@@ -1224,7 +1227,7 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row, context) => {
+              spec.option((presentation, context) => {
                 seen.push(context);
               })
             )
@@ -1250,9 +1253,13 @@ module(
       );
       await click("[role='combobox']");
 
-      const apple = seen.find((context) => context.item?.id === 1);
+      const apple = seen.find((context) => context.record?.id === 1);
       assert.true(!!apple, "the customization runs for the Apple row");
-      assert.strictEqual(apple.item, items[0], "item is the raw source item");
+      assert.strictEqual(
+        apple.record,
+        items[0],
+        "record is the raw source record"
+      );
       assert.strictEqual(
         apple.identifier,
         "item-class-select",
@@ -1283,9 +1290,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row, context) => {
+              spec.option((presentation, context) => {
                 if (context.selected) {
-                  row.classes.push("is-held");
+                  presentation.classes.push("is-held");
                 }
               })
             )
@@ -1319,10 +1326,10 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row, context) => {
-                disabledById[context.item.id] = context.disabled;
+              spec.option((presentation, context) => {
+                disabledById[context.record.id] = context.disabled;
                 if (context.disabled) {
-                  row.classes.push("is-capped");
+                  presentation.classes.push("is-capped");
                 }
               })
             )
@@ -1351,7 +1358,7 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row) => row.classes.push("x-row"))
+              spec.option((presentation) => presentation.classes.push("x-row"))
             )
         );
       });
@@ -1398,7 +1405,7 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row) => row.classes.push("x-row"))
+              spec.option((presentation) => presentation.classes.push("x-row"))
             )
         );
       });
@@ -1438,13 +1445,13 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row, context) => {
+              spec.option((presentation, context) => {
                 inputs.push({
-                  row,
-                  classes: row.classes,
-                  length: row.classes.length,
+                  presentation,
+                  classes: presentation.classes,
+                  length: presentation.classes.length,
                 });
-                row.classes.push(`x-item-${context.item.id}`);
+                presentation.classes.push(`x-item-${context.record.id}`);
               })
             )
         );
@@ -1464,9 +1471,9 @@ module(
         "each input starts empty"
       );
       assert.strictEqual(
-        new Set(inputs.map(({ row }) => row)).size,
+        new Set(inputs.map(({ presentation }) => presentation)).size,
         inputs.length,
-        "every call gets its own row"
+        "every call gets its own presentation"
       );
       assert.strictEqual(
         new Set(inputs.map(({ classes }) => classes)).size,
@@ -1494,7 +1501,7 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row) => row.classes.push("x-row"))
+              spec.option((presentation) => presentation.classes.push("x-row"))
             )
         );
       });
@@ -1524,9 +1531,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.row((row, context) => {
-                if (context.item.id === 3) {
-                  row.classes.push(null, "", false);
+              spec.option((presentation, context) => {
+                if (context.record.id === 3) {
+                  presentation.classes.push(null, "", false);
                 }
               })
             )
@@ -1683,7 +1690,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.content((items) => items.filter((item) => item.id % 4 !== 0))
+              spec.content((options) =>
+                options.filter(({ record }) => record.id % 4 !== 0)
+              )
             )
         );
       });
@@ -1773,7 +1782,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.content((items) => items.filter((item) => item.id % 4 !== 0))
+              spec.content((options) =>
+                options.filter(({ record }) => record.id % 4 !== 0)
+              )
             )
         );
       });
@@ -1851,7 +1862,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.content((rows) => rows.filter((row) => row.id % 2 === 1))
+              spec.content((options) =>
+                options.filter(({ record }) => record.id % 2 === 1)
+              )
             )
         );
       });
@@ -1936,25 +1949,27 @@ function registerSuggester({ suggest } = {}) {
         selects.forIdentifier("suggester", (spec) => {
           let suggesting = false;
 
-          spec.content((items) => {
-            const row = suggesting
-              ? {
-                  id: "back",
-                  name: "Back to results",
-                  onSelect: (control) => {
-                    suggesting = false;
-                    control.reload();
-                  },
-                }
-              : {
-                  id: "suggest",
-                  name: "Suggest tags",
-                  onSelect: (control) => {
-                    suggesting = true;
-                    control.reload();
-                  },
-                };
-            return [row, ...items];
+          spec.content((options) => {
+            const toggle = suggesting
+              ? selectOption(
+                  { id: "back", name: "Back to results" },
+                  {
+                    onSelect: (control) => {
+                      suggesting = false;
+                      control.reload();
+                    },
+                  }
+                )
+              : selectOption(
+                  { id: "suggest", name: "Suggest tags" },
+                  {
+                    onSelect: (control) => {
+                      suggesting = true;
+                      control.reload();
+                    },
+                  }
+                );
+            return [toggle, ...options];
           });
 
           spec.load((load, context) => {

@@ -241,8 +241,8 @@ module(
     });
 
     test("source end options filter but extra and content end options do not", async function (assert) {
-      appendContent((records) => [
-        ...records,
+      appendContent((options) => [
+        ...options,
         selectOption(
           { id: "content", name: "Global content" },
           { position: "end" }
@@ -644,8 +644,8 @@ module(
     });
 
     test("dividers and text boundaries leave paged net change and raw offsets unchanged", async function (assert) {
-      appendContent((records) => [
-        ...records.filter((record) => record.id !== "drop"),
+      appendContent((options) => [
+        ...options.filter(({ record }) => record.id !== "drop"),
         selectOption(
           { id: "content", name: "Content" },
           { position: "end", divider: "before" }
@@ -711,7 +711,9 @@ module(
     });
 
     test("new divider rows cannot defeat the barren-page brake", async function (assert) {
-      appendContent((records) => records.filter((record) => record.id === "a"));
+      appendContent((options) =>
+        options.filter(({ record }) => record.id === "a")
+      );
       const calls = [];
       let extras = [];
       const engine = createEngine({

@@ -280,3 +280,21 @@ export function engineOption<T extends object>(
 ): SelectOption<T> {
   return build(record, settings, kind);
 }
+
+/**
+ * Whether two options were given the same settings, compared entry by entry, so an option
+ * rebuilt with equal settings reads as unchanged.
+ */
+export function sameSettings(
+  a: Readonly<SelectOptionSettings<object>>,
+  b: Readonly<SelectOptionSettings<object>>
+): boolean {
+  if (a === b) {
+    return true;
+  }
+  const keys = Object.keys(a) as (keyof SelectOptionSettings)[];
+  return (
+    keys.length === Object.keys(b).length &&
+    keys.every((key) => Object.hasOwn(b, key) && Object.is(a[key], b[key]))
+  );
+}

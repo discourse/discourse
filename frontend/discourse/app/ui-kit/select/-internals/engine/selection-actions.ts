@@ -61,7 +61,7 @@ export default class SelectionActions {
     value: SelectValue,
     payload: SelectRecord | SelectRecord[] | null
   ) => void;
-  #getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
+  #getExtensionContext: () => Omit<SelectChangeContext, "value" | "records">;
 
   /** Runs the once-only change queue around the guarded controlled emit. */
   #runChange: (
@@ -83,7 +83,7 @@ export default class SelectionActions {
       value: SelectValue,
       payload: SelectRecord | SelectRecord[] | null
     ) => void;
-    getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
+    getExtensionContext: () => Omit<SelectChangeContext, "value" | "records">;
     /** Applies sealed per-select change declarations. */
     runChange: (
       defaultStep: () => void,
@@ -511,11 +511,11 @@ export default class SelectionActions {
     // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
     // native one.
     const nextValue = this.#coerceValue(rawNextValue);
-    const items = this.#itemsFor(nextValue);
-    const payload = this.#args.multiple ? items : (items[0] ?? null);
+    const records = this.#recordsFor(nextValue);
+    const payload = this.#args.multiple ? records : (records[0] ?? null);
     const context = {
       value: nextValue,
-      items: payload,
+      records: payload,
       ...this.#getExtensionContext(),
     };
 
@@ -555,9 +555,9 @@ export default class SelectionActions {
     return [...locked].some((key) => !nextKeys.has(key));
   }
 
-  // Best-effort synchronous resolution of a value to its item(s), from the escape
+  // Best-effort synchronous resolution of a value to its record(s), from the escape
   // hatch / cache / client list — never async (this feeds the `onChange` payload).
-  #itemsFor(value: SelectValue): SelectRecord[] {
+  #recordsFor(value: SelectValue): SelectRecord[] {
     const values: SelectId[] =
       value == null
         ? []
@@ -566,7 +566,7 @@ export default class SelectionActions {
           : [value];
     return values
       .map((v) => this.#resolveOneSync(v))
-      .filter((item): item is SelectRecord => item != null);
+      .filter((record): record is SelectRecord => record != null);
   }
 
   // Multi-select only: re-emit each id in its resolved source item's native type, so a held

@@ -1455,7 +1455,9 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
               "select-customizations",
               ({ value: selects }) =>
                 selects.forAll((spec) =>
-                  spec.content((list) => list.filter((item) => item.id !== 2))
+                  spec.content((list) =>
+                    list.filter(({ record }) => record.id !== 2)
+                  )
                 )
             )
           );

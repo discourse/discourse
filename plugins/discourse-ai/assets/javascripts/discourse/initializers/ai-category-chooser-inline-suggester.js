@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import {
   chooserSuggestionContext,
@@ -156,7 +157,7 @@ function initInlineCategorySuggester(api) {
     ({ value: selects }) => {
       for (const identifier of ["composer-category", "topic-edit-category"]) {
         selects.forIdentifier(identifier, (spec) => {
-          spec.content((items, { filter, instanceContext, control }) => {
+          spec.content((options, { filter, instanceContext, control }) => {
             const context =
               chooserSuggestionContextFromInstance(instanceContext);
             if (
@@ -165,27 +166,31 @@ function initInlineCategorySuggester(api) {
               !enabledFor(context, siteSettings, currentUser) ||
               !context.categoryAvailable
             ) {
-              return items;
+              return options;
             }
             return [
-              {
-                id: SUGGEST_ID,
-                name: i18n("discourse_ai.ai_helper.choose"),
-                icon: "discourse-sparkles",
-                sticky: true,
-                // Looked up on use: resolving them at boot would pin them before tests can stub them.
-                onSelect: (select) =>
-                  applyNewSuggestion(select, context, {
-                    toasts: api.container.lookup("service:toasts"),
-                    a11y: api.container.lookup("service:a11y"),
-                  }),
-              },
-              ...items,
+              selectOption(
+                {
+                  id: SUGGEST_ID,
+                  name: i18n("discourse_ai.ai_helper.choose"),
+                  icon: "discourse-sparkles",
+                },
+                {
+                  position: "sticky",
+                  // Looked up on use: resolving them at boot would pin them before tests can stub them.
+                  onSelect: (select) =>
+                    applyNewSuggestion(select, context, {
+                      toasts: api.container.lookup("service:toasts"),
+                      a11y: api.container.lookup("service:a11y"),
+                    }),
+                }
+              ),
+              ...options,
             ];
           });
-          spec.row((row, { item }) => {
-            if (item.id === SUGGEST_ID) {
-              row.classes.push("ai-category-suggest-row");
+          spec.option((presentation, { record }) => {
+            if (record.id === SUGGEST_ID) {
+              presentation.classes.push("ai-category-suggest-row");
             }
           });
         });

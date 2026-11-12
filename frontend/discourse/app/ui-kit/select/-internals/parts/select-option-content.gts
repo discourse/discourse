@@ -8,7 +8,8 @@ import { service } from "@ember/service";
 import type SiteSettingsService from "discourse/services/site-settings";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type { SelectOptionPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
+import { sameSettings } from "discourse/ui-kit/select/-internals/engine/select-option";
 import SelectEngine, {
   SelectRecord as SelectRecordModel,
   SelectRow,
@@ -72,11 +73,11 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
   #presentation?: {
     engine: SelectEngine;
     descriptor: SelectRow;
-    cache: ReturnType<typeof createCache<SelectRowPresentation>>;
+    cache: ReturnType<typeof createCache<SelectOptionPresentation>>;
   };
 
   /** Shares classes and title while tracking both callback dependencies and row input changes. */
-  get presentation(): SelectRowPresentation {
+  get presentation(): SelectOptionPresentation {
     return this.#resolvePresentation(this.args.engine, this.args.descriptor);
   }
 
@@ -116,24 +117,27 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
     this.args.engine.activate(this.args.descriptor.option);
   }
 
-  /** Reuses the tracked computation across equivalent list descriptor wrappers. */
+  /** Reuses the tracked computation across equivalent rows, comparing settings by value. */
   #resolvePresentation(
     engine: SelectEngine,
     descriptor: SelectRow
-  ): SelectRowPresentation {
+  ): SelectOptionPresentation {
     const previous = this.#presentation;
     if (
       !previous ||
       previous.engine !== engine ||
       previous.descriptor.record !== descriptor.record ||
-      previous.descriptor.option.settings !== descriptor.option.settings ||
+      !sameSettings(
+        previous.descriptor.option.settings,
+        descriptor.option.settings
+      ) ||
       previous.descriptor.flags.selected !== descriptor.flags.selected ||
       previous.descriptor.flags.disabled !== descriptor.flags.disabled
     ) {
       this.#presentation = {
         engine,
         descriptor,
-        cache: createCache(() => engine.rowPresentation(descriptor)),
+        cache: createCache(() => engine.optionPresentation(descriptor)),
       };
     }
     return getValue(this.#presentation!.cache)!;

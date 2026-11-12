@@ -1150,7 +1150,9 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.content((items) => items.filter((item) => !predicate(item)))
+              spec.content((options) =>
+                options.filter(({ record }) => !predicate(record))
+              )
             )
         );
       });
@@ -1364,8 +1366,10 @@ module(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>
-              spec.content((items) =>
-                items.filter((item) => item.id === 1 || item.id === 3)
+              spec.content((options) =>
+                options.filter(
+                  ({ record }) => record.id === 1 || record.id === 3
+                )
               )
             )
         );

@@ -2694,21 +2694,18 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
     );
   });
 
-  test("sticky rows are never grouped and a sticky header is ignored", async function (assert) {
+  test("sticky rows are never grouped and headers never stick", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(
         "select-customizations",
         ({ value: selects }) =>
           selects.forAll((spec) =>
-            spec.content((items) => [
-              {
-                id: "act",
-                name: "Sticky action",
-                section: "fruit",
-                sticky: true,
-              },
-              { __header: true, label: "Stray header", sticky: true },
-              ...items,
+            spec.content((options) => [
+              selectOption(
+                { id: "act", name: "Sticky action", section: "fruit" },
+                { position: "sticky" }
+              ),
+              ...options,
             ])
           )
       );

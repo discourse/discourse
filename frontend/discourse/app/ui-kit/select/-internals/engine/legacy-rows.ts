@@ -5,16 +5,41 @@ import {
   selectOption,
   type SelectOptionSettings,
 } from "discourse/ui-kit/select/-internals/engine/select-option";
-import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
+import type {
+  SelectControl,
+  SelectRecord,
+} from "discourse/ui-kit/select/select-engine";
+
+/** A select-kit row's own `onSelect`, called with the row as `this`. */
+export type LegacyRowAction = (
+  this: SelectRecord,
+  ...args: unknown[]
+) => unknown;
+
+/** Turns a row's legacy `onSelect` into the action its option runs. */
+export type LegacyActionAdapter = (
+  legacy: LegacyRowAction,
+  row: SelectRecord
+) => (control: SelectControl, record: SelectRecord) => void;
+
+/** Calls the legacy action as select-kit did, with the row as `this`. */
+const callOnRow: LegacyActionAdapter = (legacy, row) => (control, record) =>
+  void legacy.call(row, control, record);
 
 /**
  * The settings a select-kit row expressed through its own fields. Legacy code wrote these rows
  * for select-kit, where the fields are behaviour, so they are read here and nowhere else.
  */
-function legacySettings(row: SelectRecord): SelectOptionSettings {
+function legacySettings(
+  row: SelectRecord,
+  adaptAction: LegacyActionAdapter
+): SelectOptionSettings {
   const settings: SelectOptionSettings = {};
   if (typeof row.onSelect === "function") {
-    settings.onSelect = row.onSelect as SelectOptionSettings["onSelect"];
+    settings.onSelect = adaptAction(
+      row.onSelect as LegacyRowAction,
+      row
+    ) as SelectOptionSettings["onSelect"];
   }
   if (row.disabled) {
     settings.disabled = true;
@@ -38,11 +63,14 @@ function legacySettings(row: SelectRecord): SelectOptionSettings {
  * @param inputs - The options the step was given, as records.
  * @param outputs - What the step returned.
  * @param args - The engine's args, for value keys.
+ * @param adaptAction - Turns a row's legacy `onSelect` into its option's action; by default it
+ *   is called with the row as `this` and the control as its first argument.
  */
 export function optionsFromLegacyRows(
   inputs: readonly SelectOption[],
   outputs: readonly unknown[],
-  args: SelectArgsView
+  args: SelectArgsView,
+  adaptAction: LegacyActionAdapter = callOnRow
 ): SelectOption[] {
   const byRecord = new Map<object, SelectOption>();
   const byKey = new Map<string, SelectOption | null>();
@@ -64,7 +92,7 @@ export function optionsFromLegacyRows(
     }
     const key = args.valueKey(args.recordValue(row));
     const source = key == null ? undefined : byKey.get(key);
-    const settings = legacySettings(row);
+    const settings = legacySettings(row, adaptAction);
     return source
       ? selectOption(row).with(source.settings).with(settings)
       : selectOption(row, settings);

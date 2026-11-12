@@ -10,6 +10,9 @@ import {
   hasOnChangePluginApiCallbacks,
   onChangeCallbackSources,
 } from "discourse/select-kit/lib/plugin-api";
+import { optionsFromLegacyRows } from "discourse/ui-kit/select/-internals/engine/legacy-rows";
+import type SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
+import type { SelectOption } from "discourse/ui-kit/select/-internals/engine/select-option";
 import SelectEngine, {
   SelectId,
   SelectRecord,
@@ -208,36 +211,6 @@ class LegacySelectKitComponent extends EmberObject {
 }
 
 /**
- * Wraps the `onSelect` of any row the bridge injected so the engine's
- * `activate(item)` — which calls `item.onSelect(control, item)` — instead invokes the
- * legacy callback with the `selectKit` facade as its first argument, matching the old
- * `item.onSelect(selectKit, item)` contract. The facade reads `select`'s first argument as
- * an id, not an item.
- */
-function adaptInjectedRows(
-  inputItems: SelectRecord[],
-  resultItems: SelectRecord[],
-  facade: LegacySelectKitComponent
-): SelectRecord[] {
-  const original = new Set(inputItems);
-  return resultItems.map((row) => {
-    if (original.has(row) || typeof row?.onSelect !== "function") {
-      return row;
-    }
-    // Injected by a legacy extension, so it was written for the facade, not the control.
-    const legacyOnSelect = row.onSelect as unknown as (
-      selectKit: LegacySelectKit,
-      item: SelectRecord
-    ) => void;
-    return {
-      ...row,
-      onSelect: (_control: unknown, item: SelectRecord) =>
-        legacyOnSelect(facade.selectKit, item),
-    };
-  });
-}
-
-/**
  * Reports each registering plugin or theme once per control, registration name and callback kind. Reported
  * after render, so a deprecation configured to raise never aborts a render midway.
  */
@@ -272,37 +245,53 @@ function report(
 }
 
 /**
- * Applies legacy content callbacks (prepend / append / replace) to the engine's item
- * list, after native content customizations have run. Returns the list unchanged
- * when nothing is registered for the engine's kind or compatibility aliases.
+ * Applies legacy content callbacks (prepend / append / replace) to the engine's options, after
+ * native content customizations have run. Callbacks see records, as select-kit content; what
+ * they return maps back to options, and a row they injected is written for select-kit, so its
+ * `onSelect` is called with the row as `this` and the `selectKit` facade, as select-kit did.
+ * Returns the options unchanged when nothing is registered for the engine's kind or
+ * compatibility aliases.
  *
- * @param items - The items after native content customizations.
- * @returns The items with legacy callbacks applied.
+ * @param options - The options after native content customizations.
+ * @param args - The engine's args, for value keys.
+ * @returns The options with legacy callbacks applied.
  */
 export function applyLegacySelectKitContent(
   engine: SelectEngine,
-  items: SelectRecord[]
-): SelectRecord[] {
+  options: SelectOption[],
+  args: SelectArgsView
+): SelectOption[] {
   const targets = legacySelectKitIdentifiers(engine);
   if (!hasContentPluginApiCallbacks(targets)) {
-    return items;
+    return options;
   }
 
+  const records = options.map((option) => option.record);
   const facade = facadeFor(engine);
-  facade.content = items;
+  facade.content = records;
   for (const target of targets) {
     report(facade, "content", target, contentCallbackSources([target]));
   }
-  const result: SelectRecord[] = applyContentPluginApiCallbacks(items, facade, {
-    bridgeOnly: true,
-  });
+  const result: SelectRecord[] = applyContentPluginApiCallbacks(
+    records,
+    facade,
+    { bridgeOnly: true }
+  );
 
-  // A no-op run returns the same array reference; only adapt when it actually changed.
-  if (result === items) {
-    return items;
+  if (
+    result.length === records.length &&
+    result.every((record, index) => record === records[index])
+  ) {
+    return options;
   }
 
-  return adaptInjectedRows(items, result, facade);
+  return optionsFromLegacyRows(
+    options,
+    result,
+    args,
+    (legacy, row) => (_control, record) =>
+      void legacy.call(row, facade.selectKit, record)
+  );
 }
 
 /**

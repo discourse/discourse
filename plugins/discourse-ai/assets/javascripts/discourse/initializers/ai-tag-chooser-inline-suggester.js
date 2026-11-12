@@ -3,6 +3,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import {
   chooserSuggestionContext,
@@ -188,44 +189,52 @@ function initInlineTagSuggester(api) {
             };
           });
 
-          spec.content((items, { filter, instanceContext }) => {
+          spec.content((options, { filter, instanceContext }) => {
             const context =
               chooserSuggestionContextFromInstance(instanceContext);
             if (filter || !enabledFor(context, siteSettings, currentUser)) {
-              return items;
+              return options;
             }
             if (state.suggesting) {
               // Held tags leave the suggestions as they are picked, and return when removed.
               const held = context.selectedTagNames;
               return [
-                {
-                  id: EXIT_ID,
-                  icon: "xmark",
-                  name: i18n("discourse_ai.ai_helper.suggestions"),
-                  sticky: true,
-                  onSelect(control) {
-                    stopSuggesting();
-                    control.reload({ immediate: true });
+                selectOption(
+                  {
+                    id: EXIT_ID,
+                    icon: "xmark",
+                    name: i18n("discourse_ai.ai_helper.suggestions"),
                   },
-                },
-                ...items.filter((tag) => !held.includes(tag.name)),
+                  {
+                    position: "sticky",
+                    onSelect(control) {
+                      stopSuggesting();
+                      control.reload({ immediate: true });
+                    },
+                  }
+                ),
+                ...options.filter(({ record }) => !held.includes(record.name)),
               ];
             }
             if (!context.available) {
-              return items;
+              return options;
             }
             return [
-              {
-                id: SUGGEST_ID,
-                icon: "discourse-sparkles",
-                name: i18n("discourse_ai.ai_helper.suggest"),
-                sticky: true,
-                onSelect(control) {
-                  state.suggesting = true;
-                  control.reload({ immediate: true });
+              selectOption(
+                {
+                  id: SUGGEST_ID,
+                  icon: "discourse-sparkles",
+                  name: i18n("discourse_ai.ai_helper.suggest"),
                 },
-              },
-              ...items,
+                {
+                  position: "sticky",
+                  onSelect(control) {
+                    state.suggesting = true;
+                    control.reload({ immediate: true });
+                  },
+                }
+              ),
+              ...options,
             ];
           });
 
@@ -242,10 +251,10 @@ function initInlineTagSuggester(api) {
               : {}
           );
 
-          spec.row((row, { item }) => {
-            if (item.id === SUGGEST_ID || item.id === EXIT_ID) {
-              row.classes.push(
-                item.id === EXIT_ID ? "ai-tag-exit-row" : "ai-tag-suggest-row"
+          spec.option((presentation, { record }) => {
+            if (record.id === SUGGEST_ID || record.id === EXIT_ID) {
+              presentation.classes.push(
+                record.id === EXIT_ID ? "ai-tag-exit-row" : "ai-tag-suggest-row"
               );
             }
           });

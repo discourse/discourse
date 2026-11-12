@@ -28,6 +28,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import I18n, { i18n } from "discourse-i18n";
 
 /** Values of the mounted options of the open panel, in order. */
@@ -338,7 +339,9 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category", (spec) =>
-              spec.row((row) => row.classes.push("x-select-category"))
+              spec.option((presentation) =>
+                presentation.classes.push("x-select-category")
+              )
             );
           })
         );
@@ -1078,15 +1081,16 @@ module(
         withPluginApi((api) =>
           api.registerValueTransformer("select-customizations", ({ value }) => {
             value.forKind("select-category", (spec) =>
-              spec.content((items) => [
-                {
-                  id: "suggest",
-                  name: "Suggest a category",
-                  icon: "discourse-sparkles",
-                  sticky: true,
-                  onSelect() {},
-                },
-                ...items,
+              spec.content((options) => [
+                selectOption(
+                  {
+                    id: "suggest",
+                    name: "Suggest a category",
+                    icon: "discourse-sparkles",
+                  },
+                  { position: "sticky", onSelect() {} }
+                ),
+                ...options,
               ])
             );
           })

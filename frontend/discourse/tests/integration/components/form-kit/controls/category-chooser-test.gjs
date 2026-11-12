@@ -174,7 +174,9 @@ module(
       withPluginApi((api) =>
         api.registerValueTransformer("select-customizations", ({ value }) => {
           value.forKind("select-category", (spec) =>
-            spec.row((row) => row.classes.push("x-select-category"))
+            spec.option((presentation) =>
+              presentation.classes.push("x-select-category")
+            )
           );
         })
       );

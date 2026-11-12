@@ -226,7 +226,9 @@ module(
       withPluginApi((api) =>
         api.registerValueTransformer("select-customizations", ({ value }) => {
           value.forKind("select-tag", (spec) =>
-            spec.row((row) => row.classes.push("x-select-tag"))
+            spec.option((presentation) =>
+              presentation.classes.push("x-select-tag")
+            )
           );
         })
       );

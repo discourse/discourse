@@ -7,9 +7,9 @@ import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
   type SelectConfig,
+  type SelectOptionPresentation,
   type SelectPresentationArgs,
   type SelectResolvedContext,
-  type SelectRowPresentation,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
 import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
@@ -857,8 +857,10 @@ export default class SelectEngine {
     registerDestructor(this, () => this.#selectionUpdates.supersede());
     this.#listComposer = new ListComposer({
       args: this.#args,
-      applyContent: (records, context) =>
-        this.#customizations.applyContent(records, context),
+      applyContent: (options, context) =>
+        this.#customizations.applyContent(options, context, (entry) =>
+          this.#args.wrapEntry(entry)
+        ),
       getFilter: () => this.#state.filter,
       getValue: () => this.value,
       getHasValue: () => this.hasValue,
@@ -868,8 +870,8 @@ export default class SelectEngine {
       getTotal: () => this.total,
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
-      applyLegacyContent: (records) =>
-        applyLegacySelectKitContent(this, records),
+      applyLegacyContent: (options) =>
+        applyLegacySelectKitContent(this, options, this.#args),
       getContentContext: () => ({
         ...this.#extensionContext(),
         control: this.#control,
@@ -1407,13 +1409,16 @@ export default class SelectEngine {
   }
 
   /**
-   * Option-row presentation from render-time customizations. Each evaluation starts fresh
-   * so classes and titles cannot leak between rows or renders.
+   * Option presentation from render-time customizations. Each evaluation starts fresh
+   * so classes and titles cannot leak between options or renders.
+   *
+   * @param row - The option's rendered row.
    */
   @bind
-  rowPresentation(row: SelectRow): SelectRowPresentation {
-    return this.#customizations.applyRow({
-      item: row.record,
+  optionPresentation(row: SelectRow): SelectOptionPresentation {
+    return this.#customizations.applyOption({
+      option: row.option,
+      record: row.record,
       selected: row.flags.selected,
       disabled: row.flags.disabled,
       ...this.#extensionContext(),
@@ -1678,12 +1683,16 @@ export default class SelectEngine {
       })
     );
     this.#requestContextQuery = this.queryKey;
-    const load = this.#customizations.applyLoad(this.#args.load!, {
-      loadContext: snapshot,
-      filter,
-      ...this.#extensionContext(),
-      control: this.#control,
-    });
+    const load = this.#customizations.applyLoad(
+      this.#args.load!,
+      {
+        loadContext: snapshot,
+        filter,
+        ...this.#extensionContext(),
+        control: this.#control,
+      },
+      (entry) => this.#args.wrapEntry(entry)
+    );
     return (query, opts) =>
       load(query, {
         ...opts,

@@ -4,7 +4,10 @@ import {
   applyMutableValueTransformer,
   withTransformerErrorHandling,
 } from "discourse/lib/transformer";
-import type { SelectOptionLike } from "discourse/ui-kit/select/-internals/engine/select-option";
+import type {
+  SelectOption,
+  SelectOptionLike,
+} from "discourse/ui-kit/select/-internals/engine/select-option";
 import {
   attachSelectTextResolver,
   DEFAULT_SELECT_TEXTS,
@@ -27,6 +30,36 @@ import type {
   SelectRecord,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+
+/** A loader whose answers, plain or awaited, list options. */
+function wrapLoader(load: Loader, wrap: Wrap): Loader {
+  return (query, request) => {
+    const result = load(query, request);
+    return isThenable(result)
+      ? Promise.resolve(result).then((answer) => wrapAnswer(answer, wrap))
+      : wrapAnswer(result, wrap);
+  };
+}
+
+function isThenable(value: unknown): value is PromiseLike<unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as PromiseLike<unknown>).then === "function"
+  );
+}
+
+/** A loader's answer with its entries as options; any other shape is left for the source to judge. */
+function wrapAnswer<T>(answer: T, wrap: Wrap): T {
+  if (Array.isArray(answer)) {
+    return answer.map(wrap) as T;
+  }
+  const options = (answer as { options?: unknown } | null)?.options;
+  if (Array.isArray(options)) {
+    return { ...answer, options: options.map(wrap) };
+  }
+  return answer;
+}
 
 /** Names captured when a select is constructed. */
 export interface SelectNames {
@@ -157,19 +190,21 @@ export interface SelectConfigContext extends SelectCustomizationContext {
   control: SelectControl;
 }
 
-/** Presentation starts fresh for every option row evaluation. */
-export interface SelectRowPresentation {
+/** Presentation starts fresh for every option evaluation. */
+export interface SelectOptionPresentation {
   /** Classes appended to the core classes; falsy entries are ignored. */
   classes: (string | false | null | undefined | 0)[];
-  /** An explicit tooltip; an item's own title is never used implicitly. */
+  /** An explicit tooltip; a record's own title is never used implicitly. */
   title: string | undefined;
 }
 
-/** State of the option row being presented. */
-export interface SelectRowContext extends SelectResolvedContext {
-  /** The raw item behind the row. */
-  item: SelectRecord;
-  /** Whether the item is held. */
+/** State of the option being presented. */
+export interface SelectOptionContext extends SelectResolvedContext {
+  /** The option being presented, with its settings. */
+  option: SelectOption;
+  /** The record behind the option. */
+  record: SelectRecord;
+  /** Whether the option's value is held. */
   selected: boolean;
   /** Whether activation is disabled. */
   disabled: boolean;
@@ -189,19 +224,22 @@ export interface SelectLoadContext extends SelectResolvedContext {
 export interface SelectChangeContext extends SelectResolvedContext {
   /** The proposed value, coerced to the source's id types. */
   value: SelectValue;
-  /** Best-effort resolved items, with the select's single/multiple arity. */
-  items: SelectRecord | SelectRecord[] | null;
+  /** Best-effort resolved records, with the select's single/multiple arity. */
+  records: SelectRecord | SelectRecord[] | null;
   /** The live select handle, shared with content callbacks. */
   control: SelectControl;
 }
 
-/** A content step replaces the list passed to the following step. */
+/** A content step replaces the options passed to the following step. */
 type Content = (
-  items: SelectRecord[],
+  options: SelectOption[],
   context: SelectContentContext
 ) => SelectOptionLike[];
-/** A row step mutates presentation; its return value is ignored. */
-type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
+/** A presentation step mutates presentation; its return value is ignored. */
+type Presentation = (
+  presentation: SelectOptionPresentation,
+  context: SelectOptionContext
+) => void;
 /** A config step returns a partial over an immutable snapshot of the values so far. */
 type Config = (
   current: SelectConfig,
@@ -209,6 +247,8 @@ type Config = (
 ) => (Partial<SelectPresentationConfig> & Record<string, unknown>) | void;
 /** The loader a load step receives and returns. */
 type Loader = NonNullable<SelectEngineInit["load"]>;
+/** Turns what a list, a step or a loader returned into an option. */
+type Wrap = (entry: SelectOptionLike) => SelectOption;
 /** A load step wraps or replaces the previous loader. */
 type Load = (load: Loader, context: SelectLoadContext) => Loader;
 /** A continuation can be held, vetoed, or awaited, but only runs once. */
@@ -223,8 +263,8 @@ type Change = (
 export interface SelectCustomizationSpec {
   /** Appends a content step. */
   content(callback: Content): void;
-  /** Appends a row presentation step. */
-  row(callback: Row): void;
+  /** Appends an option presentation step. */
+  option(callback: Presentation): void;
   /** Appends a step resolving core and declared recipe config. */
   config(callback: Config): void;
   /** Appends a loader step. */
@@ -251,8 +291,8 @@ class Declarations {
   /** Content steps, in declaration order. */
   content: Content[] = [];
 
-  /** Row steps, in declaration order. */
-  row: Row[] = [];
+  /** Option presentation steps, in declaration order. */
+  option: Presentation[] = [];
 
   /** Config steps, in declaration order. */
   config: Config[] = [];
@@ -372,38 +412,60 @@ export default class SelectCustomizations {
     });
   }
 
-  /** Chains valid arrays, retaining the previous list when a step fails. */
+  /**
+   * Chains valid arrays, retaining the previous options when a step fails. Each step sees options:
+   * a record a step returns is wrapped with no settings, whatever an input held for it.
+   *
+   * @param options - The options entering the first step.
+   * @param context - What every step receives.
+   * @param wrap - Turns a returned entry into an option.
+   */
   applyContent(
-    records: SelectRecord[],
-    context: SelectContentContext
-  ): SelectOptionLike[] {
-    let items: SelectOptionLike[] = records;
+    options: SelectOption[],
+    context: SelectContentContext,
+    wrap: Wrap
+  ): SelectOption[] {
+    let current = options;
     for (const step of this.#steps.content) {
-      const previous = items;
-      items =
+      const previous = current;
+      current =
         withTransformerErrorHandling(() => {
-          const result = step(previous as SelectRecord[], context);
+          const result = step(previous, context);
           assert(
             "DSelect: content customization must return an array",
             Array.isArray(result)
           );
-          return Array.isArray(result) ? result : previous;
-        }) ?? items;
+          return Array.isArray(result) ? result.map(wrap) : previous;
+        }) ?? current;
     }
-    return items;
+    return current;
   }
 
-  /** Keeps mutations made before a row step fails, then continues the remaining steps. */
-  applyRow(context: SelectRowContext): SelectRowPresentation {
-    const row: SelectRowPresentation = { classes: [], title: undefined };
-    for (const step of this.#steps.row) {
-      withTransformerErrorHandling(() => step(row, context));
+  /** Keeps mutations made before a presentation step fails, then continues the remaining steps. */
+  applyOption(context: SelectOptionContext): SelectOptionPresentation {
+    const presentation: SelectOptionPresentation = {
+      classes: [],
+      title: undefined,
+    };
+    for (const step of this.#steps.option) {
+      withTransformerErrorHandling(() => step(presentation, context));
     }
-    return row;
+    return presentation;
   }
 
-  /** Chains valid loader functions, retaining the previous loader on failure. */
-  applyLoad(load: Loader, context: SelectLoadContext): Loader {
+  /**
+   * Chains valid loader functions, retaining the previous loader on failure. Every loader a step
+   * receives answers with options, so a step reads settings the steps inside it gave.
+   *
+   * @param load - The caller's loader.
+   * @param context - What every step receives.
+   * @param wrap - Turns a returned entry into an option.
+   */
+  applyLoad(load: Loader, context: SelectLoadContext, wrap: Wrap): Loader {
+    if (!this.#steps.load.length) {
+      return load;
+    }
+    load = wrapLoader(load, wrap);
     for (const step of this.#steps.load) {
       const previous = load;
       load =
@@ -413,7 +475,9 @@ export default class SelectCustomizations {
             "DSelect: load customization must return a function",
             typeof result === "function"
           );
-          return typeof result === "function" ? result : previous;
+          return typeof result === "function"
+            ? wrapLoader(result, wrap)
+            : previous;
         }) ?? load;
     }
     return load;
@@ -687,7 +751,7 @@ export default class SelectCustomizations {
     const spec = new Proxy<SelectCustomizationSpec>(
       {
         content: (callback) => append(pending.content, callback),
-        row: (callback) => append(pending.row, callback),
+        option: (callback) => append(pending.option, callback),
         load: (callback) => append(pending.load, callback),
         change: (callback) => append(pending.change, callback),
         config: (callback) => append(pending.config, callback),
@@ -721,7 +785,7 @@ export default class SelectCustomizations {
     });
     if (succeeded) {
       this.#steps.content.push(...pending.content);
-      this.#steps.row.push(...pending.row);
+      this.#steps.option.push(...pending.option);
       this.#steps.config.push(...pending.config);
       this.#steps.configTiers.push(...pending.config.map(() => tier));
       this.#steps.load.push(...pending.load);

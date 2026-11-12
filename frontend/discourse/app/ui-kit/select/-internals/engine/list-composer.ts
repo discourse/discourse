@@ -10,7 +10,6 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectContentContext } from "./customizations.ts";
-import { optionsFromLegacyRows } from "./legacy-rows.ts";
 import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
 import {
   engineOption,
@@ -76,10 +75,10 @@ export default class ListComposer {
 
   /** Native content steps run before the compatibility bridge. */
   #applyContent: (
-    records: SelectRecord[],
+    options: SelectOption[],
     context: SelectContentContext
-  ) => SelectOptionLike[];
-  #applyLegacyContent: (records: SelectRecord[]) => SelectRecord[];
+  ) => SelectOption[];
+  #applyLegacyContent: (options: SelectOption[]) => SelectOption[];
 
   /** Records transformed option counts without invalidating the current render. */
   #noteVisible: (visible: number, input: number) => void;
@@ -108,10 +107,11 @@ export default class ListComposer {
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
-      records: SelectRecord[],
+      options: SelectOption[],
       context: SelectContentContext
-    ) => SelectOptionLike[];
-    applyLegacyContent: (records: SelectRecord[]) => SelectRecord[];
+    ) => SelectOption[];
+    /** Applies the compatibility bridge's legacy content callbacks. */
+    applyLegacyContent: (options: SelectOption[]) => SelectOption[];
     /** Records the options left after content extensions, with the raw row count they came from. */
     noteVisible: (visible: number, input: number) => void;
     /** Whether the source may still add rows to this query, a page in flight or not. */
@@ -148,20 +148,16 @@ export default class ListComposer {
     // The source validates a measurement against the options it holds.
     const rawCount = loaded.length;
 
-    let options = this.#throughRecords(loaded, (records) =>
-      this.#applyContent(records, {
-        filter: this.#getFilter(),
-        value: this.#getValue(),
-        ...this.#getContentContext(),
-      })
-    );
+    let options = this.#applyContent(loaded, {
+      filter: this.#getFilter(),
+      value: this.#getValue(),
+      ...this.#getContentContext(),
+    });
 
     // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
     // their own stage, after native customizations, so ordering is deterministic and
     // does not depend on global registration order.
-    options = this.#throughRecords(options, (records) =>
-      this.#applyLegacyContent(records)
-    );
+    options = this.#applyLegacyContent(options);
     this.#noteVisible(options.length, rawCount);
 
     // Runs are found before held options are hidden, so what is selected never renumbers them.
@@ -339,22 +335,6 @@ export default class ListComposer {
   /** Whether the gap before `index` is where the sticky options end. */
   #seamBetween(previous: number, index: number, stickyCount: number): boolean {
     return previous < stickyCount && index >= stickyCount;
-  }
-
-  /** Runs a record-level step and maps what it returned back to options. */
-  #throughRecords(
-    options: SelectOption[],
-    step: (records: SelectRecord[]) => readonly SelectOptionLike[]
-  ): SelectOption[] {
-    const records = options.map((option) => option.record);
-    const result = step(records);
-    if (
-      result.length === records.length &&
-      result.every((record, index) => record === records[index])
-    ) {
-      return options;
-    }
-    return optionsFromLegacyRows(options, result, this.#args);
   }
 
   /** The value key an option is listed under, or `null` for a value-less option. */

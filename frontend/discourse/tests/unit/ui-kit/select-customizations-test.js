@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
@@ -6,7 +7,13 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { disableThrowingApplyExceptionOnTests } from "discourse/lib/transformer";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import { optionsFromLegacyRows } from "discourse/ui-kit/select/-internals/engine/legacy-rows";
+import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
+import { isSelectOption } from "discourse/ui-kit/select/-internals/engine/select-option";
+import SelectEngine, {
+  selectOption,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const ITEMS = [
@@ -309,7 +316,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       const engine = new SelectEngine({});
       const spec = stored;
 
-      for (const method of ["content", "row", "load", "change"]) {
+      for (const method of ["content", "option", "load", "change"]) {
         assert.throws(
           () => spec[method](() => {}),
           /sealed/,
@@ -642,29 +649,29 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       );
     });
 
-    test("a throwing row step keeps what it set, and later steps still run", function (assert) {
+    test("a throwing presentation step keeps what it set, and later steps still run", function (assert) {
       disableThrowingApplyExceptionOnTests();
       customize((selects) => {
         selects.forAll((spec) =>
-          spec.row((row) => {
-            row.classes.push("partial");
-            throw new Error("row failed");
+          spec.option((presentation) => {
+            presentation.classes.push("partial");
+            throw new Error("presentation failed");
           })
         );
         selects.forAll((spec) =>
-          spec.row((row) => row.classes.push("healthy"))
+          spec.option((presentation) => presentation.classes.push("healthy"))
         );
       });
       const engine = new SelectEngine({});
       const [descriptor] = engine.buildRows([{ id: 1, name: "Apple" }]);
 
       assert.deepEqual(
-        engine.rowPresentation(descriptor).classes,
+        engine.optionPresentation(descriptor).classes,
         ["partial", "healthy"],
         "partial mutations survive and the following step runs"
       );
       assert.deepEqual(
-        engine.rowPresentation(descriptor).classes,
+        engine.optionPresentation(descriptor).classes,
         ["partial", "healthy"],
         "a later evaluation starts fresh"
       );
@@ -673,7 +680,7 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
         this.reported.every(
           (detail) =>
             detail.messageKey === "broken_transformer_alert" &&
-            detail.error.message === "row failed"
+            detail.error.message === "presentation failed"
         ),
         "as a broken customization"
       );
@@ -1037,6 +1044,755 @@ module(
         "the deferred emit keeps the original values"
       );
       assert.true(Object.isFrozen(emitted.config), "the snapshot is frozen");
+    });
+  }
+);
+
+/** An engine the legacy bridge reaches, under the kind its callbacks target. */
+function bridgeEngine(owner, options = {}) {
+  const element = document.createElement("div");
+  return new SelectEngine({
+    kind: "options-bridge",
+    getValue: () => null,
+    legacy: {
+      owner,
+      getElement: () => element,
+      isDestroyed: () => false,
+    },
+    ...options,
+  });
+}
+
+module(
+  "Unit | ui-kit | select-customizations | options and records",
+  function (hooks) {
+    setupTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("a presentation step gets the option and its record", function (assert) {
+      let context;
+      customize((selects) =>
+        selects.forAll((spec) =>
+          spec.option((presentation, received) => {
+            context = received;
+            presentation.title = "Presented";
+          })
+        )
+      );
+      const engine = new SelectEngine({});
+      const record = { id: 1, name: "Record" };
+      const [row] = engine.buildRows([
+        selectOption(record, { disabled: true }),
+      ]);
+      const presentation = engine.optionPresentation(row);
+      assert.strictEqual(
+        presentation?.title,
+        "Presented",
+        "the step's presentation is returned"
+      );
+      assert.strictEqual(
+        context?.record,
+        record,
+        "the context carries the caller's record"
+      );
+      assert.strictEqual(
+        context?.option,
+        row.option,
+        "the context carries the presented option"
+      );
+    });
+
+    test("content tiers receive wrapped predecessors and merge settings", function (assert) {
+      const record = Object.freeze({ id: 1, name: "Original" });
+      const added = Object.freeze({ id: 2, name: "Added" });
+      const action = () => {};
+      const input = selectOption(record, {
+        disabled: true,
+        description: "Initial",
+        position: "sticky",
+        onSelect: action,
+      });
+      const seen = [];
+      customize((selects) => {
+        selects.forIdentifier("options", (spec) =>
+          spec.content((options) => {
+            seen.push(options);
+            return options.map((entry) =>
+              selectOption(entry).with({ description: null, divider: null })
+            );
+          })
+        );
+        selects.forKind("options", (spec) =>
+          spec.content((options) => {
+            seen.push(options);
+            return options.map((entry) =>
+              selectOption(entry).with({
+                description: "Final",
+                divider: "after",
+              })
+            );
+          })
+        );
+        selects.forAll((spec) =>
+          spec.content((options) => {
+            seen.push(options);
+            return [
+              selectOption(options[0]).with({
+                disabled: null,
+                description: undefined,
+                position: null,
+                onSelect: null,
+              }),
+              added,
+            ];
+          })
+        );
+      });
+
+      const engine = new SelectEngine({
+        kind: "options",
+        identifier: "options",
+      });
+      const rows = engine.buildRows([input]);
+      assert.strictEqual(seen.length, 3, "all three tiers ran");
+      for (const options of seen) {
+        assert.true(
+          options.every(isSelectOption),
+          "every tier receives only options"
+        );
+      }
+      assert.strictEqual(
+        seen[0][0]?.record,
+        record,
+        "the first step gets the source record"
+      );
+      assert.strictEqual(
+        seen[0][0]?.description,
+        "Initial",
+        "source settings reach the first step"
+      );
+      assert.strictEqual(
+        seen[1][0]?.description,
+        "Initial",
+        "undefined preserves a setting"
+      );
+      assert.strictEqual(
+        seen[1][1]?.record,
+        added,
+        "a returned record is wrapped before the next step"
+      );
+      const option = rows.find((row) => row.record === record)?.option;
+      assert.strictEqual(
+        option?.record,
+        record,
+        "with never copies the record"
+      );
+      assert.strictEqual(
+        seen[2][0]?.description,
+        "Final",
+        "a later step replaces description"
+      );
+      assert.strictEqual(
+        seen[2][0]?.divider,
+        "after",
+        "a later step adds a setting"
+      );
+      assert.strictEqual(
+        option?.description,
+        undefined,
+        "the final step clears description"
+      );
+      assert.strictEqual(
+        option?.divider,
+        undefined,
+        "the final step clears divider"
+      );
+      assert.false(option?.disabled, "null clears disabled");
+      assert.false(option?.action, "null clears the action");
+      assert.strictEqual(option?.position, undefined, "null clears position");
+      assert.strictEqual(
+        input.description,
+        "Initial",
+        "the original option is untouched"
+      );
+      assert.true(input.disabled, "the original settings are untouched");
+    });
+
+    test("fields on a record returned by content are data", function (assert) {
+      let actions = 0;
+      const record = Object.freeze({
+        id: 7,
+        name: "Data fields",
+        disabled: true,
+        sticky: true,
+        description: "Record data",
+        onSelect() {
+          actions++;
+        },
+      });
+      customize((selects) =>
+        selects.forAll((spec) => spec.content(() => [record]))
+      );
+      const changes = [];
+      const engine = new SelectEngine({
+        getValue: () => null,
+        onChange: (value, payload) => changes.push([value, payload]),
+      });
+      const [row] = engine.buildRows([]);
+
+      assert.strictEqual(row.record, record, "the record is not copied");
+      assert.deepEqual(
+        row.option.settings,
+        {},
+        "record fields provide no settings"
+      );
+      assert.false(row.flags.disabled, "disabled is data");
+      assert.false(row.flags.sticky, "sticky is data");
+      assert.false(row.flags.action, "onSelect is data");
+      assert.strictEqual(
+        row.option.description,
+        undefined,
+        "description is data"
+      );
+      engine.activate(row.option);
+      assert.strictEqual(
+        actions,
+        0,
+        "a record method is never called as an action"
+      );
+      assert.deepEqual(
+        changes,
+        [[7, record]],
+        "activation selects and emits the original record"
+      );
+    });
+
+    test("a record returned by content has no settings, even when an input matches", function (assert) {
+      const first = Object.freeze({ id: 1, name: "Identity" });
+      const second = Object.freeze({ id: 2, name: "Key" });
+      const copy = Object.freeze({ ...second });
+      customize((selects) =>
+        selects.forAll((spec) => spec.content(() => [first, copy]))
+      );
+      const engine = new SelectEngine({});
+      const rows = engine.buildRows([
+        selectOption(first, {
+          description: "Identity setting",
+          disabled: true,
+        }),
+        selectOption(second, {
+          description: "Key setting",
+          position: "sticky",
+        }),
+      ]);
+
+      assert.deepEqual(
+        rows.map((row) => row.value),
+        [1, 2],
+        "no inherited position reorders the list"
+      );
+      assert.strictEqual(
+        rows.find((row) => row.value === 1)?.record,
+        first,
+        "returning a record preserves its identity"
+      );
+      assert.strictEqual(
+        rows.find((row) => row.value === 2)?.record,
+        copy,
+        "returning a copy preserves that copy"
+      );
+      for (const row of rows) {
+        assert.deepEqual(
+          row.option.settings,
+          {},
+          "a bare result has no settings even when an input matches"
+        );
+      }
+    });
+
+    test("non-array content asserts and retains the previous options", function (assert) {
+      const record = { id: 1, name: "Kept" };
+      const option = selectOption(record, {
+        description: "Kept setting",
+        disabled: true,
+      });
+      let seen;
+      customize((selects) =>
+        selects.forAll((spec) => {
+          spec.content(() => [option]);
+          spec.content(() => ({ options: [] }));
+          spec.content((options) => {
+            seen = options;
+            return options;
+          });
+        })
+      );
+      const engine = new SelectEngine({});
+      assert.throws(
+        () => engine.buildRows([]),
+        /must return an array/i,
+        "a non-array is rejected"
+      );
+      disableThrowingApplyExceptionOnTests();
+      const [row] = engine.buildRows([]);
+      assert.strictEqual(
+        seen[0],
+        option,
+        "the following step gets the previous option"
+      );
+      assert.strictEqual(row.record, record, "the fallback retains the record");
+      assert.strictEqual(
+        row.option.description,
+        "Kept setting",
+        "the fallback retains settings"
+      );
+      assert.true(row.flags.disabled, "the retained option stays disabled");
+    });
+
+    test("re-wrapped options keep the source trailing run ahead of an injected group", async function (assert) {
+      const a = { id: 1, name: "A one", group: "A" };
+      const b = { id: 2, name: "B one", group: "B" };
+      const extra = { id: 3, name: "Injected", group: "C" };
+      const seen = [];
+      customize((selects) =>
+        selects.forAll((spec) =>
+          spec.content((options) => {
+            seen.push(options);
+            return [
+              ...options.map((entry) =>
+                selectOption(entry).with({ description: "Decorated" })
+              ),
+              selectOption(extra),
+            ];
+          })
+        )
+      );
+      const engine = new SelectEngine({
+        load: () => ({ options: [a, b], hasMore: true }),
+        groupBy: "group",
+        groupHeader: (key) => `Header ${key}`,
+        groupFooter: (key) => `Footer ${key}`,
+      });
+      const loaded = await engine.loadOptions(engine.loadContext);
+      const rows = engine.buildRows(loaded);
+      assert.true(
+        seen.at(-1).every(isSelectOption),
+        "content receives the loaded options"
+      );
+      assert.deepEqual(
+        rows
+          .filter((row) => row.flags.groupFooter)
+          .map((row) => row.record.label),
+        ["Footer A", "Footer C"],
+        "B stays held; the injected C run must not become the trailing source run"
+      );
+      const rebuilt = engine.buildRows(loaded);
+      assert.deepEqual(
+        rebuilt.map((row) => row.key),
+        rows.map((row) => row.key),
+        "fresh with wrappers keep boundary keys stable"
+      );
+      assert.strictEqual(
+        rebuilt.find((row) => row.value === 2)?.record,
+        b,
+        "the held run keeps the source record"
+      );
+    });
+
+    for (const envelope of [false, true]) {
+      test(`load steps wrap ${envelope ? "envelope" : "array"} results between layers`, async function (assert) {
+        const base = {
+          id: 1,
+          name: "Base",
+          disabled: true,
+          description: "Data",
+        };
+        const added = {
+          id: 2,
+          name: "Added",
+          sticky: true,
+          description: "More data",
+        };
+        const explicit = selectOption(
+          { id: 3, name: "Explicit" },
+          { disabled: true, description: "Deliberate" }
+        );
+        const seen = [];
+        const unpack = (result) =>
+          Array.isArray(result) ? result : result.options;
+        const pack = (options) =>
+          envelope
+            ? { options, hasMore: false, total: 3, cursor: "last" }
+            : options;
+        customize((selects) =>
+          selects.forAll((spec) => {
+            spec.load((load) => async (query, request) => {
+              const result = await load(query, request);
+              seen.push(unpack(result));
+              return pack([
+                selectOption(unpack(result)[0]).with({
+                  description: "First step",
+                }),
+                added,
+                explicit,
+              ]);
+            });
+            spec.load((load) => async (query, request) => {
+              const result = await load(query, request);
+              seen.push(unpack(result));
+              assert.deepEqual(
+                envelope ? [result.cursor, result.total, result.hasMore] : [],
+                envelope ? ["last", 3, false] : [],
+                "wrapping retains envelope metadata"
+              );
+              return result;
+            });
+          })
+        );
+        const engine = new SelectEngine({ load: () => pack([base]) });
+        const options = await engine.loadOptions(engine.loadContext);
+
+        assert.strictEqual(seen.length, 2, "both loader layers ran");
+        for (const entries of seen) {
+          assert.true(
+            entries.every(isSelectOption),
+            "the wrapped loader answers with options"
+          );
+        }
+        assert.strictEqual(
+          seen[0][0]?.record,
+          base,
+          "the innermost step receives the original record wrapped"
+        );
+        assert.deepEqual(
+          seen[0][0]?.settings,
+          {},
+          "base record fields are inert"
+        );
+        assert.strictEqual(
+          seen[1][0]?.description,
+          "First step",
+          "the next layer keeps explicit settings"
+        );
+        assert.strictEqual(
+          seen[1][1]?.record,
+          added,
+          "a step's bare record is wrapped for the next layer"
+        );
+        assert.deepEqual(
+          seen[1][1]?.settings,
+          {},
+          "a step's bare record fields are inert"
+        );
+        assert.strictEqual(
+          seen[1][2]?.description,
+          "Deliberate",
+          "a returned option keeps its settings"
+        );
+        assert.strictEqual(
+          options[0]?.record,
+          base,
+          "final wrapping never copies the base record"
+        );
+        assert.deepEqual(
+          options[1]?.settings,
+          {},
+          "final wrapping does not infer legacy settings"
+        );
+        assert.true(
+          options[2]?.disabled,
+          "explicit disabled survives the whole chain"
+        );
+      });
+    }
+
+    for (const multiple of [false, true]) {
+      test(`change records have ${multiple ? "multiple" : "single"} arity`, function (assert) {
+        const first = { id: 1, name: "First" };
+        const second = { id: 2, name: "Second" };
+        let held = multiple ? [1] : 1;
+        const contexts = [];
+        const payloads = [];
+        customize((selects) =>
+          selects.forAll((spec) =>
+            spec.change((next, context) => {
+              contexts.push(context);
+              next();
+            })
+          )
+        );
+        const engine = new SelectEngine({
+          multiple,
+          options: [selectOption(first, { description: "One" }), second],
+          getValue: () => held,
+          onChange: (value, records) => {
+            held = value;
+            payloads.push(records);
+          },
+        });
+        engine.select(second);
+        const proposed = contexts[0]?.records;
+        const records = multiple ? proposed : [proposed];
+        assert.strictEqual(
+          records?.[0],
+          multiple ? first : second,
+          "the first payload entry is the caller's record"
+        );
+        assert.strictEqual(
+          records?.at(-1),
+          second,
+          "the added record stays a record"
+        );
+        assert.strictEqual(
+          proposed,
+          payloads[0],
+          "middleware and the consumer share the record payload"
+        );
+        engine.clear();
+        assert.deepEqual(
+          contexts[1]?.records,
+          multiple ? [] : null,
+          "clearing keeps select arity"
+        );
+        assert.strictEqual(
+          contexts.length,
+          2,
+          "middleware ran for selection and clear"
+        );
+      });
+    }
+
+    test("legacy callbacks and facade content receive records and preserve options by identity", function (assert) {
+      const record = Object.freeze({
+        id: 1,
+        name: "Native",
+        disabled: true,
+        sticky: true,
+        description: "Data",
+        onSelect() {},
+      });
+      const option = selectOption(record, { description: "Explicit" });
+      const calls = [];
+      withPluginApi((api) => {
+        const legacy = api.modifySelectKit("options-bridge");
+        for (const method of [
+          "prependContent",
+          "appendContent",
+          "replaceContent",
+        ]) {
+          legacy[method]((facade, content) => {
+            calls.push(method);
+            assert.strictEqual(
+              content[0],
+              record,
+              `${method} gets the native record`
+            );
+            assert.strictEqual(
+              facade.content[0],
+              record,
+              `${method} facade content holds records`
+            );
+            assert.false(
+              content.some(isSelectOption),
+              `${method} never sees options`
+            );
+            return method === "replaceContent" ? content : undefined;
+          });
+        }
+      });
+      const engine = bridgeEngine(getOwner(this));
+      const [row] = engine.buildRows([option]);
+      assert.deepEqual(
+        calls,
+        ["prependContent", "appendContent", "replaceContent"],
+        "every legacy callback ran"
+      );
+      assert.strictEqual(
+        row.option,
+        option,
+        "an identity result returns the original option"
+      );
+      assert.strictEqual(
+        row.option.description,
+        "Explicit",
+        "explicit settings survive"
+      );
+      assert.false(
+        row.flags.disabled,
+        "native record fields are not translated on an identity return"
+      );
+      assert.false(row.flags.action, "a native method stays data");
+      assert.false(row.flags.sticky, "native sticky stays data");
+    });
+
+    test("legacy injected fields translate and actions bind this to the returned row", function (assert) {
+      const calls = [];
+      const changes = [];
+      const action = Object.freeze({
+        id: "action",
+        name: "Legacy action",
+        sticky: true,
+        description: "Legacy description",
+        onSelect(selectKit, record) {
+          calls.push({ receiver: this, selectKit, record });
+        },
+      });
+      const disabled = Object.freeze({
+        id: "disabled",
+        name: "Disabled",
+        disabled: true,
+      });
+      withPluginApi((api) =>
+        api
+          .modifySelectKit("options-bridge")
+          .appendContent(() => [action, disabled])
+      );
+      const engine = bridgeEngine(getOwner(this), {
+        onChange: (...args) => changes.push(args),
+      });
+      const rows = engine.buildRows([{ id: "native", name: "Native" }]);
+      const row = rows.find((entry) => entry.value === "action");
+      assert.strictEqual(
+        rows[0].value,
+        "action",
+        "legacy sticky hoists the action"
+      );
+      assert.strictEqual(
+        row.record,
+        action,
+        "the bridge never copies an injected record"
+      );
+      assert.strictEqual(
+        row.option.description,
+        "Legacy description",
+        "legacy description becomes a setting"
+      );
+      assert.true(
+        rows.find((entry) => entry.value === "disabled").flags.disabled,
+        "legacy disabled becomes a setting"
+      );
+      engine.activate(row.option);
+      assert.strictEqual(calls.length, 1, "the action ran once");
+      assert.strictEqual(
+        calls[0]?.receiver,
+        action,
+        "legacy onSelect receives the row as this"
+      );
+      assert.strictEqual(
+        calls[0]?.record,
+        action,
+        "legacy onSelect receives the exact returned row"
+      );
+      assert.strictEqual(
+        typeof calls[0]?.selectKit?.set,
+        "function",
+        "the action gets the legacy facade"
+      );
+      assert.deepEqual(
+        changes,
+        [],
+        "legacy action activation does not select a value"
+      );
+    });
+
+    test("legacy unique-key copies inherit settings with legacy fields on top", function (assert) {
+      const record = Object.freeze({ id: 0, name: "Native" });
+      const copy = Object.freeze({
+        ...record,
+        disabled: true,
+        sticky: true,
+        description: "Legacy override",
+      });
+      withPluginApi((api) =>
+        api.modifySelectKit("options-bridge").replaceContent(() => [copy])
+      );
+      const engine = bridgeEngine(getOwner(this));
+      const [row] = engine.buildRows([
+        selectOption(record, {
+          description: "Native setting",
+          position: "end",
+          divider: "before",
+        }),
+      ]);
+      assert.strictEqual(row.record, copy, "the copy is the returned record");
+      assert.strictEqual(
+        row.option.description,
+        "Legacy override",
+        "legacy description overrides the native setting"
+      );
+      assert.strictEqual(
+        row.option.position,
+        "sticky",
+        "legacy sticky overrides native end"
+      );
+      assert.strictEqual(
+        row.option.divider,
+        "before",
+        "a field the legacy copy does not set is inherited"
+      );
+      assert.true(row.option.disabled, "the legacy copy adds disabled");
+      assert.strictEqual(
+        record.description,
+        undefined,
+        "the native record is not mutated"
+      );
+    });
+
+    test("legacy null and unmatched keys do not inherit native settings", function (assert) {
+      const record = Object.freeze({ id: null, name: "Native" });
+      const copy = Object.freeze({ ...record, description: "Legacy only" });
+      const unmatched = Object.freeze({ id: 9, name: "Unmatched" });
+      withPluginApi((api) =>
+        api
+          .modifySelectKit("options-bridge")
+          .replaceContent(() => [copy, unmatched])
+      );
+      const engine = bridgeEngine(getOwner(this));
+      const rows = engine.buildRows([
+        selectOption(record, { disabled: true, divider: "after" }),
+      ]);
+      const returned = rows.find((row) => row.record === copy)?.option;
+      assert.strictEqual(
+        returned?.description,
+        "Legacy only",
+        "new legacy fields are translated"
+      );
+      assert.false(returned?.disabled, "a null key cannot inherit disabled");
+      assert.strictEqual(
+        returned?.divider,
+        undefined,
+        "a null key cannot inherit a divider"
+      );
+      assert.deepEqual(
+        rows.find((row) => row.record === unmatched)?.option.settings,
+        {},
+        "an unmatched key inherits nothing"
+      );
+    });
+
+    test("legacy ambiguous keys do not inherit either input's settings", function (assert) {
+      const first = { id: 1, name: "First" };
+      const second = { id: 1, name: "Second" };
+      const copy = Object.freeze({ ...first, description: "Legacy" });
+      // Exercise ambiguity at the bridge boundary, before source uniqueness removes duplicate keys.
+      const [option] = optionsFromLegacyRows(
+        [
+          selectOption(first, { disabled: true, divider: "before" }),
+          selectOption(second, { disabled: true, position: "sticky" }),
+        ],
+        [copy],
+        new SelectArgsView({})
+      );
+      assert.strictEqual(
+        option?.record,
+        copy,
+        "the returned copy is not copied again"
+      );
+      assert.deepEqual(
+        option?.settings,
+        { description: "Legacy" },
+        "an ambiguous key translates only the copy's own fields"
+      );
     });
   }
 );
