@@ -942,6 +942,16 @@ RSpec.describe DiscourseAi::Decisions::Client do
       end
     end
 
+    it "returns score refusals without discarding other answers" do
+      gemini_body[:answers][:severity] = { type: "refusal", reason: "Cannot answer" }
+      stub_request(:post, decision_model.url).to_return(body: gemini_body.to_json)
+
+      result = client.decide("Hello", questions:, feature_name: "test")
+
+      expect(result.refusals.map(&:name)).to eq(["severity"])
+      expect(result["team"].choice).to eq("returns")
+    end
+
     it "keeps answers when the response has no usage" do
       gemini_body.delete(:usage)
       stub_request(:post, decision_model.url).to_return(body: gemini_body.to_json)
