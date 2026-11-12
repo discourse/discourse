@@ -86,6 +86,25 @@ RSpec.describe DiscourseAi::Agents::Tools::Read do
       expect(results[:description]).to eq("Topic not found")
     end
 
+    it "omits hidden content for anonymous readers and retains authorized reader access" do
+      post2.update!(hidden: true)
+      expect(tool.invoke[:content]).not_to include(post2.raw)
+
+      [post2.user, Fabricate(:moderator)].each do |viewer|
+        authorized_tool =
+          described_class.new(
+            { topic_id: topic_with_tags.id },
+            bot_user: bot_user,
+            llm: llm,
+            agent_options: {
+              "read_private" => true,
+            },
+            context: DiscourseAi::Agents::BotContext.new(user: viewer),
+          )
+        expect(authorized_tool.invoke[:content]).to include(post2.raw)
+      end
+    end
+
     it "can read specific posts" do
       tool =
         described_class.new(

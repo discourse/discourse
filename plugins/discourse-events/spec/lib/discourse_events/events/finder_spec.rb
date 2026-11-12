@@ -12,6 +12,15 @@ describe DiscourseEvents::Events::Finder do
     Group.refresh_automatic_groups!
   end
 
+  it "filters events on hidden posts for strangers but retains author and staff access" do
+    event = Fabricate(:event)
+    event.post.update!(hidden: true, user: user)
+    expect(finder.search(current_user)).to be_empty
+    expect(finder.search(nil)).to be_empty
+    expect(finder.search(user)).to contain_exactly(event)
+    expect(finder.search(Fabricate(:moderator))).to contain_exactly(event)
+  end
+
   describe "by attending user" do
     fab!(:attending_user, :user)
     fab!(:invited_group) { Fabricate(:group, users: [attending_user]) }

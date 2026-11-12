@@ -8,7 +8,7 @@ module Jobs
 
       Post
         .select(:id, :created_at, :user_id)
-        .secured(Guardian.new)
+        .with_visible_post_types(Guardian.new)
         .visible
         .public_posts
         .where(via_email: true)

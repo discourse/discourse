@@ -96,6 +96,22 @@ describe "AutoResponder" do
           )
         end
 
+        it "counts earlier answers when the triggering post's author is missing" do
+          post = create_post(topic: topic, raw: "this is a post with foo")
+          create_post(user: answering_user, reply_to_post_number: post.post_number, topic: topic)
+          post.update_columns(user_id: nil)
+          post.reload
+          expect { automation.trigger!("post" => post) }.not_to change { Post.count }
+        end
+
+        it "keeps a hidden earlier answer from triggering a duplicate response" do
+          post = create_post(topic: topic, raw: "this is a post with foo")
+          answer =
+            create_post(user: answering_user, reply_to_post_number: post.post_number, topic: topic)
+          answer.update!(hidden: true)
+          expect { automation.trigger!("post" => post) }.not_to change { Post.count }
+        end
+
         it "doesn’t create another answer" do
           post_1 = create_post(topic: topic, raw: "this is a post with foo")
           create_post(user: answering_user, reply_to_post_number: post_1.post_number, topic: topic)

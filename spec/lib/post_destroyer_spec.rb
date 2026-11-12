@@ -1447,6 +1447,19 @@ RSpec.describe PostDestroyer do
       reviewable_reply
     end
 
+    it "deletes hidden descendants when performed by a moderator" do
+      hidden_reply = Fabricate(:post, topic: post.topic, hidden: true)
+      PostReply.create!(post: reply, reply: hidden_reply)
+      PostDestroyer.delete_with_replies(reporter, post)
+      expect(
+        Post
+          .with_deleted
+          .where(id: [post.id, reply.id, hidden_reply.id])
+          .where.not(deleted_at: nil)
+          .pluck(:id),
+      ).to contain_exactly(post.id, reply.id, hidden_reply.id)
+    end
+
     context "when deferring reply flags" do
       let(:defer_reply_flags) { true }
 

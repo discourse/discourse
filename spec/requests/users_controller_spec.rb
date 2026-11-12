@@ -6267,6 +6267,17 @@ RSpec.describe UsersController do
           Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper])
         end
 
+        it "excludes hidden posts from another viewer's topic post count" do
+          Fabricate(:post, user: admin, topic: topic, hidden: true)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(1)
+
+          sign_in(admin)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(3)
+        end
+
         it "includes only visible posts" do
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
@@ -9139,18 +9150,15 @@ RSpec.describe UsersController do
 
       TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
       hidden_post.update!(hidden: true)
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
 
       sign_in(user)
 
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-      hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
-
-      expect(hidden_post_response).to be_present
-      expect(hidden_post_response).not_to have_key("excerpt")
-      expect(hidden_post_response).not_to have_key("truncated")
-      expect(hidden_post_response).not_to have_key("cooked")
+      bookmark_list = response.parsed_body.fetch("user_bookmark_list").fetch("bookmarks")
+      expect(bookmark_list.pluck("id")).to contain_exactly(bookmark.id)
+      expect(hidden_post_bookmark.reload).to be_persisted
       expect(response.body).not_to include(hidden_post.raw)
     end
 

@@ -164,12 +164,8 @@ module DiscourseMcp
         start_post_number = arguments.fetch("start_post_number", 1)
         post_limit = arguments.fetch("post_limit", 5)
         posts =
-          request_context
-            .guardian
-            .filter_hidden_posts(
-              Post.secured(request_context.guardian).joins(:topic),
-              category: topic.category,
-            )
+          Post
+            .secured(request_context.guardian)
             .where(topic_id: topic.id, post_number: start_post_number..)
             .order(:post_number)
             .includes(:topic, :user)

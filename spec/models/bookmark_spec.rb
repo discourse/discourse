@@ -170,6 +170,16 @@ RSpec.describe Bookmark do
         expect { last_bookmark.clear_reminder! }.not_to raise_error
       end
 
+      it "counts retained inaccessible bookmarks toward the quota" do
+        hidden_post = Fabricate(:post, hidden: true)
+        hidden_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_post)
+        SiteSetting.max_bookmarks_per_user = 1
+        expect { Fabricate(:bookmark, user: user) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(hidden_bookmark.reload).to be_persisted
+        hidden_bookmark.destroy!
+        expect { Fabricate(:bookmark, user: user) }.to change { user.bookmarks.count }.by(1)
+      end
+
       it "gets the bookmark limit error when creating a new bookmark over the limit" do
         Fabricate(:bookmark, user: user)
         Fabricate(:bookmark, user: user)

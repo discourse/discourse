@@ -209,7 +209,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.allowed_draft_posts_for_user(user)
-    # .secured handles whispers, merge handles topic/pm visibility
+    # Drafts only preload PMs the user participates in, including for moderators.
     Post.secured(Guardian.new(user)).joins(:topic).merge(allowed_draft_topics_for_user(user))
   end
 

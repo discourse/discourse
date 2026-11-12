@@ -25,9 +25,15 @@ RSpec.describe Guardian do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before { Guardian.enable_topic_can_see_consistency_check }
+  before do
+    Guardian.enable_topic_can_see_consistency_check
+    Guardian.enable_post_can_see_consistency_check
+  end
 
-  after { Guardian.disable_topic_can_see_consistency_check }
+  after do
+    Guardian.disable_topic_can_see_consistency_check
+    Guardian.disable_post_can_see_consistency_check
+  end
 
   it "can be created without a user (not logged in)" do
     expect { Guardian.new }.not_to raise_error

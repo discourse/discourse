@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe PostsFilter do
+  it "retains the separately authorized filter's visibility results" do
+    hidden = Fabricate(:post, topic: feature_topic, user: user2, hidden: true)
+    visible = Fabricate(:post, topic: feature_topic, user: user2)
+    result =
+      PostsFilter.new("topic:#{feature_topic.id} post_type:all", guardian: user.guardian).search
+    expect(result).to contain_exactly(feature_post, visible)
+    expect(result.where.not(id: Post.secured(user.guardian).select(:id))).to be_empty
+    expect(Post.with_visible_post_types(user.guardian).where(id: hidden.id)).to contain_exactly(
+      hidden,
+    )
+  end
+
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_topic_title_length = 3
