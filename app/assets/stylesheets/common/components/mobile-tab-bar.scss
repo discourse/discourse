@@ -253,6 +253,15 @@ html.mobile-tab-bar-visible {
     }
   }
 
+  &__views > .nav-pills:last-child > li {
+    flex: 1 0 auto;
+
+    > a {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
   // Outweighs the topic lists' own layout for their nav, which wraps
   &__views #navigation-bar {
     flex-wrap: nowrap;
