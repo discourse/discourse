@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import type { TrustedHTML } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { cook, excerpt } from "discourse/lib/text";
@@ -101,8 +100,7 @@ export default class UserDraftsStream extends RestModel {
               draft.data = JSON.parse(
                 draft.data as unknown as string
               ) as UserDraftData;
-              // TODO(typescript-pending): cook's dynamic engine return is untyped; remove the annotation when cook publishes its HTML result.
-              return cook(draft.data.reply).then((cooked: TrustedHTML) => {
+              return cook(draft.data.reply).then((cooked) => {
                 draft.excerpt = excerpt(cooked.toString(), 300);
                 draft.post_number = draft.data.postId || null;
                 if (
