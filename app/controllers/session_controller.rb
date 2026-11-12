@@ -1531,7 +1531,7 @@ class SessionController < ApplicationController
   end
 
   # the invite_key will be present if set in InvitesController
-  # when the user visits an /invites/xxxx link; however we do
+  # when the user continues from an /invites/xxxx page; however we do
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
@@ -1556,6 +1556,11 @@ class SessionController < ApplicationController
     end
 
     invite
+  rescue Invite::ValidationFailed
+    # the invite key is only good for one attempt, otherwise it would block
+    # every later login instead of letting the user retry from the invite page
+    server_session.delete("invite-key")
+    raise
   end
 
   def redeem_invitation(invite, sso, redeeming_user)
@@ -1569,12 +1574,12 @@ class SessionController < ApplicationController
       redeeming_user:,
     ).redeem
 
-    server_session.delete("invite-key")
-
     # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
+  ensure
+    server_session.delete("invite-key")
   end
 
   def domain_redirect_allowed?(hostname)
