@@ -922,10 +922,44 @@ RSpec.describe Email::Sender do
       )
     end
 
+    let(:insider_message) do
+      UserNotifications.user_posted(
+        secret_message.user,
+        post: leaky_reply,
+        notification_type: leaky_notification.notification_type,
+        notification_data_hash: leaky_notification.data_hash,
+      )
+    end
+
     it "does not attach the secure upload the recipient cannot access" do
       Email::Sender.new(leaky_message, :valid_type, post.user).send
 
       expect(leaky_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
+    end
+
+    it "attaches the secure upload when the recipient can access it" do
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly(
+        "secret.pdf",
+        "visible.pdf",
+      )
+    end
+
+    it "does not attach the secure upload when a CC recipient cannot access it" do
+      insider_message.cc = [post.user.email]
+
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
+    end
+
+    it "does not attach the secure upload when a BCC recipient cannot access it" do
+      insider_message.bcc = [post.user.email]
+
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
     end
   end
 
