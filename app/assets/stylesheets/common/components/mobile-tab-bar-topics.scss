@@ -1,18 +1,11 @@
-// Topic lists and topics, with the tab bar: the lists' views and the topic's
-// progress float over the tabs, so the pages rearrange what's left
-
-// The lists' views sit in the tab bar, so the controls share the top row with
-// the category and tag dropdowns, kept to its end
 html.mobile-tab-bar-visible {
   .navigation-controls {
     margin-left: auto;
 
-    // Gives the dropdowns the row's gap too when there's nothing to show
     &:not(:has(> :not(:empty))) {
       display: none;
     }
 
-    // On the category list, creating a category takes the row
     &:has(> #create-category) {
       flex: 1 1 auto;
       margin-left: 0;
@@ -23,7 +16,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // The dropdowns share whatever the controls leave of the row
   .navigation-container .category-breadcrumb {
     flex: 1 1 auto;
     gap: var(--nav-space) 0.5em;
@@ -39,22 +31,17 @@ html.mobile-tab-bar-visible {
         min-width: 0;
       }
 
-      // Categories take the room first; tags keep their own width until
-      // there's none left
       &:has(> .tag-drop, > .tags-intersection-chooser) {
         flex: 0 1 auto;
       }
     }
   }
 
-  // With a subcategory, the categories take the top row to themselves, and
-  // the tags move down to share the next with the controls
   .navigation-container:has(.category-breadcrumb.--has-subcategory) {
     // The break below would double the row gap, so the categories space the
     // rows instead
     row-gap: 0;
 
-    // Lays the dropdowns out alongside the controls
     .category-breadcrumb {
       display: contents;
 
@@ -80,12 +67,6 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// A topic's progress takes the views' place over the tabs, as a bubble whose
-// fill marks how far along it is, like the views' highlight, after the
-// topic's tools. Held in place over the tabs like the views, rather than
-// stopping at the end of the topic, and kept while scrolling down, as that's
-// when it's read. Only while it shows the progress: expanded, its timeline
-// takes the whole screen, which holding it in place would keep under the posts.
 html.mobile-tab-bar-visible
   .container.posts
   .topic-navigation.with-topic-progress {
@@ -116,13 +97,10 @@ html.mobile-tab-bar-visible
 
     @include mobile-tab-bar-floating;
 
-    // Hidden until the stream loads, leaving only the admin buttons
     &:not(:has(#topic-progress:not(.hidden))) {
       display: none;
     }
 
-    // Slides away behind the tabs past the end of the topic, as the views do
-    // while scrolling down
     &.docked {
       opacity: 0;
       visibility: hidden;

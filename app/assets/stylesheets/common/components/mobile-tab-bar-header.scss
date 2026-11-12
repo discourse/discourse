@@ -1,7 +1,4 @@
-// The header and its menus, with the tab bar: the menus become sheets, and
-// a section's nested pages take its title and a back button
 html.mobile-tab-bar-visible {
-  // Keep the tab bar reachable while a menu is open, so tabs can switch menus
   .menu-panel.slide-in,
   .header-cloak {
     height: calc(
@@ -13,8 +10,6 @@ html.mobile-tab-bar-visible {
     box-shadow: none;
   }
 
-  // The header's menus become sheets, like mobile modals: the forum's menu
-  // rises over the tab bar and the user menu drops over the header
   .hamburger-panel .menu-panel.slide-in,
   .user-menu.menu-panel.slide-in {
     right: 0;
@@ -28,7 +23,6 @@ html.mobile-tab-bar-visible {
     background: var(--secondary);
     box-shadow: var(--shadow-modal);
 
-    // Mirrors the grip on mobile menu modals, as they're dragged the same way
     &::before {
       content: "";
       position: absolute;
@@ -69,7 +63,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // Its tabs run down one side, so it keeps a set height for them
   .user-menu.menu-panel.slide-in {
     top: 0;
     bottom: auto;
@@ -92,21 +85,17 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // Matches the modal backdrop, which covers the tab bar too
   &:has(.hamburger-panel .menu-panel.slide-in, .user-menu.menu-panel.slide-in)
     .header-cloak {
     height: 100%;
     background-color: rgb(0, 0, 0, 0.6);
   }
 
-  // The tabs already lead back to the other sections, which leaves the
-  // back link's row with only the toggle-all button, not worth a row here
   .sidebar-panel-header__row:has(.sidebar-sections__back-to-forum) {
     display: none;
   }
 }
 
-// Sits before the logo, so it needs the header icons' spacing mirrored
 .mobile-tab-bar-back {
   margin-right: var(--space-1);
 
@@ -115,14 +104,10 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// Next to a page's title the small logo only crowds it; the tabs already lead
-// home
 html.mobile-tab-bar-titled .d-header .title--minimized {
   display: none;
 }
 
-// The header already holds the title, category and tags, and a button to
-// edit them, whose editor shows here
 html.mobile-tab-bar-titled #topic-title:not(:has(.edit-topic-title)) {
   display: none;
 }
@@ -136,22 +121,17 @@ html.mobile-tab-bar-titled #topic-title:not(:has(.edit-topic-title)) {
   white-space: nowrap;
 }
 
-// The header names the page and the back button leads up a level, so the
-// page's own title and trail only repeat them
 html.mobile-tab-bar-titled .d-page-header {
   .d-page-header__breadcrumbs,
   .d-page-header__title {
     display: none;
   }
 
-  // The page's actions keep their place at the end of the row
   .d-page-header__title-row {
     justify-content: flex-end;
   }
 }
 
-// The topic's title shares its row with the button to edit it, trimming
-// itself rather than pushing the button off
 html.mobile-tab-bar-titled .extra-info-wrapper .title-wrapper .header-title {
   display: flex;
   align-items: center;

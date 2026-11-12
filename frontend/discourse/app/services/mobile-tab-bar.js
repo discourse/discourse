@@ -11,18 +11,11 @@ import { i18n } from "discourse-i18n";
 
 const LOADING_ROUTE = /(^|[._-])loading$/;
 
-// Past this many, the bar keeps one fewer and gathers the rest under More,
-// so the tabs stay wide enough to tap and never scroll
 const MAX_TABS = 4;
 const HUB_TAB = "hub";
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
-/**
- * Drives the mobile tab bar. Each tab is a sidebar panel that opted in
- * through `mobileTab`, and remembers where the user was in its section. The
- * menu button always opens the forum's menu; other sections keep their
- * navigation on their own pages.
- */
+/** Remembers navigation within sidebar panels that provide a `mobileTab`. */
 @disableImplicitInjections
 export default class MobileTabBar extends Service {
   @service appEvents;
@@ -192,7 +185,6 @@ export default class MobileTabBar extends Service {
       return false;
     }
 
-    // Links outside the app, like an uploaded file, lead to no section
     if (!routeInfo) {
       return false;
     }
@@ -247,7 +239,6 @@ export default class MobileTabBar extends Service {
     const tab = this.#tab(key);
     this.closeMenu();
 
-    // The app's own list of sites is the only thing outside this one
     if (key === HUB_TAB) {
       postRNWebviewMessage("dismiss", true);
       return;

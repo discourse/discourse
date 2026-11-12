@@ -1,22 +1,12 @@
 html.mobile-tab-bar-visible {
   --mobile-tab-bar-control-size: 3.25rem;
   --mobile-tab-bar-controls-height: 4.125rem;
-
-  // The controls over the tabs, kept clear of the smallest comfortable tap
   --mobile-tab-bar-item-size: 2.25rem;
-
-  // The views' strip, around its items; the controls' row keeps the gap
-  // below it
   --mobile-tab-bar-views-height: calc(
     var(--mobile-tab-bar-item-size) + var(--space-1) * 2
   );
-
-  // Room kept below the controls, and to their sides
   --mobile-tab-bar-bottom-inset: env(safe-area-inset-bottom);
   --mobile-tab-bar-side-inset: var(--space-3);
-
-  // The bottom corners of the controls at either end, nearest the screen's,
-  // and how far their icons move from them to look centred once rounded
   --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
   --mobile-tab-bar-corner-nudge: 0px;
 
@@ -31,9 +21,6 @@ html.mobile-tab-bar-visible {
         var(--space-3),
         min(env(safe-area-inset-bottom) * 100, var(--space-5))
       );
-
-      // Leaves the controls this far from the bottom, less the room the row
-      // already keeps around them
       --mobile-tab-bar-bottom-inset: min(
         env(safe-area-inset-bottom),
         calc(
@@ -46,9 +33,6 @@ html.mobile-tab-bar-visible {
             2
         )
       );
-
-      // Follow the screen's rounded corners, where it has a home indicator
-      // and so has them: concentric with recent iPhones', inside the inset
       --mobile-tab-bar-corner-radius: max(
         var(--d-button-border-radius),
         min(
@@ -83,7 +67,7 @@ html.mobile-tab-bar-visible {
       var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
   );
 
-  &:has(.mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)) {
+  &:has(.mobile-tab-bar__views > *) {
     --footer-nav-height: calc(
       var(--mobile-tab-bar-controls-height) +
         var(--mobile-tab-bar-views-height) +
@@ -92,8 +76,6 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// A control floating over the page, set off by its shadow as it has no
-// border; filled unless the button it's built on brings its own colour
 @mixin mobile-tab-bar-floating($fill: true) {
   border-radius: var(--mobile-tab-bar-radius);
   box-shadow: var(--mobile-tab-bar-shadow);
@@ -103,9 +85,6 @@ html.mobile-tab-bar-visible {
   }
 }
 
-// Floating controls over the page: the menu and create buttons on their own,
-// the section tabs grouped in a pill between them. A section's views, when it
-// has any, sit in a strip above them.
 .mobile-tab-bar {
   position: fixed;
   bottom: 0;
@@ -118,9 +97,6 @@ html.mobile-tab-bar-visible {
   height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
   padding: 0 var(--mobile-tab-bar-side-inset) var(--mobile-tab-bar-bottom-inset);
   box-sizing: border-box;
-
-  // Content scrolls underneath, so dim it behind the controls without hiding
-  // it; eased over the whole bar so there's no visible edge
   background: linear-gradient(
     to bottom,
     rgb(var(--secondary-rgb), 0),
@@ -133,17 +109,12 @@ html.mobile-tab-bar-visible {
 
   @include unselectable;
 
-  // Slides behind the tabs while the page scrolls down; the space kept for
-  // the views stays, so the page doesn't shift as they go
   &.--views-tucked &__views {
     opacity: 0;
     transform: translateY(100%);
     pointer-events: none;
   }
 
-  // A strip as wide as the controls below, so it reads as part of the bar
-  // rather than something laid over it to dismiss; the highlighted tab says
-  // whose views they are
   &__views {
     position: relative;
     display: flex;
@@ -154,9 +125,6 @@ html.mobile-tab-bar-visible {
     pointer-events: auto;
 
     @include mobile-tab-bar-floating;
-
-    // Lets the highlight sit behind the views but over the strip's own fill
-    isolation: isolate;
     transition:
       transform 200ms ease,
       opacity 200ms ease;
@@ -165,26 +133,20 @@ html.mobile-tab-bar-visible {
       transition: none;
     }
 
-    // Shown once a section renders its views into it
-    &:not(:has(> :not(.mobile-tab-bar__views-highlight))) {
+    &:not(:has(> *)) {
       display: none;
     }
 
-    // The views lead, with any options kept to the strip's end
     > * {
       flex: 0 1 auto;
       min-width: 0;
     }
 
-    // A section's views render after the highlight
-    > .mobile-tab-bar__views-highlight + * {
+    > :first-child {
       flex: 1 1 auto;
     }
   }
 
-  // Lists of views take the tab bar's own look: the current one filled
-  // rather than underlined, and bold so colour alone doesn't mark it
-  // Scrolls when the views don't fit, fading the edge with more past it
   &__views .nav-pills {
     --fade-width: 1.5rem;
     flex-wrap: nowrap;
@@ -204,9 +166,6 @@ html.mobile-tab-bar-visible {
       color: var(--header_primary-high);
       font-size: var(--font-down-1);
 
-      // The fill marks the current view, so the underline that nav links
-      // otherwise get for it, and on hover (on touch too, where taps leave
-      // hover behind), never shows here
       &::after,
       &:hover::after,
       &.active::after {
@@ -220,17 +179,16 @@ html.mobile-tab-bar-visible {
         }
       }
 
-      // The views' highlight behind it is its pill
       &.active {
+        background: var(--d-selected);
         color: var(--d-nav-color--active);
         font-weight: bold;
       }
     }
 
-    // On the view's corner, so it doesn't change the view's width as it comes
-    // and goes; level with its top, which the scrolling list would clip above
     .navigation-item__count {
       position: absolute;
+      z-index: 1;
       top: 0;
       right: calc(var(--space-1) * -1);
     }
@@ -268,7 +226,6 @@ html.mobile-tab-bar-visible {
     margin-right: 0;
   }
 
-  // Round like the views beside it, inside the bubble
   &__views .navigation-options__trigger {
     flex: none;
     width: var(--mobile-tab-bar-item-size);
@@ -283,75 +240,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // Slides between the views as the current one changes, behind them but
-  // over the bubble's fill. Built from two round caps and a stretched middle,
-  // so resizing is all transforms, which keep animating while the page is
-  // busy loading the view; animating its width would stall.
-  &__views-highlight {
-    --cap: var(--mobile-tab-bar-views-highlight-height, 0px);
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: var(--cap);
-    opacity: var(--mobile-tab-bar-views-highlight-opacity, 1);
-    transform: translate(
-      var(--mobile-tab-bar-views-highlight-x, 0),
-      var(--mobile-tab-bar-views-highlight-y, 0)
-    );
-    pointer-events: none;
-
-    &::before,
-    &::after,
-    .mobile-tab-bar__views-highlight-middle {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      background: var(--d-selected);
-    }
-
-    &::before,
-    &::after {
-      content: "";
-      width: var(--cap);
-      border-radius: var(--mobile-tab-bar-inner-radius);
-    }
-
-    &::after {
-      transform: translateX(
-        calc(var(--mobile-tab-bar-views-highlight-width, 0px) - var(--cap))
-      );
-    }
-
-    .mobile-tab-bar__views-highlight-middle {
-      width: 1px;
-      transform: translateX(calc(var(--cap) / 2))
-        scaleX(var(--mobile-tab-bar-views-highlight-stretch, 0));
-      transform-origin: left;
-    }
-
-    [data-sliding] > & {
-      &,
-      &::after,
-      .mobile-tab-bar__views-highlight-middle {
-        transition:
-          transform 250ms ease,
-          opacity 250ms ease;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        &,
-        &::after,
-        .mobile-tab-bar__views-highlight-middle {
-          transition: none;
-        }
-      }
-    }
-  }
-
-  // Over the views, which slide away behind it
   &__controls {
     position: relative;
     z-index: 1;
@@ -392,7 +280,6 @@ html.mobile-tab-bar-visible {
     position: relative;
     border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
 
-    // Over the icon's corner, as on the tabs
     .mobile-tab-bar__badge {
       top: var(--space-2);
       left: 55%;
@@ -433,8 +320,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // Visitors log in where members create; named like the tabs beside them,
-  // with the label under the icon
   &__login,
   &__signup {
     flex-direction: column;
@@ -455,8 +340,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // Signing up needs the room a lone tab leaves; logging in leads, so it
-  // takes the controls' own look
   &__signup {
     display: none;
 
@@ -467,14 +350,11 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  // A visitor with only the topics has room to sign up as well as log in,
-  // beside the tab, which keeps the rest
   &__controls:not(:has(.mobile-tab-bar__tab ~ .mobile-tab-bar__tab)) {
     .mobile-tab-bar__signup {
       display: inline-flex;
     }
 
-    // Widening with the screen, so the tab doesn't take it all on big phones
     .mobile-tab-bar__signup,
     .mobile-tab-bar__login {
       min-width: clamp(var(--mobile-tab-bar-control-size), 20vw, 6rem);
@@ -501,7 +381,6 @@ html.mobile-tab-bar-visible {
     overflow: hidden;
   }
 
-  // Never more tabs than fit, with the rest gathered under More
   &__track {
     position: relative;
     display: flex;
@@ -510,7 +389,6 @@ html.mobile-tab-bar-visible {
     min-width: 0;
   }
 
-  // Slides between tabs as the current section changes
   &__highlight {
     position: absolute;
     top: 0;
@@ -522,7 +400,6 @@ html.mobile-tab-bar-visible {
     transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
     pointer-events: none;
 
-    // Gone on pages outside every section, until one is current again
     .--no-section & {
       opacity: 0;
     }
@@ -611,7 +488,6 @@ html.keyboard-visible .mobile-tab-bar {
   display: none;
 }
 
-// The sections gathered under More, in its sheet
 .mobile-tab-bar__more-item {
   .d-button-label {
     flex: 1 1 auto;

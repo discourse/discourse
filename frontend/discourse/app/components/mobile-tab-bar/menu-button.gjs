@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ReviewBadge from "discourse/components/mobile-tab-bar/review-badge";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -8,7 +7,6 @@ export default class MobileTabBarMenuButton extends Component {
   @service currentUser;
   @service mobileTabBar;
 
-  // Names the count shown over the icon, which the label would otherwise hide
   get ariaLabel() {
     const count = this.currentUser?.reviewable_count;
 
@@ -26,8 +24,13 @@ export default class MobileTabBarMenuButton extends Component {
       @title="mobile_tab_bar.menu"
       @translatedAriaLabel={{this.ariaLabel}}
     >
-      {{! The menu leads to the review queue, whoever can review }}
-      <span class="mobile-tab-bar__badge"><ReviewBadge /></span>
+      {{#if this.currentUser.reviewable_count}}
+        <span class="mobile-tab-bar__badge">
+          <span class="mobile-tab-bar__count">
+            {{this.currentUser.reviewable_count}}
+          </span>
+        </span>
+      {{/if}}
     </DButton>
   </template>
 }

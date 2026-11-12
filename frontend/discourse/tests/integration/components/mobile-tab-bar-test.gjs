@@ -1,4 +1,4 @@
-import { click, find, render, waitUntil } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import MobileTabBar from "discourse/components/mobile-tab-bar";
@@ -177,7 +177,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
     await render(<template><MobileTabBar /></template>);
 
     assert
-      .dom(".mobile-tab-bar__views > :not(.mobile-tab-bar__views-highlight)")
+      .dom(".mobile-tab-bar__views > *")
       .doesNotExist("the strip waits for a section to fill it");
     assert
       .dom(".mobile-tab-bar__views")
@@ -233,7 +233,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       "a file isn't a section's page"
     );
   });
-  test("keeps the RTL active view's highlight clear of the logical end fade", async function (assert) {
+  test("highlights the active view in an overflowing RTL strip", async function (assert) {
     await render(
       <template>
         <MobileTabBar />
@@ -241,7 +241,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
           <ul
             class="nav-pills"
             dir="rtl"
-            style="width: 160px; flex: none; padding: 0;"
+            style="width: 160px; flex: none; padding: 0; --d-selected: rgb(240, 240, 240);"
             {{dScrollEdges}}
           >
             <li><a class="active" href="/latest">Latest topics</a></li>
@@ -252,28 +252,10 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       </template>
     );
 
-    const views = find(".mobile-tab-bar__views");
-    await waitUntil(() =>
-      parseFloat(
-        views.style.getPropertyValue("--mobile-tab-bar-views-highlight-width")
-      )
-    );
-
-    assert
-      .dom(".nav-pills")
-      .hasAttribute(
-        "data-d-scroll-at-start",
-        "",
-        "the strip starts at its right edge"
-      );
-    assert.strictEqual(
-      Math.round(
-        parseFloat(
-          views.style.getPropertyValue("--mobile-tab-bar-views-highlight-width")
-        )
-      ),
-      Math.round(find(".nav-pills a.active").getBoundingClientRect().width),
-      "the unfaded active view keeps its full highlight"
+    assert.notStrictEqual(
+      getComputedStyle(find(".nav-pills a.active")).backgroundColor,
+      getComputedStyle(find(".nav-pills a:not(.active)")).backgroundColor,
+      "the active view has its own background in RTL"
     );
   });
 });
