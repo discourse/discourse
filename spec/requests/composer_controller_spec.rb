@@ -316,6 +316,22 @@ RSpec.describe ComposerController do
         expect(response.parsed_body["group_reasons"]).to eq(mentioned_group.name => "not_allowed")
       end
 
+      it "gives members and outsiders the same reason when the group itself is hidden" do
+        recipient_group.update!(
+          visibility_level: Group.visibility_levels[:owners],
+          members_visibility_level: Group.visibility_levels[:public],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+        names = [member.username, user.username]
+        hidden = { member.username_lower => "private", user.username_lower => "private" }
+
+        get "/composer/mentions.json", params: { names:, topic_id: topic.id }
+        expect(response.parsed_body["user_reasons"]).to eq(hidden)
+
+        get "/composer/mentions.json", params: { names:, allowed_names: [recipient_group.name] }
+        expect(response.parsed_body["user_reasons"]).to eq(hidden)
+      end
+
       it "warns only about outsiders when the members are visible" do
         recipient_group.update!(members_visibility_level: Group.visibility_levels[:public])
 
