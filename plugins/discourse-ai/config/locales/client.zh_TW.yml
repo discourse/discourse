@@ -307,20 +307,32 @@ zh_TW:
         short_title: "功能"
         back: "返回 AI 功能"
         settings_save_error: "某些設置無法保存。"
-        disabled: "（已禁用）"
-        agent:
-          other: "代理程式："
-        groups: "群組："
-        llm:
-          other: "大型語言模型："
+        table:
+          status: "狀態"
+          enabled: "已啟用"
+          feature: "功能"
+          agent: "智能體"
+          llm: "LLM"
+          groups: "群組"
+        who_can_use:
+          no_one: "沒有人"
+        status:
+          "on": "開"
+          "off": "關"
+        chatbot:
+          column: "聊天機器人"
+          new_agent: "新建智能體"
+          manage_agents: "管理智能體"
+          places:
+            personal_messages: "個人訊息"
+            chat_direct_messages: "聊天消息"
+            none: "不可使用"
+        toggle: "啟用 %{name}"
+        set_up: "設置"
         no_llm: "未選擇 LLM"
         no_agent: "未設置"
         no_groups: "無"
-        classification_model: "模型："
         edit: "設置"
-        expand_list:
-          other: "（另外 %{count} 個）"
-        collapse_list: "（收起）"
         bot:
           bot: "聊天機器人"
           name: "機器人"
@@ -365,8 +377,7 @@ zh_TW:
             access_control: "訪問控制"
         embeddings:
           name: "嵌入向量"
-          description: "通過生成文本的語義表示來支持“相關主題”和“AI 搜尋”等功能"
-          hyde: "HyDE"
+          related_topics: "相關主題"
           setting_groups:
             model_settings: "模型設置"
             related_topics: "相關主題"
@@ -379,7 +390,6 @@ zh_TW:
             settings: "基本設置"
         discord:
           name: "Discord 集成"
-          description: "增加了搜尋 Discord 頻道的功能"
           search: "Discord 搜尋"
           setting_groups:
             settings: "基本設置"
@@ -433,10 +443,6 @@ zh_TW:
           schedule_topic_success:
             other: "已排定 %{count} 篇未翻譯貼文的翻譯。"
           schedule_topic_error: "無法安排翻譯。請重試。"
-          setting_groups:
-            settings: "基本設置"
-            agents: "智能體"
-            backfill_and_limits: "回填與限制"
         spam:
           name: "垃圾資訊"
           description: "使用所選 LLM 識別潛在垃圾資訊，并進行標記，使其進入審核隊列，以便網站版主可以進行檢查"
@@ -455,11 +461,22 @@ zh_TW:
       translations:
         title: "翻譯"
         description: "自動將論壇上的所有內容翻譯成使用者的首選語言"
-        supported_locales: "支持的語言"
+        sections:
+          advanced: "進階"
+        settings:
+          ai_translation_category_scope:
+            label: "分類"
+          ai_translation_personal_messages:
+            label: "個人訊息"
+            choices:
+              none: "無"
+              all: "所有"
+          content_localization_language_switcher:
+            choices:
+              none: "沒有人"
+              all: "所有使用者"
         max_locales_reached: "最多只能選擇 %{max} 種語言。"
         locale_count: "已選取 %{count}/%{max}"
-        category_scope: "分類"
-        category_scope_description: "選擇自動翻譯應用于所有分類、公開分類還是所選分類中的內容。"
         cached_results_notice: "正在顯示自 %{relative_time} 起的快取結果。"
         model_progress:
           loading: "正在加載翻譯進度"
@@ -521,12 +538,8 @@ zh_TW:
               all_translated:
                 other: "全部 %{count} 個標籤均已完整翻譯。"
         admin_actions:
-          translation_settings: "AI 設置"
-          localization_settings: "應用語言設置"
-          enable_translations: "啟用自動翻譯"
+          enabled: "已啟用"
           enable_translations_disabled: "您必須添加受支持的語言才能啟用翻譯功能。"
-          show_language_switcher: "在頁首顯示語言切換器"
-          show_language_switcher_description: "讓所有人選擇語言，並以該語言瀏覽您的網站。"
         stats:
           title: "翻譯統計"
           backfill_disabled: "回填功能已禁用，僅翻譯新貼文。"

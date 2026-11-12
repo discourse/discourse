@@ -447,9 +447,6 @@ it:
       title: "Argomenti nuovi e non letti"
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Indietro"
     design_wizard:
       back: "Indietro"
       next: "Avanti"

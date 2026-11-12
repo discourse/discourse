@@ -81,15 +81,17 @@ ro:
       llm_selector:
         none: "Nimic"
       features:
-        disabled: "(dezactivat)"
-        groups: "Grupuri:"
+        table:
+          status: "Stare"
+          enabled: "Activate"
+          groups: "Grupuri"
+        who_can_use:
+          no_one: "Nimeni"
+        chatbot:
+          places:
+            none: "Indisponibil"
         no_groups: "Nimic"
         edit: "Setări"
-        expand_list:
-          one: "(încă %{count})"
-          few: "(încă %{count})"
-          other: "(încă %{count})"
-        collapse_list: "(arată mai puține)"
         nav:
           enabled: "Activate"
         filters:
@@ -116,8 +118,19 @@ ro:
       translations:
         title: "Traduceri"
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
-        supported_locales: "Limbi acceptate"
-        category_scope: "Categorii"
+        sections:
+          advanced: "Avansat"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorii"
+          ai_translation_personal_messages:
+            choices:
+              none: "Nimic"
+              all: "Toate"
+          content_localization_language_switcher:
+            choices:
+              none: "Nimeni"
+              all: "Toată lumea"
         model_progress:
           detail:
             columns:
@@ -134,7 +147,7 @@ ro:
             tag:
               title: "Etichete"
         admin_actions:
-          enable_translations: "Activează traducerile automate"
+          enabled: "Activate"
         stats:
           title: "Statistici traducere"
           backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."

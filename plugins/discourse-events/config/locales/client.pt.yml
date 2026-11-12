@@ -14,6 +14,10 @@ pt:
             topic_id:
               label: ID do Tópico
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registar"
       preferences:
         reminders:
           preferences:

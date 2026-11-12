@@ -2743,7 +2743,6 @@ lt:
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
       custom: "Pranešimas nuo %{username} %{site_title}"
   staff_action_logs:
-    admin_onboarding_topic_option: "Pasirinkta opcija: %{option}\nOpcijos ID: %{option_id}"
     not_found: "nerastas"
     unknown: "nežinoma"
     site_setting:

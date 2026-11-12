@@ -279,9 +279,6 @@ id:
       title: "Topik Baru & Belum Dibaca"
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Kembali"
     design_wizard:
       back: "Kembali"
       theme:

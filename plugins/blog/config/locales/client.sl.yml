@@ -13,6 +13,9 @@ sl:
         preview_archive: Arhiviraj
         desktop: Namizno
         mobile: Mobilno
+        save: Shrani
+        path_formats:
+          custom: Po meri
         themes: Videzi
         theme_name: Ime videza
         edit: Uredi

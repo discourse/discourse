@@ -2529,6 +2529,7 @@ pl_PL:
     google_oauth2_prompt: "Opcjonalna lista wartości łańcuchowych rozdzielanych spacjami, która określa, czy serwer autoryzacji monituje użytkownika o ponowne uwierzytelnienie i zgodę. Możliwe wartości można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
     google_oauth2_hd_groups: 'Po uwierzytelnieniu pobierz grupy Google użytkowników w domenie hostowanej. Pobrane grupy Google mogą służyć do automatycznego przyznawania członkostwa w grupie Discourse (zobacz ustawienia grupy). Aby uzyskać więcej informacji, zobacz <a target="_blank" href="https://meta.discourse.org/t/226850">ten temat Meta</a>.'
+    google_oauth2_hd_groups_allowed: "Zezwalaj na logowanie się przez Google tylko użytkownikom należącym do co najmniej jednej z tych grup Google. Wprowadź identyfikator lub adres e-mail każdej grupy. Wymagane są pola {{setting:google_oauth2_hd}}, {{setting:google_oauth2_hd_groups_service_account_admin_email}}i {{setting:google_oauth2_hd_groups_service_account_json}}. Nieudane wyszukiwanie grup uniemożliwia logowanie. Pozostaw puste pole, aby zezwolić na logowanie dowolnemu użytkownikowi w domenie hostowanej."
     google_oauth2_hd_groups_service_account_admin_email: "Adres e-mail należący do konta administratora Google Workspace. Będzie używany z poświadczeniami konta usługi do pobierania informacji o grupie."
     google_oauth2_hd_groups_service_account_json: "Kluczowe informacje w formacie JSON dla konta usługi. Będą używane do pobierania informacji o grupie."
     google_oauth2_verbose_logging: "Rejestruj szczegółową diagnostykę związaną z Google OAuth2 w <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -3172,7 +3173,7 @@ pl_PL:
     nested_replies_hot_preload_depth_penalty: "Priorytet jest zmniejszany dla każdego poziomu głębokości podczas wybierania zagnieżdżonych odpowiedzi do wstępnego rozwinięcia w widoku aktywnym."
     nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
-    nested_replies_backfill_batch_size: "Liczba tematów do przetworzenia na jedną zagnieżdżoną partię uzupełniania statystyk odpowiedzi."
+    nested_replies_backfill_batch_size: "Maksymalna liczba tematów do sprawdzenia w każdej zagnieżdżonej partii uzupełniania statystyk odpowiedzi. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie. Jawne przygotowywanie statystyk nadal przetwarza co najmniej jeden temat na partię."
     nested_replies_stats_maintenance_enabled: "Zachowaj statystyki zagnieżdżonych odpowiedzi, nawet gdy zagnieżdżone odpowiedzi są wyłączone."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
@@ -3276,6 +3277,7 @@ pl_PL:
         other: "Lista musi zawierać dokładnie %{count} wartości."
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
+      google_oauth2_hd_groups_allowed: "Przed dodaniem dozwolonych grup musisz skonfigurować domenę hostowaną Google OAuth2 i ustawienia konta usługi grupowej."
       discourse_id_registration: "Automatyczna rejestracja przy użyciu Discourse ID się nie powiodła. Może to być spowodowane problemami z łącznością sieciową, ograniczeniami zapory ogniowej lub niedostępnością usługi Discourse ID. Sprawdź dzienniki serwera, aby uzyskać więcej informacji lub skontaktuj się z pomocą techniczną."
       auth_provider_credentials_missing: "Przed włączeniem tego ustawienia należy ustawić %{settings}."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
@@ -6316,7 +6318,6 @@ pl_PL:
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
       custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
-    admin_onboarding_topic_option: "Wybrana opcja: %{option}\nIdentyfikator opcji: %{option_id}"
     redacted: "[treść niewidoczna]"
     json_too_long: "Wartości nie są rejestrowane, ponieważ przekraczają limity długości kolumn"
     not_found: "nie znaleziono"
@@ -6594,6 +6595,9 @@ pl_PL:
     mute_error: "Przepraszamy, nie możesz wyciszyć tego użytkownika."
     error: "Przepraszamy, nie możesz zmienić poziomu powiadomień dla tego użytkownika."
     invalid_value: '„%{value}” nie jest prawidłowym poziomem powiadamiania.'
+  google_oauth2:
+    not_in_allowed_group: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem autoryzowanej grupy Google."
+    group_lookup_failed: "Uwierzytelnianie nie powiodło się. Nie można zweryfikować Twojego członkostwa w grupie Google."
   discord:
     not_in_allowed_guild: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem dozwolonej gildii Discord."
   old_keys_reminder:

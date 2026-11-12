@@ -275,23 +275,30 @@ nl:
         short_title: "Functies"
         back: "Terug naar AI-functies"
         settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
-        disabled: "(uitgeschakeld)"
-        agent:
-          one: "Agent:"
-          other: "Agenten:"
-        groups: "Groepen:"
-        llm:
-          one: "LLM:"
-          other: "LLM's:"
+        table:
+          status: "Status"
+          enabled: "Ingeschakeld"
+          feature: "Functie"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Groepen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "Aan"
+          "off": "Uit"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nieuwe agent"
+          places:
+            personal_messages: "Persoonlijke berichten"
+            chat_direct_messages: "Chatberichten"
+            none: "Niet beschikbaar"
+        set_up: "Instellen"
         no_llm: "Geen LLM geselecteerd"
         no_agent: "Niet ingesteld"
         no_groups: "Geen"
-        classification_model: "Model:"
         edit: "Instellingen"
-        expand_list:
-          one: "(Nog %{count})"
-          other: "(Nog %{count})"
-        collapse_list: "(minder weergeven)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -335,8 +342,7 @@ nl:
             access_control: "Toegangsbeheer"
         embeddings:
           name: "Insluitingen"
-          description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
-          hyde: "HyDE"
+          related_topics: "Gerelateerde topics"
           setting_groups:
             model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
@@ -346,7 +352,6 @@ nl:
             settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
-          description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
           search: "Discord-zoeken"
           setting_groups:
             settings: "Basisinstellingen"
@@ -397,10 +402,6 @@ nl:
             one: "Geplande vertaling voor %{count} onvertaald bericht."
             other: "Geplande vertaling voor %{count} onvertaalde berichten."
           schedule_topic_error: "Vertalingen plannnen mislukt. Probeer het opnieuw."
-          setting_groups:
-            settings: "Basisinstellingen"
-            agents: "Agenten"
-            backfill_and_limits: "Aanvullen en limieten"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -419,8 +420,20 @@ nl:
       translations:
         title: "Vertalingen"
         description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
-        supported_locales: "Ondersteunde talen"
-        category_scope: "Categorieën"
+        sections:
+          advanced: "Geavanceerd"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorieën"
+          ai_translation_personal_messages:
+            label: "Persoonlijke berichten"
+            choices:
+              none: "Geen"
+              all: "Alles"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Iedereen"
         cached_results_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
         model_progress:
           detail:
@@ -439,7 +452,7 @@ nl:
             tag:
               title: "Tags"
         admin_actions:
-          enable_translations: "Automatische vertalingen inschakelen"
+          enabled: "Ingeschakeld"
         stats:
           title: "Vertaalstatistieken"
           backfill_disabled: "Aanvullen is uitgeschakeld, alleen nieuwe berichten worden vertaald."

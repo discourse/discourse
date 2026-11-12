@@ -2714,7 +2714,6 @@ fr:
     nested_replies_hot_preload_depth_penalty: "Priorité soustraite à chaque niveau de profondeur lors de la sélection des réponses imbriquées à développer à l'avance dans la vue par popularité."
     nested_replies_default_sort: "Algorithme de tri par défaut pour l'affichage des réponses imbriquées."
     nested_replies_max_depth: "Profondeur visuelle maximale des réponses organisées en fil. Les publications situées au-delà de cette profondeur affichent un lien 'Continuer ce fil'."
-    nested_replies_backfill_batch_size: "Nombre de sujets à traiter dans chaque lot de rattrapage des statistiques sur les réponses imbriquées."
     nested_replies_stats_maintenance_enabled: "Conserve les statistiques sur les réponses imbriquées même lorsque celles-ci sont désactivées."
     nested_replies_cap_nesting_depth: "Limite l'imbrication des réponses à la profondeur visuelle maximale. Lorsque ce paramètre est activé, les réponses au niveau le plus profond sont rattachées comme réponses de même niveau au lieu d'être imbriquées davantage."
     enable_new_defaults_for_trust_level_3_requirements: "Nous avons mis à jour les exigences par défaut du niveau de confiance 3 afin qu'elles soient plus raisonnables pour les membres des communautés importantes et actives. Si vous aviez déjà remplacé ces paramètres par des valeurs personnalisées, cette modification n'aura aucun effet."

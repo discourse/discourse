@@ -194,6 +194,7 @@ zh_CN:
     ai_discord_search_agent: "用于 Discord 搜索的智能体。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
     ai_translation_enabled: "启用 AI 翻译功能"
+    ai_dsa_classification_decision_model: "选择用于在DSA分类期间建议社区规则和类别的模型。留空则禁用建议功能。"
     ai_translation_locale_detector_decision_model: "该决策模型用于在翻译内容之前检测其语言。对于无法准确识别语言的内容，将交由语言检测代理进行处理。留空则表示由代理检测所有语言。"
     ai_translation_category_scope: "选择 AI 翻译可以使用的类别。“包含”和“排除”选项使用 {{setting:ai_translation_categories}}。个人消息由 {{setting:ai_translation_personal_messages}}控制。"
     ai_translation_categories: "当 AI 翻译类别范围设置为<strong>包含</strong>或<strong>排除</strong>时所使用的类别。"
@@ -361,10 +362,6 @@ zh_CN:
           name: "图片生成…"
         image_generation_custom:
           name: "自定义"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -484,6 +481,9 @@ zh_CN:
         other_content_in_pm: "不能公开分享包含其他人发表的帖子的个人消息"
         failed_to_share: "无法分享对话"
         conversation_deleted: "对话分享已成功删除"
+    dsa_classification:
+      suggestion_failed: "AI 无法给出分类建议。请自行选择一个分类，或者重试一次。"
+      credit_limit_exceeded: "AI 已用尽今天用于分类建议的所有积分。请自行选择分类。"
     spam_detection:
       flag_reason: "被 <a href='%{url}'>Discourse AI</a> 标记为垃圾信息"
       silence_reason: "用户被 <a href='%{url}'>Discourse AI</a> 自动禁言"
@@ -587,6 +587,9 @@ zh_CN:
         execution_failed: "委托任务失败。"
         approval_unavailable: "委托运行中无法使用需要审批的工具。"
       chat_tool_approval:
+        enable_mcp_theme_access_title: "让AI应用构建主题"
+        enable_mcp_theme_access_details: "您连接到 %{mcp_url}的应用（例如 Claude 或 ChatGPT）将能够以连接它们的管理员身份创建和编辑主题，包括其 JavaScript 代码。这些更改会立即生效，并且不会像管理员助理那样进行审核。您已连接的应用会请求您批准新的访问权限。您可以在 [MCP 功能](%{settings_url} 中再次关闭主题工具。"
+        enable_mcp_theme_access_question: "你想让AI应用生成主题吗？"
         create_tag_title: "创建标签： %{name}"
         create_tag_question: "您想创建此标签吗？"
         create_category_title: "创建类别： %{name}"
@@ -894,6 +897,8 @@ zh_CN:
           name: "代码执行（本机）"
           help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型在提供商的沙箱中编写和运行 Python 代码。"
       tool_summary:
+        theme_app_handoff: "了解如何使用 AI 应用构建主题"
+        enable_mcp_theme_access: "让AI应用构建主题"
         load_discourse_website_page: "加载 Discourse 网站页面"
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"
@@ -945,6 +950,7 @@ zh_CN:
         search_settings: "正在搜索站点设置"
         search_discourse_navigation: "网站导航搜索"
         read_site_setting: "阅读站点设置"
+        list_upcoming_changes: "列出即将发生的变更"
         change_site_setting: "更改站点设置"
         generate_appearance_change: "构建调色板"
         save_appearance_change: "保存外观更改"
@@ -959,6 +965,8 @@ zh_CN:
         researcher: "研究"
         researcher_dry_run: "准备研究"
       tool_help:
+        theme_app_handoff: "解释如何通过 MCP 服务器使用 AI 应用构建主题"
+        enable_mcp_theme_access: "让 AI 应用通过 MCP 服务器构建主题"
         load_discourse_website_page: "从 Discourse 官方网站加载命名页面"
         read_artifact: "使用 AI 机器人阅读 Web 工件"
         search_uploaded_documents: "搜索上传至此智能体的文档"
@@ -1012,6 +1020,7 @@ zh_CN:
         search_settings: "搜索站点设置"
         search_discourse_navigation: "查找指向本网站可用页面的已验证链接"
         read_site_setting: "读取站点设置的当前值"
+        list_upcoming_changes: "列出即将发生的变更及其推出状态"
         change_site_setting: "更改站点设置的值"
         generate_appearance_change: "根据品牌颜色或网站创建易于理解的调色板并选择字体。"
         save_appearance_change: "保存调色板或新主题，但不要将其发布到当前状态。"
@@ -1091,6 +1100,7 @@ zh_CN:
         search_discourse_navigation:
           other: "找到 %{count} 个目的地"
         read_site_setting: "阅读站点设置 %{setting_name}"
+        list_upcoming_changes: "列出即将发生的变更"
         change_site_setting: "将站点设置 %{setting_name} 更改为 '%{value}'"
         generate_appearance_change: "内置调色板"
         list_appearance_changes: "列出外观变化"
@@ -1299,6 +1309,10 @@ zh_CN:
           invalid_value: "无效值：%{error}"
           failed: "无法更改站点设置。"
         success: "站点设置 %{setting_name} 已更改为 '%{value}'。"
+      list_upcoming_changes:
+        errors:
+          not_allowed: "只有管理员才能查看即将发生的变更。"
+          failed: "即将进行的更改无法加载。"
       read_site_setting:
         errors:
           not_allowed: "您无权阅读站点设置。"
@@ -1355,24 +1369,87 @@ zh_CN:
         base_font: "正文字体"
         heading_font: "标题字体"
     mcp_theme_access:
+      not_allowed: "只有管理员才能允许 AI 应用创建主题。"
+      unavailable: "这里不支持使用人工智能应用程序构建主题。"
+      themes_unavailable: "该网站无法创建新主题，因此人工智能应用程序也无法构建主题。"
+      server_locked: "全局设置会关闭 MCP 服务器，因此无法在此处启用。"
+      already_enabled: "AI 应用已经可以基于此网站构建主题。"
       approval_required: "此项更改需要管理员批准。"
       failed: "无法进行更改。"
+      enabled: "AI 应用现在可以在此网站上创建主题。将应用连接到 MCP 服务器即可开始。"
+      enabled_except_blocked: "其余功能已启用，但 AI 应用目前还无法创建主题。这些主题工具在紧急情况下已被禁用： %{tools}。管理员可以在 MCP 功能中解除禁用： %{url}"
       "on": "开"
       "off": "关"
       none: "无"
+      request_placeholder: "（描述一下你的需求）"
+      blocked_tool: "%{tool} 在紧急情况下会被阻止。管理员可以通过 MCP 功能解除阻止： %{url}"
       changes:
         server: "MCP 服务器"
+        tools: "应用程序可以使用的工具"
+        admin_scopes: "管理员访问权限"
+      setup:
+        server: "启动MCP服务器。"
+        tools: "允许应用使用这些主题工具： %{tools}。"
+        admin_scopes: "赋予管理员主题访问权限。"
+      starter_message: |-
+        我是 Discourse 网站 %{site_url}的管理员。请使用其 MCP 服务器来构建一个主题。该网站当前的默认主题是“%{theme}”。
+
+        我希望实现的效果： %{request}
+
+        请注意：
+        - 请创建一个新的主题或主题组件，而不是修改默认主题，并且不要将其设为默认主题。
+        - 使用 Discourse 的 CSS 自定义属性及配色方案（如 var(--tertiary)），而非硬编码颜色，以确保深色模式正常工作。
+        - 主题保存后请告知其 ID，以便我在将其发布前通过 %{site_url}/admin/themes/ID/preview 进行预览。
+      built_in:
+        welcome_banner: "主题列表上方的欢迎横幅： %{base_url}/admin/config/interface"
+        sidebar_sections: "通过侧边栏的“+”按钮，自定义侧边栏版块和链接"
+        banner_topic: "一个向所有人显示的横幅主题，位于主题的管理员扳手菜单中。"
+        global_notice: "每页顶部均显示一条通知： %{base_url}/admin/site_settings/category/all_results?filter=global_notice"
+        theme_components: "现成的主题组件，例如自定义头部链接： %{base_url}/admin/config/customize/components"
     mcp_app_setup:
       none: "无"
+      notes:
+        approved_domains: "应用只能从已批准的域名登录（%{domains}）。如果应用的登录页面显示该页面为私有页面，请在 MCP 设置中添加其域名，例如 claude.ai 或 chatgpt.com： %{settings_url}"
+        pre_registered_only: "应用程序只有在管理员注册后才能登录，注册方式为 MCP 客户端： %{clients_url}"
       apps:
+        claude:
+          name: "Claude（网页版或桌面版）"
+          steps: |-
+            1. 在 Claude 中，依次点击“设置”、“连接器”和“添加自定义连接器”。
+            2. 将其命名为“%{name}”，并粘贴 %{url}
+            3. 点击“添加”，然后点击“连接”。您的网站将打开；如果系统提示，请登录并点击“批准”。
+            在 Claude 团队版或企业版套餐中，所有者必须先为您的组织添加连接器。
         chatgpt:
           name: "ChatGPT"
+          steps: |-
+            1. 在 ChatGPT 中，转到“设置”，然后选择“安全”并登录，启用开发者模式。
+            2. 添加一个名为“%{name}”的连接器，URL 为 %{url}
+            3. 连接该连接器。您的网站将打开；如果提示登录，请登录并点击“批准”。
+            工作区管理员可以为所有人关闭开发者模式。
         claude_code:
           name: "Claude Code"
+          steps: |-
+            1. 运行：claude mcp add --transport http my-community %{url}
+            2. 运行：claude mcp login my-community
+            3. 您的网站打开；如果提示登录，请点击“批准”。
         codex:
           name: "Codex"
+          steps: |-
+            1. 运行：codex mcp add my-community --url %{url} --oauth-client-registration cimd
+            2. 您的网站打开；如果提示登录，请登录并点击“批准”。
+            使用以下命令检查连接：codex mcp list
+        cursor:
+          name: "Cursor"
+          steps: |-
+            1. 将以下内容添加到 ~/.cursor/mcp.json：{"mcpServers": {"my-community": {"url": "%{url}"}}}
+            2. 在 Cursor 的 MCP 设置中启用服务器。
+            3. 您的网站将打开；如果提示登录，请登录并单击“批准”。
         vscode:
           name: "Visual Studio Code"
+          steps: |-
+            1. 打开命令面板并运行“MCP：添加服务器”。
+            2. 选择 HTTP 并粘贴 %{url}
+            3. 您的网站打开；如果提示登录，请登录并单击“批准”。
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"

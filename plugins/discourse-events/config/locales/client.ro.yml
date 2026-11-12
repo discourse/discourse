@@ -19,6 +19,10 @@ ro:
               label: ID subiect
     discourse_events:
       title: "Evenimente"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Înregistrare"
       preferences:
         reminders:
           preferences:

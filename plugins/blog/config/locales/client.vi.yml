@@ -16,6 +16,9 @@ vi:
         preview_archive: Đã lưu trữ
         desktop: Máy tính để bàn
         mobile: Điện thoại
+        save: Lưu lại
+        path_formats:
+          custom: Tùy biến
         back_to_themes: Quay lại theme
         new_theme_short: Theme mới
         themes: Themes

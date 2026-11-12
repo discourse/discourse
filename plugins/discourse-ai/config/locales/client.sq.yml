@@ -59,15 +59,18 @@ sq:
       llm_selector:
         none: "Asnjë"
       features:
-        disabled: "(e çaktivizuar)"
-        groups: "Grupet:"
+        table:
+          status: "Status"
+          enabled: "Aktivizuar"
+          groups: "Grupet"
+        chatbot:
+          places:
+            personal_messages: "Mesazhe personale"
+            chat_direct_messages: "Mesazhet e bisedës"
+            none: "I padisponueshëm"
         no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
         edit: "Rregullimet"
-        expand_list:
-          one: "(%{count} tjetër)"
-          other: "(%{count} të tjera)"
-        collapse_list: "(shfaq më pak)"
         nav:
           enabled: "Aktivizuar"
         filters:
@@ -85,7 +88,18 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            label: "Mesazhe personale"
+            choices:
+              none: "Asnjë"
+              all: "Të gjitha"
+          content_localization_language_switcher:
+            choices:
+              none: "Asnjëri"
+              all: "Të gjithë"
         model_progress:
           detail:
             columns:
@@ -100,6 +114,8 @@ sq:
               title: "Categories"
             tag:
               title: "Etiketat"
+        admin_actions:
+          enabled: "Aktivizuar"
         stats:
           eta_minutes:
             one: "%{count} minutë"

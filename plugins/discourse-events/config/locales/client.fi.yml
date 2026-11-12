@@ -27,6 +27,10 @@ fi:
               label: Ketjun tunnus
     discourse_events:
       title: "Tapahtumat"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Rekisteröi"
       preferences:
         reminders:
           preferences:

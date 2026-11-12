@@ -61,13 +61,15 @@ ca:
       llm_selector:
         none: "Cap"
       features:
-        disabled: "(desactivat)"
-        groups: "Grups:"
+        table:
+          status: "Estat"
+          enabled: "Activat"
+          groups: "Grups"
+        chatbot:
+          places:
+            none: "No disponible"
         no_groups: "Cap"
         edit: "Configuració"
-        expand_list:
-          one: "(%{count} més)"
-          other: "(%{count} més)"
         nav:
           enabled: "Activat"
         filters:
@@ -86,7 +88,17 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            choices:
+              none: "Cap"
+              all: "Tots"
+          content_localization_language_switcher:
+            choices:
+              none: "Ningú"
+              all: "Tothom"
         model_progress:
           detail:
             columns:
@@ -101,6 +113,8 @@ ca:
               title: "Categories"
             tag:
               title: "Etiquetes"
+        admin_actions:
+          enabled: "Activat"
         stats:
           eta_minutes:
             one: "%{count} minut"

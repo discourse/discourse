@@ -70,15 +70,24 @@ hu:
       llm_selector:
         none: "Egyik sem"
       features:
-        disabled: "(kikapcsolva)"
-        groups: "Csoportok:"
+        table:
+          status: "Állapot"
+          enabled: "Bekapcsolva"
+          feature: "Funkció"
+          groups: "Csoportok"
+        who_can_use:
+          no_one: "Senki"
+        status:
+          "on": "Be"
+          "off": "Ki"
+        chatbot:
+          places:
+            personal_messages: "Személyes üzenetek"
+            chat_direct_messages: "Csevegőüzenetek"
+            none: "Nem érhető el"
         no_agent: "Nincs beállítva"
         no_groups: "Egyik sem"
         edit: "Beállítások"
-        expand_list:
-          one: "(%{count} további)"
-          other: "(%{count} további)"
-        collapse_list: "(kevesebb megjelenítése)"
         nav:
           enabled: "Bekapcsolva"
         filters:
@@ -102,7 +111,20 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
-        category_scope: "Kategóriák"
+        sections:
+          advanced: "Speciális"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategóriák"
+          ai_translation_personal_messages:
+            label: "Személyes üzenetek"
+            choices:
+              none: "Egyik sem"
+              all: "Összes"
+          content_localization_language_switcher:
+            choices:
+              none: "Senki"
+              all: "Mindenki"
         model_progress:
           detail:
             retry: "Újra"
@@ -119,6 +141,8 @@ hu:
               title: "Kategóriák"
             tag:
               title: "Címkék"
+        admin_actions:
+          enabled: "Bekapcsolva"
         stats:
           eta_minutes:
             one: "%{count} perc"

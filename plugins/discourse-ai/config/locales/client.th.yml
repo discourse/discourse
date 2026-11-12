@@ -59,12 +59,14 @@ th:
       llm_selector:
         none: "ไม่มี"
       features:
-        disabled: "(ปิดใช้งานแล้ว)"
-        groups: "กลุ่ม:"
+        table:
+          status: "สถานะ"
+          groups: "กลุ่ม"
+        chatbot:
+          places:
+            none: "ถูกใช้แล้ว"
         no_groups: "ไม่มี"
         edit: "การตั้งค่า"
-        expand_list:
-          other: "(อีก %{count})"
         filters:
           all: "ทั้งหมด"
         search:
@@ -77,7 +79,17 @@ th:
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
-        category_scope: "หมวดหมู่"
+        settings:
+          ai_translation_category_scope:
+            label: "หมวดหมู่"
+          ai_translation_personal_messages:
+            choices:
+              none: "ไม่มี"
+              all: "ทั้งหมด"
+          content_localization_language_switcher:
+            choices:
+              none: "ไม่มีใคร"
+              all: "ทุกคน"
         model_progress:
           detail:
             columns:

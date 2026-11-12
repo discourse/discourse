@@ -530,8 +530,8 @@ cs:
       pill: "Navrhované"
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
-      start_posting:
-        back: "Zpět"
+      create_category:
+        action: "Vytvořit kategorii"
     design_wizard:
       back: "Zpět"
       next: "Další"

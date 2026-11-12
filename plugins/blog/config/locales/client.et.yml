@@ -13,6 +13,9 @@ et:
         preview_archive: Arhiiv
         desktop: Töölaud
         mobile: Mobiil
+        save: Salvesta
+        path_formats:
+          custom: Individuaalne
         themes: Kujundused
         theme_name: Teema nimi
         edit: Muuda

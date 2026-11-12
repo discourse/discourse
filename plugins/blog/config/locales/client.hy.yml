@@ -14,6 +14,9 @@ hy:
         preview_archive: Արխիվ
         desktop: Համակարգչային
         mobile: Հեռախոսային
+        save: Պահպանել
+        path_formats:
+          custom: Մասնավոր
         themes: Թեմաներ
         theme_name: Թեմայի անվանում
         edit: Խմբագրել

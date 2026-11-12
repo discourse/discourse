@@ -373,9 +373,6 @@ sv:
       title: "Nya och olästa ämnen"
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tillbaka"
     design_wizard:
       back: "Tillbaka"
       next: "Nästa"
