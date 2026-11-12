@@ -185,6 +185,39 @@ RSpec.describe InviteGuardian do
         end
       end
 
+      describe "for a private category an invitee joins automatically" do
+        fab!(:category) do
+          Fabricate(:private_category, group: Group[:trust_level_0], read_restricted: true)
+        end
+        fab!(:topic) { Fabricate(:topic, category:) }
+
+        it "returns true for an admin" do
+          expect(admin.guardian.can_invite_to?(topic)).to eq(true)
+        end
+
+        it "returns true for a regular user who can see the topic" do
+          Group.refresh_automatic_groups!
+
+          expect(user.guardian.can_invite_to?(topic)).to eq(true)
+        end
+
+        it "returns false when the inviter cannot see the topic" do
+          Group.refresh_automatic_groups!
+          topic.trash!
+
+          expect(user.guardian.can_see?(topic)).to eq(false)
+          expect(user.guardian.can_invite_to?(topic)).to eq(false)
+        end
+
+        it "returns false when only higher trust levels can see the topic" do
+          # Existing users can redeem invites without being raised to this level.
+          SiteSetting.default_invitee_trust_level = 1
+          category.update!(permissions: { trust_level_1: :full })
+
+          expect(admin.guardian.can_invite_to?(topic)).to eq(false)
+        end
+      end
+
       describe "for a private category for automatic groups" do
         let(:category) do
           Fabricate(:private_category, group: automatic_group, read_restricted: true)

@@ -35,7 +35,9 @@ module InviteGuardian
       end
 
       if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
+        # Every invite redeemer is in trust_level_0, whatever their trust level.
+        return true if category.groups.exists?(id: Group::AUTO_GROUPS[:trust_level_0])
+        return category.groups.where(automatic: false).any? { |g| can_edit_group?(g) }
       end
     end
 
