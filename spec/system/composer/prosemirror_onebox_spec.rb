@@ -4,12 +4,13 @@ describe "Composer - ProseMirror - Oneboxing" do
   include_context "with prosemirror editor"
 
   before do
-    def body(title)
+    def body(title, image_url: nil)
       <<~HTML
       <html>
         <head>
           <title>#{title}</title>
           <meta property="og:title" content="#{title}">
+          #{%(<meta property="og:image" content="#{image_url}">) if image_url}
           <meta property="og:description" content="This is an example site">
         </head>
         <body>
@@ -60,6 +61,10 @@ describe "Composer - ProseMirror - Oneboxing" do
   end
 
   it "creates a full onebox for standalone links" do
+    SiteSetting.block_hotlinked_media = true
+    stub_request(:get, "https://example.com").to_return(
+      body: body("Example Site 1", image_url: "https://images.example.com/photo.jpg"),
+    )
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("https://example.com")
@@ -68,6 +73,7 @@ describe "Composer - ProseMirror - Oneboxing" do
     expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
     expect(rich).to have_content("Example Site 1")
     expect(rich).to have_content("This is an example site")
+    expect(composer).to have_no_onebox_images(url: "https://example.com")
 
     composer.toggle_rich_editor
 
