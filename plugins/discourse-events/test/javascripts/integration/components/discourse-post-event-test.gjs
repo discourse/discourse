@@ -359,19 +359,26 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
   });
 
   test("opens an external url in a new tab", async function (assert) {
-    stubApi.call(this, buildEvent({ url: "https://ti.to/discourse/meetup" }));
+    for (const url of [
+      "https://ti.to/discourse/meetup",
+      "Https://ti.to/discourse/meetup",
+    ]) {
+      stubApi.call(this, buildEvent({ url }));
 
-    const event = { id: 1 };
-    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
-    await waitFor(".event-url");
+      const event = { id: 1 };
+      await render(
+        <template><DiscoursePostEvent @event={{event}} /></template>
+      );
+      await waitFor(".event-url");
 
-    assert.dom(".event-url a").hasAttribute("target", "_blank");
+      assert.dom(".event-url a").hasAttribute("target", "_blank", url);
+    }
   });
 
   test("keeps a same-site url in the current tab", async function (assert) {
     stubApi.call(
       this,
-      buildEvent({ url: `${window.location.host}/live/r/kitchen` })
+      buildEvent({ url: `${window.location.origin}/live/r/kitchen` })
     );
 
     const event = { id: 1 };

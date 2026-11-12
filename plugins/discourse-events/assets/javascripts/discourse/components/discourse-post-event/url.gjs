@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import DiscourseURL, { prefixProtocol } from "discourse/lib/url";
+import { samePrefix } from "discourse/lib/get-url";
+import { prefixProtocol } from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -9,8 +10,16 @@ export default class DiscoursePostEventUrl extends Component {
   }
 
   // Same-site links stay in the tab so the app router can handle them.
+  // Compare parsed origins: `DiscourseURL.isInternal` matches by prefix.
   get isExternal() {
-    return !DiscourseURL.isInternal(this.url);
+    let parsed;
+    try {
+      parsed = new URL(this.url, window.location.origin);
+    } catch {
+      return true;
+    }
+
+    return parsed.origin !== window.location.origin || !samePrefix(parsed.href);
   }
 
   // Mirrors `EventParser.display_link` on the server.
