@@ -175,6 +175,20 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               expect(author.reload).to be_silenced
             end
 
+            it "keeps a silence imposed by staff rejecting the queued post" do
+              reviewable.perform(
+                admin,
+                :reject_and_silence,
+                reason: "spam",
+                silenced_till: 2.days.from_now,
+              )
+
+              result = reviewable.reload.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
             it "keeps a silence imposed after the auto-silence" do
               UserSilencer.auto_silence(
                 author,

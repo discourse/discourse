@@ -142,7 +142,7 @@ class ReviewableQueuedPost < Reviewable
     if target_created_by.silenced? &&
          (
            performed_by.guardian.can_unsilence_user?(target_created_by) ||
-             silenced_for_this_reviewable?
+             auto_silenced_for_this_reviewable?
          )
       UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
     end
@@ -368,12 +368,12 @@ class ReviewableQueuedPost < Reviewable
     saved_change_to_id?(from: nil) && pending? || saved_change_to_status?(from: "pending")
   end
 
-  # Approving content may lift the auto-silence it triggered, but not an unrelated silence
-  def silenced_for_this_reviewable?
+  # Approving content may lift the auto-silence it triggered, but not a staff-imposed silence
+  def auto_silenced_for_this_reviewable?
     UserHistory
       .where(action: UserHistory.actions[:silence_user], target_user_id: target_created_by_id)
       .order(id: :desc)
-      .pick(:reviewable_id) == id
+      .pick(:reviewable_id, :acting_user_id) == [id, Discourse::SYSTEM_USER_ID]
   end
 end
 
