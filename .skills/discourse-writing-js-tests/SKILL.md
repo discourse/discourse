@@ -18,7 +18,7 @@ Discourse uses [QUnit](https://qunitjs.com/) with `ember-qunit` and
   and waits-free, synchronous DOM reads. See the [qunit-dom API](https://github.com/mainmatter/qunit-dom/blob/master/API.md).
   When you need the element(s) themselves — for an interaction or a computed value — use
   `find()` / `findAll()` from `@ember/test-helpers` (scoped to the test container), not
-  `document.querySelector` or the deprecated `queryAll()`.
+  `document.querySelector`.
 - **Always `await` interactions** — `render`, `click`, `fillIn`, `visit`, `settled`, etc. are
   async. Forgetting `await` causes flaky tests.
 - **Always pass a description** as the last argument to assertions — it documents intent and
@@ -199,7 +199,6 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 - **DOM lookup helpers**: `query()`, `exists()`, `count()`, `visible()`, `invisible()`,
   `fixture()`. **Prefer `assert.dom(...)` for assertions and `find()` / `findAll()` for
   elements in new tests** — reach for these only when matching existing style.
-- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead.
 
 ## Dates and time zones
 
