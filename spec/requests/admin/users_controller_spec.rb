@@ -2142,6 +2142,39 @@ RSpec.describe Admin::UsersController do
         expect(reg_user.active).to eq(false)
       end
     end
+
+    context "when the user has a configured developer email" do
+      fab!(:developer_user) do
+        Fabricate(:inactive_user, username: "dev_account", email: "dev@example.com")
+      end
+      fab!(:email_domain_group) do
+        Fabricate(:group, automatic_membership_email_domains: "example.com")
+      end
+
+      before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
+
+      it "prevents a moderator from activating the account" do
+        sign_in(moderator)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
+      end
+
+      it "prevents an admin from activating the account" do
+        sign_in(admin)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
+      end
+    end
   end
 
   describe "#deactivate" do
