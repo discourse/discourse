@@ -18,6 +18,7 @@ import {
   shouldDeferSwipeToContent,
 } from "discourse/lib/swipe-events";
 import type Site from "discourse/models/site";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -183,12 +184,17 @@ interface DModalSignature {
 }
 
 export default class DModal extends Component<DModalSignature> {
+  @service declare a11y: A11yService;
   @service declare appEvents: AppEventsService;
   @service declare capabilities: CapabilitiesService;
   @service declare modal: ModalService;
   @service declare site: Site;
 
   @tracked animating = false;
+  registerLiveRegionOutlet = modifierFn((el: HTMLElement) => {
+    this.a11y.registerLiveRegionOutlet(el);
+    return () => this.a11y.unregisterLiveRegionOutlet(el);
+  });
   registerModalContainer = modifierFn((el: HTMLElement) => {
     this.#modalContainerElement = el;
   });
@@ -752,6 +758,11 @@ export default class DModal extends Component<DModalSignature> {
         {{! Menus opened from the dialog render here: content outside an open modal dialog is
           left out of the accessibility tree. }}
         <div class="d-modal__float-outlet" data-float-outlet></div>
+        {{! Announcements are read from here while the dialog is open, for the same reason. }}
+        <div
+          class="d-modal__live-region-outlet"
+          {{this.registerLiveRegionOutlet}}
+        ></div>
       </this.dynamicElement>
       {{#unless @inline}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}

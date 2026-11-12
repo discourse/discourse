@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next, run } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -7,6 +8,7 @@ import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DModal from "discourse/ui-kit/d-modal";
 import I18n from "discourse-i18n";
 
 const REGIONS = [
@@ -601,6 +603,86 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
         [id],
         "the service's own record is untouched"
       );
+    });
+  });
+
+  module("inside a modal dialog", function () {
+    // Browsers leave everything outside an open aria-modal dialog out of the accessibility
+    // tree, so regions left at the root are never read while a modal is open.
+    test("render inside the open modal and return when it closes", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const open = tracked(true);
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          {{#if open.value}}
+            <DModal class="outer" @inline={{true}} @title="Outer">Body</DModal>
+          {{/if}}
+        </template>
+      );
+
+      assert
+        .dom(".outer[aria-modal='true'] #a11y-announcements-polite")
+        .exists("the polite region is inside the modal");
+      assert
+        .dom(".outer[aria-modal='true'] #a11y-announcements-assertive")
+        .exists("the assertive region is inside the modal");
+
+      getOwner(this).lookup("service:a11y").announce("Removed Staff");
+      await settled();
+      assert
+        .dom(".outer #a11y-announcements-polite")
+        .hasText("Removed Staff", "announcements reach the modal's region");
+
+      open.value = false;
+      await settled();
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .exists({ count: 1 }, "there is still exactly one polite region");
+      assert.strictEqual(
+        find("#a11y-announcements-polite").closest("[aria-modal]"),
+        null,
+        "the regions return to the page once the modal closes"
+      );
+    });
+
+    test("move to a modal opened above another and back", async function (assert) {
+      const outer = tracked(true);
+      const inner = tracked(false);
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          {{#if outer.value}}
+            <DModal class="outer" @inline={{true}} @title="Outer">Body</DModal>
+          {{/if}}
+          {{#if inner.value}}
+            <DModal class="inner" @inline={{true}} @title="Inner">Body</DModal>
+          {{/if}}
+        </template>
+      );
+
+      inner.value = true;
+      await settled();
+      assert
+        .dom(".inner #a11y-announcements-polite")
+        .exists("the topmost modal holds the regions");
+
+      inner.value = false;
+      await settled();
+      assert
+        .dom(".outer #a11y-announcements-polite")
+        .exists("closing it hands the regions back to the modal below");
+
+      inner.value = true;
+      await settled();
+      outer.value = false;
+      await settled();
+      assert
+        .dom(".inner #a11y-announcements-polite")
+        .exists("closing a lower modal leaves them in the topmost one");
     });
   });
 });

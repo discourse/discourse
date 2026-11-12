@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedMap } from "@ember/reactive/collections";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { cancel, next, type Timer } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -107,6 +107,8 @@ export default class A11y extends Service {
   >();
 
   #history: AnnouncementRecord[] = [];
+
+  #liveRegionOutlets = trackedArray<HTMLElement>();
 
   #nextCallId = 1;
 
@@ -274,6 +276,15 @@ export default class A11y extends Service {
   }
 
   /**
+   * Where the live regions render: the outlet of the newest open modal dialog, or `undefined`
+   * for the page root. Browsers leave everything outside an open `aria-modal` dialog out of the
+   * accessibility tree, so regions left at the root go unread while one is open.
+   */
+  get liveRegionOutlet(): HTMLElement | undefined {
+    return this.#liveRegionOutlets.at(-1);
+  }
+
+  /**
    * The newest writes made to the live regions, oldest first, as frozen copies.
    */
   get announcementHistory(): readonly AnnouncementRecord[] {
@@ -420,6 +431,21 @@ export default class A11y extends Service {
     });
 
     return callId;
+  }
+
+  /**
+   * Renders the live regions inside `element` until it is unregistered. An open modal dialog
+   * registers its outlet, so the newest one holds them.
+   */
+  registerLiveRegionOutlet(element: HTMLElement): void {
+    this.#liveRegionOutlets.push(element);
+  }
+
+  unregisterLiveRegionOutlet(element: HTMLElement): void {
+    const index = this.#liveRegionOutlets.indexOf(element);
+    if (index !== -1) {
+      this.#liveRegionOutlets.splice(index, 1);
+    }
   }
 
   /**
