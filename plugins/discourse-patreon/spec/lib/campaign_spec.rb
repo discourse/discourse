@@ -4,7 +4,17 @@ require_relative "../spec_helper"
 
 RSpec.describe Patreon::Campaign do
   shared_examples "campaign sync" do
-    let(:new_users) { Patreon.get("users").values.map { |email| Fabricate(:user, email: email) } }
+    let(:new_users) do
+      Patreon
+        .get("users")
+        .values
+        .map do |email|
+          user = Fabricate(:user, email: email)
+          email_token = user.email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
+          EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
+          user.reload
+        end
+    end
     let(:patreon_accounts) do
       new_users.to_h { |user| [user.custom_fields["patreon_id"], user.email] }
     end
