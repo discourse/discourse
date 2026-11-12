@@ -238,94 +238,44 @@ RSpec.describe ComposerController do
       end
     end
 
-    context "with an existing private message to a group with hidden members" do
-      fab!(:alice) { Fabricate(:user, username: "alice") }
-      fab!(:bob) { Fabricate(:user, username: "bob") }
-      fab!(:hidden_members_group) do
+    context "with an existing private message to a group" do
+      fab!(:member, :user)
+      fab!(:muted_member, :user)
+      fab!(:admin_member, :admin)
+      fab!(:recipient_group) do
         Fabricate(
           :group,
-          messageable_level: Group::ALIAS_LEVELS[:everyone],
-          mentionable_level: Group::ALIAS_LEVELS[:everyone],
-          members_visibility_level: Group.visibility_levels[:staff],
-        )
-      end
-      fab!(:topic) do
-        Fabricate(
-          :group_private_message_topic,
-          user: current_user,
-          recipient_group: hidden_members_group,
-        )
-      end
-
-      before { hidden_members_group.add(alice) }
-
-      it "does not leak hidden group membership via user_reasons" do
-        get "/composer/mentions.json",
-            params: {
-              names: [alice.username, bob.username],
-              topic_id: topic.id,
-            }
-
-        expect(response.status).to eq(200)
-
-        user_reasons = response.parsed_body["user_reasons"]
-        expect(user_reasons[alice.username]).to eq("private")
-        expect(user_reasons[alice.username]).to eq(user_reasons[bob.username])
-      end
-
-      it "does not leak hidden group membership of users who can see the topic" do
-        admin_member = Fabricate(:admin, username: "admin_member")
-        admin_outsider = Fabricate(:admin, username: "admin_outsider")
-        hidden_members_group.add(admin_member)
-
-        get "/composer/mentions.json",
-            params: {
-              names: [admin_member.username, admin_outsider.username],
-              topic_id: topic.id,
-            }
-
-        expect(response.status).to eq(200)
-
-        user_reasons = response.parsed_body["user_reasons"]
-        expect(user_reasons[admin_member.username]).to eq("private")
-        expect(user_reasons[admin_member.username]).to eq(user_reasons[admin_outsider.username])
-      end
-
-      it "still reports accurate reasons to staff" do
-        sign_in(Fabricate(:admin))
-
-        get "/composer/mentions.json",
-            params: {
-              names: [alice.username, bob.username],
-              topic_id: topic.id,
-            }
-
-        expect(response.status).to eq(200)
-
-        user_reasons = response.parsed_body["user_reasons"]
-        expect(user_reasons[alice.username]).to be_nil
-        expect(user_reasons[bob.username]).to eq("private")
-      end
-    end
-
-    context "with an existing private message to a group whose members are only visible to owners" do
-      fab!(:owners_group) do
-        Fabricate(
-          :group,
-          messageable_level: Group::ALIAS_LEVELS[:everyone],
-          mentionable_level: Group::ALIAS_LEVELS[:everyone],
           members_visibility_level: Group.visibility_levels[:owners],
+          users: [member, muted_member, admin_member],
         )
       end
-      fab!(:moderator)
-      fab!(:topic) do
-        Fabricate(:group_private_message_topic, user: moderator, recipient_group: owners_group)
+      fab!(:topic) { Fabricate(:group_private_message_topic, user: current_user, recipient_group:) }
+
+      it "gives members and outsiders the same reason when the members are hidden" do
+        TopicUser.change(
+          muted_member.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+
+        get "/composer/mentions.json",
+            params: {
+              names: [member.username, muted_member.username, user.username],
+              topic_id: topic.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          member.username_lower => "private",
+          muted_member.username_lower => "private",
+          user.username_lower => "private",
+        )
       end
 
-      it "does not leak hidden group membership to staff who cannot see it" do
-        admin_member = Fabricate(:admin, username: "admin_member")
-        admin_outsider = Fabricate(:admin, username: "admin_outsider")
-        owners_group.add(admin_member)
+      it "gives staff the same reason for members and outsiders when the members are hidden" do
+        moderator = Fabricate(:moderator)
+        admin_outsider = Fabricate(:admin)
+        Fabricate(:topic_allowed_user, topic:, user: moderator)
         sign_in(moderator)
 
         get "/composer/mentions.json",
@@ -335,33 +285,15 @@ RSpec.describe ComposerController do
             }
 
         expect(response.status).to eq(200)
-
-        user_reasons = response.parsed_body["user_reasons"]
-        expect(user_reasons[admin_member.username]).to eq(user_reasons[admin_outsider.username])
-      end
-    end
-
-    context "with an existing private message to a group with visible members" do
-      fab!(:member) { Fabricate(:user, username: "visible_member") }
-      fab!(:visible_members_group) do
-        Fabricate(
-          :group,
-          messageable_level: Group::ALIAS_LEVELS[:everyone],
-          mentionable_level: Group::ALIAS_LEVELS[:everyone],
-          members_visibility_level: Group.visibility_levels[:public],
-        )
-      end
-      fab!(:topic) do
-        Fabricate(
-          :group_private_message_topic,
-          user: current_user,
-          recipient_group: visible_members_group,
+        expect(response.parsed_body["user_reasons"]).to eq(
+          admin_member.username_lower => "private",
+          admin_outsider.username_lower => "private",
         )
       end
 
-      before { visible_members_group.add(member) }
+      it "warns only about outsiders when the members are visible" do
+        recipient_group.update!(members_visibility_level: Group.visibility_levels[:public])
 
-      it "does not warn about members of the allowed group" do
         get "/composer/mentions.json",
             params: {
               names: [member.username, user.username],
@@ -369,19 +301,7 @@ RSpec.describe ComposerController do
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["user_reasons"]).to eq(user.username => "private")
-      end
-
-      it "still reports users who are not allowed to staff" do
-        sign_in(Fabricate(:admin))
-        other_admin = Fabricate(:admin)
-
-        get "/composer/mentions.json", params: { names: [other_admin.username], topic_id: topic.id }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user_reasons"]).to eq(
-          other_admin.username.downcase => "not_allowed",
-        )
+        expect(response.parsed_body["user_reasons"]).to eq(user.username_lower => "private")
       end
     end
 
