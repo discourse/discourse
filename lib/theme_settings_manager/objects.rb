@@ -6,16 +6,17 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   def default
-    hydrate_uploads(@default.map(&:deep_stringify_keys))
+    hydrate_uploads(remove_tag_objects(@default.map(&:deep_stringify_keys)))
   end
 
   def value
-    has_record? ? hydrate_uploads(db_record.json_value) : default
+    has_record? ? hydrate_uploads(remove_tag_objects(db_record.json_value)) : default
   end
 
   def value=(objects)
     objects = JSON.parse(objects) if objects.is_a?(::String)
     objects = remove_disallowed_groups(objects)
+    objects = remove_tag_objects(objects)
     objects = normalize_tag_ids(objects)
     ensure_is_valid_value!(objects)
     objects = SchemaSettingsObjectValidator.normalize_uploads(schema:, objects:)
@@ -54,6 +55,10 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
   end
 
   private
+
+  def remove_tag_objects(objects)
+    ThemeSettingsTagResolver.remove_tag_objects(objects:, schema:)
+  end
 
   def normalize_tag_ids(objects, properties: schema[:properties], tag_names: nil)
     unless tag_names
