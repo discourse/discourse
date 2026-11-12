@@ -13,9 +13,10 @@ class ComposerController < ApplicationController
       guardian.ensure_can_see!(@topic)
     end
 
-    # allowed_names is necessary just for new private messages.
+    # allowed_names is necessary just for new private messages. Existing topics use their stored
+    # recipients so a client can't vouch for users whose access comes from a hidden group.
     @allowed_names =
-      if params[:allowed_names].present?
+      if @topic.blank? && params[:allowed_names].present?
         if !params[:allowed_names].is_a?(Array)
           raise Discourse::InvalidParameters.new(:allowed_names)
         end
@@ -120,7 +121,10 @@ class ComposerController < ApplicationController
       .where(user_id: topic_allowed_user_ids)
       .or(
         GroupUser.where(
-          user_id: GroupUser.where(group_id: topic_allowed_group_ids).select(:user_id),
+          user_id:
+            GroupUser.where(
+              group_id: topic_allowed_group_ids & visible_group_ids_for_allowed_check,
+            ).select(:user_id),
         ),
       )
       .where(group:)
