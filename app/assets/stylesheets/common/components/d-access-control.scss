@@ -70,6 +70,15 @@
   &__add {
     width: 100%;
   }
+
+  &__row &__permission {
+    flex: 0 0 auto;
+    width: auto;
+  }
+}
+
+.d-select__content.--kind-select-permission {
+  --d-select-menu-min-width: 20em;
 }
 
 .d-select__content.--kind-select-permission
