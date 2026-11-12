@@ -10,10 +10,10 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectPermission from "discourse/ui-kit/select/recipes/permissions/d-select-permission";
 import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import DAccessControlGranteeChooser, {
@@ -37,13 +37,6 @@ const READ_ONLY_DEFAULT_AUTO_GROUPS = [
 const ROW_TYPE_SORT_ORDER = {
   group: 0,
   user: 1,
-};
-const REMOVE_ACTION = {
-  id: "remove",
-  name: i18n("access_control.manage.access_permission_remove"),
-  description: i18n(
-    "access_control.manage.access_permission_remove_description"
-  ),
 };
 
 function ownerOption(target) {
@@ -285,7 +278,7 @@ export default class DAccessControl extends Component {
     return this.availableGroups
       .filter((group) => {
         const availablePermissions = this.excludeBannedPermissions(
-          this.permissionOptions.filter((opt) => opt.id !== REMOVE_ACTION.id),
+          this.permissionOptions,
           { type: "group", id: group.id }
         );
 
@@ -333,7 +326,7 @@ export default class DAccessControl extends Component {
       defaultPermissions()
     ).filter((permission) => permission.id !== OWNER_PERMISSION);
 
-    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
+    return permissions.sort((a, b) => a.level - b.level);
   }
 
   /**
@@ -437,36 +430,10 @@ export default class DAccessControl extends Component {
 
   @action
   onRowPermissionChange(granteeType, granteeId, permission) {
-    const rows = this.rows;
-    const index = rows.findIndex(
-      (row) => row.type === granteeType && row.id === granteeId
+    const row = this.rows.find(
+      (candidate) =>
+        candidate.type === granteeType && candidate.id === granteeId
     );
-    const row = rows[index];
-
-    if (permission === REMOVE_ACTION.id) {
-      this.args.onChange(
-        this.acl.filter(
-          (entry) => !(entry.type === granteeType && entry.id === granteeId)
-        )
-      );
-      if (row) {
-        this.a11y.announce(
-          i18n("access_control.manage.grantee_removed", {
-            name: row.display_name,
-          })
-        );
-      }
-      // The removed row's button had focus; the nearest row keeps the reader in the list.
-      const neighbour = [
-        ...rows.slice(index + 1),
-        ...rows.slice(0, Math.max(index, 0)).reverse(),
-      ].find((candidate) => !candidate.permission_menu_disabled);
-      this.#focusAfterRender(
-        neighbour ? this.#rowButtonSelector(neighbour) : CHOOSER_CONTROL
-      );
-      return;
-    }
-
     const next = this.acl.map((entry) =>
       entry.type === granteeType && entry.id === granteeId
         ? { ...entry, permission }
@@ -484,6 +451,36 @@ export default class DAccessControl extends Component {
       // A new permission can move the row, and moving a node drops its focus.
       this.#focusAfterRender(this.#rowButtonSelector(row));
     }
+  }
+
+  @action
+  onRowRemove(granteeType, granteeId) {
+    const rows = this.rows;
+    const index = rows.findIndex(
+      (row) => row.type === granteeType && row.id === granteeId
+    );
+    const row = rows[index];
+
+    this.args.onChange(
+      this.acl.filter(
+        (entry) => !(entry.type === granteeType && entry.id === granteeId)
+      )
+    );
+    if (row) {
+      this.a11y.announce(
+        i18n("access_control.manage.grantee_removed", {
+          name: row.display_name,
+        })
+      );
+    }
+    // The removed row's select had focus; the nearest row keeps the reader in the list.
+    const neighbour = [
+      ...rows.slice(index + 1),
+      ...rows.slice(0, Math.max(index, 0)).reverse(),
+    ].find((candidate) => !candidate.permission_menu_disabled);
+    this.#focusAfterRender(
+      neighbour ? this.#rowButtonSelector(neighbour) : CHOOSER_CONTROL
+    );
   }
 
   /**
@@ -511,9 +508,7 @@ export default class DAccessControl extends Component {
     const ownerOptionForTarget = ownerOption(this.args.aclTarget?.name);
 
     if (row.owner) {
-      return this.args.canManageOwners
-        ? [ownerOptionForTarget, REMOVE_ACTION]
-        : [ownerOptionForTarget];
+      return [ownerOptionForTarget];
     }
 
     const permissionOptions = this.excludeBannedPermissions(
@@ -522,13 +517,7 @@ export default class DAccessControl extends Component {
     );
 
     if (row.type === "user" && this.args.canManageOwners && !this.args.isNew) {
-      return [
-        ...permissionOptions.filter(
-          (permission) => permission.id !== REMOVE_ACTION.id
-        ),
-        ownerOptionForTarget,
-        REMOVE_ACTION,
-      ];
+      return [...permissionOptions, ownerOptionForTarget];
     }
 
     return permissionOptions;
@@ -667,10 +656,19 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
               </span>
-              <DAccessControlPermissionMenu
+              <DSelectPermission
+                class="d-access-control__permission"
+                data-permission={{row.permission}}
                 @disabled={{row.permission_menu_disabled}}
                 @onChange={{fn this.onRowPermissionChange row.type row.id}}
+                @onRemove={{fn this.onRowRemove row.type row.id}}
                 @options={{this.permissionOptionsFor row}}
+                @texts={{hash
+                  ariaLabel=(i18n
+                    "access_control.manage.grantee_permission"
+                    name=row.display_name
+                  )
+                }}
                 @value={{row.permission}}
               />
             </div>

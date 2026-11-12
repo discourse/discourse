@@ -114,45 +114,41 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       '.d-access-control__row[data-row-id="5"] .d-access-control__permission'
     );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="manage"]')
+      .dom("[role='option'][data-value='manage']")
       .includesText(
         i18n("boards.manage.board_access_permission_manager"),
         "offers board management"
       );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="view"]')
+      .dom("[role='option'][data-value='view']")
       .includesText(
         i18n("boards.manage.board_access_permission_viewer_description"),
         "uses board-specific descriptions"
       );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="edit"]')
+      .dom("[role='option'][data-value='edit']")
       .doesNotExist("applies the board's banned permissions");
-    await click(
-      '.d-access-control__permission-option[data-permission-id="manage"]'
-    );
+    await click("[role='option'][data-value='manage']");
     await fillIn(".workflows-access-control__groups input", "[41,42]");
     await click(
       ".workflows-access-control__permission .d-access-control__permission"
     );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="manage"]')
+      .dom("[role='option'][data-value='manage']")
       .includesText(
         i18n("boards.manage.board_access_permission_manager_description"),
         "shows the board manager description for input groups"
       );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="view"]')
+      .dom("[role='option'][data-value='view']")
       .includesText(
         i18n("boards.manage.board_access_permission_viewer_description"),
         "shares the board viewer description"
       );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="remove"]')
+      .dom("[role='option'][data-value='remove']")
       .doesNotExist("input groups do not offer Remove");
-    await click(
-      '.d-access-control__permission-option[data-permission-id="manage"]'
-    );
+    await click("[role='option'][data-value='manage']");
     await formKit().submit();
     assert.strictEqual(
       this.onSubmit.firstCall.args[0].acl.permission,
@@ -229,7 +225,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       '.d-access-control__row[data-row-id="5"] .d-access-control__permission'
     );
     assert
-      .dom('.d-access-control__permission-option[data-permission-id="manage"]')
+      .dom("[role='option'][data-value='manage']")
       .doesNotExist("does not apply board permissions to other nodes");
   });
 });

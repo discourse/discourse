@@ -592,6 +592,8 @@ engine keys through `@kindTexts`.
 | `DSelectTopic`, `DSelectTopicList` | `ariaLabel` | `select_topic.topic` while it holds at most one, otherwise `select_topic.topics`; `select_topic.message` / `messages` for messages | |
 | | `placeholder` (`DSelectTopic`), `searchPlaceholder` | `select_topic.search_placeholder`, or `select_topic.message_search_placeholder` for messages | |
 | | `unresolved` | `select_topic.unresolved` | `id` |
+| `DSelectPermission` | `ariaLabel` | `select_permission.permission`; a row of grantees passes `access_control.manage.grantee_permission` | |
+| | `removeLabel`, `removeDescription` | `access_control.manage.access_permission_remove`, `access_control.manage.access_permission_remove_description` | |
 
 `DSelectTagFilter` also takes `DSelectTag`'s keys, under its own. The tag picker's placeholder
 wrappers are described under [Tag recipes](#tag-recipes).
@@ -1324,6 +1326,16 @@ Without an `ariaLabel` text or `@ariaLabelledBy`, a topic picker is named "Topic
 or "Message" or "Messages" for messages. Its field invites a title, URL or ID, since a topic is
 found only by searching. Until cleanup, `DSelectTopic` defaults `@legacyKind` to
 `topic-chooser`; the list, which replaces controls that were never select-kit, has none.
+
+#### Permission recipe
+
+**`DSelectPermission`** (kind `select-permission`) picks one permission from a short list, as a
+static select. `@options` takes the permissions as records `{ id, name, description? }` or as
+options; each is described by its record's `description` unless the caller's settings give
+another. `@value` and `@onChange` use the permission's id. With `@onRemove`, a Remove action
+option follows the permissions after a divider; picking it closes the list and calls
+`@onRemove` instead of changing the value. A permission picker is named "Permission" unless the
+call site names it; the access control names each row's picker after its grantee.
 
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.

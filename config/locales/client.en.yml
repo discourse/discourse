@@ -118,6 +118,7 @@ en:
         grantee_added: "Added %{name} as %{permission}"
         grantee_removed: "Removed %{name}"
         grantee_permission_changed: "%{name} is now %{permission}"
+        grantee_permission: "Permission for %{name}"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
         disallowed: "Disallowed"
@@ -3592,6 +3593,9 @@ en:
     select_group:
       group: "Group"
       groups: "Groups"
+
+    select_permission:
+      permission: "Permission"
 
     select_topic:
       topic: "Topic"

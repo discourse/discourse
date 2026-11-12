@@ -67,42 +67,14 @@
     color: var(--d-input-text-color--disabled);
   }
 
-  &__permission.btn-default {
-    border: none;
-
-    &:hover {
-      border: none;
-    }
-  }
-
-  &__permission-menu-content {
-    z-index: z("modal", "dropdown");
-  }
-
-  &__permission-option.--remove .d-access-control__permission-label {
-    color: var(--danger);
-  }
-
-  &__permission-texts {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: var(--line-height-medium);
-  }
-
-  &__permission-label {
-    font-weight: bold;
-    color: var(--primary);
-  }
-
-  &__permission-description {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    white-space: normal;
-    text-align: start;
-  }
-
   &__add {
     width: 100%;
   }
+}
+
+.d-select__content.--kind-select-permission
+  .d-select__option[data-value="remove"]
+  .d-select__option-content
+  > :first-child {
+  color: var(--danger);
 }

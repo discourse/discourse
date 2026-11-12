@@ -178,6 +178,8 @@ export const RECIPE_TEXT_KEYS: ReadonlySet<string> = new Set([
   "tagCountBadge",
   "tagCount",
   "noTags",
+  "removeLabel",
+  "removeDescription",
 ]);
 
 /**

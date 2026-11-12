@@ -1,10 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { click, findAll, render } from "@ember/test-helpers";
+import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
@@ -64,7 +65,7 @@ function controlledState(initialAcl = []) {
 }
 
 function permissionOptionSelector(permission) {
-  return `.d-access-control__permission-option[data-permission-id="${permission}"]`;
+  return `[role='option'][data-value="${permission}"]`;
 }
 
 async function expandPermissionMenu(rowSelector = ".d-access-control__row") {
@@ -76,14 +77,8 @@ async function selectPermission(permission, rowSelector) {
   await click(permissionOptionSelector(permission));
 }
 
-function permissionOptionLabel(permission) {
-  return `${permissionOptionSelector(permission)} .d-access-control__permission-label`;
-}
-
 function permissionOptionDescription(permission) {
-  return `${permissionOptionSelector(
-    permission
-  )} .d-access-control__permission-description`;
+  return `${permissionOptionSelector(permission)} .d-select__option-description`;
 }
 
 function rowNames() {
@@ -450,8 +445,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .dom(permissionOptionSelector("juggler"))
       .exists("renders the added permission option");
     assert
-      .dom(permissionOptionLabel("juggler"))
-      .hasText("Juggler", "the added option keeps its name");
+      .dom(permissionOptionSelector("juggler"))
+      .includesText("Juggler", "the added option keeps its name");
   });
 
   test("loads multiple existing acl groups with their permissions", async function (assert) {
@@ -543,6 +538,50 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert
       .dom(".d-access-control__item-name")
       .hasText("Some Group", "keeps the remaining row");
+  });
+
+  test("names each row's permission select after its grantee, with Remove last", async function (assert) {
+    const accessibleName = await loadAccessibleName();
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    const permission = find(".d-access-control__permission");
+    assert.dom(permission).hasAttribute("role", "combobox");
+    assert.dom(permission).hasAttribute("data-permission", "view");
+    assert.true(
+      accessibleName(permission).startsWith(
+        i18n("access_control.manage.grantee_permission", {
+          name: "Some Group",
+        })
+      ),
+      "names the select after the row's grantee"
+    );
+
+    await expandPermissionMenu();
+
+    assert.deepEqual(
+      findAll(".d-select__option, .d-select__divider").map((row) =>
+        row.classList.contains("d-select__divider") ? "|" : row.dataset.value
+      ),
+      ["view", "edit", "|", "remove"],
+      "Remove follows the permissions, after a divider"
+    );
   });
 
   test("announces the grantee it removes", async function (assert) {
@@ -704,14 +743,14 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await expandPermissionMenu();
 
     assert
-      .dom(permissionOptionLabel("view"))
-      .hasText(
+      .dom(permissionOptionSelector("view"))
+      .includesText(
         i18n("access_control.manage.access_permission_viewer"),
         "renders the default viewer option"
       );
     assert
-      .dom(permissionOptionLabel("edit"))
-      .hasText(
+      .dom(permissionOptionSelector("edit"))
+      .includesText(
         i18n("access_control.manage.access_permission_editor"),
         "renders the default editor option"
       );
@@ -805,7 +844,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert.dom(rows[0]).hasClass("--mandatory", "the mandatory row is first");
     assert
       .dom(".d-access-control__permission", rows[0])
-      .isDisabled("the mandatory row's permission select is disabled");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "the mandatory row's permission select is disabled"
+      );
   });
 
   test("renders an owner after mandatory rows without a mandatory badge when ownership cannot be managed", async function (assert) {
@@ -872,7 +915,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
         i18n("access_control.manage.access_permission_owner"),
         "labels the permission as Owner"
       )
-      .isDisabled("prevents changing or removing the owner");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "prevents changing or removing the owner"
+      );
   });
 
   test("offers only Owner and Remove for an owner manager", async function (assert) {
@@ -902,7 +949,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert
       .dom(`${ownerRow} .d-access-control__permission`)
-      .isEnabled("allows ownership management");
+      .doesNotHaveAttribute("aria-disabled", "allows ownership management");
 
     await expandPermissionMenu(ownerRow);
 

@@ -8,8 +8,8 @@ import FKOptional from "discourse/form-kit/components/fk/optional";
 import DAccessControl, {
   defaultPermissions,
 } from "discourse/ui-kit/d-access-control";
-import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectPermission from "discourse/ui-kit/select/recipes/permissions/d-select-permission";
 import { i18n } from "discourse-i18n";
 import {
   fieldShowDescription,
@@ -216,10 +216,20 @@ export default class AccessControlListControl extends Component {
                     </ExpressionWrapper>
                   </div>
                   <div class="workflows-access-control__permission">
-                    <DAccessControlPermissionMenu
-                      id="{{field.id}}-permission"
+                    <DSelectPermission
+                      class="d-access-control__permission"
+                      data-permission={{config.permission}}
+                      @id="{{field.id}}-permission"
                       @onChange={{fn this.setPermission field}}
                       @options={{this.permissionOptions}}
+                      @texts={{hash
+                        ariaLabel=(i18n
+                          "access_control.manage.grantee_permission"
+                          name=(i18n
+                            "discourse_workflows.access_control.groups_from_input"
+                          )
+                        )
+                      }}
                       @value={{config.permission}}
                     />
                   </div>
