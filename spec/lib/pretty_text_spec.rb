@@ -1995,6 +1995,20 @@ RSpec.describe PrettyText do
     )
   end
 
+  it "bounds hashtag lookups per cook" do
+    stub_const(HashtagAutocompleteService, "HASHTAGS_PER_REQUEST", 2) do
+      %w[cat-a cat-b cat-c].each { |slug| Fabricate(:category, slug:) }
+      allow(HashtagAutocompleteService).to receive(:new).and_call_original
+
+      cooked = PrettyText.cook("#cat-a #cat-a #cat-a #cat-b #cat-c")
+
+      expect(cooked.scan(%(data-slug="cat-a")).length).to eq(3)
+      expect(cooked).to include(%(data-slug="cat-b"))
+      expect(cooked).not_to include(%(data-slug="cat-c"))
+      expect(HashtagAutocompleteService).to have_received(:new).twice
+    end
+  end
+
   it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
