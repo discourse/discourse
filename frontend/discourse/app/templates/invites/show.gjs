@@ -90,7 +90,7 @@ export default <template>
 
             {{#if @controller.discourseConnectEnabled}}
               <DButton
-                class="btn btn-primary discourse-connect"
+                class="btn-primary discourse-connect"
                 @action={{@controller.continueWithDiscourseConnect}}
                 @label="continue"
               />
