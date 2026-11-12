@@ -224,7 +224,7 @@ const SCENARIOS = {
   heldMobile: { multiple: true, value: [1], mobile: true },
   mobileButton: { multiple: true, value: [1], variant: "button", mobile: true },
   valueButton: { value: 1, variant: "button" },
-  valueStatic: { value: 1, variant: "static" },
+  valueStaticDisabled: { value: 1, variant: "static", disabled: true },
   valueMobile: { value: 1, mobile: true },
   countButton: {
     multiple: true,
@@ -590,8 +590,8 @@ const USES = [
   ),
   attr(
     "labelWithValue",
-    "static value name",
-    "valueStatic",
+    "disabled static value name",
+    "valueStaticDisabled",
     ".d-select__trigger",
     "aria-label"
   ),

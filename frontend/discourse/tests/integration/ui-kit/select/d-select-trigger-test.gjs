@@ -1201,10 +1201,10 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    // An author-supplied name REPLACES name-from-contents on `role="button"`/`role="combobox"`,
-    // so labelling the trigger with the field name alone made the chosen value unspeakable: a
-    // category picker holding "Banana" announced only "Category, button".
-    test("a control trigger announces the field and its current value", async function (assert) {
+    // An author-supplied name REPLACES name-from-contents on `role="button"`, so labelling the
+    // trigger with the field name alone made the chosen value unspeakable: a category picker
+    // holding "Banana" announced only "Category, button".
+    test("a button control trigger announces the field and its current value", async function (assert) {
       await render(
         <template>
           <DSelect
@@ -1212,7 +1212,7 @@ module(
             @options={{ITEMS}}
             @texts={{hash ariaLabel="Category"}}
             @value={{2}}
-            @variant="static"
+            @variant="button"
           />
         </template>
       );

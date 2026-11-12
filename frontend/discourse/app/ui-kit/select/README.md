@@ -520,7 +520,7 @@ unknown key silently.
 | Key | Default | Values | Where |
 |---|---|---|---|
 | `ariaLabel` | `d_select.label` "Options" | | Names the trigger, the list and the panel. Required |
-| `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Trigger name while a value is held. Required |
+| `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Name of a button trigger, or a disabled static one, while a value is held. A focusable static combobox exposes its value itself. Required |
 | `labelWithCount` | `d_select.label_with_count` | `label`, `count` | Compact multi trigger name. Required |
 | `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held |
 | `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another value can be added |

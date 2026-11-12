@@ -1833,6 +1833,50 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
       .exists({ count: 3 }, "the block-free static select renders every option")
       .hasText("Apple", "option rows use the item fallback");
   });
+
+  test("a static combobox leaves its value to its contents while it can take focus", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          class="kt"
+          @options={{ITEMS}}
+          @texts={{hash ariaLabel="Fruit"}}
+          @value={{2}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".kt")
+      .hasAttribute("role", "combobox")
+      .hasAria("label", "Fruit", "the value is not spoken twice")
+      .hasText("Banana", "the value is the combobox's contents");
+  });
+
+  test("a disabled static combobox keeps its value in its name", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          class="kt"
+          @disabled={{true}}
+          @options={{ITEMS}}
+          @texts={{hash ariaLabel="Fruit"}}
+          @value={{2}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".kt")
+      .doesNotHaveAttribute("tabindex", "it leaves the tab order")
+      .hasAria(
+        "label",
+        "Fruit, Banana",
+        "browsers expose no value for a combobox that can't take focus"
+      );
+  });
 });
 
 module(
@@ -2964,15 +3008,14 @@ module(
         </template>
       );
 
-      // Both roots hold a value here, and an author-supplied name replaces name-from-contents —
-      // so naming them "Category" alone left the chosen value unspeakable. The name composes the
-      // field with its current value; see the (control trigger naming) module for the empty case.
+      // An author-supplied name replaces a button's name-from-contents, so the button composes
+      // the field with its value. The combobox exposes its contents as its value instead.
       assert
         .dom(".lbl-static[role='combobox']")
         .hasAria(
           "label",
-          "Category, Apple",
-          "the static combobox root names the field and its value"
+          "Category",
+          "the static combobox root names the field"
         );
       assert
         .dom(".lbl-button[role='button']")

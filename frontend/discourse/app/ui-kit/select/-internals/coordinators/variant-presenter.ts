@@ -185,13 +185,21 @@ export default class VariantPresenter
    * "Options, button". The value is composed in rather than dropped, because the label still has
    * to say what the control is FOR — the visible text alone would not.
    *
+   * A focusable static combobox is the exception: browsers expose its contents as its value
+   * and screen readers speak it beside the name, so composing it in read it twice. A disabled
+   * one leaves the tab order, and browsers then expose no value, so it keeps the composed name.
+   *
    * Multi-select held labels are exposed through a separate description.
    */
   get triggerRootLabel(): string | undefined {
     if (!this.triggerTakesFocus || this.ariaLabelledBy) {
       return undefined;
     }
-    if (this.#getArgs().multiple || !this.#engine.hasValue) {
+    if (
+      this.#getArgs().multiple ||
+      !this.#engine.hasValue ||
+      (this.isStatic && !this.isDisabled)
+    ) {
       return this.selectionLabel;
     }
     return (
