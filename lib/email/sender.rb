@@ -359,13 +359,17 @@ module Email
       max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
       return if max_email_size == 0
 
-      recipient_guardian = Guardian.new(find_user)
+      recipients = [find_user, *(cc_addresses + bcc_addresses).map { User.find_by_email(_1) }]
+      recipient_guardians = recipients.map { Guardian.new(_1) }
       email_size = 0
       posts.each do |post|
         next unless DiscoursePluginRegistry.apply_modifier(:should_add_email_attachments, post)
 
         post.uploads.each do |original_upload|
-          next if original_upload.secure? && !recipient_guardian.can_see_upload?(original_upload)
+          if original_upload.secure? &&
+               !recipient_guardians.all? { _1.can_see_upload?(original_upload) }
+            next
+          end
 
           optimized_1X = original_upload.optimized_images.first
 
