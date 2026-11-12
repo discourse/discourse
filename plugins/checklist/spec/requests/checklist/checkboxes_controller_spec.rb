@@ -32,7 +32,6 @@ RSpec.describe Checklist::CheckboxesController do
         )
       sign_in(moderator)
 
-
       put "/checklist/toggle.json",
           params: params.merge(post_id: private_post.id, expected_raw: "unknown")
 
