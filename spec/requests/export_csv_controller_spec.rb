@@ -368,9 +368,7 @@ RSpec.describe ExportCsvController do
     Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
       zip_file.each do |entry|
         content = zip_file.read(entry).force_encoding(Encoding::UTF_8)
-        CSV
-          .parse(content.delete_prefix(Encodings::BOM), headers: true)
-          .each { |row| rows << row.to_h }
+        CSV.parse(content, headers: true).each { |row| rows << row.to_h }
       end
     end
     rows
