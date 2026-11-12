@@ -2976,26 +2976,27 @@ RSpec.describe UsersController do
           end
 
           it "cannot mint a moderator account by redeeming a harvested staff invite" do
-            Fabricate(
-              :invite,
-              invited_by: inviting_admin,
-              email: nil,
-              max_redemptions_allowed: 1,
-              moderator: true,
-              expires_at: 1.month.from_now,
-              emailed_status: Invite.emailed_status_types[:not_required],
-            )
-            accomplice = Fabricate(:user)
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                moderator: true,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
 
             sign_in(moderator)
             get "/u/#{inviting_admin.username}/invited/pending.json"
+            expect(response.status).to eq(200)
             harvested_key = response.parsed_body["invites"].first["invite_key"]
 
-            sign_in(accomplice)
+            delete "/session/#{moderator.username}.json"
             # A withheld key is unredeemable; use an unknown key so the request stays routable.
-            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+            expect {
+              put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+            }.not_to change { User.where(moderator: true).count }
 
-            expect(accomplice.reload.moderator?).to eq(false)
+            expect(User.find_by_email(invite.email)).to be_nil
           end
 
           it "cannot join an owners-only group by redeeming a harvested group invite" do
