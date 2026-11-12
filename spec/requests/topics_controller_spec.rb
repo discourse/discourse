@@ -716,6 +716,32 @@ RSpec.describe TopicsController do
         SiteSetting.enable_category_group_moderation = true
       end
 
+      it "does not let the group moderator replace the first post of a topic they cannot moderate" do
+        banner_topic = Fabricate(:banner_topic)
+        banner_topic_owner_id = banner_topic.user_id
+        banner_post =
+          Fabricate(
+            :post,
+            topic: banner_topic,
+            raw: "Welcome to the community",
+            cooked: "<p>Welcome to the community</p>",
+            created_at: p1.created_at + 1.hour,
+          )
+
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               post_ids: [p1.id],
+               destination_topic_id: banner_topic.id,
+               chronological_order: "true",
+             }
+
+        expect(response).to be_forbidden
+        expect(banner_topic.reload.ordered_posts.first).to eq(banner_post)
+        expect(banner_topic.banner[:html]).to eq("<p>Welcome to the community</p>")
+        expect(banner_topic.user_id).to eq(banner_topic_owner_id)
+        expect(p1.reload.topic_id).to eq(topic.id)
+      end
+
       it "moves the posts" do
         post "/t/#{topic.id}/move-posts.json",
              params: {
@@ -1111,6 +1137,22 @@ RSpec.describe TopicsController do
         result = response.parsed_body
         expect(result["success"]).to eq(true)
         expect(result["url"]).to be_present
+      end
+
+      it "does not replace the first post of a topic in a category the user cannot moderate" do
+        destination = Fabricate(:topic)
+        destination_first_post =
+          Fabricate(:post, topic: destination, created_at: p1.created_at + 2.hours)
+
+        post "/t/#{topic.id}/merge-topic.json",
+             params: {
+               destination_topic_id: destination.id,
+               chronological_order: "true",
+             }
+
+        expect(response).to be_forbidden
+        expect(destination.reload.ordered_posts.first).to eq(destination_first_post)
+        expect(p1.reload.topic_id).to eq(topic.id)
       end
     end
 
