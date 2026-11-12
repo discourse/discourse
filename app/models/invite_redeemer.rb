@@ -119,7 +119,7 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.all
+    user_fields = UserField.where(show_on_signup: true)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields

@@ -919,6 +919,67 @@ RSpec.describe UsersController do
       post "/u.json", params: post_user_params.merge(extra_params)
     end
 
+    it "accepts only signup fields from anonymous registration" do
+      visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+
+      post_user(
+        user_fields: {
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "hidden",
+        },
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(
+        visible_field.id.to_s => "visible",
+        hidden_field.id.to_s => nil,
+      )
+    end
+
+    it "skips hidden required fields during anonymous registration" do
+      Fabricate(:user_field, show_on_signup: false, requirement: "on_signup")
+
+      post_user
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
+    it "accepts only signup fields from a regular user API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: true)
+      api_key = Fabricate(:api_key, user: user1)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "hidden" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => nil)
+    end
+
+    it "accepts hidden fields from an administrator API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+      api_key = Fabricate(:api_key, user: admin)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "provisioned" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => "provisioned")
+    end
+
     context "when email params is missing" do
       it "should raise the right error" do
         post "/u.json",
@@ -2102,6 +2163,54 @@ RSpec.describe UsersController do
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
         end
+      end
+    end
+
+    context "when signup includes plugin custom fields for a staged account" do
+      before do
+        UsersController.any_instance.unstub(:honeypot_value)
+        UsersController.any_instance.unstub(:challenge_value)
+        Plugin::Instance.new.register_editable_user_custom_field("signup_preference")
+      end
+
+      after { DiscoursePluginRegistry.reset! }
+
+      it "preserves required hidden fields while updating allowed preferences" do
+        hidden_field =
+          Fabricate(:user_field, show_on_signup: false, editable: false, requirement: "on_signup")
+        visible_field = Fabricate(:user_field, show_on_signup: true)
+        staged_user = Fabricate(:staged)
+        hidden_key = "user_field_#{hidden_field.id}"
+        staged_user.custom_fields[hidden_key] = "provisioned"
+        staged_user.custom_fields["signup_preference"] = "old preference"
+        staged_user.save_custom_fields
+
+        post "/u.json",
+             params:
+               honeypot_magic(
+                 email: staged_user.email,
+                 username: "signup_user",
+                 password: "strongpassword",
+                 user_fields: {
+                   hidden_field.id => "forged",
+                   visible_field.id => "visible value",
+                 },
+                 custom_fields: {
+                   :signup_preference => "new preference",
+                   hidden_key => "forged",
+                 },
+               )
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(User.find_by_email(staged_user.email).id).to eq(staged_user.id)
+        expect(staged_user.reload).not_to be_staged
+        expect(staged_user).to be_from_staged
+        expect(staged_user.custom_fields).to include(
+          hidden_key => "provisioned",
+          "user_field_#{visible_field.id}" => "visible value",
+          "signup_preference" => "new preference",
+        )
       end
     end
 

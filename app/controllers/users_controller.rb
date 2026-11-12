@@ -739,6 +739,9 @@ class UsersController < ApplicationController
     end
 
     user ||= User.new
+    if new_user_params[:custom_fields]
+      new_user_params[:custom_fields] = user.custom_fields.merge(new_user_params[:custom_fields])
+    end
     user.attributes = new_user_params
 
     # Handle API approval and
@@ -749,6 +752,7 @@ class UsersController < ApplicationController
 
     # Handle custom fields
     user_fields = UserField.all
+    user_fields = user_fields.where(show_on_signup: true) unless current_user&.admin? && is_api?
     if user_fields.present?
       fields = user.custom_fields
 
