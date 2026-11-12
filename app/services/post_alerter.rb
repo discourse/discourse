@@ -770,10 +770,12 @@ class PostAlerter
   end
 
   def expand_group_mentions(groups, post)
-    return unless post.user && groups
+    # Mentions added in an edit are authorized as the editor, not the author.
+    editor = post.last_editor
+    return unless editor && groups
 
     Group
-      .mentionable(post.user, include_public: false)
+      .mentionable(editor, include_public: false)
       .where(id: groups.map(&:id))
       .each do |group|
         next if group.user_count >= SiteSetting.max_users_notified_per_group_mention
@@ -810,7 +812,9 @@ class PostAlerter
     end
 
     # @here can be a user mention and then this feature is disabled
-    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(post.user).can_mention_here?
+    here =
+      mentions.include?(SiteSetting.here_mention) &&
+        Guardian.new(post.last_editor).can_mention_here?
 
     [groups, users, here]
   end

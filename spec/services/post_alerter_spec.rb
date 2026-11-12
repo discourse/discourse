@@ -807,6 +807,20 @@ RSpec.describe PostAlerter do
       3.times { Fabricate(:post, topic: topic) }
       expect { post }.to change { Notification.count }.by(2)
     end
+
+    it "checks the editor's permission when @here is added in an edit" do
+      tl2_post = create_post_with_alerts(raw: "Hello", user: tl2_user, topic: topic)
+      user_post = create_post_with_alerts(raw: "Hello", user: user, topic: topic)
+
+      expect { tl2_post.revise(user, raw: "Hello @here how are you?") }.not_to change(
+        other_post.user.notifications,
+        :count,
+      )
+      expect { user_post.revise(tl2_user, raw: "Hello @here how are you?") }.to change(
+        other_post.user.notifications,
+        :count,
+      ).by(1)
+    end
   end
 
   context "with @group mentions" do
@@ -893,6 +907,23 @@ RSpec.describe PostAlerter do
         event_name: :before_create_notifications_for_users,
         params: [[evil_trout], post],
       )
+    end
+
+    it "checks the editor's permission when a group mention is added in an edit" do
+      Jobs.run_immediately!
+      group.update!(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      group.add_owner(tl2_user)
+      owner_post = create_post_with_alerts(raw: "Hello", user: tl2_user)
+      user_post = create_post_with_alerts(raw: "Hello", user: user)
+
+      expect { owner_post.revise(user, raw: "Hello @group") }.not_to change(
+        evil_trout.notifications,
+        :count,
+      )
+      expect { user_post.revise(tl2_user, raw: "Hello @group") }.to change(
+        evil_trout.notifications,
+        :count,
+      ).by(1)
     end
   end
 
