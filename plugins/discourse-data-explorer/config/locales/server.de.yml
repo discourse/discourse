@@ -7,6 +7,35 @@
 de:
   site_settings:
     data_explorer_enabled: "Daten-Explorer aktivieren"
+    data_explorer_ai_queries_enabled: "KI-gestützte Abfrageerstellung im Daten-Explorer"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Daten-Explorer-Abfrageerstellung"
+          description: "Erstellt SQL-Abfragen für den Daten-Explorer aus natürlicher Sprache"
+      tool_help:
+        find_queries: "Findet vorhandene Daten-Explorer-Abfragen, die als nützliche Beispiele dienen könnten"
+        run_sql: "Führt eine SQL-Abfrage aus und gibt die Ergebnisse zurück"
+        submit_query: "Sendet die endgültig generierte Abfrage ab"
+      tool_summary:
+        find_queries: "Beispielanfragen finden"
+        run_sql: "Ausführen der SQL-Abfrage"
+        submit_query: "Generierte Anfrage wird übermittelt"
+      tool_description:
+        find_queries: "Beispielabfragen für %{search} gefunden"
+        run_sql: "SQL-Abfrage ausgeführt"
+        submit_query: "Generierte Abfrage %{name} wurde übermittelt"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "Der KI-Agent ist nicht konfiguriert. Bitte überprüfe die Einstellungen für die KI-Funktionen."
+      error_no_sql_returned: "Die KI hat keine gültige SQL-Abfrage zurückgegeben. Bitte versuche es erneut oder gib die Abfrage manuell ein."
+    errors:
+      tool_not_allowed: "Du darfst dieses Tool nicht verwenden"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Keine Abfrage ausgewählt."
+        no_sql_provided: "Es wurde keine SQL-Abfrage angegeben."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -17,6 +46,7 @@ de:
         title: Einen Beitrag in einem Thema mit Daten-Explorer-Ergebnissen planen
         description: Geplante Berichte zu einem bestimmten Thema veröffentlichen
   data_explorer:
+    admin_dashboard_label: "Daten-Explorer"
     report_generator:
       private_message:
         title: "Geplanter Bericht für %{query_name}"

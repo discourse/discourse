@@ -5,6 +5,13 @@ module DiscourseGamification
     self.table_name = "gamification_score_events"
 
     belongs_to :user
+    belongs_to :category, optional: true
+
+    validates :category,
+              presence: {
+                message: :required,
+              },
+              if: -> { !category_id.nil? && will_save_change_to_category_id? }
   end
 end
 
@@ -13,12 +20,13 @@ end
 # Table name: gamification_score_events
 #
 #  id          :bigint           not null, primary key
-#  user_id     :integer          not null
 #  date        :date             not null
-#  points      :integer          not null
 #  description :text
+#  points      :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  category_id :integer
+#  user_id     :integer          not null
 #
 # Indexes
 #

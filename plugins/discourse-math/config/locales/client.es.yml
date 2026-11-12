@@ -7,7 +7,17 @@
 es:
   js:
     discourse_math:
+      edit_math: "Editar expresión matemática"
       edit_modal:
+        title: "Editar expresión matemática"
+        label: "Expresión matemática"
         apply: "Aplicar"
+      composer:
+        insert_math: "Insertar expresión matemática"
       insert_modal:
+        title_inline: "Insertar expresión matemática en línea de texto"
+        title_block: "Insertar expresión matemática en bloque"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "Insertar"
+        block_mode: "Modo de bloques (ecuación mostrada)"

@@ -9,11 +9,13 @@ class UrlValidator < ActiveModel::EachValidator
           uri.is_a?(URI::HTTP) && !uri.host.nil? && uri.host.include?(".")
         rescue URI::Error => e
           if (e.message =~ /URI must be ascii only/)
-            value = UrlHelper.encode(value)
-            retry
+            begin
+              value = UrlHelper.encode(value)
+              retry
+            rescue Addressable::URI::InvalidURIError
+              false
+            end
           end
-
-          nil
         end
 
       unless valid

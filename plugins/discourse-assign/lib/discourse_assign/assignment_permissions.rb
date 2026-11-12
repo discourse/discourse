@@ -1,0 +1,82 @@
+# frozen_string_literal: true
+
+module DiscourseAssign
+  module AssignmentPermissions
+    CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "additional_assign_allowed_on_groups"
+
+    class << self
+      # Without a target, these are the users the assigner may assign anywhere.
+      def assignable_user_ids(target, assigner: nil)
+        group_ids =
+          if target
+            global_group_ids | scoped_group_ids_for_category(category_id_for(target))
+          elsif assigner&.guardian&.can_assign_globally?
+            all_assign_allowed_group_ids
+          else
+            global_group_ids | scoped_group_ids_for_user(assigner)
+          end
+
+        admin_ids = User.human_users.admins.select(:id)
+        member_ids = GroupUser.where(group_id: group_ids).select(:user_id)
+        User.from("(#{admin_ids.to_sql} UNION #{member_ids.to_sql}) AS users").select(:id)
+      end
+
+      def assignable_groups(target, assigner:)
+        groups = Group.assignable(assigner)
+        return groups if !target
+
+        groups.or(Group.where(id: scoped_group_ids_for_category(category_id_for(target))))
+      end
+
+      def all_assign_allowed_group_ids
+        global_group_ids | all_scoped_group_ids
+      end
+
+      def category_id_for(target)
+        case target
+        when Topic
+          target.category_id
+        when Post
+          target.topic&.category_id
+        else
+          nil
+        end
+      end
+
+      def global_group_ids
+        SiteSetting.assign_allowed_on_groups_map
+      end
+
+      def all_scoped_group_ids
+        CategoryCustomField
+          .where(name: CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS)
+          .pluck(:value)
+          .flat_map { |value| group_ids_from_value(value) }
+          .uniq
+      end
+
+      def scoped_group_ids_for_user(user)
+        return [] if user.blank?
+
+        all_scoped_group_ids & user.group_ids
+      end
+
+      def scoped_group_ids_for_category(category_id)
+        return [] if category_id.blank?
+
+        group_ids_from_value(
+          CategoryCustomField.where(
+            category_id:,
+            name: CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS,
+          ).pick(:value),
+        )
+      end
+
+      private
+
+      def group_ids_from_value(value)
+        value.to_s.split("|").map(&:to_i).reject(&:zero?)
+      end
+    end
+  end
+end

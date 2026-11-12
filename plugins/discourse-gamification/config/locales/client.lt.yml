@@ -12,6 +12,8 @@ lt:
         link_to_settings: "Nustatymai"
         refresh: "Atnaujinti"
         name: "Vardas"
+        section:
+          groups: "Grupės"
         period:
           all_time: "Per visą laiką"
           yearly: "Kasmet"
@@ -24,9 +26,7 @@ lt:
       close: "Uždaryti"
       delete: "Pašalinti"
       edit: "Redaguoti"
-      back: "Atgal"
       save: "Saugoti"
-      apply: "Kandidatuoti"
       update_range:
         last_10_days: "Paskutinės 10 dienų"
         last_30_days: "Paskutinės 30 dienų"
@@ -35,3 +35,10 @@ lt:
       custom_range_from: "Nuo"
       admin:
         name: "Vardas"
+        created_by: "Sukurta"
+    discourse_workflows:
+      gamification_score:
+        username: "Narys"
+        date: "Data"
+        description: "Aprašymas"
+        category_id: "Kategorija"

@@ -20,7 +20,7 @@ class CategoryBadgeSerializer < ApplicationSerializer
     return I18n.t("uncategorized_category_name") if object.uncategorized?
 
     translated =
-      if (ContentLocalization.show_translated_category?(object, scope))
+      if ContentLocalization.show_translated_category?(object, scope)
         object.get_localization&.name
       else
         object.name

@@ -71,7 +71,7 @@ RSpec.describe PostActionDestroyer do
       end
 
       context "when post action doesn’t exist" do
-        it "fails" do
+        it "returns an error for an unsupported post action" do
           result = PostActionDestroyer.destroy(user, post, :like)
           expect(result.success).to eq(false)
           expect(result.not_found).to eq(true)
@@ -92,6 +92,25 @@ RSpec.describe PostActionDestroyer do
         messages = MessageBus.track_publish { PostActionDestroyer.destroy(user, post, :spam) }
 
         expect(messages.last.data[:type]).to eq(:acted)
+      end
+    end
+
+    context "with a custom flag created after an earlier flag" do
+      after { Flag.reset_flag_settings! }
+
+      it "notifies subscribers" do
+        other_post = Fabricate(:post)
+        PostActionCreator.spam(admin, other_post)
+        PostActionDestroyer.destroy(admin, other_post, :spam)
+        flag = Fabricate(:flag, name: "custom flag", notify_type: true)
+        PostActionCreator.new(user, post, flag.id).perform
+
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            PostActionDestroyer.new(user, post, flag.id).perform
+          end
+
+        expect(messages.map { |message| message.data[:type] }).to include(:acted)
       end
     end
   end

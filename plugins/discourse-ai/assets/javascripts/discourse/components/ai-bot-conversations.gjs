@@ -1,24 +1,18 @@
-/* eslint-disable ember/no-classic-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -29,25 +23,32 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { clipboardHelpers } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import { clipboardHelpers, slugify } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
+import AiBotConversationsLayout from "discourse/plugins/discourse-ai/discourse/components/ai-bot-conversations-layout";
+import { takeConversationDraft } from "discourse/plugins/discourse-ai/discourse/lib/ai-bot-conversation-draft";
 
-@tagName("")
 export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
   @service capabilities;
+  @service currentUser;
   @service mediaOptimizationWorker;
+  @service sessionStore;
   @service site;
   @service siteSettings;
   @service tooltip;
 
   @tracked creditStatus = null;
+  @tracked selectedAgentId = null;
   @tracked selectedLlmId = null;
-  @tracked uploads = new TrackedArray();
-  // Don't track this directly - we'll get it from uppyUpload
+  @tracked uploads = trackedArray();
+
+  shiftHeldOnEnter = false;
 
   textarea = null;
   uppyUpload = null;
@@ -95,10 +96,10 @@ export default class AiBotConversations extends Component {
     }
   };
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
-    this.uppyUpload = new UppyUpload(getOwner(this), {
+    this.uppyUpload = new UppyUpload(this, {
       id: "ai-bot-file-uploader",
       type: "ai-bot-conversation",
       useMultipartUploadsIfAvailable: true,
@@ -108,6 +109,7 @@ export default class AiBotConversations extends Component {
           this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
             optimizeFn: (data, opts) =>
               this.mediaOptimizationWorker.optimizeImage(data, opts),
+            cancelFn: (fileId) => this.mediaOptimizationWorker.cancel(fileId),
             runParallel: !this.capabilities.isMobileDevice,
           });
         }
@@ -136,19 +138,12 @@ export default class AiBotConversations extends Component {
       uploadDone: (upload) => {
         this.uploads.push(upload);
       },
-
-      // Fix: Don't try to set inProgressUploads directly
-      onProgressUploadsChanged: () => {
-        // This is just for UI triggers - we're already tracking inProgressUploads
-        this.notifyPropertyChange("inProgressUploads");
-      },
     });
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.textarea?.removeEventListener("paste", this.#handlePaste);
-    this.uppyUpload?.teardown();
     // needed for safety (textarea may not have a autocomplete)
     if (this.textarea.autocomplete) {
       this.textarea.autocomplete("destroy");
@@ -168,11 +163,23 @@ export default class AiBotConversations extends Component {
   }
 
   get isSubmitDisabled() {
-    return this.creditStatus?.hard_limit_reached === true;
+    return (
+      !this.selectedAgentId ||
+      (this.currentUser.ai_available_llm_models?.length > 0 &&
+        !this.selectedLlmId) ||
+      this.creditStatus?.hard_limit_reached === true
+    );
+  }
+
+  get sendOnMetaEnter() {
+    return (
+      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
+    );
   }
 
   @action
   async setAgentId(id) {
+    this.selectedAgentId = id;
     this.aiBotConversationsHiddenSubmit.agentId = id;
     // Only check agent credits if no LLM is explicitly selected
     // (e.g., when agent has force_default_llm)
@@ -184,26 +191,19 @@ export default class AiBotConversations extends Component {
   @action
   async setLlmId(llmModelId) {
     this.selectedLlmId = llmModelId;
+    this.aiBotConversationsHiddenSubmit.llmModelId = llmModelId;
     await this.#checkCreditStatus(llmModelId, "llm");
   }
 
-  async #checkCreditStatus(id, type) {
-    // Clear status immediately to prevent stale data
-    this.creditStatus = null;
-
-    if (!id) {
+  @action
+  onSelectionChanged({ agentName, llmName }) {
+    const controller = this.args.controller;
+    if (!controller) {
       return;
     }
 
-    try {
-      this.creditStatus =
-        type === "agent"
-          ? await this.aiCredits.getAgentCreditStatus(id)
-          : await this.aiCredits.getLlmModelCreditStatus(id);
-    } catch {
-      // Fail open - allow usage if credit check fails
-      this.creditStatus = null;
-    }
+    controller.agent = agentName ? slugify(agentName) || agentName : null;
+    controller.llm = llmName ? slugify(llmName) || llmName : null;
   }
 
   @action
@@ -223,15 +223,47 @@ export default class AiBotConversations extends Component {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey) {
-      this.prepareAndSubmitToBot();
+    if (event.key === "Enter") {
+      // Meta/ctrl+Enter never produces an insertLineBreak beforeinput, so it
+      // must be handled here rather than in handleBeforeInput.
+      if (
+        this.sendOnMetaEnter &&
+        !event.isComposing &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.prepareAndSubmitToBot();
+        return;
+      }
+      this.shiftHeldOnEnter = event.shiftKey;
     }
+  }
+
+  @action
+  handleBeforeInput(event) {
+    // Real Enter on a textarea inserts a line break; IME-confirming Enter
+    // inserts composition text. Reading inputType is deterministic across
+    // browsers regardless of compositionend/keydown ordering quirks.
+    const shiftHeld = this.shiftHeldOnEnter;
+    this.shiftHeldOnEnter = false;
+    if (
+      event.inputType !== "insertLineBreak" ||
+      shiftHeld ||
+      this.sendOnMetaEnter
+    ) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.prepareAndSubmitToBot();
   }
 
   @action
   setTextArea(element) {
     this.textarea = element;
     this.setupAutocomplete(element);
+    this.#restoreDraft();
     scheduleOnce("afterRender", this, this.focusTextarea);
   }
 
@@ -253,7 +285,7 @@ export default class AiBotConversations extends Component {
     }
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -295,7 +327,7 @@ export default class AiBotConversations extends Component {
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -330,7 +362,7 @@ export default class AiBotConversations extends Component {
 
   @action
   removeUpload(upload) {
-    this.uploads = new TrackedArray(this.uploads.filter((u) => u !== upload));
+    this.uploads = trackedArray(this.uploads.filter((u) => u !== upload));
   }
 
   @action
@@ -347,9 +379,36 @@ export default class AiBotConversations extends Component {
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
-      this.uploads = new TrackedArray();
+      this.uploads = trackedArray();
     } catch (error) {
       popupAjaxError(error);
+    }
+  }
+
+  #restoreDraft() {
+    const draft = takeConversationDraft(this.sessionStore);
+    if (draft) {
+      this.textarea.value = draft;
+      this.updateInputValue(draft);
+    }
+  }
+
+  async #checkCreditStatus(id, type) {
+    // Clear status immediately to prevent stale data
+    this.creditStatus = null;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      this.creditStatus =
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
+          : await this.aiCredits.getLlmModelCreditStatus(id);
+    } catch {
+      // Fail open - allow usage if credit check fails
+      this.creditStatus = null;
     }
   }
 
@@ -369,75 +428,66 @@ export default class AiBotConversations extends Component {
   }
 
   <template>
-    <div class="ai-bot-conversations" ...attributes>
-      {{bodyClass "ai-bot-conversations-page"}}
-      <AiAgentLlmSelector
-        @showLabels={{true}}
-        @setAgentId={{this.setAgentId}}
-        @setLlmId={{this.setLlmId}}
-        @setTargetRecipient={{this.setTargetRecipient}}
-        @agentName={{@controller.agent}}
-        @llmName={{@controller.llm}}
-      />
-
-      <div class="ai-bot-conversations__content-wrapper">
-        <div class="ai-bot-conversations__title">
-          {{i18n "discourse_ai.ai_bot.conversations.header"}}
-        </div>
-        <PluginOutlet
-          @name="ai-bot-conversations-above-input"
-          @outletArgs={{lazyHash
-            updateInput=this.updateInputValue
-            submit=this.prepareAndSubmitToBot
-          }}
-        />
-
+    <AiBotConversationsLayout
+      ...attributes
+      @submit={{this.prepareAndSubmitToBot}}
+      @updateInput={{this.updateInputValue}}
+    >
+      <:default>
         <div
-          {{this.creditLimitTooltipModifier}}
-          class={{concatClass
+          class={{dConcatClass
             "ai-bot-conversations__input-wrapper"
             (if this.isSubmitDisabled "--disabled")
           }}
+          {{this.creditLimitTooltipModifier}}
         >
           <DButton
-            @icon="upload"
+            class="btn btn-transparent ai-bot-upload-btn"
             @action={{unless this.isSubmitDisabled this.openFileUpload}}
             @disabled={{this.isSubmitDisabled}}
+            @icon="upload"
             @title="discourse_ai.ai_bot.conversations.upload_files"
-            class="btn btn-transparent ai-bot-upload-btn"
           />
           <textarea
+            autofocus={{unless this.isSubmitDisabled "true"}}
+            disabled={{if this.isSubmitDisabled true this.loading}}
+            id="ai-bot-conversations-input"
+            minlength="10"
+            placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
+            rows="1"
             {{didInsert this.setTextArea}}
             {{on "input" this.updateInputValue}}
             {{on "keydown" this.handleKeyDown}}
-            id="ai-bot-conversations-input"
-            autofocus={{unless this.isSubmitDisabled "true"}}
-            placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
-            minlength="10"
-            disabled={{if this.isSubmitDisabled true this.loading}}
-            rows="1"
+            {{on "beforeinput" this.handleBeforeInput}}
           />
           <DButton
+            class="ai-bot-button btn-transparent ai-conversation-submit"
             @action={{unless this.isSubmitDisabled this.prepareAndSubmitToBot}}
-            @icon="paper-plane"
             @disabled={{this.isSubmitDisabled}}
+            @icon="paper-plane"
             @isLoading={{unless this.isSubmitDisabled this.loading}}
             @title="discourse_ai.ai_bot.conversations.header"
-            class="ai-bot-button btn-transparent ai-conversation-submit"
           />
           <input
-            type="file"
-            id="ai-bot-file-uploader"
             class="hidden-upload-field"
+            id="ai-bot-file-uploader"
             multiple="multiple"
+            type="file"
             {{didInsert this.registerFileInput}}
           />
         </div>
 
-        <p class="ai-disclaimer">
-          {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
-        </p>
-
+        <AiAgentLlmSelector
+          @agentName={{@controller.agent}}
+          @llmName={{@controller.llm}}
+          @onSelectionChanged={{this.onSelectionChanged}}
+          @setAgentId={{this.setAgentId}}
+          @setLlmId={{this.setLlmId}}
+          @setTargetRecipient={{this.setTargetRecipient}}
+          @showLabels={{true}}
+        />
+      </:default>
+      <:footer>
         {{#if this.showUploadsContainer}}
           <div class="ai-bot-conversations__uploads-container">
             {{#each this.uploads as |upload|}}
@@ -446,9 +496,9 @@ export default class AiBotConversations extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent ai-bot-upload__remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -460,15 +510,15 @@ export default class AiBotConversations extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat ai-bot-upload__cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
           </div>
         {{/if}}
-      </div>
-    </div>
+      </:footer>
+    </AiBotConversationsLayout>
   </template>
 }

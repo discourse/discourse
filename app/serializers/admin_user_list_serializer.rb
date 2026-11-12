@@ -25,7 +25,10 @@ class AdminUserListSerializer < BasicUserSerializer
              :staged,
              :second_factor_enabled,
              :can_be_deleted,
-             :silence_reason
+             :can_be_suspended,
+             :silence_reason,
+             :suspend_reason,
+             :bot_creator
 
   %i[days_visited posts_read_count topics_entered post_count].each do |sym|
     attributes sym
@@ -36,8 +39,12 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_email?
     # staff members can always see their email
-    (scope.is_staff? && (object.id == scope.user.id || object.staged?)) ||
-      (@options[:emails_desired] && scope.can_check_emails?(object))
+    return true if scope.is_staff? && object.id == scope.user.id
+
+    staged_or_desired = object.staged? || @options[:emails_desired]
+    return true if staged_or_desired && scope.can_check_emails?(object)
+
+    false
   end
 
   alias_method :include_secondary_emails?, :include_email?
@@ -113,11 +120,41 @@ class AdminUserListSerializer < BasicUserSerializer
     @options[:include_can_be_deleted]
   end
 
+  def can_be_suspended
+    scope.can_suspend?(object) && !object.suspended?
+  end
+
+  def include_can_be_suspended?
+    @options[:include_can_be_suspended]
+  end
+
   def silence_reason
-    object.silence_reason
+    User.format_penalty_reason(@options[:silence_reasons].to_h[object.id])
   end
 
   def include_silence_reason?
     @options[:include_silence_reason]
+  end
+
+  def suspend_reason
+    User.format_penalty_reason(@options[:suspend_reasons].to_h[object.id])
+  end
+
+  def include_suspend_reason?
+    @options[:include_suspend_reason]
+  end
+
+  def bot_creator
+    creator = @options[:bot_creators][object.id]
+    {
+      username: creator[:username],
+      avatar_template: User.avatar_template(creator[:username], creator[:uploaded_avatar_id]),
+      url:
+        "#{Discourse.base_path}/admin/users/#{creator[:id]}/#{UrlHelper.encode_component(creator[:username].downcase)}",
+    }
+  end
+
+  def include_bot_creator?
+    scope.is_admin? && object.bot? && @options[:bot_creators]&.key?(object.id)
   end
 end

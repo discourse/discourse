@@ -9,13 +9,13 @@ import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { sanitize } from "discourse/lib/text";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
 
 const FORM_FIELDS = [
@@ -61,13 +61,6 @@ export default class AdminBadgesShow extends Component {
     return this.adminBadges.badgeGroupings;
   }
 
-  @action
-  currentBadgeGrouping(data) {
-    return this.adminBadges.badgeGroupings.find(
-      (bg) => bg.id === data.badge_grouping_id
-    )?.name;
-  }
-
   get badgeTriggers() {
     return this.adminBadges.badgeTriggers;
   }
@@ -80,14 +73,6 @@ export default class AdminBadgesShow extends Component {
     return `badges.${this.args.badge.i18n_name}.`;
   }
 
-  sanitizeDescription(text) {
-    return trustHTML(sanitize(text));
-  }
-
-  hasQuery(query) {
-    return query?.trim?.()?.length > 0;
-  }
-
   // Form methods.
   @cached
   get formData() {
@@ -98,6 +83,21 @@ export default class AdminBadgesShow extends Component {
     }
 
     return data;
+  }
+
+  @action
+  currentBadgeGrouping(data) {
+    return this.adminBadges.badgeGroupings.find(
+      (bg) => bg.id === data.badge_grouping_id
+    )?.name;
+  }
+
+  sanitizeDescription(text) {
+    return trustHTML(sanitize(text));
+  }
+
+  hasQuery(query) {
+    return query?.trim?.()?.length > 0;
   }
 
   @action
@@ -242,27 +242,29 @@ export default class AdminBadgesShow extends Component {
     <AdminBadgesList @badges={{this.badges}} />
     {{#if @badge}}
       <Form
+        class="badge-form current-badge content-body"
         @data={{this.formData}}
+        @onRegisterApi={{this.registerApi}}
         @onSubmit={{this.handleSubmit}}
         @validate={{this.validateForm}}
-        @onRegisterApi={{this.registerApi}}
-        class="badge-form current-badge content-body"
         as |form data|
       >
+
         <h2 class="current-badge-header">
-          {{iconOrImage data}}
+          {{dIconOrImage data}}
           <span class="badge-display-name">{{data.name}}</span>
         </h2>
 
         <form.Field
           @name="enabled"
-          @validation="required"
           @title={{i18n "admin.badges.status"}}
+          @type="question"
+          @validation="required"
           as |field|
         >
-          <field.Question
-            @yesLabel={{i18n "admin.badges.enabled"}}
+          <field.Control
             @noLabel={{i18n "admin.badges.disabled"}}
+            @yesLabel={{i18n "admin.badges.enabled"}}
           />
         </form.Field>
 
@@ -272,22 +274,23 @@ export default class AdminBadgesShow extends Component {
               {{@badge.name}}
             </span>
             <LinkTo
-              @route="adminSiteText"
-              @query={{hash q=(concat this.textCustomizationPrefix "name")}}
               class="btn-flat"
+              @query={{hash q=(concat this.textCustomizationPrefix "name")}}
+              @route="adminSiteText"
             >
-              {{icon "pencil"}}
+              {{dIcon "pencil"}}
             </LinkTo>
           </form.Container>
         {{else}}
           <form.Field
-            @title={{i18n "admin.badges.name"}}
-            @name="name"
             @disabled={{this.readOnly}}
+            @name="name"
+            @title={{i18n "admin.badges.name"}}
+            @type="input"
             @validation="required"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         {{/if}}
 
@@ -307,43 +310,46 @@ export default class AdminBadgesShow extends Component {
             <cc.Contents as |Content|>
               <Content @name="choose-icon">
                 <form.Field
-                  @title={{i18n "admin.badges.icon"}}
-                  @showTitle={{false}}
+                  @format="small"
                   @name="icon"
                   @onSet={{this.onSetIcon}}
-                  @format="small"
+                  @showTitle={{false}}
+                  @title={{i18n "admin.badges.icon"}}
+                  @type="icon"
                   as |field|
                 >
-                  <field.Icon />
+                  <field.Control @onlyAvailable={{false}} />
                 </form.Field>
               </Content>
               <Content @name="upload-image">
                 <form.Field
                   @name="image_url"
+                  @onSet={{this.onSetImage}}
                   @showTitle={{false}}
                   @title={{i18n "admin.badges.image"}}
-                  @onSet={{this.onSetImage}}
+                  @type="image"
                   as |field|
                 >
-                  <field.Image @type="badge_image" />
+                  <field.Control @type="badge_image" />
                 </form.Field>
               </Content>
             </cc.Contents>
           </form.ConditionalContent>
           <form.Field
+            @disabled={{this.readOnly}}
             @name="badge_type_id"
             @title={{i18n "admin.badges.badge_type"}}
+            @type="select"
             @validation="required"
-            @disabled={{this.readOnly}}
             as |field|
           >
-            <field.Select as |select|>
+            <field.Control as |select|>
               {{#each this.badgeTypes as |badgeType|}}
                 <select.Option @value={{badgeType.id}}>
                   {{badgeType.name}}
                 </select.Option>
               {{/each}}
-            </field.Select>
+            </field.Control>
           </form.Field>
 
           {{#if this.readOnly}}
@@ -355,23 +361,24 @@ export default class AdminBadgesShow extends Component {
                 {{this.sanitizeDescription @badge.description}}
               </span>
               <LinkTo
-                @route="adminSiteText"
+                class="btn-flat"
                 @query={{hash
                   q=(concat this.textCustomizationPrefix "description")
                 }}
-                class="btn-flat"
+                @route="adminSiteText"
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             </form.Container>
           {{else}}
             <form.Field
-              @title={{i18n "admin.badges.description"}}
-              @name="description"
               @disabled={{this.readOnly}}
+              @name="description"
+              @title={{i18n "admin.badges.description"}}
+              @type="textarea"
               as |field|
             >
-              <field.Textarea />
+              <field.Control />
             </form.Field>
           {{/if}}
 
@@ -385,23 +392,24 @@ export default class AdminBadgesShow extends Component {
               </span>
 
               <LinkTo
-                @route="adminSiteText"
+                class="btn-flat"
                 @query={{hash
                   q=(concat this.textCustomizationPrefix "long_description")
                 }}
-                class="btn-flat"
+                @route="adminSiteText"
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             </form.Container>
           {{else}}
             <form.Field
+              @disabled={{this.readOnly}}
               @name="long_description"
               @title={{i18n "admin.badges.long_description"}}
-              @disabled={{this.readOnly}}
+              @type="textarea"
               as |field|
             >
-              <field.Textarea />
+              <field.Control />
             </form.Field>
           {{/if}}
         </form.Section>
@@ -409,67 +417,71 @@ export default class AdminBadgesShow extends Component {
         {{#if this.siteSettings.enable_badge_sql}}
           <form.Section @title={{i18n "admin.badges.sections.query"}}>
             <form.Field
-              @name="query"
-              @title={{i18n "admin.badges.query"}}
               @disabled={{this.readOnly}}
               @format="full"
+              @name="query"
+              @title={{i18n "admin.badges.query"}}
+              @type="code"
               as |field|
             >
-              <field.Code @lang="sql" />
+              <field.Control @lang="sql" />
             </form.Field>
 
             {{#if (this.hasQuery data.query)}}
               <form.Container>
                 <form.Button
-                  @isLoading={{this.previewLoading}}
-                  @label="admin.badges.preview.link_text"
                   class="preview-badge"
                   @action={{fn this.showPreview data "false"}}
+                  @isLoading={{this.previewLoading}}
+                  @label="admin.badges.preview.link_text"
                 />
                 <form.Button
-                  @isLoading={{this.previewLoading}}
-                  @label="admin.badges.preview.plan_text"
                   class="preview-badge-plan"
                   @action={{fn this.showPreview data "true"}}
+                  @isLoading={{this.previewLoading}}
+                  @label="admin.badges.preview.plan_text"
                 />
               </form.Container>
 
               <form.CheckboxGroup as |group|>
                 <group.Field
-                  @name="auto_revoke"
                   @disabled={{this.readOnly}}
+                  @name="auto_revoke"
                   @showTitle={{false}}
                   @title={{i18n "admin.badges.auto_revoke"}}
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </group.Field>
 
                 <group.Field
-                  @name="target_posts"
                   @disabled={{this.readOnly}}
-                  @title={{i18n "admin.badges.target_posts"}}
+                  @name="target_posts"
                   @showTitle={{false}}
+                  @title={{i18n "admin.badges.target_posts"}}
+                  @type="checkbox"
                   as |field|
                 >
-                  <field.Checkbox />
+                  <field.Control />
                 </group.Field>
               </form.CheckboxGroup>
 
               <form.Field
-                @name="trigger"
                 @disabled={{this.readOnly}}
-                @validation="required"
+                @name="trigger"
                 @title={{i18n "admin.badges.trigger"}}
+                @type="select"
+                @validation="required"
                 as |field|
               >
-                <field.Select as |select|>
+                <field.Control as |select|>
                   {{#each this.badgeTriggers as |badgeTrigger|}}
                     <select.Option @value={{badgeTrigger.id}}>
                       {{badgeTrigger.name}}
                     </select.Option>
                   {{/each}}
-                </field.Select>
+                </field.Control>
               </form.Field>
             {{/if}}
           </form.Section>
@@ -478,15 +490,19 @@ export default class AdminBadgesShow extends Component {
         <form.Section @title={{i18n "admin.badges.sections.settings"}}>
           <form.Field
             @name="badge_grouping_id"
-            @validation="required"
             @title={{i18n "admin.badges.badge_grouping"}}
+            @type="menu"
+            @validation="required"
             as |field|
           >
-            <field.Menu @selection={{this.currentBadgeGrouping data}} as |menu|>
+            <field.Control
+              @selection={{this.currentBadgeGrouping data}}
+              as |menu|
+            >
               {{#each this.badgeGroupings as |grouping|}}
                 <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
               {{/each}}
-            </field.Menu>
+            </field.Control>
           </form.Field>
 
           <form.CheckboxGroup
@@ -494,22 +510,26 @@ export default class AdminBadgesShow extends Component {
             as |group|
           >
             <group.Field
-              @title={{i18n "admin.badges.allow_title"}}
-              @showTitle={{false}}
+              @format="full"
               @name="allow_title"
+              @showTitle={{false}}
+              @title={{i18n "admin.badges.allow_title"}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
-              @title={{i18n "admin.badges.multiple_grant"}}
-              @showTitle={{false}}
-              @name="multiple_grant"
               @disabled={{this.readOnly}}
+              @format="full"
+              @name="multiple_grant"
+              @showTitle={{false}}
+              @title={{i18n "admin.badges.multiple_grant"}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
           </form.CheckboxGroup>
 
@@ -518,37 +538,43 @@ export default class AdminBadgesShow extends Component {
             as |group|
           >
             <group.Field
-              @title={{i18n "admin.badges.listable"}}
-              @showTitle={{false}}
+              @disabled={{this.readOnly}}
+              @format="full"
               @name="listable"
-              @disabled={{this.readOnly}}
+              @showTitle={{false}}
+              @title={{i18n "admin.badges.listable"}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
-              @title={{i18n "admin.badges.show_posts"}}
-              @showTitle={{false}}
+              @disabled={{this.readOnly}}
+              @format="full"
               @name="show_posts"
-              @disabled={{this.readOnly}}
+              @showTitle={{false}}
+              @title={{i18n "admin.badges.show_posts"}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox />
+              <field.Control />
             </group.Field>
 
             <group.Field
-              @title={{i18n "admin.badges.show_in_post_header"}}
-              @showTitle={{false}}
-              @name="show_in_post_header"
               @disabled={{this.disableBadgeOnPosts data}}
+              @format="full"
+              @name="show_in_post_header"
+              @showTitle={{false}}
+              @title={{i18n "admin.badges.show_in_post_header"}}
+              @type="checkbox"
               as |field|
             >
-              <field.Checkbox>
+              <field.Control>
                 {{#if (this.postHeaderDescription data)}}
                   {{i18n "admin.badges.show_in_post_header_disabled"}}
                 {{/if}}
-              </field.Checkbox>
+              </field.Control>
             </group.Field>
           </form.CheckboxGroup>
         </form.Section>
@@ -563,8 +589,8 @@ export default class AdminBadgesShow extends Component {
 
           {{#unless this.readOnly}}
             <form.Button
-              @action={{this.handleDelete}}
               class="badge-form__delete-badge-btn btn-danger"
+              @action={{this.handleDelete}}
             >
               {{i18n "admin.badges.delete"}}
             </form.Button>

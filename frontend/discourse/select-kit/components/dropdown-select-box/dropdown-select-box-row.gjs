@@ -1,19 +1,17 @@
-import { readOnly } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("dropdown-select-box-row")
 export default class DropdownSelectBoxRow extends SelectKitRowComponent {
-  @readOnly("item.description") description;
-
   <template>
     {{#if this.icons}}
       <div class="icons">
         <span class="selection-indicator"></span>
         {{#each this.icons as |i|}}
-          {{icon i}}
+          {{dIcon i}}
         {{/each}}
       </div>
     {{/if}}
@@ -25,4 +23,9 @@ export default class DropdownSelectBoxRow extends SelectKitRowComponent {
       {{/if}}
     </div>
   </template>
+
+  @computed("item.description")
+  get description() {
+    return this.item?.description;
+  }
 }

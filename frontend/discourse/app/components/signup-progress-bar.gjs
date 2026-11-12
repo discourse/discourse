@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SignupProgressBar extends Component {
   @service siteSettings;
@@ -43,7 +43,7 @@ export default class SignupProgressBar extends Component {
       <div class="signup-progress-bar">
         {{#each this.steps as |step index|}}
           <div
-            class={{concatClass
+            class={{dConcatClass
               "signup-progress-bar__segment"
               (concat "--" (this.getStepState index))
             }}

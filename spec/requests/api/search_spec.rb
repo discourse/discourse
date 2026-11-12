@@ -43,7 +43,7 @@ RSpec.describe "groups" do
           If you are using cURL you can use the `-G` and the `--data-urlencode` flags to encode the query:
 
           ```
-          curl -i -sS -X GET -G "http://localhost:4200/search.json" \\
+          curl -i -sS -X GET -G "http://localhost:3000/search.json" \\
           --data-urlencode 'q=wordpress @scossar #fun after:2020-01-01'
           ```
         MD

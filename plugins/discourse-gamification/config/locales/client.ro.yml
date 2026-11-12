@@ -12,7 +12,12 @@ ro:
         link_to_settings: "Setări"
         refresh: "Reîmprospătează"
         name: "Nume"
+        section:
+          groups: "Grupuri"
         excluded_groups: "Grupuri excluse"
+        weight:
+          post_created: "A fost creată postarea"
+          solution: "Soluție"
         period:
           all_time: "Dintotdeauna"
           yearly: "Anual"
@@ -25,9 +30,7 @@ ro:
       close: "Închide"
       delete: "Șterge"
       edit: "Editează"
-      back: "Înapoi"
       save: "Salvează"
-      apply: "Aplică"
       update_range:
         last_10_days: "Ultimele 10 zile"
         last_30_days: "Ultimele 30 de zile"
@@ -36,3 +39,10 @@ ro:
       custom_range_from: "De la"
       admin:
         name: "Nume"
+        created_by: "Creat de"
+    discourse_workflows:
+      gamification_score:
+        username: "Utilizator"
+        date: "Dată"
+        description: "Descriere"
+        category_id: "Categorie"

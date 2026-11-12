@@ -61,7 +61,7 @@ class TopicTrackingState
     publish_read(topic.id, 1, topic.user)
   end
 
-  def self.publish_latest(topic, whisper = false)
+  def self.publish_latest(topic)
     return unless topic.regular?
 
     payload = {
@@ -72,25 +72,20 @@ class TopicTrackingState
 
     payload[:tags] = topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
 
-    message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: payload }
+    message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: }
 
-    group_ids =
-      if whisper
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_groups_map].flatten
-      else
-        secure_category_group_ids(topic)
-      end
-    MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
+    group_ids = secure_category_group_ids(topic)
+    MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, group_ids:)
   end
 
   def self.unread_channel_key(user_id)
     "/unread/#{user_id}"
   end
 
-  def self.publish_muted(topic)
+  def self.publish_muted(topic, whisper:)
     return unless topic.regular?
 
-    user_ids =
+    scope =
       topic
         .topic_users
         .where(notification_level: NotificationLevels.all[:muted])
@@ -98,7 +93,7 @@ class TopicTrackingState
         .where("users.last_seen_at > ?", 7.days.ago)
         .order("users.last_seen_at DESC")
         .limit(100)
-        .pluck(:user_id)
+    user_ids = restrict_to_audience(scope, :user_id, topic, whisper:).pluck(:user_id)
     return if user_ids.blank?
 
     message = { topic_id: topic.id, message_type: MUTED_MESSAGE_TYPE }
@@ -106,16 +101,16 @@ class TopicTrackingState
     MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, user_ids: user_ids)
   end
 
-  def self.publish_unmuted(topic)
+  def self.publish_unmuted(topic, whisper:)
     return unless topic.regular?
 
-    user_ids =
+    scope =
       User
         .watching_topic(topic)
         .where("users.last_seen_at > ?", 7.days.ago)
         .order("users.last_seen_at DESC")
         .limit(100)
-        .pluck(:id)
+    user_ids = restrict_to_audience(scope, :id, topic, whisper:).pluck(:id)
     return if user_ids.blank?
 
     message = { topic_id: topic.id, message_type: UNMUTED_MESSAGE_TYPE }
@@ -125,6 +120,7 @@ class TopicTrackingState
 
   def self.publish_unread(post)
     return unless post.topic.regular?
+    return if post.small_action?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
 
@@ -139,22 +135,8 @@ class TopicTrackingState
         post,
       )
 
-    group_ids =
-      if post.post_type == Post.types[:whisper]
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_groups_map].flatten
-      else
-        post.topic.category && post.topic.category.secure_group_ids
-      end
-
-    if group_ids.present?
-      scope =
-        scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
-          "gu.group_id IN (?)",
-          group_ids,
-        )
-    end
-
-    user_ids = scope.pluck(:user_id)
+    user_ids =
+      restrict_to_audience(scope, :user_id, post.topic, whisper: post.whisper?).pluck(:user_id)
     return if user_ids.empty?
 
     payload = {
@@ -232,9 +214,9 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
-    self.publish_read_message(
+    publish_read_message(
       message_type: READ_MESSAGE_TYPE,
-      channel_name: self.unread_channel_key(user.id),
+      channel_name: unread_channel_key(user.id),
       topic_id: topic_id,
       user: user,
       last_read_post_number: last_read_post_number,
@@ -244,12 +226,12 @@ class TopicTrackingState
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
     message = { message_type: DISMISS_NEW_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.publish_dismiss_new_posts(user_id, topic_ids: [])
     message = { message_type: DISMISS_NEW_POSTS_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.new_filter_sql
@@ -319,6 +301,7 @@ class TopicTrackingState
           min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
           max_topics: TopicTrackingState::MAX_TOPICS,
           user_first_unread_at: user.user_stat.first_unread_at,
+          logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
         }.merge(treat_as_new_topic_params),
       )
 
@@ -359,7 +342,7 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id, 'name', tags.name, 'slug', tags.slug))
+          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id))
           FROM topic_tags
           JOIN tags ON tags.id = topic_tags.tag_id
           WHERE topic_id = tags_included_cte.topic_id
@@ -449,8 +432,10 @@ class TopicTrackingState
            NOT c.read_restricted #{append} OR c.id IN (
               SELECT c2.id FROM categories c2
               JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
-              WHERE c2.read_restricted )
+              WHERE c2.read_restricted AND (
+                cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)
+                OR cg.group_id = :logged_in_users
+              ))
           ) AND
         SQL
       end
@@ -586,8 +571,8 @@ class TopicTrackingState
     groups.each do |group|
       member = group.members.include?(user_id)
 
-      member_writing = (write_event && member)
-      non_member_reading = (!write_event && !member)
+      member_writing = write_event && member
+      non_member_reading = !write_event && !member
       next if non_member_reading || member_writing
 
       groups_to_update << group
@@ -604,7 +589,7 @@ class TopicTrackingState
   def self.trigger_post_read_count_update(post, groups, last_read_post_number, user_id)
     return if !post
     return if groups.empty?
-    opts = { readers_count: post.readers_count, reader_id: user_id }
+    opts = { readers_count: post.readers_count }
     post.publish_change_to_clients!(:read, opts)
   end
 
@@ -632,12 +617,13 @@ class TopicTrackingState
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
         max_topics: TopicTrackingState::MAX_TOPICS,
         user_first_unread_at: user.user_stat.first_unread_at,
+        logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
       }.merge(treat_as_new_topic_params),
     ).count
   end
 
   def self.report_totals(user)
-    if user.new_new_view_enabled?
+    if user.unified_new_enabled?
       { new: report(user).count }
     else
       new = report_count_by_type(user, type: "new")
@@ -660,4 +646,20 @@ class TopicTrackingState
     end
   end
   private_class_method :secure_category_group_ids
+
+  # A notification preference stays after the user loses access, so it does not give access.
+  def self.restrict_to_audience(scope, user_id_column, topic, whisper:)
+    scope = scope.where(user_id_column => User.whisperers.select(:id)) if whisper
+
+    group_ids = secure_category_group_ids(topic)
+    return scope if group_ids.nil? || group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+
+    scope.where(user_id_column => members_of(group_ids))
+  end
+  private_class_method :restrict_to_audience
+
+  def self.members_of(group_ids)
+    GroupUser.where(group_id: group_ids).select(:user_id)
+  end
+  private_class_method :members_of
 end

@@ -1,36 +1,30 @@
-p > code,
-li > code,
-strong > code,
-em > code {
+code {
   padding: 2px 4px;
   background: var(--inline-code-bg);
   white-space: pre-wrap;
   color: var(--primary);
-}
-
-a > code {
-  padding: 2px 4px;
-  background: var(--inline-code-bg);
-  white-space: pre-wrap;
-  color: var(--tertiary);
-}
-
-code {
-  color: var(--primary-very-high);
-  background: var(--hljs-bg);
   border-radius: var(--d-border-radius);
   font-size: 0.875rem;
   line-height: calc((13 + 4) / 13);
+}
 
-  small & {
-    font-size: 0.875em;
-  }
+a > code {
+  color: var(--tertiary);
 }
 
 pre > code {
   display: block;
   padding: 12px;
   max-height: 500px;
+  background: var(--hljs-bg);
+  color: var(--primary-very-high);
+
+  // wrapping is the `pre`'s call; a value here would override it
+  white-space: inherit;
+}
+
+small code {
+  font-size: 0.875em;
 }
 
 h1 code,
@@ -50,14 +44,8 @@ h6 code {
   font-style: italic;
 }
 
-.hljs-color {
-  color: var(--hljs-color);
-}
-
 .hljs-keyword,
-.hljs-subst,
-.hljs-request,
-.hljs-status {
+.hljs-subst {
   color: var(--hljs-keyword);
 }
 
@@ -130,13 +118,11 @@ h6 code {
   color: var(--success);
 }
 
-.hljs-symbol,
-.hljs-prompt {
+.hljs-symbol {
   color: var(--hljs-symbol);
 }
 
-.hljs-built_in,
-.hljs-builtin-name {
+.hljs-built_in {
   color: var(--hljs-name);
 }
 

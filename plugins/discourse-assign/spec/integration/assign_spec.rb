@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
 require_relative "../fabricators/assign_hook_fabricator"
 
 describe "integration tests" do
@@ -14,27 +13,72 @@ describe "integration tests" do
     # should not explode for now
   end
 
+  describe "private message MessageBus access" do
+    fab!(:admin)
+    fab!(:private_message_post) { Fabricate(:private_message_post, user: admin) }
+    fab!(:private_message) { private_message_post.topic }
+
+    before do
+      SiteSetting.unassign_on_close = true
+      Fabricate(
+        :topic_assignment,
+        topic: private_message,
+        assigned_to: admin,
+        assigned_by_user: admin,
+      )
+    end
+
+    it "does not expose assignment refreshes for private messages to nonparticipants" do
+      channel = "/topic/#{private_message.id}"
+      message_id = MessageBus.last_id(channel)
+
+      sign_in(admin)
+      put "/t/#{private_message.id}/status.json", params: { status: "closed", enabled: true }
+
+      expect(response.status).to eq(200)
+      expect(private_message.reload.assignment.active).to eq(false)
+
+      cookies.to_hash.keys.each { |key| cookies.delete(key) }
+      get "/t/#{private_message.id}.json"
+      expect(response.status).to eq(404)
+
+      post "/message-bus/poll?dlp=t", params: { channel => message_id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to include(
+        include(
+          "channel" => channel,
+          "data" => {
+            "reload_topic" => true,
+            "refresh_stream" => true,
+          },
+        ),
+      )
+    end
+  end
+
   describe "for a private message" do
     let(:post) { Fabricate(:private_message_post) }
     let(:pm) { post.topic }
     let(:user) { pm.allowed_users.first }
     let(:user2) { pm.allowed_users.last }
     let(:channel) { "/private-messages/assigned" }
+
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
       group.add(user)
       group.add(user2)
+      pm.topic_allowed_groups.create!(group: group)
     end
 
     def assert_publish_topic_state(topic, user: nil, group: nil)
       messages = MessageBus.track_publish { yield }
-
-      message = messages.find { |m| m.channel == channel }
+      message = messages.find { |published_message| published_message.channel == channel }
 
       expect(message.data[:topic_id]).to eq(topic.id)
       expect(message.user_ids).to eq([user.id]) if user
@@ -104,8 +148,8 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user1)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user1)
+      assign_allowed_group.add(user2)
     end
 
     it "assigns topic" do
@@ -144,12 +188,13 @@ describe "integration tests" do
     fab!(:post)
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
+
     fab!(:user)
 
     include_context "with group that is allowed to assign"
 
     it "allows to assign topic if post is already assigned" do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       assigner = Assigner.new(post, user)
       response = assigner.assign(user)

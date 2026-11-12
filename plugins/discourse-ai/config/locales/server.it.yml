@@ -25,7 +25,6 @@ it:
         description: "Report periodico basato su LLM"
   site_settings:
     discourse_ai_enabled: "Abilita il plugin Discourse AI."
-    ai_default_llm_model: "Il modello LLM predefinito da utilizzare per tutte le funzionalità AI"
     ai_artifact_security: "l sistema di artefatti IA genera IFRAME con codice eseguibile. La modalità Strict impone un clic extra per eseguire il codice. La modalità Lax esegue il codice direttamente. La modalità Hybrid permette all'utente di immettere data-ai-artifact-autorun per vedere subito il risultato. La modalità Disabled disabilita il sistema di artefatti."
     ai_toxicity_enabled: "Abilita il modulo tossicità."
     ai_toxicity_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo tossicità"
@@ -40,10 +39,8 @@ it:
     ai_toxicity_flag_threshold_threat: "Minaccia"
     ai_toxicity_flag_threshold_sexual_explicit: "Sessualmente esplicito"
     ai_toxicity_groups_bypass: "Gli utenti di questi gruppi non vedranno i propri post classificati dal modulo sulla tossicità."
-    ai_sentiment_enabled: "Abilita il modulo sentimento."
     ai_sentiment_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo sentimento"
     ai_sentiment_inference_service_api_key: "Chiave API per l'API di sentimento"
-    ai_sentiment_models: "Modelli da utilizzare per l'inferenza. Il sentimento classifica i messaggi nello spazio positivo/neutro/negativo. L'emozione si classifica nello spazio rabbia/disgusto/paura/gioia/neutrale/tristezza/sorpresa."
     ai_nsfw_detection_enabled: "Abilita il modulo NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo NSFW"
     ai_nsfw_inference_service_api_key: "Chiave API per l'API NSFW"
@@ -61,10 +58,8 @@ it:
     ai_helper_allowed_in_pm: "Abilita l'assistente IA nei MP."
     ai_helper_automatic_chat_thread_title_delay: "Ritardo in minuti prima che l'assistente IA imposti automaticamente il titolo del thread della chat."
     ai_helper_automatic_chat_thread_title: "Imposta automaticamente i titoli dei thread della chat in base ai contenuti del thread."
-    ai_helper_enabled_features: "Seleziona le funzionalità da abilitare nell'assistente IA."
     post_ai_helper_allowed_groups: "Gruppi di utenti autorizzati ad accedere alle funzionalità dell'assistente IA nei post"
     ai_embeddings_selected_model: "Usa il modello selezionato per generare le integrazioni."
-    ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
     ai_embeddings_semantic_related_topics_enabled: "Usa la ricerca semantica per argomenti correlati."
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
     ai_embeddings_backfill_batch_size: "Numero di embedding da riempire ogni 15 minuti."
@@ -76,9 +71,7 @@ it:
     ai_summarization_enabled: "Abilita la funzionalità riepilogo"
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
-    ai_summary_backfill_maximum_topics_per_hour: "Numero di riepiloghi degli argomenti da riempire all'ora."
     ai_bot_enabled: "Abilita il modulo Bot IA."
-    ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"
     ai_bot_public_sharing_allowed_groups: "Consenti a questi gruppi di condividere messaggi personali dell'IA con il pubblico tramite un link univoco disponibile al pubblico. Nota: se il tuo sito richiede l'accesso, anche le condivisioni richiederanno l'accesso."
     ai_bot_github_access_token: "Token di accesso GitHub da utilizzare con gli strumenti GitHub IA (richiesto per il supporto della ricerca)"
@@ -89,8 +82,6 @@ it:
     ai_discord_app_public_key: "La chiave pubblica dell'applicazione Discord a cui vuoi collegare la ricerca Discord"
     ai_discord_search_mode: "Seleziona la modalità di ricerca da utilizzare per la ricerca su Discord"
     ai_discord_allowed_guilds: "Gilde (server) Discord in cui il bot è autorizzato a cercare"
-    ai_translation_backfill_limit_to_public_content: "Se abilitata, verranno tradotti solo i contenuti nelle categorie pubbliche. Se disabilitata, verranno inviati all'assistente di traduzione anche gli MP di gruppo e le categorie private."
-    ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messaggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
   reviewables:
     reasons:
       flagged_by_toxicity: Il plugin IA lo ha segnalato dopo averlo classificato come tossico.
@@ -101,93 +92,64 @@ it:
       description: "Questo rapporto contieni l'analisi del sentimento dei messaggi, raggruppati per categoria, con punteggi positivi, negativi e neutri per ciascun messaggio e ciascuna categoria."
     overall_sentiment:
       title: "Sentimento generale"
-      description: 'Il grafico confronta il numero di messaggi classificati come positivi o negativi. Questi vengono calcolati quando i punteggi positivi o negativi > il punteggio soglia impostato. Ciò significa che i messaggi neutri non vengono mostrati. Sono esclusi anche i messaggi personali (MP). Classificazione effettuata con "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Positività(%)"
       yaxis: "Data"
     emotion_admiration:
-      title: "\U0001F929 Ammirazione"
-      description: "Messaggi classificati con l'emozione ammirazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🤩 Ammirazione"
     emotion_amusement:
-      title: "\U0001F604 Divertimento"
-      description: "Messaggi classificati con l'emozione divertimento tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😄 Divertimento"
     emotion_anger:
-      title: "\U0001F620 Rabbia"
-      description: "Messaggi classificati con l'emozione rabbia tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😠 Rabbia"
     emotion_annoyance:
-      title: "\U0001F612 Fastidio"
-      description: "Messaggi classificati con l'emozione fastidio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😒 Fastidio"
     emotion_approval:
-      title: "\U0001F44D Approvazione"
-      description: "Messaggi classificati con l'emozione approvazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "👍 Approvazione"
     emotion_caring:
-      title: "\U0001F917 Premura"
-      description: "Messaggi classificati con l'emozione premuroso tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🤗 Premura"
     emotion_confusion:
-      title: "\U0001F615 Confusione"
-      description: "Messaggi classificati con l'emozione confusione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😕 Confusione"
     emotion_curiosity:
-      title: "\U0001F914 Curiosità"
-      description: "Messaggi classificati con l'emozione curiosità tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🤔 Curiosità"
     emotion_desire:
-      title: "\U0001F60D Desiderio"
-      description: "Messaggi classificati con l'emozione desiderio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😍 Desiderio"
     emotion_disappointment:
-      title: "\U0001F61E Delusione"
-      description: "Messaggi classificati con l'emozione delusione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😞 Delusione"
     emotion_disapproval:
-      title: "\U0001F44E Disapprovazione"
-      description: "Messaggi classificati con l'emozione disapprovazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "👎 Disapprovazione"
     emotion_disgust:
-      title: "\U0001F922 Disgusto"
-      description: "Messaggi classificati con l'emozione disgusto tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🤢 Disgusto"
     emotion_embarrassment:
-      title: "\U0001F633 Imbarazzo"
-      description: "Messaggi classificati con l'emozione imbarazzo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😳 Imbarazzo"
     emotion_excitement:
-      title: "\U0001F92A Eccitazione"
-      description: "Messaggi classificati con l'emozione eccitazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🤪 Eccitazione"
     emotion_fear:
-      title: "\U0001F628 Paura"
-      description: "Messaggi classificati con l'emozione paura tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😨 Paura"
     emotion_gratitude:
-      title: "\U0001F64F Gratitudine"
-      description: "Messaggi classificati con l'emozione gratitudine tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🙏 Gratitudine"
     emotion_grief:
-      title: "\U0001F622 Dolore"
-      description: "Messaggi classificati con l'emozione dolore tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😢 Dolore"
     emotion_joy:
-      title: "\U0001F60A Gioia"
-      description: "Messaggi classificati con l'emozione gioia tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😊 Gioia"
     emotion_love:
       title: '❤️ Amore'
-      description: "Messaggi classificati con l'emozione amore tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Nervosismo"
-      description: "Messaggi classificati con l'emozione nervosismo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😰 Nervosismo"
     emotion_neutral:
-      title: "\U0001F610 Neutralità"
-      description: "Messaggi classificati con l'emozione neutrale tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😐 Neutralità"
     emotion_optimism:
-      title: "\U0001F31F Ottimismo"
-      description: "Messaggi classificati con l'emozione ottimismo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🌟 Ottimismo"
     emotion_pride:
-      title: "\U0001F981 Orgoglio"
-      description: "Messaggi classificati con l'emozione orgoglio tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "🦁 Orgoglio"
     emotion_realization:
-      title: "\U0001F4A1 Realizzazione"
-      description: "Messaggi classificati con l'emozione realizzazione tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "💡 Realizzazione"
     emotion_relief:
-      title: "\U0001F60C Sollievo"
-      description: "Messaggi classificati con l'emozione sollievo tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😌 Sollievo"
     emotion_remorse:
-      title: "\U0001F614 Rimorso"
-      description: "Messaggi classificati con l'emozione rimorso tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😔 Rimorso"
     emotion_sadness:
-      title: "\U0001F62D Tristezza"
-      description: "Messaggi classificati con l'emozione tristezza tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😭 Tristezza"
     emotion_surprise:
-      title: "\U0001F632 Sorpresa"
-      description: "Messaggi classificati con l'emozione sorpresa tramite intelligenza artificiale, utilizzando il modello 'SamLowe/roberta-base-go_emotions'."
+      title: "😲 Sorpresa"
   discourse_ai:
     ai_artifact:
       errors:
@@ -212,8 +174,6 @@ it:
           name: "Quotazione azionaria (AlphaVantage)"
         image_generation_custom:
           name: "Personalizzato"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Inizia da zero..."
       name:
@@ -223,15 +183,12 @@ it:
         completion_request_failed: "Qualcosa è andato storto durante il tentativo di fornire suggerimenti. Riprova."
       prompts:
         translate: Traduci in %{language}
-        generate_titles: Suggerisci i titoli degli argomenti
         proofread: Testo corretto
         markdown_table: Genera tabella di markdown
         custom_prompt: "Comando personalizzato"
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      image_caption:
-        attribution: "Didascalia da IA"
     share_ai:
       read_more: "Leggi la trascrizione completa"
       onebox_title: "Conversazione IA con %{llm_name}"
@@ -251,10 +208,53 @@ it:
       configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
       logging_subject: "Rilevamento spam"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Rilevamento spam"
+      navigation:
+        settings:
+          title: "Impostazioni del sito"
+        users:
+          title: "Utenti"
+        groups:
+          title: "Gruppi"
+        review:
+          title: "Coda di revisione"
+        categories:
+          title: "Categorie"
+        tags:
+          title: "Etichette"
+        themes:
+          title: "Temi"
+        authentication:
+          title: "Accesso e autenticazione"
+        backups:
+          title: "Backup"
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
+      read_post:
+        unknown_post: "messaggio"
+      chat_tool_approval:
+        topic_states:
+          open: "Aperta"
+          closed: "Chiuso"
+          active: "Attivo"
+          deleted: "Eliminato"
+        solution_post: "Messaggio #%{number}"
+        duration_label: "Durata:"
+        user_duration:
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        posts_label: "Messaggi"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrizione"
+          color: "colore"
+          text_color: "colore del testo"
+        approve_label: "Sì"
+        reject_label: "No"
       agents:
-        default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:
           name: "Assistente GitHub"
@@ -403,6 +403,8 @@ it:
         random_picker: "Selettore casuale"
         categories: "Elenca le categorie"
         flag_post: "Segnala messaggio"
+        suspend_user: "Sospendi utente"
+        silence_user: "Silenzia utente"
         search: "Cerca"
         tags: "Elenca le etichette"
         time: "Ora"
@@ -431,6 +433,7 @@ it:
         random_picker: "Scegli un numero casuale o un elemento casuale di una lista"
         categories: "Elenca tutte le categorie visibili pubblicamente sul forum"
         delete_topic: "Elimina un argomento"
+        create_category: "Crea una nuova categoria"
         search: "Cerca tutti gli argomenti pubblici sul forum"
         tags: "Elenca tutte le etichette sul forum"
         time: "Trova l'ora in diversi fusi orari"
@@ -490,10 +493,6 @@ it:
         search_settings:
           one: "Trovato %{count} risultato per '%{query}'"
           other: "Trovati %{count} risultati per '%{query}'"
-      discoveries:
-        continue_conversation:
-          title: "Conversazioni scoperte: cerca %{query}"
-          raw: "Nella mia ricerca di %{query} mi hai mostrato le seguenti informazioni:\n\n%{context}\n\nProseguiamo la conversazione."
       close_topic:
         errors:
           not_found: "Argomento non trovato."
@@ -503,10 +502,13 @@ it:
       delete_topic:
         errors:
           not_found: "Argomento non trovato."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Argomento non trovato."
       edit_category:
+        errors:
+          not_found: "Categoria non trovata."
+      change_topic_category:
         errors:
           not_found: "Argomento non trovato."
           category_not_found: "Categoria non trovata."
@@ -522,6 +524,26 @@ it:
       assign:
         errors:
           not_found: "Argomento non trovato."
+    appearance_authoring:
+      default_theme: "Tema predefinito"
+      colors:
+        light:
+          header_background: "Intestazione"
+      fonts:
+        base_font: "Carattere del corpo"
+        heading_font: "Carattere dell'intestazione"
+    mcp_theme_access:
+      "on": "On"
+      "off": "Off"
+      none: "nessuna"
+    mcp_app_setup:
+      none: "nessuna"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Approva"
+        reject:
+          title: "Rifiuta"
     summarization:
       configuration_hint:
         one: "Configura prima l'impostazione \"%{setting}\"."
@@ -532,13 +554,13 @@ it:
       reports:
         overall_sentiment: "Sentimento generale (positivo - negativo)"
         post_emotion:
-          sadness: "Tristezza \U0001F622"
-          surprise: "Sorpresa \U0001F631"
-          neutral: "Neutralità \U0001F610"
-          fear: "Paura \U0001F628"
-          anger: "Rabbia \U0001F621"
-          joy: "Gioia \U0001F600"
-          disgust: "Disgusto \U0001F922"
+          sadness: "Tristezza 😢"
+          surprise: "Sorpresa 😱"
+          neutral: "Neutralità 😐"
+          fear: "Paura 😨"
+          anger: "Rabbia 😡"
+          joy: "Gioia 😀"
+          disgust: "Disgusto 🤢"
         sentiment_analysis:
           positive: "Positivo"
           negative: "Negativo"
@@ -565,6 +587,7 @@ it:
     embeddings:
       delete_failed: "Questo modello è attualmente in uso. Aggiorna prima `ai embeddings selected model`."
       cannot_edit_builtin: "Non è possibile modificare un modello incorporato."
+      missing_provider_param: "%{param} non può essere vuoto"
       configuration:
         disable_embeddings: "Devi prima disabilitare \"integrazioni ia abilitate\"."
         choose_model: "Imposta prima \"ai embeddings selected model\"."
@@ -577,7 +600,6 @@ it:
       removed: "rimosso"
     errors:
       quota_exceeded: "Hai superato la quota per questo modello. Riprova tra %{relative_time}."
-      quota_required: "È necessario specificare il numero massimo di token o utilizzi per questo modello"
       no_query_specified: Il parametro di query è obbligatorio, specificalo.
       no_user_specified: Il parametro username o user_unique_id è obbligatorio, specificalo.
       user_not_found: L'utente specificato non esiste. Controlla il parametro username.

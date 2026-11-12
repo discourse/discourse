@@ -108,9 +108,9 @@ const REPLACEMENTS = {
 };
 ```
 
-Ref: [discourse/icon-library.js at main · discourse/discourse (github.com)](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/icon-library.js)
+Ref: [discourse/icon-library.ts at main · discourse/discourse (github.com)](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/icon-library.ts)
 [/details]
 
 ---
 
-Feel free to create other themes component and share it in our #theme-component category!
+Feel free to create other themes component and share it in our #customization:theme-component category!

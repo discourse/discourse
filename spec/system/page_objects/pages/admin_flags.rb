@@ -71,6 +71,52 @@ module PageObjects
         has_no_css?(".flag-menu-content")
       end
 
+      # Methods for when the enable_new_reordering_controls upcoming change is
+      # enabled. move_up/move_down below keep main's menu-driven behaviour.
+      #
+      # TODO (ui-kit-reorderable-list-cleanup) fold these over them once the
+      # change ships.
+      def reorderable(key)
+        PageObjects::Components::ReorderableList.new(reorderable_row_selector(key))
+      end
+
+      def move_up_via_list(key)
+        reorderable(key).move(:up)
+        self
+      end
+
+      def move_down_via_list(key)
+        reorderable(key).move(:down)
+        self
+      end
+
+      def move_to_top_via_list(key)
+        reorderable(key).move(:top)
+        self
+      end
+
+      # A real browser drag, the only move that can cross several rows without
+      # naming a destination. The drop lands on the target's top edge.
+      def drag_flag_above(source_key, target_key)
+        drag_and_drop(
+          source: "#{reorderable_row_selector(source_key)} .d-reorderable-list__handle",
+          target: reorderable_row_selector(target_key),
+          target_position: {
+            x: 100,
+            y: 1,
+          },
+        )
+        self
+      end
+
+      # Waiting, unlike has_flags?, so it can follow a move or a page load.
+      def has_flags_in_order?(*flags)
+        has_css?(".admin-flag-item__name", count: flags.size) &&
+          flags.each_with_index.all? do |flag, index|
+            has_css?(".admin-flag-item:nth-child(#{index + 1}) .admin-flag-item__name", text: flag)
+          end
+      end
+
       def move_down(key)
         toggle_flag_menu(key)
         find(".admin-flag-item__move-down").click
@@ -105,6 +151,12 @@ module PageObjects
         find(".dialog-footer .btn-primary").click
         expect(page).to have_no_css(".dialog-body", wait: Capybara.default_max_wait_time * 3)
         self
+      end
+
+      private
+
+      def reorderable_row_selector(key)
+        ".admin-flag-item.#{key}"
       end
     end
   end

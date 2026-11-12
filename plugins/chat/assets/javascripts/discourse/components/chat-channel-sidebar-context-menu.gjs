@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { i18n } from "discourse-i18n";
+import { formatMuteEnd } from "discourse/plugins/chat/discourse/lib/chat-mute-durations";
+import ChatChannelSidebarContextMuteSubmenu from "./chat-channel-sidebar-context-mute-submenu.gjs";
+import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu.gjs";
 
 export default class ChatChannelSidebarContextMenu extends Component {
   @service chatApi;
@@ -15,14 +17,16 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @service chatChannelsManager;
   @service currentUser;
 
-  @tracked isTogglingStarred;
-
   get channel() {
     return this.args.data.channel;
   }
 
   get currentUserMembership() {
     return this.channel?.currentUserMembership;
+  }
+
+  get isTogglingStarred() {
+    return this.chatChannelsManager.isUpdatingStarred(this.channel);
   }
 
   get starIcon() {
@@ -35,6 +39,17 @@ export default class ChatChannelSidebarContextMenu extends Component {
       : "chat.channel_settings.star_channel";
   }
 
+  get mutedUntil() {
+    if (!this.currentUserMembership?.mutedUntil) {
+      return;
+    }
+
+    return formatMuteEnd(
+      this.currentUserMembership.mutedUntil,
+      this.currentUser
+    );
+  }
+
   get leaveLabel() {
     return this.channel.isDirectMessageChannel
       ? "chat.channel_settings.close_channel"
@@ -43,27 +58,15 @@ export default class ChatChannelSidebarContextMenu extends Component {
 
   @action
   async toggleStarred() {
-    if (!this.currentUserMembership || this.isTogglingStarred) {
-      return;
-    }
+    const channel = this.channel;
+    const menuIdentifier = channel.isDirectMessageChannel
+      ? "chat-direct-message-channel-menu"
+      : "chat-channel-menu";
+    const menu = this.menu;
 
-    this.isTogglingStarred = true;
-    const previousValue = this.currentUserMembership.starred;
-    const newValue = !previousValue;
-
-    this.currentUserMembership.starred = newValue;
-
-    try {
-      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
-        starred: newValue,
-      });
-      this.args.close();
-    } catch (err) {
-      this.currentUserMembership.starred = previousValue;
-      popupAjaxError(err);
-    } finally {
-      this.isTogglingStarred = false;
-    }
+    await this.chatChannelsManager.toggleStarred(channel, {
+      beforeUpdate: () => menu.close(menuIdentifier),
+    });
   }
 
   @action
@@ -98,6 +101,23 @@ export default class ChatChannelSidebarContextMenu extends Component {
   }
 
   @action
+  async unmuteChannel() {
+    try {
+      const result =
+        await this.chatApi.updateCurrentUserChannelNotificationsSettings(
+          this.channel.id,
+          { muted: false }
+        );
+      this.currentUserMembership.muted = result.membership.muted;
+      this.currentUserMembership.mutedUntil = null;
+    } catch (err) {
+      popupAjaxError(err);
+    } finally {
+      this.args.close();
+    }
+  }
+
+  @action
   async navigateToSettings() {
     try {
       await this.router.transitionTo(
@@ -116,52 +136,92 @@ export default class ChatChannelSidebarContextMenu extends Component {
       component: ChatChannelSidebarContextNotificationSubmenu,
       modalForMobile: true,
       placement: "right-start",
+      offset: { mainAxis: 10, crossAxis: -5 },
+      data: { channel: this.channel },
+      onClose: () => this.args.close(),
+    });
+  }
+
+  @action
+  openMuteSettings(_actionParam, event) {
+    this.menu.show(event.target, {
+      identifier: "chat-channel-menu-mute-submenu",
+      component: ChatChannelSidebarContextMuteSubmenu,
+      modalForMobile: true,
+      placement: "right-start",
+      offset: { mainAxis: 10, crossAxis: -5 },
       data: { channel: this.channel },
       onClose: () => this.args.close(),
     });
   }
 
   <template>
-    <DropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
+    <DDropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__open-notification-settings"
           @action={{this.openNotificationSettings}}
           @forwardEvent={{true}}
           @icon="bell"
-          @suffixIcon="angle-right"
           @label="chat.channel_settings.notification_settings_context"
+          @suffixIcon="angle-right"
           @title="chat.channel_settings.notification_settings_context"
-          class="chat-channel-sidebar-link-menu__open-notification-settings"
         />
       </dropdown.item>
       <dropdown.item>
+        {{#if this.currentUserMembership.muted}}
+          <DButton
+            class="chat-channel-sidebar-link-menu__unmute-channel"
+            @action={{this.unmuteChannel}}
+            @icon="bell"
+            @label="chat.settings.unmute"
+          >
+            {{#if this.mutedUntil}}
+              <span class="chat-channel-sidebar-link-menu__muted-until">
+                {{i18n "chat.settings.muted_until_hint" until=this.mutedUntil}}
+              </span>
+            {{/if}}
+          </DButton>
+        {{else}}
+          <DButton
+            class="chat-channel-sidebar-link-menu__open-mute-settings"
+            @action={{this.openMuteSettings}}
+            @forwardEvent={{true}}
+            @icon="bell-slash"
+            @label="chat.settings.mute"
+            @suffixIcon="angle-right"
+            @title="chat.settings.mute"
+          />
+        {{/if}}
+      </dropdown.item>
+      <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__channel-settings"
           @action={{this.navigateToSettings}}
           @icon="gear"
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
-          class="chat-channel-sidebar-link-menu__channel-settings"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__star-channel"
           @action={{this.toggleStarred}}
           @disabled={{this.isTogglingStarred}}
           @icon={{this.starIcon}}
           @label={{this.starLabel}}
           @title={{this.starLabel}}
-          class="chat-channel-sidebar-link-menu__star-channel"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__leave-channel --danger"
           @action={{this.leaveChannel}}
           @icon="xmark"
           @label={{this.leaveLabel}}
           @title={{this.leaveLabel}}
-          class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

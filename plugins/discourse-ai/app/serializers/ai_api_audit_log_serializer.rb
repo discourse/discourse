@@ -10,12 +10,74 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :cache_write_tokens,
              :raw_request_payload,
              :raw_response_payload,
+             :decoded_response,
              :topic_id,
              :post_id,
              :feature_name,
              :llm_id,
              :language_model,
+             :response_status,
+             :request_attempts,
+             :duration_msecs,
+             :time_to_first_token_msecs,
              :created_at,
              :prev_log_id,
-             :next_log_id
+             :next_log_id,
+             :spending,
+             :conversation_request_tokens,
+             :conversation_response_tokens,
+             :conversation_cache_read_tokens,
+             :conversation_cache_write_tokens,
+             :conversation_spending
+
+  def decoded_response
+    DiscourseAi::AiApiAuditLogResponseDecoder.decode(object.raw_response_payload)
+  end
+
+  def request_attempts
+    object.request_attempts
+  end
+
+  def include_request_attempts?
+    object.has_attribute?(:request_attempts)
+  end
+
+  def spending
+    return object.estimated_cost.to_d.round(6).to_f if !object.estimated_cost.nil?
+
+    object.llm_model&.spending_for(object)
+  end
+
+  def conversation_request_tokens
+    conversation_stats && conversation_stats[:request_tokens]
+  end
+
+  def conversation_response_tokens
+    conversation_stats && conversation_stats[:response_tokens]
+  end
+
+  def conversation_cache_read_tokens
+    conversation_stats && conversation_stats[:cache_read_tokens]
+  end
+
+  def conversation_cache_write_tokens
+    conversation_stats && conversation_stats[:cache_write_tokens]
+  end
+
+  def conversation_spending
+    conversation_stats && conversation_stats[:spending]
+  end
+
+  private
+
+  def conversation_stats
+    return @conversation_stats if defined?(@conversation_stats)
+
+    @conversation_stats =
+      if object.topic_id.blank?
+        nil
+      else
+        AiApiAuditLog.token_and_spending_stats(AiApiAuditLog.where(topic_id: object.topic_id))
+      end
+  end
 end

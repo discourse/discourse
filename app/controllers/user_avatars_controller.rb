@@ -12,28 +12,18 @@ class UserAvatarsController < ApplicationController
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_avatar!(user)
 
-    if user
-      hijack do
-        user.create_user_avatar(user_id: user.id) unless user.user_avatar
-        user.user_avatar.update_gravatar!
+    hijack do
+      avatar = user.user_avatar || user.create_user_avatar
+      avatar.update_gravatar!
+      upload_id = avatar.gravatar_upload_id
 
-        gravatar =
-          if user.user_avatar.gravatar_upload_id
-            {
-              gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-              gravatar_avatar_template:
-                User.avatar_template(user.username, user.user_avatar.gravatar_upload_id),
-            }
-          else
-            { gravatar_upload_id: nil, gravatar_avatar_template: nil }
-          end
-
-        render json: gravatar
-      end
-    else
-      raise Discourse::NotFound
+      render json: {
+               gravatar_upload_id: upload_id,
+               gravatar_avatar_template:
+                 upload_id && User.avatar_template(user.username, upload_id),
+             }
     end
   end
 
@@ -49,15 +39,16 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
+    # Don't try to proxy avatars in tests. The timeout could block the single worker. (QUnit case)
+    return render_blank if disable_proxy?
+
     hijack do
-      begin
-        proxy_avatar(
-          "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
-          Time.new(1990, 01, 01),
-        )
-      rescue OpenURI::HTTPError
-        render_blank
-      end
+      proxy_avatar(
+        "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
+        Time.new(1990, 01, 01),
+      )
+    rescue OpenURI::HTTPError
+      render_blank
     end
   end
 
@@ -86,9 +77,10 @@ class UserAvatarsController < ApplicationController
     is_asset_path
 
     # we need multisite support to keep a single origin pull for CDNs
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      hijack { show_in_site(params[:hostname]) }
-    end
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) { hijack { show_in_site(params[:hostname]) } }
   end
 
   protected
@@ -122,8 +114,7 @@ class UserAvatarsController < ApplicationController
       return redirect_to cdn_path(avatar_url), allow_other_host: true
     end
 
-    upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
-    upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
+    upload = user.find_avatar_upload(upload_id)
 
     if user.uploaded_avatar && !upload
       avatar_url =
@@ -137,7 +128,7 @@ class UserAvatarsController < ApplicationController
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
-        image = optimized_path if File.exist?(optimized_path)
+        image = optimized_path if optimized_path && File.exist?(optimized_path)
       elsif GlobalSetting.redirect_avatar_requests
         return redirect_s3_avatar(Discourse.store.cdn_url(optimized.url))
       else
@@ -149,7 +140,13 @@ class UserAvatarsController < ApplicationController
       response.headers["Last-Modified"] = File.ctime(image).httpdate
       response.headers["Content-Length"] = File.size(image).to_s
       immutable_for 1.year
-      send_file image, disposition: nil
+
+      if optimized.is_a?(Upload) && !FileHelper.is_inline_safe?(optimized.original_filename)
+        response.headers["Content-Security-Policy"] = "sandbox;"
+        send_file image, disposition: "attachment"
+      else
+        send_file image, disposition: nil
+      end
     else
       render_blank
     end
@@ -197,7 +194,13 @@ class UserAvatarsController < ApplicationController
     response.headers["Last-Modified"] = last_modified.httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     immutable_for(1.year)
-    send_file path, disposition: nil
+
+    if !FileHelper.is_inline_safe?(filename)
+      response.headers["Content-Security-Policy"] = "sandbox;"
+      send_file path, disposition: "attachment"
+    else
+      send_file path, disposition: nil
+    end
   rescue Errno::ENOENT, ActionController::MissingFile
     render_blank
   end
@@ -218,15 +221,14 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
-  protected
-
-  # consider removal of hacks some time in 2019
-
   def get_optimized_image(upload, size)
     return if !upload
     return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size)
-    # TODO decide if we want to detach here
+  end
+
+  def disable_proxy?
+    Rails.env.test?
   end
 end

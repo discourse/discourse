@@ -168,7 +168,7 @@ module SiteSettings::Validations
   end
 
   def validate_secure_uploads(new_val)
-    if new_val == "t" && (!SiteSetting.Upload.enable_s3_uploads || !SiteSetting.s3_use_acls)
+    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
       validate_error :secure_uploads_requirements
     end
   end
@@ -261,6 +261,18 @@ module SiteSettings::Validations
     return if new_val.blank?
     return if !Upload.exists?(id: new_val, extension: "svg")
     validate_error :x_summary_large_image_no_svg
+  end
+
+  def validate_dsa_reporting_enabled(new_val)
+    return if new_val == "f" || JSON.parse(SiteSetting.dsa_community_rules).present?
+
+    validate_error :dsa_community_rules_required
+  end
+
+  def validate_dsa_community_rules(new_val)
+    return if !SiteSetting.dsa_reporting_enabled || JSON.parse(new_val).present?
+
+    validate_error :dsa_community_rules_in_use
   end
 
   def validate_allow_all_users_to_flag_illegal_content(new_val)

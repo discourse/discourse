@@ -16,6 +16,6 @@ If you've followed the [instructions to set up your local discourse](https://met
 
 1.  Re-start the server.
 
-1.  If the plugin has settings, you can edit them by going to `http://localhost:4200/admin/plugins` and clicking on "Settings" next to its name.
+1.  If the plugin has settings, you can edit them by going to `http://localhost:3000/admin/plugins` and clicking on "Settings" next to its name.
 
 If you'd like to install a plugin in production, [follow this guide](https://meta.discourse.org/t/install-plugins-in-discourse/19157/1).

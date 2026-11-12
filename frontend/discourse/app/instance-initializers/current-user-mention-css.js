@@ -9,10 +9,10 @@ export default {
       const currentUser = api.getCurrentUser();
 
       if (currentUser) {
-        const href = getURL(`/u/${currentUser.username.toLowerCase()}`);
+        const href = getURL(`/u/${currentUser.username}`);
         const style = document.createElement("style");
         style.id = "current-user-mention-css";
-        style.textContent = `.mention[href="${href}"] { background: var(--tertiary-400); }`;
+        style.textContent = `.mention[href="${href}" i] { background: var(--tertiary-400); }`;
         document.head.appendChild(style);
       }
     });

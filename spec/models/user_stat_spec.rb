@@ -9,6 +9,58 @@ RSpec.describe UserStat do
     expect(user.user_stat.new_since).to be_present
   end
 
+  describe ".recalculate_likes!" do
+    fab!(:liker, :user)
+    fab!(:author, :user)
+
+    def like!(post)
+      UserAction.create!(
+        action_type: UserAction::LIKE,
+        user_id: liker.id,
+        acting_user_id: liker.id,
+        target_post_id: post.id,
+        target_topic_id: post.topic_id,
+      )
+      UserAction.create!(
+        action_type: UserAction::WAS_LIKED,
+        user_id: author.id,
+        acting_user_id: liker.id,
+        target_post_id: post.id,
+        target_topic_id: post.topic_id,
+      )
+    end
+
+    it "only counts likes on visible regular posts in visible public topics" do
+      like!(Fabricate(:post, user: author))
+      like!(Fabricate(:private_message_post, user: author))
+      like!(Fabricate(:post, user: author, post_type: Post.types[:whisper]))
+      like!(Fabricate(:post, user: author, hidden: true))
+      like!(Fabricate(:post, user: author, deleted_at: Time.zone.now))
+      like!(Fabricate(:post, user: author, topic: Fabricate(:topic, visible: false)))
+      liker.user_stat.update!(likes_given: 42)
+
+      UserStat.recalculate_likes!([liker.id, author.id])
+
+      expect(liker.user_stat.reload).to have_attributes(likes_given: 1, likes_received: 0)
+      expect(author.user_stat.reload).to have_attributes(likes_given: 0, likes_received: 1)
+    end
+
+    it "matches the directory refresh" do
+      like!(Fabricate(:post, user: author))
+      like!(Fabricate(:post, user: author, hidden: true))
+      DirectoryItem.refresh_period!(:all, force: true)
+      directory_counts =
+        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received)
+      UserStat.where(user_id: [liker.id, author.id]).update_all(likes_given: 9, likes_received: 9)
+
+      UserStat.recalculate_likes!([liker.id, author.id])
+
+      expect(
+        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received),
+      ).to eq(directory_counts)
+    end
+  end
+
   describe "#update_view_counts" do
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
@@ -36,7 +88,7 @@ RSpec.describe UserStat do
           expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
 
-        it "won't record a second view as a different topic" do
+        it "does not count a repeat view as another topic" do
           TopicViewItem.add(topic.id, "127.0.0.1", user.id)
           expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
@@ -73,6 +125,44 @@ RSpec.describe UserStat do
           expect { UserStat.update_view_counts }.to change { stat.reload.posts_read_count }.to 1
         end
       end
+    end
+  end
+
+  describe ".update_first_unread" do
+    fab!(:user) { Fabricate(:user, last_seen_at: Time.zone.now) }
+
+    shared_examples "finding the first unread logged in category topic" do |enabled:|
+      it "includes logged-in pseudogroup topics with granular permissions #{enabled}" do
+        freeze_time
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+        author = Fabricate(:admin)
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+        post = create_post(category: category, user: author, created_at: 1.hour.ago)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_post =
+          create_post(category: private_category, user: author, created_at: 2.hours.ago)
+        [post, private_post].each do |unread_post|
+          TopicUser.change(
+            user.id,
+            unread_post.topic_id,
+            last_read_post_number: 0,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+        end
+
+        UserStat.update_first_unread(1.day.ago)
+
+        expected = post.topic.reload.updated_at
+        expect(user.user_stat.reload.first_unread_at).to eq_time(expected)
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "finding the first unread logged in category topic", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "finding the first unread logged in category topic", enabled: true
     end
   end
 
@@ -218,6 +308,7 @@ RSpec.describe UserStat do
   describe ".update_distinct_badge_count" do
     fab!(:user)
     let(:stat) { user.user_stat }
+
     fab!(:badge1, :badge)
     fab!(:badge2, :badge)
 
@@ -303,6 +394,27 @@ RSpec.describe UserStat do
         group_ids: [Group::AUTO_GROUPS[:staff]],
       )
       update_pending_posts
+    end
+  end
+
+  describe "trigger_badges" do
+    fab!(:user)
+
+    it "queues a badge grant for the user when present" do
+      stat = user.user_stat
+
+      BadgeGranter.expects(:queue_badge_grant).with(Badge::Trigger::UserChange, user:)
+
+      stat.save!
+    end
+
+    it "does not raise when the user row is gone" do
+      stat = user.user_stat
+      User.where(id: user.id).delete_all
+      stat.reload
+      expect(stat.user).to be_nil
+
+      expect { stat.save! }.not_to raise_error
     end
   end
 end

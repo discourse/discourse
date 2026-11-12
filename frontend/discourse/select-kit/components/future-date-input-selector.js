@@ -1,5 +1,4 @@
-import { action } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
@@ -7,8 +6,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header";
-import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row";
+import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header.gjs";
+import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row.gjs";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -19,13 +18,17 @@ export const FORMAT = "YYYY-MM-DD HH:mmZ";
 })
 @pluginApiIdentifiers("future-date-input-selector")
 export default class FutureDateInputSelector extends ComboBoxComponent {
-  @equal("value", "custom") isCustom;
-
+  /** @type {string | null | undefined} */
   userTimezone = null;
 
   init() {
     super.init(...arguments);
     this.userTimezone = this.currentUser.user_option.timezone;
+  }
+
+  @computed("value")
+  get isCustom() {
+    return this.value === "custom";
   }
 
   modifyComponentForRow() {

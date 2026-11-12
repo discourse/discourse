@@ -1,9 +1,15 @@
 $max_image_height: 150px;
+$max_video_height: 250px;
 
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .onebox img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
+  .onebox
+    img:not(
+      .ytp-thumbnail-image,
+      .onebox-avatar-inline,
+      .discourse-event-onebox__image
+    ),
   img.onebox,
   .chat-uploads img,
   p img,
@@ -15,6 +21,10 @@ $max_image_height: 150px;
     max-width: 100%;
     width: unset;
     overflow: hidden;
+  }
+
+  iframe.youtube-onebox {
+    max-width: calc(#{$max_video_height} / 9 * 16);
   }
 
   .onebox {
@@ -36,6 +46,16 @@ $max_image_height: 150px;
     }
   }
 
+  // Match the maximum width used in posts
+  aside.onebox {
+    max-width: var(--topic-body-width);
+  }
+
+  // Keeps event banner images compact in chat; cropped images lose more and letterboxed ones get wider bars
+  .discourse-event-onebox.--banner-image .discourse-event-onebox__image {
+    max-height: 12rem;
+  }
+
   .onebox:not(.githubpullrequest, .githubcommit, .githubissue) {
     @container (width < 400px) {
       .onebox-body {
@@ -48,7 +68,7 @@ $max_image_height: 150px;
           margin-right: 0.5rem;
         }
 
-        .thumbnail {
+        .thumbnail:not(.discourse-event-onebox__image) {
           max-width: 100% !important;
           margin: 0;
         }
@@ -73,13 +93,45 @@ $max_image_height: 150px;
     }
   }
 
+  .youtube-onebox {
+    margin-top: var(--space-1);
+  }
+
+  .onebox.twitterstatus {
+    max-width: 500px;
+
+    .tweet-images {
+      .tweet-video {
+        height: calc(576px / (var(--aspect-ratio)));
+        max-height: 400px;
+      }
+    }
+
+    .aspect-image-full-size {
+      object-fit: initial;
+      max-height: 400px;
+
+      .tweet-image {
+        object-fit: initial;
+        max-height: 400px;
+      }
+    }
+
+    .thumbnail.onebox-avatar {
+      max-width: 38px;
+      margin-right: var(--space-2);
+      margin-top: var(--space-1);
+    }
+  }
+
   .chat-message-collapser
     .chat-message-collapser-header
     + div
     .chat-message-collapser-lazy-video {
     object-fit: contain;
-    max-height: $max_image_height;
-    max-width: calc(#{$max_image_height} / 9 * 16);
+    max-height: $max_video_height;
+    max-width: calc(#{$max_video_height} / 9 * 16);
+    margin-top: var(--space-2);
 
     &:has(div[data-provider-name="tiktok"]) {
       max-height: unset;

@@ -10,10 +10,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (
-      this.categoryTypeChooser.isEnabled &&
-      !this.categoryTypeChooser.hasCompletedSetup
-    ) {
+    if (!this.categoryTypeChooser.hasCompletedSetup) {
       this.router.replaceWith("newCategory.setup");
     }
   }
@@ -30,15 +27,18 @@ export default class NewCategoryTabs extends DiscourseRoute {
     // when creating a new category, so we need to keep the selection in memory.
     //
     // categoryTypeChooser is reset when leaving the newCategory route anyway.
-    const result = this.categoryTypeChooser.currentSelection();
+    const result = this.categoryTypeChooser.currentSelection;
     if (result) {
       const initialTypes = {};
       initialTypes[result.type] = {
         id: result.type,
         name: result.typeName,
         configuration_schema: result.typeSchema,
+        title: result.typeTitle,
+        visible: result.visible,
+        available: result.available,
       };
-      model.set("category_types", initialTypes);
+      model.set("categoryTypes", initialTypes);
 
       // Only want to prefill the general settings (name etc) if it's the
       // first category of this type.

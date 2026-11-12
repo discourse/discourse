@@ -12,9 +12,90 @@ describe DiscourseAi::TopicSummarization do
     SiteSetting.ai_summarization_enabled = true
   end
 
+  def create_cached_summary(topic, locale: SiteSetting.default_locale)
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: locale)
+    content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
+
+    Fabricate(
+      :ai_summary,
+      target: topic,
+      locale: locale,
+      original_content_sha: content_sha,
+      highest_target_number: topic.highest_post_number,
+    )
+  end
+
   let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
 
   let(:summary) { "This is the final summary" }
+
+  describe ".for" do
+    it "selects the displayed locale and respects the automatic-translation preference" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "he"
+      topic.update!(locale: "en")
+      english_summary = create_cached_summary(topic, locale: "en")
+      english_summary.update!(summarized_text: "English summary")
+      hebrew_summary = create_cached_summary(topic, locale: "he")
+      hebrew_summary.update!(summarized_text: "סיכום בעברית")
+
+      localized_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(localized_service.cached_summary).to eq(hebrew_summary)
+
+      user.user_option.update!(automatically_translate: false)
+      original_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(original_service.cached_summary).to eq(english_summary)
+    end
+
+    it "reads a cached summary without building the summarization bot" do
+      cached_summary = create_cached_summary(topic)
+      allow(DiscourseAi::Summarization).to receive(:build_bot).and_call_original
+
+      expect(described_class.for(topic, nil).cached_summary).to eq(cached_summary)
+      expect(DiscourseAi::Summarization).not_to have_received(:build_bot)
+    end
+
+    it "reads a cached summary without querying LLM models" do
+      cached_summary = create_cached_summary(topic)
+      result = nil
+
+      queries = track_sql_queries { result = described_class.for(topic, nil).cached_summary }
+
+      expect(result).to eq(cached_summary)
+      expect(queries.grep(/FROM "llm_models"/)).to be_empty
+    end
+
+    it "can read a stored summary when generation is unavailable" do
+      cached_summary = create_cached_summary(topic)
+      SiteSetting.ai_summarization_agent = ""
+      service = described_class.for(topic, user)
+
+      expect(service.cached_summary).to eq(cached_summary)
+      expect(service).not_to be_available
+      expect(service.summarize(force_regenerate: true)).to be_nil
+    end
+
+    it "does not read or generate summaries when summarization is disabled" do
+      create_cached_summary(topic)
+      SiteSetting.ai_summarization_enabled = false
+      service = described_class.for(topic, user)
+
+      expect(service.cached_summary).to be_nil
+      expect(service).not_to be_available
+      expect(service.summarize).to be_nil
+    end
+
+    it "generates a summary through the shared topic API" do
+      DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+        service = described_class.for(topic, user)
+
+        expect(service).to be_available
+        expect(service.summarize.summarized_text).to eq(summary)
+      end
+    end
+  end
 
   describe "#summarize" do
     subject(:summarization) { described_class.new(strategy, user) }
@@ -44,7 +125,6 @@ describe DiscourseAi::TopicSummarization do
         cached_summary_text = "This is a cached summary"
         AiSummary.find_by(target: topic, summary_type: AiSummary.summary_types[:complete]).update!(
           summarized_text: cached_summary_text,
-          updated_at: 24.hours.ago,
         )
 
         summarization = described_class.new(strategy, user)
@@ -114,6 +194,68 @@ describe DiscourseAi::TopicSummarization do
             end
           end
         end
+
+        context "when posts were edited" do
+          before do
+            cached_summary.update!(created_at: 30.minutes.ago)
+            post_2.update_columns(last_version_at: 1.minute.from_now)
+          end
+
+          it "regenerates even when the cached summary is less than one hour old" do
+            DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+              section = summarization.summarize
+
+              expect(section.summarized_text).to eq(summary)
+            end
+          end
+        end
+      end
+    end
+
+    it "regenerates a fresh cached summary when forced" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+        result = summarization.summarize(force_regenerate: true)
+
+        expect(result).to have_attributes(id: cached_summary.id, summarized_text: summary)
+      end
+    end
+
+    it "preserves a fresh cached summary when forced generation fails" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("LLM failed")]) do
+        expect { summarization.summarize(force_regenerate: true) }.to raise_error(
+          RuntimeError,
+          "LLM failed",
+        )
+      end
+
+      expect(cached_summary.reload.summarized_text).to eq("Cached summary")
+    end
+
+    context "when the user is anonymous" do
+      let(:summarization) { described_class.new(strategy, nil) }
+
+      it "returns a fresh cached summary" do
+        cached_summary = create_cached_summary(topic)
+
+        section = summarization.summarize
+
+        expect(section.id).to eq(cached_summary.id)
+      end
+
+      it "returns nil when the cached summary is outdated" do
+        create_cached_summary(topic)
+        Fabricate(:post, topic: topic, post_number: 3)
+        topic.update!(highest_post_number: 3)
+
+        section = summarization.summarize
+
+        expect(section).to be_nil
       end
     end
 

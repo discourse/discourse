@@ -35,6 +35,7 @@ module DiscourseSolved
       return false if !authenticated?
       return false if !topic || !post || post.post_number <= 1 || post.whisper?
       return false if !allow_accepted_answers?(topic)
+      return false if !can_see_post?(post)
 
       return true if is_staff?
 
@@ -48,7 +49,46 @@ module DiscourseSolved
     end
 
     def can_unaccept_answer?(topic, post)
-      can_accept_answer?(topic, post) || (is_staff? && topic.solved.present?)
+      can_accept_answer?(topic, post) ||
+        (is_staff? && topic&.topic_answers&.exists?(answer_post_id: post.id))
+    end
+
+    def can_create_shared_issue?(topic)
+      return false if topic.blank? || !authenticated?
+      return false if topic.user_id == current_user.id
+      return false if topic.private_message?
+      return false if topic.is_category_topic?
+      return false if topic.trashed? || topic.closed? || topic.archived?
+      return false if topic.solved.present? && !SiteSetting.solved_allow_multiple_solutions
+      return false unless topic_in_support_category?(topic)
+      return false unless shared_issues_enabled_for_category?(topic)
+      return false unless SiteSetting.enable_solved_shared_issues
+      can_see_topic?(topic)
+    end
+
+    def shared_issue_visible?(topic)
+      return false if topic.blank?
+      return false if topic.private_message?
+      return false if topic.is_category_topic?
+      return false if topic.trashed?
+      return false unless topic_in_support_category?(topic)
+      return false unless shared_issues_enabled_for_category?(topic)
+      return false unless SiteSetting.enable_solved_shared_issues
+      true
+    end
+
+    def shared_issues_enabled_for_category?(topic)
+      topic.category&.shared_issues_enabled?
+    end
+
+    def topic_in_support_category?(topic)
+      return false if topic.category_id.blank?
+
+      if !DiscourseSolved::AcceptedAnswerCache.allowed
+        DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+      end
+
+      DiscourseSolved::AcceptedAnswerCache.allowed.include?(topic.category_id)
     end
   end
 end

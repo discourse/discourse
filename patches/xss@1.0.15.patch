@@ -1,0 +1,24 @@
+diff --git a/lib/parser.js b/lib/parser.js
+--- a/lib/parser.js
++++ b/lib/parser.js
+@@ -128,6 +128,7 @@
+   var lastPos = 0;
+   var lastMarkPos = 0;
+   var retAttrs = [];
++  var whitespaceNormalized = false;
+   var tmpName = false;
+   var len = html.length;
+ 
+@@ -167,7 +168,11 @@
+       }
+     }
+     if (/\s|\n|\t/.test(c)) {
+-      html = html.replace(/\s|\n|\t/g, " ");
++      // Normalize lazily: doing this before parsing changes earlier quoted values.
++      if (!whitespaceNormalized) {
++        html = html.replace(/\s|\n|\t/g, " ");
++        whitespaceNormalized = true;
++      }
+       if (tmpName === false) {
+         j = findNextEqual(html, i);
+         if (j === -1) {

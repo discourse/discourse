@@ -1,10 +1,10 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import GamificationLeaderboardRow from "../discourse/components/gamification-leaderboard-row";
+import GamificationLeaderboardRow from "discourse/plugins/discourse-gamification/discourse/components/gamification-leaderboard-row";
 
 module(
-  "Discourse Gamification | Component | gamification-leaderboard-row",
+  "Discourse Gamification | Component | GamificationLeaderboardRow",
   function (hooks) {
     setupRenderingTest(hooks);
 

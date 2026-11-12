@@ -1,0 +1,63 @@
+import { concat } from "@ember/helper";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+
+const DEmptyState = <template>
+  <div
+    class="empty-state__container
+      {{if @identifier (concat '--' @identifier)}}
+      {{if (or @svgContent @icon) '--with-image' '--text-only'}}"
+    ...attributes
+  >
+    <div class="empty-state">
+      {{#if @svgContent}}
+        <div class="empty-state__image">
+          {{@svgContent}}
+        </div>
+      {{else if @icon}}
+        <div class="empty-state__image --icon">
+          {{dIcon @icon}}
+        </div>
+      {{/if}}
+
+      {{#if @title}}
+        <div class="empty-state__title" data-test-title>{{@title}}</div>
+      {{/if}}
+
+      {{#if @body}}
+        <div class="empty-state__body">
+          <p data-test-body>{{@body}}</p>
+        </div>
+      {{/if}}
+
+      {{#if @ctaLabel}}
+        <div class="empty-state__cta">
+          <DButton
+            class="btn-primary"
+            @action={{@ctaAction}}
+            @disabled={{@ctaDisabled}}
+            @href={{@ctaHref}}
+            @icon={{@ctaIcon}}
+            @route={{@ctaRoute}}
+            @translatedLabel={{@ctaLabel}}
+          />
+        </div>
+      {{/if}}
+
+      {{#if (or @tipText (has-block "tip"))}}
+        <div class="empty-state__tip">
+          {{#if @tipIcon}}
+            {{dIcon @tipIcon}}
+          {{/if}}
+          {{#if (has-block "tip")}}
+            {{yield to="tip"}}
+          {{else}}
+            {{@tipText}}
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</template>;
+
+export default DEmptyState;

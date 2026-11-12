@@ -1,0 +1,368 @@
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+import {
+  inputSummaryForNode,
+  outputSummaryForNode,
+  schemaFieldsForNodeInput,
+  schemaFieldsForNodeOutput,
+} from "../../../lib/workflows/data-preview.js";
+import {
+  inputFieldPrefixForConnection,
+  inputIndexForConnection,
+  nodeOutputJsonPath,
+  outputIndexForConnection,
+} from "../../../lib/workflows/expression-paths.js";
+import processFields from "../../../lib/workflows/field-processors.js";
+import {
+  nodeTypeColor,
+  nodeTypeIcon,
+} from "../../../lib/workflows/node-types.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
+import {
+  ancestorOutputNodes,
+  inputConnectionsForNode,
+  previousNodeForConnection,
+} from "../../../lib/workflows/schema-graph.js";
+import DragDropHint from "./drag-drop-hint.gjs";
+import SchemaField from "./schema-field.gjs";
+
+function ancestorIconStyle(type) {
+  return trustHTML(`color: ${nodeTypeColor(type)}`);
+}
+
+function nodeMatchesCondition(node, condition) {
+  if (condition.type && node.type !== condition.type) {
+    return false;
+  }
+  if (condition.parameters) {
+    for (const [key, value] of Object.entries(condition.parameters)) {
+      if (node.configuration?.[key] !== value) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function fieldVisible(fieldDef, nodes) {
+  const nodePresentConditions = fieldDef.display_options?.show?.node_present;
+  if (!nodePresentConditions) {
+    return true;
+  }
+  return nodePresentConditions.some((condition) =>
+    (nodes || []).some((n) => nodeMatchesCondition(n, condition))
+  );
+}
+
+const WORKFLOW_VARIABLE_TYPE_SCHEMAS = {
+  integer: "integer",
+  category: "integer",
+  group: "integer",
+  boolean: "boolean",
+  category_list: "array",
+  group_list: "array",
+  tag_list: "array",
+  simple_list: "array",
+};
+
+function workflowVariableEntries(workflowVariables) {
+  return (workflowVariables || []).map((field) => ({
+    key: field.key,
+    type: WORKFLOW_VARIABLE_TYPE_SCHEMAS[field.variable_type] || "string",
+    id: field.key,
+  }));
+}
+
+function schemaFieldToEntry(key, def, nodes, workflowVariables) {
+  const displayKey = key.replace(/^\$/, "");
+  const entry = {
+    key: displayKey,
+    type: def.type || "object",
+    id: key,
+  };
+
+  if (key === "$workflow_vars") {
+    entry.children = workflowVariableEntries(workflowVariables);
+  } else if (def.fields) {
+    entry.children = Object.entries(def.fields)
+      .filter(([, childDef]) => fieldVisible(childDef, nodes))
+      .map(([childKey, childDef]) => ({
+        key: childKey,
+        type: childDef.type || "string",
+        id: childKey,
+      }));
+  }
+
+  return entry;
+}
+
+function triggerProvidesCurrentUser(nodes, nodeTypesService) {
+  const triggerNode = (nodes || []).find((n) => n.type?.startsWith("trigger:"));
+  if (!triggerNode) {
+    return false;
+  }
+  const nodeType = nodeTypesService.findNodeType(triggerNode.type);
+  return nodeType?.capabilities?.provides_current_user ?? false;
+}
+
+function environmentFields(
+  expressionContext,
+  nodes,
+  nodeTypesService,
+  workflowVariables
+) {
+  const env = expressionContext.environment;
+  if (!env) {
+    return [];
+  }
+
+  const hasCurrentUser = triggerProvidesCurrentUser(nodes, nodeTypesService);
+
+  return Object.entries(env)
+    .filter(([, def]) => {
+      if (def.provided_by_trigger) {
+        return hasCurrentUser;
+      }
+      return true;
+    })
+    .map(([symbol, def]) =>
+      schemaFieldToEntry(symbol, def, nodes, workflowVariables)
+    );
+}
+
+export default class InputContext extends Component {
+  @service workflowsNodeTypes;
+
+  get graph() {
+    return {
+      nodes: this.args.nodes || [],
+      connections: this.args.connections || [],
+    };
+  }
+
+  @cached
+  get inputConnections() {
+    return inputConnectionsForNode(this.args.node, this.graph);
+  }
+
+  get primaryInputConnection() {
+    return this.inputConnections[0] || null;
+  }
+
+  get runData() {
+    return this.args.session?.lastExecutionRunData || {};
+  }
+
+  get inputSections() {
+    return this.inputConnections
+      .map((connection) => {
+        const previousNode = previousNodeForConnection(connection, this.graph);
+        if (!previousNode) {
+          return null;
+        }
+
+        const inputIndex = inputIndexForConnection(connection);
+        const outputIndex = outputIndexForConnection(connection);
+        const pinnedItems =
+          outputIndex === 0
+            ? this.args.session?.pinnedItemsForNode(previousNode.name)
+            : undefined;
+        const recordedInputSummary = inputSummaryForNode(
+          this.runData,
+          this.args.node.name,
+          inputIndex,
+          {
+            node: this.args.node,
+            sourceNode: previousNode,
+            outputIndex,
+            pinnedItems,
+          }
+        );
+        const fields = schemaFieldsForNodeInput(
+          this.runData,
+          this.args.node.name,
+          {
+            inputIndex,
+            node: this.args.node,
+            sourceNode: previousNode,
+            outputIndex,
+            prefix: inputFieldPrefixForConnection(connection, previousNode, {
+              primaryConnection: this.primaryInputConnection,
+            }),
+            pinnedItems,
+            declaredOutputSchemas: this.args.session?.outputSchemas,
+          }
+        );
+
+        return {
+          node: previousNode,
+          inputIndex,
+          fields: processFields(fields, this.args.node, this.graph),
+          itemCountLabel: this.itemCountLabel(recordedInputSummary),
+          inputLabel: this.inputConnectionLabel(inputIndex),
+          emptyMessage: this.emptyMessage(recordedInputSummary),
+        };
+      })
+      .filter(Boolean);
+  }
+
+  get environmentFields() {
+    return environmentFields(
+      this.workflowsNodeTypes.expressionContext,
+      this.args.nodes || [],
+      this.workflowsNodeTypes,
+      this.args.session?.variables
+    );
+  }
+
+  get ancestorNodes() {
+    const directNodeIds = new Set(
+      this.inputSections.map((section) => section.node.clientId)
+    );
+
+    return ancestorOutputNodes(this.args.node, this.graph)
+      .filter((ancestor) => !directNodeIds.has(ancestor.node.clientId))
+      .map((ancestor) => {
+        const pinnedItems =
+          ancestor.outputIndex === 0
+            ? this.args.session?.pinnedItemsForNode(ancestor.node.name)
+            : undefined;
+        const prefix = nodeOutputJsonPath(this.runData, ancestor.node.name, {
+          outputIndex: ancestor.outputIndex,
+          node: ancestor.node,
+          itemCount: pinnedItems?.length,
+        });
+        const fields = pinnedItems
+          ? schemaFieldsForItems(pinnedItems, { prefix })
+          : schemaFieldsForNodeOutput(this.runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+              prefix,
+              declaredOutputSchemas: this.args.session?.outputSchemas,
+            });
+        const summary = pinnedItems
+          ? { itemCount: pinnedItems.length, truncated: false }
+          : outputSummaryForNode(
+              this.runData,
+              ancestor.node.name,
+              ancestor.outputIndex,
+              { node: ancestor.node }
+            );
+        return {
+          name: ancestor.node.name,
+          type:
+            this.workflowsNodeTypes.findNodeType(ancestor.node.type) ||
+            ancestor.node.type,
+          fields,
+          itemCountLabel: this.itemCountLabel(summary),
+        };
+      })
+      .filter((ancestor) => ancestor.fields.length);
+  }
+
+  itemCountLabel(summary) {
+    if (!summary?.itemCount) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_item_count", {
+      count: summary.itemCount,
+    });
+  }
+
+  emptyMessage(summary) {
+    if (summary?.itemCount > 0) {
+      return i18n("discourse_workflows.configurator.no_input_fields");
+    }
+
+    return i18n("discourse_workflows.configurator.no_input_context");
+  }
+
+  inputConnectionLabel(inputIndex) {
+    if (this.inputConnections.length < 2 && inputIndex === 0) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_input_label", {
+      number: inputIndex + 1,
+    });
+  }
+
+  <template>
+    <div class="workflows-context-panel">
+      {{#if @hasConfiguration}}
+        <DragDropHint />
+      {{/if}}
+
+      {{#each this.inputSections as |section|}}
+        <div class="workflows-context-panel__section">
+          <h3 class="workflows-context-panel__title">
+            {{dIcon "right-to-bracket"}}
+            {{section.node.name}}
+            {{#if section.inputLabel}}
+              <span class="workflows-context-panel__title-info">
+                {{section.inputLabel}}
+              </span>
+            {{/if}}
+            {{#if section.itemCountLabel}}
+              <span class="workflows-context-panel__title-meta">
+                {{section.itemCountLabel}}
+              </span>
+            {{/if}}
+          </h3>
+
+          {{#if section.fields.length}}
+            <ul class="workflows-schema-field-list">
+              {{#each section.fields as |field|}}
+                <SchemaField @draggable={{true}} @field={{field}} />
+              {{/each}}
+            </ul>
+          {{else}}
+            <p class="workflows-context-panel__empty">
+              {{section.emptyMessage}}
+            </p>
+          {{/if}}
+        </div>
+      {{/each}}
+
+      <div class="workflows-context-panel__section">
+        <h3 class="workflows-context-panel__title">
+          {{dIcon "gear"}}
+          {{i18n "discourse_workflows.configurator.environment"}}
+        </h3>
+
+        <ul class="workflows-schema-field-list">
+          {{#each this.environmentFields as |field|}}
+            <SchemaField @draggable={{true}} @field={{field}} />
+          {{/each}}
+        </ul>
+      </div>
+
+      {{#each this.ancestorNodes as |ancestor|}}
+        <div class="workflows-context-panel__section">
+          <h3 class="workflows-context-panel__title">
+            <span style={{ancestorIconStyle ancestor.type}}>
+              {{dIcon (nodeTypeIcon ancestor.type)}}
+            </span>
+            {{ancestor.name}}
+            {{#if ancestor.itemCountLabel}}
+              <span class="workflows-context-panel__title-meta">
+                {{ancestor.itemCountLabel}}
+              </span>
+            {{/if}}
+          </h3>
+
+          <ul class="workflows-schema-field-list">
+            {{#each ancestor.fields as |field|}}
+              <SchemaField @draggable={{true}} @field={{field}} />
+            {{/each}}
+          </ul>
+        </div>
+      {{/each}}
+    </div>
+  </template>
+}

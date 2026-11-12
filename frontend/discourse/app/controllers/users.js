@@ -1,14 +1,31 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { and, equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
+import EditUserDirectoryColumnsModalReorderable from "discourse/components/modal/edit-user-directory-columns-reorderable";
 import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
 
+/**
+ * @typedef {Object} DirectoryParams
+ * @property {string} [period]
+ * @property {string} [order]
+ * @property {boolean | string | null} [asc]
+ * @property {string} [name]
+ * @property {string | null} [group]
+ * @property {string | null} [exclude_usernames]
+ * @property {string | null} [exclude_groups]
+ * @property {string} [user_field_ids]
+ * @property {string} [plugin_column_ids]
+ */
 export default class UsersController extends Controller {
   @service modal;
+  @service siteSettings;
+
+  @tracked period = "weekly";
 
   queryParams = [
     "period",
@@ -20,21 +37,43 @@ export default class UsersController extends Controller {
     "exclude_groups",
   ];
 
-  period = "weekly";
   order = "";
+
+  /** @type {boolean | string | null} */
   asc = null;
   name = "";
+
+  /** @type {string | null | undefined} */
   group = null;
+
+  /** @type {string | null | undefined} */
   nameInput = null;
+
+  /** @type {string | null} */
   exclude_usernames = null;
+
+  /** @type {string | null} */
   exclude_groups = null;
   isLoading = false;
+
+  /** @type {{ id: number, name: string, type: string, position: number, icon: string | null, user_field_id: number | null }[] | null} */
   columns = null;
+
+  /** @type {{ name: string, id: string }[] | null} */
   groupOptions = null;
+
+  /** @type {DirectoryParams | null} */
   params = null;
 
-  @and("currentUser", "groupOptions") showGroupFilter;
-  @equal("period", "all") showTimeRead;
+  @computed("currentUser", "groupOptions")
+  get showGroupFilter() {
+    return this.currentUser && this.groupOptions;
+  }
+
+  @dependentKeyCompat
+  get showTimeRead() {
+    return this.period === "all";
+  }
 
   loadUsers(params = null) {
     if (params) {
@@ -101,20 +140,18 @@ export default class UsersController extends Controller {
 
   @action
   showEditColumnsModal() {
-    this.modal.show(EditUserDirectoryColumnsModal);
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? EditUserDirectoryColumnsModalReorderable
+      : EditUserDirectoryColumnsModal;
+
+    this.modal.show(Modal);
   }
 
   @action
   onUsernameFilterChanged(filter) {
     discourseDebounce(this, this._setUsernameFilter, filter, 500);
-  }
-
-  _setUsernameFilter(username) {
-    this.setProperties({
-      name: username,
-      "params.name": username,
-    });
-    this.loadUsers();
   }
 
   @action
@@ -125,5 +162,13 @@ export default class UsersController extends Controller {
   @action
   loadMore() {
     this.model.loadMore();
+  }
+
+  _setUsernameFilter(username) {
+    this.setProperties({
+      name: username,
+      "params.name": username,
+    });
+    this.loadUsers();
   }
 }

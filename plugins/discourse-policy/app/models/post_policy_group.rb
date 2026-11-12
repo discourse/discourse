@@ -10,10 +10,10 @@ end
 # Table name: post_policy_groups
 #
 #  id             :bigint           not null, primary key
-#  group_id       :integer          not null
-#  post_policy_id :bigint           not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  group_id       :integer          not null
+#  post_policy_id :bigint           not null
 #
 # Indexes
 #

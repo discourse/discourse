@@ -5,11 +5,24 @@ discourse_zendesk:
   zendesk_enabled:
     default: false
     client: true
+  zendesk_create_ticket_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
+  zendesk_view_ticket_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
   zendesk_jobs_api_token:
     default: ""
     secret: true
   zendesk_jobs_email:
     default: ""
+  zendesk_oauth_client_id:
+    default: ""
+  zendesk_oauth_client_secret:
+    default: ""
+    secret: true
   zendesk_autogenerate_all_categories:
     default: false
   zendesk_autogenerate_categories:

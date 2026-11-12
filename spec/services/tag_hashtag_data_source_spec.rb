@@ -37,6 +37,11 @@ RSpec.describe TagHashtagDataSource do
       expect(described_class.search(guardian, "fact", 5).map(&:slug)).not_to include("fact")
     end
 
+    it "includes tags only used in personal messages for users who cannot tag PMs" do
+      tag1.update!(pm_topic_count: 1)
+      expect(described_class.search(guardian, "fact", 5).map(&:slug)).to include("fact")
+    end
+
     it "returns an array of HashtagAutocompleteService::HashtagItem" do
       expect(described_class.search(guardian, "fact", 1).first).to be_a(
         HashtagAutocompleteService::HashtagItem,
@@ -73,6 +78,11 @@ RSpec.describe TagHashtagDataSource do
     it "does not return tags the user has muted" do
       TagUser.create(user: user, tag: tag2, notification_level: TagUser.notification_levels[:muted])
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).not_to include("factor")
+    end
+
+    it "includes tags only used in personal messages for users who cannot tag PMs" do
+      tag1.update!(pm_topic_count: 1)
+      expect(described_class.search_without_term(guardian, 5).map(&:slug)).to include("fact")
     end
   end
 

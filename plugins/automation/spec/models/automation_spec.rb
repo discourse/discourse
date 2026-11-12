@@ -21,6 +21,74 @@ describe DiscourseAutomation::Automation do
         expect(list).to eq(["Howdy!"])
       end
     end
+
+    context "when triggers are suppressed" do
+      it "doesn’t run the script" do
+        automation = Fabricate(:automation, enabled: true)
+
+        list =
+          capture_contexts do
+            DiscourseAutomation.suppress_triggers { automation.trigger!("Howdy!") }
+          end
+
+        expect(list).to eq([])
+      end
+    end
+
+    context "when recursively triggered" do
+      before do
+        DiscourseAutomation::Scriptable.add("recursive_test_scriptable") do
+          script do |context, _, automation|
+            depth = context[:depth]
+
+            DiscourseAutomation::CapturedContext.add(depth)
+
+            if depth < context[:target_depth]
+              automation.trigger!(depth: depth + 1, target_depth: context[:target_depth])
+            end
+          end
+        end
+      end
+
+      after { DiscourseAutomation::Scriptable.remove("recursive_test_scriptable") }
+
+      it "runs nested triggers up to the configured maximum depth" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 5) }
+
+        expect(list).to eq([1, 2, 3, 4, 5])
+      end
+
+      it "does not allow recursive triggers by default" do
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 2) }
+
+        expect(list).to eq([1])
+      end
+
+      it "silently stops when the configured maximum depth is exceeded" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
+
+        expect(list).to eq([1, 2, 3, 4, 5])
+      end
+
+      it "clears recursion depth after the limit is reached" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 1) }
+
+        expect(list).to eq([1])
+      end
+    end
   end
 
   describe "when a script is meant to be triggered in the background" do
@@ -72,7 +140,7 @@ describe DiscourseAutomation::Automation do
     end
   end
 
-  context "when automation’s script has a field with validor" do
+  context "when automation’s script has a field with validator" do
     before do
       DiscourseAutomation::Scriptable.add("required_dogs") do
         field :dog, component: :text, validator: ->(input) { "must have dog" if input != "dog" }
@@ -161,6 +229,28 @@ describe DiscourseAutomation::Automation do
           }.to raise_error(ActiveRecord::RecordInvalid, /dog/)
         end
       end
+    end
+  end
+
+  describe ".serialize_context" do
+    it "serializes date and time as iso8601" do
+      expect(
+        described_class.serialize_context(
+          {
+            "time" => Time.utc(2026, 4, 15, 12, 0, 0),
+            "time_with_zone" => Time.utc(2026, 4, 15, 12, 0, 0).in_time_zone("Europe/Warsaw"),
+            "date_time" => DateTime.new(2026, 4, 15, 12, 0, 0),
+            "date" => Date.new(2026, 4, 15),
+          },
+        ),
+      ).to eq(
+        {
+          "time" => "2026-04-15T12:00:00Z",
+          "time_with_zone" => "2026-04-15T14:00:00+02:00",
+          "date_time" => "2026-04-15T12:00:00+00:00",
+          "date" => "2026-04-15",
+        },
+      )
     end
   end
 

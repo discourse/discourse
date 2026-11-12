@@ -34,7 +34,7 @@ RSpec.describe DiscoursePoll::PollsController do
   before { Group.refresh_automatic_groups! }
 
   describe "#vote" do
-    it "works" do
+    it "publishes the updated poll vote" do
       channel = "/polls/#{poll.topic_id}"
 
       message =
@@ -63,6 +63,8 @@ RSpec.describe DiscoursePoll::PollsController do
     end
 
     it "works in PM" do
+      Fabricate(:moderator)
+      admin = Fabricate(:admin)
       user2 = Fabricate(:user)
       topic =
         Fabricate(
@@ -97,7 +99,7 @@ RSpec.describe DiscoursePoll::PollsController do
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
       expect(message.channel).to eq(channel)
-      expect(message.user_ids).to contain_exactly(user.id, user2.id)
+      expect(message.user_ids).to contain_exactly(user.id, user2.id, admin.id)
       expect(message.group_ids).to eq(nil)
     end
 
@@ -133,6 +135,36 @@ RSpec.describe DiscoursePoll::PollsController do
       expect(message.channel).to eq(channel)
       expect(message.user_ids).to eq(nil)
       expect(message.group_ids).to contain_exactly(group.id)
+    end
+
+    it "blocks topic participants from voting on a staff whisper" do
+      visible_post = Fabricate(:post, topic: topic)
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: Fabricate(:admin),
+          post_type: Post.types[:whisper],
+          raw: "[poll]\n- Staff-only option\n- Another staff-only option\n[/poll]",
+        )
+      secret_option = whisper.polls.first.poll_options.first
+
+      expect(user.guardian.can_see?(visible_post)).to eq(true)
+      expect(user.guardian.can_see?(whisper)).to eq(false)
+
+      put :vote,
+          params: {
+            post_id: whisper.id,
+            poll_name: "poll",
+            options: [secret_option.digest],
+          },
+          format: :json
+
+      aggregate_failures do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).not_to include(secret_option.html)
+        expect(PollVote.exists?(poll_option: secret_option, user: user)).to eq(false)
+      end
     end
 
     it "requires at least 1 valid option" do
@@ -531,6 +563,84 @@ RSpec.describe DiscoursePoll::PollsController do
         expect(json["voters"][first].size).to eq(1)
         expect(json["voters"][first][0]["id"]).to eq(user_in_group.id)
       end
+    end
+  end
+
+  context "when post_id does not match the poll's post" do
+    it "does not allow voting on another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      put :vote,
+          params: {
+            post_id: [accessible_post.id, private_poll_post.id],
+            poll_name: "poll",
+            options: ["5c24fc1df56d764b550ceae1b9319125"],
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(PollVote.where(user_id: user.id).count).to eq(0)
+    end
+
+    it "does not allow removing a vote from another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      delete :remove_vote,
+             params: {
+               post_id: [accessible_post.id, private_poll_post.id],
+               poll_name: "poll",
+             },
+             format: :json
+
+      expect(response.status).not_to eq(200)
+    end
+
+    it "does not allow toggling status of another post's poll" do
+      own_post = Fabricate(:post, topic: topic, user: user)
+
+      other_topic = Fabricate(:topic)
+      other_user = Fabricate(:user, trust_level: TrustLevel[1])
+      victim_poll_post =
+        Fabricate(:post, topic: other_topic, user: other_user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      expect(own_post.id).to be < victim_poll_post.id
+
+      put :toggle_status,
+          params: {
+            post_id: [own_post.id, victim_poll_post.id],
+            poll_name: "poll",
+            status: "closed",
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(victim_poll_post.polls.first.reload.status).to eq("open")
     end
   end
 end

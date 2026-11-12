@@ -17,9 +17,9 @@ end
 # Table name: dismissed_topic_users
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer
-#  topic_id   :integer
 #  created_at :datetime
+#  topic_id   :integer
+#  user_id    :integer
 #
 # Indexes
 #

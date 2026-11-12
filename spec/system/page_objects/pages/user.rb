@@ -61,6 +61,15 @@ module PageObjects
         page.has_css?(".staff-counters .flags", text: count.to_s)
       end
 
+      def click_staff_info_flags_given_link
+        page.find(".staff-counters .helpful-flags").click
+        self
+      end
+
+      def has_staff_counter_flags_given?(count:)
+        page.has_css?(".staff-counters .helpful-flags", text: count.to_s)
+      end
+
       def expand_info_panel
         button = page.find("button[aria-controls='collapsed-info-panel']")
         button.click if button["aria-expanded"] == "false"

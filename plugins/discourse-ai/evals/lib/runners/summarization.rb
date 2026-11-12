@@ -55,7 +55,10 @@ module DiscourseAi
           elsif gists?
             [
               DiscourseAi::Agents::ShortSummarizer,
-              DiscourseAi::Summarization::Strategies::HotTopicGists.new(topic),
+              DiscourseAi::Summarization::Strategies::HotTopicGists.new(
+                topic,
+                locale: SiteSetting.default_locale,
+              ),
             ]
           else
             raise "Unknown summary type"
@@ -64,6 +67,8 @@ module DiscourseAi
 
         def capture_summary(agent, user, llm, context, execution_context:)
           bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
+          return capture_tool_response(bot, context, execution_context:) if gists?
+
           schema = agent.response_format&.first
 
           if schema.present?
@@ -77,6 +82,20 @@ module DiscourseAi
           else
             capture_plain_response(bot, context, execution_context:)
           end
+        end
+
+        def capture_tool_response(bot, context, execution_context:)
+          summary = nil
+          bot.reply(context, execution_context:) do |partial, _, type|
+            summary = partial.to_s if type == :custom_raw
+          end
+
+          if summary.blank?
+            raise DiscourseAi::Summarization::FoldContent::MissingToolOutput,
+                  "The model did not set a topic summary"
+          end
+
+          summary
         end
 
         def extract_conversation(args)

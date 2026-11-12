@@ -105,7 +105,7 @@ class EndpointMock
   end
 
   def self.with_chunk_array_support(&blk)
-    self.new(nil).with_chunk_array_support(&blk)
+    new(nil).with_chunk_array_support(&blk)
   end
 
   protected

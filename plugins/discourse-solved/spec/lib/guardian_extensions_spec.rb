@@ -10,6 +10,13 @@ describe DiscourseSolved::GuardianExtensions do
 
   before { SiteSetting.allow_solved_on_all_topics = true }
 
+  describe ".can_unaccept_answer? with a missing topic" do
+    it "returns false when topic is nil" do
+      admin = Fabricate(:admin, refresh_auto_groups: true)
+      expect(Guardian.new(admin).can_unaccept_answer?(nil, post)).to be_falsey
+    end
+  end
+
   describe ".can_accept_answer?" do
     it "returns false for anon users" do
       expect(Guardian.new.can_accept_answer?(topic, post)).to eq(false)
@@ -109,6 +116,65 @@ describe DiscourseSolved::GuardianExtensions do
       SiteSetting.accept_all_solutions_allowed_groups = Fabricate(:group).id
       user.update!(trust_level: TrustLevel[4])
       expect(guardian.can_accept_answer?(topic, post)).to eq(false)
+    end
+
+    it "returns false when user cannot see the post" do
+      group = Fabricate(:group)
+      category = Fabricate(:private_category, group:)
+      restricted_topic = Fabricate(:topic_with_op, category:)
+      restricted_post = Fabricate(:post, topic: restricted_topic)
+
+      SiteSetting.accept_all_solutions_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      user.update!(trust_level: TrustLevel[4])
+      Group.refresh_automatic_groups!
+
+      expect(guardian.can_accept_answer?(restricted_topic, restricted_post)).to eq(false)
+    end
+  end
+
+  describe ".can_unaccept_answer?" do
+    it "returns false when user cannot see the post" do
+      group = Fabricate(:group)
+      category = Fabricate(:private_category, group:)
+      restricted_topic = Fabricate(:topic_with_op, category:)
+      restricted_post = Fabricate(:post, topic: restricted_topic)
+
+      SiteSetting.accept_all_solutions_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      user.update!(trust_level: TrustLevel[4])
+      Group.refresh_automatic_groups!
+
+      expect(guardian.can_unaccept_answer?(restricted_topic, restricted_post)).to eq(false)
+    end
+  end
+
+  describe "shared issues" do
+    fab!(:support_category) do
+      Fabricate(:category_with_definition).tap do |c|
+        c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+      end
+    end
+    fab!(:support_topic) { Fabricate(:topic_with_op, category: support_category, user: other_user) }
+
+    before { DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache }
+
+    describe ".can_create_shared_issue?" do
+      it "returns true for a regular topic in a support category" do
+        expect(guardian.can_create_shared_issue?(support_topic)).to eq(true)
+      end
+
+      it "returns false for the category definition topic" do
+        expect(guardian.can_create_shared_issue?(support_category.topic)).to eq(false)
+      end
+    end
+
+    describe ".shared_issue_visible?" do
+      it "returns true for a regular topic in a support category" do
+        expect(guardian.shared_issue_visible?(support_topic)).to eq(true)
+      end
+
+      it "returns false for the category definition topic" do
+        expect(guardian.shared_issue_visible?(support_category.topic)).to eq(false)
+      end
     end
   end
 end

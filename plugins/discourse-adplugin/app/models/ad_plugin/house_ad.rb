@@ -15,7 +15,7 @@ module AdPlugin
     has_many :impressions,
              class_name: "AdPlugin::AdImpression",
              foreign_key: "ad_plugin_house_ad_id",
-             dependent: :destroy
+             dependent: :delete_all
 
     has_many :routes,
              class_name: "AdPlugin::HouseAdRoute",
@@ -86,7 +86,7 @@ module AdPlugin
     def sanitize_html
       return unless html_changed?
 
-      fragment = Loofah.html5_fragment(self.html)
+      fragment = Loofah.html5_fragment(html)
 
       scrubber =
         Loofah::Scrubber.new do |node|

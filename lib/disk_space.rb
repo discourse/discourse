@@ -6,11 +6,9 @@ class DiskSpace
   end
 
   def self.uploads_free_bytes
-    if Discourse.store.external?
-      0
-    else
-      free(uploads_path)
-    end
+    return nil if Discourse.store.external?
+
+    free(uploads_path)
   end
 
   def self.free(path)
@@ -30,7 +28,7 @@ class DiskSpace
   end
 
   def self.uploads_path
-    "#{Rails.root}/public/#{Discourse.store.upload_path}"
+    "#{Rails.root.join("public/#{Discourse.store.upload_path}")}"
   end
   private_class_method :uploads_path
 end

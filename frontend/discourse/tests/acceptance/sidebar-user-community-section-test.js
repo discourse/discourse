@@ -466,7 +466,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
     );
 
-    assert.strictEqual(currentRouteName(), "admin.dashboard.general");
+    assert.strictEqual(currentRouteName(), "admin.dashboard");
   });
 
   test("admin section link is not shown to non-staff users", async function (assert) {
@@ -583,7 +583,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       user_option: {
         sidebar_show_count_of_new_items: true,
       },
-      new_new_view_enabled: true,
+      unified_new_enabled: true,
     });
     await visit("/");
 
@@ -1095,7 +1095,7 @@ acceptance(
   "Sidebar - Logged on user - Community Section - New new view experiment enabled",
   function (needs) {
     needs.user({
-      new_new_view_enabled: true,
+      unified_new_enabled: true,
     });
 
     needs.settings({

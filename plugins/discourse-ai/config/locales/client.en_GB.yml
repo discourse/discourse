@@ -13,10 +13,24 @@ en_GB:
             categories:
               label: "Categories"
     discourse_ai:
+      translations:
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+        model_progress:
+          targets:
+            category:
+              title: "Categories"
       usage:
         summary: "Summary"
+      logs:
+        post: "Post"
+        retention:
+          summary_stage: "Summary"
       ai_agent:
         description: "Description"
       tools:
         description: "Description"
         summary: "Summary"
+      mcp_servers:
+        description: "Description"

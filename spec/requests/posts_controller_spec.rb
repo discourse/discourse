@@ -8,10 +8,10 @@ RSpec.shared_examples "finding and showing post" do
     topic.convert_to_private_message(Discourse.system_user)
     topic.remove_allowed_user(Discourse.system_user, user.username)
     get url
-    expect(response).to be_forbidden
+    expect(response.status).to eq(404)
   end
 
-  it "succeeds" do
+  it "returns 200 for an accessible post" do
     get url
     expect(response.status).to eq(200)
   end
@@ -75,7 +75,7 @@ end
 
 RSpec.shared_examples "action requires login" do |method, url, params = {}|
   it "raises an exception when not logged in" do
-    self.public_send(method, url, **params)
+    public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
@@ -100,6 +100,17 @@ RSpec.describe PostsController do
       let(:url) { "/posts/#{post.id}.json" }
     end
 
+    it "does not reveal private post existence to anonymous users" do
+      get "/posts/#{private_post.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+
+      get "/posts/#{Post.maximum(:id) + 1}.json"
+
+      expect(response.status).to eq(404)
+    end
+
     it "gets all the expected fields" do
       # non fabricated test
       new_post = create_post
@@ -112,11 +123,181 @@ RSpec.describe PostsController do
       expect(parsed["username"]).to eq(new_post.user.username)
       expect(parsed["cooked"]).to eq(new_post.cooked)
     end
+
+    it "localizes posts from Accept-Language for clients classified as crawlers" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_crawler_param = true
+      SiteSetting.content_localization_supported_locales = "ja"
+      localized_post = Fabricate(:post, raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      get "/posts/#{localized_post.id}",
+          headers: {
+            "HTTP_USER_AGENT" => "curl/8.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_LANGUAGE" => "ja",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["cooked"]).to eq("<p>翻訳された本文</p>")
+    end
+
+    context "with version parameter" do
+      let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
+      let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }
+
+      it "returns the reverted content for a visible revision" do
+        post_revision
+        sign_in(user)
+        get "/posts/#{post_with_revisions.id}.json?version=1"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+      end
+
+      it "rejects a version restored from a hidden revision" do
+        hidden_raw = "hidden moderator-redacted secret"
+        hidden_cooked = "<p>#{hidden_raw}</p>"
+        post_with_hidden_revision =
+          Fabricate(:post, user: user, version: 3, raw: "public current version")
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 2,
+          hidden: true,
+          modifications: {
+            "cooked" => ["<p>public first version</p>", hidden_cooked],
+            "raw" => ["public first version", hidden_raw],
+          },
+        )
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 3,
+          modifications: {
+            "cooked" => [hidden_cooked, "<p>public current version</p>"],
+            "raw" => [hidden_raw, "public current version"],
+          },
+        )
+
+        get "/posts/#{post_with_hidden_revision.id}.json", params: { version: 2 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+      end
+
+      context "when the revision is hidden" do
+        before { post_revision.update!(hidden: true) }
+
+        it "rejects access for a regular user" do
+          sign_in(user)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for an anonymous user" do
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for a category group moderator" do
+          SiteSetting.enable_category_group_moderation = true
+          group = Fabricate(:group)
+          category_moderator = Fabricate(:user, groups: [group])
+          Fabricate(
+            :category_moderation_group,
+            category: post_with_revisions.topic.category,
+            group:,
+          )
+
+          sign_in(category_moderator)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+        end
+      end
+
+      context "when edit history is not visible to the public" do
+        before { SiteSetting.edit_history_visible_to_public = false }
+
+        it "rejects access for an anonymous user" do
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for a regular user who is not the poster" do
+          other_user = Fabricate(:user)
+          sign_in(other_user)
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          post_revision
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "#by_number" do
     include_examples "finding and showing post" do
       let(:url) { "/posts/by_number/#{post.topic_id}/#{post.post_number}.json" }
+    end
+  end
+
+  describe "whisper visibility" do
+    it "blocks removed whisperers from their own whisper", :aggregate_failures do
+      whisper_group = Fabricate(:group)
+      whisper_author = Fabricate(:user, trust_level: TrustLevel[1])
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic)
+      original_raw = "staff-only whisper body"
+      edited_raw = "edited whisper body"
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: whisper_author,
+          post_type: Post.types[:whisper],
+          raw: original_raw,
+        )
+
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+      whisper_group.add(whisper_author)
+      whisper_group.remove(whisper_author)
+      sign_in(User.find(whisper_author.id))
+
+      get "/posts/#{whisper.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/posts/by_number/#{topic.id}/#{whisper.post_number}.json"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/raw/#{topic.id}/#{whisper.post_number}"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      put "/posts/#{whisper.id}.json", params: { post: { raw: edited_raw } }
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(edited_raw)
+      expect(whisper.reload.raw).to eq(original_raw)
     end
   end
 
@@ -255,7 +436,7 @@ RSpec.describe PostsController do
         sign_in(user)
 
         delete "/posts/#{post.id}.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "raises an error when the self deletions are disabled" do
@@ -265,6 +446,19 @@ RSpec.describe PostsController do
 
         delete "/posts/#{post.id}.json"
         expect(response).to be_forbidden
+      end
+
+      it "deletes another user's post for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        post = Fabricate(:post, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.deleted_at).to be_present
       end
 
       it "uses a PostDestroyer" do
@@ -406,6 +600,19 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "deletes the posts for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        sign_in(user)
+
+        delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+
+        expect(response.status).to eq(200)
+        expect(post1.reload.deleted_at).to be_present
+        expect(post2.reload.deleted_at).to be_present
+      end
+
       # bookmark
       it "triggers DiscourseEvent with :posts_destroyed and correct params" do
         sign_in(poster)
@@ -480,7 +687,7 @@ RSpec.describe PostsController do
         sign_in(user)
 
         put "/posts/#{post.id}/recover.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "raises an error when self deletion/recovery is disabled" do
@@ -522,6 +729,135 @@ RSpec.describe PostsController do
           },
         },
       }
+    end
+
+    context "when a trust level 1 user edits a public wiki post" do
+      it "does not publish a hidden new user profile onebox" do
+        author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        editor = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        profile_user = Fabricate(:user, trust_level: TrustLevel[1])
+        profile_user.user_stat.update!(post_count: 0)
+        profile_user.user_profile.update!(
+          bio_raw: "private new user biography",
+          location: "private new user location",
+          website: "https://private-new-user.example.com",
+        )
+        wiki_post = create_post(user: author, raw: "public wiki post")
+        wiki_post.update!(wiki: true)
+        Group[:trust_level_1].add(editor)
+        editor.reload
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        SiteSetting.hide_new_user_profiles = true
+        CookedPostProcessor.any_instance.stubs(:get_size).returns([100, 100])
+        Jobs.run_immediately!
+
+        sign_in(editor)
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              post: {
+                raw: "#{Discourse.base_url}/u/#{profile_user.username}",
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+
+        sign_out
+        get "/posts/#{wiki_post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(profile_user.user_profile.bio_raw)
+        expect(response.body).not_to include(profile_user.user_profile.location)
+        expect(response.body).not_to include(profile_user.user_profile.website)
+      end
+    end
+
+    context "when a wiki editor changes another user's topic title" do
+      fab!(:author) { Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true) }
+      fab!(:editor) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:wiki_post) do
+        create_post(
+          user: author,
+          title: "Original topic title",
+          raw: "Original wiki body",
+        ).tap { |post| post.update!(wiki: true) }
+      end
+
+      before do
+        Group[:trust_level_1].add(editor)
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        sign_in(editor)
+      end
+
+      it "prevents title changes while allowing wiki body edits" do
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              title: "Unauthorized topic title",
+              post: {
+                raw: "Unauthorized wiki body",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+        expect(wiki_post.raw).to eq("Original wiki body")
+
+        put "/posts/#{wiki_post.id}.json", params: { post: { raw: "Authorized wiki body" } }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body.dig("post", "raw")).to eq("Authorized wiki body")
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+      end
+    end
+
+    context "with default wiki-edit settings" do
+      fab!(:private_group, :group)
+      fab!(:author) do
+        Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true).tap do |user|
+          private_group.add(user)
+        end
+      end
+      fab!(:editor) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:outsider) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+      fab!(:public_category, :category)
+      fab!(:wiki_post) do
+        create_post(
+          user: author,
+          category: private_category,
+          title: "Restricted topic title",
+          raw: "Restricted wiki body",
+        ).tap { |post| post.update!(wiki: true) }
+      end
+
+      before do
+        private_group.add(editor)
+        sign_in(editor)
+      end
+
+      it "does not let a trust level 1 wiki editor move another user's restricted topic to a public category" do
+        expect(SiteSetting.edit_wiki_post_allowed_groups_map).to include(
+          Group::AUTO_GROUPS[:trust_level_1],
+        )
+
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              post: {
+                category_id: public_category.id,
+                raw: "Restricted wiki body",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(wiki_post.reload.topic.category_id).to eq(private_category.id)
+
+        sign_in(outsider)
+        get "/t/#{wiki_post.topic.id}.json"
+
+        expect(response).to be_not_found
+        expect(response.body).not_to include(wiki_post.reload.raw)
+      end
     end
 
     describe "when logged in as a regular user" do
@@ -625,6 +961,39 @@ RSpec.describe PostsController do
     describe "when logged in as staff" do
       before { sign_in(moderator) }
 
+      it "limits edit reasons while allowing staff to edit small action content" do
+        small_action = Fabricate(:small_action, user: user)
+        oversized_edit_reason = "a" * 1001
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: oversized_edit_reason,
+              },
+            }
+
+        aggregate_failures do
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            "Edit reason is too long (maximum is 1000 characters)",
+          )
+          expect(small_action.reload.edit_reason).not_to eq(oversized_edit_reason)
+        end
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: "a" * 1000,
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body["post"]["raw"]).to eq("x")
+        expect(small_action.reload.edit_reason).to eq("a" * 1000)
+      end
+
       it "supports updating posts in deleted topics" do
         first_post = post.topic.ordered_posts.first
         PostDestroyer.new(moderator, first_post).destroy
@@ -636,7 +1005,76 @@ RSpec.describe PostsController do
         expect(post.raw).to eq("edited body")
       end
 
-      it "won't update bump date if post is a whisper" do
+      it "prevents unrelated moderators from updating posts in deleted private messages" do
+        private_message_post = Fabricate(:private_message_post, raw: "private message secret")
+        private_message_reply =
+          Fabricate(
+            :post,
+            topic: private_message_post.topic,
+            user: private_message_post.user,
+            raw: "private reply secret",
+          )
+        private_message_post.topic.trash!
+
+        get "/posts/#{private_message_reply.id}.json"
+        expect(response).to be_not_found
+        expect(response.body).not_to include(private_message_reply.raw)
+
+        put "/posts/#{private_message_reply.id}.json",
+            params: {
+              post: {
+                raw: "moderator overwrite",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.body).not_to include(private_message_reply.raw)
+        expect(private_message_reply.reload.raw).to eq("private reply secret")
+      end
+
+      it "rolls back post changes when a first-post title edit is invalid" do
+        Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "blockedword")
+
+        first_post = create_post(user:, title: "Original topic title", raw: "Original topic body")
+        original_title = first_post.topic.title
+        original_raw = first_post.raw
+
+        put "/posts/#{first_post.id}.json",
+            params: {
+              title: "A blockedword topic title",
+              post: {
+                raw: "Body from failed title edit",
+                edit_reason: "moderator edit",
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include("blockedword")
+        expect(first_post.reload.raw).to eq(original_raw)
+        expect(first_post.version).to eq(1)
+        expect(PostRevision.where(post_id: first_post.id).pluck(:number)).to eq([])
+
+        put "/posts/#{first_post.id}.json",
+            params: {
+              title: original_title,
+              post: {
+                raw: "Body from valid title edit",
+                edit_reason: "moderator edit",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(first_post.reload.raw).to eq("Body from valid title edit")
+        expect(first_post.version).to eq(2)
+        expect(PostRevision.where(post_id: first_post.id).pluck(:number)).to eq([2])
+
+        get "/posts/#{first_post.id}/revisions/2.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["current_revision"]).to eq(2)
+      end
+
+      it "does not update the bump date for whispers" do
         created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
 
@@ -675,6 +1113,21 @@ RSpec.describe PostsController do
                   },
                 }
           }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "respects top-level bypass_bump=false over nested bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: false,
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                },
+                as: :json
+          }.to change { wiki_post.topic.reload.bumped_at }
           expect(response.status).to eq(200)
         end
 
@@ -761,6 +1214,52 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents editing a post in a topic the user cannot see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(403)
+        expect(private_post.reload.raw).not_to eq("edited body")
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows editing a post in a topic the user can see" do
+        put "/posts/#{private_post.id}.json", params: { post: { raw: "edited body" } }
+
+        expect(response.status).to eq(200)
+        expect(private_post.reload.raw).to eq("edited body")
+      end
+    end
+
     it "can not change category to a disallowed category" do
       post = create_post
       sign_in(post.user)
@@ -799,6 +1298,23 @@ RSpec.describe PostsController do
 
       expect(response.status).to eq(403)
       expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
+
+    it "does not let a moderator move a topic to a category they cannot see" do
+      post = create_post
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      sign_in(moderator)
+
+      put "/posts/#{post.id}.json",
+          params: {
+            post: {
+              category_id: private_category.id,
+              raw: "this is a test edit to post",
+            },
+          }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(private_category.id)
     end
 
     describe "trying to add a link without permission" do
@@ -844,6 +1360,68 @@ RSpec.describe PostsController do
         expect(post.reload.custom_fields[:random_number]).to eq("244")
       end
     end
+
+    describe "reply_to_post_number" do
+      fab!(:topic)
+      fab!(:op) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+      fab!(:first_reply) do
+        Fabricate(:post, topic: topic, user: Fabricate(:user), reply_to_post_number: op.post_number)
+      end
+      fab!(:editable_post) do
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: op.post_number,
+          reply_to_user_id: op.user_id,
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "reparents the post to another earlier post" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: first_reply.post_number,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to eq(first_reply.post_number)
+        expect(editable_post.reply_to_user_id).to eq(first_reply.user_id)
+      end
+
+      it "clears the reply relationship when set to null" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: nil,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        editable_post.reload
+        expect(editable_post.reply_to_post_number).to be_nil
+        expect(editable_post.reply_to_user_id).to be_nil
+      end
+
+      it "returns an error when the target is invalid" do
+        put "/posts/#{editable_post.id}.json",
+            params: {
+              post: {
+                raw: editable_post.raw,
+                reply_to_post_number: editable_post.post_number,
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(editable_post.reload.reply_to_post_number).to eq(op.post_number)
+      end
+    end
   end
 
   describe "#destroy_bookmark" do
@@ -860,6 +1438,7 @@ RSpec.describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic)) }
+
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body["topic_bookmarked"]).to eq(true)
@@ -955,6 +1534,62 @@ RSpec.describe PostsController do
         expect(response.status).to eq(400)
       end
 
+      it "rejects changing a reply to a small action" do
+        put "/posts/#{post.id}/post_type.json", params: { post_type: Post.types[:small_action] }
+
+        expect(response).to be_bad_request
+        expect(post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "prevents moderators outside whisper groups from converting public replies to whispers" do
+        whisper_group = Fabricate(:group)
+        SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:)
+        public_reply = Fabricate(:post, topic:, raw: "public reply that must remain visible")
+
+        put "/posts/#{public_reply.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).to include(I18n.t("invalid_whisper_access"))
+          expect(public_reply.reload.post_type).to eq(Post.types[:regular])
+        end
+      end
+
+      it "rejects changing an opening post to a whisper" do
+        opening_post = Fabricate(:post)
+
+        put "/posts/#{opening_post.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        expect(response).to be_bad_request
+        expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "rejects changing a nested topic's opening post to a small action" do
+        nested_view_topic = Fabricate(:topic, user: user)
+        opening_post = Fabricate(:post, topic: nested_view_topic, user: user, post_number: 1)
+        Fabricate(:nested_topic, topic: nested_view_topic)
+        SiteSetting.nested_replies_enabled = true
+
+        put "/posts/#{opening_post.id}/post_type.json",
+            params: {
+              post_type: Post.types[:small_action],
+            }
+
+        aggregate_failures do
+          expect(response).to be_bad_request
+          expect(response.body).to include("post_type")
+          expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+
+          sign_out
+          get "/n/#{nested_view_topic.slug}/#{nested_view_topic.id}.json"
+
+          expect(response).to be_ok
+          expect(response.parsed_body.dig("op_post", "id")).to eq(opening_post.id)
+        end
+      end
+
       it "can change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
@@ -982,7 +1617,7 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
-      it "will invalidate broken images cache" do
+      it "invalidates the broken images cache" do
         sign_in(moderator)
         PostHotlinkedMedia.create!(
           url: "https://example.com/image.jpg",
@@ -1002,6 +1637,70 @@ RSpec.describe PostsController do
     before do
       SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+    end
+
+    it "does not spend quadratic time cooking a post full of unclosed bbcode tags" do
+      # A TL0 user can submit a post (well within max_post_length) whose server
+      # side cooking is quadratic in its length, tying up the web worker for
+      # several seconds regardless of whether the post is ultimately accepted.
+      sign_in(user_trust_level_0)
+      PrettyText.cook("warm up the v8 context")
+
+      raw = (["[quote]"] * 2000).join("\n")
+
+      elapsed =
+        Benchmark.realtime do
+          post "/posts.json", params: { raw: raw, title: "a perfectly ordinary topic title" }
+        end
+
+      expect(response.status).to be_between(200, 499)
+      expect(elapsed).to be < 2
+    end
+
+    it "prevents regular users from publishing a global banner while creating a topic" do
+      ApplicationLayoutPreloader.banner_json_cache.clear
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test banner topic body",
+             title: "this is a test banner topic title",
+             category: category.id,
+             archetype: Archetype.banner,
+           }
+
+      creation_status = response.status
+      creation_body = response.parsed_body
+      created_topic = Topic.find(creation_body["topic_id"])
+
+      sign_in(user)
+      get "/site/banner.json"
+      banner_status = response.status
+      banner_body = response.parsed_body
+      ApplicationLayoutPreloader.banner_json_cache.clear
+
+      aggregate_failures do
+        expect(creation_status).to eq(200)
+        expect(creation_body["topic_id"]).to eq(created_topic.id)
+        expect(created_topic.archetype).to eq(Archetype.default)
+        expect(banner_status).to eq(200)
+        expect(banner_body).to eq({})
+      end
+    end
+
+    it "creates a regular topic when an unregistered archetype is supplied" do
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test topic body",
+             title: "this is a test topic title",
+             category: category.id,
+             archetype: "unknown",
+           }
+
+      expect(response.status).to eq(200)
+      expect(Topic.find(response.parsed_body["topic_id"]).archetype).to eq(Archetype.default)
     end
 
     context "with api" do
@@ -1131,6 +1830,113 @@ RSpec.describe PostsController do
         expect(new_topic.external_id).to eq("external_id")
       end
 
+      it "blocks email private message recipients that disabled private messages" do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        SiteSetting.send_email_messages_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        sender = Fabricate(:trust_level_4, refresh_auto_groups: true)
+        recipient = Fabricate(:user)
+        recipient.user_option.update!(allow_private_messages: false)
+        api_key = ApiKey.create!(user: sender).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is some post",
+               archetype: Archetype.private_message,
+               target_recipients: recipient.email,
+             },
+             headers: {
+               HTTP_API_USERNAME: sender.username,
+               HTTP_API_KEY: api_key,
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("activerecord.errors.models.topic.attributes.base.cant_send_pm"),
+        )
+        expect(TopicAllowedUser.exists?(user: recipient)).to eq(false)
+      end
+
+      it "blocks email private message recipients that are ignoring the sender" do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        SiteSetting.send_email_messages_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        sender = Fabricate(:trust_level_4, refresh_auto_groups: true)
+        recipient = Fabricate(:user)
+        Fabricate(:ignored_user, user: recipient, ignored_user: sender)
+        api_key = ApiKey.create!(user: sender).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is some post",
+               archetype: Archetype.private_message,
+               target_recipients: recipient.email,
+             },
+             headers: {
+               HTTP_API_USERNAME: sender.username,
+               HTTP_API_KEY: api_key,
+             }
+
+        expect(response.status).to eq(422)
+        expect(TopicAllowedUser.exists?(user: recipient)).to eq(false)
+      end
+
+      it "blocks email private message recipients that allowlist other senders" do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        SiteSetting.send_email_messages_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        sender = Fabricate(:trust_level_4, refresh_auto_groups: true)
+        recipient = Fabricate(:user)
+        recipient.user_option.update!(enable_allowed_pm_users: true)
+        Fabricate(:allowed_pm_user, user: recipient, allowed_pm_user: Fabricate(:user))
+        api_key = ApiKey.create!(user: sender).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is some post",
+               archetype: Archetype.private_message,
+               target_recipients: recipient.email,
+             },
+             headers: {
+               HTTP_API_USERNAME: sender.username,
+               HTTP_API_KEY: api_key,
+             }
+
+        expect(response.status).to eq(422)
+        expect(TopicAllowedUser.exists?(user: recipient)).to eq(false)
+      end
+
+      it "blocks email private message recipients that muted the sender" do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        SiteSetting.send_email_messages_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        sender = Fabricate(:trust_level_4, refresh_auto_groups: true)
+        recipient = Fabricate(:user)
+        Fabricate(:muted_user, user: recipient, muted_user: sender)
+        api_key = ApiKey.create!(user: sender).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is some post",
+               archetype: Archetype.private_message,
+               target_recipients: recipient.email,
+             },
+             headers: {
+               HTTP_API_USERNAME: sender.username,
+               HTTP_API_KEY: api_key,
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("activerecord.errors.models.topic.attributes.base.cant_send_pm"),
+        )
+        expect(TopicAllowedUser.exists?(user: recipient)).to eq(false)
+      end
+
       it "prevents whispers for regular users" do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key
@@ -1209,7 +2015,7 @@ RSpec.describe PostsController do
         expect(Draft.get(user, Draft::NEW_TOPIC, 0)).to eq("test")
       end
 
-      it "will raise an error if specified category cannot be found" do
+      it "returns an error when the specified category does not exist" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -1231,7 +2037,7 @@ RSpec.describe PostsController do
         )
       end
 
-      it "will raise an error if specified embed_url is invalid" do
+      it "returns an error when embed_url is invalid" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -1297,6 +2103,49 @@ RSpec.describe PostsController do
 
       before { sign_in(user) }
 
+      it "rejects scalar tags before queuing a post" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: "macos",
+               }
+        end.not_to change(ReviewableQueuedPost, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_params", message: "tags"))
+      end
+
+      it "queues and approves a topic with blank tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.approve_post_count = 1
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is the test title for the topic",
+               tags: "",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+        queued_post = ReviewableQueuedPost.find_by!(target_created_by: user)
+
+        sign_in(admin)
+        put "/review/#{queued_post.id}/perform/approve_post.json",
+            params: {
+              version: queued_post.version,
+            }
+
+        expect(response.status).to eq(200)
+        expect(queued_post.reload).to be_approved
+        expect(queued_post.target.topic.tags).to be_empty
+      end
+
       context "when fast typing" do
         before do
           SiteSetting.fast_typing_threshold = "standard"
@@ -1333,6 +2182,28 @@ RSpec.describe PostsController do
 
           mod = moderator
           rp.perform(mod, :approve_post)
+
+          user.reload
+          expect(user).not_to be_silenced
+        end
+
+        it "does not silence when the post cannot be queued" do
+          SiteSetting.newuser_max_embedded_media = 1
+          topic = Fabricate(:topic)
+          user.change_trust_level!(TrustLevel[0])
+
+          post "/posts.json",
+               params: {
+                 raw:
+                   "this is the test content\n\n<img src='https://example.com/first.png'>\n\n<img src='https://example.com/second.png'>",
+                 topic_id: topic.id,
+                 composer_open_duration_msecs: 204,
+                 typing_duration_msecs: 100,
+               }
+
+          expect(response).not_to be_successful
+          expect(response.parsed_body["errors"]).to be_present
+          expect(ReviewableQueuedPost.find_by(target_created_by: user)).to be_blank
 
           user.reload
           expect(user).not_to be_silenced
@@ -1400,6 +2271,34 @@ RSpec.describe PostsController do
           parsed = response.parsed_body
           expect(parsed["action"]).not_to eq("enqueued")
         end
+      end
+
+      it "prevents category-Y reviewers from approving a queued reply in category X" do
+        SiteSetting.enable_category_group_moderation = true
+        topic_category = Fabricate(:category)
+        topic_category.update!(require_reply_approval: true)
+        review_category = Fabricate(:category)
+        topic = Fabricate(:topic, category: topic_category)
+        review_group = Fabricate(:group)
+        reviewer = Fabricate(:user, refresh_auto_groups: true)
+        review_group.add(reviewer)
+        Fabricate(:category_moderation_group, category: review_category, group: review_group)
+
+        raw = "queued reply in category X"
+        post "/posts.json", params: { raw: raw, topic_id: topic.id, category: review_category.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by!(target_created_by: user)
+
+        sign_in(reviewer)
+        expect do
+          put "/review/#{reviewable.id}/perform/approve_post.json?version=#{reviewable.version}"
+        end.not_to change(Post, :count)
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(raw)
+        expect(reviewable.reload).to be_pending
       end
 
       it "silences correctly based on auto_silence_first_post_regex" do
@@ -1639,6 +2538,204 @@ RSpec.describe PostsController do
         expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
+      it "rejects tag arrays exceeding the configured per-topic limit" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.max_tags_per_topic = 5
+        tags = 25.times.map { |index| Fabricate(:tag, name: "tag-#{index}") }
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: tags.map { |tag| { id: tag.id, name: tag.name } },
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("tags.too_many_tags_for_topic", count: 5),
+        )
+      end
+
+      context "with content localization enabled" do
+        fab!(:japanese_user) { Fabricate(:user, locale: "ja", refresh_auto_groups: true) }
+        fab!(:localized_tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+        fab!(:tag_localization) do
+          Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "戦略")
+        end
+
+        before do
+          SiteSetting.tagging_enabled = true
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_supported_locales = "en|ja"
+          sign_in(japanese_user)
+        end
+
+        it "creates a topic with localized tags" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: [{ id: localized_tag.id, name: "戦略" }],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+
+        it "creates a topic with tags sent as strings" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: ["strategy"],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+      end
+
+      it "does not persist an iframe whose encoded userinfo points to an unallowlisted host" do
+        iframe_source = "https://www.instagram.com%2f@attacker.example/"
+
+        post "/posts.json",
+             params: {
+               raw: %(User content <iframe src="#{iframe_source}"></iframe>),
+               title: "Iframe allowlist bypass",
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.body).to include(%("id":#{created_post.id}))
+          expect(created_post.cooked).not_to include(iframe_source)
+          expect(Nokogiri::HTML5.fragment(created_post.cooked).at_css("iframe")).to be_nil
+        end
+      end
+
+      it "does not persist HTML from an untrusted oEmbed provider" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        malicious_html =
+          '<div class="onebox-attack" style="position: fixed; inset: 0; z-index: 9999">overlay</div>'
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            provider_name: "Flickr",
+            html: malicious_html,
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Untrusted oEmbed provider" }
+
+        expect(response.status).to eq(200)
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
+      it "does not persist sibling HTML from oEmbed with an allowed iframe" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        iframe_source = "https://www.youtube.com/embed/dQw4w9WgXcQ"
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            html:
+              "<iframe src=\"#{iframe_source}\"></iframe><style>.onebox-attack { position: fixed; inset: 0; z-index: 9999; }</style><div class=\"onebox-attack\">overlay</div>",
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Allowed iframe oEmbed" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(%("id":#{response.parsed_body["id"]}))
+
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css("iframe")["src"]).to eq(iframe_source)
+        expect(cooked.at_css("style")).to be_nil
+        expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
+      it "does not persist a backslash-bypassed wildcard iframe origin from oEmbed" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        iframe_origin = "https://evil.example\\@sub.typeform.com/to/abc"
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            html: "<iframe src=\"#{iframe_origin}\"></iframe>",
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Backslash iframe origin" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["id"]).to be_present
+
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css("iframe")).to be_nil
+      end
+
+      it "keeps an iframe URL inside the link href of notification emails" do
+        recipient = Fabricate(:user)
+        topic = Fabricate(:topic, user: recipient)
+        Fabricate(:post, topic: topic, user: recipient)
+        iframe_source = "https://www.instagram.com/p/x'style='position:fixed;inset:0'title='x"
+
+        post "/posts.json",
+             params: {
+               raw: %(Reply <iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(200)
+        email =
+          UserNotifications.user_replied(
+            recipient,
+            post: Post.find(response.parsed_body["id"]),
+            notification_type: "replied",
+            notification_data_hash: {
+              original_username: user.username,
+            },
+          )
+        link =
+          Nokogiri
+            .HTML5(Email::Renderer.new(email).html)
+            .css("a")
+            .find { |a| a["href"].start_with?("https://www.instagram.com") }
+        expect(link.to_h).to eq("href" => iframe_source)
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
@@ -1657,6 +2754,41 @@ RSpec.describe PostsController do
         expect(topic.title).to eq("This is the test title for the topic")
         expect(topic.category).to eq(category)
         expect(topic.visible).to eq(true)
+      end
+
+      it "prevents regular users from replying to whispers" do
+        sign_in(admin)
+        post "/posts.json",
+             params: {
+               raw: "this is the first post with enough words",
+               title: "this is a topic title for whispers",
+             }
+        expect(response.status).to eq(200)
+
+        topic_id = response.parsed_body["topic_id"]
+        post "/posts.json",
+             params: {
+               raw: "this is a staff-only whisper",
+               topic_id: topic_id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+
+        whisper_post_number = response.parsed_body["post_number"]
+        sign_in(user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "replying to a whisper over http",
+                 topic_id: topic_id,
+                 reply_to_post_number: whisper_post_number,
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t(:topic_not_found))
       end
 
       describe "posts_controller_create_user modifier" do
@@ -1683,7 +2815,7 @@ RSpec.describe PostsController do
       end
 
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
-        it "should return a 400 response code when no custom fields has been permitted" do
+        it "returns 400 when no custom fields are permitted" do
           sign_in(user)
 
           post "/posts.json",
@@ -1709,7 +2841,7 @@ RSpec.describe PostsController do
             plugin
           end
 
-          it "should return a 400 response when trying to add a staff ony custom field for a non-staff user" do
+          it "returns 400 when a non-staff user adds a staff-only custom field" do
             sign_in(user)
 
             post "/posts.json",
@@ -1726,7 +2858,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({})
           end
 
-          it "should add custom fields to topic that is permitted for a non-staff user" do
+          it "adds topic custom fields permitted for non-staff users" do
             sign_in(user)
 
             post "/posts.json",
@@ -1743,7 +2875,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+          it "adds permitted topic custom fields through the deprecated meta_data parameter" do
             sign_in(user)
 
             post "/posts.json",
@@ -1760,7 +2892,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          it "should add custom fields to topic that is permitted for a staff user and public user" do
+          it "adds topic custom fields permitted for staff and public users" do
             sign_in(Fabricate(:admin))
 
             post "/posts.json",
@@ -1901,7 +3033,7 @@ RSpec.describe PostsController do
           expect(response.status).to eq(422)
         end
 
-        it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
+        it "triggers flag_linked_posts_as_spam when the post creator returns spam" do
           SiteSetting.newuser_spam_host_threshold = 1
           sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
@@ -2096,7 +3228,7 @@ RSpec.describe PostsController do
     describe "shared draft" do
       fab!(:destination_category, :category)
 
-      it "will raise an error for regular users" do
+      it "returns an error for regular users" do
         post "/posts.json",
              params: {
                raw: "this is the shared draft content",
@@ -2110,7 +3242,7 @@ RSpec.describe PostsController do
       describe "as a staff user" do
         before { sign_in(moderator) }
 
-        it "will raise an error if there is no shared draft category" do
+        it "returns an error when no shared draft category exists" do
           post "/posts.json",
                params: {
                  raw: "this is the shared draft content",
@@ -2125,7 +3257,7 @@ RSpec.describe PostsController do
           fab!(:shared_category, :category)
           before { SiteSetting.shared_drafts_category = shared_category.id }
 
-          it "will work if the shared draft category is present" do
+          it "creates a shared draft when the shared draft category exists" do
             post "/posts.json",
                  params: {
                    raw: "this is the shared draft content",
@@ -2167,7 +3299,7 @@ RSpec.describe PostsController do
       context "as a staff user" do
         before { sign_in(admin) }
 
-        it "should be able to mark a topic as warning" do
+        it "marks the topic as a warning" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2199,7 +3331,7 @@ RSpec.describe PostsController do
           expect(Topic.last.is_official_warning?).to eq(true)
         end
 
-        it "should be able to mark a topic as not a warning" do
+        it "removes the topic's warning status" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2219,7 +3351,7 @@ RSpec.describe PostsController do
       end
 
       context "as a normal user" do
-        it "should not be able to mark a topic as warning" do
+        it "rejects marking the topic as a warning" do
           sign_in(user)
           post "/posts.json",
                params: {
@@ -2242,7 +3374,7 @@ RSpec.describe PostsController do
 
     context "with topic bump" do
       shared_examples "it works" do
-        it "should be able to skip topic bumping" do
+        it "skips topic bumping when requested" do
           original_bumped_at = 1.day.ago
           topic = Fabricate(:topic, bumped_at: original_bumped_at)
 
@@ -2272,7 +3404,7 @@ RSpec.describe PostsController do
           expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
         end
 
-        it "should be able to post with topic bumping" do
+        it "creates the post and bumps the topic" do
           post "/posts.json", params: { raw: "this is the test content", topic_id: topic.id }
 
           expect(response.status).to eq(200)
@@ -2303,17 +3435,15 @@ RSpec.describe PostsController do
       context "with users" do
         fab!(:topic)
 
-        [:user].each do |user|
-          it "will raise an error for #{user}" do
-            sign_in(Fabricate(user))
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   topic_id: topic.id,
-                   no_bump: true,
-                 }
-            expect(response.status).to eq(400)
-          end
+        it "returns an error for user" do
+          sign_in(Fabricate(:user))
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 topic_id: topic.id,
+                 no_bump: true,
+               }
+          expect(response.status).to eq(400)
         end
       end
     end
@@ -2374,6 +3504,22 @@ RSpec.describe PostsController do
         expect(response.status).to eq(422)
       end
     end
+
+    it "cooks an unrecognized image size suffix in bounded time" do
+      sign_in(user_trust_level_0)
+      numbers = "1" * 800
+      raw = "![a|#{numbers}x#{numbers},](https://example.com/image.png)"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      post "/posts.json", params: { raw: raw, topic_id: post_by_user.topic_id }
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(response.status).to eq(200)
+      expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
+    end
   end
 
   describe "#revisions" do
@@ -2383,6 +3529,182 @@ RSpec.describe PostsController do
     it "throws an exception when revision is < 2" do
       get "/posts/#{post.id}/revisions/1.json"
       expect(response.status).to eq(400)
+    end
+
+    it "attributes coalesced grace-period edits to the correct editor" do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.editing_grace_period = 1.minute
+      SiteSetting.editing_grace_period_max_diff = 1000
+
+      edited_post = Fabricate(:post, raw: "Original version")
+      first_editor = Fabricate(:user)
+      second_editor = Fabricate(:user)
+      first_body = "First editor first version"
+      coalesced_body = "First editor coalesced version"
+      second_body = "Second editor version"
+
+      PostRevisor.new(edited_post).revise!(
+        first_editor,
+        { raw: first_body },
+        revised_at: edited_post.updated_at + 2.minutes,
+      )
+      edited_post.reload
+      PostRevisor.new(edited_post).revise!(
+        first_editor,
+        { raw: coalesced_body },
+        revised_at: edited_post.last_version_at + 1.second,
+      )
+      edited_post.reload
+      PostRevisor.new(edited_post).revise!(
+        second_editor,
+        { raw: second_body },
+        revised_at: edited_post.last_version_at + 2.seconds,
+      )
+      edited_post.reload
+
+      get "/posts/#{edited_post.id}/revisions/2.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to eq(first_editor.username_lower)
+      expect(response.parsed_body.dig("body_changes", "side_by_side_markdown")).to eq(
+        DiscourseDiff.new("Original version", coalesced_body).side_by_side_markdown,
+      )
+
+      get "/posts/#{edited_post.id}/revisions/3.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to eq(second_editor.username_lower)
+      expect(response.parsed_body.dig("body_changes", "side_by_side_markdown")).to eq(
+        DiscourseDiff.new(coalesced_body, second_body).side_by_side_markdown,
+      )
+    end
+
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not return a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        get "/posts/#{accessible_post.id}/revisions/2.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+      end
+    end
+
+    context "when a visible revision is adjacent to a hidden revision" do
+      fab!(:post_owner, :user)
+      fab!(:post_with_following_hidden_revision) do
+        Fabricate(:post, user: post_owner, raw: "Initial public version")
+      end
+      fab!(:post_with_previous_hidden_revision) do
+        Fabricate(:post, user: post_owner, raw: "Initial public version")
+      end
+
+      before do
+        SiteSetting.edit_history_visible_to_public = true
+        SiteSetting.editing_grace_period = 0
+      end
+
+      it "does not disclose a following hidden revision to non-staff" do
+        post_with_following_hidden_revision.revise(post_owner, raw: "Visible version")
+        post_with_following_hidden_revision.revise(post_owner, raw: "Following hidden secret")
+        hidden_revision = post_with_following_hidden_revision.revisions.find_by(number: 3)
+        hidden_revision.hide!
+
+        get "/posts/#{post_with_following_hidden_revision.id}/revisions/2.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["current_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+
+      it "does not disclose a previous hidden revision to non-staff" do
+        post_with_previous_hidden_revision.revise(post_owner, raw: "Previous hidden secret")
+        hidden_revision = post_with_previous_hidden_revision.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post_with_previous_hidden_revision.revise(post_owner, raw: "Visible version")
+
+        get "/posts/#{post_with_previous_hidden_revision.id}/revisions/3.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["previous_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+
+      it "does not disclose metadata changes from a previous hidden revision to non-staff" do
+        topic = Fabricate(:topic, user: post_owner)
+        op = Fabricate(:post, topic: topic, user: post_owner, post_number: 1)
+        hidden_parent = Fabricate(:post, topic: topic, user: post_owner, post_number: 2)
+        visible_parent = Fabricate(:post, topic: topic, user: post_owner, post_number: 3)
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: post_owner,
+            post_number: 4,
+            raw: "Initial public version",
+            reply_to_post_number: op.post_number,
+            locale: "en",
+            wiki: false,
+            post_type: Post.types[:regular],
+          )
+
+        post.revise(
+          post_owner,
+          {
+            raw: "Hidden metadata version",
+            reply_to_post_number: hidden_parent.post_number,
+            wiki: true,
+            post_type: Post.types[:whisper],
+            locale: "ja",
+          },
+          skip_validations: true,
+        )
+        hidden_revision = post.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post.revise(
+          post_owner,
+          {
+            raw: "Visible metadata version",
+            reply_to_post_number: visible_parent.post_number,
+            wiki: false,
+            post_type: Post.types[:regular],
+            locale: "fr",
+          },
+          skip_validations: true,
+        )
+
+        get "/posts/#{post.id}/revisions/3.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["previous_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body).not_to have_key("reply_to_post_number_changes")
+        expect(response.parsed_body).not_to have_key("wiki_changes")
+        expect(response.parsed_body).not_to have_key("post_type_changes")
+        expect(response.parsed_body).not_to have_key("locale_changes")
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
     end
 
     context "when diff generation exceeds the comparison budget" do
@@ -2451,6 +3773,38 @@ RSpec.describe PostsController do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(403)
       end
+
+      context "with a category group moderator" do
+        fab!(:group)
+        fab!(:category_moderator) { Fabricate(:user, groups: [group]) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          sign_in(category_moderator)
+        end
+
+        it "ensures they can see the revisions in their moderated category" do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response.status).to eq(200)
+        end
+
+        it "ensures they cannot see the revisions in other categories" do
+          Fabricate(:category_moderation_group, category: Fabricate(:category), group:)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response).to be_forbidden
+        end
+
+        it "ensures they cannot see hidden revisions in their moderated category" do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+          post_revision.update!(hidden: true)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response).to be_forbidden
+        end
+      end
     end
 
     context "when the history on a specific post is hidden" do
@@ -2497,7 +3851,7 @@ RSpec.describe PostsController do
       it "throws an exception for users" do
         sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "works for admins" do
@@ -2513,6 +3867,141 @@ RSpec.describe PostsController do
       it "ensures anyone can see the revisions" do
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
+      end
+
+      it "does not expose tag names restricted to an inaccessible category" do
+        SiteSetting.tagging_enabled = true
+        public_tag = Fabricate(:tag, name: "public-revision-tag")
+        restricted_tag = Fabricate(:tag, name: "restricted-revision-tag")
+        revised_post = Fabricate(:post, version: 2)
+        revision =
+          Fabricate(
+            :post_revision,
+            post: revised_post,
+            modifications: {
+              "tags" => [[public_tag.name], [public_tag.name, restricted_tag.name]],
+            },
+          )
+
+        revised_post.topic.update!(tags: [public_tag, restricted_tag])
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Group[:staff]),
+          tag: restricted_tag,
+        )
+
+        [
+          "/posts/#{revised_post.id}/revisions/#{revision.number}.json",
+          "/posts/#{revised_post.id}/revisions/latest.json",
+        ].each do |url|
+          get url
+
+          expect(response).to have_http_status(:ok)
+          expect(response.body).not_to include(restricted_tag.name)
+        end
+      end
+
+      it "does not disclose category-restricted tag names to anonymous users" do
+        SiteSetting.tagging_enabled = true
+
+        restricted_tag = Fabricate(:tag, name: "classified-tag")
+        revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "tags" => [[restricted_tag.name], []],
+            },
+          )
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+        CategoryTagGroup.create!(category: private_category, tag_group: tag_group)
+
+        get "/posts/#{post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(restricted_tag.name)
+      end
+
+      it "does not disclose historical tags restricted to inaccessible categories" do
+        SiteSetting.tagging_enabled = true
+
+        restricted_tag = Fabricate(:tag, name: "restricted-historical-tag")
+        visible_previous_tag = Fabricate(:tag, name: "visible-previous-tag")
+        visible_current_tag = Fabricate(:tag, name: "visible-current-tag")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        CategoryTag.create!(category: private_category, tag: restricted_tag)
+        post.topic.update!(tags: [visible_current_tag])
+        revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "tags" => [
+                [visible_previous_tag.name, restricted_tag.name],
+                [visible_current_tag.name],
+              ],
+            },
+          )
+
+        get "/posts/#{post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags_changes"]).to eq(
+          "previous" => [visible_previous_tag.name],
+          "current" => [visible_current_tag.name],
+        )
+        expect(response.body).not_to include(restricted_tag.name)
+      end
+
+      it "omits unseen reply target post numbers" do
+        SiteSetting.editing_grace_period = 0
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic, post_number: 1)
+        visible_parent = Fabricate(:post, topic: topic, post_number: 2)
+        whisper = Fabricate(:post, topic: topic, post_number: 3, post_type: Post.types[:whisper])
+        revised_post =
+          Fabricate(
+            :post,
+            topic: topic,
+            post_number: 4,
+            reply_to_post_number: visible_parent.post_number,
+            reply_to_user_id: visible_parent.user_id,
+          )
+
+        sign_in(admin)
+        put "/posts/#{revised_post.id}.json",
+            params: {
+              post: {
+                raw: revised_post.raw,
+                reply_to_post_number: whisper.post_number,
+              },
+            }
+        expect(response.status).to eq(200)
+        delete "/session/#{admin.username}.json"
+
+        revision = revised_post.reload.revisions.last
+        get "/posts/#{revised_post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["reply_to_post_number_changes"]["previous"]["post_number"],
+        ).to eq(visible_parent.post_number)
+        expect(response.parsed_body["reply_to_post_number_changes"]["current"]).to eq(nil)
+      end
+
+      context "when names are disabled" do
+        before { SiteSetting.enable_names = false }
+
+        it "does not expose the acting user's name" do
+          post_revision.user.update!(name: "Hidden Editor")
+
+          get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["acting_user_name"]).to eq(nil)
+        end
       end
     end
 
@@ -2543,9 +4032,40 @@ RSpec.describe PostsController do
       end
     end
 
+    context "with an unlisted revision" do
+      fab!(:revised_post) { Fabricate(:post, version: 3) }
+
+      before do
+        Fabricate(:post_revision, post: revised_post, number: 2)
+        Fabricate(:post_revision, post: revised_post, number: 3, unlisted: true)
+      end
+
+      it "steps to it only when unlisted revisions are included" do
+        SiteSetting.edit_history_visible_to_public = true
+
+        get "/posts/#{revised_post.id}/revisions/2.json"
+        expect(response.parsed_body["next_revision"]).to eq(nil)
+
+        get "/posts/#{revised_post.id}/revisions/2.json", params: { include_unlisted: true }
+        expect(response.parsed_body["next_revision"]).to eq(3)
+      end
+
+      it "doesn't grant access to edit history that isn't visible" do
+        SiteSetting.edit_history_visible_to_public = false
+        sign_in(user)
+
+        get "/posts/#{revised_post.id}/revisions/2.json", params: { include_unlisted: true }
+        expect(response.status).to eq(403)
+
+        get "/posts/#{revised_post.id}/revisions/latest.json", params: { include_unlisted: true }
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "with a tagged topic" do
       let(:tag) { Fabricate(:tag) }
-      it "works" do
+
+      it "returns tagged topic revisions with tagging enabled or disabled" do
         SiteSetting.tagging_enabled = true
 
         post_revision.post.topic.update(tags: [tag])
@@ -2557,6 +4077,211 @@ RSpec.describe PostsController do
 
         get "/posts/#{post_revision.post_id}/revisions/latest.json"
         expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "#latest_revision" do
+    fab!(:post_owner, :user)
+    fab!(:revised_post) { Fabricate(:post, user: post_owner, raw: "Initial version") }
+
+    before do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.editing_grace_period = 0
+
+      revised_post.revise(post_owner, raw: "Listed version")
+      revised_post.revise(post_owner, raw: "Unlisted version")
+      revised_post.revisions.find_by(number: 3).unlist!
+    end
+
+    it "opens the latest listed revision for non-staff" do
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 2, "next_revision" => nil)
+    end
+
+    it "opens the latest revision for non-staff who include unlisted revisions" do
+      get "/posts/#{revised_post.id}/revisions/latest.json", params: { include_unlisted: true }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 3, "unlisted" => true)
+    end
+
+    it "opens the latest revision for staff" do
+      sign_in(moderator)
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["current_revision"]).to eq(3)
+    end
+
+    it "falls back to the latest visible revision when no listed revision is left" do
+      revised_post.revisions.find_by(number: 2).unlist!
+      revised_post.revisions.find_by(number: 3).hide!
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "current_revision" => 2,
+        "last_revision" => 2,
+        "unlisted" => true,
+      )
+    end
+
+    it "opens a loaded revision when the latest listed one is older than the loaded history" do
+      (4..102).each do |number|
+        Fabricate(:post_revision, post: revised_post, user: post_owner, number:, unlisted: true)
+      end
+
+      get "/posts/#{revised_post.id}/revisions/latest.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_revision" => 102, "unlisted" => true)
+    end
+  end
+
+  describe "#hide_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2, public_version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post, unlisted: true) }
+
+    it "clears the unlisted flag when hiding an unlisted revision" do
+      sign_in(moderator)
+
+      expect { put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/hide" }.to change {
+        revised_post.reload.public_version
+      }.by(-1)
+
+      expect(response.status).to eq(200)
+      expect(post_revision.reload).to have_attributes(hidden: true, unlisted: false)
+    end
+  end
+
+  describe "#unlist_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post) }
+
+    it "only allows staff to unlist a revision" do
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+      expect(response.status).to eq(403)
+
+      sign_in(user)
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+      expect(response.status).to eq(403)
+
+      expect(post_revision.reload.unlisted).to eq(false)
+    end
+
+    it "unlists the revision" do
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+
+      expect(response.status).to eq(204)
+      expect(post_revision.reload.unlisted).to eq(true)
+    end
+
+    it "refuses to unlist a hidden revision" do
+      post_revision.hide!
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/unlist"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("cannot_unlist_hidden_revision"),
+      )
+      expect(post_revision.reload).to have_attributes(hidden: true, unlisted: false)
+    end
+  end
+
+  describe "#relist_revision" do
+    fab!(:revised_post) { Fabricate(:post, version: 2) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: revised_post, unlisted: true) }
+
+    it "only allows staff to relist a revision" do
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+      expect(response.status).to eq(403)
+
+      sign_in(user)
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+      expect(response.status).to eq(403)
+
+      expect(post_revision.reload.unlisted).to eq(true)
+    end
+
+    it "relists the revision" do
+      sign_in(moderator)
+
+      put "/posts/#{revised_post.id}/revisions/#{post_revision.number}/relist"
+
+      expect(response.status).to eq(204)
+      expect(post_revision.reload.unlisted).to eq(false)
+    end
+  end
+
+  describe "#permanently_delete_check" do
+    fab!(:post)
+
+    before { SiteSetting.can_permanently_delete = true }
+
+    it "returns 404 for anonymous users" do
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for regular users" do
+      sign_in(user)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(admin) }
+
+      it "returns can_permanently_delete true when allowed" do
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(true)
+        expect(json["reason"]).to be_nil
+      end
+
+      it "returns the reason when the same admin must wait" do
+        freeze_time do
+          PostDestroyer.new(admin, post).destroy
+          get "/posts/#{post.id}/permanently_delete_check.json"
+        end
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(
+          I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: "5 minutes"),
+        )
+      end
+
+      it "returns the reason when topic has undeleted posts" do
+        Fabricate(:post, topic: post.topic)
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(I18n.t("post.cannot_permanently_delete.many_posts", count: 1))
       end
     end
   end
@@ -2782,6 +4507,58 @@ RSpec.describe PostsController do
         post.topic.reload
         expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
       end
+
+      it "supports reverting reply-target-only revisions" do
+        earlier_post = Fabricate(:post, topic: post.topic, post_number: post.post_number - 1)
+        post.update!(reply_to_post_number: nil)
+
+        reply_to_revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "reply_to_post_number" => [earlier_post.post_number, nil],
+            },
+          )
+
+        put "/posts/#{post_id}/revisions/#{reply_to_revision.number}/revert.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
+      end
+    end
+
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not revert using a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        put "/posts/#{accessible_post.id}/revisions/2/revert.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+        expect(accessible_post.reload.raw).not_to include(previous_raw)
+      end
     end
   end
 
@@ -2871,6 +4648,42 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "doesn't return whispers for moderators outside whispers_allowed_groups" do
+        whisperers = Fabricate(:group)
+        whisperers.add(user)
+        SiteSetting.whispers_allowed_groups = whisperers.id.to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        reply = Fabricate(:post, topic: topic, user: user)
+        PostDestroyer.new(admin, whisper).destroy
+        PostDestroyer.new(admin, reply).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          reply.id,
+        )
+      end
+
+      it "returns whispers for moderators in whispers_allowed_groups" do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        PostDestroyer.new(admin, whisper).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          whisper.id,
+        )
+      end
+
       it "returns PMs for admins who are also moderators" do
         admin.update!(moderator: true)
 
@@ -2902,6 +4715,17 @@ RSpec.describe PostsController do
         expect(data.length).to eq(1)
         expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
         expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
+      end
+
+      it "denies access to non-staff users in delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        non_staff_user = Fabricate(:user, refresh_auto_groups: true)
+        group.add(non_staff_user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+
+        sign_in(non_staff_user)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response).to be_forbidden
       end
     end
   end
@@ -2939,6 +4763,38 @@ RSpec.describe PostsController do
       get "/raw/#{topic.id}"
       expect(response.status).to eq(200)
       expect(response.body).to include("123456789", "abcdefghij")
+    end
+
+    context "with a hidden post revision" do
+      before do
+        SiteSetting.edit_history_visible_to_public = true
+        SiteSetting.editing_grace_period = 0
+      end
+
+      it "prevents anonymous access while allowing staff to fetch a visible raw revision after a hidden revision" do
+        post = Fabricate(:post, raw: "Initial public version")
+        hidden_raw = "moderator-redacted secret"
+        visible_raw = "Visible version"
+        post.revise(post.user, raw: hidden_raw)
+        hidden_revision = post.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post.revise(post.user, raw: visible_raw)
+
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+
+        sign_in(moderator)
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to eq(visible_raw)
+        end
+      end
     end
 
     context "with a hidden post" do
@@ -3031,6 +4887,63 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "noindex on raw post text" do
+    fab!(:unlisted_topic) { Fabricate(:topic, visible: false) }
+    fab!(:unlisted_post) { Fabricate(:post, topic: unlisted_topic, raw: "unlisted body") }
+    fab!(:listed_post) { Fabricate(:post, topic: topic, raw: "listed body") }
+
+    before do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.editing_grace_period = 0
+      unlisted_post.revise(unlisted_post.user, raw: "unlisted body, edited")
+      listed_post.revise(listed_post.user, raw: "listed body, edited")
+    end
+
+    def raw_paths(post)
+      [
+        "/raw/#{post.topic_id}",
+        "/raw/#{post.topic_id}/#{post.post_number}",
+        "/raw/#{post.topic_id}/#{post.post_number}?revision=2",
+        "/posts/#{post.id}/raw",
+      ]
+    end
+
+    it "follows the topic's noindex decision, as the topic page does" do
+      raw_paths(unlisted_post).each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+
+      raw_paths(listed_post).each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok), path
+        expect(response.headers["X-Robots-Tag"]).to be_nil, path
+      end
+    end
+
+    context "with a topic_noindex modifier" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) do
+        Proc.new { |noindex, modifier_topic| noindex || modifier_topic.id == topic.id }
+      end
+
+      before { DiscoursePluginRegistry.register_modifier(plugin, :topic_noindex, &modifier) }
+      after { DiscoursePluginRegistry.unregister_modifier(plugin, :topic_noindex, &modifier) }
+
+      it "keeps the raw text of a listed topic out of search engines too" do
+        raw_paths(listed_post).each do |path|
+          get path
+
+          expect(response).to have_http_status(:ok), path
+          expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+        end
+      end
+    end
+  end
+
   describe "#short_link" do
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -3114,6 +5027,35 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
+    it "does not disclose a user's posts when public profiles are hidden" do
+      public_post
+      SiteSetting.hide_user_profiles_from_public = true
+
+      %w[rss json].each do |format|
+        get "/u/#{user.username}/activity.#{format}"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(public_post.raw)
+      end
+    end
+
+    it "excludes ignored users' likes from JSON like counts" do
+      viewer = Fabricate(:user, refresh_auto_groups: true)
+      ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+      regular_liker = Fabricate(:user, refresh_auto_groups: true)
+      PostActionCreator.like(ignored_liker, public_post)
+      PostActionCreator.like(regular_liker, public_post)
+      Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+      sign_in(viewer)
+
+      get "/u/#{user.username}/activity.json"
+
+      post_json = response.parsed_body.find { |post| post["id"] == public_post.id }
+      like_summary =
+        post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+      expect(like_summary["count"]).to eq(1)
+    end
+
     it "returns 404 if `hide_profile` user option is checked" do
       user.user_option.update_columns(hide_profile: true)
 
@@ -3137,9 +5079,21 @@ RSpec.describe PostsController do
   end
 
   describe "#latest" do
+    it "returns the translated excerpt" do
+      viewer = Fabricate(:user, locale: "ja")
+      SiteSetting.content_localization_enabled = true
+      post = Fabricate(:post, raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+
+      sign_in(viewer)
+      get "/posts.json"
+
+      expect(response.parsed_body["latest_posts"].first["excerpt"]).to eq("翻訳された本文")
+    end
+
     context "with private posts" do
       describe "when not logged in" do
-        it "should return the right response" do
+        it "returns 404 and the private posts login form" do
           Fabricate(:post)
 
           get "/private-posts.rss"
@@ -3182,6 +5136,23 @@ RSpec.describe PostsController do
         expect(post_ids).to eq([post_id])
       end
 
+      it "does not include whisper posts for non-whisperer users" do
+        sign_in(user)
+
+        pm = Fabricate(:private_message_topic, recipient: user)
+        regular_post = Fabricate(:post, topic: pm)
+        whisper_post = Fabricate(:post, topic: pm, post_type: Post.types[:whisper])
+
+        get "/private-posts.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        post_ids = json["private_posts"].map { |p| p["id"] }
+
+        expect(post_ids).to include(regular_post.id)
+        expect(post_ids).to_not include(whisper_post.id)
+      end
+
       it "returns private posts for json" do
         sign_in(admin)
 
@@ -3199,6 +5170,19 @@ RSpec.describe PostsController do
     end
 
     context "with public posts" do
+      it "caches paginated results for anonymous users" do
+        public_post
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+        Middleware::AnonymousCache.clear_all_cache!
+
+        get "/posts.json", params: { before: public_post.id + 1 }
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+
+        get "/posts.json", params: { before: public_post.id + 1 }
+        expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      end
+
       it "returns public posts with topic rss feed" do
         public_post
         private_post
@@ -3278,6 +5262,24 @@ RSpec.describe PostsController do
         expect(post_ids).to_not include private_post.id
         expect(post_ids).to_not include topicless_post.id
       end
+
+      it "excludes ignored users' likes from json like counts" do
+        viewer = Fabricate(:user, refresh_auto_groups: true)
+        ignored_liker = Fabricate(:user, refresh_auto_groups: true)
+        regular_liker = Fabricate(:user, refresh_auto_groups: true)
+        PostActionCreator.like(ignored_liker, public_post)
+        PostActionCreator.like(regular_liker, public_post)
+        Fabricate(:ignored_user, user: viewer, ignored_user: ignored_liker)
+        sign_in(viewer)
+
+        get "/posts.json"
+
+        post_json =
+          response.parsed_body["latest_posts"].find { |post| post["id"] == public_post.id }
+        like_summary =
+          post_json["actions_summary"].find { |action| action["id"] == PostActionType.types[:like] }
+        expect(like_summary["count"]).to eq(1)
+      end
     end
   end
 
@@ -3321,11 +5323,39 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
-      it "can view raw email if the user is in the allowed group" do
+      it "blocks raw email for unseen private messages" do
+        raw_email = "From: sender@example.com\nTo: recipient@example.com\n\nsecret body"
+        private_message_post =
+          Fabricate(
+            :private_message_post,
+            user: user,
+            recipient: Fabricate(:user),
+            raw_email: raw_email,
+          )
+        sign_in(moderator)
+
+        get "/posts/#{private_message_post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(raw_email)
+      end
+
+      it "blocks deleted raw email for allowed non-staff users" do
         sign_in(user)
         SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
 
         get "/posts/#{post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(post.raw_email)
+      end
+
+      it "can view raw email if the user is in the allowed group" do
+        allowed_post = Fabricate(:post, user: Fabricate(:user), raw_email: "email_content")
+        sign_in(user)
+        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+
+        get "/posts/#{allowed_post.id}/raw-email.json"
         expect(response.status).to eq(200)
 
         json = response.parsed_body
@@ -3449,7 +5479,7 @@ RSpec.describe PostsController do
 
         context "when there are existing pending posts" do
           let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
+            Fabricate.times(2, :reviewable_queued_post, target_created_by: user)
           end
           let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
           let(:expected_keys) do
@@ -3469,8 +5499,29 @@ RSpec.describe PostsController do
 
           it "returns user's pending posts" do
             request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts.pluck("id")).to contain_exactly(*owner_pending_posts.map(&:id))
             expect(pending_posts).to all include(*expected_keys)
+          end
+
+          it "returns the user's own pending posts from categories they cannot access" do
+            private_category = Fabricate(:private_category, group: Fabricate(:group))
+            private_topic = Fabricate(:topic, category: private_category)
+            restricted_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: private_topic,
+                category: private_category,
+                payload: {
+                  raw: "own restricted pending post content",
+                },
+              )
+
+            request
+
+            expect(response).to have_http_status(:ok)
+            expect(pending_posts.pluck("id")).to include(restricted_pending_post.id)
+            expect(response.body).to include(restricted_pending_post.payload["raw"])
           end
         end
 
@@ -3487,7 +5538,7 @@ RSpec.describe PostsController do
 
         context "when there are existing pending posts" do
           let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
+            Fabricate.times(2, :reviewable_queued_post, target_created_by: user)
           end
           let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
           let(:expected_keys) do
@@ -3507,8 +5558,74 @@ RSpec.describe PostsController do
 
           it "returns user's pending posts" do
             request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+            expect(pending_posts.pluck("id")).to contain_exactly(*owner_pending_posts.map(&:id))
             expect(pending_posts).to all include(*expected_keys)
+          end
+        end
+
+        context "when the user has pending posts in categories the staff member cannot access" do
+          it "excludes them from the response" do
+            visible_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                payload: {
+                  raw: "visible",
+                },
+              )
+            private_category = Fabricate(:private_category, group: Fabricate(:group))
+            private_topic = Fabricate(:topic, category: private_category)
+            restricted_pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: private_topic,
+                category: private_category,
+                payload: {
+                  raw: "restricted pending post content",
+                },
+              )
+
+            request
+
+            expect(response).to have_http_status(:ok)
+            expect(pending_posts.pluck("id")).to contain_exactly(visible_pending_post.id)
+            expect(response.body).not_to include(restricted_pending_post.payload["raw"])
+          end
+        end
+
+        context "when the user's pending posts have different scores" do
+          it "orders them by created_at descending" do
+            newer_pending_post =
+              Fabricate(:reviewable_queued_post, target_created_by: user, created_at: 1.hour.ago)
+            older_pending_post =
+              Fabricate(:reviewable_queued_post, target_created_by: user, created_at: 2.hours.ago)
+            older_pending_post.update_columns(score: 10)
+
+            request
+
+            ids = pending_posts.pluck("id")
+            expect(ids).to contain_exactly(newer_pending_post.id, older_pending_post.id)
+            expect(ids.index(newer_pending_post.id)).to be < ids.index(older_pending_post.id)
+          end
+        end
+
+        context "when a pending post is in a category with several moderation groups" do
+          it "returns it once" do
+            SiteSetting.enable_category_group_moderation = true
+            category = Fabricate(:category)
+            category.moderating_groups = [Fabricate(:group), Fabricate(:group)]
+            pending_post =
+              Fabricate(
+                :reviewable_queued_post,
+                target_created_by: user,
+                topic: Fabricate(:topic, category: category),
+                category: category,
+              )
+
+            request
+
+            expect(pending_posts.pluck("id")).to contain_exactly(pending_post.id)
           end
         end
 
@@ -3577,7 +5694,7 @@ RSpec.describe PostsController do
         expect(@controller.send(:create_params)).to include(hash_arg: { key1: "val" })
       end
 
-      it "allows strings to be added" do
+      it "allows arrays to be added" do
         instance.add_permitted_post_create_param(:array_arg)
         request.call
         expect(@controller.send(:create_params)).not_to include(array_arg: %w[1 2 3])

@@ -8,6 +8,10 @@ gl:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Fallou"
         reports:
           filters:
             sort_by:
@@ -36,28 +40,83 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      copied: "Copiado"
+      ai_decoded_transcript:
+        type: "Tipo"
+        error: "Erro"
+        response: "Resposta"
+      discourse_workflows:
+        classify:
+          text: "Texto"
+          upload_ids: "Imaxes"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Puntuación"
+      ai_tool_approval:
+        loading: "Cargando..."
+        tool: "Acción"
+        user: "Usuario"
+        approve: "Aprobar"
+        reject: "Rexeitar"
+        approved: "Aprobado"
+        rejected: "Rexeitada"
       llm_selector:
         none: "Ningunha"
       features:
-        back: "Volver"
-        disabled: "(desactivado)"
-        groups: "Grupos:"
+        table:
+          status: "Estado"
+          enabled: "Activado"
+          groups: "Grupos"
+        chatbot:
+          places:
+            none: "Non dispoñíbel"
         no_groups: "Ningunha"
         edit: "Configuración"
-        expand_list:
-          one: "(%{count} máis)"
-          other: "(%{count} máis)"
+        nav:
+          enabled: "Activado"
         filters:
           all: "Todas"
           reset: "Restabelecer"
+        sentiment:
+          enabled: "Activado"
         search:
           name: "Buscar"
+        image_caption:
+          setting_groups:
+            settings: "Configuración"
         spam:
           name: "Lixo"
       modals:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorías"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ningunha"
+              all: "Todas"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguén"
+              all: "Todos"
+        model_progress:
+          detail:
+            columns:
+              pending: "Pendente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicacións"
+            topic:
+              title: "Temas"
+            category:
+              title: "Categorías"
+            tag:
+              title: "Etiquetas"
+        admin_actions:
+          enabled: "Activado"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -74,6 +133,8 @@ gl:
             other: "%{count} publicacións"
       spam:
         short_title: "Lixo"
+        no_llm_selected: "Ningunha"
+        no_decision_model_selected: "Ningunha"
         enable: "Activar"
         test_modal:
           spam: "Lixo"
@@ -84,8 +145,35 @@ gl:
         total: "Total"
         periods:
           custom: "Personalizar..."
+      logs:
+        short_title: "Rexistros"
+        apply: "Aplicar"
+        successful: "Feito"
+        failed: "Fallou"
+        unknown: "Descoñecido"
+        time: "Hora"
+        when: "Cando"
+        request: "Petición"
+        provider: "Fornecedor"
+        user: "Usuario"
+        context: "Contexto"
+        topic: "Tema"
+        post: "Publicación"
+        post_short: "Publicación %{id}"
+        duration: "Duración"
+        actions: "Accións"
+        view_details: "Detalles"
+        periods:
+          custom: "Personalizado"
+        detail:
+          request: "Petición"
+          response: "Resposta"
+          context: "Contexto"
+        retention:
+          summary_stage: "Resumo"
+          deleted_stage: "Eliminado"
+          save: "Gardar"
       ai_agent:
-        back: "Volver"
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
@@ -96,6 +184,12 @@ gl:
         enabled: "Activado?"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Ningunha"
+          low: "Baixa"
+          medium: "Media"
+          high: "Alta"
+          max: "Máx"
         response_format:
           open_modal: "Editar"
           modal:
@@ -107,7 +201,6 @@ gl:
           title: "Cargas"
           uploading: "Cargando..."
       tools:
-        back: "Volver"
         export: "Exportar"
         import: "Importar"
         name: "Nome"
@@ -123,17 +216,46 @@ gl:
         short_title: "Acreditacións"
         name: "Nome"
         secret: "Valor"
-        back: "Volver"
         save: "Gardar"
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporando"
+      decision_models:
+        no_preset: "Ningunha"
+        display_name: "Nome"
+        provider: "Fornecedor"
+        edit: "Editar"
+        delete: "Eliminar"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrición"
+        url: "URL"
+        oauth_statuses:
+          connected: "Conectadas"
+        oauth_connect: "Conectar"
+        enabled: "Activado"
+        save: "Gardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          required: "Obrigatorio"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornecedor"
+        edit: "Editar"
+        types:
+          embedding: "Incorporando"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"
+        vision_modes:
+          disabled:
+            title: "Desactivado"
         save: "Gardar"
         edit: "Editar"
-        back: "Volver"
         delete: Eliminar
         quotas:
           group: "Grupo"
@@ -151,7 +273,6 @@ gl:
         tests:
           success: "Feito!"
         providers:
-          google: "Google"
           fake: "Personalizado"
       ai_helper:
         context_menu:
@@ -165,10 +286,7 @@ gl:
           cancel: "Cancelar"
         thumbnail_suggestions:
           try_again: "Tentar de novo"
-        image_caption:
-          save_caption: "Gardar"
       embeddings:
-        back: "Volver"
         save: "Gardar"
         delete: "Eliminar"
         edit: "Editar"
@@ -179,8 +297,16 @@ gl:
         providers:
           google: "Google"
           fake: "Personalizado"
+      ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Predeterminado"
+          apply: "Aplicar"
+        share: "Compartir"
+        filter_all: "Todas"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Duración:"
           request: "Petición"
           response: "Resposta"
           next_log: "Seguinte"
@@ -201,9 +327,18 @@ gl:
             tag: "Etiqueta"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
+        tabs:
+          topics: "Temas"
+          messages: "Mensaxes"
       discobot_discoveries:
-        regular_results: "Temas"
-        collapse: "Pregar"
-        tooltip:
-          actions:
-            disable: "Desactivar"
+        legacy:
+          regular_results: "Temas"
+          collapse: "Pregar"
+          tooltip:
+            actions:
+              disable: "Desactivar"
+        search_messages: "Mensaxes"

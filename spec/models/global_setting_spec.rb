@@ -179,4 +179,43 @@ RSpec.describe GlobalSetting::FileProvider do
 
     f.unlink
   end
+
+  describe ".load_plugins? and .plugins_to_load" do
+    around do |example|
+      original = ENV["LOAD_PLUGINS"]
+      example.run
+    ensure
+      original.nil? ? ENV.delete("LOAD_PLUGINS") : ENV["LOAD_PLUGINS"] = original
+    end
+
+    it "treats `1` as load-all" do
+      ENV["LOAD_PLUGINS"] = "1"
+      expect(GlobalSetting.load_plugins?).to eq(true)
+      expect(GlobalSetting.plugins_to_load).to be_nil
+    end
+
+    it "treats `0` as load-none" do
+      ENV["LOAD_PLUGINS"] = "0"
+      expect(GlobalSetting.load_plugins?).to eq(false)
+      expect(GlobalSetting.plugins_to_load).to be_nil
+    end
+
+    it "parses a comma-separated list, stripping whitespace and empty entries" do
+      ENV["LOAD_PLUGINS"] = "  chat , automation ,, "
+      expect(GlobalSetting.load_plugins?).to eq(true)
+      expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+    end
+
+    it "tolerates `plugins/foo` entries by taking the basename" do
+      ENV["LOAD_PLUGINS"] = "plugins/chat,plugins/automation"
+      expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+    end
+
+    it "raises when given a list outside of dev/test" do
+      ENV["LOAD_PLUGINS"] = "chat,automation"
+      allow(Rails.env).to receive(:local?).and_return(false)
+      expect { GlobalSetting.load_plugins? }.to raise_error(RuntimeError, /only supported/)
+      expect { GlobalSetting.plugins_to_load }.to raise_error(RuntimeError, /only supported/)
+    end
+  end
 end

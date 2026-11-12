@@ -1,24 +1,59 @@
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import {
   attributeBindings,
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
-import { or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")
 @classNames("multi-select-header")
 @attributeBindings("ariaLabel:aria-label")
 export default class MultiSelectHeader extends SelectKitHeaderComponent {
-  @reads("selectKit.options.caretUpIcon") caretUpIcon;
-  @reads("selectKit.options.caretDownIcon") caretDownIcon;
-  @reads("selectKit.options.headerAriaLabel") ariaLabel;
+  @tracked _caretUpIconOverride;
+  @tracked _caretDownIconOverride;
+  @tracked _ariaLabelOverride;
+
+  @computed("selectKit.options.caretUpIcon")
+  get caretUpIcon() {
+    if (this._caretUpIconOverride !== undefined) {
+      return this._caretUpIconOverride;
+    }
+    return this.selectKit?.options?.caretUpIcon;
+  }
+
+  set caretUpIcon(value) {
+    this._caretUpIconOverride = value;
+  }
+
+  @computed("selectKit.options.caretDownIcon")
+  get caretDownIcon() {
+    if (this._caretDownIconOverride !== undefined) {
+      return this._caretDownIconOverride;
+    }
+    return this.selectKit?.options?.caretDownIcon;
+  }
+
+  set caretDownIcon(value) {
+    this._caretDownIconOverride = value;
+  }
+
+  @computed("selectKit.options.headerAriaLabel")
+  get ariaLabel() {
+    if (this._ariaLabelOverride !== undefined) {
+      return this._ariaLabelOverride;
+    }
+    return this.selectKit?.options?.headerAriaLabel;
+  }
+
+  set ariaLabel(value) {
+    this._ariaLabelOverride = value;
+  }
 
   @computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon")
   get caretIcon() {
@@ -28,8 +63,19 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
   <template>
     <div class="select-kit-header-wrapper">
       {{#each this.icons as |iconName|}}
-        {{icon iconName}}
+        {{dIcon iconName}}
       {{/each}}
+
+      {{#if
+        (and
+          this.selectKit.options.useHeaderSelectedCount
+          this.selectedContent.length
+        )
+      }}
+        <span
+          class="multi-select-header__selected-count"
+        >{{this.selectedContent.length}}</span>
+      {{/if}}
 
       {{#if this.selectKit.options.useHeaderFilter}}
         <div class="select-kit-header--filter">
@@ -42,8 +88,8 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             }}
               {{#each this.selectedContent as |item|}}
                 <SelectedChoiceComponent
-                  @selectKit={{this.selectKit}}
                   @item={{item}}
+                  @selectKit={{this.selectKit}}
                 />
               {{/each}}
             {{/let}}
@@ -54,9 +100,9 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
-              @id={{concat this.selectKit.uniqueID "-filter"}}
               @hidePlaceholderWithSelection={{true}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
         </div>
@@ -66,7 +112,7 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
           @selectKit={{this.selectKit}}
         />
         {{#if this.caretIcon}}
-          {{icon this.caretIcon class="angle-icon"}}
+          {{dIcon this.caretIcon class="angle-icon"}}
         {{/if}}
       {{/if}}
     </div>

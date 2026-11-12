@@ -1,39 +1,22 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed, getProperties } from "@ember/object";
-import { and } from "@ember/object/computed";
+import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import {
+  completeOnboardingStep,
+  CREATE_CATEGORY_STEP,
+} from "discourse/lib/admin-onboarding";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import DiscourseURL from "discourse/lib/url";
-import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-// Only fields managed through FormKit in the legacy edit-category flow.
-// Other legacy tab components (settings, tags, etc.) write directly to the model.
-const LEGACY_FORMKIT_FIELDS = [
-  "name",
-  "slug",
-  "parent_category_id",
-  "color",
-  "text_color",
-  "style_type",
-  "emoji",
-  "icon",
-  "localizations",
-  "email_in",
-  "email_in_allow_strangers",
-  "mailinglist_mirror",
-  "topic_template",
-  "form_template_ids",
-];
-
-// All fields managed through FormKit in the simplified creation flow.
 const SIMPLIFIED_FIELD_LIST = [
   "name",
   "slug",
@@ -44,6 +27,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "position",
   "num_featured_topics",
@@ -54,6 +38,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",
@@ -75,11 +61,34 @@ const SIMPLIFIED_FIELD_LIST = [
   "allow_global_tags",
   "default_slow_mode_seconds",
   "topic_template",
+  "topic_title_placeholder",
   "form_template_ids",
+  "uploaded_logo",
+  "uploaded_logo_dark",
+  "uploaded_background",
+  "uploaded_background_dark",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
+const DISCUSSION_TYPE_ID = "discussion";
 
+/**
+ * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
+ */
+/**
+ * @typedef {Object} CategoryFormApi
+ * @property {(name: string, value: unknown) => Promise<void>} set
+ * @property {(values: Record<string, unknown>) => Promise<void>} setProperties
+ * @property {(name: string) => unknown} get
+ * @property {() => void} commit
+ * @property {(name: string) => void} commitField
+ * @property {(event?: Event) => Promise<void>} submit
+ * @property {(event?: Event) => Promise<void>} reset
+ * @property {(name: string, error: { title?: string, message?: string }) => void} addError
+ * @property {(name: string) => void} removeError
+ * @property {() => void} removeErrors
+ * @property {boolean} isDirty
+ */
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
@@ -89,85 +98,38 @@ export default class EditCategoryTabsController extends Controller {
   @service keyValueStore;
   @service toasts;
 
-  @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @tracked breadcrumbCategories = this.site.categoriesList;
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked formData;
   @tracked selectedTab = "general";
+
+  /** @type {CategoryFormApi | null} */
   @tracked formApi = null;
+  @tracked siteTextsLocale = this.siteSettings.default_locale;
+  @tracked isLoadingSiteTextsLocale = false;
+  @tracked siteTextEdits = {};
+  @tracked siteTextOriginals = {};
   @autoTrackedArray panels = [];
   saving = false;
   deleting = false;
   showTooltip = false;
-  createdCategory = false;
   expandedMenu = false;
+
+  /** @type {{ slug?: string } | null} */
   parentParams = null;
   validators = [];
-  textColors = ["000000", "FFFFFF"];
 
-  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
+  /**
+   * Callbacks registered by tab components that are invoked when the form
+   * is reset, allowing child components to clean up their own state.
+   * @type {Function[]}
+   */
+  afterResetCallbacks = [];
 
-  @action
-  initFormData() {
-    const enableSimplifiedCategoryCreation =
-      this.siteSettings.enable_simplified_category_creation;
-    const data = getProperties(
-      this.model,
-      ...(enableSimplifiedCategoryCreation
-        ? SIMPLIFIED_FIELD_LIST
-        : LEGACY_FORMKIT_FIELDS)
-    );
-
-    if (enableSimplifiedCategoryCreation) {
-      if (!this.model.styleType) {
-        data.style_type = "icon";
-      }
-
-      data.required_tag_groups = Array.from(
-        data.required_tag_groups ?? [],
-        (rtg) => ({ ...rtg })
-      );
-      data.category_setting = { ...(this.model.category_setting ?? {}) };
-      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
-
-      data.category_type_site_settings = {};
-
-      Object.values(this.model.category_types ?? {}).forEach((categoryType) => {
-        categoryType.configuration_schema.category_custom_fields?.forEach(
-          (field) => {
-            data.custom_fields[field.key] ??= field.default;
-          }
-        );
-
-        categoryType.configuration_schema.site_settings?.forEach((setting) => {
-          data.category_type_site_settings[setting.key] = this.model.id
-            ? setting.current
-            : setting.default;
-        });
-      });
-    }
-
-    this.formData = data;
-  }
-
-  @computed("saving", "deleting")
-  get deleteDisabled() {
-    return this.deleting || this.saving || false;
-  }
-
-  @computed("name")
-  get categoryName() {
-    const name = this.name || "";
-    return name.trim().length > 0 ? name : i18n("preview");
-  }
-
-  @computed("saving", "model.id")
-  get saveLabel() {
-    if (this.saving) {
-      return "saving";
-    }
-    return this.model?.id ? "category.save" : "category.create_category";
+  get availableLocales() {
+    return this.siteSettings.available_locales;
   }
 
   get baseTitle() {
@@ -177,10 +139,10 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    const types = Object.values(this.model.category_types ?? {});
+    const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
-        typeName: types[0].name.toLowerCase(),
+        typeName: types[0].title,
       });
     }
 
@@ -188,7 +150,102 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   get isFormDirty() {
-    return this.formApi?.isDirty ?? false;
+    return (this.formApi?.isDirty ?? false) || this.hasPendingSiteTextChanges;
+  }
+
+  // True when any locale (visible or stashed) has customizable text that
+  // differs from its saved value. The form's own dirty flag only reflects the
+  // locale currently on screen, so we track the rest ourselves.
+  get hasPendingSiteTextChanges() {
+    const entries = this._siteTextEntries;
+    if (entries.length === 0) {
+      return false;
+    }
+
+    const edits = {
+      ...this.siteTextEdits,
+      [this.siteTextsLocale]: this._visibleSiteTexts,
+    };
+
+    return Object.entries(edits).some(([locale, values]) => {
+      const originals = this.siteTextOriginals[locale] ?? {};
+      return entries.some(
+        (entry) => (values[entry.name] ?? "") !== (originals[entry.name] ?? "")
+      );
+    });
+  }
+
+  get _visibleSiteTexts() {
+    return this.formApi?.get("site_texts") ?? {};
+  }
+
+  get _siteTextEntries() {
+    return Object.values(this.model?.categoryTypes ?? {}).flatMap(
+      (categoryType) => categoryType.configuration_schema.site_texts ?? []
+    );
+  }
+
+  @action
+  initFormData() {
+    const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
+
+    if (!this.model.styleType) {
+      data.style_type = "icon";
+    }
+
+    data.required_tag_groups = Array.from(
+      data.required_tag_groups ?? [],
+      (rtg) => ({
+        ...rtg,
+      })
+    );
+    data.category_setting = { ...(this.model.category_setting ?? {}) };
+    data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+
+    data.category_type_site_settings = {};
+    data.category_type_settings = {
+      ...(this.model.category_type_settings ?? {}),
+    };
+    data.site_texts = {};
+    data.category_type_ids = Object.keys(this.model.categoryTypes ?? {});
+
+    if (!data.category_type_ids.includes(DISCUSSION_TYPE_ID)) {
+      data.category_type_ids.unshift(DISCUSSION_TYPE_ID);
+    }
+
+    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.category_custom_fields?.forEach(
+        (field) => {
+          data.custom_fields[field.key] ??= field.default;
+        }
+      );
+
+      categoryType.configuration_schema.category_settings?.forEach((field) => {
+        data.category_type_settings[field.key] ??= field.default;
+      });
+
+      categoryType.configuration_schema.site_settings?.forEach((setting) => {
+        data.category_type_site_settings[setting.key] = setting.overridden
+          ? setting.current
+          : setting.default;
+      });
+
+      // Site texts are translation overrides, not stored on the category. The
+      // server provides the current value (default locale) so we can seed the
+      // field without an extra request, then diff against it on save. Keyed by
+      // the dot-free form name (the i18n key itself is not FormKit-safe).
+      categoryType.configuration_schema.site_texts?.forEach((text) => {
+        data.site_texts[text.name] = text.current ?? "";
+      });
+    });
+
+    // Customizable text is always seeded with the default locale's value, so
+    // reset the editing language to match whenever the form is (re)initialized.
+    const defaultLocale = this.siteSettings.default_locale;
+    this.siteTextsLocale = defaultLocale;
+    this.siteTextOriginals = { [defaultLocale]: { ...data.site_texts } };
+    this.siteTextEdits = { [defaultLocale]: { ...data.site_texts } };
+    this.formData = data;
   }
 
   @action
@@ -198,14 +255,33 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (tab !== "general") {
+      this.showAdvancedTabs = true;
+    }
+
+    if (this.selectedTab === tab) {
+      return;
+    }
+
     this.selectedTab = tab;
-    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }
 
+  /**
+   * Runs all registered validators, then performs built-in validation for
+   * required fields (name, emoji, icon) when submitting from a non-general tab.
+   * Both `addError` and `removeError` are passed to validators so they can
+   * manage errors bidirectionally.
+   *
+   * @param {CategoryFormData} data - The current form draft data.
+   * @param {Pick<CategoryFormApi, "addError" | "removeError">} helpers
+   * @param {CategoryFormApi["addError"]} helpers.addError - Adds a validation error for a field.
+   * @param {CategoryFormApi["removeError"]} helpers.removeError - Removes a validation error for a field.
+   * @returns {void}
+   */
   @action
-  validateForm(data, { addError }) {
-    if (!this.siteSettings.enable_simplified_category_creation) {
-      return;
+  validateForm(data, { addError, removeError }) {
+    for (const validator of this.validators) {
+      validator(data, { addError, removeError });
     }
 
     if (this.selectedTab === "general") {
@@ -248,30 +324,45 @@ export default class EditCategoryTabsController extends Controller {
     this.validators.push(validator);
   }
 
+  /**
+   * Registers a callback that will be invoked when the form is reset.
+   * Tab components use this to synchronize their internal state (e.g.,
+   * clearing local selections) when the user resets the form.
+   *
+   * @param {Function} callback - The function to call on form reset.
+   */
+  @action
+  registerAfterReset(callback) {
+    this.afterResetCallbacks.push(callback);
+  }
+
+  /**
+   * Called by FormKit's `@onReset` hook. Invokes all registered
+   * after-reset callbacks so tab components can react to the reset.
+   */
+  @action
+  onFormReset() {
+    this.afterResetCallbacks.forEach((callback) => callback());
+
+    const restored = {};
+    for (const [locale, values] of Object.entries(this.siteTextOriginals)) {
+      restored[locale] = { ...values };
+    }
+    this.siteTextEdits = restored;
+
+    const current = this.siteTextOriginals[this.siteTextsLocale] ?? {};
+    this._siteTextEntries.forEach((entry) => {
+      this.formApi?.set(`site_texts.${entry.name}`, current[entry.name] ?? "");
+    });
+    this.formApi?.commitField("site_texts");
+  }
+
   @action
   isLeavingForm(transition) {
     const name = transition.targetName;
     return (
       !name.startsWith("editCategory.tabs") &&
       !name.startsWith("newCategory.tabs")
-    );
-  }
-
-  _wouldLoseAccess(category = this.model) {
-    if (this.currentUser.admin) {
-      return false;
-    }
-
-    const permissions = category.permissions;
-    if (!permissions?.length) {
-      return false;
-    }
-
-    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
-
-    return !permissions.some(
-      (p) =>
-        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
     );
   }
 
@@ -282,15 +373,21 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
-    // If permissions is empty or not set, ensure it's an empty array (public category)
-    if (!this.model.permissions || this.model.permissions.length === 0) {
+    // Category serialization converts an empty permission list to staff-only access.
+    if (!this.model.permissions?.length) {
       this.model.set("permissions", []);
     }
 
-    const lostAccess = this._wouldLoseAccess();
+    let lostAccess;
+    try {
+      lostAccess = await this.#wouldLoseAccess();
+    } catch (error) {
+      popupAjaxError(error);
+      return;
+    }
 
     if (lostAccess) {
       const confirmed = await this.dialog.yesNoConfirm({
@@ -305,13 +402,37 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
-      const result = await this.model.save();
+      const isNew = !this.model.id;
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
+      const result = await this.model.save(category_type_ids);
+      const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
+      // awaited ahead of the reloads below, which would cancel the audit write
+      if (isNew && this.currentUser?.show_site_owner_onboarding) {
+        await completeOnboardingStep(this.keyValueStore, CREATE_CATEGORY_STEP);
+      }
+
       if (lostAccess) {
-        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        this.router.transitionTo(homepageNavigationDestination());
         return;
+      }
+
+      const newTypes = Object.keys(result.category.category_types ?? {});
+      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+      // A reload is needed when site texts change
+      if (typeWasAdded || siteTextsChanged) {
+        if (this.model.id) {
+          window.location.reload();
+        } else {
+          DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
+        }
+
+        // Never resolves: keeps the form busy until the page unloads
+        return new Promise(() => {});
       }
 
       this.set("saving", false);
@@ -341,8 +462,43 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
+  async switchSiteTextsLocale(locale) {
+    if (locale === this.siteTextsLocale) {
+      return;
+    }
+
+    this._stashVisibleSiteTexts();
+
+    this.isLoadingSiteTextsLocale = true;
+    const previousLocale = this.siteTextsLocale;
+    this.siteTextsLocale = locale;
+
+    try {
+      let values = this.siteTextEdits[locale];
+      if (!values) {
+        values = await this._fetchSiteTexts(locale);
+        this.siteTextOriginals = {
+          ...this.siteTextOriginals,
+          [locale]: { ...values },
+        };
+        this.siteTextEdits = { ...this.siteTextEdits, [locale]: { ...values } };
+      }
+
+      this._siteTextEntries.forEach((entry) => {
+        this.formApi?.set(`site_texts.${entry.name}`, values[entry.name] ?? "");
+      });
+      this.formApi?.commitField("site_texts");
+    } catch (error) {
+      this.siteTextsLocale = previousLocale;
+      popupAjaxError(error);
+    } finally {
+      this.isLoadingSiteTextsLocale = false;
+    }
+  }
+
+  @action
   deleteCategory() {
-    if (this.deleteDisabled) {
+    if (this.deleting || this.saving) {
       return;
     }
 
@@ -367,20 +523,6 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  toggleDeleteTooltip() {
-    if (this.deleteDisabled) {
-      return;
-    }
-
-    this.toggleProperty("showTooltip");
-  }
-
-  @action
-  goBack() {
-    DiscourseURL.routeTo(this.model.url);
-  }
-
-  @action
   toggleAdvancedTabs() {
     this.showAdvancedTabs = !this.showAdvancedTabs;
 
@@ -391,22 +533,105 @@ export default class EditCategoryTabsController extends Controller {
     );
 
     // When collapsing, reset to general unless current tab is still visible
-    if (!this.showAdvancedTabs && this.selectedTab !== "general") {
-      const primaryTab = registeredEditCategoryTabs.find(
-        (tab) => tab.id === this.selectedTab && tab.primary
-      );
-      if (!primaryTab) {
-        next(() => {
-          this.selectedTab = "general";
-          if (this.router.currentRouteName?.startsWith("newCategory")) {
-            DiscourseURL.routeTo(getURL("/new-category/general"));
-          } else if (this.parentParams?.slug) {
-            DiscourseURL.routeTo(
-              getURL(`/c/${this.parentParams.slug}/edit/general`)
-            );
-          }
-        });
+    if (this.showAdvancedTabs || this.selectedTab === "general") {
+      return;
+    }
+
+    const primaryTab = registeredEditCategoryTabs.find(
+      (tab) => tab.id === this.selectedTab && tab.primary
+    );
+    if (primaryTab) {
+      return;
+    }
+
+    next(() => {
+      this.selectedTab = "general";
+      if (this.router.currentRouteName?.startsWith("newCategory")) {
+        DiscourseURL.routeTo(getURL("/new-category/general"));
+      } else if (this.parentParams?.slug) {
+        DiscourseURL.routeTo(
+          getURL(`/c/${this.parentParams.slug}/edit/general`)
+        );
+      }
+    });
+  }
+
+  async #wouldLoseAccess(category = this.model) {
+    try {
+      await ajax("/categories/evaluate_permissions.json", {
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          group_ids: category.permissions.map(
+            (permission) => permission.group_id
+          ),
+        }),
+      });
+      return false;
+    } catch (error) {
+      if (error.jqXHR?.responseJSON?.extras?.current_user_will_lose_access) {
+        return true;
+      }
+
+      throw error;
+    }
+  }
+
+  _stashVisibleSiteTexts() {
+    this.siteTextEdits = {
+      ...this.siteTextEdits,
+      [this.siteTextsLocale]: { ...this._visibleSiteTexts },
+    };
+  }
+
+  async _fetchSiteTexts(locale) {
+    const entries = this._siteTextEntries;
+    const responses = await Promise.all(
+      entries.map((entry) =>
+        ajax(
+          `/admin/customize/site_texts/${encodeURIComponent(entry.key)}.json`,
+          { data: { locale } }
+        ).catch(() => ({ site_text: { value: "" } }))
+      )
+    );
+
+    const values = {};
+    entries.forEach((entry, index) => {
+      values[entry.name] = responses[index].site_text?.value ?? "";
+    });
+    return values;
+  }
+
+  async _saveSiteTexts() {
+    this._stashVisibleSiteTexts();
+
+    const entries = this._siteTextEntries;
+    let changed = false;
+
+    for (const [locale, values] of Object.entries(this.siteTextEdits)) {
+      const originals = this.siteTextOriginals[locale] ?? {};
+
+      for (const entry of entries) {
+        const newValue = values[entry.name] ?? "";
+        if (newValue === (originals[entry.name] ?? "")) {
+          continue;
+        }
+
+        const url = `/admin/customize/site_texts/${encodeURIComponent(
+          entry.key
+        )}?locale=${encodeURIComponent(locale)}`;
+        if (newValue.trim() === "") {
+          await ajax(url, { type: "DELETE" });
+        } else {
+          await ajax(url, {
+            type: "PUT",
+            data: { site_text: { value: newValue, locale } },
+          });
+        }
+        changed = true;
       }
     }
+
+    return changed;
   }
 }

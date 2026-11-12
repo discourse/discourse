@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import PinnedOptions from "discourse/components/pinned-options";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | pinned-options", function (hooks) {
+module("Integration | Component | PinnedOptions", function (hooks) {
   setupRenderingTest(hooks);
 
   test("unpinning", async function (assert) {
@@ -23,7 +23,7 @@ module("Integration | Component | pinned-options", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
+        <PinnedOptions @topic={{this.topic}} @value={{this.topic.pinned}} />
       </template>
     );
 
@@ -54,7 +54,7 @@ module("Integration | Component | pinned-options", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
+        <PinnedOptions @topic={{this.topic}} @value={{this.topic.pinned}} />
       </template>
     );
 

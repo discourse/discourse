@@ -4,11 +4,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserMenuItemsListEmptyState from "discourse/components/user-menu/items-list-empty-state";
 import MenuItem from "discourse/components/user-menu/menu-item";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import deprecated from "discourse/lib/deprecated";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserMenuItemsList extends Component {
@@ -35,12 +37,16 @@ export default class UserMenuItemsList extends Component {
   get dismissTitle() {}
 
   get emptyStateComponent() {
-    return "user-menu/items-list-empty-state";
+    return UserMenuItemsListEmptyState;
   }
 
   get resolvedEmptyStateComponent() {
     const component = this.emptyStateComponent;
     if (typeof component === "string") {
+      deprecated(
+        `user-menu emptyStateComponent must be a component class (${this.constructor.name} returned the string ${JSON.stringify(component)})`,
+        { id: "discourse.user-menu.empty-state-component-class" }
+      );
       return getOwner(this).resolveRegistration(`component:${component}`);
     } else {
       return component;
@@ -59,6 +65,13 @@ export default class UserMenuItemsList extends Component {
 
   async refreshList() {
     await this.#load();
+  }
+
+  @action
+  dismissButtonClick() {
+    throw new Error(
+      `dismissButtonClick must be implemented in ${this.constructor.name}.`
+    );
   }
 
   async #load() {
@@ -97,13 +110,6 @@ export default class UserMenuItemsList extends Component {
     }
   }
 
-  @action
-  dismissButtonClick() {
-    throw new Error(
-      `dismissButtonClick must be implemented in ${this.constructor.name}.`
-    );
-  }
-
   <template>
     <PluginOutlet
       @name="before-panel-body"
@@ -116,7 +122,7 @@ export default class UserMenuItemsList extends Component {
     {{else if this.items.length}}
       <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
         {{#each this.items as |item|}}
-          <MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}} />
+          <MenuItem @closeUserMenu={{@closeUserMenu}} @item={{item}} />
         {{/each}}
       </ul>
       <div class="panel-body-bottom">
@@ -127,17 +133,17 @@ export default class UserMenuItemsList extends Component {
             @translatedAriaLabel={{this.showAllTitle}}
             @translatedTitle={{this.showAllTitle}}
           >
-            {{icon "chevron-down" aria-label=this.showAllTitle}}
+            {{dIcon "chevron-down" aria-label=this.showAllTitle}}
           </DButton>
         {{/if}}
         {{#if this.showDismiss}}
           <button
-            type="button"
             class="btn btn-default notifications-dismiss btn-icon-text"
             title={{this.dismissTitle}}
+            type="button"
             {{on "click" this.dismissButtonClick}}
           >
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "user.dismiss"}}
           </button>
         {{/if}}

@@ -20,21 +20,8 @@ module Jobs
       return if post.blank? || post.raw.blank? || post.deleted_at.present?
 
       force = args[:force] || false
-      return if post.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
-
-      topic = post.topic
-      return if topic.blank?
-
-      if force
-        # no restrictions
-      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
-        return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
-      else
-        if topic.archetype == Archetype.private_message &&
-             !TopicAllowedGroup.exists?(topic_id: topic.id)
-          return
-        end
-      end
+      return if post.topic.blank?
+      return if !force && !DiscourseAi::Translation.post_translatable?(post)
 
       # the user may fill locale in manually
       if (detected_locale = post.locale).blank?
@@ -45,15 +32,30 @@ module Jobs
           # the backfill job will handle failures
           return
         end
+
+        return if detected_locale.blank?
+
+        DiscourseEvent.trigger(
+          :post_locale_detected,
+          post,
+          { skip_workflows: args[:skip_workflows] },
+        )
       end
 
-      return if detected_locale.blank?
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
+      existing_base_locales =
+        PostLocalization
+          .where(post_id: post.id)
+          .pluck(:locale)
+          .map { |l| l.split("_").first }
+          .to_set
+
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        exists = post.localizations.matching_locale(locale).exists?
+        base_locale = locale.split("_").first
+        exists = existing_base_locales.include?(base_locale)
 
         has_quota = DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
         next if !force && exists && !has_quota
@@ -61,21 +63,29 @@ module Jobs
         localize(post, locale)
       end
 
-      MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
+      MessageBus.publish(
+        "/topic/#{post.topic_id}",
+        { type: :localized, id: post.id },
+        post.topic.secure_audience_publish_messages,
+      )
+    ensure
+      # Lets anything waiting on this post's translations stop waiting, even when
+      # some of them weren't produced.
+      if args[:post_id].present?
+        DiscourseEvent.trigger(:post_localizations_finished, args[:post_id].to_i)
+      end
     end
 
     private
 
     def localize(post, locale)
-      begin
-        DiscourseAi::Translation::PostLocalizer.localize(post, locale)
-      rescue FinalDestination::SSRFDetector::LookupFailedError
-        # do nothing, there are too many sporadic lookup failures
-      rescue => e
-        DiscourseAi::Translation::VerboseLogger.log(
-          "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-        )
-      end
+      DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      # do nothing, there are too many sporadic lookup failures
+    rescue => e
+      DiscourseAi::Translation::VerboseLogger.log(
+        "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+      )
     end
   end
 end

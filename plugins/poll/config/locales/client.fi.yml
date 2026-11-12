@@ -51,6 +51,8 @@ fi:
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
+      keep-vote:
+        label: "Takaisin"
       show-results:
         title: "Näytä kyselyn tulos"
         label: "Tulokset"
@@ -155,5 +157,3 @@ fi:
           add: Lisää vaihtoehto
         automatic_close:
           label: Sulje kysely automaattisesti
-        show_advanced: "Näytä lisäasetukset"
-        hide_advanced: "Piilota lisäasetukset"

@@ -8,7 +8,7 @@ So you want to set up Discourse locally to hack on and develop with?
 
 This root guide links all the #dev-install guides for the various systems to setup Discourse locally on. If you want to add a guide to this list, be sure to tag it `dev-install` before editing this post to include it here.
 
-_(If you want to install Discourse for production use, see [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md))_
+_(If you want to install Discourse for production use, see [our install guide](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md))_
 
 In no particular order, here are the install guides for setting Discourse up on your local environment:
 

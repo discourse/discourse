@@ -8,7 +8,6 @@ RSpec.describe Chat::Api::ChannelPinsController do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_pinned_messages = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(admin)
   end
@@ -22,6 +21,42 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["pinned_messages"].length).to eq(1)
       expect(response.parsed_body["pinned_messages"][0]["chat_message_id"]).to eq(message.id)
+    end
+
+    it "returns pinned messages to users outside the pinning groups" do
+      sign_in(user)
+      Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
+        [message.id],
+      )
+      expect(response.parsed_body["pinned_messages"][0]["message"]["pinned"]).to eq(true)
+    end
+
+    it "keeps links in the pin excerpt, unlike the message's own excerpt" do
+      linked = Fabricate(:chat_message, chat_channel: channel, message: "see [the docs](/faq)")
+      Fabricate(:chat_pinned_message, chat_message: linked, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"/faq\"")
+      expect(pin["message"]["excerpt"]).not_to include("<a")
+    end
+
+    it "keeps a link for a pin whose message is only a URL" do
+      url_only =
+        Fabricate(:chat_message, chat_channel: channel, message: "https://example.com/docs")
+      Fabricate(:chat_pinned_message, chat_message: url_only, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"https://example.com/docs\"")
+      expect(pin["excerpt"]).to include("rel=\"noopener nofollow ugc\"")
     end
 
     it "returns an empty list when there are no pinned messages" do
@@ -47,6 +82,38 @@ RSpec.describe Chat::Api::ChannelPinsController do
         get "/chat/api/channels/#{channel.id}/pins"
 
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [user]) }
+      fab!(:channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          message: "Confidential restricted pinned message",
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "does not expose pinned messages" do
+        Fabricate(:chat_pinned_message, chat_channel: channel, chat_message: message)
+
+        get "/chat/api/channels/#{channel.id}/pins"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(message.message)
       end
     end
   end
@@ -84,6 +151,17 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(true)
     end
 
+    it "allows members of the configured pinning groups to pin messages" do
+      sign_in(user)
+      group = Fabricate(:group, users: [user])
+      SiteSetting.chat_pinning_messages_allowed_groups = group.id.to_s
+
+      post "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
+
+      expect(response.status).to eq(200)
+      expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(true)
+    end
+
     context "when user is not staff" do
       before { sign_in(user) }
 
@@ -99,6 +177,17 @@ RSpec.describe Chat::Api::ChannelPinsController do
     fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel) }
 
     it "unpins a message" do
+      delete "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
+
+      expect(response.status).to eq(200)
+      expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(false)
+    end
+
+    it "allows members of the configured pinning groups to unpin messages" do
+      sign_in(user)
+      group = Fabricate(:group, users: [user])
+      SiteSetting.chat_pinning_messages_allowed_groups = group.id.to_s
+
       delete "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
 
       expect(response.status).to eq(200)

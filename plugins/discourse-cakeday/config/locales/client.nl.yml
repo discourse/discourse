@@ -19,7 +19,7 @@ nl:
       today: "Vandaag"
       tomorrow: "Morgen"
       upcoming: "Binnenkort"
-      all: "Alles"
+      all: "Alle"
     birthdays:
       title: "Verjaardagen"
       month:

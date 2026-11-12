@@ -25,7 +25,6 @@ fi:
         description: "Säännöllinen raportti laajan kielimallin perusteella"
   site_settings:
     discourse_ai_enabled: "Ota Discoursen tekoälylisäosa käyttöön."
-    ai_default_llm_model: "Oletusarvoinen LLM-malli, jota käytetään kaikkiin tekoälyominaisuuksiin"
     ai_artifact_security: "Tekoälyartefaktijärjestelmä luo iframe-kehyksiä suoritettavalla koodilla. Tiukka tila pakottaa ylimääräisen klikkauksen koodin suorittamiseksi. Löyhä tila suorittaa koodin välittömästi. Hybriditila antaa käyttäjälle mahdollisuuden syöttää data-ai-artifact-autorun-parametrin näytettäväksi heti. Pois käytöstä -tila poistaa artefaktijärjestelmän käytöstä."
     ai_toxicity_enabled: "Ota toksisuusmoduuli käyttöön."
     ai_toxicity_inference_service_api_endpoint: "URL-osoite, jossa toksisuusmoduulin API on käynnissä"
@@ -40,10 +39,8 @@ fi:
     ai_toxicity_flag_threshold_threat: "Uhkaus"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksuaalinen"
     ai_toxicity_groups_bypass: "Toksisuusmoduuli ei luokittele näiden ryhmien käyttäjien viestejä."
-    ai_sentiment_enabled: "Ota sävymoduuli käyttöön."
     ai_sentiment_inference_service_api_endpoint: "URL-osoite, jossa sävymoduulin API on käynnissä"
     ai_sentiment_inference_service_api_key: "Sävy-APIn API-avain"
-    ai_sentiment_models: "Päätelmien tekemiseen käytettävät mallit. Sävy luokittelee viestin positiivinen/neutraali/negatiivinen-skaalalla. Tunne luokittelee viha/inho/pelko/ilo/neutraali/suru/yllätys-skaalalla."
     ai_nsfw_detection_enabled: "Ota NSFW-moduuli käyttöön."
     ai_nsfw_inference_service_api_endpoint: "URL-osoite, jossa NSFW-moduulin API on käynnissä"
     ai_nsfw_inference_service_api_key: "NSFW-APIn API-avain"
@@ -61,10 +58,8 @@ fi:
     ai_helper_allowed_in_pm: "Ota kirjoitustoiminnon tekoälyavustaja käyttöön yksityisviesteissä."
     ai_helper_automatic_chat_thread_title_delay: "Viive minuuteissa ennen kuin tekoälyapuohjelma asettaa chat-ketjun otsikon automaattisesti."
     ai_helper_automatic_chat_thread_title: "Aseta chat-ketjujen otsikot automaattisesti ketjun sisällön perusteella."
-    ai_helper_enabled_features: "Valitse ominaisuudet, jotka otetaan käyttöön tekoälyavustajassa."
     post_ai_helper_allowed_groups: "Käyttäjäryhmät, joilla on oikeus käyttää tekoälyavustajan ominaisuuksia viesteissä"
     ai_embeddings_selected_model: "Käytä valittua mallia upotusten luomiseen."
-    ai_embeddings_generate_for_pms: "Luo upotuksia yksityisviesteille."
     ai_embeddings_semantic_related_topics_enabled: "Käytä semanttista hakua aiheeseen liittyviä ketjuja varten."
     ai_embeddings_semantic_related_topics: "Aiheeseen liittyvien ketjujen osiossa näytettävien ketjujen enimmäismäärä."
     ai_embeddings_backfill_batch_size: "15 minuutin välein täydennettävien upotusten määrä."
@@ -76,9 +71,7 @@ fi:
     ai_summarization_enabled: "Ota yhteenveto-ominaisuus käyttöön"
     ai_pm_summarization_allowed_groups: "Ryhmät voivat luoda ja tarkastella yhteenvetoja yksityisviesteissä."
     ai_summary_gists_enabled: "Luo lyhyitä yhteenvetoja ketjujen uusimmista vastauksista automaattisesti"
-    ai_summary_backfill_maximum_topics_per_hour: "Täydennettävien ketjujen yhteenvetojen määrä tunnissa."
     ai_bot_enabled: "Ota tekoälybottimoduuli käyttöön."
-    ai_bot_allowed_groups: "Kun GPT-botilla on yksityisviestin käyttöoikeus, se vastaa näiden ryhmien jäsenille."
     ai_bot_debugging_allowed_groups: "Salli näiden ryhmien nähdä viesteissä virheenkorjauspainike, joka näyttää raa'an tekoälypyynnön ja vastauksen"
     ai_bot_public_sharing_allowed_groups: "Salli näiden ryhmien jakaa tekoälyn yksityisviestejä yleisölle ainutlaatuisen julkisesti käytettävissä olevan linkin kautta. Huomaa: jos sivustosi edellyttää kirjautumista, myös jaot edellyttävät kirjautumista."
     ai_bot_github_access_token: "GitHubin käyttötunnus käytettäväksi GitHubin tekoälytyökalujen kanssa (vaaditaan haun tukea varten)"
@@ -89,8 +82,6 @@ fi:
     ai_discord_app_public_key: "Sen Discord-sovelluksen julkinen avain, johon haluat yhdistää Discord-haun"
     ai_discord_search_mode: "Valitse Discord-haussa käytettävä hakutila"
     ai_discord_allowed_guilds: "Discord-killat (palvelimet), joilla botti saa hakea"
-    ai_translation_backfill_limit_to_public_content: "Kun tämä on käytössä, vain julkisten alueiden sisältö käännetään. Kun tämä ei ole käytössä, myös ryhmäyksityisviestien ja yksityisten alueiden sisältö lähetetään käännettäväksi."
-    ai_translation_backfill_max_age_days: "Käännettävien viestien ja ketjujen enimmäisikä. Tätä vanhempia viestejä ja ketjuja ei käännetä. 0 poistaa aiempien viestien kääntämisen käytöstä, mutta ei poista käytöstä uusien viestien kääntämistä."
   reviewables:
     reasons:
       flagged_by_toxicity: Tekoälylisäosa liputti tämän luokiteltuaan sen toksiseksi.
@@ -101,93 +92,64 @@ fi:
       description: "Tämä raportti tarjoaa sävyanalyysin viesteistä ryhmiteltynä luokittain, ja jokaiselle viestille ja luokalle annetaan positiiviset, negatiiviset ja neutraalit pisteet."
     overall_sentiment:
       title: "Yleinen sävy"
-      description: 'Kaaviossa verrataan positiivisiksi tai negatiivisiksi luokiteltujen viestien määrää. Nämä lasketaan, kun positiiviset tai negatiiviset pisteet ylittävät asetetun kynnysarvon. Tämä tarkoittaa, että neutraaleja viestejä ei näytetä. Myöskään yksityisviestejä ei lasketa. Luokiteltu "cardiffnlp/twitter-roberta-base-sentiment-latest"-mallilla.'
       xaxis: "Positiivinen (%)"
       yaxis: "Päivämäärä"
     emotion_admiration:
-      title: "\U0001F929 Ihailu"
-      description: "Viestit, jotka on luokiteltu ihailun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🤩 Ihailu"
     emotion_amusement:
-      title: "\U0001F604 Huvittuneisuus"
-      description: "Viestit, jotka on luokiteltu huvittuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😄 Huvittuneisuus"
     emotion_anger:
-      title: "\U0001F620 Viha"
-      description: "Viestit, jotka on luokiteltu vihan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😠 Viha"
     emotion_annoyance:
-      title: "\U0001F612 Ärsytys"
-      description: "Viestit, jotka on luokiteltu ärsytyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😒 Ärsytys"
     emotion_approval:
-      title: "\U0001F44D Hyväksyntä"
-      description: "Viestit, jotka on luokiteltu hyväksynnän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "👍 Hyväksyntä"
     emotion_caring:
-      title: "\U0001F917 Välittäminen"
-      description: "Viestit, jotka on luokiteltu välittämisen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🤗 Välittäminen"
     emotion_confusion:
-      title: "\U0001F615 Hämmennys"
-      description: "Viestit, jotka on luokiteltu hämmennyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😕 Hämmennys"
     emotion_curiosity:
-      title: "\U0001F914 Uteliaisuus"
-      description: "Viestit, jotka on luokiteltu uteliaisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🤔 Uteliaisuus"
     emotion_desire:
-      title: "\U0001F60D Halu"
-      description: "Viestit, jotka on luokiteltu halun tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😍 Halu"
     emotion_disappointment:
-      title: "\U0001F61E Pettymys"
-      description: "Viestit, jotka on luokiteltu pettymyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😞 Pettymys"
     emotion_disapproval:
-      title: "\U0001F44E Paheksunta"
-      description: "Viestit, jotka on luokiteltu paheksunnan tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "👎 Paheksunta"
     emotion_disgust:
-      title: "\U0001F922 Inho"
-      description: "Viestit, jotka on luokiteltu inhon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🤢 Inho"
     emotion_embarrassment:
-      title: "\U0001F633 Häpeä"
-      description: "Viestit, jotka on luokiteltu häpeän tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😳 Häpeä"
     emotion_excitement:
-      title: "\U0001F92A Innostus"
-      description: "Viestit, jotka on luokiteltu innostuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🤪 Innostus"
     emotion_fear:
-      title: "\U0001F628 Pelko"
-      description: "Viestit, jotka on luokiteltu pelon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😨 Pelko"
     emotion_gratitude:
-      title: "\U0001F64F Kiitollisuus"
-      description: "Viestit, jotka on luokiteltu kiitollisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🙏 Kiitollisuus"
     emotion_grief:
-      title: "\U0001F622 Murheellisuus"
-      description: "Viestit, jotka on luokiteltu murheellisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😢 Murheellisuus"
     emotion_joy:
-      title: "\U0001F60A Ilo"
-      description: "Viestit, jotka on luokiteltu ilon tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😊 Ilo"
     emotion_love:
       title: '❤️ Rakkaus'
-      description: "Viestit, jotka on luokiteltu rakkauden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
-      title: "\U0001F630 Hermostuneisuus"
-      description: "Viestit, jotka on luokiteltu hermostuneisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😰 Hermostuneisuus"
     emotion_neutral:
-      title: "\U0001F610 Neutraali"
-      description: "Viestit, jotka on luokiteltu neutraalilla tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😐 Neutraali"
     emotion_optimism:
-      title: "\U0001F31F Optimismi"
-      description: "Viestit, jotka on luokiteltu optimismin tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🌟 Optimismi"
     emotion_pride:
-      title: "\U0001F981 Ylpeys"
-      description: "Viestit, jotka on luokiteltu ylpeyden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "🦁 Ylpeys"
     emotion_realization:
-      title: "\U0001F4A1 Oivallus"
-      description: "Viestit, jotka on luokiteltu oivalluksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "💡 Oivallus"
     emotion_relief:
-      title: "\U0001F60C Helpotus"
-      description: "Viestit, jotka on luokiteltu helpotuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😌 Helpotus"
     emotion_remorse:
-      title: "\U0001F614 Katumus"
-      description: "Viestit, jotka on luokiteltu katumuksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😔 Katumus"
     emotion_sadness:
-      title: "\U0001F62D Suru"
-      description: "Viestit, jotka on luokiteltu surullisuuden tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😭 Suru"
     emotion_surprise:
-      title: "\U0001F632 Yllätys"
-      description: "Viestit, jotka on luokiteltu yllätyksen tunteella tekoälyllä mallilla \"SamLowe/roberta-base-go_emotions\"."
+      title: "😲 Yllätys"
   discourse_ai:
     ai_artifact:
       errors:
@@ -212,8 +174,6 @@ fi:
           name: "Osakekurssi (AlphaVantage)"
         image_generation_custom:
           name: "Mukautettu"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Aloita tyhjästä..."
       name:
@@ -223,15 +183,12 @@ fi:
         completion_request_failed: "Jokin meni vikaan yritettäessä antaa ehdotuksia. Yritä uudelleen."
       prompts:
         translate: Käännä kielelle %{language}
-        generate_titles: Ehdota ketjujen otsikoita
         proofread: Oikolue teksti
         markdown_table: Luo markdown-taulukko
         custom_prompt: "Mukautettu kehote"
         explain: "Selitä"
         illustrate_post: "Havainnollista viestiä"
         replace_dates: "Älykkäät päivämäärät"
-      image_caption:
-        attribution: "Tekoälyn laatima kuvateksti"
     share_ai:
       read_more: "Lue koko transkriptio"
       onebox_title: "Tekoälykeskustelu LLM:n %{llm_name} kanssa"
@@ -251,10 +208,53 @@ fi:
       configuration_missing: "Tekoälyroskapostihavaitsemisen määritys puuttuu. Lisää määritys kohdassa Ylläpito > Lisäosat > Discourse AI > Roskaposti ennen käyttöönottoa."
       logging_subject: "Roskapostin havaitseminen"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Roskapostin havaitseminen"
+      navigation:
+        settings:
+          title: "Sivustoasetukset"
+        users:
+          title: "Käyttäjiä"
+        groups:
+          title: "Ryhmät"
+        review:
+          title: "Tarkastusjono"
+        categories:
+          title: "Kategoriat"
+        tags:
+          title: "Tunnisteet"
+        themes:
+          title: "Teemat"
+        authentication:
+          title: "Kirjautuminen ja todennus"
+        backups:
+          title: "Varmuuskopiot"
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
+      read_post:
+        unknown_post: "viesti"
+      chat_tool_approval:
+        topic_states:
+          open: "Avoinna"
+          closed: "Suljettu"
+          active: "Aktiivinen"
+          deleted: "Poistettu"
+        solution_post: "%{number}. Viesti"
+        duration_label: "Kesto:"
+        user_duration:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
+        posts_label: "Viestit"
+        category_label: "Luokka"
+        category_fields:
+          name: "nimi"
+          description: "kuvaus"
+          color: "väri"
+          text_color: "tekstin väri"
+        approve_label: "Kyllä"
+        reject_label: "Ei"
       agents:
-        default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
           name: "GitHub-apulainen"
@@ -403,6 +403,8 @@ fi:
         random_picker: "Satunnainen valitsin"
         categories: "Listaa alueet"
         flag_post: "Liputa viesti"
+        suspend_user: "Jäädytä käyttäjä"
+        silence_user: "Hiljennä käyttäjä"
         search: "Hae"
         tags: "Listaa tunnisteet"
         time: "Aika"
@@ -431,6 +433,7 @@ fi:
         random_picker: "Valitse satunnainen luku tai satunnainen luettelon elementti"
         categories: "Listaa kaikki foorumin julkisesti näkyvät alueet"
         delete_topic: "Poista ketju"
+        create_category: "Luo uusi alue"
         search: "Hae kaikista foorumin julkisista ketjuista"
         tags: "Listaa kaikki foorumin tunnisteet"
         time: "Etsi aika eri aikavyöhykkeillä"
@@ -490,10 +493,6 @@ fi:
         search_settings:
           one: "Ehdolla \"%{query}\" löytyi %{count} tulos"
           other: "Ehdolla \"%{query}\" löytyi %{count} tulosta"
-      discoveries:
-        continue_conversation:
-          title: "Löytökeskustelu: hae hakuehdolla %{query}"
-          raw: "Haussani hakuehdolla %{query} näytit minulle seuraavat tiedot:\n\n%{context}\n\nJatketaan keskustelua."
       close_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
@@ -503,10 +502,13 @@ fi:
       delete_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Ketjua ei löytynyt."
       edit_category:
+        errors:
+          not_found: "Aluetta ei löytynyt."
+      change_topic_category:
         errors:
           not_found: "Ketjua ei löytynyt."
           category_not_found: "Aluetta ei löytynyt."
@@ -522,6 +524,26 @@ fi:
       assign:
         errors:
           not_found: "Ketjua ei löytynyt."
+    appearance_authoring:
+      default_theme: "Oletusteema"
+      colors:
+        light:
+          header_background: "Yläpalkki"
+      fonts:
+        base_font: "Leipätekstin fontti"
+        heading_font: "Otsikon fontti"
+    mcp_theme_access:
+      "on": "Käytössä"
+      "off": "Pois käytöstä"
+      none: "ei valittu"
+    mcp_app_setup:
+      none: "ei valittu"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Hyväksy"
+        reject:
+          title: "Hylkää"
     summarization:
       configuration_hint:
         one: "Määritä ensin %{setting}-asetus."
@@ -532,13 +554,13 @@ fi:
       reports:
         overall_sentiment: "Yleinen sävy (positiivinen–negatiivinen)"
         post_emotion:
-          sadness: "Suru \U0001F622"
-          surprise: "Yllätys \U0001F631"
-          neutral: "Neutraali \U0001F610"
-          fear: "Pelko \U0001F628"
-          anger: "Viha \U0001F621"
-          joy: "Ilo \U0001F600"
-          disgust: "Inho \U0001F922"
+          sadness: "Suru 😢"
+          surprise: "Yllätys 😱"
+          neutral: "Neutraali 😐"
+          fear: "Pelko 😨"
+          anger: "Viha 😡"
+          joy: "Ilo 😀"
+          disgust: "Inho 🤢"
         sentiment_analysis:
           positive: "Positiivinen"
           negative: "Negatiivinen"
@@ -565,6 +587,7 @@ fi:
     embeddings:
       delete_failed: "Tämä malli on tällä hetkellä käytössä. Päivitä \"ai embeddings selected model\" ensin."
       cannot_edit_builtin: "Et voi muokata sisäänrakennettua mallia."
+      missing_provider_param: "%{param} ei voi olla tyhjä"
       configuration:
         disable_embeddings: "Sinun täytyy ensin poistaa \"ai embeddings enabled\" käytöstä."
         choose_model: "Aseta \"ai embeddings selected model\" ensin."
@@ -577,7 +600,6 @@ fi:
       removed: "poistettu"
     errors:
       quota_exceeded: "Olet ylittänyt tämän mallin kiintiön. Odota %{relative_time} ja yritä sitten uudelleen."
-      quota_required: "Sinun on määritettävä tälle mallille saneiden tai käyttökertojen enimmäismäärä"
       no_query_specified: Kyselyparametri on pakollinen, määritä se.
       no_user_specified: Parametri username tai user_unique_id vaaditaan, määritä se.
       user_not_found: Määritettyä käyttäjää ei ole olemassa. Tarkista username-parametri.

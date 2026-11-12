@@ -129,6 +129,8 @@ ru:
       web_hooks:
         assign_event:
           group_name: "Назначение событий"
+          assigned: "Когда пользователь назначает тему"
+          unassigned: "Когда пользователь отменяет назначение темы"
     search:
       advanced:
         in:
@@ -138,8 +140,8 @@ ru:
           label: "Назначено:"
     topics:
       bulk:
-        unassign: "Снять ответственного"
-        assign: "Назначить ответственного"
+        assign_description: "Назначьте выбранные темы следующему пользователю:"
+        unassign_description: "Вы хотите отменить назначение выбранных тем?"
     discourse_automation:
       scriptables:
         random_assign:
@@ -192,3 +194,25 @@ ru:
       title: "Изменить назначения"
       topic: "Тема"
       post: "Публикация"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Назначенные"
+        "trigger:unassigned": "Неназначенные"
+      assign_topic:
+        resource: "Ресурс"
+        resources:
+          topic: "Тема"
+          post: "Публикация"
+        operations:
+          assign: "Назначить"
+          unassign: "Снять ответственного"
+        topic_id: "ID темы"
+        post_id: "ID сообщения"
+        assignee: "Назначенный"
+      check_assignment:
+        target_types:
+          topic: "Тема"
+          post: "Публикация"
+        topic_id: "ID темы"
+        post_id: "ID сообщения"
+        assignee: "Назначенный"

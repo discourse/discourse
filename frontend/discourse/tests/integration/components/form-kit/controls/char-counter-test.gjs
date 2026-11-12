@@ -15,11 +15,11 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
             <form.Field
-              @type="input"
               @name="foo"
               @title="Foo"
+              @type="input"
               @validation="length:0,5"
               as |field|
             >

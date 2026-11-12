@@ -11,6 +11,40 @@ import { i18n } from "discourse-i18n";
 
 const INIT_PROMISES = new WeakMap();
 
+export function sortLightboxItems(items) {
+  const result = [];
+  let i = 0;
+  while (i < items.length) {
+    const grid = items[i].closest(".d-image-grid");
+    if (!grid) {
+      result.push(items[i++]);
+      continue;
+    }
+    let j = i;
+    while (j < items.length && items[j].closest(".d-image-grid") === grid) {
+      j++;
+    }
+    const gridItems = items.slice(i, j);
+    const sorted = gridItems.every((item) => {
+      const position = item.dataset.lightboxPosition;
+      return (
+        position !== undefined &&
+        position !== "" &&
+        Number.isInteger(Number(position))
+      );
+    })
+      ? gridItems.sort(
+          (a, b) =>
+            Number(a.dataset.lightboxPosition) -
+            Number(b.dataset.lightboxPosition)
+        )
+      : gridItems;
+    result.push(...sorted);
+    i = j;
+  }
+  return result;
+}
+
 export default function lightbox(elem, additionalData = {}) {
   if (!elem) {
     return Promise.resolve();
@@ -36,13 +70,16 @@ async function initLightbox(elem, additionalData = {}) {
   const siteSettings = helperContext().siteSettings;
   const caps = helperContext().capabilities;
 
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
-  const isTestEnv = isTesting() || isRailsTesting();
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
+  );
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
   const canQuoteImage = !!currentUser;
   const rtl = isDocumentRTL();
-  const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+  const items = sortLightboxItems([
+    ...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR),
+  ]);
 
   if (rtl) {
     items.reverse();
@@ -57,44 +94,21 @@ async function initLightbox(elem, additionalData = {}) {
   });
 
   const lightboxEl = new PhotoSwipeLightbox({
+    ...sharedOptions(() => lightboxEl.pswp),
     dataSource: items,
-    arrowPrevTitle: i18n("lightbox.previous"),
-    arrowNextTitle: i18n("lightbox.next"),
-    closeTitle: i18n("lightbox.close"),
-    zoomTitle: i18n("lightbox.zoom"),
-    errorMsg: i18n("lightbox.error"),
-    showHideAnimationType: isTestEnv ? "none" : "zoom",
     counter: false,
-    escKey: false,
-    tapAction,
     paddingFn,
-    pswpModule: async () => await import("photoswipe"),
-    appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 
-  const keyDownHandler = function (event) {
-    if (event.key !== "Escape") {
-      return;
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-
-    lightboxEl.pswp.close();
-  };
+  closeOnEscape(lightboxEl);
 
   lightboxEl.on("afterInit", () => {
     const el = lightboxEl.pswp.currSlide.data.element;
     el.querySelector(".meta")?.classList.add("open");
-
-    lightboxEl.pswp.element.addEventListener("keydown", (event) =>
-      keyDownHandler(event)
-    );
   });
 
   lightboxEl.on("close", function () {
     lightboxEl.pswp.element.classList.add("pswp--behind-header");
-    lightboxEl.pswp.element.removeEventListener("keydown", keyDownHandler);
   });
 
   lightboxEl.on("destroy", () => {
@@ -111,23 +125,33 @@ async function initLightbox(elem, additionalData = {}) {
       html: "",
       onInit: (caption, pswp) => {
         pswp.on("change", () => {
-          const { element, title, inlineSVG } = pswp.currSlide.data;
+          const { aiDescription, element, title, inlineSVG } =
+            pswp.currSlide.data;
 
-          if (!element || !title || inlineSVG) {
+          if (!element || inlineSVG) {
+            caption.innerHTML = "";
             return;
           }
 
-          const captionTitle = escapeExpression(title);
+          const captionTitle = title ? escapeExpression(title) : null;
+          const captionAiDescription = aiDescription
+            ? escapeExpression(aiDescription)
+            : null;
           const captionDetails =
             element.querySelector(".informations")?.textContent;
           const titleEl = captionTitle
             ? `<div class='pswp__caption-title'>${captionTitle}</div>`
             : null;
+          const aiDescriptionEl = captionAiDescription
+            ? `<div class='pswp__caption-ai-description'>${captionAiDescription}</div>`
+            : null;
           const detailsEl = captionDetails
             ? `<div class='pswp__caption-details'>${captionDetails}</div>`
             : null;
 
-          caption.innerHTML = [titleEl, detailsEl].filter(Boolean).join("");
+          caption.innerHTML = [titleEl, aiDescriptionEl, detailsEl]
+            .filter(Boolean)
+            .join("");
         });
       },
     });
@@ -289,12 +313,14 @@ async function initLightbox(elem, additionalData = {}) {
     // this ensures that cropped images (eg: grid) do not cause jittering when closing
     data.thumbCropped = true;
 
-    data.src = data.src || el.getAttribute("data-large-src");
+    data.src ||= el.getAttribute("data-large-src");
+    data.msrc ||= imgEl?.currentSrc || imgEl?.src;
     data.origSrc =
       imgEl?.getAttribute("data-orig-src") ||
       el.getAttribute("data-orig-src") ||
       null;
     data.title = el.title || imgEl?.alt || imgEl?.title || null;
+    data.aiDescription = imgEl?.getAttribute("aria-description") || null;
     data.base62SHA1 =
       imgEl?.getAttribute("data-base62-sha1") ||
       el.getAttribute("data-base62-sha1") ||
@@ -358,15 +384,6 @@ async function initLightbox(elem, additionalData = {}) {
         })
     )
   );
-  function tapAction(pt, event) {
-    const pswp = lightboxEl.pswp;
-    if (event.target.classList.contains("pswp__img")) {
-      pswp?.element?.classList.toggle("pswp--ui-visible");
-    } else {
-      pswp?.close();
-    }
-  }
-
   function paddingFn(viewportSize, itemData) {
     if (viewportSize.x < 1200 || caps.isMobileDevice) {
       return { top: 0, bottom: 0, left: 0, right: 0 };
@@ -380,4 +397,209 @@ async function initLightbox(elem, additionalData = {}) {
   }
 
   lightboxEl.init();
+}
+
+/**
+ * Opens a lightbox over standalone media elements, for content that isn't
+ * rendered as `.lightbox` links (editor images, pending uploads).
+ *
+ * @param {Array<{type?: "image"|"video", src: string, element?: HTMLImageElement|HTMLVideoElement, alt?: string}>} items
+ *   `alt` labels the slide and its caption; images default to the element's alt
+ * @param {{index?: number}} [options]
+ * @returns {Promise<void>} resolves when the lightbox closes, or right away
+ *   when another lightbox is already open
+ */
+export async function openLightbox(items, { index = 0 } = {}) {
+  const dataSource = items.map(buildSlideData);
+
+  // loaded up front: with a lazily loaded core, two quick opens race and one never settles
+  const [{ default: PhotoSwipeLightbox }, { default: PhotoSwipe }] =
+    await waitForPromise(
+      Promise.all([
+        import(
+          /* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox"
+        ),
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe"),
+      ])
+    );
+  const lightboxEl = new PhotoSwipeLightbox({
+    ...sharedOptions(() => lightboxEl.pswp),
+    dataSource,
+    pswpModule: PhotoSwipe,
+  });
+
+  closeOnEscape(lightboxEl);
+
+  lightboxEl.on("uiRegister", function () {
+    lightboxEl.pswp.ui.registerElement({
+      name: "caption",
+      order: 11,
+      isButton: false,
+      appendTo: "root",
+      html: "",
+      onInit: (caption, pswp) => {
+        const titleEl = document.createElement("div");
+        titleEl.className = "pswp__caption-title";
+        caption.appendChild(titleEl);
+
+        pswp.on("change", () => {
+          titleEl.textContent = pswp.currSlide?.data.alt || "";
+        });
+      },
+    });
+  });
+
+  lightboxEl.on("contentLoad", (event) => {
+    const { content } = event;
+    if (content.type !== "video") {
+      return;
+    }
+
+    event.preventDefault();
+
+    const video = document.createElement("video");
+    video.className = "pswp__video";
+    video.src = content.data.src;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    if (content.data.alt) {
+      video.setAttribute("aria-label", content.data.alt);
+    }
+    video.addEventListener(
+      "loadedmetadata",
+      () => syncSlideSize(content, video.videoWidth, video.videoHeight),
+      { once: true }
+    );
+    // native controls swallow key and pointer events while focused, so Escape
+    // would never reach the lightbox; media events are all they let through
+    const refocus = () => video.focus({ preventScroll: true });
+    for (const type of ["play", "pause", "seeked", "volumechange"]) {
+      video.addEventListener(type, refocus);
+    }
+    content.element = video;
+  });
+
+  lightboxEl.on("contentLoadImage", ({ content }) => {
+    const image = content.element;
+    image.addEventListener(
+      "load",
+      () => syncSlideSize(content, image.naturalWidth, image.naturalHeight),
+      { once: true }
+    );
+  });
+
+  lightboxEl.on("contentDeactivate", ({ content }) => {
+    if (content.type === "video") {
+      content.element?.pause();
+    }
+  });
+
+  lightboxEl.on("pointerDown", (event) => {
+    if (event.originalEvent.target.closest?.(".pswp__video")) {
+      event.preventDefault();
+    }
+  });
+
+  return new Promise((resolve) => {
+    lightboxEl.addFilter("thumbEl", (thumbEl, itemData) =>
+      itemData.element?.isConnected ? itemData.element : undefined
+    );
+    lightboxEl.on("close", resolve);
+    lightboxEl.on("closingAnimationEnd", () => lightboxEl.destroy());
+
+    lightboxEl.init();
+    if (!lightboxEl.loadAndOpen(index)) {
+      lightboxEl.destroy();
+      resolve();
+    }
+  });
+}
+
+function sharedOptions(getPswp) {
+  return {
+    arrowPrevTitle: i18n("lightbox.previous"),
+    arrowNextTitle: i18n("lightbox.next"),
+    closeTitle: i18n("lightbox.close"),
+    zoomTitle: i18n("lightbox.zoom"),
+    errorMsg: i18n("lightbox.error"),
+    showHideAnimationType: isTesting() || isRailsTesting() ? "none" : "zoom",
+    escKey: false,
+    tapAction: (pt, event) => {
+      if (event.target.closest(".pswp__video")) {
+        return;
+      }
+
+      const pswp = getPswp();
+      if (event.target.classList.contains("pswp__img")) {
+        pswp?.element?.classList.toggle("pswp--ui-visible");
+      } else {
+        pswp?.close();
+      }
+    },
+    pswpModule: () =>
+      waitForPromise(import(/* dynamicChunkName: "photoswipe" */ "photoswipe")),
+    appendToEl: isTesting() && document.getElementById("ember-testing"),
+  };
+}
+
+// keeps Escape from also reaching handlers underneath the overlay
+function closeOnEscape(lightboxEl) {
+  const onKeyDown = (event) => {
+    if (event.key !== "Escape") {
+      return;
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+    lightboxEl.pswp.close();
+  };
+
+  lightboxEl.on("afterInit", () => {
+    lightboxEl.pswp.element.addEventListener("keydown", onKeyDown);
+  });
+}
+
+// initial sizes come from thumbnails, which may not have loaded yet
+function syncSlideSize(content, width, height) {
+  if (!width || !height) {
+    return;
+  }
+  if (content.width === width && content.height === height) {
+    return;
+  }
+
+  content.width = content.data.width = width;
+  content.height = content.data.height = height;
+
+  if (content.slide) {
+    content.slide.width = width;
+    content.slide.height = height;
+    content.slide.resize();
+    // resize() skips this when the slide is zoomed in
+    content.slide.updateContentSize(true);
+  }
+}
+
+function buildSlideData({ type = "image", src, element, alt }) {
+  if (type === "video") {
+    return {
+      type,
+      src,
+      element,
+      alt: alt || "",
+      width: element?.videoWidth || 1280,
+      height: element?.videoHeight || 720,
+    };
+  }
+
+  return {
+    src,
+    msrc: element?.currentSrc || src,
+    element,
+    width: element?.naturalWidth || 800,
+    height: element?.naturalHeight || 600,
+    alt: alt ?? (element?.alt || ""),
+    thumbCropped: true,
+  };
 }

@@ -64,10 +64,22 @@ module Chat
     end
 
     def fetch_target_users(guardian:, params:)
-      ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: [*params.target_usernames, guardian.user.username],
-        groups: params.target_groups,
-      )
+      target_groups =
+        if params.target_groups.present?
+          Group
+            .where(name: params.target_groups)
+            .visible_groups(guardian.user)
+            .members_visible_groups(guardian.user)
+            .pluck(:name)
+        end
+
+      users =
+        ::Chat::UsersFromUsernamesAndGroupsQuery.call(
+          usernames: [*params.target_usernames, guardian.user.username],
+          groups: target_groups,
+        )
+      return if users.none? { |u| u.id == guardian.user.id }
+      users
     end
 
     def fetch_user_comm_screener(target_users:, guardian:)

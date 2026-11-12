@@ -578,7 +578,7 @@ acceptance(
     });
 
     needs.user({
-      new_new_view_enabled: true,
+      unified_new_enabled: true,
       display_sidebar_tags: true,
       sidebar_tags: [
         { id: 2, name: "tag2", slug: "tag2", pm_only: false },

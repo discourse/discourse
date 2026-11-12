@@ -9,13 +9,6 @@ RSpec.shared_context "with prosemirror editor" do
     )
   end
 
-  fab!(:tag)
-  fab!(:category_with_emoji) do
-    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
-  end
-  fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
-  fab!(:category_without_icon, :category)
-
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
@@ -36,9 +29,10 @@ RSpec.shared_context "with prosemirror editor" do
     cdp.copy_test_image
     cdp.paste
 
+    expect(composer).to have_no_in_progress_uploads
     expect(rich).to have_css(".composer-image-node img", count: 1)
     expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
-    expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
+    expect(rich).to have_no_css("img[data-placeholder='true']")
 
     rich.find(".composer-image-node img").click
 

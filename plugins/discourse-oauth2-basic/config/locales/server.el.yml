@@ -6,5 +6,6 @@
 
 el:
   site_settings:
+    oauth2_json_username_path: "Διαδρομή στο OAuth2 User JSON προς το όνομα χρήστη. π.χ.: user.username"
     oauth2_debug_auth: "Να συμπεριλαμβάνονται πλούσιες πληροφορίες αποσφαλμάτωσης στα αρχεία καταγραφής σας"
     oauth2_disable_csrf: "Απενεργοποίηση ελέγχου CSRF"

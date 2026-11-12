@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-describe "Editing topic timers", type: :system do
+describe "Editing topic timers" do
   fab!(:admin)
   fab!(:post)
   fab!(:topic) { post.topic }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
-  let(:timer_type_selector) { PageObjects::Components::DSelect.new(".timer-type") }
+  let(:timer_type_selector) { PageObjects::Components::DNativeSelect.new(".timer-type") }
 
   before { sign_in(admin) }
 

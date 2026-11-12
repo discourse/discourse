@@ -39,3 +39,16 @@ ro:
     edit_assignments_modal:
       topic: "Subiect"
       post: "Articol"
+    discourse_workflows:
+      assign_topic:
+        resources:
+          topic: "Subiect"
+          post: "Articol"
+        topic_id: "ID subiect"
+        post_id: "ID postare"
+      check_assignment:
+        target_types:
+          topic: "Subiect"
+          post: "Articol"
+        topic_id: "ID subiect"
+        post_id: "ID postare"

@@ -2,7 +2,7 @@ import markdownit from "markdown-it";
 import AllowLister from "pretty-text/allow-lister";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
-import { TextPostProcessRuler } from "./features/text-post-process";
+import { TextPostProcessRuler } from "./features/text-post-process.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor
@@ -22,11 +22,13 @@ export default function makeEngine(
 
   const tlds = options.discourse.limitedSiteSettings.markdownLinkifyTlds || "";
   engine.linkify.tlds(tlds.split("|"));
+  engine.linkify.set({ fuzzyLink: true });
 
   setupUrlDecoding(engine);
   setupHoister(engine);
   setupImageAndPlayableMediaRenderer(engine);
   setupAttachments(engine);
+  setupLiteralizeUploadLabels(engine);
   setupBlockBBCode(engine);
   setupInlineBBCode(engine);
   setupTextPostProcessRuler(engine);
@@ -56,6 +58,10 @@ export default function makeEngine(
       allowLister.allowListFeature(feature, info);
     });
 
+    options.allowLister = allowLister;
+    // The identity sanitizer is for trusted input only. It also removes the
+    // premise unhoistForCooked relies on, since nothing normalizes "<" and ">"
+    // in attribute values any more.
     options.sanitizer = options.discourse.sanitizer = options.discourse.sanitize
       ? (a) => sanitize(a, allowLister)
       : (a) => a;
@@ -107,12 +113,36 @@ function renderHoisted(tokens, idx, options) {
   }
 }
 
-function unhoistForCooked(hoisted, cooked) {
+/**
+ * Restores the raw HTML that `renderHoisted` set aside, putting each value back
+ * where its placeholder stands in the sanitized output.
+ *
+ * Exported only so tests can pass a hoist map in directly. The placeholders are
+ * minted while rendering, so a value holding another value's placeholder cannot
+ * be produced through `cook`.
+ *
+ * @param {Record<string, string>} hoisted - Placeholders mapped to the raw HTML
+ *   they stand for. Emptied as the keys are consumed.
+ * @param {string} cooked - The sanitized output that holds the placeholders.
+ * @returns {string} The output with every placeholder resolved or dropped.
+ */
+export function unhoistForCooked(hoisted, cooked) {
   const keys = Object.keys(hoisted);
   if (keys.length) {
     let found = true;
 
+    // guids are hexadecimal digits and dashes, so they need no escaping here
+    const keysRegExp = new RegExp(keys.join("|"), "g");
+
     const unhoist = function (key) {
+      // A key is only safe to substitute where text may stand. The sanitizer
+      // escapes "<" and ">" in attribute values, so anything between a "<" and
+      // a ">" here is a tag, and raw HTML restored inside one would become
+      // attributes the allow-lister never saw. Earlier substitutions move the
+      // markup around the remaining keys, so where a key lands has to be
+      // re-checked before every substitution rather than once for the pass.
+      cooked = cooked.replace(/<[^>]*>/g, (tag) => tag.replace(keysRegExp, ""));
+
       cooked = cooked.replace(new RegExp(key, "g"), function () {
         found = true;
         return hoisted[key];
@@ -171,18 +201,40 @@ function audioHTML(token) {
   </audio>`;
 }
 
+// `[1-9][0-9]*` rather than `[1-9]+[0-9]*`: overlapping quantifiers force a
+// rejected match to retry every split of a long digit run, which lets a small
+// user-supplied suffix burn unbounded cooking time.
 const IMG_SIZE_REGEX =
-  /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
+  /^([1-9][0-9]*)x([1-9][0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2})([%x]?))?$/;
+function isKnownImageSuffix(segment) {
+  return (
+    segment === "video" ||
+    segment === "audio" ||
+    segment === "thumbnail" ||
+    IMG_SIZE_REGEX.test(segment) ||
+    !!extractDataAttribute(segment)
+  );
+}
+
 function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
   const split = alt.split("|");
-  const altSplit = [split[0]];
+
+  // Find where structured suffixes begin by scanning from the right.
+  // Everything before that boundary is alt text (which may contain pipes).
+  let suffixStart = split.length;
+  while (suffixStart > 1 && isKnownImageSuffix(split[suffixStart - 1])) {
+    suffixStart--;
+  }
+
+  const altText = split.slice(0, suffixStart).join("|");
+  const suffixes = split.slice(suffixStart);
 
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
-  if (split[1] === "video") {
+  if (suffixes[0] === "video") {
     if (
       options.discourse.previewing &&
       !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
@@ -197,13 +249,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
     } else {
       return videoHTML(token);
     }
-  } else if (split[1] === "audio") {
+  } else if (suffixes[0] === "audio") {
     return audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
-  for (let i = 1, match, data; i < split.length; ++i) {
-    if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
+  for (let i = 0, match, data; i < suffixes.length; ++i) {
+    if ((match = suffixes[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
       let width = match[1];
       let height = match[2];
 
@@ -243,20 +295,17 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
       ) {
         token.attrs.push(["class", "resizable"]);
       }
-    } else if ((data = extractDataAttribute(split[i]))) {
+    } else if ((data = extractDataAttribute(suffixes[i]))) {
       token.attrs.push(data);
-    } else if (split[i] === "thumbnail") {
+    } else if (suffixes[i] === "thumbnail") {
       token.attrs.push(["data-thumbnail", "true"]);
-    } else {
-      altSplit.push(split[i]);
     }
   }
 
-  const altValue = altSplit.join("|").trim();
-  if (altValue === "") {
+  if (altText === "") {
     token.attrSet("role", "presentation");
   } else {
-    token.attrSet("alt", altValue);
+    token.attrSet("alt", altText);
   }
 
   return slf.renderToken(tokens, idx, options);
@@ -274,23 +323,36 @@ export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function renderAttachment(tokens, idx, options, env, slf) {
   const linkToken = tokens[idx];
-  const textToken = tokens[idx + 1];
 
-  const split = textToken.content.split("|");
-  const contentSplit = [];
-
-  for (let i = 0, data; i < split.length; ++i) {
-    if (split[i] === ATTACHMENT_CSS_CLASS) {
-      linkToken.attrs.unshift(["class", split[i]]);
-    } else if ((data = extractDataAttribute(split[i]))) {
-      linkToken.attrs.push(data);
-    } else {
-      contentSplit.push(split[i]);
+  // Link text may span multiple tokens when it contains inline formatting.
+  // Scan forward to find the last text token which holds the |attachment marker.
+  let lastTextToken = null;
+  for (let i = idx + 1; i < tokens.length; i++) {
+    if (tokens[i].type === "link_close") {
+      break;
+    }
+    if (tokens[i].type === "text" && tokens[i].content) {
+      lastTextToken = tokens[i];
     }
   }
 
-  if (contentSplit.length > 0) {
-    textToken.content = contentSplit.join("|");
+  if (lastTextToken) {
+    const split = lastTextToken.content.split("|");
+    const contentSplit = [];
+
+    for (let i = 0, data; i < split.length; ++i) {
+      if (split[i] === ATTACHMENT_CSS_CLASS) {
+        linkToken.attrs.unshift(["class", split[i]]);
+      } else if ((data = extractDataAttribute(split[i]))) {
+        linkToken.attrs.push(data);
+      } else {
+        contentSplit.push(split[i]);
+      }
+    }
+
+    if (contentSplit.length > 0) {
+      lastTextToken.content = contentSplit.join("|");
+    }
   }
 
   return slf.renderToken(tokens, idx, options);
@@ -298,6 +360,88 @@ function renderAttachment(tokens, idx, options, env, slf) {
 
 function setupAttachments(engine) {
   engine.renderer.rules.link_open = renderAttachment;
+}
+
+// Rebuilds a label's source text from the parsed inline tokens, treating
+// emphasis/strikethrough delimiters as literal characters (using each token's
+// `markup` field). Used to reverse inline parsing on labels we want to keep
+// verbatim.
+const EMPHASIS_MARKUP = /^[_*~]+$/;
+function reconstructLiteralLabel(tokens) {
+  let result = "";
+  for (const token of tokens) {
+    if (token.type === "text" || token.type === "text_special") {
+      result += token.content;
+    } else if (token.type === "code_inline") {
+      const markup = token.markup || "`";
+      result += `${markup}${token.content}${markup}`;
+    } else if (token.type.endsWith("_open") || token.type.endsWith("_close")) {
+      // `markup` is only reliable as source text for emphasis/strong/strike
+      // delimiters. Other open/close tokens (linkify, autolink) store a
+      // descriptor like "linkify" — skip those.
+      const markup = token.markup || "";
+      if (EMPHASIS_MARKUP.test(markup)) {
+        result += markup;
+      }
+    } else if (token.type === "softbreak" || token.type === "hardbreak") {
+      result += " ";
+    } else if (token.children) {
+      result += reconstructLiteralLabel(token.children);
+    }
+  }
+  return result;
+}
+
+// Discourse generates upload markdown like `![name|100x100](upload://hash)`
+// and `[name|attachment](upload://hash)`. By default markdown-it runs inline
+// parsing on the label, which italicizes filenames containing `_`, strips
+// them from the alt attribute, and can hide the `|attachment` marker behind
+// formatting tokens.
+//
+// This core ruler walks the parsed tokens, finds links/images whose URL is
+// an `upload://` short URL, and collapses their children back to a single
+// literal text token. Emphasis and other inline formatting are preserved as
+// literal characters so the rendered output matches the original filename.
+function literalizeUploadLabels(state) {
+  for (const block of state.tokens) {
+    const children = block.children;
+    if (!children) {
+      continue;
+    }
+
+    for (let i = 0; i < children.length; i++) {
+      const token = children[i];
+
+      if (token.type === "image") {
+        if (token.attrGet("src")?.startsWith("upload://")) {
+          const literal = reconstructLiteralLabel(token.children);
+          const text = new state.Token("text", "", 0);
+          text.content = literal;
+          token.children = [text];
+          token.content = literal;
+        }
+      } else if (
+        token.type === "link_open" &&
+        token.attrGet("href")?.startsWith("upload://")
+      ) {
+        // Markdown can't nest links, so the first `link_close` is ours.
+        let j = i + 1;
+        while (j < children.length && children[j].type !== "link_close") {
+          j++;
+        }
+        if (j > i + 1) {
+          const literal = reconstructLiteralLabel(children.slice(i + 1, j));
+          const text = new state.Token("text", "", 0);
+          text.content = literal;
+          children.splice(i + 1, j - i - 1, text);
+        }
+      }
+    }
+  }
+}
+
+function setupLiteralizeUploadLabels(engine) {
+  engine.core.ruler.push("literalize_upload_labels", literalizeUploadLabels);
 }
 
 // TODO we may just use a proper ruler from markdown it... this is a basic proxy

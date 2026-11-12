@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Editing sidebar categories navigation", type: :system do
+RSpec.describe "Editing sidebar categories navigation" do
   fab!(:user)
 
   fab!(:category2) { Fabricate(:category, name: "category 2") }
@@ -285,6 +285,12 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     end
 
     it "loads categories in multiple pages correctly" do
+      Fabricate(
+        :category_sidebar_section_link,
+        linkable: category_subcategory_subcategory,
+        user: user,
+      )
+
       resize_window(height: 500) do
         stub_const(CategoriesController, "MAX_CATEGORIES_LIMIT", 5) do
           visit "/latest"
@@ -300,6 +306,14 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
               category_subcategory2,
             ],
           )
+
+          modal.filter_by_unselected
+
+          expect(modal).to have_category_row(category2)
+
+          modal.filter_by_all
+
+          expect(modal).to have_no_category_row(category2)
 
           modal.scroll_to_category(category_subcategory2)
 

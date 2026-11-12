@@ -25,21 +25,18 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
+    return false if action_key == :illegal && SiteSetting.dsa_reporting_enabled
     return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
-    if action_key == :notify_user &&
-         (
-           post.user.blank? ||
-             (!is_staff? && opts[:is_warning].present? && opts[:is_warning] == "true")
-         )
+    if action_key == :notify_user && (post.user.blank? || (!is_staff? && opts[:is_warning]))
       return false
     end
 
     taken = opts[:taken_actions].try(:keys).to_a
     post_action_type_view = opts[:post_action_type_view] || PostActionTypeView.new
     is_flag =
-      if (opts[:notify_flag_types] && opts[:additional_message_types])
+      if opts[:notify_flag_types] && opts[:additional_message_types]
         opts[:notify_flag_types][action_key] || opts[:additional_message_types][action_key]
       else
         post_action_type_view.notify_flag_types[action_key] ||
@@ -57,8 +54,11 @@ module PostGuardian
           return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
         end
 
-        # Silenced users can't flag
-        return false if is_flag && @user.silenced?
+        # Silenced users can't flag, except to report illegal content
+        if is_flag && @user.silenced? &&
+             !(action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content)
+          return false
+        end
 
         # Silenced users can't like
         return false if action_key == :like && @user.silenced?
@@ -67,7 +67,7 @@ module PostGuardian
         return false if is_flag && post.hidden?
 
         # post made by staff, but we don't allow staff flags
-        return false if is_flag && (!SiteSetting.allow_flagging_staff?) && post&.user&.staff?
+        return false if is_flag && !SiteSetting.allow_flagging_staff? && post&.user&.staff?
 
         if is_flag && post_action_type_view.disabled_flag_types.keys.include?(action_key)
           return false
@@ -159,32 +159,38 @@ module PostGuardian
 
     return true if is_admin?
 
+    post.topic ||= Topic.with_deleted.find_by(id: post.topic_id) if post.topic_id
+
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category)
-      return can_create_post?(post.topic)
+    # Staff in edit groups skip visibility (e.g. deleted topics); non-staff must pass it
+    if is_in_edit_post_groups?
+      return can_create_post?(post.topic) if is_staff?
+      return can_create_post?(post.topic) if can_see_post_topic?(post)
+      return false
     end
     return false if !can_see_post_topic?(post)
+    return can_create_post?(post.topic) if is_category_group_moderator?(post.topic&.category)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
     # Editing a shared draft.
-    if (
-         can_see_post?(post) && can_create_post?(post.topic) &&
-           post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-           can_see_category?(post.topic.category) && can_see_shared_draft?
-       )
+    if can_see_post?(post) && can_create_post?(post.topic) &&
+         post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+         can_see_category?(post.topic.category) && can_see_shared_draft?
       return true
     end
 
     if post.wiki && @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
+      return false if post.hidden? && is_my_own?(post) && !can_edit_hidden_post?(post)
       return can_create_post?(post.topic)
     end
 
     return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
+      return false if !is_staff? && !visible_post_types.include?(post.post_type)
       return false if @user.silenced?
 
       return can_edit_hidden_post?(post) if post.hidden?
@@ -229,17 +235,14 @@ module PostGuardian
 
     return true if is_category_group_moderator?(post.topic&.category)
 
-    return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    return true if can_delete_all_posts_and_topics?
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
 
     # You can delete your own posts
     if is_my_own?(post)
-      if (
-           SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
-         )
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if !post.user_deleted?
@@ -264,14 +267,11 @@ module PostGuardian
     return false unless post
 
     # PERF, vast majority of the time topic will not be deleted
-    topic = (post.topic || Topic.with_deleted.find(post.topic_id)) if post.topic_id
+    topic = post.topic || Topic.with_deleted.find(post.topic_id) if post.topic_id
     return true if can_moderate_topic?(topic) && !!post.deleted_at
 
     if is_my_own?(post)
-      if (
-           SiteSetting.max_post_deletions_per_minute < 1 ||
-             SiteSetting.max_post_deletions_per_day < 1
-         )
+      if SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1
         return false
       end
       return true if post.user_deleted && !post.deleted_at
@@ -318,13 +318,30 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    return false unless is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
+    return false if visible_post_types.exclude?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
       return true
     end
     false
+  end
+
+  def reviewable_post_scope
+    return Post.with_deleted if is_admin?
+    return Post.none if !is_staff? && !category_group_moderation_allowed?
+
+    topics = visible_topic_scope(Topic.with_deleted.where("topics.id = posts.topic_id"))
+    topics = topics.where(category_id: category_group_moderator_scope.select(:id)) if !is_staff?
+
+    Post.with_deleted.secured(self).where("EXISTS (#{topics.select(1).to_sql})")
+  end
+
+  def can_review_post?(post)
+    return false if post.blank?
+    return true if is_admin?
+
+    reviewable_post_scope.exists?(id: post.id)
   end
 
   def can_see_deleted_post?(post)
@@ -334,15 +351,36 @@ module PostGuardian
     post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_see_hidden_post?(post)
-    if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
-      return true
-    end
-    return false if anonymous?
-    return true if is_staff?
-    return true if is_my_own?(post)
+  def filter_hidden_posts(records, category: nil, category_id_column: "topics.category_id")
+    return records if can_see_all_hidden_posts?(category)
+    return records.where(posts: { hidden: false }) if anonymous?
 
-    @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
+    conditions = ["posts.hidden = false", "posts.user_id = :user_id"]
+    params = { user_id: user.id }
+
+    if category.nil? && category_group_moderation_allowed?
+      conditions << "#{category_id_column} IN (:moderated_category_ids)"
+      params[:moderated_category_ids] = category_group_moderator_scope.select(:id)
+    end
+
+    records.where(conditions.join(" OR "), params)
+  end
+
+  def can_see_all_hidden_posts?(category = nil)
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+
+    in_any_groups?(SiteSetting.hidden_post_visible_groups_map) ||
+      is_category_group_moderator?(category)
+  end
+
+  def can_see_hidden_post?(post)
+    return true if can_see_all_hidden_posts?
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+    is_my_own?(post)
   end
 
   def can_view_edit_history?(post)
@@ -355,7 +393,7 @@ module PostGuardian
     return false if !authenticated?
     return false if !can_see_post?(post)
 
-    is_staff? || is_my_own?(post)
+    is_staff? || is_my_own?(post) || is_category_group_moderator?(post.topic.category)
   end
 
   def can_change_post_owner?
@@ -390,12 +428,19 @@ module PostGuardian
   end
 
   def can_see_deleted_posts?(category = nil)
-    is_category_group_moderator?(category) ||
-      @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    is_category_group_moderator?(category) || can_delete_all_posts_and_topics?
+  end
+
+  def can_see_deleted_posts_for_user?
+    is_staff?
+  end
+
+  def can_view_raw_emails?
+    @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 
   def can_view_raw_email?(post)
-    post && @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    post && can_view_raw_emails?
   end
 
   def can_unhide?(post)
@@ -412,13 +457,17 @@ module PostGuardian
 
   private
 
+  def visible_post_types
+    @visible_post_types ||= Topic.visible_post_types(@user)
+  end
+
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic&.subtype == "system_message"
       return false
     end
 
     is_pm = !!topic&.private_message?
-    return false if is_pm && topic.subtype != "system_message" && !can_see_topic?(topic)
+    return false if is_pm && !can_see_topic?(topic)
     return false if !is_pm && SpamRule::AutoSilence.prevent_posting?(@user)
 
     !topic || !topic.category ||

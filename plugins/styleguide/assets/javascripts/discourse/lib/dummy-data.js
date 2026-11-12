@@ -120,10 +120,6 @@ export function createData(store) {
     can_delete: false,
     can_close_topic: false,
   });
-  topic.setProperties({
-    category_id: categories[0].id,
-    suggested_topics: [topic, topic, topic],
-  });
 
   let invisibleTopic = createTopic({ visible: false });
   let closedTopic = createTopic({ closed: true });
@@ -135,9 +131,103 @@ export function createData(store) {
   pinnedTopic.set("category_id", categories[2].id);
   let unpinnedTopic = createTopic({ unpinned: true });
   let warningTopic = createTopic({ is_warning: true });
+
+  topic.setProperties({
+    category_id: categories[0].id,
+    suggested_topics: [
+      {
+        id: 200001,
+        title: "Suggested Topic 1",
+        fancy_title: "Suggested Topic 1",
+        slug: "suggested-1",
+        posts_count: 5,
+        views: 100,
+        like_count: 2,
+        created_at: "2017-03-01T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200002,
+        title: "Suggested Topic 2",
+        fancy_title: "Suggested Topic 2",
+        slug: "suggested-2",
+        posts_count: 3,
+        views: 50,
+        like_count: 1,
+        created_at: "2017-03-02T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200003,
+        title: "Suggested Topic 3",
+        fancy_title: "Suggested Topic 3",
+        slug: "suggested-3",
+        posts_count: 7,
+        views: 200,
+        like_count: 4,
+        created_at: "2017-03-03T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
+  });
+
   let pmTopic = createTopic({
     archetype: "private_message",
-    related_messages: [topic, topic],
+    related_messages: [
+      {
+        id: 200004,
+        title: "Related Message 1",
+        fancy_title: "Related Message 1",
+        slug: "related-1",
+        posts_count: 2,
+        views: 30,
+        like_count: 0,
+        created_at: "2017-03-04T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200005,
+        title: "Related Message 2",
+        fancy_title: "Related Message 2",
+        slug: "related-2",
+        posts_count: 4,
+        views: 60,
+        like_count: 1,
+        created_at: "2017-03-05T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
+    suggested_topics: [
+      {
+        id: 200006,
+        title: "Suggested Topic A",
+        fancy_title: "Suggested Topic A",
+        slug: "suggested-a",
+        posts_count: 6,
+        views: 120,
+        like_count: 3,
+        created_at: "2017-03-06T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200007,
+        title: "Suggested Topic B",
+        fancy_title: "Suggested Topic B",
+        slug: "suggested-b",
+        posts_count: 4,
+        views: 80,
+        like_count: 2,
+        created_at: "2017-03-07T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
   });
 
   const bunchOfTopics = [
@@ -149,9 +239,6 @@ export function createData(store) {
     unpinnedTopic,
     warningTopic,
   ];
-
-  let sentence =
-    "Donec viverra lacus id sapien aliquam, tempus tincidunt urna porttitor.";
 
   let cooked = `<p>Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.</p>
 
@@ -511,28 +598,7 @@ export function createData(store) {
   ];
 
   _data = {
-    options: [
-      { id: 1, name: "Orange" },
-      { id: 2, name: "Blue" },
-      { id: 3, name: "Red" },
-      { id: 4, name: "Yellow" },
-    ],
-
     categories,
-
-    buttonSizes: [
-      { class: "btn-large", text: "large" },
-      { class: "", text: "default" },
-      { class: "btn-small", text: "small" },
-    ],
-
-    buttonStates: [
-      { class: "", text: "normal" },
-      { class: "btn-hover", text: "hover" },
-      { disabled: true, text: "disabled" },
-    ],
-
-    toggleSwitchState: true,
 
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
@@ -557,45 +623,10 @@ export function createData(store) {
 
     topics: bunchOfTopics,
 
-    sentence,
-    short_sentence: "Lorem ipsum dolor sit amet.",
-    soon: moment().add(2, "days"),
-
     transformedPost,
     postModel,
     postList,
     oneboxPosts,
-
-    user,
-
-    userWithUnread: createUser({
-      unread_notifications: 3,
-      unread_high_priority_notifications: 7,
-    }),
-
-    lorem: cooked,
-    shortLorem:
-      "Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.",
-
-    topicTimerUpdateDate: "2017-10-18 18:00",
-
-    groups: [
-      { name: "staff", id: 1, automatic: false },
-      { name: "lounge", id: 2, automatic: true },
-      { name: "admin", id: 3, automatic: false },
-    ],
-
-    groupNames: ["staff", "lounge", "admin"],
-
-    selectedGroups: [1, 2],
-
-    settings: "bold|italic|strike|underline",
-
-    colors: "f49|c89|564897",
-
-    charCounterContent: "",
-
-    selectedTags: ["apple", "orange", "potato"],
   };
 
   return _data;

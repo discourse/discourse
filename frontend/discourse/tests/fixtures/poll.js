@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const pollFixtures = {
   "/t/13.json": {
     post_stream: {
       posts: [
@@ -939,3 +944,5 @@ export default {
     },
   },
 };
+
+export default pollFixtures;

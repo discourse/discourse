@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-jquery */
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
@@ -40,7 +38,10 @@ export default class UserActivityBookmarks extends DiscourseRoute {
     return this._loadBookmarks(params)
       .then(async (response) => {
         if (!response.user_bookmark_list) {
-          return { bookmarks: [] };
+          return {
+            bookmarks:
+              /** @type {import("discourse/models/bookmark").default[]} */ ([]),
+          };
         }
 
         response.user_bookmark_list.categories?.forEach((category) =>
@@ -53,7 +54,7 @@ export default class UserActivityBookmarks extends DiscourseRoute {
         await Bookmark.applyTransformations(bookmarks);
         const loadMoreUrl = response.user_bookmark_list.more_bookmarks_url;
 
-        const model = { bookmarks: new TrackedArray(bookmarks), loadMoreUrl };
+        const model = { bookmarks: trackedArray(bookmarks), loadMoreUrl };
         this.session.set("bookmarksModel", model);
         return model;
       })
@@ -74,7 +75,11 @@ export default class UserActivityBookmarks extends DiscourseRoute {
     let url = `/u/${this.modelFor("user").username}/bookmarks.json`;
 
     if (params) {
-      url += "?" + $.param(params);
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) =>
+        searchParams.set(key, value ?? "")
+      );
+      url += "?" + searchParams;
     }
 
     return ajax(url);

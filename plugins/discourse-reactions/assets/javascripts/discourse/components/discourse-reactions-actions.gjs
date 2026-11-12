@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-jquery */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -15,19 +14,17 @@ import {
   shift,
 } from "@floating-ui/dom";
 import curryComponent from "ember-curry-component";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { isTesting } from "discourse/lib/environment";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import { and, eq, not } from "discourse/truth-helpers";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
-import DiscourseReactionsCounter from "./discourse-reactions-counter";
-import DiscourseReactionsDoubleButton from "./discourse-reactions-double-button";
-import DiscourseReactionsPicker from "./discourse-reactions-picker";
-import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button";
+import CustomReaction from "../models/discourse-reactions-custom-reaction.js";
+import DiscourseReactionsCounter from "./discourse-reactions-counter.gjs";
+import DiscourseReactionsPicker from "./discourse-reactions-picker.gjs";
+import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button.gjs";
 
 const VIBRATE_DURATION = 5;
 
@@ -38,8 +35,13 @@ export function resetCurrentReaction() {
 }
 
 function buildFakeReaction(reactionId) {
+  const emojiUrl = emojiUrlFor(reactionId);
+  if (!emojiUrl) {
+    return null;
+  }
+
   const img = document.createElement("img");
-  img.src = emojiUrlFor(reactionId);
+  img.src = emojiUrl;
   img.classList.add(
     "btn-toggle-reaction-emoji",
     "reaction-button",
@@ -56,11 +58,15 @@ function moveReactionAnimation(
   endPosition,
   complete
 ) {
-  if (isTesting()) {
-    return;
+  if (isTesting() || isRailsTesting()) {
+    return run(complete);
   }
 
   const fakeReaction = buildFakeReaction(reactionId);
+  if (!fakeReaction) {
+    return run(complete);
+  }
+
   const reactionButton = postContainer.querySelector(".reaction-button");
 
   reactionButton.appendChild(fakeReaction);
@@ -73,17 +79,15 @@ function moveReactionAnimation(
   fakeReaction.style.top = startPosition;
   fakeReaction.style.opacity = 0;
 
-  $(fakeReaction).animate(
-    {
-      top: endPosition,
-      opacity: 1,
-    },
-    {
-      duration: 350,
-      complete: done,
-    },
-    "swing"
-  );
+  fakeReaction
+    .animate(
+      [
+        { top: startPosition, opacity: 0 },
+        { top: endPosition, opacity: 1 },
+      ],
+      { duration: 350, easing: "ease-in-out", fill: "forwards" }
+    )
+    .finished.then(done, () => {});
 }
 
 function addReaction(list, reactionId, complete) {
@@ -95,45 +99,62 @@ function dropReaction(list, reactionId, complete) {
 }
 
 function scaleReactionAnimation(mainReaction, start, end, complete) {
-  if (isTesting()) {
+  if (isTesting() || isRailsTesting()) {
     return run(this, complete);
   }
 
-  return $(mainReaction)
-    .stop()
-    .css("textIndent", start)
-    .animate(
-      { textIndent: end },
-      {
-        complete,
-        step(now) {
-          $(this)
-            .css("transform", `scale(${now})`)
-            .addClass("d-icon-d-unliked")
-            .removeClass("d-icon-d-liked");
-        },
-        duration: 150,
-      },
-      "linear"
-    );
+  // Cancel any in-flight scale animation before starting a new one.
+  mainReaction.getAnimations().forEach((animation) => animation.cancel());
+
+  mainReaction.classList.add("d-icon-d-unliked");
+  mainReaction.classList.remove("d-icon-d-liked");
+
+  const animation = mainReaction.animate(
+    [{ transform: `scale(${start})` }, { transform: `scale(${end})` }],
+    { duration: 150, easing: "linear", fill: "forwards" }
+  );
+  animation.finished.then(complete, () => {});
+
+  return animation;
 }
 
 export default class DiscourseReactionsActions extends Component {
   @service dialog;
   @service capabilities;
   @service siteSettings;
-  @service site;
   @service currentUser;
   @service appEvents;
 
   @tracked reactionsPickerExpanded = false;
-  @tracked statePanelExpanded = false;
   @tracked clickOutsideDisabled = false;
 
   containerElement = null;
 
   get data() {
     return this.args.post;
+  }
+
+  get topicArchived() {
+    // Archived topics reject reactions server-side. Closed topics still
+    // accept them (see Guardian#post_can_act?), so don't gate on closed.
+    return !!this.data?.topic?.archived;
+  }
+
+  get canReact() {
+    if (this.topicArchived) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until login.
+    if (!this.currentUser) {
+      return true;
+    }
+
+    return (
+      (!this.data.current_user_reaction ||
+        this.data.current_user_reaction.can_undo) &&
+      this.data.likeAction?.canToggle
+    );
   }
 
   get classes() {
@@ -172,33 +193,53 @@ export default class DiscourseReactionsActions extends Component {
       classes.push("has-used-main-reaction");
     }
 
-    if (
-      (!this.data.current_user_reaction ||
-        this.data.current_user_reaction.can_undo) &&
-      this.data.likeAction?.canToggle
-    ) {
+    if (this.canReact) {
       classes.push("can-toggle-reaction");
     }
 
     return classes.join(" ");
   }
 
+  get elementId() {
+    if (!this.data?.id) {
+      return null;
+    }
+    return `discourse-reactions-actions-${this.data.id}-${
+      this.args.position || "right"
+    }`;
+  }
+
+  get showReactionsPicker() {
+    if (!this.reactionsPickerExpanded || !this.siteSettings.enable_emoji) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until they log in.
+    if (!this.currentUser) {
+      return this.canReact;
+    }
+
+    return this.data.user_id !== this.currentUser.id;
+  }
+
   @action
   toggleReactions(event) {
     if (!this.reactionsPickerExpanded) {
-      if (this.statePanelExpanded) {
-        this.scheduleExpand("expandReactionsPicker");
-      } else {
-        this.expandReactionsPicker(event);
-      }
+      this.expandReactionsPicker(event);
     }
   }
 
   @action
-  touchStart() {
-    this._validTouch = true;
+  touchStart(event) {
+    this._validTouch = !!event.target.closest(
+      ".discourse-reactions-reaction-button"
+    );
 
     cancel(this._touchTimeout);
+
+    if (!this._validTouch) {
+      return false;
+    }
 
     if (this.capabilities.touch) {
       document.documentElement?.classList?.toggle(
@@ -284,17 +325,21 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  toggle(params) {
+  async toggle(params) {
     if (!this.currentUser) {
-      if (this.args.showLogin) {
-        return this.args.showLogin();
+      if (!this.canReact) {
+        return;
       }
+      return deferAnonymousAction(this, "react_to_post", {
+        post_id: this.data.id,
+        reaction: params.reaction,
+      });
     }
 
     if (
-      !this.data.current_user_reaction ||
-      (this.data.current_user_reaction.can_undo &&
-        this.data.likeAction?.canToggle)
+      this.data.likeAction?.canToggle &&
+      (!this.data.current_user_reaction ||
+        this.data.current_user_reaction.can_undo)
     ) {
       if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
         navigator.vibrate(VIBRATE_DURATION);
@@ -303,7 +348,9 @@ export default class DiscourseReactionsActions extends Component {
       const pickedReaction = this.containerElement?.querySelector(
         `.discourse-reactions-picker .pickable-reaction.${CSS.escape(
           params.reaction
-        )} .emoji`
+        )} .emoji, .discourse-reactions-picker .pickable-reaction.${CSS.escape(
+          params.reaction
+        )} .d-icon`
       );
 
       const scales = [1.0, 1.75];
@@ -474,16 +521,21 @@ export default class DiscourseReactionsActions extends Component {
     }
     // Trigger re-render for anything autotracking reactions.
     // In future, we should make reactions a deeply-trackable structure.
-    // eslint-disable-next-line no-self-assign
-    this.data.reactions = this.data.reactions;
+    // A new array reference is required because Ember's native trackedObject
+    // skips dirtying when Object.is(oldValue, newValue) is true.
+    this.data.reactions = [...this.data.reactions];
   }
 
   @action
-  toggleFromButton(attrs) {
+  async toggleFromButton(attrs) {
     if (!this.currentUser) {
-      if (this.args.showLogin) {
-        return this.args.showLogin();
+      if (!this.canReact) {
+        return;
       }
+      return deferAnonymousAction(this, "react_to_post", {
+        post_id: this.data.id,
+        reaction: attrs.reaction,
+      });
     }
 
     this.collapseAllPanels();
@@ -493,7 +545,7 @@ export default class DiscourseReactionsActions extends Component {
     const current_user_reaction = this.data.current_user_reaction;
 
     if (
-      this.data.likeAction &&
+      !this.data.likeAction ||
       !(this.data.likeAction.canToggle || this.data.likeAction.can_undo)
     ) {
       return;
@@ -528,18 +580,10 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     let selector;
-    if (
-      this.data.reactions &&
-      this.data.reactions.length === 1 &&
-      this.data.reactions[0].id === mainReactionName
-    ) {
-      selector = `.discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
+    if (!attrs.reaction || attrs.reaction === mainReactionName) {
+      selector = `.discourse-reactions-reaction-button .d-icon`;
     } else {
-      if (!attrs.reaction || attrs.reaction === mainReactionName) {
-        selector = `.discourse-reactions-reaction-button .d-icon`;
-      } else {
-        selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
-      }
+      selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
     }
 
     const mainReaction = this.containerElement?.querySelector(selector);
@@ -583,30 +627,10 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  cancelExpand() {
-    cancel(this._expandHandler);
-  }
-
-  scheduleExpand(handler) {
-    this.cancelExpand();
-
-    this._expandHandler = later(this, this[handler], 250);
-  }
-
-  @action
   scheduleCollapse(handler) {
     this.cancelCollapse();
 
     this._collapseHandler = later(this, this[handler], 500);
-  }
-
-  get elementId() {
-    if (!this.data?.id) {
-      return null;
-    }
-    return `discourse-reactions-actions-${this.data.id}-${
-      this.args.position || "right"
-    }`;
   }
 
   @action
@@ -614,7 +638,7 @@ export default class DiscourseReactionsActions extends Component {
     if (this.clickOutsideDisabled) {
       return;
     }
-    if (this.reactionsPickerExpanded || this.statePanelExpanded) {
+    if (this.reactionsPickerExpanded) {
       this.collapseAllPanels();
     }
   }
@@ -622,25 +646,8 @@ export default class DiscourseReactionsActions extends Component {
   expandReactionsPicker() {
     cancel(this._collapseHandler);
     activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = true;
     this.updateReactionsPickerPopover();
-  }
-
-  @action
-  expandStatePanel() {
-    cancel(this._collapseHandler);
-    activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = true;
-    this.reactionsPickerExpanded = false;
-    this.updateReactionsStatePanel();
-  }
-
-  @action
-  collapseStatePanel() {
-    cancel(this._collapseHandler);
-    this._collapseHandler = null;
-    this.statePanelExpanded = false;
   }
 
   collapseReactionsPicker() {
@@ -657,7 +664,6 @@ export default class DiscourseReactionsActions extends Component {
       false
     );
     this._collapseHandler = null;
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = false;
   }
 
@@ -666,14 +672,6 @@ export default class DiscourseReactionsActions extends Component {
     this.showPopover(
       ".discourse-reactions-reaction-button",
       ".discourse-reactions-picker"
-    );
-  }
-
-  @action
-  updateReactionsStatePanel() {
-    this.showPopover(
-      ".discourse-reactions-counter",
-      ".discourse-reactions-state-panel"
     );
   }
 
@@ -706,6 +704,11 @@ export default class DiscourseReactionsActions extends Component {
     });
   }
 
+  @action
+  registerContainerElement(element) {
+    this.containerElement = element;
+  }
+
   _captureState(post) {
     return {
       current_user_reaction: post.current_user_reaction
@@ -732,12 +735,7 @@ export default class DiscourseReactionsActions extends Component {
       return i18n("errors.desc.network");
     }
 
-    if (
-      xhr.status === 429 &&
-      xhr.responseJSON &&
-      xhr.responseJSON.errors &&
-      xhr.responseJSON.errors[0]
-    ) {
+    if (xhr.responseJSON?.errors?.[0]) {
       return xhr.responseJSON.errors[0];
     } else if (xhr.status === 403) {
       return i18n("discourse_reactions.reaction.forbidden");
@@ -746,53 +744,21 @@ export default class DiscourseReactionsActions extends Component {
     }
   }
 
-  get onlyOneMainReaction() {
-    return (
-      this.data.reactions?.length === 1 &&
-      this.data.reactions[0].id ===
-        this.siteSettings.discourse_reactions_reaction_for_like
-    );
-  }
-
-  get showReactionsPicker() {
-    return (
-      this.currentUser &&
-      this.data.user_id !== this.currentUser.id &&
-      this.reactionsPickerExpanded
-    );
-  }
-
-  @action
-  registerContainerElement(element) {
-    this.containerElement = element;
-  }
-
   <template>
     <div
-      id={{this.elementId}}
       class="discourse-reactions-actions {{this.classes}}"
+      id={{this.elementId}}
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
-      {{closeOnClickOutside this.clickOutside}}
+      {{dCloseOnClickOutside this.clickOutside}}
       {{didInsert this.registerContainerElement}}
     >
       {{#let
         (hash
           counter=(curryComponent
             DiscourseReactionsCounter
-            (lazyHash
-              post=this.data
-              position=@position
-              reactionsPickerExpanded=this.reactionsPickerExpanded
-              statePanelExpanded=this.statePanelExpanded
-              expandStatePanel=this.expandStatePanel
-              collapseStatePanel=this.collapseStatePanel
-              cancelCollapse=this.cancelCollapse
-              scheduleCollapse=this.scheduleCollapse
-              updatePopover=this.updateReactionsStatePanel
-              collapseAllPanels=this.collapseAllPanels
-            )
+            (lazyHash post=this.data position=@position)
           )
           button=(curryComponent
             DiscourseReactionsReactionButton
@@ -802,7 +768,6 @@ export default class DiscourseReactionsActions extends Component {
               cancelCollapse=this.cancelCollapse
               toggleFromButton=this.toggleFromButton
               toggleReactions=this.toggleReactions
-              cancelExpand=this.cancelExpand
               scheduleCollapse=this.scheduleCollapse
             )
           )
@@ -811,33 +776,18 @@ export default class DiscourseReactionsActions extends Component {
       }}
         {{#if this.showReactionsPicker}}
           <DiscourseReactionsPicker
-            @post={{this.data}}
-            @scheduleCollapse={{this.scheduleCollapse}}
             @cancelCollapse={{this.cancelCollapse}}
             @disableClickOutside={{this.disableClickOutside}}
             @enableClickOutside={{this.enableClickOutside}}
+            @post={{this.data}}
             @reactionsPickerExpanded={{this.reactionsPickerExpanded}}
+            @scheduleCollapse={{this.scheduleCollapse}}
             @toggle={{this.toggle}}
           />
         {{/if}}
 
         {{#if (eq @position "left")}}
           <components.counter />
-        {{else if this.onlyOneMainReaction}}
-          <DiscourseReactionsDoubleButton
-            @post={{this.data}}
-            @counterComponent={{components.counter}}
-            @buttonComponent={{components.button}}
-          />
-        {{else if this.site.mobileView}}
-          {{#if (not this.data.yours)}}
-            <components.counter />
-            <components.button />
-          {{else if
-            (and this.data.yours this.data.reactions this.data.reactions.length)
-          }}
-            <components.counter />
-          {{/if}}
         {{else if (not this.data.yours)}}
           <components.button />
         {{/if}}

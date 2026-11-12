@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import PostVotingAnswerButton from "../components/post-voting-answer-button";
+import PostVotingAnswerButton from "../components/post-voting-answer-button.gjs";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
-} from "../components/post-voting-answer-header";
-import PostVotingComments from "../components/post-voting-comments";
-import PostVotingVoteControls from "../components/post-voting-vote-controls";
+} from "../components/post-voting-answer-header.gjs";
+import PostVotingComments from "../components/post-voting-comments.gjs";
+import PostVotingVoteControls from "../components/post-voting-vote-controls.gjs";
 
 function initPlugin(api, container) {
   customizePost(api);
@@ -36,36 +35,25 @@ function initPlugin(api, container) {
 }
 
 function customizePost(api) {
-  api.modifyClass(
-    "model:post",
-    (Superclass) =>
-      class extends Superclass {
-        @autoTrackedArray comments;
-      }
-  );
+  api.addModelField("post", "comments", { type: "array" });
 
   api.addTrackedPostProperties(
     "comments_count",
     "post_voting_user_voted_direction",
-    "post_voting_has_votes"
+    "post_voting_has_votes",
+    "post_voting_vote_count"
   );
 
-  api.modifyClass(
-    "model:post-stream",
-    (Superclass) =>
-      class extends Superclass {
-        orderStreamByActivity() {
-          this.cancelFilter();
-          this.set("filter", ORDER_BY_ACTIVITY_FILTER);
-          return this.refreshAndJumpToSecondVisible();
-        }
+  api.addModelMethod("post-stream", "orderStreamByActivity", function () {
+    this.cancelFilter();
+    this.set("filter", ORDER_BY_ACTIVITY_FILTER);
+    return this.refresh({ refreshInPlace: true });
+  });
 
-        orderStreamByVotes() {
-          this.cancelFilter();
-          return this.refreshAndJumpToSecondVisible();
-        }
-      }
-  );
+  api.addModelMethod("post-stream", "orderStreamByVotes", function () {
+    this.cancelFilter();
+    return this.refresh({ refreshInPlace: true });
+  });
 
   api.renderAfterWrapperOutlet(
     "post-avatar",
@@ -124,8 +112,8 @@ function customizePostMenu(api, container) {
 
       <template>
         <PostVotingComments
-          @post={{@outletArgs.post}}
           @canCreatePost={{@outletArgs.state.canCreatePost}}
+          @post={{@outletArgs.post}}
         />
       </template>
     }

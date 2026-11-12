@@ -1,27 +1,22 @@
-import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-
-const onTimestampClick = function (event) {
-  if (wantsNewWindow(event)) {
-    // Allow opening the link in a new tab/window
-    event.stopPropagation();
-  } else {
-    // Otherwise only display the TopicEntrance component
-    event.preventDefault();
-  }
-};
+import lazyHash from "discourse/helpers/lazy-hash";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 
 const FeaturedTopic = <template>
-  <div data-topic-id={{@topic.id}} class="featured-topic --glimmer">
-    <TopicStatus @topic={{@topic}} @context="topic-list" />
+  <div class="featured-topic --glimmer" data-topic-id={{@topic.id}}>
+    <TopicStatus @context="topic-list" @topic={{@topic}} />
 
-    <a href={{@topic.lastUnreadUrl}} class="title">{{trustHTML
+    <a class="title" href={{@topic.lastUnreadUrl}}>{{trustHTML
         @topic.fancyTitle
       }}</a>
+
+    <PluginOutlet
+      @name="topic-list-after-title"
+      @outletArgs={{lazyHash topic=@topic}}
+    />
 
     <TopicPostBadges
       @unreadPosts={{@topic.unread_posts}}
@@ -29,11 +24,9 @@ const FeaturedTopic = <template>
       @url={{@topic.lastUnreadUrl}}
     />
 
-    <a
-      {{on "click" onTimestampClick}}
-      href={{@topic.lastPostUrl}}
-      class="last-posted-at"
-    >{{ageWithTooltip @topic.last_posted_at}}</a>
+    <a class="last-posted-at" href={{@topic.lastPostUrl}}>{{dAgeWithTooltip
+        @topic.last_posted_at
+      }}</a>
   </div>
 </template>;
 

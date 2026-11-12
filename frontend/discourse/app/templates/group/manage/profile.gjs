@@ -4,8 +4,8 @@ import GroupsFormProfileFields from "discourse/components/groups-form-profile-fi
 export default <template>
   <form class="groups-form form-vertical">
     <GroupsFormProfileFields
-      @model={{@controller.model}}
       @disableSave={{@controller.saving}}
+      @model={{@controller.model}}
     />
     <GroupManageSaveButton
       @model={{@controller.model}}

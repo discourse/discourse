@@ -3,23 +3,22 @@ import { cached } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { eq, not } from "truth-helpers";
-import DButton from "discourse/components/d-button";
+import { trustHTML } from "@ember/template";
+import CategoryList from "discourse/admin/components/site-settings/category-list";
+import Color from "discourse/admin/components/site-settings/color";
+import FontList from "discourse/admin/components/site-settings/font-list";
+import GroupList from "discourse/admin/components/site-settings/group-list";
+import HostList from "discourse/admin/components/site-settings/host-list";
+import LocaleEnum from "discourse/admin/components/site-settings/locale-enum";
+import TagList from "discourse/admin/components/site-settings/tag-list";
+import ValueList from "discourse/admin/components/value-list";
+import SiteSetting from "discourse/admin/models/site-setting";
 import Form from "discourse/components/form";
 import { clipboardCopy } from "discourse/lib/utilities";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import UserChooser from "discourse/select-kit/components/user-chooser";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import CategoryList from "admin/components/site-settings/category-list";
-import Color from "admin/components/site-settings/color";
-import FontList from "admin/components/site-settings/font-list";
-import GroupList from "admin/components/site-settings/group-list";
-import HostList from "admin/components/site-settings/host-list";
-import LocaleEnum from "admin/components/site-settings/locale-enum";
-import TagList from "admin/components/site-settings/tag-list";
-import ValueList from "admin/components/value-list";
-import SiteSetting from "admin/models/site-setting";
-import CategoryChooser from "select-kit/components/category-chooser";
-import UserChooser from "select-kit/components/user-chooser";
 
 class PrimaryActions extends Component {
   @service toasts;
@@ -74,16 +73,16 @@ class PrimaryActions extends Component {
 
   <template>
     <@actions.Menu
-      @identifier={{concat "site-setting-menu-" @setting.setting}}
-      @icon="gear"
       @class="btn-flat"
+      @icon="gear"
+      @identifier={{concat "site-setting-menu-" @setting.setting}}
     >
       <:content as |menu|>
         <menu.Dropdown as |dropdown|>
           <dropdown.item>
             <DButton
-              @disabled={{this.cannotRevert}}
               @action={{fn this.revertToDefault menu}}
+              @disabled={{this.cannotRevert}}
               @label="admin.site_settings.actions.reset_setting"
             />
           </dropdown.item>
@@ -130,6 +129,7 @@ export default class FormKitSiteSettingWrapper extends Component {
     this.formApi = api;
   }
 
+  @action
   validateHexColor(name, color, helper) {
     // Allow empty values (for reset or optional colors)
     if (!color || color === "") {
@@ -140,7 +140,7 @@ export default class FormKitSiteSettingWrapper extends Component {
     if (!isValid) {
       const setting = this.args.settings.find((s) => s.setting === name);
       helper.addError(name, {
-        title: setting?.humanized_name || name,
+        title: setting?.label || setting?.humanized_name || name,
         message: i18n("admin.site_settings.validation.invalid_color"),
       });
     }
@@ -216,6 +216,33 @@ export default class FormKitSiteSettingWrapper extends Component {
     }
   }
 
+  // Checkboxes render the description inline as the control's label
+  @action
+  fieldDescription(setting) {
+    if (setting.type !== "bool") {
+      return trustHTML(setting.description);
+    }
+  }
+
+  @action
+  controlType(settingType) {
+    switch (settingType) {
+      case "bool":
+        return "checkbox";
+      case "integer":
+      case "float":
+      case "email":
+      case "string":
+        return "input";
+      case "upload":
+        return "image";
+      case "enum":
+        return "select";
+      default:
+        return "custom";
+    }
+  }
+
   @action
   setValueList(set, delimiter, value) {
     set(value.join(delimiter));
@@ -248,340 +275,156 @@ export default class FormKitSiteSettingWrapper extends Component {
 
   <template>
     <Form
-      @onSubmit={{this.save}}
+      class="form-kit-settings-wrapper"
       @data={{this.formData}}
       @onRegisterApi={{this.onRegisterApi}}
-      class="form-kit-settings-wrapper"
+      @onSubmit={{this.save}}
       as |form|
     >
       {{#each @settings as |setting|}}
-        {{setting.type}}
-        {{#if (eq setting.type "bool")}}
-          <form.Field
-            @name={{setting.setting}}
-            @title={{setting.humanized_name}}
-            @emphasis={{this.isOverridden setting}}
-            @format={{this.fieldFormat setting.type}}
-          >
-            <:body as |field|>
-              <field.Checkbox @label={{htmlSafe setting.description}}>
-                <:primary-actions as |actions|>
-                  <PrimaryActions
-                    @form={{form}}
-                    @field={{field}}
-                    @actions={{actions}}
-                    @setting={{setting}}
-                    @save={{this.save}}
-                  />
-                </:primary-actions>
-              </field.Checkbox>
-            </:body>
-          </form.Field>
-        {{else if (eq setting.type "color")}}
-          <form.Field
-            @name={{setting.setting}}
-            @title={{setting.humanized_name}}
-            @emphasis={{this.isOverridden setting}}
-            @format={{this.fieldFormat setting.type}}
-            @validate={{this.validateHexColor}}
-            as |field|
-          >
-            <field.Custom>
-              <:body>
+        <form.Field
+          @description={{this.fieldDescription setting}}
+          @emphasis={{this.isOverridden setting}}
+          @format={{this.fieldFormat setting.type}}
+          @name={{setting.setting}}
+          @title={{or setting.label setting.humanized_name setting.setting}}
+          @type={{this.controlType setting.type}}
+          @validate={{if (eq setting.type "color") this.validateHexColor}}
+        >
+          <:body as |field|>
+            {{#if (eq setting.type "bool")}}
+              <field.Control>{{trustHTML setting.description}}</field.Control>
+            {{else if (eq setting.type "color")}}
+              <field.Control>
                 <Color
                   @changeValueCallback={{field.set}}
                   @value={{field.value}}
                 />
-              </:body>
-              <:primary-actions as |actions|>
-                <PrimaryActions
-                  @form={{form}}
-                  @field={{field}}
-                  @actions={{actions}}
-                  @setting={{setting}}
-                  @save={{this.save}}
+              </field.Control>
+            {{else if (eq setting.type "integer")}}
+              <field.Control @type="number" />
+            {{else if (eq setting.type "float")}}
+              <field.Control @type="number" />
+            {{else if (eq setting.type "email")}}
+              <field.Control @type="email" />
+            {{else if (eq setting.type "string")}}
+              <field.Control />
+            {{else if (eq setting.type "upload")}}
+              <field.Control @type="site_setting" />
+            {{else if (eq setting.type "enum")}}
+              <field.Control as |select|>
+                {{#each setting.valid_values as |item|}}
+                  <select.Option @value={{item.value}}>
+                    {{item.name}}
+                  </select.Option>
+                {{/each}}
+              </field.Control>
+            {{else if (eq setting.type "category")}}
+              <field.Control>
+                <CategoryChooser
+                  @onChangeCategory={{fn this.setCategory field.set}}
+                  @options={{hash
+                    allowUncategorized=true
+                    none=(eq setting.default "")
+                  }}
+                  @value={{readonly field.value}}
                 />
-              </:primary-actions>
-            </field.Custom>
-          </form.Field>
-        {{else}}
-          <form.Field
-            @name={{setting.setting}}
-            @title={{setting.humanized_name}}
-            @description={{htmlSafe setting.description}}
-            @emphasis={{this.isOverridden setting}}
-            @format={{this.fieldFormat setting.type}}
-          >
-            <:body as |field|>
-              {{#if (eq setting.type "integer")}}
-                <field.Input @type="number">
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Input>
-              {{else if (eq setting.type "email")}}
-                <field.Input>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Input>
-              {{else if (eq setting.type "float")}}
-                <field.Input @type="number">
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Input>
-              {{else if (eq setting.type "string")}}
-                <field.Input>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Input>
-              {{else if (eq setting.type "upload")}}
-                <field.Image @type="site_setting">
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Image>
-              {{else if (eq setting.type "enum")}}
-                <field.Select>
-                  <:body as |select|>
-                    {{#each setting.valid_values as |item|}}
-                      <select.Option @value={{item.value}}>
-                        {{item.name}}
-                      </select.Option>
-                    {{/each}}
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Select>
-              {{else if (eq setting.type "category")}}
-                <field.Custom>
-                  <:body>
-                    <CategoryChooser
-                      @value={{readonly field.value}}
-                      @onChangeCategory={{fn this.setCategory field.set}}
-                      @options={{hash
-                        allowUncategorized=true
-                        none=(eq @setting.default "")
-                      }}
-                    />
-                  </:body>
+              </field.Control>
+            {{else if (eq setting.type "group")}}
+              <field.Control>
+                <GroupList
+                  @changeValueCallback={{field.set}}
+                  @setting={{setting}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "category_list")}}
+              <field.Control>
+                <CategoryList
+                  @changeValueCallback={{field.set}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "tag_list")}}
+              <field.Control>
+                <TagList
+                  @changeValueCallback={{field.set}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "username")}}
+              <field.Control>
+                <UserChooser
+                  @onChange={{fn this.setUsername field.set}}
+                  @options={{hash maximum=1}}
+                  @value={{this.getUsernameArray field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "locale_enum")}}
+              <field.Control>
+                <LocaleEnum
+                  @changeValueCallback={{field.set}}
+                  @setting={{setting}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "host_list")}}
+              <field.Control>
+                <HostList
+                  @allowAny={{not (eq setting.anyValue false)}}
+                  @changeValueCallback={{field.set}}
+                  @setting={{setting}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "group_list")}}
+              <field.Control>
+                <GroupList
+                  @changeValueCallback={{field.set}}
+                  @setting={{setting}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            {{else if (eq setting.type "list")}}
+              <field.Control>
+                {{#if (eq setting.list_type "font")}}
+                  <FontList
+                    @changeValueCallback={{field.set}}
+                    @setting={{setting}}
+                    @value={{field.value}}
+                  />
+                {{else}}
+                  <ValueList
+                    @choices={{setting.choices}}
+                    @inputDelimiter="|"
+                    @onChange={{fn this.setValueList field.set "|"}}
+                    @values={{field.value}}
+                  />
+                {{/if}}
+              </field.Control>
+            {{else}}
+              {{setting.type}}
+            {{/if}}
+          </:body>
 
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "group")}}
-                <field.Custom>
-                  <:body>
-                    <GroupList @onChange={{field.set}} @value={{field.value}} />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "category_list")}}
-                <field.Custom>
-                  <:body>
-                    <CategoryList
-                      @changeValueCallback={{field.set}}
-                      @value={{field.value}}
-                    />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "tag_list")}}
-                <field.Custom>
-                  <:body>
-                    <TagList @onChange={{field.set}} @value={{field.value}} />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "username")}}
-                <field.Custom>
-                  <:body>
-                    <UserChooser
-                      @value={{this.getUsernameArray field.value}}
-                      @options={{hash maximum=1}}
-                      @onChange={{fn this.setUsername field.set}}
-                    />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "locale_enum")}}
-                <field.Custom>
-                  <:body>
-                    <LocaleEnum
-                      @setting={{setting}}
-                      @changeValueCallback={{field.set}}
-                      @value={{field.value}}
-                    />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "host_list")}}
-                <field.Custom>
-                  <:body>
-                    <HostList
-                      @setting={{setting}}
-                      @onChangeCallback={{field.set}}
-                      @value={{field.value}}
-                      @allowAny={{not (eq setting.anyValue false)}}
-                    />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "group_list")}}
-                <field.Custom>
-                  <:body>
-                    <GroupList @onChange={{field.set}} @value={{field.value}} />
-                  </:body>
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else if (eq setting.type "list")}}
-                <field.Custom>
-                  <:body>
-                    {{#if (eq setting.list_type "font")}}
-                      <FontList
-                        @setting={{setting}}
-                        @value={{field.value}}
-                        @changeValueCallback={{field.set}}
-                      />
-                    {{else}}
-                      <ValueList
-                        @values={{field.value}}
-                        @onChange={{fn this.setValueList field.set "|"}}
-                        @inputDelimiter="|"
-                        @choices={{setting.choices}}
-                      />
-                    {{/if}}
-                  </:body>
-
-                  <:primary-actions as |actions|>
-                    <PrimaryActions
-                      @form={{form}}
-                      @field={{field}}
-                      @actions={{actions}}
-                      @setting={{setting}}
-                      @save={{this.save}}
-                    />
-                  </:primary-actions>
-                </field.Custom>
-              {{else}}
-                {{setting.type}}
-              {{/if}}
-            </:body>
-          </form.Field>
-        {{/if}}
-
+          <:primary-actions as |actions field|>
+            <PrimaryActions
+              @actions={{actions}}
+              @field={{field}}
+              @setting={{setting}}
+            />
+          </:primary-actions>
+        </form.Field>
       {{/each}}
 
       {{#if form.dirtyCount}}
         <form.Actions
           class="site-settings-form__floating-actions admin-changes-banner"
-          @floating={{true}}
           @floatContainerClass="admin-detail"
+          @floating={{true}}
         >
           <div class="admin-changes-banner__message">
-            {{htmlSafe
+            {{trustHTML
               (i18n "admin.site_settings.dirty_banner" count=form.dirtyCount)
             }}
           </div>

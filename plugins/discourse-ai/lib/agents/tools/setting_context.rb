@@ -65,7 +65,7 @@ module DiscourseAi
             result = +"# #{setting_name}\n#{description}\n\n"
 
             setting_info =
-              find_setting_info(setting_name, [Rails.root.join("config", "site_settings.yml").to_s])
+              find_setting_info(setting_name, [Rails.root.join("config/site_settings.yml").to_s])
             if !setting_info
               setting_info =
                 find_setting_info(setting_name, Dir[Rails.root.join("plugins/**/settings.yml")])

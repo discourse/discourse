@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Narrative Bot PM", type: :system do
+describe "Narrative Bot PM" do
   fab!(:admin)
   fab!(:current_user, :user)
   fab!(:topics) { Fabricate.times(2, :post).map(&:topic) }

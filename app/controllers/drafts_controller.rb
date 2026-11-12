@@ -97,6 +97,8 @@ class DraftsController < ApplicationController
 
     json = success_json.merge(draft_sequence: sequence)
 
+    DiscourseEvent.trigger(:draft_saved, current_user, params[:draft_key], data)
+
     # check for conflicts when editing a post
     if data.present? && data["postId"].present? && data["action"].to_s.start_with?("edit")
       original_text = data["original_text"] || data["originalText"]
@@ -138,16 +140,7 @@ class DraftsController < ApplicationController
   end
 
   def destroy
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     begin
       Draft.clear(user, params[:id], params[:sequence].to_i)
@@ -176,28 +169,17 @@ class DraftsController < ApplicationController
 
     return render json: success_json.merge(deleted_count: 0) if draft_keys.empty?
 
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     # Validate all sequences first (fail fast)
     sequence_errors = []
     draft_keys.each do |draft_key|
-      begin
-        current_sequence = DraftSequence.current(user, draft_key)
-        provided_sequence = sequences[draft_key].to_i
-        sequence_errors << draft_key if provided_sequence != current_sequence
-      rescue StandardError
-        # If we can't get sequence for some reason, skip validation for this draft
-        # This maintains the same lenient behavior as the single delete
-      end
+      current_sequence = DraftSequence.current(user, draft_key)
+      provided_sequence = sequences[draft_key].to_i
+      sequence_errors << draft_key if provided_sequence != current_sequence
+    rescue StandardError
+      # If we can't get sequence for some reason, skip validation for this draft
+      # This maintains the same lenient behavior as the single delete
     end
 
     if sequence_errors.any?

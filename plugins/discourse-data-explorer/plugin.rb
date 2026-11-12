@@ -18,6 +18,7 @@ register_svg_icon "angle-left"
 register_svg_icon "circle-exclamation"
 register_svg_icon "info"
 register_svg_icon "pencil"
+register_svg_icon "thumbtack-slash"
 register_svg_icon "upload"
 
 add_admin_route "explorer.title", "discourse-data-explorer", use_new_show_route: true
@@ -33,6 +34,78 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-data-explorer/db/fixtures"))
+
+  require_relative "lib/discourse_data_explorer/mcp_tools"
+
+  register_mcp_tool(
+    "discourse_get_query",
+    title: "Get Data Explorer query",
+    description:
+      "Returns the definition of a saved Data Explorer query. Requires an admin account.",
+    implementation: DiscourseDataExplorer::McpTools::GetQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+          minimum: 1,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::GetQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::GetQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    risk: :administration,
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
+  register_mcp_tool(
+    "discourse_run_query",
+    title: "Run Data Explorer query",
+    description: "Runs a saved Data Explorer query that the authenticated user can access.",
+    implementation: DiscourseDataExplorer::McpTools::RunQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+        },
+        params: {
+          type: "object",
+        },
+        limit: {
+          anyOf: [
+            { type: "integer", minimum: 1, maximum: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT },
+            { const: "ALL" },
+          ],
+        },
+        explain: {
+          type: "boolean",
+          default: false,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::RunQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::RunQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
@@ -40,6 +113,14 @@ after_initialize do
   #   - warn+block
   #   - block
   GlobalSetting.add_default(:max_data_explorer_api_req_mode, "warn")
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_svg_icon "database"
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_data_explorer/workflows/sql_action/v1"
+      DiscourseDataExplorer::Workflows::SqlAction::V1
+    end
+  end
 
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
@@ -67,12 +148,14 @@ after_initialize do
 
   register_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
 
+  register_admin_dashboard_report_source(DiscourseDataExplorer::AdminDashboardReportProvider)
+
   add_api_key_scope(
-    :discourse_data_explorer,
+    :data_explorer,
     {
       run_queries: {
         actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],
-        params: %i[id],
+        path_params: %i[id],
       },
     },
   )
@@ -131,11 +214,9 @@ after_initialize do
               { skip_empty:, users_from_group:, attach_csv:, render_url_columns: true },
             )
             .each do |pm|
-              begin
-                utils.send_pm(pm, automation_id: automation.id)
-              rescue ActiveRecord::RecordNotSaved => e
-                Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
-              end
+              utils.send_pm(pm, automation_id: automation.id)
+            rescue ActiveRecord::RecordNotSaved => e
+              Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
             end
         end
       end
@@ -195,4 +276,50 @@ after_initialize do
       end
     end
   end
+
+  if defined?(DiscourseAi)
+    require_relative "lib/discourse_data_explorer/ai_query_params"
+    require_relative "lib/discourse_data_explorer/tools/find_queries"
+    require_relative "lib/discourse_data_explorer/tools/run_sql"
+    require_relative "lib/discourse_data_explorer/tools/submit_query"
+    require_relative "lib/discourse_data_explorer/ai_query_generator"
+    require_relative "lib/discourse_data_explorer/query_generation"
+    require_relative "lib/discourse_data_explorer/admin_assistant/capability"
+    require_relative "lib/discourse_data_explorer/admin_assistant/query_draft"
+    require_relative "lib/discourse_data_explorer/admin_assistant/generate_query"
+    require_relative "lib/discourse_data_explorer/admin_assistant/create_query"
+
+    admin_assistant_tools = [
+      DiscourseDataExplorer::AdminAssistant::GenerateQuery,
+      DiscourseDataExplorer::AdminAssistant::CreateQuery,
+    ]
+
+    register_modifier(:admin_assistant_tools) { |tools, _agent| tools + admin_assistant_tools }
+
+    DiscourseAi.register_tools(admin_assistant_tools, plugin: self)
+
+    DiscourseAi.register_feature(
+      module_name: :data_explorer,
+      feature: :query_generation,
+      agent_klass: DiscourseDataExplorer::AiQueryGenerator,
+      enabled_by_setting: "data_explorer_ai_queries_enabled",
+      plugin: self,
+      entry_point: {
+        path: "/admin/plugins/discourse-data-explorer/queries/new",
+        label: "explorer.new_query",
+      },
+    )
+  end
+
+  register_stat("queries_total", stat_type: :de) { DiscourseDataExplorer::Statistics.queries_total }
+  register_stat("queries_created", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_created
+  end
+  register_stat("queries_edited", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_edited
+  end
+  register_stat("queries_executed", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_executed
+  end
+  register_stat("executions", stat_type: :de) { DiscourseDataExplorer::Statistics.executions }
 end

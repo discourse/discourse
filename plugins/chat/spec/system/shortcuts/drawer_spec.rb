@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | drawer", type: :system do
+RSpec.describe "Shortcuts | drawer" do
   fab!(:user_1, :admin)
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)
@@ -20,7 +20,6 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
     context "when pressing dash" do
       it "opens the drawer" do
-        expect(chat_page).to have_css("#site-logo")
         page.send_keys("-")
 
         expect(chat_page).to have_drawer

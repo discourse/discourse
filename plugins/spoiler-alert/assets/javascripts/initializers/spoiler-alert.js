@@ -1,10 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  addBlockDecorateCallback,
-  addTagDecorateCallback,
-} from "discourse/lib/to-markdown";
 import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
-import richEditorExtension from "../lib/rich-editor-extension";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 function spoil(element) {
   element.querySelectorAll(".spoiler").forEach((spoiler) => {
@@ -32,25 +28,6 @@ export function initializeSpoiler(api) {
         });
       }
     },
-  });
-
-  addTagDecorateCallback(function () {
-    const { attributes } = this.element;
-
-    if (/\bspoiled\b/.test(attributes.class)) {
-      this.prefix = "[spoiler]";
-      this.suffix = "[/spoiler]";
-    }
-  });
-
-  addBlockDecorateCallback(function (text) {
-    const { name, attributes } = this.element;
-
-    if (name === "div" && /\bspoiled\b/.test(attributes.class)) {
-      this.prefix = "[spoiler]\n";
-      this.suffix = "\n[/spoiler]";
-      return text.trim();
-    }
   });
 
   api.registerRichEditorExtension(richEditorExtension);

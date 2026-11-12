@@ -1,62 +1,71 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers */
-import Component, { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { empty, equal } from "@ember/object/computed";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
 import WatchedWord from "discourse/admin/models/watched-word";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class WatchedWordForm extends Component {
-  formSubmitted = false;
-  actionKey = null;
-  showMessage = false;
-  isCaseSensitive = false;
-  isHtml = false;
-  selectedTags = [];
-  words = [];
+  @service siteSettings;
 
-  @empty("words") submitDisabled;
-  @equal("actionKey", "replace") canReplace;
-  @equal("actionKey", "tag") canTag;
-  @equal("actionKey", "link") canLink;
+  @tracked formSubmitted = false;
+  @tracked isCaseSensitive = false;
+  @tracked isHtml = false;
+  @tracked replacement;
+  @tracked replacementTags;
 
-  @computed("siteSettings.watched_words_regular_expressions")
+  /** @type {{ id?: number | string, name: string }[]} */
+  @tracked selectedTags = [];
+
+  /** @type {string[]} */
+  @tracked words = [];
+
+  // keyed by action so switching to another action's page hides it
+  /** @type {{ text: string, actionKey: string } | null} */
+  @tracked shownMessage = null;
+
+  get message() {
+    return this.shownMessage?.actionKey === this.args.actionKey
+      ? this.shownMessage.text
+      : null;
+  }
+
+  get submitDisabled() {
+    return isEmpty(this.words);
+  }
+
+  get canReplace() {
+    return this.args.actionKey === "replace";
+  }
+
+  get canTag() {
+    return this.args.actionKey === "tag";
+  }
+
+  get canLink() {
+    return this.args.actionKey === "link";
+  }
+
   get placeholderKey() {
-    if (this.siteSettings?.watched_words_regular_expressions) {
+    if (this.siteSettings.watched_words_regular_expressions) {
       return "admin.watched_words.form.placeholder_regexp";
     } else {
       return "admin.watched_words.form.placeholder";
     }
   }
 
-  @observes("words.[]")
-  removeMessage() {
-    if (this.showMessage && !isEmpty(this.words)) {
-      this.set("showMessage", false);
-    }
-  }
-
-  @observes("actionKey")
-  actionChanged() {
-    this.setProperties({
-      showMessage: false,
-    });
-  }
-
-  @computed("words.[]")
   get isUniqueWord() {
-    const existingWords = this.filteredContent || [];
+    const existingWords = this.args.filteredContent || [];
     const filtered = existingWords.filter(
-      (content) => content.action === this.actionKey
+      (content) => content.action === this.args.actionKey
     );
 
     const duplicate = filtered.find((content) => {
@@ -73,33 +82,39 @@ export default class WatchedWordForm extends Component {
   }
 
   @action
+  changeWords(words) {
+    this.words = words;
+    if (!isEmpty(words)) {
+      this.shownMessage = null;
+    }
+  }
+
+  @action
   changeSelectedTags(tags) {
-    this.setProperties({
-      selectedTags: tags,
-      replacementTags: tags.map((t) =>
-        typeof t.id === "number" ? { id: t.id, name: t.name } : { name: t.name }
-      ),
-    });
+    this.selectedTags = tags;
+    this.replacementTags = tags.map((t) =>
+      typeof t.id === "number" ? { id: t.id, name: t.name } : { name: t.name }
+    );
   }
 
   @action
   submitForm() {
     if (!this.isUniqueWord) {
-      this.setProperties({
-        showMessage: true,
-        message: i18n("admin.watched_words.form.exists"),
-      });
+      this.shownMessage = {
+        text: i18n("admin.watched_words.form.exists"),
+        actionKey: this.args.actionKey,
+      };
       return;
     }
 
     if (!this.formSubmitted) {
-      this.set("formSubmitted", true);
+      this.formSubmitted = true;
 
       const watchedWord = WatchedWord.create({
         words: this.words,
         replacement: this.canReplace || this.canLink ? this.replacement : null,
         replacementTags: this.canTag ? this.replacementTags : null,
-        action: this.actionKey,
+        action: this.args.actionKey,
         isCaseSensitive: this.isCaseSensitive,
         isHtml: this.isHtml,
       });
@@ -107,26 +122,28 @@ export default class WatchedWordForm extends Component {
       watchedWord
         .save()
         .then((result) => {
-          this.setProperties({
-            words: [],
-            replacement: "",
-            replacementTags: [],
-            selectedTags: [],
-            showMessage: true,
-            message: i18n("admin.watched_words.form.success"),
-            isCaseSensitive: false,
-            isHtml: false,
-          });
+          this.words = [];
+          this.replacement = "";
+          this.replacementTags = [];
+          this.selectedTags = [];
+          this.isCaseSensitive = false;
+          this.isHtml = false;
+          this.shownMessage = {
+            text: i18n("admin.watched_words.form.success"),
+            actionKey: this.args.actionKey,
+          };
           if (result.words) {
             result.words.forEach((word) => {
-              this.action(WatchedWord.create(word));
+              this.args.action(WatchedWord.create(word));
             });
           } else {
-            this.action(result);
+            this.args.action(result);
           }
         })
         .catch(popupAjaxError)
-        .finally(this.set("formSubmitted", false));
+        .finally(() => {
+          this.formSubmitted = false;
+        });
     }
   }
 
@@ -138,12 +155,12 @@ export default class WatchedWordForm extends Component {
           }}</label>
         <WatchedWords
           @id="watched-words"
-          @value={{this.words}}
-          @onChange={{fn (mut this.words)}}
+          @onChange={{this.changeWords}}
           @options={{hash
             filterPlaceholder=this.placeholderKey
             disabled=this.formSubmitted
           }}
+          @value={{this.words}}
         />
       </div>
 
@@ -152,14 +169,14 @@ export default class WatchedWordForm extends Component {
           <label for="watched-replacement">{{i18n
               "admin.watched_words.form.replace_label"
             }}</label>
-          <TextField
-            @id="watched-replacement"
-            @value={{this.replacement}}
-            @disabled={{this.formSubmitted}}
-            @autocorrect="off"
-            @autocapitalize="off"
-            @placeholderKey="admin.watched_words.form.replace_placeholder"
+          <DTextField
             class="watched-word-input-field"
+            @autocapitalize="off"
+            @autocorrect="off"
+            @disabled={{this.formSubmitted}}
+            @id="watched-replacement"
+            @placeholderKey="admin.watched_words.form.replace_placeholder"
+            @value={{this.replacement}}
           />
         </div>
       {{/if}}
@@ -170,12 +187,12 @@ export default class WatchedWordForm extends Component {
               "admin.watched_words.form.tag_label"
             }}</label>
           <TagChooser
-            @id="watched-tag"
-            @tags={{this.selectedTags}}
-            @onChange={{this.changeSelectedTags}}
-            @everyTag={{true}}
-            @options={{hash allowAny=true disabled=this.formSubmitted}}
             class="watched-word-input-field"
+            @everyTag={{true}}
+            @id="watched-tag"
+            @onChange={{this.changeSelectedTags}}
+            @options={{hash allowAny=true disabled=this.formSubmitted}}
+            @tags={{this.selectedTags}}
           />
         </div>
       {{/if}}
@@ -185,14 +202,14 @@ export default class WatchedWordForm extends Component {
           <label for="watched-link">{{i18n
               "admin.watched_words.form.link_label"
             }}</label>
-          <TextField
-            @id="watched-link"
-            @value={{this.replacement}}
-            @disabled={{this.formSubmitted}}
-            @autocorrect="off"
-            @autocapitalize="off"
-            @placeholderKey="admin.watched_words.form.link_placeholder"
+          <DTextField
             class="watched-word-input-field"
+            @autocapitalize="off"
+            @autocorrect="off"
+            @disabled={{this.formSubmitted}}
+            @id="watched-link"
+            @placeholderKey="admin.watched_words.form.link_placeholder"
+            @value={{this.replacement}}
           />
         </div>
       {{/if}}
@@ -203,9 +220,9 @@ export default class WatchedWordForm extends Component {
           }}</label>
         <label class="case-sensitivity-checkbox checkbox-label">
           <Input
-            @type="checkbox"
-            @checked={{this.isCaseSensitive}}
             disabled={{this.formSubmitted}}
+            @checked={{this.isCaseSensitive}}
+            @type="checkbox"
           />
           {{i18n "admin.watched_words.form.case_sensitivity_description"}}
         </label>
@@ -218,9 +235,9 @@ export default class WatchedWordForm extends Component {
             }}</label>
           <label class="html-checkbox checkbox-label">
             <Input
-              @type="checkbox"
-              @checked={{this.isHtml}}
               disabled={{this.formSubmitted}}
+              @checked={{this.isHtml}}
+              @type="checkbox"
             />
             {{i18n "admin.watched_words.form.html_description"}}
           </label>
@@ -228,14 +245,14 @@ export default class WatchedWordForm extends Component {
       {{/if}}
 
       <DButton
+        class="btn-primary"
+        type="submit"
         @action={{this.submitForm}}
         @disabled={{this.submitDisabled}}
         @label="admin.watched_words.form.add"
-        type="submit"
-        class="btn-primary"
       />
 
-      {{#if this.showMessage}}
+      {{#if this.message}}
         <span class="success-message">{{this.message}}</span>
       {{/if}}
     </form>

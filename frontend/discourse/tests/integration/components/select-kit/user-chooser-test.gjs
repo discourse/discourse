@@ -4,7 +4,7 @@ import UserChooser from "discourse/select-kit/components/user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | select-kit/user-chooser", function (hooks) {
+module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -20,9 +20,14 @@ module("Integration | Component | select-kit/user-chooser", function (hooks) {
   });
 
   test("can remove a username", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     this.set("value", ["bob", "martin"]);
 
-    await render(<template><UserChooser @value={{this.value}} /></template>);
+    await render(
+      <template>
+        <UserChooser @onChange={{this.onChange}} @value={{this.value}} />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.deselectItemByValue("bob");

@@ -16,7 +16,7 @@ We suggest that you use [git](https://git-scm.com/) as version control for your 
 
 Once you've created your Github account, visit [this url](https://github.com/new) to create a new repository. You can call it anything you want, but generally something that starts with `discourse-` is good. Make sure the repository is **public**. Here's how my screen looked:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/3/8/38c2d794af363a8a9840cddc5ac8d92a24374b12.png" width="690" height="390">
+![GitHub new repository form|690x390](/assets/git-setup-1.png)
 
 ### Creating your local working folder
 
@@ -35,7 +35,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git remote add origin git@github.com:eviltrout/discourse-plugin-test.git
-git push -u origin master
+git push -u origin main
 ```
 
 Finally, create a `plugin.rb` file for your plugin as explained in [part 1](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515). For this example I just created a dummy one:

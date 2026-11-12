@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Post helper", type: :system do
+RSpec.describe "AI Post helper" do
   fab!(:user, :admin)
   fab!(:non_member_group, :group)
   fab!(:topic)
@@ -30,6 +30,7 @@ RSpec.describe "AI Post helper", type: :system do
   end
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:suggestion_menu) { PageObjects::Components::AiSplitTopicSuggester.new }
+
   fab!(:video, :tag)
   fab!(:music, :tag)
   fab!(:cloud, :tag)

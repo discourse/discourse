@@ -43,11 +43,72 @@ RSpec.describe ReviewablesController do
     before { sign_in(admin) }
 
     describe "#index" do
+      it "includes DSA classification for flagged posts without loading each statement separately" do
+        enable_dsa_reporting(
+          community_rules: [
+            { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+          ],
+        )
+        first_reviewable = Fabricate(:reviewable_flagged_post)
+        second_reviewable = Fabricate(:reviewable_flagged_post)
+        first_statement = Fabricate(:dsa_statement_of_record, reviewable_id: first_reviewable.id)
+        second_statement = Fabricate(:dsa_statement_of_record, reviewable_id: second_reviewable.id)
+
+        queries = track_sql_queries { get "/review.json" }
+
+        expect(response).to have_http_status(:ok)
+        reviewables = response.parsed_body["reviewables"].index_by { |reviewable| reviewable["id"] }
+        expect(reviewables[first_reviewable.id]["dsa_classification"]).to eq(
+          "statement_ids" => [first_statement.id],
+        )
+        expect(reviewables[second_reviewable.id]["dsa_classification"]).to eq(
+          "statement_ids" => [second_statement.id],
+        )
+
+        options = response.parsed_body["extras"]["dsa_classification"]
+        expect(options["community_rules"]).to eq(
+          [
+            {
+              "id" => DsaStatementOfRecord.community_rules.first["id"],
+              "ground" => "Terms, section 3",
+              "explanation" => "Personal attacks are prohibited.",
+            },
+          ],
+        )
+        expect(options["categories"]).to include(
+          "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
+          "name" => "Illegal or harmful speech",
+        )
+        expect(options["default_category"]).to eq("STATEMENT_CATEGORY_OTHER_VIOLATION_TC")
+        expect(queries.count { |sql| sql.include?('FROM "dsa_statement_of_records"') }).to eq(1)
+      end
+
       it "returns empty JSON when nothing to review" do
         get "/review.json"
         expect(response.code).to eq("200")
         json = response.parsed_body
         expect(json["reviewables"]).to eq([])
+      end
+
+      it "loads the acting user behind every author penalty in one query" do
+        silencers =
+          3.times.map do
+            author = Fabricate(:user, refresh_auto_groups: true)
+            flagged_post = Fabricate(:post, user: author)
+            silencer = Fabricate(:moderator)
+            UserSilencer.silence(author, silencer, post_id: flagged_post.id)
+            PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), flagged_post)
+            silencer
+          end
+
+        queries = track_sql_queries { get "/review.json" }
+
+        loaded_one_by_one =
+          silencers.select do |silencer|
+            queries.any? { |sql| sql.include?(%Q("users"."id" = #{silencer.id} LIMIT 1)) }
+          end
+
+        expect(loaded_one_by_one).to eq([])
       end
 
       it "returns JSON with reviewable content" do
@@ -73,6 +134,34 @@ RSpec.describe ReviewablesController do
         expect(json["meta"]["reviewable_count"]).to eq(1)
         expect(json["meta"]["unseen_reviewable_count"]).to eq(1)
         expect(json["meta"]["status"]).to eq("pending")
+      end
+
+      it "scopes action ids to their reviewable so confirmations name the right user" do
+        flagger = Fabricate(:user, trust_level: TrustLevel[3])
+        first = PostActionCreator.spam(flagger, Fabricate(:post)).reviewable
+        second = PostActionCreator.spam(flagger, Fabricate(:post)).reviewable
+
+        get "/review.json"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+
+        action_ids = json["actions"].map { |a| a["id"] }
+        expect(action_ids).to eq(action_ids.uniq)
+        expect(json["bundled_actions"].map { |b| b["id"] }).to eq(
+          json["bundled_actions"].map { |b| b["id"] }.uniq,
+        )
+
+        [first, second].each do |reviewable|
+          action = json["actions"].find { |a| a["id"] == "#{reviewable.id}-post-delete_user_block" }
+
+          expect(action["action_name"]).to eq("post-delete_user_block")
+          expect(action["confirm_message"]).to eq(
+            I18n.t(
+              "reviewables.actions.reject_user.block.confirm",
+              username: reviewable.target_created_by.username,
+            ),
+          )
+        end
       end
 
       context "with trashed topics and posts" do
@@ -115,18 +204,35 @@ RSpec.describe ReviewablesController do
           expect(topic_json["title"]).to eq(topic.title)
         end
 
-        it "does not return information for trashed topics and posts to category mods" do
+        it "returns information for trashed topics and posts to category mods" do
           SiteSetting.enable_category_group_moderation = true
           sign_in(category_mod)
           post1.trash!
           topic.trash!
 
           get "/review.json"
-          expect(response.code).to eq("200")
+          expect(response).to have_http_status(:ok)
           json = response.parsed_body
 
           reviewable_json = json["reviewables"].find { |r| r["id"] == reviewable.id }
-          expect(reviewable_json["raw"]).to be_blank
+          expect(reviewable_json["raw"]).to eq(post1.raw)
+          expect(reviewable_json["cooked"]).to eq(post1.cooked)
+          expect(reviewable_json["deleted_at"]).to be_present
+          expect(reviewable_json).not_to have_key("blank_post")
+          expect(json["topics"].find { |item| item["id"] == topic.id }["title"]).to eq(topic.title)
+        end
+
+        it "excludes inaccessible whispers from the list and counts" do
+          SiteSetting.enable_category_group_moderation = true
+          post1.update!(post_type: Post.types[:whisper])
+          sign_in(category_mod)
+
+          get "/review.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewables"]).to be_empty
+          expect(response.parsed_body["meta"]["total_rows_reviewables"]).to eq(0)
+          expect(response.parsed_body["meta"]["unseen_reviewable_count"]).to eq(0)
         end
       end
 
@@ -257,7 +363,7 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to be_present
       end
 
-      it "will use the ReviewableUser serializer for its fields" do
+      it "uses the ReviewableUser serializer for its fields" do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
         user = Fabricate(:user)
@@ -271,6 +377,32 @@ RSpec.describe ReviewablesController do
         json_review = json["reviewables"][0]
         expect(json_review["id"]).to eq(reviewable.id)
         expect(json_review["user_id"]).to eq(user.id)
+      end
+
+      it "hides full names from moderators when names are disabled" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.enable_names = false
+        user = Fabricate(:user, name: "Private Review Name")
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        json_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(json_review.dig("payload", "name")).to be_nil
+
+        sign_in(admin)
+        get "/review.json?type=ReviewableUser"
+
+        expect(response).to have_http_status(:ok)
+        admin_review =
+          response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+        expect(admin_review.dig("payload", "name")).to eq(user.name)
       end
 
       it "returns correct error message if ReviewableUser not found" do
@@ -384,6 +516,49 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"].size).to eq(1)
       end
 
+      it "doesn't cause N+1 queries when flagged posts have localizations" do
+        SiteSetting.content_localization_enabled = true
+        admin.update!(locale: "ja")
+        reviewables =
+          2.times.map do
+            post = Fabricate(:post, raw: "Original post", locale: "en")
+            Fabricate(
+              :post_localization,
+              post: post,
+              cooked: "<p>Translated post</p>",
+              locale: "ja",
+            )
+
+            Fabricate(
+              :reviewable_flagged_post,
+              target: post,
+              target_created_by: post.user,
+              topic: post.topic,
+            )
+          end
+
+        I18n.with_locale(:ja) do
+          queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          post_localization_queries =
+            queries.select { |query| query.match?(/FROM "?post_localizations"?/) }
+
+          expect(post_localization_queries.size).to eq(1)
+          expect(
+            response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+          ).to include(*reviewables.map(&:id))
+          expect(
+            response.parsed_body["reviewables"]
+              .select { |reviewable| reviewables.map(&:id).include?(reviewable["id"]) }
+              .map { |reviewable| reviewable["cooked"] },
+          ).to all(eq("<p>Translated post</p>"))
+        end
+      end
+
       context "with reviewable notes" do
         fab!(:moderator)
         fab!(:reviewable)
@@ -436,8 +611,9 @@ RSpec.describe ReviewablesController do
         reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
         reviewable_queued_post = Fabricate(:reviewable_queued_post)
 
-        get "/review/user-menu-list.json"
+        queries = track_sql_queries { get "/review/user-menu-list.json" }
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "reviewable_(scores|notes|histories)"/)).to be_empty
 
         reviewables = response.parsed_body["reviewables"]
 
@@ -495,6 +671,59 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#show" do
+      context "when dsa_reporting_enabled is enabled" do
+        fab!(:reviewable, :reviewable_flagged_post)
+        fab!(:statement) { Fabricate(:dsa_statement_of_record, reviewable_id: reviewable.id) }
+
+        before do
+          sign_in(Fabricate(:moderator))
+          enable_dsa_reporting(
+            community_rules: [
+              { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+            ],
+          )
+        end
+
+        it "includes pending statement IDs and shared classification options for a flagged post" do
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]["dsa_classification"]).to eq(
+            "statement_ids" => [statement.id],
+          )
+
+          options = response.parsed_body["extras"]["dsa_classification"]
+          expect(options["community_rules"]).to eq(
+            [
+              {
+                "id" => DsaStatementOfRecord.community_rules.first["id"],
+                "ground" => "Terms, section 3",
+                "explanation" => "Personal attacks are prohibited.",
+              },
+            ],
+          )
+          expect(options["categories"]).to include(
+            "id" => "STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH",
+            "name" => "Illegal or harmful speech",
+          )
+        end
+
+        it "omits classification for an existing site without community rules" do
+          SiteSetting.stubs(:dsa_community_rules).returns("[]")
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]).not_to have_key("dsa_classification")
+        end
+
+        it "omits classification when dsa_reporting_enabled is disabled" do
+          SiteSetting.dsa_reporting_enabled = false
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.parsed_body["reviewable"]).not_to have_key("dsa_classification")
+        end
+      end
+
       context "with basics" do
         fab!(:reviewable)
         before { sign_in(Fabricate(:moderator)) }
@@ -561,6 +790,193 @@ RSpec.describe ReviewablesController do
           expect(reply["user_id"]).to eq(admin.id)
         end
       end
+
+      context "when a category moderator cannot see the flag's PM topic" do
+        subject(:show_reviewable) { get "/review/#{reviewable.id}.json" }
+
+        fab!(:post)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:category_moderator, :user)
+        fab!(:group)
+        fab!(:category_moderation_group) do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+        end
+
+        let(:flag_reason) { "this is the flag reason" }
+        let(:result) { PostActionCreator.notify_moderators(user, post, flag_reason) }
+        let(:reviewable) { result.reviewable }
+        let(:reviewable_score) { result.reviewable_score }
+        let(:meta_topic) { reviewable_score.meta_topic }
+
+        let(:response_body) { response.parsed_body }
+        let(:serialized_score) { response_body["reviewable_scores"].first }
+        let(:conversation_id) { serialized_score["reviewable_conversation_id"] }
+        let(:conversation) do
+          response_body["reviewable_conversations"].find { |convo| convo["id"] == conversation_id }
+        end
+        let(:flagger_post) do
+          response_body["conversation_posts"].find do |convo_post|
+            convo_post["id"] == conversation["conversation_post_ids"].first
+          end
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = false
+          reviewable_score
+          SiteSetting.enable_category_group_moderation = true
+          group.add(category_moderator)
+          sign_in(category_moderator)
+        end
+
+        it "cannot see the flag's PM topic directly" do
+          expect(category_moderator.guardian.can_see_topic?(meta_topic)).to eq(false)
+        end
+
+        context "when the conversation belongs to the flag being reviewed" do
+          it "returns the notify moderators conversation" do
+            show_reviewable
+
+            expect(response.code).to eq("200")
+            expect(conversation_id).to eq(meta_topic.id)
+            expect(conversation).to be_present
+            expect(flagger_post).to include(
+              "user_id" => user.id,
+              "excerpt" => a_string_including(flag_reason),
+            )
+          end
+        end
+
+        context "when the score points at an unrelated notify_moderators message" do
+          let(:unrelated_flag_reason) { "unrelated flag reason" }
+          let(:unrelated_post) { Fabricate(:post) }
+          let(:unrelated_result) do
+            PostActionCreator.notify_moderators(user, unrelated_post, unrelated_flag_reason)
+          end
+
+          before do
+            SiteSetting.enable_category_group_moderation = false
+            reviewable_score.update!(meta_topic: unrelated_result.reviewable_score.meta_topic)
+            SiteSetting.enable_category_group_moderation = true
+          end
+
+          it "does not return the conversation" do
+            show_reviewable
+
+            expect(response.code).to eq("200")
+            expect(conversation_id).to be_blank
+            expect(response_body["reviewable_conversations"]).to be_blank
+            expect(response_body["conversation_posts"]).to be_blank
+            expect(response.body).not_to include(unrelated_flag_reason)
+          end
+        end
+      end
+
+      context "with a category moderator and a trashed target" do
+        fab!(:post1, :post)
+        fab!(:reviewable) do
+          Fabricate(
+            :reviewable,
+            target_id: post1.id,
+            target_type: "Post",
+            topic: post1.topic,
+            type: "ReviewableFlaggedPost",
+            category: post1.topic.category,
+          )
+        end
+        fab!(:group_user)
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(
+            :category_moderation_group,
+            category: post1.topic.category,
+            group: group_user.group,
+          )
+          sign_in(group_user.user)
+        end
+
+        it "returns the trashed content" do
+          post1.trash!
+          post1.topic.trash!
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewable"]).to include(
+            "raw" => post1.raw,
+            "cooked" => post1.cooked,
+            "deleted_at" => be_present,
+          )
+
+          post1.delete
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewable"]["blank_post"]).to eq(true)
+        end
+
+        it "returns 404 for an inaccessible whisper" do
+          post1.update!(post_type: Post.types[:whisper])
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context "with an inaccessible conversation" do
+        it "does not serialize the deleted conversation of a deleted target" do
+          SiteSetting.enable_category_group_moderation = true
+
+          category = Fabricate(:category)
+          group_user = Fabricate(:group_user)
+          Fabricate(:category_moderation_group, category: category, group: group_user.group)
+
+          flagger = Fabricate(:user, refresh_auto_groups: true)
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          meta_post =
+            PostCreator.create!(
+              flagger,
+              archetype: Archetype.private_message,
+              subtype: TopicSubtype.notify_moderators,
+              target_group_names: [Group[:moderators].name],
+              title: "A hidden flag conversation",
+              raw: "Sensitive flag reason for moderators only",
+            )
+          reviewable =
+            ReviewableFlaggedPost.needs_review!(
+              created_by: flagger,
+              target: post,
+              topic: topic,
+              reviewable_by_moderator: true,
+            )
+          reviewable_score =
+            reviewable.add_score(
+              flagger,
+              ReviewableScore.types[:notify_moderators],
+              meta_topic_id: meta_post.topic_id,
+            )
+
+          expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
+
+          post.trash!
+          meta_post.trash!
+          meta_post.topic.trash!
+
+          sign_in(group_user.user)
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.code).to eq("200")
+          json = response.parsed_body
+          score = json["reviewable_scores"].find { |item| item["id"] == reviewable_score.id }
+
+          expect(score).not_to have_key("reviewable_conversation_id")
+          expect(json["reviewable_conversations"]).to be_blank
+          expect(json["conversation_posts"]).to be_blank
+          expect(response.body).not_to include(meta_post.raw)
+        end
+      end
     end
 
     describe "#explain" do
@@ -589,6 +1005,143 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      context "when performing agree_and_edit on a flagged post reviewable" do
+        it "rejects agree_and_edit on a flagged post reviewable without saved revision evidence" do
+          flagged = Fabricate(:reviewable_flagged_post)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+              }
+
+          expect(response).to have_http_status(:bad_request)
+          expect(flagged.reload).to be_pending
+        end
+
+        it "approves a flagged post reviewable through agree_and_edit with the saved post version" do
+          sign_in(admin)
+          flagged_post = Fabricate(:post, version: 2, public_version: 2)
+          flagged = Fabricate(:reviewable_flagged_post, target: flagged_post)
+          Fabricate(:post_revision, post: flagged_post, number: flagged_post.version)
+
+          put "/review/#{flagged.id}/perform/agree_and_edit.json",
+              params: {
+                version: flagged.version,
+                post_version: flagged_post.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+          expect(flagged.reload).to be_approved
+        end
+      end
+
+      it "suspends a flagged post's author and deletes the post when the moderator selects both actions" do
+        flagged_post = Fabricate(:post)
+        flagged =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: flagged_post,
+            target_created_by: flagged_post.user,
+          )
+        expiry = 2.days.from_now.change(usec: 0)
+
+        put "/review/#{flagged.id}/perform/agree_and_suspend.json",
+            params: {
+              version: flagged.version,
+              reason: "Repeated spam",
+              suspend_until: expiry.iso8601,
+              post_action: "delete",
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged.reload).to be_approved
+        expect(flagged_post.user.reload.suspended_till).to eq(expiry)
+        expect(flagged_post.reload).to be_trashed
+        expect(response.parsed_body.dig("reviewable_perform_result", "success")).to eq(true)
+      end
+
+      it "silences the author and rejects a queued post" do
+        queued = Fabricate(:reviewable_queued_post)
+        expiry = 2.days.from_now.change(usec: 0)
+
+        put "/review/#{queued.id}/perform/reject_and_silence.json",
+            params: {
+              version: queued.version,
+              reason: "Repeated spam",
+              silenced_till: expiry.iso8601,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(queued.reload).to be_rejected
+        expect(queued.target_created_by.reload.silenced_till).to eq(expiry)
+      end
+
+      it "rejects missing penalty details without resolving the reviewable" do
+        flagged = Fabricate(:reviewable_flagged_post)
+
+        put "/review/#{flagged.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged.version,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(flagged.reload).to be_pending
+        expect(flagged.target_created_by.reload).not_to be_silenced
+      end
+
+      it "returns 404 to category moderators for an inaccessible whisper" do
+        SiteSetting.enable_category_group_moderation = true
+        group_user = Fabricate(:group_user)
+        whisper = Fabricate(:post, post_type: Post.types[:whisper])
+        Fabricate(
+          :category_moderation_group,
+          category: whisper.topic.category,
+          group: group_user.group,
+        )
+        flagged_whisper =
+          Fabricate(
+            :reviewable,
+            target_id: whisper.id,
+            target_type: "Post",
+            topic: whisper.topic,
+            type: "ReviewableFlaggedPost",
+            category: whisper.topic.category,
+          )
+        sign_in(group_user.user)
+
+        put "/review/#{flagged_whisper.id}/perform/ignore.json",
+            params: {
+              version: flagged_whisper.version,
+            }
+
+        expect(response).to have_http_status(:not_found)
+        expect(flagged_whisper.reload).to be_pending
+      end
+
+      it "includes the statuses of the other reviewables resolved by the action in the response" do
+        sign_in(Fabricate(:admin))
+        spammer = Fabricate(:user, refresh_auto_groups: true)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        acted_flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+        queued_post =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+
+        put "/review/#{acted_flag.id}/perform/delete_user_block.json?version=#{acted_flag.version}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("reviewable_perform_result", "reviewable_updates")).to eq(
+          queued_post.id.to_s => {
+            "status" => Reviewable.statuses[:rejected],
+          },
+        )
+      end
+
       it "returns 404 when the reviewable does not exist" do
         put "/review/12345/perform/approve_user.json?version=0"
         expect(response.code).to eq("404")
@@ -613,6 +1166,24 @@ RSpec.describe ReviewablesController do
         result = response.parsed_body
         expect(result["errors"]).to be_present
         expect(qp.reload.version).to eq(version)
+      end
+
+      it "returns a validation error when approving a queued topic with scalar tags" do
+        SiteSetting.tagging_enabled = true
+        queued_post = Fabricate(:reviewable_queued_post_topic)
+        queued_post.update!(payload: queued_post.payload.merge("tags" => "macos"))
+
+        expect do
+          put "/review/#{queued_post.id}/perform/approve_post.json",
+              params: {
+                version: queued_post.version,
+              }
+        end.not_to change(Post, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_params", message: "tags"))
+        expect(queued_post.reload).to be_pending
+        expect(queued_post.version).to eq(0)
       end
 
       it "requires a version parameter" do
@@ -652,6 +1223,49 @@ RSpec.describe ReviewablesController do
         expect(job).to be_blank
       end
 
+      it "keeps removed likes removed after deleting and recovering a flagged post" do
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        like = PostActionCreator.like(flagger, post).post_action
+        PostActionDestroyer.destroy(flagger, post, :like)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: flagged_reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        PostDestroyer.new(admin, post.reload).recover
+
+        expect(like.reload).to be_trashed
+      end
+
+      it "releases a deleted topic's claim when agreeing and silencing" do
+        SiteSetting.reviewable_claiming = "optional"
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        claim = Fabricate(:reviewable_claimed_topic, topic: post.topic, user: admin)
+        PostDestroyer.new(admin, post, reviewable_id: flagged_reviewable.id).destroy
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged_reviewable.reload.version,
+              reason: "Repeated spam",
+              silenced_till: 1.day.from_now,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_reviewable.reload).to be_approved
+        expect(ReviewableClaimedTopic.exists?(claim.id)).to eq(false)
+        expect(post.reload).to be_trashed
+      end
+
       context "with claims" do
         fab!(:qp, :reviewable_queued_post)
 
@@ -684,6 +1298,67 @@ RSpec.describe ReviewablesController do
           expect(response.code).to eq("409")
           json = response.parsed_body
           expect(json["errors"]).to be_present
+        end
+      end
+
+      describe "ReviewableFlaggedPost with deleted post" do
+        fab!(:admin)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:post)
+
+        before do
+          sign_in(admin)
+          SiteSetting.reviewable_claiming = "optional"
+        end
+
+        it "allows performing actions on reviewable when post is deleted" do
+          result = PostActionCreator.spam(user, post)
+          reviewable = result.reviewable
+
+          expect(reviewable.pending?).to eq(true)
+          expect(reviewable.target_id).to eq(post.id)
+
+          # Delete the post but keep reviewable pending
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+          reviewable.reload
+          post.reload
+
+          expect(post.deleted_at).not_to be_nil
+          expect(reviewable.pending?).to eq(true),
+          "Reviewable should still be pending after post deletion"
+
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
+
+          expect(response.status).to eq(200),
+          "Expected 200 but got #{response.status}. " \
+            "This means target association is not loading as expected. " \
+            "Body: #{response.parsed_body}"
+
+          json = response.parsed_body
+          expect(json.dig("reviewable_perform_result", "success")).to eq(true)
+
+          reviewable.reload
+          expect(reviewable.approved?).to eq(true)
+        end
+
+        it "does not return 403 when reviewable has deleted post" do
+          result = PostActionCreator.spam(user, post)
+          reviewable = result.reviewable
+
+          # Delete the post but keep reviewable pending
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+          reviewable.reload
+
+          expect(reviewable.pending?).to eq(true), "Reviewable should still be pending"
+
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
+
+          expect(response.status).not_to eq(403),
+          "Got 403 InvalidAction. " \
+            "This means actions_for returned empty due to post.blank? being true. " \
+            "The preload: false fix should prevent this."
+
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -965,6 +1640,21 @@ RSpec.describe ReviewablesController do
         expect(json["payload"]["extra"]).to be_blank
         expect(json["category_id"]).to eq(new_category_id.to_s)
       end
+
+      it "does not let a moderator move a queued topic to a category they cannot see" do
+        original_category_id = reviewable_topic.category_id
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        put "/review/#{reviewable_topic.id}.json?version=#{reviewable_topic.version}",
+            params: {
+              reviewable: {
+                category_id: private_category.id,
+              },
+            }
+
+        expect(response.code).to eq("403")
+        expect(reviewable_topic.reload.category_id).to eq(original_category_id)
+      end
     end
 
     describe "#destroy" do
@@ -991,6 +1681,16 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_deleted
       end
 
+      it "returns 200 if the user can delete their queued topic" do
+        sign_in(user)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.code).to eq("200")
+        expect(queued_topic.reload).to be_deleted
+      end
+
       it "denies attempts to destroy unowned reviewables" do
         sign_in(admin)
         queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
@@ -1000,79 +1700,99 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_present
       end
 
-      shared_examples "for a passed user" do
-        it "deletes reviewable" do
-          api_key = Fabricate(:api_key).key
-          queued_post = Fabricate(:reviewable_queued_post, target_created_by: recipient)
+      it "denies staff attempts to destroy another user's queued topic" do
+        sign_in(admin)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(queued_topic.reload).to be_present
+      end
+
+      describe "via API" do
+        it "admin can target another user with `username` param" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
+
           delete "/review/#{queued_post.id}.json",
                  params: {
-                   username: recipient.username,
+                   username: user.username,
                  },
                  headers: {
-                   HTTP_API_USERNAME: caller.username,
+                   HTTP_API_USERNAME: admin.username,
                    HTTP_API_KEY: api_key,
                  }
 
-          expect(response.status).to eq(response_code)
-
-          if reviewable_deleted
-            expect(queued_post.reload).to be_deleted
-          else
-            expect(queued_post.reload).to be_present
-          end
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { user }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+        it "admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: admin)
+
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: admin.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by tl4 user" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:trust_level_4) }
-          let(:recipient) { user }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
+        it "non-admin gets 403 when passing `username` to target another user" do
+          other_user = Fabricate(:user)
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: other_user)
+
+          delete "/review/#{queued_post.id}.json",
+                 params: {
+                   username: other_user.username,
+                 },
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(403)
+          expect(queued_post.reload).to be_present
         end
-      end
 
-      describe "api called by regular user" do
-        include_examples "for a passed user" do
-          let(:caller) { user }
-          let(:recipient) { Fabricate(:user) }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
-        end
-      end
+        it "non-admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
 
-      describe "api called by admin for another admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { Fabricate(:admin) }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
       end
     end
 
     describe "#scrub" do
-      it "only allows admins to scrub reviewables" do
-        moderator = Fabricate(:moderator)
+      let(:user) { Fabricate(:user).tap(&:activate) }
+      let(:reviewable) { ReviewableUser.find_by(target: user) }
 
+      before do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
+      end
 
-        sign_in(moderator)
+      def reject_user
         put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
         expect(response.status).to eq(200)
+      end
+
+      it "only allows admins to scrub reviewables" do
+        sign_in(Fabricate(:moderator))
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
@@ -1083,12 +1803,6 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that haven't been rejected" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(404)
@@ -1110,21 +1824,25 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
-        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
-        expect(response.status).to eq(200)
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(200)
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
+      end
+
+      it "allows scrubbing of rejected reviewables whose user couldn't be deleted" do
+        Fabricate(:post, user: user)
+
+        sign_in(admin)
+        reject_user
+        expect(User.exists?(user.id)).to eq(true)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1145,6 +1863,229 @@ RSpec.describe ReviewablesController do
         expect(response.code).to eq("200")
         json = response.parsed_body
         expect(json["count"]).to eq(1)
+      end
+    end
+  end
+
+  shared_context "with a private-message reviewable" do
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) do
+      Fabricate(
+        :post,
+        topic: pm_topic,
+        user: pm_author,
+        raw: "the confidential body of a private message xyzsecret481",
+      )
+    end
+
+    fab!(:unescalated_pm_reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+  end
+
+  describe "#index" do
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns no private-message reviewable, body, or unseen count to a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        get "/review.json"
+
+        expect(response.status).to eq(200)
+        listed_ids = response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] }
+        expect(listed_ids).not_to include(unescalated_pm_reviewable.id)
+        expect(response.body).not_to include(pm_post.raw)
+        expect(response.parsed_body["meta"]["unseen_reviewable_count"]).to eq(0)
+      end
+    end
+  end
+
+  describe "#perform" do
+    context "when DSA classification is provided" do
+      fab!(:admin)
+      fab!(:flagged_post, :post)
+
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target: flagged_post,
+          target_created_by: flagged_post.user,
+          topic: flagged_post.topic,
+          category: flagged_post.topic.category,
+        )
+      end
+
+      let(:rule) { { ground: "Be respectful", explanation: "Personal attacks are not allowed." } }
+
+      let(:classification) do
+        {
+          community_rule: DsaStatementOfRecord.community_rules.first.fetch("id"),
+          category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        }
+      end
+
+      before do
+        enable_dsa_reporting(community_rules: [rule])
+        sign_in(admin)
+      end
+
+      it "classifies the new statement using the configured rule and records a note" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload).to be_trashed
+        statement = reviewable.dsa_statement_of_records.sole
+        expect(statement).to be_ready
+        expect(statement.payload).to include(
+          "incompatible_content_ground" => rule[:ground],
+          "incompatible_content_explanation" => rule[:explanation],
+          "category" => classification[:category],
+        )
+        expect(reviewable.reviewable_notes.sole.content).to include(rule[:ground])
+      end
+
+      it "rejects an unknown rule before moderation" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification.merge(community_rule: "unknown-rule"),
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+      end
+
+      it "rejects a string before moderation" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: "invalid",
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+      end
+
+      it "rejects an invalid category before moderation" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification.merge(category: "unknown-category"),
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+      end
+
+      it "preserves optional classification for existing clients" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload).to be_trashed
+        expect(reviewable.dsa_statement_of_records.sole).to be_pending
+      end
+
+      it "rejects classification when reporting has been disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+      end
+
+      it "lets a category moderator classify an action in their category" do
+        category_moderator = Fabricate(:user)
+        group = Fabricate(:group)
+        group.add(category_moderator)
+        Fabricate(:category_moderation_group, group: group, category: flagged_post.topic.category)
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(category_moderator)
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload).to be_trashed
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "rejects classification with an action outside the moderator's category" do
+        category_moderator = Fabricate(:user)
+        group = Fabricate(:group)
+        group.add(category_moderator)
+        moderated_post = Fabricate(:post, topic: Fabricate(:topic, category: Fabricate(:category)))
+        moderated_reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: moderated_post,
+            target_created_by: moderated_post.user,
+            topic: moderated_post.topic,
+            category: moderated_post.topic.category,
+          )
+        Fabricate(:category_moderation_group, group: group, category: moderated_post.topic.category)
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(category_moderator)
+
+        get "/review/#{moderated_reviewable.id}.json"
+
+        expect(response).to have_http_status(:ok)
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:not_found)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+      end
+    end
+
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns 404 and leaves the post intact for a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        put "/review/#{unescalated_pm_reviewable.id}/perform/reject_and_delete.json",
+            params: {
+              version: unescalated_pm_reviewable.version,
+            }
+
+        expect(response.status).to eq(404)
+        expect(pm_post.reload.trashed?).to eq(false)
       end
     end
   end

@@ -4,17 +4,15 @@ import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
-import draggable from "discourse/modifiers/draggable";
-import { and, not } from "discourse/truth-helpers";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
-import BackButton from "./back-button";
 
 export default class TopicTimelineScroller extends Component {
   style = trustHTML(`height: ${SCROLLER_HEIGHT}px`);
 
-  get repliesShort() {
-    return i18n(`topic.timeline.replies_short`, {
-      current: this.args.current,
+  get totalLabel() {
+    return i18n("topic.timeline.replies_short", {
+      current: "",
       total: this.args.total,
     });
   }
@@ -25,45 +23,35 @@ export default class TopicTimelineScroller extends Component {
 
   <template>
     <div
-      {{draggable
-        didStartDrag=@didStartDrag
-        didEndDrag=@didEndDrag
-        dragMove=@dragMove
-      }}
-      style={{this.style}}
       class="timeline-scroller"
+      style={{this.style}}
       ...attributes
+      {{! Position is committed continuously as the pointer moves, so discarding
+          on cancel would snap the topic back to where the drag began. }}
+      {{dPointerDrag
+        onDragStart=@didStartDrag
+        onDrag=@dragMove
+        onDragEnd=@didEndDrag
+        cancelCommits=true
+        bodyClass="dragging"
+      }}
     >
+      {{#unless @fullscreen}}
+        <div class="timeline-handle"></div>
+      {{/unless}}
+      <div class="timeline-scroller-content">
+        <div class="timeline-replies">
+          <span>{{@current}}</span>
+          <span>{{this.totalLabel}}</span>
+        </div>
+        {{#if @date}}
+          <div class="timeline-ago">
+            {{this.timelineAgo}}
+          </div>
+        {{/if}}
+      </div>
       {{#if @fullscreen}}
-        <div class="timeline-scroller-content">
-          <div class="timeline-replies">
-            {{this.repliesShort}}
-          </div>
-          {{#if @date}}
-            <div class="timeline-ago">
-              {{this.timelineAgo}}
-            </div>
-          {{/if}}
-          {{#if (and @showDockedButton (not @dragging))}}
-            <BackButton @onGoBack={{@onGoBack}} />
-          {{/if}}
-        </div>
         <div class="timeline-handle"></div>
-      {{else}}
-        <div class="timeline-handle"></div>
-        <div class="timeline-scroller-content">
-          <div class="timeline-replies">
-            {{this.repliesShort}}
-          </div>
-          {{#if @date}}
-            <div class="timeline-ago">
-              {{this.timelineAgo}}
-            </div>
-          {{/if}}
-          {{#if (and @showDockedButton (not @dragging))}}
-            <BackButton @onGoBack={{@onGoBack}} />
-          {{/if}}
-        </div>
       {{/if}}
     </div>
   </template>

@@ -26,6 +26,10 @@ export default class RouteHistory extends Service {
     return history;
   }
 
+  get lastURL() {
+    return this.history[0];
+  }
+
   addToHistory(url) {
     const history = this.history || [];
     history.unshift(url);
@@ -43,9 +47,5 @@ export default class RouteHistory extends Service {
     ) {
       this.addToHistory(this.router.currentURL);
     }
-  }
-
-  get lastURL() {
-    return this.history[0];
   }
 }

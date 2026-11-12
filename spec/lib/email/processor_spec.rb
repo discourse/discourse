@@ -18,6 +18,7 @@ RSpec.describe Email::Processor do
 
     context "when reply via email is too short" do
       let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
+
       fab!(:post)
       fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
 
@@ -52,6 +53,7 @@ RSpec.describe Email::Processor do
         )
       end
     end
+
     describe "from reply to email address" do
       let(:mail) do
         "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"
@@ -117,6 +119,46 @@ RSpec.describe Email::Processor do
     it "does not raise an error" do
       expect { Email::Processor.process!(nil) }.not_to raise_error
       expect { Email::Processor.process!("") }.not_to raise_error
+    end
+  end
+
+  describe "rejection email recipient" do
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+
+    let(:mail_with_relayed_sender) { <<~EMAIL }
+        From: attacker@example.com
+        Reply-To: Discourse User <discourse@bar.com>
+        X-Original-From: Discourse User <discourse@bar.com>
+        To: team@bar.com
+        Subject: Hello there
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+
+        Please let me in.
+      EMAIL
+
+    let(:mail_from_sender) { <<~EMAIL }
+        From: discourse@bar.com
+        To: team@bar.com
+        Subject: Hello there
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+
+        Please let me in.
+      EMAIL
+
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "does not send the rejection to an address other than the one whose account was checked" do
+      Email::Processor.process!(mail_with_relayed_sender)
+
+      expect(IncomingEmail.last.from_address).to eq("discourse@bar.com")
+      expect(ActionMailer::Base.deliveries.map(&:to)).to contain_exactly(["discourse@bar.com"])
+      expect(ActionMailer::Base.deliveries.last.body.to_s).to include("has been silenced")
+    end
+
+    it "sends the rejection to the sender when the From header is the sender" do
+      Email::Processor.process!(mail_from_sender)
+
+      expect(ActionMailer::Base.deliveries.map(&:to)).to contain_exactly(["discourse@bar.com"])
     end
   end
 
@@ -201,6 +243,50 @@ RSpec.describe Email::Processor do
       expect { Email::Processor.process!(mail) }.to change { EmailLog.count }.by(1)
 
       expect { Email::Processor.process!(mail2) }.to change { EmailLog.count }.by(1)
+    end
+  end
+
+  describe "when the site is archived" do
+    let(:mail) { file_from_fixtures("new_user.eml", "emails").read }
+
+    before { SiteSetting.site_archived = true }
+
+    it "rejects the email and tells the sender the site is archived" do
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      expect(IncomingEmail.last.error).to eq("Email::Receiver::SiteArchivedError")
+      expect(EmailLog.last.email_type).to eq("email_reject_site_archived")
+      expect(ActionMailer::Base.deliveries.first.body.to_s).to eq(
+        I18n.t(
+          "system_messages.email_reject_site_archived.text_body_template",
+          destination: processor.receiver.mail.to,
+          former_title: processor.receiver.mail.subject,
+        ),
+      )
+    end
+  end
+
+  describe "when the message has a deeply nested MIME structure" do
+    it "drops the message without recording it or replying to the sender" do
+      expect(Email::Processor.process!(nested_mime_email(50), source: :pop3_poll)).to be_nil
+
+      expect(IncomingEmail.count).to eq(0)
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+  end
+
+  describe "when the message has too many MIME parts" do
+    it "drops the message without recording it or replying to the sender" do
+      expect(
+        Email::Processor.process!(
+          wide_mime_email(Email::Receiver::MAX_MIME_PARTS + 10),
+          source: :pop3_poll,
+        ),
+      ).to be_nil
+
+      expect(IncomingEmail.count).to eq(0)
+      expect(ActionMailer::Base.deliveries).to be_empty
     end
   end
 

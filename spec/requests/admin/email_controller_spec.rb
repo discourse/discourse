@@ -201,6 +201,29 @@ RSpec.describe Admin::EmailController do
             }
         expect(response.status).to eq(200)
       end
+
+      it "does not turn a post attribute into executable HTML" do
+        attacker = Fabricate(:user, trust_level: TrustLevel[1])
+        payload =
+          '<a class="hashtag-cooked" data-slug="&lt;img src=x onerror=alert(1)&gt;">ignored</a>'
+
+        freeze_time 1.day.ago do
+          sign_in(attacker)
+          post "/posts.json", params: { title: "Attacker-created topic", raw: payload }
+          expect(response.status).to eq(200)
+        end
+
+        sign_in(admin)
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+            }
+
+        expect(response.status).to eq(200)
+        preview = Nokogiri::HTML5.parse(response.parsed_body["html_content"])
+        expect(preview.at_css("img[onerror='alert(1)']")).to be_nil
+      end
     end
 
     shared_examples "preview digest inaccessible" do
@@ -279,7 +302,7 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to include("param is missing")
       end
 
-      it "should enqueue the right job, and show a deprecation warning (email_encoded param should be used)" do
+      it "enqueues the email job and warns that email_encoded is preferred" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -294,7 +317,7 @@ RSpec.describe Admin::EmailController do
         )
       end
 
-      it "should enqueue the right job, decoding the raw email param" do
+      it "decodes the raw email and enqueues the email job" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -312,13 +335,111 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to eq("email has been received and is queued for processing")
       end
 
-      it "retries enqueueing with forced UTF-8 encoding when encountering Encoding::UndefinedConversionError" do
+      it "keeps cross-group email references from granting access to private conversations" do
+        SiteSetting.email_in = true
+        receiving_group =
+          Fabricate(
+            :group,
+            incoming_email: "inbox@example.com",
+            allow_unknown_sender_topic_replies: true,
+          )
+        victim_group = Fabricate(:group, allow_unknown_sender_topic_replies: false)
+        private_post = Fabricate(:private_message_post, raw: "Confidential victim conversation")
+        private_post.topic.allowed_groups << victim_group
+        message_id = "discourse/post/#{private_post.id}@#{Discourse.current_hostname}"
+        Fabricate(
+          :incoming_email,
+          post: private_post,
+          topic: private_post.topic,
+          message_id: message_id,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+
+        sign_in(user)
+        get "/t/#{private_post.topic_id}.json"
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(private_post.raw)
+
+        attacker_mail = <<~MAIL
+          From: #{user.email}
+          To: #{receiving_group.incoming_email}
+          Subject: Re: Support request
+          Date: #{Time.current.rfc2822}
+          Message-ID: <outsider-reply@example.com>
+          In-Reply-To: <#{message_id}>
+          Content-Type: text/plain; charset=UTF-8
+
+          Please add this reply to the conversation.
+        MAIL
+
+        sign_in(admin)
+        Jobs.run_immediately!
+        post "/admin/email/handle_mail.json",
+             params: {
+               email_encoded: Base64.strict_encode64(attacker_mail),
+             }
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("email has been received and is queued for processing")
+
+        incoming = IncomingEmail.find_by!(message_id: "outsider-reply@example.com")
+        expect(incoming.rejection_message).to be_blank
+        expect(incoming.post_id).to be_present
+
+        sign_in(user)
+        get "/t/#{private_post.topic_id}.json"
+        expect(response.body).not_to include(private_post.raw)
+        expect(response.status).to eq(404)
+        expect(private_post.topic.topic_allowed_users.exists?(user_id: user.id)).to eq(false)
+        expect(private_post.topic.posts.count).to eq(1)
+        expect(Post.last.topic.allowed_groups).to contain_exactly(receiving_group)
+      end
+
+      it "normalizes invalid UTF-8 bytes before enqueueing" do
         post "/admin/email/handle_mail.json",
              params: {
                email_encoded: Base64.strict_encode64(email("encoding_undefined_conversion")),
              }
         expect(response.status).to eq(200)
         expect(response.body).to eq("email has been received and is queued for processing")
+      end
+
+      it "enqueues the email job when the site is archived" do
+        SiteSetting.site_archived = true
+
+        expect_enqueued_with(job: :process_email, args: { mail: email("cc") }) do
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(email("cc")),
+               }
+        end
+        expect(response.status).to eq(200)
+      end
+
+      it "bounds the body of a message sent to a group inbox" do
+        Jobs.run_immediately!
+        SiteSetting.email_in = true
+        SiteSetting.max_post_length = 100
+        Fabricate(:group, incoming_email: "team@bar.com")
+
+        mail = <<~EMAIL
+          From: Someone <someone@example.com>
+          To: team@bar.com
+          Subject: A very long email
+          Date: #{Time.now.rfc2822}
+          Content-Type: text/plain; charset=UTF-8
+
+          #{"This body is long enough to exceed the maximum post length. " * 20}
+        EMAIL
+
+        expect {
+          post "/admin/email/handle_mail.json",
+               params: {
+                 email_encoded: Base64.strict_encode64(mail),
+               }
+        }.to change(Post, :count).by(1)
+
+        expect(response.status).to eq(200)
+        expect(Post.last.raw.length).to be <= SiteSetting.max_post_length
       end
     end
 
@@ -365,7 +486,7 @@ RSpec.describe Admin::EmailController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should ..." do
+      it "returns parsed email text and elided content" do
         post "/admin/email/advanced-test.json", params: { email: email }
 
         expect(response.status).to eq(200)

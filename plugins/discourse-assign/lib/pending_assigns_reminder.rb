@@ -52,7 +52,13 @@ class PendingAssignsReminder
         .joins(topic: :_custom_fields)
         .where(topic_custom_fields: { name: CUSTOM_FIELD_NAME })
 
-    posts.find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+    posts.find_each do |post|
+      PostDestroyer.new(
+        Discourse.system_user,
+        post,
+        context: "cleaning up pending assigns reminder",
+      ).destroy
+    end
   end
 
   def visible_topics(user)

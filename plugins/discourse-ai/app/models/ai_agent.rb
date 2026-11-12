@@ -2,7 +2,15 @@
 
 class AiAgent < ActiveRecord::Base
   # TODO remove tool_details from ignored_columns 01-02-2027
-  self.ignored_columns = %i[tool_details]
+  # question_consolidator_llm_id is intentionally ignored after the RAG tool
+  # migration; the column can be dropped in a later schema cleanup.
+  # TODO remove max_context_posts and execution_mode from ignored_columns 01-01-2027
+  self.ignored_columns = %i[
+    tool_details
+    question_consolidator_llm_id
+    max_context_posts
+    execution_mode
+  ]
 
   # Between the regular migration (which creates ai_agents as a VIEW over
   # ai_personas) and the post-migration (which does the actual rename_table),
@@ -12,15 +20,15 @@ class AiAgent < ActiveRecord::Base
 
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_AGENTS_PER_SITE = 500
+  MAX_SUBAGENTS = 20
+  MAX_RAG_DOCUMENT_SOURCES = 100
 
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :description, presence: true, length: { maximum: 2000 }
   validates :system_prompt, presence: true, length: { maximum: 10_000_000 }
   validate :system_agent_unchangeable, on: :update, if: :system
-  validate :chat_preconditions
+  validate :forced_default_llm_preconditions
   validate :well_formated_examples
-  validates :max_context_posts, numericality: { greater_than: 0 }, allow_nil: true
-  validates :execution_mode, inclusion: { in: %w[default agentic] }
   validates :max_turn_tokens,
             numericality: {
               greater_than: 0,
@@ -32,11 +40,15 @@ class AiAgent < ActiveRecord::Base
             numericality: {
               greater_than_or_equal_to: 20,
               less_than_or_equal_to: 99,
-            },
-            if: -> { execution_mode == "agentic" }
+            }
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
+  validates :thinking_effort,
+            inclusion: {
+              in: ["default", *DiscourseAi::Completions::ThinkingConfig::VALUES],
+            },
+            allow_nil: true
 
   validates :rag_chunk_tokens, numericality: { greater_than: 0, maximum: 50_000 }
   validates :rag_chunk_overlap_tokens, numericality: { greater_than: -1, maximum: 200 }
@@ -44,40 +56,97 @@ class AiAgent < ActiveRecord::Base
   validates :forced_tool_count, numericality: { greater_than: -2, maximum: 100_000 }
 
   validate :tools_can_not_be_duplicated
+  validate :native_tools_require_supported_forced_llm
+  validate :subagent_ids_are_valid
+  validate :subagents_can_not_use_spawn_agent
+  validate :rag_document_sources_count_within_limit
+  validate :bot_user_supported, if: :user_id_changed?
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
+  has_many :rag_document_sources, dependent: :destroy, as: :target
+  has_many :ai_agent_mcp_servers, dependent: :destroy
+  has_many :ai_mcp_servers, through: :ai_agent_mcp_servers
 
   belongs_to :created_by, class_name: "User"
   belongs_to :user
 
   belongs_to :default_llm, class_name: "LlmModel"
-  belongs_to :question_consolidator_llm, class_name: "LlmModel"
   belongs_to :rag_llm_model, class_name: "LlmModel"
 
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
 
+  accepts_nested_attributes_for :rag_document_sources, allow_destroy: true
+
+  before_validation :set_default_compression_threshold
+  before_validation :normalize_subagent_ids
+
   before_update :regenerate_rag_fragments
+  after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
+  after_destroy :remove_destroyed_agent_from_subagents
+  after_destroy :sync_bot_user_activation
+  after_save :sync_bot_user_activation,
+             if: -> { saved_change_to_enabled? || saved_change_to_user_id? }
 
   def self.agent_cache
     @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
+  scope :with_user, -> { where.not(user_id: nil) }
+
+  def allowed_group_ids
+    ids = super
+    return ids unless SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+
+    # Preserve stored permissions so opting out restores the original group selection.
+    ids
+      .map { |id| id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id }
+      .uniq
+  end
 
   def self.all_agents(enabled_only: true)
-    agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :value_everyone_disallowed
+      else
+        :value_everyone_allowed
+      end
+    agents = agent_cache[key] ||= all_agent_records(enabled_only: false).map(&:class_instance)
 
     if enabled_only
-      agent_cache[:value].select { |p| p.enabled }
+      agents.select(&:enabled)
     else
-      agent_cache[:value]
+      agents
+    end
+  end
+
+  def self.subagent_tool_token_count
+    agent_cache[:subagent_tool_token_count] ||= begin
+      tokenizer = DiscourseAi::Tokenizer::OpenAiCl100kTokenizer
+      catalog =
+        AiAgent
+          .ordered
+          .limit(MAX_AGENTS_PER_SITE)
+          .pluck(:id, :name, :description)
+          .sort_by do |id, name, description|
+            -tokenizer.size("#{id}: #{name} #{description.to_s.truncate(300)}")
+          end
+          .first(MAX_SUBAGENTS)
+          .to_h { |id, name, description| [id, { name: name, description: description }] }
+
+      DiscourseAi::Agents::Tools::SpawnAgent.class_instance_from_catalog(nil, catalog).token_count
     end
   end
 
   def self.all_agent_records(enabled_only: true)
-    agent_cache[:records] ||= AiAgent.ordered.includes(:user).all.limit(MAX_AGENTS_PER_SITE).to_a
+    agent_cache[:records] ||= AiAgent
+      .ordered
+      .includes(:user, ai_agent_mcp_servers: :ai_mcp_server)
+      .all
+      .limit(MAX_AGENTS_PER_SITE)
+      .to_a
 
     if enabled_only
       agent_cache[:records].select(&:enabled)
@@ -98,8 +167,14 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.agent_users(user: nil)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :agent_users_everyone_disallowed
+      else
+        :agent_users_everyone_allowed
+      end
     agent_users =
-      agent_cache[:agent_users] ||= AiAgent
+      agent_cache[key] ||= AiAgent
         .where(enabled: true)
         .joins(:user)
         .map do |agent|
@@ -131,8 +206,14 @@ class AiAgent < ActiveRecord::Base
     allow_topic_mentions: false,
     allow_personal_messages: false
   )
+    permission_key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        "everyone_disallowed"
+      else
+        "everyone_allowed"
+      end
     index =
-      "modality-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
+      "modality-#{permission_key}-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
 
     agents =
       agent_cache[index.to_sym] ||= agent_users.select do |agent|
@@ -154,6 +235,8 @@ class AiAgent < ActiveRecord::Base
 
   def bump_cache
     self.class.agent_cache.flush!
+    return if !DiscourseAi::AiHelper::Assistant.prompt_agent_ids.include?(id)
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
   end
 
   def tools_can_not_be_duplicated
@@ -197,6 +280,34 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def native_tools_require_supported_forced_llm
+    return unless tools.is_a?(Array)
+
+    native_ids =
+      tools.filter_map do |tool|
+        inner_name, _, _ = tool.is_a?(Array) ? tool : [tool, nil]
+        next unless DiscourseAi::Completions::NativeTools.prefixed?(inner_name)
+        DiscourseAi::Completions::NativeTools.strip_prefix(inner_name)
+      end
+
+    return if native_ids.empty?
+
+    if !force_default_llm || default_llm.blank?
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.native_tool_requires_forced_llm"))
+      return
+    end
+
+    supported = DiscourseAi::Completions::NativeTools.supported_ids_for(default_llm)
+    if (native_ids - supported).present?
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.native_tool_unsupported_by_llm"))
+    end
+  end
+
+  def subagent_ids=(ids)
+    @subagent_ids_contained_invalid_value = Array(ids).any? { |id| normalize_subagent_id(id).nil? }
+    super
+  end
+
   def class_instance
     attributes = %i[
       id
@@ -204,11 +315,9 @@ class AiAgent < ActiveRecord::Base
       system
       mentionable
       default_llm_id
-      max_context_posts
       vision_enabled
       vision_max_pixels
       rag_conversation_chunks
-      question_consolidator_llm_id
       allow_chat_channel_mentions
       allow_chat_direct_messages
       allow_topic_mentions
@@ -218,15 +327,17 @@ class AiAgent < ActiveRecord::Base
       description
       allowed_group_ids
       show_thinking
+      thinking_effort
       enabled
-      execution_mode
       max_turn_tokens
       compression_threshold
+      require_approval
+      subagent_ids
     ]
 
     instance_attributes = {}
     attributes.each do |attr|
-      value = self.read_attribute(attr)
+      value = attr == :allowed_group_ids ? allowed_group_ids : self[attr]
       instance_attributes[attr] = value
     end
 
@@ -234,6 +345,7 @@ class AiAgent < ActiveRecord::Base
 
     options = {}
     force_tool_use = []
+    native_tools = []
 
     tools =
       self.tools.filter_map do |element|
@@ -244,27 +356,54 @@ class AiAgent < ActiveRecord::Base
         inner_name, current_options, should_force_tool_use =
           element.is_a?(Array) ? element : [element, nil]
 
-        if inner_name.start_with?("custom-")
+        if DiscourseAi::Completions::NativeTools.prefixed?(inner_name)
+          id = DiscourseAi::Completions::NativeTools.strip_prefix(inner_name)
+          native_tools << id if DiscourseAi::Completions::NativeTools.valid?(id)
+          next
+        elsif inner_name.start_with?("custom-")
           custom_tool_id = inner_name.split("-", 2).last.to_i
           if AiTool.exists?(id: custom_tool_id, enabled: true)
             klass = DiscourseAi::Agents::Tools::Custom.class_instance(custom_tool_id)
           end
         else
-          inner_name = inner_name.gsub("Tool", "")
-          inner_name = "List#{inner_name}" if %w[Categories Tags].include?(inner_name)
-
-          begin
-            klass = "DiscourseAi::Agents::Tools::#{inner_name}".constantize
-            options[klass] = current_options if current_options
-          rescue StandardError
-          end
+          klass =
+            DiscourseAi::Agents::Agent.builtin_tool_by_name(inner_name) ||
+              DiscourseAi::Agents::Agent.external_tool_by_name(inner_name)
+          options[klass] = current_options if klass && current_options
         end
 
         force_tool_use << klass if should_force_tool_use
         klass
       end
 
-    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[self.id]
+    reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
+    reserved_names << DiscourseAi::Agents::Tools::SpawnAgent.name if subagent_ids.present?
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: {
+        ai_agent_mcp_servers: :ai_mcp_server,
+      },
+    ).call
+    enabled_mcp_server_assignments =
+      ai_agent_mcp_servers.select { |assignment| assignment.ai_mcp_server&.enabled? }
+    enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
+    selected_tool_names_by_server =
+      enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
+        next if assignment.all_tools_enabled?
+
+        hash[assignment.ai_mcp_server_id] = assignment.selected_tool_names
+      end
+
+    tools.concat(
+      DiscourseAi::Mcp::ToolRegistry.tool_classes_for_servers(
+        enabled_mcp_servers,
+        reserved_names: reserved_names,
+        selected_tool_names_by_server: selected_tool_names_by_server,
+      ),
+    )
+    instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)
+
+    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[id]
     if agent_class
       return(
         # we need a new copy so we don't leak information
@@ -276,12 +415,14 @@ class AiAgent < ActiveRecord::Base
             # description/name are localized
             define_singleton_method(key) { value } if key != :description && key != :name
           end
+          define_method(:thinking_effort) { self.class.thinking_effort }
           define_method(:options) { options }
+          define_method(:native_tools) { native_tools }
         end
       )
     end
 
-    ai_agent_id = self.id
+    ai_agent_id = id
 
     Class.new(DiscourseAi::Agents::Agent) do
       instance_attributes.each { |key, value| define_singleton_method(key) { value } }
@@ -298,11 +439,13 @@ class AiAgent < ActiveRecord::Base
       end
 
       define_method(:tools) { tools }
+      define_method(:native_tools) { native_tools }
       define_method(:force_tool_use) { force_tool_use }
       define_method(:forced_tool_count) { @ai_agent&.forced_tool_count }
       define_method(:options) { options }
       define_method(:temperature) { @ai_agent&.temperature }
       define_method(:top_p) { @ai_agent&.top_p }
+      define_method(:thinking_effort) { @ai_agent&.thinking_effort }
       define_method(:system_prompt) { @ai_agent&.system_prompt || "You are a helpful bot." }
       define_method(:uploads) { @ai_agent&.uploads }
       define_method(:response_format) { @ai_agent&.response_format }
@@ -310,49 +453,80 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
-  FIRST_AGENT_USER_ID = -1200
+  def self.automatic_user_provisioning_enabled?
+    SiteSetting.discourse_ai_enabled && SiteSetting.ai_bot_enabled
+  end
+
+  def self.ensure_users!
+    return if !automatic_user_provisioning_enabled?
+
+    where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
+  end
+
+  def self.detach_user!(user_id)
+    return if where(user_id: user_id).update_all(user_id: nil) == 0
+
+    agent_cache.flush!
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+  end
+
+  def supports_bot_user?
+    return true if !system
+
+    !!DiscourseAi::Agents::Agent.system_agents_by_id[id]&.supports_bot_user?
+  end
+
+  def can_have_bot_user?
+    user.present? || supports_bot_user?
+  end
+
+  def needs_user?
+    self.class.automatic_user_provisioning_enabled? && enabled? && supports_bot_user? &&
+      (
+        force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
+          allow_chat_direct_messages? || allow_chat_channel_mentions?
+      )
+  end
+
+  def ensure_user!
+    with_lock do
+      reload
+      return user if user_id.present? && User.exists?(user_id)
+
+      create_user_without_lock!
+    end
+  end
 
   def create_user!
-    raise "User already exists" if user_id && User.exists?(user_id)
+    return create_user_without_lock! if new_record?
 
-    # find the first id smaller than FIRST_USER_ID that is not taken
-    id = nil
+    with_lock do
+      reload
+      raise "User already exists" if user_id && User.exists?(user_id)
 
-    id = DB.query_single(<<~SQL, FIRST_AGENT_USER_ID, FIRST_AGENT_USER_ID - 200).first
-        WITH seq AS (
-          SELECT generate_series(?, ?, -1) AS id
-          )
-        SELECT seq.id FROM seq
-        LEFT JOIN users ON users.id = seq.id
-        WHERE users.id IS NULL
-        ORDER BY seq.id DESC
-      SQL
+      create_user_without_lock!
+    end
+  end
 
-    id = DB.query_single(<<~SQL).first if id.nil?
-        SELECT min(id) - 1 FROM users
-      SQL
-
-    # note .invalid is a reserved TLD which will route nowhere
-    user =
-      User.new(
-        email: "#{SecureRandom.hex}@does-not-exist.invalid",
-        name: name.titleize,
-        username: UserNameSuggester.suggest(name + "_bot"),
-        active: true,
-        approved: true,
-        trust_level: TrustLevel[4],
-        id: id,
-      )
-    user.save!(validate: false)
-
-    update!(user_id: user.id)
-    user
+  def set_default_compression_threshold
+    self.compression_threshold ||= 80
   end
 
   def regenerate_rag_fragments
     if rag_chunk_tokens_changed? || rag_chunk_overlap_tokens_changed?
       RagDocumentFragment.where(target: self).delete_all
     end
+  end
+
+  # This system agent discovers its tools at runtime rather than using the stored selection.
+  def automatic_image_tools
+    return unless system? && class_instance <= DiscourseAi::Agents::PostIllustrator
+
+    AiTool
+      .where(enabled: true, is_image_generation_tool: true)
+      .order(:name)
+      .pluck(:id, :name)
+      .map { |id, name| { id:, name: } }
   end
 
   def has_image_generation_tool?
@@ -373,12 +547,142 @@ class AiAgent < ActiveRecord::Base
 
   private
 
-  def chat_preconditions
-    if (
-         allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
-           force_default_llm
-       ) && !default_llm_id
-      errors.add(:default_llm, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+  def sync_bot_user_activation
+    user_ids = [user_id]
+    user_ids.concat(saved_change_to_user_id) if !destroyed? && saved_change_to_user_id?
+
+    User
+      .bot_users
+      .where(id: user_ids.compact.uniq)
+      .order(:id)
+      .lock
+      .each do |bot_user|
+        next if bot_user.is_system_user? || bot_user.staff?
+
+        active = self.class.where(user_id: bot_user.id, enabled: true).exists?
+        bot_user.update!(active:) if bot_user.active? != active
+      end
+  end
+
+  # Spam scans use an explicit model setting, so agent edits must update it too.
+  # Clearing the agent default preserves the model selected for spam detection.
+  def sync_spam_detection_model
+    return if default_llm_id.blank?
+
+    settings = AiModerationSetting.spam
+    settings.update!(llm_model_id: default_llm_id) if settings&.ai_agent_id == id
+  end
+
+  def create_user_without_lock!
+    raise I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported") if !supports_bot_user?
+
+    user =
+      User.new(
+        email: "#{SecureRandom.hex}@does-not-exist.invalid",
+        name: name.titleize,
+        username: UserNameSuggester.suggest(name + "_bot"),
+        active: enabled?,
+        approved: true,
+        trust_level: TrustLevel[4],
+        id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id,
+      )
+    user.save!(validate: false)
+
+    update!(user_id: user.id)
+    user
+  end
+
+  def normalize_subagent_ids
+    self[:subagent_ids] = Array(self[:subagent_ids])
+      .filter_map { |id| normalize_subagent_id(id) }
+      .uniq
+  end
+
+  def normalize_subagent_id(id)
+    return id if id.is_a?(Integer)
+    id.to_i if id.is_a?(String) && id.match?(/\A-?\d+\z/)
+  end
+
+  def subagent_ids_are_valid
+    if @subagent_ids_contained_invalid_value
+      errors.add(:subagent_ids, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids"))
+    end
+
+    return if subagent_ids.blank?
+
+    if subagent_ids.length > MAX_SUBAGENTS
+      errors.add(
+        :subagent_ids,
+        I18n.t("discourse_ai.ai_bot.agents.too_many_subagents", max: MAX_SUBAGENTS),
+      )
+    end
+
+    if subagent_ids.include?(id)
+      errors.add(:subagent_ids, I18n.t("discourse_ai.ai_bot.agents.subagent_self"))
+    end
+
+    missing_ids = subagent_ids - AiAgent.where(id: subagent_ids).pluck(:id)
+    if missing_ids.present?
+      errors.add(
+        :subagent_ids,
+        I18n.t("discourse_ai.ai_bot.agents.subagents_not_found", ids: missing_ids.join(", ")),
+      )
+    end
+  end
+
+  def subagents_can_not_use_spawn_agent
+    return if subagent_ids.blank?
+
+    if configured_tool_function_names.any? { |name| name.to_s.casecmp("spawn_agent").zero? }
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.subagent_tool_collision"))
+    end
+  end
+
+  def rag_document_sources_count_within_limit
+    count = rag_document_sources.reject(&:marked_for_destruction?).size
+    return if count <= MAX_RAG_DOCUMENT_SOURCES
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.ai_bot.agents.too_many_rag_document_sources",
+        max: MAX_RAG_DOCUMENT_SOURCES,
+      ),
+    )
+  end
+
+  def configured_tool_function_names
+    Array(tools).filter_map do |tool_config|
+      tool_name = tool_config.is_a?(Array) ? tool_config.first : tool_config
+      next if tool_name.blank?
+
+      if tool_name.to_s.start_with?("custom-")
+        AiTool.find_by(id: tool_name.to_s.split("-", 2).last.to_i)&.function_call_name
+      else
+        tool_class =
+          DiscourseAi::Agents::Agent.builtin_tool_by_name(tool_name) ||
+            DiscourseAi::Agents::Agent.external_tool_by_name(tool_name.to_s)
+        tool_class&.signature&.[](:name)
+      end
+    end
+  end
+
+  def remove_destroyed_agent_from_subagents
+    affected_agents = AiAgent.where("? = ANY(subagent_ids)", id)
+    affected_agents.update_all(
+      AiAgent.sanitize_sql_array(["subagent_ids = array_remove(subagent_ids, ?)", id]),
+    )
+  end
+
+  def bot_user_supported
+    return if user_id.blank? || supports_bot_user?
+
+    errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.bot_user_unsupported"))
+  end
+
+  def forced_default_llm_preconditions
+    if force_default_llm && default_llm_id.blank?
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"))
     end
   end
 
@@ -386,7 +690,7 @@ class AiAgent < ActiveRecord::Base
     error_msg = I18n.t("discourse_ai.ai_bot.agents.cannot_edit_system_agent")
 
     if top_p_changed? || temperature_changed? || system_prompt_changed? || name_changed? ||
-         description_changed?
+         description_changed? || subagent_ids_changed?
       errors.add(:base, error_msg)
     elsif tools_changed?
       old_tools = tools_change[0]
@@ -432,42 +736,42 @@ end
 #
 # Table name: ai_agents
 #
-#  id                           :bigint           not null, primary key
-#  allow_chat_channel_mentions  :boolean          default(FALSE), not null
-#  allow_chat_direct_messages   :boolean          default(FALSE), not null
-#  allow_personal_messages      :boolean          default(TRUE), not null
-#  allow_topic_mentions         :boolean          default(FALSE), not null
-#  allowed_group_ids            :integer          default([]), not null, is an Array
-#  compression_threshold        :integer
-#  description                  :string(2000)     not null
-#  enabled                      :boolean          default(TRUE), not null
-#  examples                     :jsonb
-#  execution_mode               :string           default("default"), not null
-#  force_default_llm            :boolean          default(FALSE), not null
-#  forced_tool_count            :integer          default(-1), not null
-#  max_context_posts            :integer
-#  max_turn_tokens              :integer
-#  name                         :string(100)      not null
-#  priority                     :boolean          default(FALSE), not null
-#  rag_chunk_overlap_tokens     :integer          default(10), not null
-#  rag_chunk_tokens             :integer          default(374), not null
-#  rag_conversation_chunks      :integer          default(10), not null
-#  response_format              :jsonb
-#  show_thinking                :boolean          default(TRUE), not null
-#  system                       :boolean          default(FALSE), not null
-#  system_prompt                :string(10000000) not null
-#  temperature                  :float
-#  tools                        :json             not null
-#  top_p                        :float
-#  vision_enabled               :boolean          default(FALSE), not null
-#  vision_max_pixels            :integer          default(1048576), not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  created_by_id                :integer
-#  default_llm_id               :bigint
-#  question_consolidator_llm_id :bigint
-#  rag_llm_model_id             :bigint
-#  user_id                      :integer
+#  id                          :bigint           not null, primary key
+#  allow_chat_channel_mentions :boolean          default(FALSE), not null
+#  allow_chat_direct_messages  :boolean          default(FALSE), not null
+#  allow_personal_messages     :boolean          default(TRUE), not null
+#  allow_topic_mentions        :boolean          default(FALSE), not null
+#  allowed_group_ids           :integer          default([]), not null, is an Array
+#  compression_threshold       :integer          default(80), not null
+#  description                 :string(2000)     not null
+#  enabled                     :boolean          default(TRUE), not null
+#  examples                    :jsonb
+#  force_default_llm           :boolean          default(FALSE), not null
+#  forced_tool_count           :integer          default(-1), not null
+#  max_turn_tokens             :integer
+#  name                        :string(100)      not null
+#  priority                    :boolean          default(FALSE), not null
+#  rag_chunk_overlap_tokens    :integer          default(10), not null
+#  rag_chunk_tokens            :integer          default(374), not null
+#  rag_conversation_chunks     :integer          default(10), not null
+#  require_approval            :boolean          default(FALSE), not null
+#  response_format             :jsonb
+#  show_thinking               :boolean          default(TRUE), not null
+#  subagent_ids                :bigint           default([]), not null, is an Array
+#  system                      :boolean          default(FALSE), not null
+#  system_prompt               :string(10000000) not null
+#  temperature                 :float
+#  thinking_effort             :string
+#  tools                       :json             not null
+#  top_p                       :float
+#  vision_enabled              :boolean          default(FALSE), not null
+#  vision_max_pixels           :integer          default(1048576), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  created_by_id               :integer
+#  default_llm_id              :bigint
+#  rag_llm_model_id            :bigint
+#  user_id                     :integer
 #
 # Indexes
 #

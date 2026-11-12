@@ -28,7 +28,7 @@ module PageObjects
       end
 
       def has_suggestion_value?(value)
-        page.has_css?("#{SUGGESTION_SELECTOR}__text", text: value)
+        page.has_css?("#{SUGGESTION_SELECTOR}__text:not(.streaming)", text: value)
       end
 
       def suggestion_value

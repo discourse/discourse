@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
+require_relative "oauth2_faraday_formatter"
+
 class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   def name
     "oauth2_basic"
+  end
+
+  def enable_setting
+    :oauth2_enabled
+  end
+
+  def required_settings
+    %i[oauth2_client_id oauth2_authorize_url oauth2_token_url]
   end
 
   def can_revoke?
@@ -11,6 +21,10 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def can_connect_existing_user?
     SiteSetting.oauth2_allow_association_change
+  end
+
+  def provides_groups?
+    SiteSetting.oauth2_json_groups_path.present?
   end
 
   def register_middleware(omniauth)
@@ -26,6 +40,11 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
                             authorize_url: SiteSetting.oauth2_authorize_url,
                             token_url: SiteSetting.oauth2_token_url,
                             token_method: SiteSetting.oauth2_token_url_method.downcase.to_sym,
+                            connection_opts: {
+                              request: {
+                                timeout: request_timeout_seconds,
+                              },
+                            },
                           }
                           opts[:authorize_options] = SiteSetting
                             .oauth2_authorize_options
@@ -118,6 +137,41 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     end
   end
 
+  def groups_from(user_json)
+    path = SiteSetting.oauth2_json_groups_path
+    expanded = path.gsub(".[].", ".").gsub(".[", "[")
+    value = walk_path(user_json, parse_segments(expanded))
+
+    if value.is_a?(Array)
+      value
+    elsif value.present?
+      log("groups path '#{path}' did not resolve to an array (got #{value.class})")
+      []
+    else
+      log("groups path '#{path}' did not resolve to anything")
+      []
+    end
+  end
+
+  def user_field_values_from(user_json)
+    mappings = JSON.parse(SiteSetting.oauth2_user_field_mappings.presence || "[]")
+    return {} if mappings.blank?
+
+    mappings.each_with_object({}) do |mapping, hash|
+      path = mapping["path"].to_s
+      field_id = mapping["user_field_id"]
+      next if path.blank? || field_id.blank?
+
+      expanded = path.gsub(".[].", ".").gsub(".[", "[")
+      value = walk_path(user_json, parse_segments(expanded))
+      next if value.nil?
+
+      hash[field_id.to_s] = value.is_a?(Array) ? value.join(",") : value.to_s
+    end
+  rescue JSON::ParserError
+    {}
+  end
+
   def parse_segments(path)
     segments = [+""]
     quoted = false
@@ -148,28 +202,44 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def fetch_user_details(token, id)
     user_json_url = SiteSetting.oauth2_user_json_url.sub(":token", token.to_s).sub(":id", id.to_s)
+    user_json_log_url = OAuth2LogRedactor.url(user_json_url, sensitive_values: [token, id])
     user_json_method = SiteSetting.oauth2_user_json_url_method.downcase.to_sym
 
     bearer_token = "Bearer #{token}"
-    connection = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
+    connection =
+      Faraday.new(request: { timeout: request_timeout_seconds }) do |f|
+        f.adapter FinalDestination::FaradayAdapter
+      end
     headers = { "Authorization" => bearer_token, "Accept" => "application/json" }
-    user_json_response = connection.run_request(user_json_method, user_json_url, nil, headers)
 
     log <<-LOG
-      user_json request: #{user_json_method} #{user_json_url}
+      user_json request: #{user_json_method} #{user_json_log_url}
 
-      request headers: #{headers}
+      request headers: #{OAuth2LogRedactor.headers(headers)}
+    LOG
 
-      response status: #{user_json_response.status}
+    begin
+      user_json_response = connection.run_request(user_json_method, user_json_url, nil, headers)
+    rescue Faraday::Error => e
+      failure_detail =
+        e.is_a?(Faraday::TimeoutError) ? "timed out after #{request_timeout_seconds}s" : "failed"
+      Rails.logger.warn(
+        "OAuth2 Basic: user_json request to #{user_json_log_url} #{failure_detail}: #{e.class}",
+      )
+      return nil
+    end
+
+    log <<-LOG
+      user_json response: #{user_json_response.status}
 
       response body:
-      #{user_json_response.body}
+      #{OAuth2LogRedactor::OMITTED}
     LOG
 
     if user_json_response.status == 200
       user_json = JSON.parse(user_json_response.body)
 
-      log("user_json:\n#{user_json.to_yaml}")
+      log("user_json parsed successfully")
 
       result = {}
       if user_json.present?
@@ -184,6 +254,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
           prop = "extra:#{detail}"
           json_walk(result, user_json, prop, custom_path: detail)
         end
+
+        result[:user_field_values] = user_field_values_from(user_json)
+        result[:groups] = groups_from(user_json) if provides_groups?
       end
       result
     else
@@ -193,10 +266,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def primary_email_verified?(auth)
     return true if SiteSetting.oauth2_email_verified
-    verified = auth["info"]["email_verified"]
-    verified = true if verified == "true"
-    verified = false if verified == "false"
-    verified
+
+    email_verified = auth["info"]["email_verified"]
+    email_verified == true || (email_verified.is_a?(String) && email_verified.downcase == "true")
   end
 
   def always_update_user_email?
@@ -207,16 +279,13 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     log <<-LOG
       after_authenticate response:
 
-      creds:
-      #{auth["credentials"].to_hash.to_yaml}
+      credentials: #{OAuth2LogRedactor::FILTERED}
 
-      uid: #{auth["uid"]}
+      uid: #{OAuth2LogRedactor::FILTERED}
 
-      info:
-      #{auth["info"].to_hash.to_yaml}
+      info: #{OAuth2LogRedactor::FILTERED}
 
-      extra:
-      #{auth["extra"].to_hash.to_yaml}
+      extra: #{OAuth2LogRedactor::FILTERED}
     LOG
 
     if SiteSetting.oauth2_fetch_user_details? && SiteSetting.oauth2_user_json_url.present?
@@ -252,10 +321,18 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       end
     end
 
-    super(auth, existing_account: existing_account)
+    result = super(auth, existing_account: existing_account)
+    if fetched_user_details
+      result.user_field_values = fetched_user_details[:user_field_values]
+      if provides_groups?
+        groups = fetched_user_details[:groups] || []
+        result.associated_groups = groups.map { |g| { id: g, name: g } }
+      end
+    end
+    result
   end
 
-  def enabled?
-    SiteSetting.oauth2_enabled
+  def request_timeout_seconds
+    GlobalSetting.oauth2_request_timeout_seconds
   end
 end

@@ -141,6 +141,7 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     context "with DiscourseConnect enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 

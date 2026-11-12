@@ -22,10 +22,10 @@ sw:
         yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
+      pinned_bar:
+        title: "Imebandikwa"
       pinned: "Imebandikwa"
       channel_settings:
-        edit: "Hariri"
-        add: "ongeza"
         notification_settings_context: "Taarifa"
         join: "Jiunge"
         leave: "Ondoka"
@@ -56,19 +56,21 @@ sw:
         filter_all: Vyote
         filter_open: Fungua
         filter_closed: Imefungwa
+        filter_joined_all: "Yote"
+        filter_joined_joined: "Alijiunga"
       chat_message_separator:
         today: Leo
         yesterday: Jana
       search_view:
         filter_placeholder: Tafuta ujumbe
       about_view:
-        title: Kichwa cha Habari
         name: Jina
         description: Elezo
       channel_info:
         back_to_channel: "Iliyopita"
         tabs:
           members: Wanachama
+          preferences: Mapendekezo
           settings: Mipangilio
           search: Tafuta
         remove_member: "Ondoa"
@@ -78,6 +80,7 @@ sw:
         title: Ujumbe Mpya
         prefix: "Kwenda:"
       create_channel:
+        description: "Maelezo"
         type: "Aina"
         types:
           category: "Kikundi"
@@ -93,6 +96,7 @@ sw:
       settings:
         follow: "Jiunge"
         followed: "Alijiunga"
+        muted_until_hint: "mpaka %{until}"
         threading_enabled: "Imeruhusiwa"
         threading_disabled: "Imezuiwa"
         notifications: "Taarifa"
@@ -100,8 +104,6 @@ sw:
         save: "Hifadhi"
         saved: "Imehifadhiwa"
         unfollow: "Ondoka"
-        admin_title: "Kiongozi"
-        settings_title: "Mipangilio"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Wanachama"
@@ -111,6 +113,11 @@ sw:
         sort:
           relevance: "Umuhimu"
           latest: "Hivi Karibuni"
+      channel_list:
+        options:
+          filter: "Ichujwe"
+        filter:
+          mentions: "Kutajwa"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"
@@ -159,3 +166,18 @@ sw:
           fields:
             message:
               label: Ujumbe
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Chaneli"
+      send_chat_message:
+        targets:
+          channel: "Chaneli"
+        channel_id: "Chaneli"
+        message: "Ujumbe"
+      chat_approval:
+        message: "Ujumbe"
+        value: "Thamani"
+        style_default: "Halisi"
+        style_success: "Mafanikio"
+        icon: "ikoni"
+        channel_id: "Chaneli"

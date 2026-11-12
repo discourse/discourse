@@ -78,8 +78,8 @@ describe DiscourseAi::Automation::LlmTriage do
     count = ai_log.raw_request_payload.scan("hello").size
     # we could use the exact count here but it can get fragile
     # as we change tokenizers, this will give us reasonable confidence
-    expect(count).to be <= (100)
-    expect(count).to be > (50)
+    expect(count).to be <= 100
+    expect(count).to be > 50
   end
 
   it "can trigger via stalled_topic with topic context" do
@@ -109,7 +109,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # nothing should happen, no classification, its a PM
   end
 
-  it "will triage PMs if automation allows it" do
+  it "triages PMs if automation allows it" do
     # needs to be admin or it will not be able to just step in to
     # PM
     reply_user.update!(admin: true)
@@ -185,6 +185,24 @@ describe DiscourseAi::Automation::LlmTriage do
 
     # Verify it's a whisper post (since we set whisper: true)
     expect(last_post.post_type).to eq(Post.types[:whisper])
+  end
+
+  it "replies as the canned reply user when one is configured with a reply agent" do
+    ai_agent.update!(default_llm: llm_model, user_id: nil)
+
+    add_automation_field("canned_reply", nil, type: "message")
+    add_automation_field("reply_agent", ai_agent.id, type: "choices")
+
+    post = Fabricate(:post, raw: "I need help with a problem")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad", "Agent reply"]) do
+      automation.running_in_background!
+      automation.trigger!({ "post" => post })
+    end
+
+    last_post = post.topic.reload.posts.order(:post_number).last
+    expect(last_post.raw).to eq("Agent reply")
+    expect(last_post.user_id).to eq(reply_user.id)
   end
 
   it "does not create replies when the action is edit" do
@@ -276,8 +294,69 @@ describe DiscourseAi::Automation::LlmTriage do
 
       reviewable = ReviewableFlaggedPost.find_by(target: post)
       scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
+      conversation_excerpt = scores.first.reviewable_conversation.conversation_posts.first.excerpt
 
-      expect(scores.size).to eq(1)
+      aggregate_failures do
+        expect(scores.size).to eq(1)
+        expect(scores.first.reason).to include("Triggered by")
+        expect(scores.first.reason).not_to include("Response from the model:")
+        expect(conversation_excerpt).to include("Response from the model: bad")
+      end
+    end
+
+    it "adds spam scores to an existing flagged reviewable" do
+      reviewable_post =
+        ReviewablePost.needs_review!(
+          target: post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+      reviewable_post.add_score(
+        Discourse.system_user,
+        ReviewableScore.types[:needs_approval],
+        reason: "Existing review flag",
+        force_review: true,
+      )
+
+      flagged_reviewable =
+        ReviewableFlaggedPost.needs_review!(
+          target: post,
+          created_by: Fabricate(:user),
+          reviewable_by_moderator: true,
+        )
+      flagged_reviewable.add_score(
+        flagged_reviewable.created_by,
+        ReviewableScore.types[:spam],
+        reason: "Existing spam flag",
+        force_review: true,
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+        add_automation_field("flag_type", "spam")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+      end
+
+      flagged_reviewable.reload
+      system_spam_scores =
+        flagged_reviewable.reviewable_scores.select do |score|
+          score.user == Discourse.system_user &&
+            score.reviewable_score_type == ReviewableScore.types[:spam]
+        end
+      conversation_excerpt =
+        system_spam_scores.first.reviewable_conversation.conversation_posts.first.excerpt
+
+      aggregate_failures do
+        expect(ReviewablePost.pending.where(target: post)).to contain_exactly(reviewable_post)
+        expect(ReviewableFlaggedPost.pending.where(target: post)).to contain_exactly(
+          flagged_reviewable,
+        )
+        expect(system_spam_scores.size).to eq(1)
+        expect(system_spam_scores.first.reason).to include("Triggered by")
+        expect(system_spam_scores.first.reason).not_to include("Response from the model:")
+        expect(conversation_excerpt).to include("Response from the model: bad")
+      end
     end
 
     it "flags the post once when not using spam-based types (review_* types)" do
@@ -292,7 +371,13 @@ describe DiscourseAi::Automation::LlmTriage do
       reviewable = ReviewablePost.find_by(target: post)
       scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
 
-      expect(scores.size).to eq(1)
+      score_reason = scores.first.reason
+
+      aggregate_failures do
+        expect(scores.size).to eq(1)
+        expect(score_reason.index("Triggered by")).to be <
+          score_reason.index("Response from the model")
+      end
     end
 
     it "makes the reviewable visible to moderators when using review flag types" do

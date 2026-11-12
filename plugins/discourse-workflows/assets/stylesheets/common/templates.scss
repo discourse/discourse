@@ -1,0 +1,30 @@
+.workflows-templates {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    .d-table-badge {
+      line-height: 1;
+    }
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-top: var(--space-1);
+  }
+
+  &__requirement {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}

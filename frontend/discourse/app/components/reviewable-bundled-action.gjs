@@ -3,16 +3,37 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import { penaltyEffectDescription } from "discourse/lib/reviewable-penalty";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ReviewableBundledAction extends Component {
   @service site;
 
   get multiple() {
     return this.args.bundle.actions.length > 1;
+  }
+
+  get bundleActions() {
+    return this.args.bundle.actions.map((bundledAction) => {
+      const effect = penaltyEffectDescription(
+        bundledAction,
+        this.args.authorPenalties
+      );
+
+      if (!effect) {
+        return bundledAction;
+      }
+
+      return {
+        ...bundledAction,
+        description: [bundledAction.description, effect]
+          .filter(Boolean)
+          .join(" "),
+      };
+    });
   }
 
   get first() {
@@ -26,24 +47,12 @@ export default class ReviewableBundledAction extends Component {
     return `${vertical}-${horizontal}`;
   }
 
-  get buttonClass() {
-    const buttonIdentifier = dasherize(
-      this.first.button_class || this.first.id
-    );
-
-    if (buttonIdentifier === "reject-post") {
-      return "btn-danger";
-    } else if (buttonIdentifier === "approve-post") {
-      return "btn-success";
-    } else {
-      return "btn-default";
-    }
-  }
-
   @action
-  perform(id) {
-    if (id) {
-      const _action = this.args.bundle.actions.find((a) => a.id === id);
+  perform(actionName) {
+    if (actionName) {
+      const _action = this.args.bundle.actions.find(
+        (a) => a.action_name === actionName
+      );
       this.args.performAction(_action);
     } else {
       this.args.performAction(this.first);
@@ -53,35 +62,34 @@ export default class ReviewableBundledAction extends Component {
   <template>
     {{#if this.multiple}}
       <DropdownSelectBox
+        class={{dConcatClass
+          "reviewable-action-dropdown"
+          "btn-icon-text"
+          (dasherize this.first.action_name)
+          this.first.button_class
+        }}
+        @content={{this.bundleActions}}
         @nameProperty="label"
-        @content={{@bundle.actions}}
         @onChange={{this.perform}}
         @options={{hash
           showCaret=true
           disabled=@reviewableUpdating
           placement=this.placement
           translatedNone=@bundle.label
-          customStyle=true
-          btnCustomClasses=this.buttonClass
         }}
-        class={{concatClass
-          "reviewable-action-dropdown"
-          "btn-icon-text"
-          (dasherize this.first.id)
-          this.first.button_class
-        }}
+        @valueProperty="action_name"
       />
     {{else}}
       <DButton
-        @action={{this.perform}}
-        @translatedLabel={{this.first.label}}
-        @disabled={{@reviewableUpdating}}
-        class={{concatClass
+        class={{dConcatClass
+          "btn-default"
           "reviewable-action"
-          (dasherize this.first.id)
+          (dasherize this.first.action_name)
           this.first.button_class
-          this.buttonClass
         }}
+        @action={{this.perform}}
+        @disabled={{@reviewableUpdating}}
+        @translatedLabel={{this.first.label}}
       />
     {{/if}}
   </template>

@@ -3,9 +3,9 @@
 RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2, :user)
-  fab!(:user_3, :user)
-  fab!(:user_4, :user)
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_3) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_4) { Fabricate(:user, refresh_auto_groups: true) }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
@@ -57,8 +57,68 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     end
   end
 
+  describe "private_messages_personal_inbox_query modifier" do
+    fab!(:hidden_pm) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message,
+      ).topic
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_block) { ->(list, _user) { list.where(<<~SQL) } }
+          NOT EXISTS (
+            SELECT 1 FROM topic_custom_fields tcf
+            WHERE tcf.topic_id = topics.id
+            AND tcf.name = 'hidden_from_inbox'
+            AND tcf.value = 't'
+          )
+        SQL
+
+    before do
+      hidden_pm.custom_fields["hidden_from_inbox"] = "t"
+      hidden_pm.save_custom_fields
+
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :private_messages_personal_inbox_query,
+        &modifier_block
+      )
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :private_messages_personal_inbox_query,
+        &modifier_block
+      )
+    end
+
+    it "filters topics out of #list_private_messages" do
+      topics = TopicQuery.new(user_2).list_private_messages(user_2).topics
+
+      expect(topics).to include(private_message)
+      expect(topics).not_to include(hidden_pm)
+    end
+
+    it "leaves #list_private_messages_archive untouched" do
+      [private_message, hidden_pm].each { |pm| UserArchivedMessage.archive!(user_2.id, pm) }
+
+      topics = TopicQuery.new(user_2).list_private_messages_archive(user_2).topics
+
+      expect(topics).to include(private_message, hidden_pm)
+    end
+
+    it "leaves #list_private_messages_sent untouched" do
+      topics = TopicQuery.new(user).list_private_messages_sent(user).topics
+
+      expect(topics).to include(private_message, hidden_pm)
+    end
+  end
+
   describe "#list_private_messages_group" do
-    it "should return the right list for a group user" do
+    it "returns the group's messages for a group member" do
       group.add(user_2)
 
       topics =
@@ -67,7 +127,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should return the right list for an admin not part of the group" do
+    it "returns the group's messages for an admin outside the group" do
       group.update!(name: group.name.capitalize)
 
       topics =
@@ -79,7 +139,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should not allow a moderator not part of the group to view the group's messages" do
+    it "prevents moderators outside the group from viewing its messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)
@@ -89,7 +149,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to eq([])
     end
 
-    it "should not allow a user not part of the group to view the group's messages" do
+    it "prevents users outside the group from viewing its messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)
@@ -315,22 +375,20 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     end
   end
 
-  describe "#list_private_messages_direct_and_groups" do
-    it "returns a list of all personal and group private messages for a given user" do
-      expect(
-        TopicQuery.new(user_2).list_private_messages_direct_and_groups(user_2).topics,
-      ).to contain_exactly(private_message, group_message)
+  describe "#private_messages_direct_and_groups" do
+    it "returns all personal and group private messages for a given user with their user data" do
+      topics = TopicQuery.new(user_2).private_messages_direct_and_groups(user_2)
+
+      expect(topics).to contain_exactly(private_message, group_message)
+      expect(topics.find { |t| t.id == group_message.id }.user_data).to be_present
     end
 
     it "returns a list of personal private messages and user watching group private messages for a given user when the `groups_notification_level` option is set" do
       expect(
-        TopicQuery
-          .new(user_2)
-          .list_private_messages_direct_and_groups(
-            user_2,
-            groups_messages_notification_level: :watching,
-          )
-          .topics,
+        TopicQuery.new(user_2).private_messages_direct_and_groups(
+          user_2,
+          groups_messages_notification_level: :watching,
+        ),
       ).to contain_exactly(private_message, group_message)
 
       TopicUser.find_by(user: user_2, topic: group_message).update!(
@@ -338,13 +396,10 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       )
 
       expect(
-        TopicQuery
-          .new(user_2)
-          .list_private_messages_direct_and_groups(
-            user_2,
-            groups_messages_notification_level: :watching,
-          )
-          .topics,
+        TopicQuery.new(user_2).private_messages_direct_and_groups(
+          user_2,
+          groups_messages_notification_level: :watching,
+        ),
       ).to contain_exactly(private_message)
     end
   end

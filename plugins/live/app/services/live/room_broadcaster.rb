@@ -1,0 +1,174 @@
+# frozen_string_literal: true
+
+module Live
+  class RoomBroadcaster
+    def self.publish_participants(room)
+      new(room).publish_participants
+    end
+
+    def self.publish_participants_if_changed(room)
+      new(room).publish_participants_if_changed
+    end
+
+    def self.publish_kick(room, user_id)
+      new(room).publish_kick(user_id)
+    end
+
+    def self.publish_role_change(room, user_id, new_role)
+      new(room).publish_role_change(user_id, new_role)
+    end
+
+    def self.publish_hand_raise(room, user_id, raised:, raised_at: nil, reason: nil)
+      new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
+    end
+
+    def self.publish_reaction(room, user, emoji)
+      new(room).publish_reaction(user, emoji)
+    end
+
+    # Someone in the room started ringing `user` — lets open room pages show
+    # a pending tile for them without refetching the room.
+    def self.publish_ringing(room, user, notified_at:)
+      new(room).publish_room(
+        type: "ringing",
+        user: BasicUserSerializer.new(user, scope: Guardian.new(nil), root: false).as_json,
+        notified_at: notified_at,
+      )
+    end
+
+    # Each entry carries the sender's own publish entitlements: mesh peers
+    # exchange media directly, so a receiver decides whether to play a video
+    # or screen-audio track from this, not from its own rights. Every roster
+    # a client can seed from goes through here so none of them lacks them.
+    def self.participant_entries(room, users, guardian:, metadata:)
+      entitlements = Live::MediaEntitlements.for_users(room, users)
+
+      users.map do |user|
+        BasicUserSerializer
+          .new(user, scope: guardian, root: false)
+          .as_json
+          .merge(metadata[user.id] || {})
+          .merge(entitlements[user.id] || Live::MediaEntitlements::NONE)
+      end
+    end
+
+    def initialize(room)
+      @room = room
+    end
+
+    def publish_participants(fingerprint: nil)
+      payload = {
+        type: "participants",
+        room_id: room.id,
+        participants:
+          self.class.participant_entries(
+            room,
+            Live::ParticipantTracker.list(room.id),
+            guardian: Guardian.new(nil),
+            metadata: Live::ParticipantTracker.get_all_metadata(room.id),
+          ),
+        resuming_ids: Live::ParticipantTracker.resuming_user_ids(room.id),
+      }
+
+      MessageBus.publish(Live.room_channel(room.id), payload, **room_message_bus_targets)
+
+      # Keep the stored fingerprint in sync so the heartbeat backstop doesn't
+      # redundantly re-broadcast the state we just sent.
+      Live::ParticipantTracker.update_fingerprint(room.id, fingerprint)
+    end
+
+    # Backstop for ghosts left by abrupt disconnects (refresh, tab close,
+    # crash) that never sent a clean leave. Called on every heartbeat: it
+    # compares the live membership/state against the last broadcast and emits a
+    # single participants broadcast when — and only when — something changed.
+    def publish_participants_if_changed
+      fingerprint = Live::ParticipantTracker.participants_fingerprint(room.id)
+      previous = Live::ParticipantTracker.swap_fingerprint(room.id, fingerprint)
+      return if previous == fingerprint
+
+      publish_participants(fingerprint: fingerprint)
+    end
+
+    def publish_room(payload)
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        payload.merge(room_id: room.id),
+        **room_message_bus_targets,
+      )
+    end
+
+    def publish_kick(user_id)
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        { type: "kicked", room_id: room.id },
+        user_ids: [user_id],
+      )
+    end
+
+    def publish_role_change(user_id, new_role)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        { type: "role_change", room_id: room.id, user_id: user_id, role: new_role },
+        user_ids: participant_ids,
+      )
+    end
+
+    # Lightweight event alongside the authoritative participants broadcast, so
+    # clients can toast on raises/dismissals without diffing rosters.
+    def publish_hand_raise(user_id, raised:, raised_at: nil, reason: nil)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "hand_raise",
+          room_id: room.id,
+          user_id: user_id,
+          raised: raised,
+          raised_at: raised_at,
+          reason: reason,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    # Fire-and-forget: nothing is stored, so a client that misses one simply
+    # never sees it float by.
+    def publish_reaction(user, emoji)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "reaction",
+          room_id: room.id,
+          user_id: user.id,
+          username: user.username,
+          emoji: emoji,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    private
+
+    attr_reader :room
+
+    def room_message_bus_targets
+      targets = room.message_bus_targets
+      # An untargeted publish already reaches everyone; merging user_ids into
+      # it would restrict delivery to just those users.
+      return targets if targets.blank?
+
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return targets if participant_ids.empty?
+
+      targets.merge(user_ids: Array(targets[:user_ids] || []) | participant_ids)
+    end
+  end
+end

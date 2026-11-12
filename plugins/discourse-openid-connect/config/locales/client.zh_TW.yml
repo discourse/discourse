@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+      config:
+        login:
+          sub_pages:
+            oidc: "OIDC"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "使用 OpenID Connect"
+        message: "正在使用 OpenID Connect 驗證身分"

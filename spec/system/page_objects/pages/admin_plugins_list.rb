@@ -16,12 +16,26 @@ module PageObjects
         ".admin-plugins-list .admin-plugins-list__row[data-plugin-name=\"#{plugin}\"]"
       end
 
-      def has_plugin_tab?(plugin)
-        page.has_css?(plugin_nav_tab_selector(plugin))
+      def click_plugin_name(plugin)
+        find_plugin(plugin).find(".admin-plugins-list__name").click
       end
 
-      def plugin_nav_tab_selector(plugin)
-        ".d-nav-submenu__tabs .admin-plugin-tab-nav-item[data-plugin-nav-tab-id=\"#{plugin}\"]"
+      def toggle_plugin(plugin)
+        find(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled label.d-toggle-switch__label",
+        ).click
+      end
+
+      def has_plugin_enabled?(plugin)
+        has_css?(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='true']",
+        )
+      end
+
+      def has_plugin_disabled?(plugin)
+        has_css?(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='false']",
+        )
       end
     end
   end

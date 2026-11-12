@@ -1,18 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import { fillIn, render, settled, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 
-module("Integration | Component | relative-time-picker", function (hooks) {
+module("Integration | Component | RelativeTimePicker", function (hooks) {
   setupRenderingTest(hooks);
 
   test("calls the onChange arg", async function (assert) {
     let updatedValue;
     const update = (value) => (updatedValue = value);
     await render(
-      <template><RelativeTimePicker @onChange={{update}} /></template>
+      <template><DRelativeTimePicker @onChange={{update}} /></template>
     );
 
     // empty and "days" by default
@@ -77,16 +77,14 @@ module("Integration | Component | relative-time-picker", function (hooks) {
   });
 
   test("onChange callback works w/ a start value", async function (assert) {
-    const testState = new (class {
-      @tracked minutes = 120;
-    })();
+    const minutes = tracked(120);
 
-    const update = (value) => (testState.minutes = value);
+    const update = (value) => (minutes.value = value);
     await render(
       <template>
-        <RelativeTimePicker
+        <DRelativeTimePicker
+          @durationMinutes={{minutes.value}}
           @onChange={{update}}
-          @durationMinutes={{testState.minutes}}
         />
       </template>
     );
@@ -102,7 +100,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     // clear the duration
     await fillIn(".relative-time-duration", "");
     assert.dom(".relative-time-duration").hasValue("");
-    assert.strictEqual(testState.minutes, null, "onChange called with null");
+    assert.strictEqual(minutes.value, null, "onChange called with null");
     // semi-acceptable behavior: because `initValues()` is called, it changes the interval:
     assert.strictEqual(
       selectKit().header().value(),
@@ -113,14 +111,14 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     // type <60 minutes
     await typeIn(".relative-time-duration", "18");
     assert.dom(".relative-time-duration").hasValue("18");
-    assert.strictEqual(testState.minutes, 18, "onChange called with 18");
+    assert.strictEqual(minutes.value, 18, "onChange called with 18");
 
     // select "days"
     await selectKit().expand();
     await selectKit().selectRowByValue("days");
     assert.dom(".relative-time-duration").hasValue("18");
     assert.strictEqual(
-      testState.minutes,
+      minutes.value,
       18 * 60 * 24,
       "onChange called with 18 * 60 * 24"
     );
@@ -134,7 +132,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     );
     assert.dom(".relative-time-duration").hasValue("2");
     assert.strictEqual(
-      testState.minutes,
+      minutes.value,
       2 * 60 * 24,
       "onChange called with 2 * 60 * 24"
     );
@@ -143,12 +141,12 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     await selectKit().expand();
     await selectKit().selectRowByValue("mins");
     assert.dom(".relative-time-duration").hasValue("2");
-    assert.strictEqual(testState.minutes, 2, "onChange called with 2");
+    assert.strictEqual(minutes.value, 2, "onChange called with 2");
 
     // type >60 minutes
     await fillIn(".relative-time-duration", "90");
     assert.dom(".relative-time-duration").hasValue("1.5");
-    assert.strictEqual(testState.minutes, 90, "onChange called with 90");
+    assert.strictEqual(minutes.value, 90, "onChange called with 90");
     assert.strictEqual(
       selectKit().header().value(),
       "hours",
@@ -157,21 +155,18 @@ module("Integration | Component | relative-time-picker", function (hooks) {
   });
 
   test("updates the input when args change", async function (assert) {
-    const testState = new (class {
-      @tracked value;
-    })();
-    testState.value = 10;
+    const durationMinutes = tracked(10);
 
     await render(
       <template>
-        <RelativeTimePicker @durationMinutes={{testState.value}} />
+        <DRelativeTimePicker @durationMinutes={{durationMinutes.value}} />
       </template>
     );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("10");
 
-    testState.value = 20;
+    durationMinutes.value = 20;
     await settled();
 
     assert.dom(".relative-time-duration").hasValue("20");
@@ -179,7 +174,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes="5" /></template>
+      <template><DRelativeTimePicker @durationMinutes="5" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "mins");
@@ -188,7 +183,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects null minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes={{null}} /></template>
+      <template><DRelativeTimePicker @durationMinutes={{null}} /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "mins");
@@ -197,7 +192,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects hours based on converted minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes="90" /></template>
+      <template><DRelativeTimePicker @durationMinutes="90" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "hours");
@@ -206,7 +201,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects days based on converted minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes="2880" /></template>
+      <template><DRelativeTimePicker @durationMinutes="2880" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "days");
@@ -215,7 +210,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects months based on converted minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes="151200" /></template>
+      <template><DRelativeTimePicker @durationMinutes="151200" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "months");
@@ -224,7 +219,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects years based on converted minutes", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationMinutes="525700" /></template>
+      <template><DRelativeTimePicker @durationMinutes="525700" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "years");
@@ -233,7 +228,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours="5" /></template>
+      <template><DRelativeTimePicker @durationHours="5" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "hours");
@@ -242,7 +237,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects null hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours={{null}} /></template>
+      <template><DRelativeTimePicker @durationHours={{null}} /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "hours");
@@ -251,7 +246,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects minutes based on converted hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours="0.5" /></template>
+      <template><DRelativeTimePicker @durationHours="0.5" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "mins");
@@ -260,7 +255,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects days based on converted hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours="48" /></template>
+      <template><DRelativeTimePicker @durationHours="48" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "days");
@@ -269,7 +264,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects months based on converted hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours="2160" /></template>
+      <template><DRelativeTimePicker @durationHours="2160" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "months");
@@ -278,7 +273,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects years based on converted hours", async function (assert) {
     await render(
-      <template><RelativeTimePicker @durationHours="17520" /></template>
+      <template><DRelativeTimePicker @durationHours="17520" /></template>
     );
 
     assert.strictEqual(selectKit().header().value(), "years");
@@ -290,7 +285,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     const update = (value) => (updatedValue = value);
     await render(
       <template>
-        <RelativeTimePicker @onChange={{update}} @durationOutputUnit="hours" />
+        <DRelativeTimePicker @durationOutputUnit="hours" @onChange={{update}} />
       </template>
     );
 
@@ -322,7 +317,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     let updatedValue;
     const update = (value) => (updatedValue = value);
     await render(
-      <template><RelativeTimePicker @onChange={{update}} /></template>
+      <template><DRelativeTimePicker @onChange={{update}} /></template>
     );
 
     await typeIn(".relative-time-duration", "2");

@@ -115,17 +115,21 @@ module DiscourseAi
         # we need an llm so we have a tokenizer
         # but will do without if none is available
         llm = LlmModel.first&.to_llm
+        context = DiscourseAi::Agents::BotContext.new(guardian: guardian)
         runner =
           @ai_tool.runner(
             parameters,
             llm: llm,
             bot_user: current_user,
+            context: context,
             secret_bindings: test_bindings,
           )
         result = runner.invoke
 
         if result.is_a?(Hash) && result[:error]
           render_json_error result[:error]
+        elsif (source_error = ask_ai_source_error(result))
+          render_json_error source_error
         else
           response = { output: result }
           response[:custom_raw] = runner.custom_raw if runner.custom_raw.present?
@@ -138,6 +142,17 @@ module DiscourseAi
       end
 
       private
+
+      # Ask AI calls its sources without a model to read their output, so a
+      # result in the wrong shape would be dropped without a word.
+      def ask_ai_source_error(result)
+        return if !DiscourseAi::Discoveries::ExternalSource.configured?(@ai_tool)
+
+        DiscourseAi::Discoveries::ExternalSource.normalize(result, strict: true)
+        nil
+      rescue DiscourseAi::Discoveries::ExternalSource::InvalidResults => error
+        error.message
+      end
 
       def attached_upload_ids
         params[:ai_tool][:rag_uploads].to_a.map { |h| h[:id] }

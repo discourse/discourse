@@ -1,9 +1,9 @@
-/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
+/* eslint-disable ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
+import domUtils from "discourse/lib/dom-utils";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
@@ -13,9 +13,11 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
+const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -32,9 +34,18 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/logs($|\/)/,
   /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/themes\/\d+\/export$/,
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so
@@ -80,6 +91,28 @@ let _transitioning = false;
 let lockOn = null;
 
 class DiscourseURL extends EmberObject {
+  // This has been extracted so it can be tested.
+  get origin() {
+    const prefix = getURL("/");
+    return window.location.origin + (prefix === "/" ? "" : prefix);
+  }
+
+  get isComposerOpen() {
+    return this.container.lookup("service:composer")?.visible;
+  }
+
+  get router() {
+    return this.container.lookup("router:main");
+  }
+
+  get routerService() {
+    return this.container.lookup("service:router");
+  }
+
+  get appEvents() {
+    return this.container.lookup("service:app-events");
+  }
+
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   }
@@ -93,13 +126,14 @@ class DiscourseURL extends EmberObject {
 
     schedule("afterRender", () => {
       if (opts.jumpEnd) {
-        let $holder = $(holderId);
-        let holderHeight = $holder.height();
-        let windowHeight = $(window).height() - offsetCalculator();
+        const holder = document.querySelector(holderId);
+        const holderHeight = holder ? holder.offsetHeight : 0;
+        const windowHeight = window.innerHeight - offsetCalculator();
 
         if (holderHeight > windowHeight) {
-          $(window).scrollTop(
-            $holder.offset().top + (holderHeight - JUMP_END_BUFFER)
+          window.scrollTo(
+            window.pageXOffset,
+            domUtils.offset(holder).top + (holderHeight - JUMP_END_BUFFER)
           );
           _transitioning = false;
           return;
@@ -107,7 +141,7 @@ class DiscourseURL extends EmberObject {
       }
 
       if (postNumber === 1 && !opts.anchor) {
-        $(window).scrollTop(0);
+        window.scrollTo(window.pageXOffset, 0);
         _transitioning = false;
         return;
       }
@@ -149,9 +183,9 @@ class DiscourseURL extends EmberObject {
 
       if (holder && opts.skipIfOnScreen) {
         const elementTop = lockOn.elementTop();
-        const scrollTop = $(window).scrollTop();
-        const windowHeight = $(window).height() - offsetCalculator();
-        const height = $(holder).height();
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight - offsetCalculator();
+        const height = holder.offsetHeight;
 
         if (
           elementTop > scrollTop &&
@@ -222,11 +256,6 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
-    path = applyValueTransformer("route-to-url", path, { opts });
-    if (isEmpty(path)) {
-      return;
-    }
-
     // In embed mode, open all navigation in new tabs except same-topic navigation
     if (EmbedMode.enabled) {
       const currentTopicMatch = TOPIC_URL_REGEXP.exec(window.location.pathname);
@@ -244,7 +273,15 @@ class DiscourseURL extends EmberObject {
       }
     }
 
-    if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
+    let shouldRefresh =
+      Session.currentProp("requiresRefresh") && !this.isComposerOpen;
+    shouldRefresh = applyValueTransformer(
+      "full-page-refresh-on-navigation",
+      shouldRefresh,
+      { url: path }
+    );
+
+    if (shouldRefresh) {
       return this.redirectTo(path);
     }
 
@@ -254,10 +291,17 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const pathnameWithoutPrefix = withoutPrefix(pathname);
-    const serverSide = SERVER_SIDE_ONLY.some((r) =>
-      pathnameWithoutPrefix.match(r)
-    );
+    const pathnameWithoutPrefix = withoutPrefix(pathname).split(/[?#]/, 1)[0];
+    const registeredServerSidePath = Site.current()
+      ?.homepage_options?.filter(({ server_side }) => server_side)
+      .some(
+        ({ path: homepagePath }) =>
+          pathnameWithoutPrefix === homepagePath ||
+          pathnameWithoutPrefix.startsWith(`${homepagePath}/`)
+      );
+    const serverSide =
+      registeredServerSidePath ||
+      SERVER_SIDE_ONLY.some((r) => pathnameWithoutPrefix.match(r));
     if (serverSide) {
       this.redirectTo(path);
       return;
@@ -287,6 +331,14 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
+    if (oldPath === path && NESTED_URL_REGEXP.test(path)) {
+      // The nested context view caches its scroll target in the
+      // component's lifecycle, so a plain refresh() wouldn't re-trigger
+      // it. Fire an event the view listens for instead.
+      this.appEvents.trigger("nested:scroll-to-target");
+      return;
+    }
+
     if (oldPath === path || this.refreshedHomepage(oldPath, path)) {
       // If navigating to the same path, refresh the route
       this.routerService.refresh();
@@ -301,19 +353,26 @@ class DiscourseURL extends EmberObject {
   }
 
   routeToUrl(url, opts = {}) {
-    this.routeTo(getURL(url), opts);
+    const transformedUrl = applyValueTransformer("route-to-url", getURL(url), {
+      opts,
+    });
+    this.routeTo(transformedUrl, opts);
   }
 
   rewrite(regexp, replacement, opts) {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 
@@ -374,11 +433,17 @@ class DiscourseURL extends EmberObject {
       const oldMatches = TOPIC_URL_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
+      // Nested topics use the topic route too, but post-number changes need to
+      // run the route model hook so it can load the nested context payload.
+      const topicController = this.container.lookup("controller:topic");
+      if (topicController.shouldRenderNestedView) {
+        return false;
+      }
+
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
         this.replaceState(path);
 
-        const topicController = this.container.lookup("controller:topic");
         const opts = {};
         const postStream = topicController.get("model.postStream");
 
@@ -400,16 +465,15 @@ class DiscourseURL extends EmberObject {
             enteredAt: Date.now().toString(),
           });
 
-          this.appEvents.trigger("post:highlight", closest);
+          this.appEvents.trigger("post:highlight", closest, {
+            highlightQuote: routeOpts.highlightQuote,
+          });
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
             jumpEnd: routeOpts.jumpEnd,
           };
 
-          const anchorMatch = /#(.+)$/.exec(path);
-          if (anchorMatch) {
-            jumpOpts.anchor = anchorMatch[1];
-          }
+          jumpOpts.anchor = routeOpts.anchor ?? /#(.+)$/.exec(path)?.[1];
 
           this.jumpToPost(closest, jumpOpts);
         });
@@ -437,32 +501,6 @@ class DiscourseURL extends EmberObject {
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
     );
-  }
-
-  // This has been extracted so it can be tested.
-  get origin() {
-    const prefix = getURL("/");
-    return window.location.origin + (prefix === "/" ? "" : prefix);
-  }
-
-  get isComposerOpen() {
-    return this.container.lookup("service:composer")?.visible;
-  }
-
-  get router() {
-    return this.container.lookup("router:main");
-  }
-
-  get routerService() {
-    return this.container.lookup("service:router");
-  }
-
-  get appEvents() {
-    return this.container.lookup("service:app-events");
-  }
-
-  controllerFor(name) {
-    return this.container.lookup("controller:" + name);
   }
 
   /**
@@ -494,8 +532,13 @@ class DiscourseURL extends EmberObject {
     transition._discourse_anchor = elementId;
     transition._discourse_original_url = path;
 
-    const promise = transition.promise || transition;
-    return promise.then(() => this.jumpToElement(elementId));
+    const promise = transition.followRedirects?.() || transition;
+    return promise.then(() => {
+      if (elementId) {
+        this.replaceState(`#${elementId}`);
+      }
+      this.jumpToElement(elementId);
+    });
   }
 
   jumpToElement(elementId) {
@@ -552,34 +595,42 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
+export function isHttpUrl(value) {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  try {
+    const { protocol } = new URL(trimmed);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
   if (category) {
     url = category.path;
-    if (category.default_list_filter === "none" && subcategories) {
-      if (subcategories) {
-        url += "/all";
-      } else {
-        url += "/none";
-      }
-    } else if (!subcategories) {
+    if (!subcategories) {
       url += "/none";
+    } else if (category.default_list_filter === "none") {
+      url += "/all";
     }
   }
 
   if (tag) {
-    // tag can be string "none" (special filter) or object with {id, name, slug}
-    if (typeof tag === "string") {
-      // special case: "none" filter
-      url = url ? "/tags" + url + "/" + tag : "/tag/" + tag;
-    } else {
-      if (url) {
-        url = "/tags" + url + "/" + tag.slug + "/" + tag.id;
-      } else {
-        url = "/tag/" + tag.slug + "/" + tag.id;
-      }
-    }
+    // tag can be string "none" (special filter) or object with {id, name, slug}.
+    // A Tag model with a null id also represents the "no tags" filter — handle
+    // it the same as the string form so we don't produce ".../none/null" URLs.
+    const isString = typeof tag === "string";
+    const slug = isString ? tag : tag.slug;
+    const id = isString ? null : tag.id;
+
+    const prefix = url ? `/tags${url}` : "/tag";
+    url = id ? `${prefix}/${slug}/${id}` : `${prefix}/${slug}`;
   }
 
   return getURL(url || "/");
@@ -592,6 +643,44 @@ export function getEditCategoryUrl(category, subcategories, tab) {
     url += `/${tab}`;
   }
   return getURL(url);
+}
+
+// These helpers operate on app-relative paths like `RouterService#currentURL`
+// ("/admin/badges?filter=x"), which the URL API cannot parse on its own.
+
+function splitPath(path) {
+  const hashIndex = path.indexOf("#");
+  const withoutHash = hashIndex === -1 ? path : path.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? "" : path.slice(hashIndex);
+  const queryIndex = withoutHash.indexOf("?");
+
+  return {
+    pathname:
+      queryIndex === -1 ? withoutHash : withoutHash.slice(0, queryIndex),
+    query: queryIndex === -1 ? "" : withoutHash.slice(queryIndex + 1),
+    hash,
+  };
+}
+
+export function searchParamsFromPath(path) {
+  const { query } = splitPath(path || "");
+  return new URLSearchParams(query);
+}
+
+export function applyQueryParams(path, params) {
+  const { pathname, query, hash } = splitPath(path || "/");
+
+  const searchParams = new URLSearchParams(query);
+  for (const [name, value] of Object.entries(params)) {
+    if (value) {
+      searchParams.set(name, value);
+    } else {
+      searchParams.delete(name);
+    }
+  }
+
+  const queryString = searchParams.toString();
+  return pathname + (queryString ? `?${queryString}` : "") + hash;
 }
 
 export function getCanonicalUrl(absoluteUrl) {

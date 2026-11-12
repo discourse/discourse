@@ -35,8 +35,6 @@ nl:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Geen actie"
         agree_and_keep_comment:
           title: "Reactie behouden"
           description: "Ga akkoord met de markering en laat de reactie ongewijzigd."
@@ -60,9 +58,12 @@ nl:
           description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
         disagree:
           title: "Reactie behouden"
+          description: "Ga niet akkoord met de markering en laat de reactie ongewijzigd."
         ignore:
           title: "Markering negeren"
+          description: "Verwijder het uit de wachtrij zonder actie te ondernemen."
         delete_and_agree:
+          title: "Markering negeren en reactie verwijderen"
           description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
   post_action_types:
     vote:
@@ -111,14 +112,17 @@ nl:
             title: "Reactie verwijderen"
             description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
           delete_and_agree:
+            title: "Markering negeren en reactie verwijderen"
             description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
           disagree_and_restore:
             title: "Niet akkoord en reactie herstellen"
             description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
           disagree:
             title: "Reactie behouden"
+            description: "Ga niet akkoord met de markering en laat de reactie ongewijzigd."
           ignore:
             title: "Markering negeren"
+            description: "Verwijder het uit de wachtrij zonder actie te ondernemen."
         transcript:
           view: "Transcript van eerdere reacties weergeven"
       reviewable_score_types:

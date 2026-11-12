@@ -9,7 +9,7 @@ ug:
     overall_sentiment:
       yaxis: "چېسلا"
     emotion_neutral:
-      title: "\U0001F610 بىتەرەپ"
+      title: "😐 بىتەرەپ"
   discourse_ai:
     tools:
       presets:
@@ -18,6 +18,50 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "ئەخلەت ئۇچۇر بايقاش"
+      navigation:
+        settings:
+          title: "بېكەت تەڭشىكى"
+        users:
+          title: "ئىشلەتكۈچى"
+        groups:
+          title: "گۇرۇپپا"
+        review:
+          title: "تەكشۈرۈش ئۆچىرىتى"
+        categories:
+          title: "سەھىپە"
+        tags:
+          title: "بەلگە"
+        themes:
+          title: "ئۆرنەك"
+        authentication:
+          title: "تىزىمغا كىرىش ۋە دەلىللەش"
+        backups:
+          title: "زاپاس"
+      read_post:
+        unknown_post: "يازما"
+      chat_tool_approval:
+        topic_states:
+          open: "ئاچ"
+          closed: "تاقالدى"
+          active: "ئاكتىپ"
+        solution_post: "يازما #%{number}"
+        duration_label: "داۋاملىشىش ۋاقتى:"
+        user_duration:
+          one: "%{count} كۈن"
+          other: "%{count} كۈن"
+        posts_label: "يازما"
+        category_label: "سەھىپە"
+        category_fields:
+          name: "ئىسمى"
+          description: "چۈشەندۈرۈش"
+          color: "رەڭ"
+          text_color: "تېكىست رەڭگى"
+        approve_label: "ھەئە"
+        reject_label: "ياق"
+        empty_value: "بوش"
       agents:
         titles_generator:
           name: "ماۋزۇ ھاسىللىغۇچ"
@@ -57,6 +101,8 @@ ug:
         github_file_content: "GitHub ھۆججەت مەزمۇنى"
         random_picker: "ئىختىيارىي تاللىغۇچ"
         categories: "سەھىپە تىزىمىنى كۆرسەت"
+        suspend_user: "ئىشلەتكۈچىنى توختات"
+        silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
@@ -72,6 +118,7 @@ ug:
         researcher_dry_run: "تەتقىقات تەييارلاش"
       tool_help:
         delete_topic: "تېما ئۆچۈرىدۇ"
+        create_category: "يېڭى سەھىپە قۇرىدۇ"
         search_settings: "بېكەت تەڭشىكىنى ئىزدەيدۇ"
       tool_description:
         dall_e: "%{prompt}"
@@ -85,19 +132,28 @@ ug:
           one: "%{count} بەلگە تېپىلدى"
           other: "%{count} بەلگە تېپىلدى"
         schema: "%{tables}"
+      flag_post:
+        score_reason: "سۈنئىي ئەقىل ماشىنا ئادىمى بۇ يازمىغا بەلگە سالدى."
       close_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
       unlist_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
+      lock_post:
+        errors:
+          not_found: "يازما تېپىلمىدى."
+          not_allowed: "بۇ يازمىنى قۇلۇپلاش ياكى قۇلۇپىنى ئېچىش ئىجازىتىڭىز يوق."
       delete_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "تېما تېپىلمىدى."
       edit_category:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      change_topic_category:
         errors:
           not_found: "تېما تېپىلمىدى."
           category_not_found: "سەھىپە تېپىلمىدى."
@@ -113,13 +169,37 @@ ug:
       assign:
         errors:
           not_found: "تېما تېپىلمىدى."
+      add_reviewable_note:
+        errors:
+          not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
+          not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
+    appearance_authoring:
+      default_theme: "كۆڭۈلدىكى ئۆرنەك"
+      colors:
+        light:
+          header_background: "بەت قاش"
+      fonts:
+        base_font: "مەزمۇن خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
+    mcp_theme_access:
+      "on": "ئوچۇق"
+      "off": "تاقاق"
+      none: "يوق"
+    mcp_app_setup:
+      none: "يوق"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "تەستىقلا"
+        reject:
+          title: "رەت قىل"
     summarization:
       chat:
         no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."
     sentiment:
       reports:
         post_emotion:
-          neutral: "بىتەرەپ \U0001F610"
+          neutral: "بىتەرەپ 😐"
         sentiment_analysis:
           positive: "ئىجابىي"
           negative: "سەلبىي"

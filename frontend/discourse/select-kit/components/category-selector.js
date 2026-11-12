@@ -1,12 +1,11 @@
 import EmberObject, { action, computed } from "@ember/object";
-import { mapBy } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
-import SelectedChoiceCategory from "./selected-choice-category";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
+import SelectedChoiceCategory from "./selected-choice-category.gjs";
 
 @classNames("category-selector")
 @selectKitOptions({
@@ -18,10 +17,11 @@ import SelectedChoiceCategory from "./selected-choice-category";
 })
 @pluginApiIdentifiers(["category-selector"])
 export default class CategorySelector extends MultiSelectComponent {
+  /** @type {Array<import("discourse/models/category").default | { id: number, name: string }> | null | undefined} */
   categories = null;
-  blockedCategories = null;
 
-  @mapBy("categories", "id") value;
+  /** @type {import("discourse/models/category").default[] | null | undefined} */
+  blockedCategories = null;
 
   init() {
     super.init(...arguments);
@@ -29,6 +29,11 @@ export default class CategorySelector extends MultiSelectComponent {
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
+  }
+
+  @computed("categories.@each.id")
+  get value() {
+    return this.categories?.map?.((item) => item.id) ?? [];
   }
 
   @computed("categories.[]", "blockedCategories.[]")
@@ -78,7 +83,7 @@ export default class CategorySelector extends MultiSelectComponent {
       (categories.length === 1 ||
         (categories.length > 0 &&
           categories[0].name.localeCompare(filter) === 0)) &&
-      categories[0].subcategory_count > 0
+      categories[0].has_children
     ) {
       categories.splice(
         1,

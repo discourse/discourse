@@ -10,6 +10,10 @@ RSpec.describe TagGuardian do
   fab!(:trust_level_3)
 
   describe "#can_see_tag?" do
+    it "returns false when the tag is missing" do
+      expect(Guardian.new(nil).can_see_tag?(nil)).to be_falsey
+    end
+
     it "returns false when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
@@ -32,6 +36,22 @@ RSpec.describe TagGuardian do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
 
       expect(Guardian.new(admin).can_see_tag?(tag)).to be_truthy
+    end
+  end
+
+  describe "#visible_tag_ids" do
+    it "memoizes category-aware tag visibility" do
+      visible_tag = Fabricate(:tag)
+      restricted_tag = Fabricate(:tag)
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      private_category.tags = [restricted_tag]
+      guardian = Guardian.new(user)
+
+      queries = track_sql_queries { 2.times { guardian.visible_tag_ids } }
+
+      expect(guardian.visible_tag_ids).to include(visible_tag.id)
+      expect(guardian.visible_tag_ids).not_to include(restricted_tag.id)
+      expect(queries.count { |query| query.include?("FROM \"tags\"") }).to eq(1)
     end
   end
 
@@ -66,6 +86,21 @@ RSpec.describe TagGuardian do
     it "returns true when user is in an allowed group" do
       SiteSetting.edit_tags_allowed_groups = "1|2|13"
       expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_truthy
+    end
+
+    it "returns false for a hidden tag when user is not in the tag's permitted group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_falsey
+    end
+
+    it "returns true for a hidden tag when user is admin" do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      expect(Guardian.new(admin).can_edit_tag?(tag)).to be_truthy
+    end
+
+    it "requires a tag" do
+      expect { Guardian.new(trust_level_3).can_edit_tag? }.to raise_error(ArgumentError)
     end
   end
 
@@ -112,6 +147,13 @@ RSpec.describe TagGuardian do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|11"
 
       expect(Guardian.new(trust_level_1).can_tag_pms?).to be_truthy
+    end
+
+    it "returns true for any user when everyone is mapped to logged_in_users" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+
+      expect(Guardian.new(trust_level_0).can_tag_pms?).to be_truthy
     end
   end
 

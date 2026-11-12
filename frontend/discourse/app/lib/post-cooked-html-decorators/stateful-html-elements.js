@@ -1,5 +1,14 @@
+import { REVEAL_EVENT } from "discourse/lib/highlight-html";
+
 export default function (element, context) {
   restoreOpenedDetails(element, context);
+  openDetailsOnReveal(element);
+}
+
+function openDetailsOnReveal(element) {
+  element.querySelectorAll("details").forEach((details) => {
+    details.addEventListener(REVEAL_EVENT, () => (details.open = true));
+  });
 }
 
 function restoreOpenedDetails(element, context) {

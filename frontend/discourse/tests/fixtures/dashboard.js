@@ -1,6 +1,9 @@
-export default {
+const dashboardFixtures = {
   "/admin/dashboard.json": {
-    updated_at: "2018-04-25T08:06:11.292Z",
-    has_unseen_features: true
+    sections: [],
+    configuration: { sections: [] },
+    problems: [],
   },
 };
+
+export default dashboardFixtures;

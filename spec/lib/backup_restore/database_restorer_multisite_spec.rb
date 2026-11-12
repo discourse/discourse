@@ -13,7 +13,7 @@ RSpec.describe BackupRestore::DatabaseRestorer, type: :multisite do
     context "with database connection" do
       it "reconnects to the correct database" do
         RailsMultisite::ConnectionManagement.establish_connection(db: "second")
-        execute_stubbed_restore
+        execute_stubbed_restore(stub_reconnect: false)
         expect(RailsMultisite::ConnectionManagement.current_db).to eq("second")
       end
     end

@@ -9,7 +9,10 @@ jobs:
     if: |
       github.event.issue.pull_request &&
       contains(github.event.comment.body, '@discoursebot backport') &&
-      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+      (
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) ||
+        github.event.comment.user.login == 'patch-triage[bot]'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -35,7 +38,7 @@ jobs:
             --body "Backport started. [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN }}
@@ -49,4 +52,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
           PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
         run: ruby script/backport.rb

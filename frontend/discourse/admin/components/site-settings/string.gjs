@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input, Textarea } from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 
 @tagName("")
 export default class String extends Component {
@@ -9,23 +9,23 @@ export default class String extends Component {
     <div ...attributes>
       {{#if this.setting.textarea}}
         <Textarea
-          @value={{this.value}}
           class="input-setting-textarea"
           @disabled={{@disabled}}
+          @value={{this.value}}
         />
       {{else if this.isSecret}}
         <Input
+          autocomplete="new-password"
+          class="input-setting-string"
+          @disabled={{@disabled}}
           @type="password"
           @value={{this.value}}
-          class="input-setting-string"
-          autocomplete="new-password"
-          @disabled={{@disabled}}
         />
       {{else}}
-        <TextField
-          @value={{this.value}}
+        <DTextField
           @classNames="input-setting-string"
           @disabled={{@disabled}}
+          @value={{this.value}}
         />
       {{/if}}
     </div>

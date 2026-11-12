@@ -7,8 +7,30 @@ RSpec.describe TopicStatusUpdater do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
 
-  it "avoids notifying on automatically closed topics" do
-    # TODO: TopicStatusUpdater should suppress message bus updates from the users it "pretends to read"
+  it "retries a status change when an event listener fails" do
+    topic = create_topic
+    handler = proc { raise "Listener unavailable" }
+    DiscourseEvent.on(:topic_status_updated, &handler)
+
+    expect do described_class.new(topic, admin).update!("closed", true) end.to raise_error(
+      "Listener unavailable",
+    )
+    expect(topic.reload).not_to be_closed
+
+    DiscourseEvent.off(:topic_status_updated, &handler)
+    events =
+      DiscourseEvent.track_events(:topic_status_updated) do
+        described_class.new(topic, admin).update!("closed", true)
+      end
+
+    expect(events.map { |event| event[:params] }).to eq(
+      [[topic, "closed", true, { acting_user: admin }]],
+    )
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &handler) if handler
+  end
+
+  it "does not advance read state when a topic is automatically closed" do
     post =
       PostCreator.create(
         user,
@@ -23,16 +45,14 @@ RSpec.describe TopicStatusUpdater do
 
     expect(post.topic.posts.count).to eq(2)
 
+    # The autoclose small_action advances no counter, so the author's read state
+    # stays on the original post.
     tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(2)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
-  it "respects topics_unread_when_closed preference for private messages" do
-    user_wants_unread = Fabricate(:user)
-    user_wants_unread.user_option.update!(topics_unread_when_closed: true)
-
-    user_wants_read = Fabricate(:user)
-    user_wants_read.user_option.update!(topics_unread_when_closed: false)
+  it "does not advance read state when a private message is closed" do
+    recipient = Fabricate(:user)
 
     post =
       PostCreator.create(
@@ -40,37 +60,21 @@ RSpec.describe TopicStatusUpdater do
         raw: "this is a private message",
         title: "private message title",
         archetype: Archetype.private_message,
-        target_usernames: [user_wants_unread.username, user_wants_read.username],
+        target_usernames: [recipient.username],
       )
 
-    TopicUser.update_last_read(user_wants_unread, post.topic.id, 1, 1, 0)
-    TopicUser.update_last_read(user_wants_read, post.topic.id, 1, 1, 0)
-
-    PostTiming.create!(
-      topic_id: post.topic.id,
-      post_number: 1,
-      user_id: user_wants_unread.id,
-      msecs: 1000,
-    )
-    PostTiming.create!(
-      topic_id: post.topic.id,
-      post_number: 1,
-      user_id: user_wants_read.id,
-      msecs: 1000,
-    )
+    TopicUser.update_last_read(recipient, post.topic.id, 1, 1, 0)
+    PostTiming.create!(topic: post.topic, post_number: 1, user: recipient, msecs: 1000)
 
     TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
 
     # Should have 2 posts (original + close action)
     expect(post.topic.posts.count).to eq(2)
 
-    # User with topics_unread_when_closed enabled should NOT have read the close action
-    tu_wants_unread = TopicUser.find_by(user_id: user_wants_unread.id, topic_id: post.topic.id)
-    expect(tu_wants_unread.last_read_post_number).to eq(1)
-
-    # User with topics_unread_when_closed disabled SHOULD have read the close action
-    tu_wants_read = TopicUser.find_by(user_id: user_wants_read.id, topic_id: post.topic.id)
-    expect(tu_wants_read.last_read_post_number).to eq(2)
+    # The close small_action advances no counter, so the recipient's read state
+    # stays on the original post.
+    tu = TopicUser.find_by(user: recipient, topic: post.topic)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
   it "adds an autoclosed message" do
@@ -85,18 +89,42 @@ RSpec.describe TopicStatusUpdater do
     expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0))
   end
 
-  it "triggers a DiscourseEvent on close" do
+  it "triggers a DiscourseEvent with :manually when manually closing a topic" do
     topic = create_topic
 
-    called = false
-    updater = ->(_) { called = true }
+    closure_type = nil
+    captured_topic = nil
+    updater = ->(t, type) do
+      captured_topic = t
+      closure_type = type
+    end
 
     DiscourseEvent.on(:topic_closed, &updater)
     TopicStatusUpdater.new(topic, admin).update!("closed", true)
     DiscourseEvent.off(:topic_closed, &updater)
 
     expect(topic).to be_closed
-    expect(called).to eq(true)
+    expect(captured_topic).to eq(topic)
+    expect(closure_type).to eq(:manually)
+  end
+
+  it "triggers a DiscourseEvent with :automatically when auto-closing a topic" do
+    topic = create_topic
+
+    closure_type = nil
+    captured_topic = nil
+    updater = ->(t, type) do
+      captured_topic = t
+      closure_type = type
+    end
+
+    DiscourseEvent.on(:topic_closed, &updater)
+    TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)
+    DiscourseEvent.off(:topic_closed, &updater)
+
+    expect(topic).to be_closed
+    expect(captured_topic).to eq(topic)
+    expect(closure_type).to eq(:automatically)
   end
 
   it "adds an autoclosed message based on last post" do

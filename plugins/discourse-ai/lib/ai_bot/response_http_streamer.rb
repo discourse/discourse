@@ -19,11 +19,9 @@ module DiscourseAi
 
         def schedule_block(&block)
           thread_pool.post do
-            begin
-              block.call
-            rescue StandardError => e
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
-            end
+            block.call
+          rescue StandardError => e
+            Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
           end
         end
 
@@ -32,6 +30,7 @@ module DiscourseAi
         def queue_streamed_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -42,45 +41,46 @@ module DiscourseAi
           tool_results: nil
         )
           schedule_block do
-            begin
-              if custom_tools.present? || resume_token.present?
-                stream_custom_tool_reply(
-                  io: io,
-                  agent: agent,
-                  user: user,
-                  topic: topic,
-                  query: query,
-                  custom_instructions: custom_instructions,
-                  current_user: current_user,
-                  custom_tools: custom_tools,
-                  resume_token: resume_token,
-                  tool_results: tool_results,
-                )
-              else
-                stream_standard_reply(
-                  io: io,
-                  agent: agent,
-                  user: user,
-                  topic: topic,
-                  query: query,
-                  custom_instructions: custom_instructions,
-                  current_user: current_user,
-                )
-              end
-            rescue StandardError => e
-              # make it a tiny bit easier to debug in dev, this is tricky
-              # multi-threaded code that exhibits various limitations in rails
-              p e if Rails.env.local?
-              Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
-            ensure
-              io.close
+            if custom_tools.present? || resume_token.present?
+              stream_custom_tool_reply(
+                io: io,
+                agent: agent,
+                llm_model: llm_model,
+                user: user,
+                topic: topic,
+                query: query,
+                custom_instructions: custom_instructions,
+                current_user: current_user,
+                custom_tools: custom_tools,
+                resume_token: resume_token,
+                tool_results: tool_results,
+              )
+            else
+              stream_standard_reply(
+                io: io,
+                agent: agent,
+                llm_model: llm_model,
+                user: user,
+                topic: topic,
+                query: query,
+                custom_instructions: custom_instructions,
+                current_user: current_user,
+              )
             end
+          rescue StandardError => e
+            # make it a tiny bit easier to debug in dev, this is tricky
+            # multi-threaded code that exhibits various limitations in rails
+            p e if Rails.env.local?
+            Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
+          ensure
+            io.close
           end
         end
 
         def stream_standard_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -101,6 +101,12 @@ module DiscourseAi
             post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
             post_params[:archetype] = Archetype.private_message
             post_params[:target_usernames] = "#{user.username},#{agent.user.username}"
+            post_params[:topic_opts] = {
+              custom_fields: {
+                TOPIC_AI_AGENT_ID_FIELD => agent.id,
+                TOPIC_AI_LLM_MODEL_ID_FIELD => llm_model.id,
+              },
+            }
           end
 
           post = PostCreator.create!(user, post_params)
@@ -109,13 +115,27 @@ module DiscourseAi
           write_headers(io)
 
           agent_class = DiscourseAi::Agents::Agent.find_by(id: agent.id, user: current_user)
-          bot = DiscourseAi::Agents::Bot.as(agent.user, agent: agent_class.new)
+          raise DiscourseAi::Agents::Bot::BOT_NOT_FOUND if agent_class.blank?
+          bot = DiscourseAi::Agents::Bot.as(agent.user, agent: agent_class.new, model: llm_model)
 
-          write_chunk(io, { topic_id: topic.id, bot_user_id: agent.user.id, agent_id: agent.id })
+          write_chunk(
+            io,
+            {
+              topic_id: topic.id,
+              bot_user_id: agent.user.id,
+              agent_id: agent.id,
+              llm_model_id: llm_model.id,
+            },
+          )
 
           DiscourseAi::AiBot::Playground
             .new(bot)
-            .reply_to(post, custom_instructions: custom_instructions) do |partial|
+            .reply_to(
+              post,
+              custom_instructions: custom_instructions,
+              feature_name: "bot",
+              authorization_user_id: current_user.id,
+            ) do |partial|
               next if partial.empty?
 
               write_chunk(io, { partial: partial })
@@ -127,6 +147,7 @@ module DiscourseAi
         def stream_custom_tool_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -143,6 +164,7 @@ module DiscourseAi
           session =
             DiscourseAi::AiBot::StreamReplyCustomToolsSession.new(
               agent: agent,
+              llm_model: llm_model,
               user: user,
               topic: topic,
               query: query,
@@ -162,12 +184,15 @@ module DiscourseAi
           end
 
           finish_chunks(io)
-        rescue DiscourseAi::AiBot::StreamReplyCustomToolsSession::ProtocolError => e
+        rescue DiscourseAi::AiBot::StreamReplyCustomToolsSession::ProtocolError,
+               DiscourseAi::Completions::ContextPreparation::Error => e
           Discourse.warn_exception(
             e,
             message: "Discourse AI: Stream reply custom tool protocol error",
           )
-          write_chunk(io, { event: "error", error: e.message })
+          payload = { event: "error", error: e.message }
+          payload[:reason] = e.reason if e.respond_to?(:reason)
+          write_chunk(io, payload)
           finish_chunks(io)
         rescue StandardError => e
           # Headers were already sent. Emit an error frame and chunk terminator so clients can

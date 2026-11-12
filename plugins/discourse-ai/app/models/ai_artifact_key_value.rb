@@ -42,13 +42,13 @@ end
 # Table name: ai_artifact_key_values
 #
 #  id             :bigint           not null, primary key
-#  ai_artifact_id :bigint           not null
-#  user_id        :integer          not null
 #  key            :string(50)       not null
-#  value          :string(20000)    not null
 #  public         :boolean          default(FALSE), not null
+#  value          :string(20000)    not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  ai_artifact_id :bigint           not null
+#  user_id        :integer          not null
 #
 # Indexes
 #

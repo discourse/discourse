@@ -36,4 +36,12 @@ RSpec.describe UserAssociatedGroup do
     uag.destroy!
     expect(group.users.include?(user)).to eq(false)
   end
+
+  it "does not remove user from groups with no OIDC association when destroyed" do
+    unsynced_group = Fabricate(:group)
+    unsynced_group.add(user)
+
+    uag.destroy!
+    expect(unsynced_group.users.include?(user)).to eq(true)
+  end
 end

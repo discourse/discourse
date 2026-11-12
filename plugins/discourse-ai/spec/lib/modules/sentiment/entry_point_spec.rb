@@ -1,11 +1,22 @@
 # frozen_string_literal: true
 
-require_relative "../../../support/sentiment_inference_stubs"
-
 RSpec.describe DiscourseAi::Sentiment::EntryPoint do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before { enable_current_plugin }
+
+  describe "admin dashboard report registration" do
+    it "excludes the per-emotion reports while keeping the sentiment summaries" do
+      DiscourseAi::Sentiment::Emotions::LIST.each do |emotion|
+        expect(Report.dashboard_excluded_report_types).to include("emotion_#{emotion}")
+      end
+
+      expect(Report.dashboard_excluded_report_types).not_to include(
+        "overall_sentiment",
+        "sentiment_analysis",
+      )
+    end
+  end
 
   describe "registering event callbacks" do
     context "when editing a post" do
@@ -44,28 +55,43 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
     fab!(:post_2, :post)
 
     describe "overall_sentiment report" do
-      let(:positive_classification) { { negative: 0.2, neutral: 0.3, positive: 0.7 } }
-      let(:negative_classification) { { negative: 0.65, neutral: 0.2, positive: 0.1 } }
-
-      def sentiment_classification(post, classification)
-        Fabricate(:sentiment_classification, target: post, classification: classification)
+      fab!(:post_1_classification) do
+        Fabricate(
+          :sentiment_classification,
+          target: post_1,
+          classification: {
+            negative: 0.2,
+            neutral: 0.3,
+            positive: 0.7,
+          },
+        )
+      end
+      fab!(:post_2_classification) do
+        Fabricate(
+          :sentiment_classification,
+          target: post_2,
+          classification: {
+            negative: 0.65,
+            neutral: 0.2,
+            positive: 0.1,
+          },
+        )
+      end
+      fab!(:private_message_classification) do
+        Fabricate(
+          :sentiment_classification,
+          target: pm,
+          classification: post_1_classification.classification,
+        )
       end
 
       it "calculate averages using only public posts" do
-        sentiment_classification(post_1, positive_classification)
-        sentiment_classification(post_2, negative_classification)
-        sentiment_classification(pm, positive_classification)
-
         report = Report.find("overall_sentiment")
         overall_sentiment = report.data[0][:data][0][:y].to_i
         expect(overall_sentiment).to eq(0)
       end
 
       it "exports the report without any errors" do
-        sentiment_classification(post_1, positive_classification)
-        sentiment_classification(post_2, negative_classification)
-        sentiment_classification(pm, positive_classification)
-
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
         exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "overall_sentiment")
@@ -77,102 +103,159 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
     end
 
     describe "post_emotion report" do
-      let(:emotion_1) do
-        {
-          love: 0.9444406,
-          admiration: 0.013724019,
-          surprise: 0.010188869,
-          excitement: 0.007888741,
-          curiosity: 0.006301749,
-          joy: 0.004060776,
-          confusion: 0.0028238264,
-          approval: 0.0018160914,
-          realization: 0.001174849,
-          neutral: 0.0008561869,
-          amusement: 0.00075853954,
-          disapproval: 0.0006987994,
-          disappointment: 0.0006166883,
-          anger: 0.0006000542,
-          annoyance: 0.0005615011,
-          desire: 0.00046368592,
-          fear: 0.00045117878,
-          sadness: 0.00041727215,
-          gratitude: 0.00041727215,
-          optimism: 0.00037112957,
-          disgust: 0.00035552034,
-          nervousness: 0.00022954118,
-          embarrassment: 0.0002049572,
-          caring: 0.00017737568,
-          remorse: 0.00011407586,
-          grief: 0.0001006716,
-          pride: 0.00009681493,
-          relief: 0.00008919009,
-        }
-      end
-      let(:emotion_2) do
-        {
-          love: 0.8444406,
-          admiration: 0.113724019,
-          surprise: 0.010188869,
-          excitement: 0.007888741,
-          curiosity: 0.006301749,
-          joy: 0.004060776,
-          confusion: 0.0028238264,
-          approval: 0.0018160914,
-          realization: 0.001174849,
-          neutral: 0.0008561869,
-          amusement: 0.00075853954,
-          disapproval: 0.0006987994,
-          disappointment: 0.0006166883,
-          anger: 0.0006000542,
-          annoyance: 0.0005615011,
-          desire: 0.00046368592,
-          fear: 0.00045117878,
-          sadness: 0.00041727215,
-          gratitude: 0.00041727215,
-          optimism: 0.00037112957,
-          disgust: 0.00035552034,
-          nervousness: 0.00022954118,
-          embarrassment: 0.0002049572,
-          caring: 0.00017737568,
-          remorse: 0.00011407586,
-          grief: 0.0001006716,
-          pride: 0.00009681493,
-          relief: 0.00008919009,
-        }
-      end
-      let(:model_used) { "SamLowe/roberta-base-go_emotions" }
-
-      def emotion_classification(post, classification)
+      fab!(:post_1_classification) do
         Fabricate(
           :sentiment_classification,
-          target: post,
-          model_used: model_used,
-          classification: classification,
+          target: post_1,
+          model_used: "SamLowe/roberta-base-go_emotions",
+          classification: {
+            love: 0.9444406,
+            admiration: 0.013724019,
+            surprise: 0.010188869,
+            excitement: 0.007888741,
+            curiosity: 0.006301749,
+            joy: 0.004060776,
+            confusion: 0.0028238264,
+            approval: 0.0018160914,
+            realization: 0.001174849,
+            neutral: 0.0008561869,
+            amusement: 0.00075853954,
+            disapproval: 0.0006987994,
+            disappointment: 0.0006166883,
+            anger: 0.0006000542,
+            annoyance: 0.0005615011,
+            desire: 0.00046368592,
+            fear: 0.00045117878,
+            sadness: 0.00041727215,
+            gratitude: 0.00041727215,
+            optimism: 0.00037112957,
+            disgust: 0.00035552034,
+            nervousness: 0.00022954118,
+            embarrassment: 0.0002049572,
+            caring: 0.00017737568,
+            remorse: 0.00011407586,
+            grief: 0.0001006716,
+            pride: 0.00009681493,
+            relief: 0.00008919009,
+          },
         )
       end
-
-      def strip_emoji_and_downcase(str)
-        stripped_str = str.gsub(/[^\p{L}\p{N}]+/, "") # remove any non-alphanumeric characters
-        stripped_str.downcase
+      fab!(:post_2_classification) do
+        Fabricate(
+          :sentiment_classification,
+          target: post_2,
+          model_used: "SamLowe/roberta-base-go_emotions",
+          classification: {
+            love: 0.8444406,
+            admiration: 0.113724019,
+            surprise: 0.010188869,
+            excitement: 0.007888741,
+            curiosity: 0.006301749,
+            joy: 0.004060776,
+            confusion: 0.0028238264,
+            approval: 0.0018160914,
+            realization: 0.001174849,
+            neutral: 0.0008561869,
+            amusement: 0.00075853954,
+            disapproval: 0.0006987994,
+            disappointment: 0.0006166883,
+            anger: 0.0006000542,
+            annoyance: 0.0005615011,
+            desire: 0.00046368592,
+            fear: 0.00045117878,
+            sadness: 0.00041727215,
+            gratitude: 0.00041727215,
+            optimism: 0.00037112957,
+            disgust: 0.00035552034,
+            nervousness: 0.00022954118,
+            embarrassment: 0.0002049572,
+            caring: 0.00017737568,
+            remorse: 0.00011407586,
+            grief: 0.0001006716,
+            pride: 0.00009681493,
+            relief: 0.00008919009,
+          },
+        )
+      end
+      fab!(:private_message_classification) do
+        Fabricate(
+          :sentiment_classification,
+          target: pm,
+          model_used: "SamLowe/roberta-base-go_emotions",
+          classification: post_2_classification.classification,
+        )
       end
 
       it "calculate averages using only public posts" do
         threshold = 0.10
-
-        emotion_classification(post_1, emotion_1)
-        emotion_classification(post_2, emotion_2)
-        emotion_classification(pm, emotion_2)
-
         report = Report.find("emotion_love")
 
         data_point = report.data
 
         data_point.each do |point|
-          expected = (emotion_1[:love] > threshold ? 1 : 0) + (emotion_2[:love] > threshold ? 1 : 0)
+          expected =
+            (post_1_classification.classification["love"] > threshold ? 1 : 0) +
+              (post_2_classification.classification["love"] > threshold ? 1 : 0)
           expect(point[:y]).to eq(expected)
         end
       end
+    end
+  end
+
+  describe "independent capability enable flags" do
+    fab!(:post)
+    fab!(:admin)
+
+    shared_examples "gating edited post sentiment features" do |sentiment_enabled:, emotion_enabled:, features_enabled:|
+      it "enqueues analysis and exposes reports only for enabled capabilities" do
+        SiteSetting.ai_sentiment_enabled = sentiment_enabled
+        SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
+        Fabricate(:sentiment_classification, target: post)
+
+        PostRevisor.new(post).revise!(post.user, raw: "#{post.raw} Edited content")
+
+        expect(job_enqueued?(job: :post_sentiment_analysis, args: { post_id: post.id })).to eq(
+          features_enabled,
+        )
+        serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+        expect(serializer.can_see_sentiment_reports).to eq(features_enabled)
+      end
+    end
+
+    context "with both capabilities disabled" do
+      include_examples "gating edited post sentiment features",
+                       sentiment_enabled: false,
+                       emotion_enabled: false,
+                       features_enabled: false
+    end
+
+    context "with only sentiment enabled" do
+      include_examples "gating edited post sentiment features",
+                       sentiment_enabled: true,
+                       emotion_enabled: false,
+                       features_enabled: true
+    end
+
+    context "with only emotion enabled" do
+      include_examples "gating edited post sentiment features",
+                       sentiment_enabled: false,
+                       emotion_enabled: true,
+                       features_enabled: true
+    end
+
+    context "with both capabilities enabled" do
+      include_examples "gating edited post sentiment features",
+                       sentiment_enabled: true,
+                       emotion_enabled: true,
+                       features_enabled: true
+    end
+
+    it "keeps report visibility off without stored results even when emotion is enabled" do
+      SiteSetting.ai_sentiment_emotion_enabled = true
+
+      serializer = CurrentUserSerializer.new(admin, scope: admin.guardian)
+
+      expect(serializer.can_see_sentiment_reports).to eq(false)
     end
   end
 end

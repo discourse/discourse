@@ -1,30 +1,38 @@
 /* eslint-disable simple-import-sort/imports */
-import Application from "../app";
-import "./loader-shims";
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
+import Application from "discourse/app";
+import "./loader-shims.js";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
-import { getOwner } from "@ember/owner";
+import { ASYNC_OBSERVERS, SYNC_OBSERVERS } from "@ember/-internals/metal";
 import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
+  pauseTest,
   setApplication,
-  setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
+import "message-bus-client";
+// Captures `setTimeout` when evaluated, so it must load before a test can fake timers
+import "pikaday";
+import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
+import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { removeCookie } from "discourse/lib/cookie";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import {
-  disableLoadMoreObserver,
-  enableLoadMoreObserver,
-} from "discourse/components/load-more";
+import { WebauthnAbortHandler } from "discourse/lib/webauthn";
+import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import { resetCategoryCache } from "discourse/models/category";
+import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -42,51 +50,35 @@ import {
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
-import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setDefaultOwner } from "discourse/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse/lib/get-url";
-import { buildResolver } from "discourse/resolver";
-import { loadSprites } from "../lib/svg-sprite-loader";
-import * as FakerModule from "@faker-js/faker";
-import { setLoadedFaker } from "discourse/lib/load-faker";
+import {
+  currentSettings,
+  resetSettings,
+} from "discourse/tests/helpers/site-settings";
+import setupNavigationGuard from "discourse/tests/navigation-guard";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 
-const REPORT_MEMORY = false;
 let cancelled = false;
 let started = false;
 
-function createApplication(config, settings) {
+function createApplication(config) {
   const app = Application.create(config);
 
-  app.injectTestHelpers();
   setApplication(app);
-  setResolver(buildResolver("discourse").create({ namespace: app }));
 
-  // Modern Ember only sets up a container when the ApplicationInstance
-  // is booted. We have legacy code which relies on having access to a container
-  // before boot (e.g. during pre-initializers)
-  //
-  // This hack sets up a container early, then stubs the container setup method
-  // so that Ember will use the same container instance when it boots the ApplicationInstance
-  //
-  // Note that this hack is not required in production because we use the default `autoboot` flag,
-  // which triggers the internal `_globalsMode` flag, which sets up an ApplicationInstance immediately when
-  // an Application is initialized (via the `_buildDeprecatedInstance` method).
-  //
-  // In the future, we should move away from relying on the `container` before the ApplicationInstance
-  // is booted, and then remove this hack.
-  let container = app.__registry__.container();
-  app.__container__ = container;
-  setDefaultOwner(container);
-  sinon
-    .stub(Object.getPrototypeOf(app.__registry__), "container")
-    .callsFake((opts) => {
-      container.owner = opts.owner;
-      container.registry = opts.owner.__registry__;
-      return container;
-    });
-
-  SiteSettingService.create = () => settings;
+  // Production's autoboot builds the ApplicationInstance before initializers run, and they
+  // rely on its container. ember-qunit only builds one after booting the app, so build it
+  // up front and have ember-qunit boot this one.
+  const instance = app.buildInstance();
+  app.__container__ = instance.__container__;
+  app.buildInstance = () => instance;
+  setDefaultOwner(app.__container__);
 
   if (!started) {
     app.instanceInitializer({
@@ -127,7 +119,6 @@ function setupToolbar() {
     value: [
       "core",
       "plugins",
-      "all",
       "theme-qunit",
       "-----",
       ...(window._discourseQunitPluginNames || []),
@@ -154,8 +145,6 @@ function setupToolbar() {
     select.querySelector("option[value=-----]").disabled = true;
     select.querySelector("option[value=plugins]").innerText =
       "all plugins (not recommended)";
-    select.querySelector("option[value=all]").innerText =
-      "all (not recommended)";
   });
 
   // Abort tests when the qunit controls are clicked
@@ -178,9 +167,6 @@ function setupToolbar() {
 }
 
 function reportMemoryUsageAfterTests() {
-  if (!REPORT_MEMORY) {
-    return;
-  }
   QUnit.done(() => {
     const usageBytes = performance.memory?.usedJSHeapSize;
     let result;
@@ -206,7 +192,7 @@ function writeSummaryLine(message) {
   }
 }
 
-export default function setupTests(config) {
+export default async function setupTests(config) {
   const target = getUrlParameter("target") || "core";
 
   disableCloaking();
@@ -216,90 +202,93 @@ export default function setupTests(config) {
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
 
-  window.onunhandledrejection = (event) => {
-    // reports test boot failures to testem, so the browser doesn't hang forever
-    window.Testem?.emit(
-      "top-level-error",
-      String(event.reason),
-      window.location.href,
-      "0"
-    );
-  };
-
-  sinon.config = {
-    injectIntoThis: false,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: true,
-  };
+  // Available in tests without an import
+  window.pauseTest = pauseTest;
 
   // Stop the message bus so we don't get ajax calls
-  MessageBus.stop();
+  window.MessageBus.stop();
 
-  // disable logster error reporting
-  if (window.Logster) {
-    window.Logster.enabled = false;
-  } else {
-    window.Logster = { enabled: false };
-  }
-
-  let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
-  if (setupDataElement) {
-    setupData = setupDataElement.dataset;
-    setupDataElement.remove();
+  const setupData = setupDataElement.dataset;
+  setupDataElement.remove();
+
+  await loadSprites(setupData.svgSpritePath, "fontawesome");
+
+  // Shortcuts render only when a keyboard is likely; assume one before the
+  // first test, and after each test in testCleanup, so rendering does not
+  // depend on the test browser's pointer.
+  noteKeyboardEvidence();
+
+  const headlessTestem =
+    window.Testem && navigator.userAgent.includes("HeadlessChrome");
+
+  // In the browser UI, toolbar changes and manual reloads navigate on purpose
+  if (window.Testem) {
+    setupNavigationGuard({
+      qunit: QUnit,
+      navigation: window.navigation,
+      storage: window.sessionStorage,
+    });
   }
+
+  const preexistingObserved = new Set([
+    ...ASYNC_OBSERVERS.keys(),
+    ...SYNC_OBSERVERS.keys(),
+  ]);
+
+  // Tests change settings through currentSettings(), so the service must be that object
+  SiteSettingService.create = currentSettings;
+
+  const reportRequests = getUrlParameter("report_requests") === "1";
+
+  pretender.prepareBody = function (body) {
+    if (typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  if (reportRequests) {
+    pretender.handledRequest = function (verb, path) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
+  pretender.unhandledRequest = function (verb, path) {
+    if (reportRequests) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+
+    // eslint-disable-next-line no-console
+    console.error(error);
+    throw new Error(error);
+  };
+
+  pretender.checkPassthrough = (request) =>
+    request.requestHeaders["Discourse-Script"];
 
   let app;
-  QUnit.testStart(function (ctx) {
-    let settings = resetSettings();
-
+  QUnit.testStart(async function (ctx) {
+    resetSettings();
     resetThemeSettings();
 
-    app = createApplication(config, settings);
+    app = createApplication(config);
 
-    const cdn = setupData ? setupData.cdn : null;
-    const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
-    if (setupData && setupData.s3BaseUrl) {
+    setupURL(setupData.cdn, "http://localhost:3000", setupData.baseUri, {
+      snapshot: true,
+    });
+    if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
 
-    applyDefaultHandlers(pretender);
-
-    pretender.prepareBody = function (body) {
-      if (typeof body === "object") {
-        return JSON.stringify(body);
-      }
-      return body;
-    };
-
-    if (QUnit.config.logAllRequests) {
-      pretender.handledRequest = function (verb, path) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path);
-      };
-    }
-
-    pretender.unhandledRequest = function (verb, path) {
-      if (QUnit.config.logAllRequests) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path + " missing");
-      }
-
-      const error =
-        "Unhandled request in test environment: " + path + " (" + verb + ")";
-
-      // eslint-disable-next-line no-console
-      console.error(error);
-      throw new Error(error);
-    };
-
-    pretender.checkPassthrough = (request) =>
-      request.requestHeaders["Discourse-Script"];
-
+    applyDefaultHandlers();
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
@@ -316,11 +305,33 @@ export default function setupTests(config) {
     sinon.stub(scrollManager, "unbindScrolling");
 
     disableLoadMoreObserver();
+
+    // Rendering tests mount in a zero-height container, so a virtualizer would compute an
+    // empty window and render nothing. Disable it globally (opt back in per-test with
+    // enableVirtualization) so tests mount every row; mirrors disableLoadMoreObserver.
+    //
+    // The fallback is a different code path, in which a row's index and its item can
+    // never disagree. A consumer whose behaviour depends on windowing therefore needs
+    // its own module that opts back in, or its suite says nothing about what ships.
+    disableVirtualization();
   });
 
   QUnit.testDone(function () {
-    testCleanup(getOwner(app), app);
+    testCleanup(app);
 
+    // A pending ceremony never settles in headless Chrome, so it would retain the app
+    WebauthnAbortHandler.controller?.abort();
+
+    // An open lightbox is a window global that would stop later tests opening one
+    window.pswp?.destroy();
+
+    // Test modules can keep fakes after the test; their unformatted error stacks,
+    // call history and pending timers would retain the test's owner
+    for (const fake of sinon.getFakes()) {
+      delete fake.stackTraceError;
+    }
+    sinon.resetHistory();
+    sinon.clock?.reset();
     sinon.restore();
 
     // Destroy the previous Application so its entire dependency graph
@@ -329,6 +340,21 @@ export default function setupTests(config) {
     run(() => {
       app.destroy();
     });
+
+    // Ember keeps observed objects in global maps until they're destroyed,
+    // which models never are
+    for (const map of [ASYNC_OBSERVERS, SYNC_OBSERVERS]) {
+      for (const observed of map.keys()) {
+        if (!preexistingObserved.has(observed)) {
+          map.delete(observed);
+        }
+      }
+    }
+
+    // The inspector shim's global list would otherwise pin the destroyed app's registry.
+    globalThis.emberInspectorApps = globalThis.emberInspectorApps?.filter(
+      (entry) => entry.app !== app
+    );
 
     resetPretender();
     clearPresenceState();
@@ -346,19 +372,29 @@ export default function setupTests(config) {
     testContainer.scrollLeft = 0;
 
     flushMap();
+    clearExtraAttributes();
 
-    MessageBus.unsubscribe("*");
+    window.MessageBus.unsubscribe("*");
     localStorage.clear();
+    if (headlessTestem) {
+      // Chrome keeps logged objects alive for DevTools even when it's closed
+      // eslint-disable-next-line no-console
+      console.clear();
+    }
+    // Color preferences persist in cookies, which would force a later test's color mode
+    removeCookie("forced_color_mode", { path: "/" });
+    removeCookie("color_scheme_id", { path: "/" });
+    removeCookie("dark_scheme_id", { path: "/" });
+    // Entering the login or signup route stores the test page URL here, and a
+    // later profile save would navigate to it
+    removeCookie("destination_url");
     enableLoadMoreObserver();
+    enableVirtualization();
 
     // Release the app reference so the destroyed app isn't retained
     // by this closure until the next test creates a new one.
     app = null;
   });
-
-  if (getUrlParameter("qunit_disable_auto_start") === "1") {
-    QUnit.config.autostart = false;
-  }
 
   if (getUrlParameter("loop")) {
     QUnit.done(({ failed }) => {
@@ -366,12 +402,6 @@ export default function setupTests(config) {
         window.location.reload();
       }
     });
-  }
-
-  handleLegacyParameters();
-
-  if (target === "theme-qunit") {
-    window.location.href = window.location.origin + "/theme-qunit";
   }
 
   const hasPluginJs = !!document.querySelector(
@@ -384,36 +414,26 @@ export default function setupTests(config) {
   // forces 0 as duration for all jquery animations
   $.fx.off = true;
 
-  setupToolbar();
-  reportMemoryUsageAfterTests();
-  patchFailedAssertion();
-  if (!window.Testem) {
-    // Running in a dev server - svg sprites are available
-    // Using a fake 40-char version hash will redirect to the current one
-    loadSprites(
-      "/svg-sprite/localhost/svg--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js",
-      "fontawesome"
-    );
+  if (headlessTestem) {
+    // Nobody sees this report, and it keeps every passed test's DOM to unhide later
+    QUnit.config.reporters.html = false;
+  } else {
+    setupToolbar();
   }
+  if (getUrlParameter("report_memory") === "1") {
+    reportMemoryUsageAfterTests();
+  }
+  patchFailedAssertion();
 
   setLoadedFaker(FakerModule);
 
   // core tests run without loading plugins or themes
   const isCoreTest = !hasPluginJs && !hasThemeJs;
-  const isPreinstalledPluginTest = !!(
-    document.querySelector(
-      // TODO (ROLLUP_PLUGIN_COMPILER): drop this legacy script tag check
-      `script[data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
-    ) ||
-    document.querySelector(
-      `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
-    )
+  const isPreinstalledPluginTest = !!document.querySelector(
+    `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
-  if (
-    window.EmberENV.RAISE_ON_DEPRECATION ??
-    (isCoreTest || isPreinstalledPluginTest)
-  ) {
+  if (config.RAISE_ON_DEPRECATION ?? (isCoreTest || isPreinstalledPluginTest)) {
     configureRaiseOnDeprecation();
   }
 }
@@ -446,20 +466,4 @@ function patchFailedAssertion() {
 
     oldPushResult.call(this, resultInfo);
   };
-}
-
-function handleLegacyParameters() {
-  for (const param of [
-    "qunit_single_plugin",
-    "qunit_skip_core",
-    "qunit_skip_plugins",
-  ]) {
-    if (getUrlParameter(param)) {
-      QUnit.begin(() => {
-        throw new Error(
-          `${param} is no longer supported. Use the 'target' parameter instead`
-        );
-      });
-    }
-  }
 }

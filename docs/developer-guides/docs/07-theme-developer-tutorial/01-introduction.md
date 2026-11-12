@@ -28,7 +28,7 @@ Discourse themes and theme components can either be Local or Remote. Local theme
 
 Once your theme becomes more complex, or if you want to share it with other communities, it's beneficial to make it a Remote Theme. These are stored on GitHub (or another Git hosting system), and can be installed on any community using the repository URL.
 
-All the themes in the #theme and #theme-component categories are remote themes.
+All the themes in the #customization:theme and #customization:theme-component categories are remote themes.
 
 ## Getting started with a local theme
 

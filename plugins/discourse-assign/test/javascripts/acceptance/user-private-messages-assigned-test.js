@@ -6,11 +6,12 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures.js";
 
-acceptance("Discourse Assign | User Private Messages", function (needs) {
+acceptance("User Private Messages", function (needs) {
   needs.user({
     can_assign: true,
+    can_assign_globally: true,
   });
 
   needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });

@@ -61,6 +61,26 @@ RSpec.describe "TopicThumbnail" do
     expect(topic.topic_thumbnails.length).to eq(0)
   end
 
+  it "skips optimized image creation for animated uploads when setting is enabled" do
+    SiteSetting.animated_topic_thumbnails = true
+    animated_upload = Fabricate(:image_upload, width: 50, height: 50, animated: true)
+
+    thumbnail = TopicThumbnail.find_or_create_for!(animated_upload, max_width: 49, max_height: 49)
+
+    expect(thumbnail).to be_present
+    expect(thumbnail.optimized_image_id).to be_nil
+  end
+
+  it "creates optimized image for animated uploads when setting is disabled" do
+    SiteSetting.animated_topic_thumbnails = false
+    animated_upload = Fabricate(:image_upload, width: 50, height: 50, animated: true)
+
+    thumbnail = TopicThumbnail.find_or_create_for!(animated_upload, max_width: 49, max_height: 49)
+
+    expect(thumbnail).to be_present
+    expect(thumbnail.optimized_image_id).to be_present
+  end
+
   it "cleans up unneeded sizes" do
     expect(topic.topic_thumbnails.length).to eq(1)
     topic.topic_thumbnails[0].update_column(:max_width, 999_999)

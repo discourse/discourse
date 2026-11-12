@@ -24,11 +24,11 @@ end
 # Table name: post_reply_keys
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  post_id    :integer          not null
 #  reply_key  :uuid             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  post_id    :integer          not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

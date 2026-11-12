@@ -213,9 +213,9 @@
       }
 
       img {
-        width: 100%;
-        max-width: var(--badge-icon-size);
-        max-height: var(--badge-icon-size);
+        width: var(--badge-icon-size);
+        height: var(--badge-icon-size);
+        object-fit: contain;
       }
 
       &.badge-type-gold .fa {
@@ -315,12 +315,6 @@
   margin-bottom: 2em;
   margin-top: 1em;
   gap: 1em;
-
-  .badge-grant-info {
-    &.hidden {
-      display: none;
-    }
-  }
 
   .grant-info-item {
     margin-bottom: 1em;

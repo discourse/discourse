@@ -1,3 +1,4 @@
+import UserMenuBookmarksListEmptyState from "discourse/components/user-menu/bookmarks-list-empty-state";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
@@ -32,7 +33,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   get emptyStateComponent() {
-    return "user-menu/bookmarks-list-empty-state";
+    return UserMenuBookmarksListEmptyState;
   }
 
   get #unreadBookmarkRemindersCount() {
@@ -62,6 +63,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
       content.push(
         new UserMenuNotificationItem({
           notification,
+          appEvents: this.appEvents,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
           site: this.site,

@@ -8,6 +8,8 @@ module AdPlugin
       topic_above_suggested: "",
       post_bottom: "",
       topic_list_between: "",
+      nested_roots_between: "",
+      above_site_header: "",
     }
 
     def self.all
@@ -37,6 +39,7 @@ module AdPlugin
           settings.merge(
             after_nth_post: SiteSetting.house_ads_after_nth_post,
             after_nth_topic: SiteSetting.house_ads_after_nth_topic,
+            after_nth_root: SiteSetting.house_ads_after_nth_root,
             house_ads_frequency: SiteSetting.house_ads_frequency,
           ),
         creatives:

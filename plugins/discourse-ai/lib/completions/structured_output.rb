@@ -24,6 +24,19 @@ module DiscourseAi
         @done = false
       end
 
+      def content?
+        raw = @raw_response.strip
+        return false if raw.empty? || raw.match?(/\A\{\s*\}\z/)
+        return false if raw == "{" && (@prefilled || !finished?)
+
+        true
+      end
+
+      def prefill
+        @prefilled = true
+        self << "{"
+      end
+
       def to_s
         # we may want to also normalize the JSON here for the broken case
         @raw_response.to_s
@@ -58,6 +71,7 @@ module DiscourseAi
         if @partial_json_tracker.broken?
           if @done
             return nil if @type_map[prop_name.to_sym].nil?
+            log_broken_stream
             return(
               DiscourseAi::Utils::BestEffortJsonParser.extract_key(
                 @raw_response,
@@ -84,11 +98,37 @@ module DiscourseAi
         end
       end
 
+      # Yields the unread chunk of a string property, if any. Reading consumes
+      # the buffer, so unlike a presence check at the call site this never
+      # drops whitespace-only chunks (e.g. a "\n\n" delta between paragraphs).
+      def read_buffered_property_chunk(prop_name)
+        chunk = read_buffered_property(prop_name)
+        yield chunk if !chunk.nil? && !chunk.empty?
+        chunk
+      end
+
+      # Until a later key starts or the response finishes, a streamed value may
+      # still be growing, e.g. an array whose last item is half written.
+      def property_complete?(prop_name)
+        @done || @partial_json_tracker.last_key != prop_name.to_s
+      end
+
       def notify_progress(key, value)
         key_sym = key.to_sym
         return if !@property_names.include?(key_sym)
 
         @tracked[key_sym] = value
+      end
+
+      private
+
+      def log_broken_stream
+        return if @broken_logged
+        @broken_logged = true
+        Rails.logger.warn(
+          "Discourse AI: structured output response was not valid JSON, " \
+            "falling back to best-effort parsing (#{@raw_response.bytesize} bytes)",
+        )
       end
     end
   end

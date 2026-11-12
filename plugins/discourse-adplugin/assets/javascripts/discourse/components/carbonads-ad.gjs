@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 export default class CarbonadsAd extends AdComponent {
   serve_id = null;
@@ -57,8 +57,8 @@ export default class CarbonadsAd extends AdComponent {
 
   <template>
     {{#if this.showAd}}
-      {{! template-lint-disable no-forbidden-elements }}
-      <script src={{this.url}} id="_carbonads_js" async type="text/javascript">
+      {{! eslint-disable ember/template-no-forbidden-elements }}
+      <script async id="_carbonads_js" src={{this.url}} type="text/javascript">
       </script>
     {{/if}}
   </template>

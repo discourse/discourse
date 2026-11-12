@@ -3,6 +3,26 @@
 RSpec.describe PostRevisionSerializer do
   fab!(:post) { Fabricate(:post, version: 2) }
 
+  it "does not include body or title diffs when an earlier revision is hidden" do
+    SiteSetting.editing_grace_period = 0
+    revised_post = Fabricate(:post)
+    revised_post.revise(revised_post.user, raw: "Hidden historical content")
+    revised_post.revisions.find_by!(number: 2).hide!
+    revised_post.revise(revised_post.user, title: "First visible title edit")
+    revised_post.revise(revised_post.user, title: "Second visible title edit")
+    revised_post.revise(revised_post.user, raw: "Current public content")
+
+    json =
+      described_class.new(
+        revised_post.revisions.find_by!(number: 5),
+        scope: Guardian.new,
+        root: false,
+      ).as_json
+
+    expect(json).to include(previous_hidden: true, body_changes: nil)
+    expect(json).not_to have_key(:title_changes)
+  end
+
   context "with secured categories" do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
@@ -49,6 +69,24 @@ RSpec.describe PostRevisionSerializer do
 
     expect(json[:tags_changes][:previous]).to eq("[]")
     expect(json[:tags_changes][:current]).to eq([])
+  end
+
+  it "preserves the revision tag order when filtering visible tags" do
+    SiteSetting.tagging_enabled = true
+    tags = %w[alpha bravo charlie].map { |name| Fabricate(:tag, name: name) }
+    post.topic.tags = tags
+    revision =
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[charlie alpha], %w[alpha bravo charlie]],
+        },
+      )
+
+    json = described_class.new(revision, scope: Guardian.new, root: false).as_json
+
+    expect(json[:tags_changes]).to eq(previous: %w[charlie alpha], current: %w[alpha bravo charlie])
   end
 
   context "with hidden tags" do
@@ -144,6 +182,98 @@ RSpec.describe PostRevisionSerializer do
     end
   end
 
+  describe "unlisted revisions" do
+    fab!(:admin)
+    fab!(:post_owner, :user)
+    fab!(:revised_post) { Fabricate(:post, user: post_owner, raw: "First version") }
+
+    before do
+      SiteSetting.editing_grace_period = 0
+
+      revised_post.revise(post_owner, raw: "Second version")
+      revised_post.revise(post_owner, raw: "Unlisted version")
+      revised_post.revise(post_owner, raw: "Fourth version")
+      revised_post.revisions.find_by(number: 3).unlist!
+    end
+
+    def serialize(number, guardian: Guardian.new, **options)
+      described_class.new(
+        revised_post.revisions.find_by(number:),
+        scope: guardian,
+        root: false,
+        **options,
+      ).as_json
+    end
+
+    it "skips unlisted revisions when non-staff navigate" do
+      expect(serialize(2)).to include(
+        first_revision: 2,
+        next_revision: 4,
+        last_revision: 4,
+        current_version: 2,
+        version_count: 4,
+        unlisted_revision_count: 1,
+      )
+      expect(serialize(4)).to include(previous_revision: 2, current_version: 4, version_count: 4)
+    end
+
+    it "diffs each revision against its direct predecessor for every viewer" do
+      expected_diffs = {
+        2 => ["First version", "Second version"],
+        3 => ["Second version", "Unlisted version"],
+        4 => ["Unlisted version", "Fourth version"],
+      }
+      viewers = [
+        { guardian: admin.guardian },
+        { guardian: Guardian.new },
+        { guardian: Guardian.new, include_unlisted: true },
+      ]
+
+      viewers.each do |viewer|
+        expected_diffs.each do |number, (previous_raw, current_raw)|
+          expect(serialize(number, **viewer)[:body_changes][:side_by_side_markdown]).to eq(
+            DiscourseDiff.new(previous_raw, current_raw).side_by_side_markdown,
+          )
+        end
+      end
+    end
+
+    it "lets staff navigate every revision" do
+      expect(serialize(2, guardian: admin.guardian)).to include(next_revision: 3, version_count: 4)
+    end
+
+    it "lets non-staff include unlisted revisions" do
+      expect(serialize(2, include_unlisted: true)).to include(next_revision: 3, version_count: 4)
+    end
+
+    it "keeps suppressing diffs next to a hidden revision while skipping unlisted ones" do
+      revised_post.revise(post_owner, raw: "Fifth version")
+      revised_post.revisions.find_by(number: 4).hide!
+
+      expect(serialize(2)).to include(next_revision: 5)
+      expect(serialize(2)[:body_changes][:side_by_side_markdown]).to eq(
+        DiscourseDiff.new("First version", "Second version").side_by_side_markdown,
+      )
+      expect(serialize(3)).to include(current_hidden: true, body_changes: nil)
+      expect(serialize(5)).to include(
+        previous_revision: 2,
+        previous_hidden: true,
+        body_changes: nil,
+      )
+    end
+
+    it "renders an unlisted revision opened directly" do
+      json = serialize(3)
+
+      expect(json).to include(
+        unlisted: true,
+        current_revision: 3,
+        previous_revision: 2,
+        next_revision: 4,
+      )
+    end
+  end
+
   describe "post locale edits" do
     it "returns the locale changes when set to nothing" do
       post_revision =
@@ -174,6 +304,114 @@ RSpec.describe PostRevisionSerializer do
 
       expect(json[:locale_changes][:previous]).to eq(nil)
       expect(json[:locale_changes][:current]).to eq("ja")
+    end
+  end
+
+  describe "reply_to_post_number edits" do
+    fab!(:topic)
+    fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:other_parent) { Fabricate(:post, topic: topic, post_number: 2) }
+    fab!(:subject_post) do
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 3,
+        version: 2,
+        reply_to_post_number: other_parent.post_number,
+      )
+    end
+
+    def serialize(revision)
+      PostRevisionSerializer.new(
+        revision,
+        scope: Guardian.new(Fabricate(:user)),
+        root: false,
+      ).as_json
+    end
+
+    it "exposes the change with user info enrichment when the target still exists" do
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [op.post_number, other_parent.post_number],
+          },
+        )
+
+      json = serialize(revision)
+
+      expect(json[:reply_to_post_number_changes][:previous][:post_number]).to eq(op.post_number)
+      expect(json[:reply_to_post_number_changes][:previous][:username]).to eq(
+        op.user.username_lower,
+      )
+      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(
+        other_parent.post_number,
+      )
+      expect(json[:reply_to_post_number_changes][:current][:username]).to eq(
+        other_parent.user.username_lower,
+      )
+    end
+
+    it "returns nil on the side that has no reply target" do
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [nil, other_parent.post_number],
+          },
+        )
+
+      json = serialize(revision)
+
+      expect(json[:reply_to_post_number_changes][:previous]).to be_nil
+      expect(json[:reply_to_post_number_changes][:current][:post_number]).to eq(
+        other_parent.post_number,
+      )
+    end
+
+    it "omits the field when reply_to_post_number didn't change" do
+      revision =
+        Fabricate(:post_revision, post: subject_post, modifications: { "raw" => %w[old new] })
+
+      json = serialize(revision)
+
+      expect(json).not_to have_key(:reply_to_post_number_changes)
+    end
+
+    it "omits target info for a reply target the viewer cannot see" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_number: 4,
+          post_type: Post.types[:whisper],
+          user: Fabricate(:user),
+        )
+      subject_post.update!(reply_to_post_number: whisper.post_number)
+
+      revision =
+        Fabricate(
+          :post_revision,
+          post: subject_post,
+          modifications: {
+            "reply_to_post_number" => [other_parent.post_number, whisper.post_number],
+          },
+        )
+
+      json =
+        PostRevisionSerializer.new(
+          revision,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json[:reply_to_post_number_changes][:previous][:post_number]).to eq(
+        other_parent.post_number,
+      )
+      expect(json[:reply_to_post_number_changes][:current]).to be_nil
     end
   end
 end

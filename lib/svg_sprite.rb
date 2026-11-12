@@ -6,7 +6,9 @@ module SvgSprite
         a
         address-book
         address-card
+        align-center
         align-left
+        align-right
         anchor
         angle-down
         angle-left
@@ -17,11 +19,13 @@ module SvgSprite
         angles-right
         angles-up
         arrow-down
+        arrow-down-wide-short
         arrow-left
         arrow-right
         arrow-rotate-left
         arrow-rotate-right
         arrow-up
+        arrow-up-from-bracket
         arrows-rotate
         asterisk
         at
@@ -71,7 +75,9 @@ module SvgSprite
         cloud-arrow-down
         cloud-arrow-up
         code
+        code-branch
         comment
+        comments
         compress
         copy
         crosshairs
@@ -79,6 +85,7 @@ module SvgSprite
         cubes
         desktop
         diagram-project
+        dice
         discourse-amazon
         discourse-bell-exclamation
         discourse-bell-one
@@ -86,6 +93,8 @@ module SvgSprite
         discourse-bookmark-clock
         discourse-chevron-collapse
         discourse-chevron-expand
+        discourse-circle-minus
+        discourse-circle-plus
         discourse-compress
         discourse-dnd
         discourse-emojis
@@ -109,6 +118,7 @@ module SvgSprite
         ellipsis
         ellipsis-vertical
         envelope
+        expand
         eye
         eye-dropper
         eye-slash
@@ -117,14 +127,21 @@ module SvgSprite
         fab-chrome
         fab-discord
         fab-discourse
+        fab-edge
         fab-facebook
         fab-facebook-square
+        fab-firefox-browser
         fab-github
         fab-google
         fab-instagram
+        fab-internet-explorer
         fab-linkedin-in
         fab-linux
+        fab-microsoft
         fab-markdown
+        fab-opera
+        fab-qq
+        fab-safari
         fab-threads
         fab-threads-square
         fab-twitter
@@ -139,6 +156,7 @@ module SvgSprite
         far-chart-bar
         far-circle
         far-circle-dot
+        far-circle-question
         far-clipboard
         far-clock
         far-comment
@@ -166,6 +184,7 @@ module SvgSprite
         file
         file-lines
         filter
+        filter-circle-xmark
         flag
         flask
         folder
@@ -176,9 +195,11 @@ module SvgSprite
         forward-step
         gavel
         gear
+        gif
         gift
         globe
         grip-lines
+        grip-vertical
         hand-point-right
         handshake-angle
         hashtag
@@ -210,6 +231,7 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
+        nested-thread
         paintbrush
         palette
         paper-plane
@@ -278,6 +300,7 @@ module SvgSprite
         user-shield
         user-xmark
         users
+        video
         wand-magic
         wrench
         xmark
@@ -304,6 +327,9 @@ module SvgSprite
         icon_id = prepare_symbol(sym, svg_filename)
         if icon_id.present?
           sym.attributes["id"].value = icon_id
+          # Some glyphs draw outside their viewBox; Firefox and Safari clip a <use> symbol
+          # to its viewBox unless overflow is set on the symbol itself (page CSS can't reach it)
+          sym["overflow"] = "visible"
           sym.css("title").each(&:remove)
           [icon_id, sym.to_xml]
         end
@@ -312,7 +338,7 @@ module SvgSprite
   end
 
   def self.core_svgs_files
-    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+    @svg_files ||= Dir.glob("#{Rails.root.join("vendor/assets/svg-icons/**/*.svg")}")
   end
 
   def self.core_svgs
@@ -320,6 +346,28 @@ module SvgSprite
       core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
+  end
+
+  def self.legacy_icon_ids
+    @legacy_icon_ids ||=
+      core_svgs_files
+        .select { |path| File.basename(File.dirname(path)) == FontAwesomeSync::LEGACY_DIRECTORY }
+        .flat_map do |path|
+          symbols_for(File.basename(path, ".svg"), File.read(path), strict: true).keys
+        end
+  end
+
+  def self.site_symbols(icon_ids)
+    symbols = core_svgs.slice(*icon_ids)
+
+    DiscoursePluginRegistry.svg_symbol_sources.each do |source|
+      missing = icon_ids - symbols.keys
+      break if missing.empty?
+
+      symbols.merge!(source.symbols(missing).slice(*missing))
+    end
+
+    symbols
   end
 
   # Just used in tests
@@ -370,16 +418,11 @@ module SvgSprite
 
           theme_sprites
             .map do |(_theme_id, upload_id, sprite)|
-              begin
-                [
-                  _theme_id,
-                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
-                ]
-              rescue => e
-                Rails.logger.warn(
-                  "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
-                )
-              end
+              [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
+            rescue => e
+              Rails.logger.warn(
+                "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
+              )
             end
             .compact
             .to_h
@@ -403,6 +446,7 @@ module SvgSprite
         .new()
         .merge(settings_icons)
         .merge(plugin_icons)
+        .merge(plugin_icon_sources)
         .merge(badge_icons)
         .merge(group_icons)
         .merge(theme_icons(theme_id))
@@ -428,12 +472,6 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.svgs_for(theme_id)
-    svgs = core_svgs
-    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
-    svgs
-  end
-
   def self.bundle(theme_id = nil)
     icons = all_icons(theme_id)
 
@@ -447,21 +485,71 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 " \
         "".dup
 
-    svg_subset << core_svgs.slice(*icons).values.join
+    symbols = site_symbols(icons)
+    svg_subset << icons.filter_map { |icon| symbols[icon] }.join
     svg_subset << custom_svgs(theme_id).values.join
 
     svg_subset << "</svg>"
   end
 
   def self.search(searched_icon)
-    svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
+    icon = searched_icon.strip
+    theme_id = SiteSetting.default_theme_id
+    custom = theme_id.present? ? custom_svgs(theme_id) : {}
+
+    custom[icon] || site_symbols([icon])[icon] || false
   end
 
-  def self.icon_picker_search(keyword, only_available = false)
-    symbols = svgs_for(SiteSetting.default_theme_id)
-    symbols.slice!(*all_icons(SiteSetting.default_theme_id)) if only_available
-    symbols.reject! { |icon_id, _sym| !icon_id.include?(keyword) } if keyword.present?
-    symbols.sort_by(&:first).map { |id, symbol| { id:, symbol: } }
+  def self.icon_picker_search(keyword, only_available, page:, per_page:, theme_id: nil)
+    keyword = keyword.to_s.downcase
+    limit = (page + 1) * per_page + 1
+    in_sprite = picker_sprite_icon_ids(theme_id)
+
+    ids = in_sprite.lazy.select { |id| id.downcase.include?(keyword) }.first(limit)
+    if !only_available && ids.size < limit
+      ids.concat(picker_other_icon_ids(theme_id, keyword, limit - ids.size))
+    end
+
+    ids = ids.drop(page * per_page)
+    has_more = ids.size > per_page
+    ids = ids.take(per_page)
+
+    missing = only_available ? [] : (ids - in_sprite).to_set
+    return { icons: ids.map { |id| { id: } }, has_more: } if missing.empty?
+
+    custom = theme_id.present? ? custom_svgs(theme_id) : {}
+    site = site_symbols(missing.to_a)
+    icons =
+      ids.map { |id| missing.include?(id) ? { id:, symbol: custom[id] || site[id] } : { id: } }
+    { icons:, has_more: }
+  end
+
+  def self.picker_sprite_icon_ids(theme_id)
+    get_set_cache("picker_sprite_icon_ids_#{Theme.transform_ids(theme_id).join(",")}") do
+      icons = all_icons(theme_id)
+      available = site_symbols(icons).keys.to_set
+      available.merge(custom_svgs(theme_id).keys) if theme_id.present?
+      icons.select { |id| available.include?(id) }
+    end
+  end
+
+  def self.picker_other_icon_ids(theme_id, keyword, limit)
+    in_sprite = picker_sprite_icon_ids(theme_id)
+
+    local =
+      get_set_cache("picker_other_icon_ids_#{Theme.transform_ids(theme_id).join(",")}") do
+        ids = core_svgs.keys
+        ids |= custom_svgs(theme_id).keys if theme_id.present?
+        # Legacy names still render where already used, but aren't offered for new picks
+        (ids - in_sprite - legacy_icon_ids).sort
+      end
+    ids = local.lazy.select { |id| id.downcase.include?(keyword) }.first(limit)
+
+    DiscoursePluginRegistry.svg_symbol_sources.each do |source|
+      ids.concat(source.search_icon_ids(keyword, limit: limit + in_sprite.size) - in_sprite)
+    end
+
+    ids.uniq.sort.first(limit)
   end
 
   # For use in no_ember .html.erb layouts
@@ -496,11 +584,19 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.settings_icons
     get_set_cache("settings_icons") do
-      # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
+      # includes svg_icon_subset, icon type settings, icon properties of objects
+      # type settings, and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
       SiteSetting.settings_hash.each do |key, value|
-        site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
+        next unless String === value
+
+        if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
+          site_setting_icons |= value.split("|")
+        elsif SiteSetting.type_supervisor.get_type(key) == :objects && value.present?
+          schema = SiteSetting.type_supervisor.type_hash(key)[:schema]
+          site_setting_icons |= objects_setting_icons(schema, JSON.parse(value)) if schema
+        end
       end
 
       site_setting_icons
@@ -509,6 +605,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons
+  end
+
+  def self.plugin_icon_sources
+    DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
   end
 
   def self.badge_icons
@@ -529,17 +629,30 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     Theme
       .where(id: theme_ids)
       .each do |theme|
-        _settings =
-          theme.cached_settings.each do |key, value|
-            if key.to_s.include?("_icon") && String === value
+        settings = theme.cached_settings
+        type_info = settings["theme_setting_type_info"] || {}
+
+        settings.each do |key, value|
+          if String === value
+            if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
               theme_icon_settings |= value.split("|")
             end
+          elsif type_info.dig(key, :type) == "objects" && value.is_a?(Array)
+            schema = type_info.dig(key, :schema)
+            theme_icon_settings |= objects_setting_icons(schema, value) if schema
           end
+        end
       end
 
     theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
 
     theme_icon_settings
+  end
+
+  def self.objects_setting_icons(schema, objects)
+    SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "icon").grep(
+      String,
+    )
   end
 
   def self.custom_icons(theme_id)

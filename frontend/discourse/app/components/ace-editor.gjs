@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -63,17 +63,29 @@ export default class AceEditor extends Component {
   @service appEvents;
 
   @tracked isLoading = true;
+
+  /**
+   * The resized box, handed to the separator once the editor has built it.
+   * @type {HTMLElement | null}
+   */
+  @tracked editorContainer = null;
+
+  /** @type {import("ace-builds").Ace.Editor | null} */
   editor = null;
+
+  /** @type {typeof import("ace-builds") | null} */
   ace = null;
   skipChangePropagation = false;
 
   setContent = modifier(() => {
-    if (this.args.content === this.editor.getSession().getValue()) {
+    const content = this.args.content || "";
+
+    if (content === this.editor.getSession().getValue()) {
       return;
     }
 
     this.skipChangePropagation = true;
-    this.editor.getSession().setValue(this.args.content || "");
+    this.editor.getSession().setValue(content);
     this.skipChangePropagation = false;
 
     const token = WAITER.beginAsync();
@@ -85,8 +97,16 @@ export default class AceEditor extends Component {
   constructor() {
     super(...arguments);
 
+    deprecated(
+      "<AceEditor> is deprecated. Use <CodeEditor> instead: @content becomes @value, @mode becomes @language, @save and @submit become @onSave and @onSubmit, @setWarning becomes @lineWarnings, @editorId becomes @inputId, and an HTML placeholder is passed through trustHTML() rather than @htmlPlaceholder.",
+      {
+        since: "2026.11.0",
+        id: "discourse.ace-editor",
+      }
+    );
+
     loadAce().then((ace) => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -108,6 +128,18 @@ export default class AceEditor extends Component {
     this._darkModeListener?.removeEventListener("change", this.setAceTheme);
     window.removeEventListener("resize", this.resize);
     this.appEvents.off("ace:resize", this.resize);
+  }
+
+  get mode() {
+    return this.args.mode || "css";
+  }
+
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
   }
 
   @bind
@@ -151,6 +183,7 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
+    this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -166,18 +199,6 @@ export default class AceEditor extends Component {
     }
 
     this.setAceTheme();
-  }
-
-  get mode() {
-    return this.args.mode || "css";
-  }
-
-  get cssClasses() {
-    let cssClasses = ["ace"];
-    if (this.args.resizable) {
-      cssClasses.push("ace_editor--resizable");
-    }
-    return cssClasses.join(" ");
   }
 
   @bind
@@ -268,34 +289,41 @@ export default class AceEditor extends Component {
 
   @bind
   onResizeDrag(size) {
-    this.editor.container.style.height = `${size}px`;
+    this.editorContainer.classList.add("clear-transitions");
+    this.editorContainer.style.height = `${size}px`;
+  }
+
+  @bind
+  onResizeEnd() {
+    this.editorContainer.classList.remove("clear-transitions");
   }
 
   <template>
     <div class="ace-wrapper">
-      <ConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
+      <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         <div
+          class={{dConcatClass this.cssClasses}}
+          ...attributes
           {{didInsert this.setupAce}}
           {{this.setContent}}
           {{didUpdate this.editorIdChanged @editorId}}
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class={{concatClass this.cssClasses}}
-          ...attributes
         >
         </div>
         {{#if @resizable}}
-          <div
+          <DResizeSeparator
             class="grippie"
-            {{grippieDragResize
-              ".ace_editor--resizable"
-              "bottom"
-              (hash onThrottledDrag=this.onResizeDrag)
-            }}
-          ></div>
+            @axis="vertical"
+            @label={{i18n "ace_editor.resize"}}
+            @measure={{this.editorContainer}}
+            @onResize={{this.onResizeDrag}}
+            @onResizeEnd={{this.onResizeEnd}}
+            @side="start"
+          />
         {{/if}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }

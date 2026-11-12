@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ConvertToPublicTopic extends Component {
@@ -36,26 +36,26 @@ export default class ConvertToPublicTopic extends Component {
 
   <template>
     <DModal
-      @title={{i18n "topic.make_public.title"}}
-      @closeModal={{@closeModal}}
       class="convert-to-public-topic"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "topic.make_public.title"}}
     >
       <:body>
         <div class="instructions">
           {{i18n "topic.make_public.choose_category"}}
         </div>
         <CategoryChooser
-          @value={{this.publicCategoryId}}
           @onChange={{fn (mut this.publicCategoryId)}}
+          @value={{this.publicCategoryId}}
         />
       </:body>
       <:footer>
         <DButton
           class="btn-primary"
           @action={{this.makePublic}}
-          @label="composer.modal_ok"
           @disabled={{this.saving}}
+          @label="composer.modal_ok"
         />
         <DButton
           class="btn-flat d-modal-cancel"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "securerandom"
-
 class HtmlToMarkdown
   def initialize(html, opts = {})
     @opts = opts
@@ -12,6 +10,7 @@ class HtmlToMarkdown
 
     remove_not_allowed!(@doc)
     remove_hidden!(@doc)
+    nest_sibling_lists!(@doc)
     hoist_line_breaks!(@doc)
     remove_whitespaces!(@doc)
   end
@@ -44,44 +43,55 @@ class HtmlToMarkdown
     @doc.css("img[height]").each { |n| n.remove if n["height"].to_i <= 0 }
   end
 
+  def nest_sibling_lists!(doc)
+    doc
+      .css("ul > ul, ul > ol, ol > ul, ol > ol")
+      .each do |list|
+        previous = list.previous_element
+        previous.add_child(list) if previous&.name == "li"
+      end
+  end
+
+  # Hoisting a <br> moves it and its siblings out of every inline ancestor, so
+  # the work grows with nesting depth. Allow each node of the message to be moved
+  # this many times on average (far more than real mail needs) so the cost of
+  # converting a message tracks its size: once the budget is spent, the remaining
+  # line breaks stay inside their inline element.
+  MAX_LINE_BREAK_MOVES_PER_NODE = 16
+
   # When there's a <br> inside an inline element, split the inline element around the <br>
   def hoist_line_breaks!(doc)
-    klass = "_" + SecureRandom.hex
-    doc.css("br").each { |br| br.add_class(klass) }
+    @line_break_move_budget = MAX_LINE_BREAK_MOVES_PER_NODE * doc.xpath(".//node()").size
+    hoist_line_breaks_within!(doc)
+  end
 
-    loop do
-      changed = false
+  # Children first, so each element is split once, around every <br> hoisted into it.
+  def hoist_line_breaks_within!(node)
+    node.element_children.to_a.each { |child| hoist_line_breaks_within!(child) }
 
-      doc
-        .css("br.#{klass}")
-        .each do |br|
-          parent = br.parent
+    children = node.children
+    return if block?(node) || children.none? { |child| child.name == "br" }
+    return if children.size > @line_break_move_budget
+    @line_break_move_budget -= children.size
 
-          if block?(parent)
-            br.remove_class(klass)
-          else
-            before, after = parent.children.slice_when { |n| n == br }.to_a
+    segments = children.slice_when { |a, b| a.name == "br" || b.name == "br" }.to_a
 
-            if before.size > 1
-              b = doc.document.create_element(parent.name)
-              before[0...-1].each { |c| b.add_child(c) }
-              parent.previous = b if b.inner_html.present?
-            end
+    segments.each do |segment|
+      if segment.first.name == "br"
+        node.add_previous_sibling(segment.first)
+      else
+        clone = node.document.create_element(node.name)
+        segment.each { |child| clone.add_child(child) }
 
-            if after.present?
-              a = doc.document.create_element(parent.name)
-              after.each { |c| a.add_child(c) }
-              parent.next = a if a.inner_html.present?
-            end
-
-            parent.replace(br)
-
-            changed = true
-          end
-        end
-
-      break if !changed
+        node.add_previous_sibling(clone) if has_content?(clone)
+      end
     end
+
+    node.remove
+  end
+
+  def has_content?(node)
+    node.children.any? { |child| !child.text? || child.text.present? }
   end
 
   # Removes most of the unnecessary white spaces for better markdown conversion
@@ -310,7 +320,8 @@ class HtmlToMarkdown
   LISTS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
-      suffix = node.ancestors("ul, ol, li").size > 0 ? "" : "\n"
+      nested = node.ancestors("ul, ol, li").present?
+      suffix = nested && node.next_element.nil? ? "" : "\n"
       "#{prefix}#{traverse(node)}#{suffix}"
     end
   end

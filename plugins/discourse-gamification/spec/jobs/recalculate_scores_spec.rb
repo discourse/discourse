@@ -2,12 +2,17 @@
 
 describe Jobs::RecalculateScores do
   fab!(:current_user, :admin)
+  fab!(:leaderboard, :gamification_leaderboard)
 
   before { RateLimiter.enable }
 
   it "publishes MessageBus and executes job" do
     since = 10.days.ago
-    DiscourseGamification::GamificationScore.expects(:calculate_scores).with(since_date: since)
+    DiscourseGamification::GamificationLeaderboardScore.expects(:calculate_all).with(
+      since_date: since,
+    )
+
+    DiscourseGamification::LeaderboardCachedView.expects(:regenerate_all)
 
     MessageBus
       .expects(:publish)

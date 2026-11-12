@@ -18,7 +18,6 @@ ja:
     openid_connect_allow_association_change: "ユーザーが OpenID Connect プロバイダーから Discourse アカウントを切断して再接続することを許可する"
     openid_connect_verbose_logging: "詳細な openid-connect 認証情報を `/logs` に記録する。通常使用の場合は、これを無効にしてください。"
     openid_connect_authorize_parameters: "/auth/oidc から IDP の承認エンドポイントへのリダイレクトに含まれる URL パラメーター"
-    openid_connect_overrides_email: "ログインごとに、ユーザーのメールアドレスを openid-connect 値でオーバーライドする。`auth_overrides_email` と同じように機能しますが、OpenID Connect ログインに固有です。"
     openid_connect_claims: "スコープに基づいてデータを戻さないプロバイダーで使用するための要求を明示的に定義する。（JSON）"
     openid_connect_match_by_email: "メールアドレスを使用して、OpenID Connect 認証を既存の Discourse ユーザーアカウントと照合する。"
     openid_connect_use_pkce: "OpenID Connect 認証の Proof Key for Code Exchange（PKCE）を有効にする。"

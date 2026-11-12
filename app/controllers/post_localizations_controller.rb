@@ -54,6 +54,15 @@ class PostLocalizationsController < ApplicationController
     end
   end
 
+  def update_locale
+    post = Post.find_by(id: params[:post_id])
+    raise Discourse::NotFound unless post
+
+    updated_post =
+      PostLocaleUpdater.update(post:, locale: params.fetch(:locale).presence, user: current_user)
+    render json: { locale: updated_post.locale }, status: :ok
+  end
+
   def destroy
     post_id, locale = params.require(%i[post_id locale])
 

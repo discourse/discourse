@@ -12,6 +12,10 @@ nb_NO:
         link_to_settings: "Innstillinger"
         refresh: "Last inn på nytt"
         name: "Navn"
+        section:
+          groups: "Grupper"
+        weight:
+          solution: "Løsning"
         period:
           all_time: "Totalt"
           yearly: "Årlig"
@@ -24,9 +28,7 @@ nb_NO:
       close: "Lukk"
       delete: "Slett"
       edit: "Rediger"
-      back: "Forrige"
       save: "Lagre"
-      apply: "Bruk"
       update_range:
         last_10_days: "Siste 10 dager"
         last_30_days: "Siste 30 dager"
@@ -35,3 +37,9 @@ nb_NO:
       custom_range_from: "Fra"
       admin:
         name: "Navn"
+    discourse_workflows:
+      gamification_score:
+        username: "Bruker"
+        date: "Dato"
+        description: "Beskrivelse"
+        category_id: "Kategori"

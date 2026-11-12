@@ -15,11 +15,6 @@ vi:
         vote_closed_topic: "Bạn không thể bỏ phiếu cho các chủ đề đã đóng."
   site_settings:
     post_voting_undo_vote_action_window: "Số phút tối đa người dùng được phép hủy bỏ bình chọn trong các chủ đề Bỏ phiếu sau tút (nhập 0 để không giới hạn)."
-  discourse_post_voting:
-    reviewables:
-      actions:
-        no_action_comment:
-          title: "Không có hành động"
   post_action_types:
     vote:
       title: "Bình chọn"

@@ -61,7 +61,7 @@ module DiscourseConnectHelpers
 
   def shutdown_test_discourse_connect_server
     @server&.shutdown
-    @server_thread&.kill
+    @server_thread&.join
   end
 
   def server_responding?(sso_url)
@@ -69,5 +69,11 @@ module DiscourseConnectHelpers
     true
   rescue StandardError
     false
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
   end
 end

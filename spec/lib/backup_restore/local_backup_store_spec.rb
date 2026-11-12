@@ -19,6 +19,40 @@ RSpec.describe BackupRestore::LocalBackupStore do
     expect(store.remote?).to eq(false)
   end
 
+  describe "path traversal protection" do
+    let(:filename) { "a.tgz" }
+
+    before do
+      create_local_backup_file(
+        root_directory: @root_directory,
+        db_name: "default",
+        filename: filename,
+        last_modified: "2018-02-11T09:27:00Z",
+        size_in_bytes: 29,
+      )
+    end
+
+    it "raises an error when reading a backup outside the current site's directory" do
+      expect { store.file("../second/multi-1.tar.gz") }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error when deleting a backup outside the current site's directory" do
+      expect { store.delete_file("../second/multi-1.tar.gz") }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "raises an error when downloading a backup outside the current site's directory" do
+      Dir.mktmpdir do |path|
+        destination_path = File.join(path, filename)
+
+        expect { store.download_file("../second/multi-1.tar.gz", destination_path) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+  end
+
   def create_backups
     create_local_backup_file(
       root_directory: @root_directory,

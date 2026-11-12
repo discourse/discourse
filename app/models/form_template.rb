@@ -27,7 +27,7 @@ class FormTemplate < ActiveRecord::Base
 
     tag_groups =
       TagGroup
-        .includes(:tags)
+        .includes(:base_tags)
         .visible(guardian)
         .where("lower(name) IN (?)", tag_group_names)
         .index_by { |tg| tg.name }
@@ -36,7 +36,7 @@ class FormTemplate < ActiveRecord::Base
       next form_field unless form_field["tag_group"]
 
       tag_group_name = form_field["tag_group"]
-      tags = tag_groups[tag_group_name].tags.reject { |tag| tag.target_tag_id.present? }
+      tags = tag_groups[tag_group_name].base_tags
       ordered_field = {}
 
       tags =

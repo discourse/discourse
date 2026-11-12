@@ -10,6 +10,15 @@ id:
       site_settings:
         categories:
           discourse_ai: "Discourse"
+      dashboard:
+        sections:
+          ask_ai:
+            title: "Tanya AI"
+        ask_ai:
+          title: "Tanya AI"
+          date: "Tanggal"
+          outcomes:
+            failed: "Gagal"
   js:
     discourse_automation:
       scriptables:
@@ -84,27 +93,80 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      copied: "Disalin"
+      ai_decoded_transcript:
+        type: "Tipe"
+        error: "Gangguan"
+      discourse_workflows:
+        classify:
+          name: "Nama"
+          type: "Tipe"
+          type_score: "Skor"
+      ai_tool_approval:
+        loading: "Diproses..."
+        tool: "Aksi"
+        user: "Pengguna"
+        approve: "Terima"
+        reject: "Tolak"
+        approved: "Disetujui"
+        rejected: "Ditolak"
       llm_selector:
         none: "Tidak ada"
       features:
-        back: "Kembali"
-        disabled: "(dinonaktifkan)"
-        groups: "Grup:"
+        table:
+          status: "Status"
+          enabled: "Diaktifkan"
+          groups: "Grup"
+        chatbot:
+          places:
+            none: "Tidak tersedia"
         no_groups: "Tidak ada"
         edit: "Pengaturan"
-        expand_list:
-          other: "(%{count} lainnya)"
-        collapse_list: "(tampilkan lebih sedikit)"
+        nav:
+          enabled: "Diaktifkan"
         filters:
           all: "Semua"
           reset: "Reset"
+        sentiment:
+          enabled: "Diaktifkan"
         search:
           name: "Cari"
+          ask_ai: "Tanya AI"
+        image_caption:
+          setting_groups:
+            settings: "Pengaturan"
         spam:
           name: "Spam"
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        settings:
+          ai_translation_category_scope:
+            label: "Kategori"
+          ai_translation_personal_messages:
+            choices:
+              none: "Tidak ada"
+              all: "Semua"
+          content_localization_language_switcher:
+            choices:
+              none: "Tak seorangpun"
+              all: "Semua orang"
+        model_progress:
+          detail:
+            columns:
+              pending: "tertunda"
+              total: "Jumlah"
+          targets:
+            post:
+              title: "Pos"
+            topic:
+              title: "Topik"
+            category:
+              title: "Kategori"
+            tag:
+              title: "Label"
+        admin_actions:
+          enabled: "Diaktifkan"
         stats:
           eta_minutes:
             other: "%{count} menit"
@@ -117,6 +179,8 @@ id:
             other: "%{count} post"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Tidak ada"
+        no_decision_model_selected: "Tidak ada"
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
@@ -129,21 +193,47 @@ id:
         total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
+      logs:
+        short_title: "Log"
+        apply: "menerapkan"
+        failed: "Gagal"
+        unknown: "Tidak diketahui"
+        time: "Waktu"
+        when: "Ketika"
+        model: "Model"
+        request: "Pinta"
+        user: "Pengguna"
+        topic: "Topik"
+        post: "Postingan"
+        duration: "Durasi"
+        actions: "Aksi"
+        view_details: "Detil"
+        periods:
+          day: "24 jam terakhir"
+          week: "7 hari terakhir"
+        detail:
+          request: "Pinta"
+        retention:
+          summary_stage: "Ringkasan"
+          deleted_stage: "Dihapus"
+          save: "Simpan"
       ai_agent:
-        back: "Kembali"
         name: "Nama"
         edit: "Ubah"
         export: "Ekspor"
         description: "Deskripsi"
         user: Pengguna
-        question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
-        question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.
         save: "Simpan"
         enabled: "Diaktifkan?"
         allowed_groups: "Grup yang diizinkan"
         delete: "Hapus"
         temperature: "Temperatur"
         top_p: "Top P"
+        thinking_effort_options:
+          none: "Tidak ada"
+          low: "Rendah"
+          medium: "Sedang"
+          high: "Tinggi"
         response_format:
           open_modal: "Ubah"
         filters:
@@ -152,7 +242,6 @@ id:
         uploads:
           uploading: "Mengunggah..."
       tools:
-        back: "Kembali"
         export: "Ekspor"
         name: "Nama"
         description: "Deskripsi"
@@ -164,15 +253,39 @@ id:
       secrets:
         short_title: "Kredensial"
         name: "Nama"
-        back: "Kembali"
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
-      llms:
+      decision_models:
+        no_preset: "Tidak ada"
         display_name: "Nama"
+        model: "Model"
+        edit: "Ubah"
+        delete: "Hapus"
+      mcp_servers:
+        name: "Nama"
+        description: "Deskripsi"
+        oauth_statuses:
+          connected: "Terhubung"
+        oauth_connect: "Hubungkan"
+        enabled: "Diaktifkan"
         save: "Simpan"
         edit: "Ubah"
-        back: "Kembali"
+        delete: "Hapus"
+      models:
+        name: "Nama"
+        type: "Tipe"
+        edit: "Ubah"
+        select_type: "Pilih"
+        filters:
+          all: "Semua tipe"
+      llms:
+        display_name: "Nama"
+        vision_modes:
+          disabled:
+            title: "Dinonaktifkan"
+        save: "Simpan"
+        edit: "Ubah"
         delete: Hapus
         quotas:
           duration: "Durasi"
@@ -188,8 +301,8 @@ id:
           running: "Tes berlangsung..."
           success: "Sukses!"
           failure: "Mencoba menghubungi model menghasilkan kesalahan ini: %{error}"
-        providers:
-          google: "Google"
+        provider_fields:
+          region: "Wilayah"
       ai_helper:
         missing_content: "Silakan masukkan beberapa konten untuk menghasilkan saran."
         context_menu:
@@ -214,16 +327,10 @@ id:
           select: "Pilih"
           selected: "Dipilih"
           try_again: "Coba Lagi"
-        image_caption:
-          button_label: "Keterangan dengan AI"
-          generating: "Menghasilkan keterangan..."
-          credits: "Keterangan oleh AI"
-          save_caption: "Simpan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
       embeddings:
-        back: "Kembali"
         save: "Simpan"
         delete: "Hapus"
         edit: "Ubah"
@@ -234,11 +341,15 @@ id:
         providers:
           google: "Google"
         semantic_search: "Topik (Semantik)"
-        ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
+      ai_artifact:
+        editor:
+          default: "Asal"
+          apply: "menerapkan"
+        filter_all: "Semua"
       ai_bot:
-        llm: "Model"
+        llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
         cancel_streaming: "Berhenti membalas"
         default_pm_prefix: "[PM bot AI tanpa judul]"
@@ -246,6 +357,7 @@ id:
         share: "Salin percakapan AI"
         conversation_shared: "Percakapan disalin"
         debug_ai_modal:
+          duration_label: "Durasi:"
           request: "Pinta"
         share_ai_conversation:
           name: "Bagikan percakapan AI"
@@ -286,9 +398,22 @@ id:
             other: "%{count} jam terakhir"
         topic:
           title: "Ringkasan topik"
+      ai_search:
+        related_replies:
+          other: "%{count} balasan"
+        tabs:
+          ask: "Tanya AI"
+          topics: "Topik"
+          messages: "Pesan"
       discobot_discoveries:
-        regular_results: "Topik"
-        collapse: "Persempit"
-        tooltip:
-          actions:
-            disable: "Nonaktifkan"
+        main_title: "Tanya AI"
+        legacy:
+          regular_results: "Topik"
+          collapse: "Persempit"
+          tooltip:
+            actions:
+              disable: "Nonaktifkan"
+        search_type: "AI"
+        search_all_topics: "Semua topik"
+        search_messages: "Pesan"
+        ask_ai: "AI"

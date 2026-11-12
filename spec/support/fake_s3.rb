@@ -6,7 +6,7 @@ class FakeS3
   attr_reader :s3_client
 
   def self.create
-    s3 = self.new
+    s3 = new
     s3.stub_bucket(SiteSetting.s3_upload_bucket) if SiteSetting.s3_upload_bucket.present?
     if SiteSetting.s3_backup_bucket.present?
       s3.stub_bucket(
@@ -121,6 +121,16 @@ class FakeS3
 
         find_bucket(context.params)&.delete_object(context.params[:key])
         { delete_marker: true }
+      end,
+    )
+
+    @s3_client.stub_responses(
+      :put_object,
+      ->(context) do
+        log_operation(context)
+
+        find_bucket(context.params)&.put_object(key: context.params[:key])
+        { etag: calculate_etag(context) }
       end,
     )
 

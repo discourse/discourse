@@ -1,17 +1,13 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
+import { dimColor } from "discourse/lib/chart-legend-icon";
+import { getCSSColors } from "discourse/lib/css-color";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import Chart from "./chart";
+import Chart from "./chart.gjs";
 
 const DOTTED_LINE = [5, 5];
-
-function getCSSColor(varName) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim();
-}
 
 export function isInCurrentPeriod(timestamp, grouping) {
   // Report data uses UTC dates, so compare in UTC
@@ -54,12 +50,21 @@ export default class AdminReportChart extends Component {
       options.chartGrouping
     );
 
-    const incompleteColor = getCSSColor("--primary-medium");
-    let pointColors = model.primary_color;
+    const colors = getCSSColors([
+      "--primary",
+      "--primary-low",
+      "--primary-medium",
+      "--secondary",
+      "--tertiary",
+    ]);
+    const incompleteColor = colors["--primary-medium"];
+    const primaryColor = colors["--tertiary"];
+    const secondaryColor = dimColor(primaryColor, 0.1);
+    let pointColors = primaryColor;
     let segment;
 
     if (isLastPointInCurrentPeriod) {
-      pointColors = Array(chartData.length).fill(model.primary_color);
+      pointColors = Array(chartData.length).fill(primaryColor);
       pointColors[lastDataPointIndex] = incompleteColor;
 
       const isIncompleteSegment = (ctx) =>
@@ -67,7 +72,7 @@ export default class AdminReportChart extends Component {
       segment = {
         borderDash: (ctx) => (isIncompleteSegment(ctx) ? DOTTED_LINE : []),
         borderColor: (ctx) =>
-          isIncompleteSegment(ctx) ? incompleteColor : model.primary_color,
+          isIncompleteSegment(ctx) ? incompleteColor : primaryColor,
       };
     }
 
@@ -78,8 +83,8 @@ export default class AdminReportChart extends Component {
           data: chartData.map((d) => Math.round(parseFloat(d.y))),
           backgroundColor: prevChartData.length
             ? "transparent"
-            : model.secondary_color,
-          borderColor: model.primary_color,
+            : secondaryColor,
+          borderColor: primaryColor,
           pointRadius: 3,
           borderWidth: 2,
           pointBackgroundColor: pointColors,
@@ -97,7 +102,7 @@ export default class AdminReportChart extends Component {
     if (prevChartData.length) {
       data.datasets.push({
         data: prevChartData.map((d) => Math.round(parseFloat(d.y))),
-        borderColor: model.primary_color,
+        borderColor: primaryColor,
         borderDash: DOTTED_LINE,
         backgroundColor: "transparent",
         borderWidth: 1,
@@ -112,10 +117,10 @@ export default class AdminReportChart extends Component {
       options: {
         plugins: {
           tooltip: {
-            backgroundColor: getCSSColor("--primary"),
-            titleColor: getCSSColor("--secondary"),
-            bodyColor: getCSSColor("--secondary"),
-            footerColor: getCSSColor("--secondary"),
+            backgroundColor: colors["--primary"],
+            titleColor: colors["--secondary"],
+            bodyColor: colors["--secondary"],
+            footerColor: colors["--secondary"],
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {
@@ -170,13 +175,12 @@ export default class AdminReportChart extends Component {
               text: model.y_axis_title,
             },
 
-            grid: { color: getCSSColor("--primary-low") },
+            grid: { color: colors["--primary-low"] },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
-              stepSize: 1,
               precision: 0,
             },
           },
@@ -199,6 +203,6 @@ export default class AdminReportChart extends Component {
   }
 
   <template>
-    <Chart @chartConfig={{this.chartConfig}} class="admin-report-chart" />
+    <Chart class="admin-report-chart" @chartConfig={{this.chartConfig}} />
   </template>
 }

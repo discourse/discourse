@@ -14,8 +14,20 @@ class Admin::GroupsController < Admin::StaffController
         dynamic_attributes: group_params.slice(*DiscoursePluginRegistry.group_params),
       },
     ) do |result|
-      on_success { |group:| render_serialized(group, BasicGroupSerializer) }
+      on_success { |group:| render_serialized(group.reload, BasicGroupSerializer) }
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
+      on_failed_policy(:can_use_flair_upload) do
+        render json: failed_json.merge(errors: [I18n.t("groups.errors.flair_upload_not_owned")]),
+               status: :unprocessable_entity
+      end
+      on_failed_policy(:can_request_access) do
+        render json:
+                 failed_json.merge(
+                   errors: [I18n.t("groups.errors.cant_allow_membership_requests")],
+                 ),
+               status: :unprocessable_entity
+      end
+      on_model_errors(:group) { |group:| render_json_error(group) }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
   end
@@ -24,37 +36,28 @@ class Admin::GroupsController < Admin::StaffController
     group = Group.find_by(id: params[:id])
     raise Discourse::NotFound unless group
 
-    if group.automatic
-      can_not_modify_automatic
-    else
-      StaffActionLogger.new(current_user).log_group_deletion(group)
+    GroupDestroyer.destroy(guardian, group)
 
-      group.destroy!
-      render json: success_json
-    end
+    render json: success_json
+  rescue GroupMutations::AutomaticGroup => error
+    render_json_error(error.message)
   end
 
   def remove_owner
     group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group
 
-    return can_not_modify_automatic if group.automatic
-    guardian.ensure_can_edit_group!(group)
-
-    if params[:user_id].present?
-      users = [User.find_by(id: params[:user_id].to_i)]
-    elsif usernames = group_params[:usernames].presence
-      users = User.where(username: usernames.split(","))
-    else
-      raise Discourse::InvalidParameters.new(:user_id)
-    end
-
-    users.each do |user|
-      group.group_users.where(user_id: user.id).update_all(owner: false)
-      GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
-    end
+    user_id = params[:user_id]
+    GroupOwnerManager.remove(
+      guardian,
+      group,
+      user_id:,
+      usernames: user_id.present? ? nil : group_params[:usernames],
+    )
 
     render json: success_json
+  rescue GroupMutations::AutomaticGroup => error
+    render_json_error(error.message)
   end
 
   def set_primary
@@ -63,12 +66,17 @@ class Admin::GroupsController < Admin::StaffController
 
     users = User.where(username: group_params[:usernames].split(","))
     users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
-    users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
+    if params[:primary] == "true"
+      users.where(id: group.group_users.select(:user_id)).update_all(primary_group_id: group.id)
+    else
+      users.where(primary_group_id: group.id).update_all(primary_group_id: nil)
+    end
 
     render json: success_json
   end
 
   def automatic_membership_count
+    guardian.ensure_can_create_group!
     domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
     group_id = params[:id]
     user_count = 0
@@ -85,18 +93,13 @@ class Admin::GroupsController < Admin::StaffController
       end
 
       if domains.size > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP
-        raise Discourse::InvalidParameters.new(
-                I18n.t(
-                  "groups.errors.counting_too_many_email_domains",
-                  count: MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP,
-                ),
-              )
+        user_count = nil
+      else
+        user_count = Group.automatic_membership_users(domains.join("|")).count
       end
-
-      user_count = Group.automatic_membership_users(domains.join("|")).count
     end
 
-    render json: { user_count: user_count }
+    render json: { user_count: }
   end
 
   protected

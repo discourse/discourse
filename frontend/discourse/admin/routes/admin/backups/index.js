@@ -1,5 +1,5 @@
+import { trackedArray } from "@ember/reactive/collections";
 import Route from "@ember/routing/route";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import Backup from "discourse/admin/models/backup";
 import { bind } from "discourse/lib/decorators";
 
@@ -14,7 +14,7 @@ export default class AdminBackupsIndexRoute extends Route {
 
   async model() {
     const backups = await Backup.find();
-    return new TrackedArray(backups.map((backup) => Backup.create(backup)));
+    return trackedArray(backups.map((backup) => Backup.create(backup)));
   }
 
   @bind

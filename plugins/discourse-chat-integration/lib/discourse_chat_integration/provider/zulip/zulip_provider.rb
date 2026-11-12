@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module ZulipProvider
       PROVIDER_NAME = "zulip"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_zulip_enabled
       CHANNEL_IDENTIFIER_KEY = "stream"
       CHANNEL_PARAMETERS = [
@@ -47,14 +48,14 @@ module DiscourseChatIntegration
               ),
           )
 
-        data = { type: "stream", to: stream, subject: subject, content: message }
+        { type: "stream", to: stream, subject: subject, content: message }
       end
 
       def self.trigger_notification(post, channel, rule)
         stream = channel.data["stream"]
         subject = channel.data["subject"]
 
-        message = self.generate_zulip_message(post, stream, subject)
+        message = generate_zulip_message(post, stream, subject)
 
         response = send_message(message)
 

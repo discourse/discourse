@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User Card", type: :system do
+describe "User Card" do
   fab!(:current_user, :admin)
   fab!(:topic) { Fabricate(:post).topic }
   fab!(:user)
@@ -29,6 +29,25 @@ describe "User Card", type: :system do
 
       expect(user_card).to be_visible
       expect(user_card).to be_showing_user(user.username)
+    end
+  end
+
+  context "when the mentioned user is silenced" do
+    before do
+      UserSilencer.new(
+        user,
+        current_user,
+        reason: "public reason",
+        message_body: "private email body",
+      ).silence
+    end
+
+    it "does not show the private email body on the user card" do
+      topic_page.visit_topic(topic)
+      mention_post.find("a.mention").click
+
+      expect(user_card).to be_visible
+      expect(user_card.silence_reason_description).to eq("public reason")
     end
   end
 

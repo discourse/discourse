@@ -4,7 +4,7 @@ import { cloneJSON } from "discourse/lib/object";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
+import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers.js";
 
 function solvedTopicFixture(overrides = {}) {
   const topic = cloneJSON(postStreamWithAcceptedAnswerExcerpt("an answer"));
@@ -15,7 +15,7 @@ function solvedTopicFixture(overrides = {}) {
 function unsolvedTopicFixture() {
   const topic = cloneJSON(postStreamWithAcceptedAnswerExcerpt("an answer"));
   topic.category_id = 100;
-  topic.accepted_answer = null;
+  topic.accepted_answers = [];
   topic.post_stream.posts.forEach((p) => {
     p.accepted_answer = false;
     p.can_accept_answer = false;
@@ -25,7 +25,7 @@ function unsolvedTopicFixture() {
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
-acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
+acceptance("Solved Removal Confirmation", function (needs) {
   needs.user({ admin: true });
 
   needs.settings({

@@ -4,40 +4,47 @@ import {
   trackNextAjaxAsPageview,
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
+import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
+import EmbedMode from "discourse/lib/embed-mode";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { sendDeferredPageview } from "./message-bus";
+
+let _preNavigationUrl = null;
 
 export default {
   after: "inject-objects",
   before: "message-bus",
 
   initialize(owner) {
-    const isErrorPage =
-      document.querySelector("meta#discourse-error")?.dataset.discourseError ===
-      "true";
-    if (!isErrorPage) {
-      sendDeferredPageview();
-    }
-
     // Tell our AJAX system to track a page transition
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
+    const isErrorPage =
+      document.querySelector("meta#discourse-error")?.dataset.discourseError ===
+      "true";
+    if (!isErrorPage) {
+      router.on("routeDidChange", this.handleRouteDidChange);
+    }
 
     let appEvents = owner.lookup("service:app-events");
     let documentTitle = owner.lookup("service:document-title");
 
     startPageTracking(router, appEvents, documentTitle);
 
+    const isEmbedded = EmbedMode.enabled;
+
     // Out of the box, Discourse tries to track google analytics
     // if it is present
     if (typeof window._gaq !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
+          if (isEmbedded) {
+            window._gaq.push(["_setCustomVar", 1, "embed_mode", "true", 3]);
+          }
           window._gaq.push(["_set", "title", data.title]);
           window._gaq.push(["_trackPageview", data.url]);
         }
@@ -52,7 +59,11 @@ export default {
     ) {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
-          window.ga("send", "pageview", { page: data.url, title: data.title });
+          let gaFields = { page: data.url, title: data.title };
+          if (isEmbedded) {
+            gaFields.dimension1 = "embed";
+          }
+          window.ga("send", "pageview", gaFields);
         }
       });
     }
@@ -64,6 +75,7 @@ export default {
           window.gtag("event", "page_view", {
             page_location: data.url,
             page_title: data.title,
+            embed_mode: isEmbedded || undefined,
           });
         }
       });
@@ -73,14 +85,49 @@ export default {
     if (typeof window.dataLayer !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
+          if (isEmbedded) {
+            data = Object.assign({}, data, { embed_mode: true });
+          }
           googleTagManagerPageChanged(data);
         }
       });
     }
   },
 
+  handleRouteDidChange(transition) {
+    if (transition.isAborted) {
+      return;
+    }
+
+    const trackingSessionId = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
+    )?.content;
+    const referrerUrl = transition.from
+      ? _preNavigationUrl
+      : document.referrer.length
+        ? document.referrer
+        : null;
+
+    let topicId;
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      topicId = transition.to.parent.params.id;
+    }
+
+    sendBeaconPageview({
+      sessionId: trackingSessionId,
+      url: window.location.href,
+      referrer: referrerUrl,
+      topicId,
+    });
+
+    _preNavigationUrl = window.location.href;
+  },
+
   handleRouteWillChange(transition) {
-    // transition.from will be null on initial boot transition, which is already tracked as a pageview via the HTML request
+    // The initial transition is tracked by handleRouteDidChange.
     if (!transition.from) {
       return;
     }

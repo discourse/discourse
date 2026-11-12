@@ -1,12 +1,12 @@
 import { trustHTML } from "@ember/template";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import ColorPaletteListItem from "discourse/admin/components/color-palette-list-item";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 const FILTER_MINIMUM = 8;
@@ -14,18 +14,18 @@ const FILTER_MINIMUM = 8;
 export default <template>
   <DPageHeader @hideTabs={{true}}>
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/colors"
         @label={{i18n "admin.config.color_palettes.title"}}
+        @path="/admin/config/colors"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <DPageSubheader
-    @titleLabel={{i18n "admin.config.color_palettes.title"}}
     @descriptionLabel={{i18n "admin.config.color_palettes.header_description"}}
     @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
+    @titleLabel={{i18n "admin.config.color_palettes.title"}}
   >
     <:actions as |actions|>
       <PluginOutlet
@@ -34,9 +34,9 @@ export default <template>
       >
         <actions.Primary
           class="create-new-palette"
-          @label="admin.customize.new"
           @action={{@controller.newColorScheme}}
           @icon="plus"
+          @label="admin.customize.new"
         />
       </PluginOutlet>
     </:actions>
@@ -64,30 +64,32 @@ export default <template>
     </p>
   {{/if}}
 
-  <AdminFilterControls
+  <DFilterControls
     @array={{@controller.displayedPalettes}}
-    @minItemsForFilter={{FILTER_MINIMUM}}
-    @searchableProps={{@controller.searchableProps}}
+    @dropdownFilterQueryParam="type"
     @dropdownOptions={{@controller.dropdownOptions}}
     @inputPlaceholder={{i18n
       "admin.customize.colors.filters.search_placeholder"
     }}
+    @minItemsForFilter={{FILTER_MINIMUM}}
     @noResultsMessage={{i18n "admin.customize.colors.filters.no_results"}}
+    @searchableProps={{@controller.searchableProps}}
+    @textFilterQueryParam="filter"
   >
     <:content as |schemes|>
       <ul class="color-palette__list">
         {{#each schemes as |scheme|}}
           <ColorPaletteListItem
-            @scheme={{scheme}}
             @defaultTheme={{@controller.defaultTheme}}
-            @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
-            @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
-            @toggleUserSelectable={{@controller.toggleUserSelectable}}
-            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
             @deleteColorScheme={{@controller.deleteColorScheme}}
+            @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
+            @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
+            @scheme={{scheme}}
+            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+            @toggleUserSelectable={{@controller.toggleUserSelectable}}
           />
         {{/each}}
       </ul>
     </:content>
-  </AdminFilterControls>
+  </DFilterControls>
 </template>

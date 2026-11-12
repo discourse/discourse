@@ -7,10 +7,11 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-rss-polling
 
 enabled_site_setting :rss_polling_enabled
-add_admin_route "rss_polling.title", "rss_polling"
+add_admin_route "rss_polling.title", "discourse-rss-polling", { use_new_show_route: true }
 register_asset "stylesheets/rss-polling.scss"
-register_svg_icon "floppy-disk"
 register_svg_icon "rss"
+register_svg_icon "filter"
+register_svg_icon "arrows-rotate"
 
 module ::DiscourseRssPolling
   PLUGIN_NAME = "discourse_rss_polling"

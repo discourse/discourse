@@ -207,9 +207,6 @@ sk:
               description: "Voliteľné, obmedziť spúšťanie len na príspevky s týmito funkciami"
           created: Vytvorené
           edited: Upravené
-          topics: Všetky témy
-          personal_messages: Osobné správy
-          public_topics: Verejné témy (vylúčte všetky zabezpečené kategórie)
           with_images: Obrázky
           with_links: Odkazy
           with_code: Kód

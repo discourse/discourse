@@ -2,8 +2,9 @@
 
 RSpec.describe ReviewableActionBuilder do
   fab!(:admin)
-  fab!(:guardian) { Guardian.new(admin) }
   fab!(:user)
+
+  let(:guardian) { Guardian.new(admin) }
 
   describe "#build_action" do
     fab!(:reviewable_user) { ReviewableUser.create_for(user) }
@@ -48,6 +49,26 @@ RSpec.describe ReviewableActionBuilder do
       expect(action.client_action).to eq("go")
       expect(action.confirm_message).to eq("reviewables.actions.approve_user.confirm")
       expect(action.require_reject_reason).to be(true)
+    end
+
+    it "allows an extension action to opt into classification while ordinary actions remain optional" do
+      actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(actions, :approve_user)
+      reviewable_user.build_action(actions, :plugin_restrict, dsa_classification_required: true)
+
+      expect(actions.to_a.select(&:dsa_classification_required).map(&:server_action)).to eq(
+        ["plugin_restrict"],
+      )
+    end
+
+    it "keeps potentially illegal reviewables outside classification" do
+      reviewable_user.update!(potentially_illegal: true)
+      actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(actions, :plugin_restrict, dsa_classification_required: true)
+
+      expect(actions.to_a.select(&:dsa_classification_required)).to be_empty
     end
 
     it "adds the action to the provided bundle" do

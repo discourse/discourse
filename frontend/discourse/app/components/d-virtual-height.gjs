@@ -23,8 +23,6 @@ export default class DVirtualHeight extends Component {
       return;
     }
 
-    this.windowInnerHeight = window.innerHeight;
-
     scheduleOnce("afterRender", this, this.debouncedOnViewportResize);
 
     window.visualViewport.addEventListener(
@@ -80,8 +78,7 @@ export default class DVirtualHeight extends Component {
 
     let keyboardVisible = false;
 
-    let viewportWindowDiff =
-      this.windowInnerHeight - window.visualViewport.height;
+    let viewportWindowDiff = window.innerHeight - window.visualViewport.height;
 
     if (viewportWindowDiff > KEYBOARD_DETECT_THRESHOLD) {
       keyboardVisible = true;

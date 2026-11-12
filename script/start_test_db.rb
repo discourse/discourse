@@ -31,6 +31,8 @@ if should_setup
   run "echo fsync = off >> #{DATA}/postgresql.conf"
   run "echo synchronous_commit = off >> #{DATA}/postgresql.conf"
   run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
+  run "echo wal_level = minimal >> #{DATA}/postgresql.conf"
+  run "echo max_wal_senders = 0 >> #{DATA}/postgresql.conf"
   run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
 end
 

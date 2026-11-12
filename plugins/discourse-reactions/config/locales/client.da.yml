@@ -13,19 +13,21 @@ da:
   js:
     discourse_reactions:
       reactions_title: "Reaktioner"
-      state_panel:
-        more_users: "og %{count} mere..."
-      reaction:
-        forbidden: "Den reaktion blev givet for længe siden. Den kan ikke længere ændres eller fjernes."
       picker:
         react_with: "Reager på dette indlæg med: %{reaction}"
         cant_remove_reaction: "Du kan ikke længere fjerne din reaktion"
         remove_reaction: "Fjern denne %{reaction} reaktion"
+      users_popup:
+        all: "Alle"
       main_reaction:
         add: "Synes godt om dette indlæg"
         remove: "Fjern dette 'Synes godt om'"
         cant_remove: "Du kan ikke længere fjerne dit 'Synes godt om'"
         unauthenticated: "Tilmeld dig eller log ind for at 'synes godt om' dette indlæg"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Tilføjet"
+        changes_removed: "Fjernet"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:

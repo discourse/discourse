@@ -9,7 +9,7 @@ module DiscourseNarrativeBot
     end
 
     def discobot_username
-      self.discobot_user.username_lower
+      discobot_user.username_lower
     end
 
     private
@@ -26,12 +26,12 @@ module DiscourseNarrativeBot
           skip_validations: true,
         }
 
-        new_post = PostCreator.create!(self.discobot_user, default_opts.merge(opts))
+        new_post = PostCreator.create!(discobot_user, default_opts.merge(opts))
         reset_rate_limits(post) if new_post
         new_post
       else
         PostCreator.create!(
-          self.discobot_user,
+          discobot_user,
           { post_alert_options: default_post_alert_opts, raw: raw, skip_validations: true }.merge(
             opts,
           ),
@@ -81,7 +81,7 @@ module DiscourseNarrativeBot
       doc
         .css(".mention")
         .each do |mention|
-          if User.normalize_username(mention.text) == "@#{self.discobot_username}"
+          if User.normalize_username(mention.text) == "@#{discobot_username}"
             valid = true
             break
           end

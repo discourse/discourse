@@ -7,21 +7,26 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @topic_timeline_component = PageObjects::Components::TopicTimeline.new
         @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
-        page.visit(topic.url(post_number))
+        visit(topic.url(post_number))
         self
       end
 
+      def timeline
+        @topic_timeline_component
+      end
+
       def open_new_topic
-        page.visit "/new-topic"
+        visit "/new-topic"
         self
       end
 
       def open_new_message
-        page.visit "/new-message"
+        visit "/new-message"
         self
       end
 
@@ -79,6 +84,22 @@ module PageObjects
         within_post(post) { has_no_css?(".embedded-posts") }
       end
 
+      def expand_quote(post)
+        within_post(post) { find("aside.quote .quote-toggle", match: :first).click }
+      end
+
+      def follow_quote(post)
+        within_post(post) { find("aside.quote .quote-controls .back").click }
+      end
+
+      def has_highlighted_text?(post, text, inside: nil)
+        selector = [inside, ".quote-highlight"].compact.join(" ")
+        within_post(post) do
+          has_css?(selector, obscured: false) &&
+            text.split.all? { |word| has_css?(selector, text: word) }
+        end
+      end
+
       def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
         find(".topic-post:not(.staged) #post_#{post_or_number}", wait: wait)
@@ -94,6 +115,10 @@ module PageObjects
 
       def has_post_more_actions?(post)
         within_post(post) { has_css?(".show-more-actions") }
+      end
+
+      def has_post_flagged?(post:, type:)
+        within_post(post) { has_text?(I18n.t("js.post.actions.by_you.#{type}")) }
       end
 
       def has_post_bookmarked?(post, with_reminder: false)
@@ -116,6 +141,13 @@ module PageObjects
         find_post_action_button(post, button).click
       end
 
+      def open_post_translations(post)
+        click_post_action_button(post, :show_more)
+        click_post_action_button(post, :add_translation)
+        find(".post-action-menu__view-translation").click
+        self
+      end
+
       def find_post_action_buttons(post)
         within_post(post) { find(".post-controls .actions") }
       end
@@ -136,20 +168,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        if count
-          return(
-            has_css?(
-              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
-              count: count,
-            )
-          )
-        end
+        return has_css?(".users-popup .users-popup__item", count: count) if count
 
-        within_post(post) { has_css?(".who-liked.--expanded") }
+        has_css?(".users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked.--expanded") }
+        has_no_css?(".users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)
@@ -185,9 +210,21 @@ module PageObjects
           element_klass += " .grant-badge"
         when :change_owner
           element_klass += " .change-owner"
+        when :permanently_delete
+          element_klass += " .permanently-delete"
         end
 
         find(element_klass).click
+      end
+
+      def permanently_delete_post(post)
+        expand_post_actions(post)
+        expand_post_admin_actions(post)
+        click_post_admin_action_button(post, :permanently_delete)
+      end
+
+      def open_post_history(post)
+        post_by_number(post).find(".post-info.edits").click
       end
 
       def click_topic_bookmark_button
@@ -216,7 +253,7 @@ module PageObjects
 
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
-          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
+          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit bookmark")
         end
       end
 
@@ -235,6 +272,43 @@ module PageObjects
       def click_reply_button
         within_topic_footer_buttons { find(".create").click }
         has_expanded_composer?
+      end
+
+      def click_floating_reply_button
+        find(".embed-floating-reply-button").click
+      end
+
+      def has_floating_reply_button?
+        has_css?(".embed-floating-reply-button")
+      end
+
+      def has_no_floating_reply_button?
+        has_no_css?(".embed-floating-reply-button")
+      end
+
+      def click_floating_timeline_button
+        find(".embed-floating-timeline-button").click
+      end
+
+      def has_floating_timeline_button?
+        has_css?(".embed-floating-timeline-button")
+      end
+
+      def has_no_floating_timeline_button?
+        has_no_css?(".embed-floating-timeline-button")
+      end
+
+      def has_docked_composer?
+        has_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def has_no_docked_composer?
+        has_no_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def click_embed_reply_button
+        within_topic_footer_buttons { find(".create").click }
+        self
       end
 
       def has_expanded_composer?
@@ -306,7 +380,25 @@ module PageObjects
       end
 
       def click_like_reaction_for(post)
-        within_post(post) { find(".post-controls .actions .like").click }
+        post_container = post_container_for(post)
+
+        if post_container.has_css?(".discourse-reactions-reaction-button", wait: 0)
+          post_container.find(".discourse-reactions-reaction-button").click
+        else
+          post_container.find(".post-action-menu__like").click
+        end
+      end
+
+      def has_like_count_for?(post, count)
+        post_container_for(post).has_css?(
+          ".post-action-menu__like-count, .reactions-counter",
+          text: count.to_s,
+        )
+      end
+
+      def post_container_for(post)
+        post_number = post.is_a?(Post) ? post.post_number : post
+        post_by_number(post_number).ancestor(".topic-post")
       end
 
       def has_topic_map?
@@ -357,7 +449,7 @@ module PageObjects
       end
 
       def move_to_public_modal
-        find(".modal.convert-to-public-topic")
+        find(".d-modal.convert-to-public-topic")
       end
 
       def has_no_flag_button?
@@ -380,6 +472,23 @@ module PageObjects
       def topic_tags
         tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
         all(tags_selector).map(&:text)
+      end
+
+      def has_topic_tag?(name)
+        has_css?(".title-wrapper .discourse-tag", text: name)
+      end
+
+      def has_content_language_preferences_launcher?
+        has_css?(".topic-content-language-preferences")
+      end
+
+      def has_no_topic_admin_menu?
+        has_no_css?(".topic-admin-menu-trigger")
+      end
+
+      def open_content_language_preferences
+        find(".topic-content-language-preferences").click
+        PageObjects::Modals::ContentLanguagePreferences.new
       end
 
       private

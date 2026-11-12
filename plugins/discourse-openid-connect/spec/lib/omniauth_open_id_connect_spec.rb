@@ -33,6 +33,47 @@ describe OmniAuth::Strategies::OpenIDConnect do
 
   after { OmniAuth.config.test_mode = false }
 
+  describe "#info" do
+    let(:userinfo) { { "email" => "standard@example.com", "mail" => "custom@example.com" } }
+    let(:id_token) { { "email" => "token@example.com", "mail" => "custom-token@example.com" } }
+
+    before do
+      strategy.stubs(:userinfo_response).returns(userinfo)
+      strategy.stubs(:id_token_info).returns(id_token)
+    end
+
+    it "uses the standard email claim by default" do
+      expect(strategy.info[:email]).to eq(userinfo["email"])
+    end
+
+    it "uses the configured claim from UserInfo" do
+      strategy.options.email_claim = "mail"
+
+      expect(strategy.info[:email]).to eq(userinfo["mail"])
+    end
+
+    it "uses the configured claim from the ID token when UserInfo is disabled" do
+      strategy.options.email_claim = "mail"
+      strategy.options.use_userinfo = false
+
+      expect(strategy.info[:email]).to eq(id_token["mail"])
+    end
+
+    it "omits a missing configured claim without falling back to another email" do
+      strategy.options.email_claim = "mail"
+      userinfo.delete("mail")
+
+      expect(strategy.info).not_to have_key(:email)
+    end
+
+    it "omits a non-string email claim" do
+      strategy.options.email_claim = "mail"
+      userinfo["mail"] = ["custom@example.com"]
+
+      expect(strategy.info).not_to have_key(:email)
+    end
+  end
+
   context "when discovery document is missing" do
     let(:discovery_document) { nil }
 
@@ -167,6 +208,17 @@ describe OmniAuth::Strategies::OpenIDConnect do
         expect(@app_called).to eq(false)
       end
 
+      it "fails gracefully when an upstream request errors" do
+        stub_request(:post, "https://id.example.com/token").to_timeout
+
+        callback_response = strategy.callback_phase
+        expect(callback_response[0]).to eq(302)
+        expect(callback_response[1]["Location"]).to eq(
+          "/auth/failure?message=openid_connect_request_failed&strategy=openidconnect",
+        )
+        expect(@app_called).to eq(false)
+      end
+
       context "with userinfo disabled" do
         before do
           stub_request(:post, "https://id.example.com/token").with(
@@ -189,6 +241,20 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(strategy.info[:email]).to eq("tokenemail@example.com")
           expect(strategy.extra[:id_token]).to eq(@token)
           expect(@app_called).to eq(true)
+        end
+
+        it "handles a blank access_token alongside the id_token" do
+          stub_request(:post, "https://id.example.com/token").to_return(
+            status: 200,
+            body: { access_token: "", id_token: @token }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          expect(strategy.callback_phase[0]).to eq(200)
+          expect(strategy.uid).to eq("someuserid")
+          expect(strategy.extra[:id_token]).to eq(@token)
         end
 
         it "checks the nonce" do
@@ -250,7 +316,97 @@ describe OmniAuth::Strategies::OpenIDConnect do
           )
           expect(@app_called).to eq(false)
         end
+
+        it "exposes id_token_info alongside the userinfo raw_info" do
+          expect(strategy.callback_phase[0]).to eq(200)
+          expect(strategy.extra[:raw_info]["email"]).to eq("userinfoemail@example.com")
+          expect(strategy.extra[:id_token_info]["email"]).to eq("tokenemail@example.com")
+        end
       end
+    end
+  end
+
+  context "with mTLS client certificate configured" do
+    before do
+      key = OpenSSL::PKey::RSA.new(2048)
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = key.public_key
+      cert.sign(key, OpenSSL::Digest.new("SHA256"))
+
+      strategy.options.client_options[:auth_scheme] = :tls_client_auth
+      strategy.options.client_options[:connection_opts] ||= {}
+      strategy.options.client_options[:connection_opts][:ssl] = {
+        client_cert: cert,
+        client_key: key,
+      }
+    end
+
+    before do
+      strategy.stubs(:full_host).returns("https://example.com")
+      strategy.stubs(:request).returns(mock)
+      strategy.request.stubs(:params).returns({})
+
+      auth_params = strategy.authorize_params
+      strategy
+        .request
+        .stubs(:params)
+        .returns("state" => auth_params[:state], "code" => "supersecretcode")
+
+      payload = {
+        iss: "https://id.example.com/",
+        sub: "someuserid",
+        aud: "appid",
+        iat: Time.now.to_i - 30,
+        exp: Time.now.to_i + 120,
+        nonce: auth_params[:nonce],
+        name: "My Auth Token Name",
+        email: "tokenemail@example.com",
+      }
+      @token = ::JWT.encode payload, nil, "none"
+
+      stub_request(:post, "https://id.example.com/token")
+        .with { |request| @request_body = request.body }
+        .to_return(
+          status: 200,
+          body: { access_token: "MTLSAccessToken", expires_in: 3600, id_token: @token }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      stub_request(:get, "https://id.example.com/userinfo").with(
+        headers: {
+          "Authorization" => "Bearer MTLSAccessToken",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          sub: "someuserid",
+          name: "My Userinfo Name",
+          email: "userinfoemail@example.com",
+        }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+    end
+
+    it "uses mTLS authentication instead of client_secret" do
+      expect(strategy.options.client_options.auth_scheme).to eq(:tls_client_auth)
+
+      ssl = strategy.options.client_options.connection_opts[:ssl]
+      expect(ssl[:client_cert]).to be_a(OpenSSL::X509::Certificate)
+      expect(ssl[:client_key]).to be_a(OpenSSL::PKey::RSA)
+
+      callback_response = strategy.callback_phase
+      expect(callback_response[0]).to eq(200)
+
+      expect(@request_body).to include("client_id")
+      expect(@request_body).not_to include("client_secret")
     end
   end
 end

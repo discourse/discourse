@@ -76,7 +76,7 @@ const setDefaultState = (ctx, options = {}) => {
 };
 
 module(
-  "Integration | Component | select-kit/color-palette-picker",
+  "Integration | Component | SelectKit | ColorPalettePicker",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -91,8 +91,8 @@ module(
         <template>
           <ColorPalettePicker
             @content={{this.content}}
-            @value={{this.value}}
             @onChange={{this.onChange}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -130,11 +130,11 @@ module(
         <template>
           <ColorPalettePicker
             @content={{this.content}}
-            @value={{this.value}}
             @onChange={{this.onChange}}
             @options={{hash
               translatedNone=(i18n "admin.customize.theme.default_light_scheme")
             }}
+            @value={{this.value}}
           />
         </template>
       );

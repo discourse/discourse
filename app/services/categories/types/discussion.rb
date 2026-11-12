@@ -6,12 +6,24 @@ module Categories
       type_id :discussion
 
       class << self
+        def svg_icon
+          "comment"
+        end
+
         def find_matches
           # All categories are implicitly discussion categories, so there's no
           # meaningful subset to count. Returning Category.none keeps count at 0,
           # which means discussion always prefills — correct since it has no
           # general_category_settings to prefill anyway.
           Category.none
+        end
+
+        def configure_category(category, guardian:, configuration_values: {})
+          # intentional noop, nothing to do here
+        end
+
+        def unconfigure_category(category, guardian:)
+          # intentional noop, nothing to do here
         end
 
         def category_matches?(category)

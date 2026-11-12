@@ -63,7 +63,7 @@ module Faker
       end
 
       def image_cache_dir
-        @image_cache_dir ||= ::File.join(Rails.root, "tmp", "discourse_dev", "images")
+        @image_cache_dir ||= Rails.root.join("tmp/discourse_dev/images").to_s
       end
 
       def load_image(image)

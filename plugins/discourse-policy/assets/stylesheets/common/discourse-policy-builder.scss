@@ -22,20 +22,4 @@
   input[type="checkbox"] {
     margin: 0;
   }
-
-  .policy-field {
-    margin-bottom: 0.5em;
-
-    &:last-child {
-      margin: 0;
-    }
-
-    .policy-field-label {
-      font-weight: 700;
-    }
-
-    .policy-field-description {
-      font-size: var(--font-down-1);
-    }
-  }
 }

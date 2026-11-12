@@ -2,39 +2,39 @@ import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import Chart from "discourse/admin/components/chart";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HighlightSearch from "discourse/components/highlight-search";
 import TopicStatus from "discourse/components/topic-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTag from "discourse/helpers/discourse-tag";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-title">
     <PeriodChooser
-      @period={{@controller.period}}
       @onChange={{fn (mut @controller.period)}}
+      @period={{@controller.period}}
     />
     <ComboBox
-      @content={{@controller.searchTypeOptions}}
-      @value={{@controller.searchType}}
-      @onChange={{fn (mut @controller.searchType)}}
       class="search-logs-filter"
+      @content={{@controller.searchTypeOptions}}
+      @onChange={{fn (mut @controller.searchType)}}
+      @value={{@controller.searchType}}
     />
   </div>
 
   <h2>
     <LinkTo
-      @route="full-page-search"
       @query={{hash q=@controller.term}}
+      @route="full-page-search"
     >{{@controller.term}}</LinkTo>
   </h2>
 
-  <ConditionalLoadingSpinner @condition={{@controller.refreshing}}>
+  <DConditionalLoadingSpinner @condition={{@controller.refreshing}}>
     <Chart @chartConfig={{@controller.chartConfig}} />
 
     <br /><br />
@@ -45,15 +45,15 @@ export default <template>
       {{#each @controller.model.search_result.posts as |result|}}
         <div class="fps-result">
           <div class="author">
-            <a href={{result.userPath}} data-user-card={{result.username}}>
-              {{avatar result imageSize="large"}}
+            <a data-user-card={{result.username}} href={{result.userPath}}>
+              {{dAvatar result imageSize="large"}}
             </a>
           </div>
 
           <div class="fps-topic">
             <div class="topic">
-              <a href={{result.url}} class="search-link">
-                <TopicStatus @topic={{result.topic}} @disableActions={{true}} />
+              <a class="search-link" href={{result.url}}>
+                <TopicStatus @disableActions={{true}} @topic={{result.topic}} />
                 <span class="topic-title">
                   {{#if result.useTopicTitleHeadline}}
                     {{trustHTML result.topicTitleHeadline}}
@@ -67,18 +67,18 @@ export default <template>
 
               <div class="search-category">
                 {{#if result.topic.category.parentCategory}}
-                  {{categoryLink result.topic.category.parentCategory}}
+                  {{dCategoryLink result.topic.category.parentCategory}}
                 {{/if}}
-                {{categoryLink result.topic.category hideParent=true}}
+                {{dCategoryLink result.topic.category hideParent=true}}
                 {{#each result.topic.tags as |tag|}}
-                  {{discourseTag tag}}
+                  {{dDiscourseTag tag}}
                 {{/each}}
               </div>
             </div>
 
             <div class="blurb container">
               <span class="date">
-                {{ageWithTooltip result.created_at}}
+                {{dAgeWithTooltip result.created_at}}
                 {{#if result.blurb}}
                   -
                 {{/if}}
@@ -98,5 +98,5 @@ export default <template>
         </div>
       {{/each}}
     </div>
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

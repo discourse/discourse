@@ -28,6 +28,10 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SET_TOPIC_TIME
     next if !post.topic
     next unless topic = Topic.find_by(id: post.topic_id)
 
+    # Saving a close timer on a closed topic would reopen it via
+    # TopicTimer#after_save (intended for the "Close Temporarily" UI flow).
+    next if topic.closed? && %w[auto_close auto_close_after_last_post].include?(timer_type)
+
     duration_minutes = fields.dig("duration", "value")
 
     case timer_type

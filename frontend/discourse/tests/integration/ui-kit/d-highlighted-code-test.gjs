@@ -1,0 +1,67 @@
+import { tracked } from "@glimmer/tracking";
+import { render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
+
+module("Integration | ui-kit | DHighlightedCode", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("highlighting code", async function (assert) {
+    await render(
+      <template>
+        <DHighlightedCode @code="def test; end" @lang="ruby" />
+      </template>
+    );
+
+    assert.dom("code.lang-ruby.hljs .hljs-keyword").hasText("def");
+  });
+
+  test("large code blocks are not highlighted", async function (assert) {
+    const longCodeBlock = "puts a\n".repeat(15000);
+
+    await render(
+      <template>
+        <DHighlightedCode @code={{longCodeBlock}} @lang="ruby" />
+      </template>
+    );
+
+    assert.dom("pre code").hasText(longCodeBlock);
+  });
+
+  test("highlighting code with lang=auto", async function (assert) {
+    await render(
+      <template>
+        <DHighlightedCode @code="def test; end" @lang="auto" />
+      </template>
+    );
+
+    assert.dom("code.hljs").hasNoClass("lang-auto", "lang-auto is removed");
+    assert.dom("code.hljs").hasClass(/language-/, "language is detected");
+
+    assert
+      .dom("code.hljs")
+      .hasNoAttribute(
+        "data-unknown-hljs-lang",
+        "language is found from language- class"
+      );
+  });
+
+  test("re-highlights the code when it changes", async function (assert) {
+    const code = tracked("def foo; end");
+
+    await render(
+      <template>
+        <DHighlightedCode @code={{code.value}} @lang="ruby" />
+        {{code.value}}
+      </template>
+    );
+
+    assert.dom("code.lang-ruby.hljs .hljs-title").hasText("foo");
+
+    code.value = "def bar; end";
+    await settled();
+
+    assert.dom("code.lang-ruby.hljs .hljs-title").hasText("bar");
+  });
+});

@@ -25,7 +25,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::Nova do
       expect(translated.system).to eq([{ text: "You are a helpful bot" }])
       expect(translated.messages).to eq(
         [
-          { role: "user", content: [{ text: "Hello" }] },
+          { role: "user", content: [{ text: "user1: Hello" }] },
           { role: "assistant", content: [{ text: "Hi there!" }] },
         ],
       )
@@ -55,7 +55,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::Nova do
 
         expect(translated.messages.first[:content]).to eq(
           [
-            { text: "What's in this image?" },
+            { text: "user1: What's in this image?" },
             { image: { format: "jpeg", source: { bytes: encoded } } },
           ],
         )

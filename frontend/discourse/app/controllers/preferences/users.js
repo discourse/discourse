@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
@@ -8,13 +7,18 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class UsersController extends Controller {
-  @and(
+  subpageTitle = i18n("user.preferences_nav.users");
+
+  @computed(
     "model.user_option.enable_allowed_pm_users",
     "model.user_option.allow_private_messages"
   )
-  allowPmUsersEnabled;
-
-  subpageTitle = i18n("user.preferences_nav.users");
+  get allowPmUsersEnabled() {
+    return (
+      this.model?.user_option?.enable_allowed_pm_users &&
+      this.model?.user_option?.allow_private_messages
+    );
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(
@@ -51,6 +55,11 @@ export default class UsersController extends Controller {
     return uniqueItemsFromArray(makeArray(usernames));
   }
 
+  @computed("model.user_option.allow_private_messages")
+  get disableAllowPmUsersSetting() {
+    return !this.model?.user_option?.allow_private_messages;
+  }
+
   @action
   onChangeMutedUsernames(usernames) {
     this.model.set(
@@ -65,11 +74,6 @@ export default class UsersController extends Controller {
       "allowed_pm_usernames",
       uniqueItemsFromArray(usernames).join(",")
     );
-  }
-
-  @computed("model.user_option.allow_private_messages")
-  get disableAllowPmUsersSetting() {
-    return !this.model?.user_option?.allow_private_messages;
   }
 
   @action

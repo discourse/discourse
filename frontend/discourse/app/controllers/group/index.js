@@ -15,12 +15,19 @@ export default class GroupIndexController extends Controller {
   @service currentUser;
   @service dialog;
 
+  /** @type {import("discourse/models/user").default[] | null} */
   @autoTrackedArray bulkSelection = null;
 
   queryParams = ["order", "asc", "filter"];
+
+  /** @type {string | null} */
   order = null;
   asc = true;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   filterInput = null;
   loading = false;
   isBulk = false;
@@ -32,40 +39,6 @@ export default class GroupIndexController extends Controller {
 
   get canLoadMore() {
     return this.get("model.members")?.length < this.get("model.user_count");
-  }
-
-  @observes("filterInput")
-  filterInputChanged() {
-    this._setFilter();
-  }
-
-  @debounce(500)
-  _setFilter() {
-    this.set("filter", this.filterInput);
-  }
-
-  @observes("order", "asc", "filter")
-  _filtersChanged() {
-    this.reloadMembers(true);
-  }
-
-  reloadMembers(refresh) {
-    if (this.loading || !this.model) {
-      return;
-    }
-
-    if (!refresh && !this.canLoadMore) {
-      return;
-    }
-
-    this.set("loading", true);
-    this.model.reloadMembers(this.memberParams, refresh).finally(() => {
-      this.set("loading", false);
-
-      if (this.refresh) {
-        this.set("bulkSelection", []);
-      }
-    });
   }
 
   @computed("order", "asc", "filter")
@@ -98,6 +71,30 @@ export default class GroupIndexController extends Controller {
     } else {
       return "groups.empty.members";
     }
+  }
+
+  @observes("filterInput")
+  filterInputChanged() {
+    this._setFilter();
+  }
+
+  reloadMembers(refresh) {
+    if (this.loading || !this.model) {
+      return;
+    }
+
+    if (!refresh && !this.canLoadMore) {
+      return;
+    }
+
+    this.set("loading", true);
+    this.model.reloadMembers(this.memberParams, refresh).finally(() => {
+      this.set("loading", false);
+
+      if (this.refresh) {
+        this.set("bulkSelection", []);
+      }
+    });
   }
 
   @action
@@ -185,23 +182,6 @@ export default class GroupIndexController extends Controller {
           this.set("isBulk", false);
         });
     }
-  }
-
-  _wouldLoseAccessOnRemoval(user) {
-    if (this.currentUser.admin) {
-      return false;
-    }
-
-    if (user.id !== this.currentUser.id) {
-      return false;
-    }
-
-    const group = this.model;
-
-    return (
-      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
-      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
-    );
   }
 
   @action
@@ -296,5 +276,32 @@ export default class GroupIndexController extends Controller {
       order: field,
       asc,
     });
+  }
+
+  @debounce(500)
+  _setFilter() {
+    this.set("filter", this.filterInput);
+  }
+
+  @observes("order", "asc", "filter")
+  _filtersChanged() {
+    this.reloadMembers(true);
+  }
+
+  _wouldLoseAccessOnRemoval(user) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    if (user.id !== this.currentUser.id) {
+      return false;
+    }
+
+    const group = this.model;
+
+    return (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    );
   }
 }

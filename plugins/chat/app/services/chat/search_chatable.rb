@@ -81,15 +81,21 @@ module Chat
       allowed_bot_user_ids =
         DiscoursePluginRegistry.apply_modifier(:chat_allowed_bot_user_ids, [], guardian)
 
+      # Replacing modifiers must not drop bots explicitly listed by admins.
+      allowed_bot_user_ids |= Chat::DiscoverableBot.pluck(:user_id)
       user_search = user_search.real(allowed_bot_user_ids:)
       user_search = user_search.includes(:user_option)
 
       if params.excluded_memberships_channel_id
-        user_search =
-          user_search.where(
-            "NOT EXISTS (SELECT 1 FROM user_chat_channel_memberships WHERE user_id = users.id AND chat_channel_id = ?)",
-            params.excluded_memberships_channel_id,
-          )
+        channel =
+          Chat::Channel.includes(:chatable).find_by(id: params.excluded_memberships_channel_id)
+        if channel && guardian.can_preview_chat_channel?(channel)
+          user_search =
+            user_search.where(
+              "NOT EXISTS (SELECT 1 FROM user_chat_channel_memberships WHERE user_id = users.id AND chat_channel_id = ?)",
+              params.excluded_memberships_channel_id,
+            )
+        end
       end
 
       filter_term = params.term.to_s

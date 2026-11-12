@@ -4,11 +4,97 @@ RSpec.describe PostActionUsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
-  describe "index" do
+  describe "#index" do
+    it "only shows TL4 members their own private flags and hides the total" do
+      user.update!(trust_level: TrustLevel[4])
+      notify_mod = PostActionType.types[:notify_moderators]
+      flagger = Fabricate(:user, refresh_auto_groups: true)
+      expect(
+        PostActionCreator.new(flagger, post, notify_mod, message: "Private report").perform,
+      ).to be_success
+      expect(
+        PostActionCreator.new(user, post, notify_mod, message: "My report").perform,
+      ).to be_success
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |actor| actor["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to be_nil
+    end
+
+    it "still shows TL4 members who liked a post" do
+      user.update!(trust_level: TrustLevel[4])
+      liker = Fabricate(:user)
+      PostActionCreator.like(liker, post)
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |actor| actor["id"] }).to eq(
+        [liker.id],
+      )
+    end
+
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/post_action_users.json",
                        described_class::INDEX_LIMIT
+    end
+
+    it "does not include total_rows_post_action_users for restricted action types" do
+      notify_mod = PostActionType.types[:notify_moderators]
+
+      PostActionCreator.new(post.user, post, notify_mod, message: "first report").perform
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        notify_mod,
+        message: "second report",
+      ).perform
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to be_nil
+    end
+
+    it "includes total_rows_post_action_users for restricted action types when staff" do
+      notify_mod = PostActionType.types[:notify_moderators]
+
+      PostActionCreator.new(post.user, post, notify_mod, message: "first report").perform
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        notify_mod,
+        message: "second report",
+      ).perform
+
+      sign_in(Fabricate(:admin))
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: notify_mod,
+            limit: 1,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
+      expect(response.parsed_body["total_rows_post_action_users"]).to eq(2)
     end
   end
 
@@ -70,7 +156,7 @@ RSpec.describe PostActionUsersController do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns 200 when listing users who liked the post" do
     get "/post_action_users.json",
         params: {
           id: post.id,
@@ -80,7 +166,25 @@ RSpec.describe PostActionUsersController do
     expect(response.status).to eq(200)
   end
 
-  it "will return an unknown attribute for muted users" do
+  it "returns an unknown attribute for muted users" do
+    muted_user = Fabricate(:user)
+    PostActionCreator.like(muted_user, post)
+    regular_user = Fabricate(:user)
+    PostActionCreator.like(regular_user, post)
+    Fabricate(:muted_user, user: user, muted_user: muted_user)
+
+    get "/post_action_users.json",
+        params: {
+          id: post.id,
+          post_action_type_id: PostActionType.types[:like],
+        }
+    expect(response.status).to eq(200)
+    json_users = response.parsed_body["post_action_users"]
+    expect(json_users.find { |u| u["id"] == regular_user.id }["unknown"]).to be_blank
+    expect(json_users.find { |u| u["id"] == muted_user.id }["unknown"]).to eq(true)
+  end
+
+  it "filters out ignored users from the post action user list" do
     ignored_user = Fabricate(:user)
     PostActionCreator.like(ignored_user, post)
     regular_user = Fabricate(:user)
@@ -93,9 +197,43 @@ RSpec.describe PostActionUsersController do
           post_action_type_id: PostActionType.types[:like],
         }
     expect(response.status).to eq(200)
-    json_users = response.parsed_body["post_action_users"]
-    expect(json_users.find { |u| u["id"] == regular_user.id }["unknown"]).to be_blank
-    expect(json_users.find { |u| u["id"] == ignored_user.id }["unknown"]).to eq(true)
+    user_ids = response.parsed_body["post_action_users"].map { |u| u["id"] }
+    expect(user_ids).to include(regular_user.id)
+    expect(user_ids).not_to include(ignored_user.id)
+  end
+
+  it "still shows ignored users to anonymous viewers" do
+    ignorer = Fabricate(:user)
+    ignored_user = Fabricate(:user)
+    PostActionCreator.like(ignored_user, post)
+    Fabricate(:ignored_user, user: ignorer, ignored_user: ignored_user)
+
+    get "/post_action_users.json",
+        params: {
+          id: post.id,
+          post_action_type_id: PostActionType.types[:like],
+        }
+    expect(response.status).to eq(200)
+    user_ids = response.parsed_body["post_action_users"].map { |u| u["id"] }
+    expect(user_ids).to include(ignored_user.id)
+  end
+
+  it "reports the filtered total in total_rows_post_action_users" do
+    stub_const(described_class, "INDEX_LIMIT", 2) do
+      ignored_user = Fabricate(:user)
+      PostActionCreator.like(ignored_user, post)
+      3.times { PostActionCreator.like(Fabricate(:user), post) }
+      Fabricate(:ignored_user, user: user, ignored_user: ignored_user)
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+            limit: 2,
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total_rows_post_action_users"]).to eq(3)
+    end
   end
 
   it "does not hide users from the like list when they are not in the actor's PM allowlist" do

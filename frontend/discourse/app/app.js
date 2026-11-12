@@ -1,19 +1,16 @@
-import "./setup-deprecation-workflow";
-import "./array-shim";
+import "./global-compat.js";
+import "./setup-deprecation-workflow.js";
+import "./array-shim.js";
 import "decorator-transforms/globals";
-import "./loader-shims";
-import "./discourse-common-loader-shims";
-import "./global-compat";
-import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";
-import floatKitCompatModules from "discourse/float-kit/float-kit-compat-modules";
-import selectKitCompatModules from "discourse/select-kit/select-kit-compat-modules";
-import truthHelperCompatModules from "discourse/truth-helpers/truth-helpers-compat-modules";
-defineModules("select-kit", selectKitCompatModules);
-defineModules("float-kit", floatKitCompatModules);
-defineModules("truth-helpers", truthHelperCompatModules);
-defineModules("dialog-holder", dialogHolderCompatModules);
-
+import "./loader-shims.js";
+import "./ui-kit-shims.js";
+import "./module-shims.js";
+import "./discourse-common-loader-shims.js";
+import "@warp-drive/ember/install";
+import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { registerSettings } from "discourse/lib/theme-settings-store";
+import { defineModules } from "./lib/loader-shim.js";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
@@ -21,36 +18,108 @@ registerDiscourseImplicitInjections();
 import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
+import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
-import require from "require";
+import deprecated from "discourse/lib/deprecated";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import {
+  populatePreloadStore,
+  readPreloadedData,
+} from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
+
+populatePreloadStore();
+
+defineModules(null, embroiderCompatModules);
+
+import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
+
+defineModules("discourse/dialog-holder", dialogHolderCompatModules);
+
+import floatKitCompatModules from "discourse/float-kit/compat-modules";
+
+defineModules("discourse/float-kit", floatKitCompatModules);
+
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+
+defineModules("discourse/select-kit", selectKitCompatModules);
+
+import truthHelpersCompatModules from "discourse/truth-helpers/compat-modules";
+
+defineModules("discourse/truth-helpers", truthHelpersCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  async lookup(moduleName) {
-    return require(moduleName);
+  lookup(moduleName, optional = false, exportNames = []) {
+    if (optional && !require.has(moduleName)) {
+      return {};
+    }
+
+    const module = require(moduleName);
+
+    for (const name of exportNames) {
+      if (!(name in module)) {
+        // TODO (discourse.missing-module-export): throw instead, so the importing theme or plugin fails to load
+        deprecated(
+          `"${moduleName}" has no export named "${name}". In a future release, this import will stop the theme or plugin from loading.`,
+          {
+            id: "discourse.missing-module-export",
+            since: "2026.11.0-latest",
+          }
+        );
+      }
+    }
+
+    return module;
   },
 };
+
+// `Resolver#addModules` expects the same namespacing as the eager modules.
+function registerRouteBundles(bundle, prefix) {
+  window._embroiderRouteBundles_ ??= [];
+
+  for (const { names, load } of bundle.routes ?? []) {
+    window._embroiderRouteBundles_.push({
+      names,
+      load: async () => {
+        const routeModules = (await load()).default;
+
+        return {
+          default: Object.fromEntries(
+            Object.entries(routeModules).map(([key, mod]) => [
+              `${prefix}/${key}`,
+              mod,
+            ])
+          ),
+        };
+      },
+    });
+  }
+}
 
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(bundle.compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/theme-${themeId}`);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
-      String(error)
+      window.Testem ? String(error) : error
     );
+
+    if (DEBUG && (isRailsTesting() || isTesting())) {
+      throw new Error(error, { cause: error });
+    }
+
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
@@ -58,30 +127,45 @@ async function loadThemeFromModulePreload(link) {
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(bundle.compatModules)) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/plugins/${pluginName}`);
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
-      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      error
-    );
-
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
 
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }
+
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      String(error)
+    );
+  }
+}
+
+function registerPreloadedThemeSettings() {
+  try {
+    const preloaded = readPreloadedData();
+    const activatedThemes = JSON.parse(preloaded.activatedThemes);
+    for (const [themeId, info] of Object.entries(activatedThemes)) {
+      registerSettings(parseInt(themeId, 10), info.settings);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to register preloaded theme settings", error);
   }
 }
 
 export async function loadThemesAndPlugins() {
+  registerPreloadedThemeSettings();
+
   const promises = [
     ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
@@ -94,18 +178,12 @@ export async function loadThemesAndPlugins() {
   await Promise.all(promises);
 }
 
-function defineModules(name, compatModules) {
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/${name}/${key.slice(2)}`, () => mod);
-  }
-}
-
 export async function loadAdmin() {
   defineModules(
-    "admin",
+    "discourse/admin",
     (
       await import(
-        /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
       )
     ).default
   );
@@ -114,6 +192,8 @@ export async function loadAdmin() {
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
+
+  inspector = setupInspector(this);
 
   customEvents = {
     paste: "paste",
@@ -143,13 +223,12 @@ class Discourse extends Application {
     loadInitializers(this);
   }
 
-  _registerPluginCode(version, code) {
-    _pluginCallbacks.push({ version, code });
-  }
-
   ready() {
     performance.mark("discourse-ready");
-    document.querySelector("#d-splash")?.remove();
+  }
+
+  _registerPluginCode(version, code) {
+    _pluginCallbacks.push({ version, code });
   }
 }
 

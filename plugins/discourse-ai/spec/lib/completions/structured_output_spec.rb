@@ -28,6 +28,83 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
   before { enable_current_plugin }
 
+  describe "#content?" do
+    it "ignores whitespace and empty objects" do
+      ["", " \n", "{  }"].each do |raw|
+        output = described_class.new(message: { type: "string" })
+        output << raw
+        expect(output.content?).to eq(false)
+      end
+    end
+
+    it "distinguishes synthetic prefill from a broken brace-only provider response" do
+      structured_output << "{"
+      expect(structured_output.content?).to eq(false)
+      structured_output.finish
+      expect(structured_output.content?).to eq(true)
+
+      prefilled = described_class.new(message: { type: "string" })
+      prefilled.prefill
+      prefilled << " "
+      prefilled.finish
+      expect(prefilled.content?).to eq(false)
+    end
+
+    it "counts false, zero, and broken content without consuming property cursors" do
+      %w[{"bool":false} {"number":0} {broken].each do |raw|
+        output = described_class.new(bool: { type: "boolean" }, number: { type: "integer" })
+        output << raw
+        expect(output.content?).to eq(true)
+      end
+      structured_output << '{"message":"Answer"}'
+      expect(structured_output.content?).to eq(true)
+      expect(structured_output.read_buffered_property(:message)).to eq("Answer")
+    end
+  end
+
+  describe "#read_buffered_property_chunk" do
+    it "yields non-empty chunks, including whitespace-only ones" do
+      yielded = []
+
+      structured_output << "{\"message\": \"First."
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "\\n\\n"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      structured_output << "Second.\"}"
+      structured_output.read_buffered_property_chunk(:message) { |chunk| yielded << chunk }
+
+      expect(yielded).to eq(["First.", "\n\n", "Second."])
+    end
+  end
+
+  describe "#property_complete?" do
+    it "treats a property as complete once a later key starts or the response finishes" do
+      structured_output << "{\"list\": [\"source_1"
+      expect(structured_output.property_complete?(:list)).to eq(false)
+
+      structured_output << "3\"], \"bool\": tr"
+      expect(structured_output.property_complete?(:list)).to eq(true)
+      expect(structured_output.property_complete?(:bool)).to eq(false)
+
+      structured_output << "ue}"
+      structured_output.finish
+      expect(structured_output.property_complete?(:bool)).to eq(true)
+    end
+
+    it "keeps a property open through a trailing comma and a half-written next key" do
+      structured_output << "{\"list\": [\"a\"],"
+      expect(structured_output.property_complete?(:list)).to eq(false)
+
+      structured_output << " \"bo"
+      expect(structured_output.property_complete?(:list)).to eq(true)
+      expect(structured_output.read_buffered_property(:list)).to eq(["a"])
+    end
+  end
+
   describe "Parsing structured output on the fly" do
     it "acts as a buffer for an streamed JSON" do
       chunks = [
@@ -53,10 +130,10 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
       structured_output << chunks[3]
       expect(structured_output.read_buffered_property(:bool)).to eq(true)
 
-      # Waiting for number to be fully buffered.
+      # Numbers stream too: mid-stream reads return the value buffered so far.
       structured_output << chunks[4]
       expect(structured_output.read_buffered_property(:bool)).to eq(true)
-      expect(structured_output.read_buffered_property(:number)).to be_nil
+      expect(structured_output.read_buffered_property(:number)).to eq(4)
 
       structured_output << chunks[5]
       expect(structured_output.read_buffered_property(:number)).to eq(42)
@@ -71,6 +148,15 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
       # No partial string left to read.
       expect(structured_output.read_buffered_property(:status)).to eq("")
+    end
+
+    it "streams pretty-printed JSON" do
+      pretty_json = JSON.pretty_generate(message: 'Hello, "world"!')
+      pretty_json.each_char.each_slice(4) { |chunk| structured_output << chunk.join }
+      structured_output.finish
+
+      expect(structured_output.broken?).to eq(false)
+      expect(structured_output.read_buffered_property(:message)).to eq('Hello, "world"!')
     end
 
     it "supports array types" do
@@ -102,7 +188,9 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
       structured_output << chunks[6]
       structured_output << chunks[7]
 
-      expect(structured_output.read_buffered_property(:list)).to eq(["Hello! I am a chunk"])
+      # A trailing comma opens a slot for the next element, which reads as a
+      # nil placeholder until its value arrives.
+      expect(structured_output.read_buffered_property(:list)).to eq(["Hello! I am a chunk", nil])
 
       structured_output << chunks[8]
       expect(structured_output.read_buffered_property(:list)).to eq(
@@ -128,14 +216,16 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
         described_class.new({ ratings: { type: "array", items: { type: "object" } } })
       end
 
-      it "falls back to full parsing without raising" do
+      it "streams partial objects and completes them at the end" do
         chunks = [
           +"{\"ratings\":[{\"candidate\":\"alpha\",\"rating\":9",
           +"},{\"candidate\":\"bravo\",\"rating\":6}]}",
         ]
 
-        expect { structured_output << chunks[0] }.not_to raise_error
-        expect(structured_output.read_buffered_property(:ratings)).to eq(nil)
+        structured_output << chunks[0]
+        expect(structured_output.read_buffered_property(:ratings)).to eq(
+          [{ "candidate" => "alpha", "rating" => 9 }],
+        )
 
         structured_output << chunks[1]
         structured_output.finish
@@ -144,6 +234,37 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
           [{ "candidate" => "alpha", "rating" => 9 }, { "candidate" => "bravo", "rating" => 6 }],
         )
       end
+    end
+  end
+
+  describe "recovering from streams with unescaped control characters" do
+    # regression specs for https://meta.discourse.org/t/407251
+    it "streams the full content instead of truncating at escaped quotes" do
+      content = "Erste Zeile.\n\nZweite Zeile mit einem \"Zitat\" und 😊 Emoji."
+      raw = { message: content }.to_json.gsub("\\n", "\n")
+
+      streamed = +""
+      raw
+        .each_char
+        .each_slice(13) do |chunk|
+          structured_output << chunk.join
+          streamed << (structured_output.read_buffered_property(:message) || "")
+        end
+      structured_output.finish
+      streamed << (structured_output.read_buffered_property(:message) || "")
+
+      expect(structured_output.broken?).to eq(false)
+      expect(streamed).to eq(content)
+    end
+
+    it "recovers the full content at finish when the response is also fenced" do
+      content = "A \"quoted\" word\nand a second line"
+      raw = "```json\n#{{ message: content }.to_json.gsub("\\n", "\n")}\n```"
+
+      structured_output << raw
+      structured_output.finish
+
+      expect(structured_output.read_buffered_property(:message)).to eq(content)
     end
   end
 

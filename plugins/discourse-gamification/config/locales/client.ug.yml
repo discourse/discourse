@@ -12,7 +12,11 @@ ug:
         refresh: "يېڭىلا"
         name: "ئىسمى"
         name_placeholder: "ئىسمى…"
+        section:
+          groups: "گۇرۇپپا"
         excluded_groups: "مۇستەسنا گۇرۇپپا"
+        weight:
+          post_created: "يازما قۇرۇلدى"
         period:
           all_time: "ھەممە ۋاقىت"
           yearly: "يىللىق"
@@ -25,11 +29,16 @@ ug:
       close: "تاقا"
       delete: "ئۆچۈر"
       edit: "تەھرىر"
-      back: "كەينى"
       save: "ساقلا"
-      apply: "قوللان"
       update_range:
         all_time: "ھەممە ۋاقىت"
       custom_range_from: "كىمدىن"
       admin:
         name: "ئىسمى"
+        created_by: "قۇرغۇچى"
+    discourse_workflows:
+      gamification_score:
+        username: "ئىشلەتكۈچى"
+        date: "چېسلا"
+        description: "چۈشەندۈرۈش"
+        category_id: "سەھىپە"

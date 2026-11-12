@@ -1,33 +1,57 @@
 # frozen_string_literal: true
 
 class Admin::DashboardController < Admin::StaffController
+  BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
+
+  before_action :ensure_admin,
+                only: %i[
+                  available_reports
+                  mount_report
+                  traffic
+                  unmount_report
+                  update_reports_section
+                  update_configuration
+                  update_section_settings
+                ]
+
   def index
-    data = AdminDashboardIndexData.fetch_cached_stats
+    render json: dashboard_sections_payload
+  end
 
-    if SiteSetting.version_checks?
-      data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+  def update_configuration
+    sections = params.permit(sections: %i[id visible])[:sections] || []
+    AdminDashboardSectionConfiguration.update(sections, actor: current_user)
+    head :no_content
+  end
+
+  def update_section_settings
+    section_id = params.require(:section_id)
+    key = params.require(:setting_key)
+
+    definition = AdminDashboardSectionConfiguration.setting_definition(section_id, key)
+
+    AdminDashboardSectionConfiguration.update_setting(
+      section_id:,
+      key:,
+      attrs: params.permit(*(definition&.dig(:permit) || [])),
+    )
+    head :no_content
+  end
+
+  def traffic
+    AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: traffic_params)) do
+      on_success { |traffic:| render json: traffic }
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_failed_step(:load_traffic) do |step|
+        render json: { error_type: step.error }, status: :service_unavailable
+      end
     end
-
-    render json: data
-  end
-
-  def moderation
-  end
-
-  def security
-  end
-
-  def reports
-  end
-
-  def general
-    render json: AdminDashboardGeneralData.fetch_cached_stats
   end
 
   def problems
     ProblemCheck.realtime.run_all
 
-    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
+    render json: { problems: serialized_problems }
   end
 
   def new_features
@@ -44,15 +68,19 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     new_features = DiscourseUpdates.new_features(force_refresh:)
+    new_features_with_permanent_uc =
+      DiscourseUpdates.merge_new_features_with_upcoming_changes(
+        new_features&.map { |item| item.symbolize_keys } || [],
+      )
 
-    if current_user.admin? && most_recent = new_features&.first
-      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])
+    if current_user.admin? && most_recent = new_features_with_permanent_uc&.first
+      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent[:created_at])
     end
 
     data = {
-      new_features: new_features,
+      new_features: new_features_with_permanent_uc,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
-      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
+      release_notes_link: release_notes_link,
     }
 
     mark_new_features_as_seen
@@ -72,9 +100,155 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def update_reports_section
+    AdminDashboard::Reports::LayoutUpdater.call(
+      items: parse_reports_items_payload,
+      guardian: guardian,
+    )
+    head :no_content
+  end
+
+  def mount_report
+    report =
+      AdminDashboard::Reports::Mounter.mount(
+        source: params.require(:source),
+        identifier: params.require(:identifier),
+        guardian: guardian,
+      )
+    render json: report.slice(:source, :identifier, :position, :rows, :cols), status: :created
+  rescue AdminDashboard::Reports::Mounter::CapReached
+    render_json_error(
+      I18n.t("dashboard.reports.cap_reached", max: AdminDashboardReport::VISIBLE_CAP),
+      status: 422,
+    )
+  end
+
+  def unmount_report
+    AdminDashboard::Reports::Mounter.unmount(
+      source: params.require(:source),
+      identifier: params.require(:identifier),
+    )
+    head :no_content
+  end
+
+  def available_reports
+    search = params[:search]
+    cursor = params.permit(cursor: %i[title key])[:cursor]&.to_h&.symbolize_keys
+    enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
+    listing = AdminDashboard::Reports::Listing.call(cursor: cursor, search: search)
+
+    render json: {
+             providers: listing[:providers],
+             enabled: enabled,
+             available: listing[:items],
+             has_more: listing[:has_more],
+             cursor: listing[:cursor],
+           }
+  end
+
+  def bulk_reports
+    permitted_filters = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
+    filters = permitted_filters.present? ? permitted_filters.to_h.symbolize_keys : {}
+
+    hijack do
+      render_json_dump(
+        AdminDashboard::Reports::BulkFetch.call(
+          items: parse_reports_items_payload,
+          filters: filters,
+          guardian: guardian,
+        ),
+      )
+    end
+  end
+
   private
+
+  def traffic_params
+    permitted = params.permit(:start_date, :end_date).to_h
+
+    AdminDashboardSiteTrafficExplorer::FILTER_KEYS.each do |key|
+      value = params[key]
+      next if value.nil?
+
+      if !value.is_a?(Array) || value.any? { |item| !item.is_a?(String) }
+        raise Discourse::InvalidParameters.new(key)
+      end
+
+      permitted[key] = if key == :traffic_type
+        value.flat_map { |item| item.split(",") }
+      else
+        value
+      end
+    end
+
+    permitted
+  end
+
+  def serialized_problems
+    serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
+  end
+
+  def dashboard_sections_payload
+    visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
+    data = {
+      sections:
+        AdminDashboardSectionLoader.build(
+          section_ids: visible_ids,
+          current_user: current_user,
+          start_date: params[:start_date],
+          end_date: params[:end_date],
+          parallel: !mini_profiler_flamegraph_request?,
+        ),
+      problems: serialized_problems,
+    }
+    if current_user.admin?
+      data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
+    end
+    data
+  end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def release_notes_link
+    days_since_update =
+      Discourse.last_commit_date ? ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i : nil
+    "https://meta.discourse.org/c/announcements/67?tags=release-notes&before=#{days_since_update}"
+  end
+
+  def parse_reports_items_payload
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    existing_reports =
+      AdminDashboardReport.all.index_by { |report| [report.source, report.identifier] }
+
+    params
+      .permit(items: %i[source identifier rows cols])
+      .fetch(:items, [])
+      .map do |entry|
+        source = entry[:source]
+        identifier = entry[:identifier]
+        raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+
+        existing_report = existing_reports[[source.to_s, identifier.to_s]]
+        rows = Integer(entry[:rows].presence || existing_report&.rows || 1, exception: false)
+        if rows.nil? || rows < 1 || rows > AdminDashboardReport::MAX_ROWS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        cols = Integer(entry[:cols].presence || existing_report&.cols || 1, exception: false)
+        if cols.nil? || cols < 1 || cols > AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+        if rows > 1 && cols != AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        { source: source.to_s, identifier: identifier.to_s, rows: rows, cols: cols }
+      end
   end
 end

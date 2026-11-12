@@ -35,6 +35,10 @@ module DiscourseAi
           "grant_badge"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           if !guardian.can_grant_badges?(nil)
             return error_response(I18n.t("discourse_ai.ai_bot.grant_badge.errors.not_allowed"))

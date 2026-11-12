@@ -69,6 +69,8 @@ Chat::Engine.routes.draw do
 
   namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
     post "export/messages" => "export#export_messages"
+    put "bots/:user_id/discoverability" => "bot_discoverability#update",
+        :constraints => AdminConstraint.new
   end
 
   # direct_messages_controller routes
@@ -93,20 +95,22 @@ Chat::Engine.routes.draw do
        }
 
   # chat_controller routes
-  get "/" => "chat#respond"
+  get "/" => "chat#respond", :defaults => { crawler_directory: true }
+  get "/disabled" => "chat#respond"
   get "/search" => "chat#respond"
   get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
   get "/starred-channels" => "chat#respond"
   get "/threads" => "chat#respond"
-  get "/browse" => "chat#respond"
+  get "/browse" => "chat#respond", :defaults => { crawler_directory: true }
   get "/browse/all" => "chat#respond"
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
   put ":chat_channel_id/react/:message_id" => "chat#react"
+  get "/:chat_channel_id/:message_id/reactions-users" => "chat#message_reactions_users"
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
@@ -116,7 +120,7 @@ Chat::Engine.routes.draw do
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_c_route}/#{route}" => "chat#respond"
   end
 
@@ -131,7 +135,7 @@ Chat::Engine.routes.draw do
 
   get base_channel_route, to: redirect(redirect_base)
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
   end
 end

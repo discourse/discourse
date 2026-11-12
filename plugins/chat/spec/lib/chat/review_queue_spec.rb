@@ -17,6 +17,29 @@ describe Chat::ReviewQueue do
     chat_channel.add(flagger)
   end
 
+  context "when the first flagger deletes their account" do
+    fab!(:other_flagger) { Fabricate(:user, refresh_auto_groups: true) }
+
+    before { chat_channel.add(other_flagger) }
+
+    it "keeps the reviewable with the other flags" do
+      queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+      queue.flag_message(
+        message,
+        Guardian.new(other_flagger),
+        ReviewableScore.types[:inappropriate],
+      )
+      reviewable = Chat::ReviewableMessage.find_by(target: message)
+
+      UserDestroyer.new(admin).destroy(flagger)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        other_flagger.id,
+      )
+    end
+  end
+
   describe "#flag_message" do
     it "raises an error when the user is not allowed to flag" do
       UserSilencer.new(flagger).silence
@@ -32,6 +55,27 @@ describe Chat::ReviewQueue do
       reviewable = Chat::ReviewableMessage.last
 
       expect(reviewable.payload["message_cooked"]).to eq(message.cooked)
+    end
+
+    it "stores the message uploads inside the reviewable" do
+      upload = Fabricate(:image_upload, user: message_poster)
+      message.uploads = [upload]
+
+      queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+      reviewable = Chat::ReviewableMessage.last
+
+      expect(reviewable.payload["message_uploads"].map { |upload_json| upload_json["id"] }).to eq(
+        [upload.id],
+      )
+    end
+
+    it "does not store an uploads key when the message has no uploads" do
+      queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+      reviewable = Chat::ReviewableMessage.last
+
+      expect(reviewable.payload).not_to have_key("message_uploads")
     end
 
     context "when the user already flagged the post" do
@@ -120,6 +164,26 @@ describe Chat::ReviewQueue do
         )
 
         expect(second_flag_result).to include success: true
+      end
+
+      it "refreshes the reviewable payload when re-flagging an edited message" do
+        upload = Fabricate(:upload, user: message_poster)
+        update_message!(
+          message,
+          user: message_poster,
+          text: "Now with an image ![#{upload.original_filename}](#{upload.short_url})",
+          upload_ids: [upload.id],
+        )
+        message.reload
+
+        expect(second_flag_result).to include success: true
+
+        payload = Chat::ReviewableMessage.find_by(target: message).payload
+        expect(payload["message_cooked"]).to eq(message.cooked)
+        expect(payload["message_cooked"]).to include(upload.url)
+        expect(payload["message_uploads"].map { |upload_json| upload_json["id"] }).to eq(
+          [upload.id],
+        )
       end
 
       it "ignores the cooldown window when using the notify_moderators flag type" do
@@ -364,6 +428,33 @@ describe Chat::ReviewQueue do
         expect(message_poster.reload.silenced?).to eq(true)
       end
 
+      it "attributes the silence to the reviewable it came from" do
+        SiteSetting.chat_auto_silence_from_flags_duration = 1
+        flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+
+        queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+        history =
+          UserHistory.find_by(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: message_poster.id,
+          )
+
+        expect(history.reviewable_id).to eq(Chat::ReviewableMessage.find_by(target: message).id)
+      end
+
+      it "lifts the silence when a moderator disagrees with the flag" do
+        SiteSetting.chat_auto_silence_from_flags_duration = 1
+        flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+
+        queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+        expect(message_poster.reload.silenced?).to eq(true)
+
+        Chat::ReviewableMessage.find_by(target: message).perform(admin, :disagree)
+
+        expect(message_poster.reload.silenced?).to eq(false)
+      end
+
       it "does nothing if the new score is less than the auto-silence threshold" do
         SiteSetting.chat_auto_silence_from_flags_duration = 50
 
@@ -386,6 +477,18 @@ describe Chat::ReviewQueue do
           SiteSetting.chat_auto_silence_from_flags_duration = 1
           flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
           message_poster.update!(admin: true)
+
+          queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+          expect(message_poster.reload.silenced?).to eq(false)
+        end
+      end
+
+      context "when the target is a moderator" do
+        it "does not silence the user" do
+          SiteSetting.chat_auto_silence_from_flags_duration = 1
+          flagger.update!(trust_level: TrustLevel[4])
+          message_poster.update!(moderator: true)
 
           queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 

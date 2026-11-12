@@ -9,6 +9,7 @@ class TopicPostersSummary
       original_poster: I18n.t(:original_poster),
       most_recent_poster: I18n.t(:most_recent_poster),
       frequent_poster: I18n.t(:frequent_poster),
+      recent_poster: I18n.t(:recent_poster),
       joiner: I18n.t(:poster_description_joiner),
     }
   end
@@ -58,7 +59,13 @@ class TopicPostersSummary
 
         while id = ids.shift
           result[id] ||= []
-          result[id] << @translations[:frequent_poster]
+          description =
+            if recent_poster_user_ids.include?(id)
+              @translations[:recent_poster]
+            else
+              @translations[:frequent_poster]
+            end
+          result[id] << description
         end
 
         result
@@ -91,6 +98,10 @@ class TopicPostersSummary
 
   def user_ids
     [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
+  end
+
+  def recent_poster_user_ids
+    @recent_poster_user_ids ||= topic.featured_users.recent_user_ids
   end
 
   def user_lookup

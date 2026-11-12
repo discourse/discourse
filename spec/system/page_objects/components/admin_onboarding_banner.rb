@@ -3,6 +3,10 @@
 module PageObjects
   module Components
     class AdminOnboardingBanner < PageObjects::Components::Base
+      def step_names
+        all(".admin-onboarding-banner .onboarding-step").map { |step| step[:id] }
+      end
+
       def visible?
         has_css?(".admin-onboarding-banner")
       end
@@ -19,16 +23,17 @@ module PageObjects
         find("div##{step_id}")
       end
 
-      def step_checkbox(step_id)
-        find("div##{step_id} .onboarding-step__checkbox > svg")
+      def has_step?(step_id, title:, description:)
+        has_css?("div##{step_id} .onboarding-step__title", text: title) &&
+          has_css?("div##{step_id} .onboarding-step__description", text: description)
       end
 
       def step_completed?(step_id)
-        step_checkbox(step_id)[:class].include?("checked")
+        has_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
       end
 
       def step_not_completed?(step_id)
-        !step_completed?(step_id)
+        has_no_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
       end
 
       def click_step_action(step_id)

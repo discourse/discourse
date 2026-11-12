@@ -48,7 +48,6 @@ he:
       not_enough_dice:
         one: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
         two: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
-        many: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
         other: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
       out_of_range: |-
         ידעת ש[מספר הפאות המרבי](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקובייה הוגנת מתמטית הוא 120?

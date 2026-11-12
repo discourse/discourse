@@ -13,6 +13,9 @@ es:
       editing:
         one: "editando"
         other: "editando"
+      translating:
+        one: "traduciendo"
+        other: "traduciendo"
       replying_to_topic:
         one: "respondiendo"
         other: "respondiendo"

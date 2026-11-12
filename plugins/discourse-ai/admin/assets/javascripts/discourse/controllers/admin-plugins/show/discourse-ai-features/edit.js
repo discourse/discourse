@@ -2,8 +2,36 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import SiteSetting from "discourse/admin/models/site-setting";
+import { isSettingValueTrue } from "discourse/admin/models/site-setting";
 import { i18n } from "discourse-i18n";
+import {
+  findSetting,
+  isSettingVisible,
+  saveSettings,
+} from "../../../../lib/site-settings-form.js";
+
+const SENTIMENT_SETTING_LABELS = {
+  ai_sentiment_enabled: "enabled",
+  ai_sentiment_emotion_enabled: "enabled",
+  ai_sentiment_sentiment_classification_strategy: "backend",
+  ai_sentiment_sentiment_agent: "agent",
+  ai_sentiment_sentiment_decision_model: "decision_model",
+  ai_sentiment_emotion_classification_strategy: "backend",
+  ai_sentiment_emotion_agent: "agent",
+  ai_sentiment_emotion_decision_model: "decision_model",
+  ai_sentiment_backfill_maximum_posts_per_hour: "posts_per_hour",
+  ai_sentiment_backfill_post_max_age_days: "post_age_limit",
+};
+
+// Choice settings whose options must be created elsewhere first.
+const CREATE_CHOICE_LINKS = {
+  ai_embeddings_selected_model: {
+    route: "adminPlugins.show.discourse-ai-models.new",
+    query: { type: "embedding" },
+    labelKey: "discourse_ai.features.embeddings.add_model",
+    descriptionKey: "discourse_ai.features.embeddings.no_models",
+  },
+};
 
 export default class AdminPluginsShowDiscourseAiFeaturesEditController extends Controller {
   @service toasts;
@@ -18,73 +46,91 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
 
   @action
   findSetting(settingName) {
-    return this.settings.find((s) => s.setting === settingName);
+    return findSetting(this.settings, settingName);
+  }
+
+  @action
+  settingDefinition(setting) {
+    const labelKey = SENTIMENT_SETTING_LABELS[setting.setting];
+    if (!labelKey) {
+      return setting.definition;
+    }
+
+    const definition = {
+      ...setting.definition,
+      label: i18n(`discourse_ai.features.sentiment.${labelKey}`),
+    };
+
+    switch (labelKey) {
+      case "backend":
+        definition.description = undefined;
+        definition.valid_values = definition.valid_values.map((choice) => {
+          const value = typeof choice === "object" ? choice.value : choice;
+          return {
+            value,
+            name: i18n(`discourse_ai.features.backends.${value}`),
+          };
+        });
+        break;
+      case "agent":
+        definition.description = undefined;
+        break;
+      case "decision_model":
+        definition.description =
+          setting.setting === "ai_sentiment_emotion_decision_model"
+            ? i18n("discourse_ai.features.sentiment.emotion_scores")
+            : undefined;
+        break;
+      case "posts_per_hour":
+        definition.description = i18n(
+          "discourse_ai.features.sentiment.posts_per_hour_description"
+        );
+        break;
+    }
+
+    return definition;
+  }
+
+  @action
+  sentimentBackendGroup(data, backend) {
+    return [
+      ["emotion", "ai_sentiment_emotion_enabled"],
+      ["sentiment", "ai_sentiment_enabled"],
+    ].find(
+      ([type, setting]) =>
+        isSettingValueTrue(data[setting]) &&
+        data[`ai_sentiment_${type}_classification_strategy`] === backend
+    )?.[0];
   }
 
   /**
-   * Generates a FormKit validation string for a site setting.
-   *
-   * @param {Object} setting - The site setting object
-   * @param {string} setting.type - The setting type (e.g., "integer", "bool", "string")
-   * @param {number} [setting.min] - Minimum value for integer settings
-   * @param {number} [setting.max] - Maximum value for integer settings
-   * @returns {string|undefined} Validation string in FormKit format (e.g., "number|between:0,100")
-   *                              or undefined if no validation is needed
+   * Where to create the first option for a choice setting that has none, so the
+   * form offers that instead of an empty dropdown.
    */
   @action
-  getValidationFor(setting) {
-    const validation = [];
-
-    if (setting.type === "integer") {
-      validation.push("number");
-
-      if (setting.min !== undefined || setting.max !== undefined) {
-        const min = setting.min ?? "";
-        const max = setting.max ?? "";
-        validation.push(`between:${min},${max}`);
-      }
+  missingChoicesLink(setting) {
+    if (setting?.valid_values?.length) {
+      return null;
     }
+    return CREATE_CHOICE_LINKS[setting?.setting] ?? null;
+  }
 
-    return validation.length > 0 ? validation.join("|") : undefined;
+  @action
+  isSettingVisible(setting, data) {
+    return isSettingVisible(this.settings, setting, data);
   }
 
   @action
   async save(data) {
-    if (this.formApi) {
-      this.formApi.removeErrors();
-    }
+    const success = await saveSettings(
+      this.settings,
+      data,
+      this.formApi,
+      undefined,
+      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+    );
 
-    const errors = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      const setting = this.findSetting(key);
-      if (!setting) {
-        continue;
-      }
-
-      const valuesEqual = this.valuesEqual(setting.value, value);
-
-      if (valuesEqual) {
-        continue;
-      }
-
-      try {
-        await SiteSetting.update(key, value);
-        setting.value = value;
-      } catch (e) {
-        const errorMsg = e.jqXHR?.responseJSON?.errors?.[0] || "Unknown error";
-        errors[key] = errorMsg;
-
-        if (this.formApi) {
-          this.formApi.addError(key, {
-            title: setting.humanized_name,
-            message: errorMsg,
-          });
-        }
-      }
-    }
-
-    if (Object.keys(errors).length === 0) {
+    if (success) {
       this.toasts.success({
         data: { message: i18n("saved") },
         duration: 2000,
@@ -99,15 +145,5 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
         duration: 4000,
       });
     }
-  }
-
-  valuesEqual(a, b) {
-    if (a === b) {
-      return true;
-    }
-    if (a == null || b == null) {
-      return false;
-    }
-    return a.toString() === b.toString();
   }
 }

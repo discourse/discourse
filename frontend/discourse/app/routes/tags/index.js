@@ -1,9 +1,15 @@
 import { action } from "@ember/object";
+import DiscourseURL from "discourse/lib/url";
 import Tag from "discourse/models/tag";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class TagsIndex extends DiscourseRoute {
+  activate() {
+    super.activate(...arguments);
+    DiscourseURL.jumpToElement(document.location.hash.slice(1));
+  }
+
   model() {
     return this.store.findAll("tag").then((result) => {
       if (result.extras) {

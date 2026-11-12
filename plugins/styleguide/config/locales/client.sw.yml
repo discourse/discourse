@@ -10,6 +10,13 @@ sw:
       sections:
         typography:
           example: "Karibu kwenye Discourse"
+        context_menu:
+          actions:
+            delete: "Futa"
+        reorderable_list:
+          policies_pinned: "Imebandikwa"
+          policies_required: "Muhimu na Inahitajika"
+          table_type: "Aina"
         colors:
           title: "Rangi"
         icons:
@@ -26,6 +33,19 @@ sw:
           title: "Ujumbe"
         more_topics:
           title: "Mada Zingine"
+        roving_focus:
+          toolbar:
+            copy: "Nakili"
+          adjacent:
+            label: "Inachujwa"
+            field: "Tafuta"
+            open: "Fungua"
+            recent: "Hivi Karibuni"
+          combobox:
+            daily: "Kila siku"
+            weekly: "Kila wiki"
+            monthly: "Klla mwezi"
+            never: "Kamwe"
         tooltips:
           description: "Elezo"
           header: "Kichwa"

@@ -6,7 +6,13 @@
 
 bg:
   chat:
+    design_wizard_homepage_name: "Чат"
     deleted_chat_username: изтрит
+    crawler:
+      nav_title: "Чат"
+      thread_replies:
+        one: "%{count} отговор"
+        other: "%{count} отговора"
     reviewables:
       actions:
         agree_and_suspend:
@@ -26,6 +32,13 @@ bg:
     popup:
       chat_mention:
         direct: '%{username} ви спомена в "%{channel}"'
+    actions:
+      chat_reply:
+        title: Отговорете
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Одобри"
+      default_deny_label: "Отказ"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

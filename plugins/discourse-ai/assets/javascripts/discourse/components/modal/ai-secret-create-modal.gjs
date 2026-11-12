@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class AiSecretCreateModal extends Component {
@@ -38,28 +38,28 @@ export default class AiSecretCreateModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.secrets.modal.title"}}
-      @closeModal={{@closeModal}}
       class="ai-secret-create-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.secrets.modal.title"}}
     >
-      <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+      <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
         <form.Field
+          @format="large"
           @name="name"
           @title={{i18n "discourse_ai.secrets.name"}}
-          @validation="required|length:1,100"
-          @format="large"
           @type="input"
+          @validation="required|length:1,100"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Field
+          @format="large"
           @name="secret"
           @title={{i18n "discourse_ai.secrets.secret"}}
-          @validation="required"
-          @format="large"
           @type="password"
+          @validation="required"
           as |field|
         >
           <field.Control autocomplete="off" />

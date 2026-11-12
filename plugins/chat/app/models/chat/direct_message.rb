@@ -62,6 +62,12 @@ module Chat
       # all users deleted
       return chat_channel.id if !users.first
 
+      # A bot has no person behind its username, so a DM with one shows its name.
+      if SiteSetting.enable_names && users.size == 1 && users.first.bot? &&
+           users.first.name.present?
+        return users.first.name
+      end
+
       formatted_names =
         (
           if prefers_name
@@ -94,7 +100,7 @@ end
 # Table name: direct_message_channels
 #
 #  id         :bigint           not null, primary key
+#  group      :boolean          default(FALSE), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  group      :boolean          default(FALSE), not null
 #

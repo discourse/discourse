@@ -7,6 +7,10 @@ class SimilarAdminUserSerializer < AdminUserListSerializer
     scope.can_suspend?(object)
   end
 
+  def include_can_be_suspended?
+    true
+  end
+
   def can_be_silenced
     scope.can_silence_user?(object)
   end

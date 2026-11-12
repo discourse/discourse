@@ -33,12 +33,16 @@ RSpec.describe PostSerializer do
         user.user_option.update!(hide_profile: true)
       end
 
-      it "does not include the user's cakedate" do
-        expect(serializer.as_json.has_key?(:user_cakedate)).to eq(false)
+      it "still includes cakedate and birthdate for the user's own posts" do
+        expect(serializer.as_json[:user_cakedate]).to eq(user.created_at.strftime("%Y-%m-%d"))
+        expect(serializer.as_json[:user_birthdate]).to eq(user.date_of_birth)
       end
 
-      it "does not include the user's birthdate" do
-        expect(serializer.as_json.has_key?(:user_birthdate)).to eq(false)
+      it "does not include cakedate or birthdate for other users viewing the post" do
+        other_user = Fabricate(:user)
+        other_serializer = described_class.new(post, scope: Guardian.new(other_user), root: false)
+        expect(other_serializer.as_json.has_key?(:user_cakedate)).to eq(false)
+        expect(other_serializer.as_json.has_key?(:user_birthdate)).to eq(false)
       end
     end
   end

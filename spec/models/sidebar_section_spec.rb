@@ -38,4 +38,47 @@ RSpec.describe SidebarSection do
       ],
     )
   end
+
+  describe "#apply_links_order!" do
+    fab!(:first_url) { Fabricate(:sidebar_url, name: "First", value: "/first") }
+    fab!(:second_url) { Fabricate(:sidebar_url, name: "Second", value: "/second") }
+    fab!(:third_url) { Fabricate(:sidebar_url, name: "Third", value: "/third") }
+    fab!(:first_link) { Fabricate(:sidebar_section_link, sidebar_section:, linkable: first_url) }
+    fab!(:second_link) { Fabricate(:sidebar_section_link, sidebar_section:, linkable: second_url) }
+    fab!(:third_link) { Fabricate(:sidebar_section_link, sidebar_section:, linkable: third_url) }
+
+    it "orders the links to match the requested order" do
+      sidebar_section.apply_links_order!([third_url.id, first_url.id, second_url.id])
+
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [third_url.id, first_url.id, second_url.id],
+      )
+    end
+
+    it "sorts links missing from the requested order last" do
+      sidebar_section.apply_links_order!([third_url.id, first_url.id])
+
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [third_url.id, first_url.id, second_url.id],
+      )
+    end
+
+    it "reassigns positions already occupied by other links" do
+      sidebar_section.apply_links_order!([third_url.id, second_url.id, first_url.id])
+
+      positions = sidebar_section.sidebar_section_links.reload.map(&:position)
+      expect(positions.uniq.size).to eq(3)
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [third_url.id, second_url.id, first_url.id],
+      )
+    end
+
+    it "is a no-op for a section without links" do
+      empty_section = Fabricate(:sidebar_section, title: "Empty", user: user)
+
+      expect { empty_section.apply_links_order!([first_url.id]) }.not_to change {
+        SidebarSectionLink.pluck(:id, :position).sort
+      }
+    end
+  end
 end

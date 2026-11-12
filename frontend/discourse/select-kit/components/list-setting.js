@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
@@ -9,9 +8,9 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import CreateColorRow from "./create-color-row";
-import SelectedChoice from "./selected-choice";
-import SelectedChoiceColor from "./selected-choice-color";
+import CreateColorRow from "./create-color-row.gjs";
+import SelectedChoice from "./selected-choice.gjs";
+import SelectedChoiceColor from "./selected-choice-color.js";
 
 @classNames("list-setting")
 @selectKitOptions({
@@ -19,16 +18,19 @@ import SelectedChoiceColor from "./selected-choice-color";
 })
 @pluginApiIdentifiers("list-setting")
 export default class ListSetting extends MultiSelectComponent {
+  /** @type {(string | { id?: string | number, name?: string, value?: string | number, label?: string, color?: string })[] | null | undefined} */
   choices = null;
+
+  /** @type {string | null | undefined} */
   nameProperty = null;
+
+  /** @type {string | null | undefined} */
   valueProperty = null;
 
-  @readOnly("choices") content;
-
-  modifyComponentForRow(collection) {
-    if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
-      return CreateColorRow;
-    }
+  /** @returns {ListSetting["choices"]} */
+  @computed("choices")
+  get content() {
+    return this.choices;
   }
 
   @computed("settingName")
@@ -37,6 +39,12 @@ export default class ListSetting extends MultiSelectComponent {
       return SelectedChoiceColor;
     } else {
       return SelectedChoice;
+    }
+  }
+
+  modifyComponentForRow(collection) {
+    if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
+      return CreateColorRow;
     }
   }
 

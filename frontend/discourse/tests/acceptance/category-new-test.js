@@ -1,10 +1,13 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  fixturesByUrl,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
@@ -52,21 +55,19 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".badge-category").hasText("testing");
 
-    await click(".edit-category-nav .edit-category-topic-template a");
+    await click(".category-show-advanced-tabs-toggle");
+
     assert
-      .dom(".edit-category-tab-topic-template.active")
+      .dom(".edit-category-topic-template")
       .exists("it can switch to the topic template tab");
 
-    await click(".edit-category-nav .edit-category-tags a");
-    await click("button.add-required-tag-group");
+    assert.dom(".edit-category-tags").exists("it can switch to the tags tab");
+    await click(".edit-category-tags a");
+    await click(".add-required-tag-group");
 
-    const tagSelector = selectKit(
-      ".required-tag-group-row .select-kit.tag-group-chooser"
-    );
-    await tagSelector.expand();
-    await tagSelector.selectRowByValue("TagGroup1");
+    await formKit().field("required_tag_groups.0.name").select("TagGroup1");
 
-    await click("#save-category");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       currentURL(),
@@ -74,13 +75,15 @@ acceptance("Category New", function (needs) {
       "it transitions to the category edit route"
     );
 
-    await click(".edit-category-nav .edit-category-tags a");
+    await visit("/c/testing/edit/tags");
 
-    assert
-      .dom(".required-tag-group-row .select-kit-header[data-value='TagGroup1']")
-      .exists("shows saved required tag group");
+    assert.strictEqual(
+      formKit().field("required_tag_groups.0.name").value(),
+      "TagGroup1",
+      "shows saved required tag group"
+    );
 
-    assert.dom(".edit-category-title h2").hasText(
+    assert.dom(".d-page-header__title").hasText(
       i18n("category.edit_dialog_title", {
         categoryName: "testing",
       })
@@ -93,15 +96,30 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-settings a");
     assert
-      .dom("#category-search-priority")
+      .form()
+      .field("search_priority")
       .exists("it can switch to the settings tab");
+  });
 
-    sinon.stub(DiscourseURL, "routeTo");
+  test("Keeps the save button busy while redirecting to the edit page", async function (assert) {
+    const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
+    category.category_types.support = category.available_category_types[0];
+    pretender.post("/categories", () => response({ category }));
+    const redirectAbsolute = sinon.stub(DiscourseURL, "redirectAbsolute");
 
-    await click(".category-back");
-    assert.true(
-      DiscourseURL.routeTo.calledWith("/c/testing/11"),
-      "back routing works"
+    await visit("/new-category");
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
+    document.querySelector("#save-category").click();
+    await settled();
+
+    assert.true(redirectAbsolute.calledWith("/c/testing/edit"));
+    assert.dom("#save-category").isDisabled();
+    assert.strictEqual(
+      pretender.handledRequests.filter(
+        ({ method, url }) => method === "POST" && url === "/categories"
+      ).length,
+      1
     );
   });
 
@@ -123,9 +141,6 @@ acceptance("Category New", function (needs) {
 
 acceptance("Category type setup page", function (needs) {
   needs.user({ admin: true, can_create_category: true });
-  needs.settings({
-    enable_simplified_category_creation: true,
-  });
   needs.pretender((server, helper) => {
     server.get("/categories/types", () => {
       return helper.response(200, {
@@ -133,6 +148,7 @@ acceptance("Category type setup page", function (needs) {
           {
             id: "discussion",
             name: "Discussion",
+            title: "discussion",
             icon: "comments",
             description: "General discussion",
             configuration_schema: {},
@@ -141,6 +157,7 @@ acceptance("Category type setup page", function (needs) {
           {
             id: "support",
             name: "Support",
+            title: "support",
             icon: "circle-question",
             description: "Q&A support",
             configuration_schema: {},
@@ -155,19 +172,12 @@ acceptance("Category type setup page", function (needs) {
     });
   });
 
-  test("Visiting /new-category redirects to setup page", async function (assert) {
+  test("Picking a type card on the setup page opens the new category form", async function (assert) {
     await visit("/new-category");
     assert.strictEqual(currentURL(), "/new-category/setup");
-  });
-
-  test("Setup page shows type cards", async function (assert) {
-    await visit("/new-category/setup");
     assert.dom(".category-type-cards__card").exists({ count: 2 });
     assert.dom(".category-type-cards__card-name").exists();
-  });
 
-  test("Clicking a type card transitions to new category form", async function (assert) {
-    await visit("/new-category/setup");
     await click(
       ".category-type-cards__card:first-child .category-type-cards__card-select"
     );
@@ -175,62 +185,38 @@ acceptance("Category type setup page", function (needs) {
   });
 });
 
-acceptance("Category text color", function (needs) {
+acceptance("Category color", function (needs) {
   needs.user({ can_create_category: true });
-  needs.pretender((server, helper) => {
-    const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
 
-    server.get("/c/testing/find_by_slug.json", () => {
-      return helper.response(200, {
-        category: {
-          ...category,
-          color: "EEEEEE",
-          text_color: "000000",
-        },
-      });
-    });
-  });
+  function previewBadgeColor() {
+    return document
+      .querySelector(".edit-category-tab-general .badge-category")
+      .style.getPropertyValue("--category-badge-color")
+      .trim();
+  }
 
-  test("Category text color is set based on contrast", async function (assert) {
+  test("Badge preview follows the color and text color follows its contrast", async function (assert) {
     await visit("/new-category");
+    await click(".form-kit__control-radio[value='square']");
+    assert.strictEqual(previewBadgeColor(), "#0088CC");
 
+    await click(".category-show-advanced-tabs-toggle");
+    await click(".edit-category-images a");
     assert.strictEqual(
       formKit().field("text_color").value(),
       CATEGORY_TEXT_COLORS[0],
       "has the default text color"
     );
 
-    await fillIn("input.category-name", "testing");
+    await click(".edit-category-general a");
     await formKit().field("color").fillIn("EEEEEE");
+    assert.strictEqual(previewBadgeColor(), "#EEEEEE");
 
+    await click(".edit-category-images a");
     assert.strictEqual(
       formKit().field("text_color").value(),
       CATEGORY_TEXT_COLORS[1],
       "sets the contrast text color"
     );
-  });
-});
-
-acceptance("New category preview", function (needs) {
-  needs.user({ admin: true, can_create_category: true });
-
-  test("Category badge color appears and updates", async function (assert) {
-    await visit("/new-category");
-
-    let previewBadgeColor = document
-      .querySelector(".category-style .badge-category")
-      .style.getPropertyValue("--category-badge-color")
-      .trim();
-
-    assert.strictEqual(previewBadgeColor, "#0088CC");
-
-    await formKit().field("color").fillIn("FF00FF");
-
-    previewBadgeColor = document
-      .querySelector(".category-style .badge-category")
-      .style.getPropertyValue("--category-badge-color")
-      .trim();
-
-    assert.strictEqual(previewBadgeColor, "#FF00FF");
   });
 });

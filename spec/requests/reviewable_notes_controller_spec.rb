@@ -48,6 +48,21 @@ RSpec.describe ReviewableNotesController do
         expect(json["user"]["id"]).to eq(moderator.id)
       end
 
+      it "returns usernames that could not be notified along with the saved note" do
+        SiteSetting.enable_mentions = true
+
+        post "/review/#{reviewable.id}/notes.json",
+             params: {
+               reviewable_note: {
+                 content: "@#{user.username} @#{moderator.username}",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["unnotified_usernames"]).to eq([user.username])
+        expect(response.parsed_body["id"]).to eq(ReviewableNote.last.id)
+      end
+
       it "returns validation errors for invalid content" do
         post "/review/#{reviewable.id}/notes.json", params: { reviewable_note: { content: "" } }
 

@@ -8,6 +8,7 @@ RSpec.describe Chat::AddUsersToChannel do
     let(:groups) { "group1" }
 
     it { is_expected.to validate_presence_of :channel_id }
+
     it do
       is_expected.to validate_length_of(:usernames)
         .is_at_most(SiteSetting.chat_max_direct_message_users)
@@ -60,6 +61,20 @@ RSpec.describe Chat::AddUsersToChannel do
           group_user_1.username,
           group_user_2.username,
         )
+      end
+
+      it "does not include users from groups the acting user cannot see" do
+        secret_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:staff],
+            members_visibility_level: Group.visibility_levels[:staff],
+          )
+        secret_user = Fabricate(:user)
+        secret_group.add(secret_user)
+
+        params.merge!(groups: [secret_group.name])
+        expect(result.target_users.map(&:username)).not_to include(secret_user.username)
       end
 
       context "with user count validation" do
@@ -127,7 +142,7 @@ RSpec.describe Chat::AddUsersToChannel do
         end
 
         it "only notifies the newly added users" do
-          expect(result.added_user_ids).to eq users.last(2).map(&:id)
+          expect(result.added_user_ids).to contain_exactly(*users.last(2).map(&:id))
         end
 
         it "respects membership settings for existing users" do

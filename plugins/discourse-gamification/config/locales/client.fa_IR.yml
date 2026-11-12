@@ -20,10 +20,14 @@ fa_IR:
         name: "نام"
         name_placeholder: "نام..."
         confirm_destroy: "آیا مطمئنید که می‌خواهید این تابلوی امتیاز را حذف کنید؟"
+        section:
+          groups: "گروه‌ها"
         date:
           range: "از / تا محدوده تاریخ"
         default_period: "بازه زمانی پیش‌فرض"
         default_period_help: "بازه زمانی پیش‌فرض را برای نمایش این تابلوی امتیازات تنظیم کنید."
+        weight:
+          solution: "راه حل مورد قبول"
         period:
           all_time: "همیشه"
           yearly: "سالیانه "
@@ -37,9 +41,7 @@ fa_IR:
       close: "بستن"
       delete: "حذف"
       edit: "ویرایش"
-      back: "بازگشت"
       save: "ذخیره"
-      apply: "اعمال کردن"
       update_range:
         last_10_days: "۱۰ روز گذشته"
         last_30_days: "۳۰ روز گذشته"
@@ -51,4 +53,11 @@ fa_IR:
       admin:
         title: "بازی‌وارسازی"
         name: "نام"
+        created_by: "ایجاد شده توسط"
         period: "دوره زمانی"
+    discourse_workflows:
+      gamification_score:
+        username: "کاربر"
+        date: "تاریخ"
+        description: "توضیح"
+        category_id: "دسته‌بندی"

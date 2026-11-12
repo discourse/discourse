@@ -1,50 +1,128 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { capitalize } from "@ember/string";
-import DButton from "discourse/components/d-button";
-import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse/lib/get-url";
-import Badge from "discourse/models/badge";
-import Category from "discourse/models/category";
+import moment from "moment";
+import DSegmentedControl from "discourse/components/d-segmented-control";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import { QUERY_RESULT_MAX_LIMIT } from "discourse/plugins/discourse-data-explorer/discourse/lib/constants";
-import DataExplorerBarChart from "./data-explorer-bar-chart";
-import QueryRowContent from "./query-row-content";
-import BadgeViewComponent from "./result-types/badge";
-import CategoryViewComponent from "./result-types/category";
-import GroupViewComponent from "./result-types/group";
-import HtmlViewComponent from "./result-types/html";
-import JsonViewComponent from "./result-types/json";
-import PostViewComponent from "./result-types/post";
-import ReltimeViewComponent from "./result-types/reltime";
-import TagGroupViewComponent from "./result-types/tag-group";
-import TextViewComponent from "./result-types/text";
-import TopicViewComponent from "./result-types/topic";
-import UrlViewComponent from "./result-types/url";
-import UserViewComponent from "./result-types/user";
+import {
+  chartability,
+  chartDatasets,
+  defaultView,
+  hasDates,
+} from "../lib/chart-helpers.js";
+import { dataExplorerStore } from "../lib/data-explorer-store.js";
+import {
+  buildColumnComponents,
+  buildRelationTables,
+  displayColumnNames,
+  relationLabel,
+} from "../lib/result-columns.js";
+import DataExplorerChart from "./data-explorer-chart.gjs";
+import QueryChartEmptyState from "./query-chart-empty-state.gjs";
+import QueryResultDownloadButtons from "./query-result-download-buttons.gjs";
+import QueryRowContent from "./query-row-content.gjs";
 
-const VIEW_COMPONENTS = {
-  topic: TopicViewComponent,
-  text: TextViewComponent,
-  post: PostViewComponent,
-  reltime: ReltimeViewComponent,
-  badge: BadgeViewComponent,
-  url: UrlViewComponent,
-  user: UserViewComponent,
-  group: GroupViewComponent,
-  html: HtmlViewComponent,
-  json: JsonViewComponent,
-  category: CategoryViewComponent,
-  tag_group: TagGroupViewComponent,
-};
+const CHART_FORMS = ["line", "bar", "stacked", "dual-axis"];
 
 export default class QueryResult extends Component {
   @service site;
 
-  @tracked chartDisplayed = false;
+  @tracked internalView;
+  @tracked internalChartForm;
+  @tracked tableExpanded = false;
+  @tracked hasOverflow = false;
+
+  constructor() {
+    super(...arguments);
+    const queryId = this.args.query?.id;
+
+    if (!this.args.view) {
+      const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
+      if (stored === "chart" || stored === "table") {
+        this.internalView = stored;
+      } else {
+        this.internalView = defaultView(this.args.content);
+      }
+    }
+
+    const storedChartForm = queryId
+      ? dataExplorerStore.get(`chart_form_${queryId}`)
+      : null;
+    if (CHART_FORMS.includes(storedChartForm)) {
+      this.internalChartForm = storedChartForm;
+    }
+  }
+
+  get view() {
+    return this.args.view ?? this.internalView;
+  }
+
+  get showExpandButton() {
+    return this.hasOverflow && !this.tableExpanded;
+  }
+
+  @cached
+  get chartability() {
+    return chartability(this.args.content);
+  }
+
+  get canShowChart() {
+    return this.chartability.chartable;
+  }
+
+  get chartVisible() {
+    return this.view === "chart" && this.canShowChart;
+  }
+
+  get showChartEmptyState() {
+    return this.view === "chart" && !this.canShowChart;
+  }
+
+  get showTable() {
+    return this.view === "table";
+  }
+
+  get hasResults() {
+    return this.rows?.length > 0;
+  }
+
+  get numericColumnIndices() {
+    return this.chartability.numericIndices;
+  }
+
+  get viewItems() {
+    return [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+    ];
+  }
+
+  get chartFormItems() {
+    const items = [
+      { value: "line", label: i18n("explorer.chart.form.line") },
+      { value: "bar", label: i18n("explorer.chart.form.bar") },
+    ];
+
+    if (this.isMultiSeries) {
+      items.push({
+        value: "stacked",
+        label: i18n("explorer.chart.form.stacked"),
+      });
+    }
+
+    if (this.canUseDualAxis) {
+      items.push({
+        value: "dual-axis",
+        label: i18n("explorer.chart.form.dual_axis"),
+      });
+    }
+
+    return items;
+  }
 
   get colRender() {
     return this.args.content.colrender || {};
@@ -58,54 +136,73 @@ export default class QueryResult extends Component {
     return this.args.content.columns;
   }
 
-  get params() {
-    return this.args.content.params;
-  }
-
   get explainText() {
     return this.args.content.explain;
   }
 
-  get chartDatasetName() {
-    return this.columnNames[1];
+  get showDownloads() {
+    return this.args.showDownloads !== false;
+  }
+
+  get isMultiSeries() {
+    return this.numericColumnIndices.length > 1;
+  }
+
+  get canUseDualAxis() {
+    return this.hasDates && this.numericColumnIndices.length === 2;
+  }
+
+  @cached
+  get hasDates() {
+    return hasDates(this.rows);
+  }
+
+  get defaultChartForm() {
+    if (this.hasDates) {
+      return "line";
+    }
+    return "bar";
+  }
+
+  get availableChartForms() {
+    return this.chartFormItems.map((item) => item.value);
+  }
+
+  get chartForm() {
+    if (this.availableChartForms.includes(this.internalChartForm)) {
+      return this.internalChartForm;
+    }
+    return this.defaultChartForm;
+  }
+
+  get chartType() {
+    return ["line", "dual-axis"].includes(this.chartForm) ? "line" : "bar";
+  }
+
+  get isStacked() {
+    return this.chartForm === "stacked";
+  }
+
+  get usesDualAxis() {
+    return this.chartForm === "dual-axis";
+  }
+
+  @cached
+  get chartDatasets() {
+    return chartDatasets(
+      this.rows,
+      this.numericColumnIndices,
+      this.columnNames
+    );
   }
 
   get columnNames() {
-    if (!this.columns) {
-      return [];
-    }
-    return this.columns.map((colName) => {
-      if (colName.endsWith("_id")) {
-        return colName.slice(0, -3);
-      }
-      const dIdx = colName.indexOf("$");
-      if (dIdx >= 0) {
-        return colName.substring(dIdx + 1);
-      }
-      return colName;
-    });
+    return displayColumnNames(this.columns);
   }
 
+  @cached
   get columnComponents() {
-    if (!this.columns) {
-      return [];
-    }
-    return this.columns.map((_, idx) => {
-      let type = "text";
-      if (this.colRender[idx]) {
-        type = this.colRender[idx];
-      }
-      return { name: type, component: VIEW_COMPONENTS[type] };
-    });
-  }
-
-  get chartValues() {
-    // return an array with the second value of this.row
-    return this.rows.map((item) => item[1]);
-  }
-
-  get colCount() {
-    return this.columns.length;
+    return buildColumnComponents(this.args.content, this._relationTables);
   }
 
   get resultCount() {
@@ -123,107 +220,68 @@ export default class QueryResult extends Component {
     });
   }
 
-  get parameterAry() {
-    let arr = [];
-    for (let key in this.params) {
-      if (this.params.hasOwnProperty(key)) {
-        arr.push({ key, value: this.params[key] });
-      }
+  get cachedResultNotice() {
+    if (!this.args.cachedAt) {
+      return null;
     }
-    return arr;
+    return i18n("explorer.cached_result_notice", {
+      relative_time: moment(this.args.cachedAt).fromNow(),
+    });
   }
 
-  get transformedUserTable() {
-    return transformedRelTable(this.args.content.relations.user);
+  @cached
+  get _relationTables() {
+    return buildRelationTables(this.args.content.relations, this.site);
   }
 
-  get transformedBadgeTable() {
-    return transformedRelTable(this.args.content.relations.badge, Badge);
-  }
+  @cached
+  get chartLabels() {
+    const table = this._relationTables[this.colRender[0]];
 
-  get transformedPostTable() {
-    return transformedRelTable(this.args.content.relations.post);
-  }
-
-  get transformedTopicTable() {
-    return transformedRelTable(this.args.content.relations.topic);
-  }
-
-  get transformedTagGroupTable() {
-    return transformedRelTable(this.args.content.relations.tag_group);
-  }
-
-  get transformedGroupTable() {
-    return transformedRelTable(this.site.groups);
-  }
-
-  get canShowChart() {
-    const hasTwoColumns = this.colCount === 2;
-    const secondColumnContainsNumber =
-      this.resultCount[0] > 0 && typeof this.rows[0][1] === "number";
-    const secondColumnContainsId = this.colRender[1];
-
-    return (
-      hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
+    return this.rows.map((r) =>
+      this._cutChartLabel(relationLabel(table?.[r[0]]) ?? r[0])
     );
   }
 
-  get chartLabels() {
-    const labelSelectors = {
-      user: (user) => user.username,
-      badge: (badge) => badge.name,
-      topic: (topic) => topic.title,
-      group: (group) => group.name,
-      category: (category) => category.name,
-    };
-
-    const relationName = this.colRender[0];
-    if (relationName) {
-      const lookupFunc = this[`lookup${capitalize(relationName)}`];
-      const labelSelector = labelSelectors[relationName];
-
-      if (lookupFunc && labelSelector) {
-        return this.rows.map((r) => {
-          const relation = lookupFunc.call(this, r[0]);
-          const label = labelSelector(relation);
-          return this._cutChartLabel(label);
-        });
-      }
+  @action
+  setView(value) {
+    if (this.args.onSetView) {
+      this.args.onSetView(value);
+      return;
     }
-
-    return this.rows.map((r) => this._cutChartLabel(r[0]));
+    this.internalView = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
+    }
   }
 
-  lookupUser(id) {
-    return this.transformedUserTable[id];
+  @action
+  viewTable() {
+    this.setView("table");
   }
 
-  lookupBadge(id) {
-    return this.transformedBadgeTable[id];
+  @action
+  setChartForm(value) {
+    this.internalChartForm = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `chart_form_${queryId}`, value });
+    }
   }
 
-  lookupPost(id) {
-    return this.transformedPostTable[id];
+  @action
+  checkOverflow(element) {
+    this.hasOverflow = element.scrollHeight > element.clientHeight;
   }
 
-  lookupTopic(id) {
-    return this.transformedTopicTable[id];
-  }
-
-  lookupTagGroup(id) {
-    return this.transformedTagGroupTable[id];
-  }
-
-  lookupGroup(id) {
-    return this.transformedGroupTable[id];
-  }
-
-  lookupCategory(id) {
-    return Category.findById(id);
+  @action
+  expandTable() {
+    this.tableExpanded = true;
   }
 
   _cutChartLabel(label) {
-    const labelString = label.toString();
+    const labelString = String(label ?? "NULL");
     if (labelString.length > 25) {
       return `${labelString.substring(0, 25)}...`;
     } else {
@@ -231,117 +289,47 @@ export default class QueryResult extends Component {
     }
   }
 
-  @action
-  downloadResultJson() {
-    this._downloadResult("json");
-  }
-
-  @action
-  downloadResultCsv() {
-    this._downloadResult("csv");
-  }
-
-  @action
-  showChart() {
-    this.chartDisplayed = true;
-  }
-
-  @action
-  hideChart() {
-    this.chartDisplayed = false;
-  }
-
-  _download_url() {
-    return this.args.group
-      ? `/g/${this.args.group.name}/reports/`
-      : "/admin/plugins/discourse-data-explorer/queries/";
-  }
-
-  _downloadResult(format) {
-    // Create a frame to submit the form in (?)
-    // to avoid leaving an about:blank behind
-    let windowName = randomIdShort();
-    const newWindowContents =
-      "<style>body{font-size:36px;display:flex;justify-content:center;align-items:center;}</style><body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
-
-    window.open("data:text/html;base64," + btoa(newWindowContents), windowName);
-
-    let form = document.createElement("form");
-    form.setAttribute("id", "query-download-result");
-    form.setAttribute("method", "post");
-    form.setAttribute(
-      "action",
-      getURL(
-        this._download_url() +
-          this.args.query.id +
-          "/run." +
-          format +
-          "?download=1"
-      )
-    );
-    form.setAttribute("target", windowName);
-    form.setAttribute("style", "display:none;");
-
-    function addInput(name, value) {
-      let field;
-      field = document.createElement("input");
-      field.setAttribute("name", name);
-      field.setAttribute("value", value);
-      form.appendChild(field);
-    }
-
-    addInput("params", JSON.stringify(this.params));
-    addInput("explain", this.explainText);
-    addInput("limit", String(QUERY_RESULT_MAX_LIMIT));
-
-    ajax("/session/csrf.json").then((csrf) => {
-      addInput("authenticity_token", csrf.csrf);
-
-      document.body.appendChild(form);
-      form.submit();
-      schedule("afterRender", () => document.body.removeChild(form));
-    });
-  }
-
   <template>
     <article>
-      <header class="result-header">
-        <div class="result-info">
-          <DButton
-            @action={{this.downloadResultJson}}
-            @icon="download"
-            @label="explorer.download_json"
-          />
+      <div class="result-header">
+        {{#unless @hideHeaderActions}}
+          <div class="result-header__top">
+            <div class="result-actions">
+              {{#if this.hasResults}}
+                <DSegmentedControl
+                  class="query-results-modes"
+                  @items={{this.viewItems}}
+                  @name="query-result-view"
+                  @onSelect={{this.setView}}
+                  @translatedLabel={{i18n "explorer.view.label"}}
+                  @value={{this.view}}
+                />
+              {{/if}}
 
-          <DButton
-            @action={{this.downloadResultCsv}}
-            @icon="download"
-            @label="explorer.download_csv"
-          />
+              {{#if this.showDownloads}}
+                <QueryResultDownloadButtons
+                  @content={{@content}}
+                  @group={{@group}}
+                  @includeQueryExport={{@includeQueryExport}}
+                  @query={{@query}}
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/unless}}
 
-          {{#if this.canShowChart}}
-            {{#if this.chartDisplayed}}
-              <DButton
-                @action={{this.hideChart}}
-                @icon="table"
-                @label="explorer.show_table"
-              />
-            {{else}}
-              <DButton
-                @action={{this.showChart}}
-                @icon="chart-bar"
-                @label="explorer.show_graph"
-              />
-            {{/if}}
+        <div class="result-meta">
+          <div class="result-about">
+            {{this.resultCount}}
+            {{this.duration}}
+          </div>
+          {{#if this.cachedResultNotice}}
+            <div class="cached-result-notice">
+              {{dIcon "clock-rotate-left"}}
+              {{this.cachedResultNotice}}
+            </div>
           {{/if}}
         </div>
-
-        <div class="result-about">
-          {{this.resultCount}}
-          {{this.duration}}
-        </div>
-
-        <br />
 
         {{~#if this.explainText}}
           <pre class="result-explain">
@@ -350,71 +338,87 @@ export default class QueryResult extends Component {
             </code>
       </pre>
         {{~/if}}
-
-        <br />
-      </header>
+      </div>
 
       <section>
-        {{#if this.chartDisplayed}}
-          <DataExplorerBarChart
-            @labels={{this.chartLabels}}
-            @values={{this.chartValues}}
-            @datasetName={{this.chartDatasetName}}
-          />
-        {{else}}
-          <table class="query-results-table">
-            <thead>
-              <tr class="headers">
-                {{#each this.columnNames as |col|}}
-                  <th>{{col}}</th>
-                {{/each}}
-              </tr>
-            </thead>
-            <tbody>
-              {{#each this.rows as |row|}}
-                <QueryRowContent
-                  @row={{row}}
-                  @columnComponents={{this.columnComponents}}
-                  @lookupUser={{this.lookupUser}}
-                  @lookupBadge={{this.lookupBadge}}
-                  @lookupPost={{this.lookupPost}}
-                  @lookupTopic={{this.lookupTopic}}
-                  @lookupTagGroup={{this.lookupTagGroup}}
-                  @lookupGroup={{this.lookupGroup}}
-                  @lookupCategory={{this.lookupCategory}}
-                  @transformedPostTable={{this.transformedPostTable}}
-                  @transformedBadgeTable={{this.transformedBadgeTable}}
-                  @transformedUserTable={{this.transformedUserTable}}
-                  @transformedTagGroupTable={{this.transformedTagGroupTable}}
-                  @transformedGroupTable={{this.transformedGroupTable}}
-                  @transformedTopicTable={{this.transformedTopicTable}}
-                  @site={{this.site}}
-                />
-              {{/each}}
-            </tbody>
-          </table>
+
+        {{#if this.chartVisible}}
+          <div class="query-results-chart">
+            <DSegmentedControl
+              class="query-results-chart__form"
+              @items={{this.chartFormItems}}
+              @name="query-result-chart-form"
+              @onSelect={{this.setChartForm}}
+              @size="small"
+              @translatedLabel={{i18n "explorer.chart.form.label"}}
+              @value={{this.chartForm}}
+            />
+
+            <DataExplorerChart
+              @chartType={{this.chartType}}
+              @datasets={{this.chartDatasets}}
+              @dualAxis={{this.usesDualAxis}}
+              @labels={{this.chartLabels}}
+              @stacked={{this.isStacked}}
+            />
+            {{#if this.chartability.ignoredColumns.length}}
+              <p class="query-results-chart__footnote">
+                {{i18n
+                  "explorer.chart_footnote.ignored"
+                  columns=(joinNames this.chartability.ignoredColumns)
+                }}
+              </p>
+            {{/if}}
+          </div>
         {{/if}}
+
+        {{#if this.showChartEmptyState}}
+          <QueryChartEmptyState
+            @ignoredColumns={{this.chartability.ignoredColumns}}
+            @onViewAsTable={{this.viewTable}}
+            @reason={{this.chartability.reason}}
+          />
+        {{/if}}
+
+        {{#if this.showTable}}
+          <div
+            class="query-results-table-wrapper
+              {{if this.tableExpanded '--expanded'}}"
+            {{didInsert this.checkOverflow}}
+          >
+            <table class="query-results-table">
+              <thead>
+                <tr class="headers">
+                  {{#each this.columnNames as |col|}}
+                    <th>{{col}}</th>
+                  {{/each}}
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.rows as |row|}}
+                  <QueryRowContent
+                    @columnComponents={{this.columnComponents}}
+                    @row={{row}}
+                  />
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          {{#if this.showExpandButton}}
+            <DButton
+              class="btn-flat query-results-expand-btn"
+              @action={{this.expandTable}}
+              @icon="chevron-down"
+              @translatedTitle={{i18n "show_more"}}
+            />
+          {{/if}}
+        {{/if}}
+
       </section>
     </article>
   </template>
 }
 
-function randomIdShort() {
-  return "xxxxxxxx".replace(/[xy]/g, () => {
-    /*eslint-disable*/
-    return ((Math.random() * 16) | 0).toString(16);
-    /*eslint-enable*/
-  });
-}
-
-function transformedRelTable(table, modelClass) {
-  const result = {};
-  table?.forEach((item) => {
-    if (modelClass) {
-      result[item.id] = modelClass.create(item);
-    } else {
-      result[item.id] = item;
-    }
-  });
-  return result;
+function joinNames(names) {
+  return names.join(", ");
 }

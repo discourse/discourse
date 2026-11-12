@@ -66,6 +66,8 @@ ja:
       starred: "スター付き"
       starred_channels: "スター付きのチャンネル"
       starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
+      pinned_bar:
+        title: "固定"
       pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
@@ -80,8 +82,6 @@ ja:
           other: "これら %{count} 件のメッセージを削除してもよろしいですか？"
       channel_settings:
         title: "チャンネルの設定"
-        edit: "編集"
-        add: "追加"
         star_channel: "チャンネルにスターを設定する"
         unstar_channel: "チャンネルのスターを解除する"
         close_channel: "チャンネルを閉鎖する"
@@ -91,7 +91,6 @@ ja:
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
         leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
-        notification_settings: "通知設定"
         notification_settings_context: "通知"
         join: "参加"
         leave: "退出"
@@ -118,7 +117,7 @@ ja:
         process_started: "チャンネルの削除処理が開始しました。このモーダルは間もなく閉じられ、削除されたチャンネルがどこにも表示されなくなります。"
       channels_list_popup:
         browse: "チャンネルを閲覧する"
-        create: "新しいチャンネル"
+        create: "新しいチャンネル..."
       close: "閉じる"
       remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
@@ -132,8 +131,6 @@ ja:
       muted: "ミュート中"
       joined: "参加中"
       empty_state:
-        direct_message_cta: "パーソナルチャットを開始"
-        direct_message: "1 人または複数のユーザーとパーソナルチャットを開始することもできます。"
         title: "チャンネルが見つかりません"
         my_threads: "まだスレッドがありません。ここに、参加しているスレッドが表示されます。"
       email_frequency:
@@ -149,12 +146,6 @@ ja:
         never: "なし"
       separate_sidebar_mode:
         title: "フォーラムとチャットに個別のサイドバーモードを表示する"
-      send_shortcut:
-        title: "送信ショートカット"
-        enter:
-          label: "Enter で送信"
-        meta_enter:
-          label: "%{meta_key} + Enter で送信"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -240,8 +231,6 @@ ja:
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       chat_notifications_title: "チャット通知"
-      only_chat_push_notifications:
-        title: "チャットのプッシュ通知のみ送信する"
       personalization_title: "パーソナライズ"
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
@@ -273,7 +262,6 @@ ja:
       retry_staged_message:
         title: "ネットワークエラー"
         action: "もう一度送信しますか？"
-      unreliable_network: "ネットワークが不安定です。メッセージの送信と下書きの保存が機能しない可能性があります"
       bookmark_message: "ブックマーク"
       bookmark_message_edit: "ブックマークを編集"
       restore: "削除されたメッセージを復元する"
@@ -290,8 +278,6 @@ ja:
         title: "デスクトップチャットの通知音"
       sounds:
         none: "なし"
-        bell: "ベル"
-        ding: "ゴーン"
       title: "チャット"
       title_capitalized: "チャット"
       upload: "ファイルを添付する"
@@ -321,6 +307,8 @@ ja:
         filter_closed: 閉鎖
         filter_archived: アーカイブ済み
         filter_input_placeholder: チャンネル名で検索
+        filter_joined_all: "すべて"
+        filter_joined_joined: "参加中"
       chat_message_separator:
         today: 今日
         yesterday: 昨日
@@ -333,21 +321,22 @@ ja:
       members_view:
         filter_placeholder: メンバーを検索
         add_member: メンバーを追加
-        back_to_settings: "設定に戻る"
       about_view:
         associated_topic: リンクされたトピック
         associated_category: リンクされたカテゴリ
-        title: タイトル
         name: 名前
         description: 説明
       channel_info:
         back_to_all_channels: "すべてのチャンネル"
         back_to_channel: "戻る"
+        nav_label: "チャンネル情報"
         tabs:
           members: メンバー
+          preferences: 設定
           settings: 設定
           search: 検索
         remove_member: "削除"
+        members_title: "%{channel} メンバー"
       new_message_modal:
         title: メッセージを送信する
         add_user_long: <kbd>Shift + クリック</kbd>または <kbd>Shift + Enter</kbd><span>@%{username} を追加</span>
@@ -367,17 +356,12 @@ ja:
         create_new_group_chat: "グループチャットを作成"
         group_with_too_many_members: "にはメンバーが多すぎます (%{membersCount} 人)"
       channel_edit_name_slug_modal:
-        title: チャンネルを編集する
         input_placeholder: 名前を追加してください
         slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラグ (オプション)
-        emoji: チャンネル絵文字 (オプション)
         reset_emoji: 絵文字をリセット
       channel_edit_description_modal:
-        title: 説明を編集する
         input_placeholder: 説明を追加する
-        description: このチャンネルの紹介を入力します
       direct_message_creator:
         add_to_channel: "チャンネルに追加"
         title: 新しいメッセージ
@@ -392,6 +376,9 @@ ja:
         no_memberships_found: メンバーが見つかりません
         memberships_count:
           other: "%{count} 人のメンバー"
+        preview_card:
+          log_in: "ログイン"
+          sign_up: "登録"
       create_channel:
         threading:
           label: "スレッドを有効にする"
@@ -418,16 +405,14 @@ ja:
           hint_multiple_groups:
             other: '%{group} と他 %{count} 個のグループのユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
         create: "チャンネルを作成"
-        description: "説明 (オプション)"
+        description: "説明"
         name: "チャンネル名"
-        slug: "チャンネルスラグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
           category: "カテゴリ"
           topic: "トピック"
         emoji:
-          label: "チャンネル絵文字 (オプション)"
           reset: "絵文字をリセット"
       reviewable:
         type: "チャットメッセージ"
@@ -458,7 +443,6 @@ ja:
         always: "すべてのアクティビティ"
       settings:
         channel_wide_mentions_label: "@all と @here メンションを許可する"
-        channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
         channel_threading_label: "スレッド"
         channel_threading_description: "スレッドが有効になっている場合、チャットメッセージへの返信によって個別の会話が作成され、メインチャンネルと並行して存在することになります。"
         auto_join_users_label: "自動的にユーザーを追加する"
@@ -470,6 +454,9 @@ ja:
         followed: "参加中"
         mute: "チャンネルをミュート"
         unmute: "チャンネルのミュートを解除する"
+        muted_until_hint: "%{until} まで"
+        mute_options:
+          "off": "オフ"
         threading_enabled: "有効"
         threading_disabled: "無効"
         muted_on: "オン"
@@ -479,9 +466,6 @@ ja:
         save: "保存"
         saved: "保存済み"
         unfollow: "退出"
-        admin_title: "管理者"
-        settings_title: "設定"
-        info_title: "チャンネル情報"
         category_label: "カテゴリ"
         history_label: "履歴"
         members_label: "メンバー"
@@ -507,14 +491,21 @@ ja:
       direct_messages:
         title: "DM"
         aria_label: "ダイレクトメッセージに切り替える"
-        new: "パーソナルチャットを作成"
+        new_group: "新しいグループチャット"
         create: "開始"
-        leave: "このパーソナルチャットから退出する"
-        close: "このパーソナルチャットを閉じる"
+        leave: "チャンネルから退出する"
+        close: "チャンネルを閉鎖する"
         cannot_create: "ダイレクトメッセージを送信できません。"
       channel_list:
         title: "チャンネル"
         aria_label: "チャンネルリストに切り替える"
+        options:
+          filter: "フィルター"
+        filter:
+          all: "すべてのチャンネル"
+          mentions: "メンション"
+        sort:
+          priority: "優先度"
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"
@@ -656,11 +647,6 @@ ja:
           direct_html: '<span>%{username}</span> <span>があなたを "%{channel}" でメンションしました</span>'
           other_plain: 'が %{identifier} を "%{channel}" でメンションしました'
           other_html: '<span>%{username}</span> <span>が %{identifier} を "%{channel}" でメンションしました</span>'
-        direct_message_chat_mention:
-          direct: "があなたをパーソナルチャットでメンションしました"
-          direct_html: "<span>%{username}</span> <span>があなたをパーソナルチャットでメンションしました</span>"
-          other_plain: "が %{identifier} をパーソナルチャットでメンションしました"
-          other_html: "<span>%{username}</span> <span>が %{identifier} をパーソナルチャットでメンションしました</span>"
         chat_message: "新しいチャットメッセージ"
         chat_quoted: "%{username} があなたのチャットメッセージを引用しました"
       titles:
@@ -729,9 +715,28 @@ ja:
         chat:
           title: チャット
     sidebar:
-      start_new_dm:
-        text: 新しい DM を開始
-        title: パーソナルチャットを作成
       panels:
         chat:
           label: "チャット"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "チャットメッセージを送信する"
+      chat_message_created:
+        channel_id: "チャンネル"
+      send_chat_message:
+        targets:
+          channel: "チャンネル"
+        channel_id: "チャンネル"
+        target_usernames: "受信者"
+        message: "メッセージ"
+        actor_username: "送信者"
+      chat_approval:
+        message: "メッセージ"
+        buttons: "ボタン"
+        value: "値"
+        style: "スタイル"
+        style_default: "デフォルト"
+        style_primary: "プライマリー"
+        style_success: "成功"
+        icon: "アイコン"
+        channel_id: "チャンネル"

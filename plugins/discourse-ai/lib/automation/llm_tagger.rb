@@ -47,9 +47,17 @@ module DiscourseAi
         end
 
         all_upload_ids = topic_posts.flat_map(&:upload_ids).compact.uniq
-        if all_upload_ids.present?
+        upload_ids =
+          DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
+            all_upload_ids,
+            include_image_uploads: tagger_agent.vision_enabled,
+            include_document_uploads: model.allowed_attachment_types.present?,
+            allowed_attachment_types: model.allowed_attachment_types,
+            guardian: Guardian.new(post.user),
+          )
+        if upload_ids.present?
           input = [input]
-          input.concat(all_upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input.concat(upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot =
@@ -181,9 +189,12 @@ module DiscourseAi
         first_post = topic.posts.where(post_number: 1).first
         return unless first_post
 
-        changes = { tags: all_tags, bypass_bump: true, skip_validations: true }
-
-        first_post.revise(Discourse.system_user, changes)
+        first_post.revise(
+          Discourse.system_user,
+          { tags: all_tags },
+          bypass_bump: true,
+          skip_validations: true,
+        )
       end
     end
   end

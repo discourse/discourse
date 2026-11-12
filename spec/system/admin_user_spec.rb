@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Page", type: :system do
+describe "Admin User Page" do
   fab!(:current_user, :admin)
 
   let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }
@@ -32,6 +32,20 @@ describe "Admin User Page", type: :system do
     end
   end
 
+  context "when approving a user with a previously rejected reviewable" do
+    before { SiteSetting.must_approve_users = true }
+
+    it "approves the user from the admin profile page" do
+      stuck_user = Fabricate(:user, active: true, approved: false)
+      Fabricate(:reviewable_user, target: stuck_user, status: Reviewable.statuses[:rejected])
+
+      admin_user_page.visit(stuck_user)
+      admin_user_page.click_approve_button
+      expect(admin_user_page).to have_approve_success
+      expect(stuck_user.reload).to be_approved
+    end
+  end
+
   context "when visiting a regular user's page" do
     fab!(:user) { Fabricate(:user, ip_address: "93.123.44.90") }
     fab!(:similar_user) { Fabricate(:user, ip_address: user.ip_address) }
@@ -56,6 +70,24 @@ describe "Admin User Page", type: :system do
       expect(admin_user_page).to have_silence_button
     end
 
+    it "asks for confirmation before granting moderation" do
+      dialog = PageObjects::Components::Dialog.new
+
+      admin_user_page.click_grant_moderation_button
+      expect(dialog).to have_content(
+        I18n.t("admin_js.admin.user.grant_moderation_confirm", username: user.username),
+      )
+
+      dialog.click_no
+      expect(dialog).to be_closed
+      expect(user.reload.moderator).to eq(false)
+
+      admin_user_page.click_grant_moderation_button
+      dialog.click_yes
+      expect(page).to have_no_css(".btn.grant-moderation")
+      expect(user.reload.moderator).to eq(true)
+    end
+
     it "displays username in the title" do
       expect(page).to have_css(".display-row.username")
       expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
@@ -78,11 +110,16 @@ describe "Admin User Page", type: :system do
         )
       end
 
+      def open_upcoming_changes
+        admin_user_page.open_upcoming_changes_modal
+      end
+
       context "when the change is enabled for everyone" do
         before { SiteSetting.enable_upload_debug_mode = true }
 
         it "displays the upcoming change with enabled status and correct reason" do
           admin_user_page.visit(user)
+          open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -99,6 +136,7 @@ describe "Admin User Page", type: :system do
 
         it "displays the upcoming change with disabled status and correct reason" do
           admin_user_page.visit(user)
+          open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -125,6 +163,7 @@ describe "Admin User Page", type: :system do
 
           it "displays the upcoming change with enabled status, correct reason, and specific groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -144,6 +183,7 @@ describe "Admin User Page", type: :system do
 
           it "displays the upcoming change with all groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -158,6 +198,7 @@ describe "Admin User Page", type: :system do
         context "when the user does not belong to any of those groups" do
           it "displays the upcoming change with disabled status, correct reason, and no specific groups" do
             admin_user_page.visit(user)
+            open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
@@ -189,6 +230,7 @@ describe "Admin User Page", type: :system do
         )
 
         admin_user_page.visit(user)
+        open_upcoming_changes
         expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
         expect(admin_user_page).to have_no_upcoming_change(
           "about_page_extra_groups_show_description",
@@ -206,14 +248,16 @@ describe "Admin User Page", type: :system do
         )
       end
 
-      it "suspends and unsuspends the user" do
+      it "suspends the user along with selected similar users and unsuspends the user" do
         admin_user_page.click_suspend_button
+        suspend_user_modal.select_similar_user(similar_user.username)
         suspend_user_modal.fill_in_suspend_reason("spamming")
         suspend_user_modal.set_future_date("tomorrow")
         suspend_user_modal.perform
         expect(suspend_user_modal).to be_closed
 
         expect(page).to have_css(".suspension-info")
+        expect(similar_user.reload).to be_suspended
 
         admin_user_page.click_unsuspend_button
         expect(page).not_to have_css(".suspension-info")

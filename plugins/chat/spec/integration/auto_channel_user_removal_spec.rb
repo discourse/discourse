@@ -4,14 +4,14 @@ describe "Automatic user removal from channels" do
   fab!(:user_1) { Fabricate(:user, trust_level: 1) }
   fab!(:user_2) { Fabricate(:user, trust_level: 3) }
 
-  fab!(:user_1_guardian) { Guardian.new(user_1) }
-
   fab!(:secret_group, :group)
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
 
   fab!(:public_channel, :chat_channel)
   fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
+
+  let(:user_1_guardian) { Guardian.new(user_1) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -104,6 +104,22 @@ describe "Automatic user removal from channels" do
           ).count,
         ).to eq(1)
       end
+    end
+  end
+
+  context "when granular_anonymous_and_logged_in_groups_permissions is enabled" do
+    before do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+    end
+
+    it "does not remove any users on the next sweep" do
+      # Everyone (0) is mapped to the logged_in_users (5) pseudo-group.
+      expect(SiteSetting.chat_allowed_groups_map).to include(Group::AUTO_GROUPS[:logged_in_users])
+
+      expect { Chat::AutoLeaveChannels.call(params: { event: :hourly_job }) }.not_to change {
+        Chat::UserChatChannelMembership.count
+      }
     end
   end
 

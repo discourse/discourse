@@ -8,6 +8,10 @@ nb_NO:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dato"
+          outcomes:
+            failed: "Feilet"
         reports:
           filters:
             sort_by:
@@ -34,30 +38,86 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopiert"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Feil"
+        response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Bilder"
+          name: "Navn"
+          type: "Type"
+          type_score: "Poeng"
+      ai_tool_approval:
+        loading: "Laster…"
+        tool: "Handling"
+        user: "Bruker"
+        approve: "Godkjenn"
+        reject: "Avvis"
+        approved: "Godkjent"
+        rejected: "Avvist"
       llm_selector:
         none: "Ingen"
       features:
-        back: "Forrige"
-        disabled: "(deaktivert)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktivert"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personlige meldinger"
+            none: "Ikke tilgjengelig"
         no_agent: "Ikke angitt"
         no_groups: "Ingen"
         edit: "Innstillinger"
-        expand_list:
-          one: "(%{count} mer)"
-          other: "(%{count} mer)"
-        collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktivert"
         filters:
           all: "Alle"
           reset: "Tilbakestill"
+        sentiment:
+          enabled: "Aktivert"
         search:
           name: "Søk"
+        image_caption:
+          setting_groups:
+            settings: "Innstillinger"
         spam:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personlige meldinger"
+            choices:
+              none: "Ingen"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alle"
+        model_progress:
+          detail:
+            columns:
+              pending: "Venter"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Innlegg"
+            topic:
+              title: "Emner"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Stikkord"
+        admin_actions:
+          enabled: "Aktivert"
         stats:
           eta_minutes:
             one: "%{count} minutt"
@@ -74,6 +134,8 @@ nb_NO:
             other: "%{count} innlegg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Siste 7 dager"
         enable: "Aktiver"
         test_modal:
@@ -85,8 +147,37 @@ nb_NO:
         total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
+      logs:
+        short_title: "Logger"
+        apply: "Bruk"
+        successful: "Vellykket"
+        failed: "Feilet"
+        unknown: "Ukjent"
+        time: "Tid"
+        when: "Når"
+        request: "Forespørsel"
+        provider: "Tilbyder"
+        user: "Bruker"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Innlegg"
+        post_short: "Innlegg %{id}"
+        duration: "Varighet"
+        actions: "Handlinger"
+        view_details: "Detaljer"
+        periods:
+          day: "Siste 24 timer"
+          week: "Siste 7 dager"
+          custom: "Egendefinert"
+        detail:
+          request: "Forespørsel"
+          response: "Svar"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Sammendrag"
+          deleted_stage: "Slettet"
+          save: "Lagre"
       ai_agent:
-        back: "Forrige"
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -96,6 +187,12 @@ nb_NO:
         save: "Lagre"
         enabled: "Aktivert?"
         delete: "Slett"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Middels"
+          high: "Høy"
+          max: "Maksimum"
         response_format:
           open_modal: "Rediger"
         filters:
@@ -105,7 +202,6 @@ nb_NO:
           title: "Opplastinger"
           uploading: "Laster opp…"
       tools:
-        back: "Forrige"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -122,17 +218,45 @@ nb_NO:
         short_title: "Legitimasjon"
         name: "Navn"
         secret: "Verdi"
-        back: "Forrige"
         save: "Lagre"
         edit: "Rediger"
         delete: "Slett"
         embedding: "Innbygging"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Navn"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        delete: "Slett"
+      mcp_servers:
+        name: "Navn"
+        description: "Beskrivelse"
+        url: "URL"
+        oauth_connect: "Koble til"
+        enabled: "Aktivert"
+        save: "Lagre"
+        edit: "Rediger"
+        delete: "Slett"
+        tools_modal:
+          required: "Påkrevd"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        select_type: "Velg"
+        types:
+          embedding: "Innbygging"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
+        vision_modes:
+          disabled:
+            title: "Deaktivert"
         save: "Lagre"
         edit: "Rediger"
-        back: "Forrige"
         delete: Slett
         quotas:
           group: "Gruppe"
@@ -152,7 +276,6 @@ nb_NO:
         tests:
           success: "Suksess!"
         providers:
-          google: "Google"
           fake: "Egendefinert"
       ai_helper:
         context_menu:
@@ -167,10 +290,7 @@ nb_NO:
         thumbnail_suggestions:
           select: "Velg"
           try_again: "Prøv igjen"
-        image_caption:
-          save_caption: "Lagre"
       embeddings:
-        back: "Forrige"
         save: "Lagre"
         delete: "Slett"
         edit: "Rediger"
@@ -181,8 +301,16 @@ nb_NO:
         providers:
           google: "Google"
           fake: "Egendefinert"
+      ai_artifact:
+        editor:
+          version: "Versjon"
+          default: "Forvalg"
+          apply: "Bruk"
+        share: "Del"
+        filter_all: "Alle"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varighet:"
           request: "Forespørsel"
           response: "Svar"
           next_log: "Neste"
@@ -206,9 +334,18 @@ nb_NO:
       summarization:
         chat:
           summarize: "Oppsummer"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Emner"
+          messages: "Meldinger"
       discobot_discoveries:
-        regular_results: "Emner"
-        collapse: "Fold sammen"
-        tooltip:
-          actions:
-            disable: "Deaktiver"
+        legacy:
+          regular_results: "Emner"
+          collapse: "Fold sammen"
+          tooltip:
+            actions:
+              disable: "Deaktiver"
+        search_messages: "Meldinger"

@@ -5,14 +5,14 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import withEventValue from "discourse/helpers/with-event-value";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 export default class RequestGroupMembershipForm extends Component {
@@ -45,10 +45,10 @@ export default class RequestGroupMembershipForm extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
+      class="request-group-membership-form"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="request-group-membership-form"
+      @title={{this.title}}
     >
       <:body>
         <div class="control-group">
@@ -56,24 +56,24 @@ export default class RequestGroupMembershipForm extends Component {
             {{i18n "groups.membership_request.reason"}}
           </label>
 
-          <ExpandingTextArea
-            {{on "input" (withEventValue (fn (mut this.reason)))}}
-            value={{this.reason}}
+          <DExpandingTextArea
             maxlength="5000"
+            @value={{this.reason}}
+            {{on "input" (withEventValue (fn (mut this.reason)))}}
           />
         </div>
       </:body>
 
       <:footer>
         <DButton
-          @action={{this.requestMember}}
-          @label="groups.membership_request.submit"
-          @disabled={{this.disableSubmit}}
           class="btn-primary"
+          @action={{this.requestMember}}
+          @disabled={{this.disableSubmit}}
+          @label="groups.membership_request.submit"
         />
 
         <DModalCancel @close={{@closeModal}} />
-        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       </:footer>
     </DModal>
   </template>

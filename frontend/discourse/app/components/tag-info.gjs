@@ -1,483 +1,92 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { Textarea } from "@ember/component";
-import { array, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
-import basePath from "discourse/helpers/base-path";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
-import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
-import withEventValue from "discourse/helpers/with-event-value";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { removeValueFromArray } from "discourse/lib/array-tools";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
+import renderTags from "discourse/lib/render-tags";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 
-export default class TagInfo extends Component {
-  @service currentUser;
-  @service dialog;
-  @service router;
-  @service site;
-  @service siteSettings;
-  @service store;
-
-  @tracked tagInfo;
-  @tracked newSynonyms;
-  @tracked newTagName;
-  @tracked descriptionWithNewLines;
-  @tracked loading = false;
-  @tracked showEditControls = false;
-  @tracked editing = false;
-  newTagDescription;
-
-  updateTagInfo = helperFn(() => {
-    this.loadTagInfo();
+function tagGroupsInfo(tagInfo) {
+  return i18n("tagging.tag_groups_info", {
+    count: tagInfo?.tag_group_names?.length,
+    tag_groups: tagInfo?.tag_group_names?.join(", "),
   });
+}
 
-  get canAdminTag() {
-    return this.currentUser.staff;
-  }
+function categoriesInfo(tagInfo) {
+  const categories = tagInfo?.categories || [];
+  return i18n("tagging.category_restrictions", {
+    count: categories.length,
+    categories: categories.map((c) => categoryBadgeHTML(c)).join(" "),
+  });
+}
 
-  get canEditTags() {
-    return this.currentUser.canEditTags;
-  }
+function synonymsDescription(tagInfo) {
+  const synonyms = tagInfo?.synonyms || [];
+  return i18n("tagging.synonyms_description", {
+    count: synonyms.length,
+    base_tag_name: renderTags(null, { tags: [tagInfo] }),
+    synonyms: renderTags(null, { tags: synonyms }),
+  });
+}
 
-  get editSynonymsMode() {
-    return this.canEditTags && this.showEditControls;
-  }
+function nothingToShow(tagInfo) {
+  return (
+    isEmpty(tagInfo?.tag_group_names) &&
+    isEmpty(tagInfo?.categories) &&
+    isEmpty(tagInfo?.synonyms) &&
+    !tagInfo?.category_restricted
+  );
+}
 
-  get useSettingsPage() {
-    return this.siteSettings.experimental_tag_settings_page;
-  }
-
-  get tagGroupsInfo() {
-    return i18n("tagging.tag_groups_info", {
-      count: this.tagInfo?.tag_group_names?.length,
-      tag_groups: this.tagInfo?.tag_group_names?.join(", "),
-    });
-  }
-
-  get categoriesInfo() {
-    return i18n("tagging.category_restrictions", {
-      count: this.tagInfo?.categories?.length,
-    });
-  }
-
-  get synonyms() {
-    return this.tagInfo?.synonyms;
-  }
-
-  get nothingToShow() {
-    return (
-      isEmpty(this.tagInfo?.tag_group_names) &&
-      isEmpty(this.tagInfo?.categories) &&
-      isEmpty(this.synonyms)
-    );
-  }
-
-  get showSave() {
-    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    return this.newTagName?.replace(filterRegexp, "").trim()?.length > 0;
-  }
-
-  @action
-  async loadTagInfo() {
-    this.loading = true;
-
-    try {
-      const result = await this.store.find(
-        "tag-info",
-        this.args.tag.id || this.args.tag.name
-      );
-
-      this.tagInfo = result;
-      this.tagInfo.synonyms = result.synonyms.map((s) =>
-        this.store.createRecord("tag", s)
-      );
-    } catch (e) {
-      this.tagInfo = null;
-      popupAjaxError(e);
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  @action
-  edit(event) {
-    event?.preventDefault();
-
-    this.descriptionWithNewLines = this.tagInfo.description?.replaceAll(
-      "<br>",
-      "\n"
-    );
-    this.editing = true;
-    this.newTagName = this.args.tag.name;
-    this.newTagDescription = this.tagInfo.description;
-  }
-
-  @action
-  async unlinkSynonym(synonym, event) {
-    event?.preventDefault();
-
-    try {
-      await ajax(`/tag/${this.tagInfo.id}/synonyms/${synonym.id}.json`, {
-        type: "DELETE",
-      });
-      removeValueFromArray(this.synonyms, synonym);
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  deleteSynonym(tag, event) {
-    event?.preventDefault();
-
-    this.dialog.yesNoConfirm({
-      message: i18n("tagging.delete_synonym_confirm", {
-        tag_name: tag.text,
-      }),
-      didConfirm: () => {
-        return tag
-          .destroyRecord()
-          .then(() => removeValueFromArray(this.synonyms, tag))
-          .catch(popupAjaxError);
-      },
-    });
-  }
-
-  @action
-  toggleEditControls() {
-    this.showEditControls = !this.showEditControls;
-  }
-
-  @action
-  cancelEditing() {
-    this.editing = false;
-  }
-
-  @action
-  async finishedEditing() {
-    const oldTagName = this.args.tag.name;
-    this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
-
-    try {
-      const result = await this.args.tag.update({
-        slug: this.args.tag.slug,
-        name: this.newTagName,
-        description: this.newTagDescription,
-      });
-
-      this.editing = false;
-
-      if (result.responseJson.tag) {
-        const updatedTag = result.responseJson.tag;
-
-        this.tagInfo.name = updatedTag.name;
-        this.tagInfo.slug = updatedTag.slug;
-        this.tagInfo.description = this.newTagDescription;
-
-        if (oldTagName !== updatedTag.name) {
-          const slugForUrl = updatedTag.slug || `${updatedTag.id}-tag`;
-          this.router.transitionTo("tag.show", slugForUrl, updatedTag.id);
-        }
-      }
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  deleteTag() {
-    const numTopics = this.args.list?.topic_list?.tags?.[0]?.topic_count || 0;
-
-    let confirmText =
-      numTopics === 0
-        ? i18n("tagging.delete_confirm_no_topics")
-        : i18n("tagging.delete_confirm", { count: numTopics });
-
-    if (this.synonyms?.length > 0) {
-      confirmText +=
-        " " +
-        i18n("tagging.delete_confirm_synonyms", {
-          count: this.synonyms.length,
-        });
-    }
-
-    this.dialog.deleteConfirm({
-      message: confirmText,
-      didConfirm: async () => {
-        try {
-          await this.args.tag.destroyRecord();
-          this.router.transitionTo("tags.index");
-        } catch {
-          this.dialog.alert(i18n("generic_error"));
-        }
-      },
-    });
-  }
-
-  @action
-  addSynonyms() {
-    this.dialog.confirm({
-      message: i18n("tagging.add_synonyms_explanation", {
-        count: this.newSynonyms.length,
-        tag_name: this.tagInfo.name,
-      }),
-      didConfirm: async () => {
-        const id = this.tagInfo.id;
-        try {
-          const response = await ajax(`/tag/${id}/synonyms.json`, {
-            type: "POST",
-            data: {
-              tags: this.newSynonyms.map((t) =>
-                typeof t.id === "number"
-                  ? { id: t.id, name: t.name }
-                  : { name: t.name }
-              ),
-            },
-          });
-
-          if (response.success) {
-            this.newSynonyms = null;
-            this.loadTagInfo();
-          } else if (response.failed_tags) {
-            this.dialog.alert(
-              i18n("tagging.add_synonyms_failed", {
-                tag_names: Object.keys(response.failed_tags).join(", "),
-              })
-            );
-          } else {
-            this.dialog.alert(i18n("generic_error"));
-          }
-        } catch (e) {
-          popupAjaxError(e);
-        }
-      },
-    });
-  }
-
-  <template>
-    {{this.updateTagInfo}}
-
-    <section class="tag-info">
-      {{#if this.loading}}
-        <div>{{i18n "loading"}}</div>
-      {{else if this.tagInfo}}
-        <div class="tag-name">
-          {{#if this.editing}}
-            <div class="edit-tag-wrapper">
-              <TextField
-                @id="edit-name"
-                @value={{readonly this.tagInfo.name}}
-                @maxlength={{this.siteSettings.max_tag_length}}
-                @input={{withEventValue (fn (mut this.newTagName))}}
-                @autofocus="true"
-              />
-
-              <Textarea
-                {{on
-                  "input"
-                  (withEventValue (fn (mut this.newTagDescription)))
-                }}
-                @value={{this.descriptionWithNewLines}}
-                placeholder={{i18n "tagging.description"}}
-                maxlength={{1000}}
-                autofocus="true"
-                id="edit-description"
-              />
-
-              <div class="edit-controls">
-                {{#if this.showSave}}
-                  <DButton
-                    @action={{this.finishedEditing}}
-                    @icon="check"
-                    @ariaLabel="tagging.save"
-                    class="btn-primary submit-edit"
-                  />
-                {{/if}}
-                <DButton
-                  @action={{this.cancelEditing}}
-                  @icon="xmark"
-                  @ariaLabel="cancel"
-                  class="btn-default cancel-edit"
-                />
-              </div>
-            </div>
-          {{else}}
-            <div class="tag-name-wrapper">
-              {{discourseTag this.tagInfo.name tagName="div"}}
-              {{#if this.canEditTags}}
-                {{#if this.useSettingsPage}}
-                  <LinkTo
-                    @route="tag.edit.tab"
-                    @models={{array
-                      this.tagInfo.slug
-                      this.tagInfo.id
-                      "general"
-                    }}
-                    title={{i18n "tagging.edit_tag"}}
-                    class="edit-tag"
-                  >{{icon "gear"}}</LinkTo>
-                {{else}}
-                  <a
-                    {{on "click" this.edit}}
-                    href
-                    title={{i18n "tagging.edit_tag"}}
-                    class="edit-tag"
-                  >{{icon "pencil"}}</a>
-                {{/if}}
-              {{/if}}
-            </div>
-            {{#if this.tagInfo.description}}
-              <div class="tag-description-wrapper">
-                <span>{{trustHTML this.tagInfo.description}}</span>
-              </div>
-            {{/if}}
-          {{/if}}
+const TagInfo = <template>
+  {{#if @tagInfo}}
+    <section class="tag-info discovery-heading {{if @loading '--loading'}}">
+      <div class="tag-name">
+        <div class="tag-name-wrapper">
+          {{dDiscourseTag @tagInfo}}
         </div>
-
-        <div class="tag-associations">
-          {{#if this.tagInfo.tag_group_names}}
-            {{this.tagGroupsInfo}}
-          {{/if}}
-
-          {{#if this.tagInfo.categories}}
-            {{this.categoriesInfo}}
-            <br />
-            {{#each this.tagInfo.categories as |category|}}
-              {{categoryLink category}}
-            {{/each}}
-          {{/if}}
-
-          {{#if this.nothingToShow}}
-            {{#if this.tagInfo.category_restricted}}
-              {{i18n "tagging.category_restricted"}}
-            {{else}}
-              {{trustHTML (i18n "tagging.default_info")}}
-              {{#if this.canAdminTag}}
-                {{trustHTML (i18n "tagging.staff_info" basePath=(basePath))}}
-              {{/if}}
-            {{/if}}
-          {{/if}}
-        </div>
-
-        {{#if this.synonyms}}
-          <div class="synonyms-list">
-            <h3>{{i18n "tagging.synonyms"}}</h3>
-
-            <div>{{trustHTML
-                (i18n
-                  "tagging.synonyms_description" base_tag_name=this.tagInfo.name
-                )
-              }}</div>
-
-            <div class="tag-list">
-              {{#each this.synonyms as |tag|}}
-                <div class="tag-box">
-                  {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
-                  {{#if this.editSynonymsMode}}
-                    <a
-                      {{on "click" (fn this.unlinkSynonym tag)}}
-                      href
-                      class="unlink-synonym"
-                    >
-                      {{icon "link-slash" title="tagging.remove_synonym"}}
-                    </a>
-                    {{#if this.canAdminTag}}
-                      <a
-                        {{on "click" (fn this.deleteSynonym tag)}}
-                        href
-                        class="delete-synonym"
-                      >
-                        {{icon "trash-can" title="tagging.delete_tag"}}
-                      </a>
-                    {{/if}}
-                  {{/if}}
-                </div>
-              {{/each}}
-            </div>
+        {{#if @tagInfo.description_cooked}}
+          <div class="tag-description-wrapper">
+            <div class="cooked">{{trustHTML @tagInfo.description_cooked}}</div>
           </div>
         {{/if}}
+      </div>
 
-        {{#if this.editSynonymsMode}}
-          <section class="add-synonyms field">
-            <label for="add-synonyms">
-              {{i18n "tagging.add_synonyms_label"}}
-            </label>
-            <div class="add-synonyms__controls">
-              <TagChooser
-                @id="add-synonyms"
-                @tags={{this.newSynonyms}}
-                @blockedTags={{array this.tagInfo.name}}
-                @everyTag={{true}}
-                @excludeSynonyms={{true}}
-                @excludeHasSynonyms={{true}}
-                @unlimitedTagCount={{true}}
-                @allowCreate={{true}}
-              />
-              {{#if this.newSynonyms}}
-                <DButton
-                  @action={{this.addSynonyms}}
-                  @disabled={{this.addSynonymsDisabled}}
-                  @icon="check"
-                  class="ok"
-                />
-              {{/if}}
-            </div>
-          </section>
+      <p class="tag-associations">
+        {{#if @tagInfo.tag_group_names}}
+          <span>{{tagGroupsInfo @tagInfo}}</span>
         {{/if}}
-
-        {{#if this.canEditTags}}
-          <PluginOutlet
-            @name="tag-custom-settings"
-            @outletArgs={{lazyHash tag=this.tagInfo}}
-            @connectorTagName="section"
-          />
-
-          <div class="tag-actions">
-            {{#if this.useSettingsPage}}
-              <LinkTo
-                @route="tag.edit.tab"
-                @models={{array this.tagInfo.slug this.tagInfo.id "general"}}
-                class="btn btn-default"
-              >
-                {{icon "gear"}}
-                {{i18n "tagging.settings"}}
-              </LinkTo>
-            {{else}}
-              <DButton
-                @action={{this.toggleEditControls}}
-                @icon="gear"
-                @label="tagging.edit_synonyms"
-                id="edit-synonyms"
-                class="btn-default"
-              />
-            {{/if}}
-            {{#if this.canAdminTag}}
-              <DButton
-                @action={{this.deleteTag}}
-                @icon="trash-can"
-                @label="tagging.delete_tag"
-                id="delete-tag"
-                class="btn-danger delete-tag"
-              />
-            {{/if}}
-          </div>
+        {{#if @tagInfo.categories}}
+          <span>{{trustHTML (categoriesInfo @tagInfo)}}</span>
+        {{else if @tagInfo.category_restricted}}
+          <span>{{i18n "tagging.category_restricted"}}</span>
         {{/if}}
+        {{#if (nothingToShow @tagInfo)}}
+          {{trustHTML (i18n "tagging.default_info")}}
+          {{#if @currentUser.staff}}
+            {{trustHTML (i18n "tagging.staff_info" basePath=(dBasePath))}}
+          {{/if}}
+        {{/if}}
+      </p>
+
+      {{#if @tagInfo.synonyms}}
+        <div class="synonyms-list">{{trustHTML
+            (synonymsDescription @tagInfo)
+          }}</div>
       {{/if}}
 
+      {{#if @currentUser.canEditTags}}
+        <PluginOutlet
+          @connectorTagName="section"
+          @name="tag-custom-settings"
+          @outletArgs={{lazyHash tag=@tagInfo}}
+        />
+      {{/if}}
     </section>
-  </template>
-}
+  {{/if}}
+</template>;
+
+export default TagInfo;

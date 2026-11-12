@@ -7,11 +7,9 @@
 lt:
   js:
     explorer:
-      default_query: "Numatytasis"
       or: "arba"
-      create: "Sukurti"
-      import:
-        label: "Importuoti"
+      ai:
+        generate: "Generuoti"
       help:
         label: "Pagalba"
       schema:
@@ -20,20 +18,34 @@ lt:
         bool:
           yes: "Taip"
           no: "Ne"
-      export: "Eksportuoti"
       save: "Išsaugoti pakeitimus"
-      edit: "Redaguoti"
       delete: "Pašalinti"
-      show_table: "Lentelė"
+      dashboard:
+        add: "Pridėti prie skydelio"
+        remove: "Pašalinti iš skydelio"
+        added: "Užklausa pridėta prie skydelio"
+        removed: "Užklausa pašalinta iš skydelio"
+        unmountable: "Užklausos su privalomais parametrais, kurie neturi numatytosios reikšmės, negali būti rodomos skydelyje"
+      chart:
+        form:
+          bar: "Juosta"
       result_count:
         one: "%{count} rezultatas."
         few: "%{count} rezultatai."
         many: "%{count} rezultatai."
         other: "%{count} rezultatai."
+      name: "Vardas"
       query_groups: "Grupės"
+      query_tags: "Žymos"
       query_description: "Aprašymas"
       query_user: "Sukurta"
       reset_params: "Atstatyti"
-      search_placeholder: "Paieška..."
+      filter_by_tag: "Filtruoti pagal žymą"
+      filter_by_this_tag: "Filtruoti sąrašą pagal šią žymą"
     group:
       reports: "Pranešimai"
+    discourse_workflows:
+      sql:
+        param_value: "Reikšmė"
+        output:
+          results: "Rezultatai"

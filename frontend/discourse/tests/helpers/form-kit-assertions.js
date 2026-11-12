@@ -1,6 +1,7 @@
 import { capitalize } from "@ember/string";
 import { isBlank } from "@ember/utils";
 import QUnit from "qunit";
+import { codeEditorValue } from "discourse/tests/helpers/code-editor-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class FieldsetHelper {
@@ -42,10 +43,32 @@ class FieldHelper {
     this.context = context;
   }
 
+  get resolvedControlType() {
+    const type = this.element.dataset.controlType;
+
+    if (type !== "custom") {
+      return type;
+    }
+
+    if (this.element.querySelector(".form-kit__control-custom .multi-select")) {
+      return "multi-select";
+    }
+
+    if (
+      this.element.querySelector(
+        ".form-kit__control-custom .tag-chooser, .form-kit__control-custom .tag-group-chooser, .form-kit__control-tag-chooser"
+      )
+    ) {
+      return "tag-chooser";
+    }
+
+    return type;
+  }
+
   get value() {
     this.context.dom(this.element).exists(`field '${this.name}' exists`);
 
-    switch (this.element.dataset.controlType) {
+    switch (this.resolvedControlType) {
       case "image": {
         return this.element
           .querySelector(".form-kit__control-image a.lightbox")
@@ -60,12 +83,13 @@ class FieldHelper {
       case "input":
       case "input-number":
       case "input-text":
+      case "input-email":
         return this.element.querySelector(".form-kit__control-input").value;
-      case "icon": {
-        return this.element.querySelector(
-          ".form-kit__control-icon .select-kit-header"
-        )?.dataset?.value;
-      }
+      case "icon":
+        return (
+          this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
+          undefined
+        );
       case "question": {
         return (
           this.element.querySelector(".form-kit__control-radio:checked")
@@ -83,9 +107,9 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-textarea").value;
       }
       case "code": {
-        return this.element.querySelector(
-          ".form-kit__control-code .ace_text-input"
-        ).value;
+        return codeEditorValue(
+          this.element.querySelector(".form-kit__control-code")
+        );
       }
       case "composer": {
         return this.element.querySelector(
@@ -112,7 +136,15 @@ class FieldHelper {
           `Calendar is a complex type, value can't be check from UI components`
         );
       }
+      case "tag-chooser": {
+        return this.element.querySelector(".select-kit-header")?.dataset?.value;
+      }
     }
+  }
+
+  get disabled() {
+    this.context.dom(this.element).exists();
+    return this.element.dataset.disabled === "";
   }
 
   isEnabled(message) {
@@ -129,11 +161,6 @@ class FieldHelper {
 
   isDisabled(message) {
     this.context.ok(this.disabled, message);
-  }
-
-  get disabled() {
-    this.context.dom(this.element).exists();
-    return this.element.dataset.disabled === "";
   }
 
   hasTitle(title, message) {

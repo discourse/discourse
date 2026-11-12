@@ -42,33 +42,9 @@
   }
 }
 
-#topic-title .edit-topic-title.showing-ai-suggestions {
-  .category-chooser {
-    flex: 1 1 90%;
-  }
-
-  .ai-category-suggester-trigger {
-    padding: 0.425em;
-  }
-
-  .ai-tag-suggester-trigger {
-    padding: 0.45em;
-  }
-}
-
 .ios-device #topic-title .edit-topic-title.showing-ai-suggestions button {
   &.ai-title-suggester-trigger {
     padding-top: 0.4em;
     padding-bottom: 0.4em;
-  }
-
-  &.ai-category-suggester-trigger {
-    padding-top: 0.4em;
-    padding-bottom: 0.25em;
-  }
-
-  &.ai-tag-suggester-trigger {
-    padding-top: 0.4em;
-    padding-bottom: 0.3em;
   }
 }

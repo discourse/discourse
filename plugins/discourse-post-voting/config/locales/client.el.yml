@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 el:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Ψήφιση Αναρτήσεων
   post_voting:
     reviewables:
       comment_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το σχόλιο και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
@@ -35,6 +31,18 @@ el:
         remove_as_post_voting:
           label: "Αφαίρεση ψήφισης αναρτήσεων"
           desc: "Το θέμα θα δημιουργηθεί σε κανονική μορφή"
+    vote:
+      already_voted: "Μπορείτε να ψηφίσετε μόνο μία φορά ανά ερώτηση."
+      user_over_limit: "Δεν μπορείτε να υπερβείτε τον αριθμό των ψήφων για το επίπεδο εμπιστοσύνης σας."
+      one_vote_per_post: "Μπορείτε να ψηφίσετε μόνο μία φορά για κάθε ανάρτηση."
+      button:
+        upvote: "Ψηφίστε θετικά"
+        remove_upvote: "Αφαίρεση θετικής ψήφου"
+        downvote: "Ψηφίστε αρνητικά"
+        remove_downvote: "Αφαίρεση αρνητικής ψήφου"
+      toggle_voters: "Εμφάνιση ψηφοφόρων"
+      upvotes: "Θετικές ψήφοι"
+      downvotes: "Αρνητικές ψήφοι"
     last_answer_lowercase: τελευταία απάντηση
     answer_lowercase:
       one: απάντηση
@@ -56,6 +64,10 @@ el:
           edit: "επεξεργασία"
           cancel: "ακύρωση"
           add: "Προσθήκη σχολίου"
+          actions:
+            edit: "Επεξεργασία σχολίου"
+            delete: "Διαγραφή σχολίου"
+            flag: "Αναφορά σχολίου"
           show:
             one: Εμφάνιση %{count} ακόμα σχολίου
             other: Εμφάνιση %{count} ακόμα σχολίων

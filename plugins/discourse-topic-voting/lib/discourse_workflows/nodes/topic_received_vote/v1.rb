@@ -1,0 +1,75 @@
+# frozen_string_literal: true
+
+if defined?(DiscourseWorkflows)
+  module DiscourseWorkflows
+    module Nodes
+      module TopicReceivedVote
+        class V1 < DiscourseWorkflows::NodeType
+          description(
+            name: "trigger:topic_received_vote",
+            version: "1.0",
+            defaults: {
+              icon: "vote-up",
+              color: "purple",
+            },
+            group: "discourse_triggers",
+            event: :topic_voting_vote_created,
+            available: -> { SiteSetting.topic_voting_enabled },
+            unavailable_reason_key: "discourse_workflows.node_unavailable.requires_topic_voting",
+            output_contracts: [
+              {
+                schema: DiscourseTopicVoting::Workflows::Schema::TOPIC_RECEIVED_VOTE_OUTPUT_SCHEMA,
+              },
+            ],
+            properties: {
+              **TOPIC_SCOPE_FILTER_PROPERTIES,
+            },
+          )
+
+          deprecated(
+            superseded_by: "2.0",
+            changes: {
+              "user" => "actor",
+            },
+            notice_key: "discourse_workflows.node_deprecated.user_is_topic_author",
+          )
+
+          def initialize(vote, *)
+            super(parameters: {})
+            @vote = vote
+          end
+
+          def valid?
+            @vote.present? && topic.present? && voter.present?
+          end
+
+          def output
+            {
+              topic: serialize_topic_list_item(topic),
+              user: serialize_user(voter),
+              vote: {
+                id: @vote.id,
+                count: topic.vote_count,
+                created_at: @vote.created_at.iso8601,
+              },
+            }
+          end
+
+          def matches?(trigger_ctx)
+            matches_topic_filters?(topic, trigger_ctx)
+          end
+
+          private
+
+          def topic
+            @topic ||= @vote&.topic
+          end
+
+          def voter
+            @voter ||= @vote&.user
+          end
+        end
+      end
+    end
+  end
+end

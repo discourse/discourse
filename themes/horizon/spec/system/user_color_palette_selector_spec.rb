@@ -2,10 +2,12 @@
 
 require_relative "page_objects/components/user_color_palette_selector"
 
-describe "Horizon theme | User color palette selector", type: :system do
+describe "Horizon theme | User color palette selector" do
   let(:set_theme_as_default) { true }
   let!(:theme) do
     horizon_theme = upload_theme(set_theme_as_default: set_theme_as_default)
+    # the bundled Horizon's palettes share these names, and the menu matches by name
+    ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"]).update_all(user_selectable: false)
     horizon_theme.color_schemes.update_all(user_selectable: true)
     horizon_theme
   end

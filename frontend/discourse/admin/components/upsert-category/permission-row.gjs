@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import PermissionType from "discourse/models/permission-type";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryPermissionRow extends Component {
@@ -140,9 +140,10 @@ export default class UpsertCategoryPermissionRow extends Component {
         {{/if}}
       </span>
       <span class="options actionable">
-        <DButton @icon="square-check" @disabled={{true}} class="btn-flat see" />
+        <DButton class="btn-flat see" @disabled={{true}} @icon="square-check" />
 
         <PluginOutlet
+          @defaultGlimmer={{true}}
           @name="category-security-permissions-row-actions"
           @outletArgs={{lazyHash
             groupName=@groupName
@@ -159,28 +160,27 @@ export default class UpsertCategoryPermissionRow extends Component {
             setPermissionFull=this.setPermissionFull
             removeRow=this.removeRow
           }}
-          @defaultGlimmer={{true}}
         >
           <DButton
-            @icon={{this.canReplyIcon}}
-            @action={{this.setPermissionReply}}
-            @translatedTitle={{this.replyTooltip}}
-            @disabled={{this.replyDisabled}}
-            class={{concatClass
+            class={{dConcatClass
               "btn btn-flat reply-toggle"
               this.replyGrantedClass
             }}
+            @action={{this.setPermissionReply}}
+            @disabled={{this.replyDisabled}}
+            @icon={{this.canReplyIcon}}
+            @translatedTitle={{this.replyTooltip}}
           />
 
           <DButton
-            @icon={{this.canCreateIcon}}
-            @action={{this.setPermissionFull}}
-            @translatedTitle={{this.createTooltip}}
-            @disabled={{this.createDisabled}}
-            class={{concatClass
+            class={{dConcatClass
               "btn-flat create-toggle"
               this.createGrantedClass
             }}
+            @action={{this.setPermissionFull}}
+            @disabled={{this.createDisabled}}
+            @icon={{this.canCreateIcon}}
+            @translatedTitle={{this.createTooltip}}
           />
 
           <DButton

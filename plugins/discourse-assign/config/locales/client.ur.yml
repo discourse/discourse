@@ -98,10 +98,6 @@ ur:
           unassigned: "غیرتفویض شدہ ہیں"
         assigned:
           label: "کو تفویض"
-    topics:
-      bulk:
-        unassign: "موضوعات کو غیر تفویض کریں"
-        assign: "موضوعات تفویض کریں"
     discourse_automation:
       scriptables:
         random_assign:
@@ -121,4 +117,24 @@ ur:
         assigned: "تفویض کردہ"
     edit_assignments_modal:
       topic: "موضوع"
-      post: "پوسٹ"
+      post: "دھاگہ"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "تفویض کردہ"
+        "trigger:unassigned": "غیر اسائین کریں"
+      assign_topic:
+        resource: "وسائل"
+        resources:
+          topic: "ٹاپک"
+          post: "دھاگہ"
+        operations:
+          assign: "تفویض"
+          unassign: "غیر اسائین کریں"
+        topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"
+      check_assignment:
+        target_types:
+          topic: "ٹاپک"
+          post: "دھاگہ"
+        topic_id: "ٹاپک ID"
+        post_id: "پوسٹ ID"

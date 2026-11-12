@@ -8,6 +8,7 @@ lv:
   js:
     chat_integration:
       settings: "Iestatījumi"
+      more_providers: "Vairāk"
       all_categories: "(Visas kategorijas)"
       delete_channel: "Dzēst"
       edit_channel: "Labot"
@@ -83,3 +84,6 @@ lv:
               label: Ziņa
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "Ziņa"

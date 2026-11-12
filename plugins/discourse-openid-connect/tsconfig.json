@@ -8,11 +8,15 @@
   "compilerOptions": {
     "paths": {
       "discourse/plugins/discourse-openid-connect/*": [
-        "./assets/javascripts/*"
-      ],
-      "discourse/plugins/discourse-openid-connect/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts"
       ]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../frontend/discourse"
+    }
+  ]
 }

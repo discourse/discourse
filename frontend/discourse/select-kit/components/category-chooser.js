@@ -2,14 +2,14 @@ import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isNone } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
+import SelectKitRow from "discourse/select-kit/components/select-kit/select-kit-row";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
 
 @classNames("category-chooser")
 @selectKitOptions({
@@ -26,9 +26,6 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {
-  @setting("allow_uncategorized_topics") allowUncategorized;
-  @setting("fixed_category_positions_on_create") fixedCategoryPositionsOnCreate;
-
   init() {
     super.init(...arguments);
 
@@ -45,7 +42,42 @@ export default class CategoryChooser extends ComboBoxComponent {
     }
   }
 
-  modifyComponentForRow() {
+  @computed("siteSettings.allow_uncategorized_topics")
+  get allowUncategorized() {
+    return this.siteSettings.allow_uncategorized_topics;
+  }
+
+  @computed("siteSettings.fixed_category_positions_on_create")
+  get fixedCategoryPositionsOnCreate() {
+    return this.siteSettings.fixed_category_positions_on_create;
+  }
+
+  @computed(
+    "selectKit.filter",
+    "selectKit.options.scopedCategoryId",
+    "selectKit.options.prioritizedCategoryId"
+  )
+  get content() {
+    if (!this.selectKit.filter) {
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
+
+      if (scopedCategoryId) {
+        return this.categoriesByScope({ scopedCategoryId });
+      }
+
+      if (prioritizedCategoryId) {
+        return this.categoriesByScope({ prioritizedCategoryId });
+      }
+    }
+
+    return this.categoriesByScope();
+  }
+
+  modifyComponentForRow(collection, item) {
+    if (typeof item?.onSelect === "function") {
+      return SelectKitRow;
+    }
+
     return CategoryRow;
   }
 
@@ -125,27 +157,6 @@ export default class CategoryChooser extends ComboBoxComponent {
     } else {
       return this.content;
     }
-  }
-
-  @computed(
-    "selectKit.filter",
-    "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId"
-  )
-  get content() {
-    if (!this.selectKit.filter) {
-      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
-
-      if (scopedCategoryId) {
-        return this.categoriesByScope({ scopedCategoryId });
-      }
-
-      if (prioritizedCategoryId) {
-        return this.categoriesByScope({ prioritizedCategoryId });
-      }
-    }
-
-    return this.categoriesByScope();
   }
 
   categoriesByScope({

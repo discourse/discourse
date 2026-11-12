@@ -41,6 +41,10 @@ module PageObjects
         find(MENU_SELECTOR + "-trigger").click
       end
 
+      def resume_draft(index = 0)
+        all(MENU_SELECTOR + "-content .topic-drafts-item button")[index].click
+      end
+
       def draft_item_count
         all(MENU_SELECTOR + "-content .topic-drafts-item").size
       end

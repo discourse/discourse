@@ -34,7 +34,6 @@ class DiscourseLti::LtiOmniauthStrategy
   end
 
   def other_phase
-    methods = %i[get post]
     if on_initiate_path? && %i[get post].include?(request.request_method.downcase.to_sym)
       return initiate_phase
     end
@@ -197,7 +196,7 @@ class DiscourseLti::LtiOmniauthStrategy
     html = <<~HTML
       <html>
         <head>
-          <script src="#{UrlHelper.absolute(script_path, GlobalSetting.cdn_url)}" nonce="#{ContentSecurityPolicy.try(:nonce_placeholder, response_headers)}"></script>
+          <script src="#{UrlHelper.absolute(script_path, GlobalSetting.cdn_url)}" nonce="#{ContentSecurityPolicy.try(:nonce_placeholder, response_headers, request_env: request.env)}"></script>
         </head>
         <body>
           <form method="post">
@@ -220,7 +219,7 @@ class DiscourseLti::LtiOmniauthStrategy
   end
 
   def decode_token(token)
-    payload, header =
+    payload, _header =
       ::JWT.decode(
         request.params["id_token"],
         public_key,

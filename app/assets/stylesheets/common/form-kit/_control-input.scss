@@ -36,16 +36,12 @@
   font-size: var(--font-down-1-rem);
   border: var(--d-input-border);
   padding-inline: 0.5em;
-  height: 2.25rem;
+  height: var(--space-9);
   box-sizing: border-box;
   background: var(--primary-very-low);
   display: flex;
   align-items: center;
-  box-shadow: var(--form-kis-shadow);
-
-  @include viewport.until(sm) {
-    height: 2.25em;
-  }
+  box-shadow: var(--form-kit-shadow);
 }
 
 .form-kit__before-input {

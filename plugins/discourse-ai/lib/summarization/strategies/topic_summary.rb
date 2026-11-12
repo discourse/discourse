@@ -4,6 +4,13 @@ module DiscourseAi
   module Summarization
     module Strategies
       class TopicSummary < Base
+        attr_reader :locale
+
+        def initialize(target, locale: nil)
+          @locale = LocaleNormalizer.normalize_to_i18n(locale)&.to_s
+          super(target)
+        end
+
         def type
           AiSummary.summary_types[:complete]
         end
@@ -18,7 +25,7 @@ module DiscourseAi
             post_attributes.push(:name)
           end
 
-          posts_data = (target.has_summary? ? best_replies : pick_selection).pluck(post_attributes)
+          posts_data = selected_posts.pluck(post_attributes)
 
           posts_data.reduce([]) do |memo, (pn, raw, username, last_version_at, name)|
             raw_text = raw
@@ -38,8 +45,16 @@ module DiscourseAi
           end
         end
 
+        def summary_fingerprint
+          posts_data = selected_posts.pluck(:post_number, :last_version_at)
+          {
+            original_content_sha:
+              AiSummary.build_sha(posts_data.map { |post_number, _| post_number }.join),
+            latest_version_at: posts_data.map { |_, last_version_at| last_version_at }.compact.max,
+          }
+        end
+
         def as_llm_messages(contents)
-          resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
           content_title = target.title
           category_name = target.category&.name
           # Only include public tags in summaries since summaries are cached and shared across users
@@ -58,13 +73,24 @@ module DiscourseAi
               #{input}
             </input>
 
-            Generate a concise, coherent summary of the text above maintaining the original language.
+            Generate a concise, coherent summary of the text above.
+            #{output_instructions}
           TEXT
         end
 
         private
 
-        attr_reader :topic
+        def output_instructions
+          if locale.present?
+            "Write the summary in #{output_language}, regardless of the language used in the input."
+          else
+            "Maintain the original language."
+          end
+        end
+
+        def selected_posts
+          target.has_summary? ? best_replies : pick_selection
+        end
 
         def best_replies
           Post
@@ -82,15 +108,18 @@ module DiscourseAi
               .where("post_type = ?", Post.types[:regular])
               .where("NOT hidden")
               .order(:post_number)
+              .select(:post_number)
 
-          post_numbers = posts.limit(5).pluck(:post_number)
-          post_numbers += posts.reorder("posts.score desc").limit(50).pluck(:post_number)
-          post_numbers += posts.reorder("post_number desc").limit(5).pluck(:post_number)
+          opening = posts.limit(5)
+          highest_scored = posts.reorder("posts.score desc").limit(50)
+          latest = posts.reorder("post_number desc").limit(5)
 
           Post
             .where(topic_id: target.id)
             .joins(:user)
-            .where("post_number in (?)", post_numbers)
+            .where(
+              "post_number IN ((#{opening.to_sql}) UNION (#{highest_scored.to_sql}) UNION (#{latest.to_sql}))",
+            )
             .order(:post_number)
         end
       end

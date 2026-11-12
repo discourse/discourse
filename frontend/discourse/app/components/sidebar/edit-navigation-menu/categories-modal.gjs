@@ -3,22 +3,23 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { gt, has } from "discourse/truth-helpers";
+import { has } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
@@ -30,9 +31,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   @tracked fetchedCategoriesGroupings = [];
   @tracked loadingMore = false;
   @tracked
-  selectedCategoryIds = new TrackedSet([
-    ...this.currentUser.sidebar_category_ids,
-  ]);
+  selectedCategoryIds = trackedSet([...this.currentUser.sidebar_category_ids]);
   selectedFilter = "";
   selectedMode = "everything";
   fetchedCategories;
@@ -122,20 +121,23 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         const requestedPage = this.loadedPage + 1;
         const opts = { page: requestedPage, ...this.searchOpts() };
 
-        const categories = await Category.asyncHierarchicalSearch(
-          requestedFilter,
-          opts
-        );
+        try {
+          const categories = await Category.asyncHierarchicalSearch(
+            requestedFilter,
+            opts
+          );
 
-        if (categories.length === 0) {
-          this.lastPage = true;
-        } else {
-          this.concatFetchedCategories(categories);
+          if (categories.length === 0) {
+            this.lastPage = true;
+          } else {
+            this.concatFetchedCategories(categories);
+          }
+
+          this.loadAnotherPage = false;
+          this.loadedPage = requestedPage;
+        } finally {
+          this.loadingMore = false;
         }
-
-        this.loadAnotherPage = false;
-        this.loadedPage = requestedPage;
-        this.loadingMore = false;
       }
     } else {
       // The shown categories are stale, refresh everything
@@ -215,7 +217,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   resetToDefaults() {
-    this.selectedCategoryIds = new TrackedSet(
+    this.selectedCategoryIds = trackedSet(
       this.siteSettings.default_navigation_menu_categories
         .split("|")
         .map((id) => parseInt(id, 10))
@@ -245,63 +247,64 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   <template>
     <EditNavigationMenuModal
-      @title="sidebar.categories_form_modal.title"
-      @disableSaveButton={{this.saving}}
-      @save={{this.save}}
-      @showResetDefaultsButton={{gt
-        this.siteSettings.default_navigation_menu_categories.length
-        0
-      }}
-      @resetToDefaults={{this.resetToDefaults}}
+      class="sidebar__edit-navigation-menu__categories-modal"
+      @closeModal={{@closeModal}}
       @deselectAll={{this.deselectAll}}
       @deselectAllText={{i18n "sidebar.categories_form_modal.subtitle.text"}}
+      @disableSaveButton={{this.saving}}
+      @filterSelected={{this.filterSelected}}
+      @filterUnselected={{this.filterUnselected}}
       @inputFilterPlaceholder={{i18n
         "sidebar.categories_form_modal.filter_placeholder"
       }}
       @onFilterInput={{this.onFilterInput}}
       @resetFilter={{this.resetFilter}}
-      @filterSelected={{this.filterSelected}}
-      @filterUnselected={{this.filterUnselected}}
-      @closeModal={{@closeModal}}
-      class="sidebar__edit-navigation-menu__categories-modal"
+      @resetToDefaults={{this.resetToDefaults}}
+      @save={{this.save}}
+      @showResetDefaultsButton={{gt
+        this.siteSettings.default_navigation_menu_categories.length
+        0
+      }}
+      @title="sidebar.categories_form_modal.title"
     >
-      <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+      <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
         <form
-          class={{concatClass
+          class={{dConcatClass
             "sidebar-categories-form"
             (if this.filtered "--filtered")
           }}
         >
-          {{#each this.fetchedCategoriesGroupings as |categories|}}
+          {{#each this.fetchedCategoriesGroupings key="0.id" as |categories|}}
             <div
-              style={{borderColor (get categories "0.color") "left"}}
               class="sidebar-categories-form__row"
+              style={{borderColor (get categories "0.color") "left"}}
             >
               {{#each categories as |category|}}
                 <div
-                  {{didInsert this.didInsert}}
+                  class="sidebar-categories-form__category-row"
                   data-category-id={{category.id}}
                   data-category-level={{category.level}}
-                  class="sidebar-categories-form__category-row"
+                  {{didInsert this.didInsert}}
+                  {{didUpdate this.didInsert this.fetchedCategoriesGroupings}}
                 >
                   <label
+                    class="sidebar-categories-form__category-label"
                     for={{concat
                       "sidebar-categories-form__input--"
                       category.id
                     }}
-                    class="sidebar-categories-form__category-label"
                   >
                     <div class="sidebar-categories-form__category-wrapper">
                       <div class="sidebar-categories-form__category-badge">
-                        {{categoryBadge category}}
+                        {{dCategoryBadge category}}
                       </div>
 
                       {{#unless category.parentCategory}}
                         <div
                           class="sidebar-categories-form__category-description"
                         >
-                          <DecoratedHtml
-                            @html={{dirSpan
+                          <DDecoratedHtml
+                            @html={{dDirSpan
                               category.description_excerpt
                               htmlSafe="true"
                             }}
@@ -311,14 +314,14 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     </div>
 
                     <input
-                      {{on "click" (fn this.toggleCategory category.id)}}
-                      type="checkbox"
                       checked={{has this.selectedCategoryIds category.id}}
+                      class="sidebar-categories-form__input"
                       id={{concat
                         "sidebar-categories-form__input--"
                         category.id
                       }}
-                      class="sidebar-categories-form__input"
+                      type="checkbox"
+                      {{on "click" (fn this.toggleCategory category.id)}}
                     />
                   </label>
                 </div>
@@ -330,9 +333,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
             </div>
           {{/each}}
         </form>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
 
-      <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
     </EditNavigationMenuModal>
   </template>
 }

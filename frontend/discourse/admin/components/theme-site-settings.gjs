@@ -4,22 +4,35 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import AsyncContent from "discourse/components/async-content";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
-import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
+/** @typedef {import("discourse/lib/theme-selector").SelectableTheme} SelectableTheme */
+/**
+ * @typedef {{
+ *   setting: string,
+ *   default: unknown,
+ *   description: string,
+ *   humanized_name: string,
+ *   themes: Array<{ theme_id: number, theme_name: string, value: unknown }>
+ * } & Record<string, unknown>} ThemeSiteSettingOverrides
+ */
 export default class ThemeSiteSettings extends Component {
   @service site;
 
+  /** @type {Record<string, ThemeSiteSettingOverrides> | null} */
   @tracked themesWithSiteSettingOverrides = null;
+
+  /** @type {Array<{ name: undefined, value: string }> | null} */
   @tracked themeableSiteSettings = null;
 
+  /** @returns {SelectableTheme[] | null} */
   get themes() {
     return listThemes(this.site);
   }
@@ -28,9 +41,10 @@ export default class ThemeSiteSettings extends Component {
     return currentThemeId();
   }
 
+  /** @returns {SelectableTheme | undefined} */
   get currentTheme() {
     return this.themes.find((theme) => {
-      return eq(theme.id, this.currentThemeIdValue);
+      return theme.id === this.currentThemeIdValue;
     });
   }
 
@@ -85,24 +99,24 @@ export default class ThemeSiteSettings extends Component {
         @descriptionLabel={{i18n
           "admin.theme_site_settings.help"
           currentTheme=this.currentTheme.name
-          basePath=basePath
+          basePath=dBasePath
           currentThemeId=this.currentThemeIdValue
         }}
       />
 
-      <AsyncContent @asyncData={{this.loadThemeSiteSettings}}>
+      <DAsyncContent @asyncData={{this.loadThemeSiteSettings}}>
         <:content as |content|>
-          <AdminFilterControls
+          <DFilterControls
             @array={{this.filterableSettings content}}
+            @inputPlaceholder={{i18n "admin.theme_site_settings.filter"}}
+            @noResultsMessage={{i18n
+              "admin.theme_site_settings.filter_no_results"
+            }}
             @searchableProps={{array
               "humanized_name"
               "name"
               "description"
               "themeNames"
-            }}
-            @inputPlaceholder={{i18n "admin.theme_site_settings.filter"}}
-            @noResultsMessage={{i18n
-              "admin.theme_site_settings.filter_no_results"
             }}
           >
             <:content as |filteredSettings|>
@@ -134,10 +148,10 @@ export default class ThemeSiteSettings extends Component {
                           <DTooltip>
                             <:trigger>
                               <LinkTo
-                                @route="adminCustomizeThemes.show"
-                                @models={{array "themes" theme.theme_id}}
                                 class="theme-link"
                                 data-theme-id={{theme.theme_id}}
+                                @models={{array "themes" theme.theme_id}}
+                                @route="adminCustomizeThemes.show"
                               >
                                 {{theme.theme_name}}
                               </LinkTo>
@@ -162,9 +176,9 @@ export default class ThemeSiteSettings extends Component {
                 </tbody>
               </table>
             </:content>
-          </AdminFilterControls>
+          </DFilterControls>
         </:content>
-      </AsyncContent>
+      </DAsyncContent>
     </div>
   </template>
 }

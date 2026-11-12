@@ -51,10 +51,6 @@ module Chat
       object.pinned_messages.size
     end
 
-    def include_pinned_messages_count?
-      SiteSetting.chat_pinned_messages
-    end
-
     def chatable_url
       object.chatable_url
     end
@@ -114,6 +110,10 @@ module Chat
       @current_user_membership.present?
     end
 
+    def include_last_message?
+      scope.can_preview_chat_channel?(object)
+    end
+
     def current_user_membership
       @current_user_membership.chat_channel = object
 
@@ -125,13 +125,14 @@ module Chat
     end
 
     def meta
-      ids = {
-        channel_message_bus_last_id: channel_message_bus_last_id,
-        new_messages: new_messages_message_bus_id,
-        new_mentions: new_mentions_message_bus_id,
-      }
+      ids = { channel_message_bus_last_id: channel_message_bus_last_id }
 
-      ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
+      if !scope.anonymous?
+        ids[:new_messages] = new_messages_message_bus_id
+        ids[:new_mentions] = new_mentions_message_bus_id
+        ids[:kick] = kick_message_bus_id if !object.direct_message_channel?
+      end
+
       data = { message_bus_last_ids: ids }
 
       if @opts.key?(:can_join_chat_channel)

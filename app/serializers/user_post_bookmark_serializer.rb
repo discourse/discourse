@@ -21,8 +21,8 @@ class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     post.raw
   end
 
-  def cooked
-    post.cooked
+  def post_item_excerpt_post
+    post
   end
 
   def bookmarkable_user

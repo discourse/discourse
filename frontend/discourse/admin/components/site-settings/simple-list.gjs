@@ -1,26 +1,23 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import SimpleList from "discourse/admin/components/simple-list";
 
-@tagName("")
 export default class SiteSettingSimpleList extends Component {
   inputDelimiter = "|";
 
   @action
   onChange(value) {
-    this.set("value", value.join(this.inputDelimiter || "\n"));
+    this.args.changeValueCallback(value.join(this.inputDelimiter || "\n"));
   }
 
   <template>
     <div ...attributes>
       <SimpleList
-        @values={{this.value}}
+        @allowAny={{@setting.allow_any}}
+        @choices={{@setting.choices}}
         @inputDelimiter={{this.inputDelimiter}}
         @onChange={{this.onChange}}
-        @choices={{this.setting.choices}}
-        @allowAny={{this.setting.allow_any}}
+        @values={{@value}}
       />
     </div>
   </template>

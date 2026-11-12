@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AiModeration::SpamScanner do
+  fab!(:flagging_user) do
+    described_class.ensure_flagging_user!
+    described_class.flagging_user
+  end
   fab!(:moderator)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:topic)
@@ -17,6 +21,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   end
 
   before do
+    SiteSetting.ai_spam_detection_user_id = flagging_user.id
     enable_current_plugin
     SiteSetting.ai_spam_detection_enabled = true
   end
@@ -108,6 +113,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
     it "returns false for nil posts" do
       expect(described_class.should_scan_post?(nil)).to eq(false)
     end
+
+    it "returns false for posts with a missing user" do
+      post.association(:user).target = nil
+      post.association(:user).loaded!
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
+    it "returns false for posts with a missing topic" do
+      post.association(:topic).target = nil
+      post.association(:topic).loaded!
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
   end
 
   describe ".perform_scan" do
@@ -135,8 +152,92 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       end.to change { AiSpamLog.count }.by(1)
     end
 
+    it "uses the configured agent's updated default model for spam scans" do
+      updated_model = Fabricate(:fake_model)
+      spam_setting.ai_agent.update!(default_llm_id: updated_model.id)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: false }],
+        llm: updated_model,
+      ) { described_class.perform_scan!(post) }
+
+      expect(AiSpamLog.find_by!(post: post).llm_model_id).to eq(updated_model.id)
+    end
+
     it "does nothing when disabled" do
       SiteSetting.ai_spam_detection_enabled = false
+      expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }
+    end
+  end
+
+  describe ".perform_scan! with a decision model" do
+    fab!(:decision_model) { Fabricate(:decision_model, id: -1) }
+
+    before { spam_setting.update!(decision_model:) }
+
+    def scan_with(probability, llm_responses: [])
+      DiscourseAi::Decisions.with_canned_answers(spam: probability) do |canned|
+        DiscourseAi::Completions::Llm.with_prepared_responses(llm_responses) do |_, _, prompts|
+          described_class.perform_scan!(post, triggering_user_id: post.user_id)
+          [canned.calls, prompts]
+        end
+      end
+    end
+
+    it "flags confident spam without asking the LLM" do
+      decision_calls, prompts = scan_with(0.95)
+
+      log = AiSpamLog.find_by!(post:)
+      expect([log.is_spam, log.spam_probability, log.decision_model_id, log.llm_model_id]).to eq(
+        [true, 0.95, decision_model.id, nil],
+      )
+      expect(log.reviewable).to be_present
+      expect(post.user.reload).to be_silenced
+      expect(prompts).to be_empty
+      expect(decision_calls.first[:questions].first.instructions).to include("test instructions")
+    end
+
+    it "clears confident non-spam without asking the LLM" do
+      _, prompts = scan_with(0.01)
+
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(false)
+      expect(prompts).to be_empty
+    end
+
+    it "lets the LLM decide unsure posts and keeps the decision model's probability" do
+      scan_with(0.5, llm_responses: [{ spam: true, reason: "llm reason" }])
+
+      log = AiSpamLog.find_by!(post:)
+      expect([log.is_spam, log.reason, log.spam_probability, log.llm_model_id]).to eq(
+        [true, "llm reason", 0.5, llm_model.id],
+      )
+    end
+
+    it "lets the LLM decide when the decision model fails" do
+      stub_request(:post, decision_model.url).to_return(status: 400, body: "{}")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: false }]) do
+        described_class.perform_scan!(post)
+      end
+
+      expect(AiSpamLog.find_by!(post:).llm_model_id).to eq(llm_model.id)
+    end
+
+    it "decides every post at one cutoff without an LLM" do
+      spam_setting.update!(llm_model: nil)
+
+      scan_with(0.6)
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(true)
+
+      AiSpamLog.delete_all
+      scan_with(0.4)
+      expect(AiSpamLog.find_by!(post:).is_spam).to eq(false)
+    end
+
+    it "skips the scan without an LLM once the decision model is out of credits" do
+      spam_setting.update!(llm_model: nil)
+      Fabricate(:decision_model_credit_allocation, decision_model:, daily_used: 10_000)
+
       expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }
     end
   end
@@ -237,6 +338,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       }.to change(Jobs::AiSpamScan.jobs, :size).by(1)
     end
 
+    it "passes the editor id in the job args without persisting it on the post" do
+      editor = Fabricate(:user, trust_level: TrustLevel[0])
+      post.update!(last_editor_id: editor.id)
+      PostRevision.create!(
+        post: post,
+        user: editor,
+        modifications: {
+          raw: ["old content", "completely new content"],
+        },
+      )
+
+      described_class.edited_post(post)
+      described_class.after_cooked_post(post)
+
+      job_args = Jobs::AiSpamScan.jobs.last["args"].first
+      expect(post.reload.custom_fields).not_to have_key("discourse_ai_spam_scan_triggering_user_id")
+      expect(job_args["triggering_user_id"]).to eq(editor.id)
+    end
+
     it "does nothing when staff is the last revisor" do
       expect {
         PostRevisor.new(post).revise!(moderator, title: "#{post.topic.title} spam spam")
@@ -313,9 +433,24 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   describe "integration test" do
     fab!(:llm_model)
     let(:api_audit_log) { Fabricate(:api_audit_log) }
+
     fab!(:post_with_uploaded_image)
 
     before { Jobs.run_immediately! }
+
+    it "notifies moderators when the site asks to be notified about auto silences" do
+      SiteSetting.notify_mods_when_user_silenced = true
+
+      allow(GroupMessage).to receive(:create)
+
+      described_class.new_post(post)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) { post.rebake! }
+
+      expect(GroupMessage).to have_received(:create).at_least(:once)
+      expect(post.user.reload).to be_silenced
+    end
 
     it "can correctly run tests" do
       prompts = nil
@@ -341,6 +476,17 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         end
 
       expect(result[:is_spam]).to eq(false)
+    end
+
+    it "tests with the spam detector agent before any spam settings are saved" do
+      spam_setting.destroy!
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true }]) do
+          described_class.test_post(post, llm_model:, decision_model: nil)
+        end
+
+      expect(result[:is_spam]).to eq(true)
     end
 
     it "correctly handles spam scanning" do
@@ -393,6 +539,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(log.reviewable).to be_present
       expect(log.reviewable.created_by_id).to eq(described_class.flagging_user.id)
 
+      expect(history.post_id).to eq(post.id)
+      expect(history.reviewable_id).to eq(log.reviewable.id)
+
       log.reviewable.perform(moderator, :disagree_and_restore)
 
       expect(post.reload.hidden?).to eq(false)
@@ -400,7 +549,30 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(post.user.reload.silenced?).to eq(false)
     end
 
-    it "does not silence the user or hide the post when a flag cannot be created" do
+    it "does not silence the author when another user adds spam to a wiki post" do
+      wiki_editor = Fabricate(:user, trust_level: TrustLevel[0])
+      wiki_post = Fabricate(:post, user: user, wiki: true, raw: "Helpful community wiki content")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do
+        PostRevisor.new(wiki_post).revise!(
+          wiki_editor,
+          raw: "Buy questionable products from this completely different wiki content",
+        )
+        wiki_post.rebake!
+      end
+
+      log = AiSpamLog.find_by(post: wiki_post)
+
+      expect(log.reviewable).to be_present
+      expect(wiki_post.user.reload).not_to be_silenced
+      expect(
+        UserHistory.where(action: UserHistory.actions[:silence_user], target_user_id: user.id),
+      ).to be_blank
+    end
+
+    it "skips posts already flagged by the scanner" do
       post = post_with_uploaded_image
       Fabricate(
         :post_action,
@@ -417,6 +589,51 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
         # force a rebake so we actually scan
         post.rebake!
       end
+
+      log = AiSpamLog.find_by(post: post)
+
+      expect(log.reviewable).to be_nil
+      expect(log.error).to eq("skipped because post already has a flag")
+      expect(post.user.reload).not_to be_silenced
+      expect(post.topic.reload).to be_visible
+    end
+
+    it "skips posts that already have an active flag" do
+      flagger = Fabricate(:user)
+      Fabricate(
+        :post_action,
+        post: post,
+        user: flagger,
+        post_action_type_id: PostActionType.types[:spam],
+      )
+
+      described_class.new_post(post)
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { post.rebake! }
+      end.not_to change { PostAction.active.flags.where(post: post).count }
+
+      log = AiSpamLog.find_by(post: post)
+
+      expect(log.reviewable).to be_nil
+      expect(log.error).to eq("skipped because post already has a flag")
+      expect(post.user.reload).not_to be_silenced
+      expect(post.topic.reload).to be_visible
+    end
+
+    it "does not silence or hide when flag creation fails" do
+      flagging_user = Fabricate(:user, trust_level: TrustLevel[4])
+      SiteSetting.ai_spam_detection_user_id = flagging_user.id
+
+      described_class.new_post(post)
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { post.rebake! }
+      end.not_to change { PostAction.active.flags.where(post: post).count }
 
       log = AiSpamLog.find_by(post: post)
 

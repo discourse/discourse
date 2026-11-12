@@ -9,6 +9,10 @@ class StaticController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
+  # `enter` is the post-login redirect helper; it performs no writes and must
+  # work on archived sites so login can complete.
+  allow_when_archived :enter
+
   PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
   MODAL_PAGES = %w[password_reset signup]
   DEFAULT_PAGES = {
@@ -60,7 +64,8 @@ class StaticController < ApplicationController
       return redirect_to path("/")
     end
 
-    if SiteSetting.login_required? && current_user.nil? && %w[faq guidelines].include?(params[:id])
+    if SiteSetting.login_required? && current_user.nil? &&
+         %w[faq guidelines rules conduct].include?(params[:id])
       return redirect_to path("/login")
     end
 
@@ -108,7 +113,13 @@ class StaticController < ApplicationController
           @topic.title
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
-      @body = @topic.posts.first.cooked
+      post = @topic.posts.first
+      @body =
+        if ContentLocalization.show_translated_post?(post, guardian)
+          post.get_localization&.cooked || post.cooked
+        else
+          post.cooked
+        end
       @faq_overridden = SiteSetting.faq_url.present?
       @rename_faq_to_guidelines = rename_faq
 
@@ -152,12 +163,21 @@ class StaticController < ApplicationController
     params.delete(:password)
 
     destination = extract_redirect_param
-
     allow_other_host = false
 
+    # We need this to redirect the user back when Discourse Connect Provider is used.
     if cookies[:sso_destination_url]
-      destination = cookies.delete(:sso_destination_url)
-      allow_other_host = true
+      sso_url = cookies.delete(:sso_destination_url)
+
+      begin
+        uri = URI(sso_url)
+        if valid_sso_redirect_uri?(uri)
+          destination = sso_url
+          allow_other_host = true
+        end
+      rescue URI::Error, ArgumentError
+        # Invalid URI, ignore and use default destination
+      end
     end
 
     destination = path(destination) if destination == "/"
@@ -205,7 +225,8 @@ class StaticController < ApplicationController
               file&.unlink
             end
           else
-            File.read(Rails.public_path.join(favicon.url[1..-1]))
+            path = Discourse.store.path_for(favicon)
+            path ? File.read(path) : ""
           end
         end
 
@@ -218,14 +239,21 @@ class StaticController < ApplicationController
         response.headers["Expires"] = 1.year.from_now.httpdate
         response.headers["Content-Length"] = data.bytesize.to_s
         response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
-        render body: data, content_type: "image/png"
+        content_type =
+          MiniMime.lookup_by_filename(SiteIconManager.favicon_url)&.content_type || "image/png"
+        render body: data, content_type: content_type
       end
     end
   end
 
   def llms_txt
     upload = SiteSetting.llms_txt
-    return head(:not_found) if upload.blank?
+
+    if upload.blank?
+      return head(:not_found) if !UpcomingChanges.enabled?(:enable_generated_llms_txt)
+
+      return render plain: LlmsTxt.generate, content_type: "text/plain; charset=utf-8"
+    end
 
     if Discourse.store.external?
       content =
@@ -268,6 +296,20 @@ class StaticController < ApplicationController
   end
 
   protected
+
+  def valid_sso_redirect_uri?(uri)
+    return false unless SiteSetting.enable_discourse_connect_provider
+    return false if uri.host.blank?
+
+    provider_domains =
+      SiteSetting
+        .discourse_connect_provider_secrets
+        .split("\n")
+        .map { |row| row.split("|", 2).first }
+        .compact
+
+    provider_domains.any? { |domain| WildcardDomainChecker.check_domain(domain, uri.host) }
+  end
 
   def serve_asset(suffix = nil)
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")

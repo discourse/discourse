@@ -10,15 +10,22 @@ he:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "מאפשר חיפוש בינה מלאכותית"
       site_settings:
         categories:
           discourse_ai: "בינה מלאכותית ב־Discourse"
       dashboard:
+        sections:
+          ask_ai:
+            title: "לשאול בינה מלאכותית"
+        ask_ai:
+          title: "לשאול בינה מלאכותית"
+          date: "תאריך"
+          outcomes:
+            failed: "נכשל"
         emotion:
           title: "רגש"
-          description: "הטבלה מפרטת את כמות הפוסטים שסווגו עם רגש שנקבע. הסיווג נעשה בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
         reports:
           filters:
             group_by:
@@ -191,42 +198,75 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      dsa_classification:
+        suggest: "הצעה עם בינה מלאכותית"
+      copied: "הועתק"
+      ai_decoded_transcript:
+        tool: "כלי"
+        arguments: "ארגומנטים"
+        type: "סוג"
+        error: "תקלה"
+        response: "תשובה"
+      discourse_workflows:
+        ai_agent:
+          mode: "מצב"
+        classify:
+          text: "טקסט"
+          upload_ids: "תמונות"
+          name: "שם"
+          type: "סוג"
+          type_score: "ניקוד"
+      ai_tool_approval:
+        loading: "בטעינה…"
+        tool: "פעולה"
+        user: "משתמש"
+        approve: "אישור"
+        reject: "לדחות"
+        approved: "אושר"
+        rejected: "נדחה"
       default_llm:
-        title: "מודל LLM/מש״ג ברירת מחדל"
+        title: "מודל שפה כברירת מחדל"
       llm_selector:
         none: "ללא"
       features:
         short_title: "יכולות"
-        back: "חזרה"
-        disabled: "(כבוי)"
-        groups: "קבוצות:"
-        llm:
-          one: "LLM/מש״ג:"
-          two: "LLMים:"
-          many: "LLMים:"
-          other: "LLMים:"
+        table:
+          status: "מצב"
+          enabled: "פעיל"
+          feature: "יכולת"
+          llm: "LLM"
+          groups: "קבוצות"
+        who_can_use:
+          no_one: "אף אחד"
+        chatbot:
+          column: "בוט שיחה"
+          places:
+            personal_messages: "הודעות פרטיות"
+            chat_direct_messages: "הודעות צ׳אט"
+            none: "לא זמין"
+        set_up: "הגדרה"
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
         no_groups: "ללא"
         edit: "הגדרות"
-        expand_list:
-          one: "(עוד %{count})"
-          two: "(עוד %{count})"
-          many: "(עוד %{count})"
-          other: "(עוד %{count})"
-        collapse_list: "(להציג פחות)"
         bot:
           bot: "בוט שיחה"
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
-          configured: "מוגדר"
-          unconfigured: "לא מוגדר"
+          enabled: "פעיל"
         filters:
           all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
+        sentiment:
+          sentiment: "רגש"
+          emotion: "רגש"
+          enabled: "פעיל"
+          setting_groups:
+            sentiment: "רגש"
+            emotion: "רגש"
         summarization:
           name: "סיכומים"
           description: "להנגיש את כפתור הסיכום שמאפשר למבקרים לסכם נושאים"
@@ -235,16 +275,15 @@ he:
         search:
           name: "חיפוש"
           description: "שיפור חוויית החיפוש על ידי אספקת תשובות שנוצרו על ידי בינה מלאכותית לשאילתות"
-          discoveries: "תגליות"
+          ask_ai: "לשאול בינה מלאכותית"
         embeddings:
           name: "הטמעות"
-          hyde: "HyDE"
+          related_topics: "נושאים קשורים"
           setting_groups:
             related_topics: "נושאים קשורים"
             semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
-          description: "הוספת היכולת לחפש בערוצי Discord"
           search: "חיפוש ב־Discord"
         inference:
           description: "סיווג נושאים ופוסטים לפי תחומי עניין / תוויות."
@@ -252,7 +291,7 @@ he:
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
         ai_helper:
-          name: "מסייע"
+          name: "מסייע בינה מלאכותית"
           proofread: הגהת הטקסט
           title_suggestions: "הצעת כותרות"
           explain: "הסבר"
@@ -261,9 +300,11 @@ he:
           translate: "תרגום"
           markdown_tables: "יצירת טבלה ב־Markdown"
           custom_prompt: "בקשה מותאמת אישית"
-          image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+        image_caption:
+          setting_groups:
+            settings: "הגדרות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -275,7 +316,6 @@ he:
           schedule_topic_success:
             one: "תזמון תרגום לפוסט שלא תורגם."
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
-            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
         spam:
           name: "ספאם"
@@ -293,29 +333,51 @@ he:
       translations:
         title: "תרגומים"
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
-        supported_locales: "שפות נתמכות"
-        supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
+        sections:
+          advanced: "מתקדם"
+        settings:
+          ai_translation_category_scope:
+            label: "קטגוריות"
+          ai_translation_personal_messages:
+            label: "הודעות פרטיות"
+            choices:
+              none: "ללא"
+              all: "הכול"
+          content_localization_language_switcher:
+            choices:
+              none: "אף אחד"
+              all: "כולם"
+        model_progress:
+          detail:
+            columns:
+              locale: "הגדרות מקומיות"
+              pending: "ממתין"
+              total: "סך הכל"
+          targets:
+            post:
+              title: "פרסומים"
+            topic:
+              title: "נושאים"
+            category:
+              title: "קטגוריות"
+            tag:
+              title: "תגיות"
         admin_actions:
-          translation_settings: "הגדרות תרגום"
-          localization_settings: "הגדרות התאמת שפה"
-          enable_translations: "הפעלת תרגומים אוטומטיים"
+          enabled: "פעיל"
         stats:
           title: "סטטיסטיקת תרגום"
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
           eta_minutes:
             one: "דקה"
             two: "שתי דקות"
-            many: "%{count} דקות"
             other: "%{count} דקות"
           eta_hours:
             one: "שעה"
             two: "שעתיים"
-            many: "%{count} שעות"
             other: "%{count} שעות"
           eta_days:
             one: "יום"
             two: "יומיים"
-            many: "%{count} יום"
             other: "%{count} ימים"
         progress_chart:
           title: "התקדמות התרגום"
@@ -323,8 +385,10 @@ he:
           bar_done:
             one: "פוסט"
             two: "שני פוסטים"
-            many: "שני פוסטים"
             other: "שני פוסטים"
+        theme_translations:
+          translate:
+            label: "תרגום"
         translations_menu:
           translate:
             label: "תרגום פוסט"
@@ -335,6 +399,8 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        no_llm_selected: "ללא"
+        no_decision_model_selected: "ללא"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -410,6 +476,46 @@ he:
           last_week: "בשבוע שעבר"
           last_month: "בחודש שעבר"
           custom: "התאמה אישית…"
+      logs:
+        short_title: "יומנים"
+        retry: "ניסיון נוסף"
+        apply: "החלה"
+        all_models: "כל המודלים"
+        all_features: "כל היכולות"
+        successful: "הצליח"
+        failed: "נכשל"
+        unknown: "לא ידוע"
+        time: "מועד"
+        when: "מתי"
+        outcome: "תוצאה"
+        feature: "יכולת"
+        model: "מודל"
+        request: "בקשה"
+        provider: "ספק"
+        user: "משתמש"
+        context: "הקשר"
+        topic: "נושא"
+        post: "פוסט"
+        post_short: "פוסט %{id}"
+        duration: "משך"
+        cost: "עלות"
+        actions: "פעולות"
+        view_details: "פרטים"
+        periods:
+          hour: "השעה האחרונה"
+          day: "24 השעות האחרונות"
+          week: "7 הימים האחרונים"
+          custom: "מותאם"
+        detail:
+          request: "בקשה"
+          response: "תשובה"
+          context: "הקשר"
+          copy_request: "העתקת הבקשה"
+          copy_response: "העתקת תגובה"
+        retention:
+          summary_stage: "תקציר"
+          deleted_stage: "נמחק"
+          save: "שמירה"
       ai_agent:
         ai_tools: "כלים"
         tool_strategies:
@@ -417,9 +523,7 @@ he:
           replies:
             one: "החלה על התגובה הראשונה בלבד"
             two: "החלה על שתי התגובות הראשונות בלבד"
-            many: "החלה על שתי התגובות הראשונות בלבד"
             other: "החלה על שתי התגובות הראשונות בלבד"
-        back: "חזרה"
         name: "שם"
         edit: "עריכה"
         export: "ייצוא"
@@ -427,11 +531,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        max_context_posts: "כמות מרבית של פוסטים להקשר"
-        max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
-        vision_enabled: ראייה מופעלת
-        vision_enabled_help: אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות שהמשתמשים מפרסמים בנושא, כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI.
-        vision_max_pixels: גודל התמונות הנתמכות
         vision_max_pixel_sizes:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
@@ -441,8 +540,6 @@ he:
         user: משתמש
         create_user: יצירת משתמש
         default_llm: מודל שפה כברירת מחדל
-        question_consolidator_llm: מודל שפה למגבש השאלות
-        question_consolidator_llm_help: מודל השפה לשימוש עבור מגבש השאלות, אפשר לבחור במודל פחות חזק כדי לחסוך בעלויות.
         system_prompt: בקשת מערכת
         forced_tool_strategy: אסטרטגיית כלי כפוי
         allow_chat_direct_messages: "לאפשר הודעות ישירות בצ׳אט"
@@ -453,13 +550,24 @@ he:
         save: "שמירה"
         enabled: "מאופשר?"
         tools: "כלים פעילים"
+        mcp_tools_modal:
+          select_all: "בחירה בהכול"
+          clear_all: "לפנות הכול"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
+        duplicate: "שכפול"
+        copy_name: "עותק של %{name}"
         delete: "מחיקה"
         temperature: "טמפרטורה"
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
         top_p: "ה־P המובילים"
         top_p_help: "ה־P המובילים לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 1.0)"
+        thinking_effort_options:
+          none: "ללא"
+          low: "נמוכה"
+          medium: "בינונית"
+          high: "גבוהה"
+          max: "מרבי"
         priority: "עדיפות"
         tool_options: "אפשרויות כלי"
         rag_conversation_chunks: "חיפוש בחלקי הדיון"
@@ -488,7 +596,6 @@ he:
         features_list:
           one: "תכונה:"
           two: "תכונות:"
-          many: "תכונות:"
           other: "תכונות:"
         llms_list: "LLM/מש״ג:"
       rag:
@@ -513,7 +620,6 @@ he:
           uploading: "בהליכי העלאה…"
           remove: "הסרת העלאה"
       tools:
-        back: "חזרה"
         short_title: "כלים"
         export: "ייצוא"
         import: "ייבוא"
@@ -526,7 +632,6 @@ he:
         tool_name: "שם הכלי"
         description: "תיאור"
         description_help: "תיאור ברור של מטרת הכלי למודל השפה"
-        subheader_description: "כלים מרחיבים את היכולות של בוטים של בינה מלאכותית עם פונקציות JavaScript המוגדרות על ידי המשתמשים."
         summary: "תקציר"
         summary_help: "סיכום מטרת הכלים להצגה למשתמשי קצה"
         script: "סקריפט"
@@ -555,12 +660,51 @@ he:
         short_title: "פרטי גישה"
         name: "שם"
         secret: "ערך"
-        back: "חזרה"
         save: "שמירה"
         edit: "עריכה"
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      decision_models:
+        no_preset: "ללא"
+        display_name: "שם"
+        model: "מודל"
+        provider: "ספק"
+        edit: "עריכה"
+        delete: "מחיקה"
+        test: "הרצת בדיקה"
+        providers:
+          CDCK: "CDCK"
+      mcp_servers:
+        name: "שם"
+        description: "תיאור"
+        url: "כתובת"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "מחובר"
+        oauth_connect: "התחברות"
+        oauth_hide_details: "הסתרת פרטים"
+        enabled: "פעיל"
+        save: "שמירה"
+        edit: "עריכה"
+        delete: "מחיקה"
+        tools_modal:
+          parameters: "משתנים"
+          required: "נדרש"
+      models:
+        new: "מודל חדש"
+        name: "שם"
+        type: "סוג"
+        provider: "ספק"
+        edit: "עריכה"
+        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
+        select_type: "בחירה"
+        types:
+          embedding: "שילוב (embedding)"
+        filters:
+          all: "כל הסוגים"
+          reset: "איפוס מסננים"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -573,7 +717,9 @@ he:
         max_output_tokens: "כמות אסימוני פלט מרבית"
         url: "כתובת השירות שמארח את המודל"
         api_key: "מפתח ה־API של השירות שמארח את המודל"
-        vision_enabled: "ראייה מופעלת"
+        vision_modes:
+          disabled:
+            title: "כבוי"
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
         cost_cached_input: "עלות קלט מאוחסן"
@@ -582,7 +728,6 @@ he:
         save: "שמירה"
         edit: "עריכה"
         saved: "מודל ה־LLM נשמר"
-        back: "חזרה"
         confirm_delete: למחוק את המודל הזה?
         delete: מחיקה
         quotas:
@@ -591,6 +736,7 @@ he:
           group: "קבוצה"
           max_tokens: "כמות אסימונים מרבית"
           max_usages: "כמות שימושים מרבית"
+          max_cost: "עלות מרבית"
           duration: "משך"
           confirm_delete: "למחוק את המכסה הזאת?"
           add: "הוספת מכסה"
@@ -601,14 +747,16 @@ he:
             week: "7 ימים"
             custom: "התאמה אישית…"
           hours: "שעות"
-          max_tokens_required: "חובה להגדיר אם לא הוגדרה כמות שימושים מרבית"
-          max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
+          max_tokens_required: "חייב להיות מוגדר אם שימושים מרביים ועלות מרבית לא מוגדרות"
+          max_usages_required: "חובה להגדיר אם כמות אסימונים מרבית ועלות מרבית לא מוגדרות"
+          max_cost_help: "העלות המרבית המשוערת שכל משתמש בקבוצה זו יכול להוציא על מודל הבינה המלאכותית הזה במהלך פרק הזמן שצוין. העלות מבוססת על מחירי הקלט, הפלט, הקלט במטמון וכתיבה למטמון שהוגדרו עבור המודל."
+          max_cost_required: "חובה להגדיר אם כמות אסימונים מרבית וכמות שימושים מרבית לא מוגדרות"
         credit_allocation:
           next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
           ai_bot: "בוט בינה מלאכותית"
           ai_helper: "מסייע (%{agent})"
-          ai_helper_image_caption: "כותרת תמונה"
+          ai_image_caption: "כותרת תמונה"
           ai_summarization: "סיכום"
           ai_embeddings_semantic_search: "חיפוש בינה מלאכותית"
           ai_spam: "ספאם"
@@ -616,15 +764,9 @@ he:
         in_use_warning:
           one: "המודל הזה משמש את %{settings}. אם לא מוגדר כראוי, היכולת לא תעבוד כמצופה."
           two: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
-          many: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-6: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
-          anthropic-claude-haiku-4-5: "מהיר וחסכוני"
-          google-gemini-3-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -648,7 +790,6 @@ he:
           max_output_tokens: "מספר האסימונים המרבי שהמודל יכול לייצר בבקשה בודדת"
           display_name: "השם משמש להתייחסות למודל הזה על פני כלל ממשק האתר שלך."
           name: "אנו מצרפים את זה לקריאת ה־API כדי לציין באיזה מודל להשתמש"
-          vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
           cost_input: "עלות הקלט לכל מיליון אסימונים למודל זה"
           cost_output: "עלות הפלט לכל מיליון אסימונים למודל זה"
           cost_measure: "$/מיליון אסימונים"
@@ -659,7 +800,6 @@ he:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -671,7 +811,7 @@ he:
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
           role_arn: "ARN של AWS Bedrock"
-          region: "אזור של AWS Bedrock"
+          region: "אזור"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"
           enable_native_tool: "הפעלת תמיכה בכלים מובנים"
@@ -691,13 +831,7 @@ he:
         title: "הצעת שינויים באמצעות בינה מלאכותית"
         description: "נא לבחור באחת מהאפשרויות להלן והבינה המלאכותית תציע לך גרסה חדשה של הטקסט."
         selection_hint: "עצה: אפשר לבחור חלק מהטקסט בטרם פתיחת המסייע כדי לשכתב רק את החלק הזה."
-        suggest: "הצעה עם בינה מלאכותית"
         suggest_errors:
-          too_many_tags:
-            one: "יכולה להיות לך עד תגית אחת"
-            two: "יכולות להיות לך עד שתי תגיות"
-            many: "יכולות להיות לך עד %{count} תגיות"
-            other: "יכולות להיות לך עד %{count} תגיות"
           no_suggestions: "אין הצעות זמינות"
         missing_content: "נא למלא קצת תוכן כדי לחולל הצעות."
         context_menu:
@@ -731,11 +865,6 @@ he:
           select: "בחירה"
           selected: "נבחרים"
           try_again: "ניסיון נוסף"
-        image_caption:
-          button_label: "מתן כותרת עם בינה מלאכותית"
-          generating: "הכותרת מתחוללת…"
-          credits: "הכותרת נוספה ע״י בינה מלאכותית"
-          save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
       errors:
         credit_limit_dialog:
@@ -743,11 +872,13 @@ he:
       reviewables:
         model_used: "דגם בשימוש:"
         accuracy: "דיוק:"
+        ai_tool_action:
+          tool: "כלי"
+          parameters: "משתנים"
       embeddings:
         short_title: "הטמעות"
         description: "הטמעות הן ייצוגים מספריים של נתונים שלוכדים משמעות וקשר, הפעלת יכולות הבינה המלאכותית של Discourse מאפשרת יכולות כגון נושאים קשורים וחיפוש בינה מלאכותית כדי להבין ולחבר תוכן."
         new: "הטמעה חדשה"
-        back: "חזרה"
         save: "שמירה"
         saved: "הגדרות ההטמעה נשמרו"
         delete: "מחיקה"
@@ -756,7 +887,6 @@ he:
         presets: "בחירת ערכה…"
         configure_manually: "הגדרה ידנית"
         edit: "עריכה"
-        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         tests:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"
@@ -782,25 +912,33 @@ he:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "מותאם"
         provider_fields:
           model_name: "שם המודל"
         semantic_search: "נושאים (סמנטיקה)"
-        semantic_search_results:
-          unavailable: "תוצאות בינה מלאכותית לא זמינות"
-        semantic_search_tooltips:
-          invalid_sort: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"
-        semantic_search_unavailable_tooltip: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"
-        ai_generated_result: "תוצאות חיפוש שנמצאו באמצעות בינה מלאכותית"
         quick_search:
           suffix: "בכל הנושאים והפוסטים עם בינה מלאכותית"
       ai_artifact:
+        editor:
+          version: "גרסה"
+          default: "ברירת מחדל"
+          apply: "החלה"
         expand_view_label: "הרחבת תצוגה"
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
+        share: "שיתוף"
+        create_link: "יצירת קישור"
+        copied: "הועתקה ללוח הגזירים"
+        copy_link: "העתקת קישור"
+        copy_embed: "העתקת הטמעה"
+        new_tab: "הצגה בלשונית חדשה"
+        filter_all: "הכול"
+        filter_standalone: "עצמאי"
       ai_bot:
-        llm: "מודל"
+        title: "בוט בינה מלאכותית"
+        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"
@@ -817,8 +955,7 @@ he:
           title: "הצגת התכתובת מול הבינה המלאכותית"
           copy_request: "העתקת הבקשה"
           copy_response: "העתקת תגובה"
-          request_tokens: "אסימוני בקשה:"
-          response_tokens: "אסימוני תגובה:"
+          duration_label: "משך:"
           request: "בקשה"
           response: "תשובה"
           next_log: "הבא"
@@ -866,7 +1003,6 @@ he:
           min_input_length_message:
             one: "אורך ההודעה חייב להיות באורך של תו ומעלה"
             two: "אורך ההודעה חייב להיות באורך של שני תווים ומעלה"
-            many: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
             other: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
           messages_sidebar_title: "שיחות"
           today: "היום"
@@ -874,11 +1010,9 @@ he:
           last_30_days: "30 הימים האחרונים"
           upload_files: "העלאת קבצים"
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
+          editing_post: "רשומה נערכת"
       sentiments:
-        dashboard:
-          title: "רגש"
         sidebar:
-          overview: "סקירת הבעה"
           analysis: "ניתוח הבעות"
         sentiment_analysis:
           share_chart: "העתקת קישור לתרשים"
@@ -901,41 +1035,53 @@ he:
           since:
             one: "השעה האחרונה"
             two: "השעתיים האחרונות"
-            many: "%{count} השעות האחרונות"
             other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
           regenerate_summaries_option: "תקצירי נושאים."
-          regenerate_gists_success:
-            one: "התקציר הקצר נוצר מחדש בהצלחה"
-            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
-            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
-            many: "יצירת %{count} תקצירים מחדש נכשלה"
             other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:
             compact: "מצומצם"
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
+      ai_search:
+        related_topics: "נושאים קשורים"
+        related_replies:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        tabs:
+          ask: "לשאול בינה מלאכותית"
+          topics: "נושאים"
+          messages: "הודעות"
       discobot_discoveries:
-        main_title: "תגליות Discobot"
-        regular_results: "נושאים"
-        tell_me_more: "אשמח לדעת עוד…"
-        continue_convo: "המשך בשיחה…"
+        main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"
-        collapse: "צמצום"
-        timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
-        tooltip:
-          header: "חיפוש מופעל בינה מלאכותית"
-          content: "חיפוש בשפה טבעית מופעל על גבי %{model}"
-          actions:
-            info: "איך זה עובד?"
-            disable: "השבתה"
+        legacy:
+          main_title: "תגליות Discobot"
+          regular_results: "נושאים"
+          tell_me_more: "אשמח לדעת עוד…"
+          continue_convo: "המשך בשיחה…"
+          loading_convo: "הדיון נטען"
+          collapse: "צמצום"
+          timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
+          tooltip:
+            header: "חיפוש מופעל בינה מלאכותית"
+            content: "חיפוש בשפה טבעית מופעל על גבי %{model}"
+            actions:
+              info: "איך זה עובד?"
+              disable: "השבתה"
+        search_type: "בינה מלאכותית"
+        search_all_topics: "כל הנושאים"
+        search_messages: "הודעות"
+        ask_ai: "בינה מלאכותית"
+        sources:
+          related_discussions: "נושאים קשורים"
       user_preferences:
         empty: "אין הגדרות תואמות זמינות בשלב זה"
     review:

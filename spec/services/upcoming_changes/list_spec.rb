@@ -2,11 +2,12 @@
 
 RSpec.describe UpcomingChanges::List do
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+    subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:admin)
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
+    let(:options) { {} }
     let(:params) { {} }
 
     before do
@@ -18,6 +19,12 @@ RSpec.describe UpcomingChanges::List do
             impact_type: "other",
             impact_role: "developers",
           },
+          allow_user_locale: {
+            impact: "feature,all_members",
+            status: :beta,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
         },
       )
     end
@@ -26,6 +33,66 @@ RSpec.describe UpcomingChanges::List do
       let(:guardian) { Guardian.new }
 
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
+    end
+
+    context "when a permanent change has stored group restrictions" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :permanent,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: [:staff],
+          },
+        )
+        SiteSetting.enable_upload_debug_mode = true
+        Fabricate(
+          :site_setting_group,
+          name: "enable_upload_debug_mode",
+          group_ids: Group::AUTO_GROUPS[:staff].to_s,
+        )
+      end
+
+      it "lists the change as enabled for everyone without groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:upcoming_change][:enabled_for]).to eq("everyone")
+        expect(setting[:groups]).to be_nil
+      end
+    end
+
+    context "when a change uses a linked group setting" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            status: :experimental,
+            group_setting: :hidden_post_visible_groups,
+          },
+        )
+        Fabricate(:site_setting_group, name: "enable_upload_debug_mode", group_ids: "3")
+      end
+
+      it "lists the linked default audience and metadata rather than stale opt-in groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:groups].split(",")).to contain_exactly(
+          "admins",
+          "moderators",
+          "trust_level_4",
+        )
+        expect(setting[:group_setting]).to include(
+          setting: :hidden_post_visible_groups,
+          value: SiteSetting.hidden_post_visible_groups,
+          mandatory_values: "1|2",
+          disallowed_groups: "4",
+        )
+        expect(setting[:group_setting]).to have_key(:requires_confirmation)
+      end
     end
 
     context "when everything's ok" do
@@ -51,7 +118,7 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "includes the image_url if there is an image for the change in public/images" do
-        Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+        Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
 
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
@@ -64,9 +131,7 @@ RSpec.describe UpcomingChanges::List do
         )
       end
 
-      # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
-      # sample plugin settings loaded in the SiteSetting model.
-      xit "includes the plugin name if the setting is from a plugin" do
+      it "includes the plugin name if the setting is from a plugin" do
         results = result.upcoming_changes
         sample_plugin_setting =
           results.find { |change| change[:setting] == :enable_experimental_sample_plugin_feature }
@@ -80,6 +145,170 @@ RSpec.describe UpcomingChanges::List do
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
         expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
+      end
+
+      describe "status_changed_at" do
+        before do
+          freeze_time
+
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 2.weeks.ago,
+          )
+          UpcomingChangeEvent.create!(
+            event_type: :status_changed,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 1.day.ago,
+          )
+          UpcomingChangeEvent.create!(
+            event_type: :manual_opt_in,
+            upcoming_change_name: "enable_upload_debug_mode",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "includes the most recent status change time" do
+          mock_setting =
+            result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:status_changed_at]).to eq_time(1.day.ago)
+        end
+
+        it "is nil for changes without a status change event" do
+          mock_setting =
+            result.upcoming_changes.find { |change| change[:setting] == :allow_user_locale }
+
+          expect(mock_setting[:upcoming_change][:status_changed_at]).to be_nil
+        end
+
+        it "does not write the time into the shared upcoming change metadata" do
+          result
+
+          expect(SiteSetting.upcoming_change_metadata[:enable_upload_debug_mode]).not_to have_key(
+            :status_changed_at,
+          )
+        end
+      end
+
+      describe "overriding defaults setting" do
+        context "when an upcoming_change_default_override points to the change" do
+          before do
+            mock_upcoming_change_default_overrides(
+              {
+                suggested_topics_max_days_old: {
+                  upcoming_change: :enable_upload_debug_mode,
+                  new_default: 1000,
+                },
+              },
+            )
+          end
+
+          it "includes overriding_defaults as true" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting[:overriding_defaults]).to eq(true)
+          end
+        end
+
+        it "returns false for overriding_defaults when no upcoming_change_default_override points to the change" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
+          expect(mock_setting[:overriding_defaults]).to eq(false)
+        end
+      end
+
+      describe "depends_on settings" do
+        before do
+          # This replaces the metadata mocked in the outer `before` block, so
+          # enable_upload_debug_mode must be re-mocked here.
+          mock_upcoming_change_metadata(
+            {
+              set_locale_from_cookie: {
+                impact: "feature,all_members",
+                status: :experimental,
+                impact_type: "feature",
+                impact_role: "all_members",
+              },
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :experimental,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it "includes the settings the change depends on and their humanized names" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on]).to eq([:allow_user_locale])
+          expect(mock_setting[:depends_on_humanized_names]).to eq(["Allow user locale"])
+        end
+
+        it "includes depends_on_met as false when a dependency is not enabled" do
+          SiteSetting.allow_user_locale = false
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on_met]).to eq(false)
+        end
+
+        it "includes depends_on_met as true when all dependencies are enabled" do
+          SiteSetting.allow_user_locale = true
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on_met]).to eq(true)
+        end
+
+        it "includes depends_on_met as true for changes with no dependencies" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:depends_on_met]).to eq(true)
+        end
+
+        it "includes an empty depends_on for changes with no dependencies" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:depends_on]).to eq([])
+        end
+      end
+
+      describe "conditional display" do
+        context "when the upcoming change should display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(true)
+          end
+
+          it "returns true" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).to be_present
+          end
+        end
+
+        context "when the upcoming change should not display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(false)
+          end
+
+          it "returns false" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).not_to be_present
+          end
+        end
       end
 
       describe "enabled_for logic" do
@@ -150,6 +379,18 @@ RSpec.describe UpcomingChanges::List do
             expect(setting[:upcoming_change][:enabled_for]).to eq(
               Group.find(Group::AUTO_GROUPS[:staff]).name,
             )
+          end
+        end
+
+        context "when filtering by statuses" do
+          let(:options) { { filter_statuses: [:beta] } }
+
+          it "only includes upcoming changes with the given statuses" do
+            results = result.upcoming_changes
+            expect(
+              results.find { |change| change[:setting] == :enable_upload_debug_mode },
+            ).not_to be_present
+            expect(results.find { |change| change[:setting] == :allow_user_locale }).to be_present
           end
         end
       end

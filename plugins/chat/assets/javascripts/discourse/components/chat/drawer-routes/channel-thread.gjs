@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
@@ -45,12 +47,20 @@ export default class ChatDrawerRoutesChannelThread extends Component {
           as |navbar|
         >
           <navbar.BackButton
-            @title={{this.backButton.title}}
             @route={{this.backButton.route}}
             @routeModels={{this.backButton.models}}
+            @title={{this.backButton.title}}
           />
-          <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
+          <navbar.Title @icon="discourse-threads" @title={{this.threadTitle}} />
           <navbar.Actions as |a|>
+            <PluginOutlet
+              @name="chat-thread-navbar-actions"
+              @outletArgs={{lazyHash
+                thread=@model.thread
+                channel=@model.channel
+                context="drawer"
+              }}
+            />
             <a.ToggleDrawerButton />
             <a.FullPageButton />
             <a.CloseDrawerButton />
@@ -61,8 +71,8 @@ export default class ChatDrawerRoutesChannelThread extends Component {
           <div class="chat-drawer-content">
             {{#each (array @model.thread) as |thread|}}
               <ChatThread
-                @thread={{thread}}
                 @targetMessageId={{@params.messageId}}
+                @thread={{thread}}
               />
             {{/each}}
           </div>

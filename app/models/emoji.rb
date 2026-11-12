@@ -2,18 +2,26 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "15"
+  EMOJI_VERSION = "16"
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
   # matches emoji codes in text, e.g. :smile: or :wave:t2:
-  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/.freeze
+  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/
 
   DEFAULT_GROUP = "default"
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group, :search_aliases, :created_by
+  attr_accessor :name, :url, :tonable, :animated, :group, :created_by
+
+  # The cached `url` is the raw upload/asset URL. CDN conversion is applied
+  # lazily here (and in EmojiSerializer) so that changing the S3/asset CDN
+  # settings takes effect without having to rebuild the emoji cache.
+  def cdn_url
+    return nil if url.blank?
+    Discourse.store.cdn_url(url)
+  end
 
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
@@ -39,12 +47,26 @@ class Emoji
     Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
   end
 
+  def self.grouped
+    groups = allowed.group_by(&:group)
+    pinned = SiteSetting.emoji_picker_pinned_groups_map
+    return groups if pinned.empty?
+
+    groups.sort_by { |key, _| pinned.index(key) || pinned.length }.to_h
+  end
+
   def self.aliases
     aliases_db
   end
 
   def self.search_aliases
     search_aliases_db
+  end
+
+  def self.locale_search_aliases(locale)
+    locale = locale.to_s
+    @locale_search_aliases ||= {}
+    @locale_search_aliases[locale] ||= load_locale_search_aliases(locale)
   end
 
   def self.translations
@@ -57,6 +79,14 @@ class Emoji
 
   def self.tonable_emojis
     tonable_emojis_db
+  end
+
+  # Only some standard emojis are animated; those that are, are in every tone.
+  def self.animated_emojis
+    @animated_emojis ||=
+      Dir
+        .glob("*.avif", base: File.join(DiscourseEmojis.path_for_emojis, "noto_animated"))
+        .to_set { File.basename(_1, ".avif") }
   end
 
   def self.normalize_name(name)
@@ -110,9 +140,9 @@ class Emoji
     Emoji.new.tap do |e|
       e.name = name
       e.tonable = Emoji.tonable_emojis.include?(name)
+      e.animated = Emoji.animated_emojis.include?(name)
       e.url = Emoji.url_for(filename)
       e.group = group
-      e.search_aliases = search_aliases[name] || []
     end
   end
 
@@ -140,6 +170,7 @@ class Emoji
     end
     global_emoji_cache.clear
     site_emoji_cache.clear
+    @locale_search_aliases = nil
   end
 
   def self.groups_file
@@ -214,6 +245,19 @@ class Emoji
     @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
   end
 
+  def self.locale_search_aliases_dir
+    @locale_search_aliases_dir ||= DiscourseEmojis.paths[:locale_search_aliases]
+  end
+
+  def self.load_locale_search_aliases(locale)
+    dir = locale_search_aliases_dir
+    return nil if dir.nil?
+    file = File.join(dir, "#{locale}.json")
+    return nil unless File.exist?(file)
+    Emoji.parse_emoji_file(file)
+  end
+  private_class_method :load_locale_search_aliases
+
   def self.load_standard
     emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
   end
@@ -240,7 +284,6 @@ class Emoji
 
   def self.load_custom
     result = []
-
     if !GlobalSetting.skip_db?
       CustomEmoji
         .includes(:upload)
@@ -354,7 +397,7 @@ class Emoji
               codepoints = code.codepoints
               codepoints.delete_at(1) if codepoints[1] == 0xfe0f
 
-              toned_code = (codepoints.insert(1, scale.to_i(16))).pack("U*")
+              toned_code = codepoints.insert(1, scale.to_i(16)).pack("U*")
               map["#{e["name"]}:t#{index + 2}"] = toned_code
             end
           end
@@ -377,20 +420,38 @@ class Emoji
   def self.codes_to_img(str)
     return if str.blank?
 
-    str =
-      str.gsub(EMOJI_CODE_REGEXP) do |name|
-        code = $1
+    result = +""
+    last_index = 0
 
-        if code && Emoji.custom?(code)
-          emoji = Emoji[code]
-          "<img src=\"#{emoji.url}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-        elsif code && Emoji.exists?(code)
-          "<img src=\"#{Emoji.url_for(code)}\" title=\"#{code}\" class=\"emoji\" alt=\"#{code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-        else
-          name
-        end
+    str.scan(EMOJI_CODE_REGEXP) do
+      match = Regexp.last_match
+      code = match[1]
+
+      result << ERB::Util.html_escape_once(str[last_index...match.begin(0)])
+
+      result << if code && Emoji.custom?(code)
+        emoji = Emoji[code]
+        emoji_img_tag(emoji.cdn_url, code)
+      elsif code && Emoji.exists?(code)
+        emoji_img_tag(Emoji.url_for(code), code)
+      else
+        ERB::Util.html_escape_once(match[0])
       end
+
+      last_index = match.end(0)
+    end
+
+    result << ERB::Util.html_escape_once(str[last_index..])
+    result
   end
+
+  def self.emoji_img_tag(url, code)
+    escaped_url = ERB::Util.html_escape(url)
+    escaped_code = ERB::Util.html_escape(code)
+
+    "<img src=\"#{escaped_url}\" title=\"#{escaped_code}\" class=\"emoji\" alt=\"#{escaped_code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
+  end
+  private_class_method :emoji_img_tag
 
   def self.sanitize_emoji_name(name)
     name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase

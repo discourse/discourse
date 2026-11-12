@@ -7,14 +7,14 @@ class PostActionsController < ApplicationController
   before_action :fetch_post_action_type_id_from_params
 
   def create
-    raise Discourse::NotFound if @post.blank?
+    raise Discourse::NotFound unless guardian.can_see?(@post)
 
     creator =
       PostActionCreator.new(
         current_user,
         @post,
         @post_action_type_id,
-        is_warning: params[:is_warning],
+        is_warning: ActiveModel::Type::Boolean.new.cast(params[:is_warning]),
         message: params[:message],
         take_action: params[:take_action] == "true",
         flag_topic: params[:flag_topic] == "true",
@@ -66,11 +66,13 @@ class PostActionsController < ApplicationController
 
     post_id =
       if flag_topic
-        begin
-          Topic.find(params[:id]).posts.first.id
-        rescue StandardError
-          raise Discourse::NotFound
-        end
+        topic = Topic.find_by(id: params[:id])
+        raise Discourse::NotFound unless guardian.can_see_topic?(topic)
+
+        post = topic.posts.first
+        raise Discourse::NotFound if post.blank?
+
+        post.id
       else
         params[:id]
       end

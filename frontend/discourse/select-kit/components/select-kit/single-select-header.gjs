@@ -1,29 +1,21 @@
 import { computed } from "@ember/object";
-import { or } from "@ember/object/computed";
 import {
   attributeBindings,
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("summary")
 @classNames("single-select-header")
 @attributeBindings("name", "ariaLabel:aria-label")
 export default class SingleSelectHeader extends SelectKitHeaderComponent {
-  @or("selectKit.options.headerAriaLabel", "name") ariaLabel;
-
-  focusIn(event) {
-    event.stopImmediatePropagation();
-
-    document.querySelectorAll(".select-kit-header").forEach((header) => {
-      if (header !== event.target) {
-        header.parentNode.open = false;
-      }
-    });
+  @computed("selectKit.options.headerAriaLabel", "name")
+  get ariaLabel() {
+    return this.selectKit?.options?.headerAriaLabel || this.name;
   }
 
   @computed("selectedContent.name")
@@ -37,9 +29,19 @@ export default class SingleSelectHeader extends SelectKitHeaderComponent {
     }
   }
 
+  focusIn(event) {
+    event.stopImmediatePropagation();
+
+    document.querySelectorAll(".select-kit-header").forEach((header) => {
+      if (header !== event.target) {
+        header.parentNode.open = false;
+      }
+    });
+  }
+
   <template>
     <div class="select-kit-header-wrapper">
-      {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+      {{#each this.icons as |iconName|}} {{dIcon iconName}} {{/each}}
 
       {{#let
         (resolveComponent this this.selectKit.options.selectedNameComponent)

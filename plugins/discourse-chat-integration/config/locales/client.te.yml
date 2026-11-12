@@ -8,6 +8,7 @@ te:
   js:
     chat_integration:
       settings: "అమరికలు"
+      more_providers: "ఇంకా"
       all_categories: "(అన్ని వర్గాలు)"
       delete_channel: "తొలగించండి"
       test_channel: "పరీక్షించండి"
@@ -84,3 +85,6 @@ te:
               label: సందేశం పంపించండి
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "సందేశం పంపించండి"

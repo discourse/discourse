@@ -18,15 +18,15 @@ end
 # Table name: post_stats
 #
 #  id                           :integer          not null, primary key
-#  post_id                      :integer
+#  composer_open_duration_msecs :integer
+#  composer_version             :integer
 #  drafts_saved                 :integer
 #  typing_duration_msecs        :integer
-#  composer_open_duration_msecs :integer
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  composer_version             :integer
 #  writing_device               :string
 #  writing_device_user_agent    :string
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  post_id                      :integer
 #
 # Indexes
 #

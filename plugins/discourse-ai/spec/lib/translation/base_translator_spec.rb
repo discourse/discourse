@@ -14,88 +14,125 @@ describe DiscourseAi::Translation::BaseTranslator do
   describe ".translate" do
     let(:text) { "cats are great" }
     let(:target_locale) { "de" }
+    let(:content_description) { "A tag about cats" }
     let(:llm_response) { "hur dur hur dur!" }
+
     fab!(:post)
     fab!(:topic) { post.topic }
 
-    it "creates the correct prompt" do
-      post_translator =
-        DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, post:)
-      allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
-        agent.system_prompt,
-        messages: array_including({ type: :user, content: a_string_including(text) }),
-        post_id: post.id,
-        topic_id: post.topic_id,
-      ).and_call_original
-
-      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
-        post_translator.translate
-      end
-    end
-
-    it "creates BotContext with the correct parameters and calls bot.reply with correct args" do
-      post_translator =
-        DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, post:, topic:)
-
-      expected_content = { content: text, target_locale: target_locale }.to_json
-
-      bot_context = instance_double(DiscourseAi::Agents::BotContext)
-      allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)
-
-      mock_bot = instance_double(DiscourseAi::Agents::Bot)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
-      allow(mock_bot).to receive(:reply).and_yield(llm_response)
-
-      post_translator.translate
-
-      expect(DiscourseAi::Agents::BotContext).to have_received(:new).with(
-        user: an_instance_of(User),
-        skip_show_thinking: true,
-        feature_name: "translation",
-        messages: [{ type: :user, content: expected_content }],
-        topic: topic,
-        post: post,
-      )
-
-      expect(DiscourseAi::Agents::Bot).to have_received(:as)
-      expect(mock_bot).to have_received(:reply).with(bot_context, llm_args: { max_tokens: 500 })
-    end
-
-    it "sets max_tokens correctly based on text length and ai_translation_max_tokens_multiplier setting" do
-      multiplier = 1.5
-      SiteSetting.ai_translation_max_tokens_multiplier = multiplier
-      test_cases = [
-        ["Short text", 500 * multiplier], # Short text (< 100 chars)
-        ["a" * 200, 1000 * multiplier], # Medium text (100-500 chars)
-        ["a" * 600, 1200 * multiplier], # Long text (> 500 chars, 600*2=1200)
-      ]
-
-      test_cases.each do |text, expected_max_tokens|
-        translator = DiscourseAi::Translation::PostRawTranslator.new(text: text, target_locale:)
-
-        bot_context = instance_double(DiscourseAi::Agents::BotContext)
-        allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)
-
-        mock_bot = instance_double(DiscourseAi::Agents::Bot)
-        allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
-        allow(mock_bot).to receive(:reply).and_yield("translated #{text[0..10]}")
-
-        translator.translate
-
-        expect(mock_bot).to have_received(:reply).with(
-          bot_context,
-          llm_args: {
-            max_tokens: expected_max_tokens,
-          },
+    it "sends unescaped content, post context, and the output limit to the model" do
+      text = "List<string> and ?a=1&b=2"
+      llm_model = Fabricate(:fake_model, max_output_tokens: 256)
+      translator =
+        DiscourseAi::Translation::PostRawTranslator.new(
+          text:,
+          target_locale:,
+          content_description:,
+          post:,
+          topic:,
+          llm_model:,
         )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [llm_response],
+      ) do |_, _, prompts, options|
+        translator.translate
+        prompt = prompts.last
+
+        expect(prompt.system_message_text).to eq(agent.system_prompt)
+        expect(prompt.messages.last).to eq(
+          type: :user,
+          content: JSON.generate(content: text, target_locale:, content_description:),
+        )
+        expect([prompt.post_id, prompt.topic_id]).to eq([post.id, topic.id])
+        expect(options.last[:max_tokens]).to eq(llm_model.max_output_tokens)
       end
     end
 
-    it "returns the translation from the llm's response" do
-      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
+    it "fits a post by token count without charging descriptive context to the output budget" do
+      llm_model = Fabricate(:fake_model, max_output_tokens: 256)
+      source = "hello world " * 30
+      translator =
+        DiscourseAi::Translation::PostRawTranslator.new(
+          text: source,
+          target_locale:,
+          content_description: "Background context " * 100,
+          llm_model:,
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do |_, _, prompts|
+        expect(translator.translate).to eq(llm_response)
+        expect(JSON.parse(prompts.last.messages.last[:content])["content"]).to eq(source)
+      end
+    end
+
+    it "reserves output headroom and preserves all source text across requests" do
+      llm_model = Fabricate(:fake_model, max_output_tokens: 128)
+      source = "猫と犬が好きです。" * 40
+      translator =
+        DiscourseAi::Translation::PostRawTranslator.new(text: source, target_locale:, llm_model:)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(40, "translated"),
+      ) do |_, _, prompts|
+        result = translator.translate
+        chunks = prompts.map { |prompt| JSON.parse(prompt.messages.last[:content])["content"] }
+
+        expect(result).to eq("translated" * chunks.size)
+        expect(chunks.join).to eq(source)
+        expect(chunks.map { |chunk| llm_model.tokenizer_class.size(chunk) }).to all(be <= 64)
+      end
+    end
+
+    it "accounts for the system prompt, examples, and content description" do
+      agent.update!(thinking_effort: nil)
+      allow(agent.class_instance).to receive(:compression_threshold).and_return(nil)
+      llm_model = Fabricate(:fake_model, max_output_tokens: 8192, max_prompt_tokens: 4096)
+      source = "hello world " * 3000
+      translator =
+        DiscourseAi::Translation::PostRawTranslator.new(
+          text: source,
+          target_locale:,
+          content_description: "A long description " * 100,
+          llm_model:,
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(40, "translated"),
+      ) do |_, _, prompts, options|
+        translator.translate
+        chunks = prompts.map { |prompt| JSON.parse(prompt.messages.last[:content])["content"] }
+
+        expect(chunks.join).to eq(source)
+        request_tokens =
+          prompts
+            .zip(options)
+            .map do |prompt, option|
+              prompt.messages.sum { |message| llm_model.tokenizer_class.size(message[:content]) } +
+                option[:max_tokens]
+            end
+        expect(request_tokens).to all(be <= llm_model.max_prompt_tokens)
+      end
+    end
+
+    it "bounds output by the agent work allowance when the model has no output limit" do
+      agent.update!(thinking_effort: nil)
+      llm_model = Fabricate(:fake_model, max_output_tokens: nil, max_prompt_tokens: 8192)
+      translator =
+        DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:, llm_model:)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do |_, _, _, options|
+        expect(translator.translate).to eq(llm_response)
+        expect(options.last[:max_tokens]).to eq(2500)
+        expect(options.last[:max_response_tokens]).to eq(2500)
+      end
+    end
+
+    it "strips control characters from the model response but keeps newlines" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hur\u001Cdur \u001Ehur\ndur!"]) do
         expect(
           DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:).translate,
-        ).to eq "hur dur hur dur!"
+        ).to eq "hurdur hur\ndur!"
       end
     end
   end

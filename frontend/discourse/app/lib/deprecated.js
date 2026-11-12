@@ -1,10 +1,23 @@
 import { registerDeprecationHandler as emberRegisterDeprecationHandler } from "@ember/debug";
-import DeprecationWorkflow from "../deprecation-workflow";
-import { isRailsTesting } from "./environment";
-import { consolePrefix } from "./source-identifier";
+import DeprecationWorkflow from "../deprecation-workflow.js";
+import { isRailsTesting } from "./environment.js";
+import identifySource, { consolePrefix } from "./source-identifier.js";
 
 const handlers = [];
+// Universal handlers also receive Ember's own deprecations (via the bridge below).
+const universalHandlers = [];
 const disabledDeprecations = [];
+
+// Recent deprecations, replayed to universal handlers registered `{ buffered: true }`.
+const universalBacklog = [];
+const MAX_BACKLOG_LENGTH = 1000;
+
+// Route Ember's own deprecations through the same pipeline, early enough to catch
+// ones fired during boot.
+emberRegisterDeprecationHandler((message, options, next) => {
+  dispatchDeprecation(message, options, true);
+  return next(message, options);
+});
 
 let emberDeprecationSilencer;
 
@@ -16,8 +29,8 @@ let emberDeprecationSilencer;
  * @param {Object} [options] Deprecation options
  * @param {String} [options.id] A unique identifier for this deprecation. This should be namespaced by dots (e.g. discourse.my_deprecation)
  * @param {String} [options.since] The Discourse version this deprecation was introduced in
- * @param {String} [options.dropFrom] The Discourse version this deprecation will be dropped in. Typically one major version after `since`
  * @param {String} [options.url] A URL which provides more detail about the deprecation
+ * @param {boolean} [options.reportAtCallSite] Attribute test reports to the code calling deprecated(), rather than its caller. Defaults to `false`
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
 export default function deprecated(msg, options = {}) {
@@ -31,18 +44,20 @@ export default function deprecated(msg, options = {}) {
     return;
   }
 
+  let config;
+  if (require.has("discourse/config/environment")) {
+    config = require("discourse/config/environment").default;
+  }
+
   const raiseError =
     options.raiseError ||
-    DeprecationWorkflow.shouldThrow(
-      id,
-      globalThis.EmberENV?.RAISE_ON_DEPRECATION
-    );
+    (config &&
+      DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION));
 
   const formattedMessage = buildDeprecationMessage(msg, options, raiseError);
   const resolvedConsolePrefix = getConsolePrefix(source);
 
-  // Execute all registered deprecation handlers
-  handlers.forEach((h) => h(formattedMessage, options));
+  dispatchDeprecation(formattedMessage, options, false);
 
   if (!DeprecationWorkflow.shouldSilence(id)) {
     if (raiseError) {
@@ -52,12 +67,77 @@ export default function deprecated(msg, options = {}) {
     console.warn(...[resolvedConsolePrefix, formattedMessage].filter(Boolean)); //eslint-disable-line no-console
   }
 }
+
+function dispatchDeprecation(message, options, fromEmber) {
+  if (!fromEmber) {
+    for (const callback of handlers) {
+      callback(message, options);
+    }
+  }
+
+  for (const callback of universalHandlers) {
+    callback(message, options);
+  }
+
+  if (!DeprecationWorkflow.shouldSilence(options?.id)) {
+    addToBacklog(message, options);
+  }
+}
+
+function addToBacklog(message, options) {
+  if (universalBacklog.length >= MAX_BACKLOG_LENGTH) {
+    universalBacklog.shift();
+  }
+
+  // Resolve source now; identifySource() reads the live call stack.
+  universalBacklog.push([
+    message,
+    { ...options, source: options.source || identifySource() },
+  ]);
+}
 /**
- * Register a function which will be called whenever a deprecation is triggered
- * @param {function} callback The callback function. Arguments will match those of `deprecated()`.
+ * Register a callback invoked for each Discourse `deprecated()` call. To also
+ * receive Ember's own deprecations, or replay ones fired before registering, use
+ * `registerUniversalDeprecationHandler`.
  */
 export function registerDeprecationHandler(callback) {
   handlers.push(callback);
+}
+
+/**
+ * Like `registerDeprecationHandler`, but also receives Ember's own deprecations.
+ * With `{ buffered: true }` the callback is first replayed the backlog of
+ * deprecations that fired before it registered.
+ */
+export function registerUniversalDeprecationHandler(
+  callback,
+  { buffered = false } = {}
+) {
+  universalHandlers.push(callback);
+
+  if (buffered) {
+    for (const [message, options] of universalBacklog) {
+      callback(message, options);
+    }
+  }
+}
+
+/**
+ * Unregister a callback previously passed to `registerUniversalDeprecationHandler`.
+ */
+export function unregisterUniversalDeprecationHandler(callback) {
+  const index = universalHandlers.indexOf(callback);
+  if (index > -1) {
+    universalHandlers.splice(index, 1);
+  }
+}
+
+/**
+ * Clears the backlog. Intended for tests, so deprecations from one test don't
+ * replay into a `{ buffered: true }` handler in the next.
+ */
+export function clearBacklog() {
+  universalBacklog.length = 0;
 }
 
 /**
@@ -148,7 +228,7 @@ function ensureEmberDeprecationSilencer() {
  * @returns {String} The formatted message
  */
 function buildDeprecationMessage(msg, options, raiseError) {
-  const { id, since, dropFrom, url } = options;
+  const { id, since, url } = options;
   const parts = [
     raiseError ? "FATAL DEPRECATION:" : "DEPRECATION NOTICE:",
     msg,
@@ -156,9 +236,6 @@ function buildDeprecationMessage(msg, options, raiseError) {
 
   if (since) {
     parts.push(`[deprecated since Discourse ${since}]`);
-  }
-  if (dropFrom) {
-    parts.push(`[removal in Discourse ${dropFrom}]`);
   }
   if (id) {
     parts.push(`[deprecation id: ${id}]`);

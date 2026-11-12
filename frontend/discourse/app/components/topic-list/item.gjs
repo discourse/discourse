@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -12,12 +13,6 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import {
@@ -30,13 +25,20 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq } from "discourse/truth-helpers";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class Item extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;
+
+  @tracked isFocused = false;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
@@ -67,6 +69,15 @@ export default class Item extends Component {
     });
   }
 
+  get #transformerContext() {
+    return {
+      topic: this.args.topic,
+      index: this.args.index,
+      listContext: this.args.listContext,
+      category: this.args.category,
+    };
+  }
+
   get expandPinned() {
     let expandPinned;
     if (
@@ -84,12 +95,51 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-expand-pinned",
       expandPinned,
-      { topic: this.args.topic, mobileView: this.useMobileLayout }
+      { ...this.#transformerContext, mobileView: this.useMobileLayout }
     );
   }
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
+  }
+
+  get useMobileLayout() {
+    return applyValueTransformer(
+      "topic-list-item-mobile-layout",
+      this.site.mobileView,
+      this.#transformerContext
+    );
+  }
+
+  get additionalClasses() {
+    return applyValueTransformer(
+      "topic-list-item-class",
+      [],
+      this.#transformerContext
+    );
+  }
+
+  get style() {
+    const parts = applyValueTransformer(
+      "topic-list-item-style",
+      [],
+      this.#transformerContext
+    );
+
+    const safeParts = parts.filter(Boolean).filter((part) => {
+      if (isHTMLSafe(part)) {
+        return true;
+      }
+      // eslint-disable-next-line no-console
+      console.error(
+        "topic-list-item-style must be formed of htmlSafe strings. Skipped unsafe value:",
+        part
+      );
+    });
+
+    if (safeParts.length) {
+      return trustHTML(safeParts.join("\n"));
+    }
   }
 
   @action
@@ -109,6 +159,16 @@ export default class Item extends Component {
     );
 
     element.classList.add("highlighted");
+  }
+
+  @action
+  onBlur() {
+    this.isFocused = false;
+  }
+
+  @action
+  onFocus() {
+    this.isFocused = true;
   }
 
   @action
@@ -232,57 +292,13 @@ export default class Item extends Component {
     }
   }
 
-  get useMobileLayout() {
-    return applyValueTransformer(
-      "topic-list-item-mobile-layout",
-      this.site.mobileView,
-      { topic: this.args.topic, listContext: this.args.listContext }
-    );
-  }
-
-  get additionalClasses() {
-    return applyValueTransformer("topic-list-item-class", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
-  }
-
-  get style() {
-    const parts = applyValueTransformer("topic-list-item-style", [], {
-      topic: this.args.topic,
-      index: this.args.index,
-      listContext: this.args.listContext,
-    });
-
-    const safeParts = parts.filter(Boolean).filter((part) => {
-      if (isHTMLSafe(part)) {
-        return true;
-      }
-      // eslint-disable-next-line no-console
-      console.error(
-        "topic-list-item-style must be formed of htmlSafe strings. Skipped unsafe value:",
-        part
-      );
-    });
-
-    if (safeParts.length) {
-      return trustHTML(safeParts.join("\n"));
-    }
-  }
-
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
-      {{! template-lint-disable no-invalid-interactive }}
-      {{this.highlightIfNeeded}}
-      {{on "keydown" this.keyDown}}
-      {{on "click" this.click}}
-      {{on "auxclick" this.click}}
-      data-topic-id={{@topic.id}}
-      role={{this.role}}
       aria-level={{this.ariaLevel}}
-      class={{concatClass
+      class={{dConcatClass
         "topic-list-item"
+        (if this.isFocused "selected")
         (if @topic.category (concat "category-" @topic.category.fullSlug))
         (if (eq @topic @lastVisitedTopic) "last-visit")
         (if @topic.visited "visited")
@@ -299,7 +315,15 @@ export default class Item extends Component {
         this.tagClassNames
         this.additionalClasses
       }}
+      data-topic-id={{@topic.id}}
+      role={{this.role}}
       style={{this.style}}
+      {{this.highlightIfNeeded}}
+      {{on "focus" this.onFocus}}
+      {{on "blur" this.onBlur}}
+      {{on "keydown" this.keyDown}}
+      {{on "click" this.click}}
+      {{on "auxclick" this.click}}
     >
       <PluginOutlet
         @name="above-topic-list-item"
@@ -322,7 +346,7 @@ export default class Item extends Component {
       >
         {{#if this.useMobileLayout}}
           <td
-            class={{concatClass
+            class={{dConcatClass
               "topic-list-data"
               (if @bulkSelectEnabled "bulk-select-enabled")
             }}
@@ -330,26 +354,26 @@ export default class Item extends Component {
             <div class="pull-left">
               {{#if @bulkSelectEnabled}}
                 <BulkSelectCheckbox
-                  @topic={{@topic}}
                   @isSelected={{this.isSelected}}
                   @onToggle={{this.onBulkSelectToggle}}
+                  @topic={{@topic}}
                 />
               {{else}}
                 <PluginOutlet
                   @name="topic-list-item-mobile-avatar"
                   @outletArgs={{lazyHash topic=@topic}}
                 >
-                  <UserLink
+                  <DUserLink
                     @ariaLabel={{i18n
                       "latest_poster_link"
                       username=@topic.lastPosterUser.username
                     }}
                     @username={{@topic.lastPosterUser.username}}
                   >
-                    {{avatar
+                    {{dAvatar
                       @topic.lastPosterUser
                       imageSize="large"
-                    }}</UserLink>
+                    }}</DUserLink>
                 </PluginOutlet>
               {{/if}}
             </div>
@@ -368,13 +392,13 @@ export default class Item extends Component {
                   @outletArgs={{lazyHash topic=@topic}}
                 />
                 {{~! no whitespace ~}}
-                <TopicStatus @topic={{@topic}} @context="topic-list" />
+                <TopicStatus @context="topic-list" @topic={{@topic}} />
                 {{~! no whitespace ~}}
                 <TopicLink
+                  class="raw-link raw-topic-link"
+                  @topic={{@topic}}
                   {{on "focus" this.onTitleFocus}}
                   {{on "blur" this.onTitleBlur}}
-                  @topic={{@topic}}
-                  class="raw-link raw-topic-link"
                 />
                 {{~#if @topic.featured_link~}}
                   &nbsp;
@@ -412,8 +436,8 @@ export default class Item extends Component {
 
               <div class="pull-right">
                 <PostCountOrBadges
-                  @topic={{@topic}}
                   @postBadgesEnabled={{@showTopicPostBadges}}
+                  @topic={{@topic}}
                 />
               </div>
 
@@ -424,7 +448,7 @@ export default class Item extends Component {
                       @name="topic-list-before-category"
                       @outletArgs={{lazyHash topic=@topic}}
                     />
-                    {{categoryLink @topic.category}}
+                    {{dCategoryLink @topic.category}}
                     {{~! no whitespace ~}}
                     <PluginOutlet
                       @name="topic-list-after-category"
@@ -432,7 +456,15 @@ export default class Item extends Component {
                     />{{~! no whitespace ~}}
                   {{/unless}}
                   {{~! no whitespace ~}}
-                  {{discourseTags @topic mode="list"}}
+                  <PluginOutlet
+                    @name="topic-list-tags-wrapper"
+                    @outletArgs={{lazyHash
+                      topic=@topic
+                      tags=@topic.visibleListTags
+                    }}
+                  >
+                    {{~dDiscourseTags @topic mode="list"~}}
+                  </PluginOutlet>
                 </span>
 
                 <div class="num activity last">
@@ -440,8 +472,8 @@ export default class Item extends Component {
                     @name="topic-list-item-mobile-bumped-at"
                     @outletArgs={{lazyHash topic=@topic}}
                   >
-                    <span title={{@topic.bumpedAtTitle}} class="age activity">
-                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                    <span class="age activity" title={{@topic.bumpedAtTitle}}>
+                      <a href={{@topic.lastPostUrl}}>{{dFormatDate
                           @topic.bumpedAt
                           format="tiny"
                           noTitle="true"
@@ -455,14 +487,14 @@ export default class Item extends Component {
         {{else}}
           {{#each @columns as |entry|}}
             <entry.value.item
-              @topic={{@topic}}
               @bulkSelectEnabled={{@bulkSelectEnabled}}
-              @onBulkSelectToggle={{this.onBulkSelectToggle}}
-              @isSelected={{this.isSelected}}
-              @showTopicPostBadges={{@showTopicPostBadges}}
-              @hideCategory={{@hideCategory}}
-              @tagsForUser={{@tagsForUser}}
               @expandPinned={{this.expandPinned}}
+              @hideCategory={{@hideCategory}}
+              @isSelected={{this.isSelected}}
+              @onBulkSelectToggle={{this.onBulkSelectToggle}}
+              @showTopicPostBadges={{@showTopicPostBadges}}
+              @tagsForUser={{@tagsForUser}}
+              @topic={{@topic}}
             />
           {{/each}}
         {{/if}}

@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const postFixtures = {
   "/posts/98737532": {
     id: 98737532,
     name: null,
@@ -217,3 +222,5 @@ export default {
     wiki: false,
   },
 };
+
+export default postFixtures;

@@ -8,25 +8,25 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-detail discourse-automation-new discourse-automation-form">
     <BackButton
+      class="discourse-automation-back"
       @label="discourse_automation.back"
       @route="adminPlugins.show.automation.index"
-      class="discourse-automation-back"
     />
     <AdminConfigAreaCard @heading="discourse_automation.select_script">
       <:content>
         <input
-          type="text"
-          placeholder={{i18n "discourse_automation.filter_placeholder"}}
-          {{on "input" @controller.updateFilterText}}
           class="admin-section-landing__header-filter"
+          placeholder={{i18n "discourse_automation.filter_placeholder"}}
+          type="text"
+          {{on "input" @controller.updateFilterText}}
         />
 
         <div class="admin-section-landing__wrapper">
           {{#each @controller.scriptableContent as |script|}}
             <AdminSectionLandingItem
-              {{on "click" (fn @controller.selectScriptToEdit script)}}
-              @titleLabelTranslated={{script.name}}
               @descriptionLabelTranslated={{script.description}}
+              @titleLabelTranslated={{script.name}}
+              {{on "click" (fn @controller.selectScriptToEdit script)}}
             />
           {{/each}}
         </div>

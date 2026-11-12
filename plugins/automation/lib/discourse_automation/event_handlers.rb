@@ -309,7 +309,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_closed(topic)
+    def self.handle_topic_closed(topic, status)
       name = DiscourseAutomation::Triggers::TOPIC_CLOSED
 
       DiscourseAutomation::Automation
@@ -318,6 +318,7 @@ module DiscourseAutomation
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
+            "status" => status,
             "placeholders" => {
               "topic_url" => topic.relative_url,
               "topic_title" => topic.title,
@@ -440,11 +441,6 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
-          flag_type_field = automation.trigger_field("flag_type")
-          flag_type_id = flag_type_field["value"]
-
-          next if flag_type_id.present? && flag_type_id != post_action.post_action_type_id
-
           categories = automation.trigger_field("categories")["value"]
           next if categories.present? && !categories.include?(topic.category_id)
 

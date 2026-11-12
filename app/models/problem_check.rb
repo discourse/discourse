@@ -21,62 +21,71 @@ class ProblemCheck
     attr_reader :checks
   end
 
-  include ActiveSupport::Configurable
-
-  config_accessor :enabled, default: true, instance_writer: false
-  config_accessor :priority, default: "low", instance_writer: false
+  class_attribute :enabled, default: true, instance_writer: false, instance_predicate: false
+  class_attribute :priority, default: "low", instance_writer: false, instance_predicate: false
 
   # Determines if the check should be performed at a regular interval, and if
   # so how often. If left blank, the check will be performed every time the
   # admin dashboard is loaded, or the data is otherwise requested.
   #
-  config_accessor :perform_every, default: nil, instance_writer: false
+  class_attribute :perform_every, default: nil, instance_writer: false, instance_predicate: false
 
   # How many times the check should retry before registering a problem. Only
   # works for scheduled checks.
   #
-  config_accessor :max_retries, default: 2, instance_writer: false
+  class_attribute :max_retries, default: 2, instance_writer: false, instance_predicate: false
 
   # The retry delay after a failed check. Only works for scheduled checks with
   # more than one retry configured.
   #
-  config_accessor :retry_after, default: 30.seconds, instance_writer: false
+  class_attribute :retry_after,
+                  default: 30.seconds,
+                  instance_writer: false,
+                  instance_predicate: false
 
   # How many consecutive times the check can fail without notifying admins.
   # This can be used to give some leeway for transient problems. Note that
   # retries are not counted. So a check that ultimately fails after e.g. two
   # retries is counted as one "blip".
   #
-  config_accessor :max_blips, default: 0, instance_writer: false
+  class_attribute :max_blips, default: 0, instance_writer: false, instance_predicate: false
 
   # Indicates that the problem check is an "inline" check. This provides a
   # low level construct for registering problems ad-hoc within application
   # code, without having to extract the checking logic into a dedicated
   # problem check.
   #
-  config_accessor :inline, default: false, instance_writer: false
+  class_attribute :inline, default: false, instance_writer: false, instance_predicate: false
 
   # Used to set up multiple targets for the check. For example, a check that
   # operates on groups may need to specify which groups to work on.
   #
-  config_accessor :targets, default: -> { [NO_TARGET] }, instance_writer: false
+  class_attribute :targets,
+                  default: -> { [NO_TARGET] },
+                  instance_writer: false,
+                  instance_predicate: false
 
   # Problem check classes need to be registered here in order to be enabled.
   #
-  # Note: This list must come after the `config_accessor` declarations.
+  # Note: This list must come after the `class_attribute` declarations.
   #
   CORE_PROBLEM_CHECKS = [
     ProblemCheck::BadFaviconUrl,
+    ProblemCheck::ContentSecurityPolicyDisabled,
+    ProblemCheck::EmailSendingFailures,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
     ProblemCheck::ForceHttps,
     ProblemCheck::GithubConfig,
+    ProblemCheck::GithubOneboxBackoff,
     ProblemCheck::GoogleAnalyticsVersion,
     ProblemCheck::GoogleOauth2Config,
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::Landlock,
+    ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
@@ -155,6 +164,12 @@ class ProblemCheck
   end
 
   def self.cleanup_trackers
+    # A disabled check never runs, so it can't clear its own trackers/notices.
+    unless enabled?
+      ProblemCheckTracker.where(identifier:).destroy_all
+      return
+    end
+
     current_targets = targets.call
     return if current_targets.empty?
 
@@ -194,10 +209,7 @@ class ProblemCheck
     if problem.blank?
       tracker.no_problem!(next_run_at:)
     else
-      tracker.problem!(
-        next_run_at:,
-        details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
-      )
+      tracker.problem!(next_run_at:, details: problem.details.merge(base_path: Discourse.base_path))
     end
   end
 
@@ -213,19 +225,19 @@ class ProblemCheck
 
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
+    problem_details =
+      override_data.merge(
+        target.present? ? translation_data(target) : translation_data,
+      ).symbolize_keys
+    notice_details = problem_details.merge(details)
+    notice_details[AdminNotice::TRANSLATION_KEY_DETAIL] = override_key if override_key
 
     Problem.new(
-      I18n.t(
-        override_key || translation_key,
-        base_path: Discourse.base_path,
-        **override_data.merge(
-          target.present? ? translation_data(target) : translation_data,
-        ).symbolize_keys,
-      ),
-      priority: self.config.priority,
+      I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
+      priority:,
       identifier:,
       target: target_identifier,
-      details:,
+      details: notice_details,
     )
   end
 

@@ -32,6 +32,36 @@ RSpec.describe UserSilencer do
       expect(count).to eq(1)
     end
 
+    it "preserves the scheduled expiry in the log after an early unsilencing" do
+      freeze_time(Time.zone.now.round)
+      UserSilencer.silence(user, admin, silenced_till: 2.days.from_now)
+
+      history = user.user_histories.find_by!(action: UserHistory.actions[:silence_user])
+      expect(history.expires_at).to eq_time(user.reload.silenced_till)
+
+      UserSilencer.unsilence(user, admin)
+
+      expect(history.reload.expires_at).to eq_time(2.days.from_now)
+      expect(
+        user.user_histories.find_by!(action: UserHistory.actions[:unsilence_user]).expires_at,
+      ).to be_nil
+    end
+
+    it "logs the expiry used for an indefinite silence" do
+      UserSilencer.silence(user, admin)
+
+      history = user.user_histories.find_by!(action: UserHistory.actions[:silence_user])
+      expect(history.expires_at).to eq_time(user.reload.silenced_till)
+    end
+
+    it "removes featured rows for hidden topics" do
+      CategoryFeaturedTopic.create!(category: post.topic.category, topic: post.topic)
+
+      expect { UserSilencer.silence(user, admin) }.to change {
+        CategoryFeaturedTopic.exists?(topic_id: post.topic_id)
+      }.from(true).to(false)
+    end
+
     it "skips sending the email for the silence PM via post alert" do
       NotificationEmailer.enable
       Jobs.run_immediately!
@@ -47,6 +77,15 @@ RSpec.describe UserSilencer do
       post.reload
       expect(post.topic.visible).to eq(true)
       expect(post.hidden).to eq(false)
+    end
+
+    it "does not silence or hide posts for staff users" do
+      user.update!(moderator: true)
+
+      expect(UserSilencer.silence(user, admin)).to eq(false)
+      expect(user.reload.silenced?).to eq(false)
+      expect(post.reload.hidden).to eq(false)
+      expect(post.topic.reload.visible).to eq(true)
     end
 
     it "allows us to silence the user for a particular post" do
@@ -66,6 +105,17 @@ RSpec.describe UserSilencer do
       old_post.reload
       expect(old_post).to_not be_hidden
       expect(old_post.topic).to be_visible
+    end
+
+    it "links the staff action log to the reviewable when passed via opts" do
+      reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
+
+      expect { UserSilencer.silence(user, admin, reviewable_id: reviewable.id) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:silence_user],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
     end
 
     context "with a plugin hook" do
@@ -90,6 +140,26 @@ RSpec.describe UserSilencer do
         expect(post.topic.title).to eq("override title")
         expect(post.raw).to eq("override raw")
       end
+
+      context "when the dsa_reporting_enabled site setting is enabled" do
+        before do
+          enable_dsa_reporting
+          SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+        end
+
+        it "includes appeal instructions in plugin customized messages" do
+          UserSilencer.silence(user, admin, message: :plugin_silence_notice)
+          # force a reload in case instance has no posts
+          system_user = User.find(Discourse::SYSTEM_USER_ID)
+
+          post = system_user.posts.order("posts.id desc").first
+
+          expect(post.topic.title).to eq("override title")
+          expect(post.raw).to eq(
+            "override raw\n\nTo appeal this decision, contact appeals@example.com",
+          )
+        end
+      end
     end
   end
 
@@ -113,6 +183,44 @@ RSpec.describe UserSilencer do
         ).count
 
       expect(count).to eq(1)
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        enable_dsa_reporting
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the unsilence notice" do
+        user.update!(silenced_till: 1.year.from_now)
+
+        UserSilencer.unsilence(user, admin)
+
+        pm = user.topics_allowed.order("topics.id desc").first
+        expect(pm.first_post.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
+
+    it "does nothing when the user is not silenced" do
+      expect(UserSilencer.unsilence(user, admin)).to eq(false)
+
+      expect(user.topics_allowed.count).to eq(0)
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user]).count).to eq(0)
+    end
+
+    it "is idempotent when called twice" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      UserSilencer.unsilence(user, admin)
+      UserSilencer.unsilence(user, admin)
+
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user]).count).to eq(1)
+      expect(
+        user
+          .topics_allowed
+          .where(title: I18n.t("system_messages.unsilenced.subject_template"))
+          .count,
+      ).to eq(1)
     end
   end
 end

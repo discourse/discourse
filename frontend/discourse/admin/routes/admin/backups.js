@@ -4,7 +4,6 @@ import StartBackupModal from "discourse/admin/components/modal/start-backup";
 import Backup from "discourse/admin/models/backup";
 import BackupStatus from "discourse/admin/models/backup-status";
 import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -50,7 +49,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
     if (log.message === "[STARTED]") {
       this.currentUser.set("hideReadOnlyAlert", true);
       this.controllerFor("admin.backups").set("model.isOperationRunning", true);
-      this.controllerFor("admin.backups.logs").get("logs").clear();
+      this.controllerFor("admin.backups.logs").get("logs").length = 0;
     } else if (log.message === "[FAILED]") {
       this.controllerFor("admin.backups").set(
         "model.isOperationRunning",
@@ -148,37 +147,5 @@ export default class AdminBackupsRoute extends DiscourseRoute {
         });
       },
     });
-  }
-
-  @action
-  uploadSuccess(filename) {
-    this.dialog.alert(i18n("admin.backups.upload.success", { filename }));
-  }
-
-  @action
-  uploadError(filename, message) {
-    this.dialog.alert(
-      i18n("admin.backups.upload.error", { filename, message })
-    );
-  }
-
-  @action
-  remoteUploadSuccess() {
-    Backup.find()
-      .then((backups) => backups.map((backup) => Backup.create(backup)))
-      .then((backups) => {
-        this.controllerFor("admin.backups.index").set(
-          "model",
-          backups.map((backup) => Backup.create(backup))
-        );
-      })
-      .catch((error) => {
-        this.dialog.alert(
-          i18n("admin.backups.backup_storage_error", {
-            error_message: extractError(error),
-          })
-        );
-        return [];
-      });
   }
 }

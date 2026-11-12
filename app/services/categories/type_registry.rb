@@ -31,17 +31,32 @@ module Categories
         types
       end
 
-      def list
-        types.values.map(&:metadata)
+      def list(only_visible: false, guardian: nil)
+        types
+          .values
+          .select { |type| only_visible ? type.visible? : true }
+          .map { |type| type.metadata(guardian:) }
       end
 
       def valid?(id)
         types.key?(id.to_sym)
       end
 
+      def owner(id)
+        owners[id.to_sym]
+      end
+
+      def plugin_display_name(id)
+        Discourse.plugins_by_name[owner(id)]&.humanized_name
+      end
+
       def reset!
         @types = nil
         @owners = nil
+
+        # Always need to re-register the core Discussion type, the system doesn't work
+        # without it.
+        register(Categories::Types::Discussion)
       end
 
       # Returns all the category type counts in a hash with the type
@@ -70,6 +85,20 @@ module Categories
         type_list.each_with_object({}) do |type, counts|
           counts[type.type_id] = (result[type.type_id.to_s] || 0).to_i
         end
+      end
+
+      # Every category is a discussion category unless configured otherwise,
+      # so that type never has a count of its own.
+      def configured_counts
+        counts.except(Categories::Types::Discussion.type_id)
+      end
+
+      def non_discussion_category_ids
+        types
+          .values
+          .reject { |type| type.type_id == :discussion }
+          .flat_map { |type| type.find_matches.pluck(:id) }
+          .uniq
       end
 
       private

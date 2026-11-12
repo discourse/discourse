@@ -1,0 +1,703 @@
+@use "lib/viewport";
+
+// Fits the frame to the image: 16:9 at most, but never taller than the image itself, so small or
+// very wide images don't sit in large bars
+@mixin letterboxed-image {
+  aspect-ratio: auto;
+  container-type: inline-size;
+
+  img {
+    background: var(--event-image-color, var(--primary-very-low));
+    display: block;
+    height: min(
+      calc(100cqi * 9 / 16),
+      calc(100cqi * var(--event-image-ratio, 1)),
+      var(--event-image-height, 100cqi)
+    );
+
+    // Shrinks images that don't fit, but never enlarges small ones
+    object-fit: scale-down;
+    object-position: center;
+  }
+}
+
+@mixin stacked-side-image {
+  @include letterboxed-image;
+  float: none;
+  margin: 0;
+  padding: 1px;
+  width: 100%;
+
+  img {
+    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    max-height: none;
+  }
+}
+
+$interested: #fb985d;
+$show-interested: inherit;
+
+.cooked > .discourse-post-event {
+  display: none;
+}
+
+// Only where the width comes from the page; elsewhere, like popovers, containment would collapse it
+.cooked .discourse-post-event,
+.chat-message-text .discourse-post-event {
+  container: post-event / inline-size;
+}
+
+.discourse-post-event-onebox {
+  display: block;
+  margin: var(--space-4) 0;
+}
+
+.chat-message-text .discourse-post-event-onebox {
+  max-width: var(--topic-body-width);
+
+  // Matches the chat cap on event onebox images; the image carries the ratio so it can be capped
+  .event-image:not(.--side) {
+    aspect-ratio: auto;
+
+    img {
+      display: block;
+      max-height: 12rem;
+    }
+
+    &:not(.--letterboxed) img {
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+  }
+}
+
+.discourse-post-event-onebox .discourse-post-event-widget,
+.discourse-post-event--preview .discourse-post-event-widget {
+  box-shadow: 0 0 0 3px var(--primary-100);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  margin: var(--space-1) 0;
+}
+
+.discourse-post-event {
+  display: flex;
+  justify-content: center;
+
+  .event__section {
+    padding: 0.5em 0.75rem;
+
+    p {
+      margin: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    > .d-icon {
+      padding-right: 0.25em;
+    }
+
+    .discourse-local-date .d-icon {
+      padding-right: 0.25em;
+    }
+  }
+
+  .event-image {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 1px;
+    aspect-ratio: 16 / 9;
+    box-sizing: border-box;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      // Only affects images taller than their box, where the subject tends to sit high
+      object-position: 50% 0;
+      border-top-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
+    }
+
+    &.--letterboxed {
+      @include letterboxed-image;
+    }
+
+    // Floated so the header and details wrap beside it, then take the full width once past it
+    &.--side {
+      aspect-ratio: auto;
+      float: left;
+      margin: 0.75em 0 0.75em 0.75em;
+      padding: 0;
+      width: 8rem;
+
+      img {
+        border-radius: var(--d-border-radius);
+        display: block;
+        height: auto;
+        max-height: 12rem;
+      }
+
+      // Two columns leave too little room for long titles in narrow spaces like phones or the chat
+      // drawer, so the image goes above, letterboxed into the usual 16:9 banner. The viewport check
+      // covers places that size the widget to its content, like the calendar popover, which can't
+      // be containers.
+      @include viewport.until(sm) {
+        @include stacked-side-image;
+      }
+
+      @container post-event (width < 30rem) {
+        @include stacked-side-image;
+      }
+    }
+  }
+
+  .discourse-post-event-widget {
+    display: flex;
+    background: var(--secondary);
+    flex-direction: column;
+    flex: 1 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    .cooked & {
+      box-shadow: 0 0 0 3px var(--primary-100);
+      border: 1px solid var(--primary-300);
+      border-radius: var(--d-border-radius);
+      margin: 5px 0;
+    }
+
+    section:last-child {
+      padding-bottom: 0.75em;
+    }
+
+    // Floats don't apply to flex items
+    &:has(> .event-image.--side) {
+      display: flow-root;
+
+      // Keeps the RSVP buttons from being squeezed beside the image
+      .event-actions {
+        clear: both;
+      }
+    }
+
+    &.is-ended {
+      background: var(--primary-very-low);
+
+      .event-image img {
+        filter: grayscale(1);
+        opacity: 0.6;
+      }
+
+      .event-date {
+        border-color: var(--primary-low-mid);
+
+        .month,
+        .day {
+          color: var(--primary-medium);
+        }
+      }
+
+      .event-info .name,
+      .event-info .name a {
+        color: var(--primary-high);
+      }
+
+      .avatar-flair,
+      .event-invitees-icon .going {
+        background: var(--primary-very-low);
+      }
+    }
+  }
+
+  .event-header {
+    column-gap: 1em;
+    display: flex;
+    align-items: flex-start;
+    padding: 0.75em;
+
+    .more-dropdown {
+      margin-left: auto;
+    }
+
+    &__controls {
+      display: flex;
+      gap: var(--space-2);
+      margin-left: auto;
+
+      &:not(:has(*)) {
+        display: none;
+      }
+    }
+  }
+
+  .event-date {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3em;
+    height: 3em;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    flex-direction: column;
+
+    .month {
+      text-align: center;
+      color: var(--primary);
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .day {
+      text-align: center;
+      font-size: var(--font-up-1);
+      font-weight: 400;
+    }
+  }
+
+  .event-info {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    margin-right: 0.5rem;
+    margin-top: calc(-1 * var(--space-1));
+
+    .name {
+      font-size: var(--font-up-2);
+      font-weight: 400;
+      line-height: var(--line-height-medium);
+    }
+
+    .status-and-creators {
+      display: flex;
+      align-items: center;
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      font-weight: 400;
+      margin: 0;
+
+      .separator {
+        margin: 0 0.25em;
+      }
+
+      .created-by,
+      .hosted-by {
+        margin-right: 0.25em;
+        white-space: nowrap;
+
+        @media screen and (width <= 450px) {
+          display: none;
+        }
+      }
+
+      .username {
+        margin-inline-start: 0.25em;
+        color: var(--primary);
+
+        @include ellipsis;
+      }
+
+      .creators {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        flex-wrap: wrap;
+        min-width: 0;
+
+        .event-creator,
+        .event-host {
+          @include ellipsis;
+
+          .topic-invitee-avatar {
+            display: flex;
+            align-items: center;
+
+            @include ellipsis;
+          }
+        }
+
+        .event-hosts {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+          min-width: 0;
+
+          .hosted-by {
+            margin-right: 0;
+          }
+        }
+
+        .event-hosts__toggle {
+          padding: 0;
+          font-size: inherit;
+          white-space: nowrap;
+        }
+      }
+
+      .status {
+        &.expired,
+        &.closed {
+          color: var(--danger-medium);
+        }
+      }
+    }
+  }
+
+  .event-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75em;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--primary-low);
+
+    &.event-status {
+      margin: 0;
+      gap: 0.75em;
+
+      .btn {
+        flex: 1;
+      }
+
+      .going-button.d-combo-button {
+        flex: 1;
+
+        .d-combo-button-menu {
+          flex: 0 0 auto;
+        }
+      }
+
+      .interested-button {
+        display: $show-interested;
+      }
+
+      .not-going-button span {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .event-invitees {
+    min-height: 1.75em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    flex-direction: column;
+
+    .event-invitees-avatars {
+      padding: 0;
+      margin: 0;
+      gap: 0.25em;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+
+      .event-invitee {
+        list-style: none;
+        opacity: 0.25;
+
+        &.status-going,
+        &.status-not_going,
+        &.status-interested {
+          opacity: 1;
+        }
+
+        &.status-interested {
+          display: $show-interested;
+        }
+
+        &.status-going .avatar-flair .d-icon {
+          color: var(--success);
+        }
+
+        &.status-not_going .avatar-flair .d-icon {
+          color: var(--danger);
+        }
+
+        &.status-interested .avatar-flair .d-icon {
+          color: $interested;
+        }
+      }
+
+      .topic-invitee-avatar {
+        position: relative;
+        display: inline-block;
+
+        &:has(.avatar-flair) {
+          padding-right: var(--space-2);
+        }
+
+        .avatar {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        .avatar-flair {
+          --avatar-flair-size: 1rem;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+
+          --avatar-flair-background: var(--secondary);
+          color: var(--primary-medium);
+          box-shadow: 0 0 0 1px var(--primary-100);
+        }
+      }
+    }
+  }
+
+  hr {
+    margin: 0;
+  }
+
+  .event-description,
+  .event-location,
+  .event-url,
+  .event-dates,
+  .event-recurrence,
+  .event-chat-channel,
+  .event-invitees-avatars-container {
+    display: grid;
+    grid-template-columns: 3em minmax(0, 1fr);
+    column-gap: 1em;
+    align-items: center;
+    height: min-content;
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .chat-channel-link {
+      @include ellipsis;
+    }
+  }
+
+  .event-location a {
+    overflow-wrap: anywhere;
+  }
+
+  .event-description {
+    align-items: start;
+    padding-right: 2em;
+
+    > .d-icon {
+      margin-top: 0.25em;
+    }
+
+    .event-description__text {
+      overflow-wrap: anywhere;
+    }
+
+    &.is-clamped .event-description__text {
+      @include line-clamp(3);
+    }
+
+    &.is-clamped.is-expanded .event-description__text {
+      -webkit-line-clamp: unset;
+    }
+
+    .event-description__toggle {
+      font-size: var(--font-down-1);
+      margin-top: 0.25em;
+      cursor: pointer;
+    }
+  }
+
+  .event-recurrence {
+    color: var(--primary-medium);
+    padding-top: 0;
+
+    > .d-icon {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
+
+    > :not(.d-icon) {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .event-url {
+    .url {
+      max-width: 80%;
+
+      @include ellipsis;
+    }
+  }
+
+  .event-livestream {
+    padding-top: 0;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .event-location.--superseded,
+  .event-url.--superseded {
+    &,
+    a,
+    .url,
+    > .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .event-recording {
+    padding-top: 0;
+  }
+
+  .event-invitees + .event-recording {
+    padding-top: var(--space-2);
+    padding-left: var(--space-6);
+  }
+
+  .cooked-date,
+  .participants,
+  .event-url .url {
+    font-size: var(--base-font-size);
+    font-weight: 400;
+    border-bottom: none;
+    margin: 0;
+  }
+
+  .event__section.no-rsvp {
+    display: grid;
+    grid-template-columns: 3em 1fr;
+    column-gap: 1em;
+    align-items: center;
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
+  }
+
+  p.no-rsvp-description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 400;
+    grid-column-start: 2;
+  }
+
+  .event-invitees-icon {
+    position: relative;
+    display: flex;
+    margin: 0 auto;
+    color: var(--primary-high);
+  }
+
+  .event-invitees-icon .going {
+    font-size: var(--font-down-3);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: var(--secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-medium);
+  }
+}
+
+.discourse-post-event-going-menu-content {
+  .--selected .d-icon {
+    color: var(--success);
+  }
+}
+
+.event-dates {
+  // hardcoded as cooking date is async and will change height after initial rendering otherwise
+  // not ideal but a decent low tech solution
+  height: 24px;
+
+  .discourse-local-date {
+    .d-icon {
+      display: none;
+    }
+  }
+}
+
+.discourse-post-event {
+  .event__placeholder {
+    display: inline-block;
+    border-radius: var(--d-border-radius, 0.25em);
+    background-color: var(--primary-low);
+  }
+
+  .event__placeholder--text {
+    width: 8em;
+    height: 0.9em;
+    vertical-align: middle;
+  }
+
+  .event__placeholder--avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  .event__placeholder--button {
+    width: 5em;
+    height: 2em;
+    margin-right: 0.5em;
+  }
+}
+
+.event-hosts-menu {
+  min-width: 14em;
+  padding: 0.5em 0;
+
+  &__title {
+    margin: 0;
+    padding: 0.25em 1em 0.5em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__host {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.5em 1em;
+    color: var(--primary);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--d-hover);
+      text-decoration: none;
+    }
+  }
+
+  &__name {
+    @include ellipsis;
+  }
+
+  &__username {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    @include ellipsis;
+  }
+}

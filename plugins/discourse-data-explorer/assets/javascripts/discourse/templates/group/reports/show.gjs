@@ -1,9 +1,10 @@
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import ParamInputForm from "../../../components/param-input-form";
-import QueryResult from "../../../components/query-result";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import ParamInputForm from "../../../components/param-input-form.gjs";
+import QueryResult from "../../../components/query-result.gjs";
+import QueryResultDownloadButtons from "../../../components/query-result-download-buttons.gjs";
 
 export default <template>
   <section class="user-content">
@@ -14,37 +15,55 @@ export default <template>
       {{#if @controller.hasParams}}
         <ParamInputForm
           @initialValues={{@controller.parsedParams}}
-          @paramInfo={{@controller.model.param_info}}
           @onRegisterApi={{@controller.onRegisterApi}}
+          @paramInfo={{@controller.model.param_info}}
         />
       {{/if}}
 
-      <DButton
-        {{didInsert @controller.runOnLoad}}
-        @action={{@controller.run}}
-        @icon="play"
-        @label="explorer.run"
-        @type="submit"
-        class="btn-primary query-run__submit"
-      />
+      <div class="query-run-actions">
+        <div class="query-run-actions__left">
+          <DButton
+            class="btn-primary query-run__submit"
+            @action={{@controller.run}}
+            @icon="play"
+            @label="explorer.run"
+            @type="submit"
+            {{didInsert @controller.runOnLoad}}
+          />
 
-      <DButton
-        @action={{@controller.toggleBookmark}}
-        @label={{@controller.bookmarkLabel}}
-        @icon={{@controller.bookmarkIcon}}
-        class={{@controller.bookmarkClassName}}
-      />
+          <DButton
+            class="btn-default query-group-bookmark
+              {{if @controller.queryGroupBookmark 'bookmarked'}}"
+            @action={{@controller.toggleBookmark}}
+            @icon={{@controller.bookmarkIcon}}
+            @translatedLabel={{@controller.bookmarkLabel}}
+          />
+        </div>
+
+        {{#if @controller.showResults}}
+          <div class="query-run-actions__right">
+            <QueryResultDownloadButtons
+              @content={{@controller.results}}
+              @group={{@controller.group}}
+              @query={{@controller.model}}
+            />
+          </div>
+        {{/if}}
+      </div>
     </form>
 
-    <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+    <hr />
+
+    <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
     {{#if @controller.results}}
       <div class="query-results">
         {{#if @controller.showResults}}
           <QueryResult
-            @query={{@controller.model}}
             @content={{@controller.results}}
             @group={{@controller.group}}
+            @query={{@controller.model}}
+            @showDownloads={{false}}
           />
         {{else}}
           {{#each @controller.results.errors as |err|}}

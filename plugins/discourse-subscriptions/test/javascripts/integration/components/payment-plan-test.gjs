@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PaymentPlan from "discourse/plugins/discourse-subscriptions/discourse/components/payment-plan";
 
-module("Subscriptions | payment-plan", function (hooks) {
+module("payment-plan", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Payment plan subscription button rendered", async function (assert) {
@@ -14,7 +14,7 @@ module("Subscriptions | payment-plan", function (hooks) {
       recurring: { interval: "year" },
       amountDollars: "44.99",
     };
-    let selectedPlan;
+    let selectedPlan = null;
 
     await render(
       <template>
@@ -42,15 +42,11 @@ module("Subscriptions | payment-plan", function (hooks) {
       amountDollars: "3.99",
     };
 
-    class State {
-      @tracked selectedPlan;
-    }
-
-    const testState = new State();
+    const selectedPlan = tracked(undefined);
 
     await render(
       <template>
-        <PaymentPlan @plan={{plan}} @selectedPlan={{testState.selectedPlan}} />
+        <PaymentPlan @plan={{plan}} @selectedPlan={{selectedPlan.value}} />
       </template>
     );
 

@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { gte } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import MembersCount from "./members-count";
-import MembersSelector from "./members-selector";
+import MembersCount from "./members-count.gjs";
+import MembersSelector from "./members-selector.gjs";
 
 export default class AddMembers extends Component {
   @service chatApi;
@@ -61,34 +60,32 @@ export default class AddMembers extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__add-members-container">
-      <div class="chat-message-creator__add-members">
+    <div class="chat-message-creator__add-members">
+      <MembersSelector
+        @cancel={{@cancel}}
+        @channel={{@channel}}
+        @close={{@close}}
+        @maxReached={{gte this.membersCount this.maxMembers}}
+        @members={{@members}}
+        @membersCount={{this.membersCount}}
+        @onChange={{@onChangeMembers}}
+      >
         <MembersCount @count={{this.membersCount}} @max={{this.maxMembers}} />
+      </MembersSelector>
 
-        <MembersSelector
-          @channel={{@channel}}
-          @members={{@members}}
-          @onChange={{@onChangeMembers}}
-          @close={{@close}}
-          @cancel={{@cancel}}
-          @membersCount={{this.membersCount}}
-          @maxReached={{gte this.membersCount this.maxMembers}}
-        />
+      {{#if @members.length}}
+        <div class="chat-message-creator__add-members-footer-container">
+          <div class="chat-message-creator__add-members-footer">
+            <DButton class="btn-flat" @action={{@cancel}} @label="cancel" />
 
-        {{#if @members.length}}
-          <div class="chat-message-creator__add-members-footer-container">
-            <div class="chat-message-creator__add-members-footer">
-              <DButton class="btn-flat" @label="cancel" @action={{@cancel}} />
-
-              <DButton
-                class="btn-primary add-to-channel"
-                @label="chat.direct_message_creator.add_to_channel"
-                @action={{this.saveGroupMembers}}
-              />
-            </div>
+            <DButton
+              class="btn-primary add-to-channel"
+              @action={{this.saveGroupMembers}}
+              @label="chat.direct_message_creator.add_to_channel"
+            />
           </div>
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

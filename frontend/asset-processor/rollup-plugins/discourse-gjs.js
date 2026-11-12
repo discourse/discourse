@@ -1,4 +1,4 @@
-import { Preprocessor } from "../content-tag";
+import { Preprocessor } from "../content-tag.js";
 
 const preprocessor = new Preprocessor();
 
@@ -10,7 +10,7 @@ export default function discourseGjs() {
       // Enforce running the gjs transform before any others like babel that expect valid JS
       order: "pre",
       handler(input, id) {
-        if (!id.endsWith(".gjs")) {
+        if (!id.endsWith(".gjs") && !id.endsWith(".gts")) {
           return null;
         }
         let { code, map } = preprocessor.process(input, {

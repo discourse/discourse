@@ -1,5 +1,6 @@
 import { click, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
@@ -14,7 +15,7 @@ import I18n from "discourse-i18n";
 acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   let _originalTestTranslations;
@@ -167,7 +168,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 });
 
-    await fillIn(".admin-filter-controls__input", "flags");
+    await fillIn(".d-filter-controls__input", "flags");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -180,7 +181,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
-    await fillIn(".admin-filter-controls__input", "activities");
+    await fillIn(".d-filter-controls__input", "activities");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -217,7 +218,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
 acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   needs.hooks.beforeEach(() => {
@@ -336,7 +337,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
 acceptance("Admin Sidebar - Plugin Icons", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   needs.hooks.beforeEach(() => {
@@ -397,9 +398,13 @@ acceptance("Admin Sidebar - Plugin Icons", function (needs) {
   });
 
   test("setAdminPluginIcon with falsy icon is ignored and keeps default gear icon", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
     withPluginApi((api) => {
       api.setAdminPluginIcon("discourse-calendar", "");
     });
+
+    assert.true(stub.calledWith("", "An icon must be provided!"));
 
     await visit("/admin");
     await click(".sidebar-toggle-all-sections");
@@ -409,6 +414,8 @@ acceptance("Admin Sidebar - Plugin Icons", function (needs) {
         ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name='admin_plugin_discourse-calendar'] .d-icon-gear"
       )
       .exists("default gear icon is displayed when falsy icon is provided");
+
+    stub.restore();
   });
 });
 
@@ -418,7 +425,7 @@ acceptance(
   function (needs) {
     needs.user({
       admin: true,
-      groups: [AUTO_GROUPS.admins],
+      visibleGroups: [AUTO_GROUPS.admins],
     });
 
     needs.hooks.beforeEach(() => {

@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { incrementTopicsOpened } from "../connectors/topic-above-footer-buttons/patreon";
+import { incrementTopicsOpened } from "../connectors/topic-above-footer-buttons/patreon.gjs";
 
 function initWithApi(api) {
   const currentUser = api.getCurrentUser();

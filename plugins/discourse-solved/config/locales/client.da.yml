@@ -5,11 +5,29 @@
 # https://translate.discourse.org/
 
 da:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Personale"
+              member: "Brugere"
+              basic: "Basis"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Fjernet"
+        tag_names: "Mærker"
     notifications:
       alt:
         solved:
           accepted_notification: "accepteret"
+          topic_solved_notification: "løst"
     solved:
       title: "Løst"
       allow_accepted_answers: "Tillad ejer af emne og stab at markere svar som en løsning"
@@ -21,7 +39,6 @@ da:
       solution_summary:
         one: "løsning"
         other: "løsninger"
-      accepted_answer_solver_info: "Løst af %{user} i %{post}"
       accepted_answer_post_number: "indlæg %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -31,13 +48,15 @@ da:
       no_solved_topics_title: "Du har ikke løst nogen emner endnu"
       no_solved_topics_title_others: "%{username} har endnu ikke løst nogen emner"
       no_solved_topics_body: "Når du giver et nyttigt svar på et emne, kan dit svar blive udvalgt som løsningen af emneejeren eller personalet."
-      marked_solved_by: "Markeret som løst af %{user}"
       move_post_cancel: "Annuller"
       confirm_solved_removal_confirm: "Bekræft"
       confirm_solved_removal_cancel: "Annuller"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Er dit spørgsmål blevet besvaret?
         description: "Fremhæv svaret og hjælp andre ved at bruge løsningsknappen under det korrekte svar."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "dit indlæg blev markeret som løsning"
     topic_statuses:
@@ -49,6 +68,11 @@ da:
           solved: "er løst"
           unsolved: "er uløst"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Emne"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Løst begivenhed"

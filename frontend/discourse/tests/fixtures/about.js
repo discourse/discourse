@@ -1,4 +1,4 @@
-export default {
+const aboutFixtures = {
   "about.json": {
     users: [
       {
@@ -71,3 +71,5 @@ export default {
     },
   },
 };
+
+export default aboutFixtures;

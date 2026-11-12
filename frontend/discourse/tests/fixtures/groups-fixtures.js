@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const groupsFixtures = {
   "/groups.json": {
     groups: [
       {
@@ -78,3 +83,5 @@ export default {
     load_more_groups: "/groups?page=1",
   },
 };
+
+export default groupsFixtures;

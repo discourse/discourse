@@ -70,10 +70,10 @@ d/boot_dev --init
 d/rails s
 
 # And in a separate terminal
-d/ember-cli
+d/dev --only ember
 ```
 
-...then open a browser on http://localhost:4200 and _voila!_, you should see Discourse.
+...then open a browser on http://localhost:3000 and _voila!_, you should see Discourse.
 
 ## Plugin Symlinks
 
@@ -128,7 +128,7 @@ d/shutdown_dev; d/boot_dev
   ```sh
   d/boot_dev -p
   ```
-- The Dockerfile comes from [discourse/discourse_docker on GitHub](https://github.com/discourse/discourse_docker), in particular [image/discourse_dev](https://github.com/discourse/discourse_docker/tree/master/image/discourse_dev).
+- The Dockerfile comes from [discourse/discourse_docker on GitHub](https://github.com/discourse/discourse_docker), in particular [image/discourse_dev](https://github.com/discourse/discourse_docker/tree/main/image/discourse_dev).
 
 ## Running Tests
 

@@ -330,6 +330,32 @@ RSpec.shared_examples "op_reactions_data serializer" do |serializer_class, modif
         end
       end
     end
+
+    context "when serialized through a topic list preload" do
+      let(:topic_list_filter) do
+        serializer_class == SuggestedTopicSerializer ? :suggested : :latest
+      end
+
+      before do
+        Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+        reaction = Fabricate(:reaction, reaction_value: "otter", post: first_post)
+        Fabricate(:reaction_user, reaction: reaction, user: user_2, post: first_post)
+        Fabricate(:reaction_user, reaction: reaction, user: user_3, post: first_post)
+      end
+
+      it "uses viewer-specific preloaded reaction counts" do
+        topic.allowed_user_ids = []
+        topic.allowed_group_ids = []
+        preloaded_topic = TopicList.new(topic_list_filter, user_1, [topic]).topics.first
+        json =
+          serializer_class.new(preloaded_topic, scope: Guardian.new(user_1), root: false).as_json
+
+        expect(json[:op_reactions_data][:reactions]).to contain_exactly(
+          { id: "otter", type: :emoji, count: 1 },
+        )
+        expect(json[:op_reactions_data][:reaction_users_count]).to eq(1)
+      end
+    end
   end
 end
 

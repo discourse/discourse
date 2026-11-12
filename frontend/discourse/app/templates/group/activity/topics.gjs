@@ -1,14 +1,14 @@
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 
 export default <template>
-  <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
+  <DLoadMore class="paginated-topics-list" @action={{@controller.loadMore}}>
     <BasicTopicList
-      @topicList={{@controller.model}}
-      @showPosters={{true}}
       @listContext="group-activity"
+      @showPosters={{true}}
+      @topicList={{@controller.model}}
     />
-    <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-  </LoadMore>
+    <DConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
+  </DLoadMore>
 </template>

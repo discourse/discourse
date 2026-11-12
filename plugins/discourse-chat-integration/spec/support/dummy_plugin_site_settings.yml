@@ -1,0 +1,5 @@
+site_settings:
+  dummy_provider_enabled:
+    default: false
+  other_dummy_provider_enabled:
+    default: false

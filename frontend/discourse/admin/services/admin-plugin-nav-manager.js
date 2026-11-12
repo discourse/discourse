@@ -11,7 +11,15 @@ export default class AdminPluginNavManager extends Service {
   @tracked viewingPluginsList = false;
 
   get currentConfigNav() {
-    const configNav = configNavForPlugin(this.currentPlugin.id);
+    return this.configNavFor(this.currentPlugin);
+  }
+
+  get currentPluginDefaultRoute() {
+    return this.defaultRouteFor(this.currentPlugin);
+  }
+
+  configNavFor(plugin) {
+    const configNav = configNavForPlugin(plugin.id);
     const settingsNav = {
       links: [
         {
@@ -33,20 +41,20 @@ export default class AdminPluginNavManager extends Service {
         .map((item) => item.route)
         .includes("adminPlugins.show.settings")
     ) {
-      configNav.links.unshift(settingsNav.links[0]);
+      configNav.links.push(settingsNav.links[0]);
     }
     return configNav;
   }
 
-  get currentPluginDefaultRoute() {
-    const currentConfigNavLinks = this.currentConfigNav.links;
-    const linksExceptSettings = currentConfigNavLinks.filter(
+  defaultRouteFor(plugin) {
+    const configNavLinks = this.configNavFor(plugin).links;
+    const linksExceptSettings = configNavLinks.filter(
       (link) => link.route !== "adminPlugins.show.settings"
     );
 
     // Some plugins only have the Settings route, if so it's fine to use it as default.
     if (linksExceptSettings.length === 0) {
-      return currentConfigNavLinks[0].route;
+      return configNavLinks[0].route;
     }
 
     return linksExceptSettings[0].route;

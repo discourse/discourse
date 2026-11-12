@@ -1,0 +1,105 @@
+name: Bundle analysis
+
+# Compares the core JS build of a PR with its base. Runs PR code, so it only
+# reads: bundle-analysis-comment.yml posts the result from the default branch.
+# See script/bundle_analysis/README.md.
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: bundle-analysis-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      js: ${{ steps.changes.outputs.js }}
+      ready: ${{ steps.base.outputs.ready }}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Analyzer tests
+        run: node --test "script/bundle_analysis/test/*.test.mjs"
+
+      - name: Check for JS changes
+        id: changes
+        # Assigned first, so a node failure fails the step.
+        run: |
+          js=$(node script/bundle_analysis/baseline.mjs --js-changed-since HEAD^1)
+          echo "js=$js" >> "$GITHUB_OUTPUT"
+
+      # A base from before this analysis has nothing to compare with.
+      - name: Check the base can be analyzed
+        id: base
+        if: steps.changes.outputs.js == 'true'
+        run: |
+          if git cat-file -e HEAD^1:script/bundle_analysis/analyze.mjs 2>/dev/null; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::The base has no bundle analysis yet, so there is nothing to compare."
+          fi
+
+      # bundle-analysis-comment.yml still runs for PRs without JS changes, to resolve an old comment.
+      - name: Report no JS changes
+        if: steps.changes.outputs.js == 'false'
+        run: node script/bundle_analysis/analyze.mjs --no-js-changes --out "$RUNNER_TEMP/analysis"
+
+      - name: Upload the report
+        if: steps.changes.outputs.js == 'false'
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-analysis
+          path: ${{ runner.temp }}/analysis/report.json
+          retention-days: 7
+
+  analyze:
+    needs: changes
+    if: needs.changes.outputs.ready == 'true'
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 20
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      # Both in worktrees, the same way.
+      - parallel:
+          - name: Build the PR
+            run: node script/bundle_analysis/baseline.mjs --commit HEAD --out "$RUNNER_TEMP/head"
+
+          - name: Build the base
+            run: node script/bundle_analysis/baseline.mjs --commit HEAD^1 --out "$RUNNER_TEMP/base"
+
+      - name: Analyze
+        run: |
+          node script/bundle_analysis/analyze.mjs --base "$RUNNER_TEMP/base" --head "$RUNNER_TEMP/head" --out "$RUNNER_TEMP/analysis"
+          cat "$RUNNER_TEMP/analysis/summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-analysis
+          path: ${{ runner.temp }}/analysis/report.json
+          retention-days: 7

@@ -87,6 +87,9 @@ module DiscourseAi
               option(:base_query, type: :string),
               option(:max_results, type: :integer),
               option(:search_private, type: :boolean),
+              option(:ignore_user_filter, type: :boolean),
+              option(:absolute_urls, type: :boolean),
+              option(:max_invocations, type: :integer),
             ]
           end
         end
@@ -101,6 +104,7 @@ module DiscourseAi
 
         def invoke
           parameters.delete(:max_posts) if parameters[:max_posts] == 0
+          parameters.delete(:user) if options[:ignore_user_filter]
 
           search_terms = []
           search_terms << options[:base_query] if options[:base_query].present?
@@ -135,6 +139,7 @@ module DiscourseAi
             )
 
           @last_num_results = results[:rows]&.length || 0
+          make_result_urls_absolute!(results) if options[:absolute_urls]
           results
         end
 
@@ -149,6 +154,16 @@ module DiscourseAi
         end
 
         private
+
+        def make_result_urls_absolute!(results)
+          url_index = results[:column_names]&.index("url")
+          return if url_index.nil?
+
+          results[:rows].to_a.each do |row|
+            url = row[url_index]
+            row[url_index] = "#{Discourse.base_url_no_prefix}#{url}" if url&.start_with?("/")
+          end
+        end
 
         def calculate_max_results(llm)
           max_results = options[:max_results].to_i

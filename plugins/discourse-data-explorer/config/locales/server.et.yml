@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 et:
+  data_explorer:
+    admin_dashboard_label: "Andmete eksportija"

@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | invite-panel", function (hooks) {
+module("Integration | Component | InvitePanel", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows the invite link after it is generated", async function (assert) {

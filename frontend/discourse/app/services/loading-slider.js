@@ -83,7 +83,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
     return this.rollingAverage.average;
   }
 
-  transitionStarted() {
+  transitionStarted({ showFallbackSpinner = true } = {}) {
     if (this.loading) {
       // Nested transition
       return;
@@ -94,11 +94,12 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.trigger("stateChanged", true);
 
     this.scheduleManager.cancelAll();
-
-    this.scheduleManager.later(
-      this.setStillLoading,
-      STILL_LOADING_DURATION * 1000
-    );
+    if (showFallbackSpinner) {
+      this.scheduleManager.later(
+        this.setStillLoading,
+        STILL_LOADING_DURATION * 1000
+      );
+    }
   }
 
   @bind

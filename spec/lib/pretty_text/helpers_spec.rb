@@ -4,7 +4,24 @@ RSpec.describe PrettyText::Helpers do
   describe ".lookup_upload_urls" do
     let(:upload) { Fabricate(:upload) }
 
-    it "should return cdn url if available" do
+    it "resolves thumbnails by their exact video SHA1" do
+      thumbnail = Fabricate(:upload, original_filename: "#{upload.sha1}.png")
+      short_url = Upload.base62_sha1(upload.sha1)
+
+      result = PrettyText::Helpers.lookup_upload_urls([short_url])
+
+      expect(result[short_url][:url]).to eq(thumbnail.url)
+    end
+
+    it "resolves legacy non-ASCII video thumbnails" do
+      thumbnail = Fabricate(:upload, original_filename: "動画.png")
+
+      result = PrettyText::Helpers.lookup_upload_urls(["動画"])
+
+      expect(result["動画"][:url]).to eq(thumbnail.url)
+    end
+
+    it "returns the CDN URL when available" do
       short_url = upload.short_url
       result = PrettyText::Helpers.lookup_upload_urls([short_url])
       expect(result[short_url][:url]).to eq(upload.url)
@@ -161,31 +178,31 @@ RSpec.describe PrettyText::Helpers do
       expect(PrettyText::Helpers.hashtag_lookup("blah", user.id, %w[category tag])).to eq(nil)
     end
 
-    it "uses the system user if the cooking_user is nil" do
-      guardian_system = Guardian.new(Discourse.system_user)
-      Guardian.expects(:new).with(Discourse.system_user).returns(guardian_system)
-      PrettyText::Helpers.hashtag_lookup("somecooltag", nil, %w[category tag])
+    it "does not expose private category hashtags when cooking without a user" do
+      group = Fabricate(:group)
+      private_category =
+        Fabricate(:private_category, slug: "secretcategory", name: "Manager Hideout", group: group)
+
+      cooked = PrettyText.cook(" #secretcategory")
+
+      expect(cooked).to have_tag("span", text: "#secretcategory", with: { class: "hashtag-raw" })
+      expect(cooked).not_to include(private_category.url)
     end
 
-    it "falls back to system user when cooking_user is deleted" do
+    it "uses anonymous permissions if the cooking user is nil" do
+      group = Fabricate(:group)
+      Fabricate(:private_category, slug: "secretcategory", name: "Manager Hideout", group: group)
+
+      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", nil, %w[category tag])).to eq(nil)
+    end
+
+    it "uses anonymous permissions when the cooking user is deleted" do
+      group = Fabricate(:group)
+      Fabricate(:private_category, slug: "secretcategory", name: "Manager Hideout", group: group)
       user.destroy
 
-      expect(
-        PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag]),
-      ).to eq(
-        {
-          relative_url: tag.url,
-          text: "somecooltag",
-          description: "Coolest things ever",
-          colors: nil,
-          emoji: nil,
-          icon: "tag",
-          style_type: "icon",
-          id: tag.id,
-          slug: "somecooltag",
-          ref: "somecooltag::tag",
-          type: "tag",
-        },
+      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user.id, %w[category tag])).to eq(
+        nil,
       )
     end
   end

@@ -12,6 +12,8 @@ In the last couple of chapters, we've explored how to use the JavaScript API to 
 
 `api.getCurrentUser()` will return information about the current user, or `null` if nobody is logged in. This can be used for all sorts of things, including per-group logic, or rendering a user's username into the UI.
 
+For group membership checks backed by theme settings, use the [`resolve_group_membership` option](../05-themes-components/09-theme-settings.md#resolving-group-membership) in your theme's `settings.yml` file instead of checking `currentUser.groups`. This avoids leaking or missing hidden group memberships.
+
 ```gjs
 import { apiInitializer } from "discourse/lib/api";
 
@@ -103,6 +105,6 @@ For more information on Transformers, check out the [dedicated guide](https://me
 
 ## Finding more JS API methods
 
-All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
+All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
 
 That's it for this chapter, and almost the end of the tutorial. Let's wrap things up [in the conclusion](https://meta.discourse.org/t/357802).

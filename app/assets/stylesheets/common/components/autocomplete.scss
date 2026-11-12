@@ -14,9 +14,7 @@
   }
 
   ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
 
     li {
       &:first-of-type a {
@@ -43,6 +41,7 @@
 
         &.selected {
           background-color: var(--d-selected);
+          color: var(--d-selected-text-color);
         }
 
         .avatar {

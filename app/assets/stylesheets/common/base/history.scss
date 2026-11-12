@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 // styles that apply to the popup that appears when you show the edit history of a post
-.modal.history-modal {
+.d-modal.history-modal {
   .d-modal__footer {
     justify-content: space-between;
   }
@@ -71,6 +71,15 @@
     gap: 0.25em;
   }
 
+  .revision-details__unlisted {
+    color: var(--primary-medium);
+
+    .fk-d-tooltip__trigger-container {
+      align-items: center;
+      gap: 0.25em;
+    }
+  }
+
   .revision__title,
   .revision__locale,
   .body-diff,
@@ -104,7 +113,6 @@
   pre code {
     overflow-wrap: anywhere; // prevent long strings from breaking modal width
     min-width: 0;
-    overflow: auto;
     flex: 0 1 auto;
   }
 
@@ -123,6 +131,14 @@
     .diff-del {
       width: fit-content;
     }
+  }
+
+  .revision__hidden-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em 0;
+    color: var(--primary-medium);
   }
 
   &:not(.--mode-inline) {
@@ -225,6 +241,7 @@
     @include viewport.until(md) {
       width: 100%;
       flex: 1 1 100%;
+      flex-wrap: wrap;
 
       button {
         font-size: var(--font-down-1);
@@ -239,8 +256,8 @@
   }
 
   ins,
-  .diff-ins,
   del,
+  .diff-ins,
   .diff-del {
     color: var(--primary);
 
@@ -255,6 +272,11 @@
 
     a {
       text-decoration: none;
+    }
+
+    > .title,
+    > blockquote {
+      background: transparent;
     }
   }
 

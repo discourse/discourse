@@ -5,3 +5,7 @@ plugins:
   discourse_automation_enable_recurring_debug:
     default: false
     hidden: true
+  discourse_automation_max_recursion_depth:
+    default: 1
+    hidden: true
+    min: 1

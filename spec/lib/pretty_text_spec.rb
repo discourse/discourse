@@ -327,6 +327,7 @@ RSpec.describe PrettyText do
       let(:default_avatar) do
         "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png"
       end
+
       fab!(:group)
       fab!(:user) { Fabricate(:user, primary_group: group) }
 
@@ -397,7 +398,7 @@ RSpec.describe PrettyText do
 
     context "with letter avatar" do
       context "with subfolder" do
-        it "should have correct avatar url" do
+        it "uses the correct avatar URL" do
           set_subfolder "/forum"
           md = <<~MD
             [quote="#{user.username}, post:123, topic:456, full:true"]
@@ -417,7 +418,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should handle 3 mentions in a row" do
+    it "handles three consecutive mentions" do
       expect(
         PrettyText.cook("@hello @hello @hello"),
       ).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
@@ -507,16 +508,16 @@ RSpec.describe PrettyText do
     context "when mentions are disabled" do
       before { SiteSetting.enable_mentions = false }
 
-      it "should not convert mentions to links" do
+      it "does not convert mentions to links" do
         expect(PrettyText.cook("hi @user")).to eq("<p>hi @user</p>")
       end
     end
 
-    it "can handle mentions inside a hyperlink" do
+    it "handles mentions inside an HTML hyperlink" do
       expect(PrettyText.cook("<a> @inner</a> ")).to match_html "<p><a> @inner</a></p>"
     end
 
-    it "can handle mentions inside a hyperlink" do
+    it "handles mentions inside a Markdown hyperlink" do
       expect(
         PrettyText.cook("[link @inner](http://site.com)"),
       ).to match_html '<p><a href="http://site.com" rel="noopener nofollow ugc">link @inner</a></p>'
@@ -528,19 +529,19 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should handle group mentions with a hyphen and without" do
+    it "handles group mentions with and without a hyphen" do
       expect(
         PrettyText.cook("@hello @hello-hello"),
       ).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
     end
 
-    it "should allow for @mentions to have punctuation" do
+    it "allows punctuation after mentions" do
       expect(PrettyText.cook("hello @bob's @bob,@bob; @bob\"")).to match_html(
         "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>",
       )
     end
 
-    it "should not treat a medium link as a mention" do
+    it "does not treat a Medium link as a mention" do
       expect(PrettyText.cook(". http://test/@sam")).not_to include("mention")
     end
 
@@ -611,7 +612,7 @@ RSpec.describe PrettyText do
   end
 
   describe "code fences" do
-    it "indents code correctly" do
+    it "indents code after preceding text" do
       code = <<~MD
          X
          ```
@@ -695,7 +696,7 @@ RSpec.describe PrettyText do
       ).to match_html("<pre data-code-foo='1'></pre>")
     end
 
-    it "indents code correctly" do
+    it "preserves indentation after a blank line" do
       code = "X\n```\n\n    #\n    x\n```"
       cooked = PrettyText.cook(code)
       expect(cooked).to match_html(
@@ -704,17 +705,15 @@ RSpec.describe PrettyText do
     end
 
     it "does censor code fences" do
-      begin
-        %w[apple banana].each do |w|
-          Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-        end
-        expect(PrettyText.cook("# banana")).not_to include("banana")
-      ensure
-        Discourse.redis.flushdb
+      %w[apple banana].each do |w|
+        Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
       end
+      expect(PrettyText.cook("# banana")).not_to include("banana")
+    ensure
+      Discourse.redis.flushdb
     end
 
-    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
+    it "highlights Unicode bidirectional override characters while cooking" do
       code = <<~MD
          X
          ```auto
@@ -739,88 +738,33 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
-    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
-      cooked = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        \u202E
-        </code></pre>
-      HTML
-      cleaned = PrettyText.cleanup(cooked)
-      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+    it "highlights every dangerous Unicode bidirectional character in code and pre elements" do
+      characters = %W[\u202A \u202B \u202C \u202D \u202E \u2066 \u2067 \u2068 \u2069]
 
-      html = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>
-        </code></pre>
-      HTML
+      cooked = PrettyText.cook(<<~MD)
+        ```
+        #{characters.join}
+        ```
 
-      expect(cleaned.strip).to eq(html.strip)
+        <code>#{characters.join}</code>
+
+        <pre>#{characters.join}</pre>
+      MD
+
+      warnings = Nokogiri::HTML5.fragment(cooked).css(".bidi-warning")
+      expect(warnings.map { |warning| [warning.parent.name, warning.text] }).to eq(
+        %w[code code pre]
+          .product(characters)
+          .map { |tag, char| [tag, format("<U+%04X>", char.ord)] },
+      )
     end
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        ```
-        #{bidi}
-        ```
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><code class="lang-auto"><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span>
-          </code></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-    end
+    it "keeps attributes intact when they contain Unicode bidirectional override characters" do
+      title = "\u202E<img src=/x style=position:fixed>"
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters in solo code and pre nodes, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <code>#{bidi}</code>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <p><code><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></code></p>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <pre>#{bidi}</pre>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
+      cooked = PrettyText.cook("<code>\u202E<abbr title=\"#{title}\">a</abbr></code>")
+
+      expect(Nokogiri::HTML5.fragment(cooked).at_css("code abbr")["title"]).to eq(title)
     end
   end
 
@@ -830,17 +774,17 @@ RSpec.describe PrettyText do
       SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
-    it "should inject nofollow in all user provided links" do
+    it "injects nofollow into user-provided links" do
       expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/noopener nofollow ugc/)
     end
 
-    it "should not inject nofollow in all local links" do
+    it "does not inject nofollow into local links" do
       expect(
         PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "should not inject nofollow in all subdomain links" do
+    it "does not inject nofollow into subdomain links" do
       expect(
         PrettyText.cook(
           "<a href='#{Discourse.base_url.sub("http://", "http://bla.")}/test.html'>cnn</a>",
@@ -848,7 +792,7 @@ RSpec.describe PrettyText do
       ).to eq(true)
     end
 
-    it "should inject nofollow in all non subdomain links" do
+    it "injects nofollow into links outside the subdomain" do
       expect(
         PrettyText.cook(
           "<a href='#{Discourse.base_url.sub("http://", "http://bla")}/test.html'>cnn</a>",
@@ -856,36 +800,36 @@ RSpec.describe PrettyText do
       ).to match(/nofollow ugc/)
     end
 
-    it "should not inject nofollow for foo.com" do
+    it "does not inject nofollow for foo.com" do
       expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(
         true,
       )
     end
 
-    it "should inject nofollow for afoo.com" do
+    it "injects nofollow for afoo.com" do
       expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(
         /nofollow ugc/,
       )
     end
 
-    it "should not inject nofollow for bar.foo.com" do
+    it "does not inject nofollow for bar.foo.com" do
       expect(
         PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "should not inject nofollow if omit_nofollow option is given" do
+    it "does not inject nofollow when omit_nofollow is enabled" do
       expect(
         PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "adds the noopener attribute even if omit_nofollow option is given" do
+    it "adds noopener when omit_nofollow is enabled" do
       raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
       expect(PrettyText.cook(raw_html, omit_nofollow: true)).to match(/noopener/)
     end
 
-    it "adds the noopener attribute even if omit_nofollow option is given" do
+    it "adds noopener when omit_nofollow is disabled" do
       raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
       expect(PrettyText.cook(raw_html, omit_nofollow: false)).to match(/noopener nofollow ugc/)
     end
@@ -902,12 +846,12 @@ RSpec.describe PrettyText do
     end
 
     context "with images" do
-      it "should dump images" do
+      it "dumps images" do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100)).to eq("[image]")
       end
 
       context "with alt tags" do
-        it "should keep alt tags" do
+        it "keeps alt attributes" do
           expect(
             PrettyText.excerpt(
               "<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",
@@ -917,7 +861,7 @@ RSpec.describe PrettyText do
         end
 
         describe "when alt tag is empty" do
-          it "should not keep alt tags" do
+          it "does not keep alt attributes" do
             expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq(
               "[#{I18n.t("excerpt_image")}]",
             )
@@ -926,14 +870,14 @@ RSpec.describe PrettyText do
       end
 
       context "with title tags" do
-        it "should keep title tags" do
+        it "keeps title attributes" do
           expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq(
             "[car]",
           )
         end
 
         describe "when title tag is empty" do
-          it "should not keep title tags" do
+          it "does not keep title attributes" do
             expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq(
               "[#{I18n.t("excerpt_image")}]",
             )
@@ -941,7 +885,7 @@ RSpec.describe PrettyText do
         end
       end
 
-      it "should convert images to markdown if the option is set" do
+      it "converts images to Markdown when configured" do
         expect(
           PrettyText.excerpt(
             "<img src='http://cnn.com/a.gif' title='car'>",
@@ -957,13 +901,13 @@ RSpec.describe PrettyText do
         ).to match_html "▶ expand"
       end
 
-      it "should remove meta information" do
+      it "removes metadata" do
         expect(
           PrettyText.excerpt(wrapped_image, 100),
         ).to match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
 
-      it "should strip images when option is set" do
+      it "strips images when configured" do
         expect(
           PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100, strip_images: true),
         ).to be_blank
@@ -976,7 +920,7 @@ RSpec.describe PrettyText do
         ).to eq("Hello world!")
       end
 
-      it "should strip images, but keep emojis when option is set" do
+      it "strips images but keeps emoji when configured" do
         emoji_image =
           "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
         html = "<img src='http://cnn.com/a.gif'> Hello world #{emoji_image}"
@@ -989,7 +933,7 @@ RSpec.describe PrettyText do
     end
 
     context "with emojis" do
-      it "should remove broken emoji" do
+      it "removes broken emoji" do
         html = <<~HTML
           <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\" loading=\"lazy\" width=\"20\" height=\"20\">
         HTML
@@ -1004,38 +948,38 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should have an option to strip links" do
+    it "can strip links" do
       expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq(
         "cnn",
       )
     end
 
-    it "should preserve links" do
+    it "preserves links" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100),
       ).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
-    it "should deal with special keys properly" do
+    it "handles special keys" do
       expect(PrettyText.excerpt("<pre><b></pre>", 100)).to eq("")
     end
 
-    it "should truncate stuff properly" do
+    it "truncates content correctly" do
       expect(PrettyText.excerpt("hello world", 5)).to eq("hello&hellip;")
       expect(PrettyText.excerpt("<p>hello</p><p>world</p>", 6)).to eq("hello w&hellip;")
     end
 
-    it "should insert a space between to Ps" do
+    it "inserts a space between paragraphs" do
       expect(PrettyText.excerpt("<p>a</p><p>b</p>", 5)).to eq("a b")
     end
 
-    it "should strip quotes" do
+    it "strips quotes" do
       expect(PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom", 5)).to eq(
         "boom",
       )
     end
 
-    it "should not count the surrounds of a link" do
+    it "does not count link markup" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 3),
       ).to match_html "<a href='http://cnn.com'>cnn</a>"
@@ -1047,7 +991,7 @@ RSpec.describe PrettyText do
       ).to match_html "<a href='http://cnn.com'>cn...</a>"
     end
 
-    it "should truncate links" do
+    it "truncates links" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2),
       ).to match_html "<a href='http://cnn.com'>cn&hellip;</a>"
@@ -1071,11 +1015,11 @@ RSpec.describe PrettyText do
       PrettyText.extract_links(text).map(&:url).to_a
     end
 
-    it "should be able to extract links" do
+    it "extracts links" do
       expect(extract_urls("<a href='http://cnn.com'>http://bla.com</a>")).to eq(["http://cnn.com"])
     end
 
-    it "should extract links to topics" do
+    it "extracts topic links" do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(
         ["/t/321"],
       )
@@ -1112,7 +1056,7 @@ RSpec.describe PrettyText do
     end
 
     context "when lazy-videos" do
-      it "should extract youtube url" do
+      it "extracts YouTube URLs" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"yXEuEUQIP3Q\" data-video-title=\"Mister Rogers defending PBS to the US Senate\" data-provider-name=\"youtube\"></div>",
@@ -1120,7 +1064,7 @@ RSpec.describe PrettyText do
         ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
       end
 
-      it "should extract vimeo url" do
+      it "extracts Vimeo URLs" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"786646692\" data-video-title=\"Dear Rich\" data-provider-name=\"vimeo\"></div>",
@@ -1128,7 +1072,7 @@ RSpec.describe PrettyText do
         ).to eq(["https://vimeo.com/786646692"])
       end
 
-      it "should extract tiktok url" do
+      it "extracts TikTok URLs" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"6718335390845095173\" data-video-title=\"Scramble up ur name &amp;amp; I’ll try to guess it😍❤️ #foryoupage #petsoftiktok...\" data-provider-name=\"tiktok\"></div>",
@@ -1137,17 +1081,17 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should extract links to posts" do
+    it "extracts post links" do
       expect(
         extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>"),
       ).to eq(["/t/1234/4567"])
     end
 
-    it "should not extract links to anchors" do
+    it "does not extract anchor links" do
       expect(extract_urls("<a href='#tos'>TOS</a>")).to eq([])
     end
 
-    it "should not extract links inside quotes" do
+    it "does not extract links inside quotes" do
       links =
         PrettyText.extract_links(
           "
@@ -1169,7 +1113,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should not extract links inside oneboxes" do
+    it "does not extract links inside oneboxes" do
       onebox = <<~HTML
         <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/EDBPostgres/status/1402528437441634306">
           <header class="source">
@@ -1187,7 +1131,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should not preserve tags in code blocks" do
+    it "does not preserve tags in code blocks" do
       expect(
         PrettyText.excerpt(
           "<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",
@@ -1196,7 +1140,7 @@ RSpec.describe PrettyText do
       ).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end
 
-    it "should handle nil" do
+    it "handles nil" do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
@@ -1253,7 +1197,7 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
-    it "should have an option to preserve emoji images" do
+    it "can preserve emoji images" do
       emoji_image =
         "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
       expect(PrettyText.excerpt(emoji_image, 100, keep_emoji_images: true)).to match_html(
@@ -1261,7 +1205,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should have an option to remap emoji to code points" do
+    it "can remap emoji to code points" do
       emoji_image =
         "I <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'> you <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':unknown:' class='emoji' alt=':unknown:' loading='lazy' width='20' height='20'> "
       expect(PrettyText.excerpt(emoji_image, 100, remap_emoji: true)).to match_html(
@@ -1269,14 +1213,14 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should have an option to preserve emoji codes" do
+    it "can preserve emoji codes" do
       emoji_code =
         "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
     context "with option to preserve onebox source" do
-      it "should return the right excerpt" do
+      it "returns the expected excerpt" do
         onebox =
           "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected =
@@ -1289,7 +1233,7 @@ RSpec.describe PrettyText do
         ).to eq("#{expected}\n\n#{expected}")
       end
 
-      it "should continue to strip quotes" do
+      it "continues to strip quotes" do
         expect(
           PrettyText.excerpt(
             "<aside class='quote'><p>a</p><p>b</p></aside>boom",
@@ -1300,7 +1244,7 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should strip audio/video" do
+    it "strips audio and video" do
       html = <<~HTML
         <audio controls>
           <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
@@ -1375,207 +1319,215 @@ RSpec.describe PrettyText do
   end
 
   describe "format_for_email" do
-    context "when (sub)domain" do
-      before { Discourse.stubs(:base_path).returns("") }
-
-      it "does not crash" do
-        html = <<~HTML
-          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>
-        HTML
-      end
-
+    describe ".make_all_links_absolute" do
       it "adds base url to relative links" do
-        html = <<~HTML
-          <p><a class="mention" href="/u/wiseguy">@wiseguy</a>, <a class="mention" href="/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
+        html = %(<a href="/u/wiseguy">@wiseguy</a>)
 
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <p><a class="mention" href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>, <a class="mention" href="#{Discourse.base_url}/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
-      end
-
-      it "doesn't change external absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="http://mywebsite.com/users/boss">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "doesn't change internal absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="#{Discourse.base_url}/users/boss">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "can tolerate invalid URLs" do
-        html = <<~HTML
-          <p>Check out <a href="not a real url">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "doesn't change mailto" do
-        html = <<~HTML
-          <p>Contact me at <a href="mailto:username@me.com">this address</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "prefers data-original-href attribute to get Vimeo iframe link and escapes it" do
-        html = <<~HTML
-          <p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to match(
-          Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"),
+        expect(described_class.format_for_email(html, post)).to match_html(
+          %(<a href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>),
         )
       end
 
-      it "creates a valid URL when data-original-href is missing from Vimeo link" do
+      it "leaves absolute, mailto and invalid links unchanged" do
         html = <<~HTML
-          <iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <a href="http://mywebsite.com/users/boss">external</a>
+          <a href="#{Discourse.base_url}/users/boss">internal</a>
+          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/127/1000?u=supermathie">mailto</a>
+          <a href="not a real url">invalid</a>
         HTML
 
-        expect(described_class.format_for_email(html, post)).to match(
-          "https://vimeo.com/508864124/fcbbcc92fa",
-        )
+        expect(described_class.format_for_email(html, post)).to eq(html)
       end
 
-      describe "#convert_vimeo_iframes" do
-        it "converts <iframe> to <a>" do
-          html = <<~HTML
-            <p>This is a Vimeo link:</p>
-            <iframe width="640" height="360" src="https://player.vimeo.com/video/1" data-original-href="https://vimeo.com/1" frameborder="0" allowfullscreen="" seamless="seamless" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
-          HTML
+      context "with a subfolder" do
+        before { set_subfolder "/forum" }
 
-          md = described_class.format_for_email(html, post)
+        it "adds base url to relative links, whether or not they include the subfolder" do
+          html = %(<a href="/forum/u/wiseguy">a</a><a href="/u/trollol">b</a>)
 
-          expect(md).not_to include("<iframe")
-          expect(md).to match_html(<<~HTML)
-            <p>This is a Vimeo link:</p>
-            <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
-          HTML
-        end
-      end
-
-      describe "#strip_secure_uploads" do
-        before do
-          setup_s3
-          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-          SiteSetting.secure_uploads = true
-          SiteSetting.login_required = true
-        end
-
-        it "replaces secure video content" do
-          html = <<~HTML
-            <video width="100%" height="100%" controls="">
-              <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">
-                <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">Video label</a>
-              </source>
-            </video>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<video")
-          expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
-          expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
-        end
-
-        it "replaces secure audio content" do
-          html = <<~HTML
-            <audio controls>
-              <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">
-                <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">Audio label</a>
-              </source>
-            </audio>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<audio")
-          expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
-          expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
-        end
-
-        it "replaces secure uploads within a link with a placeholder, keeping the url in an attribute" do
-          url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<img")
-          expect(md).to include("Redacted")
-          expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
-        end
-
-        it "does not create nested redactions from double processing because of the view media link" do
-          url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md.scan(/stripped-secure-view-upload/).length).to eq(1)
-          expect(md.scan(/Redacted/).length).to eq(1)
-        end
-
-        it "replaces secure images with a placeholder, keeping the url in an attribute" do
-          url = "/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <img src="#{url}" width="20" height="20">
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<img")
-          expect(md).to include("Redacted")
-          expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
-          expect(md).to include("data-width=\"20\"")
-          expect(md).to include("data-height=\"20\"")
+          expect(described_class.format_for_email(html, post)).to match_html(
+            %(<a href="#{Discourse.base_url}/u/wiseguy">a</a><a href="#{Discourse.base_url}/u/trollol">b</a>),
+          )
         end
       end
     end
 
-    context "when subfolder" do
-      before { Discourse.stubs(:base_path).returns("/forum") }
+    describe ".replace_diagrams" do
+      let(:html) { <<~HTML }
+        <pre data-code-wrap="mermaid"><code class="lang-mermaid">flowchart LR
+          A --&gt; B
+        </code></pre>
+        <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
+      HTML
 
-      it "adds base url to relative links" do
-        html = <<~HTML
-          <p><a class="mention" href="/forum/u/wiseguy">@wiseguy</a>, <a class="mention" href="/forum/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <p><a class="mention" href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>, <a class="mention" href="#{Discourse.base_url}/u/trollol">@trollol</a> what do you guys think?</p>
+      it "replaces diagram code blocks with a link to the post" do
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p><a href="#{post.full_url}">#{I18n.t("emails.view_diagram")}</a></p>
+          <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
         HTML
       end
 
-      it "doesn't change external absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="https://mywebsite.com/users/boss">this guy</a>.</p>
-        HTML
+      it "keeps diagram code blocks when there is no post to link to" do
+        expect(described_class.format_for_email(html)).to include("lang-mermaid")
+      end
+    end
 
-        expect(described_class.format_for_email(html, post)).to eq(html)
+    describe ".convert_vimeo_iframes" do
+      it "converts a Vimeo iframe to a link, ignoring an invalid unlisted hash" do
+        html = %(<p>Video:</p><iframe src="https://player.vimeo.com/video/1?h=not-valid!"></iframe>)
+
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p>Video:</p>
+          <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
+        HTML
       end
 
-      it "doesn't change internal absolute links" do
+      it "converts an unlisted Vimeo embed using its hash" do
+        html = %(<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa"></iframe>)
+
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p><a href="https://vimeo.com/508864124/fcbbcc92fa">https://vimeo.com/508864124/fcbbcc92fa</a></p>
+        HTML
+      end
+
+      it "prefers data-original-href to get the Vimeo link and escapes it" do
+        html =
+          "<iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>"
+
+        expect(described_class.format_for_email(html, post)).to include(
+          "https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E",
+        )
+      end
+
+      it "leaves a malformed Vimeo source without rendering it as markup" do
+        iframe_source = "https://player.vimeo.com/video/123'></a><img src=x onerror=alert(1)>"
+        html = %(<iframe src="#{iframe_source}"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("img")).to be_empty
+          expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+        end
+      end
+
+      it "leaves a non-Vimeo iframe containing the player domain unchanged" do
+        iframe_source = "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
+        html = %(<iframe src="#{iframe_source}"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("a")).to be_empty
+          expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+        end
+      end
+
+      it "leaves an iframe with a non-http data-original-href unchanged" do
+        html =
+          %(<iframe src="https://player.vimeo.com/video/1" data-original-href="javascript:alert(1)"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("a")).to be_empty
+          expect(fragment.at_css("iframe")["data-original-href"]).to eq("javascript:alert(1)")
+        end
+      end
+    end
+
+    describe ".strip_secure_uploads" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        SiteSetting.login_required = true
+      end
+
+      it "replaces secure video and audio content" do
         html = <<~HTML
-          <p>Check out <a href="#{Discourse.base_url}/users/boss">this guy</a>.</p>
+          <video controls>
+            <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">
+            <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">Video label</a>
+          </video>
+          <audio controls>
+            <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">
+            <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">Audio label</a>
+          </audio>
         HTML
 
-        expect(described_class.format_for_email(html, post)).to eq(html)
+        md = described_class.format_for_email(html, post)
+
+        expect(md).not_to include("<video", "<audio")
+        expect(md.scan(I18n.t("emails.secure_uploads_placeholder")).size).to eq(2)
+      end
+
+      it "replaces secure uploads within a link with a placeholder, idempotently" do
+        url = "#{Discourse.base_url}/secure-uploads/original/1X/testimage.png"
+        html = %(<a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>)
+
+        md = described_class.format_for_email(described_class.format_for_email(html, post), post)
+
+        expect(md).not_to include("<img")
+        expect(md).to include(%(data-stripped-secure-upload="#{url}"))
+        expect(md.scan("stripped-secure-view-upload").size).to eq(1)
+      end
+
+      it "replaces secure images with a placeholder, keeping the url in an attribute" do
+        url = "/secure-uploads/original/1X/testimage.png"
+        html = %(<img src="#{url}" width="20" height="20">)
+
+        md = described_class.format_for_email(html, post)
+
+        expect(md).not_to include("<img")
+        expect(md).to include(
+          I18n.t("emails.secure_uploads_placeholder"),
+          %(data-stripped-secure-upload="#{url}"),
+          %(data-width="20"),
+          %(data-height="20"),
+        )
+      end
+
+      it "only marks images inside a onebox as onebox images" do
+        html = <<~HTML
+          <aside class="onebox"><div class="onebox-body"><img src="/secure-uploads/original/1X/a.png" class="onebox-avatar-inline"></div></aside>
+          <p><img src="/secure-uploads/original/1X/b.png"></p>
+        HTML
+
+        notices =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).css(
+            ".secure-upload-notice",
+          )
+
+        expect(notices.map { |notice| notice["data-onebox-type"] }).to eq(["avatar-inline", nil])
+      end
+
+      it "keeps a crafted secure upload URL as attribute data" do
+        url =
+          %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)
+
+        fragment =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(%(<img src='#{url}'>), post))
+        notice = fragment.at_css("div.secure-upload-notice")
+
+        aggregate_failures do
+          expect(fragment.css("img")).to be_empty
+          expect(notice["data-stripped-secure-upload"]).to eq(url)
+        end
+      end
+
+      it "discards non-numeric secure upload dimensions" do
+        html =
+          %(<img src="/secure-uploads/original/1X/testimage.png" width="20 onmouseover=alert(1) x" height="20">)
+
+        notice =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).at_css(
+            "div.secure-upload-notice",
+          )
+
+        aggregate_failures do
+          expect(notice.attributes.keys).not_to include("onmouseover", "data-width")
+          expect(notice["data-height"]).to eq("20")
+        end
       end
     end
   end
@@ -1630,6 +1582,13 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "renders a denied emoji name as plain text when the name contains regex metacharacters" do
+      SiteSetting.emoji_deny_list = "+1"
+      Emoji.clear_cache
+
+      expect(PrettyText.cook(":+1: hello")).to eq("<p>:+1: hello</p>")
+    end
+
     it "does not replace left right arrow" do
       expect(PrettyText.cook("&harr;")).to eq("<p>↔</p>")
     end
@@ -1652,6 +1611,12 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("1️⃣")).to match(/\:one\:/)
       expect(PrettyText.cook("#️⃣")).to match(/\:hash\:/)
       expect(PrettyText.cook("*️⃣")).to match(/\:asterisk\:/)
+    end
+
+    it "renders adjacent multi-codepoint emoji" do
+      england_flag = [0x1F3F4, 0xE0067, 0xE0062, 0xE0065, 0xE006E, 0xE0067, 0xE007F].pack("U*")
+
+      expect(PrettyText.cook(england_flag * 2).scan('title=":england:"').size).to eq(2)
     end
 
     it "doesn't replace unicode emoji if emoji is disabled" do
@@ -1715,8 +1680,18 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "replaces Emoji from Unicode 14.0" do
-      expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    it "replaces Unicode emoji from all supported Emoji versions" do
+      expect(PrettyText.cook("😀")).to match(/\:grinning_face\:/) # Emoji 1.0
+      expect(PrettyText.cook("🤳")).to match(/\:selfie\:/) # Emoji 3.0
+      expect(PrettyText.cook("🦷")).to match(/\:tooth\:/) # Emoji 11.0
+      expect(PrettyText.cook("🧅")).to match(/\:onion\:/) # Emoji 12.0
+      expect(PrettyText.cook("🥷")).to match(/\:ninja\:/) # Emoji 13.0
+      expect(PrettyText.cook("❤️‍🔥")).to match(/\:heart_on_fire\:/) # Emoji 13.1
+      expect(PrettyText.cook("🫠")).to match(/\:melting_face\:/) # Emoji 14.0
+      expect(PrettyText.cook("🫨")).to match(/\:shaking_face\:/) # Emoji 15.0
+      expect(PrettyText.cook("🐦‍🔥")).to match(/\:phoenix\:/) # Emoji 15.1
+      expect(PrettyText.cook("🫩")).to match(/\:face_with_bags_under_eyes\:/) # Emoji 16.0
+      expect(PrettyText.cook("🫪")).to match(/\:distorted_face\:/) # Emoji 17.0
     end
 
     context "with subfolder" do
@@ -1747,6 +1722,34 @@ RSpec.describe PrettyText do
       Emoji.clear_cache
 
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
+    end
+
+    it "rewrites a custom emoji's S3 url through the configured CDN" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      cooked = PrettyText.cook("hello :trout:")
+      expect(cooked).to include("https://cdn.example.com/original/1X/trout.png")
+      expect(cooked).not_to include(raw_url)
+    end
+
+    it "rewrites a custom emoji's S3 url through the CDN when unescaping titles" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      unescaped = PrettyText.unescape_emoji("hello :trout:")
+      expect(unescaped).to match(
+        %r{<img[^>]+\bsrc=['"]https://cdn\.example\.com/original/1X/trout\.png},
+      )
+      expect(unescaped).not_to include(SiteSetting.Upload.absolute_base_url)
     end
   end
 
@@ -1786,7 +1789,7 @@ RSpec.describe PrettyText do
     )
   end
 
-  it "should not treat a non emoji as an emoji" do
+  it "does not treat a non-emoji as an emoji" do
     expect(PrettyText.cook(":email,class_name:")).not_to include("emoji")
   end
 
@@ -1917,6 +1920,37 @@ RSpec.describe PrettyText do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
 
+    tag_with_periods = Fabricate(:tag, name: "sam.i.am")
+    Fabricate(:topic, tags: [tag_with_periods])
+    cooked = PrettyText.cook(" #sam.i.am", user_id: user.id)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag_with_periods.url,
+        "data-type": "tag",
+        "data-slug": tag_with_periods.name,
+        "data-id": tag_with_periods.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    cooked = PrettyText.cook(" #known::tag.", user_id: user.id)
+    expect(cooked).to include("</a>.")
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
     html = <<~HTML
@@ -1942,6 +1976,42 @@ RSpec.describe PrettyText do
       },
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+  end
+
+  it "uses concise subcategory hashtag text without losing the full reference" do
+    SiteSetting.enable_category_hashtag_cards = true
+    parent_category = Fabricate(:category, name: "Silly Land", slug: "fun")
+    category =
+      Fabricate(:category, name: "Random", slug: "random", parent_category: parent_category)
+
+    cooked = PrettyText.cook("#fun:random")
+
+    expect(cooked).to have_tag(
+      "a",
+      text: "Random",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": "random",
+        "data-ref": "fun:random",
+        "data-id": category.id,
+      },
+    )
+  end
+
+  it "bounds hashtag lookups per cook" do
+    stub_const(HashtagAutocompleteService, "HASHTAGS_PER_REQUEST", 2) do
+      %w[cat-a cat-b cat-c].each { |slug| Fabricate(:category, slug:) }
+      allow(HashtagAutocompleteService).to receive(:new).and_call_original
+
+      cooked = PrettyText.cook("#cat-a #cat-a #cat-a #cat-b #cat-c")
+
+      expect(cooked.scan(%(data-slug="cat-a")).length).to eq(3)
+      expect(cooked).to include(%(data-slug="cat-b"))
+      expect(cooked).not_to include(%(data-slug="cat-c"))
+      expect(HashtagAutocompleteService).to have_received(:new).twice
     end
   end
 
@@ -1977,7 +2047,7 @@ HTML
     expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
   end
 
-  it "handles emoji boundaries correctly" do
+  it "handles skin-tone emoji boundaries" do
     cooked = PrettyText.cook("a,:man:t2:,b")
     expected =
       "<p>a,<img src=\"/images/emoji/twitter/man/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man:t2:\" class=\"emoji\" alt=\":man:t2:\" loading=\"lazy\" width=\"20\" height=\"20\">,b</p>"
@@ -1995,7 +2065,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundaries correctly" do
+  it "handles translated emoji boundaries" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
@@ -2035,7 +2105,7 @@ HTML
         )
       end
 
-      it "won't break links by censoring them." do
+      it "does not break links while censoring them" do
         expect_cooked_match(
           "The link still works. [whiz](http://www.whiz.com)",
           '<p>The link still works. <a href="http://www.whiz.com" rel="noopener nofollow ugc">■■■■</a></p>',
@@ -2068,6 +2138,7 @@ HTML
 
     context "with watched words as regular expressions" do
       before { SiteSetting.watched_words_regular_expressions = true }
+
       it "supports words as regular expressions" do
         %w[xyz* plee+ase].each do |word|
           Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
@@ -2278,6 +2349,46 @@ HTML
         </p>
       HTML
     end
+
+    it "keeps HTML replacements self-contained" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: '<abbr title="fruit">apple</abbr>',
+        html: true,
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<span>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple pie")).to eq('<p><abbr title="fruit">apple</abbr> pie</p>')
+      expect(PrettyText.cook("banana bread")).to eq("<p><span></span> bread</p>")
+    end
+
+    it "does not emit HTML replacements when the sanitizer is disabled" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "apple",
+        replacement: "orange",
+      )
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "banana",
+        replacement: "<b>bold</b>",
+        html: true,
+      )
+
+      expect(PrettyText.cook("apple banana", sanitize: false)).to eq(
+        "<p>orange &lt;b&gt;bold&lt;/b&gt;</p>",
+      )
+    end
   end
 
   it "supports typographer" do
@@ -2448,19 +2559,30 @@ HTML
     expect(cooked).to eq(html)
   end
 
-  it "should sanitize the html" do
+  it "sanitizes unknown HTML elements" do
     expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
   end
 
-  it "should not onebox magically linked urls" do
+  it "sanitizes html without cooking markdown" do
+    sanitized =
+      PrettyText.sanitize(
+        '<a href="https://example.com" target="_blank" rel="noopener" onclick="alert(1)">learn more</a><a href="javascript:alert(1)">bad</a><script>alert(1)</script>',
+      )
+
+    expect(sanitized).to eq(
+      '<a href="https://example.com" target="_blank">learn more</a><a>bad</a>',
+    )
+  end
+
+  it "does not onebox magically linked URLs" do
     expect(PrettyText.cook("[url]site.com[/url]")).not_to include("onebox")
   end
 
-  it "should sanitize the html" do
+  it "sanitizes HTML attributes" do
     expect(PrettyText.cook("<p class='hi'>hi</p>")).to eq "<p>hi</p>"
   end
 
-  it "should strip SCRIPT" do
+  it "strips script elements" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
     expect(PrettyText.cook("<div><script>alert(42)</script></div>")).to eq "<div></div>"
 
@@ -2474,7 +2596,7 @@ HTML
     ).to eq "<div></div>"
   end
 
-  it "should allow sanitize bypass" do
+  it "allows sanitization to be bypassed" do
     expect(
       PrettyText.cook("<test>alert(42)</test>", sanitize: false),
     ).to eq "<p><test>alert(42)</test></p>"
@@ -2502,6 +2624,20 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
+    it "does not backtrack catastrophically on long numeric suffixes" do
+      suffix = "#{"1" * 1000}x#{"1" * 1000},"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      cooked = PrettyText.cook("![a|#{suffix}](http://png.com/my.png)")
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(cooked).to include(%{alt="a|#{suffix}"})
+      expect(elapsed).to be < 2, "cooking took #{elapsed.round(2)}s"
+    end
+
     it "ignores whitespace and allows scaling by percent, width, height" do
       cooked = PrettyText.cook <<~MD
         ![|220x100, 50%](http://png.com/my.png)
@@ -2520,6 +2656,88 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+    end
+  end
+
+  describe "upload:// links" do
+    it "treats the label as literal so formatting characters are preserved" do
+      cooked = PrettyText.cook <<~MD
+        ![_test_file_|100x100](upload://abc.jpg)
+        [_test_file_.txt|attachment](upload://abc.txt)
+      MD
+
+      expect(cooked).to include('alt="_test_file_"')
+      expect(cooked).to include('class="attachment"')
+      expect(cooked).to include(">_test_file_.txt<")
+      expect(cooked).not_to include("<em>")
+    end
+
+    it "unescapes backslash escapes left over from legacy posts" do
+      cooked = PrettyText.cook("![20260421\\_140231|100x100](upload://abc.jpg)")
+
+      expect(cooked).to include('alt="20260421_140231"')
+    end
+
+    it "leaves non-upload links alone" do
+      cooked = PrettyText.cook("[_foo_](http://example.com)")
+
+      expect(cooked).to include("<em>foo</em>")
+    end
+
+    it "keeps plain URLs in the label intact when they would otherwise linkify" do
+      cooked = PrettyText.cook("![foo https://example.com bar|100x100](upload://abc.jpg)")
+
+      expect(cooked).to include('alt="foo https://example.com bar"')
+    end
+
+    it "keeps hashtags and mentions in the label literal" do
+      cooked = PrettyText.cook("[#cat @sam|attachment](upload://abc.txt)")
+
+      expect(cooked).to include(">#cat @sam<")
+      expect(cooked).not_to include("hashtag")
+      expect(cooked).not_to include("mention")
+    end
+
+    it "treats reference-style upload labels as literal too" do
+      cooked = PrettyText.cook("[_foo_][1]\n\n[1]: upload://abc.jpg")
+
+      expect(cooked).to include(">_foo_<")
+      expect(cooked).not_to include("<em>")
+    end
+
+    it "still renders inline formatting in non-upload attachment labels" do
+      cooked = PrettyText.cook("[**bold**|attachment](https://example.com/file.pdf)")
+
+      expect(cooked).to include('class="attachment"')
+      expect(cooked).to include("<strong>bold</strong>")
+    end
+  end
+
+  describe "links inside tables" do
+    it "keeps pipes inside complete links and images within their cells" do
+      cooked = PrettyText.cook <<~MD
+        | Kind | Content |
+        | --- | --- |
+        | Link | [x\\]y|z](https://example.com/link) |
+        | Destination | [destination](<https://example.com/a|b> 'title|value') |
+        | Image | ![rocket|large](https://example.com/rocket.png) |
+        | Reference | [ref|label][ref] |
+
+        [ref]: https://example.com/reference
+      MD
+
+      doc = Nokogiri::HTML5.fragment(cooked)
+      expect(doc.css("tbody tr").map { |row| row.css("td").map(&:text) }).to eq(
+        [["Link", "x]y|z"], %w[Destination destination], ["Image", ""], %w[Reference ref|label]],
+      )
+      expect(doc.css("tbody a").map { |link| [link.text, link["href"], link["title"]] }).to eq(
+        [
+          ["x]y|z", "https://example.com/link", nil],
+          %w[destination https://example.com/a%7Cb title|value],
+          ["ref|label", "https://example.com/reference", nil],
+        ],
+      )
+      expect(doc.at_css("tbody img")["alt"]).to eq("rocket|large")
     end
   end
 
@@ -2583,6 +2801,27 @@ HTML
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
 
+    it "handles attachment filenames with markdown characters" do
+      SiteSetting.authorized_extensions = "txt"
+
+      {
+        "_test_file_.txt" => "<em>",
+        "*test*.txt" => "<em>",
+        "**bold**.txt" => "<strong>",
+        "~~strike~~.txt" => "<s>",
+        "`code`.txt" => "<code>",
+      }.each do |filename, bad_tag|
+        upload = Fabricate(:upload, original_filename: filename, extension: "txt")
+        markdown = UploadMarkdown.new(upload).to_markdown
+        cooked = PrettyText.cook(markdown)
+
+        expect(cooked).to include('class="attachment"'),
+        "expected attachment class for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+        expect(cooked).not_to include(bad_tag),
+        "unexpected #{bad_tag} for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+      end
+    end
+
     it "can place a blank image if we can not find the upload" do
       raw = <<~MD
       ![upload](upload://abcABC.png)
@@ -2596,6 +2835,22 @@ HTML
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+
+    it "inserts the upload src literally and does not treat it as a replacement pattern" do
+      filler = "Z" * 100
+      payload = "$'" * 100
+      raw = <<~HTML
+      <div>
+      <img src="upload://#{payload}.png">
+      #{filler}
+      </div>
+      HTML
+
+      cooked = PrettyText.cook(raw)
+
+      expect(cooked.scan("Z").length).to eq(filler.length)
+      expect(cooked).to include(%{data-orig-src="upload://#{payload}.png"})
     end
   end
 
@@ -2624,6 +2879,21 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "can skip URL-encoded relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/%2e%2e/ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/%2E%2E/ghi'></iframe>
     HTML
 
     html = <<~HTML
@@ -2693,7 +2963,7 @@ HTML
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
     #
-    html = (<<~MD).strip
+    html = <<~MD.strip
       <ruby lang="je">
         <rb lang="je">X</rb>
         漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>
@@ -2886,6 +3156,18 @@ HTML
       expect(doc.to_html).to eq(html)
     end
 
+    it "does not link thumbnails from SQL LIKE wildcards" do
+      private_thumbnail = Fabricate(:upload, original_filename: "private-thumbnail.png")
+      html = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="/uploads/%"></div><p></p>
+      HTML
+      doc = Nokogiri::HTML5.fragment(html)
+
+      described_class.add_video_placeholder_image(doc)
+
+      expect(doc.to_html).not_to include(private_thumbnail.url)
+    end
+
     it "links to a thumbnail image if the video source is valid" do
       thumbnail =
         Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
@@ -2903,6 +3185,78 @@ HTML
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)
+    end
+  end
+
+  describe "bbcode blocks nested inside other container blocks" do
+    it "still finds the closing tag of a bbcode block inside a block quote" do
+      md = <<~MD
+        [b]hi[/b]
+        [quote]
+        x
+        [/quote]
+
+        > [quote]
+        > y
+        > [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <blockquote>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </blockquote>
+      HTML
+    end
+
+    it "still finds the closing tag of a bbcode block in a list item" do
+      md = <<~MD
+        - [quote]
+          y
+          [/quote]
+        - [quote]
+          z
+          [/quote]
+      MD
+
+      expect(PrettyText.cook(md)).to include(<<~HTML.chomp)
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>y</p>
+        </blockquote>
+        </aside>
+        </li>
+        <li>
+        <aside class="quote no-group">
+        <blockquote>
+        <p>z</p>
+        </blockquote>
+        </aside>
+        </li>
+      HTML
+    end
+  end
+
+  describe "cooking unclosed bbcode tags" do
+    def cook_duration(raw)
+      PrettyText.cook("warm up the v8 context") # exclude one-off engine init
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      PrettyText.cook(raw)
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    end
+
+    it "cooks many unclosed block bbcode tags in roughly linear time" do
+      raw = (["[quote]"] * 3000).join("\n")
+      expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
+      raw = "[code]" * 6000
+      expect(cook_duration(raw)).to be < 2
     end
   end
 end

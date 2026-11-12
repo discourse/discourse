@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ThemeJavascriptsController < ApplicationController
-  DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache"
-  TESTS_DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache/tests"
+  DISK_CACHE_PATH = "#{Rails.root.join("tmp/javascript-cache")}"
+  TESTS_DISK_CACHE_PATH = "#{Rails.root.join("tmp/javascript-cache/tests")}"
 
   skip_before_action(
     :check_xhr,
@@ -20,7 +20,7 @@ class ThemeJavascriptsController < ApplicationController
     return head :not_modified if not_modified?
 
     # Security: safe due to route constraint
-    cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.js"
+    cache_file = "#{site_disk_cache_path}/#{params[:digest]}.js"
 
     write_if_not_cached(cache_file) do
       content, has_source_map = query.pick(:content, "source_map IS NOT NULL")
@@ -39,7 +39,7 @@ class ThemeJavascriptsController < ApplicationController
     return head :not_modified if not_modified?
 
     # Security: safe due to route constraint
-    cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.map"
+    cache_file = "#{site_disk_cache_path}/#{params[:digest]}.map"
 
     write_if_not_cached(cache_file) { query.pick(:source_map) }
 
@@ -66,18 +66,20 @@ class ThemeJavascriptsController < ApplicationController
 
   private
 
+  def site_disk_cache_path
+    File.join(DISK_CACHE_PATH, "sites", RailsMultisite::ConnectionManagement.current_db)
+  end
+
   def query
     @query ||= JavascriptCache.where(digest: params[:digest]).limit(1)
   end
 
   def last_modified
     @last_modified ||=
-      begin
-        if params[:action].to_s == "show_tests"
-          File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
-        else
-          query.pick(:updated_at)
-        end
+      if params[:action].to_s == "show_tests"
+        File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
+      else
+        query.pick(:updated_at)
       end
   end
 
@@ -108,7 +110,7 @@ class ThemeJavascriptsController < ApplicationController
       raise Discourse::NotFound if content.nil?
 
       FileUtils.mkdir_p(File.dirname(cache_file))
-      File.write(cache_file, content)
+      Discourse::Utils.atomic_write_file(cache_file, content)
     end
   end
 

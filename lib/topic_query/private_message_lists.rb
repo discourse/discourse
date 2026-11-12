@@ -6,22 +6,21 @@ class TopicQuery
       list = user_personal_private_messages(user)
       list = not_archived(list, user)
       list = have_posts_from_others(list, user)
+      list = apply_personal_inbox_modifier(list, user)
 
       create_list(:private_messages, {}, list, &blk)
     end
 
-    def list_private_messages_direct_and_groups(user, groups_messages_notification_level: nil, &blk)
-      list =
-        user_personal_and_groups_private_messages(
-          user,
-          groups_messages_notification_level: groups_messages_notification_level,
-        )
-
+    def private_messages_direct_and_groups(user, groups_messages_notification_level: nil)
+      list = user_personal_and_groups_private_messages(user, groups_messages_notification_level:)
       list = not_archived(list, user)
       list = not_archived_in_groups(list)
       list = have_posts_from_others(list, user)
+      list = yield(list) if block_given?
 
-      create_list(:private_messages, {}, list, &blk)
+      topics = list.except(:includes).to_a
+      topic_lookup = TopicUser.lookup_for(user, topics)
+      topics.each { |topic| topic.user_data = topic_lookup[topic.id] }
     end
 
     def list_private_messages_archive(user)
@@ -51,12 +50,14 @@ class TopicQuery
       list = filter_private_message_new(user, type)
       list = TopicQuery.remove_muted_tags(list, user, skip_categories: true)
       list = remove_dismissed(list, user)
+      list = apply_personal_inbox_modifier(list, user) if type == :user
 
       create_list(:private_messages, {}, list)
     end
 
     def list_private_messages_unread(user, type = :user)
       list = filter_private_messages_unread(user, type)
+      list = apply_personal_inbox_modifier(list, user) if type == :user
       create_list(:private_messages, {}, list)
     end
 
@@ -162,6 +163,10 @@ class TopicQuery
 
     private
 
+    def apply_personal_inbox_modifier(list, user)
+      DiscoursePluginRegistry.apply_modifier(:private_messages_personal_inbox_query, list, user)
+    end
+
     def append_read_state(list, group)
       group_id = group.id
       return list if group_id.nil?
@@ -229,9 +234,7 @@ class TopicQuery
 
     def group
       @group ||=
-        begin
-          Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
-        end
+        Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
     end
 
     def user_first_unread_pm_at(user)
@@ -245,7 +248,18 @@ class TopicQuery
         return ids
       end
 
-      @group_with_messages_ids[user.id] = user.groups.where(has_messages: true).pluck(:id)
+      group_ids = user.groups.where(has_messages: true)
+
+      group_ids =
+        if user.admin? || user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+          group_ids.pluck(:id)
+        elsif user.moderator?
+          group_ids.where(id: Group::AUTO_GROUPS[:moderators]).pluck(:id)
+        else
+          []
+        end
+
+      @group_with_messages_ids[user.id] = group_ids
     end
 
     private

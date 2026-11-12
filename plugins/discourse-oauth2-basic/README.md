@@ -121,6 +121,20 @@ So for example if the API returned a different structure like this:
 
 You could use `user.id` for the `oauth2_json_user_id_path` and `user.email.address` for `oauth2_json_email_path`.
 
+### Mapping fields from the token response
+
+`oauth2_callback_user_id_path` and `oauth2_callback_user_info_paths` can read fields
+directly from the OAuth2 token response. Use dot-separated hash keys, with an
+optional `params` prefix. For example, use `params.info.uuid` for the user ID and
+`name:params.info.name|email:params.info.email` for user information. Bare paths
+such as `info.uuid` also work.
+
+These paths only look up response data. Paths that relied on Ruby method calls,
+including token accessors such as `token`, `refresh_token`, and `expires_at`, or
+array helpers such as `params.emails.first.value`, now return no value unless
+those names are actual response keys. Keys such as `size` resolve to the response
+value rather than calling a Ruby method.
+
 ## Part 3: Test it with Google OAuth 2.0 Server
 
 To test this plugin in your local dev environment you can use Google OAuth 2.0 Server. Follow [this guide](https://support.google.com/cloud/answer/6158849?hl=en) to create new OAuth client id & secret.

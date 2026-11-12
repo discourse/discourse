@@ -37,11 +37,11 @@ et:
       cancel: "Tühista"
       cancel_reply: "Tühista vastus"
       chat_channels: "Kanalid"
+      pinned_bar:
+        title: "Esiletõstetud"
       pinned: "Esiletõstetud"
       browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
-        edit: "Muuda"
-        add: "Lisa"
         close_channel: "Sulge kanal"
         open_channel: "Ava kanal"
         archive_channel: "Arhiveeri kanal"
@@ -79,19 +79,22 @@ et:
         filter_all: Kõik
         filter_open: Ava
         filter_closed: Suletud
+        filter_joined_all: "Kõik"
+        filter_joined_joined: "Liitus"
       chat_message_separator:
         today: Täna
         yesterday: Eile
       search_view:
         filter_placeholder: Otsi sõnumeid
       about_view:
-        title: Pealkiri
         name: Nimi
         description: Kirjeldus
       channel_info:
         back_to_channel: "Tagasi"
+        nav_label: "Kanali info"
         tabs:
           members: Liikmed
+          preferences: Eelistused
           settings: Sätted
           search: Otsi
         remove_member: "Eemalda"
@@ -102,6 +105,7 @@ et:
         title: Uus sõnum
         prefix: "Kellele:"
       create_channel:
+        description: "Kirjeldus"
         type: "Tüüp"
         types:
           category: "Foorum"
@@ -124,9 +128,6 @@ et:
         save: "Salvesta"
         saved: "Salvestatud"
         unfollow: "Lahku"
-        admin_title: "Admin"
-        settings_title: "Sätted"
-        info_title: "Kanali info"
         category_label: "Foorum"
         history_label: "Ajalugu"
         members_label: "Liikmed"
@@ -138,8 +139,14 @@ et:
         sort:
           relevance: "Asjakohasus"
           latest: "Värskeimad"
+      direct_messages:
+        close: "Sulge kanal"
       channel_list:
         title: "Kanalid"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Mainimised"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"
@@ -206,3 +213,18 @@ et:
       panels:
         chat:
           label: "Vestlus"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        targets:
+          channel: "Kanal"
+        channel_id: "Kanal"
+        message: "Sõnum"
+      chat_approval:
+        message: "Sõnum"
+        value: "Väärtus"
+        style_default: "Vaikimisi"
+        style_success: "Korras"
+        icon: "Ikoon"
+        channel_id: "Kanal"

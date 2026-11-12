@@ -16,9 +16,11 @@ class PostActionUsersController < ApplicationController
     guardian.ensure_can_see!(post)
 
     post_actions =
-      post
-        .post_actions
-        .where(post_action_type_id: post_action_type_id)
+      filter_ignored_users(post.post_actions.where(post_action_type_id: post_action_type_id))
+    filtered_total = post_actions.count if current_user&.ignored_user_ids&.any?
+
+    post_actions =
+      post_actions
         .includes(:user)
         .offset(page * page_size)
         .order("post_actions.created_at ASC")
@@ -27,13 +29,15 @@ class PostActionUsersController < ApplicationController
     post_actions =
       DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
 
-    if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
+    can_see_actors = guardian.can_see_post_actors?(post.topic, post_action_type_id)
+
+    if !can_see_actors
       raise Discourse::InvalidAccess if current_user.blank?
       post_actions = post_actions.where(user_id: current_user.id)
     end
 
     action_type = PostActionType.types.key(post_action_type_id)
-    total_count = post["#{action_type}_count"].to_i
+    total_count = filtered_total || post["#{action_type}_count"].to_i
     post_actions = post_actions.to_a
     data = {
       post_action_users:
@@ -44,12 +48,25 @@ class PostActionUsersController < ApplicationController
         ),
     }
 
-    data[:total_rows_post_action_users] = total_count if total_count > page_size
+    data[:total_rows_post_action_users] = total_count if can_see_actors && total_count > page_size
 
     render_json_dump(data)
   end
 
   private
+
+  def filter_ignored_users(scope)
+    return scope if current_user.blank?
+
+    scope.where(<<~SQL, current_user_id: current_user.id)
+      NOT EXISTS (
+        SELECT 1 FROM ignored_users ig
+        WHERE ig.user_id = :current_user_id
+          AND ig.ignored_user_id = post_actions.user_id
+          AND ig.ignored_user_id <> :current_user_id
+      )
+    SQL
+  end
 
   def current_user_muting_or_ignoring_users(user_ids)
     return [] if current_user.blank?

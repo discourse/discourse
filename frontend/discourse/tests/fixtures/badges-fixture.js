@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const badgesFixtures = {
   "/badges.json": {
     badge_types: [
       {
@@ -1732,3 +1737,5 @@ export default {
     ],
   },
 };
+
+export default badgesFixtures;

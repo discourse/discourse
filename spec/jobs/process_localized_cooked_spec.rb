@@ -70,6 +70,31 @@ describe Jobs::ProcessLocalizedCooked do
     expect(messages.first.data[:id]).to eq(post.id)
   end
 
+  it "restricts private message notifications to the topic audience" do
+    recipient = Fabricate(:user)
+    private_message_post = Fabricate(:private_message_post, recipient: recipient)
+    private_message_localization =
+      Fabricate(
+        :post_localization,
+        post: private_message_post,
+        locale: "ja",
+        raw: "これはテスト投稿です。",
+        cooked: "<p>これはテスト投稿です。</p>",
+      )
+
+    messages =
+      MessageBus.track_publish("/topic/#{private_message_post.topic_id}") do
+        job.execute(post_localization_id: private_message_localization.id)
+      end
+
+    expect(messages.length).to eq(1)
+    message = messages.first
+    expect(message.data).to eq(type: :localized, id: private_message_post.id)
+    expect(message.user_ids).to contain_exactly(
+      *private_message_post.topic.secure_audience_publish_messages[:user_ids],
+    )
+  end
+
   it "processes oneboxes and images" do
     stub_image_size
     onebox_html = <<~HTML
@@ -90,6 +115,26 @@ describe Jobs::ProcessLocalizedCooked do
 
     post_localization.reload
     expect(post_localization.cooked).to include("onebox")
+  end
+
+  describe "recook" do
+    it "re-cooks the localization from its raw before processing when recook is true" do
+      post_localization.update!(raw: "新しい本文です。", cooked: "<p>古いHTML</p>")
+
+      job.execute(post_localization_id: post_localization.id, recook: true)
+
+      post_localization.reload
+      expect(post_localization.cooked).to include("新しい本文です。")
+      expect(post_localization.cooked).not_to include("古いHTML")
+    end
+
+    it "uses the stored cooked when recook is not set" do
+      post_localization.update!(raw: "新しい本文です。", cooked: "<p>古いHTML</p>")
+
+      job.execute(post_localization_id: post_localization.id)
+
+      expect(post_localization.reload.cooked).to include("古いHTML")
+    end
   end
 
   describe "topic localization excerpt" do

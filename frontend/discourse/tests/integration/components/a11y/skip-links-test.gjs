@@ -1,9 +1,9 @@
-import { render } from "@ember/test-helpers";
+import { find, focus, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | a11y/skip-links", function (hooks) {
+module("Integration | Component | A11y | SkipLinks", function (hooks) {
   setupRenderingTest(hooks);
 
   test("skip link height does not exceed -75px offset on narrow 320px viewports", async function (assert) {
@@ -24,9 +24,9 @@ module("Integration | Component | a11y/skip-links", function (hooks) {
       await render(
         <template>
           <a
+            class="skip-link"
             href="#main-outlet"
             id="skip-link"
-            class="skip-link"
           >{{skipLinkText}}</a>
         </template>
       );
@@ -59,14 +59,15 @@ module("Integration | Component | a11y/skip-links", function (hooks) {
     await render(
       <template>
         <a
+          class="skip-link"
           href="#main-outlet"
           id="skip-link"
-          class="skip-link"
         >{{skipLinkText}}</a>
       </template>
     );
 
-    const skipLink = document.querySelector("#skip-link");
+    const skipLink = find("#skip-link");
+    skipLink.style.transition = "none";
 
     let computedStyle = window.getComputedStyle(skipLink);
     assert.strictEqual(
@@ -75,7 +76,10 @@ module("Integration | Component | a11y/skip-links", function (hooks) {
       "skip link is hidden with -75px offset before focus"
     );
 
-    skipLink.focus();
+    await focus(skipLink);
+    assert.dom(skipLink).isFocused("skip link receives focus");
+
+    await waitUntil(() => window.getComputedStyle(skipLink).top === "0px");
 
     computedStyle = window.getComputedStyle(skipLink);
     assert.strictEqual(

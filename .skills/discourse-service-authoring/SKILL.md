@@ -3,9 +3,32 @@ name: discourse-service-authoring
 description: Use when creating, editing, or reviewing Discourse service objects that include Service::Base - covers contracts, models, policies, steps, transactions, controller integration, and service specs
 ---
 
-We want high quality code and very senior engineering work. Best oriented object practices are observed. Think principles like SOLID and battle-tested patterns. We also want to write idiomatic ruby. Good reference authors are Sandi Metz, Katrina Owen or Avdi Grimm. Your only source of truth to write services is the documentation at docs/developer-guides/docs/03-code-internals/19-service-objects.md, don't look at examples in the codebase.
+We want high quality code and very senior engineering work. Best oriented object practices are observed. Think principles like SOLID and battle-tested patterns. We also want to write idiomatic ruby. Good reference authors are Sandi Metz, Katrina Owen or Avdi Grimm. Your only source of truth to write services is the documentation at docs/developer-guides/docs/03-code-internals/20-service-objects.md, don't look at examples in the codebase.
 
 DONT USE ANY WRITING PLAN SKILL DURING THE SESSION
+
+## Autonomous Mode
+
+When the user says "autonomous mode" (or similar), apply these overrides:
+- Do NOT use AskUserQuestion — make your best judgment call and state what you chose
+- Do NOT wait for user approval at phase gates — present the deliverable and proceed immediately
+- Still present audit tables, but fix all FAILs and continue without waiting for confirmation
+- Still present service name suggestions, but pick the best one yourself
+
+## Task Tracking
+
+**MANDATORY:** At the start of every session using this skill, create a task for each phase using TaskCreate:
+
+1. "Phase 1: Deep Understanding"
+2. "Phase 2: Assessment"
+3. "Phase 3: Implementation"
+4. "Phase 4: Quality"
+5. "Phase 5: Business logic"
+6. "Phase 6: Security"
+7. "Phase 7: Specs"
+8. "Phase 8: Finalization"
+
+Create ALL tasks upfront before starting any work. Mark each task as `in_progress` when you begin it and `completed` when the user approves the phase gate.
 
 ## Execution Discipline
 
@@ -65,7 +88,7 @@ Write the service, controller, update all callers, and remove dead code.
 
 **Gate:** Present a summary of all files created, modified, and deleted. Wait for user acknowledgment before proceeding to Phase 4.
 
-## Phase 4: Service Quality Check
+## Phase 4: Quality
 
 Review the service against these structural rules. List every violation found.
 
@@ -111,7 +134,7 @@ When in doubt AskUserQuestion.
 4. When the table is all PASS/NA, present it to the user for approval
 5. Proceed to Phase 5 only after user approval
 
-## Phase 5: Business Logic Review
+## Phase 5: Business logic
 
 Trace every code path in the original implementation against the new service. List every bug found by criticality.
 
@@ -128,7 +151,7 @@ Trace every code path in the original implementation against the new service. Li
 4. When the table is all PASS/NA, present it to the user for approval
 5. Proceed to Phase 6 only after user approval
 
-## Phase 6: Security Review
+## Phase 6: Security
 
 Review for security concerns. List every issue found by criticality.
 
@@ -157,7 +180,7 @@ Two authoritative references govern how specs are written. Whenever you are unsu
 1. **RSpec Style Guide** — https://rspec.rubystyle.guide
    Fetch this page and search for the keyword you need guidance on (e.g. "subject", "context", "let", "shared examples", "named subject", "aggregate_failures", "one expectation"). Use it as the definitive authority on RSpec idioms and style.
 
-2. **Service documentation** — `docs/developer-guides/docs/03-code-internals/19-service-objects.md`, section **Testing**
+2. **Service documentation** — `docs/developer-guides/docs/03-code-internals/20-service-objects.md`, section **Testing**
    This is the definitive authority on testing Discourse services: structure, custom matchers, and conventions. Every spec must follow the patterns shown there.
 
 ### Checklist

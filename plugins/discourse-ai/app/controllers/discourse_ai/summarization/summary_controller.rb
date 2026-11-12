@@ -10,19 +10,38 @@ module DiscourseAi
       def show
         topic = Topic.find(params[:topic_id])
         guardian.ensure_can_see!(topic)
+        summarization_service =
+          DiscourseAi::TopicSummarization.for(topic, current_user, scope: guardian)
+        cached_summary = summarization_service.cached_summary
 
-        raise Discourse::NotFound if !guardian.can_see_summary?(topic)
+        raise Discourse::NotFound if !cached_summary
+
+        if !guardian.can_see_summary?(topic, cached_summary: cached_summary)
+          raise Discourse::NotFound
+        end
+
+        render_serialized(cached_summary, AiTopicSummarySerializer)
+      end
+
+      def create
+        topic = Topic.find(params[:topic_id])
+        guardian.ensure_can_see!(topic)
+        summarization_service =
+          DiscourseAi::TopicSummarization.for(topic, current_user, scope: guardian)
+        raise Discourse::NotFound if !summarization_service.available?
+
+        cached_summary = summarization_service.cached_summary
+
+        if !guardian.can_see_summary?(topic, cached_summary: cached_summary)
+          raise Discourse::NotFound
+        end
 
         RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
 
         opts = params.permit(:skip_age_check)
         skip_age_check = opts[:skip_age_check] == "true"
 
-        summarization_service = DiscourseAi::TopicSummarization.for(topic, current_user)
-
         if params[:stream] && current_user
-          cached_summary = summarization_service.cached_summary
-
           if cached_summary && !skip_age_check
             render_serialized(cached_summary, AiTopicSummarySerializer)
             return
@@ -32,6 +51,7 @@ module DiscourseAi
             :stream_topic_ai_summary,
             topic_id: topic.id,
             user_id: current_user.id,
+            locale: summarization_service.locale,
             skip_age_check: skip_age_check,
           )
 
@@ -39,6 +59,8 @@ module DiscourseAi
         else
           hijack do
             summary = summarization_service.summarize(skip_age_check: skip_age_check)
+            raise Discourse::NotFound if summary.nil?
+
             render_serialized(summary, AiTopicSummarySerializer)
           end
         end

@@ -8,6 +8,10 @@ hr:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Neuspješno"
         reports:
           filters:
             sort_by:
@@ -36,31 +40,91 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
+        response: "Odgovor"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocjena"
+      ai_tool_approval:
+        loading: "Očitavanje..."
+        tool: "Akcija"
+        user: "Korisnik"
+        approve: "Odobrite"
+        reject: "Odbij"
+        approved: "Odobrio/la"
+        rejected: "Odbio/la"
       llm_selector:
         none: "Ništa"
       features:
-        back: "Natrag"
-        disabled: "(onemogućeno)"
-        groups: "Grupe:"
+        table:
+          status: "Statust"
+          enabled: "Omogućeno"
+          groups: "Grupe"
+        chatbot:
+          places:
+            personal_messages: "Osobne poruke"
+            none: "Nije dostupno"
         no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
-        expand_list:
-          one: "(%{count} još)"
-          few: "(%{count} još)"
-          other: "(%{count} još)"
-        collapse_list: "(prikaži manje)"
+        nav:
+          enabled: "Omogućeno"
         filters:
           all: "Sve"
           reset: "Resetirati"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Nepoželjno"
       modals:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        sections:
+          advanced: "Napredno"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            label: "Osobne poruke"
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Nitko"
+              all: "Svi"
+        model_progress:
+          detail:
+            columns:
+              locale: "Lokalizacija"
+              pending: "Na čekanju"
+              total: "Ukupno"
+          targets:
+            post:
+              title: "Postovi"
+            topic:
+              title: "Tema"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
+        admin_actions:
+          enabled: "Omogućeno"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -81,6 +145,8 @@ hr:
             other: "%{count} objava"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Zadnjih 7 dana"
         enable: "Omogućiti"
         test_modal:
@@ -93,8 +159,38 @@ hr:
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
+      logs:
+        short_title: "Zapisi"
+        apply: "Primijeni"
+        successful: "Uspješno"
+        failed: "Neuspješno"
+        unknown: "Nepoznato"
+        time: "Vrijeme"
+        when: "Kada"
+        request: "Zahtjev"
+        provider: "Pružatelj usluga"
+        user: "Korisnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Objava"
+        post_short: "Objava %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        view_details: "Detalji"
+        periods:
+          hour: "Posljednji sat"
+          day: "Posljednja 24 sata"
+          week: "Zadnjih 7 dana"
+          custom: "Posebna"
+        detail:
+          request: "Zahtjev"
+          response: "Odgovor"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Sažetak"
+          deleted_stage: "Izbrisao"
+          save: "Spremi"
       ai_agent:
-        back: "Natrag"
         name: "Ime"
         edit: "Uredi"
         export: "Izvoz"
@@ -102,8 +198,18 @@ hr:
         user: Korisnik
         save: "Spremi"
         enabled: "Omogućeno?"
+        mcp_tools_modal:
+          clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
+        duplicate: "Dupliciraj"
+        copy_name: "Kopija %{name}"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nizak"
+          medium: "Srednji"
+          high: "Visok"
+          max: "Maks"
         response_format:
           open_modal: "Uredi"
           modal:
@@ -115,7 +221,6 @@ hr:
           title: "Prijenosi"
           uploading: "Učitavanje..."
       tools:
-        back: "Natrag"
         export: "Izvoz"
         name: "Ime"
         description: "Opis"
@@ -131,17 +236,48 @@ hr:
         short_title: "Vjerodajnice"
         name: "Ime"
         secret: "Vrijednost"
-        back: "Natrag"
         save: "Spremi"
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      decision_models:
+        no_preset: "Ništa"
+        display_name: "Ime"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        delete: "Izbriši"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_statuses:
+          connected: "Povezano"
+        oauth_connect: "Povežite se"
+        enabled: "Omogućeno"
+        save: "Spremi"
+        edit: "Uredi"
+        delete: "Izbriši"
+        tools_modal:
+          required: "Potrebno"
+      models:
+        name: "Ime"
+        type: "Tip"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
+          reset: "Poništi filtere"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
+        vision_modes:
+          disabled:
+            title: "Onemogućeno"
         save: "Spremi"
         edit: "Uredi"
-        back: "Natrag"
         delete: Izbriši
         quotas:
           group: "Grupa"
@@ -162,7 +298,6 @@ hr:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:
@@ -178,10 +313,7 @@ hr:
           select: "Odaberite"
           selected: "Odabrano"
           try_again: "Pokušaj ponovno"
-        image_caption:
-          save_caption: "Spremi"
       embeddings:
-        back: "Natrag"
         save: "Spremi"
         delete: "Izbriši"
         edit: "Uredi"
@@ -192,8 +324,18 @@ hr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Inačica"
+          default: "Zadano"
+          apply: "Primijeni"
+        share: "Podijeli"
+        create_link: "Kreirajte poveznicu"
+        copy_link: "Kopirajte poveznicu"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zahtjev"
           response: "Odgovor"
           next_log: "Sljedeći"
@@ -224,9 +366,20 @@ hr:
             one: "Posljednji sat"
             few: "Posljednja %{count} sata"
             other: "Posljednjih %{count} sati"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Tema"
+          messages: "Poruke"
       discobot_discoveries:
-        regular_results: "Tema"
-        collapse: "Sakrij"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Tema"
+          collapse: "Sakrij"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_all_topics: "Sve teme"
+        search_messages: "Poruke"

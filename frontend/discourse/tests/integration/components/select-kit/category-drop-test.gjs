@@ -16,7 +16,7 @@ import { i18n } from "discourse-i18n";
 function initCategories(context) {
   const categories = context.site.categoriesList;
   context.setProperties({
-    category: categories.firstObject,
+    category: categories[0],
     categories,
   });
 }
@@ -34,7 +34,7 @@ function initCategoriesWithParentCategory(context) {
   });
 }
 
-module("Integration | Component | select-kit/category-drop", function (hooks) {
+module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -44,7 +44,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   test("caretUpIcon", async function (assert) {
     await render(
       <template>
-        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
+        <CategoryDrop @categories={{this.content}} @category={{this.value}} />
       </template>
     );
 
@@ -56,7 +56,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   test("none", async function (assert) {
     await render(
       <template>
-        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
+        <CategoryDrop @categories={{this.content}} @category={{this.value}} />
       </template>
     );
 
@@ -77,8 +77,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -101,8 +101,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -125,8 +125,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -146,8 +146,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -166,10 +166,10 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash hideParentCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -179,7 +179,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     const parentRow = this.subject.rowByValue(this.parentCategory.id);
     assert.false(parentRow.exists(), "the parent row is not showing");
 
-    const childCategory = this.categories.firstObject;
+    const childCategory = this.categories[0];
     const childCategoryId = childCategory.id;
     const childRow = this.subject.rowByValue(childCategoryId);
     assert.true(childRow.exists(), "the child row is showing");
@@ -194,8 +194,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -215,8 +215,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -235,8 +235,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -258,10 +258,10 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash countSubcategories=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -283,8 +283,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -294,7 +294,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
     assert.strictEqual(
       this.subject.rowByIndex(0).value(),
-      this.categories.firstObject.id.toString(),
+      this.categories[0].id.toString(),
       "Shortcuts are not prepended when no category is selected"
     );
   });
@@ -305,8 +305,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -323,10 +323,10 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash subCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -338,15 +338,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
   test("shortcuts with parentCategory/subCategory=true:category is selected", async function (assert) {
     initCategoriesWithParentCategory(this);
-    this.set("category", this.categories.firstObject);
+    this.set("category", this.categories[0]);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash subCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -364,8 +364,8 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>

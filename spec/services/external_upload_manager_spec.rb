@@ -70,13 +70,38 @@ RSpec.describe ExternalUploadManager do
       end
 
       context "when the upload does not get changed in UploadCreator (resized etc.)" do
-        it "copies the stubbed upload on S3 to its new destination and deletes it" do
+        it "stores the validated downloaded bytes instead of copying the mutable external object" do
           upload = manager.transform!
 
           bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-          expect(@fake_s3.operation_called?(:copy_object)).to eq(true)
+          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          expect(@fake_s3.operation_called?(:put_object)).to eq(true)
           expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
+        end
+
+        context "when the external object is replaced after it was downloaded" do
+          before do
+            bucket = @fake_s3.bucket(s3_bucket_name)
+            downloaded_file = file_from_fixtures("logo.png").read
+
+            stub_request(:get, /#{Regexp.escape(external_upload_stub.key)}/).to_return do
+              bucket.find_object(external_upload_stub.key)[:replaced_by_uploader] = true
+              { status: 200, body: downloaded_file }
+            end
+          end
+
+          it "stores the downloaded bytes rather than the replaced object" do
+            upload = manager.transform!
+
+            stored =
+              @fake_s3.bucket(s3_bucket_name).find_object(
+                Discourse.store.get_path_for_upload(upload),
+              )
+            expect(upload.sha1).to eq(sha1)
+            expect(stored).to be_present
+            expect(stored[:replaced_by_uploader]).to be_nil
+          end
         end
 
         it "errors if the image upload is too big" do
@@ -104,6 +129,8 @@ RSpec.describe ExternalUploadManager do
       end
 
       context "when the upload does get changed by the UploadCreator" do
+        subject(:manager) { ExternalUploadManager.new(external_upload_stub, force_optimize: true) }
+
         let(:object_file) { file_from_fixtures("should_be_jpeg.heic", "images") }
         let(:object_size) { 1.megabyte }
         let(:external_upload_stub) do
@@ -225,12 +252,16 @@ RSpec.describe ExternalUploadManager do
     end
 
     context "when the upload type is backup" do
+      fab!(:admin)
+
+      subject(:manager) { ExternalUploadManager.new(external_upload_stub, {}) }
+
       let(:object_size) { 200.megabytes }
       let(:object_file) { file_from_fixtures("backup_since_v1.6.tar.gz", "backups") }
       let!(:external_upload_stub) do
         Fabricate(
           :attachment_external_upload_stub,
-          created_by: user,
+          created_by: admin,
           filesize: object_size,
           upload_type: "backup",
           original_filename: "backup_since_v1.6.tar.gz",
@@ -275,7 +306,11 @@ RSpec.describe ExternalUploadManager do
   end
 
   def stub_download_object_filehelper
-    signed_url = Discourse.store.signed_url_for_path(external_upload_stub.key)
+    signed_url =
+      Discourse.store.signed_url_for_path(
+        external_upload_stub.key,
+        include_content_disposition: false,
+      )
     uri = URI.parse(signed_url)
     signed_url = uri.to_s.gsub(uri.query, "")
     stub_request(:get, signed_url).with(query: hash_including({})).to_return(

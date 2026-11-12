@@ -56,6 +56,17 @@ describe Chat::MessageReactor do
     }.to raise_error(Discourse::InvalidParameters)
   end
 
+  it "accepts a raw unicode emoji and stores its shortcode" do
+    reactor.react!(message_id: message_1.id, react_action: :add, emoji: "👍")
+    expect(message_1.reactions.where(user: reacting_user).pluck(:emoji)).to eq(["+1"])
+  end
+
+  it "leaves an unknown unicode string to fail validation" do
+    expect {
+      reactor.react!(message_id: message_1.id, react_action: :add, emoji: "🫥🫥")
+    }.to raise_error(Discourse::InvalidParameters)
+  end
+
   it "raises an error if the message is not found" do
     expect {
       reactor.react!(message_id: -999, react_action: :add, emoji: ":woohoo:")

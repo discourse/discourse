@@ -2,9 +2,9 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
 import SelectedNameComponent from "discourse/select-kit/components/selected-name";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("selected-category")
 export default class SelectedCategory extends SelectedNameComponent {
@@ -20,16 +20,16 @@ export default class SelectedCategory extends SelectedNameComponent {
 
   <template>
     <div
-      {{on "click" this.onSelectedNameClick}}
+      class="select-kit-selected-name selected-name choice"
+      data-name={{this.name}}
+      data-value={{this.value}}
       tabindex="0"
       title={{this.title}}
-      data-value={{this.value}}
-      data-name={{this.name}}
-      class="select-kit-selected-name selected-name choice"
+      {{on "click" this.onSelectedNameClick}}
     >
       <div class="body">
         {{this.badge}}
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
       </div>
     </div>
   </template>

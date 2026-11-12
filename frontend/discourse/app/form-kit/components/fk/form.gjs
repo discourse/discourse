@@ -4,12 +4,11 @@ import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedMap } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { next, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
-import DButton from "discourse/components/d-button";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
@@ -29,6 +28,7 @@ import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 class FKForm extends Component {
@@ -39,9 +39,11 @@ class FKForm extends Component {
 
   @tracked isSubmitting = false;
 
-  fields = new TrackedMap();
+  fields = trackedMap();
 
   formData = new FKFormData(this.args.data ?? {});
+
+  #pendingRegistrations = new Set();
 
   constructor() {
     super(...arguments);
@@ -51,6 +53,8 @@ class FKForm extends Component {
       set: this.set,
       setProperties: this.setProperties,
       get: this.get,
+      commit: this.commit,
+      commitField: this.commitField,
       submit: this.onSubmit,
       reset: this.onReset,
       addError: this.addError,
@@ -69,38 +73,6 @@ class FKForm extends Component {
     super.willDestroy();
 
     this.router.off("routeWillChange", this.checkIsDirty);
-  }
-
-  @action
-  async checkIsDirty(transition) {
-    let triggerConfirm = false;
-
-    // In some cases (e.g., subroute -> parent),
-    // queryParamsOnly is true even though the route name changes
-    const routeChanging = transition.to?.name !== transition.from?.name;
-
-    const shouldCheck =
-      this.formData.isDirty &&
-      !transition.isAborted &&
-      (!transition.queryParamsOnly || routeChanging);
-
-    if (this.args.onDirtyCheck) {
-      triggerConfirm = shouldCheck && this.args.onDirtyCheck(transition);
-    } else {
-      triggerConfirm = shouldCheck;
-    }
-
-    if (triggerConfirm) {
-      transition.abort();
-
-      this.dialog.yesNoConfirm({
-        message: i18n("form_kit.dirty_form"),
-        didConfirm: async () => {
-          await this.onReset();
-          transition.retry();
-        },
-      });
-    }
   }
 
   get validateOn() {
@@ -132,6 +104,38 @@ class FKForm extends Component {
       }
     });
     return paths.size;
+  }
+
+  @action
+  async checkIsDirty(transition) {
+    let triggerConfirm;
+
+    // In some cases (e.g., subroute -> parent),
+    // queryParamsOnly is true even though the route name changes
+    const routeChanging = transition.to?.name !== transition.from?.name;
+
+    const shouldCheck =
+      this.formData.isDirty &&
+      !transition.isAborted &&
+      (!transition.queryParamsOnly || routeChanging);
+
+    if (this.args.onDirtyCheck) {
+      triggerConfirm = shouldCheck && this.args.onDirtyCheck(transition);
+    } else {
+      triggerConfirm = shouldCheck;
+    }
+
+    if (triggerConfirm) {
+      transition.abort();
+
+      this.dialog.yesNoConfirm({
+        message: i18n("form_kit.dirty_form"),
+        didConfirm: async () => {
+          await this.onReset();
+          transition.retry();
+        },
+      });
+    }
   }
 
   normalizeValue(value) {
@@ -218,6 +222,21 @@ class FKForm extends Component {
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.triggerRevalidationFor(name);
     }
+
+    if (this.args.onSet) {
+      await this.args.onSet(name, value, this.formData.draftData);
+      this.formData.save();
+    }
+  }
+
+  @action
+  commit() {
+    this.formData.save();
+  }
+
+  @action
+  commitField(name) {
+    this.formData.commitField(name);
   }
 
   @action
@@ -245,14 +264,27 @@ class FKForm extends Component {
     }
 
     if (this.fields.has(name)) {
-      throw new Error(
-        `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
-      );
+      this.fields.delete(name);
     }
 
     this.fields.set(name, field);
 
+    if (this.fieldValidationEvent) {
+      this.#pendingRegistrations.add(field);
+      scheduleOnce("afterRender", this, this.validatePendingRegistrations);
+    }
+
     return field;
+  }
+
+  @action
+  async validatePendingRegistrations() {
+    if (this.#pendingRegistrations.size === 0) {
+      return;
+    }
+    const fields = [...this.#pendingRegistrations];
+    this.#pendingRegistrations.clear();
+    await this.validate(fields);
   }
 
   @action
@@ -274,12 +306,20 @@ class FKForm extends Component {
 
       await new Promise((resolve) => next(resolve));
 
-      await this.validate([...this.fields.values()]);
+      const submissionPrevented = await this.validate([
+        ...this.fields.values(),
+      ]);
+
+      if (submissionPrevented) {
+        return;
+      }
 
       if (this.formData.isValid) {
         const patchesSnapshot = [...this.formData.patches];
 
-        this.formData.save(field?.name);
+        if (this.args.commitOnSubmit !== false) {
+          this.formData.save(field?.name);
+        }
 
         if (field?.name) {
           await this.args.onSubmit?.({
@@ -318,7 +358,10 @@ class FKForm extends Component {
       return;
     }
 
-    if (this.formData.errors[name]) {
+    if (
+      this.fieldValidationEvent === VALIDATION_TYPES.change ||
+      this.formData.errors[name]
+    ) {
       await this.validate([field]);
     }
   }
@@ -329,6 +372,8 @@ class FKForm extends Component {
     }
 
     this.isValidating = true;
+    let submissionPrevented = false;
+    const preventSubmit = () => (submissionPrevented = true);
 
     try {
       for (const field of fields) {
@@ -337,23 +382,27 @@ class FKForm extends Component {
         await field.validate?.(
           field.name,
           this.formData.get(field.name),
-          this.formData.draftData
+          this.formData.draftData,
+          { preventSubmit }
         );
       }
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
         removeError: this.removeError,
+        preventSubmit,
       });
     } finally {
       this.isValidating = false;
     }
+
+    return submissionPrevented;
   }
 
   <template>
     <form
-      novalidate
       class="form-kit"
+      novalidate
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
@@ -390,24 +439,14 @@ class FKForm extends Component {
             label="form_kit.reset"
             disabled=true
           )
-          Field=(component
-            FKField
-            errors=this.formData.errors
-            data=this.formData
-            patches=this.formData.patches
-            addError=this.addError
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-            remove=this.remove
-            set=this.set
-          )
+          Field=(this.componentFor FKField)
           Collection=(this.componentFor FKCollection)
           Object=(this.componentFor FKObject)
           InputGroup=(this.componentFor FKInputGroup)
           CheckboxGroup=(this.componentFor FKCheckboxGroup)
           set=this.set
           setProperties=this.setProperties
+          commitField=this.commitField
           addItemToCollection=this.addItemToCollection
           dirtyCount=this.dirtyCount
           submit=this.onSubmit
@@ -421,15 +460,17 @@ class FKForm extends Component {
 const Form = <template>
   {{#each (array @data) as |data|}}
     <FKForm
+      ...attributes
+      @commitOnSubmit={{@commitOnSubmit}}
       @data={{data}}
+      @onDirtyCheck={{@onDirtyCheck}}
+      @onRegisterApi={{@onRegisterApi}}
+      @onReset={{@onReset}}
+      @onSet={{@onSet}}
       @onSubmit={{@onSubmit}}
       @submitOn={{@submitOn}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}
-      @onRegisterApi={{@onRegisterApi}}
-      @onReset={{@onReset}}
-      @onDirtyCheck={{@onDirtyCheck}}
-      ...attributes
       as |components draftData|
     >
       {{#if (has-block "body")}}

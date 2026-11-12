@@ -19,6 +19,7 @@ class AiApiRequestStat < ActiveRecord::Base
         response_tokens: log.response_tokens || 0,
         cache_read_tokens: log.cache_read_tokens || 0,
         cache_write_tokens: log.cache_write_tokens || 0,
+        estimated_cost: estimated_cost_for(log, llm_model),
         usage_count: 1,
         rolled_up: false,
         created_at: timestamp,
@@ -26,6 +27,18 @@ class AiApiRequestStat < ActiveRecord::Base
       )
     rescue StandardError => e
       Rails.logger.warn("Failed to persist AiApiRequestStat: #{e.message}")
+    end
+
+    def estimated_cost_for(log, llm_model)
+      return log.estimated_cost if !log.estimated_cost.nil?
+      return if llm_model.blank?
+
+      llm_model.estimated_cost_for_tokens(
+        request_tokens: log.request_tokens,
+        response_tokens: log.response_tokens,
+        cache_read_tokens: log.cache_read_tokens,
+        cache_write_tokens: log.cache_write_tokens,
+      )
     end
 
     def rollup!
@@ -56,6 +69,7 @@ class AiApiRequestStat < ActiveRecord::Base
               response_tokens,
               cache_read_tokens,
               cache_write_tokens,
+              estimated_cost,
               usage_count,
               rolled_up,
               created_at,
@@ -63,29 +77,31 @@ class AiApiRequestStat < ActiveRecord::Base
             )
             SELECT
               :start_time,
-              user_id,
-              provider_id,
-              llm_id,
-              language_model,
-              feature_name,
-              SUM(request_tokens),
-              SUM(response_tokens),
-              SUM(cache_read_tokens),
-              SUM(cache_write_tokens),
+              ai_api_request_stats.user_id,
+              ai_api_request_stats.provider_id,
+              ai_api_request_stats.llm_id,
+              ai_api_request_stats.language_model,
+              ai_api_request_stats.feature_name,
+              SUM(ai_api_request_stats.request_tokens),
+              SUM(ai_api_request_stats.response_tokens),
+              SUM(ai_api_request_stats.cache_read_tokens),
+              SUM(ai_api_request_stats.cache_write_tokens),
+              SUM(#{LlmModel.estimated_or_calculated_spending_sql(:ai_api_request_stats)}),
               SUM(usage_count),
               true,
               :start_time,
               :now
             FROM ai_api_request_stats
-            WHERE bucket_date >= :start_time
-              AND bucket_date <= :end_time
-              AND rolled_up = false
+            LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id
+            WHERE ai_api_request_stats.bucket_date >= :start_time
+              AND ai_api_request_stats.bucket_date <= :end_time
+              AND ai_api_request_stats.rolled_up = false
             GROUP BY
-              user_id,
-              provider_id,
-              llm_id,
-              language_model,
-              feature_name
+              ai_api_request_stats.user_id,
+              ai_api_request_stats.provider_id,
+              ai_api_request_stats.llm_id,
+              ai_api_request_stats.language_model,
+              ai_api_request_stats.feature_name
           SQL
 
           DB.exec(<<~SQL, start_time: start_time, end_time: end_time)
@@ -114,6 +130,7 @@ end
 #  bucket_date        :datetime         not null
 #  cache_read_tokens  :integer          default(0), not null
 #  cache_write_tokens :integer          default(0), not null
+#  estimated_cost     :decimal(20, 10)
 #  feature_name       :string(255)
 #  language_model     :string(255)
 #  request_tokens     :integer          default(0), not null

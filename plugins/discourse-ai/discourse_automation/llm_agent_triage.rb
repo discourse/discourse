@@ -45,7 +45,7 @@ if defined?(DiscourseAutomation)
           post: post,
           agent_id: agent_id,
           whisper: whisper,
-          automation: self.automation,
+          automation: automation,
           silent_mode: silent_mode,
           action: context["action"],
         )

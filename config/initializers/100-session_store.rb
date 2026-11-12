@@ -7,7 +7,7 @@ Rails.application.config.session_store(
   key: "_forum_session",
   path:
     (
-      if (Rails.application.config.relative_url_root.nil?)
+      if Rails.application.config.relative_url_root.nil?
         "/"
       else
         Rails.application.config.relative_url_root

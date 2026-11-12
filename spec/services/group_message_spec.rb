@@ -15,13 +15,13 @@ RSpec.describe GroupMessage do
   describe "not sent recently" do
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(false) }
 
-    it "should send a private message to the given group" do
+    it "sends a private message to the given group" do
       PostCreator
         .expects(:create)
         .with do |from_user, opts|
-          from_user.id == (admin.id) && opts[:target_group_names] &&
+          from_user.id == admin.id && opts[:target_group_names] &&
             opts[:target_group_names].include?(Group[:moderators].name) &&
-            opts[:archetype] == (Archetype.private_message) && opts[:title].present? &&
+            opts[:archetype] == Archetype.private_message && opts[:title].present? &&
             opts[:raw].present?
         end
         .returns(stub_everything)
@@ -50,7 +50,7 @@ RSpec.describe GroupMessage do
 
     it { is_expected.to eq(false) }
 
-    it "should not send the same notification again" do
+    it "does not send the same notification again" do
       PostCreator.expects(:create).never
       group_message
     end

@@ -31,12 +31,15 @@ RSpec.describe Chat::IncomingWebhooksController do
       expect(response.status).to eq(400)
     end
 
-    it "errors when the body is over chat_maximum_message_length characters" do
-      post "/chat/hooks/#{webhook.key}.json",
-           params: {
-             text: "$" * (SiteSetting.chat_maximum_message_length + 1),
-           }
-      expect(response.status).to eq(422)
+    it "rejects an over-length body" do
+      post "/chat/hooks/#{webhook.key}.json", params: { text: "a" * 25_000 }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to eq(
+        [
+          "You supplied invalid parameters to the request: [\"Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)\"]",
+        ],
+      )
     end
 
     it "creates a new chat message" do
@@ -79,6 +82,24 @@ RSpec.describe Chat::IncomingWebhooksController do
         post "/chat/hooks/#{webhook.key}/slack.json", params: valid_payload
         expect(response.status).to eq(404)
       end
+    end
+
+    it "rejects unauthenticated and over-length payloads before Slack preprocessing" do
+      text = (1..5_000).map { |number| "<https://example.com/#{number}|#{number}>" }.join
+      allow(Chat::SlackCompatibility).to receive(:process_text).and_call_original
+
+      post "/chat/hooks/not-a-webhook/slack.json", params: { text: text }
+
+      expect(response.status).to eq(404)
+      expect(response.body).to be_present
+
+      post "/chat/hooks/#{webhook.key}/slack.json", params: { text: text }
+
+      expect(response.status).to eq(400)
+      expect(response.body).to include(
+        "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+      )
+      expect(Chat::SlackCompatibility).not_to have_received(:process_text)
     end
 
     it "processes the text param with SlackCompatibility" do

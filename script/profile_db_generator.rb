@@ -22,9 +22,7 @@ def unbundled_require(gem)
     spec.activate
   end
 
-  begin
-    require gem
-  end
+  require gem
 end
 
 def sentence

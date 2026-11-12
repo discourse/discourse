@@ -353,4 +353,23 @@ describe AdPlugin::HouseAd do
       expect { ad.destroy }.to change { AdPlugin::HouseAdRoute.count }.by(-1)
     end
   end
+
+  describe "destroying with associated impressions" do
+    fab!(:ad, :house_ad)
+
+    it "deletes impressions in a single DELETE query" do
+      3.times { Fabricate(:anonymous_house_ad_impression, house_ad: ad) }
+
+      delete_queries = nil
+
+      expect do
+        delete_queries =
+          track_sql_queries { ad.destroy! }.select do |sql|
+            sql.match?(/DELETE FROM ["']?ad_plugin_impressions["']?/i)
+          end
+      end.to change { AdPlugin::AdImpression.count }.by(-3)
+
+      expect(delete_queries.size).to eq(1)
+    end
+  end
 end

@@ -6,21 +6,27 @@
 
 it:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
     errors:
       explorer:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
         dirty: "È necessario salvare la query prima di eseguirla."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nessun risultato"
     explorer:
-      default_query: "Predefinito"
       or: "o"
       admins_only: "Data explorer è disponibile solo per gli amministratori."
       allow_groups: "Consenti ai gruppi di accedere a questa query"
       title: "Data Explorer"
-      create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
+      ai:
+        generate: "Genera"
       import:
-        label: "Importa"
         unparseable_json: "File JSON non analizzabile."
         wrong_json: "File JSON errato. Un file JSON dovrebbe contenere un oggetto \"query\" contenente almeno una proprietà \"sql\"."
       help:
@@ -35,18 +41,15 @@ it:
           yes: "Sì"
           no: "No"
           null_: "Null"
-      export: "Esporta"
       view_json: "Visualizza JSON"
       save: "Salva le modifiche"
       run: "Esegui"
       undo: "Annulla modifiche"
-      edit: "Modifica"
       delete: "Elimina"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabella"
-      show_graph: "Grafico"
-      others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
+      chart:
+        form:
+          label: "Tipo di grafico"
+          bar: "Barra"
       run_time: "Query completata in %{value} ms."
       result_count:
         one: "%{count} risultato."
@@ -54,17 +57,16 @@ it:
       max_result_count:
         one: "Visualizzazione del primo (%{count}) risultato"
         other: "Visualizzazione dei primi %{count} risultati."
-      query_name: "Query"
+      name: "Nome"
       query_groups: "Gruppi"
+      query_tags: "Etichette"
       link: "Collegamento per"
       report_name: "Rapporto"
       query_description: "Descrizione"
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
       column: "Colonna %{number}"
-      explain_label: "Includere il piano query?"
       reset_params: "Annulla"
-      search_placeholder: "Ricerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
       form:
         errors:
@@ -77,8 +79,18 @@ it:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
+      sql:
+        query_id: "Query"
+        add_param: "Aggiungi parametro"
+        param_value: "Valore"
+        output:
+          results: "Risultati"
+          no_results: "Nessun risultato"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

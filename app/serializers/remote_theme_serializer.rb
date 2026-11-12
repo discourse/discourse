@@ -7,17 +7,25 @@ class RemoteThemeSerializer < ApplicationSerializer
              :local_version,
              :commits_behind,
              :branch,
+             :local_compat_ref,
+             :remote_compat_ref,
              :remote_updated_at,
              :updated_at,
              :github_diff_link,
              :last_error_text,
              :is_git?,
+             :placeholder?,
              :license_url,
              :about_url,
              :authors,
              :theme_version,
              :minimum_discourse_version,
-             :maximum_discourse_version
+             :maximum_discourse_version,
+             :has_private_key
+
+  def has_private_key
+    object.private_key.present?
+  end
 
   # ActiveModelSerializer has some pretty nutty logic where it tries to find
   # the path here from action dispatch, tell it not to

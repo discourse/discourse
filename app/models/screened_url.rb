@@ -16,8 +16,8 @@ class ScreenedUrl < ActiveRecord::Base
   validates :domain, presence: true
 
   def normalize
-    self.url = ScreenedUrl.normalize_url(self.url) if self.url
-    self.domain = self.domain.downcase.sub(/\Awww\./, "") if self.domain
+    self.url = ScreenedUrl.normalize_url(url) if url
+    self.domain = domain.downcase.sub(/\Awww\./, "") if domain
   end
 
   def self.watch(url, domain, opts = {})
@@ -41,14 +41,14 @@ end
 # Table name: screened_urls
 #
 #  id            :integer          not null, primary key
-#  url           :string           not null
-#  domain        :string           not null
 #  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
+#  domain        :string           not null
+#  ip_address    :inet
 #  last_match_at :datetime
+#  match_count   :integer          default(0), not null
+#  url           :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  ip_address    :inet
 #
 # Indexes
 #

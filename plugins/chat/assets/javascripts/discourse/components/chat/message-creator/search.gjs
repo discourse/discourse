@@ -4,16 +4,16 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import { MODES } from "./constants";
-import ChatablesLoader from "./lib/chatables-loader";
-import List from "./list";
-import ListHandler from "./list-handler";
-import SearchInput from "./search-input";
+import { MODES } from "./constants.js";
+import ChatablesLoader from "./lib/chatables-loader.js";
+import listKeyboardNavigation from "./lib/list-keyboard-navigation.js";
+import List from "./list.gjs";
+import SearchInput from "./search-input.gjs";
 
 export default class ChatMessageCreatorSearch extends Component {
   @service chat;
@@ -33,7 +33,7 @@ export default class ChatMessageCreatorSearch extends Component {
         type: "list-action",
         label: i18n("chat.new_message_modal.new_group_chat"),
         enabled: true,
-        icon: "users",
+        icon: "user-group",
         id: "new-group-chat",
       });
     }
@@ -134,37 +134,36 @@ export default class ChatMessageCreatorSearch extends Component {
   }
 
   <template>
-    <ListHandler
-      @items={{this.items}}
-      @highlightedItem={{this.highlightedChatable}}
-      @onHighlight={{this.highlightChatable}}
-      @onSelect={{this.selectChatable}}
-      @onShifSelect={{this.prefillAddMembers}}
+    <div
+      class="chat-message-creator__search"
+      {{listKeyboardNavigation
+        highlightedItem=this.highlightedChatable
+        items=this.items
+        onHighlight=this.highlightChatable
+        onSelect=this.selectChatable
+        onShifSelect=this.prefillAddMembers
+      }}
     >
-      <div class="chat-message-creator__search-container">
-        <div class="chat-message-creator__search">
-          <div
-            class="chat-message-creator__section"
-            {{didInsert (fn this.fetch null)}}
-          >
-            <SearchInput @filter={{this.term}} @onFilter={{this.onFilter}} />
+      <div
+        class="chat-message-creator__section"
+        {{didInsert (fn this.fetch null)}}
+      >
+        <SearchInput @filter={{this.term}} @onFilter={{this.onFilter}} />
 
-            <DButton
-              class="btn-flat chat-message-creator__search-input__cancel-button"
-              @icon="xmark"
-              @action={{@close}}
-            />
-          </div>
-
-          <List
-            @items={{this.items}}
-            @highlightedItem={{this.highlightedChatable}}
-            @onSelect={{this.selectChatable}}
-            @onHighlight={{this.highlightChatable}}
-            @onShiftSelect={{this.prefillAddMembers}}
-          />
-        </div>
+        <DButton
+          class="btn-flat chat-message-creator__search-input__cancel-button"
+          @action={{@close}}
+          @icon="xmark"
+        />
       </div>
-    </ListHandler>
+
+      <List
+        @highlightedItem={{this.highlightedChatable}}
+        @items={{this.items}}
+        @onHighlight={{this.highlightChatable}}
+        @onSelect={{this.selectChatable}}
+        @onShiftSelect={{this.prefillAddMembers}}
+      />
+    </div>
   </template>
 }

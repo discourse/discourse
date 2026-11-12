@@ -74,6 +74,10 @@ export function googleTagManagerPageChanged(data) {
     },
   };
 
+  if (data.embed_mode) {
+    gtmData.embed_mode = true;
+  }
+
   _gtmPageChangedCallbacks.forEach((callback) => callback(gtmData));
 
   window.dataLayer.push(gtmData);

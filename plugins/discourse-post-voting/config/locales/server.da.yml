@@ -8,8 +8,6 @@ da:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Ingen handling"
         ignore:
           title: "Ignorer flag"
   post_action_types:

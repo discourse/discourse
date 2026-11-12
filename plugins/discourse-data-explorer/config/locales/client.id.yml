@@ -7,9 +7,7 @@
 id:
   js:
     explorer:
-      default_query: "Asal"
       or: "atau"
-      create: "Buat"
       help:
         label: "Bantuan"
       schema:
@@ -18,10 +16,16 @@ id:
         bool:
           yes: "Ya"
           no: "Tidak"
-      export: "Ekspor"
-      edit: "Ubah"
       delete: "Hapus"
+      chart:
+        form:
+          bar: "Batang"
+      name: "Nama"
       query_groups: "Grup"
+      query_tags: "Label"
       query_description: "Deskripsi"
       reset_params: "Reset"
-      search_placeholder: "Cari..."
+    discourse_workflows:
+      sql:
+        output:
+          results: "Hasil"

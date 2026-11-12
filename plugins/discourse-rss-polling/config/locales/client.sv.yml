@@ -12,3 +12,13 @@ sv:
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Taggar
+        feeds:
+          edit: Redigera
+          delete: Radera
+          save: Spara
+        test:
+          title: Förhandsgranska
+          dismiss: Avfärda
+        status:
+          enabled: Aktiverad
+          disabled: Inaktiverad

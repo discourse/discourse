@@ -3,9 +3,12 @@
 class UpcomingChanges::List
   include Service::Base
 
+  options { attribute :filter_statuses, :array, default: [] }
+
   policy :current_user_is_admin
   model :upcoming_changes, optional: true
   step :load_upcoming_change_groups
+  step :load_status_changed_at
   step :sort_changes
   step :update_last_visited
 
@@ -15,13 +18,24 @@ class UpcomingChanges::List
     guardian.is_admin?
   end
 
-  def fetch_upcoming_changes
+  def fetch_upcoming_changes(options:)
     SiteSetting
       .all_settings(
         only_upcoming_changes: true,
         include_hidden: true,
         include_locale_setting: false,
       )
+      .select do |setting|
+        if options.filter_statuses.any?
+          options
+            .filter_statuses
+            .map(&:to_sym)
+            .include?(UpcomingChanges.change_status(setting[:setting]))
+        else
+          true
+        end
+      end
+      .select { |setting| UpcomingChanges::ConditionalDisplay.should_display?(setting[:setting]) }
       .each do |setting|
         setting[:value] = setting[:value] == "true"
 
@@ -47,19 +61,25 @@ class UpcomingChanges::List
           :value,
           :upcoming_change,
           :plugin,
+          :depends_on,
+          :depends_on_humanized_names,
         ).merge(
-          dependents: SiteSetting.type_supervisor.dependencies.dependents(setting[:setting].to_s),
+          dependents: UpcomingChanges.find_dependents_for_change(setting[:setting]),
+          depends_on_met: UpcomingChanges.change_dependencies_met?(setting[:setting]),
+          overriding_defaults:
+            SiteSetting.upcoming_change_default_overrides.values.any? do |override|
+              override[:upcoming_change] == setting[:setting]
+            end,
         )
       end
   end
 
   def load_upcoming_change_groups(upcoming_changes:)
     group_ids =
-      upcoming_changes
-        .map { |change| SiteSetting.site_setting_group_ids[change[:setting]] }
-        .flatten
-        .compact
-        .uniq
+      (
+        upcoming_changes.flat_map { |change| UpcomingChanges.group_ids_for(change[:setting]) } +
+          [Group::AUTO_GROUPS[:staff]]
+      ).compact.uniq
     groups = Group.where(id: group_ids).pluck(:id, :name).to_h
 
     upcoming_changes.each do |setting|
@@ -72,6 +92,27 @@ class UpcomingChanges::List
 
       setting[:upcoming_change][:enabled_for] = enabled_for
       setting[:groups] = setting_groups
+      if UpcomingChanges.group_setting_name(setting[:setting])
+        setting[:group_setting] = UpcomingChanges.group_setting_data(setting[:setting])
+      end
+    end
+  end
+
+  def load_status_changed_at(upcoming_changes:)
+    status_changed_at =
+      UpcomingChangeEvent
+        .status_changed
+        .where(upcoming_change_name: upcoming_changes.map { |change| change[:setting] })
+        .reorder(nil)
+        .group(:upcoming_change_name)
+        .maximum(:created_at)
+
+    # upcoming_change is the process-global metadata hash, so copy rather than
+    # write per-site data into it
+    upcoming_changes.each do |change|
+      change[:upcoming_change] = change[:upcoming_change].merge(
+        status_changed_at: status_changed_at[change[:setting].to_s],
+      )
     end
   end
 

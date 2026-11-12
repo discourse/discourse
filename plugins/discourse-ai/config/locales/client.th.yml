@@ -8,6 +8,10 @@ th:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "วันที่"
+          outcomes:
+            failed: "ล้มเหลว"
         reports:
           filters:
             sort_by:
@@ -34,25 +38,72 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      copied: "คัดลอกแล้ว"
+      ai_decoded_transcript:
+        type: "ชนิด"
+        error: "ผิดพลาด"
+      discourse_workflows:
+        classify:
+          text: "ข้อความ"
+          upload_ids: "รูปภาพ"
+          name: "ชื่อ"
+          type: "ชนิด"
+          type_score: "คะแนน"
+      ai_tool_approval:
+        loading: "กำลังโหลด..."
+        user: "ผู้ใช้"
+        approve: "อนุมัติ"
+        reject: "ละทิ้ง"
+        approved: "อนุมัติ"
+        rejected: "ถูกปฏิเสธ"
       llm_selector:
         none: "ไม่มี"
       features:
-        back: "กลับ"
-        disabled: "(ปิดใช้งานแล้ว)"
-        groups: "กลุ่ม:"
+        table:
+          status: "สถานะ"
+          groups: "กลุ่ม"
+        chatbot:
+          places:
+            none: "ถูกใช้แล้ว"
         no_groups: "ไม่มี"
         edit: "การตั้งค่า"
-        expand_list:
-          other: "(อีก %{count})"
         filters:
           all: "ทั้งหมด"
         search:
           name: "ค้นหา"
+        image_caption:
+          setting_groups:
+            settings: "การตั้งค่า"
         spam:
           name: "ขยะ"
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
+        settings:
+          ai_translation_category_scope:
+            label: "หมวดหมู่"
+          ai_translation_personal_messages:
+            choices:
+              none: "ไม่มี"
+              all: "ทั้งหมด"
+          content_localization_language_switcher:
+            choices:
+              none: "ไม่มีใคร"
+              all: "ทุกคน"
+        model_progress:
+          detail:
+            columns:
+              pending: "กำลังรอ"
+              total: "ทั้งหมด"
+          targets:
+            post:
+              title: "โพส"
+            topic:
+              title: "หัวข้อ"
+            category:
+              title: "หมวดหมู่"
+            tag:
+              title: "ป้าย"
         stats:
           eta_hours:
             other: "%{count} ชั่วโมง"
@@ -63,6 +114,8 @@ th:
             other: "%{count} โพส"
       spam:
         short_title: "ขยะ"
+        no_llm_selected: "ไม่มี"
+        no_decision_model_selected: "ไม่มี"
         last_seven_days: "7 วันที่ผ่านมา"
         enable: "เปิดใช้งาน"
         test_modal:
@@ -73,8 +126,31 @@ th:
         total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
+      logs:
+        apply: "นำไปใช้"
+        successful: "สำเร็จ"
+        failed: "ล้มเหลว"
+        unknown: "ไม่ทราบ"
+        time: "เวลา"
+        when: "เมื่อ"
+        request: "ร้องขอ"
+        user: "ผู้ใช้"
+        topic: "หัวข้อ"
+        post: "โพส"
+        post_short: "โพสต์ %{id}"
+        duration: "ช่วงเวลา"
+        actions: "การกระทำ"
+        view_details: "รายละเอียด"
+        periods:
+          day: "24 ชั่วโมงที่ผ่านมา"
+          week: "7 วันที่ผ่านมา"
+        detail:
+          request: "ร้องขอ"
+        retention:
+          summary_stage: "สรุป"
+          deleted_stage: "ลบ"
+          save: "บันทึก"
       ai_agent:
-        back: "กลับ"
         name: "ชื่อ"
         edit: "แก้ไข"
         export: "ส่งออก"
@@ -83,6 +159,11 @@ th:
         save: "บันทึก"
         enabled: "เปิดใช้"
         delete: "ลบ"
+        thinking_effort_options:
+          none: "ไม่มี"
+          low: "ต่ำ"
+          medium: "ปานกลาง"
+          high: "สูง"
         response_format:
           open_modal: "แก้ไข"
       rag:
@@ -90,7 +171,6 @@ th:
           title: "อัปโหลด"
           uploading: "กำลังอัปโหลด..."
       tools:
-        back: "กลับ"
         export: "ส่งออก"
         name: "ชื่อ"
         description: "รายละเอียด"
@@ -103,16 +183,40 @@ th:
       secrets:
         name: "ชื่อ"
         secret: "ค่า"
-        back: "กลับ"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
-      llms:
+      decision_models:
+        no_preset: "ไม่มี"
         display_name: "ชื่อ"
+        edit: "แก้ไข"
+        delete: "ลบ"
+      mcp_servers:
+        name: "ชื่อ"
+        description: "รายละเอียด"
+        url: "URL"
+        oauth_connect: "เชื่อมต่อ"
         save: "บันทึก"
         edit: "แก้ไข"
-        back: "กลับ"
+        delete: "ลบ"
+        tools_modal:
+          required: "ต้องการ"
+      models:
+        name: "ชื่อ"
+        type: "ชนิด"
+        edit: "แก้ไข"
+        types:
+          embedding: "ฝั่ง"
+        filters:
+          all: "ทุกประเภท"
+      llms:
+        display_name: "ชื่อ"
+        vision_modes:
+          disabled:
+            title: "ปิดใช้งานแล้ว"
+        save: "บันทึก"
+        edit: "แก้ไข"
         delete: ลบ
         quotas:
           group: "กลุ่ม"
@@ -123,8 +227,6 @@ th:
           title: "ต่อไป"
         tests:
           success: "สำเร็จ!"
-        providers:
-          google: "กูเกิล"
       ai_helper:
         context_menu:
           cancel: "ยกเลิก"
@@ -135,10 +237,7 @@ th:
           cancel: "ยกเลิก"
         thumbnail_suggestions:
           try_again: "ลองอีกครั้ง"
-        image_caption:
-          save_caption: "บันทึก"
       embeddings:
-        back: "กลับ"
         save: "บันทึก"
         delete: "ลบ"
         edit: "แก้ไข"
@@ -147,8 +246,16 @@ th:
         display_name: "ชื่อ"
         providers:
           google: "กูเกิล"
+      ai_artifact:
+        editor:
+          version: "เวอร์ชัน"
+          default: "ค่าเริ่มต้น"
+          apply: "นำไปใช้"
+        share: "แบ่งปัน"
+        filter_all: "ทั้งหมด"
       ai_bot:
         debug_ai_modal:
+          duration_label: "ช่วงเวลา:"
           request: "ร้องขอ"
           next_log: "ต่อไป"
           previous_log: "ก่อนหน้า"
@@ -168,9 +275,17 @@ th:
             category: "หมวดหมู่"
           table:
             total_count: "ทั้งหมด"
+      ai_search:
+        related_replies:
+          other: "%{count} ตอบ"
+        tabs:
+          topics: "หัวข้อ"
+          messages: "ข้อความ"
       discobot_discoveries:
-        regular_results: "หัวข้อ"
-        collapse: "ย่อ"
-        tooltip:
-          actions:
-            disable: "ปิดใช้งาน"
+        legacy:
+          regular_results: "หัวข้อ"
+          collapse: "ย่อ"
+          tooltip:
+            actions:
+              disable: "ปิดใช้งาน"
+        search_messages: "ข้อความ"

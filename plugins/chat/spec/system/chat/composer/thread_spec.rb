@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat | composer | thread", type: :system do
+RSpec.describe "Chat | composer | thread" do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:current_user, :admin)
   fab!(:message_1) do

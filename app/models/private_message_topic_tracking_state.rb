@@ -71,7 +71,9 @@ class PrivateMessageTopicTrackingState
         TopicTrackingState.new_filter_sql
       end
 
-    sql = +<<~SQL
+    filter_sql = topics_filter_sql
+
+    +<<~SQL
       SELECT
         DISTINCT topics.id AS topic_id,
         u.id AS user_id,
@@ -92,23 +94,40 @@ class PrivateMessageTopicTrackingState
         topics.archetype = 'private_message' AND
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
+        #{user.staff? ? "" : "AND topics.visible"}
+        #{filter_sql ? "AND #{filter_sql}" : ""}
     SQL
   end
+
+  # Lets plugins exclude topics from PM tracking entirely, e.g. topics the
+  # personal inbox lists no longer show, so they don't leave stray counts.
+  def self.topics_filter_sql
+    conditions =
+      DiscoursePluginRegistry.apply_modifier(:private_message_topic_tracking_state_filters, [])
+    conditions.map { |condition| "(#{condition})" }.join(" AND ").presence
+  end
+
+  def self.tracked_topic?(topic)
+    sql = topics_filter_sql
+    sql.nil? || Topic.where(id: topic.id).where(sql).exists?
+  end
+
+  private_class_method :topics_filter_sql, :tracked_topic?
 
   def self.publish_unread(post)
     topic = post.topic
     return unless topic.private_message?
+    return if post.small_action?
+    return unless tracked_topic?(topic)
 
-    scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
+    scope =
+      TopicUser
+        .tracking(post.topic_id)
+        .where(user_id: topic.all_allowed_users.select(:id))
+        .includes(user: %i[user_stat user_option])
+    scope = scope.where(user_id: User.whisperers.select(:id)) if post.whisper?
 
-    allowed_group_ids = topic.allowed_groups.pluck(:id)
-
-    group_ids =
-      if post.post_type == Post.types[:whisper]
-        [Group::AUTO_GROUPS[:staff]]
-      else
-        allowed_group_ids
-      end
+    group_ids = post.whisper? ? [Group::AUTO_GROUPS[:staff]] : topic.allowed_groups.pluck(:id)
 
     if group_ids.present?
       scope =
@@ -141,17 +160,18 @@ class PrivateMessageTopicTrackingState
             last_read_post_number: tu.last_read_post_number,
             highest_post_number: post.post_number,
             notification_level: tu.notification_level,
-            group_ids: allowed_group_ids,
+            group_ids: group_ids,
             created_by_user_id: post.user_id,
           },
         }
 
-        MessageBus.publish(self.user_channel(tu.user_id), message.as_json, user_ids: [tu.user_id])
+        MessageBus.publish(user_channel(tu.user_id), message.as_json, user_ids: [tu.user_id])
       end
   end
 
   def self.publish_new(topic)
     return unless topic.private_message?
+    return unless tracked_topic?(topic)
 
     message = {
       message_type: NEW_MESSAGE_TYPE,
@@ -169,14 +189,14 @@ class PrivateMessageTopicTrackingState
       .pluck(:id)
       .each do |user_id|
         next if user_id == topic.user_id # skip topic creator
-        MessageBus.publish(self.user_channel(user_id), message, user_ids: [user_id])
+        MessageBus.publish(user_channel(user_id), message, user_ids: [user_id])
       end
 
     topic
       .allowed_groups
       .pluck(:id)
       .each do |group_id|
-        MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
+        MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
       end
   end
 
@@ -192,13 +212,13 @@ class PrivateMessageTopicTrackingState
       },
     }.as_json
 
-    MessageBus.publish(self.group_channel(group_id), message, group_ids: [group_id])
+    MessageBus.publish(group_channel(group_id), message, group_ids: [group_id])
   end
 
   def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
-    self.publish_read_message(
+    publish_read_message(
       message_type: READ_MESSAGE_TYPE,
-      channel_name: self.user_channel(user.id),
+      channel_name: user_channel(user.id),
       topic_id: topic_id,
       user: user,
       last_read_post_number: last_read_post_number,

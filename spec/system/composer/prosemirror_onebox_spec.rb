@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Oneboxing", type: :system do
+describe "Composer - ProseMirror - Oneboxing" do
   include_context "with prosemirror editor"
 
   before do
-    def body(title)
+    def body(title, image_url: nil)
       <<~HTML
       <html>
         <head>
           <title>#{title}</title>
           <meta property="og:title" content="#{title}">
+          #{%(<meta property="og:image" content="#{image_url}">) if image_url}
           <meta property="og:description" content="This is an example site">
         </head>
         <body>
@@ -60,6 +61,10 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
   end
 
   it "creates a full onebox for standalone links" do
+    SiteSetting.block_hotlinked_media = true
+    stub_request(:get, "https://example.com").to_return(
+      body: body("Example Site 1", image_url: "https://images.example.com/photo.jpg"),
+    )
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("https://example.com")
@@ -68,10 +73,11 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
     expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
     expect(rich).to have_content("Example Site 1")
     expect(rich).to have_content("This is an example site")
+    expect(composer).to have_no_onebox_images(url: "https://example.com")
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("https://example.com\n\n")
+    expect(composer).to have_value("https://example.com")
   end
 
   it "creates an inline onebox for links that are part of a paragraph" do
@@ -161,7 +167,7 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
     expect(composer).to have_value(markdown[0..-2])
   end
 
-  xit "creates inline oneboxes for repeated links in different paste events" do
+  it "creates inline oneboxes for repeated links in different paste events" do
     cdp.allow_clipboard
     open_composer
     composer.type_content("Hey ")
@@ -179,6 +185,28 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
     composer.toggle_rich_editor
 
     expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
+  end
+
+  it "removes loading decoration when onebox fetch fails" do
+    # A blank preview makes /onebox respond 404, so the request rejects instead
+    # of resolving to an error card.
+    Oneboxer.stubs(:preview).returns("")
+
+    cdp.allow_clipboard
+    open_composer
+
+    cdp.with_paused_request(%r{/onebox\?}) do |onebox_request|
+      cdp.copy_paste("https://example.com/fail")
+      page.send_keys(:enter)
+
+      onebox_request.wait
+      expect(rich).to have_css(".onebox-loading")
+      onebox_request.resume
+    end
+
+    expect(rich).to have_no_css(".onebox-loading")
+    expect(rich).to have_css("a[href='https://example.com/fail']")
+    expect(rich).to have_no_css(".onebox-wrapper")
   end
 
   context "with watched word links" do

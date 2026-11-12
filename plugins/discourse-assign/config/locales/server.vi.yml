@@ -12,6 +12,7 @@ vi:
         assigned: "Lọc chủ đề được chỉ định cho một thành viên hoặc nhóm cụ thể"
         nobody: "Lọc chủ đề chưa được chỉ định cho ai"
         anyone: "Lọc chủ đề đã chỉ định cho bất kỳ ai"
+    no_assignee: "Không có người được chỉ định nào được chọn."
     reminders_frequency:
       never: "không bao giờ"
       daily: "hàng ngày"

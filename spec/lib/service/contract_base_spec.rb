@@ -49,6 +49,24 @@ RSpec.describe Service::ContractBase, type: :model do
     end
     let(:created_at) { Time.zone.parse("2025-12-25 00:00") }
 
+    context "when nested containers are frozen" do
+      subject(:contract) { contract_class.new(**params) }
+
+      let(:params) { super().deep_stringify_keys }
+
+      before do
+        params["record"].freeze
+        params["user"].freeze
+        params["records"].each(&:freeze)
+        params["records"].freeze
+        params.freeze
+      end
+
+      it "accepts the parameters" do
+        expect(contract).to be_valid
+      end
+    end
+
     describe "Validations" do
       it { is_expected.to validate_presence_of(:channel_id) }
       it { is_expected.to validate_presence_of(:user) }
@@ -81,6 +99,20 @@ RSpec.describe Service::ContractBase, type: :model do
             expect(contract.errors).to include(:"records[1].name")
           end
         end
+      end
+    end
+
+    context "when the main contract has options" do
+      subject(:contract) { contract_class.new(params, options: { locale: "fr" }) }
+
+      it "provides them to a nested contract" do
+        contract.valid?
+        expect(contract.record.options).to include(locale: "fr")
+      end
+
+      it "provides them to a contract nested inside a nested one" do
+        contract.valid?
+        expect(contract.records.map(&:options)).to all(include(locale: "fr"))
       end
     end
 

@@ -6,87 +6,80 @@ import { i18n } from "discourse-i18n";
 import Channel from "discourse/plugins/chat/discourse/components/chat/composer/channel";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module(
-  "Discourse Chat | Component | chat-composer placeholder",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Component | chat-composer placeholder", function (hooks) {
+  setupRenderingTest(hooks);
 
-    test("direct message to self shows Jot something down", async function (assert) {
-      pretender.get("/emojis.json", () => [200, [], {}]);
+  test("direct message to self shows Jot something down", async function (assert) {
+    pretender.get("/emojis.json", () => [200, [], {}]);
 
-      this.currentUser.set("id", 1);
-      this.channel = ChatChannel.create({
-        chatable_type: "DirectMessage",
-        chatable: {
-          users: [{ id: 1 }],
-        },
-      });
-
-      await render(<template><Channel @channel={{this.channel}} /></template>);
-
-      assert
-        .dom(".chat-composer__input")
-        .hasAttribute("placeholder", "Jot something down");
+    this.currentUser.set("id", 1);
+    this.channel = ChatChannel.create({
+      chatable_type: "DirectMessage",
+      chatable: {
+        users: [{ id: 1 }],
+      },
     });
 
-    test("direct message to multiple folks shows their names  when not a group", async function (assert) {
-      pretender.get("/emojis.json", () => [200, [], {}]);
+    await render(<template><Channel @channel={{this.channel}} /></template>);
 
-      this.channel = ChatChannel.create({
-        chatable_type: "DirectMessage",
-        chatable: {
-          group: false,
-          users: [
-            { name: "Tomtom" },
-            { name: "Steaky" },
-            { username: "zorro" },
-          ],
-        },
-      });
+    assert
+      .dom(".chat-composer__input")
+      .hasAttribute("placeholder", "Jot something down");
+  });
 
-      await render(<template><Channel @channel={{this.channel}} /></template>);
+  test("direct message to multiple folks shows their names  when not a group", async function (assert) {
+    pretender.get("/emojis.json", () => [200, [], {}]);
 
-      assert
-        .dom(".chat-composer__input")
-        .hasAttribute("placeholder", "Chat with Tomtom, Steaky, @zorro");
+    this.channel = ChatChannel.create({
+      chatable_type: "DirectMessage",
+      chatable: {
+        group: false,
+        users: [{ name: "Tomtom" }, { name: "Steaky" }, { username: "zorro" }],
+      },
     });
 
-    test("direct message to group shows Chat in group", async function (assert) {
-      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+    await render(<template><Channel @channel={{this.channel}} /></template>);
 
-      this.channel = ChatChannel.create({
-        chatable_type: "DirectMessage",
-        title: "Meetup Chat",
-        chatable: {
-          group: true,
-          users: [
-            { username: "user1" },
-            { username: "user2" },
-            { username: "user3" },
-          ],
-        },
-      });
+    assert
+      .dom(".chat-composer__input")
+      .hasAttribute("placeholder", "Chat with Tomtom, Steaky, @zorro");
+  });
 
-      await render(<template><Channel @channel={{this.channel}} /></template>);
+  test("direct message to group shows Chat in group", async function (assert) {
+    pretender.get("/chat/emojis.json", () => [200, [], {}]);
 
-      assert
-        .dom(".chat-composer__input")
-        .hasAttribute("placeholder", i18n("chat.placeholder_group"));
+    this.channel = ChatChannel.create({
+      chatable_type: "DirectMessage",
+      title: "Meetup Chat",
+      chatable: {
+        group: true,
+        users: [
+          { username: "user1" },
+          { username: "user2" },
+          { username: "user3" },
+        ],
+      },
     });
 
-    test("message to channel shows send message to channel name", async function (assert) {
-      pretender.get("/emojis.json", () => [200, [], {}]);
+    await render(<template><Channel @channel={{this.channel}} /></template>);
 
-      this.channel = ChatChannel.create({
-        chatable_type: "Category",
-        title: "just-cats",
-      });
+    assert
+      .dom(".chat-composer__input")
+      .hasAttribute("placeholder", i18n("chat.placeholder_group"));
+  });
 
-      await render(<template><Channel @channel={{this.channel}} /></template>);
+  test("message to channel shows send message to channel name", async function (assert) {
+    pretender.get("/emojis.json", () => [200, [], {}]);
 
-      assert
-        .dom(".chat-composer__input")
-        .hasAttribute("placeholder", "Chat in #just-cats");
+    this.channel = ChatChannel.create({
+      chatable_type: "Category",
+      title: "just-cats",
     });
-  }
-);
+
+    await render(<template><Channel @channel={{this.channel}} /></template>);
+
+    assert
+      .dom(".chat-composer__input")
+      .hasAttribute("placeholder", "Chat in #just-cats");
+  });
+});

@@ -47,6 +47,49 @@ export function shouldCloseMenu(e, origin) {
   return false;
 }
 
+export function dampenedOverdrag(distance) {
+  return Math.max(0, 8 * (Math.log(distance + 1) - 2));
+}
+
+export function shouldDeferSwipeToContent(swipeState, container) {
+  if (swipeState.direction === "left" || swipeState.direction === "right") {
+    return true;
+  }
+
+  let element = swipeState.originalEvent?.target;
+
+  while (element && element !== container) {
+    if (element.scrollHeight > element.clientHeight) {
+      const style = window.getComputedStyle(element);
+
+      if (style.overflowY === "auto" || style.overflowY === "scroll") {
+        // column-reverse scrollers rest at scrollTop 0 and go negative when
+        // scrolled back, so normalize scrollTop to a distance from the top
+        // edge before checking for remaining room
+        const maxScroll = element.scrollHeight - element.clientHeight;
+        const reversed =
+          style.display.includes("flex") &&
+          style.flexDirection === "column-reverse";
+        const distanceFromTop = reversed
+          ? maxScroll + element.scrollTop
+          : element.scrollTop;
+
+        if (swipeState.direction === "down" && distanceFromTop > 0) {
+          return true;
+        }
+
+        if (swipeState.direction === "up" && distanceFromTop < maxScroll) {
+          return true;
+        }
+      }
+    }
+
+    element = element.parentElement;
+  }
+
+  return false;
+}
+
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
    It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event.
@@ -58,9 +101,26 @@ export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
 
+/**
+ * @typedef {object} SwipeState
+ * @property {{ x: number, y: number }} center
+ * @property {{ x: number, y: number }} startLocation
+ * @property {number} velocityX
+ * @property {number} velocityY
+ * @property {number} deltaX
+ * @property {number} deltaY
+ * @property {boolean} start
+ * @property {number} timestamp
+ * @property {"left" | "right" | "up" | "down" | null} direction
+ * @property {HTMLElement} element
+ * @property {() => boolean} goingUp
+ * @property {() => boolean} goingDown
+ * @property {TouchEvent} [originalEvent]
+ */
 export default class SwipeEvents {
   //velocity is pixels per ms
 
+  /** @type {SwipeState | null} */
   swipeState = null;
   animationPending = false;
 

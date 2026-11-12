@@ -1,33 +1,33 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.themes_and_components.title"}}
     @descriptionLabel={{i18n
       "admin.config.themes_and_components.header_description"
     }}
     @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+    @titleLabel={{i18n "admin.config.themes_and_components.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
     </:breadcrumbs>
 
     <:tabs>
-      <NavItem
-        @route="adminConfig.customize.themes"
+      <DNavItem
         @label="admin.config.themes.title"
+        @route="adminConfig.customize.themes"
       />
-      <NavItem
-        @route="adminConfig.customize.components"
+      <DNavItem
         @label="admin.config.components.title"
+        @route="adminConfig.customize.components"
       />
-      <NavItem
-        @route="adminConfig.customize.themeSiteSettings"
+      <DNavItem
         @label="admin.config.theme_site_settings.title"
+        @route="adminConfig.customize.themeSiteSettings"
       />
     </:tabs>
   </DPageHeader>

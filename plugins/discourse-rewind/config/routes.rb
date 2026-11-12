@@ -2,7 +2,6 @@
 
 DiscourseRewind::Engine.routes.draw do
   get "/rewinds" => "rewinds#index"
-  get "/rewinds/:index" => "rewinds#show"
   put "/rewinds/toggle-share" => "rewinds#toggle_share"
   post "/rewinds/dismiss" => "rewinds#dismiss"
 end

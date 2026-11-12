@@ -7,4 +7,8 @@
 lv:
   js:
     topic_voting:
-      voting_closed_title: "Slēgts"
+      show_voters: "Parādīt, kas balsoja"
+      vote_count_thousands: "%{count} tūkst."
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Birkas"

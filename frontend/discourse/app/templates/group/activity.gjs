@@ -1,28 +1,28 @@
 import GroupActivityFilter from "discourse/components/group-activity-filter";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 export default <template>
   <section class="user-secondary-navigation">
-    <HorizontalOverflowNav class="activity-nav">
+    <DHorizontalOverflowNav class="activity-nav">
       {{#if @controller.model.can_see_members}}
         <GroupActivityFilter
-          @filter="posts"
           @categoryId={{@controller.category_id}}
+          @filter="posts"
         />
         <GroupActivityFilter
-          @filter="topics"
           @categoryId={{@controller.category_id}}
+          @filter="topics"
         />
       {{/if}}
       {{#if @controller.siteSettings.enable_mentions}}
         <GroupActivityFilter
-          @filter="mentions"
           @categoryId={{@controller.category_id}}
+          @filter="mentions"
         />
       {{/if}}
-      <PluginOutlet @name="group-activity-bottom" @connectorTagName="li" />
-    </HorizontalOverflowNav>
+      <PluginOutlet @connectorTagName="li" @name="group-activity-bottom" />
+    </DHorizontalOverflowNav>
   </section>
   <section class="user-content" id="user-content">
     {{outlet}}

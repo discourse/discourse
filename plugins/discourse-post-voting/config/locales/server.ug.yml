@@ -8,8 +8,6 @@ ug:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "تەدبىر قوللانمىغان"
         agree_and_suspend:
           title: "ئىشلەتكۈچىنى توختات"
           description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."

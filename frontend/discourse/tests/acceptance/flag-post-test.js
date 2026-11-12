@@ -1,6 +1,7 @@
 import { click, fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -139,6 +140,35 @@ acceptance(`flagging`, function (needs) {
     assert.dom(".d-modal__body").doesNotExist();
   });
 
+  test("Take action hides the post once the flag is created", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_inappropriate");
+    await selectKit(".reviewable-action-dropdown").expand();
+    await click("[data-value='agree_and_hide']");
+
+    assert
+      .dom(".topic-post[data-post-number='1']")
+      .hasClass("post--hidden", "hides the flagged post");
+  });
+
+  test("Take action leaves the post visible when the flag is rejected", async function (assert) {
+    pretender.post("/post_actions", () =>
+      response(422, { errors: ["The flag was rejected"] })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_inappropriate");
+    await selectKit(".reviewable-action-dropdown").expand();
+    await click("[data-value='agree_and_hide']");
+
+    assert.dom(".dialog-body").exists("shows the error");
+    assert
+      .dom(".topic-post[data-post-number='1']")
+      .doesNotHaveClass("post--hidden", "does not hide the post");
+  });
+
   test("Message appears in penalty modal", async function (assert) {
     this.siteSettings.penalty_include_post_message = true;
     await visit("/t/internationalization-localization/280");
@@ -153,6 +183,21 @@ acceptance(`flagging`, function (needs) {
         "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
         "penalty message is prefilled with post text"
       );
+  });
+
+  test("Flag for Review requires a selected reason", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+
+    assert
+      .dom(".flag-modal__flag-for-review")
+      .isDisabled("stays disabled until a reason is selected");
+
+    await click("#radio_inappropriate");
+
+    assert
+      .dom(".flag-modal__flag-for-review")
+      .isNotDisabled("enables once a non-require_message reason is selected");
   });
 
   test("Can delete spammer from spam", async function (assert) {

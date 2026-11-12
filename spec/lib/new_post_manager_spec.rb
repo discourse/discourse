@@ -6,7 +6,7 @@ RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
 
-  describe "default action" do
+  describe "default action for regular posts" do
     it "creates the post by default" do
       manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
       result = manager.perform
@@ -18,7 +18,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  describe "default action" do
+  describe "default action for private messages" do
     fab!(:other_user, :user)
 
     it "doesn't enqueue private messages" do
@@ -149,7 +149,8 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 0
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -162,7 +163,8 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 1
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -176,7 +178,7 @@ RSpec.describe NewPostManager do
         user.update!(trust_level: 2)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(result).to be_nil
       end
@@ -203,7 +205,8 @@ RSpec.describe NewPostManager do
 
     context "with a high trust level setting" do
       before { SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -217,7 +220,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         npm =
           NewPostManager.new(
             user,
@@ -239,7 +242,7 @@ RSpec.describe NewPostManager do
         user.update!(staged: true)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -251,6 +254,7 @@ RSpec.describe NewPostManager do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
+
       it "doesn't return a result action" do
         result = NewPostManager.default_handler(manager)
         expect(result).to eq(nil)
@@ -279,6 +283,19 @@ RSpec.describe NewPostManager do
         end
       end
 
+      it "links the silence staff action log entry to the queued post" do
+        manager = build_manager_with("this is new post content")
+
+        result = NewPostManager.default_handler(manager)
+
+        history =
+          UserHistory.where(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: user.id,
+          ).last
+        expect(history.reviewable_id).to eq(result.reviewable.id)
+      end
+
       it "runs the watched words check before checking if the user is a fast typer" do
         Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
         manager = build_manager_with("this is darn new post content")
@@ -295,6 +312,7 @@ RSpec.describe NewPostManager do
     end
 
     context "with media" do
+      let(:empty_image_sizes) { {} }
       let(:manager_opts) do
         {
           raw: "this is new post content",
@@ -321,6 +339,53 @@ RSpec.describe NewPostManager do
         expect(result.reason).to eq(:contains_media)
       end
 
+      it "queues an image for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw: "![image](upload://abcdefghijklmnopqrstuvwx.jpeg)",
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "queues embedded video for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw:
+                '<video controls><source src="https://example.com/video.mp4" type="video/mp4"></video>',
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "does not queue plain text or emoji when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        results =
+          ["plain text without media", "content with an emoji :mask:"].map do |raw|
+            manager =
+              NewPostManager.new(user, manager_opts.merge(raw: raw, image_sizes: empty_image_sizes))
+            NewPostManager.default_handler(manager)
+          end
+
+        expect(results).to eq([nil, nil])
+      end
+
       it "does not enqueue the post if the poster is a trusted user" do
         SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_0]
         manager = NewPostManager.new(user, manager_opts)
@@ -336,11 +401,13 @@ RSpec.describe NewPostManager do
     let(:manager) do
       NewPostManager.new(user, raw: "this is new topic content", title: "new topic title")
     end
+
     context "with a high trust level setting for new topics" do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -500,6 +567,7 @@ RSpec.describe NewPostManager do
   context "when posting in the category requires approval" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:review_group, :group)
+    fab!(:posting_review_group, :group)
     fab!(:category)
     fab!(:category_moderation_group) do
       Fabricate(:category_moderation_group, category:, group: review_group)
@@ -571,7 +639,7 @@ RSpec.describe NewPostManager do
                 raw: "this is a new topic",
                 title: "Let's start a new topic!",
                 category: category.id,
-                tags: tag.name,
+                tags: [tag.name],
               )
 
             result = manager.perform
@@ -583,6 +651,7 @@ RSpec.describe NewPostManager do
         context "when there is a minimum number of tags required from a certain tag group for the category" do
           let(:tag_group) { Fabricate(:tag_group) }
           let(:tag) { Fabricate(:tag) }
+
           before do
             TagGroupMembership.create(tag: tag, tag_group: tag_group)
             category.update(
@@ -629,6 +698,78 @@ RSpec.describe NewPostManager do
           end
         end
       end
+
+      it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
+        posting_review_group.add(user)
+        category.update!(
+          topic_posting_review_mode: :everyone_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
+        category.update!(
+          topic_posting_review_mode: :everyone_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
+        posting_review_group.add(user)
+        category.update!(
+          topic_posting_review_mode: :no_one_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
+        category.update!(
+          topic_posting_review_mode: :no_one_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result =
+          NewPostManager.new(
+            user,
+            raw: "this is a new topic",
+            title: "Let's start a new topic!",
+            category: category.id,
+          ).perform
+
+        expect(result.action).to eq(:create_post)
+      end
     end
 
     context "when new posts require approval" do
@@ -664,6 +805,54 @@ RSpec.describe NewPostManager do
         expect(result.action).to eq(:create_post)
         expect(result).to be_success
       end
+
+      it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
+        posting_review_group.add(user)
+        category.update!(
+          reply_posting_review_mode: :everyone_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:create_post)
+      end
+
+      it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
+        category.update!(
+          reply_posting_review_mode: :everyone_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
+        posting_review_group.add(user)
+        category.update!(
+          reply_posting_review_mode: :no_one_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
+      end
+
+      it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
+        category.update!(
+          reply_posting_review_mode: :no_one_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
+        )
+
+        result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
+
+        expect(result.action).to eq(:create_post)
+      end
     end
   end
 
@@ -683,7 +872,7 @@ RSpec.describe NewPostManager do
       topic.user.trust_level = 0
     end
 
-    it "will store via_email and raw_email in the enqueued post" do
+    it "stores via_email and raw_email in the enqueued post" do
       result = manager.perform
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present

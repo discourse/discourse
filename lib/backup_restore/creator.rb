@@ -92,7 +92,7 @@ module BackupRestore
       @archive_basename =
         File.join(
           @archive_directory,
-          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}",
+          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{Discourse::VERSION::STRING.tr(".", "-")}-#{BackupRestore.current_database_version}",
         )
 
       @backup_filename =
@@ -158,16 +158,14 @@ module BackupRestore
       end
 
       IO.popen("#{pg_dump_command} 2>&1") do |pipe|
-        begin
-          while line = pipe.readline
-            logs << line
-          end
-        rescue EOFError
-          # finished reading...
-        ensure
-          pg_dump_running = false
-          logs << ""
+        while line = pipe.readline
+          logs << line
         end
+      rescue EOFError
+        # finished reading...
+      ensure
+        pg_dump_running = false
+        logs << ""
       end
 
       raise "pg_dump failed" unless $?.success?
@@ -186,6 +184,8 @@ module BackupRestore
         "pg_dump", # the pg_dump command
         "--schema=public", # only public schema
         "-T public.pg_*", # exclude tables and views whose name starts with "pg_"
+        "--exclude-table-data=public.nested_hot_post_scores",
+        "--exclude-table-data=public.nested_hot_score_snapshots",
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner", # do not output commands to set ownership of objects
         "--no-privileges", # prevent dumping of access privileges
@@ -203,59 +203,85 @@ module BackupRestore
 
       archive_filename = File.join(@archive_directory, @backup_filename)
 
-      Discourse::Utils.execute_command(
-        "mv",
-        @dump_filename,
-        archive_filename,
-        failure_message: "Failed to move database dump file.",
-      )
+      FileUtils.mv(@dump_filename, archive_filename)
 
       remove_tmp_directory
+    rescue SystemCallError => error
+      raise "Failed to move database dump file.\n#{error.message}"
     end
 
     def create_archive
-      log "Creating archive: #{@backup_filename}"
+      log "Streaming archive through gzip: #{@backup_filename}"
+      archive_path = "#{@archive_basename}.tar.gz"
+      partial_path = "#{archive_path}.partial"
+      @archive_mutex = Mutex.new
 
-      tar_filename = "#{@archive_basename}.tar"
+      File.open(partial_path, "wb") do |output|
+        compress_archive(output) do |input|
+          ArchiveWriter.write(input) do |archive|
+            @archive = archive
+            log "Archiving data dump..."
+            @archive.add_file(@dump_filename, File.basename(@dump_filename))
+            add_local_uploads_to_archive
+            add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
+          end
+        end
+      end
 
-      log "Making sure archive does not already exist..."
-      Discourse::Utils.execute_command("rm", "-f", tar_filename)
-      Discourse::Utils.execute_command("rm", "-f", "#{tar_filename}.gz")
-
-      log "Creating empty archive..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--create",
-        "--file",
-        tar_filename,
-        "--files-from",
-        "/dev/null",
-      )
-
-      log "Archiving data dump..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--append",
-        "--dereference",
-        "--file",
-        tar_filename,
-        File.basename(@dump_filename),
-        failure_message: "Failed to archive data dump.",
-        chdir: File.dirname(@dump_filename),
-      )
-
-      add_local_uploads_to_archive(tar_filename)
-      add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
-
+      File.rename(partial_path, archive_path)
       remove_tmp_directory
+    ensure
+      @archive = nil
+      FileUtils.rm_f(partial_path) if partial_path
+    end
 
-      log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command(
-        "gzip",
-        "-#{SiteSetting.backup_gzip_compression_level_for_uploads}",
-        tar_filename,
-        failure_message: "Failed to gzip archive.",
-      )
+    def compress_archive(output)
+      Tempfile.create("backup-gzip-errors-", @tmp_directory) do |errors|
+        begin
+          IO.popen(
+            ["gzip", "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", "-c"],
+            "wb",
+            out: output,
+            err: errors,
+          ) { |input| yield input }
+        rescue Errno::EPIPE => write_error
+          # IO.popen waits for gzip before we read its error, including worker failures.
+        end
+
+        status = $?
+        if write_error || !status.success?
+          errors.rewind
+          raise "Failed to gzip archive (exit status #{status.exitstatus}). #{errors.read.presence || write_error&.message}"
+        end
+      end
+    end
+
+    def add_path_to_archive(source, path, exclude: nil, ancestors: Set.new)
+      return if path == exclude
+
+      stat = File.stat(source)
+      if stat.directory?
+        inode = [stat.dev, stat.ino]
+        raise "Directory cycle while archiving: #{source}" if ancestors.include?(inode)
+        @archive.add_directory(path, source: source)
+        ancestors.add(inode)
+        begin
+          Dir.each_child(source) do |name|
+            add_path_to_archive(
+              File.join(source, name),
+              File.join(path, name),
+              exclude: exclude,
+              ancestors: ancestors,
+            )
+          end
+        ensure
+          ancestors.delete(inode)
+        end
+      elsif stat.file?
+        @archive.add_file(source, path)
+      end
+    rescue Errno::ENOENT
+      log "Skipping missing local upload: #{source}"
     end
 
     def include_uploads?
@@ -263,38 +289,22 @@ module BackupRestore
     end
 
     def local_uploads_directory
-      @local_uploads_directory ||= File.join(Rails.root, "public", Discourse.store.upload_path)
+      @local_uploads_directory ||= Rails.public_path.join(Discourse.store.upload_path).to_s
     end
 
     def has_local_uploads?
       File.directory?(local_uploads_directory) && !Dir.empty?(local_uploads_directory)
     end
 
-    def add_local_uploads_to_archive(tar_filename)
+    def add_local_uploads_to_archive
       log "Archiving uploads..."
-
       if has_local_uploads?
-        upload_directory = Discourse.store.upload_path
-
-        if SiteSetting.include_thumbnails_in_backups
-          exclude_optimized = ""
-        else
-          optimized_path = File.join(upload_directory, "optimized")
-          exclude_optimized = "--exclude=#{optimized_path}"
-        end
-
-        Discourse::Utils.execute_command(
-          "tar",
-          "--append",
-          "--dereference",
-          exclude_optimized,
-          "--file",
-          tar_filename,
-          upload_directory,
-          failure_message: "Failed to archive uploads.",
-          success_status_codes: [0, 1],
-          chdir: File.join(Rails.root, "public"),
-        )
+        exclude =
+          File.join(
+            Discourse.store.upload_path,
+            "optimized",
+          ) unless SiteSetting.include_thumbnails_in_backups
+        add_path_to_archive(local_uploads_directory, Discourse.store.upload_path, exclude: exclude)
       else
         log "No local uploads found. Skipping archiving of local uploads..."
       end
@@ -305,7 +315,7 @@ module BackupRestore
     # fallback path when URL doesn't match UPLOAD_PATH_REGEX
     UploadData = Data.define(:id, :url, :sha1, :extension, :original_filename)
 
-    def add_remote_uploads_to_archive(tar_filename)
+    def add_remote_uploads_to_archive
       if !SiteSetting.include_s3_uploads_in_backups
         log "Skipping uploads stored on S3."
         return
@@ -316,30 +326,70 @@ module BackupRestore
       @s3_store = FileStore::S3Store.new
       @upload_directory = Discourse.store.upload_path
       @download_stats = { downloaded: 0, hardlinked: 0, copied: 0 }
+      @stats_mutex = Mutex.new
 
       uploads_by_sha1 = group_remote_uploads_by_sha1
-      total_uploads = uploads_by_sha1.values.sum(&:size)
-      log "Found #{uploads_by_sha1.size} unique files from #{total_uploads} total uploads"
+      @total_uploads = uploads_by_sha1.values.sum(&:size)
+      log "Found #{uploads_by_sha1.size} unique files from #{@total_uploads} total uploads"
 
-      uploads_by_sha1.each_value { |upload_group| process_upload_group(upload_group) }
+      download_upload_groups(uploads_by_sha1.values)
 
       log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied"
-
-      log "Appending uploads to archive..."
-      Discourse::Utils.execute_command(
-        "tar",
-        "--append",
-        "--file",
-        tar_filename,
-        @upload_directory,
-        failure_message: "Failed to append uploads to archive.",
-        success_status_codes: [0, 1],
-        chdir: @tmp_directory,
-      )
 
       if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0 &&
            @download_stats[:copied] == 0
         log "No uploads found on S3. Skipping archiving of uploads stored on S3..."
+      end
+    end
+
+    def download_upload_groups(upload_groups)
+      concurrency = [GlobalSetting.backup_s3_download_concurrency.to_i, 1].max
+      log "Downloading upload groups with #{concurrency} worker(s)"
+
+      if concurrency == 1
+        upload_groups.each { |group| process_upload_group(group) }
+        return
+      end
+
+      return if upload_groups.empty?
+
+      concurrency = [concurrency, upload_groups.size].min
+
+      # Initialize the shared client and bucket in the originating site's context.
+      @s3_store.s3_helper.object("")
+      queue = Queue.new
+      upload_groups.each { |group| queue << group }
+      queue.close
+      workers = []
+      errors = Queue.new
+
+      begin
+        # Defer cancellation until every started worker has been registered.
+        Thread.handle_interrupt(Exception => :never) do
+          concurrency.times do
+            workers << Thread.new do
+              Thread.handle_interrupt(Exception => :immediate) do
+                RailsMultisite::ConnectionManagement.with_connection(@current_db) do
+                  while (group = queue.pop)
+                    process_upload_group(group)
+                  end
+                end
+              end
+            rescue Exception => error
+              # Propagate worker failures on the backup thread after workers finish.
+              queue.clear
+              errors << error
+            ensure
+              ActiveRecord::Base.connection_handler.clear_active_connections!
+            end
+          end
+        end
+        workers.each(&:join)
+        raise errors.pop unless errors.empty?
+      ensure
+        # Finish active downloads, but leave queued groups untouched on cancellation.
+        queue.clear
+        workers.each(&:join)
       end
     end
 
@@ -372,26 +422,44 @@ module BackupRestore
 
     def process_upload_group(upload_group)
       primary = upload_group.first
-      primary_filename = upload_path_in_archive(primary)
+      # Each worker stages one file, then waits for the writer before downloading another.
+      Tempfile.create(%w[backup-upload- .tmp], @tmp_directory) do |file|
+        file.close
+        next unless download_upload_to_file(primary, file.path)
 
-      return if !download_upload_to_file(primary, primary_filename)
-
-      upload_group
-        .drop(1)
-        .each do |duplicate|
-          duplicate_filename = upload_path_in_archive(duplicate)
-          primary_filename = create_hardlink(primary_filename, duplicate, duplicate_filename)
+        @archive_mutex.synchronize do
+          primary_path = upload_path_in_archive(primary)
+          @archive.add_file(file.path, primary_path, mode: 0o644)
+          archived_paths = Set.new([primary_path])
+          link_count = 1
+          upload_group
+            .drop(1)
+            .each do |duplicate|
+              path = upload_path_in_archive(duplicate)
+              next unless archived_paths.add?(path)
+              if link_count >= ArchiveWriter::MAX_LINKS
+                @archive.add_file(file.path, path, mode: 0o644)
+                primary_path = path
+                link_count = 1
+                increment_and_log_progress(:copied)
+              else
+                @archive.add_hardlink(path, primary_path)
+                link_count += 1
+                increment_and_log_progress(:hardlinked)
+              end
+            end
         end
+      end
     end
 
     def upload_path_in_archive(upload_data)
-      path = @s3_store.get_path_for_upload(upload_data)
-      File.join(@tmp_directory, @upload_directory, path)
+      File.join(@upload_directory, @s3_store.get_path_for_upload(upload_data))
     end
 
     def download_upload_to_file(upload_data, filename)
       FileUtils.mkdir_p(File.dirname(filename))
-      @s3_store.download_file(upload_data, filename)
+      # Avoid a HEAD request for every file; backup workers already parallelize downloads.
+      @s3_store.download_file(upload_data, filename, mode: "single_request")
       increment_and_log_progress(:downloaded)
       true
     rescue StandardError => ex
@@ -399,29 +467,15 @@ module BackupRestore
       false
     end
 
-    def create_hardlink(source_filename, upload_data, target_filename)
-      FileUtils.mkdir_p(File.dirname(target_filename))
-      FileUtils.ln(source_filename, target_filename)
-      increment_and_log_progress(:hardlinked)
-      source_filename
-    rescue Errno::EMLINK
-      # Filesystem hardlink limit reached - copy file and use as new primary
-      FileUtils.cp(source_filename, target_filename)
-      increment_and_log_progress(:copied)
-      target_filename
-    rescue StandardError => ex
-      log "Failed to create hardlink for upload ID #{upload_data.id}, copying instead", ex
-      FileUtils.cp(source_filename, target_filename)
-      increment_and_log_progress(:copied)
-      source_filename
-    end
-
     def increment_and_log_progress(type)
-      @download_stats[type] += 1
-      total = @download_stats[:downloaded] + @download_stats[:hardlinked] + @download_stats[:copied]
-      return if total % 1000 != 0
+      @stats_mutex.synchronize do
+        @download_stats[type] += 1
+        processed = @download_stats.values.sum
+        return if processed % 1000 != 0
 
-      log "#{total} files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
+        percentage = processed * 100 / @total_uploads
+        log "#{processed}/#{@total_uploads} (#{percentage}%) files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
+      end
     end
 
     def upload_archive
@@ -491,10 +545,10 @@ module BackupRestore
     end
 
     def remove_tar_leftovers
-      log "Removing '.tar' leftovers..."
-      Dir["#{@archive_directory}/*.tar"].each { |filename| File.delete(filename) }
+      log "Removing unfinished archive leftovers..."
+      Dir["#{@archive_directory}/*.{tar,tar.gz.partial}"].each { |filename| File.delete(filename) }
     rescue => ex
-      log "Something went wrong while removing '.tar' leftovers.", ex
+      log "Something went wrong while removing unfinished archive leftovers.", ex
     end
 
     def remove_tmp_directory

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/NoIterationOverRSpecDefinitions
 
 def extract_locale(path)
   path[/\.([^.]{2,})\.yml$/, 1]
@@ -45,7 +46,7 @@ RSpec.describe "i18n integrity checks" do
       end
   end
 
-  Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
+  Dir["#{Rails.root.join("config/locales/{client,server}.*.yml")}"].each do |path|
     it "does not contain invalid interpolation keys for '#{path}'" do
       matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
       matches.flatten!
@@ -55,7 +56,7 @@ RSpec.describe "i18n integrity checks" do
     end
   end
 
-  Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
+  Dir["#{Rails.root.join("config/locales/client.*.yml")}"].each do |path|
     it "has valid client YAML for '#{path}'" do
       yaml = load_yaml(path)
       locale = extract_locale(path)
@@ -68,7 +69,7 @@ RSpec.describe "i18n integrity checks" do
     end
   end
 
-  Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
+  Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
     english_yaml = load_yaml(english_path)["en"]
 
     context(english_path) do
@@ -85,19 +86,12 @@ RSpec.describe "i18n integrity checks" do
         locale = extract_locale(path)
         yaml = load_yaml(path)
 
-        it "has no duplicate keys" do
+        it "has valid translation YAML", :aggregate_failures do
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
           expect(duplicates).to be_empty
-        end
-
-        it "does not overwrite another locale" do
           expect(yaml.keys).to eq([locale])
-        end
 
-        unless path["transliterate"]
-          it "is compatible with english" do
-            expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true)
-          end
+          expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true) unless path["transliterate"]
         end
       end
     end
@@ -132,3 +126,4 @@ RSpec.describe "fallbacks" do
     end
   end
 end
+# rubocop:enable Discourse/NoIterationOverRSpecDefinitions

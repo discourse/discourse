@@ -19,6 +19,44 @@ pt:
         image_generation_custom:
           name: "Personalizar"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Deteção de lixo eletrónico"
+      navigation:
+        users:
+          title: "Utilizadores"
+        groups:
+          title: "Grupos"
+        categories:
+          title: "Categorias"
+        tags:
+          title: "Etiquetas"
+        themes:
+          title: "Temas"
+        backups:
+          title: "Fazer Cópias de Segurança"
+      read_post:
+        unknown_post: "publicação"
+      chat_tool_approval:
+        topic_states:
+          open: "Abrir"
+          closed: "Fechado"
+          active: "Ativo"
+          deleted: "Eliminado"
+        solution_post: "Publicação #%{number}"
+        duration_label: "Duração:"
+        user_duration:
+          one: "%{count} dia"
+          other: "%{count} dias"
+        posts_label: "Publicações"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrição"
+          color: "cor"
+          text_color: "cor do texto"
+        approve_label: "Sim"
+        reject_label: "Não"
       agents:
         custom_prompt:
           name: "Janela personalizada"
@@ -29,9 +67,12 @@ pt:
         locale_detector:
           name: "Detetor de idioma"
       tool_summary:
+        silence_user: "Silenciar utilizador"
         search: "Pesquisar"
         time: "Hora"
         summarize: "Resumir"
+      tool_help:
+        create_category: "Criar uma nova categoria"
       close_topic:
         errors:
           not_found: "Tópico não encontrado."
@@ -41,10 +82,10 @@ pt:
       delete_topic:
         errors:
           not_found: "Tópico não encontrado."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tópico não encontrado."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
       set_topic_timer:
@@ -59,6 +100,20 @@ pt:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Cabeçalho"
+    mcp_theme_access:
+      none: "nenhuma"
+    mcp_app_setup:
+      none: "nenhuma"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprovar"
+        reject:
+          title: "Rejeitar"
     ai_staff_action_logger:
       updated: "atualizado"
       removed: "removido"

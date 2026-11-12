@@ -46,53 +46,51 @@ module DiscourseAutomation
         end
 
         start_date = Time.parse(start_date)
-        if start_date > Time.zone.now
+        now = Time.zone.now
+        interval = interval.to_i
+
+        if start_date > now
           automation.pending_automations.create!(execute_at: start_date)
           return
         end
 
         byday = start_date.strftime("%A").upcase[0, 2]
-        interval = interval.to_i
         interval_end = interval + 1
 
         next_trigger_date =
           case frequency
           when "minute"
-            (Time.zone.now + interval.minute).beginning_of_minute
+            (now + interval.minute).beginning_of_minute
           when "hour"
-            (Time.zone.now + interval.hour).beginning_of_hour
+            (now + interval.hour).beginning_of_hour
           when "day"
             RRule::Rule
               .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
-              .between(Time.now, interval_end.days.from_now)
-              .find { |date| date > Time.zone.now }
+              .between(now, now + interval_end.days)
+              .find { |date| date > now }
           when "weekday"
             max_weekends = (interval_end.to_f / 5).ceil
             RRule::Rule
               .new("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
-              .between(Time.now.end_of_day, max_weekends.weeks.from_now)
+              .between(now.end_of_day, now + max_weekends.weeks)
               .drop(interval - 1)
-              .find { |date| date > Time.zone.now }
+              .find { |date| date > now }
           when "week"
             RRule::Rule
               .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
-              .between(Time.now.end_of_week, interval_end.weeks.from_now)
-              .find { |date| date > Time.zone.now }
+              .between(now.end_of_week, now + interval_end.weeks)
+              .find { |date| date > now }
           when "month"
-            count = 0
-            (start_date.beginning_of_month.to_date..start_date.end_of_month.to_date).each do |date|
-              count += 1 if date.strftime("%A") == start_date.strftime("%A")
-              break if date.day == start_date.day
-            end
-            RRule::Rule
-              .new("FREQ=MONTHLY;INTERVAL=#{interval};BYDAY=#{count}#{byday}", dtstart: start_date)
-              .between(Time.now, interval_end.months.from_now)
-              .find { |date| date > Time.zone.now }
+            months_elapsed = (now.year - start_date.year) * 12 + (now.month - start_date.month)
+            steps = (months_elapsed.to_f / interval).ceil * interval
+            next_date = start_date + steps.months
+            next_date = start_date + (steps += interval).months while next_date <= now
+            next_date
           when "year"
             RRule::Rule
               .new("FREQ=YEARLY;INTERVAL=#{interval}", dtstart: start_date)
-              .between(Time.now, interval_end.years.from_now)
-              .find { |date| date > Time.zone.now }
+              .between(now, now + interval_end.years)
+              .find { |date| date > now }
           end
 
         if next_trigger_date
@@ -109,7 +107,7 @@ module DiscourseAutomation
             byday:,
             interval_end:,
             next_trigger_date:,
-            now: Time.zone.now,
+            now:,
           )
           nil
         end
@@ -131,7 +129,12 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::RECURRING) d
         extra: {
           content: DiscourseAutomation::Triggers::Recurring::RECURRENCE_CHOICES,
         },
-        required: true
+        required: true,
+        validator: ->(value) do
+          if value && !value["interval"].to_i.positive?
+            I18n.t("discourse_automation.triggerables.recurring.invalid_interval")
+          end
+        end
   field :start_date, component: :date_time, required: true
 
   on_update do |automation, fields, previous_fields|

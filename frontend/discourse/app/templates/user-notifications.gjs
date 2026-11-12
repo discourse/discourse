@@ -1,13 +1,13 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,92 +18,94 @@ export default <template>
   {{bodyClass "user-notifications-page"}}
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - notifications">
+    <DHorizontalOverflowNav @ariaLabel="User secondary - notifications">
       <DNavigationItem
-        @route="userNotifications.index"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-all"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.index"
       >
-        {{icon "bell"}}
+        {{dIcon "bell"}}
         <span>{{i18n "user.filters.all"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.responses"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-responses"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.responses"
       >
-        {{icon "reply"}}
+        {{dIcon "reply"}}
         <span>{{i18n "user_action_groups.5"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.likesReceived"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-likes"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.likesReceived"
       >
-        {{icon "heart"}}
+        {{dIcon "heart"}}
         <span>{{i18n "user_action_groups.2"}}</span>
       </DNavigationItem>
 
       {{#if @controller.siteSettings.enable_mentions}}
         <DNavigationItem
-          @route="userNotifications.mentions"
-          @ariaCurrentContext="subNav"
           class="user-nav__notifications-mentions"
+          @ariaCurrentContext="subNav"
+          @route="userNotifications.mentions"
         >
-          {{icon "at"}}
+          {{dIcon "at"}}
           <span>{{i18n "user_action_groups.7"}}</span>
         </DNavigationItem>
       {{/if}}
 
       <DNavigationItem
-        @route="userNotifications.edits"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-edits"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.edits"
       >
-        {{icon "pencil"}}
+        {{dIcon "pencil"}}
         <span>{{i18n "user_action_groups.11"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.links"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-links"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.links"
       >
-        {{icon "link"}}
+        {{dIcon "link"}}
         <span>{{i18n "user_action_groups.17"}}</span>
       </DNavigationItem>
 
       <PluginOutlet
-        @name="user-notifications-bottom"
         @connectorTagName="li"
+        @name="user-notifications-bottom"
         @outletArgs={{lazyHash model=@controller.model}}
       />
 
-    </HorizontalOverflowNav>
+    </DHorizontalOverflowNav>
 
     {{#if @controller.model.content}}
       <div class="navigation-controls">
         <DButton
-          @title="user.dismiss_notifications_tooltip"
-          @action={{@controller.resetNew}}
-          @label="user.dismiss_notifications"
-          @icon="check"
-          @disabled={{@controller.allNotificationsRead}}
           class="btn-default dismiss-notifications"
+          @action={{@controller.resetNew}}
+          @disabled={{@controller.allNotificationsRead}}
+          @icon="check"
+          @label="user.dismiss_notifications"
+          @title="user.dismiss_notifications_tooltip"
         />
       </div>
     {{/if}}
   </div>
 
   <section class="user-content" id="user-content">
-    <LoadMore
-      @action={{@controller.loadMore}}
+    <DLoadMore
       class="notification-history user-stream"
+      @action={{@controller.loadMore}}
     >
       {{outlet}}
-      <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
+    </DLoadMore>
   </section>
 </template>

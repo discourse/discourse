@@ -7,9 +7,12 @@
 bs_BA:
   js:
     discourse_reactions:
-      state_panel:
-        more_users: "i %{count} više..."
+      users_popup:
+        all: "Sve"
       main_reaction:
         add: "Lajkuj ovaj post"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Doodano"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

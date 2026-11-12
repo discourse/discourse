@@ -1,20 +1,45 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance(`Post controls`, function () {
-  test("menu of like count is shown when clicking on like count", async function (assert) {
+  test("popup with likes is shown when clicking on like count", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.dom("#post_2 .button-count").exists("like count button exists");
 
     await click("#post_2 .button-count");
 
-    // Assert that the liked users list container appears
+    assert.dom(".users-popup").exists("post likes popup appears");
     assert
-      .dom(".liked-users-list__container")
-      .exists("liked users list container appears");
+      .dom(".users-popup__item")
+      .exists("liked users are listed in the popup");
+  });
+
+  test("popup with likes moves focus into the popup and back out again", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert
+      .dom("#post_2 .button-count")
+      .hasAria("expanded", "false", "the like count starts collapsed");
+
+    await click("#post_2 .button-count");
+
+    assert
+      .dom("#post_2 .button-count")
+      .hasAria("expanded", "true", "the like count reports the popup is open");
+    assert.true(
+      document.querySelector(".users-popup").contains(document.activeElement),
+      "focus moves into the popup"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+    assert.dom(".users-popup").doesNotExist("escape closes the popup");
+    assert
+      .dom("#post_2 .button-count")
+      .isFocused("focus returns to the like count");
   });
 
   test("accessibility of the embedded replies below the post", async function (assert) {
@@ -36,7 +61,6 @@ acceptance(`Post controls`, function () {
       .dom("#post_1 button.show-replies")
       .hasAria("pressed", "true", "show replies button is now pressed");
 
-    // const replies = Array.from(queryAll("#post_1 .embedded-posts .reply"));
     assert
       .dom("#post_1 .embedded-posts .reply")
       .exists({ count: 1 }, "replies are rendered");

@@ -9,19 +9,58 @@ sv:
     overall_sentiment:
       yaxis: "Datum"
     emotion_neutral:
-      title: "\U0001F610 Neutralt"
+      title: "😐 Neutralt"
   discourse_ai:
     tools:
       presets:
         image_generation_custom:
           name: "Anpassad"
     ai_bot:
+      navigation:
+        users:
+          title: "Användare"
+        groups:
+          title: "Grupper"
+        review:
+          title: "Granskningskö"
+        categories:
+          title: "Kategorier"
+        tags:
+          title: "Taggar"
+        themes:
+          title: "Teman"
+        backups:
+          title: "Säkerhetskopior"
+      read_post:
+        unknown_post: "inlägg"
+      chat_tool_approval:
+        topic_states:
+          open: "Öppen"
+          closed: "Stängd"
+          active: "Aktiv"
+          deleted: "Raderade"
+        solution_post: "Inlägg nr %{number}"
+        duration_label: "Varaktighet:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dagar"
+        posts_label: "Inlägg"
+        category_label: "Kategori"
+        category_fields:
+          name: "namn"
+          description: "beskrivning"
+          color: "färg"
+        approve_label: "Ja"
+        reject_label: "Nej"
       tool_summary:
+        suspend_user: "Stäng av användare"
+        silence_user: "Tysta användare"
         search: "Sök"
         time: "Tid"
         summarize: "Sammanfatta"
       tool_help:
         delete_topic: "Ta bort ett ämne"
+        create_category: "Skapa en ny kategori"
       close_topic:
         errors:
           not_found: "Ämnet hittades inte."
@@ -31,10 +70,13 @@ sv:
       delete_topic:
         errors:
           not_found: "Ämnet hittades inte."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Ämnet hittades inte."
       edit_category:
+        errors:
+          not_found: "Kategorin hittades inte."
+      change_topic_category:
         errors:
           not_found: "Ämnet hittades inte."
           category_not_found: "Kategorin hittades inte."
@@ -50,13 +92,30 @@ sv:
       assign:
         errors:
           not_found: "Ämnet hittades inte."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Sidhuvud"
+      fonts:
+        base_font: "Typsnitt för brödtext"
+        heading_font: "Typsnitt för rubrik"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Godkänn"
+        reject:
+          title: "Avvisa"
     summarization:
       chat:
         no_targets: "Det fanns inga meddelanden under den valda perioden."
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutralt \U0001F610"
+          neutral: "Neutralt 😐"
         sentiment_analysis:
           neutral: "Neutralt"
     ai_staff_action_logger:

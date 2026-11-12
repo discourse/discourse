@@ -1,13 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { trackedSet } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import EmbedMode from "discourse/lib/embed-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class FooterService extends Service {
-  #hiders = new TrackedSet();
+  #hiders = trackedSet();
+
+  /** @type {boolean | null} */
   @tracked _showFooterOverride = null;
 
   get showFooter() {

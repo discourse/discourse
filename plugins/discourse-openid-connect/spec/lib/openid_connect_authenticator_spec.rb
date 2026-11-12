@@ -15,6 +15,7 @@ describe OpenIDConnectAuthenticator do
       },
       extra: {
         raw_info: {
+          email_verified: true,
           email: user.email,
           name: "John Doe",
         },
@@ -23,12 +24,75 @@ describe OpenIDConnectAuthenticator do
   end
 
   context "when email_verified is not supplied" do
-    # Some IDPs do not supply this information
-    # In this case we trust that they have verified the address
-    it "matches the user" do
+    before { hash[:extra][:raw_info].delete(:email_verified) }
+
+    it "uses a true fallback to verify the email and match the user" do
+      SiteSetting.openid_connect_email_verified_claim_fallback = true
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(user)
+      expect(result.email_valid).to eq(true)
+    end
+
+    it "uses the default false fallback and does not match the user" do
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.user).to be_nil
+      expect(result.email_valid).to eq(false)
+    end
+  end
+
+  context "when the fallback is true and email_verified is supplied" do
+    before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
+
+    shared_examples "authenticating with an explicit email verification claim" do |claim:, expected_verified:|
+      it "uses the claim for verification and account linking" do
+        hash[:extra][:raw_info][:email_verified] = claim
+        result = authenticator.after_authenticate(hash)
+
+        expect(result.email_valid).to eq(expected_verified)
+        expect(result.user).to eq(expected_user)
+      end
+    end
+
+    context "with a boolean true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: true,
+                       expected_verified: true
+    end
+
+    context "with a lowercase true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "true",
+                       expected_verified: true
+    end
+
+    context "with a capitalized true claim" do
+      let(:expected_user) { user }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "True",
+                       expected_verified: true
+    end
+
+    context "with a boolean false claim" do
+      let(:expected_user) { nil }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: false,
+                       expected_verified: false
+    end
+
+    context "with a string false claim" do
+      let(:expected_user) { nil }
+
+      include_examples "authenticating with an explicit email verification claim",
+                       claim: "false",
+                       expected_verified: false
     end
   end
 
@@ -74,6 +138,332 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "group syncing" do
+    context "when openid_connect_groups_claim is blank" do
+      it "does not provide groups" do
+        expect(authenticator.provides_groups?).to eq(false)
+      end
+
+      it "does not set associated_groups" do
+        hash[:extra][:raw_info][:groups] = %w[group1 group2]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to be_nil
+      end
+    end
+
+    context "when openid_connect_groups_claim is set" do
+      before { SiteSetting.openid_connect_groups_claim = "groups" }
+
+      it "provides groups" do
+        expect(authenticator.provides_groups?).to eq(true)
+      end
+
+      it "extracts groups from the claim" do
+        hash[:extra][:raw_info][:groups] = %w[group1 group2]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "handles an empty groups array" do
+        hash[:extra][:raw_info][:groups] = []
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([])
+      end
+
+      it "treats a missing claim as an empty groups list" do
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([])
+      end
+
+      it "extracts groups from comma-separated strings, ignoring whitespace and empty entries" do
+        hash[:extra][:raw_info][:groups] = " group1, ,group2, "
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "preserves commas in array entries" do
+        hash[:extra][:raw_info][:groups] = ["group1,group2"]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "group1,group2", name: "group1,group2" }])
+      end
+
+      it "extracts a string claim from the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => "group1,group2" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "treats blank strings as empty groups lists without falling back to the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => ["group1"] }
+
+        ["", "   ", ", ,"].each do |claim|
+          hash[:extra][:raw_info][:groups] = claim
+          expect(authenticator.after_authenticate(hash).associated_groups).to eq([])
+        end
+      end
+
+      it "syncs memberships as a string claim loses groups" do
+        SiteSetting.openid_connect_discovery_document =
+          "https://example.com/.well-known/openid-configuration"
+        SiteSetting.openid_connect_client_id = "client_id"
+        SiteSetting.openid_connect_client_secret = "client_secret"
+        SiteSetting.openid_connect_enabled = true
+        groups =
+          %w[group1 group2].map do |name|
+            group = Fabricate(:group)
+            associated_group =
+              Fabricate(:associated_group, name: name, provider_id: name, provider_name: "oidc")
+            GroupAssociatedGroup.create!(group: group, associated_group: associated_group)
+            group
+          end
+
+        hash[:extra][:raw_info][:groups] = "group1,group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(*groups)
+
+        hash[:extra][:raw_info][:groups] = "group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(groups.last)
+
+        hash[:extra][:raw_info][:groups] = ""
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to be_empty
+      end
+
+      it "logs an error and clears groups when the claim is not an array or string" do
+        hash[:extra][:raw_info][:groups] = 123
+        Rails.logger.expects(:error).with(includes("not an array"))
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([])
+      end
+
+      it "falls back to the id_token when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "groups" => %w[group1 group2] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "prefers raw_info over the id_token when both contain the claim" do
+        hash[:extra][:raw_info][:groups] = %w[from_userinfo]
+        hash[:extra][:id_token_info] = { "groups" => %w[from_id_token] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "from_userinfo", name: "from_userinfo" }])
+      end
+    end
+
+    context "with a custom claim name" do
+      before { SiteSetting.openid_connect_groups_claim = "cognito:groups" }
+
+      it "reads from the correct claim" do
+        hash[:extra][:raw_info]["cognito:groups"] = %w[admins editors]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
+        )
+      end
+    end
+  end
+
+  describe "user field syncing" do
+    fab!(:user_field)
+
+    it "leaves user_field_values empty when no mappings are configured" do
+      result = authenticator.after_authenticate(hash)
+      expect(result.user_field_values).to eq({})
+    end
+
+    context "with a mapping configured" do
+      before do
+        SiteSetting.openid_connect_user_field_mappings = [
+          { "claim" => "department", "user_field_id" => user_field.id },
+        ].to_json
+      end
+
+      it "pulls the value from raw_info" do
+        hash[:extra][:raw_info][:department] = "Engineering"
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "falls back to id_token_info when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "joins array values with commas" do
+        hash[:extra][:raw_info][:department] = %w[Eng Ops]
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
+      end
+
+      it "skips mappings whose claim is missing entirely" do
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq({})
+      end
+
+      it "clears the field when raw_info has the claim set to an empty string" do
+        hash[:extra][:raw_info][:department] = ""
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+
+      it "clears the field when raw_info has the claim set to null" do
+        hash[:extra][:raw_info][:department] = nil
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+    end
+  end
+
+  describe "#register_middleware" do
+    it "configures the strategy with the selected email claim" do
+      SiteSetting.openid_connect_email_claim = "mail"
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      stub_request(:get, SiteSetting.openid_connect_discovery_document).to_return(body: "{}")
+      builder = OmniAuth::Builder.new(->(_env) { [200, {}, []] })
+      authenticator.register_middleware(builder)
+      strategy = builder.to_app
+
+      strategy.options.setup.call("omniauth.strategy" => strategy)
+
+      expect(strategy.options.email_claim).to eq("mail")
+    end
+  end
+
+  describe "#required_settings" do
+    it "requires a client secret by default" do
+      expect(authenticator.required_settings).to contain_exactly(
+        :openid_connect_discovery_document,
+        :openid_connect_client_id,
+        :openid_connect_client_secret,
+      )
+    end
+
+    it "does not require a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "does not require a client secret when using mTLS" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      SiteSetting.openid_connect_mtls_client_key = "key-pem"
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "requires a client secret when only half of the mTLS pair is set" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      expect(authenticator.required_settings).to include(:openid_connect_client_secret)
+    end
+  end
+
+  describe "enabling the plugin" do
+    before do
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      SiteSetting.openid_connect_client_id = "my-client-id"
+    end
+
+    it "is refused while credentials are missing" do
+      expect { SiteSetting.openid_connect_enabled = true }.to raise_error(
+        Discourse::InvalidHTMLParameters,
+      )
+    end
+
+    it "is allowed once credentials are set" do
+      SiteSetting.openid_connect_client_secret = "my-client-secret"
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
+    end
+
+    it "is allowed without a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
+    end
+  end
+
+  describe "mTLS support" do
+    let!(:mtls_key) { OpenSSL::PKey::RSA.new(2048) }
+    let!(:mtls_cert) do
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = mtls_key.public_key
+      cert.sign(mtls_key, OpenSSL::Digest.new("SHA256"))
+      cert
+    end
+
+    it "returns empty hash when no mTLS settings are configured" do
+      SiteSetting.openid_connect_mtls_client_cert = ""
+      SiteSetting.openid_connect_mtls_client_key = ""
+      expect(authenticator.mtls_ssl_options).to eq({})
+    end
+
+    it "parses valid PEM certificate and key" do
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_cert]).to be_a(OpenSSL::X509::Certificate)
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "raises OpenSSL error for invalid cert PEM" do
+      SiteSetting.openid_connect_mtls_client_cert = "not-a-cert"
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+
+    it "raises OpenSSL error for invalid key PEM" do
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = "not-a-key"
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+
+    it "decrypts a key with a passcode when the setting is provided" do
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "some_passphrase"
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "raises OpenSSL error when the passphrase is wrong" do
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "wrong_passphrase"
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+  end
+
   describe "discovery document fetching" do
     let(:document_url) do
       SiteSetting.openid_connect_discovery_document =
@@ -87,6 +477,7 @@ describe OpenIDConnectAuthenticator do
         userinfo_endpoint: "https://id.example.com/userinfo",
       }.to_json
     end
+
     after { Discourse.cache.delete("openid-connect-discovery-#{document_url}") }
 
     it "loads the document correctly" do

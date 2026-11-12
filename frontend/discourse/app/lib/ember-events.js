@@ -2,7 +2,7 @@
 import { EventDispatcher } from "@ember/-internals/views";
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
-import { actionModifier } from "./ember-action-modifier";
+import { actionModifier } from "./ember-action-modifier.js";
 
 /**
  * Classic Ember components (i.e. "@ember/component") rely upon "event

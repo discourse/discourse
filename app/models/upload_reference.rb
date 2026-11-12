@@ -52,11 +52,11 @@ end
 # Table name: upload_references
 #
 #  id          :bigint           not null, primary key
-#  upload_id   :bigint           not null
 #  target_type :string           not null
-#  target_id   :bigint           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  target_id   :bigint           not null
+#  upload_id   :bigint           not null
 #
 # Indexes
 #

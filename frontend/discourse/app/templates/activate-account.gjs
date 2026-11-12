@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
@@ -11,6 +10,7 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {
@@ -105,7 +105,7 @@ export default class extends Component {
         {{#if this.accountActivated}}
           <div class="account-activated">
             <div class="tada-image">
-              <img src={{getURL "/images/wizard/tada.svg"}} alt="tada emoji" />
+              <img alt="tada emoji" src={{getURL "/images/wizard/tada.svg"}} />
             </div>
             {{#if this.needsApproval}}
               <p>{{i18n "user.activate_account.approval_required"}}</p>
@@ -113,10 +113,10 @@ export default class extends Component {
               <p>{{i18n "user.activate_account.please_continue"}}</p>
               <DButton
                 class="btn-primary continue-button"
+                @action={{this.loadHomepage}}
                 @translatedLabel={{i18n
                   "user.activate_account.continue_button"
                 }}
-                @action={{this.loadHomepage}}
               />
             {{/if}}
           </div>
@@ -124,8 +124,8 @@ export default class extends Component {
           <DButton
             class="activate-account-button btn-primary"
             @action={{this.activate}}
-            @label="user.activate_account.action"
             @disabled={{this.isLoading}}
+            @label="user.activate_account.action"
           />
         {{/if}}
       </div>

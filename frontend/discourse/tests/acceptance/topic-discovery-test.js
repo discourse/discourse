@@ -1,9 +1,6 @@
-import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
-import {
-  disableLoadMoreObserver,
-  enableLoadMoreObserver,
-} from "discourse/components/load-more";
+import { click, currentURL, find, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { LOAD_MORE_ROOT_MARGIN } from "discourse/components/discovery/topics";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
@@ -12,6 +9,11 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -181,31 +183,54 @@ acceptance("Topic Discovery", function (needs) {
 });
 
 acceptance("Topic Discovery | Footer", function (needs) {
-  needs.hooks.beforeEach(function () {
-    enableLoadMoreObserver();
-  });
-
-  needs.hooks.afterEach(function () {
-    disableLoadMoreObserver();
-  });
-
   needs.pretender((server, helper) => {
     server.get("/c/dev/7/l/latest.json", (request) => {
       const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      if (!request.queryParams.page) {
+      if (request.queryParams.page) {
+        delete json.topic_list.more_topics_url;
+      } else {
         json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
       }
       return helper.response(json);
     });
   });
 
-  // TODO: Needs scroll support in tests
-  skip("No footer, then shows footer when all loaded", async function (assert) {
-    await visit("/c/dev");
-    assert.dom(".custom-footer-content").doesNotExist();
+  test("No footer, then shows footer when all loaded", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
 
-    document.querySelector("#ember-testing-container").scrollTop = 100000; // scroll to bottom
-    await settled();
-    assert.dom(".custom-footer-content").exists();
+    try {
+      await visit("/c/dev");
+      assert.dom(".custom-footer-content").doesNotExist();
+
+      await observations
+        .find(({ element }) => element.classList.contains("load-more-sentinel"))
+        .trigger();
+
+      assert.dom(".custom-footer-content").exists();
+    } finally {
+      disableLoadMoreObserver();
+    }
+  });
+
+  test("starts loading before the reader reaches the end of the list", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+
+    try {
+      await visit("/c/dev");
+
+      const sentinel = observations.find(({ element }) =>
+        element.classList.contains("load-more-sentinel")
+      );
+
+      assert.strictEqual(
+        sentinel.options.rootMargin,
+        LOAD_MORE_ROOT_MARGIN,
+        "reaches past the bottom of the viewport, so the fetch starts before the last topic is on screen"
+      );
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 });

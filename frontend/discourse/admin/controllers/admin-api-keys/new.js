@@ -1,16 +1,29 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed, get } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
+import ApiKeyUrlsModal from "../../components/modal/api-key-urls.gjs";
 
+/**
+ * @typedef {Object} ApiKeyScope
+ * @property {string} scope_id
+ * @property {string} key
+ * @property {string} name
+ * @property {string[] | null} params
+ * @property {string[]} urls
+ * @property {boolean} [selected]
+ */
 export default class AdminApiKeysNewController extends Controller {
   @service router;
+
   @service modal;
+
+  @tracked userMode;
 
   userModes = [
     { id: "all", name: i18n("admin.api.all_users") },
@@ -21,14 +34,21 @@ export default class AdminApiKeysNewController extends Controller {
     { id: "read_only", name: i18n("admin.api.scopes.read_only") },
     { id: "global", name: i18n("admin.api.scopes.global") },
   ];
-  globalScopes = null;
-  scopes = null;
 
-  @equal("userMode", "single") showUserSelector;
+  /** @type {ApiKeyScope[] | null} */
+  globalScopes = null;
+
+  /** @type {Record<string, ApiKeyScope[]> | null} */
+  scopes = null;
 
   init() {
     super.init(...arguments);
     this._loadScopes();
+  }
+
+  @dependentKeyCompat
+  get showUserSelector() {
+    return this.userMode === "single";
   }
 
   @computed("model.{description,username}", "showUserSelector")
@@ -44,7 +64,7 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   updateUsername(selected) {
-    this.set("model.username", get(selected, "firstObject"));
+    this.set("model.username", selected[0]);
   }
 
   @action

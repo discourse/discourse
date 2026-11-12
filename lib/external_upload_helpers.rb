@@ -66,8 +66,7 @@ module ExternalUploadHelpers
 
   def complete_external_upload
     unique_identifier = params.require(:unique_identifier)
-    external_upload_stub =
-      ExternalUploadStub.find_by(unique_identifier: unique_identifier, created_by: current_user)
+    external_upload_stub = find_external_upload_stub(unique_identifier:, created_by: current_user)
     return render_404 if external_upload_stub.blank?
 
     complete_external_upload_via_manager(external_upload_stub)
@@ -132,8 +131,7 @@ module ExternalUploadHelpers
 
     part_numbers = part_numbers.map { |part_number| validate_part_number(part_number) }
 
-    external_upload_stub =
-      ExternalUploadStub.find_by(unique_identifier: unique_identifier, created_by: current_user)
+    external_upload_stub = find_external_upload_stub(unique_identifier:, created_by: current_user)
     return render_404 if external_upload_stub.blank?
 
     message = check_multipart_upload_exists(external_upload_stub)
@@ -180,8 +178,7 @@ module ExternalUploadHelpers
 
   def abort_multipart
     external_upload_identifier = params.require(:external_upload_identifier)
-    external_upload_stub =
-      ExternalUploadStub.find_by(external_upload_identifier: external_upload_identifier)
+    external_upload_stub = find_external_upload_stub(external_upload_identifier:)
 
     # The stub could have already been deleted by an earlier error via
     # ExternalUploadManager, so we consider this a great success if the
@@ -227,8 +224,7 @@ module ExternalUploadHelpers
       1.minute,
     ).performed!
 
-    external_upload_stub =
-      ExternalUploadStub.find_by(unique_identifier: unique_identifier, created_by: current_user)
+    external_upload_stub = find_external_upload_stub(unique_identifier:, created_by: current_user)
     return render_404 if external_upload_stub.blank?
 
     message = check_multipart_upload_exists(external_upload_stub)
@@ -291,56 +287,50 @@ module ExternalUploadHelpers
 
     external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)
     hijack do
-      begin
-        upload = external_upload_manager.transform!
+      upload = external_upload_manager.transform!
 
-        if upload.errors.empty?
-          response_serialized = self.class.serialize_upload(upload)
-          external_upload_stub.destroy!
-          render json: response_serialized, status: :ok
-        else
-          render_json_error(upload.errors.to_hash.values.flatten, status: 422)
-        end
-      rescue ExternalUploadManager::SizeMismatchError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.size_mismatch_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::ChecksumMismatchError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.checksum_mismatch_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::CannotPromoteError => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.cannot_promote_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
-        render_json_error(
-          debug_upload_error(
-            err,
-            I18n.t("upload.download_failure", additional_detail: err.message),
-          ),
-          status: 422,
-        )
-      rescue => err
-        Discourse.warn_exception(
-          err,
-          message: "Complete external upload failed unexpectedly for user #{current_user.id}",
-        )
-
-        render_json_error(I18n.t("upload.failed"), status: 422)
+      if upload.errors.empty?
+        response_serialized = self.class.serialize_upload(upload)
+        external_upload_stub.destroy!
+        render json: response_serialized, status: :ok
+      else
+        render_json_error(upload.errors.to_hash.values.flatten, status: 422)
       end
+    rescue ExternalUploadManager::SizeMismatchError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.size_mismatch_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::ChecksumMismatchError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.checksum_mismatch_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::CannotPromoteError => err
+      render_json_error(
+        debug_upload_error(
+          err,
+          I18n.t("upload.cannot_promote_failure", additional_detail: err.message),
+        ),
+        status: 422,
+      )
+    rescue ExternalUploadManager::DownloadFailedError, Aws::S3::Errors::NotFound => err
+      render_json_error(
+        debug_upload_error(err, I18n.t("upload.download_failure", additional_detail: err.message)),
+        status: 422,
+      )
+    rescue => err
+      Rails.logger.error(
+        "Complete external upload failed unexpectedly for user #{current_user.id}: #{err.class} #{err.message}\n#{err.backtrace.join("\n")}",
+      )
+
+      render_json_error(I18n.t("upload.failed"), status: 422)
     end
   end
 
@@ -371,8 +361,17 @@ module ExternalUploadHelpers
     end
   end
 
+  def find_external_upload_stub(**conditions)
+    stub = ExternalUploadStub.find_by(conditions)
+    return if !stub
+
+    folder = multipart_store(stub.upload_type).temporary_folder_prefix
+    prefix = File.join(FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX, folder, "")
+    stub if stub.key.start_with?(prefix)
+  end
+
   def multipart_store(upload_type)
-    ExternalUploadManager.store_for_upload_type(upload_type)
+    ExternalUploadManager.store_for_upload_type(upload_type, guardian: guardian)
   end
 
   def external_store_check

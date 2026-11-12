@@ -1,0 +1,410 @@
+# frozen_string_literal: true
+
+RSpec.describe "Discourse Workflows" do
+  fab!(:admin)
+
+  let(:workflows_page) { PageObjects::Pages::DiscourseWorkflows::Workflows.new }
+  let(:editor_page) { PageObjects::Pages::DiscourseWorkflows::WorkflowEditor.new }
+
+  before do
+    SiteSetting.tagging_enabled = true
+    sign_in(admin)
+  end
+
+  it "creates a workflow and switches between modifying and replacing topic tags" do
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+
+    editor_page.visit_new
+    editor_page.click_empty_state_add_node
+    editor_page.select_node_type("trigger:topic_closed")
+    editor_page.click_add_node
+    editor_page.select_node_type("action:topic_tags")
+    editor_page.double_click_node(1)
+
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.set_tagged_topic(topic)
+    editor_page.select_topic_tag_mode("Replace all")
+    expect(editor_page).to have_replacement_topic_tag_fields
+    editor_page.add_replacement_tag(tag)
+    expect(editor_page).to have_saved_node_configuration
+
+    page.refresh
+    expect(editor_page).to have_replacement_topic_tag_fields
+    expect(editor_page).to have_replacement_tag(tag)
+
+    editor_page.select_topic_tag_mode("Modify")
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.close_node_configurator
+
+    workflows_page.visit_index
+    expect(workflows_page).to have_workflow("My workflow")
+  end
+
+  it "keeps the operation expression and tag picker for existing topic tag nodes" do
+    node_id = "topic-tags"
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "action:topic_tags",
+            "typeVersion" => "1.0",
+            "name" => "Legacy topic tags",
+            "parameters" => {
+              "operation" => "={{ $json.operation }}",
+              "topic_id" => topic.id.to_s,
+              "tag_names" => [tag.name],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+
+    expect(editor_page).to have_legacy_topic_tag_fields
+  end
+
+  it "upgrades a deprecated node to its latest version" do
+    node_id = "post-edited"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:post_edited",
+            "typeVersion" => "1.0",
+            "name" => "Post edited",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    find(".workflows-deprecation-notice__upgrade").click
+
+    expect(editor_page).to have_node_configurator
+    expect(page).to have_no_css(".workflows-deprecation-notice")
+    expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
+  end
+
+  it "creates a workflow with condition node" do
+    editor_page.visit_new
+    editor_page.click_empty_state_add_node
+    editor_page.select_node_type("trigger:topic_closed")
+    editor_page.click_add_node
+    editor_page.select_node_type("condition:if")
+
+    workflows_page.visit_index
+    expect(workflows_page).to have_workflow("My workflow")
+  end
+
+  it "lets an admin scope a post trigger to specific topics" do
+    topic = Fabricate(:post).topic
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "post-created",
+            "type" => "trigger:post_created",
+            "typeVersion" => "1.0",
+            "name" => "Post created",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, "post-created")
+    editor_page.filter_by_topic(topic)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_topic_filter(topic)
+  end
+
+  it "lets an admin add fixed event triggers while keeping existing status filters editable" do
+    category = Fabricate(:category)
+    node_id = "existing-status"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:topic_status_changed",
+            "typeVersion" => "1.0",
+            "name" => "Topic status changed",
+            "parameters" => {
+              "statuses" => ["closed"],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    expect(editor_page).to have_status_filter("Closed")
+    editor_page.add_status_filter("reopened")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_status_filter("Reopened")
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:topic_reopened")
+    editor_page.double_click_node(1)
+    editor_page.filter_topics_by_category(category)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Topic reopened")
+    expect(editor_page).to have_fixed_topic_filters(category)
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:reviewable_rejected")
+    editor_page.double_click_node(2)
+    editor_page.filter_reviewable_type("ReviewableQueuedPost")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Review item rejected")
+    expect(editor_page).to have_fixed_reviewable_filter("Reviewable queued post")
+  end
+
+  it "renders the failed-run warning icon based on the most recent execution" do
+    failed_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+    recovered_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+    Fabricate(
+      :discourse_workflows_error_execution,
+      workflow: failed_workflow,
+      created_at: 1.hour.ago,
+    )
+    Fabricate(
+      :discourse_workflows_error_execution,
+      workflow: recovered_workflow,
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :discourse_workflows_completed_execution,
+      workflow: recovered_workflow,
+      created_at: 1.hour.ago,
+    )
+
+    workflows_page.visit_index
+
+    expect(workflows_page).to have_failed_workflow(failed_workflow)
+    expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
+  end
+
+  it "opens a user card from the creator" do
+    creator = Fabricate(:user)
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
+    user_card = PageObjects::Components::UserCard.new
+
+    workflows_page.visit_index
+
+    workflows_page.click_creator(workflow)
+    expect(user_card).to be_showing_user(creator.username)
+  end
+
+  it "opens a workflow from the edit button" do
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+    workflows_page.visit_index
+    workflows_page.click_edit(workflow)
+
+    expect(page).to have_current_path("/admin/plugins/discourse-workflows/workflows/#{workflow.id}")
+  end
+
+  it "deletes a workflow from the row menu" do
+    workflow = Fabricate(:discourse_workflows_workflow, name: "Doomed", created_by: admin)
+    Fabricate(:discourse_workflows_workflow, name: "Survivor", created_by: admin)
+    dialog = PageObjects::Components::Dialog.new
+
+    workflows_page.visit_index
+    workflows_page.click_delete(workflow)
+    dialog.click_danger
+
+    expect(workflows_page).to have_no_workflow("Doomed")
+    expect(workflows_page).to have_workflow("Survivor")
+    expect(DiscourseWorkflows::Workflow.exists?(workflow.id)).to eq(false)
+  end
+
+  context "with workflow tags" do
+    fab!(:ops_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Ops workflow",
+        created_by: admin,
+        tags: %w[ops],
+      )
+    end
+    fab!(:billing_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Billing workflow",
+        created_by: admin,
+        tags: %w[billing],
+      )
+    end
+
+    it "filters the list by tag from a row chip and from the tag filter" do
+      workflows_page.visit_index
+
+      expect(workflows_page).to have_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "billing")
+
+      workflows_page.click_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow("Ops workflow")
+      expect(workflows_page).to have_no_workflow("Billing workflow")
+      expect(page.current_url).to include("tags=ops")
+
+      workflows_page.reset_filters
+      expect(workflows_page).to have_workflow("Billing workflow")
+
+      workflows_page.filter_by_tag("billing")
+      expect(workflows_page).to have_workflow("Billing workflow")
+      expect(workflows_page).to have_no_workflow("Ops workflow")
+    end
+
+    it "adds a tag from the editor header even when core tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      editor_page.visit(billing_workflow.id)
+      editor_page.add_tag("urgent")
+
+      expect(editor_page).to have_header_tag("urgent")
+      expect(billing_workflow.reload.tags.map(&:name)).to eq(%w[billing urgent])
+
+      workflows_page.visit_index
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "urgent")
+    end
+  end
+
+  context "with a persisted workflow node" do
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+    fab!(:unavailable_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "unavailable-1",
+            "type" => "action:disabled_plugin_node",
+            "typeVersion" => "1.0",
+            "name" => "Unavailable node",
+            "position" => {
+              "x" => 100,
+              "y" => 100,
+            },
+            "parameters" => {
+            },
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    let(:node_id) { "trigger.1" }
+
+    before do
+      workflow.update!(
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:manual",
+            "typeVersion" => "1.0",
+            "name" => "Manual trigger",
+            "position" => {
+              "x" => 100,
+              "y" => 100,
+            },
+            "parameters" => {
+            },
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    def count_workflow_updates
+      count = 0
+      subscriber =
+        ActiveSupport::Notifications.subscribe("process_action.action_controller") do |*, payload|
+          if payload[:controller] == "DiscourseWorkflows::WorkflowsController" &&
+               payload[:action] == "update"
+            count += 1
+          end
+        end
+      begin
+        yield
+      ensure
+        ActiveSupport::Notifications.unsubscribe(subscriber)
+      end
+      count
+    end
+
+    it "does not save the workflow when nothing changed" do
+      updates =
+        count_workflow_updates do
+          editor_page.visit(workflow.id)
+          expect(editor_page).to have_node_count(1)
+          expect(editor_page).to have_workflow_path(workflow)
+
+          editor_page.double_click_node(0)
+          expect(editor_page).to have_node_configurator
+          expect(editor_page).to have_node_path(workflow, node_id)
+
+          editor_page.close_node_configurator
+          expect(editor_page).to have_no_node_configurator
+          expect(editor_page).to have_workflow_path(workflow)
+        end
+
+      expect(updates).to eq(0)
+    end
+
+    it "lets an admin reopen the same configured node after a refresh" do
+      editor_page.visit_node(workflow, node_id)
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Manual trigger")
+
+      editor_page.rename_configured_node("Refreshable manual trigger")
+      expect(editor_page).to have_saved_node_configuration
+
+      page.refresh
+
+      expect(editor_page).to have_node_path(workflow, node_id)
+      expect(editor_page).to have_node_configurator(name: "Refreshable manual trigger")
+    end
+
+    it "returns an admin to the workflow when a linked node is missing or unavailable" do
+      editor_page.visit_node(workflow, "missing-node")
+
+      expect(editor_page).to have_workflow_path(workflow)
+      expect(editor_page).to have_no_node_configurator
+
+      editor_page.visit_node(unavailable_workflow, "unavailable-1")
+
+      expect(editor_page).to have_workflow_path(unavailable_workflow)
+      expect(editor_page).to have_no_node_configurator
+    end
+  end
+end

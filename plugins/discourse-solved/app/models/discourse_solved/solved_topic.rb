@@ -4,14 +4,15 @@ module DiscourseSolved
   class SolvedTopic < ActiveRecord::Base
     self.table_name = "discourse_solved_solved_topics"
 
+    # TODO: Remove these columns fully in a future migration
+    self.ignored_columns += %i[answer_post_id accepter_user_id]
+
     belongs_to :topic, class_name: "Topic"
-    belongs_to :answer_post, -> { with_deleted }, class_name: "Post", foreign_key: "answer_post_id"
-    belongs_to :accepter, class_name: "User", foreign_key: "accepter_user_id"
+    has_many :topic_answers, class_name: "DiscourseSolved::TopicAnswer", dependent: :destroy
+    has_many :answer_posts, through: :topic_answers, class_name: "Post", source: :post
     belongs_to :topic_timer, dependent: :destroy
 
     validates :topic_id, presence: true
-    validates :answer_post_id, presence: true
-    validates :accepter_user_id, presence: true
 
     before_create :auto_close_topic_timer
 
@@ -36,13 +37,11 @@ end
 #
 # Table name: discourse_solved_solved_topics
 #
-#  id               :bigint           not null, primary key
-#  topic_id         :integer          not null
-#  answer_post_id   :integer          not null
-#  accepter_user_id :integer          not null
-#  topic_timer_id   :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id             :bigint           not null, primary key
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  topic_id       :bigint           not null
+#  topic_timer_id :integer
 #
 # Indexes
 #

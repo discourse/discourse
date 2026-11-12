@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const siteSettingsFixtures = {
   "/admin/site_settings": {
     site_settings: [
       {
@@ -82,3 +87,5 @@ export default {
     ],
   },
 };
+
+export default siteSettingsFixtures;

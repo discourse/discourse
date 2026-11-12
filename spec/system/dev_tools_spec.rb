@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discourse dev tools", type: :system do
+describe "Discourse dev tools" do
   let(:toolbar) { PageObjects::Components::DevTools::Toolbar.new }
   let(:plugin_outlet_debug) { PageObjects::Components::DevTools::PluginOutletDebug.new }
   let(:block_debug) { PageObjects::Components::DevTools::BlockDebug.new }
@@ -8,7 +8,6 @@ describe "Discourse dev tools", type: :system do
   describe "toolbar" do
     it "can be enabled and disabled" do
       visit("/latest")
-      expect(page).to have_css("#site-logo")
       expect(toolbar).to have_no_toolbar
 
       toolbar.enable
@@ -16,7 +15,35 @@ describe "Discourse dev tools", type: :system do
 
       toolbar.disable
       expect(toolbar).to have_no_toolbar
-      expect(page).to have_css("#site-logo")
+    end
+  end
+
+  describe "upcoming changes debugging" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+    end
+
+    it "shows upcoming changes and allows you to toggle them on and off, impacting the client-side siteSettings service" do
+      visit("/latest")
+      toolbar.enable
+      toolbar.open_upcoming_changes_menu
+      expect(toolbar).to have_upcoming_changes_menu
+      expect(toolbar.upcoming_change_site_setting_value("enable_upload_debug_mode")).to eq(false)
+      toolbar.toggle_upcoming_changes_menu_item("enable_upload_debug_mode")
+      expect(toolbar.upcoming_change_site_setting_value("enable_upload_debug_mode")).to eq(true)
+      toolbar.toggle_upcoming_changes_menu_item("enable_upload_debug_mode")
+      expect(toolbar.upcoming_change_site_setting_value("enable_upload_debug_mode")).to eq(false)
+      toolbar.close_upcoming_changes_menu
+      expect(toolbar).to have_no_upcoming_changes_menu
     end
   end
 
@@ -61,11 +88,13 @@ describe "Discourse dev tools", type: :system do
 
     context "with test theme blocks" do
       fab!(:theme) do
-        theme_dir = "#{Rails.root}/spec/fixtures/themes/dev-tools-test-theme"
+        theme_dir = "#{Rails.root.join("spec/fixtures/themes/dev-tools-test-theme")}"
         theme = RemoteTheme.import_theme_from_directory(theme_dir)
         Theme.find(SiteSetting.default_theme_id).child_themes << theme
         theme
       end
+
+      after { Theme.clear_cache! }
 
       it "shows block visual overlay with tooltip" do
         visit("/latest")

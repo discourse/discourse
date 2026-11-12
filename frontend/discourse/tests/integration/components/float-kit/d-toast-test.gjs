@@ -23,7 +23,7 @@ function createCustomToastInstance(owner, options, newClose) {
   return new CustomToastInstance(owner, options);
 }
 
-module("Integration | Component | FloatKit | d-toast", function (hooks) {
+module("Integration | Component | FloatKit | DToast", function (hooks) {
   setupRenderingTest(hooks);
 
   test("swipe up to close", async function (assert) {
@@ -99,6 +99,20 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
         "data-test-duration",
         "5000",
         "it `converts `long` to 5000ms"
+      );
+
+    toast = new DToastInstance(getOwner(this), {
+      duration: "extra-long",
+      data: { message: "test" },
+    });
+    await render(<template><DToast @toast={{toast}} /></template>);
+
+    assert
+      .dom(".fk-d-toast")
+      .hasAttribute(
+        "data-test-duration",
+        "15000",
+        "it converts `extra-long` to 15000ms"
       );
   });
 });

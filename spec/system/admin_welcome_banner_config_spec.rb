@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Welcome Banner Config", type: :system do
+describe "Admin Welcome Banner Config" do
   fab!(:admin)
   let(:config_page) { PageObjects::Pages::AdminWelcomeBannerConfig.new }
 
@@ -9,10 +9,7 @@ describe "Admin Welcome Banner Config", type: :system do
     SiteSetting.allow_user_locale = true
   end
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   describe "locale selector" do
     it "displays a locale selector" do
@@ -58,6 +55,31 @@ describe "Admin Welcome Banner Config", type: :system do
 
       config_page.visit
       expect(config_page.header_new_members_value).to eq("Welcome, %{preferred_display_name}!")
+    end
+
+    it "does not overwrite existing translation overrides when switching locales without changes" do
+      TranslationOverride.upsert!(
+        "fr",
+        "js.welcome_banner.header.new_members",
+        "Bienvenue %{preferred_display_name}!",
+      )
+
+      override =
+        TranslationOverride.find_by(
+          locale: "fr",
+          translation_key: "js.welcome_banner.header.new_members",
+        )
+      timestamp_before = override.updated_at
+
+      config_page.visit
+      config_page.select_locale("fr")
+      expect(config_page.header_new_members_value).to eq("Bienvenue %{preferred_display_name}!")
+
+      config_page.submit
+      expect(config_page).to have_saved_message
+
+      override.reload
+      expect(override.updated_at).to eq_time(timestamp_before)
     end
   end
 end

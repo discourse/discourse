@@ -14,12 +14,12 @@ class SidebarSectionLink < ActiveRecord::Base
 
   before_validation :inherit_user_id
   before_create do
-    if self.user_id && self.sidebar_section
-      self.position = self.sidebar_section.sidebar_section_links.maximum(:position).to_i + 1
+    if user_id && sidebar_section
+      self.position = sidebar_section.sidebar_section_links.maximum(:position).to_i + 1
     end
   end
 
-  after_destroy { self.linkable.destroy! if self.linkable_type == "SidebarUrl" }
+  after_destroy { linkable.destroy! if linkable_type == "SidebarUrl" }
 
   private
 
@@ -28,9 +28,9 @@ class SidebarSectionLink < ActiveRecord::Base
   end
 
   def ensure_supported_linkable_type
-    if (!SUPPORTED_LINKABLE_TYPES.include?(self.linkable_type)) ||
-         (self.linkable_type == "Tag" && !SiteSetting.tagging_enabled)
-      self.errors.add(
+    if !SUPPORTED_LINKABLE_TYPES.include?(linkable_type) ||
+         (linkable_type == "Tag" && !SiteSetting.tagging_enabled)
+      errors.add(
         :linkable_type,
         I18n.t("activerecord.errors.models.sidebar_section_link.attributes.linkable_type.invalid"),
       )
@@ -43,13 +43,13 @@ end
 # Table name: sidebar_section_links
 #
 #  id                 :bigint           not null, primary key
-#  user_id            :integer          not null
-#  linkable_id        :integer          not null
 #  linkable_type      :string           not null
+#  position           :integer          default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  linkable_id        :integer          not null
 #  sidebar_section_id :integer
-#  position           :integer          default(0), not null
+#  user_id            :integer          not null
 #
 # Indexes
 #

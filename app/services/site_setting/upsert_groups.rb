@@ -4,7 +4,10 @@ class SiteSetting::UpsertGroups
   include Service::Base
 
   params do
-    before_validation { self.group_names = Array.wrap(self.group_names).delete_if(&:empty?) }
+    before_validation do
+      self.group_names =
+        setting.present? ? UpcomingChanges.normalize_group_names(setting, group_names) : []
+    end
 
     attribute :group_names, :array
     attribute :setting, :string
@@ -13,6 +16,7 @@ class SiteSetting::UpsertGroups
   end
 
   policy :current_user_is_admin
+  policy :allowed_enabled_for_target
   only_if(:provided_group_names) do
     model :group_ids
 
@@ -41,6 +45,18 @@ class SiteSetting::UpsertGroups
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def allowed_enabled_for_target(params:)
+    return false if UpcomingChanges.group_setting_name(params.setting)
+    return true unless UpcomingChanges.exists?(params.setting)
+    if UpcomingChanges.allow_enabled_for(params.setting)&.sort == %i[specific_groups staff] &&
+         params.group_names.empty?
+      return false
+    end
+    return true if params.group_names.empty? && !UpcomingChanges.enabled?(params.setting)
+
+    UpcomingChanges.group_scope_allowed?(params.setting, params.group_names)
   end
 
   def fetch_group_ids(params:)

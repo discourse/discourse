@@ -33,6 +33,8 @@ export default class SecondFactorAuth extends DiscourseRoute {
     if (model.error) {
       controller.displayError(model.error);
       controller.set("loadError", true);
+    } else {
+      controller.maybeAutoTriggerPasskey();
     }
   }
 }

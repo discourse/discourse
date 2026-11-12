@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import ChatNotificationsList from "discourse/plugins/chat/discourse/components/user-menu/chat-notifications-list";
 
 module(
-  "Integration | Component | user-menu | chat-notifications-list",
+  "Integration | Component | UserMenu | ChatNotificationsList",
   function (hooks) {
     setupRenderingTest(hooks);
 

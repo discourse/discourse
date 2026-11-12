@@ -52,6 +52,16 @@ RSpec.describe RemoteTheme do
       JSON
     end
 
+    # Adds the version-specific d-compat branch, one commit ahead of the default branch.
+    def add_compat_branch(repo)
+      branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+      system("git -C #{repo} checkout -q -b #{branch}", exception: true)
+      add_to_git_repo(repo, "compatible.txt" => "compatible version")
+      sha = `cd #{repo} && git rev-parse HEAD`.strip
+      system("git -C #{repo} checkout -q -", exception: true)
+      [branch, sha]
+    end
+
     let :scss_data do
       "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
     end
@@ -184,6 +194,45 @@ RSpec.describe RemoteTheme do
       expect(
         theme.theme_fields.find_by(type_id: ThemeField.types[:scss], name: "file").value,
       ).to eq(".class1{color:red}")
+    end
+
+    it "leaves the compatibility refs nil when no compatibility pinning applies" do
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to be_nil
+    end
+
+    it "records local_compat_ref and remote_compat_ref when pinned to a d-compat branch" do
+      compat_branch, compat_sha = add_compat_branch(initial_repo)
+
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+
+      expect(remote.local_compat_ref).to eq(compat_branch)
+      expect(remote.remote_compat_ref).to eq(compat_branch)
+      expect(remote.local_version).to eq(compat_sha)
+
+      serialized = RemoteThemeSerializer.new(remote, root: false).as_json
+      expect(serialized[:local_compat_ref]).to eq(compat_branch)
+      expect(serialized[:remote_compat_ref]).to eq(compat_branch)
+    end
+
+    it "updates remote_compat_ref without touching local_compat_ref when checking for updates" do
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to be_nil
+
+      compat_branch, compat_sha = add_compat_branch(initial_repo)
+
+      remote.update_remote_version
+      remote.reload
+
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to eq(compat_branch)
+      expect(remote.remote_version).to eq(compat_sha)
     end
 
     it "can correctly import a remote theme" do
@@ -486,6 +535,30 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.data_type).to eq(SiteSetting.types[:bool])
       end
 
+      it "creates them while a plugin restricts theme edits" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(theme.theme_site_settings.pluck(:name, :value)).to eq([%w[enable_welcome_banner f]])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
       it "does not remove theme site settings that are no longer in about.json" do
         add_to_git_repo(
           initial_repo,
@@ -540,9 +613,7 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.count).to eq(0)
       end
 
-      # TODO (martin) Hard to test this without a better example...we don't have any
-      # theme site settings that are an enum with > 2 values.
-      xit "does not override user modified theme site settings" do
+      it "does not override user modified theme site settings" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -557,14 +628,7 @@ RSpec.describe RemoteTheme do
 
         theme.theme_site_settings.first.update!(value: "search_icon")
 
-        add_to_git_repo(
-          initial_repo,
-          "about.json" =>
-            JSON
-              .parse(about_json)
-              .merge("theme_site_settings" => { "search_experience" => "search_field" })
-              .to_json,
-        )
+        add_to_git_repo(initial_repo, "common/header.html" => "a new header")
 
         theme.remote_theme.update_from_remote
         theme.reload
@@ -660,6 +724,24 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe "version validations" do
+    it "accepts -latest versions" do
+      remote = RemoteTheme.new(minimum_discourse_version: "2026.8.0-latest")
+      remote.validate
+      expect(remote.errors[:minimum_discourse_version]).to be_empty
+
+      remote = RemoteTheme.new(maximum_discourse_version: "2026.8.0-latest.1")
+      remote.validate
+      expect(remote.errors[:maximum_discourse_version]).to be_empty
+    end
+
+    it "rejects malformed versions" do
+      remote = RemoteTheme.new(minimum_discourse_version: "2026.8.0-nightly")
+      remote.validate
+      expect(remote.errors[:minimum_discourse_version]).to be_present
+    end
+  end
+
   describe ".extract_theme_info" do
     let(:importer) { mock }
 
@@ -679,7 +761,7 @@ RSpec.describe RemoteTheme do
         I18n.t(
           "themes.import_error.about_json_too_big",
           limit:
-            ActiveSupport::NumberHelper.number_to_human_size((RemoteTheme::MAX_METADATA_FILE_SIZE)),
+            ActiveSupport::NumberHelper.number_to_human_size(RemoteTheme::MAX_METADATA_FILE_SIZE),
         ),
       )
     end
@@ -699,6 +781,151 @@ RSpec.describe RemoteTheme do
       importer.stubs(:[]).with("about.json").returns(theme_info.to_json)
 
       expect(RemoteTheme.extract_theme_info(importer)).to eq(theme_info)
+    end
+  end
+
+  describe "#update_from_remote" do
+    context "when the theme is a placeholder" do
+      let(:repo_url) { "git@github.com:discourse/private-component.git" }
+      let(:repo) do
+        setup_git_repo(
+          "about.json" => { name: "Private component", component: true }.to_json,
+          "common/header.html" => "HI",
+        )
+      end
+      let(:theme) do
+        Fabricate(
+          :theme,
+          name: "private-component",
+          remote_theme: RemoteTheme.create!(remote_url: repo_url, private_key: "private key"),
+        )
+      end
+      let(:remote_theme) { theme.remote_theme }
+
+      around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+      before { MockGitImporter.register(repo_url, repo) }
+      after { FileUtils.rm_rf(repo) }
+
+      it "uses the type from about.json even after the remote version has been checked" do
+        remote_theme.update_remote_version
+        expect(remote_theme.commits_behind).to eq(0)
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme).not_to be_placeholder
+        expect(theme.reload).to have_attributes(name: "Private component", component: true)
+      end
+
+      it "clears what a component can't have when switching to a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(user_selectable: true, child_theme_ids: [child_component.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload).to have_attributes(component: true, user_selectable: false)
+        expect(theme.child_themes).to be_empty
+      end
+
+      it "clears what a theme can't have when switching to a theme" do
+        add_to_git_repo(repo, "about.json" => { name: "Private theme" }.to_json)
+        parent_theme = Fabricate(:theme)
+        theme.update!(component: true)
+        parent_theme.update!(child_theme_ids: [theme.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.component).to eq(false)
+        expect(parent_theme.reload.child_themes).to be_empty
+      end
+
+      it "installs the child components listed in about.json" do
+        linked_url = "https://github.com/discourse/linked.git"
+        linked =
+          Fabricate(
+            :theme,
+            component: true,
+            remote_theme: Fabricate(:remote_theme, remote_url: linked_url),
+          )
+        new_repo = setup_git_repo("about.json" => { name: "New", component: true }.to_json)
+        new_url = MockGitImporter.register("https://github.com/discourse/new.git", new_repo)
+        theme.update!(child_theme_ids: [linked.id])
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [linked_url, new_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.child_themes.map(&:name)).to contain_exactly(linked.name, "New")
+      ensure
+        FileUtils.rm_rf(new_repo)
+      end
+
+      it "applies the already installed child components to the site" do
+        linked_url = "https://github.com/discourse/linked.git"
+        linked =
+          Fabricate(
+            :theme,
+            component: true,
+            remote_theme: Fabricate(:remote_theme, remote_url: linked_url),
+          )
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [linked_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(Theme.transform_ids(theme.id)).to contain_exactly(theme.id, linked.id)
+      end
+
+      it "finishes the installation without the child components that can't be installed" do
+        child_url = "https://github.com/discourse/private-child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: I18n.t("themes.import_error.git"),
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+        expect(theme.reload.child_themes).to be_empty
+      end
+
+      it "finishes the installation when a child component fails unexpectedly" do
+        child_url = "https://github.com/discourse/child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+        RemoteTheme.stubs(:import_theme).raises(Theme::SettingsMigrationError, "boom")
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: "boom",
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+      end
+
+      it "keeps everything when the theme can't become a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(child_theme_ids: [child_component.id])
+        theme.set_default!
+
+        remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+
+        expect(theme.reload.component).to eq(false)
+        expect(theme).to be_default
+        expect(theme.child_themes).to contain_exactly(child_component)
+        expect(remote_theme.reload).to be_placeholder
+      end
     end
   end
 
@@ -752,8 +979,83 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe ".update_zipped_theme" do
+    fab!(:theme)
+
+    let(:listed_url) { "https://github.com/discourse/listed.git" }
+    let(:unlisted_url) { "https://github.com/discourse/unlisted.git" }
+    let!(:listed_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: listed_url),
+      )
+    end
+    let!(:unlisted_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: unlisted_url),
+      )
+    end
+    let(:new_repo) { setup_git_repo("about.json" => { name: "New", component: true }.to_json) }
+    let(:new_url) { MockGitImporter.register("https://github.com/discourse/new.git", new_repo) }
+    let(:bundle_dir) { Dir.mktmpdir }
+
+    around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+    before { theme.update!(child_theme_ids: [listed_component.id, unlisted_component.id]) }
+
+    after { FileUtils.rm_rf([new_repo, bundle_dir]) }
+
+    def upload(update_components:)
+      FileUtils.mkdir_p("#{bundle_dir}/bundle")
+      File.write(
+        "#{bundle_dir}/bundle/about.json",
+        { name: theme.name, components: [listed_url, new_url] }.to_json,
+      )
+      zip = Compression::Zip.new.compress(bundle_dir, "bundle")
+
+      RemoteTheme.update_zipped_theme(zip, "bundle.zip", theme_id: theme.id, update_components:)
+    end
+
+    it "links the new components when adding without reimporting the linked ones" do
+      expect { upload(update_components: "add") }.to change { Theme.count }.by(1)
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(
+        listed_component.name,
+        unlisted_component.name,
+        "New",
+      )
+    end
+
+    it "applies the already installed components it links to the site" do
+      new_component = RemoteTheme.import_theme(new_url)
+      Theme.transform_ids(theme.id)
+
+      upload(update_components: "add")
+
+      expect(Theme.transform_ids(theme.id)).to include(new_component.id)
+    end
+
+    it "unlinks the components that are no longer listed from this theme only when syncing" do
+      other_theme = Fabricate(:theme, child_theme_ids: [unlisted_component.id])
+
+      upload(update_components: "sync")
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(listed_component.name, "New")
+      expect(other_theme.reload.child_themes).to contain_exactly(unlisted_component)
+    end
+
+    it "leaves the linked components untouched when components are set to none" do
+      expect { upload(update_components: "none") }.not_to change { Theme.count }
+
+      expect(theme.reload.child_themes).to contain_exactly(listed_component, unlisted_component)
+    end
+  end
+
   describe ".import_theme_from_directory" do
-    let(:theme_dir) { "#{Rails.root}/spec/fixtures/themes/discourse-test-theme" }
+    let(:theme_dir) { "#{Rails.root.join("spec/fixtures/themes/discourse-test-theme")}" }
 
     it "imports a theme from a directory" do
       theme = RemoteTheme.import_theme_from_directory(theme_dir)

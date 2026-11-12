@@ -3,9 +3,8 @@ import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import icon from "discourse/helpers/d-icon";
-import { eq } from "discourse/truth-helpers";
-import formatChatDate from "../../../helpers/format-chat-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import formatChatDate from "../../../helpers/format-chat-date.js";
 
 export default class ChatMessageLeftGutter extends Component {
   @service site;
@@ -14,15 +13,15 @@ export default class ChatMessageLeftGutter extends Component {
     <div class="chat-message-left-gutter">
       {{#if @message.reviewableId}}
         <LinkTo
-          @route="review.show"
-          @model={{@message.reviewableId}}
           class="chat-message-left-gutter__flag"
+          @model={{@message.reviewableId}}
+          @route="review.show"
         >
-          {{icon "flag" title="chat.flagged"}}
+          {{dIcon "flag" title="chat.flagged"}}
         </LinkTo>
       {{else if (eq @message.userFlagStatus 0)}}
         <div class="chat-message-left-gutter__flag">
-          {{icon "flag" title="chat.you_flagged"}}
+          {{dIcon "flag" title="chat.you_flagged"}}
         </div>
       {{else if this.site.desktopView}}
         <span class="chat-message-left-gutter__date">

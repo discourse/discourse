@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscoursePoll::Poll do
+  describe "#reload" do
+    it "accepts options like ActiveRecord's reload" do
+      poll = Fabricate(:poll)
+      expect { poll.reload(lock: true) }.not_to raise_error
+    end
+  end
+
   describe ".transform_for_user_field_override" do
     it "Transforms UserField name if a matching CustomUserField is present" do
       user_field_name = "Something Cool"

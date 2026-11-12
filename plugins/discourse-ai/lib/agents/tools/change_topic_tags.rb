@@ -1,0 +1,146 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    module Tools
+      class ChangeTopicTags < Tool
+        def self.signature
+          {
+            name: name,
+            description:
+              "Adds, replaces, or removes tags on a topic. By default appends the given tags to the existing ones; with replace set, the given list becomes the topic's complete tag set and any omitted tag is removed.",
+            parameters: [
+              {
+                name: "topic_id",
+                description: "The ID of the topic",
+                type: "integer",
+                required: true,
+              },
+              {
+                name: "tags",
+                description:
+                  "Array of tag names to apply. In replace mode this is the topic's full resulting tag list",
+                type: "array",
+                item_type: "string",
+                required: true,
+              },
+              {
+                name: "reason",
+                description: "Short explanation of why the tags are being changed",
+                type: "string",
+                required: true,
+              },
+              {
+                name: "replace",
+                description:
+                  "When true, replaces all existing tags with the given list. Defaults to false (append).",
+                type: "boolean",
+              },
+              {
+                name: "public_edit_reason",
+                description: "Whether the reason should be visible in the post's revision history",
+                type: "boolean",
+              },
+            ],
+          }
+        end
+
+        def self.name
+          "change_topic_tags"
+        end
+
+        def self.requires_approval?
+          true
+        end
+
+        def invoke
+          if !SiteSetting.tagging_enabled
+            return(
+              error_response(
+                I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.tagging_disabled"),
+              )
+            )
+          end
+
+          topic = Topic.find_by(id: parameters[:topic_id])
+          if !topic
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_found"))
+          end
+
+          if !guardian.can_edit_tags?(topic)
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_allowed"))
+            )
+          end
+
+          if reason.blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.no_reason"))
+          end
+
+          tag_names = parameters[:tags] || []
+          tag_names = (topic.tags.pluck(:name) + tag_names).uniq if !parameters[:replace]
+
+          fields = { tags: tag_names }
+          fields[:edit_reason] = reason if !!parameters[:public_edit_reason]
+
+          first_post = topic.first_post
+          if !first_post
+            return error_response(I18n.t("discourse_ai.ai_bot.change_topic_tags.errors.not_found"))
+          end
+
+          revisor = PostRevisor.new(first_post, topic)
+          result = revisor.revise!(acting_user, fields)
+
+          if result
+            { status: "success", message: I18n.t("discourse_ai.ai_bot.change_topic_tags.success") }
+          else
+            error_response(topic.errors.full_messages.join(", "))
+          end
+        end
+
+        def description_args
+          { topic_id: parameters[:topic_id], tags: (parameters[:tags] || []).join(", ") }
+        end
+
+        def approval_title
+          return super if !previewable?(topic)
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(topic)
+
+          before = DiscourseTagging.filter_visible(topic.tags, guardian).pluck(:name).sort
+          after =
+            (parameters[:tags] || [])
+              .map { |name| DiscourseTagging.clean_tag(name.to_s) }
+              .reject(&:blank?)
+          after += before if !parameters[:replace]
+          after = after.uniq.sort
+          empty = I18n.t("discourse_ai.ai_bot.chat_tool_approval.no_tags")
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_tags_label"),
+              before: before.empty? ? empty : before.join(", "),
+              after: after.empty? ? empty : after.join(", "),
+            },
+          ]
+        end
+
+        def approval_parameters
+          []
+        end
+
+        private
+
+        def topic
+          @topic ||= Topic.find_by(id: parameters[:topic_id])
+        end
+      end
+    end
+  end
+end

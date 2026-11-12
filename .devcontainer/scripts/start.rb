@@ -25,5 +25,10 @@ puts <<~TXT
   Next steps:
     1. Cmd/Ctrl + Shift + B to run the shortcuts/boot-dev task
     2. Wait for the server to start
-    3. Open your browser to http://localhost:4200
+    3. Run the "dev/admin/create" task once to create an admin account
+    4. Open your browser to http://localhost:3000
+
+  Running tests:
+    Run the "deps/testing" task once to install Playwright + discourse_test DB
+    Then you can run qunit and rspec tests (boot-dev server should be running)
 TXT

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AiPostMenuTranslationExtras extends Component {
@@ -17,16 +17,6 @@ export default class AiPostMenuTranslationExtras extends Component {
 
   @service dialog;
   @service toasts;
-
-  async #translate() {
-    try {
-      await ajax(`/discourse-ai/translate/posts/${this.args.post.id}`, {
-        type: "POST",
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
 
   @action
   translate() {
@@ -55,13 +45,23 @@ export default class AiPostMenuTranslationExtras extends Component {
     });
   }
 
+  async #translate() {
+    try {
+      await ajax(`/discourse-ai/translate/posts/${this.args.post.id}`, {
+        type: "POST",
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
   <template>
     <@dropdown.item class="update-translations-menu__translate">
       <DButton
         class="post-action-menu__translate-translation"
-        @label="discourse_ai.translations.translations_menu.translate.label"
-        @icon="arrows-rotate"
         @action={{this.translate}}
+        @icon="arrows-rotate"
+        @label="discourse_ai.translations.translations_menu.translate.label"
         @title="discourse_ai.translations.translations_menu.translate.title"
       />
     </@dropdown.item>

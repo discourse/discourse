@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User activity drafts", type: :system do
+describe "User activity drafts" do
   fab!(:user)
   let(:drafts_page) { PageObjects::Pages::UserActivityDrafts.new }
 

@@ -228,9 +228,9 @@ function applyEmoji(
   // prevent denied emoji and aliases from being rendered
   if (content && emojiDenyList?.length > 0) {
     emojiDenyList.forEach((emoji) => {
-      if (content.match(emoji)) {
-        const regex = new RegExp(`:${emoji}:`, "g");
-        content = content.replace(regex, "");
+      const token = `:${emoji}:`;
+      if (content.includes(token)) {
+        content = content.replaceAll(token, "");
       }
     });
   }

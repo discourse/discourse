@@ -3,6 +3,8 @@
 require Rails.root.join("db/migrate/20260106060807_add_slug_to_tags.rb")
 
 describe AddSlugToTags do
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   def reset_slug_column
     DB.exec("DROP INDEX IF EXISTS index_tags_on_lower_slug")
     DB.exec("DROP INDEX IF EXISTS index_tags_on_slug")

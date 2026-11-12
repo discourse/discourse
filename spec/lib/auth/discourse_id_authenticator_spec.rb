@@ -146,6 +146,7 @@ describe Auth::DiscourseIdAuthenticator do
       provider: "discourse_id",
       info: {
         "nickname" => "test_user",
+        "name" => "Test User",
         "email" => user.email,
         "image" => "http://example.com/avatar.png",
         "uuid" => "12345",
@@ -155,12 +156,13 @@ describe Auth::DiscourseIdAuthenticator do
   end
 
   describe "after_authenticate" do
-    it "works and syncs username, email, avatar" do
+    it "works and syncs username, email, name, avatar" do
       result = authenticator.after_authenticate(hash)
       expect(result.user).to eq(user)
       expect(result.failed).to eq(false)
 
       expect(result.username).to eq("test_user")
+      expect(result.name).to eq("Test User")
       expect(result.email).to eq(user.email)
 
       associated_record =
@@ -168,6 +170,26 @@ describe Auth::DiscourseIdAuthenticator do
 
       expect(associated_record[:info]["image"]).to eq("http://example.com/avatar.png")
       expect(associated_record[:info]["uuid"]).to eq("12345")
+    end
+
+    context "when name is not provided by the provider" do
+      let(:hash_without_name) do
+        OmniAuth::AuthHash.new(
+          provider: "discourse_id",
+          info: {
+            "nickname" => "test_user",
+            "email" => user.email,
+            "image" => "http://example.com/avatar.png",
+            "uuid" => "12345",
+          },
+          uid: "99",
+        )
+      end
+
+      it "result name is nil" do
+        result = authenticator.after_authenticate(hash_without_name)
+        expect(result.name).to be_nil
+      end
     end
   end
 end

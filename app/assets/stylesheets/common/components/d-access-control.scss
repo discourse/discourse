@@ -1,0 +1,108 @@
+.d-access-control {
+  --d-access-control-prefix-width: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+
+  &__chooser {
+    width: 100%;
+  }
+
+  &__chooser .select-kit-header {
+    font-weight: 400;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--content-border-color);
+    padding: var(--space-1) var(--space-2);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__item {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__row.--group .d-access-control__item-icon {
+    border-radius: 999px;
+    background-color: var(--primary-100);
+    width: var(--d-access-control-prefix-width);
+    height: var(--d-access-control-prefix-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__row.--group .d-access-control__item-icon svg {
+    width: var(--space-3);
+    height: var(--space-3);
+  }
+
+  &__tooltip {
+    font-size: var(--font-down-3);
+    background: var(--primary-100);
+    padding: var(--space-half) var(--space-1);
+    border-radius: var(--d-border-radius);
+    color: var(--d-input-text-color--disabled);
+  }
+
+  &__permission.btn-default {
+    border: none;
+
+    &:hover {
+      border: none;
+    }
+  }
+
+  &__permission-menu-content {
+    z-index: z("modal", "dropdown");
+  }
+
+  &__permission-option.--remove .d-access-control__permission-label {
+    color: var(--danger);
+  }
+
+  &__permission-texts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: var(--line-height-medium);
+  }
+
+  &__permission-label {
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  &__permission-description {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    white-space: normal;
+    text-align: start;
+  }
+
+  &__add {
+    width: 100%;
+  }
+}

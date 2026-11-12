@@ -27,16 +27,14 @@ module PageObjects
         end
       end
 
-      def fill_in_confirmation_phase(user_count:)
-        within(modal) do
-          find("input.confirmation-phrase").fill_in(
-            with:
-              I18n.t(
-                "admin_js.admin.users.bulk_actions.delete.confirmation_modal.confirmation_phrase",
-                count: user_count,
-              ),
+      def fill_in_confirmation_phrase(user_count:, upcase: false)
+        phrase =
+          I18n.t(
+            "admin_js.admin.users.bulk_actions.delete.confirmation_modal.confirmation_phrase",
+            count: user_count,
           )
-        end
+        phrase = phrase.upcase if upcase
+        within(modal) { find("input.confirmation-phrase").fill_in(with: phrase) }
       end
 
       def has_successful_log_entry_for_user?(user:, position:, total:)

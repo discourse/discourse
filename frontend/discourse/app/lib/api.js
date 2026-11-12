@@ -1,6 +1,8 @@
 // @ts-check
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+export { _INTERNAL_SOURCE_KEY } from "discourse/lib/customization-source";
+
 let _apiInitializerId = 0;
 
 /**

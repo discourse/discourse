@@ -1,32 +1,82 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import AdminReportTableSummary from "discourse/admin/components/admin-report-table-summary";
+import { adminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-@tagName("")
 export default class AdminReportTableCell extends Component {
-  options = null;
+  get type() {
+    return this.args.label?.type;
+  }
 
-  @alias("label.type") type;
-  @alias("label.mainProperty") property;
-  @alias("computedLabel.formattedValue") formattedValue;
-  @alias("computedLabel.value") value;
+  get property() {
+    return this.args.label?.mainProperty;
+  }
 
-  @computed("label", "data", "options")
+  get formattedValue() {
+    return this.computedLabel?.formattedValue;
+  }
+
+  get value() {
+    return this.computedLabel?.value;
+  }
+
+  @cached
   get computedLabel() {
-    return this.label.compute(this.data, this.options || {});
+    return this.args.label.compute(this.args.data, this.args.options || {});
+  }
+
+  get hasRelatedItemsSummary() {
+    return (
+      this.args.hasRelatedItems &&
+      this.type === "number" &&
+      this.property === "y" &&
+      this.value > 0
+    );
+  }
+
+  get relatedItemsRenderer() {
+    return adminReportRelatedItemsRenderer(this.args.reportType);
+  }
+
+  get relatedItemsSummary() {
+    return this.relatedItemsRenderer?.tableSummary;
   }
 
   <template>
     <td
-      title={{this.value}}
-      class={{concatClass "admin-report-table-cell" this.type this.property}}
+      class={{dConcatClass "admin-report-table-cell" this.type this.property}}
+      title={{if this.hasRelatedItemsSummary null this.value}}
       ...attributes
     >
-      {{trustHTML this.formattedValue}}
+      {{#if this.hasRelatedItemsSummary}}
+        {{#if this.relatedItemsRenderer}}
+          {{#if this.relatedItemsSummary}}
+            <AdminReportTableSummary
+              @date={{@data.x}}
+              @formattedValue={{this.formattedValue}}
+              @itemComponent={{this.relatedItemsSummary.itemComponent}}
+              @itemsKey={{this.relatedItemsSummary.itemsKey}}
+              @listClass={{this.relatedItemsSummary.listClass}}
+              @reportFilters={{@reportFilters}}
+              @reportType={{@reportType}}
+              @titleKey={{this.relatedItemsSummary.titleKey}}
+            />
+          {{else}}
+            {{trustHTML this.formattedValue}}
+          {{/if}}
+        {{else}}
+          <AdminReportTableSummary
+            @date={{@data.x}}
+            @formattedValue={{this.formattedValue}}
+            @reportFilters={{@reportFilters}}
+            @reportType={{@reportType}}
+          />
+        {{/if}}
+      {{else}}
+        {{trustHTML this.formattedValue}}
+      {{/if}}
     </td>
   </template>
 }

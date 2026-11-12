@@ -7,7 +7,7 @@ class FilterBestPosts
     @filtered_posts = filtered_posts
     @topic = topic
     @limit = limit
-    options.each { |key, value| self.instance_variable_set("@#{key}".to_sym, value) }
+    options.each { |key, value| instance_variable_set(:"@#{key}", value) }
     filter
   end
 

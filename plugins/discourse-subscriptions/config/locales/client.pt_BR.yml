@@ -404,8 +404,6 @@ pt_BR:
         confirm_payment: Confirmar pagamento
         success: Voltar
       admin:
-        unconfigured: 'O Stripe não está configurado corretamente. Acesse o Meta do Discourse para mais informações.'
-        on_meta: Assinaturas do Discourse no Meta
         dashboard:
           title: Painel de controle
           table:

@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk "
   js:
+    topic:
+      create_zendesk_issue: "Tạo thẻ hỗ trợ Zendesk (Ticket)"
+      view_zendesk_issue: "Xem trên Zendesk"
     zendesk:
-      general_error: Có một lỗi gì đó đang xảy ra
+      credentials_not_setup: Chưa thiết lập thông tin xác thực Zendesk.
+      url_not_set: Chưa cấu hình đường dẫn (URL) Zendesk.
+      general_error: Đã xảy ra lỗi. Vui lòng thử lại.
+  site_settings:
+    zendesk_url: 'Đường dẫn (URL) Zendesk của bạn. Ví dụ: https://TEN_MIEN_PHU.zendesk.com/api/v2'
+    zendesk_enabled: Bật phần bổ trợ Zendesk
+    zendesk_autogenerate_all_categories: Tự động tạo thẻ hỗ trợ cho tất cả chuyên mục. Khi bật, tùy chọn `zendesk_autogenerate_categories` sẽ bị bỏ qua.
+    zendesk_autogenerate_categories: Danh sách các chuyên mục sẽ tự động tạo thẻ hỗ trợ Zendesk.
+    zendesk_jobs_api_token: Mã xác thực API (API Token) dùng cho Zendesk
+    zendesk_jobs_email: Địa chỉ email dùng để xác thực Zendesk
+    zendesk_job_push_all_posts: Đẩy toàn bộ bình luận trong bài viết thành bình luận Zendesk? Nếu tắt, chỉ bình luận đầu tiên được đồng bộ sang Zendesk.
+    zendesk_job_push_only_author_posts: Chỉ đẩy các bình luận của tác giả bài viết sang Zendesk. Chỉ áp dụng khi đã bật `zendesk_job_push_all_posts`.
+    sync_comments_from_zendesk: Tự động đăng bình luận từ Zendesk về Discourse. Chỉ áp dụng cho các bài viết thuộc `zendesk_autogenerate_categories`.
+    zendesk_incoming_webhook_token: Mã xác thực (Token) gửi trong dữ liệu từ Webhook đẩy ra của Zendesk. Bắt buộc khi đã bật `sync_comments_from_zendesk`.
+    zendesk_tags: "Danh sách các thẻ (Tag) sẽ thêm vào mỗi thẻ hỗ trợ\nsite_settings.zendesk_tags"

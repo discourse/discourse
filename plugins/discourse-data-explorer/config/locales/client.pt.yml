@@ -6,19 +6,24 @@
 
 pt:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorador de Dados"
     errors:
       explorer:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
         dirty: "Deve guardar a consulta antes de executar."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Sem resultados"
     explorer:
-      default_query: "Predefinição"
       or: "ou"
       admins_only: "O explorador de dados está disponível apenas para os administradores."
       title: "Explorador de Dados"
-      create: "Criar"
       create_placeholder: "Nome da consulta..."
-      import:
-        label: "Importar"
+      ai:
+        generate: "Gerar"
       help:
         label: "Ajuda"
       schema:
@@ -29,22 +34,29 @@ pt:
         bool:
           yes: "Sim"
           no: "Não"
-      export: "Exportar"
       run: "Executar"
-      edit: "Editar"
       delete: "Eliminar"
-      download_json: "JSON"
-      download_csv: "CSV"
-      others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
+      chart:
+        form:
+          label: "Tipo de gráfico"
+          bar: "Barras"
       run_time: "Consulta concluída em %{value} ms."
       result_count:
         one: "%{count} resultado."
         other: "%{count} resultados."
+      name: "Nome"
       query_groups: "Grupos"
+      query_tags: "Etiquetas"
       query_description: "Descrição"
       column: "Coluna %{number}"
-      explain_label: "Incluir plano de consulta?"
       reset_params: "Repor"
-      search_placeholder: "Pesquisar..."
     group:
       reports: "Relatórios"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de Dados"
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"
+          no_results: "Sem resultados"

@@ -1,16 +1,26 @@
 import {
   lookupCachedUploadUrl,
   lookupUncachedUploadUrls,
+  MISSING,
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import ImageNodeView from "../components/image-node-view";
-import { getChangedRanges } from "../lib/plugin-utils";
+import MediaNodeView from "../components/media-node-view.gjs";
+import { getChangedRanges } from "../lib/plugin-utils.js";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
+
+function extractFileExtension(url) {
+  return url?.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
+}
+
+function buildUploadShortUrl(base62Sha1, url) {
+  const ext = extractFileExtension(url);
+  return `upload://${base62Sha1}${ext ? `.${ext}` : ""}`;
+}
 
 const ALT_TEXT_REGEX =
   /^(.*?)(?:\|(\d{1,4}x\d{1,4}))?(?:,\s*(\d{1,3})%)?(?:\|(.*))?$/;
@@ -21,11 +31,8 @@ const UPLOAD_TIMEOUT = 30_000;
 const extension = {
   nodeViews: {
     image: {
-      component: ImageNodeView,
-      shouldRender: ({ node }) =>
-        !node.attrs.placeholder &&
-        node.attrs.extras !== "audio" &&
-        node.attrs.extras !== "video",
+      component: MediaNodeView,
+      shouldRender: ({ node }) => node.attrs.extras !== "audio",
     },
   },
 
@@ -47,20 +54,50 @@ const extension = {
       draggable: true,
       parseDOM: [
         {
+          priority: 70,
+          tag: "a.lightbox",
+          getAttrs(dom) {
+            const img = dom.querySelector("img");
+            if (!img) {
+              return false;
+            }
+
+            const href = dom.getAttribute("href");
+            const title = dom.getAttribute("title") || img.getAttribute("alt");
+            const base62Sha1 = img.dataset.base62Sha1;
+
+            const originalSrc = base62Sha1
+              ? buildUploadShortUrl(base62Sha1, href)
+              : href;
+
+            return {
+              src: img.getAttribute("src"),
+              originalSrc,
+              alt: title,
+              width: img.getAttribute("width"),
+              height: img.getAttribute("height"),
+            };
+          },
+        },
+        {
           tag: "img[src]",
           getAttrs(dom) {
+            const src = dom.getAttribute("src");
+            if (!src || dom.classList.contains("avatar")) {
+              return false;
+            }
+
             const originalSrc =
-              dom.dataset.origSrc ??
-              (dom.dataset.base62Sha1
-                ? `upload://${dom.dataset.base62Sha1}`
-                : undefined);
+              dom.dataset.origSrc ||
+              (dom.dataset.base62Sha1 &&
+                buildUploadShortUrl(dom.dataset.base62Sha1, src));
 
             const extras = dom.hasAttribute("data-thumbnail")
               ? "thumbnail"
               : undefined;
 
             return {
-              src: dom.getAttribute("src"),
+              src,
               title: dom.getAttribute("title")?.replace(/\n/g, " "),
               alt: dom.getAttribute("alt")?.replace(/\n/g, " "),
               width: dom.getAttribute("width"),
@@ -68,6 +105,7 @@ const extension = {
               originalSrc,
               extras,
               scale: dom.getAttribute("data-scale"),
+              placeholder: dom.dataset.placeholder || null,
             };
           },
         },
@@ -77,6 +115,33 @@ const extension = {
             return {
               originalSrc: dom.getAttribute("data-orig-src"),
               extras: "audio",
+            };
+          },
+        },
+        {
+          tag: "div[data-video-src]",
+          getAttrs(dom) {
+            const { origSrc, videoBase62Sha1, videoSrc } = dom.dataset;
+
+            return {
+              src: videoSrc,
+              originalSrc:
+                origSrc ||
+                (videoBase62Sha1 &&
+                  buildUploadShortUrl(videoBase62Sha1, videoSrc)),
+              extras: "video",
+            };
+          },
+        },
+        {
+          tag: "div.onebox-placeholder-container[data-orig-src]",
+          getAttrs(dom) {
+            return {
+              src: "/404",
+              alt: dom.dataset.alt || null,
+              originalSrc: dom.dataset.origSrc,
+              title: dom.dataset.title || null,
+              extras: "video",
             };
           },
         },
@@ -95,7 +160,9 @@ const extension = {
             "div",
             {
               class: "onebox-placeholder-container",
+              "data-alt": node.attrs.alt,
               "data-orig-src": node.attrs.originalSrc,
+              "data-title": node.attrs.title,
             },
             ["span", { class: "placeholder-icon video" }],
           ];
@@ -152,6 +219,13 @@ const extension = {
         return;
       }
 
+      const src = node.attrs.originalSrc ?? node.attrs.src ?? "";
+
+      if (src.startsWith("data:")) {
+        state.write("[image]");
+        return;
+      }
+
       const alt = (node.attrs.alt || "").replace(/([\\[\]`])/g, "\\$1");
       const scale = node.attrs.scale ? `, ${node.attrs.scale}%` : "";
       const dimensions =
@@ -159,7 +233,6 @@ const extension = {
           ? `|${node.attrs.width}x${node.attrs.height}${scale}`
           : "";
       const extras = node.attrs.extras ? `|${node.attrs.extras}` : "";
-      const src = node.attrs.originalSrc ?? node.attrs.src ?? "";
       const escapedSrc = src.replace(/[\(\)]/g, "\\$&");
       const title = node.attrs.title
         ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'
@@ -227,7 +300,9 @@ const extension = {
 
           for (const { src } of unresolvedUrls) {
             const cachedUrl = lookupCachedUploadUrl(src).url;
-            if (cachedUrl) {
+            if (cachedUrl === MISSING) {
+              continue;
+            } else if (cachedUrl) {
               resolvedUrls[src] = cachedUrl;
             } else {
               uncachedSrcs.push(src);

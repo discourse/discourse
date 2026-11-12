@@ -1,0 +1,243 @@
+import { isStaticDataMap } from "../../../lib/workflows/static-data.js";
+import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note.js";
+import {
+  deserializeConnections,
+  serializeConnections,
+} from "../../../models/workflow-connection.js";
+import WorkflowNode, {
+  NODE_DIRECT_SETTING_KEYS,
+} from "../../../models/workflow-node.js";
+import { defaultNodeName } from "../editor/node-factory.js";
+
+function sanitizeImportedObject(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+
+  const sanitized = structuredClone(value);
+  delete sanitized.credentials;
+  return sanitized;
+}
+
+function cloneObject(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+
+  return structuredClone(value);
+}
+
+function importedStaticData(data) {
+  if (!Object.hasOwn(data, "staticData")) {
+    return undefined;
+  }
+
+  const staticData = data.staticData;
+  if (!isStaticDataMap(staticData)) {
+    return { error: "invalid" };
+  }
+
+  return structuredClone(staticData);
+}
+
+function importedVariables(data) {
+  if (!Object.hasOwn(data, "variables")) {
+    return undefined;
+  }
+
+  const variables = data.variables;
+  if (!Array.isArray(variables)) {
+    return { error: "invalid" };
+  }
+
+  return variables
+    .filter(
+      (variable) =>
+        variable &&
+        typeof variable === "object" &&
+        typeof variable.key === "string"
+    )
+    .map((variable) => ({
+      key: variable.key,
+      description:
+        typeof variable.description === "string" ? variable.description : null,
+      variable_type:
+        typeof variable.variable_type === "string"
+          ? variable.variable_type
+          : "string",
+      type_options:
+        variable.type_options && typeof variable.type_options === "object"
+          ? variable.type_options
+          : {},
+    }));
+}
+
+function directSettingsFromImportedNode(node) {
+  const settings = {};
+
+  for (const key of NODE_DIRECT_SETTING_KEYS) {
+    if (Object.hasOwn(node, key)) {
+      settings[key] = structuredClone(node[key]);
+    }
+  }
+
+  return settings;
+}
+
+// an imported file is arbitrary user input, so a node can arrive with a missing
+// or non-string name that the server would then reject on every later save
+function importedNodeName(node) {
+  const name = typeof node.name === "string" ? node.name.trim() : "";
+  return name || defaultNodeName(node.type);
+}
+
+function hasUnsupportedNodeKey(node) {
+  if (!node || typeof node !== "object") {
+    return false;
+  }
+
+  return ["type_version", "webhook_id", "position_index", "settings"].some(
+    (key) => Object.hasOwn(node, key)
+  );
+}
+
+export function buildWorkflowExportPayload(
+  nodes,
+  connections,
+  stickyNotes,
+  workflow = {}
+) {
+  const workflowMetadata = workflow || {};
+  const exportedNodes = (nodes || []).map(WorkflowNode.serialize);
+
+  const exportedStickyNotes = (stickyNotes || []).map(StickyNote.serialize);
+
+  const allNodes = [...exportedNodes, ...exportedStickyNotes];
+
+  return {
+    name: workflowMetadata.name || null,
+    nodes: allNodes,
+    connections: serializeConnections(connections || [], [
+      ...(nodes || []),
+      ...(stickyNotes || []),
+    ]),
+    settings: cloneObject(workflowMetadata.settings),
+    variables: (workflowMetadata.variables || []).map((variable) => ({
+      key: variable.key,
+      description: variable.description,
+      variable_type: variable.variable_type,
+      type_options: variable.type_options,
+    })),
+    staticData: cloneObject(workflowMetadata.staticData),
+  };
+}
+
+export function exportWorkflowToFile(
+  nodes,
+  connections,
+  stickyNotes,
+  workflow
+) {
+  const payload = buildWorkflowExportPayload(
+    nodes,
+    connections,
+    stickyNotes,
+    workflow
+  );
+  const data = JSON.stringify(payload, null, 2);
+  const date = new Date().toISOString().slice(0, 10);
+  const file = new File([data], `workflow-nodes-${date}.json`, {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(file);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = file.name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function parseWorkflowImport(text) {
+  const data = JSON.parse(text);
+
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return { error: "invalid" };
+  }
+
+  if (
+    data.version ||
+    data.sticky_notes ||
+    Array.isArray(data.connections) ||
+    data.nodes?.some(hasUnsupportedNodeKey)
+  ) {
+    return { error: "invalid" };
+  }
+
+  if (!Array.isArray(data.nodes) || data.nodes.length === 0) {
+    return { error: "invalid" };
+  }
+
+  const staticData = importedStaticData(data);
+  if (staticData?.error) {
+    return staticData;
+  }
+
+  const variables = importedVariables(data);
+  if (variables?.error) {
+    return variables;
+  }
+
+  const allImportedNodes = data.nodes.map((n) =>
+    WorkflowNode.create({
+      clientId: crypto.randomUUID(),
+      type: n.type,
+      typeVersion: n.typeVersion,
+      name: importedNodeName(n),
+      parameters: sanitizeImportedObject(n.parameters),
+      credentials: {},
+      webhookId: n.webhookId || null,
+      position: n.position || null,
+      ...directSettingsFromImportedNode(n),
+    })
+  );
+
+  const regularNodes = allImportedNodes.filter(
+    (n) => n.type !== STICKY_NOTE_TYPE
+  );
+
+  const newStickyNotes = allImportedNodes
+    .filter((n) => n.type === STICKY_NOTE_TYPE)
+    .map((n) =>
+      StickyNote.create({
+        position: n.position,
+        size: {
+          width: n.parameters?.width,
+          height: n.parameters?.height,
+        },
+        color: n.parameters?.color,
+        text: n.parameters?.content,
+      })
+    );
+
+  const newConnections = deserializeConnections(data.connections || {}, [
+    ...regularNodes,
+    ...newStickyNotes,
+  ]);
+
+  const result = {
+    nodes: regularNodes,
+    connections: newConnections,
+    stickyNotes: newStickyNotes,
+  };
+
+  if (staticData !== undefined) {
+    result.staticData = staticData;
+  }
+
+  if (variables !== undefined) {
+    result.variables = variables;
+  }
+
+  return result;
+}

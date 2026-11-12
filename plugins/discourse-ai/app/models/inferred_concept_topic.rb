@@ -13,10 +13,10 @@ end
 #
 # Table name: inferred_concept_topics
 #
-#  inferred_concept_id :bigint
-#  topic_id            :bigint
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  inferred_concept_id :bigint
+#  topic_id            :bigint
 #
 # Indexes
 #

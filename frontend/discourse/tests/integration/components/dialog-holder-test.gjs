@@ -14,7 +14,7 @@ import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | dialog-holder", function (hooks) {
+module("Integration | Component | DialogHolder", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -305,6 +305,8 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await fillIn("#confirm-phrase", "Disa");
     assert.dom(".btn-danger").isDisabled();
     await fillIn("#confirm-phrase", "Disable");
+    assert.dom(".btn-danger").isEnabled();
+    await fillIn("#confirm-phrase", "disable");
     assert.dom(".btn-danger").isEnabled();
   });
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Archived channel settings", type: :system do
+RSpec.describe "Archived channel settings" do
   fab!(:channel_1, :chat_channel)
   fab!(:current_user, :admin)
 

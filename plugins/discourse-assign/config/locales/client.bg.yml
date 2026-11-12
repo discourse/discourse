@@ -30,3 +30,16 @@ bg:
     edit_assignments_modal:
       topic: "Тема"
       post: "Публикация"
+    discourse_workflows:
+      assign_topic:
+        resources:
+          topic: "Тема"
+          post: "Публикация"
+        topic_id: "Тема ID "
+        post_id: "Публикация ID "
+      check_assignment:
+        target_types:
+          topic: "Тема"
+          post: "Публикация"
+        topic_id: "Тема ID "
+        post_id: "Публикация ID "

@@ -47,7 +47,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.problem.poll_pop3_auth_error"
 
-        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error").message).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error").message).to match_html(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end
@@ -59,7 +59,7 @@ RSpec.describe Jobs::PollMailbox do
 
         i18n_key = "dashboard.problem.poll_pop3_timeout"
 
-        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout").message).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout").message).to match_html(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end
@@ -153,6 +153,60 @@ RSpec.describe Jobs::PollMailbox do
         SiteSetting.pop3_polling_delete_from_server = false
         poller.expects(:mail_too_old?).returns(false, true, false, false).times(4)
         poller.poll_pop3
+      end
+    end
+
+    context "when the mailbox contains a deeply nested MIME message" do
+      let(:nested_mail) do
+        nested_mime_email(
+          Email::Receiver::MAX_MIME_DEPTH + 10,
+          from: "one@foo.com",
+          date: 1.day.ago.rfc2822,
+        )
+      end
+
+      before do
+        mail1 = Net::POPMail.new(1, nil, nil, nil)
+        mail2 = Net::POPMail.new(2, nil, nil, nil)
+        Net::POP3.any_instance.stubs(:start).yields(Net::POP3.new(nil, nil))
+        Net::POP3.any_instance.stubs(:mails).returns([mail1, mail2])
+        Net::POPMail.any_instance.stubs(:delete)
+        mail1.stubs(:pop).returns(nested_mail)
+        mail2.stubs(:pop).returns(example_email)
+      end
+
+      it "rejects the nested message and keeps processing the rest of the mailbox" do
+        poller.poll_pop3
+
+        expect(IncomingEmail.where(subject: "Nested")).to be_empty
+        expect(IncomingEmail.where(subject: "Testing email").count).to eq(1)
+      end
+    end
+
+    context "when the mailbox contains a wide MIME message" do
+      let(:wide_mail) do
+        wide_mime_email(
+          Email::Receiver::MAX_MIME_PARTS + 10,
+          from: "one@foo.com",
+          date: 1.day.ago.rfc2822,
+        )
+      end
+
+      before do
+        mail1 = Net::POPMail.new(1, nil, nil, nil)
+        mail2 = Net::POPMail.new(2, nil, nil, nil)
+        Net::POP3.any_instance.stubs(:start).yields(Net::POP3.new(nil, nil))
+        Net::POP3.any_instance.stubs(:mails).returns([mail1, mail2])
+        Net::POPMail.any_instance.stubs(:delete)
+        mail1.stubs(:pop).returns(wide_mail)
+        mail2.stubs(:pop).returns(example_email)
+      end
+
+      it "rejects the wide message and keeps processing the rest of the mailbox" do
+        poller.poll_pop3
+
+        expect(IncomingEmail.where(subject: "Wide")).to be_empty
+        expect(IncomingEmail.where(subject: "Testing email").count).to eq(1)
       end
     end
   end

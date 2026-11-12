@@ -8,8 +8,8 @@ module DiscourseDev
     attr_reader :config, :file_path
 
     def initialize
-      default_file_path = File.join(Rails.root, "config", "dev_defaults.yml")
-      @file_path = File.join(Rails.root, "config", "dev.yml")
+      default_file_path = Rails.root.join("config/dev_defaults.yml").to_s
+      @file_path = Rails.root.join("config/dev.yml").to_s
       # https://stackoverflow.com/questions/71332602/upgrading-to-ruby-3-1-causes-psychdisallowedclass-exception-when-using-yaml-lo
       default_config = YAML.load_file(default_file_path, permitted_classes: [Date])
 

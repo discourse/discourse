@@ -26,6 +26,12 @@ module DiscourseAi
         @parsed.map { |node| node[:content] }.join
       end
 
+      def finish_visible
+        return "" if @parsed.any? { |node| node[:type] == :open_tag }
+
+        @parsed.filter_map { |node| node[:content] if node[:type] == :maybe_tag }.join
+      end
+
       def process_parsed(parsed)
         output = []
         buffer = []

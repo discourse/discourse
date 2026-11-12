@@ -8,6 +8,44 @@ RSpec.describe UserAction do
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
+  describe ".remove_action!" do
+    fab!(:user)
+    fab!(:target_post) { Fabricate(:post, user: user) }
+
+    it "scopes removal messages to the affected user", :aggregate_failures do
+      action =
+        described_class.log_action!(
+          action_type: UserAction::EDIT,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: target_post.topic_id,
+          target_post_id: target_post.id,
+        )
+
+      messages =
+        MessageBus.track_publish("/user/#{user.id}") do
+          described_class.remove_action!(
+            action_type: UserAction::EDIT,
+            user_id: user.id,
+            acting_user_id: user.id,
+            target_topic_id: target_post.topic_id,
+            target_post_id: target_post.id,
+          )
+        end
+
+      expect(messages).to contain_exactly(
+        have_attributes(
+          data: {
+            user_action_id: action.id,
+            remove: true,
+          },
+          user_ids: [user.id],
+          group_ids: nil,
+        ),
+      )
+    end
+  end
+
   describe "#stream" do
     fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }
@@ -132,7 +170,7 @@ RSpec.describe UserAction do
         private_post.save!
       end
 
-      it "should include the right attributes in the stream" do
+      it "includes the expected attributes in the stream" do
         expect(stream.count).to eq(1)
 
         user_action_row = stream.first
@@ -209,7 +247,7 @@ RSpec.describe UserAction do
 
       before { PostActionCreator.like(liker, post) }
 
-      it "should result in correct data assignment" do
+      it "assigns the expected data" do
         expect(liker_action).not_to eq(nil)
         expect(likee_action).not_to eq(nil)
         expect(likee.user_stat.reload.likes_received).to eq(1)
@@ -225,7 +263,7 @@ RSpec.describe UserAction do
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
-        it "should not increase user stats" do
+        it "does not increase user statistics" do
           expect(liker_action).not_to eq(nil)
           expect(liker.user_stat.reload.likes_given).to eq(0)
           expect(likee_action).not_to eq(nil)
@@ -246,6 +284,40 @@ RSpec.describe UserAction do
         expect(likee_stream.count).not_to eq(old_count + 1)
       end
     end
+
+    context "with ignored users" do
+      before { Fabricate(:ignored_user, user: likee, ignored_user: liker) }
+
+      def likee_stream_for(viewer)
+        UserAction.stream(user_id: likee.id, guardian: Guardian.new(viewer))
+      end
+
+      it "hides likes from ignored users when the ignorer views the stream" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count)
+      end
+
+      it "still shows the likes to anonymous viewers" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream.count).to eq(old_count + 1)
+      end
+
+      it "still shows the likes to other logged-in viewers who aren't ignoring the liker" do
+        other = Fabricate(:user)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(other).count).to eq(old_count + 1)
+      end
+
+      it "hides only the ignored user's actions, not other users' actions on the same topic" do
+        normal_user = Fabricate(:user)
+        PostActionCreator.like(normal_user, post)
+        PostActionCreator.like(liker, post)
+
+        acting_user_ids = likee_stream_for(likee).map(&:acting_user_id).uniq
+        expect(acting_user_ids).to include(normal_user.id)
+        expect(acting_user_ids).not_to include(liker.id)
+      end
+    end
   end
 
   describe "when a user posts a new topic" do
@@ -256,13 +328,13 @@ RSpec.describe UserAction do
     describe "topic action" do
       let(:action) { post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC) }
 
-      it "should exist" do
+      it "creates the user action" do
         expect(action).not_to eq(nil)
         expect(action.created_at).to eq_time(post.topic.created_at)
       end
     end
 
-    it "should not log a post user action" do
+    it "does not log a post user action" do
       expect(post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
@@ -281,7 +353,7 @@ RSpec.describe UserAction do
 
       before { PostAlerter.post_created(response) }
 
-      it "should log user actions correctly" do
+      it "logs user actions correctly" do
         expect(response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
         expect(post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
         expect(mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
@@ -290,7 +362,7 @@ RSpec.describe UserAction do
         ).to eq(1)
       end
 
-      it "should not log a double notification for a post edit" do
+      it "does not log two notifications for a post edit" do
         response.raw = "here it goes again"
         response.save!
         expect(response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)

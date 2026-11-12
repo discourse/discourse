@@ -1,7 +1,9 @@
 export default {
-  resource: "admin.adminPlugins",
-  path: "/plugins",
+  resource: "admin.adminPlugins.show",
+
   map() {
-    this.route("patreon");
+    // Route names are shared across every plugin nested under the show route,
+    // so this one keeps the plugin prefix.
+    this.route("patreon-filters", { path: "filters" });
   },
 };

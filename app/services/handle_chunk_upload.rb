@@ -23,7 +23,7 @@ class HandleChunkUpload
     has_chunk_been_uploaded =
       File.exist?(@chunk) && File.size(@chunk) == @params[:current_chunk_size]
     # 200 = exists, 404 = not uploaded yet
-    status = has_chunk_been_uploaded ? 200 : 404
+    has_chunk_been_uploaded ? 200 : 404
   end
 
   def upload_chunk

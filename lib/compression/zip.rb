@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require "zip"
+require "compression/safe_zip_reader"
 
 module Compression
   class Zip < Strategy
+    MAX_ZIP_ENTRIES = 10_000
+
     def extension
       ".zip"
     end
@@ -12,7 +15,7 @@ module Compression
       absolute_path = sanitize_path("#{path}/#{target_name}")
       zip_filename = "#{absolute_path}.zip"
 
-      ::Zip::File.open(zip_filename, ::Zip::File::CREATE) do |zipfile|
+      ::Zip::File.open(zip_filename, create: true) do |zipfile|
         if File.directory?(absolute_path)
           entries = Dir.entries(absolute_path) - %w[. ..]
           write_entries(entries, absolute_path, "", zipfile)
@@ -27,11 +30,12 @@ module Compression
     private
 
     def extract_folder(entry, entry_path)
-      entry.extract(entry_path)
+      FileUtils.mkdir_p(entry_path)
     end
 
     def get_compressed_file_stream(compressed_file_path)
       zip_file = ::Zip::File.open(compressed_file_path)
+      Compression::SafeZipReader.new(zip_file, max_entries: MAX_ZIP_ENTRIES).validate!
       yield(zip_file)
     end
 
@@ -47,7 +51,7 @@ module Compression
       remaining_size = available_size
 
       if ::File.exist?(entry_path)
-        raise ::Zip::DestinationFileExistsError, "Destination '#{entry_path}' already exists"
+        raise DestinationFileExistsError, "Destination '#{entry_path}' already exists"
       end
 
       ::File.open(entry_path, "wb") do |os|

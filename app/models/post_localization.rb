@@ -15,10 +15,16 @@ class PostLocalization < ActiveRecord::Base
   validates :localizer_user_id, presence: true
   validates :locale, uniqueness: { scope: :post_id }
 
+  after_commit :trigger_saved_event, on: %i[create update]
+
   private
 
+  def trigger_saved_event
+    DiscourseEvent.trigger(:post_localization_saved, self)
+  end
+
   def access_control_post_id_for_upload
-    self.post_id
+    post_id
   end
 end
 
@@ -27,14 +33,14 @@ end
 # Table name: post_localizations
 #
 #  id                :bigint           not null, primary key
-#  post_id           :integer          not null
-#  post_version      :integer          not null
-#  locale            :string(20)       not null
-#  raw               :text             not null
 #  cooked            :text             not null
-#  localizer_user_id :integer          not null
+#  locale            :string(20)       not null
+#  post_version      :integer          not null
+#  raw               :text             not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  localizer_user_id :integer          not null
+#  post_id           :integer          not null
 #
 # Indexes
 #

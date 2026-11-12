@@ -29,6 +29,10 @@ class FakeStreamUpdater {
     return this._raw;
   }
 
+  get element() {
+    return this._element;
+  }
+
   async setRaw(value) {
     this._raw = value;
     // just fake it, calling cook is tricky
@@ -40,13 +44,9 @@ class FakeStreamUpdater {
     this._cooked = value;
     this._element.innerHTML = value;
   }
-
-  get element() {
-    return this._element;
-  }
 }
 
-module("Discourse AI | Unit | Lib | ai-streamer", function () {
+module("Unit | Lib | ai-streamer", function () {
   function confirmPlaceholder(html, expected, assert) {
     const element = document.createElement("div");
     element.innerHTML = html;

@@ -1,0 +1,92 @@
+@use "lib/viewport";
+
+.livestream-topic.chat-enabled.archetype-regular {
+  // we need to fullscreen the header icons to match the chat panel
+  // being on the right side of the screen
+  .d-header-wrap .wrap {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  #main-outlet-wrapper {
+    grid-template-areas:
+      "sidebar content livestream"
+      "sidebar below-content livestream";
+    margin: 0;
+    padding-right: 0;
+    max-width: 100%;
+  }
+
+  #custom-chat-container {
+    --1dvh: 1vh;
+    grid-area: livestream;
+    display: flex;
+    position: sticky;
+    top: var(--header-offset);
+    background: var(--d-content-background, var(--secondary));
+    align-self: start;
+    overflow-y: auto;
+
+    @include viewport.from(lg) {
+      border-left: 2px solid var(--primary-very-low);
+      height: calc(
+        var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
+      ) !important;
+    }
+
+    .livestream-chat-close {
+      display: none;
+    }
+
+    .chat-drawer {
+      height: 100%;
+    }
+  }
+
+  .d-modal__body {
+    #custom-chat-container {
+      height: 70vh;
+
+      .chat-composer__wrapper {
+        position: sticky;
+        bottom: 0;
+      }
+    }
+  }
+
+  // the timeline is swapped for the progress bar while chat is docked, so the
+  // navigation is placed below the posts and the column it occupied is
+  // reclaimed for them
+  .container.posts {
+    // outranks themes and components sizing the timeline column themselves
+    grid-template-columns: minmax(0, 1fr) 0;
+  }
+
+  .container.posts .topic-navigation {
+    grid-area: posts;
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    margin-left: 0;
+    margin-top: var(--border-offset);
+    top: auto;
+
+    > * {
+      margin-bottom: 0;
+    }
+
+    .topic-admin-menu-trigger {
+      border-radius: 0;
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+    }
+  }
+
+  .discourse-calendar-livestream-zoom-entry {
+    width: min(100%, 1444px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

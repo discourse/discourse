@@ -3,12 +3,56 @@
 RSpec.describe LlmModel do
   before { enable_current_plugin }
 
+  describe "user association" do
+    fab!(:model, :llm_model)
+    fab!(:legacy_user, :user)
+
+    it "rejects new attachments and replacement of a legacy attachment" do
+      new_model = Fabricate.build(:llm_model, user: legacy_user)
+      expect(new_model).not_to be_valid
+
+      model.update_columns(user_id: legacy_user.id)
+      expect(model).to be_valid
+
+      replacement = Fabricate(:user)
+      model.user = replacement
+      expect(model).not_to be_valid
+    end
+
+    it "allows clearing a legacy attachment" do
+      model.update_columns(user_id: legacy_user.id)
+
+      expect { model.update!(user: nil) }.to change { model.reload.user_id }.from(
+        legacy_user.id,
+      ).to(nil)
+      expect(
+        UserCustomField.exists?(
+          user_id: legacy_user.id,
+          name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+        ),
+      ).to eq(true)
+    end
+
+    it "preserves the identity of a legacy model user when the model is deleted" do
+      model.update_columns(user_id: legacy_user.id)
+
+      model.destroy!
+
+      expect(
+        UserCustomField.exists?(
+          user_id: legacy_user.id,
+          name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+        ),
+      ).to eq(true)
+    end
+  end
+
   describe "api_key" do
     fab!(:llm_model, :seeded_model)
 
     before { ENV["DISCOURSE_AI_SEEDED_LLM_API_KEY_2"] = "blabla" }
 
-    it "should use environment variable over database value if seeded LLM" do
+    it "uses the environment variable instead of the database value for a seeded LLM" do
       expect(llm_model.api_key).to eq("blabla")
     end
   end
@@ -54,6 +98,161 @@ RSpec.describe LlmModel do
         role_arn: "arn:aws:iam::123:role/test",
       }
       expect(bedrock_model.valid?).to be true
+    end
+  end
+
+  describe "Google Vertex AI provider validation" do
+    def build_vertex_model(provider_params)
+      Fabricate.build(
+        :llm_model,
+        provider: "google_vertex_ai",
+        tokenizer: "DiscourseAi::Tokenizer::GeminiTokenizer",
+        name: "google/gemini-3.5-flash",
+        url: nil,
+        api_key: nil,
+        provider_params: provider_params,
+      )
+    end
+
+    it "does not require a URL or API key" do
+      model = build_vertex_model(project_id: "discourse-project", region: "global")
+
+      expect(model).to be_valid
+    end
+
+    it "requires region and project_id" do
+      model = build_vertex_model({})
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"),
+        I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+      )
+    end
+
+    it "rejects regions that could redirect requests to another host" do
+      model = build_vertex_model(project_id: "discourse-project", region: "evil.example/")
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"),
+      )
+    end
+
+    it "rejects project ids that don't match the GCP format" do
+      model = build_vertex_model(project_id: "Bad Project!", region: "us-central1")
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+      )
+    end
+  end
+
+  describe "#estimated_cost_for_tokens" do
+    it "calculates request, response, cache read, and cache write cost" do
+      model =
+        Fabricate.build(
+          :llm_model,
+          input_cost: 3.0,
+          output_cost: 15.0,
+          cached_input_cost: 0.3,
+          cache_write_cost: 3.75,
+        )
+
+      cost =
+        model.estimated_cost_for_tokens(
+          request_tokens: 1_000_000,
+          response_tokens: 100_000,
+          cache_read_tokens: 10_000,
+          cache_write_tokens: 1_000,
+        )
+
+      expect(cost).to eq(BigDecimal("4.50675"))
+    end
+
+    it "returns nil when no costs are configured" do
+      model =
+        Fabricate.build(
+          :llm_model,
+          input_cost: nil,
+          output_cost: nil,
+          cached_input_cost: nil,
+          cache_write_cost: 0,
+        )
+
+      expect(
+        model.estimated_cost_for_tokens(
+          request_tokens: 1_000_000,
+          response_tokens: 100_000,
+          cache_read_tokens: 10_000,
+          cache_write_tokens: 1_000,
+        ),
+      ).to be_nil
+    end
+  end
+
+  describe "vision delegation" do
+    fab!(:native_model) do
+      Fabricate(:llm_model, display_name: "Native vision", vision_enabled: true)
+    end
+
+    it "represents disabled, native, and delegated modes without changing native capability" do
+      disabled_model = Fabricate(:llm_model)
+      delegated_model = Fabricate(:llm_model, vision_llm_model: native_model)
+
+      expect(disabled_model.vision_mode).to eq("disabled")
+      expect(native_model.vision_mode).to eq("native")
+      expect(delegated_model.vision_mode).to eq("delegated")
+      expect(delegated_model).to be_delegated_vision
+      expect(delegated_model).not_to be_vision_enabled
+    end
+
+    it "rejects native delegation, self-reference, and non-native targets" do
+      disabled_target = Fabricate(:llm_model, display_name: "Disabled target")
+      model = Fabricate.build(:llm_model, vision_enabled: true, vision_llm_model: native_model)
+      expect(model).not_to be_valid
+
+      model = Fabricate(:llm_model)
+      model.vision_llm_model = model
+      expect(model).not_to be_valid
+
+      model.vision_llm_model = disabled_target
+      expect(model).not_to be_valid
+    end
+
+    it "rejects delegation chains" do
+      delegate = Fabricate(:llm_model, vision_llm_model: native_model)
+      model = Fabricate.build(:llm_model, vision_llm_model: delegate)
+
+      expect(model).not_to be_valid
+    end
+
+    it "reports configured delegation but fails closed for a missing target" do
+      model = Fabricate(:llm_model, vision_llm_model: native_model)
+      model.update_column(:vision_llm_model_id, 99_999_999)
+      model.reload
+
+      expect(model.vision_mode).to eq("delegated")
+      expect(model).not_to be_delegated_vision
+    end
+
+    it "protects a vision target from deletion and demotion" do
+      dependent = Fabricate(:llm_model, display_name: "Text model", vision_llm_model: native_model)
+
+      expect(native_model.destroy).to eq(false)
+      expect(native_model.errors.full_messages.join).to include(dependent.display_name)
+      expect(native_model.update(vision_enabled: false)).to eq(false)
+      expect(native_model.errors.full_messages.join).to include(dependent.display_name)
+    end
+  end
+
+  describe "allowed_attachment_types" do
+    it "normalizes markdown attachments to md" do
+      model = Fabricate.build(:llm_model)
+      model.allowed_attachment_types = %w[pdf markdown md htm text]
+
+      expect(model.allowed_attachment_types).to eq(%w[pdf md html txt])
     end
   end
 end

@@ -1,12 +1,12 @@
 import { settings } from "virtual:theme";
 import HeaderTopicCell from "discourse/components/topic-list/header/topic-cell";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import HighContextTopicCard from "../components/card/high-context-topic-card";
-import TopicActivityColumn from "../components/card/topic-activity-column";
-import TopicCategoryColumn from "../components/card/topic-category-column";
-import TopicCreatorColumn from "../components/card/topic-creator-column";
-import TopicRepliesColumn from "../components/card/topic-replies-column";
-import TopicStatusColumn from "../components/card/topic-status-column";
+import HighContextTopicCard from "../components/card/high-context-topic-card.gjs";
+import TopicActivityColumn from "../components/card/topic-activity-column.gjs";
+import TopicCategoryColumn from "../components/card/topic-category-column.gjs";
+import TopicCreatorColumn from "../components/card/topic-creator-column.gjs";
+import TopicRepliesColumn from "../components/card/topic-replies-column.gjs";
+import TopicStatusColumn from "../components/card/topic-status-column.gjs";
 
 const TOPIC_CARD_CONTEXTS = [
   "discovery",
@@ -18,10 +18,10 @@ const TOPIC_CARD_CONTEXTS = [
 
 const SIMPLE_CARD_CONTEXTS = ["suggested", "related"];
 
-const isTopicCardContext = (listContext) =>
-  TOPIC_CARD_CONTEXTS.includes(listContext);
+const isTopicCardContext = ({ listContext, category }) =>
+  TOPIC_CARD_CONTEXTS.includes(listContext) && !category?.doc_index_topic_id;
 
-const isSimpleCardContext = (listContext) =>
+const isSimpleCardContext = ({ listContext }) =>
   SIMPLE_CARD_CONTEXTS.includes(listContext);
 
 const TopicActivity = <template>
@@ -56,11 +56,11 @@ const TopicCreator = <template>
 
 const HighContextCard = <template>
   <HighContextTopicCard
-    @topic={{@topic}}
-    @hideCategory={{@hideCategory}}
     @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @hideCategory={{@hideCategory}}
     @isSelected={{@isSelected}}
     @onBulkSelectToggle={{@onBulkSelectToggle}}
+    @topic={{@topic}}
   />
 </template>;
 
@@ -115,7 +115,7 @@ export default {
       api.registerValueTransformer(
         "topic-list-class",
         ({ value: classes, context }) => {
-          if (isTopicCardContext(context.listContext)) {
+          if (isTopicCardContext(context)) {
             classes.push("--d-topic-cards");
           }
           return classes;
@@ -125,11 +125,11 @@ export default {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns, context }) => {
-          if (!isTopicCardContext(context.listContext)) {
+          if (!isTopicCardContext(context)) {
             return columns;
           }
 
-          isHighContext && !isSimpleCardContext(context.listContext)
+          isHighContext && !isSimpleCardContext(context)
             ? applyHighContextLayout(columns)
             : applySimpleLayout(columns);
 
@@ -140,15 +140,15 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value: classes, context }) => {
-          if (!isTopicCardContext(context.listContext)) {
+          if (!isTopicCardContext(context)) {
             return classes;
           }
 
-          if (isHighContext && !isSimpleCardContext(context.listContext)) {
+          if (isHighContext && !isSimpleCardContext(context)) {
             classes.push("--high-context");
           }
 
-          if (context.topic.replyCount > 1) {
+          if (context.topic.replyCount) {
             classes.push("--has-replies");
           }
 
@@ -168,7 +168,7 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-mobile-layout",
         ({ value, context }) => {
-          if (isTopicCardContext(context.listContext)) {
+          if (isTopicCardContext(context)) {
             return false;
           }
           return value;
@@ -177,12 +177,23 @@ export default {
 
       api.registerBehaviorTransformer(
         "topic-list-item-click",
-        ({ context: { event, listContext }, next }) => {
-          if (!isTopicCardContext(listContext)) {
+        ({ context, next }) => {
+          const { event, topic, listContext } = context;
+
+          if (
+            !isTopicCardContext({
+              listContext,
+              category: topic?.category,
+            })
+          ) {
             return next();
           }
 
-          if (event.target.closest("a, button, input")) {
+          if (
+            (event.target.closest("a, button, input") &&
+              !event.target.closest(".topic-excerpt")) ||
+            event.target.closest(".topic-excerpt-more")
+          ) {
             return next();
           }
 
@@ -193,7 +204,12 @@ export default {
             .closest("tr")
             .querySelector("a.raw-topic-link");
 
-          // Redispatch the click on the topic link, so that all key-handing is sorted
+          if (event.button === 1) {
+            // click events with button=1 can't naturally trigger browser navigation
+            window.open(topicLink.href, "_blank", "noopener,noreferrer");
+            return;
+          }
+
           topicLink.dispatchEvent(
             new MouseEvent("click", {
               ctrlKey: event.ctrlKey,

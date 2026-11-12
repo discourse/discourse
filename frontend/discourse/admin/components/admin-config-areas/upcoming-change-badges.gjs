@@ -1,0 +1,104 @@
+import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+
+const UpcomingChangeBadge = <template>
+  <span
+    class={{dConcatClass
+      "d-table-badge upcoming-change__badge"
+      (if @hasTooltip "--has-tooltip")
+      @badgeClass
+    }}
+  >
+    <span class="d-table-badge__content upcoming-change__badge-content">
+      {{dIcon @icon}}
+      {{if @label @label (i18n @badgeLabelKey)}}
+    </span>
+    {{yield}}
+  </span>
+</template>;
+
+export default class UpcomingChangeBadges extends Component {
+  impactRoleIcon(impactRole) {
+    switch (impactRole) {
+      case "admins":
+      case "moderators":
+      case "staff":
+        return "shield-halved";
+      case "all_members":
+        return "users";
+      case "developers":
+        return "code";
+    }
+  }
+
+  impactTypeIcon(impactType) {
+    switch (impactType) {
+      case "feature":
+        return "wand-magic-sparkles";
+      case "other":
+        return "discourse-other-tab";
+      case "site_setting_default":
+        return "gear";
+    }
+  }
+
+  <template>
+    <div class="d-table__badges upcoming-change__badges">
+      <DTooltip
+        @content={{i18n
+          (concat
+            "admin.upcoming_changes.status_descriptions." @upcomingChange.status
+          )
+        }}
+      >
+        <:trigger>
+          <UpcomingChangeBadge
+            @badgeClass={{concat "--status-" @upcomingChange.status}}
+            @badgeLabelKey={{concat
+              "admin.upcoming_changes.statuses."
+              @upcomingChange.status
+            }}
+            @hasTooltip={{true}}
+            @icon="flask"
+          >
+
+            <span class="d-table-badge__info upcoming-change__badge-info">
+              {{dIcon "info"}}
+            </span>
+          </UpcomingChangeBadge>
+        </:trigger>
+      </DTooltip>
+
+      <UpcomingChangeBadge
+        @badgeClass={{concat "--impact-role-" @upcomingChange.impact_role}}
+        @badgeLabelKey={{concat
+          "admin.upcoming_changes.impact_roles."
+          @upcomingChange.impact_role
+        }}
+        @icon={{this.impactRoleIcon @upcomingChange.impact_role}}
+      />
+
+      <UpcomingChangeBadge
+        @badgeClass={{concat "--impact-type-" @upcomingChange.impact_type}}
+        @badgeLabelKey={{concat
+          "admin.upcoming_changes.impact_types."
+          @upcomingChange.impact_type
+          "_type"
+        }}
+        @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
+      />
+
+      {{#if @plugin}}
+        <UpcomingChangeBadge
+          @badgeClass="--plugin upcoming-change__plugin"
+          @icon="plug"
+          @label={{@plugin}}
+        />
+      {{/if}}
+    </div>
+  </template>
+}

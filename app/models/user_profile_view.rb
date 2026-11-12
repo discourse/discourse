@@ -20,7 +20,7 @@ class UserProfileView < ActiveRecord::Base
       skip_redis ||
         Discourse.redis.expire(redis_key, SiteSetting.user_profile_view_duration_hours.hours)
 
-      self.transaction do
+      transaction do
         sql =
           "INSERT INTO user_profile_views (user_profile_id, ip_address, viewed_at, user_id)
                SELECT :user_profile_id, :ip_address, :viewed_at, :user_id
@@ -55,7 +55,7 @@ class UserProfileView < ActiveRecord::Base
   end
 
   def self.profile_views_by_day(start_date, end_date, group_id = nil)
-    profile_views = self.where("viewed_at >= ? AND viewed_at < ?", start_date, end_date + 1.day)
+    profile_views = where("viewed_at >= ? AND viewed_at < ?", start_date, end_date + 1.day)
     if group_id
       profile_views =
         profile_views.joins("INNER JOIN users ON users.id = user_profile_views.user_id")
@@ -72,10 +72,10 @@ end
 # Table name: user_profile_views
 #
 #  id              :integer          not null, primary key
-#  user_profile_id :integer          not null
-#  viewed_at       :datetime         not null
 #  ip_address      :inet
+#  viewed_at       :datetime         not null
 #  user_id         :integer
+#  user_profile_id :integer          not null
 #
 # Indexes
 #

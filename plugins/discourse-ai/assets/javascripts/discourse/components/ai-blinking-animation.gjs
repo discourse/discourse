@@ -6,8 +6,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel } from "@ember/runloop";
-import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 class Block {
   @tracked show = false;
@@ -99,7 +99,7 @@ export default class AiBlinkingAnimation extends Component {
     <ul class="ai-blinking-animation" {{didInsert this.setupAnimation}}>
       {{#each this.blocks as |block|}}
         <li
-          class={{concatClass
+          class={{dConcatClass
             "ai-blinking-animation__list-item"
             (if block.show "show")
             (if block.shown "is-shown")

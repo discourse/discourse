@@ -8,6 +8,10 @@ hy:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Ամսաթիվ"
+          outcomes:
+            failed: "Ձախողված"
         reports:
           filters:
             sort_by:
@@ -34,29 +38,76 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      copied: "Պատճենված է"
+      ai_decoded_transcript:
+        type: "Տիպ"
+        error: "Սխալ"
+        response: "Արձագանք"
+      discourse_workflows:
+        classify:
+          text: "Տեքստ"
+          upload_ids: "Նկարներ"
+          name: "Անուն"
+          type: "Տիպ"
+          type_score: "Քանակ"
+      ai_tool_approval:
+        loading: "Բեռնվում է..."
+        tool: "Գործողություն"
+        user: "Օգտատեր"
+        approve: "Հաստատել"
+        reject: "Մերժել"
+        approved: "Հաստատված է"
+        rejected: "Մերժված է"
       llm_selector:
         none: "Ոչ մի"
       features:
-        back: "Ետ"
-        disabled: "(անջատված)"
-        groups: "Խմբեր:"
+        table:
+          status: "Ստատուս"
+          groups: "Խմբեր"
+        chatbot:
+          places:
+            none: "Հասանելի չէ"
         no_groups: "Ոչ մի"
         edit: "Կարգավորումներ"
-        expand_list:
-          one: "(%{count} ավելի)"
-          other: "(%{count} ավելի)"
-        collapse_list: "(ցույց տալ ավելի քիչ)"
         filters:
           all: "Բոլոր"
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        image_caption:
+          setting_groups:
+            settings: "Կարգավորումներ"
         spam:
           name: "Սպամ"
       modals:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        settings:
+          ai_translation_category_scope:
+            label: "Կատեգորիաներ"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ոչ մի"
+              all: "Բոլոր"
+          content_localization_language_switcher:
+            choices:
+              none: "Ոչ ոք"
+              all: "Բոլորը"
+        model_progress:
+          detail:
+            columns:
+              pending: "Սպասող"
+              total: "Ամբողջ"
+          targets:
+            post:
+              title: "Գրառումներ"
+            topic:
+              title: "Թեմաներ"
+            category:
+              title: "Կատեգորիաներ"
+            tag:
+              title: "Պիտակներ"
         stats:
           eta_minutes:
             one: "%{count} րոպե"
@@ -73,6 +124,8 @@ hy:
             other: "%{count} գրառում"
       spam:
         short_title: "Սպամ"
+        no_llm_selected: "Ոչ մի"
+        no_decision_model_selected: "Ոչ մի"
         enable: "Միացնել"
         test_modal:
           spam: "Սպամ"
@@ -81,8 +134,34 @@ hy:
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
         total: "Ամբողջ"
+      logs:
+        short_title: "Գրառումներ"
+        apply: "Կիրառել"
+        successful: "Հաջողված"
+        failed: "Ձախողված"
+        unknown: "Անհայտ"
+        time: "Ժամ"
+        when: "Երբ"
+        request: "Հարցում"
+        provider: "Մատակարար"
+        user: "Օգտատեր"
+        context: "Համատեքստ"
+        topic: "Թեմա"
+        post: "Գրառում"
+        post_short: "Գրառում %{id}"
+        actions: "Գործողություններ"
+        view_details: "Մանրամասներ"
+        periods:
+          custom: "Մասնավոր"
+        detail:
+          request: "Հարցում"
+          response: "Արձագանք"
+          context: "Համատեքստ"
+        retention:
+          summary_stage: "Ամփոփումը"
+          deleted_stage: "Ջնջված է"
+          save: "Պահպանել"
       ai_agent:
-        back: "Ետ"
         name: "Անուն"
         edit: "Խմբագրել"
         export: "Արտահանել"
@@ -92,6 +171,12 @@ hy:
         save: "Պահպանել"
         enabled: "Միացվա՞ծ է:"
         delete: "Ջնջել"
+        thinking_effort_options:
+          none: "Ոչ մի"
+          low: "Բարձր"
+          medium: "Միջին"
+          high: "Ցածր"
+          max: "Առավելագույնը"
         response_format:
           open_modal: "Խմբագրել"
           modal:
@@ -103,7 +188,6 @@ hy:
           title: "Վերբեռնումներ"
           uploading: "Վերբեռնում..."
       tools:
-        back: "Ետ"
         export: "Արտահանել"
         import: "Ներմուծել"
         name: "Անուն"
@@ -119,17 +203,43 @@ hy:
         short_title: "Հավատարմագրեր"
         name: "Անուն"
         secret: "Արժեք"
-        back: "Ետ"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      decision_models:
+        no_preset: "Ոչ մի"
+        display_name: "Անուն"
+        provider: "Մատակարար"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+      mcp_servers:
+        name: "Անուն"
+        description: "Նկարագրություն"
+        url: "URL"
+        oauth_connect: "Կապել"
+        save: "Պահպանել"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        tools_modal:
+          required: "Պարտադիր"
+      models:
+        name: "Անուն"
+        type: "Տիպ"
+        provider: "Մատակարար"
+        edit: "Խմբագրել"
+        types:
+          embedding: "Զետեղում"
+        filters:
+          all: "Բոլոր տեսակները"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
+        vision_modes:
+          disabled:
+            title: "Անջատված"
         save: "Պահպանել"
         edit: "Խմբագրել"
-        back: "Ետ"
         delete: Ջնջել
         quotas:
           group: "Խմբավորել"
@@ -147,7 +257,6 @@ hy:
         tests:
           success: "Հաջողություն!"
         providers:
-          google: "Google"
           fake: "Մասնավոր"
       ai_helper:
         context_menu:
@@ -161,10 +270,7 @@ hy:
           cancel: "Չեղարկել"
         thumbnail_suggestions:
           try_again: "Կրկին Փորձել"
-        image_caption:
-          save_caption: "Պահպանել"
       embeddings:
-        back: "Ետ"
         save: "Պահպանել"
         delete: "Ջնջել"
         edit: "Խմբագրել"
@@ -175,8 +281,17 @@ hy:
         providers:
           google: "Google"
           fake: "Մասնավոր"
+      ai_artifact:
+        editor:
+          version: "Տարբերակ"
+          default: "Լռելյայն"
+          apply: "Կիրառել"
+        share: "Կիսվել"
+        copy_link: "Պատճենել հղումը"
+        filter_all: "Բոլոր"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Տևողությունը."
           request: "Հարցում"
           response: "Արձագանք"
           next_log: "Հաջորդը"
@@ -196,9 +311,18 @@ hy:
             category: "Կատեգորիա"
           table:
             total_count: "Ամբողջ"
+      ai_search:
+        related_replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        tabs:
+          topics: "Թեմաներ"
+          messages: "Հաղորդագրություն"
       discobot_discoveries:
-        regular_results: "Թեմաներ"
-        collapse: "Կրճատել"
-        tooltip:
-          actions:
-            disable: "Անջատել"
+        legacy:
+          regular_results: "Թեմաներ"
+          collapse: "Կրճատել"
+          tooltip:
+            actions:
+              disable: "Անջատել"
+        search_messages: "Հաղորդագրություն"

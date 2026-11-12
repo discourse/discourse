@@ -9,9 +9,9 @@ end
 # Table name: silenced_assignments
 #
 #  id            :bigint           not null, primary key
-#  assignment_id :bigint           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  assignment_id :bigint           not null
 #
 # Indexes
 #

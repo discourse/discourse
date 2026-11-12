@@ -56,7 +56,9 @@
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
-    left: calc(var(--toggle-switch-width) - 22px);
+    left: calc(
+      var(--toggle-switch-width) - var(--toggle-switch-height) * 0.875
+    );
   }
 
   &__checkbox[disabled] + .d-toggle-switch__checkbox-slider {
@@ -80,9 +82,9 @@
     transition: background 0.25s;
 
     .d-icon {
-      width: calc(var(--toggle-switch-height) * 0.54);
-      height: calc(var(--toggle-switch-height) * 0.54);
-      color: var(--secondary);
+      width: calc(var(--toggle-switch-height) * 0.54) !important;
+      height: calc(var(--toggle-switch-height) * 0.54) !important;
+      color: var(--secondary) !important;
       position: absolute;
       top: 50%;
       left: calc(var(--toggle-switch-height) * 0.291);

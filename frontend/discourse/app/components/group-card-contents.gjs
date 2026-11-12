@@ -1,19 +1,17 @@
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
-import { alias, gt } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
-import AvatarFlair from "discourse/components/avatar-flair";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
 import GroupMembershipButton from "discourse/components/group-membership-button";
-import boundAvatar from "discourse/helpers/bound-avatar";
 import routeAction from "discourse/helpers/route-action";
-import { setting } from "discourse/lib/computed";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { i18n } from "discourse-i18n";
 
 const maxMembersToDisplay = 10;
@@ -29,16 +27,37 @@ const maxMembersToDisplay = 10;
 export default class GroupCardContents extends CardContentsBase {
   @service composer;
 
-  @setting("allow_profile_backgrounds") allowBackgrounds;
-  @setting("enable_badges") showBadges;
-
-  @alias("topic.postStream") postStream;
-  @gt("moreMembersCount", 0) showMoreMembers;
-
   elementId = "group-card";
+  avatarSelector = "[data-group-card]";
+  avatarDataAttrKey = "groupCard";
   mentionSelector = "a.mention-group";
 
+  /** @type {import("discourse/models/group").default | null} */
   group = null;
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("siteSettings.allow_profile_backgrounds")
+  get allowBackgrounds() {
+    return this.siteSettings.allow_profile_backgrounds;
+  }
+
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
+
+  @computed("moreMembersCount")
+  get showMoreMembers() {
+    return this.moreMembersCount > 0;
+  }
 
   @computed("group.members.[]")
   get highlightedMembers() {
@@ -58,6 +77,40 @@ export default class GroupCardContents extends CardContentsBase {
   @computed("group")
   get groupPath() {
     return groupPath(this.group.name);
+  }
+
+  @action
+  close(event) {
+    event?.preventDefault();
+    this._close();
+  }
+
+  @action
+  handleShowGroup(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
+    // refactoring this to a glimmer component.
+    this.showGroup(this.group);
+    this._close();
+  }
+
+  @action
+  cancelFilter() {
+    this.postStream.cancelFilter();
+    this.postStream.refresh();
+    this._close();
+  }
+
+  @action
+  messageGroup() {
+    this.composer.openNewMessage({
+      recipients: this.get("group.name"),
+      hasGroups: true,
+    });
   }
 
   @onEvent("didInsertElement")
@@ -97,40 +150,6 @@ export default class GroupCardContents extends CardContentsBase {
     super._close(...arguments);
   }
 
-  @action
-  close(event) {
-    event?.preventDefault();
-    this._close();
-  }
-
-  @action
-  handleShowGroup(event) {
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    event.preventDefault();
-    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
-    // refactoring this to a glimmer component.
-    this.showGroup(this.group);
-    this._close();
-  }
-
-  @action
-  cancelFilter() {
-    this.postStream.cancelFilter();
-    this.postStream.refresh();
-    this._close();
-  }
-
-  @action
-  messageGroup() {
-    this.composer.openNewMessage({
-      recipients: this.get("group.name"),
-      hasGroups: true,
-    });
-  }
-
   <template>
     {{#if this.visible}}
       <div class="card-content">
@@ -150,15 +169,15 @@ export default class GroupCardContents extends CardContentsBase {
           <div class="card-row first-row">
             <div class="group-card-avatar">
               <a
-                {{on "click" this.handleShowGroup}}
-                href={{this.groupPath}}
                 class="card-huge-avatar"
+                href={{this.groupPath}}
+                {{on "click" this.handleShowGroup}}
               >
-                <AvatarFlair
-                  @flairName={{this.group.name}}
-                  @flairUrl={{this.group.flair_url}}
+                <DAvatarFlair
                   @flairBgColor={{this.group.flair_bg_color}}
                   @flairColor={{this.group.flair_color}}
+                  @flairName={{this.group.name}}
+                  @flairUrl={{this.group.flair_url}}
                 />
               </a>
             </div>
@@ -166,9 +185,9 @@ export default class GroupCardContents extends CardContentsBase {
               <span>
                 <div class="names__primary {{this.group.name}}">
                   <a
-                    {{on "click" this.handleShowGroup}}
-                    href={{this.groupPath}}
                     class="group-page-link"
+                    href={{this.groupPath}}
+                    {{on "click" this.handleShowGroup}}
                   >{{this.group.name}}</a>
                 </div>
                 {{#if this.group.full_name}}
@@ -192,10 +211,10 @@ export default class GroupCardContents extends CardContentsBase {
               {{#if this.group.messageable}}
                 <li>
                   <DButton
+                    class="btn-primary group-message-button inline"
                     @action={{this.messageGroup}}
                     @icon="envelope"
                     @label="groups.message"
-                    class="btn-primary group-message-button inline"
                   />
                 </li>
               {{/if}}
@@ -215,16 +234,16 @@ export default class GroupCardContents extends CardContentsBase {
               <div class="members metadata">
                 {{#each this.highlightedMembers as |user|}}
                   <a
-                    {{on "click" this.close}}
-                    href={{user.path}}
                     class="card-tiny-avatar"
-                  >{{boundAvatar user "tiny"}}</a>
+                    href={{user.path}}
+                    {{on "click" this.close}}
+                  >{{dBoundAvatar user "tiny"}}</a>
                 {{/each}}
                 {{#if this.showMoreMembers}}
                   <a
-                    {{on "click" this.handleShowGroup}}
-                    href={{this.groupPath}}
                     class="more-members-link"
+                    href={{this.groupPath}}
+                    {{on "click" this.handleShowGroup}}
                   >
                     <span class="more-members-count">+{{this.moreMembersCount}}
                       {{i18n "more"}}</span>

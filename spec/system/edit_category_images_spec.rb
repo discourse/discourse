@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Images", type: :system do
+describe "Edit Category Images" do
   fab!(:admin)
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }
@@ -21,7 +21,7 @@ describe "Edit Category Images", type: :system do
         find("#category-logo-uploader .file-uploader__controls").click
         attach_file(
           "category-logo-uploader__input",
-          "#{Rails.root}/spec/fixtures/images/logo.png",
+          "#{Rails.root.join("spec/fixtures/images/logo.png")}",
           make_visible: true,
         )
 

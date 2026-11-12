@@ -25,7 +25,7 @@ RSpec.describe SuggestedTopicSerializer do
         SiteSetting.topic_featured_link_enabled = false
       end
 
-      it "should not return featured link attrs" do
+      it "omits featured link attributes" do
         expect(json[:featured_link]).to eq(nil)
         expect(json[:featured_link_root_domain]).to eq(nil)
       end
@@ -34,7 +34,7 @@ RSpec.describe SuggestedTopicSerializer do
     context "when topic featured link is enabled" do
       before { SiteSetting.topic_featured_link_enabled = true }
 
-      it "should return featured link attrs" do
+      it "returns featured link attributes" do
         expect(json[:featured_link]).to eq(featured_link)
         expect(json[:featured_link_root_domain]).to eq("discourse.org")
       end
@@ -75,6 +75,25 @@ RSpec.describe SuggestedTopicSerializer do
 
       json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
       expect(json[:op_like_count]).to eq(5)
+    end
+  end
+
+  describe "#is_nested_view" do
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "returns true when the topic uses nested replies" do
+      topic = Fabricate(:topic)
+      Fabricate(:nested_topic, topic: topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json[:is_nested_view]).to eq(true)
+    end
+
+    it "omits the attribute when the topic uses the flat view" do
+      topic = Fabricate(:topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json).not_to have_key(:is_nested_view)
     end
   end
 end

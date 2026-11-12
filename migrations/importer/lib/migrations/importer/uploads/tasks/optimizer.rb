@@ -1,0 +1,236 @@
+# frozen_string_literal: true
+
+module Migrations
+  module Importer
+    module Uploads
+      module Tasks
+        # Precomputes OptimizedImages for the uploads that need them (post images
+        # and avatars). Each worker rebakes against a throwaway post; only
+        # {#write} records the results.
+        class Optimizer < Base
+          OPTIMIZED_IMAGE_COLUMNS =
+            Database::FilesDB::OptimizedImage.method(:create).parameters.map(&:last).freeze
+          UploadFileType = Database::FilesDB::Enums::UploadFileType
+
+          def title
+            "Creating optimized images"
+          end
+
+          def max_count
+            @max_count
+          end
+
+          def before_run
+            # Let several threads optimize at once.
+            OptimizedImage.lock_per_machine = false
+            # OptimizedImage.create_for enqueues jobs; run them in-process.
+            Jobs.run_immediately!
+
+            @avatar_sizes = Discourse.avatar_sizes
+            @system_user = Discourse.system_user
+            @category_id = Category.last.id
+
+            files_db.attach_database(intermediate_db.path, name: "intermediate")
+            @max_count = files_db.query_value(<<~SQL, UploadFileType::IMAGE)
+                SELECT COUNT(*)
+                  FROM upload_results r
+                       JOIN uploads u ON u.id = r.upload_id
+                 WHERE r.file_type = ?
+              SQL
+          end
+
+          def produce(emit_work:, emit_result:)
+            sql = <<~SQL
+              SELECT u.id AS upload_id,
+                     u.sha1 AS upload_sha1,
+                     r.id AS original_id,
+                     r.markdown,
+                     CASE
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM optimized_images oi
+                          WHERE oi.upload_id = u.id
+                       ) THEN NULL
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM intermediate.embed_uploads eu
+                          WHERE eu.upload_id = r.id
+                       ) THEN 'post'
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM intermediate.users iu
+                          WHERE iu.uploaded_avatar_id = r.id
+                       ) THEN 'avatar'
+                     END AS type
+                FROM upload_results r
+                     JOIN uploads u ON u.id = r.upload_id
+               WHERE r.file_type = ?
+               ORDER BY r.upload_id
+            SQL
+
+            files_db.query(sql, UploadFileType::IMAGE) do |row|
+              if row[:type]
+                emit_work.call(row)
+              else
+                emit_result.call(skip_status(row[:upload_id]))
+              end
+            end
+          end
+
+          def build_worker_resource
+            PostCreator.new(
+              @system_user,
+              raw: "Topic created by uploads_importer",
+              acting_user: @system_user,
+              skip_validations: true,
+              title: "Topic created by uploads_importer - #{SecureRandom.hex}",
+              archetype: Archetype.default,
+              category: @category_id,
+            ).create!
+          end
+
+          def process(row, post)
+            retry_policy.run { attempt_optimization(row, post) } || no_images_status(row)
+          rescue StandardError => e
+            # Permanent failure, or a transient one past its retry budget.
+            error_status(row, e.message)
+          end
+
+          def write(result)
+            if result[:status] == :ok
+              result[:optimized_images].each do |attributes|
+                Database::FilesDB::OptimizedImage.create(**attributes)
+              end
+            else
+              reporter.notice(result[:error]) if result[:error]
+            end
+
+            result[:status]
+          end
+
+          private
+
+          def attempt_optimization(row, post)
+            upload = Upload.find_by(sha1: row[:upload_sha1])
+            return upload_not_found_status(row) if upload.nil?
+            return skip_status(row[:upload_id]) if row[:type] == "post" && fits_in_post?(upload)
+
+            images = create_optimized_images(row[:type], row[:markdown], upload, post)
+            return if images.blank?
+
+            images = verify_optimized_images(images)
+            return unless images_valid?(images)
+
+            ok_status(row, images)
+          end
+
+          def create_optimized_images(type, markdown, upload, post)
+            case type
+            when "post"
+              cook_and_process(post, markdown)
+              OptimizedImage.where(upload_id: upload.id).to_a
+            when "avatar"
+              @avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+            end
+          end
+
+          # The cooked post processor only makes thumbnails for images it has to
+          # lightbox, so an image within the limits has nothing to record.
+          def fits_in_post?(upload)
+            upload.width.to_i <= SiteSetting.max_image_width &&
+              upload.height.to_i <= SiteSetting.max_image_height
+          end
+
+          # What `Post#rebake!` does, minus the job it enqueues for the post
+          # processor: `Jobs.run_immediately!` only makes that job synchronous
+          # outside development, and the optimized images have to exist before
+          # this returns.
+          def cook_and_process(post, markdown)
+            post.update_columns(
+              raw: markdown,
+              cooked: post.cook(markdown, topic_id: post.topic_id),
+              baked_at: Time.zone.now,
+              baked_version: Post::BAKED_VERSION,
+            )
+            post.reload
+
+            processor = CookedPostProcessor.new(post)
+            processor.post_process
+            post.update_column(:cooked, processor.html)
+          end
+
+          def verify_optimized_images(images)
+            images.map do |image|
+              next if image.blank?
+
+              image_path = add_multisite_prefix(discourse_store.get_path_for_optimized_image(image))
+              next image if file_exists?(image_path)
+
+              image.destroy
+              nil
+            end
+          end
+
+          def images_valid?(images)
+            images.present? && images.all?(&:present?) && images.all?(&:persisted?) &&
+              images.all? { |image| image.errors.blank? }
+          end
+
+          def ok_status(row, images)
+            {
+              id: row[:upload_id],
+              status: :ok,
+              optimized_images: images.map { |image| optimized_image_attributes(image) },
+            }
+          end
+
+          def error_status(row, error)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_failed", sha1: row[:upload_sha1], error:),
+            }
+          end
+
+          def no_images_status(row)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_no_images", sha1: row[:upload_sha1]),
+            }
+          end
+
+          # The migration-environment row's sha1 has no matching Discourse
+          # `Upload` record, so
+          # there's nothing to optimize. Recorded as an error with a message
+          # rather than left to crash on a nil upload later on.
+          def upload_not_found_status(row)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_upload_not_found", sha1: row[:upload_sha1]),
+            }
+          end
+
+          def skip_status(upload_id)
+            { id: upload_id, status: :skip }
+          end
+
+          def optimized_image_attributes(image)
+            image.attributes.symbolize_keys.slice(*OPTIMIZED_IMAGE_COLUMNS)
+          end
+
+          def retry_policy
+            @retry_policy ||= RetryPolicy.new(transient_errors: transient_error_classes)
+          end
+
+          def transient_error_classes
+            classes = [ActiveRecord::Deadlocked, ActiveRecord::RecordNotUnique]
+            classes << Aws::S3::Errors::ServiceError if defined?(Aws::S3::Errors::ServiceError)
+            classes
+          end
+        end
+      end
+    end
+  end
+end

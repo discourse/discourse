@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse сноски"
   js:
     footnote:
+      title: "Сноски"
       add: "Добавить сноску"

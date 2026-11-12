@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post history with tag changes", type: :system do
+describe "Post history with tag changes" do
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "alpha") }
   fab!(:tag2) { Fabricate(:tag, name: "beta") }
@@ -62,5 +62,95 @@ describe "Post history with tag changes", type: :system do
     post_history_modal.click_previous_revision
     expect(post_history_modal.deleted_tags).to contain_exactly(tag1.name)
     expect(post_history_modal.inserted_tags).to contain_exactly(tag2.name, tag3.name)
+  end
+end
+
+describe "Post history with a hidden revision" do
+  include ThemeScreenshotMarker
+
+  fab!(:admin)
+  fab!(:post_owner, :user)
+  fab!(:topic) { Fabricate(:topic, user: post_owner) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: post_owner, raw: "Initial public version") }
+
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+
+  before do
+    SiteSetting.editing_grace_period = 0
+
+    post.revise(post_owner, raw: "Second public version")
+    post.revise(post_owner, raw: "Hidden secret version")
+    post.revise(post_owner, raw: "Latest public version")
+    post.revisions.find_by(number: 3).hide!
+  end
+
+  it "tells anonymous users why a diff can't be displayed instead of showing a blank space" do
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+
+    expect(post_history_modal).to have_hidden_diff_notice
+    screenshot_marker(label: "post-history-hidden-edit", only: :desktop)
+
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_hidden_diff_notice
+  end
+
+  it "still shows the diffs around the hidden revision to staff" do
+    sign_in(admin)
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+
+    expect(post_history_modal).to have_no_hidden_diff_notice
+    expect(post_history_modal).to have_body_diff("Latest public version")
+  end
+end
+
+describe "Post history with an unlisted revision" do
+  fab!(:admin)
+  fab!(:post_owner, :user)
+  fab!(:topic) { Fabricate(:topic, user: post_owner) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: post_owner, raw: "Initial public version") }
+
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+
+  before do
+    SiteSetting.editing_grace_period = 0
+
+    post.revise(post_owner, raw: "Second public version")
+    post.revise(post_owner, raw: "Noisy intermediate version")
+    post.revise(post_owner, raw: "Latest public version")
+  end
+
+  it "lets staff unlist a revision" do
+    sign_in(admin)
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_body_diff("Noisy intermediate version")
+    expect(post_history_modal).to have_no_unlisted_marker
+
+    post_history_modal.choose_visibility("unlisted")
+
+    expect(post_history_modal).to have_unlisted_marker
+  end
+
+  it "skips the unlisted revision for users until they show all edits" do
+    post.revisions.find_by(number: 3).unlist!
+
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_body_diff("Second public version")
+    expect(post_history_modal).to have_no_body_diff("Noisy intermediate version")
+
+    post_history_modal.show_all_edits.click_next_revision
+
+    expect(post_history_modal).to have_unlisted_marker
+    expect(post_history_modal).to have_body_diff("Noisy intermediate version")
   end
 end

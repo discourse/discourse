@@ -1,13 +1,12 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
@@ -22,14 +21,20 @@ export default class SecurityController extends Controller {
   @service router;
   @service currentUser;
 
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
+  /** @type {string | null} */
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
 
-  @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
-  canShowAllAuthTokens;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("model.user_auth_tokens.length")
+  get canShowAllAuthTokens() {
+    return this.model?.user_auth_tokens?.length > DEFAULT_AUTH_TOKENS_COUNT;
+  }
 
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
@@ -87,30 +92,6 @@ export default class SecurityController extends Controller {
       : this.model?.user_auth_tokens?.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
   }
 
-  @action
-  changePassword(event) {
-    event?.preventDefault();
-    if (!this.passwordProgress) {
-      this.set("passwordProgress", i18n("user.change_password.in_progress"));
-      return this.model
-        .changePassword()
-        .then(() => {
-          // password changed
-          this.setProperties({
-            changePasswordProgress: false,
-            passwordProgress: i18n("user.change_password.success"),
-          });
-        })
-        .catch(() => {
-          // password failed to change
-          this.setProperties({
-            changePasswordProgress: false,
-            passwordProgress: i18n("user.change_password.error"),
-          });
-        });
-    }
-  }
-
   @computed(
     "model.is_anonymous",
     "model.no_password",
@@ -143,6 +124,40 @@ export default class SecurityController extends Controller {
 
   get associatedAccountsLoaded() {
     return typeof this.model.associated_accounts !== "undefined";
+  }
+
+  @action
+  changePassword(event) {
+    event?.preventDefault();
+    if (!this.passwordProgress) {
+      this.set("passwordProgress", i18n("user.change_password.in_progress"));
+      return this.model
+        .changePassword()
+        .then((result) => {
+          if (result.email_code) {
+            this.set("passwordProgress", null);
+            this.modal.show(ForgotPassword, {
+              model: {
+                codeSent: true,
+                emailOrUsername: this.model.email || this.model.username,
+              },
+            });
+            return;
+          }
+
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: i18n("user.change_password.success"),
+          });
+        })
+        .catch(() => {
+          // password failed to change
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: i18n("user.change_password.error"),
+          });
+        });
+    }
   }
 
   removePasswordConfirm() {

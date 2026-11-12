@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Plugin admin interface compatibility", type: :system do
+RSpec.describe "Plugin admin interface compatibility" do
   fab!(:current_user, :admin)
+  # Tests don't seed the bundled queries, and an empty list renders no table.
+  fab!(:query)
 
   before do
     sign_in(current_user)

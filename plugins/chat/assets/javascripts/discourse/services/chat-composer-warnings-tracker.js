@@ -52,40 +52,6 @@ export default class ChatComposerWarningsTracker extends Service {
     );
   }
 
-  @bind
-  _trackMentions(currentMessage) {
-    if (!this.siteSettings.enable_mentions) {
-      return;
-    }
-
-    currentMessage.parseMentions().then((mentions) => {
-      this.mentionsCount = mentions?.length;
-
-      if (this.mentionsCount > 0) {
-        this.tooManyMentions =
-          this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
-
-        if (!this.tooManyMentions) {
-          const newMentions = mentions.filter(
-            (mention) => !(mention in this._mentionWarningsSeen)
-          );
-
-          this.channelWideMentionDisallowed =
-            !currentMessage.channel.allowChannelWideMentions &&
-            (mentions.includes("here") || mentions.includes("all"));
-
-          if (newMentions?.length > 0) {
-            this.#recordNewWarnings(newMentions, mentions);
-          } else {
-            this.#rebuildWarnings(mentions);
-          }
-        }
-      } else {
-        this.#resetMentionStats();
-      }
-    });
-  }
-
   #resetMentionStats() {
     this.tooManyMentions = false;
     this.channelWideMentionDisallowed = false;
@@ -139,5 +105,39 @@ export default class ChatComposerWarningsTracker extends Service {
 
     this.unreachableGroupMentions = newWarnings[0];
     this.overMembersLimitGroupMentions = newWarnings[1];
+  }
+
+  @bind
+  _trackMentions(currentMessage) {
+    if (!this.siteSettings.enable_mentions) {
+      return;
+    }
+
+    currentMessage.parseMentions().then((mentions) => {
+      this.mentionsCount = mentions?.length;
+
+      if (this.mentionsCount > 0) {
+        this.tooManyMentions =
+          this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
+
+        if (!this.tooManyMentions) {
+          const newMentions = mentions.filter(
+            (mention) => !(mention in this._mentionWarningsSeen)
+          );
+
+          this.channelWideMentionDisallowed =
+            !currentMessage.channel.allowChannelWideMentions &&
+            (mentions.includes("here") || mentions.includes("all"));
+
+          if (newMentions?.length > 0) {
+            this.#recordNewWarnings(newMentions, mentions);
+          } else {
+            this.#rebuildWarnings(mentions);
+          }
+        }
+      } else {
+        this.#resetMentionStats();
+      }
+    });
   }
 }

@@ -349,6 +349,42 @@ acceptance("Composer - Image Preview", function (needs) {
   });
 });
 
+acceptance(
+  "Composer - Image Preview - Hand-written attributes",
+  function (needs) {
+    needs.user({});
+    needs.settings({ allow_uncategorized_topics: true });
+    needs.pretender((server, helper) => {
+      server.post("/uploads/lookup-urls", () => helper.response([]));
+    });
+
+    test("controls for an image that is not in the draft change nothing", async function (assert) {
+      const draft = `![real|200x200](upload://real.png)\n\n<img src="/images/avatar.png" alt="fake" data-image-index="9" data-image-run="2" data-scale="100">`;
+
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", draft);
+
+      const fake = ".button-wrapper[data-image-index='9']";
+
+      await click(`${fake} .alt-text-edit-btn`);
+      await fillIn(`${fake} .alt-text-input`, "changed");
+      await click(`${fake} .alt-text-edit-ok`);
+      assert.dom(".d-editor-input").hasValue(draft, "alt text check button");
+
+      await click(`${fake} .alt-text-edit-btn`);
+      await triggerKeyEvent(`${fake} .alt-text-input`, "keypress", "Enter");
+      assert.dom(".d-editor-input").hasValue(draft, "alt text enter key");
+
+      await click(`${fake} .delete-image-button`);
+      assert.dom(".d-editor-input").hasValue(draft, "delete button");
+
+      await click(`${fake} .wrap-image-grid-button`);
+      assert.dom(".d-editor-input").hasValue(draft, "grid button");
+    });
+  }
+);
+
 acceptance("Composer - Image Preview - Plugin API", function (needs) {
   needs.user({});
   needs.settings({ allow_uncategorized_topics: true });

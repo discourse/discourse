@@ -20,7 +20,7 @@ describe "AddUserToGroupThroughCustomField" do
   end
 
   context "with no matching user custom fields" do
-    it "works" do
+    it "leaves both users outside the target group" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(false)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
@@ -40,7 +40,7 @@ describe "AddUserToGroupThroughCustomField" do
       )
     end
 
-    it "works" do
+    it "adds only the matching user to the target group" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(false)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
@@ -48,6 +48,23 @@ describe "AddUserToGroupThroughCustomField" do
 
       expect(user_1.reload.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.reload.in_any_groups?([target_group.id])).to eq(false)
+    end
+  end
+
+  context "when the field value is the full name of an automatic group" do
+    before do
+      Group.refresh_automatic_groups!
+      UserCustomField.create!(
+        user_id: user_1.id,
+        name: "user_field_#{user_field.id}",
+        value: Group[:admins].full_name,
+      )
+    end
+
+    it "does not add the user to the automatic group" do
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
+
+      expect(user_1.reload.groups).not_to include(Group[:admins])
     end
   end
 
@@ -70,7 +87,7 @@ describe "AddUserToGroupThroughCustomField" do
   context "when group is already present" do
     before { target_group.add(user_1) }
 
-    it "works" do
+    it "preserves existing group membership" do
       expect(user_1.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.in_any_groups?([target_group.id])).to eq(false)
 
@@ -111,6 +128,26 @@ describe "AddUserToGroupThroughCustomField" do
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
+      end
+    end
+
+    context "when the field value is the full name of an automatic group" do
+      before do
+        Group.refresh_automatic_groups!
+        UserCustomField.create!(
+          user_id: user_1.id,
+          name: "user_field_#{user_field.id}",
+          value: Group[:admins].full_name,
+        )
+      end
+
+      it "does not add the user to the automatic group" do
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
+          "user" => user_1,
+        )
+
+        expect(user_1.reload.groups).not_to include(Group[:admins])
       end
     end
 

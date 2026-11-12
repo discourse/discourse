@@ -21,7 +21,7 @@ export default class ScrollManager extends Service {
    * Binds scroll events to a component and calls its 'scrolled' method when scrolling occurs
    *
    * @method bindScrolling
-   * @param {Object} target The component that will receive 'scrolled' method calls
+   * @param {{ scrolled: () => void }} target The component that will receive 'scrolled' method calls
    * @param {Object} [opts={}] Configuration options
    * @param {Number} [opts.throttle=100] Throttle time in milliseconds; this is the time interval between every call of the scroll event
    * @public
@@ -77,7 +77,7 @@ export default class ScrollManager extends Service {
    * Unbinds scroll events from a component
    *
    * @method unbindScrolling
-   * @param {Object} target The component to unbind scroll events from
+   * @param {{ scrolled: () => void }} target The component to unbind scroll events from
    * @public
    */
   unbindScrolling(target) {

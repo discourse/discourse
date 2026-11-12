@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class PostVotingAnswerButton extends Component {
   static shouldRender(args) {
@@ -16,7 +16,7 @@ export default class PostVotingAnswerButton extends Component {
 
   <template>
     <DButton
-      class={{concatClass
+      class={{dConcatClass
         "post-action-menu__post-voting-answer"
         "reply"
         (if this.showLabel "create fade-out")

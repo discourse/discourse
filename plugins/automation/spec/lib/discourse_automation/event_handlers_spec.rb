@@ -30,7 +30,7 @@ describe DiscourseAutomation::EventHandlers do
     end
     fab!(:topic) { Fabricate(:post).topic }
 
-    it "triggers automation when a topic is closed" do
+    it "triggers automation when a topic is closed manually" do
       list =
         capture_contexts do
           TopicStatusUpdater.new(topic, Fabricate(:admin)).update!("closed", true)
@@ -39,6 +39,23 @@ describe DiscourseAutomation::EventHandlers do
       expect(list.size).to eq(1)
       expect(list.first["kind"]).to eq("topic_closed")
       expect(list.first["topic"].id).to eq(topic.id)
+      expect(list.first["status"]).to eq(:manually)
+      expect(list.first["placeholders"]["topic_url"]).to eq(topic.relative_url)
+      expect(list.first["placeholders"]["topic_title"]).to eq(topic.title)
+    end
+
+    it "triggers automation when a topic is closed automatically" do
+      topic.set_or_create_timer(TopicTimer.types[:close], "10")
+
+      list =
+        capture_contexts do
+          TopicStatusUpdater.new(topic, Fabricate(:admin)).update!("autoclosed", true)
+        end
+
+      expect(list.size).to eq(1)
+      expect(list.first["kind"]).to eq("topic_closed")
+      expect(list.first["topic"].id).to eq(topic.id)
+      expect(list.first["status"]).to eq(:automatically)
       expect(list.first["placeholders"]["topic_url"]).to eq(topic.relative_url)
       expect(list.first["placeholders"]["topic_title"]).to eq(topic.title)
     end

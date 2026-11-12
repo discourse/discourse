@@ -8,6 +8,10 @@ sw:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Tarehe"
+          outcomes:
+            failed: "Kushindwa"
         reports:
           filters:
             sort_by:
@@ -34,24 +38,79 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Aina"
+        error: "Hitilafu"
+        response: "Mwitikio"
+      discourse_workflows:
+        classify:
+          text: "Neno"
+          upload_ids: "Picha"
+          name: "Jina"
+          type: "Aina"
+      ai_tool_approval:
+        loading: "Inaandaa...."
+        tool: "Kitendo"
+        user: "Mtumiaji"
+        approve: "Imethibitishwa"
+        reject: "Kataa"
+        approved: "Wamekubaliwa"
+        rejected: "Imekataliwa"
       llm_selector:
         none: "Hakuna"
       features:
-        back: "Iliyopita"
-        disabled: "(imezuiwa)"
-        groups: "Makundi:"
+        table:
+          enabled: "Imeruhusiwa"
+          groups: "Makundi"
+        chatbot:
+          places:
+            none: "Haijapatikana"
         no_groups: "Hakuna"
         edit: "Mipangilio"
+        nav:
+          enabled: "Imeruhusiwa"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
+        sentiment:
+          enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
+        image_caption:
+          setting_groups:
+            settings: "Mipangilio"
         spam:
           name: "Barua Taka"
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        settings:
+          ai_translation_category_scope:
+            label: "Kategoria"
+          ai_translation_personal_messages:
+            choices:
+              none: "Hakuna"
+              all: "Yote"
+          content_localization_language_switcher:
+            choices:
+              none: "Hakuna Mtu"
+              all: "Kila Mtu"
+        model_progress:
+          detail:
+            columns:
+              pending: "Inasubiri"
+              total: "Jumla"
+          targets:
+            post:
+              title: "Machapisho"
+            topic:
+              title: "Mada"
+            category:
+              title: "Kategoria"
+            tag:
+              title: "Lebo"
+        admin_actions:
+          enabled: "Imeruhusiwa"
         stats:
           eta_hours:
             one: "saa %{count}"
@@ -65,6 +124,8 @@ sw:
             other: "%{count} machapisho"
       spam:
         short_title: "Barua Taka"
+        no_llm_selected: "Hakuna"
+        no_decision_model_selected: "Hakuna"
         enable: "Wezesha"
         test_modal:
           spam: "Barua Taka"
@@ -73,8 +134,32 @@ sw:
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
         total: "Jumla"
+      logs:
+        short_title: "Batli"
+        apply: "Tumia"
+        successful: "Fanikiwa"
+        failed: "Kushindwa"
+        unknown: "Haijulikani"
+        time: "Muda"
+        when: "Lini"
+        request: "Ombi"
+        provider: "Mkimu"
+        user: "Mtumiaji"
+        context: "Muktadha"
+        topic: "Mada"
+        post: "Ujumbe"
+        actions: "Vitendo"
+        view_details: "Taarifa"
+        periods:
+          custom: "Binafsi"
+        detail:
+          request: "Ombi"
+          response: "Mwitikio"
+          context: "Muktadha"
+        retention:
+          summary_stage: "Muhtasari"
+          save: "Hifadhi"
       ai_agent:
-        back: "Iliyopita"
         name: "Jina"
         edit: "Hariri"
         export: "Hamisha"
@@ -84,6 +169,9 @@ sw:
         save: "Hifadhi"
         enabled: "Imeruhusiwa?"
         delete: "Futa"
+        thinking_effort_options:
+          none: "Hakuna"
+          max: "Kiwango cha juu"
         response_format:
           open_modal: "Hariri"
         filters:
@@ -93,7 +181,6 @@ sw:
           title: "Upakiaji"
           uploading: "Inaongezwa"
       tools:
-        back: "Iliyopita"
         export: "Hamisha"
         import: "Imeingizwa kutoka sehemu nyingine"
         name: "Jina"
@@ -108,17 +195,42 @@ sw:
       secrets:
         name: "Jina"
         secret: "Thamani"
-        back: "Iliyopita"
         save: "Hifadhi"
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      decision_models:
+        no_preset: "Hakuna"
+        display_name: "Jina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        delete: "Futa"
+      mcp_servers:
+        name: "Jina"
+        description: "Maelezo"
+        url: "Anwani ya mtandao"
+        oauth_connect: "Unganisha"
+        enabled: "Imeruhusiwa"
+        save: "Hifadhi"
+        edit: "Hariri"
+        delete: "Futa"
+        tools_modal:
+          required: "Muhimu na Inahitajika"
+      models:
+        name: "Jina"
+        type: "Aina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        types:
+          embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"
+        vision_modes:
+          disabled:
+            title: "Imezuiwa"
         save: "Hifadhi"
         edit: "Hariri"
-        back: "Iliyopita"
         delete: Futa
         quotas:
           group: "Kikundi"
@@ -129,7 +241,6 @@ sw:
         tests:
           success: "Mafanikio!"
         providers:
-          google: "Google"
           fake: "Binafsi"
       ai_helper:
         context_menu:
@@ -140,10 +251,7 @@ sw:
           cancel: "Batili"
         thumbnail_suggestions:
           try_again: "Jaribu Tena"
-        image_caption:
-          save_caption: "Hifadhi"
       embeddings:
-        back: "Iliyopita"
         save: "Hifadhi"
         delete: "Futa"
         edit: "Hariri"
@@ -154,6 +262,13 @@ sw:
         providers:
           google: "Google"
           fake: "Binafsi"
+      ai_artifact:
+        editor:
+          version: "Toleo"
+          default: "Halisi"
+          apply: "Tumia"
+        share: "Shirikisha"
+        filter_all: "Yote"
       ai_bot:
         debug_ai_modal:
           request: "Ombi"
@@ -174,9 +289,18 @@ sw:
             category: "Kikundi"
           table:
             total_count: "Jumla"
+      ai_search:
+        related_replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        tabs:
+          topics: "Mada"
+          messages: "Ujumbe"
       discobot_discoveries:
-        regular_results: "Mada"
-        collapse: "Kunja"
-        tooltip:
-          actions:
-            disable: "Sitisha"
+        legacy:
+          regular_results: "Mada"
+          collapse: "Kunja"
+          tooltip:
+            actions:
+              disable: "Sitisha"
+        search_messages: "Ujumbe"

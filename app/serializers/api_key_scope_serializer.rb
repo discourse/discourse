@@ -4,11 +4,12 @@ class ApiKeyScopeSerializer < ApplicationSerializer
   attributes :resource, :action, :parameters, :urls, :allowed_parameters, :key
 
   def parameters
-    ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym, :params).to_a
+    mapping = ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym)
+    ApiKeyScope.restrictable_parameters(mapping).to_a
   end
 
   def urls
-    ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym, :urls).to_a
+    ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym)&.dig(:urls).to_a
   end
 
   def action

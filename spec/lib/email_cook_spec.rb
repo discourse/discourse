@@ -135,7 +135,7 @@ RSpec.describe EmailCook do
     )
   end
 
-  it "it works and does not interpret Markdown in plaintext and elided" do
+  it "leaves Markdown uninterpreted in plain-text and elided sections" do
     long = <<~EMAIL
       [plaintext]
       *Lorem ipsum* dolor sit amet, consectetur adipiscing elit.

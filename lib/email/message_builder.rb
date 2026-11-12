@@ -24,15 +24,24 @@ module Email
         @template_args[:recipient_username] = @opts[:recipient_user].username
       end
 
+      # the instructions and preview are cooked, so the title must stay text there
+      markdown_args = @template_args
+      if @template_args[:topic_title].present?
+        markdown_args =
+          @template_args.merge(
+            topic_title: MessageBuilder.escape_markdown(@template_args[:topic_title]),
+          )
+      end
+
       if @opts[:template].present? && I18n.exists?("#{@opts[:template]}.preview")
-        @template_args[:email_preview] ||= I18n.t("#{@opts[:template]}.preview", @template_args)
+        @template_args[:email_preview] ||= I18n.t("#{@opts[:template]}.preview", markdown_args)
       end
 
       return if @template_args[:url].blank?
 
       @template_args[:header_instructions] ||= I18n.t(
         "user_notifications.header_instructions",
-        @template_args,
+        markdown_args,
       )
       @visit_link_to_respond_key =
         DiscoursePluginRegistry.apply_modifier(
@@ -53,7 +62,7 @@ module Email
         if @opts[:private_reply]
           @template_args[:respond_instructions] = I18n.t(
             "user_notifications.pm_participants",
-            @template_args,
+            markdown_args,
           )
         else
           @template_args[:respond_instructions] = ""
@@ -87,7 +96,7 @@ module Email
         end
         @template_args[:respond_instructions] = (
           if respond_instructions_key != ""
-            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, @template_args)
+            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, markdown_args)
           else
             ""
           end
@@ -103,7 +112,7 @@ module Email
           else
             "unsubscribe_link"
           end
-        @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
+        @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, markdown_args)
       end
     end
 
@@ -139,7 +148,13 @@ module Email
         subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
       elsif @opts[:template]
-        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+        subject_key = "#{@opts[:template]}.subject_template"
+
+        if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
+          subject_key += "_improved"
+        end
+
+        subject = I18n.t(subject_key, @template_args)
       else
         subject = @opts[:subject]
       end
@@ -150,35 +165,16 @@ module Email
     def html_part
       return unless html_override = @opts[:html_override]
 
-      if @template_args[:unsubscribe_instructions].present?
-        unsubscribe_instructions =
-          PrettyText.cook(@template_args[:unsubscribe_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
-      else
-        html_override.gsub!("%{unsubscribe_instructions}", "")
-      end
-
-      if @template_args[:email_preview].present?
-        email_preview = PrettyText.cook(@template_args[:email_preview], sanitize: false).html_safe
-        html_override.gsub!("%{email_preview}", email_preview)
-      else
-        html_override.gsub!("%{email_preview}", "")
-      end
-
-      if @template_args[:header_instructions].present?
-        header_instructions =
-          PrettyText.cook(@template_args[:header_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{header_instructions}", header_instructions)
-      else
-        html_override.gsub!("%{header_instructions}", "")
-      end
-
-      if @template_args[:respond_instructions].present?
-        respond_instructions =
-          PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{respond_instructions}", respond_instructions)
-      else
-        html_override.gsub!("%{respond_instructions}", "")
+      # these can hold user content, such as participant names or customized
+      # translations interpolating a topic title
+      %i[
+        unsubscribe_instructions
+        email_preview
+        header_instructions
+        respond_instructions
+      ].each do |key|
+        cooked = @template_args[key].present? ? PrettyText.cook(@template_args[key]) : ""
+        html_override.gsub!("%{#{key}}") { cooked }
       end
 
       html =
@@ -205,17 +201,26 @@ module Email
           @template_args[key] = escaped_template_arg(key) if @template_args.key?(key)
         end
 
+        if @opts.key?(:body_topic_title)
+          @template_args[:topic_title] = ERB::Util.html_escape(@opts[:body_topic_title])
+        end
+
         augmented_template_args =
           @template_args.merge(
             optional_re: "",
             optional_pm: "",
             optional_cat: format_category,
-            optional_tags: format_tags,
+            optional_tags: ->(_) { format_tag_hashtags },
           )
 
         body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
       else
         body = @opts[:body].dup
+      end
+
+      if key = @template_args[:body_suffix_key]
+        paragraph = I18n.t(key, @template_args)
+        body = "#{body.rstrip}\n\n#{paragraph}"
       end
 
       if @template_args[:unsubscribe_instructions].present?
@@ -308,6 +313,11 @@ module Email
       result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))
     end
 
+    # keeps user text from adding links, images or tags to cooked Markdown
+    def self.escape_markdown(text)
+      text.gsub(/[\\\[\]<]/) { |character| "\\#{character}" }
+    end
+
     def self.custom_headers(string)
       result = {}
       string
@@ -397,6 +407,15 @@ module Email
       else
         ""
       end
+    end
+
+    def format_tag_hashtags
+      return "" if @opts[:tag_names].blank?
+      return format_tags if HashtagAutocompleteService.data_source_types.exclude?("tag")
+
+      guardian = @opts[:recipient_user]&.guardian || Guardian.new
+      hashtags = HashtagAutocompleteService.new(guardian).hashtags_for("tag", @opts[:tag_names])
+      "#{hashtags.join(" ")} "
     end
   end
 end

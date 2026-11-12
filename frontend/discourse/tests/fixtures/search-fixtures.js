@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const searchFixtures = {
   "/search.json": {
     posts: [
       {
@@ -844,3 +849,5 @@ export default {
     },
   },
 };
+
+export default searchFixtures;

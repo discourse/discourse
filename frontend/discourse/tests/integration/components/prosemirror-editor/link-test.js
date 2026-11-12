@@ -1,6 +1,11 @@
+import { settled } from "@ember/test-helpers";
+import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - link extension",
@@ -45,8 +50,43 @@ module(
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
-        this.siteSettings.rich_editor = true;
         await testMarkdown(assert, markdown, html, expectedMarkdown);
+      });
+    });
+
+    module("pasting rich content over a selection", function () {
+      async function pasteOverWorld(assert, html) {
+        const [editor] = await setupRichEditor(assert, "Hello world");
+        const { view } = editor;
+        view.dispatch(
+          view.state.tr.setSelection(
+            TextSelection.create(view.state.doc, 7, 12)
+          )
+        );
+        view.pasteHTML(html);
+        await settled();
+        return editor;
+      }
+
+      test("a lone URL links the selection", async function (assert) {
+        const editor = await pasteOverWorld(
+          assert,
+          "<span>https://discourse.org</span>"
+        );
+
+        assert.strictEqual(
+          editor.value,
+          "Hello [world](https://discourse.org)"
+        );
+      });
+
+      test("text with a URL among other words replaces the selection", async function (assert) {
+        const editor = await pasteOverWorld(
+          assert,
+          "<span>see https://discourse.org</span>"
+        );
+
+        assert.strictEqual(editor.value, "Hello see https://discourse.org");
       });
     });
   }

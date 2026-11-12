@@ -3,36 +3,35 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
-import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const FilterNavigationMenuList = <template>
   {{#if @data.suggestions.length}}
-    <DropdownMenu as |dropdown|>
+    <DDropdownMenu as |dropdown|>
       {{#each @data.suggestions as |item index|}}
         <dropdown.item
-          class={{concatClass
+          class={{dConcatClass
             "filter-navigation__tip-item"
             (if (eq index @data.selectedIndex) "--selected")
           }}
           {{on "click" (fn @data.selectItem item)}}
         >
           {{#if item.category}}
-            {{categoryBadge item.category allowUncategorized=true}}
+            {{dCategoryBadge item.category allowUncategorized=true}}
           {{else}}
             <span class="filter-navigation__tip-name">
               {{item.name}}
@@ -45,10 +44,13 @@ const FilterNavigationMenuList = <template>
           {{/if}}
         </dropdown.item>
       {{/each}}
-    </DropdownMenu>
+    </DDropdownMenu>
   {{/if}}
 </template>;
 
+/**
+ * @typedef {{ name: string, description?: string, category?: import("discourse/models/category").default, term?: string, isSuggestion?: boolean, delimiters?: { name: string, description?: string }[], alias?: string, type?: string, priority?: number, prefixes?: { name: string, description?: string }[], extra_entries?: { name: string, description: string }[], min?: number }} FilterSuggestion
+ */
 /**
  * FilterNavigationMenu - A simpler UI component for filter input and suggestions
  *
@@ -65,20 +67,30 @@ export default class FilterNavigationMenu extends Component {
   @service site;
 
   @tracked currentInputValue = this.args.initialInputValue || "";
+
+  /** @type {FilterSuggestion[]} */
   @tracked suggestions = [];
+
+  /** @type {string | null} */
   @tracked activeFilter = null;
 
   lastSuggestionInput = "";
   suggestionRequestId = 0;
 
-  trackedMenuListData = new TrackedObject({
+  /** @type {{ suggestions: FilterSuggestion[], selectedIndex: number | null, selectItem: FilterNavigationMenu["selectItem"] }} */
+  trackedMenuListData = trackedObject({
     suggestions: [],
     selectedIndex: null,
     selectItem: this.selectItem,
   });
 
+  /** @type {import("@ember/runloop").Timer | null} */
   searchTimer = null;
+
+  /** @type {HTMLInputElement | null} */
   inputElement = null;
+
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null | undefined} */
   dMenuInstance = null;
   _selectedIndex = -1;
 
@@ -91,12 +103,16 @@ export default class FilterNavigationMenu extends Component {
     this.trackedMenuListData.selectedIndex = value;
   }
 
-  clearSelection() {
-    this.selectedIndex = -1;
-  }
-
   get nothingSelected() {
     return this.selectedIndex === -1;
+  }
+
+  get placeholder() {
+    return this.args.placeholder || i18n("filter.placeholder");
+  }
+
+  clearSelection() {
+    this.selectedIndex = -1;
   }
 
   @action
@@ -230,7 +246,6 @@ export default class FilterNavigationMenu extends Component {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
-      maxWidth: 2000,
       matchTriggerWidth: true,
       visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
       constrainHeightToViewport: true,
@@ -339,30 +354,30 @@ export default class FilterNavigationMenu extends Component {
 
   <template>
     <div class="topic-query-filter__input">
-      {{icon "filter" class="topic-query-filter__icon btn-flat"}}
+      {{dIcon "filter" class="topic-query-filter__icon btn-flat"}}
 
       <input
+        autocapitalize="none"
+        autocomplete="off"
+        autocorrect="off"
         class="topic-query-filter__filter-term"
+        enterkeyhint="search"
+        id="topic-query-filter-input"
+        placeholder={{this.placeholder}}
+        type="text"
         value={{this.currentInputValue}}
         {{on "keydown" this.handleKeydown}}
         {{on "input" (withEventValue this.updateInput)}}
         {{on "focus" this.openFilterMenu}}
         {{didInsert this.storeInputElement}}
-        autocapitalize="none"
-        enterkeyhint="search"
-        autocorrect="off"
-        type="text"
-        id="topic-query-filter-input"
-        autocomplete="off"
-        placeholder={{i18n "filter.placeholder"}}
         {{didUpdate this.syncFromInitialValue @initialInputValue}}
       />
 
       {{#if this.currentInputValue}}
         <DButton
-          @icon="xmark"
-          @action={{this.clearInput}}
           class="topic-query-filter__clear-btn btn-flat"
+          @action={{this.clearInput}}
+          @icon="xmark"
         />
       {{/if}}
     </div>

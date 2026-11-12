@@ -1,7 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import RestModel from "discourse/models/rest";
@@ -24,7 +23,7 @@ export default class CustomReaction extends RestModel {
   }
 
   static flattenForPostList(reaction) {
-    const title = reaction.topic.title;
+    const { title, fancy_title } = reaction.topic;
     return {
       // Original reaction data
       ...reaction,
@@ -44,7 +43,7 @@ export default class CustomReaction extends RestModel {
       post_type: reaction.post.post_type,
       url: reaction.post.url,
       title,
-      titleHtml: title && emojiUnescape(escapeExpression(title)),
+      titleHtml: fancy_title && emojiUnescape(fancy_title),
       category: reaction.category,
       created_at: reaction.created_at,
     };
@@ -92,16 +91,33 @@ export default class CustomReaction extends RestModel {
     });
   }
 
-  static findReactionUsers(postId, opts) {
-    opts = opts || {};
-    const data = {};
-
-    if (opts.reactionValue) {
-      data.reaction_value = opts.reactionValue;
+  static fetchReactionsUsersList(postId, page, limit, reactionValue) {
+    const data = { page, limit };
+    if (reactionValue) {
+      data.reaction_value = reactionValue;
     }
+    return ajax(
+      `/discourse-reactions/posts/${postId}/reactions-users-list.json`,
+      { data }
+    );
+  }
 
+  static findReactionUsers(postId, options = {}) {
+    const data = {};
+    if (options.reactionValue) {
+      data.reaction_value = options.reactionValue;
+    }
     return ajax(`/discourse-reactions/posts/${postId}/reactions-users.json`, {
+      type: "GET",
       data,
+    }).then((result) => {
+      const reactionUsers = result.reaction_users.map((reactionUser) => {
+        reactionUser.users = reactionUser.users.map((user) =>
+          User.create(user)
+        );
+        return reactionUser;
+      });
+      return { reaction_users: reactionUsers };
     });
   }
 

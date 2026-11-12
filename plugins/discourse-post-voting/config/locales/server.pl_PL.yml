@@ -37,11 +37,6 @@ pl_PL:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Co chcesz zrobić z tym komentarzem?"
-        no_action_comment:
-          title: "Brak akcji"
-          description: "Pozostaw komentarz bez zmian."
         agree_and_keep_comment:
           title: "Zachowaj komentarz"
           description: "Zgadzam się z flagą i pozostawię komentarz bez zmian."

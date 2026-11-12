@@ -35,6 +35,7 @@ module Categories
 
     step :log_action
     step :clear_category_type_counts_cache
+    step :clear_site_cache
 
     private
 
@@ -50,8 +51,8 @@ module Categories
       Categories::TypeRegistry.get(params.category_type)
     end
 
-    def type_is_available(type_class:)
-      type_class.available?
+    def type_is_available(type_class:, guardian:)
+      type_class.available_for?(guardian)
     end
 
     def enable_plugin(type_class:)
@@ -83,6 +84,12 @@ module Categories
 
     def clear_category_type_counts_cache
       Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
+    end
+
+    # The cached `site.json` carries `category_types`
+    # clearing cache makes type changes apply immediately on change
+    def clear_site_cache
+      Site.clear_cache
     end
   end
 end

@@ -5,9 +5,24 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_math: "Discourse Math"
   js:
     discourse_math:
+      edit_math: "編輯數學式"
       edit_modal:
+        title: "編輯數學式"
+        label: "數學式"
         apply: "套用"
+      composer:
+        insert_math: "插入數學式"
       insert_modal:
+        title_inline: "插入行內數學式"
+        title_block: "插入區塊數學式"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "插入"
+        block_mode: "區塊模式（顯示方程式）"

@@ -1,25 +1,26 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DStatTiles from "discourse/components/d-stat-tiles";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import SpamTestModal from "./modal/spam-test-modal";
+import SpamTestModal from "discourse/plugins/discourse-ai/discourse/components/modal/spam-test-modal";
 
 export default class AiSpam extends Component {
   @service toasts;
@@ -35,6 +36,7 @@ export default class AiSpam extends Component {
   };
   @tracked isEnabled = false;
   @tracked selectedLLM = null;
+  @tracked selectedDecisionModelId = null;
   @tracked selectedAgentId = null;
   @tracked customInstructions = "";
   @autoTrackedArray errors;
@@ -54,124 +56,26 @@ export default class AiSpam extends Component {
     }
   }
 
-  @action
-  async fixScanUserNotAdmin() {
-    const spamScanningUser = this.args.model.spam_scanning_user;
-    if (!spamScanningUser || spamScanningUser.admin) {
-      return;
-    }
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-ai/ai-spam/fix-errors`,
-        {
-          type: "POST",
-          data: {
-            error: "spam_scanner_not_admin",
-          },
-        }
-      );
-
-      if (response.success) {
-        this.toasts.success({
-          data: { message: i18n("discourse_ai.spam.errors.resolved") },
-          duration: "short",
-        });
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      window.location.reload();
-    }
-  }
-
-  @action
-  initializeFromModel() {
-    const model = this.args.model;
-    this.isEnabled = model.is_enabled;
-
-    if (model.llm_id) {
-      this.selectedLLM = model.llm_id;
-    } else {
-      if (this.availableLLMs.length) {
-        this.selectedLLM = this.availableLLMs[0].id;
-        this.autoSelectedLLM = true;
-      }
-    }
-    this.customInstructions = model.custom_instructions;
-    this.stats = model.stats;
-    this.selectedAgentId = model.ai_agent_id;
-  }
-
   get availableLLMs() {
     return this.args.model?.available_llms || [];
+  }
+
+  get availableDecisionModels() {
+    return this.args.model?.available_decision_models || [];
   }
 
   get availableAgents() {
     return this.args.model?.available_agents || [];
   }
 
-  @action
-  async toggleEnabled() {
-    this.isEnabled = !this.isEnabled;
-    const data = { is_enabled: this.isEnabled };
-    if (this.autoSelectedLLM) {
-      data.llm_model_id = this.llmId;
-    }
-    try {
-      const response = await ajax("/admin/plugins/discourse-ai/ai-spam.json", {
-        type: "PUT",
-        data,
-      });
-      this.autoSelectedLLM = false;
-      this.isEnabled = response.is_enabled;
-    } catch (error) {
-      this.isEnabled = !this.isEnabled;
-      popupAjaxError(error);
-    }
+  get toggleDisabled() {
+    return applyValueTransformer("ai-spam-toggle-disabled", false, {
+      spam: this.args.model,
+    });
   }
 
   get llmId() {
     return this.selectedLLM;
-  }
-
-  @action
-  async updateLLM(value) {
-    this.selectedLLM = value;
-  }
-
-  @action
-  async updateAgent(value) {
-    this.selectedAgentId = value;
-  }
-
-  @action
-  async save() {
-    try {
-      await ajax("/admin/plugins/discourse-ai/ai-spam.json", {
-        type: "PUT",
-        data: {
-          llm_model_id: this.llmId,
-          custom_instructions: this.customInstructions,
-          ai_agent_id: this.selectedAgentId,
-        },
-      });
-      this.toasts.success({
-        data: { message: i18n("discourse_ai.spam.settings_saved") },
-        duration: "short",
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  showTestModal() {
-    this.modal.show(SpamTestModal, {
-      model: {
-        customInstructions: this.customInstructions,
-        llmId: this.llmId,
-      },
-    });
   }
 
   get metrics() {
@@ -216,13 +120,131 @@ export default class AiSpam extends Component {
     ];
   }
 
+  @action
+  async fixScanUserNotAdmin() {
+    const spamScanningUser = this.args.model.spam_scanning_user;
+    if (!spamScanningUser || spamScanningUser.admin) {
+      return;
+    }
+    try {
+      const response = await ajax(
+        `/admin/plugins/discourse-ai/ai-spam/fix-errors`,
+        {
+          type: "POST",
+          data: {
+            error: "spam_scanner_not_admin",
+          },
+        }
+      );
+
+      if (response.success) {
+        this.toasts.success({
+          data: { message: i18n("discourse_ai.spam.errors.resolved") },
+          duration: "short",
+        });
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      window.location.reload();
+    }
+  }
+
+  @action
+  initializeFromModel() {
+    const model = this.args.model;
+    this.isEnabled = model.is_enabled;
+
+    this.selectedDecisionModelId = model.decision_model_id;
+    if (model.llm_id) {
+      this.selectedLLM = model.llm_id;
+    } else if (!model.decision_model_id && this.availableLLMs.length) {
+      this.selectedLLM = this.availableLLMs[0].id;
+      this.autoSelectedLLM = true;
+    }
+    this.customInstructions = model.custom_instructions;
+    this.stats = model.stats;
+    this.selectedAgentId = model.ai_agent_id;
+  }
+
+  @action
+  async toggleEnabled() {
+    if (this.toggleDisabled) {
+      return;
+    }
+
+    this.isEnabled = !this.isEnabled;
+    const data = { is_enabled: this.isEnabled };
+    if (this.autoSelectedLLM) {
+      data.llm_model_id = this.llmId;
+    }
+    try {
+      const response = await ajax("/admin/plugins/discourse-ai/ai-spam.json", {
+        type: "PUT",
+        data,
+      });
+      this.autoSelectedLLM = false;
+      this.isEnabled = response.is_enabled;
+    } catch (error) {
+      this.isEnabled = !this.isEnabled;
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async updateLLM(value) {
+    this.selectedLLM = value;
+  }
+
+  @action
+  async updateDecisionModel(value) {
+    this.selectedDecisionModelId = value;
+  }
+
+  @action
+  async updateAgent(value) {
+    this.selectedAgentId = value;
+  }
+
+  @action
+  async save() {
+    try {
+      await ajax("/admin/plugins/discourse-ai/ai-spam.json", {
+        type: "PUT",
+        data: {
+          llm_model_id: this.llmId ?? "",
+          decision_model_id: this.selectedDecisionModelId ?? "",
+          custom_instructions: this.customInstructions,
+          ai_agent_id: this.selectedAgentId,
+        },
+      });
+      this.toasts.success({
+        data: { message: i18n("discourse_ai.spam.settings_saved") },
+        duration: "short",
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  showTestModal() {
+    this.modal.show(SpamTestModal, {
+      model: {
+        customInstructions: this.customInstructions,
+        llmId: this.llmId,
+        decisionModelId: this.selectedDecisionModelId,
+      },
+    });
+  }
+
   <template>
     <div class="ai-spam">
       <section class="ai-spam__settings">
         <div class="ai-spam__errors">
           {{#each this.errors as |e|}}
             <div class="alert alert-error">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <p>{{e.message}}</p>
               <DButton
                 @action={{e.button.action}}
@@ -232,19 +254,24 @@ export default class AiSpam extends Component {
           {{/each}}
         </div>
         <DPageSubheader
-          @titleLabel={{i18n "discourse_ai.spam.title"}}
           @descriptionLabel={{i18n "discourse_ai.spam.spam_description"}}
+          @titleLabel={{i18n "discourse_ai.spam.title"}}
         />
         <div class="control-group ai-spam__enabled">
           <DToggleSwitch
             class="ai-spam__toggle"
-            @state={{this.isEnabled}}
+            disabled={{this.toggleDisabled}}
             @label="discourse_ai.spam.enable"
+            @state={{this.isEnabled}}
             {{on "click" this.toggleEnabled}}
           />
           <DTooltip
+            @content={{if
+              this.toggleDisabled
+              (i18n "discourse_ai.spam.enabled_locked_tip")
+              (i18n "discourse_ai.spam.spam_tip")
+            }}
             @icon="circle-question"
-            @content={{i18n "discourse_ai.spam.spam_tip"}}
           />
         </div>
 
@@ -254,38 +281,62 @@ export default class AiSpam extends Component {
             }}</label>
           {{#if this.availableLLMs.length}}
             <ComboBox
-              @value={{this.selectedLLM}}
+              class="ai-spam__llm-selector"
               @content={{this.availableLLMs}}
               @onChange={{this.updateLLM}}
-              class="ai-spam__llm-selector"
+              @options={{hash none="discourse_ai.spam.no_llm_selected"}}
+              @value={{this.selectedLLM}}
             />
           {{else}}
             <span class="ai-spam__llm-placeholder">
-              <LinkTo @route="adminPlugins.show.discourse-ai-llms.index">
+              <LinkTo @route="adminPlugins.show.discourse-ai-models.new">
                 {{i18n "discourse_ai.spam.no_llms"}}
               </LinkTo>
             </span>
           {{/if}}
         </div>
 
-        <div class="ai-spam__agent">
-          <label class="ai-spam__agent-label">{{i18n
-              "discourse_ai.spam.select_agent"
-            }}</label>
-          <ComboBox
-            @value={{this.selectedAgentId}}
-            @content={{this.availableAgents}}
-            @onChange={{this.updateAgent}}
-            class="ai-spam__agent-selector"
-          />
-        </div>
+        {{#if this.availableDecisionModels.length}}
+          <div class="ai-spam__decision-model">
+            <label class="ai-spam__decision-model-label">
+              {{i18n "discourse_ai.spam.select_decision_model"}}
+              <DTooltip
+                @content={{i18n "discourse_ai.spam.decision_model_help"}}
+                @icon="circle-question"
+              />
+            </label>
+            <ComboBox
+              class="ai-spam__decision-model-selector"
+              @content={{this.availableDecisionModels}}
+              @onChange={{this.updateDecisionModel}}
+              @options={{hash
+                none="discourse_ai.spam.no_decision_model_selected"
+              }}
+              @value={{this.selectedDecisionModelId}}
+            />
+          </div>
+        {{/if}}
+
+        {{#if this.selectedLLM}}
+          <div class="ai-spam__agent">
+            <label class="ai-spam__agent-label">{{i18n
+                "discourse_ai.spam.select_agent"
+              }}</label>
+            <ComboBox
+              class="ai-spam__agent-selector"
+              @content={{this.availableAgents}}
+              @onChange={{this.updateAgent}}
+              @value={{this.selectedAgentId}}
+            />
+          </div>
+        {{/if}}
 
         <div class="ai-spam__instructions">
           <label class="ai-spam__instructions-label">
             {{i18n "discourse_ai.spam.custom_instructions"}}
             <DTooltip
-              @icon="circle-question"
               @content={{i18n "discourse_ai.spam.custom_instructions_help"}}
+              @icon="circle-question"
             />
           </label>
           <textarea
@@ -296,30 +347,30 @@ export default class AiSpam extends Component {
             {{on "input" (withEventValue (fn (mut this.customInstructions)))}}
           >{{this.customInstructions}}</textarea>
           <DButton
+            class="ai-spam__instructions-save btn-primary"
             @action={{this.save}}
             @label="discourse_ai.spam.save_button"
-            class="ai-spam__instructions-save btn-primary"
           />
           <DButton
+            class="btn-default"
             @action={{this.showTestModal}}
             @label="discourse_ai.spam.test_button"
-            class="btn-default"
           />
         </div>
       </section>
 
       <AdminConfigAreaCard
-        @heading="discourse_ai.spam.last_seven_days"
         class="ai-spam__stats"
+        @heading="discourse_ai.spam.last_seven_days"
       >
         <:content>
           <DStatTiles as |tiles|>
             {{#each this.metrics as |metric|}}
               <tiles.Tile
                 @label={{metric.label}}
+                @tooltip={{metric.tooltip}}
                 @url={{metric.href}}
                 @value={{metric.value}}
-                @tooltip={{metric.tooltip}}
               />
             {{/each}}
           </DStatTiles>

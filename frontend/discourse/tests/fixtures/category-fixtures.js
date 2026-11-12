@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const categoryFixtures = {
   "/c/1/show.json": {
     category: {
       id: 1,
@@ -32,6 +37,7 @@ export default {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
+      search_priority: 0,
       group_permissions: [
         { permission_type: 1, group_name: "everyone", group_id: 0 },
       ],
@@ -44,9 +50,16 @@ export default {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/11/show.json": {
@@ -124,9 +137,16 @@ export default {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
   "/c/2481/show.json": {
@@ -146,9 +166,18 @@ export default {
         discussion: {
           id: "discussion",
           name: "Discussion",
+          configuration_schema: {},
+        },
+      },
+      available_category_types: [
+        {
+          id: "support",
+          name: "Support",
           configuration_schema: {}
         },
-      }
+      ],
     },
   },
 };
+
+export default categoryFixtures;

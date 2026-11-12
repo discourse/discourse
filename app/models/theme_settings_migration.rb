@@ -40,12 +40,12 @@ end
 # Table name: theme_settings_migrations
 #
 #  id             :bigint           not null, primary key
-#  theme_id       :integer          not null
-#  theme_field_id :integer          not null
-#  version        :integer          not null
-#  name           :string(150)      not null
 #  diff           :json             not null
+#  name           :string(150)      not null
+#  version        :integer          not null
 #  created_at     :datetime         not null
+#  theme_field_id :integer          not null
+#  theme_id       :integer          not null
 #
 # Indexes
 #

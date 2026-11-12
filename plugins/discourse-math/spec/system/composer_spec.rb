@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Discourse Math - composer", type: :system do
+RSpec.describe "Discourse Math - composer" do
   fab!(:current_user) do
     # Start in markdown mode so we can type math syntax, then toggle to rich editor
     Fabricate(:admin, composition_mode: UserOption.composition_mode_types[:markdown])
@@ -12,7 +12,6 @@ RSpec.describe "Discourse Math - composer", type: :system do
 
   before do
     SiteSetting.discourse_math_enabled = true
-    SiteSetting.rich_editor = true
     sign_in(current_user)
   end
 

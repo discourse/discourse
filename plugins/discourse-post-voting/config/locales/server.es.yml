@@ -35,23 +35,18 @@ es:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "¿Qué quieres hacer con el comentario?"
-        no_action_comment:
-          title: "Ninguna acción"
-          description: "Deje el comentario como está."
         agree_and_keep_comment:
           title: "Mantener comentario"
-          description: "Estar de acuerdo con la denuncia y mantener el comentario intacto."
+          description: "Aceptar la denuncia y mantener el comentario intacto."
         agree_and_keep_deleted:
-          title: "Mantener el comentario eliminado"
+          title: "Dejar el comentario eliminado"
           description: "Aceptar la denuncia y dejar el comentario eliminado."
         agree_and_restore:
           title: "Restaurar comentario"
-          description: "Restaura el comentario para que los usuarios puedan verlo."
+          description: "Restaurar el comentario para que los usuarios puedan verlo."
         agree_and_delete:
           title: "Eliminar comentario"
-          description: "Elimina el comentario para que los usuarios no puedan verlo."
+          description: "Eliminar el comentario para que los usuarios no puedan verlo."
         agree_and_suspend:
           title: "Suspender al usuario"
           description: "Aceptar la denuncia y suspender al usuario."
@@ -60,12 +55,15 @@ es:
           description: "Aceptar la denuncia y silenciar al usuario."
         disagree_and_restore:
           title: "Discrepar y restaurar comentario"
-          description: "Restaura el comentario para que todos los usuarios puedan verlo."
+          description: "Restaurar el comentario para que todos los usuarios puedan verlo."
         disagree:
           title: "Mantener comentario"
+          description: "No aceptar la denuncia y mantener el comentario intacto."
         ignore:
-          title: "Ignorar reporte"
+          title: "Ignorar la denuncia"
+          description: "Eliminar de la cola sin realizar ninguna acción."
         delete_and_agree:
+          title: "Ignorar denuncia y eliminar comentario"
           description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
   post_action_types:
     vote:
@@ -114,14 +112,17 @@ es:
             title: "Eliminar comentario"
             description: "Elimina el comentario para que los usuarios no puedan verlo."
           delete_and_agree:
+            title: "Ignorar denuncia y eliminar comentario"
             description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
           disagree_and_restore:
             title: "Discrepar y restaurar comentario"
             description: "Restaura el comentario para que todos los usuarios puedan verlo."
           disagree:
             title: "Mantener comentario"
+            description: "No aceptar la denuncia y mantener el comentario intacto."
           ignore:
-            title: "Ignorar reporte"
+            title: "Ignorar la denuncia"
+            description: "Eliminar de la cola sin realizar ninguna acción."
         transcript:
           view: "Ver la transcripción de los comentarios anteriores"
       reviewable_score_types:

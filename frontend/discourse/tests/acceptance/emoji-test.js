@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, find, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
@@ -90,6 +90,47 @@ acceptance("Emoji", function (needs) {
       .doesNotExist(
         "emoji autocomplete should close after whitespace is added to the term"
       );
+  });
+
+  for (const ellipsis of ["...", "…"]) {
+    test(`emoji autocomplete after ${ellipsis}`, async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#topic-footer-buttons .btn.create");
+
+      await simulateKeys(".d-editor-input", `Hello world${ellipsis}:smi`);
+      assert.dom(".autocomplete.ac-emoji").exists();
+
+      await simulateKey(".d-editor-input", "\t");
+
+      assert.dom(".d-editor-input").hasValue(`Hello world${ellipsis}:smiley: `);
+    });
+  }
+
+  test("emoji autocomplete after an ellipsis changes while the menu is open", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await simulateKeys(".d-editor-input", "Hello world...:smi");
+    assert.dom(".autocomplete.ac-emoji").exists();
+
+    await fillIn(".d-editor-input", "Hello world…:smi");
+    await simulateKey(".d-editor-input", "\t");
+
+    assert.dom(".d-editor-input").hasValue("Hello world…:smiley: ");
+  });
+
+  test("emoji autocomplete inserts at the cursor if the trigger disappears", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await simulateKeys(".d-editor-input", "Hello world...:smi");
+    assert.dom(".autocomplete.ac-emoji").exists();
+
+    await fillIn(".d-editor-input", "Hello world");
+    find(".d-editor-input").setSelectionRange(6, 6);
+    await simulateKey(".d-editor-input", "\t");
+
+    assert.dom(".d-editor-input").hasValue("Hello :smiley: world");
   });
 
   needs.settings({ emoji_autocomplete_min_chars: 2 });

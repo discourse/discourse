@@ -24,10 +24,10 @@ sr:
         yesterday: "Juče"
       all_loaded: "Prikaz svih poruka"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       channel_settings:
-        edit: "Izmeni"
-        add: "Dodaj"
         notification_settings_context: "Obaveštenja"
       close: "Zatvori"
       remove: "Ukloni"
@@ -56,25 +56,29 @@ sr:
         back: "Nazad"
         filter_all: sve
         filter_open: Otvori
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružen"
       chat_message_separator:
         today: Danas
         yesterday: Juče
       about_view:
-        title: Naslov
         name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"
         tabs:
           members: Članovi
+          preferences: Postavke
           settings: Podešavanja
           search: Pretraži
         remove_member: "Ukloni"
+        members_title: "%{channel} člana"
       new_message_modal:
         filter: "Filter"
       direct_message_creator:
         title: Nova privatna poruka
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"
@@ -89,8 +93,6 @@ sr:
         notifications: "Obaveštenja"
         save: "Sačuvaj"
         saved: "Sačuvano"
-        admin_title: "Admin"
-        settings_title: "Podešavanja"
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Članovi"
@@ -102,6 +104,10 @@ sr:
           latest: "Poslednje"
       channel_list:
         title: "Kanali"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spominjanja"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"
@@ -147,3 +153,13 @@ sr:
           fields:
             message:
               label: Privatna poruka
+    discourse_workflows:
+      send_chat_message:
+        message: "Privatna poruka"
+      chat_approval:
+        message: "Privatna poruka"
+        buttons: "Дугмад"
+        value: "Vriednost"
+        style_default: "Подразумевано"
+        style_primary: "Primarna"
+        icon: "Ikona"

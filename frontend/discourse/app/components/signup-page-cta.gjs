@@ -1,6 +1,6 @@
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const SignupPageCta = <template>
@@ -12,28 +12,28 @@ const SignupPageCta = <template>
     {{/if}}
     <div class="signup-page-cta__buttons">
       <DButton
+        class="btn-large btn-primary signup-page-cta__signup"
         @action={{@createAccount}}
         @disabled={{@submitDisabled}}
         @isLoading={{@formSubmitted}}
         @label="create_account.title"
-        class="btn-large btn-primary signup-page-cta__signup"
       />
       {{#unless @hasAuthOptions}}
         <span class="signup-page-cta__existing-account">
           {{i18n "create_account.already_have_account"}}
         </span>
         <DButton
+          class="btn-large btn-flat signup-page-cta__login"
           @action={{@goToLogin}}
           @disabled={{@formSubmitted}}
           @label="log_in"
-          class="btn-large btn-flat signup-page-cta__login"
         />
       {{/unless}}
     </div>
   </div>
   <PluginOutlet
-    @name="create-account-after-modal-footer"
     @connectorTagName="div"
+    @name="create-account-after-modal-footer"
   />
 </template>;
 

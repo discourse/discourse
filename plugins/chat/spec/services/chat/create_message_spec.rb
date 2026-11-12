@@ -24,13 +24,6 @@ RSpec.describe Chat::CreateMessage do
 
       it { is_expected.not_to validate_presence_of :message }
     end
-
-    describe "client_created_at parameter" do
-      it "accepts client_created_at parameter" do
-        contract = described_class.new(client_created_at: 1.minute.ago.iso8601)
-        expect(contract.attributes.keys).to include("client_created_at")
-      end
-    end
   end
 
   describe ".call" do
@@ -64,6 +57,35 @@ RSpec.describe Chat::CreateMessage do
     let(:message) { result[:message_instance].reload }
 
     before { channel.add(guardian.user) }
+
+    context "with a /me command" do
+      let(:content) { "/me waves" }
+
+      it "preserves the raw message and cooks it as an action by the author" do
+        expect(message.message).to eq("/me waves")
+        expect(message.cooked).to match_html(
+          %(<p><em class="chat-message-action">#{user.username} waves</em></p>),
+        )
+      end
+    end
+
+    context "with a /shrug command" do
+      let(:content) { "/shrug not sure" }
+
+      it "preserves the raw message and expands the command" do
+        expect(message.message).to eq("/shrug not sure")
+        expect(message.cooked).to match_html("<p>not sure ¯\\_(ツ)_/¯</p>")
+      end
+    end
+
+    context "with a /tableflip command" do
+      let(:content) { "/tableflip" }
+
+      it "preserves the raw message and expands the command" do
+        expect(message.message).to eq("/tableflip")
+        expect(message.cooked).to match_html("<p>(╯°□°)╯︵ ┻━┻</p>")
+      end
+    end
 
     shared_examples "creating a new message" do
       it "saves the message" do
@@ -181,6 +203,16 @@ RSpec.describe Chat::CreateMessage do
           channel_membership: membership,
         )
         result
+      end
+
+      it "processes the direct message channel outside of the service transaction" do
+        initial_depth = ActiveRecord::Base.connection.open_transactions
+        transaction_depth_when_called = nil
+        Chat::Action::PublishAndFollowDirectMessageChannel
+          .expects(:call)
+          .with { transaction_depth_when_called = ActiveRecord::Base.connection.open_transactions }
+        result
+        expect(transaction_depth_when_called).to eq(initial_depth)
       end
     end
 
@@ -322,7 +354,7 @@ RSpec.describe Chat::CreateMessage do
             context "when user can't create a message in the channel" do
               before { channel.closed!(Discourse.system_user) }
 
-              it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+              it { is_expected.to fail_a_policy(:channel_allows_message_creation) }
             end
 
             context "when user can create a message in the channel" do
@@ -482,10 +514,13 @@ RSpec.describe Chat::CreateMessage do
                 end
 
                 context "when nor thread nor reply is provided" do
-                  context "when message is not valid" do
+                  context "when message is too long" do
                     let(:content) { "a" * (SiteSetting.chat_maximum_message_length + 1) }
 
-                    it { is_expected.to fail_with_an_invalid_model(:message_instance) }
+                    it "fails the contract" do
+                      expect(result).to fail_a_contract
+                      expect(result.params.errors.of_kind?(:message, :too_long)).to eq(true)
+                    end
                   end
 
                   context "when message is valid" do
@@ -524,65 +559,6 @@ RSpec.describe Chat::CreateMessage do
 
                       it "attaches the upload created by the other user" do
                         expect(message.uploads).to contain_exactly(upload, another_upload)
-                      end
-                    end
-
-                    context "when client_created_at is provided" do
-                      let(:client_timestamp) { 30.seconds.ago }
-
-                      before do
-                        params[:client_created_at] = client_timestamp.iso8601
-                        params[:upload_ids] = [] # Remove uploads to avoid ID conflicts
-                      end
-
-                      it "uses the client timestamp for created_at" do
-                        expect(result).to run_successfully
-                        expect(message.created_at).to be_within(1.second).of(client_timestamp)
-                      end
-
-                      context "when client timestamp is too old" do
-                        let(:client_timestamp) { 2.minutes.ago }
-
-                        it "falls back to server timestamp" do
-                          expect(result).to run_successfully
-                          expect(message.created_at).to be_within(5.seconds).of(Time.zone.now)
-                        end
-                      end
-
-                      context "when client timestamp is in the future" do
-                        let(:client_timestamp) { 2.minutes.from_now }
-
-                        it "falls back to server timestamp" do
-                          expect(result).to run_successfully
-                          expect(message.created_at).to be_within(5.seconds).of(Time.zone.now)
-                        end
-                      end
-
-                      context "when client timestamp is invalid format" do
-                        before { params[:client_created_at] = "invalid-timestamp" }
-
-                        it "falls back to server timestamp" do
-                          expect(result).to run_successfully
-                          expect(message.created_at).to be_within(5.seconds).of(Time.zone.now)
-                        end
-                      end
-
-                      context "when client timestamp is empty" do
-                        before { params[:client_created_at] = "" }
-
-                        it "falls back to server timestamp" do
-                          expect(result).to run_successfully
-                          expect(message.created_at).to be_within(5.seconds).of(Time.zone.now)
-                        end
-                      end
-                    end
-
-                    context "when client_created_at is not provided" do
-                      before { params[:upload_ids] = [] } # Remove uploads to avoid ID conflicts
-
-                      it "uses server timestamp" do
-                        expect(result).to run_successfully
-                        expect(message.created_at).to be_within(5.seconds).of(Time.zone.now)
                       end
                     end
                   end

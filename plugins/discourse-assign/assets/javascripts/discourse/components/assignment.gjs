@@ -3,11 +3,10 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TextArea from "discourse/components/textarea";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { not } from "discourse/truth-helpers";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class Assignment extends Component {
@@ -16,6 +15,22 @@ export default class Assignment extends Component {
 
   get assignee() {
     return this.args.assignment.username || this.args.assignment.group_name;
+  }
+
+  get targetId() {
+    return this.args.assignment.targetId || this.args.assignment.target?.id;
+  }
+
+  get targetType() {
+    return this.args.assignment.targetType || "Topic";
+  }
+
+  get suggestions() {
+    return this.taskActions.suggestionsFor(this.targetId, this.targetType);
+  }
+
+  get searchUrl() {
+    return this.taskActions.searchUrlFor(this.targetId, this.targetType);
   }
 
   get status() {
@@ -39,8 +54,10 @@ export default class Assignment extends Component {
   }
 
   @action
-  handleTextAreaKeydown(event) {
+  handleKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
       this.args.onSubmit();
     }
   }
@@ -51,8 +68,8 @@ export default class Assignment extends Component {
   }
 
   @action
-  setAssignee([newAssignee]) {
-    if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
+  setAssignee([newAssignee], [item]) {
+    if (item?.isGroup) {
       this.args.assignment.username = null;
       this.args.assignment.group_name = newAssignee;
     } else {
@@ -77,28 +94,25 @@ export default class Assignment extends Component {
       <EmailGroupUserChooser
         autocomplete="off"
         @id="assignee-chooser"
-        @value={{this.assignee}}
         @onChange={{this.setAssignee}}
-        @showUserStatus={{true}}
         @options={{hash
           mobilePlacementStrategy="absolute"
-          includeGroups=true
-          customSearchOptions=(hash
-            assignableGroups=true
-            defaultSearchResults=this.taskActions.suggestions
-          )
-          groupMembersOf=this.taskActions.allowedGroups
+          searchUrl=this.searchUrl
+          customSearchOptions=(hash defaultSearchResults=this.suggestions)
           maximum=1
           tabindex=1
           expandedOnInsert=(not this.assignee)
           caretUpIcon="magnifying-glass"
           caretDownIcon="magnifying-glass"
         }}
+        @showUserStatus={{true}}
+        @value={{this.assignee}}
+        {{on "keydown" this.handleKeydown capture=true}}
       />
 
       {{#if this.showAssigneeIeEmptyError}}
         <span class="error-label">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           {{i18n "discourse_assign.assign_modal.choose_assignee"}}
         </span>
       {{/if}}
@@ -108,10 +122,11 @@ export default class Assignment extends Component {
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
         <ComboBox
-          @id="assign-status"
           @content={{this.assignStatusOptions}}
-          @value={{this.status}}
+          @id="assign-status"
           @onChange={{this.setStatus}}
+          @value={{this.status}}
+          {{on "keydown" this.handleKeydown capture=true}}
         />
       </div>
     {{/if}}
@@ -123,10 +138,10 @@ export default class Assignment extends Component {
         >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
 
-      <TextArea
+      <DTextarea
         id="assign-modal-note"
         @value={{@assignment.note}}
-        {{on "keydown" this.handleTextAreaKeydown}}
+        {{on "keydown" this.handleKeydown}}
         {{on "input" this.markAsEdited}}
       />
     </div>

@@ -1,11 +1,11 @@
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const QueryHelp = <template>
   <DModal
-    @title={{i18n "explorer.help.modal_title"}}
     @closeModal={{@closeModal}}
+    @title={{i18n "explorer.help.modal_title"}}
   >
     <:body>
       {{trustHTML (i18n "explorer.help.auto_resolution")}}

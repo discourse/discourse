@@ -13,19 +13,21 @@ it:
   js:
     discourse_reactions:
       reactions_title: "Reazioni"
-      state_panel:
-        more_users: "e %{count} altro..."
-      reaction:
-        forbidden: "Quella reazione è stata creata troppo tempo fa. Non può più essere modificata né rimossa."
       picker:
         react_with: "Reagisci a questo messaggio con: %{reaction}"
         cant_remove_reaction: "Non puoi più rimuovere la tua reazione"
         remove_reaction: "Rimuovi questa reazione %{reaction}"
+      users_popup:
+        all: "Tutte"
       main_reaction:
         add: "Metti \"Mi piace\" a questo messaggio"
         remove: "Rimuovi questo \"Mi piace\""
         cant_remove: "Non puoi più rimuovere il tuo Mi piace"
         unauthenticated: "Registrati o accedi per mettere mi piace a questo post"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Aggiunta"
+        changes_removed: "Rimosso"
     notifications:
       reaction_1_user_multiple_posts:
         one: "ha reagito a %{count} tuo messaggio"

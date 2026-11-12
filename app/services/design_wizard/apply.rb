@@ -1,0 +1,232 @@
+# frozen_string_literal: true
+
+# Applies the design choices made in the admin design wizard: default theme,
+# the theme's light/dark palettes, fonts, logo, homepage, and whether members
+# can switch between the offered palettes.
+# The palette work is transactional; the site settings are applied after it,
+# the same way the rest of the admin config writes them.
+class DesignWizard::Apply
+  include Service::Base
+
+  BASE_LIGHT_PALETTE_ID = ColorScheme::NAMES_TO_ID_MAP[ColorScheme::LIGHT_PALETTE_NAME]
+
+  params do
+    attribute :theme_id, :integer
+    attribute :light_palette_id, :integer
+    attribute :dark_palette_id, :integer
+    attribute :palettes_user_selectable, :boolean, default: false
+    attribute :base_font, :string
+    attribute :heading_font, :string
+    attribute :logo, :string
+    attribute :homepage, :string
+    attribute :homepage_settings, default: -> { {} }
+    attribute :category_page_style, :string
+    # step saves can still be reverted, so only finishing may discard what
+    # members chose for themselves
+    attribute :finishing, :boolean, default: false
+
+    before_validation do
+      # the built-in light palette is represented by a theme without an
+      # assigned light palette
+      self.light_palette_id = nil if light_palette_id == BASE_LIGHT_PALETTE_ID
+    end
+
+    validates :theme_id, presence: true, inclusion: { in: ->(_) { DesignWizard::Themes.ids } }
+    validates :base_font,
+              :heading_font,
+              inclusion: {
+                in: BaseFontSetting.values.map { |font| font[:value] },
+              },
+              allow_blank: true
+    validates :homepage,
+              inclusion: {
+                in: ->(_) { DesignWizard::Homepages.restorable_ids },
+              },
+              allow_blank: true
+    validates :category_page_style,
+              inclusion: {
+                in: CategoryPageStyle.values.map { |style| style[:value] },
+              },
+              allow_blank: true
+    validate :built_in_palettes_exist
+    validate :homepage_settings_are_available
+
+    def site_settings(theme_id:)
+      DesignWizard::Homepages
+        .settings_for(homepage, overrides: homepage_settings)
+        .merge(
+          {
+            default_theme_id: theme_id,
+            base_font: base_font.presence,
+            heading_font: heading_font.presence,
+            # blank removes the logo, so only nil leaves it untouched; a hidden
+            # logo would fail the whole update, including a revert
+            logo: (logo if SiteSetting.hidden_settings.exclude?(:logo)),
+            default_homepage: homepage.presence,
+            desktop_category_page_style: category_page_style.presence,
+          },
+        )
+        .compact
+        .map { |setting_name, value| { setting_name:, value: } }
+    end
+
+    private
+
+    def homepage_settings_are_available
+      if !homepage_settings.is_a?(Hash) ||
+           (homepage_settings.keys - DesignWizard::Homepages.current_settings.keys).any?
+        errors.add(:homepage_settings, :invalid)
+        return
+      end
+
+      homepage_settings.each do |name, value|
+        SiteSetting.type_supervisor.to_db_value(name, value)
+      rescue Discourse::InvalidParameters, ArgumentError
+        errors.add(:homepage_settings, :invalid)
+      end
+    end
+
+    def built_in_palettes_exist
+      %i[light_palette_id dark_palette_id].each do |attribute|
+        palette_id = public_send(attribute)
+        next if palette_id.nil? || palette_id.positive?
+        errors.add(attribute, :inclusion) if !ColorScheme::NAMES_TO_ID_MAP.value?(palette_id)
+      end
+    end
+  end
+
+  policy :current_user_is_admin
+  model :theme
+  policy :can_edit_theme
+  policy :palettes_available_to_theme
+  policy :can_create_needed_palettes
+
+  transaction do
+    model :light_palette, :resolve_light_palette, optional: true
+    model :dark_palette, :resolve_dark_palette, optional: true
+    step :assign_theme_palettes
+    only_if :enabling_built_in_palettes do
+      step :offer_built_in_palettes
+    end
+    step :update_palette_selectability
+    only_if :finishing_single_mode do
+      step :reset_member_palette_choices
+    end
+  end
+
+  step :update_site_settings
+  step :expire_user_color_schemes_cache
+
+  private
+
+  def current_user_is_admin(guardian:)
+    guardian.is_admin?
+  end
+
+  def fetch_theme(params:)
+    Theme.find_by(id: params.theme_id)
+  end
+
+  def can_edit_theme(guardian:, theme:)
+    guardian.can_edit_theme?(theme)
+  end
+
+  # Built-in palettes are saved the first time they're chosen or offered.
+  def can_create_needed_palettes(params:, theme:, guardian:)
+    return true if guardian.can_create_color_scheme?
+
+    palette_ids = [params.light_palette_id, params.dark_palette_id]
+    if enabling_built_in_palettes(params:, theme:)
+      palette_ids +=
+        DesignWizard::PalettePairs::BUILT_IN_PAIRS.flat_map do |pair|
+          pair.values_at(:light, :dark).compact.map { |name| ColorScheme::NAMES_TO_ID_MAP[name] }
+        end
+    end
+    palette_ids.none? do |palette_id|
+      DesignWizard::Action::ResolvePalette.creates_palette?(palette_id)
+    end
+  end
+
+  def palettes_available_to_theme(params:, theme:)
+    [params.light_palette_id, params.dark_palette_id].all? do |palette_id|
+      palette_id.nil? || palette_id.negative? ||
+        ColorScheme.where(id: palette_id, theme_id: [nil, theme.id]).exists?
+    end
+  end
+
+  def resolve_light_palette(params:)
+    DesignWizard::Action::ResolvePalette.call(palette_id: params.light_palette_id)
+  end
+
+  def resolve_dark_palette(params:)
+    DesignWizard::Action::ResolvePalette.call(palette_id: params.dark_palette_id)
+  end
+
+  def assign_theme_palettes(theme:, light_palette:, dark_palette:)
+    theme.update!(color_scheme_id: light_palette&.id, dark_color_scheme_id: dark_palette&.id)
+  end
+
+  def enabling_built_in_palettes(params:, theme:)
+    params.palettes_user_selectable && ColorScheme.where(theme_id: theme.id).none?
+  end
+
+  def offer_built_in_palettes
+    DesignWizard::PalettePairs::BUILT_IN_PAIRS.each do |pair|
+      pair
+        .values_at(:light, :dark)
+        .compact
+        .each do |name|
+          DesignWizard::Action::ResolvePalette.call(palette_id: ColorScheme::NAMES_TO_ID_MAP[name])
+        end
+    end
+  end
+
+  # a single-mode site uses one palette for both slots: a dark one in the light
+  # slot for dark-only, and no dark one at all for light-only
+  def finishing_single_mode(params:, light_palette:, dark_palette:)
+    params.finishing && (dark_palette.nil? || !!light_palette&.is_dark?)
+  end
+
+  # Cleared rather than set to the theme's palettes, so members keep following
+  # whatever the admin picks next instead of an old pick coming back.
+  def reset_member_palette_choices(dark_palette:)
+    light_only = dark_palette.nil?
+    UserOption.where.not(dark_scheme_id: [nil, -1]).update_all(dark_scheme_id: nil) if light_only
+
+    unoffered_ids =
+      ColorScheme
+        .where(id: UserOption.where.not(color_scheme_id: nil).select(:color_scheme_id))
+        .includes(:color_scheme_colors)
+        .select { |palette| !!palette.is_dark? == light_only }
+        .map(&:id)
+    if unoffered_ids.any?
+      UserOption.where(color_scheme_id: unoffered_ids).update_all(color_scheme_id: nil)
+    end
+  end
+
+  def update_palette_selectability(params:, theme:, light_palette:, dark_palette:)
+    DesignWizard::Action::UpdatePaletteSelectability.call(
+      theme:,
+      selectable: params.palettes_user_selectable,
+      light: !light_palette&.is_dark?,
+      dark: dark_palette.present?,
+    )
+  end
+
+  # default_theme_id is hidden, so it has to be explicitly allowed.
+  def update_site_settings(params:, theme:, guardian:)
+    SiteSetting::Update.call(
+      params: {
+        settings: params.site_settings(theme_id: theme.id),
+      },
+      options: {
+        allow_changing_hidden: %i[default_theme_id],
+      },
+      guardian:,
+    ) { on_failure { fail!("failed to update site settings") } }
+  end
+
+  def expire_user_color_schemes_cache
+    ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
+  end
+end

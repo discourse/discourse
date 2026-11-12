@@ -21,6 +21,7 @@ export function isWebauthnSupported() {
 // The webauthn API only supports one auth attempt at a time
 // We need this service to cancel the previous attempt when a new one is started
 class WebauthnAbortService {
+  /** @type {AbortController | undefined} */
   controller = undefined;
 
   signal() {
@@ -43,7 +44,8 @@ export function getWebauthnCredential(
   challenge,
   allowedCredentialIds,
   successCallback,
-  errorCallback
+  errorCallback,
+  { userVerification = "discouraged" } = {}
 ) {
   if (!isWebauthnSupported()) {
     return errorCallback(i18n("login.security_key_support_missing_error"));
@@ -66,10 +68,10 @@ export function getWebauthnCredential(
         challenge: challengeBuffer,
         allowCredentials,
         timeout: 60000, // this is just a hint
-        // in the backend, we don't check for user verification for 2FA
-        // therefore we should indicate to browser that it's not necessary
-        // (this is only a hint, though, browser may still prompt)
-        userVerification: "discouraged",
+        // "discouraged" for second-factor security keys, "required" for
+        // passkey ceremonies (matching the server-side validation for
+        // first-factor credentials).
+        userVerification,
       },
       signal: WebauthnAbortHandler.signal(),
     })

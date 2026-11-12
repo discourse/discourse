@@ -4,7 +4,7 @@ export default {
   map() {
     this.route("explorer", function () {
       this.route("queries", function () {
-        this.route("details", { path: "/:query_id" });
+        this.route("edit", { path: "/:query_id" });
       });
     });
   },

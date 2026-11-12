@@ -7,24 +7,61 @@
 vi:
   js:
     discourse_policy:
+      title: "Điều khoản & Chính sách"
+      accepted_tooltip: "Danh sách thành viên đã chấp thuận chính sách này"
+      not_accepted_tooltip: "Danh sách thành viên chưa chấp thuận chính sách này"
+      accept_policy: "Chấp thuận chính sách"
+      revoke_policy: "Hủy chấp thuận chính sách"
+      edit_reason: "Cài đặt chính sách đã được điều chỉnh"
+      no_possible_users: "Không có thành viên nào thuộc phạm vi áp dụng chính sách này"
+      accept_policy_template: "Tôi đồng ý với chính sách này"
       builder:
+        title: Chính sách
+        attach: Tạo chính sách
+        save: Lưu thay đổi
+        edit: Chỉnh sửa cài đặt chính sách
         insert: Chèn
+        errors:
+          group: Bắt buộc phải chọn nhóm
+          version: Bắt buộc phải nhập số phiên bản
         groups:
           label: Nhóm
+          description: Các nhóm áp dụng chính sách này
         version:
           label: Phiên bản
+          description: Phiên bản chính sách; khi tăng số phiên bản, hệ thống sẽ yêu cầu thành viên chấp thuận lại
+        renew:
+          label: Chu kỳ gia hạn
+          description: Yêu cầu xác nhận lại chính sách sau mỗi x ngày
+        renew-start:
+          label: Thời điểm bắt đầu gia hạn
+          description: Thời điểm bắt đầu tính chu kỳ xác nhận lại chính sách
+        reminder:
+          label: Tần suất nhắc nhở
+          description: Tần suất gửi thông báo nhắc nhở thành viên chấp thuận chính sách
+          no_reminder: (Không nhắc nhở)
         accept:
-          label: Chấp nhận
+          label: Đồng ý
+          description: Nhãn hiển thị trên nút chấp thuận
         revoke:
-          label: Thu hồi
+          label: Hủy chấp thuận
+          description: Nhãn hiển thị trên nút hủy chấp thuận
         private:
           label: Riêng tư?
+          description: Chỉ cho phép Quản trị viên xem trạng thái chấp thuận chính sách
         send-email:
-          label: Gửi email?
+          label: Gửi thư điện tử (Email)?
+          description: Gửi email thông báo cho thành viên về chính sách mới
+        add-users-to-group:
+          label: Gửi email thông báo cho thành viên về chính sách mới
+          description: Tự động thêm thành viên vào nhóm sau khi họ chấp thuận chính sách này
       preferences:
+        title: Quản lý chính sách
         policy_emails:
-          away_description: Sẽ chỉ gửi email nếu bạn vắng mặt trong 10 phút khi trạng thái chính sách thay đổi, và chỉ khi bạn cũng đã chọn nhận email thông báo hoạt động mới.
+          always_description: Hệ thống chỉ gửi email khi bạn đã bật tính năng nhận email thông báo hoạt động mới.
+          away_description: Hệ thống chỉ gửi email khi bạn không hoạt động trong 10 phút gần nhất lúc trạng thái chính sách thay đổi, và với điều kiện bạn đã đăng ký nhận email hoạt động mới.
+          label: Gửi email cho tôi khi có chính sách cần xem xét
           email_frequency_options:
             never: Không bao giờ
-            when_away: Khi vắng mặt
+            when_away: Chỉ khi vắng mặt
             always: Luôn luôn

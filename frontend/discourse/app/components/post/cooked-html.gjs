@@ -1,32 +1,36 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-  NON_STREAM_HTML_DECORATOR,
-} from "discourse/components/decorated-html";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
+import decorateLocalizedOneboxes from "discourse/lib/post-cooked-html-decorators/localized-oneboxes";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
+import decorateQuoteHighlight from "discourse/lib/post-cooked-html-decorators/quote-highlight";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
 import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
+import DDecoratedHtml, {
+  applyHtmlDecorators,
+  NON_STREAM_HTML_DECORATOR,
+} from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
 const POST_COOKED_DECORATORS = [
   decorateStatefulHtmlElements,
+  decorateLocalizedOneboxes,
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,
+  decorateQuoteHighlight,
   decorateMentions,
 ];
 
@@ -36,7 +40,7 @@ export default class PostCookedHtml extends Component {
   @service currentUser;
 
   #pendingDecoratorCleanup = [];
-  #decoratorState = this.args.decoratorState || new TrackedMap();
+  #decoratorState = this.args.decoratorState || trackedMap();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -49,6 +53,37 @@ export default class PostCookedHtml extends Component {
 
   get shouldAddSelectionBarrier() {
     return this.args.selectionBarrier ?? true;
+  }
+
+  get className() {
+    return this.args.className ?? "cooked";
+  }
+
+  get cooked() {
+    if (this.isIgnored) {
+      return i18n("post.ignored");
+    }
+
+    return this.args.cooked ?? this.args.post.cooked;
+  }
+
+  get highlightTerm() {
+    return this.args.highlightTerm;
+  }
+
+  get extraDecorators() {
+    return makeArray(this.args.extraDecorators);
+  }
+
+  get ignoredUsers() {
+    return this.currentUser?.ignored_users;
+  }
+
+  get isIgnored() {
+    return (
+      (this.args.post.firstPost || this.args.embeddedPost) &&
+      this.ignoredUsers?.includes?.(this.args.post.username)
+    );
   }
 
   @bind
@@ -66,7 +101,7 @@ export default class PostCookedHtml extends Component {
         if (this.#decoratorState.has(decorator)) {
           decoratorState = this.#decoratorState.get(decorator);
         } else {
-          decoratorState = new TrackedMap();
+          decoratorState = trackedMap();
           this.#decoratorState.set(decorator, decoratorState);
         }
 
@@ -114,6 +149,7 @@ export default class PostCookedHtml extends Component {
           isIgnored: args.isIgnored,
           owner,
           post: this.args.post,
+          quoteHighlight: args.quoteHighlight,
           renderGlimmer: helper.renderGlimmer,
           renderNestedPostCookedHtml,
           streamElement: this.isStreamElement,
@@ -143,37 +179,6 @@ export default class PostCookedHtml extends Component {
     this.#pendingDecoratorCleanup.push(...cleanUpFns);
   }
 
-  get className() {
-    return this.args.className ?? "cooked";
-  }
-
-  get cooked() {
-    if (this.isIgnored) {
-      return i18n("post.ignored");
-    }
-
-    return this.args.cooked ?? this.args.post.cooked;
-  }
-
-  get highlightTerm() {
-    return this.args.highlightTerm;
-  }
-
-  get extraDecorators() {
-    return makeArray(this.args.extraDecorators);
-  }
-
-  get ignoredUsers() {
-    return this.currentUser?.ignored_users;
-  }
-
-  get isIgnored() {
-    return (
-      (this.args.post.firstPost || this.args.embeddedPost) &&
-      this.ignoredUsers?.includes?.(this.args.post.username)
-    );
-  }
-
   #cleanupDecorations() {
     this.#pendingDecoratorCleanup.forEach((teardown) => teardown());
     this.#pendingDecoratorCleanup = [];
@@ -184,16 +189,18 @@ export default class PostCookedHtml extends Component {
   }
 
   <template>
-    <DecoratedHtml
+    <DDecoratedHtml
       @className={{this.className}}
       @decorate={{this.decorate}}
       @decorateArgs={{lazyHash
         highlightTerm=this.highlightTerm
         isIgnored=this.isIgnored
         ignoredUsers=this.ignoredUsers
+        quoteHighlight=@quoteHighlight
       }}
       @html={{trustHTML this.cooked}}
       @model={{@post}}
+      @preservePointerTarget={{true}}
     />
   </template>
 }

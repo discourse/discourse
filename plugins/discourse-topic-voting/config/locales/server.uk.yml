@@ -5,8 +5,15 @@
 # https://translate.discourse.org/
 
 uk:
+  category_types:
+    ideas:
+      name: "Ідеї"
+      title: "ідеї"
+      description: "Де учасники можуть пропонувати ідеї та голосувати за ті, які їм найбільше подобаються."
   site_settings:
+    enable_ideas_category_type_setup: "Вмикає опцію типу категорії «Ідеї» під час налаштування створення категорії."
     topic_voting_enabled: 'Дозволити користувачам голосувати за темами?'
+    topic_voting_enable_vote_limits: 'Обмежити кількість голосів на користувача залежно від рівня довіри'
     topic_voting_tl0_vote_limit: 'Скільки активних голосів дозволено користувачам TL0?'
     topic_voting_tl1_vote_limit: 'Скільки активних голосів дозволено користувачам TL1?'
     topic_voting_tl2_vote_limit: 'Скільки активних голосів дозволено користувачам TL2?'
@@ -16,6 +23,25 @@ uk:
     topic_voting_show_votes_on_profile: 'Дозволити користувачам бачити свої голоси у стрічці активності?'
     topic_voting_alert_votes_left: 'Попередити користувача, коли залишилося стільки голосів'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Покажіть, хто проголосував"
+      show_votes_on_profile:
+        label: "Показувати голоси в профілі"
+      enable_vote_limits:
+        label: "Обмеження голосів учасників"
+      tl0_vote_limit:
+        label: "Ліміт голосів TL0"
+      tl1_vote_limit:
+        label: "Ліміт голосів TL1"
+      tl2_vote_limit:
+        label: "Ліміт голосів TL2"
+      tl3_vote_limit:
+        label: "Ліміт голосів TL3"
+      tl4_vote_limit:
+        label: "Ліміт голосів TL4"
+      alert_votes_left:
+        label: "Сповіщення про залишок голосів"
     votes_moved:
       one: "Голосування переміщено."
       few: "%{count} голосів переміщено."
@@ -32,3 +58,20 @@ uk:
         topic_votes_max: "Максимальна кількість голосів за тему"
         order_topic_votes: "Упорядкувати теми за кількістю голосів"
         order_topic_votes_asc: "Упорядкувати теми за найменшою кількістю голосів"
+  badges:
+    daydreamer:
+      name: "Мрійник"
+      description: "Отримати голос на вашу тему"
+      long_description: "Цей значок надається за отримання голосу в одній з ваших тем. :white_check_mark: Гарна ідея :+1:"
+    brainstormer:
+      name: "Мозковий штурм"
+      description: "Отримайте 5 голосів за вашу тему"
+      long_description: "Цей значок надається за отримання 5 голосів за одну з ваших тем. :white_check_mark: Ваша тема набирає обертів."
+    innovator:
+      name: "Інноватор"
+      description: "Отримайте 15 голосів за вашу тему"
+      long_description: "Цей значок надається за отримання 15 голосів за одну з ваших тем. :white_check_mark: Настільки добре, що це неможливо ігнорувати."
+    visionary:
+      name: "Візіонер"
+      description: "Отримайте 25 голосів за вашу тему"
+      long_description: "Цей значок надається за отримання 25 голосів за одну з ваших тем. :white_check_mark: Дайте людям те, чого вони хочуть! :clap:"

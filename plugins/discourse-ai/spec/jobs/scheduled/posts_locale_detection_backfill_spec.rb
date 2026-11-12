@@ -6,16 +6,15 @@ describe Jobs::PostsLocaleDetectionBackfill do
   fab!(:post) { Fabricate(:post, locale: nil) }
 
   before do
-    fake_llm = assign_fake_provider_to(:ai_default_llm_model)
-
-    # Update the locale detector agent (ID -27) with the fake LLM
-    locale_detector = AiAgent.find_by(id: -27)
-    locale_detector.update!(default_llm_id: fake_llm.id) if locale_detector
+    assign_fake_provider_to(:ai_default_llm_model)
 
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
+    SiteSetting.ai_translation_backfill_start_date = 1.day.ago.utc.to_date.iso8601
     SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -45,8 +44,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
   end
 
   it "detects most recently updated posts first" do
-    post_2 = Fabricate(:post, locale: nil)
-    post_3 = Fabricate(:post, locale: nil)
+    post_2 = Fabricate(:post, locale: nil, topic: post.topic)
+    post_3 = Fabricate(:post, locale: nil, topic: post.topic)
 
     post.update!(updated_at: 3.days.ago)
     post_2.update!(updated_at: 2.days.ago)
@@ -59,6 +58,24 @@ describe Jobs::PostsLocaleDetectionBackfill do
     DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post_3).never
 
     job.execute({})
+  end
+
+  it "detects with a decision model until its credits are used up" do
+    decision_model = Fabricate(:decision_model, id: -1)
+    SiteSetting.ai_translation_locale_detector_decision_model = decision_model.id
+    allocation = Fabricate(:decision_model_credit_allocation, decision_model:)
+
+    DiscourseAi::Decisions.with_canned_answers(
+      language: DiscourseAi::Translation::DecisionLocaleDetector::OTHER_CHOICE,
+    ) do |canned|
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en"]) { job.execute({}) }
+      expect(post.reload.locale).to eq("en")
+
+      post.update!(locale: nil)
+      DecisionModelCreditDailyUsage.increment_usage!(decision_model, allocation.daily_credits)
+      job.execute({})
+      expect([post.reload.locale, canned.calls.size]).to eq([nil, 1])
+    end
   end
 
   it "skips bot posts" do
@@ -100,10 +117,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_cat_topic) { Fabricate(:topic, category: private_category) }
-    fab!(:private_cat_post) { Fabricate(:post, topic: private_cat_topic, locale: nil) }
+  describe "with selected categories" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
+    fab!(:included_post) { Fabricate(:post, topic: included_topic, locale: nil) }
+    fab!(:excluded_post) { Fabricate(:post, topic: excluded_topic, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -112,28 +132,26 @@ describe Jobs::PostsLocaleDetectionBackfill do
     fab!(:pm_topic, :private_message_topic)
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, locale: nil) }
 
-    before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before do
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
 
-    it "only processes posts from public categories" do
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(private_cat_post)
-        .never
+    it "only processes posts from selected categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 
       job.execute({})
     end
 
-    it "processes all public content and group PMs and private categories when setting is disabled" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+    it "processes included posts and group PMs when pm_translation_scope is group" do
+      SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(private_cat_post)
-        .once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).once
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 
@@ -141,13 +159,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     end
   end
 
-  describe "with max age limit" do
+  describe "with a backfill start date" do
     fab!(:old_post) { Fabricate(:post, locale: nil, created_at: 10.days.ago) }
     fab!(:new_post) { Fabricate(:post, locale: nil, created_at: 2.days.ago) }
 
-    before { SiteSetting.ai_translation_backfill_max_age_days = 5 }
+    before { SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601 }
 
-    it "only processes posts within the age limit" do
+    it "only processes posts created after the start date" do
       # other posts
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).at_least_once
 
@@ -157,8 +175,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
       job.execute({})
     end
 
-    it "processes all posts when setting is large" do
-      SiteSetting.ai_translation_backfill_max_age_days = 100
+    it "processes older posts when the start date is earlier" do
+      SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
 
       # other posts
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).at_least_once

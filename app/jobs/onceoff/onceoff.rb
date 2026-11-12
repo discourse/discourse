@@ -43,7 +43,7 @@ class Jobs::Onceoff < ::Jobs::Base
   def self.enqueue_all
     previously_ran = OnceoffLog.pluck(:job_name).uniq
 
-    self.onceoff_job_klasses.each do |klass|
+    onceoff_job_klasses.each do |klass|
       job_name = name_for(klass)
       Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
     end

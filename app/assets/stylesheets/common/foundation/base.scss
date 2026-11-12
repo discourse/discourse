@@ -7,9 +7,12 @@
   --topic-avatar-width: #{$topic-avatar-width};
   --d-border-radius: 2px;
   --d-border-radius-large: 2px;
+  --d-border-radius-fixed: 4px; // very subtle soft borders that never make sense to change with global theming
+  --d-border-radius-pill: 1em; // pill-like elements that also shouldn't be influenced by normal border-radius
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
+  --d-link-text-decoration: none;
 
   // used for padding & margin
   --space: 0.25rem; // 4px
@@ -63,7 +66,7 @@ a:visited,
 a:hover,
 a:active {
   color: var(--d-link-color);
-  text-decoration: none;
+  text-decoration: var(--d-link-text-decoration);
   cursor: pointer;
 }
 
@@ -76,6 +79,10 @@ hr {
   border: 0;
   border-top: 1px solid var(--content-border-color);
   padding: 0;
+}
+
+.dot-separator {
+  @include dot-separator;
 }
 
 // Lists

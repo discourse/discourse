@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const topFixtures = {
   "/top.json": {
     users: [
       {
@@ -2487,3 +2492,5 @@ export default {
     },
   },
 };
+
+export default topFixtures;

@@ -10,7 +10,9 @@ export default class GamificationLeaderboard {
   @tracked id;
   @tracked createdAt;
   @tracked updatedAt;
+  @tracked createdBy;
   @tracked createdById;
+  @tracked defaultPeriodId;
   @tracked excludedGroupsIds;
   @tracked includedGroupsIds;
   @tracked visibleToGroupsIds;
@@ -20,12 +22,16 @@ export default class GamificationLeaderboard {
   @tracked name;
   @tracked period;
   @tracked periodFilterDisabled;
+  @tracked scoreOverrides;
+  @tracked scorableCategoryIds;
 
   constructor(args = {}) {
     this.id = args.id;
     this.createdAt = args.created_at;
     this.updatedAt = args.updated_at;
+    this.createdBy = args.created_by;
     this.createdById = args.created_by_id;
+    this.defaultPeriodId = args.default_period;
     this.excludedGroupsIds = args.excluded_groups_ids;
     this.includedGroupsIds = args.included_groups_ids;
     this.visibleToGroupsIds = args.visible_to_groups_ids;
@@ -35,6 +41,8 @@ export default class GamificationLeaderboard {
     this.name = args.name;
     this.period = args.period;
     this.periodFilterDisabled = args.period_filter_disabled;
+    this.scoreOverrides = args.score_overrides;
+    this.scorableCategoryIds = args.scorable_category_ids;
 
     if (Number.isInteger(args.default_period)) {
       this.defaultPeriod = i18n(

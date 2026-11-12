@@ -14,17 +14,17 @@ vi:
     chat_integration:
       menu_title: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
       settings: "Cài đặt"
-      no_providers: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
+      more_providers: "Thêm"
+      channels_title: "Các kênh"
       channels_with_errors: "Một vài channels từ dịch vụ chat này đã thất bại trong lần gửi tin nhắn cuối cùng. Nhấn chuột vào biểu tượng lỗi để xem thêm."
-      choose_group: "(chọn một nhóm)"
-      all_categories: "(tất cả chuyên mục)"
-      all_tags: "(tất cả từ khoá)"
+      choose_group: "(Chọn một nhóm)"
+      all_categories: "(Tất cả chuyên mục)"
+      all_tags: "(Tất cả thẻ)"
       delete_channel: "Xóa"
       edit_channel: "Sửa"
       test_modal:
         title: "Gửi một tin nhắn kiểm tra dịch vụ"
         topic: "Chủ đề"
-        send: "Gửi tin nhắn kiểm tra"
         close: "Đóng lại"
       type:
         normal: Bình thường
@@ -44,8 +44,6 @@ vi:
           ok: "Hợp lệ"
           fail: "Định dạng không hợp lệ"
       edit_rule_modal:
-        title: Sửa quy tắc
-        save: Lưu quy tắc
         cancel: Hủy
         type: Loại
         filter: Lọc
@@ -53,14 +51,13 @@ vi:
         group: Nhóm
         tags: Thẻ
       provider:
-        slack:
-          param:
-            identifier:
-              help: "Ví dụ #channel, @username"
         telegram:
           param:
             name:
               title: "Tên"
+          errors:
+            invalid_api_base_url: "Địa chỉ URL cơ sở cho Telegram API trong cài đặt hệ thống không phải là đường dẫn HTTPS hợp lệ."
+            api_base_url_blocked: "Các yêu cầu tới URL cơ sở Telegram API đã bị chặn. Các máy chủ thuộc mạng nội bộ phải được thêm vào danh sách máy chủ nội bộ cho phép trong cài đặt hệ thống."
         discord:
           title: "Discord"
           param:
@@ -70,10 +67,6 @@ vi:
           param:
             name:
               title: "Tên"
-        mattermost:
-          param:
-            identifier:
-              help: "Ví dụ #channel, @username"
         matrix:
           param:
             name:
@@ -82,10 +75,6 @@ vi:
           param:
             subject:
               title: "Tiêu đề"
-        rocketchat:
-          param:
-            identifier:
-              help: "Ví dụ #channel, @username"
         gitter:
           param:
             name:
@@ -114,3 +103,14 @@ vi:
               label: Tin nhắn
             url:
               label: URL
+    discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Yêu cầu phải bật phần bổ trợ Tích hợp trò chuyện (Chat Integration)"
+      nodes:
+        "action:send_chat_integration_message": "Gửi tin nhắn qua tính năng Tích hợp trò chuyện"
+      node_descriptions:
+        "action:send_chat_integration_message": "Gửi thông báo đến kênh liên kết (Slack, Discord, Telegram, v.v.)"
+      send_chat_integration_message:
+        channel_id: "Kênh"
+        configure: "Cấu hình"
+        message: "Nội dung tin nhắn"

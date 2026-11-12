@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <%= preload_script('onpopstate-handler') %>
+  <%= preload_script('js/onpopstate-handler') %>
 <%- end %>
 
   <%- if @group&.dig(:allow_membership_requests) %>
@@ -61,5 +61,3 @@
 <%= build_plugin_html 'server:not-found-before-topics' %>
 
 <%= @topics_partial %>
-
-

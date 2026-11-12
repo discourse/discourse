@@ -36,7 +36,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def generate_key_pair
     require "sshkey"
-    k = SSHKey.generate
+    k = SSHKey.generate(bits: 4096)
     Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
     render json: { public_key: k.ssh_public_key }
   end
@@ -50,45 +50,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def import
     @theme = nil
-    if params[:theme] && params[:theme].content_type == "application/json"
-      ban_in_allowlist_mode!
-
-      # .dcstyle.json import. Deprecated, but still available to allow conversion
-      json = JSON.parse(params[:theme].read)
-      theme = json["theme"]
-
-      @theme = Theme.new(name: theme["name"], user_id: theme_user.id, auto_update: false)
-      theme["theme_fields"]&.each do |field|
-        if field["raw_upload"]
-          begin
-            tmp = Tempfile.new
-            tmp.binmode
-            file = Base64.decode64(field["raw_upload"])
-            tmp.write(file)
-            tmp.rewind
-            upload = UploadCreator.new(tmp, field["filename"]).create_for(theme_user.id)
-            field["upload_id"] = upload.id
-          ensure
-            tmp.unlink
-          end
-        end
-
-        @theme.set_field(
-          target: field["target"],
-          name: field["name"],
-          value: field["value"],
-          type_id: field["type_id"],
-          upload_id: field["upload_id"],
-        )
-      end
-
-      if @theme.save
-        log_theme_change(nil, @theme)
-        render json: serialize_data(@theme, ThemeSerializer), status: :created
-      else
-        render json: @theme.errors, status: :unprocessable_entity
-      end
-    elsif remote = params[:remote]
+    if remote = params[:remote]
       if remote.length > MAX_REMOTE_LENGTH
         error =
           I18n.t("themes.import_error.not_allowed_theme", { repo: remote[0..MAX_REMOTE_LENGTH] })
@@ -103,36 +65,35 @@ class Admin::ThemesController < Admin::AdminController
         return
       end
 
+      branch = params[:branch]
+      private_key =
+        params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
+
+      if params[:public_key].present? && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.ssh_key_gone")
+      end
+      if params[:placeholder] && private_key.blank?
+        return render_json_error I18n.t("themes.import_error.git_authentication")
+      end
+
       hijack do
-        begin
-          branch = params[:branch] ? params[:branch] : nil
-          private_key =
-            params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
-          if params[:public_key].present? && private_key.blank?
-            return render_json_error I18n.t("themes.import_error.ssh_key_gone")
-          end
-
-          @theme =
-            RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
-          render json: serialize_data(@theme, ThemeSerializer), status: :created
-        rescue RemoteTheme::ImportError => e
-          if params[:force]
-            theme_name = params[:remote].gsub(/.git\z/, "").split("/").last
-
-            remote_theme = RemoteTheme.new
-            remote_theme.private_key = private_key
-            remote_theme.branch = params[:branch] ? params[:branch] : nil
-            remote_theme.remote_url = params[:remote]
-            remote_theme.save!
-
-            @theme = Theme.new(user_id: theme_user&.id || -1, name: theme_name)
-            @theme.remote_theme = remote_theme
-            @theme.save!
-
-            render json: serialize_data(@theme, ThemeSerializer), status: :created
+        @theme =
+          if params[:placeholder]
+            create_remote_theme_placeholder(remote, branch:, private_key:)
           else
-            render_json_error e.message
+            RemoteTheme.import_theme(remote, theme_user, private_key:, branch:, guardian:)
           end
+        render json: serialize_data(@theme, ThemeSerializer), status: :created
+      rescue Discourse::InvalidAccess
+        # hijacked requests don't go through the usual error handling
+        render_json_error I18n.t("invalid_access"), status: :forbidden
+      rescue RemoteTheme::ImportError => e
+        if params[:force]
+          @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
+
+          render json: serialize_data(@theme, ThemeSerializer), status: :created
+        else
+          render_json_error e.message
         end
       end
     elsif params[:bundle] ||
@@ -145,6 +106,10 @@ class Admin::ThemesController < Admin::AdminController
       update_components = params[:components]
       run_migrations = !params[:skip_migrations]
 
+      if theme_id.present? && (existing_theme = Theme.find_by(id: theme_id))
+        guardian.ensure_can_edit_theme!(existing_theme)
+      end
+
       begin
         @theme =
           RemoteTheme.update_zipped_theme(
@@ -154,6 +119,7 @@ class Admin::ThemesController < Admin::AdminController
             theme_id:,
             update_components:,
             run_migrations:,
+            guardian:,
           )
 
         log_theme_change(nil, @theme)
@@ -220,6 +186,20 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
+    guardian.ensure_can_edit_theme!(@theme)
+    child_theme_ids = theme_params[:child_theme_ids]
+    parent_theme_ids = theme_params[:parent_theme_ids]
+    # switching between theme and component drops the relations on one side
+    case theme_params[:component].to_s
+    when "true"
+      child_theme_ids = [] if !@theme.component?
+    when "false"
+      parent_theme_ids = [] if @theme.component?
+    end
+    if !guardian.can_edit_theme_relations?(@theme, child_theme_ids:, parent_theme_ids:)
+      raise Discourse::InvalidAccess
+    end
+
     original_json = ThemeSerializer.new(@theme, root: false).to_json
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
@@ -253,7 +233,15 @@ class Admin::ThemesController < Admin::AdminController
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
     if params[:theme][:remote_update]
-      @theme.remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+      skipped_components =
+        @theme
+          .remote_theme
+          .update_from_remote(
+            raise_if_theme_save_fails: false,
+            raise_on_import_error: true,
+            guardian:,
+          )
+          .skipped_child_components
     else
       @theme.save
     end
@@ -270,7 +258,7 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_component_disabled if disables_component
         log_theme_component_enabled if enables_component
 
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :ok }
+        format.json { render json: theme_json(@theme, skipped_components:), status: :ok }
       else
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
@@ -281,9 +269,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
     end
-  rescue RemoteTheme::ImportError => e
-    render_json_error e.message
-  rescue Theme::SettingsMigrationError => e
+  rescue RemoteTheme::ImportError, Theme::SettingsMigrationError => e
     render_json_error e.message
   end
 
@@ -294,6 +280,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -304,6 +291,7 @@ class Admin::ThemesController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:themes) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_themes) { raise Discourse::InvalidAccess }
     end
   end
 
@@ -344,21 +332,16 @@ class Admin::ThemesController < Admin::AdminController
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
 
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
 
-    previous_value = @theme.cached_settings[setting_name]
-
     begin
-      @theme.update_setting(setting_name, new_value)
+      ThemeSettingUpdater.update(guardian, @theme, setting_name, new_value)
     rescue Discourse::InvalidParameters => e
       return render_json_error e.message
     end
-
-    @theme.save
-
-    log_theme_setting_change(setting_name, previous_value, new_value)
 
     updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
@@ -381,6 +364,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_theme) { raise Discourse::InvalidAccess }
       on_failed_policy(:ensure_setting_is_themeable) do
         render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
       end
@@ -401,7 +385,91 @@ class Admin::ThemesController < Admin::AdminController
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
   end
 
+  def update_source
+    @theme = Theme.include_relations.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+    guardian.ensure_can_edit_theme!(@theme)
+    raise Discourse::InvalidParameters.new(:remote_theme) unless @theme.remote_theme&.is_git?
+
+    remote_url = params[:remote_url]&.strip
+    raise Discourse::InvalidParameters.new(:remote_url) if remote_url.blank?
+
+    if remote_url.length > MAX_REMOTE_LENGTH
+      error = I18n.t("themes.import_error.not_allowed_theme", { repo: remote_url[0..100] })
+      return render_json_error(error, status: 422)
+    end
+
+    begin
+      guardian.ensure_allowed_theme_repo_import!(remote_url)
+    rescue Discourse::InvalidAccess
+      return(
+        render_json_error I18n.t("themes.import_error.not_allowed_theme", { repo: remote_url }),
+                          status: :forbidden
+      )
+    end
+
+    private_key = nil
+    if params[:public_key].present?
+      private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
+      return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
+    end
+
+    theme_id = @theme.id
+
+    hijack do
+      theme = Theme.include_relations.find(theme_id)
+      remote_theme = theme.remote_theme
+
+      remote_theme.transaction do
+        remote_theme.remote_url = remote_url
+        remote_theme.branch = params[:branch].presence
+        remote_theme.private_key = private_key if private_key.present?
+
+        remote_theme.update_from_remote(
+          already_in_transaction: true,
+          refresh_name_and_type: true,
+          guardian:,
+        )
+
+        if remote_theme.last_error_text.present?
+          raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+        end
+      end
+
+      log_theme_change(nil, theme.reload)
+      render json: theme_json(theme, skipped_components: remote_theme.skipped_child_components),
+             status: :ok
+    rescue Discourse::InvalidAccess
+      # hijacked requests don't go through the usual error handling
+      remote_theme.reload
+      render_json_error I18n.t("invalid_access"), status: :forbidden
+    rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid, Theme::SettingsMigrationError => e
+      remote_theme.reload
+      render_json_error e.message
+    end
+  end
+
   private
+
+  def theme_json(theme, skipped_components:)
+    json = serialize_data(theme, ThemeSerializer)
+    json[:skipped_components] = skipped_components if skipped_components.present?
+    json
+  end
+
+  def create_remote_theme_placeholder(remote, branch:, private_key:)
+    Theme.transaction do
+      remote_theme =
+        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
+
+      Theme.create!(
+        user_id: theme_user&.id || -1,
+        name: remote.gsub(/\.git\z/, "").split("/").last,
+        component: params[:component].to_s == "true",
+        remote_theme: remote_theme,
+      )
+    end
+  end
 
   def ban_in_allowlist_mode!
     raise Discourse::InvalidAccess if !Theme.allowed_remote_theme_ids.nil?
@@ -486,9 +554,7 @@ class Admin::ThemesController < Admin::AdminController
       I18n.locale = locale
     end
 
-    target_translations.each_pair do |translation_key, new_value|
-      @theme.update_translation(translation_key, new_value)
-    end
+    ThemeTranslationUpdater.assign(guardian, @theme, target_translations)
   end
 
   def log_theme_change(old_record, new_record)

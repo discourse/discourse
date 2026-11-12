@@ -50,6 +50,49 @@ RSpec.describe WordWatcher do
     it "returns an empty hash when no words are present" do
       expect(described_class.words_for_action(:tag)).to eq({})
     end
+
+    it "isolates HTML replacements so they cannot absorb the content that follows" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "hello",
+        replacement: '<a href="https://example.com/">',
+        html: true,
+      )
+
+      expect(described_class.words_for_action(:replace).values.first).to include(
+        html: true,
+        replacement: '<a href="https://example.com/"></a>',
+      )
+    end
+  end
+
+  describe ".regexps_for_action" do
+    before { SiteSetting.watched_words_regular_expressions = true }
+
+    it "maps valid words to their attrs and drops words whose regex is invalid" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "hello",
+        replacement: "hi",
+      )
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "+1")
+
+      result = nil
+      fake_logger = track_log_messages { result = described_class.regexps_for_action(:replace) }
+
+      expect(result).to eq("(hello)" => { word: "hello", replacement: "hi", case_sensitive: false })
+      expect(fake_logger.warnings).to eq(
+        [
+          "Watched word '+1' has invalid regex '(+1)' for replace: target of repeat operator is not specified: /(+1)/",
+        ],
+      )
+    end
+
+    it "returns nil when no watched words exist for the action" do
+      expect(described_class.regexps_for_action(:replace)).to be_nil
+    end
   end
 
   describe ".compiled_regexps_for_action" do
@@ -381,6 +424,22 @@ RSpec.describe WordWatcher do
         "bar",
         "baz",
       )
+    end
+  end
+
+  describe "#word_matches_across_actions" do
+    it "only returns words for the specified actions" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "blocked")
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "replaced",
+        replacement: "replacement",
+      )
+
+      watcher = described_class.new("blocked and replaced")
+
+      expect(watcher.word_matches_across_actions(%i[block flag])).to contain_exactly("blocked")
     end
   end
 

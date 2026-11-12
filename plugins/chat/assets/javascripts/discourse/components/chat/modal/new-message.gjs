@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 
 export default class ChatModalNewMessage extends Component {
@@ -16,13 +16,17 @@ export default class ChatModalNewMessage extends Component {
   <template>
     {{#if this.shouldRender}}
       <DModal
-        @closeModal={{@closeModal}}
         class="chat-modal-new-message --quick-palette"
-        @title="chat.new_message_modal.title"
-        @inline={{@inline}}
+        @closeModal={{@closeModal}}
         @hideHeader={{true}}
+        @inline={{@inline}}
+        @title="chat.new_message_modal.title"
       >
-        <MessageCreator @onClose={{@closeModal}} @channel={{@model}} />
+        <MessageCreator
+          @channel={{@model}}
+          @initialMode={{@model.initialMode}}
+          @onClose={{@closeModal}}
+        />
       </DModal>
     {{/if}}
   </template>

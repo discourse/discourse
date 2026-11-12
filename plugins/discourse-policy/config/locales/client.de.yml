@@ -19,6 +19,7 @@ de:
         title: Richtlinie
         attach: Richtlinie erstellen
         save: Änderungen speichern
+        edit: Richtlinieneinstellungen bearbeiten
         insert: Einfügen
         errors:
           group: Gruppe ist erforderlich

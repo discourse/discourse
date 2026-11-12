@@ -1,7 +1,6 @@
 import {
   InputRule,
   inputRules,
-  smartQuotes,
   textblockTypeInputRule,
   wrappingInputRule,
 } from "prosemirror-inputrules";
@@ -21,8 +20,6 @@ export function buildInputRules(extensions, params, includeDefault = true) {
     });
 
     const defaultRules = [
-      // TODO(renato) smartQuotes should respect `markdown_typographer_quotation_marks`
-      ...smartQuotes,
       ...[
         wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
         orderedListRule(schema.nodes.ordered_list),
@@ -38,8 +35,11 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
       markInputRule(/(^|[^*])\*([^*]+)\*$/, schema.marks.em, getAttrs),
       markInputRule(/(^|\s)_([^_]+)_$/, schema.marks.em, getAttrs),
+      // `---`, `___ `, `***`. The en/em-dash variants are kept for content
+      // that already contains those characters (e.g. pasted), since the editor
+      // no longer converts `--`/`---` to dashes as you type.
       new InputRule(
-        /^(\u2013-|\u2014-|___\s|\*\*\*\s)$/,
+        /^(---|\u2013-|\u2014-|___\s|\*\*\*\s)$/,
         horizontalRuleHandler,
         { inCodeMark: false }
       ),

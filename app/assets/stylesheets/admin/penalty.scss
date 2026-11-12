@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .silence-user-modal,
 .suspend-user-modal {
   .penalty-duration,
@@ -26,6 +28,12 @@
       align-items: end;
       display: flex;
       justify-content: space-between;
+
+      @include viewport.until(sm) {
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: stretch;
+      }
 
       input {
         height: 34px;
@@ -86,27 +94,5 @@
         padding: 8px 0;
       }
     }
-  }
-
-  .penalty-history {
-    position: sticky;
-    bottom: 0;
-    background-color: var(--secondary);
-    padding: 0 0 1em 0;
-  }
-
-  .penalty-history::before {
-    position: absolute;
-    content: "";
-    display: block;
-    height: 1.5em;
-    top: -1.5em;
-    width: 100%;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      rgb(var(--secondary-rgb), 0),
-      rgb(var(--secondary-rgb), 1)
-    );
   }
 }

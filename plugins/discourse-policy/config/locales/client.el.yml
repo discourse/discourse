@@ -14,6 +14,7 @@ el:
         title: Πολιτική
         attach: Δημιουργία Πολιτικής
         save: Αποθήκευση αλλαγών
+        edit: Επεξεργασία ρυθμίσεων πολιτικής
         insert: Εισαγωγή
         groups:
           label: Ομάδες
@@ -21,6 +22,9 @@ el:
           label: Έκδοση
         renew:
           label: Ανανέωση
+        renew-start:
+          label: Έναρξη ανανέωσης
+          description: Πότε πρέπει να ανανεώνεται η πολιτική
         accept:
           label: Αποδέχομαι
         revoke:

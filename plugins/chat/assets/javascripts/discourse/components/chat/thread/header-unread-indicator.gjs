@@ -14,7 +14,7 @@ export default class ThreadHeaderUnreadIndicator extends Component {
   }
 
   get showUnreadIndicator() {
-    return !this.currentUser.isInDoNotDisturb() && this.unreadCount > 0;
+    return !this.currentUser?.isInDoNotDisturb() && this.unreadCount > 0;
   }
 
   get cappedUnreadCount() {
@@ -24,11 +24,11 @@ export default class ThreadHeaderUnreadIndicator extends Component {
   <template>
     {{#if this.showUnreadIndicator}}
       <div
-        class="chat-thread-header-unread-indicator"
+        class="c-unread-indicator chat-thread-header-unread-indicator"
         title={{this.unreadCountLabel}}
       >
         <div
-          class="chat-thread-header-unread-indicator__number"
+          class="c-unread-indicator__number chat-thread-header-unread-indicator__number"
         >{{this.cappedUnreadCount}}</div>
       </div>
     {{/if}}

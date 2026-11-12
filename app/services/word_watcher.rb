@@ -2,7 +2,7 @@
 
 class WordWatcher
   REPLACEMENT_LETTER = CGI.unescape_html("&#9632;")
-  CACHE_VERSION = 3
+  CACHE_VERSION = 4
 
   def initialize(raw)
     @raw = raw
@@ -34,10 +34,24 @@ class WordWatcher
       .pluck(:word, :replacement, :case_sensitive, :html)
       .to_h do |w, r, c, h|
         opts = { word: w, replacement: r, case_sensitive: c }.compact
-        opts[:html] = true if h
+        if h
+          opts[:replacement] = self_contained_html(opts[:replacement])
+          opts[:html] = true
+        end
         [word_to_regexp(w, match_word: false), opts]
       end
   end
+
+  # HTML replacements are concatenated with the surrounding content before
+  # sanitization, so they must be balanced for both the sanitizer and an HTML
+  # parser. Sanitizing first removes raw-text content the two read differently.
+  def self.self_contained_html(html)
+    return html if html.blank?
+
+    Nokogiri::HTML5.fragment(PrettyText.sanitize(html)).to_html
+  end
+
+  private_class_method :self_contained_html
 
   def self.words_for_action_exist?(action)
     WatchedWord.where(action: WatchedWord.actions[action.to_sym]).exists?
@@ -54,7 +68,20 @@ class WordWatcher
   end
 
   def self.regexps_for_action(action)
-    cached_words_for_action(action)&.to_h { |_, attrs| [word_to_regexp(attrs[:word]), attrs] }
+    words = cached_words_for_action(action)
+    return if words.blank?
+
+    words.each_with_object({}) do |(_, attrs), hash|
+      regexp = word_to_regexp(attrs[:word])
+      begin
+        Regexp.new(regexp)
+        hash[regexp] = attrs
+      rescue RegexpError => e
+        Rails.logger.warn(
+          "Watched word '#{attrs[:word]}' has invalid regex '#{regexp}' for #{action}: #{e.message}",
+        )
+      end
+    end
   end
 
   # This regexp is run in miniracer, and the client JS app
@@ -229,15 +256,17 @@ class WordWatcher
     match_list
   end
 
-  def word_matches_across_all_actions
-    WatchedWord
-      .actions
-      .keys
+  def word_matches_across_actions(actions)
+    actions
       .filter_map { |action| word_matches_for_action?(action, all_matches: true) }
       .flatten
       .compact
       .uniq
       .sort
+  end
+
+  def word_matches_across_all_actions
+    word_matches_across_actions(WatchedWord.actions.keys)
   end
 
   def word_matches?(word, case_sensitive: false)

@@ -1,67 +1,88 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import Chart from "discourse/admin/components/chart";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import icon from "discourse/helpers/d-icon";
+import moment from "moment";
+import SiteSetting from "discourse/admin/models/site-setting";
+import Form from "discourse/components/form";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import {
+  TRANSLATION_SETTING_GROUPS,
+  translationSettingDefinition,
+  translationSettingVisible,
+} from "../lib/ai-translation-settings.js";
+import { findSetting, saveSettings } from "../lib/site-settings-form.js";
+import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card.gjs";
+import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card.gjs";
+import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton.gjs";
 
 export default class AiTranslations extends Component {
   @service aiCredits;
   @service router;
-  @service languageNameLookup;
-  @service site;
   @service siteSettings;
+  @service toasts;
 
-  @tracked data = this.args.model?.translation_progress;
-  @tracked done = this.args.model?.posts_with_detected_locale;
-  @tracked total = this.args.model?.total;
-  @tracked
-  translationEnabled =
-    this.args.model?.translation_enabled &&
-    !this.args.model?.no_locales_configured;
-  @tracked enabled = this.args.model?.enabled;
-  @tracked
-  selectedLocales = this.siteSettings.content_localization_supported_locales
-    ? this.siteSettings.content_localization_supported_locales.split("|")
-    : [];
-  @tracked
-  originalLocales = this.siteSettings.content_localization_supported_locales
-    ? this.siteSettings.content_localization_supported_locales.split("|")
-    : [];
-  @tracked isSavingLocales = false;
+  @tracked overviewGeneration = 0;
+  @tracked expandedTargetType = null;
+  @tracked targetDetails = {};
+  @tracked loadingTargetDetails = {};
+  @tracked targetDetailErrors = {};
+  @tracked displayedTargetDetails = null;
+  @tracked optimisticState = null;
+  @tracked formData;
   @tracked isTogglingTranslation = false;
-  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
   @tracked creditStatus = null;
-  @tracked creditCheckComplete = false;
+
+  settingGroups = TRANSLATION_SETTING_GROUPS;
+  targetDetailRequests = new Map();
+  targetDetailGeneration = 0;
+  #formApi;
 
   constructor() {
     super(...arguments);
+    // Preserve drafts and inline errors when readiness refreshes replace the route model.
+    this.formData = this.args.model.formData;
     this._checkCredits();
   }
 
-  async _checkCredits() {
-    try {
-      this.creditStatus =
-        await this.aiCredits.getFeatureCreditStatus("locale_detector");
-    } catch {
-      this.creditStatus = null;
-    }
-    this.creditCheckComplete = true;
+  // Readiness is the server's call (AI enabled, a model is available, locales
+  // are saved), so it is only overridden until a refresh replaces the model.
+  get #optimistic() {
+    return this.optimisticState?.model === this.args.model
+      ? this.optimisticState
+      : null;
   }
 
   get creditLimitReached() {
     return this.creditStatus?.hard_limit_reached === true;
+  }
+
+  get maxLocaleToast() {
+    const max = this.siteSettings.content_localization_max_locales;
+    return {
+      duration: "short",
+      data: {
+        message: i18n("discourse_ai.translations.max_locales_reached", {
+          max,
+        }),
+      },
+    };
   }
 
   get creditLimitWarningMessage() {
@@ -83,475 +104,608 @@ export default class AiTranslations extends Component {
     );
   }
 
-  get localesChanged() {
-    const current = [...this.selectedLocales].sort().join("|");
-    const original = [...this.originalLocales].sort().join("|");
-    return current !== original;
+  get enabled() {
+    return this.#optimistic?.enabled ?? this.args.model.enabled;
   }
 
-  get showLocaleSelector() {
-    const noLocales =
-      this.args.model?.no_locales_configured ||
-      this.originalLocales.length === 0;
-    return noLocales && !this.translationEnabled;
+  get translationEnabled() {
+    return (
+      this.#optimistic?.translationEnabled ??
+      this.args.model.translation_enabled
+    );
   }
 
-  get showLocalizationSettingsButton() {
-    return this.enabled || !this.showLocaleSelector;
+  get hasSavedLocales() {
+    return Boolean(this.siteSettings.content_localization_supported_locales);
   }
 
   get isToggleDisabled() {
     return (
       this.isTogglingTranslation ||
-      (this.args.model?.no_locales_configured &&
-        this.originalLocales.length === 0)
+      (!this.translationEnabled && !this.hasSavedLocales)
     );
   }
 
-  get availableLocales() {
-    const locales = this.siteSettings.available_locales;
-    if (!locales) {
-      return [];
-    }
-
-    return locales;
-  }
-
-  get settingsUrl() {
-    return this.router.urlFor(
-      "adminPlugins.show.discourse-ai-features.edit",
-      this.args.model.translation_id
-    );
-  }
-
-  @action
-  navigateToLocalizationSettings() {
-    this.router.transitionTo("adminConfig.localization.settings", {
-      queryParams: { filter: "content_localization_supported_locales" },
-    });
-  }
-
-  @action
-  updateSelectedLocales(locales) {
-    this.selectedLocales = locales;
-  }
-
-  @action
-  async saveLocales() {
-    this.isSavingLocales = true;
-    try {
-      // also enable content_localization_enabled when we're setting locales
-      if (this.selectedLocales.length > 0) {
-        await ajax("/admin/site_settings/content_localization_enabled", {
-          type: "PUT",
-          data: { content_localization_enabled: true },
-        });
-      }
-
-      await ajax(
-        "/admin/site_settings/content_localization_supported_locales",
-        {
-          type: "PUT",
-          data: {
-            content_localization_supported_locales:
-              this.selectedLocales.join("|"),
-          },
-        }
+  get toggleDisabledReason() {
+    if (!this.translationEnabled && !this.hasSavedLocales) {
+      return i18n(
+        "discourse_ai.translations.admin_actions.enable_translations_disabled"
       );
-      this.originalLocales = [...this.selectedLocales];
-
-      if (this.selectedLocales.length > 0) {
-        this.args.model.no_locales_configured = false;
-      }
-
-      if (this.translationEnabled) {
-        window.location.reload();
-      }
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.isSavingLocales = false;
     }
   }
 
-  @action
-  cancelLocales() {
-    this.selectedLocales = [...this.originalLocales];
+  get waitingForLanguages() {
+    return this.translationEnabled && !this.hasSavedLocales;
+  }
+
+  get hiddenFromReaders() {
+    return (
+      this.translationEnabled &&
+      this.hasSavedLocales &&
+      !this.siteSettings.content_localization_enabled
+    );
+  }
+
+  get hiddenFromReadersMessage() {
+    return trustHTML(i18n("discourse_ai.translations.hidden_from_readers"));
+  }
+
+  get localeDefinition() {
+    return translationSettingDefinition(
+      this.findSetting("content_localization_supported_locales")
+    );
+  }
+
+  get isLoadingExpandedTargetDetails() {
+    return this.loadingTargetDetails[this.expandedTargetType];
+  }
+
+  get hasExpandedTargetDetailError() {
+    return this.targetDetailErrors[this.expandedTargetType];
+  }
+
+  get isDetailStateOverlay() {
+    return Boolean(
+      this.displayedTargetDetails &&
+      (this.isLoadingExpandedTargetDetails || this.hasExpandedTargetDetailError)
+    );
+  }
+
+  get expandedTargetTitle() {
+    if (!this.expandedTargetType) {
+      return null;
+    }
+
+    return i18n(
+      `discourse_ai.translations.model_progress.targets.${this.expandedTargetType}.title`
+    );
+  }
+
+  @bind
+  loadProgress() {
+    return ajax("/admin/plugins/discourse-ai/ai-translations/progress.json");
   }
 
   @action
-  resetLocales() {
-    this.selectedLocales = [];
+  findSetting(name) {
+    return findSetting(this.args.model.settings, name);
+  }
+
+  @action
+  isSettingVisible(setting, data) {
+    return translationSettingVisible(this.args.model.settings, setting, data);
+  }
+
+  localeValues(value) {
+    return value ? value.split("|").filter(Boolean) : [];
+  }
+
+  @action
+  localeCount(value) {
+    return this.localeValues(value).length;
+  }
+
+  @action
+  updateLocales(field, locales) {
+    const max = this.siteSettings.content_localization_max_locales;
+    if (max && locales.length > max) {
+      this.toasts.error(this.maxLocaleToast);
+      return;
+    }
+    field.set(locales.join("|"));
+  }
+
+  @action
+  registerFormApi(api) {
+    this.#formApi = api;
+  }
+
+  @action
+  async save(data) {
+    const settings = this.args.model.settings;
+    const success = await saveSettings(
+      settings,
+      data,
+      this.#formApi,
+      (key, value) => {
+        if (key in this.siteSettings) {
+          this.siteSettings[key] = value;
+        }
+      },
+      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+    );
+
+    if (success) {
+      this.toasts.success({
+        data: { message: i18n("saved") },
+        duration: "short",
+      });
+    } else {
+      this.toasts.error({
+        data: {
+          message: i18n("discourse_ai.translations.settings_save_error"),
+        },
+        duration: "long",
+      });
+    }
+
+    // Some settings save even when others fail.
+    await this.#refreshModel();
+
+    const expandedTargetType = this.expandedTargetType;
+    this._invalidateTargetDetails({ keepDisplayed: this.enabled });
+    this.overviewGeneration += 1;
+    if (expandedTargetType) {
+      await this._loadTargetDetails(expandedTargetType, { retry: true });
+    }
   }
 
   @action
   async toggleTranslationEnabled() {
-    if (this.isTogglingTranslation) {
-      return;
-    }
-
-    if (!this.translationEnabled && this.originalLocales.length === 0) {
+    if (this.isToggleDisabled) {
       return;
     }
 
     this.isTogglingTranslation = true;
     try {
-      if (!this.translationEnabled && this.originalLocales.length > 0) {
-        await ajax("/admin/site_settings/content_localization_enabled", {
-          type: "PUT",
-          data: { content_localization_enabled: true },
-        });
+      const value = !this.translationEnabled;
+      await SiteSetting.update("ai_translation_enabled", value);
+      this.siteSettings.ai_translation_enabled = value;
+      // Readiness stays false until the server confirms it for the new value.
+      this.optimisticState = {
+        model: this.args.model,
+        translationEnabled: value,
+        enabled: false,
+      };
+      this.overviewGeneration += 1;
+      if (!value) {
+        this.expandedTargetType = null;
+        this._invalidateTargetDetails();
       }
-
-      await ajax("/admin/site_settings/ai_translation_enabled", {
-        type: "PUT",
-        data: { ai_translation_enabled: !this.translationEnabled },
-      });
-      this.translationEnabled = !this.translationEnabled;
-
-      if (this.translationEnabled && !this.args.model.no_locales_configured) {
-        const response = await ajax(
-          "/admin/plugins/discourse-ai/ai-translations"
-        );
-        if (response.enabled) {
-          this.data = response.translation_progress;
-          this.total = response.total;
-          this.done = response.posts_with_detected_locale;
-          this.enabled = response.enabled;
-          this.hourlyRate = response.hourly_rate || 0;
-        }
-      } else {
-        this.enabled = false;
-      }
-    } catch (e) {
-      popupAjaxError(e);
+      await this.#refreshModel();
+    } catch (error) {
+      popupAjaxError(error);
     } finally {
       this.isTogglingTranslation = false;
     }
   }
 
-  get chartRightPadding() {
-    const max = Math.max(...this.data.map(({ total }) => total));
-    switch (true) {
-      case max >= 100000:
-        return 90;
-      case max >= 10000:
-        return 80;
-      case max >= 20:
-        return 70;
-      default:
-        return 50;
-    }
-  }
+  @bind
+  backfillStatusMessage(targets) {
+    const { backfill_enabled, backfill_start_date } = this.args.model;
 
-  get backfillStatusMessage() {
-    if (
-      this.args.model?.backfill_enabled &&
-      this.args.model?.backfill_max_age_days &&
-      this.hourlyRate > 0
-    ) {
-      const totalRemaining = this.data?.reduce(
-        (sum, { total, done }) => sum + (total - done),
-        0
-      );
-
-      if (totalRemaining && totalRemaining > 0) {
-        const hoursRemaining = totalRemaining / this.hourlyRate;
-
-        const cutoffDate = new Date();
-        cutoffDate.setDate(
-          cutoffDate.getDate() - this.args.model.backfill_max_age_days
-        );
-
-        const formattedDate = cutoffDate.toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        let timeKey;
-        if (hoursRemaining < 1) {
-          const minutes = Math.ceil(hoursRemaining * 60);
-          timeKey = i18n("discourse_ai.translations.stats.eta_minutes", {
-            count: minutes,
-          });
-        } else if (hoursRemaining < 24) {
-          const hours = Math.ceil(hoursRemaining);
-          timeKey = i18n("discourse_ai.translations.stats.eta_hours", {
-            count: hours,
-          });
-        } else {
-          const days = Math.ceil(hoursRemaining / 24);
-          timeKey = i18n("discourse_ai.translations.stats.eta_days", {
-            count: days,
-          });
-        }
-
-        return trustHTML(
-          i18n("discourse_ai.translations.stats.backfill_message", {
-            date: formattedDate,
-            eta: timeKey,
-            settingsUrl: this.settingsUrl,
-          })
-        );
-      }
-    }
-
-    if (!this.args.model?.backfill_enabled) {
+    if (!backfill_enabled) {
       return i18n("discourse_ai.translations.stats.backfill_disabled");
     }
 
-    return null;
-  }
+    const posts = targets?.find(({ target_type }) => target_type === "post");
+    const totalRemaining = posts
+      ? posts.total_count - posts.translated_count
+      : 0;
 
-  get chartColors() {
-    const styles = getComputedStyle(document.querySelector(".ai-translations"));
-    return {
-      progress: styles.getPropertyValue("--chart-progress-color").trim(),
-      remaining: styles.getPropertyValue("--chart-remaining-color").trim(),
-      text: styles.getPropertyValue("--chart-text-color").trim(),
-      label: styles.getPropertyValue("--chart-label-color").trim(),
-    };
-  }
-
-  get chartConfig() {
-    if (!this.data?.length) {
-      return {};
+    if (!backfill_start_date || totalRemaining <= 0) {
+      return null;
     }
 
-    const colors = this.chartColors;
-    const processedData = this.data.map(({ locale, total, done }) => {
-      const rawPercentage = total > 0 ? (done / total) * 100 : 0;
-      const donePercentage = Math.trunc(rawPercentage).toString();
-      const localeName = this.languageNameLookup.getLanguageName(locale);
-      const languageNameForTooltip = localeName.split(" (")[0];
+    const formattedDate = new Date(backfill_start_date).toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      }
+    );
 
-      return {
-        locale: localeName,
-        done,
-        total,
-        donePercentage,
-        tooltip: [
-          i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
-            done,
-            total,
-            language: languageNameForTooltip,
-          }),
-        ],
-      };
+    return trustHTML(
+      i18n("discourse_ai.translations.stats.backfill_message", {
+        date: formattedDate,
+        settingsUrl: "#ai-translations-backfill",
+      })
+    );
+  }
+
+  @bind
+  cachedResultsNotice(cachedAt) {
+    if (!cachedAt) {
+      return null;
+    }
+
+    return i18n("discourse_ai.translations.cached_results_notice", {
+      relative_time: moment(cachedAt).fromNow(),
     });
-    const chartData = {
-      labels: processedData.map(({ locale }) => locale),
-      datasets: [
-        {
-          tooltip: processedData.map(({ tooltip }) => tooltip),
-          data: processedData.map(({ donePercentage }) => donePercentage),
-          totalItems: processedData.map(({ total }) => total),
-          backgroundColor: colors.progress,
-          barThickness: 30,
-          borderRadius: 4,
-        },
-      ],
+  }
+
+  @action
+  toggleTarget(targetType) {
+    if (this.expandedTargetType === targetType) {
+      this.expandedTargetType = null;
+      this.displayedTargetDetails = null;
+      return;
+    }
+
+    this.expandedTargetType = targetType;
+    this._loadTargetDetails(targetType);
+  }
+
+  @action
+  retryTargetDetails() {
+    this._loadTargetDetails(this.expandedTargetType, { retry: true });
+  }
+
+  async #refreshModel() {
+    const previousData = this.args.model.formData;
+    try {
+      await this.router.refresh();
+      for (const [name, value] of Object.entries(this.args.model.formData)) {
+        if (
+          value !== previousData[name] &&
+          this.#formApi?.get(name) === previousData[name]
+        ) {
+          await this.#formApi.set(name, value);
+          this.#formApi.commitField(name);
+        }
+      }
+    } catch {
+      // The settings were saved; a failed refresh only leaves stale readiness.
+    }
+  }
+
+  async _checkCredits() {
+    try {
+      this.creditStatus =
+        await this.aiCredits.getFeatureCreditStatus("locale_detector");
+    } catch {
+      this.creditStatus = null;
+    }
+  }
+
+  async _loadTargetDetails(targetType, { retry = false } = {}) {
+    if (this.targetDetails[targetType] && !retry) {
+      this.displayedTargetDetails = this.targetDetails[targetType];
+      return;
+    }
+
+    const generation = this.targetDetailGeneration;
+    let request = this.targetDetailRequests.get(targetType);
+    if (!request || retry) {
+      request = ajax(
+        `/admin/plugins/discourse-ai/ai-translations/progress/${targetType}.json`
+      );
+      this.targetDetailRequests.set(targetType, request);
+    }
+
+    this.loadingTargetDetails = {
+      ...this.loadingTargetDetails,
+      [targetType]: true,
+    };
+    this.targetDetailErrors = {
+      ...this.targetDetailErrors,
+      [targetType]: false,
     };
 
-    return {
-      type: "bar",
-      data: chartData,
-      plugins: [
-        {
-          id: "barTotalText",
-          afterDraw: ({ ctx, data, scales }) => {
-            ctx.save();
-            ctx.textBaseline = "middle";
-            ctx.fillStyle = colors.text;
-            const items = data.datasets[0].totalItems;
-            items.forEach((count, i) => {
-              ctx.fillText(
-                i18n("discourse_ai.translations.progress_chart.bar_done", {
-                  count,
-                }),
-                scales.x.getPixelForValue(100) + 10,
-                scales.y.getPixelForValue(i)
-              );
-            });
-            ctx.canvas.parentElement.style.height = `${items.length * 50 + 40}px`;
-            ctx.restore();
-          },
-        },
-      ],
-      options: {
-        indexAxis: "y",
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { right: this.chartRightPadding } },
-        scales: {
-          x: {
-            beginAtZero: true,
-            max: 100,
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: colors.text,
-              callback: (percentage) =>
-                i18n("discourse_ai.translations.progress_chart.data_label", {
-                  percentage,
-                }),
-            },
-          },
-          y: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: colors.text,
-            },
-          },
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            displayColors: false,
-            callbacks: {
-              label: ({ dataset: { tooltip }, dataIndex }) =>
-                tooltip[dataIndex],
-            },
-          },
-          datalabels: {
-            formatter: (percentage) =>
-              this.site.mobileView && percentage < 20
-                ? ""
-                : i18n("discourse_ai.translations.progress_chart.data_label", {
-                    percentage,
-                  }),
-            color: colors.label,
-          },
-        },
-      },
-    };
+    try {
+      const response = await request;
+      if (generation === this.targetDetailGeneration && this.enabled) {
+        this.targetDetails = {
+          ...this.targetDetails,
+          [targetType]: response,
+        };
+        if (this.expandedTargetType === targetType) {
+          this.displayedTargetDetails = response;
+        }
+      }
+    } catch {
+      if (generation === this.targetDetailGeneration && this.enabled) {
+        this.targetDetailErrors = {
+          ...this.targetDetailErrors,
+          [targetType]: true,
+        };
+      }
+    } finally {
+      if (generation === this.targetDetailGeneration) {
+        if (this.targetDetailRequests.get(targetType) === request) {
+          this.targetDetailRequests.delete(targetType);
+        }
+        this.loadingTargetDetails = {
+          ...this.loadingTargetDetails,
+          [targetType]: false,
+        };
+      }
+    }
+  }
+
+  _invalidateTargetDetails({ keepDisplayed = false } = {}) {
+    this.targetDetailGeneration += 1;
+    this.targetDetails = {};
+    this.loadingTargetDetails = {};
+    this.targetDetailErrors = {};
+    this.targetDetailRequests.clear();
+
+    if (!keepDisplayed) {
+      this.displayedTargetDetails = null;
+    }
   }
 
   <template>
     <div class="ai-translations admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.translations.title"}}
         @descriptionLabel={{i18n "discourse_ai.translations.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
+        @titleLabel={{i18n "discourse_ai.translations.title"}}
       >
         <:actions as |actions|>
-          {{#if this.enabled}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.translation_settings"
-              @route="adminPlugins.show.discourse-ai-features.edit"
-              @routeModels={{@model.translation_id}}
-              class="ai-translation-settings-button"
-            />
-          {{/if}}
-          {{#if this.showLocalizationSettingsButton}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.localization_settings"
-              @route="adminConfig.localization.settings"
-              class="ai-localization-settings-button"
-            />
-          {{/if}}
+          <actions.Wrapped>
+            <div class="ai-translations__toggle-container">
+              <DToggleSwitch
+                aria-describedby={{if
+                  this.toggleDisabledReason
+                  "ai-translations-toggle-hint"
+                }}
+                disabled={{this.isToggleDisabled}}
+                @label="discourse_ai.translations.admin_actions.enabled"
+                @state={{this.translationEnabled}}
+                {{on "click" this.toggleTranslationEnabled}}
+              />
+            </div>
+          </actions.Wrapped>
         </:actions>
       </DPageSubheader>
 
       {{#if this.creditLimitReached}}
         <div class="alert alert-warning ai-translations__credit-warning">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           <span>{{this.creditLimitWarningMessage}}</span>
         </div>
       {{/if}}
 
-      {{#if this.showLocaleSelector}}
-        <div class="alert alert-info">
-          <div class="settings">
-            <div class="setting">
-              <div class="setting-label">
-                <label>{{i18n
-                    "discourse_ai.translations.supported_locales"
-                  }}</label>
-              </div>
-              <div class="setting-value">
-                <div class="ai-translations__locale-input-row">
-                  <MultiSelect
-                    @value={{this.selectedLocales}}
-                    @content={{this.availableLocales}}
-                    @nameProperty="name"
-                    @valueProperty="value"
-                    @onChange={{this.updateSelectedLocales}}
-                    @options={{hash allowAny=false}}
-                  />
-                  {{#if this.localesChanged}}
-                    <div class="setting-controls">
-                      <DButton
-                        @action={{this.saveLocales}}
-                        @icon="check"
-                        @isLoading={{this.isSavingLocales}}
-                        @ariaLabel="save"
-                        class="ok setting-controls__ok"
-                      />
-                      <DButton
-                        @action={{this.cancelLocales}}
-                        @icon="xmark"
-                        @isLoading={{this.isSavingLocales}}
-                        @ariaLabel="cancel"
-                        class="cancel setting-controls__cancel"
-                      />
-                    </div>
-                  {{else if this.selectedLocales.length}}
-                    <DButton
-                      @action={{this.resetLocales}}
-                      @icon="arrow-rotate-left"
-                      @label="admin.settings.reset"
-                      class="undo setting-controls__undo"
-                    />
-                  {{/if}}
-                </div>
-                <div class="desc">{{i18n
-                    "discourse_ai.translations.supported_locales_description"
-                  }}</div>
-              </div>
-            </div>
-          </div>
+      {{#if this.toggleDisabledReason}}
+        <p
+          class="ai-translations__toggle-hint"
+          id="ai-translations-toggle-hint"
+        >
+          {{this.toggleDisabledReason}}
+        </p>
+      {{/if}}
+
+      {{#if this.waitingForLanguages}}
+        <div class="alert alert-warning ai-translations__languages-notice">
+          {{i18n "discourse_ai.translations.waiting_for_languages"}}
         </div>
       {{/if}}
 
-      <div class="ai-translations__toggle-container">
-        <DToggleSwitch
-          @state={{this.translationEnabled}}
-          @label="discourse_ai.translations.admin_actions.enable_translations"
-          disabled={{this.isToggleDisabled}}
-          {{on "click" this.toggleTranslationEnabled}}
-        />
-      </div>
+      {{#if this.hiddenFromReaders}}
+        <div class="alert alert-info ai-translations__readers-notice">
+          {{this.hiddenFromReadersMessage}}
+        </div>
+      {{/if}}
+
+      <Form
+        class="ai-translations__settings-panel"
+        @data={{this.formData}}
+        @onRegisterApi={{this.registerFormApi}}
+        @onSubmit={{this.save}}
+        as |form data|
+      >
+        <form.Section
+          @title={{i18n "discourse_ai.translations.sections.languages"}}
+        >
+          <form.Field
+            class="ai-translations__locales"
+            @description={{this.localeDefinition.description}}
+            @format="large"
+            @labelFormat="full"
+            @name="content_localization_supported_locales"
+            @title={{this.localeDefinition.label}}
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <MultiSelect
+                @content={{this.siteSettings.available_locales}}
+                @nameProperty="name"
+                @onChange={{fn this.updateLocales field}}
+                @options={{hash allowAny=false}}
+                @value={{this.localeValues field.value}}
+                @valueProperty="value"
+              />
+            </field.Control>
+          </form.Field>
+          <div class="ai-translations__locale-info">
+            {{#if this.siteSettings.content_localization_max_locales}}
+              <p class="ai-translations__locale-count">
+                {{i18n
+                  "discourse_ai.translations.locale_count"
+                  count=(this.localeCount
+                    data.content_localization_supported_locales
+                  )
+                  max=this.siteSettings.content_localization_max_locales
+                }}
+              </p>
+            {{/if}}
+            <PluginOutlet
+              @connectorTagName="div"
+              @name="ai-translations-locale-info"
+              @outletArgs={{lazyHash
+                localesCount=(this.localeCount
+                  data.content_localization_supported_locales
+                )
+                maxLocales=this.siteSettings.content_localization_max_locales
+              }}
+            />
+          </div>
+        </form.Section>
+        {{#each this.settingGroups as |group|}}
+          {{#unless (eq group.key "languages")}}
+            {{#if (eq group.key "agents")}}
+              <details class="ai-translations__agents">
+                <summary>{{i18n
+                    "discourse_ai.translations.sections.agents"
+                  }}</summary>
+                <form.Section>
+                  {{#each group.settings as |name|}}
+                    {{#let (this.findSetting name) as |setting|}}
+                      {{#if (this.isSettingVisible setting data)}}
+                        <SettingDefinitionField
+                          @definition={{translationSettingDefinition setting}}
+                          @disabled={{setting.disabled}}
+                          @form={{form}}
+                        />
+                      {{/if}}
+                    {{/let}}
+                  {{/each}}
+                </form.Section>
+              </details>
+            {{else}}
+              <form.Section
+                id={{concat "ai-translations-" group.key}}
+                @title={{i18n
+                  (concat "discourse_ai.translations.sections." group.key)
+                }}
+              >
+                {{#each group.settings as |name|}}
+                  {{#let (this.findSetting name) as |setting|}}
+                    {{#if (this.isSettingVisible setting data)}}
+                      <SettingDefinitionField
+                        @definition={{translationSettingDefinition setting}}
+                        @disabled={{setting.disabled}}
+                        @form={{form}}
+                      />
+                    {{/if}}
+                  {{/let}}
+                {{/each}}
+                {{#if (eq group.key "readers")}}
+                  <LinkTo
+                    class="ai-translations__more-settings"
+                    @route="adminConfig.localization.settings"
+                  >
+                    {{i18n "discourse_ai.translations.more_language_settings"}}
+                  </LinkTo>
+                {{/if}}
+              </form.Section>
+            {{/if}}
+          {{/unless}}
+        {{/each}}
+        <form.Actions><form.Submit @label="save" /></form.Actions>
+      </Form>
 
       {{#if this.enabled}}
-        <AdminConfigAreaCard class="ai-translations__charts">
-          <:header>
-            {{i18n "discourse_ai.translations.progress_chart.title"}}
-          </:header>
-          <:content>
-            <div class="ai-translations__stats-container">
-              {{#if this.backfillStatusMessage}}
-                <div class="ai-translations__stat-item">
-                  <span class="ai-translations__stat-label">
-                    {{this.backfillStatusMessage}}
-                  </span>
+        <div class="ai-translations__overview">
+          <DAsyncContent
+            @asyncData={{this.loadProgress}}
+            @context={{this.overviewGeneration}}
+            @errorMode="popup"
+            @retainWhileReloading={{true}}
+          >
+            <:loading>
+              <AiTranslationModelProgressOverviewSkeleton />
+            </:loading>
+            <:content as |progress|>
+              <div class="ai-translations__progress-meta">
+                {{#let
+                  (this.backfillStatusMessage progress.targets)
+                  as |backfillStatusMessage|
+                }}
+                  {{#if backfillStatusMessage}}
+                    <div class="ai-translations__stat-item">
+                      <span class="ai-translations__stat-label">
+                        {{backfillStatusMessage}}
+                      </span>
+                    </div>
+                  {{/if}}
+                {{/let}}
+                {{#let
+                  (this.cachedResultsNotice progress.cached_at)
+                  as |cachedResultsNotice|
+                }}
+                  {{#if cachedResultsNotice}}
+                    <div class="ai-translations__cached-results">
+                      {{dIcon "clock-rotate-left"}}
+                      <span>{{cachedResultsNotice}}</span>
+                    </div>
+                  {{/if}}
+                {{/let}}
+              </div>
+
+              <div
+                aria-label={{i18n
+                  "discourse_ai.translations.model_progress.overview_label"
+                }}
+                class="ai-translations__overview-grid"
+              >
+                {{#each progress.targets as |target|}}
+                  <AiTranslationModelProgressOverviewCard
+                    @expanded={{eq this.expandedTargetType target.target_type}}
+                    @onToggle={{this.toggleTarget}}
+                    @target={{target}}
+                  />
+                {{/each}}
+              </div>
+              {{#if this.expandedTargetType}}
+                <div class="ai-translation-model-progress-detail-region">
+                  {{#if this.displayedTargetDetails}}
+                    <div aria-hidden={{this.isDetailStateOverlay}}>
+                      <AiTranslationModelProgressDetailCard
+                        @data={{this.displayedTargetDetails}}
+                      />
+                    </div>
+                  {{/if}}
+                  {{#if this.isLoadingExpandedTargetDetails}}
+                    <div
+                      class="ai-translation-model-progress-detail-state
+                        {{if this.isDetailStateOverlay '--overlay'}}"
+                      role="status"
+                    >
+                      {{i18n
+                        "discourse_ai.translations.model_progress.detail.loading"
+                        target=this.expandedTargetTitle
+                      }}
+                    </div>
+                  {{else if this.hasExpandedTargetDetailError}}
+                    <div
+                      class="ai-translation-model-progress-detail-state --error
+                        {{if this.isDetailStateOverlay '--overlay'}}"
+                      role="alert"
+                    >
+                      <span>
+                        {{i18n
+                          "discourse_ai.translations.model_progress.detail.load_error"
+                          target=this.expandedTargetTitle
+                        }}
+                      </span>
+                      <DButton
+                        class="btn-default"
+                        @action={{this.retryTargetDetails}}
+                        @icon="rotate"
+                        @label="discourse_ai.translations.model_progress.detail.retry"
+                      />
+                    </div>
+                  {{/if}}
                 </div>
               {{/if}}
-            </div>
-            <div class="ai-translations__chart-container">
-              <Chart
-                @chartConfig={{this.chartConfig}}
-                @loadChartDataLabelsPlugin={{true}}
-                class="ai-translations__chart"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
-
+            </:content>
+          </DAsyncContent>
+        </div>
       {{/if}}
 
     </div>

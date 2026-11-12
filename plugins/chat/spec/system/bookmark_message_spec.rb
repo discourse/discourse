@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Bookmark message", type: :system do
+RSpec.describe "Bookmark message" do
   fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -28,6 +28,7 @@ RSpec.describe "Bookmark message", type: :system do
 
       expect(channel_page).to have_bookmarked_message(message_1)
     end
+
     context "when in a long thread" do
       it "supports linking to a bookmark in a long thread" do
         category_channel_1.update!(threading_enabled: true)

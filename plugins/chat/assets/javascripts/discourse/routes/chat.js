@@ -1,6 +1,9 @@
 import { service } from "@ember/service";
+import {
+  discoveryHomepageRoute,
+  isHomepageTransition,
+} from "discourse/lib/homepage-router-overrides";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -16,14 +19,24 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service designWizard;
+  @service siteSettings;
 
   titleToken() {
     return i18n("chat.title_capitalized");
   }
 
   beforeModel(transition) {
-    if (!this.chat.userCanChat) {
-      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
+    if (this.chat.chatDisabledInPreferences) {
+      if (transition.to.name === "chat.disabled") {
+        return;
+      }
+
+      return this.router.replaceWith("chat.disabled");
+    }
+
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
+      return this.router.transitionTo(discoveryHomepageRoute());
     }
 
     // Check if user prefers drawer mode and the route can be handled in drawer
@@ -38,9 +51,13 @@ export default class ChatRoute extends DiscourseRoute {
     // This preserves the original behavior: if someone directly types /chat in
     // the address bar, show them full page chat (they explicitly chose it).
     // But if requiresRefresh caused a reload mid-session, respect drawer preference.
+    // The homepage always opens full page: there is no page beneath for the
+    // drawer to open over.
     if (
       isDrawerPreferred &&
       canHandleInDrawer &&
+      !isHomepageTransition(transition) &&
+      !(this.designWizard.active && this.designWizard.homepage === "chat") &&
       (!fullPageReload || requiresRefresh)
     ) {
       transition.abort();
@@ -60,8 +77,7 @@ export default class ChatRoute extends DiscourseRoute {
       // navigate to a non-chat page first before opening the drawer
       if (fullPageReload) {
         const appURL =
-          this.chatStateManager.lastKnownAppURL ||
-          `discovery.${defaultHomepage()}`;
+          this.chatStateManager.lastKnownAppURL || discoveryHomepageRoute();
         return this.router.transitionTo(appURL).then(() => {
           this.appEvents.trigger("chat:open-url", url);
         });
@@ -77,11 +93,16 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
+    if (this.chat.chatDisabledInPreferences) {
+      return;
+    }
+
     withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
+        this.siteSettings
       );
 
       if (chatSeparateSidebarMode.never) {

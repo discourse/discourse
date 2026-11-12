@@ -7,7 +7,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
-module("Integration | Component | da-groups-field", function (hooks) {
+module("Integration | Component | DaGroupsField", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

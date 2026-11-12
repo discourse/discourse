@@ -2,10 +2,11 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
+import AdminWatchedWordsActionNav from "discourse/admin/components/admin-watched-words-action-nav";
 import WatchedWord from "discourse/admin/models/watched-word";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,13 +17,25 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const MESSAGE_BUS_UPLOAD_PATH = "/watched_words/upload";
 
 export default class AdminWatchedWordsController extends Controller {
+  @service capabilities;
   @service messageBus;
+  @service menu;
 
+  /** @type {string | null} */
   @tracked filter = null;
+
+  /** @type {HTMLElement | null} */
+  menuTrigger = null;
+
   @autoTrackedArray allWatchedWords;
+
   @autoTrackedArray filteredWatchedWords;
 
   showWords = false;
+
+  get showMenuToggle() {
+    return !this.capabilities.viewport.sm;
+  }
 
   @observes("allWatchedWords", "filter")
   filterContent() {
@@ -68,12 +81,34 @@ export default class AdminWatchedWordsController extends Controller {
         EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
-          words: new TrackedArray(wordRecords),
+          words: trackedArray(wordRecords),
         })
       );
     });
 
     this.filteredWatchedWords = filteredWatchedWords;
+  }
+
+  @action
+  clearFilter() {
+    this.filter = "";
+  }
+
+  @action
+  registerMenuTrigger(element) {
+    this.menuTrigger = element;
+  }
+
+  @action
+  toggleMenu() {
+    this.menu.show(this.menuTrigger, {
+      identifier: "admin-watched-words-action-nav",
+      component: AdminWatchedWordsActionNav,
+      modalForMobile: true,
+      data: {
+        items: this.filteredWatchedWords,
+      },
+    });
   }
 
   @bind
@@ -85,18 +120,5 @@ export default class AdminWatchedWordsController extends Controller {
     if (message.errors?.length) {
       popupAjaxError(message.errors[0]);
     }
-  }
-
-  @action
-  clearFilter() {
-    this.filter = "";
-  }
-
-  @action
-  toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
-    });
   }
 }

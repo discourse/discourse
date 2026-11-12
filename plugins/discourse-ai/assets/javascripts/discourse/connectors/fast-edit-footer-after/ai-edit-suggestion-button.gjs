@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import DButton from "discourse/ui-kit/d-button";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiEditSuggestionButton extends Component {
   static shouldRender(args, context) {
@@ -58,10 +58,10 @@ export default class AiEditSuggestionButton extends Component {
       <DButton
         class="btn-default btn-small btn-ai-suggest-edit"
         @action={{this.suggest}}
-        @icon="discourse-sparkles"
-        @label="discourse_ai.ai_helper.fast_edit.suggest_button"
-        @isLoading={{this.loading}}
         @disabled={{this.disabled}}
+        @icon="discourse-sparkles"
+        @isLoading={{this.loading}}
+        @label="discourse_ai.ai_helper.fast_edit.suggest_button"
       />
     {{/unless}}
   </template>

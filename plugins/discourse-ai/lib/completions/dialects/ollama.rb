@@ -69,7 +69,8 @@ module DiscourseAi
         end
 
         def user_msg(msg)
-          user_message = { role: "user", content: DiscourseAi::Completions::Prompt.text_only(msg) }
+          content = prepend_user_id(DiscourseAi::Completions::Prompt.text_only(msg), msg)
+          user_message = { role: "user", content: content }
 
           encoded_uploads = prompt.encoded_uploads(msg)
           if encoded_uploads.present?
@@ -86,8 +87,6 @@ module DiscourseAi
 
             user_message[:images] = images if images.present?
           end
-
-          # TODO: Add support for user messages with embedded user ids
 
           user_message
         end

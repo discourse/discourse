@@ -26,6 +26,8 @@ lt:
       cast-votes:
         title: "Apskaičiuoti tavo balsus"
         label: "Balsuoti dabar!"
+      keep-vote:
+        label: "Atgal"
       show-results:
         title: "Rodyti balsavimo rezultatus"
         label: "Rezultatai"
@@ -100,5 +102,3 @@ lt:
           add: Pridėti parinktį
         automatic_close:
           label: Automatiškai uždaryti apklausą
-        show_advanced: "Rodyti išplėstines parinktis"
-        hide_advanced: "Slėpti išplėstines parinktis"

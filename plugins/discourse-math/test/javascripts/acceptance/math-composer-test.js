@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Discourse Math - composer", function (needs) {
+acceptance("composer", function (needs) {
   needs.user();
   needs.settings({
     discourse_math_enabled: true,

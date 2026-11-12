@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
-import UserThreads from "../../user-threads";
-import Navbar from "../navbar";
+import UserThreads from "../../user-threads/index.gjs";
+import Navbar from "../navbar/index.gjs";
 
 const ChatRoutesThreads = <template>
   <div class="c-routes --threads">

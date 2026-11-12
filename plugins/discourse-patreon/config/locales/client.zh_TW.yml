@@ -5,22 +5,58 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
   js:
     login:
       patreon:
         name: Patreon
+        title: 使用 Patreon 登入
     patreon:
       title: 'Patreon'
       header:
         rules: '過濾器'
+      unconfigured: "Patreon 尚未連結。如需詳細資訊，請參閱<a href='%{url}' target='_blank'>Discourse Meta 上的說明文件</a>。"
+      configure_tokens: '前往設定'
       group: '群組'
       rewards: '獎勵'
       filter: '過濾器'
       help_text: '您可以將 Discourse 群組與一個或多個 Patreon 獎勵等級同步。'
+      last_synced: '上次同步'
       edit: '編輯'
       delete: '刪除'
       save: '儲存'
       update_data: '更新 Patreon 資料與同步群組'
+      refresh_page: '已從 Patreon API 下載新資料。請重新整理頁面。'
+      select_group: '選取群組'
       field:
+        id: "ID"
         email: "電子信箱"
+        amount_cents: "金額（以美分計）"
         rewards: "獎勵"
+        declined_since: "贊助遭拒起始日"
+        more_details:
+          label: "付款與更多詳細資料"
+          help_text:
+            email_available: "捲動到頁面右下方，查看此贊助者的贊助紀錄。"
+            email_not_available: "選取 Patreon 會員，然後捲動到頁面右下方查看贊助紀錄。"
+      donation_prompt:
+        body: |
+          <h1>讀者您好！</h1>
+
+          <p>喜歡我們的網站嗎？願意為有意義的目標盡一份心力嗎？</p>
+
+          <p>
+            如果您覺得我們的網站很有幫助，也喜歡我們所建立的社群，誠摯邀請您捐款支持本網站。
+            您的捐款可讓我們的服務穩定運作，確保社群未來多年持續提供服務。
+            每一分支持都很重要，我們也會妥善運用。
+          </p>
+
+          <p>感謝您的支持！</p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">成為贊助者</a>
+          </p>

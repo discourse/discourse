@@ -7,18 +7,19 @@
     <link><%= @link %></link>
     <description><%= @description %></description>
     <% if lang %><language><%= lang.sub('_', '-')%></language><% end %>
+    <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
+    <% if markdown_alternate_url %><atom:link href="<%= markdown_alternate_url %>" rel="alternate" type="text/markdown" /><% end %>
     <% if @topic_list.topics && @topic_list.topics.length > 0 %>
       <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
-      <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
       <% @topic_list.topics.each do |topic| %>
         <% topic_url = topic.url -%>
         <item>
           <title><%= topic.title %></title>
-          <dc:creator><![CDATA[<%= rss_creator(topic.user) -%>]]></dc:creator>
+          <dc:creator><![CDATA[<%= rss_cdata(rss_creator(topic.user)) -%>]]></dc:creator>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
             <%- if first_post = topic.ordered_posts.first %>
-            <%= PrettyText.format_for_email(first_post.cooked, first_post).html_safe %>
+            <%= rss_cdata(PrettyText.format_for_email(first_post.cooked, first_post)) %>
             <%- end %>
             <p><small><%= t 'rss_num_posts', count: topic.posts_count %> - <%= t 'rss_num_participants', count: topic.participant_count %></small></p>
             <p><%= link_to t('read_full_topic'), topic_url %></p>

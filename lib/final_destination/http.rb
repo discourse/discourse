@@ -1,42 +1,65 @@
 # frozen_string_literal: true
 
 class FinalDestination::HTTP < Net::HTTP
+  # Ruby's Happy Eyeballs implementation will try every IP address at 250ms intervals.
+  # Limit the total to avoid DoS via a high-ip-count DNS response.
+  MAX_ADDRESSES_PER_FAMILY = 5
+
+  # Bounds reads by wall-clock time. read_timeout alone resets on every received
+  # byte, so a peer trickling its response could otherwise hold the caller indefinitely.
+  module DeadlineBufferedIO
+    attr_accessor :deadline
+
+    private
+
+    def rbuf_fill
+      remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      raise Net::ReadTimeout.new(io) if remaining <= 0
+      self.read_timeout = remaining if read_timeout.nil? || read_timeout > remaining
+      super
+    end
+  end
+
+  # Maximum seconds a request may spend reading the response once connected, on top
+  # of open_timeout. Unset by default.
+  attr_accessor :total_timeout
+
   def connect
     raise ArgumentError.new("address cannot be nil or empty") if @address.blank?
 
-    original_open_timeout = @open_timeout
-    return super if @ipaddr
+    if !@ipaddr
+      ips =
+        FinalDestination::SSRFDetector.lookup_and_filter_ips(@address, timeout: @connect_timeout)
 
-    timeout_at = current_time + @open_timeout
-
-    # This iteration through addresses would normally happen in Socket#tcp
-    # We do it here because we're tightly controlling addresses rather than
-    # handing Socket#tcp a hostname
-    ips = FinalDestination::SSRFDetector.lookup_and_filter_ips(@address, timeout: @connect_timeout)
-
-    ips.each_with_index do |ip, index|
-      debug "[FinalDestination] Attempting connection to #{ip}..."
-      self.ipaddr = ip
-
-      remaining_time = timeout_at - current_time
-      if remaining_time <= 0
-        raise Net::OpenTimeout.new("Operation timed out - FinalDestination::HTTP")
+      if proxy?
+        self.ipaddr = ips.first
+      else
+        @final_destination_token =
+          FinalDestination::Connector.encode(@address, capped_addresses(ips))
       end
-
-      @open_timeout = remaining_time
-      return super
-    rescue OpenSSL::SSL::SSLError, SystemCallError, Net::OpenTimeout => e
-      debug "[FinalDestination] Error connecting to #{ip}... #{e.message}"
-      was_last_attempt = index == ips.length - 1
-      raise if was_last_attempt
     end
+
+    super
+    apply_total_timeout
   ensure
-    @open_timeout = original_open_timeout
+    @final_destination_token = nil
+  end
+
+  def conn_address
+    @final_destination_token || super
   end
 
   private
 
-  def current_time
-    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  def apply_total_timeout
+    return if total_timeout.nil?
+
+    @socket.extend(DeadlineBufferedIO)
+    @socket.deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + total_timeout
+  end
+
+  def capped_addresses(ips)
+    ipv6, ipv4 = ips.partition { |ip| ip.include?(":") }
+    ipv6.first(MAX_ADDRESSES_PER_FAMILY) + ipv4.first(MAX_ADDRESSES_PER_FAMILY)
   end
 end

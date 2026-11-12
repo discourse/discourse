@@ -46,6 +46,32 @@ module(
       assert.dom(".user-title").hasText("Trout Master");
     });
 
+    test("screen readers only announce one name", async function (assert) {
+      this.siteSettings.display_name_on_posts = true;
+      this.siteSettings.prioritize_username_in_ux = false;
+      this.post.user_id = 1;
+      this.post.username = "eviltrout";
+      this.post.name = "Robin Ward";
+
+      await renderComponent(this.post);
+
+      assert
+        .dom(".first a")
+        .hasAttribute(
+          "aria-label",
+          "Robin Ward's profile",
+          "the first link is announced with the displayed name"
+        );
+      assert
+        .dom(".second a")
+        .hasAttribute(
+          "aria-hidden",
+          "true",
+          "the second name is redundant and hidden from screen readers"
+        )
+        .hasAttribute("tabindex", "-1");
+    });
+
     test("extra classes and glyphs", async function (assert) {
       this.post.user_id = 1;
       this.post.username = "eviltrout";
@@ -178,11 +204,12 @@ module(
         .dom("span.poster-icon.test-smile > a")
         .exists()
         .hasAttribute("href", "/u/eviltrout");
+
       assert
-        .dom("span.poster-icon.test-smile > a > .emoji[alt='heart']")
+        .dom("span.poster-icon.test-smile > a > .emoji[title='test emojis']")
         .exists();
       assert
-        .dom("span.poster-icon.test-smile > a > .emoji[alt='smile']")
+        .dom("span.poster-icon.test-smile > a > .emoji[title='test emojis']")
         .exists();
     });
 

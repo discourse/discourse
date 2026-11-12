@@ -8,12 +8,14 @@ import { trustHTML } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
-import { isRailsTesting, isTesting } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
+import { openLightbox } from "discourse/lib/lightbox";
+import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ImageAltTextInput from "./image-alt-text-input";
+import ImageAltTextInput from "./image-alt-text-input.gjs";
 
-const MIN_SCALE = 50;
+const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
+
+const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 
@@ -86,6 +88,7 @@ class ImageToolbar extends ToolbarBase {
 }
 
 export default class ImageNodeView extends Component {
+  @service("app-events") appEvents;
   @service menu;
   @service siteSettings;
 
@@ -93,16 +96,88 @@ export default class ImageNodeView extends Component {
   @tracked menuInstance;
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
+  @tracked uploadProgress = 0;
+  #progressEvent;
 
   constructor() {
     super(...arguments);
+
+    if (this.isPlaceholder) {
+      const fileId = this.args.node.attrs.title;
+      this.args.dom.classList.add(...PLACEHOLDER_CLASSES);
+      this.args.dom.dataset.uploadId = fileId;
+      this.#progressEvent = `composer:upload-progress:${fileId}`;
+      this.appEvents.on(this.#progressEvent, this, this.onUploadProgress);
+    }
 
     this.args.onSetup?.(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.#progressEvent) {
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+    }
     this.closeMenus();
+  }
+
+  get isPlaceholder() {
+    return !!this.args.node.attrs.placeholder;
+  }
+
+  get maxDimensions() {
+    if (!this.imageLoaded) {
+      return null;
+    }
+
+    const widthRatio =
+      this.siteSettings.max_image_width / this.image.naturalWidth;
+    const heightRatio =
+      this.siteSettings.max_image_height / this.image.naturalHeight;
+
+    const ratio = Math.min(widthRatio, heightRatio);
+
+    return {
+      width: Math.floor(this.image.naturalWidth * ratio),
+      height: Math.floor(this.image.naturalHeight * ratio),
+    };
+  }
+
+  get imageStyle() {
+    const width = this.args.node.attrs.width ?? this.maxDimensions?.width;
+    if (!width) {
+      return null;
+    }
+
+    const scale = (this.args.node.attrs.scale ?? 100) / 100;
+
+    return trustHTML(`width: ${width * scale}px`);
+  }
+
+  get isInGrid() {
+    const pos = this.args.getPos();
+    const $pos = this.args.view.state.doc.resolve(pos);
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  get altInputHasFocus() {
+    return !!this.altMenuInstance?.content?.contains(document.activeElement);
+  }
+
+  update(node) {
+    if (this.#progressEvent && !node.attrs.placeholder) {
+      this.args.dom.classList.remove(...PLACEHOLDER_CLASSES);
+      delete this.args.dom.dataset.uploadId;
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+      this.#progressEvent = null;
+    }
   }
 
   stopEvent(event) {
@@ -271,14 +346,18 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.image.classList.add("ProseMirror-selectednode");
 
-    this.showToolbar();
-    this.showAltText();
+    if (!this.isPlaceholder) {
+      this.showToolbar();
+      this.showAltText();
+    }
   }
 
   deselectNode() {
     this.image.classList.remove("ProseMirror-selectednode");
 
-    this.closeMenus();
+    if (!this.isPlaceholder) {
+      this.closeMenus();
+    }
   }
 
   closeMenus() {
@@ -286,48 +365,6 @@ export default class ImageNodeView extends Component {
     this.menuInstance = null;
     this.altMenuInstance?.close();
     this.altMenuInstance = null;
-  }
-
-  get maxDimensions() {
-    if (!this.imageLoaded) {
-      return null;
-    }
-
-    const widthRatio =
-      this.siteSettings.max_image_width / this.image.naturalWidth;
-    const heightRatio =
-      this.siteSettings.max_image_height / this.image.naturalHeight;
-
-    const ratio = Math.min(widthRatio, heightRatio);
-
-    return {
-      width: Math.floor(this.image.naturalWidth * ratio),
-      height: Math.floor(this.image.naturalHeight * ratio),
-    };
-  }
-
-  get imageStyle() {
-    const width = this.args.node.attrs.width ?? this.maxDimensions?.width;
-    if (!width) {
-      return null;
-    }
-
-    const scale = (this.args.node.attrs.scale ?? 100) / 100;
-
-    return trustHTML(`width: ${width * scale}px`);
-  }
-
-  get isInGrid() {
-    const pos = this.args.getPos();
-    const $pos = this.args.view.state.doc.resolve(pos);
-
-    for (let depth = $pos.depth; depth >= 0; depth--) {
-      if ($pos.node(depth).type.name === "grid") {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   @action
@@ -351,6 +388,137 @@ export default class ImageNodeView extends Component {
         state,
         view
       );
+    }
+  }
+
+  @action
+  moveOutsideGrid() {
+    if (!this.isInGrid) {
+      return;
+    }
+
+    const pos = this.args.getPos();
+    const view = this.args.view;
+    const { state } = view;
+    const { tr } = state;
+    const imageNode = this.args.node;
+
+    const $pos = state.doc.resolve(pos);
+    let gridDepth = null;
+    let gridPos = null;
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        gridDepth = depth;
+        gridPos = $pos.start(depth);
+        break;
+      }
+    }
+
+    if (gridDepth === null) {
+      return;
+    }
+
+    const gridNode = $pos.node(gridDepth);
+
+    const willGridBeEmpty =
+      gridNode.childCount === 1 &&
+      gridNode.firstChild.type.name === "paragraph" &&
+      gridNode.firstChild.content.size === 1 &&
+      gridNode.firstChild.firstChild.type.name === "image";
+
+    const gridEndPos = gridPos + gridNode.nodeSize - 1;
+    const paragraphWithImage = state.schema.nodes.paragraph.create(
+      null,
+      imageNode
+    );
+
+    if (willGridBeEmpty) {
+      tr.replaceWith(
+        gridPos - 1,
+        gridPos + gridNode.nodeSize,
+        paragraphWithImage
+      );
+      tr.setSelection(NodeSelection.create(tr.doc, gridPos)).scrollIntoView();
+    } else {
+      tr.delete(pos - 1, pos + 1);
+
+      const adjustedGridEndPos = tr.mapping.map(gridEndPos);
+      tr.insert(adjustedGridEndPos, paragraphWithImage);
+
+      const newImagePos = adjustedGridEndPos + 1; // Insert position + paragraph boundary
+      tr.setSelection(
+        NodeSelection.create(tr.doc, newImagePos)
+      ).scrollIntoView();
+    }
+
+    view.dispatch(tr);
+  }
+
+  onUploadProgress(percentage) {
+    this.uploadProgress = percentage;
+  }
+
+  @action
+  cancelUpload(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.appEvents.trigger("composer:cancel-upload", {
+      fileId: this.args.node.attrs.title,
+    });
+  }
+
+  @action
+  updateImageLoaded() {
+    this.imageLoaded = true;
+  }
+
+  @action
+  handleImageMouseDown(event) {
+    // keep the alt input focused so handleImageClick treats this click as
+    // a dismissal — ProseMirror also ignores default-prevented events
+    if (event.button === 0 && this.altInputHasFocus) {
+      event.preventDefault();
+    }
+  }
+
+  @action
+  async handleImageClick(event) {
+    if (this.altInputHasFocus) {
+      event.preventDefault();
+      this.args.view.focus();
+      return;
+    }
+
+    if (this.image.classList.contains("ProseMirror-selectednode")) {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      // image nodes also hold videos and audio; only rendered images belong in the gallery
+      const { view } = this.args;
+      const slides = [];
+      view.state.doc.descendants((node, pos) => {
+        if (node.type.name !== "image") {
+          return;
+        }
+
+        const element = view.nodeDOM(pos)?.querySelector(":scope > img");
+        if (element) {
+          slides.push({ src: node.attrs.src, element });
+        }
+      });
+
+      await openLightbox(slides, {
+        index: slides.findIndex((slide) => slide.element === this.image),
+      });
+
+      const pos = this.args.getPos();
+      if (pos !== null && pos >= 0) {
+        const tr = this.args.view.state.tr.setSelection(
+          NodeSelection.create(this.args.view.state.doc, pos)
+        );
+        this.args.view.dispatch(tr);
+      }
     }
   }
 
@@ -503,176 +671,38 @@ export default class ImageNodeView extends Component {
     return null;
   }
 
-  @action
-  moveOutsideGrid() {
-    if (!this.isInGrid) {
-      return;
-    }
-
-    const pos = this.args.getPos();
-    const view = this.args.view;
-    const { state } = view;
-    const { tr } = state;
-    const imageNode = this.args.node;
-
-    const $pos = state.doc.resolve(pos);
-    let gridDepth = null;
-    let gridPos = null;
-
-    for (let depth = $pos.depth; depth >= 0; depth--) {
-      if ($pos.node(depth).type.name === "grid") {
-        gridDepth = depth;
-        gridPos = $pos.start(depth);
-        break;
-      }
-    }
-
-    if (gridDepth === null) {
-      return;
-    }
-
-    const gridNode = $pos.node(gridDepth);
-
-    const willGridBeEmpty =
-      gridNode.childCount === 1 &&
-      gridNode.firstChild.type.name === "paragraph" &&
-      gridNode.firstChild.content.size === 1 &&
-      gridNode.firstChild.firstChild.type.name === "image";
-
-    const gridEndPos = gridPos + gridNode.nodeSize - 1;
-    const paragraphWithImage = state.schema.nodes.paragraph.create(
-      null,
-      imageNode
-    );
-
-    if (willGridBeEmpty) {
-      tr.replaceWith(
-        gridPos - 1,
-        gridPos + gridNode.nodeSize,
-        paragraphWithImage
-      );
-      tr.setSelection(NodeSelection.create(tr.doc, gridPos)).scrollIntoView();
-    } else {
-      tr.delete(pos - 1, pos + 1);
-
-      const adjustedGridEndPos = tr.mapping.map(gridEndPos);
-      tr.insert(adjustedGridEndPos, paragraphWithImage);
-
-      const newImagePos = adjustedGridEndPos + 1; // Insert position + paragraph boundary
-      tr.setSelection(
-        NodeSelection.create(tr.doc, newImagePos)
-      ).scrollIntoView();
-    }
-
-    view.dispatch(tr);
-  }
-
-  @action
-  updateImageLoaded() {
-    this.imageLoaded = true;
-  }
-
-  @action
-  async handleImageClick(event) {
-    if (this.image.classList.contains("ProseMirror-selectednode")) {
-      event?.preventDefault();
-      event?.stopPropagation();
-
-      await openLightbox(this.args.view.dom, this.image);
-
-      const pos = this.args.getPos();
-      if (pos !== null && pos >= 0) {
-        const tr = this.args.view.state.tr.setSelection(
-          NodeSelection.create(this.args.view.state.doc, pos)
-        );
-        this.args.view.dispatch(tr);
-      }
-    }
-  }
-
   <template>
     <img
-      src={{@node.attrs.src}}
       alt={{@node.attrs.alt}}
-      title={{@node.attrs.title}}
-      width={{@node.attrs.width}}
-      height={{@node.attrs.height}}
       data-orig-src={{@node.attrs.originalSrc}}
+      data-placeholder={{@node.attrs.placeholder}}
       data-scale={{@node.attrs.scale}}
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
-      style={{this.imageStyle}}
+      height={{@node.attrs.height}}
       role="button"
+      src={{@node.attrs.src}}
+      style={{this.imageStyle}}
+      title={{@node.attrs.title}}
+      width={{@node.attrs.width}}
       {{didInsert this.setupImage}}
       {{on "load" this.updateImageLoaded}}
+      {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+      {{on "mousedown" this.handleImageMouseDown}}
       {{on "click" this.handleImageClick}}
     />
+    {{#if this.isPlaceholder}}
+      <span class="upload-placeholder__overlay">
+        <span
+          class="upload-placeholder__progress"
+        >{{this.uploadProgress}}%</span>
+        <button
+          aria-label={{i18n "cancel"}}
+          class="upload-placeholder__cancel btn-transparent no-text"
+          contenteditable="false"
+          title={{i18n "cancel"}}
+          {{on "click" this.cancelUpload}}
+        >{{icon "xmark"}}</button>
+      </span>
+    {{/if}}
   </template>
-}
-
-async function openLightbox(editorElement, currentImage) {
-  const allImages = [
-    ...editorElement.querySelectorAll(".composer-image-node img"),
-  ];
-  const currentIndex = allImages.indexOf(currentImage);
-
-  const dataSource = allImages.map((img) => {
-    return {
-      src: img.src,
-      msrc: img.currentSrc || img.src,
-      width: img.naturalWidth || 800,
-      height: img.naturalHeight || 600,
-      alt: img.alt || "",
-      element: img,
-      thumbCropped: true,
-    };
-  });
-
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
-  const isTestEnv = isTesting() || isRailsTesting();
-
-  const lightbox = new PhotoSwipeLightbox({
-    dataSource,
-    showHideAnimationType: isTestEnv ? "none" : "zoom",
-    closeTitle: i18n("lightbox.close"),
-    zoomTitle: i18n("lightbox.zoom"),
-    arrowPrevTitle: i18n("lightbox.previous"),
-    arrowNextTitle: i18n("lightbox.next"),
-    pswpModule: () => import("photoswipe"),
-    tapAction: (pt, e) => {
-      if (e.target.classList.contains("pswp__img")) {
-        lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");
-      } else {
-        lightbox.pswp?.close();
-      }
-    },
-  });
-
-  lightbox.on("uiRegister", function () {
-    lightbox.pswp.ui.registerElement({
-      name: "caption",
-      order: 11,
-      isButton: false,
-      appendTo: "root",
-      html: "",
-      onInit: (caption, pswp) => {
-        const titleEl = document.createElement("div");
-        titleEl.className = "pswp__caption-title";
-        caption.appendChild(titleEl);
-
-        pswp.on("change", () => {
-          const slideData = pswp.getItemData(pswp.currIndex);
-          titleEl.textContent = slideData?.alt || "";
-        });
-      },
-    });
-  });
-
-  return new Promise((resolve) => {
-    lightbox.addFilter("thumbEl", (thumbEl, itemData) => itemData.element);
-    lightbox.on("close", resolve);
-    lightbox.on("closingAnimationEnd", () => lightbox.destroy());
-
-    lightbox.init();
-    lightbox.loadAndOpen(currentIndex);
-  });
 }

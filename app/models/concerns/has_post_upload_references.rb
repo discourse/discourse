@@ -32,7 +32,7 @@ module HasPostUploadReferences
     upload_references =
       upload_ids.map do |upload_id|
         {
-          target_id: self.id,
+          target_id: id,
           target_type: self.class.name,
           upload_id: upload_id,
           created_at: Time.zone.now,
@@ -63,7 +63,7 @@ module HasPostUploadReferences
       %r{/uploads/short-url/[a-zA-Z0-9]+(\.[a-z0-9]+)?},
     ]
 
-    fragments ||= Nokogiri::HTML5.fragment(self.cooked)
+    fragments ||= Nokogiri::HTML5.fragment(cooked)
 
     selectors =
       fragments.css(

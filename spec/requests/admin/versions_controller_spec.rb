@@ -9,19 +9,18 @@ RSpec.describe Admin::VersionsController do
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
     DiscourseUpdates.stubs(:updated_at).returns(2.hours.ago)
     DiscourseUpdates.stubs(:latest_version).returns("1.2.33")
-    DiscourseUpdates.stubs(:critical_updates_available?).returns(false)
   end
 
   describe "#show" do
     shared_examples "version info accessible" do
-      it "should return the currently available version" do
+      it "returns the currently available version" do
         get "/admin/version_check.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["latest_version"]).to eq("1.2.33")
       end
 
-      it "should return the installed version" do
+      it "returns the installed version" do
         get "/admin/version_check.json"
         json = response.parsed_body
         expect(response.status).to eq(200)

@@ -5,8 +5,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class GroupsNewController extends Controller {
   @service router;
+  @service site;
   @service groupAutomaticMembersDialog;
 
+  /** @type {boolean | null} */
   saving = null;
 
   @computed("model.ownerUsernames")
@@ -40,7 +42,19 @@ export default class GroupsNewController extends Controller {
 
     group
       .create()
-      .then(() => {
+      .then((created) => {
+        // Matches the shape `SiteSerializer#groups` sends.
+        const fullName = created.full_name || created.name;
+        this.site.groups.push({
+          id: created.id,
+          name: created.name,
+          full_name: fullName,
+          display_name: fullName,
+          flair_url: created.flair_url,
+          flair_bg_color: created.flair_bg_color,
+          flair_color: created.flair_color,
+          automatic: created.automatic,
+        });
         this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)

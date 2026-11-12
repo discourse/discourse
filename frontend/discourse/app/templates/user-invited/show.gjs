@@ -1,62 +1,66 @@
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
-import TextField from "discourse/components/text-field";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
+import { groupPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{bodyClass "user-invites-page"}}
 
   {{#if @controller.canInviteToForum}}
-    <LoadMore
-      @id="user-content"
-      @action={{@controller.loadMore}}
-      class={{concatClass
+    <DLoadMore
+      class={{dConcatClass
         "user-content"
         (if @controller.hasLoadedInitialInvites "--loaded")
       }}
+      @action={{@controller.loadMore}}
+      @id="user-content"
     >
       <section class="user-additional-controls">
         {{#if @controller.showSearch}}
           <div class="user-invite-search">
             <form>
-              <TextField
-                @value={{@controller.searchTerm}}
+              <DTextField
                 @placeholderKey="user.invited.search"
+                @value={{@controller.searchTerm}}
               /></form>
           </div>
         {{/if}}
         <section class="user-invite-buttons">
           {{#if @controller.model.invites}}
-            <DButton
-              @icon="plus"
-              @action={{@controller.createInvite}}
-              @label="user.invited.create"
-              class="btn-default invite-button"
-            />
+            {{#if @controller.canCreateInvite}}
+              <DButton
+                class="btn-default invite-button"
+                @action={{@controller.createInvite}}
+                @icon="plus"
+                @label="user.invited.create"
+              />
+            {{/if}}
             {{#if @controller.canBulkInvite}}
               {{#if @controller.siteSettings.allow_bulk_invite}}
                 {{#if @controller.site.desktopView}}
                   <DButton
-                    @icon="upload"
-                    @action={{@controller.createInviteCsv}}
-                    @label="user.invited.bulk_invite.text"
                     class="btn-default"
+                    @action={{@controller.createInviteCsv}}
+                    @icon="upload"
+                    @label="user.invited.bulk_invite.text"
                   />
                 {{/if}}
               {{/if}}
@@ -65,10 +69,10 @@ export default <template>
           {{#if @controller.showBulkActionButtons}}
             {{#if @controller.inviteExpired}}
               <DButton
-                @icon="xmark"
+                class="btn-default bulk-remove-expired"
                 @action={{@controller.destroyAllExpired}}
+                @icon="xmark"
                 @label="user.invited.remove_all"
-                class="bulk-remove-expired"
               />
             {{/if}}
 
@@ -76,17 +80,17 @@ export default <template>
               {{#if @controller.reinvitedAll}}
                 <span class="reinvited-all">
                   <DButton
-                    @icon="check"
                     @disabled={{true}}
+                    @icon="check"
                     @label="user.invited.reinvited_all"
                   />
                 </span>
               {{else if @controller.hasEmailInvites}}
                 <DButton
-                  @icon="arrows-rotate"
-                  @action={{@controller.reinviteAll}}
-                  @label="user.invited.reinvite_all"
                   class="btn-default"
+                  @action={{@controller.reinviteAll}}
+                  @icon="arrows-rotate"
+                  @label="user.invited.reinvite_all"
                 />
               {{/if}}
             {{/if}}
@@ -131,45 +135,45 @@ export default <template>
                 {{#each @controller.model.invites as |invite|}}
                   <tr class="d-table__row">
                     <td class="d-table__cell --overview">
-                      <LinkTo @route="user" @model={{invite.user}}>{{avatar
+                      <LinkTo @model={{invite.user}} @route="user">{{dAvatar
                           invite.user
                           imageSize="tiny"
                         }}</LinkTo>
                       <LinkTo
-                        @route="user"
                         @model={{invite.user}}
+                        @route="user"
                       >{{invite.user.username}}</LinkTo>
                     </td>
                     <td class="d-table__cell --detail">
                       <div class="d-table__mobile-label">
                         {{i18n "user.invited.redeemed_at"}}
                       </div>
-                      {{formatDate invite.redeemed_at}}
+                      {{dFormatDate invite.redeemed_at}}
                     </td>
                     {{#if @controller.model.can_see_invite_details}}
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.last_seen"}}
                         </div>
-                        {{formatDate invite.user.last_seen_at}}
+                        {{dFormatDate invite.user.last_seen_at}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.topics_entered"}}
                         </div>
-                        {{number invite.user.topics_entered}}
+                        {{dNumber invite.user.topics_entered}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.posts_read_count"}}
                         </div>
-                        {{number invite.user.posts_read_count}}
+                        {{dNumber invite.user.posts_read_count}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
                           {{i18n "user.invited.time_read"}}
                         </div>
-                        {{formatDuration invite.user.time_read}}
+                        {{dFormatDuration invite.user.time_read}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">
@@ -217,11 +221,20 @@ export default <template>
                   <tr class="d-table__row">
                     <td class="d-table__cell --overview invite-type">
                       <div class="invite-shortkey">
+                        {{#if invite.link}}
+                          <input
+                            class="invite-link-target"
+                            disabled={{true}}
+                            id={{concat "invite-link-" invite.id}}
+                            type="text"
+                            value={{invite.link}}
+                          />
+                        {{/if}}
                         {{#if invite.email}}
-                          {{icon "envelope"}}
+                          {{dIcon "envelope"}}
                           {{invite.email}}
                         {{else}}
-                          {{icon "link"}}
+                          {{dIcon "link"}}
                           {{#if invite.invite_key}}
                             {{i18n
                               "user.invited.invited_via_link"
@@ -246,9 +259,9 @@ export default <template>
                           {{#each invite.groups as |g|}}
                             <span class="invite-extra">
                               <a
-                                href="/g/{{g.name}}"
                                 class="invite-extra-item-link"
-                              >{{icon "users"}}
+                                href={{groupPath g.name}}
+                              >{{dIcon "users"}}
                                 {{g.name}}
                               </a>
                             </span>
@@ -258,10 +271,10 @@ export default <template>
                         {{#if invite.topic}}
                           <span class="invite-extra invite-topic">
                             <a
-                              href={{invite.topic.url}}
                               class="invite-extra-item-link"
+                              href={{invite.topic.url}}
                             >
-                              {{icon "file-lines"}}
+                              {{dIcon "file-lines"}}
                               {{invite.topic.title}}
                             </a>
                           </span>
@@ -273,7 +286,7 @@ export default <template>
                       <div class="d-table__mobile-label">
                         {{i18n "user.invited.sent"}}
                       </div>
-                      {{formatDate invite.updated_at}}
+                      {{dFormatDate invite.updated_at}}
                     </td>
 
                     <td class="d-table__cell --detail invite-expires-at">
@@ -293,28 +306,28 @@ export default <template>
                       <td class="d-table__cell --controls invite-actions">
                         <div class="d-table__cell-actions">
                           <DButton
-                            @label="user.invited.edit"
-                            @action={{fn @controller.editInvite invite}}
-                            @title="user.invited.edit"
                             class="btn-default btn-small edit-invite"
+                            @action={{fn @controller.editInvite invite}}
+                            @label="user.invited.edit"
+                            @title="user.invited.edit"
                           />
                           <DMenu
-                            @identifier="invites-menu"
-                            @title={{i18n "more_options"}}
+                            class="btn-default btn-small"
                             @icon="ellipsis-vertical"
+                            @identifier="invites-menu"
                             @onRegisterApi={{@controller.onRegisterApi}}
-                            class="btn-small"
+                            @title={{i18n "more_options"}}
                           >
                             <:content>
-                              <DropdownMenu as |dropdown|>
+                              <DDropdownMenu as |dropdown|>
                                 <dropdown.item>
                                   <DButton
+                                    class="btn-transparent --danger"
                                     @action={{fn
                                       @controller.destroyInvite
                                       invite
                                     }}
                                     @icon="trash-can"
-                                    class="btn-transparent --danger"
                                     @label={{if
                                       invite.destroyed
                                       "user.invited.removed"
@@ -322,7 +335,25 @@ export default <template>
                                     }}
                                   />
                                 </dropdown.item>
-                              </DropdownMenu>
+                                {{#if invite.link}}
+                                  <dropdown.item>
+                                    <DCopyButton
+                                      @copyClass="btn-transparent"
+                                      @icon="copy"
+                                      @selector={{concat
+                                        "#invite-link-"
+                                        invite.id
+                                      }}
+                                      @translatedLabel={{i18n
+                                        "user.invited.invite.copy_link"
+                                      }}
+                                      @translatedLabelAfterCopy={{i18n
+                                        "user.invited.invite.link_copied"
+                                      }}
+                                    />
+                                  </dropdown.item>
+                                {{/if}}
+                              </DDropdownMenu>
                             </:content>
                           </DMenu>
                         </div>
@@ -334,33 +365,39 @@ export default <template>
             </table>
           {{/if}}
 
-          <ConditionalLoadingSpinner
+          <DConditionalLoadingSpinner
             @condition={{@controller.invitesLoading}}
           />
         {{else}}
-          <EmptyState
+          <DEmptyState
+            @ctaAction={{if
+              @controller.canCreateInvite
+              @controller.createInvite
+            }}
+            @ctaLabel={{if
+              @controller.canCreateInvite
+              (i18n "user.invited.none.cta")
+            }}
             @identifier="empty-channels-list"
             @svgContent={{SvgEnvelopeZero}}
-            @title={{i18n "user.invited.none.title"}}
-            @ctaLabel={{i18n "user.invited.none.cta"}}
-            @ctaAction={{@controller.createInvite}}
             @tipIcon={{if @controller.canBulkInvite "upload"}}
+            @title={{i18n "user.invited.none.title"}}
           >
             <:tip>
               {{#if @controller.canBulkInvite}}
                 {{i18n "user.invited.none.tip.prefix"}}
                 <DButton
+                  class="btn-link"
                   @action={{@controller.createInviteCsv}}
                   @label="user.invited.none.tip.action"
-                  class="btn-link"
                 />
                 {{i18n "user.invited.none.tip.suffix"}}
               {{/if}}
             </:tip>
-          </EmptyState>
+          </DEmptyState>
         {{/if}}
       </section>
-    </LoadMore>
+    </DLoadMore>
   {{else}}
     <div class="alert alert-error invite-error">
       {{@controller.model.error}}

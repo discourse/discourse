@@ -28,6 +28,8 @@ nb_NO:
       cast-votes:
         title: "Stem nå"
         label: "Stem!"
+      keep-vote:
+        label: "Forrige"
       show-results:
         title: "Vis resultat"
         label: "Resultater"
@@ -103,5 +105,3 @@ nb_NO:
           add: Legg til alternativ
         automatic_close:
           label: Steng avstemningen automatisk
-        show_advanced: "Vis avanserte innstillinger"
-        hide_advanced: "Skjul avanserte alternativer"

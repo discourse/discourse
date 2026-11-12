@@ -23,7 +23,9 @@ module UserTagNotificationsMixin
 
   def tags_with_notification_level(lookup_level)
     tag_user_notification_levels.filter_map do |id, data|
-      { id:, name: data[:name] } if data[:level] == TagUser.notification_levels[lookup_level]
+      if data[:level] == TagUser.notification_levels[lookup_level]
+        { id:, name: data[:name], slug: data[:slug] }
+      end
     end
   end
 

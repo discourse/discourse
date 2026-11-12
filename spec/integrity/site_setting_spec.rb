@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "site setting integrity checks" do
-  let(:site_setting_file) { File.join(Rails.root, "config", "site_settings.yml") }
+  let(:site_setting_file) { Rails.root.join("config/site_settings.yml").to_s }
   let(:yaml) { YAML.load_file(site_setting_file) }
 
-  %w[hidden client].each do |property|
-    it "set #{property} value as true or not set" do
+  shared_examples "validating optional setting flags" do |property:|
+    it "allows only true or an omitted flag" do
       yaml.each_value do |category|
         category.each_value do |setting|
           next unless setting.is_a?(Hash)
@@ -15,9 +15,44 @@ RSpec.describe "site setting integrity checks" do
     end
   end
 
+  context "for the hidden property" do
+    include_examples "validating optional setting flags", property: "hidden"
+  end
+
+  context "for the client property" do
+    include_examples "validating optional setting flags", property: "client"
+  end
+
   it "has no duplicate keys" do
     duplicates = DuplicateKeyFinder.new.find_duplicates(site_setting_file)
     expect(duplicates).to be_empty
+  end
+
+  it "guards every auth provider enable setting, and nothing else" do
+    files = [site_setting_file]
+    files.concat(Discourse.plugins.map { File.join(it.directory, "config/settings.yml") })
+
+    validators = {}
+    files
+      .select { File.exist?(it) }
+      .each do |file|
+        YAML
+          .load_file(file, aliases: true)
+          .each_value do |category|
+            next if !category.is_a?(Hash)
+            category.each do |name, setting|
+              validators[name.to_sym] = setting["validator"] if setting.is_a?(Hash)
+            end
+          end
+      end
+
+    guarded =
+      Discourse.authenticators.select { it.required_settings.present? }.map(&:enable_setting)
+
+    expect(guarded.reject { validators[it].present? }).to be_empty
+    expect(
+      validators.select { |_, v| v == "AuthProviderCredentialsValidator" }.keys - guarded,
+    ).to be_empty
   end
 
   it "no locale default has different type than default or invalid key" do

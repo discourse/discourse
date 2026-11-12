@@ -15,6 +15,81 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "ACL owner changes" do
+    fab!(:target, :category)
+    fab!(:target_user, :user)
+
+    it "logs owner additions and removals as distinct actions" do
+      added = logger.log_add_access_control_list_owner(target, target_user)
+      removed = logger.log_remove_access_control_list_owner(target, target_user)
+
+      expect([added, removed]).to contain_exactly(
+        have_attributes(
+          action: UserHistory.actions[:add_access_control_list_owner],
+          subject: "Category (#{target.id})",
+          target_user_id: target_user.id,
+        ),
+        have_attributes(
+          action: UserHistory.actions[:remove_access_control_list_owner],
+          subject: "Category (#{target.id})",
+          target_user_id: target_user.id,
+        ),
+      )
+    end
+
+    it "rejects an invalid target user" do
+      expect { logger.log_add_access_control_list_owner(target, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { logger.log_remove_access_control_list_owner(target, target.id) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
+  describe "#log_bot_creation" do
+    fab!(:bot) { Fabricate(:user, id: -1234, trust_level: 2) }
+
+    it "records the actor, bot target, username, and trust level" do
+      expect { logger.log_bot_creation(bot) }.to change(UserHistory, :count).by(1)
+
+      expect(UserHistory.last).to have_attributes(
+        action: UserHistory.actions[:create_bot],
+        acting_user_id: admin.id,
+        target_user_id: bot.id,
+        subject: bot.username,
+        details: "trust_level: #{bot.trust_level}",
+      )
+    end
+  end
+
+  describe "#log_assume_access_control_ownership" do
+    fab!(:deleted_user, :user)
+    fab!(:owner_acl) do
+      Fabricate(:access_control_list_with_users, permission: "owner", users: [deleted_user])
+    end
+
+    it "records the new owner, target, and departing user's identity" do
+      deleted_at = Time.zone.parse("2026-10-26T01:23:45Z")
+      entry =
+        logger.log_assume_access_control_ownership(
+          owner_acl,
+          user_id: deleted_user.id,
+          username: deleted_user.username,
+          deleted_at:,
+        )
+
+      expect(entry).to have_attributes(
+        action: UserHistory.actions[:assume_access_control_ownership],
+        acting_user_id: admin.id,
+        target_user_id: admin.id,
+        subject: "#{owner_acl.target_type} (#{owner_acl.target_id})",
+        context:
+          "deleted_user_id: #{deleted_user.id}\ndeleted_username: #{deleted_user.username}\ndeleted_at: #{deleted_at.iso8601}",
+      )
+    end
+  end
+
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
@@ -74,6 +149,30 @@ RSpec.describe StaffActionLogger do
     it "truncates overly long values" do
       deleted_post.update!(raw: long_string, skip_validation: true)
       expect { log_post_deletion }.to change { UserHistory.count }.by(1)
+      log = UserHistory.last
+      expect(log.details.size).to be_between(50_000, 110_000)
+    end
+  end
+
+  describe "#log_post_recover" do
+    fab!(:topic)
+    fab!(:reply, :post)
+
+    it "raises an error when post is nil" do
+      expect { logger.log_post_recover(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error when post is not a Post" do
+      expect { logger.log_post_recover(topic) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_post_recover(reply) }.to change { UserHistory.count }.by(1)
+    end
+
+    it "truncates overly long values" do
+      long_reply = Fabricate(:post, topic: topic, skip_validation: true, raw: long_string)
+      expect { logger.log_post_recover(long_reply) }.to change { UserHistory.count }.by(1)
       log = UserHistory.last
       expect(log.details.size).to be_between(50_000, 110_000)
     end
@@ -237,6 +336,32 @@ RSpec.describe StaffActionLogger do
 
       result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
       expect(result.details).to eq(details)
+    end
+  end
+
+  describe "log_update_site_setting_localizations" do
+    it "raises an error when params are invalid" do
+      expect {
+        logger.log_update_site_setting_localizations(locale: nil, setting_names: ["title"])
+      }.to raise_error(Discourse::InvalidParameters)
+      expect {
+        logger.log_update_site_setting_localizations(locale: "ja", setting_names: [])
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a custom staff UserHistory record" do
+      log_record =
+        logger.log_update_site_setting_localizations(
+          locale: "ja",
+          setting_names: %w[title site_description title],
+        )
+
+      aggregate_failures do
+        expect(log_record.action).to eq(UserHistory.actions[:custom_staff])
+        expect(log_record.custom_type).to eq("update_site_setting_localizations")
+        expect(log_record.details).to include("locale: ja")
+        expect(log_record.details).to include("setting_names: site_description|title")
+      end
     end
   end
 

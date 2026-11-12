@@ -5,13 +5,17 @@ DiscourseAi::Engine.routes.draw do
     get "status" => "ai_credits#status"
   end
 
+  scope path: "/post-image-captions", defaults: { format: :json } do
+    get ":post_id" => "post_image_captions#index"
+    put ":post_id/:base62_sha1" => "post_image_captions#update"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
     post "suggest_category" => "assistant#suggest_category"
     post "suggest_tags" => "assistant#suggest_tags"
     post "stream_suggestion" => "assistant#stream_suggestion"
-    post "caption_image" => "assistant#caption_image"
   end
 
   scope module: :embeddings, path: "/embeddings", defaults: { format: :json } do
@@ -33,10 +37,14 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
     post "reply" => "discoveries#reply"
+    put "tabs" => "discoveries#record_tabs"
+    get "recent" => "discoveries#recent"
+    delete "recent" => "discoveries#clear_recent"
     post "continue-convo" => "discoveries#continue_convo"
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
+    get "/" => "shared_ai_conversations#index"
     post "/" => "shared_ai_conversations#create"
     delete "/:share_key" => "shared_ai_conversations#destroy"
     get "/:share_key" => "shared_ai_conversations#show"
@@ -46,9 +54,31 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    post "/" => "conversations#create"
+    put "/:topic_id/starred" => "conversations#update_starred"
+  end
+
+  scope module: :ai_bot, path: "/ai-bot/artifact-shares" do
+    get "/" => "artifact_shares#index"
+    get "/eligibility/:id" => "artifact_shares#eligibility"
+    post "/:id" => "artifact_shares#create"
+    put "/:share_key" => "artifact_shares#update"
+    delete "/:share_key" => "artifact_shares#destroy"
+    get "/:share_key/metadata" => "artifacts#shared_metadata", :defaults => { format: :json }
+    get "/:share_key/forum" => "artifacts#forum"
+    get "/:share_key" => "artifacts#shared"
+  end
+
+  scope module: :ai_bot, path: "/ai-bot/artifact-share-key-values/:share_key" do
+    get "/" => "artifact_share_key_values#index"
+    post "/" => "artifact_share_key_values#set"
+    delete "/" => "artifact_share_key_values#destroy"
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
+    get "/:id/metadata" => "artifacts#metadata", :defaults => { format: :json }
+    get "/:id/embed" => "artifacts#embed"
+    get "/:id/:version/embed" => "artifacts#embed"
     get "/:id" => "artifacts#show"
     get "/:id/:version" => "artifacts#show"
   end
@@ -62,6 +92,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
+    post "/t/:topic_id" => "summary#create", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
     put "/regen_summary" => "summary#regen_summary"
     post "/channels/:channel_id" => "chat_summary#show"
@@ -71,19 +102,47 @@ DiscourseAi::Engine.routes.draw do
     get "/posts" => "sentiment#posts", :constraints => StaffConstraint.new
   end
 
+  scope module: :ai_moderation,
+        path: "/ai-moderation/dsa-classifications",
+        defaults: {
+          format: :json,
+        } do
+    post ":reviewable_id/suggest" => "dsa_classifications#suggest"
+  end
+
   scope module: :translation, path: "/translate", defaults: { format: :json } do
     post "/posts/:post_id" => "translation#translate"
     post "/topics/:topic_id" => "translation#schedule_topic"
+  end
+
+  scope path: "/mcp/oauth", defaults: { format: :json } do
+    get "client-metadata" => "mcp_oauth#client_metadata"
   end
 end
 
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
-      :constraints => StaffConstraint.new
-
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
+          "discourse_ai/admin/ask_ai_reports#asks",
+        :format => :json
+
+    get "/ask-ai-reports/:report_id/subjects/:subject_id/asks/:id" =>
+          "discourse_ai/admin/ask_ai_reports#ask",
+        :format => :json
+
+    resources :ask_ai_reports,
+              only: %i[index show create],
+              path: "ask-ai-reports",
+              controller: "discourse_ai/admin/ask_ai_reports",
+              defaults: {
+                format: :json,
+              }
+
+    get "/admin-dashboard-highlights" => "discourse_ai/admin/admin_dashboard_highlights#show",
+        :format => :json
+
     get "/ai-personas", to: redirect("/admin/plugins/discourse-ai/ai-agents")
     get "/ai-personas/new", to: redirect("/admin/plugins/discourse-ai/ai-agents/new")
     get "/ai-personas/:id/edit", to: redirect("/admin/plugins/discourse-ai/ai-agents/%{id}/edit")
@@ -118,25 +177,56 @@ Discourse::Application.routes.draw do
     post "/ai-tools/:id/test", to: "discourse_ai/admin/ai_tools#test"
     get "/ai-tools/:id/export", to: "discourse_ai/admin/ai_tools#export", format: :json
     post "/ai-tools/import", to: "discourse_ai/admin/ai_tools#import"
+    get "/ai-tools/mcp-servers/new", to: "discourse_ai/admin/ai_mcp_servers#new"
+    get "/ai-tools/mcp-servers/:id/edit", to: "discourse_ai/admin/ai_mcp_servers#edit"
+
+    resources :ai_mcp_servers,
+              only: %i[index new create edit update destroy],
+              path: "ai-mcp-servers",
+              controller: "discourse_ai/admin/ai_mcp_servers"
+    post "/ai-mcp-servers/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    post "/ai-mcp-servers/:id/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    get "/ai-mcp-servers/:id/oauth/start", to: "discourse_ai/admin/ai_mcp_servers#oauth_start"
+    get "/ai-mcp-servers/oauth/callback", to: "discourse_ai/admin/ai_mcp_servers#oauth_callback"
+    delete "/ai-mcp-servers/:id/oauth/disconnect",
+           to: "discourse_ai/admin/ai_mcp_servers#oauth_disconnect"
 
     post "/rag-document-fragments/files/upload",
          to: "discourse_ai/admin/rag_document_fragments#upload_file"
     get "/rag-document-fragments/files/status",
         to: "discourse_ai/admin/rag_document_fragments#indexing_status_check"
 
+    get "/ai-models" => "admin/plugins#index"
+    get "/ai-models/new" => "admin/plugins#index"
+
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
+    get "/ai-logs", to: "discourse_ai/admin/ai_logs#index"
+    get "/ai-logs/new", to: "discourse_ai/admin/ai_logs#new_logs"
+    put "/ai-logs/retention", to: "discourse_ai/admin/ai_logs#update_retention"
+    get "/ai-logs/:id", to: "discourse_ai/admin/ai_logs#show", constraints: { id: /\d+/ }
     get "/ai-spam", to: "discourse_ai/admin/ai_spam#show"
     put "/ai-spam", to: "discourse_ai/admin/ai_spam#update"
     post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+    get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
+    get "/ai-translations/progress/:target_type",
+        to: "discourse_ai/admin/ai_translations#progress_detail"
+    post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,
               only: %i[index new create edit update destroy],
               path: "ai-llms",
               controller: "discourse_ai/admin/ai_llms" do
+      collection { post :test }
+    end
+
+    resources :ai_decision_models,
+              only: %i[index new create edit update destroy],
+              path: "ai-decision-models",
+              controller: "discourse_ai/admin/ai_decision_models" do
       collection { post :test }
     end
 

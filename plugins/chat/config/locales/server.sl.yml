@@ -6,7 +6,16 @@
 
 sl:
   chat:
+    design_wizard_homepage_name: "Klepet"
     deleted_chat_username: izbrisano
+    crawler:
+      directory_title: "Kanali klepeta"
+      nav_title: "Klepet"
+      thread_replies:
+        one: "%{count} odgovor"
+        two: "%{count} odgovora"
+        few: "%{count} odgovori"
+        other: "%{count} odgovorov"
     reviewables:
       actions:
         agree:
@@ -28,6 +37,13 @@ sl:
     popup:
       chat_mention:
         direct: '%{username} vas je omenil v "%{channel}"'
+    actions:
+      chat_reply:
+        title: Odgovori
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Odobri"
+      default_deny_label: "Zavrni"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

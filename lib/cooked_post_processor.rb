@@ -25,7 +25,6 @@ class CookedPostProcessor
     cooked = post.cook(post.raw, @cooking_options)
     @doc = Loofah.html5_fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
-    @size_cache = {}
 
     @disable_dominant_color = !!opts[:disable_dominant_color]
     @omit_nofollow = post.omit_nofollow?
@@ -75,7 +74,13 @@ class CookedPostProcessor
         post_number = q["data-post"]
         topic_id = q["data-topic"]
         if topic_id && post_number
-          comparer = QuoteComparer.new(topic_id.to_i, post_number.to_i, q.css("blockquote").text)
+          comparer =
+            QuoteComparer.new(
+              topic_id.to_i,
+              post_number.to_i,
+              q.css("blockquote").text,
+              user: @post.user,
+            )
 
           q["class"] = ((q["class"] || "") + " quote-post-not-found").strip if comparer.missing?
           q["class"] = ((q["class"] || "") + " quote-modified").strip if comparer.modified?
@@ -116,6 +121,7 @@ class CookedPostProcessor
     quoteless_raw = @post.raw.sub(quote_regexp, "").strip
 
     return if @post.raw.strip == quoteless_raw
+    return if !only_the_quote_is_removed?(quoteless_raw)
 
     PostRevisor.new(@post).revise!(
       Discourse.system_user,
@@ -160,14 +166,20 @@ class CookedPostProcessor
       @post.update_column(:image_upload_id, upload.id) # post
       if @post.is_first_post? # topic
         @post.topic.update_column(:image_upload_id, upload.id)
+        @post.topic.clear_generated_og_image!
         extra_sizes =
           ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
         @post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
       end
     else
       @post.update_column(:image_upload_id, nil) if @post.image_upload_id
-      if @post.topic.image_upload_id && @post.is_first_post?
-        @post.topic.update_column(:image_upload_id, nil)
+      if @post.is_first_post?
+        topic = @post.topic
+        topic.update_column(:image_upload_id, nil) if topic.image_upload_id
+        if SiteSetting.generate_topic_og_image && topic.og_image_upload_id.nil? &&
+             TopicOgImageGenerator.eligible?(topic)
+          Jobs.enqueue(:generate_topic_og_image, topic_id: topic.id)
+        end
       end
       nil
     end
@@ -206,7 +218,7 @@ class CookedPostProcessor
         query = Rack::Utils.parse_nested_query(uri.query)
         next if !query.delete("u")
 
-        uri.query = query.map { |k, v| "#{k}=#{v}" }.join("&").presence
+        uri.query = Rack::Utils.build_nested_query(query).presence
         a["href"] = uri.to_s
       end
   end
@@ -217,6 +229,22 @@ class CookedPostProcessor
   end
 
   private
+
+  # quote_regexp cuts raw without parsing it, so it can swallow markup that only
+  # balanced a later "[/quote]" (an opening code fence for example) and revive
+  # content that was inert when the post was validated. Accept the cut only when
+  # the rest of the post cooks exactly as it did with the quote in place.
+  def only_the_quote_is_removed?(quoteless_raw)
+    without_quote = Loofah.html5_fragment(@post.cook(@post.raw, @cooking_options))
+    without_quote.xpath("aside[contains(@class, 'quote')]").each(&:remove)
+    quoteless = Loofah.html5_fragment(@post.cook(quoteless_raw, @cooking_options))
+
+    canonical_cooked(quoteless) == canonical_cooked(without_quote)
+  end
+
+  def canonical_cooked(fragment)
+    fragment.to_html.gsub(/>\s+</, "><").strip
+  end
 
   def post_process_videos
     changes_made = false

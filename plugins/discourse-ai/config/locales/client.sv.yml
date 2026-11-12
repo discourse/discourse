@@ -8,6 +8,10 @@ sv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Misslyckad"
         reports:
           filters:
             sort_by:
@@ -36,24 +40,53 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      copied: "Kopierad"
+      ai_decoded_transcript:
+        type: "Typ"
+        error: "Fel"
+        response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Namn"
+          type: "Typ"
+          type_score: "Poäng"
+      ai_tool_approval:
+        loading: "Laddar..."
+        tool: "Åtgärd"
+        user: "Användare"
+        approve: "Godkänn"
+        reject: "Avvisa"
+        approved: "Godkända"
+        rejected: "Avvisade"
       llm_selector:
         none: "Ingen"
       features:
-        back: "Tillbaka"
-        disabled: "(inaktiverad)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktiverad"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personliga meddelanden"
+            chat_direct_messages: "Chattmeddelanden"
+            none: "Inte tillgängligt"
         no_agent: "Inte inställd"
         no_groups: "Ingen"
         edit: "Inställningar"
-        expand_list:
-          one: "(ytterligare %{count})"
-          other: "(ytterligare %{count})"
-        collapse_list: "(visa mindre)"
+        nav:
+          enabled: "Aktiverad"
         filters:
           all: "Alla"
           reset: "Återställ"
+        sentiment:
+          enabled: "Aktiverad"
         search:
           name: "Sök"
+        image_caption:
+          setting_groups:
+            settings: "Inställningar"
         spam:
           name: "Skräppost"
       modals:
@@ -62,6 +95,36 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        sections:
+          advanced: "Avancerat"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personliga meddelanden"
+            choices:
+              none: "Ingen"
+              all: "Alla"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alla"
+        model_progress:
+          detail:
+            columns:
+              pending: "Väntande"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Inlägg"
+            topic:
+              title: "Ämnen"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Taggar"
+        admin_actions:
+          enabled: "Aktiverad"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -78,6 +141,8 @@ sv:
             other: "%{count} inlägg"
       spam:
         short_title: "Skräppost"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Senaste 7 dagarna"
         enable: "Aktivera"
         save_button: "Spara ändringar"
@@ -91,8 +156,39 @@ sv:
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
+      logs:
+        short_title: "Loggar"
+        apply: "Tillämpa"
+        successful: "Lyckad"
+        failed: "Misslyckad"
+        unknown: "Okänd"
+        time: "Tid"
+        when: "När"
+        request: "Förfrågning"
+        provider: "Leverantör"
+        user: "Användare"
+        context: "Sammanhang"
+        topic: "Ämne"
+        post: "Inlägg"
+        post_short: "Inlägg %{id}"
+        duration: "Varaktighet"
+        actions: "Åtgärder"
+        view_details: "Detaljer"
+        periods:
+          hour: "Senaste timmen"
+          day: "Senaste 24 timmarna"
+          week: "Senaste 7 dagarna"
+          custom: "Anpassad"
+        detail:
+          request: "Förfrågning"
+          response: "Svar"
+          context: "Sammanhang"
+          network_error: "Nätverksfel"
+        retention:
+          summary_stage: "Sammanfattning"
+          deleted_stage: "Raderade"
+          save: "Spara"
       ai_agent:
-        back: "Tillbaka"
         name: "Namn"
         edit: "Redigera"
         export: "Exportera"
@@ -102,7 +198,14 @@ sv:
         save: "Spara"
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
+        duplicate: "Duplicera"
         delete: "Ta bort"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Låg"
+          medium: "Medium"
+          high: "Hög"
+          max: "Max"
         response_format:
           open_modal: "Redigera"
           modal:
@@ -114,7 +217,6 @@ sv:
           title: "Uppladdningar"
           uploading: "Laddar upp..."
       tools:
-        back: "Tillbaka"
         export: "Exportera"
         import: "Importera"
         name: "Namn"
@@ -131,17 +233,49 @@ sv:
         short_title: "Kontouppgifter"
         name: "Namn"
         secret: "Värde"
-        back: "Tillbaka"
         save: "Spara"
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Namn"
+        provider: "Leverantör"
+        edit: "Redigera"
+        delete: "Radera"
+      mcp_servers:
+        name: "Namn"
+        description: "Beskrivning"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kopplad"
+        oauth_connect: "Koppla"
+        enabled: "Aktiverad"
+        save: "Spara"
+        edit: "Redigera"
+        delete: "Ta bort"
+        tools_modal:
+          required: "Krävs"
+      models:
+        name: "Namn"
+        type: "Typ"
+        provider: "Leverantör"
+        edit: "Redigera"
+        select_type: "Välj"
+        types:
+          embedding: "Inbäddning"
+        filters:
+          all: "Alla typer"
       llms:
         display_name: "Namn"
         provider: "Leverantör"
+        vision_modes:
+          disabled:
+            title: "Inaktiverad"
         save: "Spara"
         edit: "Redigera"
-        back: "Tillbaka"
         delete: Ta bort
         quotas:
           group: "Grupp"
@@ -162,8 +296,9 @@ sv:
         tests:
           success: "Klart!"
         providers:
-          google: "Google"
           fake: "Anpassad"
+        provider_fields:
+          region: "Region"
       ai_helper:
         context_menu:
           cancel: "Avbryt"
@@ -178,10 +313,7 @@ sv:
           select: "Välj"
           selected: "Markerat"
           try_again: "Försök igen"
-        image_caption:
-          save_caption: "Spara"
       embeddings:
-        back: "Tillbaka"
         save: "Spara"
         delete: "Ta bort"
         edit: "Redigera"
@@ -192,8 +324,17 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Tillämpa"
+        share: "Dela"
+        filter_all: "Alla"
+        filter_standalone: "Fristående"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varaktighet:"
           request: "Förfrågning"
           response: "Svar"
           next_log: "Nästa"
@@ -226,9 +367,19 @@ sv:
             other: "Senaste %{count} timmarna"
         topic:
           title: "Sammanfattning av ämne"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Ämnen"
+          messages: "Meddelanden"
       discobot_discoveries:
-        regular_results: "Ämnen"
-        collapse: "Förminska"
-        tooltip:
-          actions:
-            disable: "Inaktivera"
+        legacy:
+          regular_results: "Ämnen"
+          collapse: "Förminska"
+          tooltip:
+            actions:
+              disable: "Inaktivera"
+        search_all_topics: "Alla ämnen"
+        search_messages: "Meddelanden"

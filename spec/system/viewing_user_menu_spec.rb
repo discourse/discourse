@@ -1,9 +1,93 @@
 # frozen_string_literal: true
 
-RSpec.describe "Viewing User Menu", system: true do
+RSpec.describe "Viewing User Menu" do
   fab!(:user)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
+
+  it "shows filters for read notifications and hides them after their last notification is deleted" do
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_notification_tab("all-notifications")
+    expect(user_menu).to have_notification_tab("bookmarks")
+    expect(user_menu).to have_notification_tab("profile")
+    expect(user_menu).to have_no_notification_tab("likes")
+    expect(user_menu).to have_no_notification_tab("replies")
+    expect(user_menu).to have_no_notification_tab("other-notifications")
+
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        post: Fabricate(:post),
+      )
+    visit("/latest")
+    user_menu.open
+    expect(user_menu).to have_notification_tab("likes")
+
+    notification.update!(read: true)
+    visit("/latest")
+    user_menu.open
+    expect(user_menu).to have_notification_tab("likes")
+    expect(user_menu).to have_no_notification_tab("replies")
+
+    notification.destroy!
+    visit("/latest")
+    user_menu.open
+    expect(user_menu).to have_no_notification_tab("likes")
+  end
+
+  it "keeps the mentions tab hidden when the upcoming change is disabled" do
+    SiteSetting.enable_user_menu_mentions_tab = false
+
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_no_mentions_notifications_tab
+  end
+
+  it "lets the user filter direct mentions and visit the mentioned post" do
+    SiteSetting.enable_user_menu_mentions_tab = true
+    Jobs.run_immediately!
+
+    mentioned_post =
+      PostCreator.create!(
+        Fabricate(:user),
+        topic_id: Fabricate(:post).topic_id,
+        raw: "Hello @#{user.username}, what do you think about this?",
+      )
+    Fabricate(:replied_notification, user: user, post: Fabricate(:post))
+    Fabricate(
+      :group_mentioned_notification,
+      user: user,
+      post: Fabricate(:post),
+      group: Fabricate(:group),
+    )
+
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_notification_count_of(3)
+
+    user_menu.click_replies_notifications_tab
+
+    expect(user_menu).to have_notification_count_of(2)
+    expect(user_menu).to have_no_direct_mentions
+
+    user_menu.click_mentions_notifications_tab
+
+    expect(user_menu).to have_direct_mention_notification(mentioned_post)
+    expect(user_menu).to have_notification_count_of(1)
+
+    user_menu.click_notification_with_href(mentioned_post.url)
+
+    expect(page).to have_current_path(mentioned_post.url)
+  end
 
   describe "with notification limit set via plugin api" do
     it "only displays as many notifications as the limit" do
@@ -24,10 +108,50 @@ RSpec.describe "Viewing User Menu", system: true do
     end
   end
 
+  describe "when clicking a notification in the bookmarks tab" do
+    fab!(:post)
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, bookmarkable: post) }
+    fab!(:bookmark_reminder) do
+      Fabricate(
+        :notification,
+        user: user,
+        topic: post.topic,
+        post_number: post.post_number,
+        notification_type: Notification.types[:bookmark_reminder],
+        data: {
+          bookmark_id: bookmark.id,
+          bookmarkable_type: bookmark.bookmarkable_type,
+          bookmarkable_id: bookmark.bookmarkable_id,
+          title: post.topic.title,
+          bookmark_name: "reminder",
+        }.to_json,
+      )
+    end
+
+    it "does not raise a JS error on click" do
+      sign_in(user)
+      visit("/latest")
+
+      page_errors = []
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.on("pageerror", ->(error) { page_errors << error.message })
+      end
+
+      user_menu.open
+      user_menu.click_bookmarks_tab
+      find("#quick-access-bookmarks li.bookmark-reminder a").click
+
+      expect(page).to have_current_path(%r{/t/})
+      expect(page_errors).to be_empty
+    end
+  end
+
   describe "when viewing replies notifications tab" do
     fab!(:topic)
 
-    it "should display group mentioned notifications in the tab" do
+    before { SiteSetting.enable_user_menu_mentions_tab = false }
+
+    it "shows group-mention notifications in the tab" do
       Jobs.run_immediately!
 
       mentionable_group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
@@ -52,7 +176,7 @@ RSpec.describe "Viewing User Menu", system: true do
     context "with SiteSetting.prioritize_full_name_in_ux=true" do
       before { SiteSetting.prioritize_full_name_in_ux = true }
 
-      it "should display user full name in mention notifications" do
+      it "shows the user's full name in mention notifications" do
         Jobs.run_immediately!
 
         user = Fabricate(:user)
@@ -72,7 +196,7 @@ RSpec.describe "Viewing User Menu", system: true do
         expect(user_menu).to have_user_full_name_mentioned_notification(topic, user)
       end
 
-      it "should display user full name in message notification" do
+      it "shows the user's full name in message notifications" do
         Jobs.run_immediately!
 
         user = Fabricate(:moderator)
@@ -94,7 +218,7 @@ RSpec.describe "Viewing User Menu", system: true do
         expect(user_menu).to have_user_full_name_messaged_notification(post, user)
       end
 
-      it "should display user full name in bookmark notification" do
+      it "shows the user's full name in bookmark notifications" do
         Jobs.run_immediately!
 
         user = Fabricate(:moderator)
@@ -120,7 +244,7 @@ RSpec.describe "Viewing User Menu", system: true do
     context "with SiteSetting.prioritize_full_name_in_ux=false" do
       before { SiteSetting.prioritize_full_name_in_ux = false }
 
-      it "should display only username in mention notifications" do
+      it "shows only the username in mention notifications" do
         Jobs.run_immediately!
 
         SiteSetting.prioritize_username_in_ux = true

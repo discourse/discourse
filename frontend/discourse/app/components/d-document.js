@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
 import { clearBodyLocks } from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse/lib/decorators";
@@ -17,15 +15,18 @@ export function clearPluginDocumentTitleCounters() {
   pluginCounterFunctions.length = 0;
 }
 
-@tagName("")
 export default class DDocument extends Component {
-  @service documentTitle;
+  @service appEvents;
+  @service currentUser;
   @service dialog;
+  @service documentTitle;
+  @service messageBus;
+  @service session;
 
-  _showingLogout = false;
+  #showingLogout = false;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  constructor() {
+    super(...arguments);
 
     this.documentTitle.setTitle(document.title);
     document.addEventListener("visibilitychange", this._focusChanged);
@@ -37,8 +38,8 @@ export default class DDocument extends Component {
     setLogoffCallback(() => this.displayLogoff());
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
 
     setLogoffCallback(null);
     document.removeEventListener("visibilitychange", this._focusChanged);
@@ -50,6 +51,23 @@ export default class DDocument extends Component {
       this,
       this._updateNotifications
     );
+  }
+
+  displayLogoff() {
+    if (this.#showingLogout) {
+      return;
+    }
+
+    this.#showingLogout = true;
+    this.messageBus.stop();
+
+    this.dialog.alert({
+      message: i18n("logout"),
+      confirmButtonLabel: "refresh",
+      didConfirm: () => logout(),
+      didCancel: () => logout(),
+      class: "dialog-container__logout-refresh",
+    });
   }
 
   _updateNotifications(opts) {
@@ -74,25 +92,8 @@ export default class DDocument extends Component {
       if (this.session.hasFocus) {
         this.documentTitle.setFocus(false);
       }
-    } else if (!this.hasFocus) {
+    } else if (!this.session.hasFocus) {
       this.documentTitle.setFocus(true);
     }
-  }
-
-  displayLogoff() {
-    if (this._showingLogout) {
-      return;
-    }
-
-    this._showingLogout = true;
-    this.messageBus.stop();
-
-    this.dialog.alert({
-      message: i18n("logout"),
-      confirmButtonLabel: "refresh",
-      didConfirm: () => logout(),
-      didCancel: () => logout(),
-      class: "dialog-container__logout-refresh",
-    });
   }
 }

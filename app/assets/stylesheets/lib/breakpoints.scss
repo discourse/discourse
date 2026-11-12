@@ -1,0 +1,19 @@
+@use "sass:map";
+
+// Shared breakpoint scale used by the viewport and container libraries
+$breakpoints: (
+  xs: 20rem,
+  sm: 40rem,
+  md: 48rem,
+  lg: 64rem,
+  xl: 80rem,
+  2xl: 96rem,
+);
+
+@function get($bp) {
+  @if not map.has-key($breakpoints, $bp) {
+    @error "Invalid breakpoint: #{$bp}";
+  }
+
+  @return map.get($breakpoints, $bp);
+}

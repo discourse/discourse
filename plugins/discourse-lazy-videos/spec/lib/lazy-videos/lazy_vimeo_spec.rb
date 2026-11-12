@@ -2,7 +2,7 @@
 
 RSpec.describe Onebox::Engine::VimeoOnebox do
   def get_response(filename)
-    file = "#{Rails.root}/plugins/discourse-lazy-videos/spec/fixtures/#{filename}.response"
+    file = "#{Rails.root.join("plugins/discourse-lazy-videos/spec/fixtures/#{filename}.response")}"
     File.read(file)
   end
 
@@ -76,6 +76,19 @@ RSpec.describe Onebox::Engine::VimeoOnebox do
   context "when public video" do
     it "creates a lazy video container" do
       expect(Onebox.preview("https://vimeo.com/786646692").to_s).to match(/lazy-video-container/)
+    end
+
+    it "escapes quotes and angle brackets in provider titles" do
+      video_title = 'Video ">'
+      Oneboxer.invalidate("https://vimeo.com/786646692")
+      stub_request(:get, "https://vimeo.com/786646692").to_return(
+        status: 200,
+        body: %(<meta property="og:title" content="Video &quot;&gt;">),
+      )
+
+      fragment = Nokogiri::HTML5.fragment(Onebox.preview("https://vimeo.com/786646692").to_s)
+
+      expect(fragment.at_css(".lazy-video-container")["data-video-title"]).to eq(video_title)
     end
 
     it "uses the correct ids" do

@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module(
-  "Integration | Component | request-group-membership-form",
+  "Integration | Component | RequestGroupMembershipForm",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -20,7 +20,7 @@ module(
 
       await render(
         <template>
-          <RequestGroupMembershipForm @model={{model}} @inline={{true}} />
+          <RequestGroupMembershipForm @inline={{true}} @model={{model}} />
         </template>
       );
 

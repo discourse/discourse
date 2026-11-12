@@ -1,17 +1,17 @@
-import RelativeTimePicker from "discourse/components/relative-time-picker";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class RelativeTimeField extends BaseField {
   <template>
     <section class="field text-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="field-wrapper">
-            <RelativeTimePicker
+            <DRelativeTimePicker
               @durationMinutes={{@field.metadata.value}}
               @onChange={{this.mutValue}}
             />

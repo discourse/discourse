@@ -19,13 +19,13 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
 
-    it "doesn't return the HTML when not in the `html_providers`" do
-      Onebox::Engine::AllowlistedGenericOnebox.html_providers = []
+    it "doesn't return the HTML when the provider does not match the URL host" do
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = {}
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to be_nil
     end
 
-    it "returns the HMTL when in the `html_providers`" do
-      Onebox::Engine::AllowlistedGenericOnebox.html_providers = ["CoolSite"]
+    it "returns the HTML when the provider matches the URL host" do
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = { "CoolSite" => ["coolsite.com"] }
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to eq "cool html"
     end
   end
@@ -103,6 +103,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:canonical_url) do
         "https://www.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter"
       end
+
       before do
         stub_request(:get, mobile_url).to_return(status: 200, body: onebox_response("etsy_mobile"))
         stub_request(:get, canonical_url).to_return(status: 200, body: onebox_response("etsy"))
@@ -132,6 +133,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:discourse_topic_reply_url) do
         "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2"
       end
+
       before do
         stub_request(:get, discourse_topic_url).to_return(
           status: 200,
@@ -190,8 +192,35 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
     end
   end
 
+  describe "media oneboxes" do
+    it "escapes metadata in video and player attributes" do
+      payload = "x'\"><div class='injected'></div>"
+      stub_request(:get, "https://example.com/video").to_return(body: <<~HTML)
+        <meta property="og:type" content="video.other">
+        <meta property="og:video" content="https://example.com/video.mp4">
+        <meta property="og:video:type" content="video/mp4">
+        <meta name="twitter:title" content="#{CGI.escapeHTML(payload)}">
+      HTML
+      stub_request(:get, "https://example.com/player").to_return(body: <<~HTML)
+        <meta name="twitter:card" content="player">
+        <meta name="twitter:player" content="https://example.com/embed">
+        <meta name="twitter:player:width" content="#{CGI.escapeHTML(payload)}">
+      HTML
+
+      player_onebox = described_class.new("https://example.com/player")
+      player_onebox.options = { allowed_iframe_regexes: [%r{\Ahttps://example\.com/}] }
+
+      video = Nokogiri::HTML5.fragment(described_class.new("https://example.com/video").to_html)
+      player = Nokogiri::HTML5.fragment(player_onebox.to_html)
+
+      expect(video.at_css("video")["title"]).to eq(payload)
+      expect(player.at_css("iframe")["width"]).to eq(payload)
+    end
+  end
+
   describe "missing description" do
     let(:url) { "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660" }
+
     before do
       stub_request(:get, url).to_return(status: 200, body: onebox_response("title_no_description"))
       stub_request(

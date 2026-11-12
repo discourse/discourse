@@ -1,0 +1,45 @@
+import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
+import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import {
+  logIn,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
+import ZendeskTopicActions from "discourse/plugins/discourse-zendesk-plugin/discourse-zendesk-plugin/connectors/after-topic-footer-buttons/zendesk-topic-actions";
+
+module("Integration | Component | ZendeskTopicActions", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("links to the issue it creates", async function (assert) {
+    logIn(getOwner(this));
+    updateCurrentUser({
+      discourse_zendesk_plugin_status: true,
+      can_create_zendesk_ticket: true,
+      can_view_zendesk_ticket: true,
+    });
+    pretender.post("/zendesk-plugin/issues", () =>
+      response({
+        discourse_zendesk_plugin_has_ticket: true,
+        discourse_zendesk_plugin_zendesk_url: "https://zendesk.example/42",
+      })
+    );
+    const topic = EmberObject.create({ id: 1 });
+
+    await render(<template><ZendeskTopicActions @topic={{topic}} /></template>);
+    await click(".zendesk-topic-actions .btn-primary");
+
+    assert
+      .dom(".zendesk-topic-actions a.btn-primary")
+      .hasAttribute("href", "https://zendesk.example/42", "links the issue");
+    assert.strictEqual(
+      getOwner(this).lookup("service:toasts").activeToasts[0].options.data
+        .message,
+      i18n("zendesk.ticket_created"),
+      "confirms successful creation"
+    );
+  });
+});

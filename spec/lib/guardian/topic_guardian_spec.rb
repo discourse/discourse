@@ -116,6 +116,30 @@ RSpec.describe TopicGuardian do
       expect(Guardian.new(user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
     end
 
+    it "returns false for a category group moderator who cannot see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      mod_group = Fabricate(:group)
+      cat_mod_user = Fabricate(:user)
+      private_cat = Fabricate(:private_category, group: Fabricate(:group))
+      private_t = Fabricate(:topic, category: private_cat, deleted_at: 1.day.ago)
+      Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+      mod_group.add(cat_mod_user)
+
+      expect(Guardian.new(cat_mod_user).can_recover_topic?(private_t)).to eq(false)
+    end
+
+    it "returns true for a category group moderator who can see the topic" do
+      SiteSetting.enable_category_group_moderation = true
+      mod_group = Fabricate(:group)
+      cat_mod_user = Fabricate(:user)
+      private_cat = Fabricate(:private_category, group: mod_group)
+      private_t = Fabricate(:topic, category: private_cat, deleted_at: 1.day.ago)
+      Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+      mod_group.add(cat_mod_user)
+
+      expect(Guardian.new(cat_mod_user).can_recover_topic?(private_t)).to eq(true)
+    end
+
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
       SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
@@ -125,6 +149,55 @@ RSpec.describe TopicGuardian do
     it "returns false for anonymous user" do
       SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
+    end
+
+    it "returns false when the user only owns a surviving reply and staff trashed the first post" do
+      trashed_topic = Fabricate(:topic, category: category, user: user)
+      Fabricate(
+        :post,
+        topic: trashed_topic,
+        user: user,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: admin,
+      )
+      Fabricate(:post, topic: trashed_topic, user: user, post_number: 2, user_deleted: true)
+      trashed_topic.trash!(admin)
+
+      expect(Guardian.new(user).can_recover_topic?(trashed_topic)).to eq(false)
+    end
+
+    it "returns true for the author of a topic they deleted themselves" do
+      own_topic = Fabricate(:topic, category: category, user: user)
+      Fabricate(:post, topic: own_topic, user: user, post_number: 1, user_deleted: true)
+
+      expect(Guardian.new(user).can_recover_topic?(own_topic)).to eq(true)
+    end
+
+    it "returns false for tl4 when someone else trashed the first post of a live topic" do
+      live_topic = Fabricate(:topic, category: category)
+      Fabricate(
+        :post,
+        topic: live_topic,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: moderator,
+      )
+
+      expect(Guardian.new(tl4_user).can_recover_topic?(live_topic)).to eq(false)
+    end
+
+    it "returns true for tl4 when they trashed the first post of a live topic themselves" do
+      live_topic = Fabricate(:topic, category: category)
+      Fabricate(
+        :post,
+        topic: live_topic,
+        post_number: 1,
+        deleted_at: 1.day.ago,
+        deleted_by: tl4_user,
+      )
+
+      expect(Guardian.new(tl4_user).can_recover_topic?(live_topic)).to eq(true)
     end
   end
 
@@ -170,6 +243,14 @@ RSpec.describe TopicGuardian do
 
         expect(Guardian.new(tl2_user).can_edit_topic?(topic)).to eq(false)
       end
+    end
+  end
+
+  describe "#can_edit_tags?" do
+    it "returns false for the author of a wiki topic whose first post is hidden during the cooldown" do
+      post = Fabricate(:post, user:, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_tags?(post.topic)).to eq(false)
     end
   end
 
@@ -246,6 +327,28 @@ RSpec.describe TopicGuardian do
 
         expect(Guardian.new(group_user.user).can_delete_topic?(topic)).to be_truthy
       end
+
+      it "returns false for a category group moderator who cannot see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: Fabricate(:group))
+        private_t = Fabricate(:topic, category: private_cat)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_delete_topic?(private_t)).to be_falsey
+      end
+
+      it "returns true for a category group moderator who can see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: mod_group)
+        private_t = Fabricate(:topic, category: private_cat)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_delete_topic?(private_t)).to be_truthy
+      end
     end
   end
 
@@ -292,6 +395,25 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_set_topic_timer?" do
+    it "uses topic_timers_allowed_groups and requires topic visibility" do
+      expect(Guardian.new(admin).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(moderator).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl3_user).can_set_topic_timer?(topic)).to eq(false)
+
+      group.add(user)
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      inaccessible_private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      expect(Guardian.new(user.reload).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(false)
+      expect(Guardian.new(user).can_set_topic_timer?(inaccessible_private_topic)).to eq(false)
+    end
+  end
+
   describe "#can_see_unlisted_topics?" do
     it "is allowed for staff users" do
       expect(Guardian.new(moderator).can_see_unlisted_topics?).to eq(true)
@@ -310,6 +432,12 @@ RSpec.describe TopicGuardian do
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.
   describe "#can_see_topic_ids" do
+    it "excludes flagged regular topics in inaccessible categories" do
+      Fabricate(:reviewable_flagged_post, topic: private_topic, category: private_category)
+
+      expect(moderator.guardian.can_see_topic_ids(topic_ids: [private_topic.id])).to be_empty
+    end
+
     it "returns the topic ids for the topics which a user is allowed to see" do
       expect(
         Guardian.new.can_see_topic_ids(topic_ids: [topic.id, private_message_topic.id]),
@@ -326,6 +454,38 @@ RSpec.describe TopicGuardian do
       expect(
         Guardian.new(admin).can_see_topic_ids(topic_ids: [topic.id, private_message_topic.id]),
       ).to contain_exactly(topic.id, private_message_topic.id)
+    end
+
+    it "returns private messages a moderator participates in, was warned in, or must review" do
+      direct_pm = Fabricate(:private_message_topic, recipient: moderator)
+      group_pm =
+        Fabricate(
+          :group_private_message_topic,
+          recipient_group: Fabricate(:group, users: [moderator]),
+        )
+      warning_pm = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      flagged_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: flagged_pm, category: nil)
+      resolved_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: resolved_flag_pm, status: :rejected)
+      ignored_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: ignored_flag_pm, score: -1)
+      ids = [
+        private_message_topic,
+        direct_pm,
+        group_pm,
+        warning_pm,
+        flagged_pm,
+        resolved_flag_pm,
+        ignored_flag_pm,
+      ].map(&:id)
+
+      expect(moderator.guardian.can_see_topic_ids(topic_ids: ids)).to contain_exactly(
+        direct_pm.id,
+        group_pm.id,
+        warning_pm.id,
+        flagged_pm.id,
+      )
     end
 
     it "returns the topic ids for topics which are deleted but user is a category moderator of" do
@@ -346,6 +506,37 @@ RSpec.describe TopicGuardian do
       expect(
         Guardian.new(user2).can_see_topic_ids(topic_ids: [topic.id, topic2.id]),
       ).to contain_exactly(topic2.id)
+    end
+  end
+
+  describe "#can_move_topic_to_category?" do
+    it "allows a moderator to move a topic to a category they can see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "allows a moderator to move a topic to a category they can see that requires topic review" do
+      category.require_topic_approval = true
+      category.save!
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "does not allow a moderator to move a topic to a category they cannot see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(false)
+    end
+
+    it "allows a moderator to move a topic to a category they have been given access to" do
+      group.add(moderator)
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(true)
+    end
+
+    it "allows an admin to move a topic to a category they cannot see" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      private_category.require_topic_approval = true
+      private_category.save!
+
+      expect(Guardian.new(admin).can_move_topic_to_category?(private_category)).to eq(true)
     end
   end
 

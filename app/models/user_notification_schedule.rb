@@ -6,8 +6,8 @@ class UserNotificationSchedule < ActiveRecord::Base
   DEFAULT = -> do
     attrs = { enabled: false }
     7.times do |n|
-      attrs["day_#{n}_start_time".to_sym] = 480
-      attrs["day_#{n}_end_time".to_sym] = 1020
+      attrs[:"day_#{n}_start_time"] = 480
+      attrs[:"day_#{n}_end_time"] = 1020
     end
     attrs
   end.call
@@ -51,22 +51,22 @@ end
 # Table name: user_notification_schedules
 #
 #  id               :bigint           not null, primary key
-#  user_id          :integer          not null
-#  enabled          :boolean          default(FALSE), not null
-#  day_0_start_time :integer          not null
 #  day_0_end_time   :integer          not null
-#  day_1_start_time :integer          not null
+#  day_0_start_time :integer          not null
 #  day_1_end_time   :integer          not null
-#  day_2_start_time :integer          not null
+#  day_1_start_time :integer          not null
 #  day_2_end_time   :integer          not null
-#  day_3_start_time :integer          not null
+#  day_2_start_time :integer          not null
 #  day_3_end_time   :integer          not null
-#  day_4_start_time :integer          not null
+#  day_3_start_time :integer          not null
 #  day_4_end_time   :integer          not null
-#  day_5_start_time :integer          not null
+#  day_4_start_time :integer          not null
 #  day_5_end_time   :integer          not null
-#  day_6_start_time :integer          not null
+#  day_5_start_time :integer          not null
 #  day_6_end_time   :integer          not null
+#  day_6_start_time :integer          not null
+#  enabled          :boolean          default(FALSE), not null
+#  user_id          :integer          not null
 #
 # Indexes
 #

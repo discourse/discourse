@@ -34,22 +34,17 @@ module("Integration | Component | Category Title Link", function (hooks) {
   ];
 
   test("Shows title, icon/emoji, and logo when switching categories in styled mode", async function (assert) {
-    const testState = new (class {
-      @tracked category = testCategories[0];
-    })();
+    const category = tracked(testCategories[0]);
 
     await render(
       <template>
-        <CategoryTitleLink
-          @category={{testState.category}}
-          @unstyled={{false}}
-        />
+        <CategoryTitleLink @category={{category.value}} @unstyled={{false}} />
       </template>
     );
 
     assert.dom(".category-title-link").hasText(testCategories[0].name);
 
-    testState.category = testCategories[1];
+    category.value = testCategories[1];
     await settled();
     assert
       .dom(".category-title-link .badge-category svg")
@@ -58,7 +53,7 @@ module("Integration | Component | Category Title Link", function (hooks) {
       .dom(".category-title-link")
       .hasText(testCategories[1].name, "shows title");
 
-    testState.category = testCategories[2];
+    category.value = testCategories[2];
     await settled();
     assert
       .dom(".category-title-link .category-logo img")
@@ -76,23 +71,18 @@ module("Integration | Component | Category Title Link", function (hooks) {
   });
 
   test("Shows title only when switching categories in unstyled mode", async function (assert) {
-    const testState = new (class {
-      @tracked category = testCategories[0];
-    })();
+    const category = tracked(testCategories[0]);
 
     await render(
       <template>
-        <CategoryTitleLink
-          @category={{testState.category}}
-          @unstyled={{true}}
-        />
+        <CategoryTitleLink @category={{category.value}} @unstyled={{true}} />
       </template>
     );
     assert
       .dom(".category-title-link")
       .hasText(testCategories[0].name, "shows title");
 
-    testState.category = testCategories[1];
+    category.value = testCategories[1];
     await settled();
     assert
       .dom(".category-title-link .badge-category svg")
@@ -101,7 +91,7 @@ module("Integration | Component | Category Title Link", function (hooks) {
       .dom(".category-title-link")
       .hasText(testCategories[1].name, "shows title");
 
-    testState.category = testCategories[2];
+    category.value = testCategories[2];
     await settled();
     assert
       .dom(".category-title-link .badge-category img.emoji")
@@ -112,21 +102,17 @@ module("Integration | Component | Category Title Link", function (hooks) {
   });
 
   test("Respects the tagName attribute", async function (assert) {
-    const testState = new (class {
-      @tracked category = testCategories[0];
-    })();
+    const category = tracked(testCategories[0]);
 
     await render(
-      <template>
-        <CategoryTitleLink @category={{testState.category}} />
-      </template>
+      <template><CategoryTitleLink @category={{category.value}} /></template>
     );
 
     assert.dom("h3:has(> .category-title-link)").exists(); // defaults to h3
 
     await render(
       <template>
-        <CategoryTitleLink @category={{testState.category}} @tagName="h1" />
+        <CategoryTitleLink @category={{category.value}} @tagName="h1" />
       </template>
     );
 
@@ -134,7 +120,7 @@ module("Integration | Component | Category Title Link", function (hooks) {
 
     await render(
       <template>
-        <CategoryTitleLink @category={{testState.category}} @tagName="span" />
+        <CategoryTitleLink @category={{category.value}} @tagName="span" />
       </template>
     );
 

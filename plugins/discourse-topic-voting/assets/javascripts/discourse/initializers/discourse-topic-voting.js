@@ -7,12 +7,35 @@ export default {
 
   initialize() {
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-votes",
+        route: "userActivity.votes",
+        label: "topic_voting.vote_title_plural",
+        icon: "check-to-slot",
+        displayed: ({ siteSettings }) =>
+          siteSettings.topic_voting_show_votes_on_profile,
+      });
+
+      api.replaceIcon("topic_voting.voting_closed", "lock");
+
       api.registerNotificationTypeRenderer(
         "votes_released",
         (NotificationTypeBase) => {
           return class extends NotificationTypeBase {
             get label() {
-              return i18n("topic_voting.notification_label.vote_released");
+              return this.siteSettings.topic_voting_enable_vote_limits
+                ? i18n("topic_voting.notification_label.vote_released")
+                : i18n("topic_voting.notification_label.voting_closed");
+            }
+
+            get linkTitle() {
+              return this.label;
+            }
+
+            get icon() {
+              return this.siteSettings.topic_voting_enable_vote_limits
+                ? super.icon
+                : "topic_voting.voting_closed";
             }
           };
         }
@@ -20,6 +43,19 @@ export default {
 
       const siteSettings = api.container.lookup("service:site-settings");
       if (siteSettings.topic_voting_enabled) {
+        api.registerValueTransformer(
+          "navigation-items",
+          ({ value, context }) => {
+            if (context.category?.can_vote) {
+              const hotItem = value.find((item) => item.name === "hot");
+              if (hotItem) {
+                hotItem.title = i18n("topic_voting.hot_nav_help");
+              }
+            }
+            return value;
+          }
+        );
+
         const pageSearchController = api.container.lookup(
           "controller:full-page-search"
         );
@@ -29,47 +65,31 @@ export default {
           term: "order:votes",
         });
 
-        api.addNavigationBarItem({
-          name: "votes",
-          before: "top",
-          customFilter: (category) => {
-            return category && category.can_vote;
-          },
-          customHref: (category, args) => {
-            const path = NavItem.pathFor("latest", args);
-            return `${path}?order=votes`;
-          },
-          forceActive: (category, args, router) => {
-            const queryParams = router.currentRoute.queryParams;
-            return (
-              queryParams &&
-              Object.keys(queryParams).length === 1 &&
-              queryParams["order"] === "votes"
-            );
-          },
-        });
-        api.addNavigationBarItem({
-          name: "my_votes",
-          before: "top",
-          customFilter: (category) => {
-            return category && category.can_vote && api.getCurrentUser();
-          },
-          customHref: (category, args) => {
-            const path = NavItem.pathFor("latest", args);
-            return `${path}?state=my_votes`;
-          },
-          forceActive: (category, args, router) => {
-            const queryParams = router.currentRoute.queryParams;
-            return (
-              queryParams &&
-              Object.keys(queryParams).length === 1 &&
-              queryParams["state"] === "my_votes"
-            );
-          },
-        });
-      }
+        const addVotingNavItem = (name, param, { requiresUser } = {}) => {
+          const [key, value] = param.split("=");
+          api.addNavigationBarItem({
+            name,
+            before: "top",
+            customFilter: (category) =>
+              category?.can_vote && (!requiresUser || api.getCurrentUser()),
+            customHref: (_category, args) =>
+              `${NavItem.pathFor("latest", args)}?${param}`,
+            forceActive: (_category, _args, router) => {
+              const queryParams = router.currentRoute.queryParams;
+              return (
+                queryParams &&
+                Object.keys(queryParams).length === 1 &&
+                queryParams[key] === value
+              );
+            },
+          });
+        };
 
-      if (siteSettings.topic_voting_enabled) {
+        addVotingNavItem("votes", "order=votes");
+        addVotingNavItem("my_votes", "state=my_votes", {
+          requiresUser: true,
+        });
+
         api.addSearchSuggestion("order:votes");
       }
 

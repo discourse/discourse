@@ -1,6 +1,41 @@
 # frozen_string_literal: true
 
 describe OAuth2BasicAuthenticator do
+  describe "configuration" do
+    let(:authenticator) { described_class.new }
+
+    before do
+      SiteSetting.oauth2_client_id = "client"
+      SiteSetting.oauth2_client_secret = ""
+      SiteSetting.oauth2_authorize_url = "https://id.example.com/authorize"
+      SiteSetting.oauth2_token_url = "https://id.example.com/token"
+    end
+
+    it "allows the provider to be enabled with an empty client secret" do
+      SiteSetting.oauth2_enabled = true
+
+      expect(authenticator.required_settings).to eq(
+        %i[oauth2_client_id oauth2_authorize_url oauth2_token_url],
+      )
+      expect(authenticator).to be_configured
+      expect(authenticator).to be_enabled
+    end
+
+    it "still requires the client ID and endpoint URLs" do
+      SiteSetting.oauth2_enabled = true
+
+      authenticator.required_settings.each do |setting|
+        value = SiteSetting.public_send(setting)
+        SiteSetting.public_send("#{setting}=", "")
+
+        expect(authenticator).not_to be_configured
+        expect(authenticator).not_to be_enabled
+
+        SiteSetting.public_send("#{setting}=", value)
+      end
+    end
+  end
+
   describe "after_authenticate" do
     before { SiteSetting.oauth2_user_json_url = "https://provider.com/user" }
 
@@ -62,6 +97,22 @@ describe OAuth2BasicAuthenticator do
       expect(result.email_valid).to eq(false)
     end
 
+    it "only accepts explicit verified email values" do
+      SiteSetting.oauth2_email_verified = false
+
+      [true, "true", "True", "TRUE"].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(true)
+      end
+
+      [false, nil, "false", "pending", 0, [], {}].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(false)
+      end
+    end
+
     describe "fetch_user_details" do
       before(:each) do
         SiteSetting.oauth2_fetch_user_details = true
@@ -76,7 +127,7 @@ describe OAuth2BasicAuthenticator do
 
       let(:fail_response) { { status: 403 } }
 
-      it "works" do
+      it "supports GET and POST requests" do
         stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")
@@ -94,6 +145,12 @@ describe OAuth2BasicAuthenticator do
 
         SiteSetting.oauth2_user_json_url_method = "POST"
         stub_request(:post, SiteSetting.oauth2_user_json_url).to_return(fail_response)
+        result = authenticator.after_authenticate(auth)
+        expect(result.failed).to eq(true)
+      end
+
+      it "returns a standardised result if the request times out" do
+        stub_request(:get, SiteSetting.oauth2_user_json_url).to_timeout
         result = authenticator.after_authenticate(auth)
         expect(result.failed).to eq(true)
       end
@@ -120,6 +177,95 @@ describe OAuth2BasicAuthenticator do
           associated_account = UserAssociatedAccount.last
 
           expect(associated_account.extra[custom_path]).to eq("received")
+        end
+      end
+
+      describe "group syncing" do
+        before { SiteSetting.oauth2_json_groups_path = "account.groups" }
+
+        it "sets associated_groups from the configured path" do
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq(
+            [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
+          )
+        end
+
+        it "clears associated_groups when the path resolves to an empty array" do
+          body = { account: { email: "newemail@example.com", groups: [] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups and logs when the path resolves to a non-array" do
+          body = { account: { email: "newemail@example.com", groups: "admins" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "leaves associated_groups nil when no path is configured" do
+          SiteSetting.oauth2_json_groups_path = ""
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to be_nil
+        end
+      end
+
+      describe "user field mappings" do
+        fab!(:user_field)
+
+        before do
+          SiteSetting.oauth2_user_field_mappings = [
+            { "path" => "account.department", "user_field_id" => user_field.id },
+          ].to_json
+        end
+
+        it "populates user_field_values from the user JSON" do
+          body = { account: { email: "newemail@example.com", department: "Engineering" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+        end
+
+        it "clears the field when the path resolves to an empty string" do
+          body = { account: { email: "newemail@example.com", department: "" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "")
+        end
+
+        it "skips the mapping when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq({})
+        end
+
+        it "joins array values with commas" do
+          body = { account: { email: "newemail@example.com", department: %w[Eng Ops] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
         end
       end
 
@@ -181,19 +327,6 @@ describe OAuth2BasicAuthenticator do
 
       let(:job_klass) { Jobs::DownloadAvatarFromUrl }
 
-      before do
-        png =
-          Base64.decode64(
-            "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
-          )
-        stub_request(:get, "http://avatar.example.com/avatar.png").to_return(
-          body: png,
-          headers: {
-            "Content-Type" => "image/png",
-          },
-        )
-      end
-
       it "enqueues a download_avatar_from_url job for existing user" do
         authenticator.expects(:fetch_user_details).returns(
           email: user.email,
@@ -205,7 +338,7 @@ describe OAuth2BasicAuthenticator do
 
         expect(job_args["url"]).to eq("http://avatar.example.com/avatar.png")
         expect(job_args["user_id"]).to eq(user.id)
-        expect(job_args["override_gravatar"]).to eq(false)
+        expect(job_args["associated_account_id"]).to eq(user.user_associated_accounts.first.id)
       end
 
       it "enqueues a download_avatar_from_url job for new user" do
@@ -227,7 +360,7 @@ describe OAuth2BasicAuthenticator do
 
         expect(job_args["url"]).to eq("http://avatar.example.com/avatar.png")
         expect(job_args["user_id"]).to eq(user.id)
-        expect(job_args["override_gravatar"]).to eq(false)
+        expect(job_args["associated_account_id"]).to eq(user.user_associated_accounts.first.id)
       end
     end
   end
@@ -325,6 +458,91 @@ describe OAuth2BasicAuthenticator do
     expect(result).to eq false
   end
 
+  describe "debug logging" do
+    let(:authenticator) { described_class.new }
+    let(:messages) { [] }
+
+    before do
+      SiteSetting.oauth2_debug_auth = true
+      allow(Rails.logger).to receive(:warn) { |message| messages << message }
+    end
+
+    it "redacts bearer credentials and URL substitutions and omits the user response" do
+      access_token = "access-token-value"
+      provider_id = "provider-user-id"
+      response_secret = "response-client-secret"
+      response_email = "private@example.com"
+      SiteSetting.oauth2_user_json_url =
+        "https://provider.com/users/:id/tokens/:token?access_token=query-token-value&view=profile"
+      SiteSetting.oauth2_json_email_path = "account.email"
+      response_body = {
+        account: {
+          email: response_email,
+          client_secret: response_secret,
+          refresh_token: "response-refresh-token",
+        },
+      }.to_json
+      user_json_url =
+        "https://provider.com/users/#{provider_id}/tokens/#{access_token}?access_token=query-token-value&view=profile"
+      request =
+        stub_request(:get, user_json_url).with(
+          headers: {
+            "Authorization" => "Bearer #{access_token}",
+          },
+        ).to_return(status: 200, body: response_body)
+
+      result = authenticator.fetch_user_details(access_token, provider_id)
+
+      expect(result[:email]).to eq(response_email)
+      expect(request).to have_been_requested.once
+      expect(messages.join).to include("view=profile", "[FILTERED]", "[OMITTED]")
+      expect(messages.join).not_to include(
+        access_token,
+        "query-token-value",
+        provider_id,
+        response_secret,
+        response_email,
+        "response-refresh-token",
+      )
+    end
+
+    it "redacts credentials, identity information, and extra authentication data" do
+      auth =
+        OmniAuth::AuthHash.new(
+          "provider" => "oauth2_basic",
+          "credentials" => {
+            "token" => "access-token-value",
+            "refresh_token" => "refresh-token-value",
+          },
+          "uid" => "provider-user-id",
+          "info" => {
+            "name" => "Private Name",
+            "email" => "private@example.com",
+          },
+          "extra" => {
+            "id_token" => "id-token-value",
+          },
+        )
+      original_auth = auth.deep_dup
+      SiteSetting.oauth2_callback_user_id_path = "uid"
+      SiteSetting.oauth2_fetch_user_details = false
+      SiteSetting.oauth2_email_verified = true
+
+      authenticator.after_authenticate(auth)
+
+      expect(messages.join).to include("after_authenticate response", "[FILTERED]")
+      expect(messages.join).not_to include(
+        "access-token-value",
+        "refresh-token-value",
+        "provider-user-id",
+        "Private Name",
+        "private@example.com",
+        "id-token-value",
+      )
+      expect(auth).to eq(original_auth)
+    end
+  end
+
   describe "token_callback" do
     let(:user) { Fabricate(:user) }
     let(:strategy) { OmniAuth::Strategies::Oauth2Basic.new({}) }
@@ -347,15 +565,22 @@ describe OAuth2BasicAuthenticator do
     end
 
     let(:access_token) do
-      {
-        "params" => {
+      OAuth2::AccessToken.new(
+        OAuth2::Client.new("Rails", "client-secret"),
+        "token",
+        {
+          "rails" => "Rails",
           "info" => {
             "name" => "Sammy the Shark",
             "email" => "sammy@digitalocean.com",
             "uuid" => "e028b1b918853eca7fba208a9d7e9d29a6e93c57",
+            "size" => "XL",
+            "verified" => false,
+            "count" => 42,
+            "emails" => [{ "value" => "sammy@digitalocean.com" }],
           },
         },
-      }
+      )
     end
 
     before(:each) do
@@ -372,6 +597,60 @@ describe OAuth2BasicAuthenticator do
       strategy.stubs(:access_token).returns(access_token)
       expect(strategy.info["name"]).to eq "Sammy the Shark"
       expect(strategy.info["email"]).to eq "sammy@digitalocean.com"
+    end
+
+    it "supports bare response keys and keys named after Ruby methods" do
+      strategy.stubs(:access_token).returns(access_token)
+      SiteSetting.oauth2_callback_user_id_path = "info.uuid"
+      SiteSetting.oauth2_callback_user_info_paths =
+        "name:params.info.size|email:info.email|verified:params.info.verified|count:params.info.count"
+
+      expect(strategy.uid).to eq(access_token.params["info"]["uuid"])
+      expect(strategy.info).to eq(
+        "name" => "XL",
+        "email" => "sammy@digitalocean.com",
+        "verified" => false,
+        "count" => 42,
+      )
+    end
+
+    it "returns nil for method calls in either callback path setting" do
+      strategy.stubs(:access_token).returns(access_token)
+      original_params = access_token.params.deep_dup
+
+      %w[
+        client.secret
+        client.id.constantize.name
+        params.rails.constantize.name
+        params.info.name.upcase
+        params.info.clear
+        params.info.emails.first.value
+        token
+      ].each do |path|
+        SiteSetting.oauth2_callback_user_id_path = path
+        SiteSetting.oauth2_callback_user_info_paths = "name:#{path}"
+
+        expect(strategy.uid).to be_nil, "Expected uid path #{path} to return nil"
+        expect(strategy.info).to eq("name" => nil), "Expected info path #{path} to return nil"
+        expect(access_token.params).to eq(original_params)
+      end
+    end
+
+    it "returns nil when a path is missing or continues beyond a scalar value" do
+      strategy.stubs(:access_token).returns(access_token)
+
+      %w[
+        params.missing.name
+        params.info.name.missing
+        params.info.verified.value
+        params.info.count.value
+      ].each do |path|
+        SiteSetting.oauth2_callback_user_id_path = path
+        SiteSetting.oauth2_callback_user_info_paths = "name:#{path}"
+
+        expect(strategy.uid).to be_nil
+        expect(strategy.info).to eq("name" => nil)
+      end
     end
 
     it "does apply user properties from access token callback in after_authenticate" do

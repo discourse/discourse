@@ -9,7 +9,7 @@ import {
   TABLE_LAYOUT,
 } from "discourse/plugins/discourse-ai/discourse/services/gists";
 
-module("Integration | Component | ai-topic-gist", function (hooks) {
+module("Integration | Component | AiTopicGist", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

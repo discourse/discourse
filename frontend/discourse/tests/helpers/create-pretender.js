@@ -1,31 +1,38 @@
 import EmberObject from "@ember/object";
 import Pretender from "pretender";
+import { TOO_MANY_REQUESTS } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
 
 export function parsePostData(query) {
-  const result = {};
-  if (query) {
-    query.split("&").forEach(function (part) {
-      const item = part.split("=");
-      const firstSeg = decodeURIComponent(item[0]);
-      const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
-      const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
-      const isArray = firstSeg.endsWith("[]");
-
-      if (m) {
-        let key = m[1];
-        result[key] = result[key] || {};
-        result[key][m[2].replace("][", ".")] = val;
-      } else if (isArray) {
-        result[firstSeg] ||= [];
-        result[firstSeg].push(val);
-      } else {
-        result[firstSeg] = val;
-      }
-    });
+  if (!query) {
+    return {};
   }
+
+  if (query.startsWith("{") || query.startsWith("[")) {
+    return JSON.parse(query);
+  }
+
+  const result = {};
+  query.split("&").forEach(function (part) {
+    const item = part.split("=");
+    const firstSeg = decodeURIComponent(item[0]);
+    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
+    const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
+    const isArray = firstSeg.endsWith("[]");
+
+    if (m) {
+      let key = m[1];
+      result[key] = result[key] || {};
+      result[key][m[2].replace("][", ".")] = val;
+    } else if (isArray) {
+      result[firstSeg] ||= [];
+      result[firstSeg].push(val);
+    } else {
+      result[firstSeg] = val;
+    }
+  });
   return result;
 }
 
@@ -45,44 +52,102 @@ export function OK(resp = {}, headers = {}) {
   return [200, headers, resp];
 }
 
+export { TOO_MANY_REQUESTS };
+
+export function middlewareRateLimit(
+  retryAfterSeconds = 10,
+  errorCode = "user_10_secs_limit"
+) {
+  const headers = { "Content-Type": "text/plain" };
+
+  if (retryAfterSeconds !== null) {
+    headers["Retry-After"] = String(retryAfterSeconds);
+    headers["Discourse-Rate-Limit-Error-Code"] = errorCode;
+  }
+
+  return [
+    TOO_MANY_REQUESTS,
+    headers,
+    "Slow down, you're making too many requests.\n" +
+      `Please retry again in ${retryAfterSeconds} seconds.\n` +
+      `Error code: ${errorCode}.\n`,
+  ];
+}
+
+export function controllerRateLimit(waitSeconds = 10) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Retry-After": String(waitSeconds),
+  };
+
+  return [
+    TOO_MANY_REQUESTS,
+    headers,
+    {
+      errors: ["You've performed this action too many times."],
+      error_type: "rate_limit",
+      extras: { wait_seconds: waitSeconds },
+    },
+  ];
+}
+
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
-export let fixturesByUrl = {};
+export const fixturesByUrl = {};
+const fixturesByUrlForHandlers = {};
 
-function replacesFixturesByUrl(newFixtures) {
-  for (const member of Object.keys(fixturesByUrl)) {
-    delete fixturesByUrl[member];
+for (const module of Object.values(
+  import.meta.glob("../fixtures/**/*", { eager: true })
+)) {
+  if (module.default) {
+    const obj = module.default;
+    Object.keys(obj).forEach((url) => {
+      let fixtureUrl = url;
+      if (fixtureUrl[0] !== "/") {
+        fixtureUrl = "/" + fixtureUrl;
+      }
+      fixturesByUrl[url] = obj[url];
+      fixturesByUrlForHandlers[fixtureUrl] = obj[url];
+    });
   }
-
-  Object.assign(fixturesByUrl, newFixtures);
 }
 
-const instance = new Pretender();
+const pretender = new Pretender();
 
-const oldRegister = instance.register;
-instance.register = (...args) => {
+const oldRegister = pretender.register;
+pretender.register = (...args) => {
   args[1] = getURL(args[1]);
-  return oldRegister.call(instance, ...args);
+  return oldRegister.call(pretender, ...args);
 };
 
-export default instance;
+export default pretender;
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };
 }
 
-export function applyDefaultHandlers(pretender) {
-  // Autoload any `*-pretender` files
-  Object.keys(requirejs.entries).forEach((e) => {
-    let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
-    if (m && m[1] !== "create") {
-      let result = requirejs(e).default.call(pretender, helpers);
-      if (m[1] === "fixture") {
-        replacesFixturesByUrl(result);
-      }
+export function applyDefaultHandlers() {
+  const pretenderModules = import.meta.glob(
+    "./**/*-pretender.{js,gjs,ts,gts}",
+    {
+      eager: true,
+    }
+  );
+
+  Object.keys(requirejs.entries).forEach((entry) => {
+    if (/^discourse\/plugins\/.*helpers\/[a-z-]+\-pretender$/.test(entry)) {
+      pretenderModules[entry] = requirejs(entry);
     }
   });
+
+  for (const module of Object.values(pretenderModules)) {
+    module.default.call(pretender, helpers);
+  }
+
+  for (const [url, data] of Object.entries(fixturesByUrlForHandlers)) {
+    pretender.get(url, () => response(data));
+  }
 
   pretender.get("/admin/plugins", () => response({ plugins: [] }));
 
@@ -212,6 +277,22 @@ export function applyDefaultHandlers(pretender) {
           },
         ],
       },
+    });
+  });
+
+  pretender.get("/tag/:tag_id/info.json", (request) => {
+    return response({
+      tag_info: {
+        id: parseInt(request.params.tag_id, 10) || request.params.tag_id,
+        name: request.params.tag_id,
+        slug: request.params.tag_id,
+        topic_count: 0,
+        staff: false,
+        synonyms: [],
+        tag_group_names: [],
+        category_ids: [],
+      },
+      categories: [],
     });
   });
 
@@ -443,14 +524,14 @@ export function applyDefaultHandlers(pretender) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "consectetur visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.last_read_post_number = 1;
+      obj.topics[0].last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "consectetur in:personal" ||
       request.queryParams.q === "consectetur in:messages"
     ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.archetype = "private_message";
+      obj.topics[0].archetype = "private_message";
       return response(obj);
     } else {
       return response({});
@@ -569,6 +650,41 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/c/2481/show.json"])
   );
 
+  pretender.get("/c/:category_id/show.json", (request) => {
+    const fixture = fixturesByUrl[request.url];
+
+    if (fixture) {
+      return response(fixture);
+    }
+
+    const categoryId = parseInt(request.params.category_id, 10);
+    const siteCategory = fixturesByUrl["site.json"].site.categories.find(
+      (category) => category.id === categoryId
+    );
+
+    if (!siteCategory) {
+      return response(404, { errors: ["category not found"] });
+    }
+
+    const category = cloneJSON(siteCategory);
+
+    category.available_groups ||= ["admins", "everyone", "moderators", "staff"];
+    category.group_permissions ||= [
+      { permission_type: 1, group_name: "everyone", group_id: 0 },
+    ];
+    category.custom_fields ||= {};
+    category.category_types ||= {
+      discussion: {
+        id: "discussion",
+        name: "Discussion",
+        configuration_schema: {},
+      },
+    };
+    category.available_category_types ||= [];
+
+    return response({ category });
+  });
+
   pretender.put("/categories/:category_id", (request) => {
     const category = JSON.parse(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
@@ -588,11 +704,49 @@ export function applyDefaultHandlers(pretender) {
     // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
+    // The simplified flow sends `category_types` as an array of IDs but the
+    // real response is a hash `{type_id: metadata}`; other flows send the
+    // hash unchanged.
+    if (Array.isArray(category.category_types)) {
+      category.category_types = Object.fromEntries(
+        category.category_types.map((id) => [
+          id,
+          { id, name: id, configuration_schema: {} },
+        ])
+      );
+    }
+
     return response({ category });
   });
 
+  pretender.post("/categories/evaluate_permissions.json", () =>
+    response({
+      success: "OK",
+      current_user_will_lose_access: false,
+    })
+  );
+
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
+  );
+
+  pretender.get("/categories/types", () =>
+    response({
+      types: [
+        {
+          id: "discussion",
+          name: "Discussion",
+          title: "discussion",
+          icon: "comments",
+          description: "General discussion",
+          configuration_schema: {},
+          available: true,
+        },
+      ],
+      counts: {
+        discussion: 1,
+      },
+    })
   );
 
   pretender.get("/categories/find", () => {
@@ -704,6 +858,8 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.post("/u/action/send_activation_email", success);
   pretender.put("/u/update-activation-email", success);
+
+  pretender.post("/anonymous-action", success);
 
   pretender.get("/session/hp.json", function () {
     return response({
@@ -1415,9 +1571,16 @@ export function applyDefaultHandlers(pretender) {
 }
 
 export function resetPretender() {
-  instance.handlers = [];
-  instance.handledRequests = [];
-  instance.unhandledRequests = [];
-  instance.passthroughRequests = [];
-  instance.hosts.registries = {};
+  // A response still pending here, e.g. to a request sent while the app was torn down,
+  // would land in the next test, possibly before its app has booted
+  for (const { request } of pretender.requestReferences) {
+    // Stops pretender's progress polling without dispatching events
+    request.aborted = true;
+  }
+  pretender.requestReferences = [];
+  pretender.handlers = [];
+  pretender.handledRequests = [];
+  pretender.unhandledRequests = [];
+  pretender.passthroughRequests = [];
+  pretender.hosts.registries = {};
 }

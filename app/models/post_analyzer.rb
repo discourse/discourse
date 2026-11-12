@@ -30,16 +30,17 @@ class PostAnalyzer
       cooked = PrettyText.cook(raw, opts)
     end
 
-    limit = SiteSetting.max_oneboxes_per_post
     result =
-      Oneboxer.apply(cooked, extra_paths: ".inline-onebox-loading") do |url, element|
+      Oneboxer.apply(
+        cooked,
+        extra_paths: ".#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}",
+        limit: SiteSetting.max_oneboxes_per_post,
+      ) do |url, element|
         if opts[:invalidate_oneboxes]
           Oneboxer.invalidate(url)
           InlineOneboxer.invalidate(url)
         end
         next if element["class"] != Oneboxer::ONEBOX_CSS_CLASS
-        next if limit <= 0
-        limit -= 1
         @onebox_urls << url
         onebox = Oneboxer.cached_onebox(url)
         @found_oneboxes = true if onebox.present?
@@ -104,14 +105,12 @@ class PostAnalyzer
     @linked_hosts = {}
 
     all_links.each do |u|
-      begin
-        uri = self.class.parse_uri_rfc2396(u)
-        host = uri.host
-        @linked_hosts[host] ||= 1 unless host.nil?
-      rescue URI::Error
-        # An invalid URI does not count as a host
-        next
-      end
+      uri = self.class.parse_uri_rfc2396(u)
+      host = uri.host
+      @linked_hosts[host] ||= 1 unless host.nil?
+    rescue URI::Error
+      # An invalid URI does not count as a host
+      next
     end
 
     @linked_hosts

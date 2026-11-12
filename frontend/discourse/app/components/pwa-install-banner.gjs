@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
+import DButton from "discourse/ui-kit/d-button";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
@@ -19,6 +19,7 @@ export default class PwaInstallBanner extends Component {
   bannerDismissed =
     this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY) === "true";
 
+  /** @type {(Event & { prompt: () => unknown }) | null} */
   @tracked deferredInstallPromptEvent = null;
 
   registerInstallPromptListener = modifierFn(() => {
@@ -70,10 +71,10 @@ export default class PwaInstallBanner extends Component {
           />
         </span>
         <DButton
-          @icon="xmark"
-          @action={{this.dismiss}}
-          @title="banner.close"
           class="btn-transparent close"
+          @action={{this.dismiss}}
+          @icon="xmark"
+          @title="banner.close"
         />
       </div>
     {{/if}}

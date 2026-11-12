@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require "open3"
+
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 RSpec::Support.require_rspec_core "formatters/console_codes"
 
@@ -10,7 +12,12 @@ module TurboTests
       output_slowest_examples(timings) if timings.present?
 
       totals_by_id, totals_by_origin = aggregate_js_deprecations(notification.examples)
-      output_js_deprecations(totals_by_id, totals_by_origin) if totals_by_id.present?
+
+      if totals_by_id.present?
+        summary = write_js_deprecation_report(notification.examples, totals_by_id, totals_by_origin)
+        summary ||= fallback_js_deprecation_summary(totals_by_id, totals_by_origin)
+        output.puts "\n#{summary}\n"
+      end
 
       super(notification)
     end
@@ -41,69 +48,81 @@ module TurboTests
       [totals_by_id, totals_by_origin]
     end
 
-    def output_js_deprecations(totals_by_id, totals_by_origin)
-      output.puts "\n[Deprecation Counter] Test run completed with deprecations:\n\n"
+    # Label identifying which CI run group produced a report, so the artifacts of
+    # a single workflow run stay distinguishable.
+    def js_deprecation_report_group
+      ENV["DEPRECATION_REPORT_GROUP"].presence&.gsub(/[^\w.-]+/, "-") || "system"
+    end
 
-      deprecations_table = generate_deprecations_table(totals_by_id)
-      output.puts deprecations_table
+    # Pairs each collected JS deprecation with the spec that triggered it and,
+    # via the frontend sourcemaps, the original call site it came from.
+    def write_js_deprecation_report(examples, totals_by_id, totals_by_origin)
+      entries =
+        examples.flat_map do |example|
+          details = example.metadata[:js_deprecation_details]
+          next [] if details.blank?
 
-      origin_table = nil
-      if totals_by_origin.any?
-        origin_table = generate_deprecations_by_origin_table(totals_by_origin)
-        output.puts "\nDeprecations by spec origin:\n\n"
-        output.puts origin_table
+          location = example.location_rerun_argument.presence || example.location
+          test_file, _, test_line = location.rpartition(":")
+
+          details.map do |detail|
+            {
+              id: detail["id"],
+              count: 1,
+              origin: extract_origin_from_example(example) || "unknown",
+              stack: detail["stack"],
+              reportAtCallSite: detail["reportAtCallSite"],
+              test: {
+                module: nil,
+                name: example.full_description,
+                file: test_file,
+                declarationLine: test_line.to_i,
+                callSiteLine: nil,
+                callSiteCode: nil,
+              },
+            }
+          end
+        end
+
+      group = js_deprecation_report_group
+      dir =
+        ENV["DEPRECATION_REPORT_DIR"].presence || Rails.root.join("tmp/deprecation-reports").to_s
+      FileUtils.mkdir_p(dir)
+      report_path = File.join(dir, "#{group}-#{Process.pid}.json")
+
+      payload = { entries:, totals: totals_by_id, totalsByOrigin: totals_by_origin }
+      cli = Rails.root.join("frontend/discourse/lib/deprecation-report-cli.js").to_s
+      summary, stderr, status =
+        Open3.capture3("node", cli, "build", report_path, group, stdin_data: payload.to_json)
+
+      unless status.success?
+        reason = status.signaled? ? "signal #{status.termsig}" : "exit status #{status.exitstatus}"
+        output.puts "\n[Deprecation Counter] Failed to build detailed report (#{reason})."
+        output.puts stderr if stderr.present?
+        return nil
       end
 
-      write_github_summary(deprecations_table, origin_table)
+      output.puts stderr if stderr.present?
+      summary
+    rescue StandardError => e
+      output.puts "\n[Deprecation Counter] Failed to build detailed report: #{e.message}\n"
+      nil
     end
 
-    def generate_deprecations_table(totals_by_id)
-      max_id_length = totals_by_id.keys.map(&:length).max
+    def fallback_js_deprecation_summary(totals_by_id, totals_by_origin)
+      summary = +"[Deprecation Counter] Test run completed with deprecations:\n\n"
+      summary << "| id | count |\n| --- | --- |\n"
+      totals_by_id.sort.each { |id, count| summary << "| #{id} | #{count} |\n" }
 
-      headers = ["id".ljust(max_id_length), "count".rjust(5)]
-      rows = totals_by_id.map { |id, count| [id.ljust(max_id_length), count.to_s.rjust(5)] }
-
-      build_markdown_table(headers, rows)
-    end
-
-    def generate_deprecations_by_origin_table(totals_by_origin)
-      all_ids = totals_by_origin.values.flat_map(&:keys).uniq
-      max_id_length = all_ids.map(&:length).max
-      origins = totals_by_origin.keys.sort
-      max_origin_length = [origins.map(&:length).max, 6].max
-
-      headers = ["origin".ljust(max_origin_length), "id".ljust(max_id_length), "count".rjust(5)]
-      rows = []
-
-      origins.each do |origin|
-        origin_deprecations = totals_by_origin[origin]
-        sorted_ids = origin_deprecations.keys.sort
-
-        sorted_ids.each do |id|
-          count = origin_deprecations[id]
-          rows += [[origin.ljust(max_origin_length), id.ljust(max_id_length), count.to_s.rjust(5)]]
+      if totals_by_origin.any?
+        summary << "\nDeprecations by spec origin:\n\n"
+        summary << "| origin | id | count |\n| --- | --- | --- |\n"
+        totals_by_origin.sort.each do |origin, counts|
+          counts.sort.each { |id, count| summary << "| #{origin} | #{id} | #{count} |\n" }
         end
       end
 
-      build_markdown_table(headers, rows)
-    end
-
-    def build_markdown_table(headers, rows)
-      table = "| #{headers.join(" | ")} |\n"
-      table += "| #{headers.map { |h| "-" * h.length }.join(" | ")} |\n"
-      rows.each { |row| table += "| #{row.join(" | ")} |\n" }
-      table
-    end
-
-    def write_github_summary(deprecations_table, origin_table)
-      return unless ENV["GITHUB_ACTIONS"] && ENV["GITHUB_STEP_SUMMARY"]
-
-      summary = "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n"
-      summary += deprecations_table
-      summary += "\n\nDeprecations by spec origin:\n\n#{origin_table}" if origin_table
-      summary += "\n\n"
-
-      File.write(ENV["GITHUB_STEP_SUMMARY"], summary)
+      summary
     end
 
     def extract_origin_from_example(example)

@@ -12,6 +12,6 @@ lt:
         title: "Šiandien mano gimtadienis!"
         label: "Gimtadienis"
     cakeday:
-      today: "Šandien"
+      today: "Šiandien"
       tomorrow: "Rytoj"
       all: "Visi"

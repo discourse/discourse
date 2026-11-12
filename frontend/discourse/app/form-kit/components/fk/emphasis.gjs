@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers/index";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FKEmphasis extends Component {
   get type() {
@@ -10,7 +10,7 @@ export default class FKEmphasis extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "form-kit__section"
         "emphasis"
         (if this.type (concat "emphasis-" this.type))

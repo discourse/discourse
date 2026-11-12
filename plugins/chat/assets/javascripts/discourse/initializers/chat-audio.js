@@ -1,5 +1,10 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isPrimaryTab } from "discourse/lib/utilities";
+import {
+  claimChatAlert,
+  confirmChatAlert,
+  releaseChatAlert,
+} from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
@@ -49,12 +54,23 @@ export default {
         }
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
-          this.canPlaySound().then((success) => {
-            if (success) {
-              const chatAudioManager = container.lookup(
-                "service:chat-audio-manager"
-              );
-              chatAudioManager.play(user.chat_sound);
+          return this.canPlaySound().then(async (success) => {
+            if (!success || !claimChatAlert(data.chat_message_id)) {
+              return;
+            }
+
+            const chatAudioManager = container.lookup(
+              "service:chat-audio-manager"
+            );
+            const handled = await chatAudioManager.play(user.chat_sound, {
+              type: isMention ? "mention" : "incoming",
+            });
+
+            if (handled) {
+              confirmChatAlert(data.chat_message_id);
+            } else {
+              // audio is unavailable in this tab, let another tab play it
+              releaseChatAlert(data.chat_message_id);
             }
           });
         }

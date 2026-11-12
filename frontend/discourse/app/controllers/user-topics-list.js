@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -16,19 +16,20 @@ import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
+  @service site;
+
   @tracked model;
   @tracked listContext = "user-activity";
 
   hideCategory = false;
   showPosters = false;
   channel = null;
+
+  /** @type {string | null} */
   tagsForUser = null;
   queryParams = Object.keys(QUERY_PARAMS);
 
   bulkSelectHelper = new BulkSelectHelper(this);
-
-  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
-  canBulkSelect;
 
   constructor() {
     super(...arguments);
@@ -36,6 +37,15 @@ export default class UserTopicsListController extends Controller {
     for (const [name, info] of Object.entries(QUERY_PARAMS)) {
       defineTrackedProperty(this, name, info.default);
     }
+  }
+
+  @computed("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  get canBulkSelect() {
+    return (
+      this.currentUser?.canManageTopic ||
+      this.showDismissRead ||
+      this.showResetNew
+    );
   }
 
   @dependentKeyCompat
@@ -51,6 +61,10 @@ export default class UserTopicsListController extends Controller {
     return this.bulkSelectHelper.selected;
   }
 
+  get showBottomDismissButtons() {
+    return !this.site.mobileView;
+  }
+
   @computed("model.topics.length", "incomingCount")
   get noContent() {
     return this.model?.topics?.length === 0 && this.incomingCount === 0;
@@ -64,6 +78,18 @@ export default class UserTopicsListController extends Controller {
   @computed("filter", "model.topics.length")
   get showDismissRead() {
     return this.filter === UNREAD_FILTER && this.model?.topics?.length;
+  }
+
+  get resolvedAscending() {
+    if (isNone(this.ascending)) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return this.ascending.toString() === "true";
+    }
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   subscribe() {
@@ -82,18 +108,6 @@ export default class UserTopicsListController extends Controller {
       this.ascending = false;
     }
     this.order = sortBy;
-  }
-
-  get resolvedAscending() {
-    if (isNone(this.ascending)) {
-      return this.model.get("params.ascending") === "true";
-    } else {
-      return this.ascending.toString() === "true";
-    }
-  }
-
-  get resolvedOrder() {
-    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   @action

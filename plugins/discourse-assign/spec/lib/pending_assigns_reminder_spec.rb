@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
-def assert_reminder_not_created
-  expect { reminder.remind(user) }.not_to change { Post.count }
-end
-
 RSpec.describe PendingAssignsReminder do
   subject(:reminder) { described_class.new }
+
+  def assert_reminder_not_created
+    expect { reminder.remind(user) }.not_to change { Post.count }
+  end
 
   before { SiteSetting.assign_enabled = true }
 
@@ -29,22 +27,23 @@ RSpec.describe PendingAssignsReminder do
 
     include_context "with group that is allowed to assign"
 
+    fab!(:secure_category_group, :group)
+    fab!(:secure_category) { Fabricate(:private_category, group: secure_category_group) }
+    fab!(:first_assigned_post, :post)
+    fab!(:second_assigned_post, :post)
+    fab!(:trashed_assigned_post, :post)
+    fab!(:private_category_assigned_post, :post)
+
     before do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
-      secure_category = Fabricate(:private_category, group: Fabricate(:group))
-
-      @post1 = Fabricate(:post)
-      @post2 = Fabricate(:post)
-      @post2.topic.update_column(:fancy_title, nil)
-      @post3 = Fabricate(:post)
-      @post4 = Fabricate(:post)
-      Assigner.new(@post1.topic, user).assign(user)
-      Assigner.new(@post2.topic, user).assign(user)
-      Assigner.new(@post3.topic, user).assign(user)
-      Assigner.new(@post4.topic, user).assign(user)
-      @post3.topic.trash!
-      @post4.topic.update(category: secure_category)
+      second_assigned_post.topic.update_column(:fancy_title, nil)
+      Assigner.new(first_assigned_post.topic, user).assign(user)
+      Assigner.new(second_assigned_post.topic, user).assign(user)
+      Assigner.new(trashed_assigned_post.topic, user).assign(user)
+      Assigner.new(private_category_assigned_post.topic, user).assign(user)
+      trashed_assigned_post.topic.trash!
+      private_category_assigned_post.topic.update(category: secure_category)
     end
 
     it "creates a reminder for a particular user and sets the timestamp of the last reminder" do
@@ -61,10 +60,10 @@ RSpec.describe PendingAssignsReminder do
 
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 2))
 
-      expect(post.raw).to include(@post1.topic.fancy_title)
-      expect(post.raw).to include(@post2.topic.fancy_title)
-      expect(post.raw).to_not include(@post3.topic.fancy_title)
-      expect(post.raw).to_not include(@post4.topic.fancy_title)
+      expect(post.raw).to include(first_assigned_post.topic.fancy_title)
+      expect(post.raw).to include(second_assigned_post.topic.fancy_title)
+      expect(post.raw).to_not include(trashed_assigned_post.topic.fancy_title)
+      expect(post.raw).to_not include(private_category_assigned_post.topic.fancy_title)
 
       expect(user.reload.custom_fields[described_class::REMINDED_AT].to_datetime).to eq_time(
         DateTime.now,
@@ -87,7 +86,7 @@ RSpec.describe PendingAssignsReminder do
     it "doesn't delete reminders from a different user" do
       reminder.remind(user)
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       3.times do
         post = Fabricate(:post)
         Assigner.new(post.topic, user).assign(another_user)
@@ -131,8 +130,8 @@ RSpec.describe PendingAssignsReminder do
       post = Post.last
       topic = post.topic
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 2))
-      expect(post.raw).to include(@post1.topic.fancy_title)
-      expect(post.raw).to include(@post2.topic.fancy_title)
+      expect(post.raw).to include(first_assigned_post.topic.fancy_title)
+      expect(post.raw).to include(second_assigned_post.topic.fancy_title)
 
       expect(post.raw).to_not include(post.topic.fancy_title)
     end
@@ -148,8 +147,8 @@ RSpec.describe PendingAssignsReminder do
       topic = post.topic
 
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 3))
-      expect(post.raw).to include(@post1.topic.fancy_title)
-      expect(post.raw).to include(@post2.topic.fancy_title)
+      expect(post.raw).to include(first_assigned_post.topic.fancy_title)
+      expect(post.raw).to include(second_assigned_post.topic.fancy_title)
       expect(post.raw).to include(pm.fancy_title)
     end
 
@@ -178,12 +177,12 @@ RSpec.describe PendingAssignsReminder do
     end
 
     context "with assigns_reminder_assigned_topics_query modifier" do
-      let(:modifier_block) { Proc.new { |query| query.where.not(id: @post1.topic_id) } }
       it "updates the query correctly" do
+        modifier_block = proc { |query| query.where.not(id: first_assigned_post.topic_id) }
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:assigns_reminder_assigned_topics_query, &modifier_block)
         topics = reminder.send(:assigned_topics, user, order: :asc)
-        expect(topics).not_to include(@post1.topic)
+        expect(topics).not_to include(first_assigned_post.topic)
       ensure
         DiscoursePluginRegistry.unregister_modifier(
           plugin_instance,
@@ -194,8 +193,8 @@ RSpec.describe PendingAssignsReminder do
     end
 
     context "with assigned_count_for_user_query modifier" do
-      let(:modifier_block) { Proc.new { |query, user| query.where.not(assigned_to_id: user.id) } }
       it "updates the query correctly" do
+        modifier_block = proc { |query, user| query.where.not(assigned_to_id: user.id) }
         expect(reminder.send(:assigned_count_for, user)).to eq(2)
 
         plugin_instance = Plugin::Instance.new

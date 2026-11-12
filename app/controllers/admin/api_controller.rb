@@ -35,6 +35,7 @@ class Admin::ApiController < Admin::AdminController
     scopes =
       ApiKeyScope
         .scope_mappings
+        .sort_by { |resource, _| resource.to_s }
         .reduce({}) do |memo, (resource, actions)|
           memo.tap do |m|
             m[resource] = actions.map do |k, v|
@@ -42,7 +43,7 @@ class Admin::ApiController < Admin::AdminController
                 scope_id: "#{resource}:#{k}",
                 key: k,
                 name: k.to_s.gsub("_", " "),
-                params: v[:params],
+                params: ApiKeyScope.restrictable_parameters(v),
                 urls: v[:urls],
               }
             end
@@ -71,10 +72,16 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def create
-    api_key = ApiKey.new(update_params)
+    api_key_params = update_params
+    validate_read_only_scopes!
+
+    api_key = ApiKey.new(api_key_params)
     ApiKey.transaction do
       api_key.created_by = current_user
-      api_key.api_key_scopes = build_scopes
+      api_key.api_key_scopes =
+        ApiKeyScope.build_from_params(
+          params.require(:key)[:scopes].to_a.map { it.try(:to_unsafe_h) || it },
+        )
       api_key.scope_mode = params.dig(:key, :scope_mode)
       if username = params.require(:key).permit(:username)[:username].presence
         api_key.user = User.find_by_username(username)
@@ -110,31 +117,10 @@ class Admin::ApiController < Admin::AdminController
 
   private
 
-  def build_scopes
-    params.require(:key)[:scopes].to_a.map do |scope_params|
-      resource, action = scope_params[:scope_id].split(":")
+  def validate_read_only_scopes!
+    return if params.dig(:key, :scope_mode) != "read_only"
 
-      mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
-      raise Discourse::InvalidParameters if mapping.nil? # invalid mapping
-
-      ApiKeyScope.new(
-        resource: resource,
-        action: action,
-        allowed_parameters: build_params(scope_params, mapping[:params]),
-      )
-    end
-  end
-
-  def build_params(scope_params, params)
-    return if params.nil?
-
-    scope_params
-      .slice(*params)
-      .tap do |allowed_params|
-        allowed_params.each do |k, v|
-          v.blank? ? allowed_params.delete(k) : allowed_params[k] = v.split(",")
-        end
-      end
+    raise Discourse::InvalidParameters if params.dig(:key, :scopes).blank?
   end
 
   def update_params

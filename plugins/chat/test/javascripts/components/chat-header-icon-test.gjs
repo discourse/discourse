@@ -8,7 +8,7 @@ import { i18n } from "discourse-i18n";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
 import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
-module("Discourse Chat | Component | chat-header-icon", function (hooks) {
+module("Component | ChatHeaderIcon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("full page - never separated sidebar mode", async function (assert) {
@@ -44,15 +44,11 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
   });
 
   test("mobile", async function (assert) {
-    const testState = new (class {
-      @tracked isActive = false;
-    })();
+    const isActive = tracked(false);
 
     forceMobile();
 
-    await render(
-      <template><Icon @isActive={{testState.isActive}} /></template>
-    );
+    await render(<template><Icon @isActive={{isActive.value}} /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -63,7 +59,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .dom(".d-icon-d-chat")
       .exists("chat icon is rendered if chat is inactive");
 
-    testState.isActive = true;
+    isActive.value = true;
     await settled();
     assert
       .dom(".d-icon-d-chat")

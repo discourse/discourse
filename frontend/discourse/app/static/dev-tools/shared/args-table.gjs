@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
-import { logArgToConsole } from "../lib/console-logger";
-import { formatValue, getTypeInfo } from "../lib/value-formatter";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { logArgToConsole } from "../lib/console-logger.js";
+import { formatValue, getTypeInfo } from "../lib/value-formatter.js";
 
 /**
  * Shared component for displaying outlet arguments in a formatted table.
@@ -27,7 +27,7 @@ export default class ArgsTable extends Component {
    * Transforms the raw args object into an array of entry objects for display.
    * Each entry contains the original key/value plus formatted display representations.
    *
-   * @returns {Array<{key: string, value: any, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: Object|null}>}
+   * @returns {Array<{key: string, value: unknown, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: {message: string | undefined, since: string | undefined}|null}>}
    */
   get entries() {
     const entries = [];
@@ -95,20 +95,6 @@ export default class ArgsTable extends Component {
   }
 
   /**
-   * Extracts deprecation info from a deprecated argument for display.
-   *
-   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
-   * @returns {{message: string, since: string|undefined, dropFrom: string|undefined}}
-   */
-  #getDeprecationInfo(deprecatedArg) {
-    return {
-      message: deprecatedArg.message,
-      since: deprecatedArg.options?.since,
-      dropFrom: deprecatedArg.options?.dropFrom,
-    };
-  }
-
-  /**
    * Logs the argument value to the console and stores it in a global variable
    * for easy inspection. The variable is named `arg1`, `arg2`, etc.
    *
@@ -123,13 +109,25 @@ export default class ArgsTable extends Component {
     });
   }
 
+  /**
+   * Extracts deprecation info from a deprecated argument for display.
+   *
+   * @param {DeprecatedOutletArgument} deprecatedArg - The deprecated argument.
+   * @returns {{message: string, since: string|undefined}}
+   */
+  #getDeprecationInfo(deprecatedArg) {
+    return {
+      message: deprecatedArg.message,
+      since: deprecatedArg.options?.since,
+    };
+  }
+
   <template>
     {{#if this.entries.length}}
       <div class="outlet-args-table">
         {{#each this.entries as |entry|}}
           <button
-            type="button"
-            class={{concatClass
+            class={{dConcatClass
               "outlet-args-table__row"
               (if entry.isDeprecated "--deprecated")
             }}
@@ -138,13 +136,14 @@ export default class ArgsTable extends Component {
               entry.deprecationInfo.message
               "Save to global variable"
             }}
+            type="button"
             {{on "click" (fn this.logValue entry)}}
           >
             <span class="outlet-args-table__key">
               @{{entry.key}}
               {{#if entry.isDeprecated}}
                 <span class="outlet-args-table__deprecated-badge">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                 </span>
               {{/if}}
             </span>
@@ -163,9 +162,7 @@ export default class ArgsTable extends Component {
               {{#if entry.deprecationInfo.since}}
                 <span class="outlet-args-table__deprecation-version">
                   (since
-                  {{entry.deprecationInfo.since}}{{#if
-                    entry.deprecationInfo.dropFrom
-                  }}, removal in {{entry.deprecationInfo.dropFrom}}{{/if}})
+                  {{entry.deprecationInfo.since}})
                 </span>
               {{/if}}
             </div>

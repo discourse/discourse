@@ -1,5 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   simulateKeys,
@@ -90,6 +91,68 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
       .exists();
   });
 
+  test("escapes hashtag display text in the composer preview", async function (assert) {
+    const name = '<b id="hashtag-injected">Meeting</b>';
+    pretender.get("/hashtags", () =>
+      response({
+        category: [
+          {
+            id: 28,
+            text: name,
+            slug: "meeting-room",
+            ref: "meeting-room",
+            type: "category",
+            style_type: "square",
+            relative_url: "/c/meeting-room/28",
+          },
+        ],
+      })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await simulateKeys(".d-editor-input", "Visit #meeting-room ");
+    await waitFor(".d-editor-preview a.hashtag-cooked");
+
+    assert
+      .dom(".d-editor-preview a.hashtag-cooked")
+      .hasText(name, "the name remains literal text");
+    assert
+      .dom(".d-editor-preview #hashtag-injected")
+      .doesNotExist("the name does not create an element");
+  });
+
+  test("autocomplete supports periods in the middle of tag names", async function (assert) {
+    const terms = [];
+
+    pretender.get("/hashtags/search.json", (request) => {
+      terms.push(request.queryParams.term);
+
+      return response({
+        results: [
+          {
+            id: 301,
+            text: "sam.i.am x 1",
+            slug: "sam.i.am",
+            icon: "tag",
+            relative_url: "/tag/sam-i-am/301",
+            ref: "sam.i.am",
+            type: "tag",
+            style_type: "icon",
+          },
+        ],
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await simulateKeys(".d-editor-input", "abc #sam.i");
+
+    assert.true(terms.includes("sam.i"));
+    assert.dom(".hashtag-autocomplete__option").exists({ count: 1 });
+    assert.dom(".hashtag-autocomplete__option").hasText("sam.i.am x 1");
+  });
+
   test("iconHTML is correctly generated for various hashtag types and style_type configs", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
@@ -118,3 +181,66 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
       .exists();
   });
 });
+
+acceptance(
+  "#hashtag autocompletion with types unknown to the client",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/hashtags", () => helper.response({ category: [], tag: [] }));
+      server.get("/hashtags/search.json", () => {
+        return helper.response({
+          results: [
+            {
+              id: 1,
+              text: "Music Lounge",
+              slug: "music",
+              icon: "comment",
+              relative_url: "/chat/c/music/1",
+              ref: "music",
+              type: "channel",
+              style_type: "icon",
+            },
+            {
+              id: 28,
+              text: "Other Languages",
+              slug: "other-languages",
+              colors: ["FF0000"],
+              icon: "folder",
+              relative_url: "/c/other-languages/28",
+              ref: "other-languages",
+              type: "category",
+              style_type: "square",
+            },
+          ],
+        });
+      });
+    });
+
+    test("only requests types that have a client-side class registered", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#topic-footer-buttons .btn.create");
+      await simulateKeys(".d-editor-input", "abc #filter-known");
+
+      const searchRequest = pretender.handledRequests.findLast((r) =>
+        r.url.startsWith("/hashtags/search.json")
+      );
+      const order = new URL(
+        searchRequest.url,
+        "http://dummy"
+      ).searchParams.getAll("order[]");
+      assert.deepEqual(order, ["category", "tag"]);
+    });
+
+    test("does not crash when the server returns a type not registered on the client", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#topic-footer-buttons .btn.create");
+      await simulateKeys(".d-editor-input", "abc #unknown-type");
+
+      // The server-side handler above returns a channel result despite the
+      // client not registering a "channel" hashtag type class. The row should
+      // still render (without an icon) and the promise must not reject.
+      assert.dom(".hashtag-autocomplete__option").exists({ count: 2 });
+    });
+  }
+);

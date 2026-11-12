@@ -8,6 +8,7 @@ be:
   js:
     chat_integration:
       settings: "Налады"
+      more_providers: "Яшчэ"
       all_categories: "(Усе катэгорыі)"
       delete_channel: "Выдаліць"
       edit_channel: "Рэдагаваць"
@@ -80,3 +81,6 @@ be:
               label: Паказаць выдаленыя паведамленні...
             url:
               label: URL спасылка
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "Паведамленне"

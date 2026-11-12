@@ -43,6 +43,15 @@ describe Jobs::Chat::ChannelDelete do
       new_message: revision_message.message,
     )
 
+    5.times do |i|
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: messages.sample,
+        url: "//example.com/hotlinked-#{i}.png",
+        status: "downloaded",
+        upload: Fabricate(:upload, user: users.sample),
+      )
+    end
+
     Chat::Draft.create(chat_channel: chat_channel, user: users.sample, data: "wow some draft")
 
     Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user1)
@@ -66,6 +75,7 @@ describe Jobs::Chat::ChannelDelete do
           target_id: @message_ids,
           target_type: Chat::Message.polymorphic_name,
         ).count,
+      hotlinked_media: Chat::MessageHotlinkedMedia.where(chat_message_id: @message_ids).count,
       messages: Chat::Message.where(id: @message_ids).count,
       reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
     }
@@ -83,6 +93,7 @@ describe Jobs::Chat::ChannelDelete do
     expect(new_counts[:revisions]).to eq(initial_counts[:revisions] - 1)
     expect(new_counts[:mentions]).to eq(initial_counts[:mentions] - 1)
     expect(new_counts[:upload_references]).to eq(initial_counts[:upload_references] - 10)
+    expect(new_counts[:hotlinked_media]).to eq(initial_counts[:hotlinked_media] - 5)
     expect(new_counts[:messages]).to eq(initial_counts[:messages] - 20)
     expect(new_counts[:reactions]).to eq(initial_counts[:reactions] - 10)
   end

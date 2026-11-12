@@ -60,4 +60,28 @@ describe DiscourseAi::Inference::OpenAiEmbeddings do
 
     expect(result).to eq([0.0, 0.1])
   end
+
+  it "distinguishes OpenAI quota exhaustion from temporary rate limiting" do
+    url = "https://api.openai.com/v1/embeddings"
+    client = described_class.new(url, api_key, model, dimensions)
+
+    [
+      ["rate_limit_exceeded", :rate_limited, true],
+      ["insufficient_quota", :quota_exhausted, false],
+      ["credit_balance_exhausted", :quota_exhausted, false],
+    ].each do |code, category, retryable|
+      stub_request(:post, url).to_return(
+        status: 429,
+        body: { error: { type: code, code: code, message: "request failed" } }.to_json,
+      )
+
+      expect { client.perform!("hello") }.to raise_error(
+        DiscourseAi::Inference::EmbeddingInferenceError,
+      ) do |error|
+        expect([error.provider_error_code, error.category, error.retryable?]).to eq(
+          [code, category, retryable],
+        )
+      end
+    end
+  end
 end

@@ -5,26 +5,115 @@ class LlmModel < ActiveRecord::Base
   # has been promoted to pre-deploy
   self.ignored_columns = %w[enabled_chat_bot]
 
-  FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
+  BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
+  GOOGLE_VERTEX_AI_PROVIDER_NAME = "google_vertex_ai"
+  OPEN_AI_PROVIDER_NAME = "open_ai"
+  OPEN_AI_REASONING_MODES = %w[standard pro].freeze
+  # Interpolated into the Vertex AI hostname/path — must stay strict to avoid
+  # sending environment credentials to an attacker-controlled host.
+  GOOGLE_VERTEX_AI_REGION_FORMAT = /\A[a-z](?:[a-z0-9-]*[a-z0-9])?\z/
+  GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT = /\A[a-z][a-z0-9-]{4,28}[a-z0-9]\z/
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
-    "md" => "markdown",
-    "markdown" => "markdown",
+    "markdown" => "md",
+    "md" => "md",
     "htm" => "html",
     "text" => "txt",
   }.freeze
 
+  COST_COMPONENTS = {
+    input: {
+      tokens: :request_tokens,
+      cost: :input_cost,
+    },
+    output: {
+      tokens: :response_tokens,
+      cost: :output_cost,
+    },
+    cache_read: {
+      tokens: :cache_read_tokens,
+      cost: :cached_input_cost,
+    },
+    cache_write: {
+      tokens: :cache_write_tokens,
+      cost: :cache_write_cost,
+    },
+  }.freeze
+
+  def self.spending_component_sql(component, table)
+    info = COST_COMPONENTS.fetch(component)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
+  end
+
+  def self.spending_sql(table)
+    COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
+  end
+
+  def self.spending_dollars_sql(table)
+    "(#{spending_sql(table)}) / 1000000.0"
+  end
+
+  def self.estimated_or_calculated_spending_sql(table)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+  end
+
+  def estimated_cost_for_tokens(
+    request_tokens:,
+    response_tokens:,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0
+  )
+    return nil if !costs_configured?
+
+    [
+      [request_tokens, input_cost],
+      [response_tokens, output_cost],
+      [cache_read_tokens, cached_input_cost],
+      [cache_write_tokens, cache_write_cost],
+    ].sum(BigDecimal("0")) do |tokens, cost|
+      BigDecimal(tokens.to_i.to_s) * BigDecimal((cost || 0).to_s) / 1_000_000
+    end
+  end
+
+  def spending_for(record)
+    if record.respond_to?(:estimated_cost) && record.estimated_cost.present?
+      record.estimated_cost.to_d.round(6).to_f
+    else
+      estimated_cost_for_tokens(
+        request_tokens: record.request_tokens,
+        response_tokens: record.response_tokens,
+        cache_read_tokens: record.cache_read_tokens,
+        cache_write_tokens: record.cache_write_tokens,
+      )&.round(6)&.to_f
+    end
+  end
+
+  def costs_configured?
+    [input_cost, output_cost, cached_input_cost].any? { |cost| !cost.nil? } ||
+      cache_write_cost.to_f != 0
+  end
+
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
   has_many :llm_feature_credit_costs, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :ai_secret, optional: true
+  belongs_to :vision_llm_model, class_name: "LlmModel", optional: true
+  has_many :vision_dependents, class_name: "LlmModel", foreign_key: :vision_llm_model_id
+
+  attr_accessor :requested_vision_mode
+
+  before_update :preserve_legacy_user_identity, if: :will_save_change_to_user_id?
+  before_destroy :ensure_no_vision_dependents
+  before_destroy :preserve_legacy_user_identity
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
-  validates :url, presence: true, unless: -> { provider == BEDROCK_PROVIDER_NAME }
+  validates :url, presence: true, if: -> { llm_endpoint&.requires_configured_url? != false }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -38,11 +127,21 @@ class LlmModel < ActiveRecord::Base
             },
             allow_nil: true
   validate :required_provider_params
+  validate :user_association_is_legacy_only
+  validate :valid_vision_configuration
+  validate :vision_dependents_require_native_vision
+  validates :requested_vision_mode,
+            inclusion: {
+              in: %w[disabled delegated native],
+            },
+            allow_nil: true
+  validates :vision_llm_model_id, numericality: { only_integer: true }, allow_nil: true
   scope :in_use,
         -> do
           model_ids = DiscourseAi::Configuration::LlmEnumerator.global_usage.keys
           where(id: model_ids)
         end
+  scope :with_user, -> { where.not(user_id: nil) }
 
   def self.enabled_chat_bot_ids
     SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)
@@ -58,6 +157,7 @@ class LlmModel < ActiveRecord::Base
         access_key_id: :secret,
         role_arn: :text,
         region: :text,
+        inference_profile_arn: :text,
         enable_reasoning: :checkbox,
         adaptive_thinking: {
           type: :checkbox,
@@ -70,7 +170,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -89,6 +189,40 @@ class LlmModel < ActiveRecord::Base
           default: "tool_results",
         },
       },
+      aws_bedrock_converse: {
+        access_key_id: :secret,
+        role_arn: :text,
+        region: :text,
+        enable_reasoning: :checkbox,
+        adaptive_thinking: {
+          type: :checkbox,
+          depends_on: :enable_reasoning,
+        },
+        reasoning_tokens: {
+          type: :number,
+          depends_on: :enable_reasoning,
+          hidden_if: :adaptive_thinking,
+        },
+        effort: {
+          type: :enum,
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
+          default: "default",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: %i[enable_reasoning adaptive_thinking],
+        },
+        disable_top_p: {
+          type: :checkbox,
+          hidden_if: %i[enable_reasoning adaptive_thinking],
+        },
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "tool_results",
+        },
+        extra_model_fields: :text,
+      },
       anthropic: {
         enable_reasoning: :checkbox,
         adaptive_thinking: {
@@ -102,7 +236,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -126,16 +260,22 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+        },
+        reasoning_mode: {
+          type: :enum,
+          values: ["default", *OPEN_AI_REASONING_MODES],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
         },
         disable_temperature: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_top_p: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_streaming: :checkbox,
         service_tier: {
@@ -164,7 +304,53 @@ class LlmModel < ActiveRecord::Base
       mistral: {
         disable_native_tools: :checkbox,
       },
+      gemini_interactions: {
+        disable_native_tools: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :thinking_level,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
       google: {
+        disable_native_tools: :checkbox,
+        enable_thinking: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          depends_on: :enable_thinking,
+        },
+        thinking_tokens: {
+          type: :number,
+          depends_on: :enable_thinking,
+          hidden_if: :thinking_level,
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :enable_thinking,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
+      google_vertex_ai: {
+        project_id: :text,
+        region: :text,
         disable_native_tools: :checkbox,
         enable_thinking: :checkbox,
         thinking_level: {
@@ -188,8 +374,9 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
         },
         disable_temperature: {
           type: :checkbox,
@@ -213,11 +400,54 @@ class LlmModel < ActiveRecord::Base
       vllm: {
         disable_system_prompt: :checkbox,
         disable_native_tools: :checkbox,
-        enable_thinking: :checkbox,
+        reasoning_parser: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "deepseek_r1", name: "deepseek_r1" },
+            { id: "qwen3", name: "qwen3" },
+            { id: "deepseek_v3", name: "deepseek_v3" },
+            { id: "deepseek_v4", name: "deepseek_v4" },
+            { id: "gemma4", name: "gemma4" },
+            { id: "granite", name: "granite" },
+            { id: "glm45", name: "glm45" },
+            { id: "hunyuan_a13b", name: "hunyuan_a13b" },
+            { id: "cohere_command3", name: "cohere_command3" },
+            { id: "ernie45", name: "ernie45" },
+            { id: "holo2", name: "holo2" },
+            { id: "minimax_m2_append_think", name: "minimax_m2_append_think" },
+          ],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
+        },
+        thinking_override: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "on", name: "Force on" },
+            { id: "off", name: "Force off" },
+          ],
+          default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_override",
+        },
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "none", name: "None" },
+            { id: "low", name: "Low" },
+            { id: "medium", name: "Medium" },
+            { id: "high", name: "High" },
+          ],
           default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_effort",
+        },
+        thinking_token_budget: {
+          type: :number,
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_token_budget",
         },
         disable_temperature: {
           type: :checkbox,
@@ -258,67 +488,39 @@ class LlmModel < ActiveRecord::Base
     DiscourseAi::Completions::Llm.proxy(self)
   end
 
+  def native_vision?
+    vision_enabled?
+  end
+
+  def delegated_vision_configured?
+    !native_vision? && vision_llm_model_id.present?
+  end
+
+  def delegated_vision?
+    delegated_vision_configured? && vision_llm_model&.native_vision? &&
+      vision_llm_model.vision_llm_model_id.nil?
+  end
+
+  def vision_mode
+    return "native" if native_vision?
+    return "delegated" if delegated_vision_configured?
+
+    "disabled"
+  end
+
+  def agent_image_capable?
+    native_vision? || delegated_vision?
+  end
+
   def identifier
     "#{id}"
-  end
-
-  def toggle_companion_user
-    return if name == "fake" && Rails.env.production?
-
-    enable_check = SiteSetting.ai_bot_enabled && enabled_chat_bot?
-
-    if enable_check
-      if !user
-        next_id = DB.query_single(<<~SQL).first
-          SELECT min(id) - 1 FROM users
-        SQL
-
-        new_user =
-          User.new(
-            id: [FIRST_BOT_USER_ID, next_id].min,
-            email: "no_email_#{SecureRandom.hex}",
-            name: name.titleize,
-            username: UserNameSuggester.suggest(name),
-            active: true,
-            approved: true,
-            admin: true,
-            moderator: true,
-            trust_level: TrustLevel[4],
-          )
-        new_user.save!(validate: false)
-        self.update!(user: new_user)
-      else
-        user.active = true
-        user.save!(validate: false)
-      end
-    else
-      cleanup_companion_user
-    end
-  end
-
-  def cleanup_companion_user
-    return unless user
-
-    # will include deleted
-    has_posts = DB.query_single("SELECT 1 FROM posts WHERE user_id = #{user.id} LIMIT 1").present?
-
-    if has_posts
-      user.update!(active: false) if user.active
-    else
-      user.destroy!
-      self.update!(user: nil)
-    end
   end
 
   def tokenizer_class
     tokenizer.constantize
   end
 
-  def allowed_attachment_types
-    (self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES).map(&:downcase)
-  end
-
-  def allowed_attachment_types=(value)
+  def self.normalize_attachment_types(value)
     normalized =
       Array(value)
         .map { |v| v.to_s.downcase.strip }
@@ -326,7 +528,17 @@ class LlmModel < ActiveRecord::Base
         .reject(&:blank?)
         .uniq
     normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
-    self[:allowed_attachment_types] = normalized
+    normalized
+  end
+
+  def allowed_attachment_types
+    self.class.normalize_attachment_types(
+      self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES,
+    )
+  end
+
+  def allowed_attachment_types=(value)
+    self[:allowed_attachment_types] = self.class.normalize_attachment_types(value)
   end
 
   def lookup_custom_param(key)
@@ -396,6 +608,88 @@ class LlmModel < ActiveRecord::Base
 
   private
 
+  def preserve_legacy_user_identity
+    legacy_user_id = user_id.presence || user_id_in_database
+    return if legacy_user_id.blank? || !User.exists?(legacy_user_id)
+
+    field =
+      UserCustomField.find_or_initialize_by(
+        user_id: legacy_user_id,
+        name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+      )
+    field.value = "true"
+    field.save! if field.changed?
+  end
+
+  def user_association_is_legacy_only
+    return if !will_save_change_to_user_id?
+    return if user_id.nil?
+
+    errors.add(:user_id, I18n.t("discourse_ai.llm.user_association_is_legacy_only"))
+  end
+
+  def valid_vision_configuration
+    if requested_vision_mode == "delegated" && vision_llm_model_id.blank?
+      errors.add(:vision_llm_model_id, I18n.t("discourse_ai.llm_models.vision_model_required"))
+      return
+    end
+
+    if vision_enabled? && vision_llm_model_id.present?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.native_vision_cannot_delegate"))
+      return
+    end
+
+    return if vision_llm_model_id.blank?
+
+    target = vision_llm_model
+    if target.blank?
+      errors.add(:vision_llm_model_id, I18n.t("discourse_ai.llm_models.vision_model_not_found"))
+    elsif target == self
+      errors.add(
+        :vision_llm_model_id,
+        I18n.t("discourse_ai.llm_models.vision_model_cannot_be_self"),
+      )
+    elsif !target.native_vision? || target.vision_llm_model_id.present?
+      errors.add(
+        :vision_llm_model_id,
+        I18n.t("discourse_ai.llm_models.vision_model_must_be_native"),
+      )
+    end
+  end
+
+  def vision_dependents_require_native_vision
+    if new_record? ||
+         !will_save_change_to_vision_enabled? && !will_save_change_to_vision_llm_model_id?
+      return
+    end
+    return if vision_enabled? && vision_llm_model_id.nil?
+
+    dependent_names = vision_dependents.order(:display_name).pluck(:display_name)
+    return if dependent_names.empty?
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.llm_models.vision_model_has_dependents",
+        models: dependent_names.join(", "),
+      ),
+    )
+  end
+
+  def ensure_no_vision_dependents
+    dependent_names = vision_dependents.order(:display_name).pluck(:display_name)
+    return if dependent_names.empty?
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.llm_models.vision_model_has_dependents",
+        models: dependent_names.join(", "),
+      ),
+    )
+    throw :abort
+  end
+
   def param_active?(key)
     val = provider_params&.dig(key.to_s)
     return false if val.nil? || val == false || val == "false" || val == "default" || val == ""
@@ -404,6 +698,9 @@ class LlmModel < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
+
+    return if llm_endpoint&.supports_environment_credentials?
+
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
@@ -414,17 +711,52 @@ class LlmModel < ActiveRecord::Base
     errors.add(:base, I18n.t("discourse_ai.llm_models.secret_required"))
   end
 
+  def llm_endpoint
+    DiscourseAi::Completions::Endpoints::Base.endpoint_for(self)
+  rescue DiscourseAi::Completions::Llm::UNKNOWN_MODEL
+    nil
+  end
+
   def required_provider_params
-    return if provider != BEDROCK_PROVIDER_NAME
+    reasoning_mode = lookup_custom_param("reasoning_mode")
+    if provider == OPEN_AI_PROVIDER_NAME && reasoning_mode == "pro"
+      if !url.to_s.include?("/v1/responses")
+        errors.add(:base, I18n.t("discourse_ai.llm_models.reasoning_mode_requirements"))
+      end
+    elsif provider == BEDROCK_PROVIDER_NAME
+      if lookup_custom_param("region").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      end
 
-    # Region is always required
-    if lookup_custom_param("region").blank?
-      errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
-    end
+      if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
+      end
+    elsif provider == BEDROCK_CONVERSE_PROVIDER_NAME
+      if lookup_custom_param("region").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      end
+      # access_key_id and role_arn are optional — SDK can auto-resolve credentials
+    elsif provider == GOOGLE_VERTEX_AI_PROVIDER_NAME
+      region = lookup_custom_param("region")
+      project_id = lookup_custom_param("project_id")
 
-    # Either access_key_id or role_arn must be present
-    if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
-      errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
+      if region.blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      elsif !region.to_s.match?(GOOGLE_VERTEX_AI_REGION_FORMAT)
+        errors.add(:base, I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"))
+      end
+
+      if project_id.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+        )
+      elsif !project_id.to_s.match?(GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT)
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+        )
+      end
     end
   end
 end
@@ -453,8 +785,10 @@ end
 #  updated_at               :datetime         not null
 #  ai_secret_id             :bigint
 #  user_id                  :integer
+#  vision_llm_model_id      :bigint
 #
 # Indexes
 #
-#  index_llm_models_on_ai_secret_id  (ai_secret_id)
+#  index_llm_models_on_ai_secret_id         (ai_secret_id)
+#  index_llm_models_on_vision_llm_model_id  (vision_llm_model_id)
 #

@@ -2,7 +2,7 @@ import { trustHTML } from "@ember/template";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
-import UserMenuAssignNotificationsList from "../components/user-menu/assigns-list";
+import UserMenuAssignNotificationsList from "../components/user-menu/assigns-list.js";
 
 export default {
   name: "assign-user-menu",
@@ -70,7 +70,7 @@ export default {
         );
       }
 
-      if (api.registerUserMenuTab) {
+      if (currentUser?.can_assign_globally && api.registerUserMenuTab) {
         api.registerUserMenuTab((UserMenuTab) => {
           return class extends UserMenuTab {
             id = "assign-list";

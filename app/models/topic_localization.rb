@@ -30,14 +30,14 @@ end
 # Table name: topic_localizations
 #
 #  id                :bigint           not null, primary key
-#  topic_id          :integer          not null
+#  excerpt           :string
+#  fancy_title       :string           not null
 #  locale            :string(20)       not null
 #  title             :string           not null
-#  fancy_title       :string           not null
-#  localizer_user_id :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  excerpt           :string
+#  localizer_user_id :integer          not null
+#  topic_id          :integer          not null
 #
 # Indexes
 #

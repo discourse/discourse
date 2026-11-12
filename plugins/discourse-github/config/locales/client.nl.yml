@@ -11,6 +11,7 @@ nl:
         draft: "Concept"
         open: "Open"
         approved: "Goedgekeurd"
+        merged: "Samengevoegd"
         closed: "Gesloten"
   admin_js:
     admin:

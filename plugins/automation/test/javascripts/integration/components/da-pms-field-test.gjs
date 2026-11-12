@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
-module("Integration | Component | da-pms-field", function (hooks) {
+module("Integration | Component | DaPmsField", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

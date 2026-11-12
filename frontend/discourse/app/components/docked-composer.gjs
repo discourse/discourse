@@ -1,0 +1,502 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { destroy } from "@ember/destroyable";
+import { fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
+import { trackedArray } from "@ember/reactive/collections";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
+import { clipboardHelpers } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+
+// Reusable chat-style "docked" composer. There is deliberately no
+// markdown-preview toggle — users who want to see rendered output
+// switch to the rich editor via the toolbar's RTE toggle, which is
+// effectively a live preview. Skipping preview also avoids the
+// cook-on-change CPU cost on every keystroke.
+//
+// @onSubmit is required; all other args are optional. See the
+// styleguide entry (/styleguide → Organisms → Docked Composer) for
+// the live API surface.
+export default class DockedComposer extends Component {
+  @service capabilities;
+  @service currentUser;
+  @service keyValueStore;
+  @service mediaOptimizationWorker;
+  @service siteSettings;
+
+  @tracked dragOffset = 0;
+  @tracked reply = "";
+  @tracked uploads = trackedArray();
+
+  /** @type {HTMLElement | null} */
+  inputElement = null;
+
+  /** @type {import("discourse/lib/uppy/uppy-upload").default | null} */
+  uppyUpload = null;
+
+  /** @type {HTMLInputElement | null} */
+  fileInputEl = null;
+  #rootElement = null;
+
+  #handlePaste = (event) => {
+    if (!this.inputElement || document.activeElement !== this.inputElement) {
+      return;
+    }
+    const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
+      siteSettings: this.siteSettings,
+      canUpload: true,
+    });
+    if (!canUpload || canPasteHtml || types.includes("text/plain")) {
+      return;
+    }
+    if (event?.clipboardData?.files?.length) {
+      this.uppyUpload?.addFiles([...event.clipboardData.files], {
+        pasted: true,
+      });
+    }
+  };
+
+  #handleKeyDown = (event) => {
+    if (event.key !== "Enter" || event.isComposing) {
+      return;
+    }
+
+    const submitOnEnter =
+      this.args.submitOnEnter ??
+      this.currentUser?.user_option?.send_shortcut !== SEND_SHORTCUT_META_ENTER;
+
+    if (submitOnEnter) {
+      if (
+        !event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
+    } else {
+      if (event.metaKey || event.ctrlKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
+    }
+  };
+
+  get autoResize() {
+    return this.args.autoResize ?? false;
+  }
+
+  get resizable() {
+    return (this.args.resizable ?? false) && !this.autoResize;
+  }
+
+  get maxResizeOffset() {
+    return this.args.maxResizeOffset ?? null;
+  }
+
+  get resizeAriaMax() {
+    return this.maxResizeOffset ?? 400;
+  }
+
+  get show() {
+    return this.args.show ?? true;
+  }
+
+  get draftKey() {
+    return this.args.draftKey ?? "docked-composer-draft";
+  }
+
+  get uploaderId() {
+    return (
+      this.args.uploaderId ?? `docked-composer-file-uploader-${guidFor(this)}`
+    );
+  }
+
+  get uploadType() {
+    return this.args.uploadType ?? "composer";
+  }
+
+  get minLength() {
+    return this.args.minLength ?? 1;
+  }
+
+  // DEditor's composer-event bus (quote-reply insert, toolbar replace,
+  // etc.). Defaults on for real app use; tests can pass false to avoid
+  // app-event listener churn in rendering harnesses.
+  get composerEvents() {
+    return this.args.composerEvents ?? true;
+  }
+
+  get inProgressUploads() {
+    return this.uppyUpload?.inProgressUploads || [];
+  }
+
+  get canSubmit() {
+    if (this.args.isSubmitting || this.args.disabled) {
+      return false;
+    }
+    if (this.inProgressUploads.length > 0) {
+      return false;
+    }
+    return (
+      this.reply.trim().length >= this.minLength || this.uploads.length > 0
+    );
+  }
+
+  get submitDisabled() {
+    return !this.canSubmit;
+  }
+
+  get showUploadsContainer() {
+    return this.uploads?.length > 0 || this.inProgressUploads?.length > 0;
+  }
+
+  @action
+  setupEditor(textManipulation) {
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
+
+    this.inputElement =
+      textManipulation?.textarea ??
+      // Scope the fallback to this instance's root so multiple docked
+      // composers on the same page can't cross-wire.
+      this.#rootElement?.querySelector(".d-editor-input") ??
+      null;
+    if (this.inputElement) {
+      // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
+      this.inputElement.addEventListener("keydown", this.#handleKeyDown, true);
+      this.inputElement.addEventListener("paste", this.#handlePaste);
+      this.syncAutoResizeHeight();
+    }
+  }
+
+  @action
+  loadDraft() {
+    const saved = this.keyValueStore.get(this.draftKey);
+    if (saved) {
+      this.reply = saved;
+      this.syncAutoResizeHeight();
+    }
+  }
+
+  @action
+  persistDraft(value) {
+    if (value?.length) {
+      this.keyValueStore.set({ key: this.draftKey, value });
+    } else {
+      this.keyValueStore.remove(this.draftKey);
+    }
+  }
+
+  @action
+  onReplyChange(event) {
+    const value = event?.target?.value ?? "";
+    this.reply = value;
+    this.persistDraft(value);
+    this.syncAutoResizeHeight();
+  }
+
+  @action
+  updateMaxResizeOffset() {
+    this.#rootElement?.style.setProperty(
+      "--docked-composer-max-resize-offset",
+      `${this.maxResizeOffset ?? 400}px`
+    );
+  }
+
+  @action
+  setReply(value) {
+    this.reply = value ?? "";
+    this.persistDraft(this.reply);
+  }
+
+  @action
+  setupContainer(element) {
+    this.#rootElement = element;
+    this.updateMaxResizeOffset();
+    this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
+    this.loadDraft();
+
+    this.uppyUpload = new UppyUpload(this, {
+      id: this.uploaderId,
+      type: this.uploadType,
+      useMultipartUploadsIfAvailable: true,
+      uppyReady: () => {
+        if (this.siteSettings.composer_media_optimization_image_enabled) {
+          this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
+            optimizeFn: (data, opts) =>
+              this.mediaOptimizationWorker.optimizeImage(data, opts),
+            cancelFn: (fileId) => this.mediaOptimizationWorker.cancel(fileId),
+            runParallel: !this.capabilities.isMobileDevice,
+          });
+        }
+      },
+      uploadDone: (upload) => {
+        this.uploads.push(upload);
+      },
+    });
+
+    if (this.fileInputEl) {
+      this.uppyUpload.setup(this.fileInputEl);
+    }
+  }
+
+  @action
+  teardown() {
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
+    if (this.uppyUpload) {
+      destroy(this.uppyUpload);
+      this.uppyUpload = null;
+    }
+    this.#rootElement = null;
+  }
+
+  @action
+  registerFileInput(element) {
+    if (!element) {
+      return;
+    }
+    this.fileInputEl = element;
+    this.uppyUpload?.setup(element);
+  }
+
+  @action
+  openFileUpload() {
+    this.fileInputEl?.click();
+  }
+
+  @action
+  addToolbarButtons(toolbar) {
+    toolbar.addButton({
+      id: "docked-composer-upload",
+      group: "insertions",
+      icon: "upload",
+      title: this.args.uploadTitle ?? "composer.upload_title",
+      sendAction: () => this.openFileUpload(),
+    });
+
+    this.args.extraToolbarButtons?.(toolbar);
+  }
+
+  @action
+  removeUpload(upload) {
+    this.uploads = trackedArray(this.uploads.filter((u) => u !== upload));
+  }
+
+  @action
+  cancelUpload(upload) {
+    this.uppyUpload?.cancelSingleUpload({ fileId: upload.id });
+  }
+
+  @action
+  async submit() {
+    if (!this.canSubmit || !this.args.onSubmit) {
+      return;
+    }
+    try {
+      const result = await this.args.onSubmit({
+        raw: this.reply,
+        uploads: this.uploads,
+        inProgressUploadsCount: this.inProgressUploads.length,
+      });
+      // Falsy return → don't clear; consumer can short-circuit on
+      // validation failure without losing the user's input.
+      if (!result) {
+        return;
+      }
+      this.reply = "";
+      this.uploads = trackedArray();
+      this.persistDraft("");
+      this.syncAutoResizeHeight();
+      schedule("afterRender", () => this.inputElement?.focus());
+    } catch (error) {
+      // Consumers can opt into custom error handling; otherwise we
+      // fall back to the generic ajax-error popup for network failures.
+      if (this.args.onError) {
+        this.args.onError(error);
+      } else {
+        popupAjaxError(error);
+      }
+    }
+  }
+
+  @action
+  focus() {
+    this.inputElement?.focus();
+  }
+
+  @action
+  syncAutoResizeHeight() {
+    if (!this.autoResize || this.inputElement?.tagName !== "TEXTAREA") {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      if (!this.inputElement?.isConnected) {
+        return;
+      }
+
+      // CSS `field-sizing: content` handles modern browsers using the same
+      // mechanism as ExpandingTextArea. This fallback keeps older browsers
+      // usable without affecting the RTE, which naturally grows with content.
+      if (globalThis.CSS?.supports?.("field-sizing", "content")) {
+        return;
+      }
+
+      this.inputElement.style.height = "auto";
+      this.inputElement.style.height = `${this.inputElement.scrollHeight}px`;
+    });
+  }
+
+  @action
+  onResize(offset) {
+    this.dragOffset = offset;
+    this.#rootElement?.style.setProperty(
+      "--docked-composer-drag-offset",
+      `${offset}px`
+    );
+  }
+
+  <template>
+    {{#if this.show}}
+      {{#if @bodyClassName}}
+        {{bodyClass @bodyClassName}}
+      {{/if}}
+      <div
+        class={{dConcatClass
+          "docked-composer"
+          (if this.resizable "docked-composer--resizable")
+          (if this.autoResize "docked-composer--auto-resize")
+          @class
+        }}
+        ...attributes
+        {{didInsert this.setupContainer}}
+        {{didUpdate this.updateMaxResizeOffset this.maxResizeOffset}}
+        {{willDestroy this.teardown}}
+      >
+        {{#if this.resizable}}
+          <DResizeSeparator
+            class="docked-composer__resize-handle"
+            @axis="vertical"
+            @label={{i18n "composer.resize"}}
+            @max={{this.resizeAriaMax}}
+            @min={{0}}
+            @onResize={{this.onResize}}
+            @side="end"
+            @value={{this.dragOffset}}
+          />
+        {{/if}}
+        {{#if (has-block "header")}}
+          <div class="docked-composer__header">
+            {{yield to="header"}}
+          </div>
+        {{/if}}
+        <div class="docked-composer__inner">
+          <div class="docked-composer__editor">
+            <DEditor
+              @categoryId={{@categoryId}}
+              @change={{this.onReplyChange}}
+              @composerEvents={{this.composerEvents}}
+              @extraButtons={{this.addToolbarButtons}}
+              @onSetup={{this.setupEditor}}
+              @placeholder={{@placeholder}}
+              @processPreview={{false}}
+              @topicId={{@topicId}}
+              @value={{this.reply}}
+            >
+              {{#if (has-block "submit")}}
+                {{yield
+                  (hash
+                    submit=this.submit
+                    disabled=this.submitDisabled
+                    isSubmitting=@isSubmitting
+                  )
+                  to="submit"
+                }}
+              {{else}}
+                <DButton
+                  class="docked-composer__submit-btn"
+                  @action={{this.submit}}
+                  @disabled={{this.submitDisabled}}
+                  @icon="reply"
+                  @isLoading={{@isSubmitting}}
+                  @title={{@submitTitle}}
+                />
+              {{/if}}
+            </DEditor>
+          </div>
+
+          <input
+            class="hidden-upload-field"
+            id={{this.uploaderId}}
+            multiple="multiple"
+            type="file"
+            {{didInsert this.registerFileInput}}
+          />
+        </div>
+
+        {{#if this.showUploadsContainer}}
+          <div class="docked-composer__uploads">
+            {{#each this.uploads as |upload|}}
+              <div class="docked-composer__upload">
+                <span class="docked-composer__upload-filename">
+                  {{upload.original_filename}}
+                </span>
+                <DButton
+                  class="btn-transparent docked-composer__upload-remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
+                />
+              </div>
+            {{/each}}
+            {{#each this.inProgressUploads as |upload|}}
+              <div
+                class="docked-composer__upload docked-composer__upload--in-progress"
+              >
+                <span class="docked-composer__upload-filename">
+                  {{upload.fileName}}
+                </span>
+                <span class="docked-composer__upload-progress">
+                  {{upload.progress}}%
+                </span>
+                <DButton
+                  class="btn-flat docked-composer__upload-cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
+                />
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{yield}}
+      </div>
+    {{/if}}
+  </template>
+}

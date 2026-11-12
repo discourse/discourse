@@ -3,11 +3,12 @@
 class RouteMatcher
   PATH_PARAMETERS = "_DISCOURSE_REQUEST_PATH_PARAMETERS"
 
-  attr_reader :actions, :params, :methods, :aliases, :formats, :allowed_param_values
+  attr_reader :actions, :params, :path_params, :methods, :aliases, :formats, :allowed_param_values
 
   def initialize(
     actions: nil,
     params: nil,
+    path_params: nil,
     methods: nil,
     formats: nil,
     aliases: nil,
@@ -15,6 +16,7 @@ class RouteMatcher
   )
     @actions = Array(actions) if actions
     @params = Array(params) if params
+    @path_params = Array(path_params) if path_params
     @methods = Array(methods) if methods
     @formats = Array(formats) if formats
     @aliases = aliases
@@ -26,6 +28,7 @@ class RouteMatcher
     RouteMatcher.new(
       actions: actions,
       params: params,
+      path_params: path_params,
       methods: methods,
       formats: formats,
       aliases: aliases,
@@ -51,21 +54,28 @@ class RouteMatcher
     # logster is not a rails route, special handling
     return true if actions.include?(Logster::Web) && request.fullpath =~ %r{\A/logs/.*\.json\z}
 
-    path_params = path_params_from_request(request)
-    actions.include? "#{path_params[:controller]}##{path_params[:action]}"
+    recognized_params = path_params_from_request(request)
+    actions.include? "#{recognized_params[:controller]}##{recognized_params[:action]}"
   end
 
   def params_allowed?(request)
-    return true if params.nil? || allowed_param_values.blank? # params are unrestricted
+    return true if allowed_param_values.blank?
+
+    ordinary_params = Array(params).map(&:to_sym) - Array(path_params).map(&:to_sym)
+    ordinary_params_allowed?(request, ordinary_params) && path_params_allowed?(request)
+  end
+
+  def ordinary_params_allowed?(request, ordinary_params)
+    return true if ordinary_params.empty?
 
     requested_params = request.parameters
 
-    params.all? do |param|
-      param_alias = aliases&.[](param)
+    ordinary_params.all? do |param|
+      param_alias = param_alias_for(param)
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
-      alias_value = requested_params[param_alias.to_s]
+      alias_value = requested_params[param_alias.to_s] if param_alias
 
       return false if value.present? && alias_value.present?
 
@@ -76,9 +86,72 @@ class RouteMatcher
     end
   end
 
+  def path_params_allowed?(request)
+    return true if path_params.nil?
+
+    restricted_params =
+      path_params.select { |param| [allowed_param_values.fetch(param.to_s, [])].flatten.present? }
+    return true if restricted_params.empty?
+
+    return false if path_selector_in_non_path_params?(request)
+
+    requested_params = path_params_from_request(request)
+
+    restricted_params.all? do |param|
+      allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
+
+      param_alias = param_alias_for(param)
+      value_present, value = path_parameter(requested_params, param)
+      alias_present, alias_value = path_parameter(requested_params, param_alias)
+      alias_value = extract_category_id(alias_value) if param_alias == :category_slug_path_with_id
+
+      next false if value_present && alias_present
+      next false unless value_present || alias_present
+
+      requested_value = value_present ? value : alias_value
+      scalar_path_value?(requested_value) && allowed_values.include?(requested_value)
+    end
+  end
+
+  # Record selection must remain consistent with the restricted path, including
+  # controllers that accept alternative selectors.
+  def path_selector_in_non_path_params?(request)
+    selector_keys =
+      path_params.flat_map { |param| [param.to_s, param_alias_for(param)&.to_s] }.compact.uniq
+
+    non_path_params = request.query_parameters.merge(request.request_parameters)
+    selector_keys.any? { |key| non_path_params.key?(key) }
+  end
+
+  def param_alias_for(param)
+    aliases&.[](param) || aliases&.[](param.to_s) || aliases&.[](param.to_sym)
+  end
+
+  def path_parameter(requested_params, param)
+    return false, nil if param.nil?
+
+    string_key = param.to_s
+    if requested_params.key?(string_key)
+      value = requested_params[string_key]
+      return true, value unless value.nil?
+    end
+
+    symbol_key = param.to_sym
+    if requested_params.key?(symbol_key)
+      value = requested_params[symbol_key]
+      return true, value unless value.nil?
+    end
+    [false, nil]
+  end
+
+  def scalar_path_value?(value)
+    value.is_a?(String) || value.is_a?(Symbol) || value.is_a?(Numeric) || value == true ||
+      value == false
+  end
+
   def extract_category_id(category_slug_with_id)
-    parts = category_slug_with_id.split("/")
-    !parts.empty? && parts.last =~ /\A\d+\Z/ ? parts.pop : nil
+    parts = category_slug_with_id&.split("/")
+    parts.present? && parts.last.match?(/\A\d+\Z/) ? parts.pop : nil
   end
 
   def method_allowed?(request)
@@ -94,18 +167,12 @@ class RouteMatcher
   end
 
   def path_params_from_request(request)
-    if request.env[ActionDispatch::Http::Parameters::PARAMETERS_KEY].nil?
-      # We need to manually recognize the path when Rails hasn't done that yet. That can happen when
-      # the matcher gets called in a Middleware before the controller did its work.
-      # We store the result of `recognize_path` in a custom env key, so that we don't change
-      # some Rails behavior by accident.
-      request.env[PATH_PARAMETERS] ||= begin
-        Rails.application.routes.recognize_path(request.path_info)
-      rescue ActionController::RoutingError
-        {}
-      end
-    end
+    return request.path_parameters if request.path_parameters.present?
 
-    request.path_parameters.presence || request.env[PATH_PARAMETERS] || {}
+    request.env[PATH_PARAMETERS] ||= begin
+      Rails.application.routes.recognize_path(request.path_info, method: request.request_method)
+    rescue ActionController::RoutingError
+      {}
+    end
   end
 end

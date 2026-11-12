@@ -2,9 +2,9 @@ import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 
 export default <template>
   <AdminAreaSettings
-    @area="users"
-    @path="/admin/users/settings"
-    @filter={{@controller.filter}}
     @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+    @area="users"
+    @filter={{@controller.filter}}
+    @path="/admin/users/settings"
   />
 </template>

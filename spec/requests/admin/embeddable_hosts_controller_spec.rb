@@ -22,6 +22,22 @@ RSpec.describe Admin::EmbeddableHostsController do
         ).to eq(true)
       end
 
+      it "rejects invalid path allowlists" do
+        post "/admin/embeddable_hosts.json",
+             params: {
+               embeddable_host: {
+                 host: "example.com",
+                 allowed_paths: "[invalid",
+               },
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          "#{EmbeddableHost.human_attribute_name(:allowed_paths)} #{I18n.t("errors.messages.invalid")}",
+        )
+        expect(EmbeddableHost.where(host: "example.com")).not_to exist
+      end
+
       it "creates an embeddable host with associated tags" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)

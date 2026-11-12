@@ -8,7 +8,7 @@ import selectKit, {
 } from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | select-kit/notifications-button",
+  "Integration | Component | SelectKit | NotificationsButton",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -23,11 +23,11 @@ module(
       await render(
         <template>
           <NotificationsButton
-            @value={{this.value}}
             @options={{hash
               i18nPrefix=this.i18nPrefix
               i18nPostfix=this.i18nPostfix
             }}
+            @value={{this.value}}
           />
         </template>
       );

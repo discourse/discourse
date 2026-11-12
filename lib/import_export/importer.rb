@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.join(Rails.root, "script", "import_scripts", "base.rb")
+require Rails.root.join("script/import_scripts/base.rb").to_s
 
 module ImportExport
   class Importer < ImportScripts::Base
@@ -62,14 +62,13 @@ module ImportExport
       @groups.each do |group_data|
         g = group_data.dup
         user_ids = g.delete(:user_ids)
-        external_id = g.delete(:id)
+        g.delete(:id) # external_id
         new_group = Group.find_by_name(g[:name]) || Group.create!(g)
+
         user_ids.each do |external_user_id|
-          begin
-            new_group.add(User.find(new_user_id(external_user_id)))
-          rescue StandardError
-            ActiveRecord::RecordNotUnique
-          end
+          new_group.add(User.find(new_user_id(external_user_id)))
+        rescue StandardError
+          ActiveRecord::RecordNotUnique
         end
       end
 
@@ -102,32 +101,29 @@ module ImportExport
       @categories.sort_by! { |c| levels[c[:id]] || 0 }
 
       @categories.each do |cat_attrs|
-        begin
-          id = cat_attrs.delete(:id)
-          permissions = cat_attrs.delete(:permissions_params)
+        id = cat_attrs.delete(:id)
+        permissions = cat_attrs.delete(:permissions_params)
 
-          category = Category.new(cat_attrs)
-          category.parent_category_id =
-            new_category_id(cat_attrs[:parent_category_id]) if cat_attrs[
-            :parent_category_id
-          ].present?
-          category.user_id = new_user_id(cat_attrs[:user_id])
-          import_id = "#{id}#{import_source}"
-          category.custom_fields["import_id"] = import_id
-          category.permissions = permissions
-          category.save!
-          existing_categories << { category_id: category.id, value: import_id }
+        category = Category.new(cat_attrs)
+        category.parent_category_id = new_category_id(cat_attrs[:parent_category_id]) if cat_attrs[
+          :parent_category_id
+        ].present?
+        category.user_id = new_user_id(cat_attrs[:user_id])
+        import_id = "#{id}#{import_source}"
+        category.custom_fields["import_id"] = import_id
+        category.permissions = permissions
+        category.save!
+        existing_categories << { category_id: category.id, value: import_id }
 
-          if cat_attrs[:description].present?
-            post = category.topic.ordered_posts.first
-            post.raw = cat_attrs[:description]
-            post.skip_validation = true
-            post.save!
-            post.rebake!
-          end
-        rescue => e
-          puts "Failed to import category (ID = #{id}, name = #{cat_attrs[:name]}): #{e.message}"
+        if cat_attrs[:description].present?
+          post = category.topic.ordered_posts.first
+          post.raw = cat_attrs[:description]
+          post.skip_validation = true
+          post.save!
+          post.rebake!
         end
+      rescue => e
+        puts "Failed to import category (ID = #{id}, name = #{cat_attrs[:name]}): #{e.message}"
       end
 
       self

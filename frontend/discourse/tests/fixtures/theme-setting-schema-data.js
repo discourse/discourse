@@ -1,10 +1,10 @@
-import ThemeSettings from "admin/models/theme-settings";
-import SiteSetting from "admin/models/site-setting";
-export const SCHEMA_MODES = {
-  THEME: "theme",
-  SITE_SETTING: "SITE_SETTING",
-};
-export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
+import ThemeSettings from "discourse/admin/models/theme-settings";
+
+export function objectsSetting(attrs) {
+  return ThemeSettings.create({ setting: "objects_setting", ...attrs });
+}
+
+export default function schemaAndData(version = 1) {
   let schema, data;
 
   if (version === 1) {
@@ -171,40 +171,17 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   } else if (version === 3) {
     schema = {
       name: "something",
-      identifier: "name",
       properties: {
-        name: {
-          type: "string",
-        },
-        integer_field: {
-          type: "integer",
-        },
-        float_field: {
-          type: "float",
-        },
         boolean_field: {
           type: "boolean",
         },
-        category_field: {
-          type: "categories",
-        },
-        group_field: {
-          type: "groups",
-        },
-        tags_field: {
-          type: "tags",
-        }
       },
     };
     data = [
       {
-        name: "lamb",
-        integer_field: 92,
         boolean_field: true,
       },
       {
-        name: "cow",
-        integer_field: 820,
         boolean_field: false,
       },
     ];
@@ -235,17 +212,5 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
     throw new Error("unknown fixture version");
   }
 
-  if (mode === SCHEMA_MODES.SITE_SETTING) {
-    return SiteSetting.create({
-      schema: schema,
-      value: data,
-      setting: "objects_setting"
-    })
-  }
-
-  return ThemeSettings.create({
-    objects_schema: schema,
-    value: data,
-    setting: "objects_setting"
-  });
+  return objectsSetting({ objects_schema: schema, value: data });
 }

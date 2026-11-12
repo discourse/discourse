@@ -4,7 +4,7 @@ module PageObjects
   module Modals
     class EditTopicTimer < Base
       def select_timer_type(type)
-        timer_type_selector = PageObjects::Components::DSelect.new(".timer-type")
+        timer_type_selector = PageObjects::Components::DNativeSelect.new(".timer-type")
         timer_type_selector.select(type)
       end
 

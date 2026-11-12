@@ -16,6 +16,8 @@ tr_TR:
       group_not_found: "Politika için grup bulunamadı"
       no_policy: "Gönderi için politika yok"
       staff_only: "Politikalar yalnızca personel gönderileri için geçerli olabilir"
+      policy_group_inaccessible: "Bu politika şu anda kabul edilememektedir. Lütfen site yöneticisiyle iletişime geçin."
+      no_policy_permission: "Bu gönderideki kuralları değiştirme izniniz yok."
     error:
       no_permission: "Yetkilendirilmemiş"
   reports:

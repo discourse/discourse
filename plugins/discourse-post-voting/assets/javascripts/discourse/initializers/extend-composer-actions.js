@@ -1,5 +1,3 @@
-/* eslint-disable ember/no-observers */
-import { observer } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { CREATE_TOPIC } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
@@ -43,24 +41,17 @@ export default {
         },
       });
 
-      api.modifyClass("component:composer-actions", {
-        pluginId: "discourse-post-voting",
+      api.registerValueTransformer(
+        "composer-actions-content",
+        ({ value, context }) => {
+          const { action, composerModel } = context;
 
-        togglePostVotingSelected(options, model) {
-          model.toggleProperty("createAsPostVoting");
-          model.notifyPropertyChange("replyOptions");
-          model.notifyPropertyChange("action");
-        },
-      });
-
-      api.modifySelectKit("composer-actions").appendContent((options) => {
-        if (options.action === CREATE_TOPIC) {
-          if (
-            options.composerModel.createAsPostVoting &&
-            !options.composerModel.onlyPostVotingInThisCategory
-          ) {
-            return [
-              {
+          if (action === CREATE_TOPIC) {
+            if (
+              composerModel.createAsPostVoting &&
+              !composerModel.onlyPostVotingInThisCategory
+            ) {
+              value.push({
                 name: i18n(
                   "composer.composer_actions.remove_as_post_voting.label"
                 ),
@@ -69,13 +60,9 @@ export default {
                 ),
                 icon: "plus",
                 id: "togglePostVoting",
-              },
-            ];
-          } else if (options.composerModel.onlyPostVotingInThisCategory) {
-            return [];
-          } else {
-            return [
-              {
+              });
+            } else if (!composerModel.onlyPostVotingInThisCategory) {
+              value.push({
                 name: i18n(
                   "composer.composer_actions.create_as_post_voting.label"
                 ),
@@ -84,41 +71,53 @@ export default {
                 ),
                 icon: "plus",
                 id: "togglePostVoting",
-              },
-            ];
+              });
+            }
           }
-        } else {
-          return [];
+
+          return value;
         }
-      });
+      );
 
-      api.modifyClass("model:composer", {
-        pluginId: "discourse-post-voting",
-
-        categoryCreateAsPostVotingDefault: observer("categoryId", function () {
-          const createAsPostVoting =
-            this.category?.create_as_post_voting_default;
-
-          const onlyPostVotingInThisCategory =
-            this.category?.only_post_voting_in_this_category;
-
-          if (this.creatingTopic && onlyPostVotingInThisCategory) {
-            this.set("createAsPostVoting", true);
-            this.set(
-              "onlyPostVotingInThisCategory",
-              onlyPostVotingInThisCategory
-            );
-            this.notifyPropertyChange("replyOptions");
-            this.notifyPropertyChange("action");
-          } else if (
-            this.creatingTopic &&
-            createAsPostVoting !== this.createAsPostVoting
-          ) {
-            this.set("createAsPostVoting", createAsPostVoting);
-            this.notifyPropertyChange("replyOptions");
-            this.notifyPropertyChange("action");
+      api.registerBehaviorTransformer(
+        "composer-actions-on-select",
+        ({ context, next }) => {
+          if (context.actionId === "togglePostVoting") {
+            context.model.toggleProperty("createAsPostVoting");
+            context.model.notifyPropertyChange("replyOptions");
+            context.model.notifyPropertyChange("action");
+          } else {
+            next();
           }
-        }),
+        }
+      );
+
+      // Purely derived from the category.
+      api.addModelGetter(
+        "composer",
+        "onlyPostVotingInThisCategory",
+        function () {
+          return (
+            this.creatingTopic &&
+            !!this.category?.only_post_voting_in_this_category
+          );
+        }
+      );
+
+      // Defaults from the category (forced on when it's post-voting-only),
+      // resets on category change, and is user-toggleable until then.
+      api.addModelField("composer", "createAsPostVoting", {
+        resettable: true,
+        defaultValue() {
+          if (!this.creatingTopic) {
+            return false;
+          }
+
+          return (
+            this.onlyPostVotingInThisCategory ||
+            !!this.category?.create_as_post_voting_default
+          );
+        },
       });
     });
   },

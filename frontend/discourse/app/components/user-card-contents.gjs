@@ -2,8 +2,8 @@
 import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
@@ -14,21 +14,13 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
-import HtmlWithLinks from "discourse/components/html-with-links";
+import UserStatusModal from "discourse/components/modal/user-status";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserBadge from "discourse/components/user-badge";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
-import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -36,6 +28,14 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
+import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @classNames("user-card")
@@ -49,46 +49,122 @@ import { i18n } from "discourse-i18n";
 )
 @attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase {
+  @service modal;
+  @service userStatus;
+
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
 
-  @setting("allow_profile_backgrounds") allowBackgrounds;
-  @setting("enable_badges") showBadges;
-  @setting("display_local_time_in_user_card") showUserLocalTime;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-
-  @alias("topic.postStream") postStream;
-
-  @gte("topicPostCount", 2) enoughPostsForFiltering;
-
-  @and("viewingTopic", "postStream.hasNoFilters", "enoughPostsForFiltering")
-  showFilter;
-
-  @gt("postStream.userFilters.length", 0) hasUserFilters;
-  @gt("moreBadgesCount", 0) showMoreBadges;
-  @and("viewingAdmin", "showName", "user.canBeDeleted") showDelete;
-  @not("user.isBasic") linkWebsite;
-  @or("user.suspend_reason", "user.silence_reason") isRestricted;
-  @or("isRestricted", "user.bio_excerpt") isRestrictedOrHasBio;
-  @and("user.staged", "canCheckEmails") showCheckEmail;
-
+  /** @type {import("discourse/models/user").default | null} */
   user = null;
 
   // If inside a topic
+  /** @type {number | null | undefined} */
   topicPostCount = null;
 
-  @and(
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("siteSettings.allow_profile_backgrounds")
+  get allowBackgrounds() {
+    return this.siteSettings.allow_profile_backgrounds;
+  }
+
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
+
+  @computed("siteSettings.display_local_time_in_user_card")
+  get showUserLocalTime() {
+    return this.siteSettings.display_local_time_in_user_card;
+  }
+
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
+
+  @computed("topicPostCount")
+  get enoughPostsForFiltering() {
+    return this.topicPostCount >= 2;
+  }
+
+  @computed(
+    "viewingTopic",
+    "postStream.hasNoFilters",
+    "enoughPostsForFiltering"
+  )
+  get showFilter() {
+    return (
+      this.viewingTopic &&
+      this.postStream?.hasNoFilters &&
+      this.enoughPostsForFiltering
+    );
+  }
+
+  @computed("postStream.userFilters.length")
+  get hasUserFilters() {
+    return this.postStream?.userFilters?.length > 0;
+  }
+
+  @computed("moreBadgesCount")
+  get showMoreBadges() {
+    return this.moreBadgesCount > 0;
+  }
+
+  @computed("viewingAdmin", "showName", "user.canBeDeleted")
+  get showDelete() {
+    return this.viewingAdmin && this.showName && this.user?.canBeDeleted;
+  }
+
+  @computed("user.isBasic")
+  get linkWebsite() {
+    return !this.user?.isBasic;
+  }
+
+  @computed("user.suspend_reason", "user.silence_reason")
+  get isRestricted() {
+    return this.user?.suspend_reason || this.user?.silence_reason;
+  }
+
+  @computed("isRestricted", "user.bio_excerpt")
+  get isRestrictedOrHasBio() {
+    return this.isRestricted || this.user?.bio_excerpt;
+  }
+
+  @computed("user.staged", "canCheckEmails")
+  get showCheckEmail() {
+    return this.user?.staged && this.canCheckEmails;
+  }
+
+  @computed(
     "user.featured_topic",
     "siteSettings.allow_featured_topic_on_user_profiles"
   )
-  showFeaturedTopic;
+  get showFeaturedTopic() {
+    return (
+      this.user?.featured_topic &&
+      this.siteSettings?.allow_featured_topic_on_user_profiles
+    );
+  }
 
-  @computed("user.name", "user.username")
+  @computed("siteSettings.enable_names", "user.name", "user.username")
   get showName() {
-    return this.user.name !== this.user.username;
+    return (
+      this.siteSettings.enable_names &&
+      this.user.name &&
+      this.user.name !== this.user.username
+    );
   }
 
   @computed("user.id", "currentUser.id")
@@ -118,11 +194,6 @@ export default class UserCardContents extends CardContentsBase {
     return this.user.location || this.user.website_name || this.userTimezone;
   }
 
-  @computed("user.status")
-  get hasStatus() {
-    return this.siteSettings.enable_user_status && this.user.status;
-  }
-
   @computed("user.status.emoji")
   get userStatusEmoji() {
     return emojiUnescape(escapeExpression(`:${this.user?.status?.emoji}:`));
@@ -138,9 +209,9 @@ export default class UserCardContents extends CardContentsBase {
     return this.user?.trust_level === 0 ? "new-user" : "";
   }
 
-  @computed("user.name")
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.user?.name);
+    return this.showName && prioritizeNameInUx(this.user.name);
   }
 
   @computed("user")
@@ -220,6 +291,16 @@ export default class UserCardContents extends CardContentsBase {
     }
   }
 
+  @computed("user.primary_group_name")
+  get primaryGroup() {
+    return `group-${this.user?.primary_group_name}`;
+  }
+
+  @computed("user.profile_hidden", "user.inactive")
+  get contentHidden() {
+    return this.user?.profile_hidden || this.user?.inactive;
+  }
+
   @observes("user.card_background_upload_url")
   addBackground() {
     if (!this.allowBackgrounds) {
@@ -233,65 +314,6 @@ export default class UserCardContents extends CardContentsBase {
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     this.element.style.backgroundImage = bg;
-  }
-
-  @computed("user.primary_group_name")
-  get primaryGroup() {
-    return `group-${this.user?.primary_group_name}`;
-  }
-
-  @computed("user.profile_hidden", "user.inactive")
-  get contentHidden() {
-    return this.user?.profile_hidden || this.user?.inactive;
-  }
-
-  @onEvent("didInsertElement")
-  _inserted() {
-    this.appEvents.on("dom:clean", this, this.cleanUp);
-  }
-
-  @onEvent("didDestroyElement")
-  _destroyed() {
-    this.appEvents.off("dom:clean", this, this.cleanUp);
-  }
-
-  async _showCallback(username) {
-    this.setProperties({ visible: true, loading: true });
-
-    const args = {
-      forCard: true,
-      include_post_count_for: this.get("topic.id"),
-    };
-
-    try {
-      const user = await User.findByUsername(username, args);
-
-      if (user.topic_post_count) {
-        this.set(
-          "topicPostCount",
-          user.topic_post_count[args.include_post_count_for]
-        );
-      }
-      this.setProperties({ user });
-      this.user.statusManager.trackStatus();
-
-      return user;
-    } catch {
-      this._close();
-    } finally {
-      this.set("loading", null);
-    }
-  }
-
-  _close() {
-    this.user?.statusManager.stopTrackingStatus();
-
-    this.setProperties({
-      user: null,
-      topicPostCount: null,
-    });
-
-    super._close(...arguments);
   }
 
   cleanUp() {
@@ -351,6 +373,72 @@ export default class UserCardContents extends CardContentsBase {
     user.checkEmail();
   }
 
+  @action
+  editUserStatus() {
+    const user = this.user;
+    this._close();
+
+    this.modal.show(UserStatusModal, {
+      model: {
+        user,
+        status: this.currentUser.status,
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
+        deleteAction: () => this.userStatus.clear(),
+      },
+    });
+  }
+
+  @onEvent("didInsertElement")
+  _inserted() {
+    this.appEvents.on("dom:clean", this, this.cleanUp);
+  }
+
+  @onEvent("didDestroyElement")
+  _destroyed() {
+    this.appEvents.off("dom:clean", this, this.cleanUp);
+  }
+
+  async _showCallback(username) {
+    this.setProperties({ visible: true, loading: true });
+
+    const args = {
+      forCard: true,
+      include_post_count_for: this.get("topic.id"),
+    };
+
+    try {
+      const user = await User.findByUsername(username, args);
+
+      if (user.topic_post_count) {
+        this.set(
+          "topicPostCount",
+          user.topic_post_count[args.include_post_count_for]
+        );
+      }
+      this.setProperties({ user });
+      this.user.statusManager.trackStatus();
+
+      return user;
+    } catch {
+      this._close();
+    } finally {
+      this.set("loading", null);
+    }
+  }
+
+  _close() {
+    this.user?.statusManager.stopTrackingStatus();
+
+    this.setProperties({
+      user: null,
+      topicPostCount: null,
+    });
+
+    super._close(...arguments);
+  }
+
   <template>
     {{#if this.visible}}
       <PluginOutlet
@@ -390,38 +478,80 @@ export default class UserCardContents extends CardContentsBase {
                 handleShowUser=this.handleShowUser
               }}
             >
-              <div class="user-card-avatar" aria-hidden="true">
-                {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{boundAvatar
-                      this.user
-                      "huge"
-                    }}</span>
-                {{else}}
-                  <a
-                    href={{this.avatarUrl}}
-                    class="card-huge-avatar"
-                    tabindex="-1"
-                  >
-                    {{boundAvatar this.user "huge"}}
-                    {{#if this.isOwnCard}}
-                      <span class="own-avatar-pencil">
-                        <span class="own-avatar-pencil--icon">
-                          {{icon "pencil"}}
+              <div class="user-card-avatar-wrapper">
+                <div class="user-card-avatar">
+                  {{#if this.contentHidden}}
+                    <span
+                      aria-hidden="true"
+                      class="card-huge-avatar"
+                    >{{dBoundAvatar this.user "huge"}}</span>
+                  {{else}}
+                    <a
+                      aria-hidden="true"
+                      class="card-huge-avatar"
+                      href={{this.avatarUrl}}
+                      tabindex="-1"
+                    >
+                      {{dBoundAvatar this.user "huge"}}
+                      {{#if this.isOwnCard}}
+                        <span class="own-avatar-pencil">
+                          <span class="own-avatar-pencil--icon">
+                            {{dIcon "pencil"}}
+                          </span>
                         </span>
-                      </span>
-                    {{/if}}
-                  </a>
-                {{/if}}
+                      {{/if}}
+                    </a>
+                  {{/if}}
 
-                <UserAvatarFlair @user={{this.user}} />
+                  <DUserAvatarFlair @user={{this.user}} />
 
-                <div>
-                  <PluginOutlet
-                    @name="user-card-avatar-flair"
-                    @connectorTagName="div"
-                    @outletArgs={{lazyHash user=this.user}}
-                  />
+                  <div>
+                    <PluginOutlet
+                      @connectorTagName="div"
+                      @name="user-card-avatar-flair"
+                      @outletArgs={{lazyHash user=this.user}}
+                    />
+                  </div>
                 </div>
+
+                {{#if this.siteSettings.enable_user_status}}
+                  {{#if this.user.status}}
+                    {{#if this.isOwnCard}}
+                      <button
+                        class="user-status --editable"
+                        title={{i18n "user_status.edit_status"}}
+                        type="button"
+                        {{on "click" this.editUserStatus}}
+                      >
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </button>
+                    {{else}}
+                      <div class="user-status">
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </div>
+                    {{/if}}
+                  {{else if this.isOwnCard}}
+                    <button
+                      class="user-status --empty"
+                      title={{i18n "user_status.set_custom_status"}}
+                      type="button"
+                      {{on "click" this.editUserStatus}}
+                    >
+                      {{dIcon "circle-plus"}}
+                      <span class="user-status__description">
+                        {{i18n "user_status.what_are_you_doing"}}
+                      </span>
+                    </button>
+                  {{/if}}
+                {{/if}}
               </div>
               <div class="names">
                 <div
@@ -440,13 +570,13 @@ export default class UserCardContents extends CardContentsBase {
                     </span>
                   {{else}}
                     <a
-                      {{on "click" this.handleShowUser}}
-                      href={{this.user.path}}
-                      class="user-profile-link"
                       aria-label={{i18n
                         "user.profile_link"
                         username=this.user.username
                       }}
+                      class="user-profile-link"
+                      href={{this.user.path}}
+                      {{on "click" this.handleShowUser}}
                     >
                       <span class="name-username-wrapper">
                         {{if
@@ -455,13 +585,17 @@ export default class UserCardContents extends CardContentsBase {
                           (formatUsername this.user.username)
                         }}
                       </span>
-                      {{userStatus this.user currentUser=this.currentUser}}
+                      {{userStatus
+                        this.user
+                        currentUser=this.currentUser
+                        showName=this.showName
+                      }}
                     </a>
                   {{/if}}
                 </div>
                 <PluginOutlet
-                  @name="user-card-after-username"
                   @connectorTagName="div"
+                  @name="user-card-after-username"
                   @outletArgs={{lazyHash
                     user=this.user
                     showUser=this.handleShowUser
@@ -472,7 +606,7 @@ export default class UserCardContents extends CardContentsBase {
                     class="names__secondary username"
                   >{{this.user.username}}</div>
                 {{else}}
-                  {{#if this.user.name}}
+                  {{#if this.showName}}
                     <div
                       class="names__secondary full-name"
                     >{{this.user.name}}</div>
@@ -486,19 +620,10 @@ export default class UserCardContents extends CardContentsBase {
                       "user.staged"
                     }}</div>
                 {{/if}}
-                {{#if this.hasStatus}}
-                  <div class="user-status">
-                    {{trustHTML this.userStatusEmoji}}
-                    <span class="user-status__description">
-                      {{this.user.status.description}}
-                    </span>
-                    {{formatDate this.user.status.ends_at format="tiny"}}
-                  </div>
-                {{/if}}
                 <div>
                   <PluginOutlet
-                    @name="user-card-post-names"
                     @connectorTagName="div"
+                    @name="user-card-post-names"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
@@ -508,25 +633,25 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.can_send_private_message_to_user}}
                 <li class="compose-pm">
                   <DButton
+                    class="btn-primary"
                     @action={{fn this.composePM this.user this.post}}
                     @icon="envelope"
                     @label="user.private_message"
-                    class="btn-primary"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-below-message-button"
                 @connectorTagName="li"
+                @name="user-card-below-message-button"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
               {{#if this.showFilter}}
                 <li>
                   <DButton
+                    class="btn-default"
                     @action={{fn this.handleFilterPosts this.user}}
                     @icon="filter"
                     @translatedLabel={{this.filterPostsLabel}}
-                    class="btn-default"
                   />
                 </li>
               {{/if}}
@@ -542,22 +667,22 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.showDelete}}
                 <li>
                   <DButton
+                    class="btn-danger"
                     @action={{fn this.deleteUser this.user}}
                     @icon="triangle-exclamation"
                     @label="admin.user.delete"
-                    class="btn-danger"
                   />
                 </li>
               {{/if}}
               <PluginOutlet
-                @name="user-card-additional-buttons"
                 @connectorTagName="li"
+                @name="user-card-additional-buttons"
                 @outletArgs={{lazyHash user=this.user close=this.close}}
               />
             </ul>
             <PluginOutlet
-              @name="user-card-additional-controls"
               @connectorTagName="div"
+              @name="user-card-additional-controls"
               @outletArgs={{lazyHash
                 user=this.user
                 close=this.close
@@ -585,7 +710,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.suspend_reason}}
                 <div class="suspended">
                   <div class="suspension-date">
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{#if this.user.suspendedForever}}
                       {{i18n "user.suspended_permanently"}}
                     {{else}}
@@ -608,7 +733,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.silence_reason}}
                 <div class="silenced">
                   <div class="silence-date">
-                    {{icon "microphone-slash"}}
+                    {{dIcon "microphone-slash"}}
                     {{#if this.user.silencedForever}}
                       {{i18n "user.silenced_permanently"}}
                     {{else}}
@@ -630,9 +755,9 @@ export default class UserCardContents extends CardContentsBase {
               {{/if}}
               {{#unless this.isRestricted}}
                 <div class="bio">
-                  <HtmlWithLinks>
+                  <DHtmlWithLinks>
                     {{trustHTML this.user.bio_excerpt}}
-                  </HtmlWithLinks>
+                  </DHtmlWithLinks>
                 </div>
               {{/unless}}
             </div>
@@ -643,12 +768,12 @@ export default class UserCardContents extends CardContentsBase {
               <div class="featured-topic">
                 <span class="desc">{{i18n "user.featured_topic"}}</span>
                 <LinkTo
-                  @route="topic"
                   @models={{array
                     this.user.featured_topic.slug
                     this.user.featured_topic.id
                   }}
-                >{{replaceEmoji
+                  @route="topic"
+                >{{dReplaceEmoji
                     (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
@@ -660,9 +785,9 @@ export default class UserCardContents extends CardContentsBase {
               <div class="location-and-website">
                 {{#if this.user.website_name}}
                   <span class="website-name">
-                    {{icon "globe"}}
+                    {{dIcon "globe"}}
                     {{#if this.linkWebsite}}
-                      {{! template-lint-disable link-rel-noopener }}
+                      {{! eslint-disable ember/template-link-rel-noopener }}
                       <a
                         href={{this.user.website}}
                         rel="noopener {{unless
@@ -671,7 +796,7 @@ export default class UserCardContents extends CardContentsBase {
                         }}"
                         target="_blank"
                       >{{this.user.website_name}}</a>
-                      {{! template-lint-enable link-rel-noopener }}
+                      {{! eslint-enable ember/template-link-rel-noopener }}
                     {{else}}
                       <span
                         title={{this.user.website}}
@@ -681,20 +806,20 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.user.location}}
                   <span class="location">
-                    {{icon "location-dot"}}
+                    {{dIcon "location-dot"}}
                     <span>{{this.user.location}}</span>
                   </span>
                 {{/if}}
                 {{#if this.showUserLocalTime}}
                   <span class="local-time" title={{i18n "local_time"}}>
-                    {{icon "far-clock"}}
+                    {{dIcon "far-clock"}}
                     <span>{{this.formattedUserLocalTime}}</span>
                   </span>
                 {{/if}}
                 <span>
                   <PluginOutlet
-                    @name="user-card-location-and-website"
                     @connectorTagName="div"
+                    @name="user-card-location-and-website"
                     @outletArgs={{lazyHash user=this.user}}
                   />
                 </span>
@@ -708,21 +833,21 @@ export default class UserCardContents extends CardContentsBase {
                 {{#if this.user.last_posted_at}}
                   <div class="metadata__last-posted">
                     <span class="desc">{{i18n "last_post"}}</span>
-                    {{formatDate
+                    {{dFormatDate
                       this.user.last_posted_at
                       leaveAgo="true"
                     }}</div>
                 {{/if}}
                 <div class="metadata__user-created">
                   <span class="desc">{{i18n "joined"}}</span>
-                  {{formatDate this.user.created_at leaveAgo="true"}}</div>
+                  {{dFormatDate this.user.created_at leaveAgo="true"}}</div>
                 {{#if this.user.time_read}}
                   <div
                     class="metadata__time-read"
                     title={{this.timeReadTooltip}}
                   >
                     <span class="desc">{{i18n "time_read"}}</span>
-                    {{formatDuration this.user.time_read}}
+                    {{dFormatDuration this.user.time_read}}
                     {{#if this.showRecentTimeRead}}
                       <span>
                         ({{i18n
@@ -735,29 +860,29 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.showCheckEmail}}
                   <div class="metadata__email">
-                    {{icon "envelope" title="user.email.title"}}
+                    {{dIcon "envelope" title="user.email.title"}}
                     {{#if this.user.email}}
                       {{this.user.email}}
                     {{else}}
                       <DButton
+                        class="btn-primary"
                         @action={{fn this.checkEmail this.user}}
                         @icon="envelope"
                         @label="admin.users.check_email.text"
-                        class="btn-primary"
                       />
                     {{/if}}
                   </div>
                 {{/if}}
                 <PluginOutlet
-                  @name="user-card-metadata"
                   @connectorTagName="div"
+                  @name="user-card-metadata"
                   @outletArgs={{lazyHash user=this.user}}
                 />
               </div>
             {{/unless}}
             <PluginOutlet
-              @name="user-card-after-metadata"
               @connectorTagName="div"
+              @name="user-card-after-metadata"
               @outletArgs={{lazyHash user=this.user}}
             />
           </div>
@@ -777,8 +902,8 @@ export default class UserCardContents extends CardContentsBase {
                           <span class="user-field-value-list-item">
                             {{#if uf.field.searchable}}
                               <LinkTo
-                                @route="users"
                                 @query={{hash name=v}}
+                                @route="users"
                                 {{on "click" (fn this.refreshRoute v)}}
                               >{{v}}</LinkTo>
                             {{else}}
@@ -797,8 +922,8 @@ export default class UserCardContents extends CardContentsBase {
           {{/if}}
 
           <PluginOutlet
-            @name="user-card-before-badges"
             @connectorTagName="div"
+            @name="user-card-before-badges"
             @outletArgs={{lazyHash user=this.user}}
           />
 
@@ -815,7 +940,7 @@ export default class UserCardContents extends CardContentsBase {
                     {{/each}}
                     {{#if this.showMoreBadges}}
                       <span class="more-user-badges">
-                        <LinkTo @route="user.badges" @model={{this.user}}>
+                        <LinkTo @model={{this.user}} @route="user.badges">
                           {{i18n
                             "badges.more_badges"
                             count=this.moreBadgesCount

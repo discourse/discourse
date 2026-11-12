@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import AiSecretCreateModal from "./modal/ai-secret-create-modal";
+import DButton from "discourse/ui-kit/d-button";
+import AiSecretCreateModal from "./modal/ai-secret-create-modal.gjs";
 
 export default class AiSecretSelector extends Component {
   @service modal;
@@ -13,10 +13,15 @@ export default class AiSecretSelector extends Component {
   @tracked addedSecrets = [];
 
   get secretOptions() {
-    return [...(this.args.secrets || []), ...this.addedSecrets].map((s) => ({
-      id: s.id,
-      name: s.name,
-    }));
+    const seen = new Set();
+    const options = [];
+    for (const s of [...(this.args.secrets || []), ...this.addedSecrets]) {
+      if (!seen.has(s.id)) {
+        seen.add(s.id);
+        options.push({ id: s.id, name: s.name });
+      }
+    }
+    return options;
   }
 
   get hasSecrets() {
@@ -34,6 +39,7 @@ export default class AiSecretSelector extends Component {
       model: {
         onSave: (newSecret) => {
           this.addedSecrets = [...this.addedSecrets, newSecret];
+          this.args.secrets?.push(newSecret);
           this.args.onChange?.(newSecret.id);
         },
       },
@@ -44,27 +50,27 @@ export default class AiSecretSelector extends Component {
     <div class="ai-secret-selector">
       {{#if this.hasSecrets}}
         <ComboBox
-          @value={{@value}}
+          class="ai-secret-selector__dropdown"
           @content={{this.secretOptions}}
           @onChange={{this.onSelectSecret}}
           @options={{hash
             filterable=true
             none="discourse_ai.secrets.select_secret"
           }}
-          class="ai-secret-selector__dropdown"
+          @value={{@value}}
         />
         <DButton
+          class="btn-default ai-secret-selector__add-btn"
           @action={{this.openCreateModal}}
           @icon="plus"
           @title="discourse_ai.secrets.create_new"
-          class="btn-default ai-secret-selector__add-btn"
         />
       {{else}}
         <DButton
+          class="btn-default ai-secret-selector__add-btn"
           @action={{this.openCreateModal}}
           @icon="plus"
           @label="discourse_ai.secrets.add_secret"
-          class="btn-default ai-secret-selector__add-btn"
         />
       {{/if}}
     </div>

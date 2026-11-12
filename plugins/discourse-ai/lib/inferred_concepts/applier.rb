@@ -99,9 +99,6 @@ module DiscourseAi
       def match_concepts_to_content(content, concept_list)
         return [] if content.blank? || concept_list.blank?
 
-        # Prepare user message with only the content
-        user_message = content
-
         # Use the ConceptMatcher agent to match concepts
 
         agent =

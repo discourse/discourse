@@ -2,121 +2,187 @@
 
 describe DiscourseAi::Translation::CategoryCandidates do
   describe ".get" do
-    it "returns all categories" do
-      expect(DiscourseAi::Translation::CategoryCandidates.get.count).to eq(Category.count)
+    before do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
     end
 
-    it "filters out read restricted categories if ai_translation_backfill_limit_to_public_content is enabled" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = true
-      restricted_category = Fabricate(:category, read_restricted: true)
-      public_category = Fabricate(:category, read_restricted: false)
+    it "returns all categories when all categories are configured" do
+      category_1 = Fabricate(:category)
+      category_2 = Fabricate(:category)
 
       categories = DiscourseAi::Translation::CategoryCandidates.get
-      expect(categories).not_to include(restricted_category)
+      expect(categories).to include(category_1, category_2)
+    end
+
+    it "returns private categories by default" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+      expect(DiscourseAi::Translation::CategoryCandidates.get).to include(private_category)
+    end
+
+    it "returns only public categories when configured" do
+      public_category = Fabricate(:category)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      SiteSetting.ai_translation_category_scope = "public"
+
+      categories = DiscourseAi::Translation::CategoryCandidates.get
       expect(categories).to include(public_category)
+      expect(categories).not_to include(private_category)
+    end
+
+    it "includes selected categories and subcategories" do
+      parent_category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category:)
+      unselected_category = Fabricate(:category)
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = parent_category.id.to_s
+
+      categories = DiscourseAi::Translation::CategoryCandidates.get
+      expect(categories).to include(parent_category, subcategory)
+      expect(categories).not_to include(unselected_category)
+    end
+
+    it "excludes only selected categories in strict mode" do
+      parent_category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category:)
+      SiteSetting.ai_translation_category_scope = "exclude_strict"
+      SiteSetting.ai_translation_categories = parent_category.id.to_s
+
+      categories = DiscourseAi::Translation::CategoryCandidates.get
+      expect(categories).to include(subcategory)
+      expect(categories).not_to include(parent_category)
     end
   end
 
   describe ".calculate_completion_per_locale" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
+    end
+
     context "when (scenario A) completion determined by category's locale" do
       it "returns done = total if all categories are in the locale" do
         locale = "pt_BR"
-        Fabricate(:category, locale:)
-        Category.update_all(locale: locale)
-        Fabricate(:category, locale: "pt") # pt counts as pt_BR
+        target_category.update!(locale: locale)
 
         completion =
           DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-        expect(completion).to eq({ done: Category.count, total: Category.count })
+        expect(completion).to eq({ done: 1, total: 1 })
       end
 
       it "returns correct done and total if some categories are in the locale" do
         locale = "pt_BR"
-        Category.update_all(locale: "ar") # not portuguese
-
-        Fabricate(:category, locale:)
-        Fabricate(:category, locale: "ar") # not portuguese
+        target2 = Fabricate(:category, locale: "ar")
+        target_category.update!(locale: locale)
 
         completion =
           DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-        expect(completion).to eq({ done: 1, total: Category.count })
+        expect(completion).to eq({ done: 1, total: 2 })
       end
     end
 
     context "when (scenario B) completion determined by category localizations" do
       it "returns done = total if all categories have a localization in the locale" do
         locale = "pt_BR"
-
-        Fabricate(:category, locale: "en")
-        Category.all.each do |category|
-          category.update(locale: "en")
-          Fabricate(:category_localization, category:, locale:)
-        end
-        CategoryLocalization.order("RANDOM()").first.update(locale: "pt") # pt counts as pt_BR
+        target_category.update!(locale: "en")
+        Fabricate(:category_localization, category: target_category, locale:)
 
         completion =
           DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-        expect(completion).to eq({ done: Category.count, total: Category.count })
+        expect(completion).to eq({ done: 1, total: 1 })
       end
 
       it "returns correct done and total if some categories have a localization in the locale" do
         locale = "es"
-        category1 = Fabricate(:category, locale: "en")
-        category2 = Fabricate(:category, locale: "fr")
-        Fabricate(:category_localization, category: category1, locale:)
-        Fabricate(:category_localization, category: category2, locale: "ar") # not the target locale
+        target2 = Fabricate(:category, locale: "fr")
+        target_category.update!(locale: "en")
+        Fabricate(:category_localization, category: target_category, locale:)
+        Fabricate(:category_localization, category: target2, locale: "ar")
 
         completion =
           DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-        categories_with_locale = Category.where.not(locale: nil).count
-        expect(completion).to eq({ done: 1, total: categories_with_locale })
+        expect(completion).to eq({ done: 1, total: 2 })
       end
-    end
-
-    it "returns the correct done and total based on (scenario A & B) `category.locale` and `CategoryLocalization` in the specified locale" do
-      locale = "pt_BR"
-
-      Category.update_all(locale: "en")
-
-      # translated candidates
-      Fabricate(:category, locale:)
-      category2 = Fabricate(:category, locale: "en")
-      Fabricate(:category_localization, category: category2, locale:)
-
-      # untranslated candidate
-      category3 = Fabricate(:category, locale: "fr")
-      Fabricate(:category_localization, category: category3, locale: "zh_CN")
-
-      # not a candidate as it is read restricted
-      SiteSetting.ai_translation_backfill_limit_to_public_content = true
-      category4 = Fabricate(:category, read_restricted: true, locale: "de")
-      Fabricate(:category_localization, category: category4, locale:)
-
-      completion =
-        DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-      translated_candidates = 2 # category1 + category2
-      total_candidates = Category.count - 1 # excluding the read restricted category
-      expect(completion).to eq({ done: translated_candidates, total: total_candidates })
     end
 
     it "does not allow done to exceed total when category.locale and category_localization both exist" do
       locale = "pt_BR"
-      Category.update_all(locale:)
-      category = Fabricate(:category, locale:)
-      Fabricate(:category_localization, category:, locale:)
+      target_category.update!(locale:)
+      Fabricate(:category_localization, category: target_category, locale:)
 
       completion =
         DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
-      expect(completion).to eq({ done: Category.count, total: Category.count })
+      expect(completion).to eq({ done: 1, total: 1 })
     end
 
-    it "returns nil - nil for done and total when no categories are present" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
-      Category.destroy_all
+    it "returns 0 for done and total when no categories match" do
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
 
       completion =
         DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale("pt")
       expect(completion).to eq({ done: 0, total: 0 })
+    end
+  end
+
+  describe ".progress_summary" do
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_category_scope = "include_strict"
+    end
+
+    it "counts eligible, fully translated, and undetected categories" do
+      fully_translated_category = Fabricate(:category, locale: "en_US")
+      partially_translated_category = Fabricate(:category, locale: "en_US")
+      undetected_category = Fabricate(:category, locale: nil)
+      SiteSetting.ai_translation_categories = [
+        fully_translated_category.id,
+        partially_translated_category.id,
+        undetected_category.id,
+      ].join("|")
+      Fabricate(:category_localization, category: fully_translated_category, locale: "fr")
+
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "category",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
+      )
+    end
+  end
+
+  describe ".progress_details" do
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_category_scope = "include_strict"
+    end
+
+    it "returns translated, pending, and eligible counts per configured locale" do
+      translated_category = Fabricate(:category, locale: "EN-US")
+      untranslated_category = Fabricate(:category, locale: "en-US")
+      undetected_category = Fabricate(:category, locale: nil)
+      SiteSetting.ai_translation_categories = [
+        translated_category.id,
+        untranslated_category.id,
+        undetected_category.id,
+      ].join("|")
+      localization = Fabricate(:category_localization, category: translated_category, locale: "fr")
+      localization.update_column(:locale, "FR-fr")
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "category",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, eligible_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, eligible_count: 3 },
+          ],
+        },
+      )
     end
   end
 end

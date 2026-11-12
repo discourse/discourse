@@ -13,19 +13,38 @@ ar:
   js:
     discourse_reactions:
       reactions_title: "التفاعلات"
-      state_panel:
-        more_users: "و%{count} أخرى..."
       reaction:
-        forbidden: "تم إنشاء هذا التفاعل منذ فترة طويلة جدًا، ولم يعُد من الممكن تعديله أو حذفه."
+        forbidden: "غير مسموح لك بالتفاعل أو تغيير تفاعلك مع هذا المنشور."
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"
         remove_reaction: "إزالة هذا التفاعل %{reaction}"
+      users_popup:
+        all: "الكل"
+        title:
+          zero: "%{count} تفاعل"
+          one: "تفاعل واحد (%{count})"
+          two: "تفاعلان (%{count})"
+          few: "%{count} تفاعلات"
+          many: "%{count} تفاعلًا"
+          other: "%{count} تفاعل"
+      counter:
+        aria_label:
+          zero: "%{count} من التفاعل"
+          one: "تفاعل واحد (%{count})"
+          two: "تفاعلان (%{count})"
+          few: "%{count} تفاعلات"
+          many: "%{count} تفاعلًا"
+          other: "%{count} تفاعل"
       main_reaction:
         add: "تسجيل الإعجاب بهذا المنشور"
         remove: "إزالة هذا الإعجاب"
         cant_remove: "لم يعد بإمكانك إزالة إعجابك"
         unauthenticated: "يُرجى الاشتراك أو تسجيل الدخول لتسجيل الإعجاب بهذا المنشور"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "تمت الإضافة"
+        changes_removed: "تمت إزالتها"
     notifications:
       reaction_1_user_multiple_posts:
         zero: "تفاعل على %{count} من منشوراتك"

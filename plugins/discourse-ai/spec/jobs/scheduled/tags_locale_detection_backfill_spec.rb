@@ -10,7 +10,6 @@ describe Jobs::TagsLocaleDetectionBackfill do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
-    SiteSetting.ai_translation_backfill_max_age_days = 30
     SiteSetting.content_localization_supported_locales = "en"
   end
 
@@ -68,50 +67,22 @@ describe Jobs::TagsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with public content limitation" do
-    fab!(:tag_group)
-    fab!(:restricted_group, :group)
+  it "includes all tags regardless of tag group restrictions" do
+    Tag.update_all(locale: "en")
 
-    before do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = true
-      Tag.update_all(locale: "en")
-    end
+    restricted_tag = Fabricate(:tag, locale: nil)
+    tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+    TagGroupPermission.where(tag_group: tag_group).destroy_all
+    restricted_group = Fabricate(:group)
+    TagGroupPermission.create!(
+      tag_group: tag_group,
+      group_id: restricted_group.id,
+      permission_type: TagGroupPermission.permission_types[:full],
+    )
 
-    it "processes tags not in any tag group" do
-      standalone_tag = Fabricate(:tag, locale: nil)
-      DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).with(standalone_tag).once
+    DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).with(restricted_tag).once
 
-      job.execute({})
-    end
-
-    it "processes tags in tag groups visible to everyone" do
-      public_tag = Fabricate(:tag, locale: nil)
-      tag_group.tags << public_tag
-      TagGroupPermission.create!(
-        tag_group: tag_group,
-        group_id: Group::AUTO_GROUPS[:everyone],
-        permission_type: TagGroupPermission.permission_types[:full],
-      )
-
-      DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).with(public_tag).once
-
-      job.execute({})
-    end
-
-    it "skips tags in tag groups not visible to everyone" do
-      restricted_tag = Fabricate(:tag, locale: nil)
-      tag_group.tags << restricted_tag
-      TagGroupPermission.where(tag_group: tag_group).destroy_all
-      TagGroupPermission.create!(
-        tag_group: tag_group,
-        group_id: restricted_group.id,
-        permission_type: TagGroupPermission.permission_types[:full],
-      )
-
-      DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).never
-
-      job.execute({})
-    end
+    job.execute({})
   end
 
   it "limits processing to the backfill rate" do

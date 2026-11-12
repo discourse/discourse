@@ -10,3 +10,5 @@ if SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
     end
   end
 end
+
+SiteSetting.api_key_last_used_epoch = Time.now if SiteSetting.api_key_last_used_epoch.blank?

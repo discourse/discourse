@@ -6,9 +6,11 @@ module Jobs
       user_id = args[:user_id]
       raise Discourse::InvalidParameters.new(:user_id) if user_id.blank?
 
-      DiscourseGamification::GamificationScore.calculate_scores(
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all(
         since_date: args[:since] || 10.days.ago,
       )
+
+      DiscourseGamification::LeaderboardCachedView.regenerate_all
 
       ::MessageBus.publish "/recalculate_scores",
                            {

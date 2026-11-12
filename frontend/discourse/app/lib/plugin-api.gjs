@@ -1,5 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -11,17 +13,11 @@ import {
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import {
-  NON_STREAM_HTML_DECORATOR,
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
-import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
@@ -46,12 +42,8 @@ import { registerFullPageSearchType } from "discourse/controllers/full-page-sear
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
@@ -66,8 +58,19 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerCodeEditorLanguage } from "discourse/lib/code-editor-languages";
+import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  _INTERNAL_SOURCE_KEY,
+  CORE_SOURCE,
+} from "discourse/lib/customization-source";
+import {
+  deferClassModification,
+  lazyClassFor,
+} from "discourse/lib/deferred-class-modifications";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -81,8 +84,18 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
+import {
+  defineModelAccessor,
+  defineModelMethod,
+  defineModelResettableField,
+  registerModelCallback,
+  registerModelField,
+  registerModelSaveProperty,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import {
   extraConnectorClass,
@@ -93,6 +106,7 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { reportClientError } from "discourse/lib/report-client-error";
 import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
@@ -110,6 +124,7 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
@@ -139,10 +154,16 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
-import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
-import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-
-const blockedModifications = ["component:topic-list"];
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
+import { addToolbarCallback } from "discourse/ui-kit/d-editor";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
+import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 
 const appliedModificationIds = new WeakMap();
 
@@ -178,11 +199,7 @@ function wrapWithErrorHandler(func, messageKey) {
     try {
       return func.call(this, ...arguments);
     } catch (error) {
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
-        })
-      );
+      reportClientError(error, messageKey);
       if (isTesting()) {
         throw error;
       }
@@ -195,9 +212,103 @@ function wrapWithErrorHandler(func, messageKey) {
  * @typedef {_PluginApi} PluginApi
  */
 class _PluginApi {
-  constructor(container) {
+  #source;
+
+  constructor(container, source = CORE_SOURCE) {
     this.container = container;
-    this.h = warnWidgetsDecommissioned;
+    this.#source = source;
+  }
+
+  /** The plugin, theme, or core code this api was handed to. */
+  get source() {
+    return this.#source;
+  }
+
+  /**
+   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
+   *
+   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
+   *
+   * Example: Add the chat icon to the header icons after the search icon
+   * ```
+   * api.headerIcons.add(
+   *  "chat",
+   *  ChatIconComponent,
+   *  { after: "search" }
+   * )
+   * ```
+   *
+   * Example: Remove the chat icon from the header icons
+   * ```
+   * api.headerIcons.delete("chat")
+   * ```
+   *
+   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
+   * ```
+   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
+   * ```
+   *
+   * Example: Check if the chat icon is present in the header icons (returns true of false)
+   * ```
+   * api.headerIcons.has("chat")
+   * ```
+   *
+   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * const IconWithDropdown = <template>
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
+   *
+   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
+   * ```
+   *
+   **/
+  get headerIcons() {
+    return headerIconsDAG();
+  }
+
+  /**
+   * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
+   *
+   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
+   *
+   * Example: Add a `foo` button to the header buttons after the auth buttons
+   * ```
+   * api.headerButtons.add(
+   *  "foo",
+   *  FooComponent,
+   *  { after: "auth" }
+   * )
+   * ```
+   *
+   * Example: Remove the `foo` button from the header buttons
+   * ```
+   * api.headerButtons.delete("foo")
+   * ```
+   *
+   * Example: Reposition the `foo` button to be before the `bar` and after the `baz` button
+   * ```
+   * api.headerButtons.reposition("foo", { before: "bar", after: "baz" })
+   * ```
+   *
+   * Example: Check if the `foo` button is present in the header buttons (returns true of false)
+   * ```
+   * api.headerButtons.has("foo")
+   * ```
+   *
+   **/
+  get headerButtons() {
+    return headerButtonsDAG();
   }
 
   /**
@@ -206,53 +317,6 @@ class _PluginApi {
    **/
   getCurrentUser() {
     return this._lookupContainer("service:current-user");
-  }
-
-  _lookupContainer(path) {
-    if (
-      !this.container ||
-      this.container.isDestroying ||
-      this.container.isDestroyed
-    ) {
-      return;
-    }
-
-    return this.container.lookup(path);
-  }
-
-  _resolveClass(resolverName, opts) {
-    opts = opts || {};
-    const normalized = this.container.registry.normalize(resolverName);
-    if (
-      this.container.cache[normalized] ||
-      (normalized === "model:user" &&
-        this.container.lookup("service:current-user"))
-    ) {
-      // eslint-disable-next-line no-console
-      console.error(
-        consolePrefix(),
-        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
-      );
-      return;
-    }
-
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized);
-    }
-
-    if (!klass) {
-      if (!opts.ignoreMissing) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          consolePrefix(),
-          `"${normalized}" was not found by modifyClass`
-        );
-      }
-      return;
-    }
-
-    return klass;
   }
 
   /**
@@ -271,12 +335,17 @@ class _PluginApi {
    *   }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClass(resolverName, changes, opts) {
-    this.#deprecateModifyClass(resolverName);
+    this.#deprecateModifyClass(resolverName, "modifyClass");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClass(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -310,10 +379,17 @@ class _PluginApi {
    *   superFinder() { return []; }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClassStatic(resolverName, changes, opts) {
-    const klass = this._resolveClass(resolverName, opts);
+    this.#deprecateModifyClass(resolverName, "modifyClassStatic");
+
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClassStatic(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -348,7 +424,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addBehaviorTransformerName(name) {
@@ -400,12 +476,12 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [R=unknown] - The expected behavior result; middleware may also return void.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
-   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
-   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
-   * the default behavior will be completely overridden
-   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
+   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
+   * doesn't call next(), the default behavior is completely overridden.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -437,7 +513,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addValueTransformerName(name) {
@@ -468,12 +544,14 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [T=unknown] - The value passed to the callback.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
-   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
-   * mutating the input value, return the same output for the same input and not have any side effects.
-   * @param {*} valueCallback.value the value to be transformed
-   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
+   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
+   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
+   * callback to mutate the value instead; their return value is ignored.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
@@ -694,20 +772,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  decorateWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  attachWidgetAction() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * @deprecated
    *
    * This function is now an alias to `api.addTrackedPostProperties`.
@@ -755,10 +819,211 @@ class _PluginApi {
    * You'll need to do this if you've added properties to a Topic and need them to be
    * automatically updated in the UI when there are changes in the model.
    *
+   * To type the properties for TypeScript, augment `TopicFields` from
+   * `discourse/models/topic`, as described in the "JS type hinting &
+   * validation" developer guide.
+   *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedTopicProperties(...names) {
     names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  /**
+   * Adds a tracked data field to a store model, so a property your plugin adds
+   * (e.g. one included in the server payload) is reactive in the UI.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * To type the field for TypeScript, augment the model's fields interface,
+   * such as `TopicFields` from `discourse/models/topic`, as described in the
+   * "JS type hinting & validation" developer guide.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the field to add.
+   * @param {Object} [options]
+   * @param {(*|Function)} [options.defaultValue] - Value when the server omits
+   *   the field (default `undefined`). A function runs per instance at
+   *   construction — before the payload (server wins) and too early for create
+   *   args — for per-record mutable defaults, e.g. `() => ({})`.
+   * @param {("array"|"object"|"set")} [options.type] - Store the field as a
+   *   reactive collection, created fresh per instance so it is never shared.
+   * @param {boolean} [options.resettable] - Requires a function `defaultValue`;
+   *   resets to it when the derived value changes, and a manual assignment
+   *   sticks until then.
+   *
+   * @example
+   * api.addModelField("bookmark", "is_pinned", { defaultValue: false });
+   * api.addModelField("post", "comments", { type: "array" });
+   * api.addModelField("post", "polls_votes", { type: "object" });
+   * api.addModelField("post", "meta", { defaultValue: () => ({}) });
+   * api.addModelField("composer", "createAsPostVoting", {
+   *   resettable: true,
+   *   defaultValue() {
+   *     return !!this.category?.create_as_post_voting_default;
+   *   },
+   * });
+   */
+  addModelField(modelName, name, options = {}) {
+    const klass = this._resolveModelClass(modelName, { stamp: true });
+    if (!klass) {
+      return;
+    }
+
+    if (options.resettable) {
+      if (typeof options.defaultValue !== "function") {
+        throw new Error(
+          "addModelField: `resettable` requires `defaultValue` to be a function (the initializer to reset to)."
+        );
+      }
+      defineModelResettableField(klass, name, options.defaultValue);
+    } else {
+      registerModelField(modelName, name, options);
+    }
+  }
+
+  /**
+   * Adds an accessor (getter and/or setter) to a store model.
+   *
+   * Defined on the prototype (works in templates and with autotracking). For a
+   * single side, prefer `addModelGetter` / `addModelSetter`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the property to add.
+   * @param {Object} accessor
+   * @param {Function} [accessor.get] - Getter, called with the instance as `this`.
+   * @param {Function} [accessor.set] - Setter, called with the new value.
+   *
+   * @example
+   * api.addModelAccessor("post", "polls", {
+   *   get() {
+   *     return this._polls;
+   *   },
+   *   set(value) {
+   *     this._polls = value;
+   *   },
+   * });
+   */
+  addModelAccessor(modelName, name, accessor) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelAccessor(klass, name, accessor);
+    }
+  }
+
+  /**
+   * Adds a getter (computed/derived property) to a store model. Shorthand for
+   * `addModelAccessor` with only a getter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the getter to add.
+   * @param {Function} getter - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelGetter("bookmark", "isPinned", function () {
+   *   return this.is_pinned;
+   * });
+   */
+  addModelGetter(modelName, name, getter) {
+    this.addModelAccessor(modelName, name, { get: getter });
+  }
+
+  /**
+   * Adds a setter to a store model. Shorthand for `addModelAccessor` with only a
+   * setter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "topic".
+   * @param {string} name - The name of the setter to add.
+   * @param {Function} setter - Called with the new value; the instance is `this`.
+   *
+   * @example
+   * api.addModelSetter("topic", "related_topics", function (value) {
+   *   this._relatedTopicsRecords = value;
+   * });
+   */
+  addModelSetter(modelName, name, setter) {
+    this.addModelAccessor(modelName, name, { set: setter });
+  }
+
+  /**
+   * Adds an instance method to a store model.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the method to add.
+   * @param {Function} fn - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelMethod("bookmark", "togglePin", function () {
+   *   this.is_pinned = !this.is_pinned;
+   * });
+   */
+  addModelMethod(modelName, name, fn) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelMethod(klass, name, fn);
+    }
+  }
+
+  /**
+   * Registers a property to include in a model's save payload.
+   *
+   * For persisting a field your plugin adds (see `addModelField`). By default
+   * `instance[name]` is sent; pass `valueFn` (bound to the instance) to send a
+   * computed value, e.g. to nest data under `custom_fields`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "group".
+   * @param {string} name - The name of the property to include when saving.
+   * @param {Function} [valueFn] - Returns the value to send; called with the
+   *   model instance as `this`.
+   *
+   * @example
+   * api.addModelSaveProperty("group", "assignable_level");
+   * api.addModelSaveProperty("group", "custom_fields", function () {
+   *   return { my_field: this.my_field };
+   * });
+   */
+  addModelSaveProperty(modelName, name, valueFn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelSaveProperty(modelName, name, valueFn);
+    }
+  }
+
+  /**
+   * Registers a callback to run on a model's lifecycle.
+   *
+   * Runs with the model instance as `this`, replacing `modifyClass` overrides
+   * of `init`/`save`. `init` fires per instance after create args are applied.
+   * Create/update events fire on the standard store save path (and for `Group`,
+   * which also fires destroy); other models with a custom `save()` (e.g.
+   * `Category`) don't. `after*` callbacks returning a promise are awaited.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {("init"|"beforeCreate"|"afterCreate"|"beforeUpdate"|"afterUpdate"|"beforeDestroy"|"afterDestroy"|"beforeSave"|"afterSave")} event -
+   *   The lifecycle event. "beforeSave"/"afterSave" fire for both create and update.
+   * @param {Function} fn - Called with nothing (init/destroy), the request props
+   *   (before create/update), or the server result (after*).
+   *
+   * @example
+   * api.addModelCallback("bookmark", "afterSave", function (result) {
+   *   // ...
+   * });
+   */
+  addModelCallback(modelName, event, fn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelCallback(modelName, event, fn);
+    }
   }
 
   /**
@@ -798,6 +1063,10 @@ class _PluginApi {
   /**
    * Add a new button in the topic admin menu.
    *
+   * Optionally pass a `section` to group buttons under a labelled subheader.
+   * Adjacent buttons sharing the same `section.id` are grouped together;
+   * provide either an i18n `label` key or a pre-translated `translatedLabel`.
+   *
    * Example:
    *
    * ```
@@ -809,6 +1078,7 @@ class _PluginApi {
    *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     label: 'coffee.title',
+   *     section: { id: 'beverages', label: 'beverages.title' },
    *   };
    * });
    * ```
@@ -869,7 +1139,7 @@ class _PluginApi {
    * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
    * @callback condition
-   * @param {Object} composer - The composer service object.
+   * @param {import("discourse/services/composer").default} composer - The composer service object.
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
@@ -910,24 +1180,31 @@ class _PluginApi {
     addPopupMenuOption(opts);
   }
 
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-        dropFrom: "3.3",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
-  }
-
   /**
-   * @deprecated the widget rendering system was decommissioned
+   * Register a custom item in the composer-actions dropdown (the menu next
+   * to the composer title that switches between Reply, Create Topic, etc.).
+   *
+   * @param {Object} opts
+   * @param {string} opts.id - Unique identifier for the item.
+   * @param {string} opts.label - I18n key for the item's display name.
+   * @param {string} [opts.description] - Optional I18n key for the item's description text.
+   * @param {string} [opts.icon] - Optional icon name.
+   * @param {Function} [opts.condition] - `(composerActionsComponent) => boolean`. Item is shown when this returns truthy, or when omitted.
+   * @param {Function} opts.action - `(composerModel, composerActionsComponent) => void`. Called when the user picks the item.
+   *
+   * @example
+   * api.addComposerAction({
+   *   id: "create_event",
+   *   label: "discourse_post_event.composer_actions.create_event.label",
+   *   description: "discourse_post_event.composer_actions.create_event.desc",
+   *   icon: "calendar-days",
+   *   condition: (component) =>
+   *     component.composerModel?.category?.isType("events"),
+   *   action: (composerModel) => composerModel.set("creatingEvent", true),
+   * });
    */
-  cleanupStream() {
-    warnWidgetsDecommissioned();
+  addComposerAction(opts) {
+    registerComposerAction(opts);
   }
 
   /**
@@ -1027,13 +1304,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  changeWidgetSetting() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * Prevents a specific post from being cloaked during scroll.
    *
    * This is useful, for example, for posts that apply customizations that hold state which
@@ -1052,38 +1322,6 @@ class _PluginApi {
    **/
   preventCloak(postId, prevent = true) {
     preventCloaking(postId, prevent);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  createWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  reopenWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  addFlagProperty() {
-    deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead.",
-      { id: "discourse.add-flag-property" }
-    );
-  }
-
-  /**
-   * @deprecated Use `api.headerIcons` instead.
-   */
-  addHeaderPanel() {
-    // eslint-disable-next-line no-console
-    console.error(
-      consolePrefix(),
-      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
-    );
   }
 
   /**
@@ -1341,28 +1579,6 @@ class _PluginApi {
   }
 
   /**
-   * Adds a glyph to the legacy user menu after bookmarks
-   * WARNING: there is limited space there
-   *
-   * example:
-   *
-   * api.addUserMenuGlyph({
-   *    title: 'awesome.label',
-   *    className: 'my-class',
-   *    icon: 'my-icon',
-   *    data: { url: `/some/path` },
-   * });
-   *
-   * To customize the new user menu, see api.registerUserMenuTab
-   */
-  addUserMenuGlyph() {
-    deprecated(
-      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
-      { id: "discourse.add-user-menu-glyph" }
-    );
-  }
-
-  /**
    * Adds a callback to be called before rendering any post that
    * that returns custom classes to add to the post
    *
@@ -1420,13 +1636,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  addPostTransformCallback() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    *
    * Adds a new item in the navigation bar. Returns the NavItem object created.
    *
@@ -1456,6 +1665,8 @@ class _PluginApi {
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
+   *
+   * @param {import("discourse/models/nav-item").NavigationBarItem} item
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {
@@ -1868,35 +2079,6 @@ class _PluginApi {
   }
 
   /**
-   *
-   * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
-   *
-   * `callback` will be called when it is time to decorate it.
-   *
-   * For example, to add a yellow background to a connector:
-   *
-   * ```
-   * api.decoratePluginOutlet(
-   *   "discovery-list-container-top",
-   *   (elem, args) => {
-   *     if (elem.classList.contains("foo")) {
-   *       elem.style.backgroundColor = "yellow";
-   *     }
-   *   }
-   * );
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
-   **/
-  decoratePluginOutlet(outletName, callback, opts) {
-    deprecated(
-      "decoratePluginOutlet is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead",
-      { id: "discourse.decorate-plugin-outlet" }
-    );
-    addPluginOutletDecorator(outletName, callback, opts || {});
-  }
-
-  /**
    * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
    * Example:
    * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
@@ -1929,93 +2111,6 @@ class _PluginApi {
    **/
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
-  }
-
-  /**
-   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
-   *
-   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
-   *
-   * Example: Add the chat icon to the header icons after the search icon
-   * ```
-   * api.headerIcons.add(
-   *  "chat",
-   *  ChatIconComponent,
-   *  { after: "search" }
-   * )
-   * ```
-   *
-   * Example: Remove the chat icon from the header icons
-   * ```
-   * api.headerIcons.delete("chat")
-   * ```
-   *
-   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
-   * ```
-   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
-   * ```
-   *
-   * Example: Check if the chat icon is present in the header icons (returns true of false)
-   * ```
-   * api.headerIcons.has("chat")
-   * ```
-   *
-   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
-   * you want create a button in the header that opens a dropdown panel with additional content.
-   *
-   * ```
-   * const IconWithDropdown = <template>
-    *
-    <DMenu @icon="foo" title={{i18n "title"}}>
-      *
-      <:content as |args|>
-        *       dropdown content here
-        *
-        <DButton @action={{args.close}} @icon="bar" />
-        *     </:content>
-      *   </DMenu>
-    * </template>;
-   *
-   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
-   * ```
-   *
-   **/
-  get headerIcons() {
-    return headerIconsDAG();
-  }
-
-  /**
-   * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
-   *
-   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
-   *
-   * Example: Add a `foo` button to the header buttons after the auth buttons
-   * ```
-   * api.headerButtons.add(
-   *  "foo",
-   *  FooComponent,
-   *  { after: "auth" }
-   * )
-   * ```
-   *
-   * Example: Remove the `foo` button from the header buttons
-   * ```
-   * api.headerButtons.delete("foo")
-   * ```
-   *
-   * Example: Reposition the `foo` button to be before the `bar` and after the `baz` button
-   * ```
-   * api.headerButtons.reposition("foo", { before: "bar", after: "baz" })
-   * ```
-   *
-   * Example: Check if the `foo` button is present in the header buttons (returns true of false)
-   * ```
-   * api.headerButtons.has("foo")
-   * ```
-   *
-   **/
-  get headerButtons() {
-    return headerButtonsDAG();
   }
 
   /**
@@ -2187,13 +2282,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated Use `addSaveableUserOption` instead
-   */
-  addSaveableUserOptionField(fieldName, options = {}) {
-    this.addSaveableUserOption(fieldName, options);
-  }
-
-  /**
    * Ensures custom_fields are saved on a specific preferences page.
    * Custom fields are stored in the user_custom_fields table.
    *
@@ -2266,6 +2354,62 @@ class _PluginApi {
    **/
   registerReviewableActionModal(reviewableType, modalClass) {
     registerReviewableActionModal(reviewableType, modalClass);
+  }
+
+  /**
+   * Registers the component used to render a reviewable type in the review queue.
+   *
+   * The loader returns the component class, or a promise resolving to it — in
+   * which case the module is only loaded when a reviewable of that type is
+   * rendered.
+   *
+   * @param {String} reviewableType - The reviewable type class name (e.g. "ReviewableChatMessage")
+   * @param {Function} loader - A function returning the component class, or a promise
+   *   resolving to it
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent("ReviewableChatMessage", () => ReviewableChatMessage);
+   * ```
+   *
+   * @example
+   * ```
+   * api.registerReviewableComponent(
+   *   "ReviewableChatMessage",
+   *   async () => (await import("../components/reviewable/chat-message")).default
+   * );
+   * ```
+   **/
+  registerReviewableComponent(reviewableType, loader) {
+    if (typeof loader !== "function") {
+      throw new Error(
+        `registerReviewableComponent("${reviewableType}", ...) requires a function as second argument.`
+      );
+    }
+
+    this.registerValueTransformer(
+      "reviewable-component",
+      ({ value, context }) => (context.type === reviewableType ? loader : value)
+    );
+  }
+
+  /**
+   * Register custom status names for a reviewable type, used in the
+   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   *
+   * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
+   *
+   * @param {String} reviewableType - The reviewable class name (e.g. "ReviewableAiToolAction")
+   * @param {String} approvedName - Status name for approved items
+   * @param {String} rejectedName - Status name for rejected items
+   *
+   * @example
+   * ```
+   * api.registerReviewableStatusName("ReviewableAiToolAction", "approved_tool_action", "rejected_tool_action");
+   * ```
+   **/
+  registerReviewableStatusName(reviewableType, approvedName, rejectedName) {
+    registerReviewableStatusName(reviewableType, approvedName, rejectedName);
   }
 
   /**
@@ -2378,7 +2522,7 @@ class _PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
+   * Add an event to an ICS-compatible app, Google Calendar, Microsoft Outlook, or Apple Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```javascript
    * api.downloadCalendar("title of the event",
@@ -2472,15 +2616,14 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  dispatchWidgetAppEvent() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * Support for customizing the composer text. By providing a callback. Callbacks should
    * return `null` or `undefined` if you don't need a customization based on the current state.
+   *
+   * Supported callback keys: `actionTitle`, `saveLabel`, `saveIcon`,
+   * `titlePlaceholder`. Each callback receives the composer model and
+   * returns an i18n key (or a translated string for `actionTitle`, or an
+   * icon name for `saveIcon`). Return `null` or `undefined` to fall
+   * through to the default.
    *
    * ```
    * api.customizeComposerText({
@@ -2492,6 +2635,12 @@ class _PluginApi {
    *
    *   saveLabel(model) {
    *     return "my.custom_save_label_key";
+   *   },
+   *
+   *   titlePlaceholder(model) {
+   *     if (model.creatingEvent) {
+   *       return "my.event_title_placeholder";
+   *     }
    *   }
    * })
    *
@@ -2546,7 +2695,7 @@ class _PluginApi {
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|{name: string, title: string, text: string, route?: string, href?: string, icon?: string})} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
@@ -2604,7 +2753,7 @@ class _PluginApi {
    * @param {Object} arg - An object
    * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
    * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {Object} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
+   * @param {Record<string, unknown>} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
    * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
    * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
@@ -2773,6 +2922,40 @@ class _PluginApi {
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a link to a section of the user nav sidebar panel.
+   *
+   * The panel replaces the horizontal user navs, and the outlets a plugin adds
+   * its tabs through (`user-main-nav`, `user-activity-bottom`,
+   * `user-notifications-bottom`, `user-preferences-nav`) render markup the
+   * panel cannot read. A plugin with a tab in any of them registers it here as
+   * well to stay reachable once those navs are hidden.
+   *
+   * ```javascript
+   * api.addUserNavSidebarLink("activity", {
+   *   name: "activity-solved",
+   *   route: "userActivity.solved",
+   *   label: "solved.title",
+   *   icon: "square-check",
+   *   displayed: ({ siteSettings }) => siteSettings.solved_enabled,
+   * });
+   * ```
+   *
+   * @param {String} sectionName - The panel section to add the link to: profile,
+   *   activity, notifications, messages, invites or preferences.
+   * @param {Object} link - A link object representing a section link.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.route - The Ember route name the link points at.
+   * @param {string} link.label - The i18n key for the link's text.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   * @param {Array} [link.routeParams] - Extra route models, after the username.
+   * @param {Function} [link.displayed] - Predicate deciding whether to show the link.
+   */
+  addUserNavSidebarLink(sectionName, link) {
+    addUserNavSidebarLink(sectionName, link);
   }
 
   /**
@@ -2976,6 +3159,68 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    this.registerValueTransformer(
+      "admin-dashboard-report-renderer",
+      ({ value, context }) =>
+        context.source === source ? componentClass : value
+    );
+  }
+
+  /**
+   * Registers a component to render a whole section in the admin dashboard.
+   * Pair it with the server-side `register_admin_dashboard_section`: the `id` here must
+   * match the one registered there, and the loader block registered there
+   * produces the `@data` this component receives.
+   *
+   * The component is rendered once for each visible section with a matching id.
+   * The render site also stamps a `--<id>` class and a `data-section-id="<id>"`
+   * attribute on it, so forward `...attributes` onto your root element (wrapping
+   * the shared `<DashboardSection>` component does this for you).
+   *
+   * The component receives these args:
+   * - `@data` {Object} — the section payload: the hash returned by the
+   *   server-side loader block passed to `register_admin_dashboard_section`.
+   * - `@startDate` {Date} — start of the selected dashboard period.
+   * - `@endDate` {Date} — end of the selected dashboard period.
+   * - `@fetchError` {boolean} — true when the dashboard sections request failed.
+   * - `@period` {string} — the selected period preset (e.g. "monthly"), or
+   *   "custom" for a custom range.
+   * - `@loading` {boolean} — true while the dashboard is (re)loading sections.
+   *   Provided for convenience; a section that refetches on its own (as Solved's
+   *   "support" section does) may track its own loading state instead.
+   *
+   * ```
+   * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";
+   *
+   * api.registerAdminDashboardSection("my_section", MySection);
+   * ```
+   *
+   * @param {string} id - The section id, matching the server-side registration.
+   * @param {Component} componentClass - A Glimmer component for the section.
+   */
+  registerAdminDashboardSection(id, componentClass) {
+    registerAdminDashboardSection(id, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3021,10 +3266,7 @@ class _PluginApi {
    * ```
    * api.registerModelTransformer("topic", async (topics) => {
    *   for (const topic of topics) {
-   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
-   *     if (decryptedTitle) {
-   *       topic.fancy_title = decryptedTitle;
-   *     }
+   *     topic.fancy_title = await translateTitle(topic.fancy_title);
    *   }
    * });
    * ```
@@ -3058,9 +3300,16 @@ class _PluginApi {
    * @param {string} translationKey
    * @param {string} searchTypeId
    * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   * @param {Object} [options]
+   * @param {string} [options.after] - Id of the search type this one should follow; appended last when omitted or unknown.
    */
-  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
-    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc, options) {
+    registerFullPageSearchType(
+      translationKey,
+      searchTypeId,
+      searchFunc,
+      options
+    );
   }
 
   /**
@@ -3082,6 +3331,27 @@ class _PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Registers a language shortcut for code editors, so a field can ask for it
+   * by name through the `language` argument.
+   *
+   * The loader is called the first time something asks for the language, and
+   * its module's default export receives the editor's modules and returns the
+   * extensions to apply.
+   *
+   * ```
+   * api.registerCodeEditorLanguage("toml", () =>
+   *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")
+   * );
+   * ```
+   *
+   * @param {string} name - The name a field refers to the language by.
+   * @param {import("discourse/lib/code-editor-languages").CodeEditorLanguageLoader} loader - Returns a promise for the module.
+   */
+  registerCodeEditorLanguage(name, loader) {
+    registerCodeEditorLanguage(name, loader);
   }
 
   /**
@@ -3247,8 +3517,8 @@ class _PluginApi {
    * ```
    *
    * @callback activityItemConfig
-   * @param {Object} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
-   * @returns {Object} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
+   * @param {Record<string, number>} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
+   * @returns {{icon: string, class: string, activityText: string, period: string}} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
    *
    * @param {string} name - a string that matches the string given to the `register_stat` server-side API.
    * @param {activityItemConfig} func - a callback that returns an object containing properties for the custom site activity item.
@@ -3333,6 +3603,22 @@ class _PluginApi {
   }
 
   /**
+   * Registers components that render related items for an admin report.
+   *
+   * @param {String} reportType - The report's identifier
+   * @param {Object} renderer - The related-item renderer configuration
+   * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
+   */
+  registerAdminReportRelatedItemsRenderer(reportType, renderer) {
+    registerAdminReportRelatedItemsRenderer(reportType, renderer);
+  }
+
+  /**
    * Registers an extension for the rich editor
    *
    * EXPERIMENTAL: This API will change without warning
@@ -3363,9 +3649,6 @@ class _PluginApi {
 
   /**
    * Registers a custom tab for the category edit page.
-   * Only available when the `enable_simplified_category_creation`
-   * site setting is enabled, this will not work for the legacy
-   * category edit page.
    *
    * ```
    * api.registerEditCategoryTab({
@@ -3388,6 +3671,25 @@ class _PluginApi {
   }
 
   /**
+   * Register a callback that runs when the user changes category type selection in the
+   * category editor's General tab.
+   *
+   * Callbacks run in order. Each may be `async`. The change applies only if every callback
+   * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback
+   * throws, the error is reported and the change is blocked; in tests the error is rethrown.
+   *
+   * The callback receives:
+   * - `nextTypes` - normalized type objects after the empty-to-discussion rule
+   * - `previousTypes` - selection before this change
+   * - `category`, `form`, and optionally `transientData`
+   *
+   * @param {(context: import("discourse/lib/on-before-category-types-change").OnBeforeCategoryTypesChangeContext) => (boolean|undefined|Promise<boolean|undefined>)} fn
+   */
+  registerOnBeforeCategoryTypesChange(fn) {
+    registerOnBeforeCategoryTypesChange(fn);
+  }
+
+  /**
    * Registers block components to render in a designated outlet.
    *
    * **IMPORTANT:** Must be called in an initializer that runs after "freeze-block-registry".
@@ -3403,7 +3705,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript
@@ -3472,7 +3774,7 @@ class _PluginApi {
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {string | import("discourse/lib/blocks/-internals/types").BlockClass} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration
@@ -3494,10 +3796,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3531,7 +3833,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -3579,38 +3881,69 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this.source);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  #deprecateModifyClass(className) {
-    // display notification messages for deprecated classes
-    // e.g:
-    //
-    // if (DEPRECATED_CLASSES.includes(className)) {
-    //   deprecated(
-    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-    //     DEPRECATION_OPTIONS
-    //   );
-    // }
-  }
-}
-
-function getPluginApi() {
-  const owner = getOwnerWithFallback(this);
-  let pluginApi = owner.lookup("plugin-api:main");
-
-  if (!pluginApi) {
-    pluginApi = new _PluginApi(owner);
-    owner.registry.register("plugin-api:main", pluginApi, {
-      instantiate: false,
-    });
-  } else {
-    // If we are re-using an instance, make sure the container is correct
-    pluginApi.container = owner;
+  // The module may not have been evaluated yet, and registers itself when it is.
+  #deferModification(resolverName, retry) {
+    deferClassModification(
+      this.container.registry.normalize(resolverName),
+      retry
+    );
   }
 
-  return pluginApi;
+  #deprecateModifyClass(resolverName, apiName) {
+    if (!resolverName.startsWith("model:")) {
+      return;
+    }
+
+    deprecated(
+      `Using api.${apiName} on \`${resolverName}\` is deprecated. Use the \`addModelField\`, \`addModelAccessor\`/\`addModelGetter\`/\`addModelSetter\`, \`addModelMethod\`, \`addModelSaveProperty\` and \`addModelCallback\` APIs instead.`,
+      {
+        id: "discourse.modify-class-model",
+        since: "2026.8",
+      }
+    );
+  }
+
+  _lookupContainer(path) {
+    if (!this.container || this.container.isDestroying) {
+      return;
+    }
+
+    return this.container.lookup(path);
+  }
+
+  _resolveClass(resolverName) {
+    const normalized = this.container.registry.normalize(resolverName);
+    if (
+      this.container.cache[normalized] ||
+      (normalized === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
+      // eslint-disable-next-line no-console
+      console.error(
+        consolePrefix(),
+        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
+      );
+      return;
+    }
+
+    return this.container.factoryFor(normalized) || lazyClassFor(normalized);
+  }
+
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
+  }
 }
 
 /**
@@ -3628,5 +3961,10 @@ export function withPluginApi(apiCodeCallback, opts) {
 
   opts = opts || {};
 
-  return apiCodeCallback(getPluginApi(), opts);
+  const api = new _PluginApi(
+    getOwnerWithFallback(this),
+    opts[_INTERNAL_SOURCE_KEY]
+  );
+
+  return apiCodeCallback(api, opts);
 }

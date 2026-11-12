@@ -1,4 +1,8 @@
-import { click, fillIn, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -15,6 +19,61 @@ class Field {
     return this.element.dataset.controlType;
   }
 
+  get resolvedControlType() {
+    const type = this.controlType;
+
+    if (type && type !== "custom") {
+      return type;
+    }
+
+    if (type === "custom") {
+      if (
+        this.element.querySelector(".form-kit__control-custom .multi-select")
+      ) {
+        return "multi-select";
+      }
+
+      if (
+        this.element.querySelector(
+          ".form-kit__control-custom .tag-chooser, .form-kit__control-custom .tag-group-chooser, .form-kit__control-tag-chooser"
+        )
+      ) {
+        return "tag-chooser";
+      }
+
+      throw new Error("Unknown custom control");
+    }
+
+    if (this.element.classList.contains("select-kit")) {
+      return "tag-chooser";
+    }
+
+    throw new Error("Unknown field control");
+  }
+
+  get tagChooserSelector() {
+    if (this.element.dataset.name) {
+      return `[data-name="${this.element.dataset.name}"] .select-kit`;
+    }
+
+    const multiSelect = this.element.querySelector(
+      ".form-kit__control-custom .multi-select"
+    );
+    if (multiSelect?.id) {
+      return `#${multiSelect.id}`;
+    }
+
+    if (this.element.id && this.element.classList.contains("select-kit")) {
+      return `#${this.element.id}`;
+    }
+
+    throw new Error("Unable to resolve tag chooser selector");
+  }
+
+  get tagChooserKit() {
+    return selectKit(this.tagChooserSelector);
+  }
+
   /**
    * For elements that have a single input element, this returns that element.
    *
@@ -25,11 +84,13 @@ class Field {
     switch (this.controlType) {
       case "input":
       case "input-text":
+      case "input-email":
       case "input-number":
       case "password":
       case "checkbox":
         return this.element.querySelector("input");
       case "code":
+        return this.element.querySelector(".cm-content");
       case "textarea":
       case "composer":
         return this.element.querySelector("textarea");
@@ -44,15 +105,24 @@ class Field {
     }
   }
 
+  get pickerElement() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return this.element.querySelector(".form-kit__control-color-input-picker");
+  }
+
   value() {
-    switch (this.controlType) {
+    switch (this.resolvedControlType) {
       case "input-number":
         return parseInt(this.inputElement.value, 10);
+      case "code":
+        return codeEditorValue(this.element.querySelector(".code-editor"));
       // String-based controls fall through to return raw value
       case "input":
       case "input-text":
+      case "input-email":
       case "password":
-      case "code":
       case "textarea":
       case "composer":
       case "color":
@@ -62,6 +132,15 @@ class Field {
       case "checkbox":
       case "toggle":
         return this.inputElement.checked;
+      case "icon":
+        return (
+          this.element.querySelector(".d-icon-grid-picker")?.dataset?.value ||
+          null
+        );
+      case "tag-chooser":
+        return this.element.querySelector(".select-kit-header")?.dataset?.value;
+      case "multi-select":
+        return this.element.querySelector(".select-kit-header")?.dataset?.value;
       default:
         throw new Error(`Unsupported control type: ${this.controlType}`);
     }
@@ -77,6 +156,11 @@ class Field {
   }
 
   async fillIn(value) {
+    if (this.controlType === "code") {
+      await fillInCodeEditor(this.element.querySelector(".code-editor"), value);
+      return;
+    }
+
     await fillIn(this.inputElement, value);
   }
 
@@ -149,13 +233,6 @@ class Field {
     );
   }
 
-  get pickerElement() {
-    if (this.controlType !== "color") {
-      throw new Error(`Unsupported control type: ${this.controlType}`);
-    }
-    return this.element.querySelector(".form-kit__control-color-input-picker");
-  }
-
   swatches() {
     if (this.controlType !== "color") {
       throw new Error(`Unsupported control type: ${this.controlType}`);
@@ -171,13 +248,28 @@ class Field {
   }
 
   async select(value) {
-    switch (this.element.dataset.controlType) {
-      case "icon":
-        const picker = selectKit(
-          "#" + this.element.querySelector("details").id
+    switch (this.resolvedControlType) {
+      case "multi-select": {
+        const multiSelect = this.element.querySelector(
+          ".form-kit__control-custom .multi-select"
         );
-        await picker.expand();
-        await picker.selectRowByValue(value);
+        const kit = selectKit(`#${multiSelect.id}`);
+        await kit.expand();
+        await kit.selectRowByValue(value);
+        await kit.collapse();
+        break;
+      }
+      case "tag-chooser": {
+        const kit = this.tagChooserKit;
+        await kit.expand();
+        await kit.selectRowByValue(value);
+        await kit.collapse();
+        break;
+      }
+      case "icon":
+        await click(".d-icon-grid-picker-trigger");
+        await waitFor(`[data-icon-id="${value}"]`);
+        await click(`[data-icon-id="${value}"]`);
         break;
       case "select":
         this.inputElement.value = value;
@@ -215,11 +307,44 @@ class Field {
     }
   }
 
+  async selectByName(name) {
+    if (this.resolvedControlType !== "tag-chooser") {
+      throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
+    }
+
+    const kit = this.tagChooserKit;
+    await kit.expand();
+    await kit.selectRowByName(name);
+    await kit.collapse();
+  }
+
+  async deselectByName(name) {
+    if (this.resolvedControlType !== "tag-chooser") {
+      throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
+    }
+
+    const kit = this.tagChooserKit;
+    await kit.expand();
+    await kit.deselectItemByName(name);
+    await kit.collapse();
+  }
+
+  async deselectByValue(value) {
+    if (this.resolvedControlType !== "tag-chooser") {
+      throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
+    }
+
+    const kit = this.tagChooserKit;
+    await kit.expand();
+    await kit.deselectItemByValue(value);
+    await kit.collapse();
+  }
+
   /**
    * Triggers any event on the input element of the field.
    *
    * @param {string} eventName - The name of the event to trigger.
-   * @param {Object} [options={}] - Additional options for the event.
+   * @param {Record<string, unknown>} [options={}] - Additional options for the event.
    */
   async triggerEvent(eventName, options = {}) {
     await triggerEvent(this.inputElement, eventName, options);
@@ -253,6 +378,10 @@ class Form {
     return new Field(fieldElement);
   }
 
+  control(selector) {
+    return new Field(query(selector));
+  }
+
   hasField(name) {
     return !!this.element.querySelector(`[data-name="${name}"]`);
   }
@@ -270,6 +399,10 @@ export default function form(selector = "form") {
     },
     field(name) {
       return helper.field(name);
+    },
+
+    control(controlSelector) {
+      return helper.control(controlSelector);
     },
 
     hasField(name) {

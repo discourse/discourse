@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module(
-  "Integration | Component | form-template-field | wrapper",
+  "Integration | Component | FormTemplateField | Wrapper",
   function (hooks) {
     setupRenderingTest(hooks);
 

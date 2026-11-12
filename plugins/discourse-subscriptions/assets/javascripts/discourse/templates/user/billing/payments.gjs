@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
-import formatCurrency from "../../../helpers/format-currency";
-import formatUnixDate from "../../../helpers/format-unix-date";
+import formatCurrency from "../../../helpers/format-currency.js";
+import formatUnixDate from "../../../helpers/format-unix-date.js";
 
 export default <template>
   {{#if @controller.model}}

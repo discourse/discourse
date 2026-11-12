@@ -1,8 +1,7 @@
 @use "lib/viewport";
 
 :root {
-  --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
-    var(--space-4);
+  --d-sidebar-active-background: var(--d-selected);
 }
 
 body.has-full-page-chat .sidebar-wrapper,
@@ -82,14 +81,6 @@ body.has-full-page-chat .sidebar-wrapper,
 .sidebar-section-link-wrapper .sidebar-section-link:hover {
   .d-icon {
     color: var(--primary);
-  }
-}
-
-.sidebar-new-topic-button__wrapper {
-  margin: 0 var(--space-2) var(--space-4) var(--space-4);
-
-  .sidebar-new-topic-button .d-icon {
-    display: none;
   }
 }
 

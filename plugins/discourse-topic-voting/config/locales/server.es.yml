@@ -7,6 +7,7 @@
 es:
   site_settings:
     topic_voting_enabled: '¿Permitir a los usuarios votar sobre temas?'
+    topic_voting_enable_vote_limits: 'Limitar el número de votos por usuario en función del nivel de confianza.'
     topic_voting_tl0_vote_limit: '¿Cuántos votos activos tienen permitidos los usuarios de NC0?'
     topic_voting_tl1_vote_limit: '¿Cuántos votos activos tienen permitidos los usuarios de NC1?'
     topic_voting_tl2_vote_limit: '¿Cuántos votos activos tienen permitidos los usuarios de NC2?'
@@ -16,9 +17,18 @@ es:
     topic_voting_show_votes_on_profile: '¿Permitir a los usuarios ver sus votos en su feed de actividad?'
     topic_voting_alert_votes_left: 'Alertar al usuario cuando queda esta cantidad de votos'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Mostrar quién votó"
     votes_moved:
       one: "Se ha movido un voto."
       other: "Se han movido %{count} votos."
     duplicated_votes:
       one: "No se pudo mover un voto porque el usuario ya votó en el otro tema."
       other: "No se pudieron mover %{count} votos porque los usuarios ya votaron en el otro tema."
+    filter:
+      description:
+        topic_votes_min: "Número mínimo de votos del tema"
+        topic_votes_max: "Número máximo de votos del tema"
+        order_topic_votes: "Ordenar los temas por mayor número de votos"
+        order_topic_votes_asc: "Ordenar los temas por menor número de votos"

@@ -1,4 +1,4 @@
-import UserInfo from "discourse/components/user-info";
+import DUserInfo from "discourse/ui-kit/d-user-info";
 import { i18n } from "discourse-i18n";
 
 function cakedayDate(val, { isBirthday }) {
@@ -15,9 +15,9 @@ const UserInfoList = <template>
   <ul class="user-info-list">
     {{#each @users.content as |user|}}
       <li class="user-info-item">
-        <UserInfo @user={{user}}>
+        <DUserInfo @user={{user}}>
           <div>{{cakedayDate user.cakedate isBirthday=@isBirthday}}</div>
-        </UserInfo>
+        </DUserInfo>
       </li>
     {{else}}
       <div class="user-info-empty-message"><p>{{yield}}</p></div>

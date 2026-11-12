@@ -7,8 +7,13 @@
 id:
   js:
     discourse_reactions:
+      users_popup:
+        all: "Semua"
       main_reaction:
         add: "Sukai post ini"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Ditambahkan"
     notifications:
       reaction_multiple_users:
         other: "%{username} dan %{count} lainnya"

@@ -16,7 +16,14 @@ module Jobs
       return if topic.private_message? && !SiteSetting.ai_embeddings_generate_for_pms
       return if post.raw.blank?
 
-      DiscourseAi::Embeddings::Vector.instance.generate_representation_from(target)
+      definition = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
+      return if DiscourseAi::Embeddings::ProviderHealth.paused?(definition)
+
+      DiscourseAi::Embeddings::Vector.new(definition).generate_representation_from(target)
+    rescue DiscourseAi::Inference::EmbeddingInferenceError => error
+      raise if !error.terminal?
+    rescue DiscourseAi::Embeddings::ProviderPausedError
+      nil
     end
   end
 end

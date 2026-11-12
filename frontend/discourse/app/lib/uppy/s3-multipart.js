@@ -4,6 +4,8 @@ import { service } from "@ember/service";
 import AwsS3 from "@uppy/aws-s3";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { isRateLimitError } from "discourse/lib/ajax-error";
+import { withRateLimitRetry } from "discourse/lib/uploads";
 
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
 const MB = 1024 * 1024;
@@ -79,11 +81,12 @@ export default class UppyS3Multipart {
       data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
     }
 
-    return ajax(`${this.uploadRootPath}/create-multipart.json`, {
-      type: "POST",
-      data,
-      // uppy is inconsistent, an error here fires the upload-error event
-    }).then((responseData) => {
+    return withRateLimitRetry(() =>
+      ajax(`${this.uploadRootPath}/create-multipart.json`, {
+        type: "POST",
+        data,
+      })
+    ).then((responseData) => {
       this.uppyInstance.emit("create-multipart-success", file.id);
 
       file.meta.unique_identifier = responseData.unique_identifier;
@@ -122,6 +125,10 @@ export default class UppyS3Multipart {
       `[uppy] requesting signature for part ${partData.partNumber} (attempt ${thisPartAttempts})`
     );
 
+    if (fileMeta.rateLimitError) {
+      throw fileMeta.rateLimitError;
+    }
+
     try {
       const url = await fileMeta.batchSigner.signedUrlFor(partData);
       this.uppyWrapper.debug.log(
@@ -131,15 +138,18 @@ export default class UppyS3Multipart {
     } catch (err) {
       // Uppy doesn't properly bubble errors from failed #signPart, so we call
       // the error handler ourselves after the last failed attempt
+      if (isRateLimitError(err)) {
+        fileMeta.rateLimitError = err;
+      }
+
       if (
         !fileMeta.signingErrorRaised &&
-        thisPartAttempts >= RETRY_DELAYS.length
+        (fileMeta.rateLimitError || thisPartAttempts >= RETRY_DELAYS.length)
       ) {
         this.uppyWrapper.debug.log(
           `[uppy] Fetching a signed part URL for ${file.id} failed too many times, raising error.`
         );
-        // uppy is inconsistent, an error here does not fire the upload-error event
-        this.handleUploadError(file, err);
+        this.errorHandler(file, err);
         fileMeta.signingErrorRaised = true;
       }
       throw err;
@@ -155,19 +165,20 @@ export default class UppyS3Multipart {
     const parts = data.parts.map((part) => {
       return { part_number: part.PartNumber, etag: part.ETag };
     });
-    return ajax(`${this.uploadRootPath}/complete-multipart.json`, {
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        parts,
-        unique_identifier: file.meta.unique_identifier,
-        pasted: file.meta.pasted,
-        for_private_message: file.meta.for_private_message,
-        for_site_setting: file.meta.for_site_setting,
-        site_setting_name: file.meta.site_setting_name,
-      }),
-      // uppy is inconsistent, an error here fires the upload-error event
-    }).then((responseData) => {
+    return withRateLimitRetry(() =>
+      ajax(`${this.uploadRootPath}/complete-multipart.json`, {
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          parts,
+          unique_identifier: file.meta.unique_identifier,
+          pasted: file.meta.pasted,
+          for_private_message: file.meta.for_private_message,
+          for_site_setting: file.meta.for_site_setting,
+          site_setting_name: file.meta.site_setting_name,
+        }),
+      })
+    ).then((responseData) => {
       this.uppyInstance.emit("complete-multipart-success", file.id);
       return responseData;
     });
@@ -196,7 +207,6 @@ export default class UppyS3Multipart {
       data: {
         external_upload_identifier: uploadId,
       },
-      // uppy is inconsistent, an error here does not fire the upload-error event
     }).catch((err) => {
       this.errorHandler(file, err);
     });
@@ -254,9 +264,8 @@ class BatchSigner {
     this.pendingRequests = [];
 
     try {
-      const result = await ajax(
-        `${this.uploadRootPath}/batch-presign-multipart-parts.json`,
-        {
+      const result = await withRateLimitRetry(() =>
+        ajax(`${this.uploadRootPath}/batch-presign-multipart-parts.json`, {
           type: "POST",
           data: {
             part_numbers: requests.map(
@@ -264,14 +273,12 @@ class BatchSigner {
             ),
             unique_identifier: this.file.meta.unique_identifier,
           },
-        }
+        })
       );
       requests.forEach(({ partData, resolve }) => {
         resolve(result.presigned_urls[partData.partNumber.toString()]);
       });
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error("[uppy] failed to get part signatures", err);
       requests.forEach(({ reject }) => reject(err));
       return;
     }

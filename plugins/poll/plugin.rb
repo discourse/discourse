@@ -49,11 +49,11 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
-    return if polls.blank? && self.id.blank?
+    return if polls.blank? && id.blank?
 
     if polls.present?
       validator = DiscoursePoll::PostValidator.new(self)
@@ -61,7 +61,7 @@ after_initialize do
     end
 
     # are we updating a post?
-    if self.id.present?
+    if id.present?
       return if polls.blank? && ::Poll.where(post: self).empty?
 
       DiscoursePoll::PollsUpdater.update(self, polls)
@@ -101,10 +101,6 @@ after_initialize do
         .each do |poll|
           html = +""
 
-          if title = poll.at_css(".poll-title")
-            html << title.to_html
-          end
-
           if container = poll.at_css(".poll-container")
             container.css("li").each { |li| li.remove_attribute("data-poll-option-id") }
             html << container.inner_html
@@ -129,21 +125,18 @@ after_initialize do
     doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
 
-  on(:post_created) do |post, _opts, user|
-    guardian = Guardian.new(user)
+  # Drop content-bearing messages retained before invalidation-only broadcasts.
+  MessageBus.register_client_message_filter("/polls/") do |message|
+    message.data.keys.map(&:to_s) == ["post_id"]
+  end
+
+  on(:post_created) do |post, _opts, _user|
     DiscoursePoll::Poll.schedule_jobs(post)
 
     next if post.is_first_post?
     next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
 
-    polls =
-      ActiveModel::ArraySerializer.new(
-        post.polls,
-        each_serializer: PollSerializer,
-        root: false,
-        scope: guardian,
-      ).as_json
-    post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+    post.publish_poll_message!
   end
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|
@@ -194,7 +187,7 @@ after_initialize do
           end
 
         if post_with_polls.present?
-          all_polls = Poll.includes(:poll_options).where(post_id: post_with_polls)
+          all_polls = Poll.includes(:poll_options, :closed_by).where(post_id: post_with_polls)
           Poll.preload!(all_polls, user_id: @user&.id)
           DiscoursePoll::Poll.preload_serialized_voters!(all_polls)
           all_polls.each do |p|
@@ -216,19 +209,25 @@ after_initialize do
       if @topic_view.present?
         @topic_view.polls[object.id]
       else
-        Poll.includes(:poll_options).where(post: object)
+        Poll.includes(:poll_options, :closed_by).where(post: object)
       end
   end
 
-  add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
+  add_to_class(PostSerializer, :can_see_post_polls?) do
+    !object.hidden? || scope.can_see_hidden_post?(object)
   end
+
+  add_to_serializer(
+    :post,
+    :polls,
+    include_condition: -> { preloaded_polls.present? && can_see_post_polls? },
+  ) { preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: scope) } }
 
   add_to_serializer(
     :post,
     :polls_votes,
     include_condition: -> do
-      scope.user&.id.present? && preloaded_polls.present? &&
+      scope.user&.id.present? && preloaded_polls.present? && can_see_post_polls? &&
         preloaded_polls.any? { |p| p.has_voted?(scope.user) }
     end,
   ) do
@@ -261,5 +260,23 @@ after_initialize do
     else
       posts
     end
+  end
+
+  # Only single-choice (regular) polls are supported for anonymous voting.
+  # Multi-choice and ranked-choice polls require accumulating selections
+  # client-side, which is out of scope for the current anonymous flow.
+  register_anonymous_action("vote_poll") do |user, params|
+    options = params["options"]
+    next if !options.is_a?(Array) || options.size != 1
+
+    DiscoursePoll::Poll.vote(user, params["post_id"], params["poll_name"], options)
+  rescue DiscoursePoll::Error
+    # Expected business-logic failures (poll closed, group-restricted, etc.)
+    # — silently drop. Unexpected exceptions still bubble to AnonymousAction.consume.
+  end
+
+  # Protect users who have cast poll votes from the inactive user cleanup job.
+  register_modifier(:clean_up_inactive_users_query) do |relation|
+    relation.where("NOT EXISTS (SELECT 1 FROM poll_votes WHERE poll_votes.user_id = users.id)")
   end
 end

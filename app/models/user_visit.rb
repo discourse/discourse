@@ -16,21 +16,64 @@ class UserVisit < ActiveRecord::Base
 
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
-      WITH dau AS (
-        SELECT date_trunc('day', user_visits.visited_at)::DATE AS date,
-               count(distinct user_visits.user_id) AS dau
-        FROM user_visits
-        WHERE user_visits.visited_at::DATE >= :start_date::DATE AND user_visits.visited_at <= :end_date::DATE
-        GROUP BY date_trunc('day', user_visits.visited_at)::DATE
-        ORDER BY date_trunc('day', user_visits.visited_at)::DATE
-      )
-
-      SELECT date, dau,
-        (SELECT count(distinct user_visits.user_id)
+      WITH island_boundaries AS (
+        -- A user's visit days merge into an "active island" when gaps are
+        -- 30 days or less; the user counts toward MAU from each island's
+        -- start until 29 days after its end. A row is an island start when
+        -- the previous visit is too far back, an island end when the next
+        -- visit is too far ahead.
+        SELECT d, prev_d, next_d
+        FROM (
+          SELECT
+            visited_at AS d,
+            lag(visited_at) OVER w AS prev_d,
+            lead(visited_at) OVER w AS next_d
           FROM user_visits
-          WHERE user_visits.visited_at::DATE BETWEEN dau.date - 29 AND dau.date
-        ) AS mau
+          WHERE visited_at >= :start_date::DATE - 29
+            AND visited_at <= :end_date::DATE
+          WINDOW w AS (PARTITION BY user_id ORDER BY visited_at)
+        ) visits
+        WHERE prev_d IS NULL OR prev_d < d - 30
+          OR next_d IS NULL OR next_d > d + 30
+      ),
+      active_range_events AS (
+        SELECT d AS day, 1 AS delta
+        FROM island_boundaries
+        WHERE prev_d IS NULL OR prev_d < d - 30
+        UNION ALL
+        SELECT d + 30 AS day, -1 AS delta
+        FROM island_boundaries
+        WHERE next_d IS NULL OR next_d > d + 30
+      ),
+      daily_active_deltas AS (
+        SELECT day, sum(delta) AS delta
+        FROM active_range_events
+        GROUP BY day
+      ),
+      days AS (
+        SELECT generate_series(
+          (SELECT min(day) FROM daily_active_deltas),
+          :end_date::DATE,
+          INTERVAL '1 day'
+        )::DATE AS day
+      ),
+      rolling_mau AS (
+        SELECT days.day,
+          sum(coalesce(daily_active_deltas.delta, 0)) OVER (ORDER BY days.day) AS mau
+        FROM days
+        LEFT JOIN daily_active_deltas ON daily_active_deltas.day = days.day
+      ),
+      dau AS (
+        SELECT visited_at AS date, count(*) AS dau
+        FROM user_visits
+        WHERE visited_at >= :start_date::DATE
+          AND visited_at <= :end_date::DATE
+        GROUP BY visited_at
+      )
+      SELECT dau.date, dau.dau, rolling_mau.mau
       FROM dau
+      JOIN rolling_mau ON rolling_mau.day = dau.date
+      ORDER BY dau.date
     SQL
 
     DB.query_hash(sql, start_date: start_date, end_date: end_date)
@@ -85,11 +128,11 @@ end
 # Table name: user_visits
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  visited_at :date             not null
-#  posts_read :integer          default(0)
 #  mobile     :boolean          default(FALSE)
+#  posts_read :integer          default(0)
 #  time_read  :integer          default(0), not null
+#  visited_at :date             not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

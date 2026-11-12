@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const new_assignee_username = "new_assignee";
 
@@ -26,7 +26,7 @@ const selectors = {
 const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
-acceptance(`Discourse Assign | Post popup menu`, function (needs) {
+acceptance("Post popup menu", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,
@@ -45,13 +45,16 @@ acceptance(`Discourse Assign | Post popup menu`, function (needs) {
 
     server.get("/assign/suggestions", () =>
       helper.response({
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [{ username: new_assignee_username }],
       })
     );
 
-    server.get("/u/search/users", () =>
-      helper.response({ users: [{ username: new_assignee_username }] })
+    server.get("/assign/search", () =>
+      helper.response({
+        users: [{ username: new_assignee_username }],
+        groups: [],
+      })
     );
   });
 

@@ -200,13 +200,9 @@ class PostActionCreator
                                          likes_count: @post.like_count + 1,
                                          user_id: @created_by.id,
                                        }
-    elsif self.class.notify_types.include?(@post_action_name)
+    elsif flagging_post?
       @post.publish_change_to_clients! :acted
     end
-  end
-
-  def self.notify_types
-    @notify_types ||= PostActionType.notify_flag_types.keys
   end
 
   def enforce_rules
@@ -299,8 +295,15 @@ class PostActionCreator
       created_at: @created_at,
     }
 
-    # First try to revive a trashed record
-    post_action = PostAction.where(where_attrs).with_deleted.where.not(deleted_at: nil).first
+    # Revive a trashed record only if it was never reviewed. A reviewed one would come back
+    # already agreed with (or deferred/disagreed), so it would never count as a new flag.
+    post_action =
+      PostAction
+        .where(where_attrs)
+        .with_deleted
+        .where.not(deleted_at: nil)
+        .where(agreed_at: nil, disagreed_at: nil, deferred_at: nil)
+        .first
 
     if post_action
       post_action.recover!

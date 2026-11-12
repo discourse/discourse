@@ -4,11 +4,13 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 import StyleguideIcons from "discourse/plugins/styleguide/discourse/components/styleguide-icons";
 
 export default class Icons extends Component {
+  // Curated rather than sourced from a module: the block below renders the whole
+  // sprite gallery, so no example module could ever match what it displays.
   get codeSample() {
-    return `import icon from "discourse/helpers/d-icon";
+    return `import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 <template>
-  {{icon "link"}}
+  {{dIcon "link"}}
 </template>`;
   }
 
@@ -35,7 +37,7 @@ export default class Icons extends Component {
         <pre class="pre-inline">.d-icon-link</pre>)</p>
     </div>
 
-    <StyleguideExample @title="Available icons" @code={{this.codeSample}}>
+    <StyleguideExample @code={{this.codeSample}} @title="Available icons">
       <StyleguideIcons />
     </StyleguideExample>
   </template>

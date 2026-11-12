@@ -11,11 +11,12 @@ export default class ChatChannelThreadSubscriptionManager {
 
   @tracked channel;
 
-  constructor(context, thread, { onNewMessage } = {}) {
+  constructor(context, thread, { onNewMessage, onRemoveMessage } = {}) {
     setOwner(this, getOwner(context));
 
     this.thread = thread;
     this.onNewMessage = onNewMessage;
+    this.onRemoveMessage = onRemoveMessage;
 
     this.messageBus.subscribe(
       this.messageBusChannel,
@@ -113,6 +114,9 @@ export default class ChatChannelThreadSubscriptionManager {
     stagedMessage.uploads = cloneJSON(data.chat_message.uploads || []);
     stagedMessage.streaming = data.chat_message.streaming;
     stagedMessage.edited = data.chat_message.edited;
+    stagedMessage.isAction = data.chat_message.is_action;
+
+    messagesManager.sortMessages();
 
     return stagedMessage;
   }
@@ -141,6 +145,9 @@ export default class ChatChannelThreadSubscriptionManager {
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
       message.streaming = data.chat_message.streaming;
+      message.aiLlmName = data.chat_message.ai_llm_name;
+      message.blocks = data.chat_message.blocks;
+      message.isAction = data.chat_message.is_action;
     }
   }
 
@@ -177,6 +184,7 @@ export default class ChatChannelThreadSubscriptionManager {
       targetMsg.deletedById = data.deleted_by_id;
       targetMsg.expanded = false;
     } else {
+      this.onRemoveMessage?.(targetMsg);
       this.messagesManager.removeMessage(targetMsg);
     }
 

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import Container from "discourse/components/topic-timeline/container";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class TopicTimeline extends Component {
   @tracked docked = false;
@@ -34,41 +34,41 @@ export default class TopicTimeline extends Component {
 
   <template>
     <div
-      {{this.addShowClass}}
-      class={{concatClass
+      class={{dConcatClass
         "timeline-container"
         (if @fullscreen "timeline-fullscreen")
         (if this.docked "timeline-docked")
         (if this.dockedBottom "timeline-docked-bottom")
       }}
+      {{this.addShowClass}}
     >
       <div class="topic-timeline">
         <Container
-          @model={{@model}}
+          @convertToPrivateMessage={{@convertToPrivateMessage}}
+          @convertToPublicTopic={{@convertToPublicTopic}}
+          @deleteTopic={{@deleteTopic}}
           @enteredIndex={{this.enteredIndex}}
-          @jumpTop={{@jumpTop}}
+          @fullscreen={{@fullscreen}}
           @jumpBottom={{@jumpBottom}}
           @jumpEnd={{@jumpEnd}}
           @jumpToIndex={{@jumpToIndex}}
+          @jumpTop={{@jumpTop}}
           @jumpToPostPrompt={{@jumpToPostPrompt}}
-          @fullscreen={{@fullscreen}}
-          @toggleMultiSelect={{@toggleMultiSelect}}
-          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
-          @showTopReplies={{@showTopReplies}}
-          @deleteTopic={{@deleteTopic}}
+          @model={{@model}}
           @recoverTopic={{@recoverTopic}}
-          @toggleClosed={{@toggleClosed}}
-          @toggleArchived={{@toggleArchived}}
-          @toggleVisibility={{@toggleVisibility}}
-          @showTopicTimerModal={{@showTopicTimerModal}}
-          @showFeatureTopic={{@showFeatureTopic}}
-          @showChangeTimestamp={{@showChangeTimestamp}}
-          @resetBumpDate={{@resetBumpDate}}
-          @convertToPublicTopic={{@convertToPublicTopic}}
-          @convertToPrivateMessage={{@convertToPrivateMessage}}
           @replyToPost={{@replyToPost}}
+          @resetBumpDate={{@resetBumpDate}}
           @setDocked={{this.setDocked}}
           @setDockedBottom={{this.setDockedBottom}}
+          @showChangeTimestamp={{@showChangeTimestamp}}
+          @showFeatureTopic={{@showFeatureTopic}}
+          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @showTopicTimerModal={{@showTopicTimerModal}}
+          @showTopReplies={{@showTopReplies}}
+          @toggleArchived={{@toggleArchived}}
+          @toggleClosed={{@toggleClosed}}
+          @toggleMultiSelect={{@toggleMultiSelect}}
+          @toggleVisibility={{@toggleVisibility}}
         />
       </div>
     </div>

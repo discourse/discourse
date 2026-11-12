@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import AiFullPageSearch from "../../components/ai-full-page-search";
+import AiFullPageSearch from "../../components/ai-full-page-search.gjs";
 
 export default class AiFullPageSearchConnector extends Component {
   static shouldRender(args, { siteSettings }) {
@@ -8,11 +8,11 @@ export default class AiFullPageSearchConnector extends Component {
 
   <template>
     <AiFullPageSearch
-      @sortOrder={{@outletArgs.sortOrder}}
-      @searchTerm={{@outletArgs.searchTerm}}
-      @searchType={{@outletArgs.type}}
       @addSearchResults={{@outletArgs.addSearchResults}}
       @model={{@outletArgs.model}}
+      @searchTerm={{@outletArgs.searchTerm}}
+      @searchType={{@outletArgs.type}}
+      @sortOrder={{@outletArgs.sortOrder}}
     />
   </template>
 }

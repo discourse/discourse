@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse-voetnoten"
   js:
     footnote:
+      title: "Voetnoten"
       add: "Voetnoot toevoegen"

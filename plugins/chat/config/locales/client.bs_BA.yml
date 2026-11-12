@@ -21,10 +21,10 @@ bs_BA:
         yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakačena"
       pinned: "Zakačena"
       channel_settings:
-        edit: "Edit"
-        add: "Add"
         notification_settings_context: "Obavijest"
         join: "Učlani se"
         leave: "Napusti"
@@ -56,19 +56,21 @@ bs_BA:
         filter_all: All
         filter_open: Otvori
         filter_closed: Zatvoreno
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružio se"
       chat_message_separator:
         today: Today
         yesterday: Yesterday
       search_view:
         filter_placeholder: Pretraži poruke
       about_view:
-        title: Naslov
         name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Prethodno"
         tabs:
           members: Članovi
+          preferences: Postavke
           settings: Postavke
           search: Pretraži
         remove_member: "Ukloni"
@@ -79,6 +81,7 @@ bs_BA:
         title: Nova poruka
         prefix: "Za:"
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"
@@ -92,6 +95,7 @@ bs_BA:
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Omogućen"
         threading_disabled: "Neomogućen"
         notifications: "Obavijest"
@@ -99,8 +103,6 @@ bs_BA:
         save: "Save"
         saved: "Spašeno"
         unfollow: "Napusti"
-        admin_title: "Admin"
-        settings_title: "Postavke"
         category_label: "Kategorija"
         history_label: "Historija"
         members_label: "Članovi"
@@ -110,6 +112,11 @@ bs_BA:
         sort:
           relevance: "Bitnost"
           latest: "Zadnje"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spomenuto"
       incoming_webhooks:
         back: "Prethodno"
         description: "Opis"
@@ -161,3 +168,12 @@ bs_BA:
           fields:
             message:
               label: Privatna Poruka
+    discourse_workflows:
+      send_chat_message:
+        message: "Privatna Poruka"
+      chat_approval:
+        message: "Privatna Poruka"
+        value: "Value"
+        style_default: "Uobičajen"
+        style_success: "Uspjeh"
+        icon: "Icon"

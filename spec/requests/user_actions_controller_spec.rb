@@ -7,9 +7,39 @@ RSpec.describe UserActionsController do
     context "when 'username' is not specified" do
       let(:params) { {} }
 
-      it "fails" do
+      it "returns 400 when username is missing" do
         user_actions
         expect(response).to have_http_status :bad_request
+      end
+    end
+
+    context "when requesting more actions than the maximum page size" do
+      fab!(:user)
+
+      let(:params) { { username: user.username, filter: UserAction::REPLY, limit: 200 } }
+
+      before do
+        topic = Fabricate(:topic, user: user)
+
+        101.times do
+          post = Fabricate(:post, topic: topic, user: user)
+          UserAction.create!(
+            action_type: UserAction::REPLY,
+            user: user,
+            acting_user: user,
+            target_topic: topic,
+            target_post: post,
+          )
+        end
+
+        user.user_stat.update!(post_count: 101)
+      end
+
+      it "returns no more than 100 actions" do
+        user_actions
+
+        expect(response).to have_http_status :ok
+        expect(response.parsed_body["user_actions"].length).to eq(100)
       end
     end
 
@@ -31,8 +61,17 @@ RSpec.describe UserActionsController do
         expect(actions.first).not_to include "email"
       end
 
+      it "does not disclose activity when public profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+
+        user_actions
+
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(post.raw)
+      end
+
       it "returns categories when lazy load categories is enabled" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
         user_actions
         expect(response.status).to eq(200)
         category_ids = response.parsed_body["categories"].map { |category| category["id"] }
@@ -43,6 +82,7 @@ RSpec.describe UserActionsController do
         let(:user) { Fabricate(:user) }
 
         before do
+          sign_in(post.user)
           PostActionNotifier.enable
           PostActionCreator.like(user, post)
           params[:acting_username] = user.username
@@ -63,7 +103,7 @@ RSpec.describe UserActionsController do
         context "when `allow_users_to_hide_profile` is disabled" do
           before { SiteSetting.allow_users_to_hide_profile = false }
 
-          it "succeeds" do
+          it "returns user actions when profile hiding is disabled" do
             user_actions
             expect(response).to have_http_status :ok
           end
@@ -80,13 +120,36 @@ RSpec.describe UserActionsController do
       context "when checking other users' activity" do
         fab!(:another_user, :user)
 
+        context "when filter is omitted" do
+          it "does not return private action types for another user" do
+            another_user.user_stat.update!(post_count: 1)
+            topic = Fabricate(:topic, user: another_user)
+            post = Fabricate(:post, topic: topic, user: another_user)
+            UserAction.create!(
+              action_type: UserAction::RESPONSE,
+              user_id: another_user.id,
+              acting_user_id: another_user.id,
+              target_topic_id: topic.id,
+              target_post_id: post.id,
+            )
+
+            get "/user_actions.json", params: { username: another_user.username }
+
+            expect(response.status).to eq(200)
+            action_types = response.parsed_body["user_actions"].map { |a| a["action_type"] }
+            expect(action_types).not_to include(*UserAction.private_types)
+          end
+        end
+
         context "when user is anonymous" do
+          # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
           UserAction.private_types.each do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+          # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
         end
 
         context "when user is logged in" do
@@ -94,12 +157,14 @@ RSpec.describe UserActionsController do
 
           before { sign_in(user) }
 
+          # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
           UserAction.private_types.each do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+          # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
         end
 
         context "when user is a moderator" do
@@ -107,12 +172,14 @@ RSpec.describe UserActionsController do
 
           before { sign_in(moderator) }
 
+          # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
           UserAction.private_types.each do |action_type|
             action_name = UserAction.types.key(action_type)
             it "cannot list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 404)
             end
           end
+          # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
         end
 
         context "when user is an admin" do
@@ -120,12 +187,14 @@ RSpec.describe UserActionsController do
 
           before { sign_in(admin) }
 
+          # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
           UserAction.private_types.each do |action_type|
             action_name = UserAction.types.key(action_type)
             it "can list other users' actions of type: #{action_name}" do
               list_and_check(action_type, 200)
             end
           end
+          # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
         end
 
         def list_and_check(action_type, expected_response)
@@ -144,17 +213,296 @@ RSpec.describe UserActionsController do
         let(:offset) { "0" }
         let(:limit) { "10" }
 
-        %i[filter username offset limit].each do |parameter|
-          context "when providing bad data for '#{parameter}'" do
-            let(parameter) { { bad: "data" } }
+        context "when providing bad data for 'filter'" do
+          let(:filter) { { bad: "data" } }
 
-            it "doesn't raise an error" do
-              user_actions
-              expect(response).not_to have_http_status :error
-            end
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'username'" do
+          let(:username) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'offset'" do
+          let(:offset) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
+          end
+        end
+
+        context "when providing bad data for 'limit'" do
+          let(:limit) { { bad: "data" } }
+
+          it "doesn't raise an error" do
+            user_actions
+            expect(response).not_to have_http_status :error
           end
         end
       end
+    end
+  end
+
+  describe "#show" do
+    fab!(:acting_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    fab!(:target_post) do
+      UserActionManager.enable
+      post = create_post(user: acting_user)
+      acting_user.user_stat.update!(post_count: 1)
+      post
+    end
+
+    fab!(:user_action) do
+      UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:new_topic])
+    end
+
+    it "returns the action for a visible user with a public action" do
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      expect(response).to have_http_status :ok
+      expect(parsed["action_type"]).to eq(user_action.action_type)
+      expect(parsed["title"]).to eq(target_post.topic.title)
+      expect(parsed["excerpt"]).to eq(
+        PrettyText.excerpt(target_post.cooked, 300, keep_emoji_images: true),
+      )
+    end
+
+    it "returns 404 when the fallback first post is hidden" do
+      UserActionManager.enable
+      hidden_text = "hidden fallback excerpt token"
+      hidden_post = create_post(user: acting_user, raw: hidden_text)
+      hidden_post.update_columns(hidden: true)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: hidden_post.topic_id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(hidden_text)
+      end
+    end
+
+    it "returns the action when the hidden fallback first post belongs to the viewer" do
+      UserActionManager.enable
+      hidden_text = "own hidden fallback excerpt token"
+      hidden_post = create_post(user: acting_user, raw: hidden_text)
+      hidden_post.update_columns(hidden: true)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: hidden_post.topic_id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      aggregate_failures do
+        expect(response).to have_http_status :ok
+        expect(parsed["excerpt"]).to include(hidden_text)
+      end
+    end
+
+    it "returns 404 when a hidden target post has no owner" do
+      hidden_text = "hidden ownerless excerpt token"
+      hidden_reply = create_post(user: Fabricate(:user), topic: target_post.topic, raw: hidden_text)
+      hidden_reply.update_columns(hidden: true, user_id: nil)
+      user_action =
+        UserAction.create!(
+          action_type: UserAction::REPLY,
+          user_id: acting_user.id,
+          acting_user_id: acting_user.id,
+          target_topic_id: hidden_reply.topic_id,
+          target_post_id: hidden_reply.id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(hidden_text)
+      end
+    end
+
+    it "returns the action when the hidden target post belongs to the viewer" do
+      hidden_text = "own hidden target excerpt token"
+      hidden_reply = create_post(user: acting_user, topic: target_post.topic, raw: hidden_text)
+      hidden_reply.update_columns(hidden: true)
+      user_action =
+        UserAction.create!(
+          action_type: UserAction::REPLY,
+          user_id: acting_user.id,
+          acting_user_id: acting_user.id,
+          target_topic_id: hidden_reply.topic_id,
+          target_post_id: hidden_reply.id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      aggregate_failures do
+        expect(response).to have_http_status :ok
+        expect(parsed["excerpt"]).to include(hidden_text)
+      end
+    end
+
+    it "returns 404 for an unlisted topic viewed anonymously" do
+      UserActionManager.enable
+      unlisted_text = "unlisted user action excerpt token"
+      unlisted_post = create_post(user: acting_user, raw: unlisted_text)
+      unlisted_post.topic.update!(visible: false)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: unlisted_post.topic_id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(unlisted_text)
+      end
+    end
+
+    it "returns 404 for a non-existent action" do
+      get "/user_actions/-1.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 when the acting user has a hidden profile" do
+      SiteSetting.allow_users_to_hide_profile = true
+      acting_user.user_option.update!(hide_profile: true)
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 when hide_user_activity_tab is enabled" do
+      SiteSetting.hide_user_activity_tab = true
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 for a private action type viewed by a non-admin non-owner" do
+      liker = Fabricate(:user)
+      other_user = Fabricate(:user)
+      UserActionManager.enable
+      PostActionNotifier.enable
+      PostActionCreator.like(liker, target_post)
+      was_liked_action =
+        UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:was_liked])
+
+      sign_in(other_user)
+      get "/user_actions/#{was_liked_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+  end
+
+  describe "content localization" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:viewer) { Fabricate(:user, locale: "ja") }
+    fab!(:staff_viewer) { Fabricate(:moderator, locale: "ja") }
+
+    let!(:topic_post) do
+      UserActionManager.enable
+      create_post(
+        user: author,
+        title: "Original english title",
+        raw: "Original topic body",
+        locale: "en",
+      )
+    end
+    let(:topic) { topic_post.topic }
+    let!(:reply) do
+      create_post(user: author, topic: topic, raw: "Original reply body", locale: "en")
+    end
+
+    let(:new_topic_action) do
+      response.parsed_body["user_actions"].find { |a| a["action_type"] == UserAction::NEW_TOPIC }
+    end
+    let(:reply_action) do
+      response.parsed_body["user_actions"].find { |a| a["action_type"] == UserAction::REPLY }
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "翻訳されたタイトル")
+      Fabricate(:post_localization, post: topic_post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+      Fabricate(:post_localization, post: reply, locale: "ja", cooked: "<p>翻訳された返信</p>")
+
+      sign_in(viewer)
+    end
+
+    it "returns the translated title and excerpt" do
+      get "/user_actions.json", params: { username: author.username }
+
+      expect(response).to have_http_status :ok
+      expect(new_topic_action["title"]).to eq("翻訳されたタイトル")
+      expect(new_topic_action["excerpt"]).to eq("翻訳された本文")
+      expect(reply_action["excerpt"]).to eq("翻訳された返信")
+      expect(new_topic_action["slug"]).to eq(topic.slug)
+    end
+
+    it "returns the original content without preloading when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      queries =
+        track_sql_queries { get "/user_actions.json", params: { username: author.username } }
+
+      expect(new_topic_action["title"]).to eq("Original english title")
+      expect(queries.grep(/FROM "?(topic|post)_localizations"?/)).to be_empty
+    end
+
+    it "returns the translated excerpt of a deleted post to staff" do
+      reply.trash!(staff_viewer)
+      sign_in(staff_viewer)
+
+      get "/user_actions.json", params: { username: author.username }
+
+      expect(reply_action["excerpt"]).to eq("翻訳された返信")
+    end
+
+    it "returns the translated title and excerpt for a single action" do
+      user_action =
+        UserAction.find_by!(
+          user_id: author.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: topic.id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response.parsed_body["user_action"]["excerpt"]).to eq("翻訳された本文")
     end
   end
 end

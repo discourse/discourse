@@ -6,19 +6,21 @@
 
 nb_NO:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Datautforsker"
     errors:
       explorer:
         no_semicolons: "Fjern semikolonene fra spørringen."
         dirty: "Du må lagre spørringen før du kjører den."
     explorer:
-      default_query: "Forvalg"
       or: "eller"
       admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
       title: "Datautforsker"
-      create: "Opprett"
       create_placeholder: "Spørringsnavn…"
-      import:
-        label: "Importer"
+      ai:
+        generate: "Generer API-nøkkel"
       help:
         label: "Hjelp"
       schema:
@@ -28,19 +30,24 @@ nb_NO:
           yes: "Ja"
           no: "Nei"
           null_: "Null"
-      export: "Eksporter"
-      edit: "Rediger"
       delete: "Slett"
-      download_json: "JSON"
-      download_csv: "CSV"
-      others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
+      chart:
+        form:
+          bar: "Bar"
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
+      name: "Navn"
       query_groups: "Grupper"
+      query_tags: "Stikkord"
       query_description: "Beskrivelse"
-      explain_label: "Inkluder spørringsplan?"
       reset_params: "Tilbakestill"
-      search_placeholder: "Søk…"
     group:
       reports: "Rapporter"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Datautforsker"
+      sql:
+        param_value: "Verdi"
+        output:
+          results: "Resultater"

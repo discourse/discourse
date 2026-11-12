@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Uploading files in the composer to S3", type: :system do
+describe "Uploading files in the composer to S3" do
   fab!(:current_user, :admin)
 
   let(:modal) { PageObjects::Modals::Base.new }
@@ -36,7 +36,7 @@ describe "Uploading files in the composer to S3", type: :system do
     end
 
     describe "multipart uploads" do
-      xit "uploads a file in the post composer" do
+      it "uploads a file in the post composer" do
         setup_or_skip_s3_system_test
         sign_in(current_user)
 

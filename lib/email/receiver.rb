@@ -37,6 +37,9 @@ module Email
     class InactiveUserError < ProcessingError
     end
 
+    class SuspendedUserError < ProcessingError
+    end
+
     class SilencedUserError < ProcessingError
     end
 
@@ -76,10 +79,16 @@ module Email
     class EmailNotAllowed < ProcessingError
     end
 
+    class EmailAliasNotAllowed < ProcessingError
+    end
+
     class OldDestinationError < ProcessingError
     end
 
     class ReplyToDigestError < ProcessingError
+    end
+
+    class SiteArchivedError < ProcessingError
     end
 
     class TooManyRecipientsError < ProcessingError
@@ -90,12 +99,27 @@ module Email
       end
     end
 
+    class MaxMimeDepthExceededError < ProcessingError
+    end
+
+    class MaxMimePartsExceededError < ProcessingError
+    end
+
     attr_reader :incoming_email
     attr_reader :raw_email
     attr_reader :mail
     attr_reader :message_id
+    attr_reader :from_email
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
+
+    # The mail gem walks nested MIME parts recursively, so bound the nesting
+    # before any traversal to keep one message from exhausting the stack.
+    MAX_MIME_DEPTH = 20
+
+    # Bound the total number of MIME parts so a wide message can't monopolise
+    # the mail worker.
+    MAX_MIME_PARTS = 1_000
 
     def self.formats
       @formats ||= Enum.new(plaintext: 1, markdown: 2)
@@ -116,6 +140,8 @@ module Email
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
       @destinations ||= opts[:destinations]
+
+      ensure_shallow_mime_structure!
     end
 
     def process!
@@ -124,33 +150,76 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
 
       DistributedMutex.synchronize("process_email_#{id_hash}") do
-        begin
-          # If we find an existing incoming email record with the exact same `message_id`
-          # do not create a new `IncomingEmail` record to avoid double ups.
-          return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+        # If we find an existing incoming email record with the exact same `message_id`
+        # do not create a new `IncomingEmail` record to avoid double ups.
+        return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
 
-          Email::Validator.ensure_valid!(@mail)
+        Email::Validator.ensure_valid!(@mail)
 
-          @from_email, @from_display_name = parse_from_field(@mail)
-          @from_user = User.find_by_email(@from_email)
-          @incoming_email = create_incoming_email
+        @from_email, @from_display_name = parse_from_field(@mail)
+        @from_user = User.find_by_email(@from_email)
+        @incoming_email = create_incoming_email
 
-          post = process_internal
+        post = process_internal
 
-          raise BouncedEmailError if is_bounce?
+        raise BouncedEmailError if is_bounce?
 
-          post
-        rescue Exception => e
-          @incoming_email.update_columns(error: e.class.name) if @incoming_email
-          delete_created_staged_users
-          raise
-        end
+        post
+      rescue Exception => e
+        @incoming_email.update_columns(error: e.class.name) if @incoming_email
+        delete_created_staged_users
+        raise
       end
     end
 
     def is_blocked?
-      return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
+      if SiteSetting.ignore_by_title.present?
+        escaped_regex =
+          SiteSetting.ignore_by_title.split("|").map { |s| Regexp.escape(s) }.join("|")
+        return true if Regexp.new(escaped_regex, Regexp::IGNORECASE) =~ @mail.subject
+      end
+      if SiteSetting.ignore_by_title_regex.present?
+        if Regexp.new(SiteSetting.ignore_by_title_regex, Regexp::IGNORECASE) =~ @mail.subject
+          return true
+        end
+      end
+      false
+    end
+
+    def ensure_shallow_mime_structure!
+      pending = [[@mail, 1]]
+      part_count = 1
+
+      until pending.empty?
+        part, depth = pending.pop
+        raise MaxMimeDepthExceededError if depth > MAX_MIME_DEPTH
+
+        next unless part.multipart?
+
+        # Mail parses every sibling as soon as `parts` is called, so check the
+        # raw source first to avoid building a huge tree only to reject it.
+        raise MaxMimePartsExceededError if too_many_mime_parts?(part)
+
+        children = part.parts
+        part_count += children.size
+        raise MaxMimePartsExceededError if part_count > MAX_MIME_PARTS
+
+        pending.concat(children.map { |child| [child, depth + 1] })
+      end
+    end
+
+    def too_many_mime_parts?(part)
+      boundary = part.boundary
+      return false if boundary.blank?
+
+      count = 0
+      part
+        .raw_source
+        .scan(/(?:\A|\r?\n)--#{Regexp.escape(boundary)}(?:--)?(?=\s*$)/) do
+          count += 1
+          return true if count > MAX_MIME_PARTS
+        end
+      false
     end
 
     def create_incoming_email
@@ -172,11 +241,12 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
+      raise SiteArchivedError if SiteSetting.site_archived
 
       user = @from_user
 
       if user.present?
-        log_and_validate_user(user)
+        log_user(user)
       elsif !SiteSetting.enable_staged_users
         category = Category.find_by_email(mail.to)
         if category&.email_in_allow_strangers? && SiteSetting.email_in_allow_system_user_fallback
@@ -206,6 +276,7 @@ module Email
 
       if action = subscription_action_for(body, subject)
         raise UnsubscribeNotAllowed if user.nil?
+        validate_user(user)
         send_subscription_mail(action, user)
         return
       end
@@ -214,7 +285,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -249,17 +320,16 @@ module Email
         first_exception = nil
 
         destinations.each do |destination|
-          begin
-            return process_destination(destination, user, body, elided)
-          rescue => e
-            first_exception ||= e
-          end
+          return process_destination(destination, user, body, elided)
+        rescue => e
+          first_exception ||= e
         end
 
         raise first_exception if first_exception
 
         # We don't stage new users for emails to reply addresses, exit if user is nil
         raise BadDestinationAddress if user.blank?
+        validate_user(user)
 
         # We only get here if there are no destinations (the email is not going to
         # a Category, Group, or PostReplyKey)
@@ -278,11 +348,32 @@ module Email
       end
     end
 
-    def log_and_validate_user(user)
+    def log_user(user)
       @incoming_email.update_columns(user_id: user.id)
+    end
 
-      raise InactiveUserError if !user.active && !user.staged
-      raise SilencedUserError if user.silenced?
+    def validate_user(user)
+      error = user_restriction_error(user)
+      raise error if error
+    end
+
+    def user_restriction_error(user)
+      return InactiveUserError if !user.active && !user.staged
+      return SuspendedUserError if user.suspended?
+      return SilencedUserError if user.silenced?
+      nil
+    end
+
+    def original_sender(user)
+      address, = Email::Receiver.extract_email_address_and_name(@mail[:from])
+      User.find_by_email(address) || @from_user || user
+    end
+
+    def validate_destination_user(user:, destination:)
+      if destination.is_a?(Category) ||
+           (destination.is_a?(Group) && destination.incoming_email.blank?)
+        validate_user(user)
+      end
     end
 
     def get_all_recipients(mail)
@@ -292,10 +383,8 @@ module Email
         next if mail[field].blank?
 
         mail[field].each do |address_field|
-          begin
-            address_field.decoded
-            recipients << address_field.address.downcase
-          end
+          address_field.decoded
+          recipients << address_field.address.downcase
         end
       end
 
@@ -417,6 +506,10 @@ module Email
 
     def auth_res_action
       @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+    rescue StandardError => e
+      # fail closed without losing the post: queue it for review
+      Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
+      @auth_res_action = :enqueue
     end
 
     def select_body
@@ -461,7 +554,7 @@ module Email
           # use the first html extracter that matches
           if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
             doc = Nokogiri::HTML5.fragment(html)
-            self.public_send(:"extract_from_#{html_extracter[0]}", doc)
+            public_send(:"extract_from_#{html_extracter[0]}", doc)
           else
             markdown =
               HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
@@ -544,17 +637,20 @@ module Email
     def extract_from_outlook(doc)
       # Outlook properly identifies the signature and any replied/forwarded email
       # Use their id to remove them and anything that comes after
-      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      elided =
+        remove_with_following_siblings(
+          doc,
+          predicate: "@id='Signature' or @id='divRplyFwdMsg'",
+          standalone_predicate: "local-name()='hr'",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
-      elided =
-        doc.css(
-          ".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *",
-        ).remove
+      signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
+      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
@@ -579,7 +675,14 @@ module Email
     def extract_from_apple_mail(doc)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
+      elided =
+        doc
+          .children
+          .xpath(
+            ".//*[@id='AppleMailSignature'][position()=last()]/following-sibling::* | " \
+              "self::*[@id='AppleMailSignature'][not(preceding-sibling::*[@id='AppleMailSignature'][1])]/following-sibling::*",
+          )
+          .remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -587,17 +690,18 @@ module Email
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided =
-        doc.css(
-          "*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
-            "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
-            "*[class^='moz-forward'], *[class^='moz-forward'] ~ *",
-        ).remove
+        remove_with_following_siblings(
+          doc,
+          predicate:
+            "starts-with(@class, 'moz-cite') or " \
+              "starts-with(@class, 'moz-signature') or starts-with(@class, 'moz-forward')",
+        )
       to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_protonmail(doc)
       # Removes anything that has a class starting with "protonmail_" and everything after that
-      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
+      elided = remove_with_following_siblings(doc, predicate: "starts-with(@class, 'protonmail_')")
       to_markdown(doc.to_html, elided.to_html)
     end
 
@@ -763,28 +867,26 @@ module Email
     end
 
     def self.extract_email_address_and_name(value)
-      begin
-        # ensure the email header value is a string
-        value = value.to_s
-        # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
-        value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
-        # 'mailto:' suffix isn't supported by Mail::Address parsing
-        value = value.gsub("mailto:", "")
-        # parse the email header value
-        parsed = Mail::Address.new(value)
-        # extract the email address and name
-        mail = parsed.address.to_s.downcase.strip
-        name = parsed.name.to_s.strip
-        # ensure the email address is "valid"
-        if mail.include?("@")
-          # remove surrounding quotes from the name
-          name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
-          # return the email address and name
-          [mail, name]
-        end
-      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
-        # something went wrong parsing the email header value, return nil
+      # ensure the email header value is a string
+      value = value.to_s
+      # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
+      value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
+      # 'mailto:' suffix isn't supported by Mail::Address parsing
+      value = value.gsub("mailto:", "")
+      # parse the email header value
+      parsed = Mail::Address.new(value)
+      # extract the email address and name
+      mail = parsed.address.to_s.downcase.strip
+      name = parsed.name.to_s.strip
+      # ensure the email address is "valid"
+      if mail.include?("@")
+        # remove surrounding quotes from the name
+        name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
+        # return the email address and name
+        [mail, name]
       end
+    rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
+      # something went wrong parsing the email header value, return nil
     end
 
     def subject
@@ -802,6 +904,10 @@ module Email
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
+          # Staging would be rejected by the normalized uniqueness rule, which is a
+          # deliberate block rather than an unexpected failure. Callers that tolerate
+          # a failed create keep getting nil, so only the sender aborts the email.
+          raise EmailAliasNotAllowed if raise_on_failed_create && normalized_email_taken?(email)
 
           username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
@@ -829,6 +935,10 @@ module Email
       find_or_create_user(email, display_name, raise_on_failed_create: true)
     end
 
+    def normalized_email_taken?(email)
+      SiteSetting.normalize_emails? && UserEmail.find_by_normalized(email).present?
+    end
+
     def all_destinations
       @all_destinations ||= [
         @mail.destinations,
@@ -842,15 +952,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -887,11 +993,13 @@ module Email
         user ||= stage_from_user
         create_group_post(destination, user, body, elided)
       elsif destination.is_a?(Category)
+        validate_user(user) if user
         if (user.nil? || user.staged?) && !destination.email_in_allow_strangers
           raise StrangersNotAllowedError
         end
 
         user ||= stage_from_user
+        validate_user(user)
 
         if !user.staged? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
              !sent_to_mailinglist_mirror?
@@ -911,6 +1019,7 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post = Post.with_deleted.find(destination.post_id)
+        validate_user(user) unless group_inbox_message?(post.topic)
         raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if destination.user_id != user.id && !forwarded_reply_key?(destination, user)
@@ -931,6 +1040,7 @@ module Email
     end
 
     def create_group_post(group, user, body, elided)
+      validate_destination_user(user: user, destination: group)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
 
       # Incoming emails with matching message ids, and then cross references
@@ -962,8 +1072,15 @@ module Email
         post_ids << post_id_from_email_log if post_id_from_email_log
       end
 
-      target_post = post_ids.any? && Post.where(id: post_ids).order(:created_at).last
-      too_old_for_group_smtp = (destination_too_old?(target_post) && group.smtp_enabled)
+      target_post =
+        if post_ids.any?
+          Post
+            .joins(topic: :topic_allowed_groups)
+            .where(id: post_ids, topic_allowed_groups: { group_id: group.id })
+            .order(:created_at)
+            .last
+        end
+      too_old_for_group_smtp = destination_too_old?(target_post) && group.smtp_enabled
 
       if target_post.blank? || too_old_for_group_smtp
         create_topic(
@@ -974,6 +1091,7 @@ module Email
           archetype: Archetype.private_message,
           target_group_names: [group.name],
           is_group_message: true,
+          is_group_inbox_message: group.incoming_email.present?,
           skip_validations: true,
         )
       else
@@ -1073,6 +1191,11 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
+      sender = original_sender(user)
+      [user, sender].uniq.each do |destination_user|
+        validate_destination_user(user: destination_user, destination: destination)
+      end
+      user = sender if user_restriction_error(sender)
       case SiteSetting.forwarded_emails_behaviour
       when "create_replies"
         forwarded_email_create_replies(destination, user)
@@ -1092,7 +1215,7 @@ module Email
       embedded_user: nil
     )
       if destination.is_a?(Group)
-        topic_user = embedded_user&.call || user
+        topic_user = user_restriction_error(user) ? user : (embedded_user&.call || user)
         create_topic(
           user: topic_user,
           raw: raw,
@@ -1101,6 +1224,7 @@ module Email
           target_usernames: [user.username],
           target_group_names: [destination.name],
           is_group_message: true,
+          is_group_inbox_message: destination.incoming_email.present?,
           skip_validations: true,
           created_at: date,
         )
@@ -1130,6 +1254,7 @@ module Email
 
       if forwarded_by_address && forwarded_by_name
         @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
+        validate_destination_user(user: @forwarded_by_user, destination: destination)
       end
 
       email_address, display_name =
@@ -1253,7 +1378,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1314,6 +1445,14 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:is_group_message] = options[:topic].private_message? &&
+        options[:topic].allowed_groups.exists?
+      options[:is_group_inbox_message] = group_inbox_message?(options[:topic])
+      post_action_type = post_action_for(options[:raw])
+      notification_level = notification_level_for(options[:raw])
+      group_inbox_post =
+        options[:is_group_inbox_message] && !post_action_type && !notification_level
+      validate_user(options[:user]) unless group_inbox_post || options[:bounce]
       if options[:bounce] && options[:topic].archetype != Archetype.private_message
         raise BouncedEmailError
       end
@@ -1323,9 +1462,9 @@ module Email
         enable_email_pm_setting(options[:user])
       end
 
-      if post_action_type = post_action_for(options[:raw])
+      if post_action_type
         create_post_action(options[:user], options[:post], post_action_type)
-      elsif notification_level = notification_level_for(options[:raw])
+      elsif notification_level
         TopicUser.change(
           options[:user].id,
           options[:post].topic_id,
@@ -1335,10 +1474,13 @@ module Email
         raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:topic].id
         options[:reply_to_post_number] = options[:post]&.post_number
-        options[:is_group_message] = options[:topic].private_message? &&
-          options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
+    end
+
+    def group_inbox_message?(topic)
+      topic.present? && topic.private_message? &&
+        topic.allowed_groups.where.not(incoming_email: [nil, ""]).exists?
     end
 
     def create_post_action(user, post, type)
@@ -1494,12 +1636,16 @@ module Email
       options[:via_email] = true
       options[:raw_email] = @raw_email
 
+      options[:created_at] = Time.zone.now if options[:topic_id] && !options[:import_mode]
       options[:created_at] ||= @mail.date
       options[:created_at] = DateTime.now if options[:created_at] > DateTime.now
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else
@@ -1518,6 +1664,12 @@ module Email
         )
         user = Discourse.system_user
         options[:post_type] = Post.types[:whisper]
+      end
+
+      # Skipping validations also skips the max_post_length check, so bound
+      # the body here before it reaches the post or queued post records.
+      if options[:skip_validations]
+        options[:raw] = options[:raw].truncate(SiteSetting.max_post_length, omission: "")
       end
 
       # To avoid race conditions with the post alerter and Group SMTP
@@ -1581,52 +1733,52 @@ module Email
     end
 
     def add_other_addresses(post, sender, mail_object)
+      return if user_restriction_error(original_sender(sender))
+
       max_staged_users_post = nil
 
       %i[to cc bcc].each do |d|
         next if mail_object[d].blank?
 
         mail_object[d].each do |address_field|
-          begin
-            address_field.decoded
-            email = address_field.address.downcase
-            display_name = address_field.display_name.try(:to_s)
-            next if !email.include?("@")
+          address_field.decoded
+          email = address_field.address.downcase
+          display_name = address_field.display_name.try(:to_s)
+          next if !email.include?("@")
 
-            if should_invite?(email)
-              user = User.find_by_email(email)
+          if should_invite?(email)
+            user = User.find_by_email(email)
 
-              # cap number of staged users created per email
-              if (!user || user.staged) &&
-                   @staged_users.count >= SiteSetting.maximum_staged_users_per_email
-                max_staged_users_post ||=
-                  post.topic.add_moderator_post(
-                    sender,
-                    I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
-                    import_mode: @opts[:import_mode],
-                  )
-                next
-              end
-
-              user = find_or_create_user(email, display_name, user: user)
-              if user && can_invite?(post.topic, user)
-                post.topic.topic_allowed_users.create!(user_id: user.id)
-                TopicUser.auto_notification_for_staging(
-                  user.id,
-                  post.topic_id,
-                  TopicUser.notification_reasons[:auto_watch],
-                )
-                post.topic.add_small_action(
+            # cap number of staged users created per email
+            if (!user || user.staged) &&
+                 @staged_users.count >= SiteSetting.maximum_staged_users_per_email
+              max_staged_users_post ||=
+                post.topic.add_moderator_post(
                   sender,
-                  "invited_user",
-                  user.username,
+                  I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
                   import_mode: @opts[:import_mode],
                 )
-              end
+              next
             end
-          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-            # don't care if user already allowed or the user's email address is not allowed
+
+            user = find_or_create_user(email, display_name, user: user)
+            if user && can_invite?(post.topic, user)
+              post.topic.topic_allowed_users.create!(user_id: user.id)
+              TopicUser.auto_notification_for_staging(
+                user.id,
+                post.topic_id,
+                TopicUser.notification_reasons[:auto_watch],
+              )
+              post.topic.add_small_action(
+                sender,
+                "invited_user",
+                user.username,
+                import_mode: @opts[:import_mode],
+              )
+            end
           end
+        rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+          # don't care if user already allowed or the user's email address is not allowed
         end
       end
     end
@@ -1654,7 +1806,7 @@ module Email
     end
 
     def stage_sender_user(email, display_name)
-      find_or_create_user!(email, display_name).tap { |u| log_and_validate_user(u) }
+      find_or_create_user!(email, display_name).tap { |u| log_user(u) }
     end
 
     def delete_created_staged_users
@@ -1677,6 +1829,16 @@ module Email
       return false if post.blank?
       num_of_days = SiteSetting.disallow_reply_by_email_after_days
       num_of_days > 0 && post.created_at < num_of_days.days.ago
+    end
+
+    private
+
+    def remove_with_following_siblings(doc, predicate:, standalone_predicate: nil)
+      matches = "descendant-or-self::*[#{predicate}]"
+      first_matches = "#{matches}[not(preceding-sibling::*[#{predicate}][1])]"
+      query = "#{matches} | #{first_matches}/following-sibling::*"
+      query += " | descendant-or-self::*[#{standalone_predicate}]" if standalone_predicate
+      doc.children.xpath(query).remove
     end
   end
 end

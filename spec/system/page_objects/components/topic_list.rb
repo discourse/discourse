@@ -38,6 +38,14 @@ module PageObjects
         page.has_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
       end
 
+      def has_no_topic_checkbox?(topic)
+        page.has_no_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+      end
+
+      def has_bulk_select_enabled?
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR} input.bulk-select")
+      end
+
       def has_closed_status?(topic)
         page.has_css?("#{topic_list_item_closed(topic)}")
       end
@@ -48,6 +56,14 @@ module PageObjects
 
       def has_no_unread_badge?(topic)
         page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
+      end
+
+      def has_new_replies_dot?(topic)
+        page.has_css?("#{topic_list_item_new_replies_dot(topic)}")
+      end
+
+      def has_no_new_replies_dot?(topic)
+        page.has_no_css?("#{topic_list_item_new_replies_dot(topic)}")
       end
 
       def has_checkbox_selected_on_row?(n)
@@ -72,6 +88,26 @@ module PageObjects
 
       def visit_topic(topic)
         find("#{topic_list_item_class(topic)} a.raw-topic-link").click
+      end
+
+      def scroll_to_topic_at_index(index)
+        page.scroll_to(all(TOPIC_LIST_ITEM_SELECTOR)[index], align: :top)
+      end
+
+      def scroll_page_down(amount: 50)
+        page.execute_script(<<~JS, amount)
+          const listArea = document.querySelector("#list-area");
+          if (!listArea) {
+            throw new Error("Topic list area not found");
+          }
+
+          listArea.style.minHeight = "3000px";
+          window.scrollTo(0, arguments[0]);
+        JS
+      end
+
+      def scrolled_down?
+        page.evaluate_script("window.scrollY").positive?
       end
 
       def visit_topic_last_reply_via_keyboard(topic)
@@ -108,8 +144,12 @@ module PageObjects
         )
       end
 
-      def has_topic_tags?(topic, *tag_names)
-        tag_names.all? { |name| has_topic_tag?(topic, name) }
+      def has_topic_tags?(topic, tags:)
+        tags.all? { |tag| has_topic_tag?(topic, tag.name) } &&
+          page.has_css?(
+            "#{topic_list_item_class(topic)} .discourse-tags .discourse-tag",
+            count: tags.size,
+          )
       end
 
       def has_no_topic_tags?(topic)
@@ -128,14 +168,26 @@ module PageObjects
         find(".show-more.has-topics").click
       end
 
+      def has_pinned_status?(topic)
+        page.has_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+      end
+
+      def has_no_pinned_status?(topic)
+        page.has_no_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+      end
+
       private
 
       def topic_list_item_closed(topic)
-        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-topic.closed']"
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-lock']"
       end
 
       def topic_list_item_unread_badge(topic)
         "#{topic_list_item_class(topic)} .topic-post-badges .unread-posts"
+      end
+
+      def topic_list_item_new_replies_dot(topic)
+        "#{topic_list_item_class(topic)} .topic-post-badges .new-replies"
       end
     end
   end

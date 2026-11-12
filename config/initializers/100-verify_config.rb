@@ -17,7 +17,7 @@ if defined?(Rails::Server) && Rails.env.production? # Only run these checks when
     raise "Invalid host_names in database.yml"
   end
 
-  if !Dir.glob(File.join(Rails.root, "public", "assets", "application*.js")).present?
+  if !Dir.glob(Rails.public_path.join("assets/application*.js").to_s).present?
     puts <<~TEXT
 
       Assets have not been precompiled. Please run the following command

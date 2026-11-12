@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ChatNavbarFullPageButton extends Component {
   @service chat;
@@ -23,10 +23,10 @@ export default class ChatNavbarFullPageButton extends Component {
   <template>
     {{#if this.chatStateManager.isDrawerExpanded}}
       <DButton
-        @icon="discourse-expand"
         class="btn-transparent no-text c-navbar__full-page-button"
-        @title="chat.open_full_page"
         @action={{this.openInFullPage}}
+        @icon="discourse-expand"
+        @title="chat.open_full_page"
       />
     {{/if}}
   </template>

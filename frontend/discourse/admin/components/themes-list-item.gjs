@@ -5,11 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MAX_COMPONENTS = 4;
@@ -27,13 +27,6 @@ export default class ThemesListItem extends Component {
 
   get hasComponents() {
     return this.children.length > 0;
-  }
-
-  @action
-  handleClick(event) {
-    if (!event.target.classList.contains("others-count")) {
-      this.args.navigateToTheme();
-    }
   }
 
   get children() {
@@ -67,27 +60,34 @@ export default class ThemesListItem extends Component {
   }
 
   @action
+  handleClick(event) {
+    if (!event.target.classList.contains("others-count")) {
+      this.args.navigateToTheme();
+    }
+  }
+
+  @action
   toggleChildrenExpanded(event) {
     event?.preventDefault();
     this.childrenExpanded = !this.childrenExpanded;
   }
 
   <template>
-    {{! template-lint-disable no-nested-interactive }}
+    {{! eslint-disable ember/template-no-nested-interactive }}
     <div
-      class={{concatClass
+      class={{dConcatClass
         "themes-list-container__item"
         (if @theme.selected "selected")
       }}
       role="button"
-      {{on "click" this.handleClick}}
       ...attributes
+      {{on "click" this.handleClick}}
     >
       <div class="inner-wrapper">
         <span>
           <PluginOutlet
-            @name="admin-customize-themes-list-item"
             @connectorTagName="span"
+            @name="admin-customize-themes-list-item"
             @outletArgs={{lazyHash theme=@theme}}
           />
         </span>
@@ -95,8 +95,8 @@ export default class ThemesListItem extends Component {
         <div class="info">
           {{#if @selectInactiveMode}}
             <Input
-              @checked={{@theme.markedToDelete}}
               id={{@theme.id}}
+              @checked={{@theme.markedToDelete}}
               @type="checkbox"
             />
           {{/if}}
@@ -106,31 +106,31 @@ export default class ThemesListItem extends Component {
 
           <span class="icons">
             {{#if @theme.selected}}
-              {{icon "angle-right"}}
+              {{dIcon "angle-right"}}
             {{else}}
               {{#if @theme.default}}
-                {{icon
+                {{dIcon
                   "check"
                   class="default-indicator"
                   title="admin.customize.theme.default_theme_tooltip"
                 }}
               {{/if}}
               {{#if @theme.isPendingUpdates}}
-                {{icon
+                {{dIcon
                   "arrows-rotate"
                   title="admin.customize.theme.updates_available_tooltip"
                   class="light-grey-icon"
                 }}
               {{/if}}
               {{#if @theme.isBroken}}
-                {{icon
+                {{dIcon
                   "circle-exclamation"
                   class="broken-indicator"
                   title="admin.customize.theme.broken_theme_tooltip"
                 }}
               {{/if}}
               {{#unless @theme.enabled}}
-                {{icon
+                {{dIcon
                   "ban"
                   class="light-grey-icon"
                   title="admin.customize.theme.disabled_component_tooltip"
@@ -146,9 +146,9 @@ export default class ThemesListItem extends Component {
 
             {{#if this.displayHasMore}}
               <a
+                class="others-count"
                 href
                 {{on "click" this.toggleChildrenExpanded}}
-                class="others-count"
               >
                 {{#if this.childrenExpanded}}
                   {{i18n "admin.customize.theme.collapse"}}

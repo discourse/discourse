@@ -27,6 +27,3 @@ cs:
     other: "%{count} odpovědí"
   theme_metadata:
     description: "Jednoduché a krásné téma, které vylepšuje zážitek z prostředí Discourse ihned po instalaci."
-    settings:
-      topic_card_high_context:
-        description: "Pokud je povoleno, zobrazuje na kartách témat další kontext, včetně štítků, úryvků, stavu vyřešených úloh, přiřazených uživatelů a počtu hlasů (experimentální)"

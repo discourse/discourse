@@ -4,9 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DEditor from "discourse/components/d-editor";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
+import DEditor from "discourse/ui-kit/d-editor";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTopicTemplateEditor extends Component {
@@ -15,6 +16,7 @@ export default class CategoryTopicTemplateEditor extends Component {
 
   @tracked _showFormTemplateOverride;
   @tracked _localTopicTemplate;
+  @tracked _localTopicTitlePlaceholder;
 
   get topicTemplate() {
     return this._localTopicTemplate ?? this.args.category?.topic_template;
@@ -24,11 +26,15 @@ export default class CategoryTopicTemplateEditor extends Component {
     this._localTopicTemplate = value;
   }
 
-  get showInsertLinkButton() {
-    if (this.args.showInsertLinkButton === undefined) {
-      return true;
-    }
-    return this.args.showInsertLinkButton;
+  get topicTitlePlaceholder() {
+    return (
+      this._localTopicTitlePlaceholder ??
+      this.args.category?.topic_title_placeholder
+    );
+  }
+
+  set topicTitlePlaceholder(value) {
+    this._localTopicTitlePlaceholder = value;
   }
 
   get showFormTemplate() {
@@ -42,6 +48,13 @@ export default class CategoryTopicTemplateEditor extends Component {
 
   set showFormTemplate(value) {
     this._showFormTemplateOverride = value;
+  }
+
+  get showInsertLinkButton() {
+    if (this.args.showInsertLinkButton === undefined) {
+      return true;
+    }
+    return this.args.showInsertLinkButton;
   }
 
   get templateTypeToggleLabel() {
@@ -76,6 +89,16 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   @action
+  handleTopicTitlePlaceholderChange(value) {
+    this.topicTitlePlaceholder = value;
+    if (this.args.onChange) {
+      this.args.onChange("topic_title_placeholder", value);
+    } else {
+      this.args.category.set("topic_title_placeholder", value);
+    }
+  }
+
+  @action
   handleTopicTemplateChange(event) {
     const value = event.target.value;
     this.topicTemplate = value;
@@ -87,12 +110,23 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   <template>
+    <div class="control-group">
+      <label for="category-topic-title-placeholder">
+        {{i18n "category.topic_title_placeholder"}}
+      </label>
+      <DTextField
+        @id="category-topic-title-placeholder"
+        @onChange={{this.handleTopicTitlePlaceholderChange}}
+        @placeholderKey="category.topic_title_placeholder_placeholder"
+        @value={{this.topicTitlePlaceholder}}
+      />
+    </div>
     {{#if this.siteSettings.enable_form_templates}}
       <div class="control-group">
         <DToggleSwitch
           class="toggle-template-type"
-          @state={{this.showFormTemplate}}
           @label={{this.templateTypeToggleLabel}}
+          @state={{this.showFormTemplate}}
           {{on "click" this.toggleTemplateType}}
         />
       </div>
@@ -100,9 +134,9 @@ export default class CategoryTopicTemplateEditor extends Component {
       {{#if this.showFormTemplate}}
         <div class="control-group">
           <FormTemplateChooser
-            @value={{@category.form_template_ids}}
-            @onChange={{this.handleFormTemplateChange}}
             class="select-category-template"
+            @onChange={{this.handleFormTemplateChange}}
+            @value={{@category.form_template_ids}}
           />
 
           <p class="select-category-template__info desc">
@@ -117,16 +151,16 @@ export default class CategoryTopicTemplateEditor extends Component {
         </div>
       {{else}}
         <DEditor
-          @value={{this.topicTemplate}}
-          @showLink={{this.showInsertLinkButton}}
           @change={{this.handleTopicTemplateChange}}
+          @showLink={{this.showInsertLinkButton}}
+          @value={{this.topicTemplate}}
         />
       {{/if}}
     {{else}}
       <DEditor
-        @value={{this.topicTemplate}}
-        @showLink={{this.showInsertLinkButton}}
         @change={{this.handleTopicTemplateChange}}
+        @showLink={{this.showInsertLinkButton}}
+        @value={{this.topicTemplate}}
       />
     {{/if}}
   </template>

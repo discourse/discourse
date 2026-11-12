@@ -6,13 +6,12 @@ describe DiscourseAi::Completions::CancelManager do
   before do
     enable_current_plugin
     WebMock.disable!
-    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
-    SiteSetting.allowed_internal_hosts = "127.0.0.1"
+    FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).returns(["127.0.0.1"])
   end
 
   after do
+    FinalDestination::SSRFDetector.unstub(:lookup_and_filter_ips)
     WebMock.enable!
-    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
   end
 
   it "can stop monitoring for cancellation cleanly" do
@@ -37,7 +36,49 @@ describe DiscourseAi::Completions::CancelManager do
     expect(cancel_manager.monitor_thread).to be_nil
   end
 
-  it "should do nothing when cancel manager is already cancelled" do
+  it "bounds transport timeouts by the time left before its deadline" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: 20)
+
+    expect(DiscourseAi::Completions::CancelManager.new.bound_timeout(360)).to eq(360)
+    expect(cancel_manager.bound_timeout(5)).to eq(5)
+    expect(cancel_manager.bound_timeout(360)).to be_within(1).of(20)
+    expect(cancel_manager).not_to be_expired
+  end
+
+  it "keeps a minimal transport timeout once the deadline has passed" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: 0)
+
+    expect(cancel_manager).to be_expired
+    expect(cancel_manager.bound_timeout(360)).to eq(
+      DiscourseAi::Completions::CancelManager::MIN_TRANSPORT_TIMEOUT,
+    )
+  end
+
+  it "waits until timeout when not cancelled" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new
+
+    expect(cancel_manager.wait_for_cancel(0.001)).to eq(false)
+  end
+
+  it "wakes waiters when cancelled" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new
+    waiting = Queue.new
+
+    waiter =
+      Thread.new do
+        waiting << true
+        cancel_manager.wait_for_cancel(60)
+      end
+
+    waiting.pop
+    cancel_manager.cancel!
+
+    expect(waiter.join(1)).to eq(waiter)
+  ensure
+    waiter&.kill
+  end
+
+  it "does nothing when the cancel manager is already cancelled" do
     cancel_manager = DiscourseAi::Completions::CancelManager.new
     cancel_manager.cancel!
 
@@ -52,7 +93,7 @@ describe DiscourseAi::Completions::CancelManager do
     expect(result).to be_nil
   end
 
-  it "should be able to cancel a completion" do
+  it "cancels a completion" do
     # Start an HTTP server that hangs indefinitely
     server = TCPServer.new("127.0.0.1", 0)
     port = server.addr[1]
@@ -61,14 +102,12 @@ describe DiscourseAi::Completions::CancelManager do
       thread =
         Thread.new do
           loop do
-            begin
-              _client = server.accept
-              sleep(30) # Hold the connection longer than the test will run
-              break
-            rescue StandardError
-              # Server closed
-              break
-            end
+            _client = server.accept
+            sleep(30) # Hold the connection longer than the test will run
+            break
+          rescue StandardError
+            # Server closed
+            break
           end
         end
 

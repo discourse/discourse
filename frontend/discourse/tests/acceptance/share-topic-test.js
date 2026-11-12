@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
@@ -14,6 +15,10 @@ acceptance("Share and Invite modal", function (needs) {
       })
     );
 
+    server.get("/posts/by_number/280/1", () =>
+      helper.response({ id: 398, post_number: 1, topic_id: 280 })
+    );
+
     server.get(`/c/2/visible_groups.json`, () =>
       helper.response(200, {
         groups: [],
@@ -27,6 +32,12 @@ acceptance("Share and Invite modal", function (needs) {
     assert
       .dom("#topic-footer-button-share-and-invite")
       .exists("the button exists");
+
+    assert
+      .dom(
+        "#topic-footer-button-share-and-invite svg.d-icon-d-topic-share use[href='#arrow-up-from-bracket']"
+      )
+      .exists("the button uses the share icon");
 
     await click("#topic-footer-button-share-and-invite");
 
@@ -50,6 +61,19 @@ acceptance("Share and Invite modal", function (needs) {
     await click(".link-share-actions .invite");
 
     assert.dom(".create-invite-modal").exists();
+  });
+
+  test("New topic button on mega topics", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-share-and-invite");
+
+    const { postStream } = getOwner(this).lookup("controller:topic").model;
+    postStream.isMegaTopic = true;
+    postStream.posts.shift();
+
+    await click(".share-topic-modal .new-topic");
+
+    assert.dom("#reply-control .d-editor-input").exists();
   });
 
   test("Post date link", async function (assert) {

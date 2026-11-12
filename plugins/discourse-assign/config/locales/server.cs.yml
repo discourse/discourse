@@ -22,7 +22,6 @@ cs:
     remind_assigns_frequency: "Frekvence připomínání přidělených témat uživatelům."
     pending_assign_reminder_threshold: "Počet nevyřízených úkolů, které spustí upozornění na připomenutí."
     max_assigned_topics: "Maximální počet témat, která lze uživateli přidělit."
-    assign_allowed_on_groups: "Uživatelé v těchto skupinách mohou přidělovat témata a mohou jim být témata přidělována."
     enable_assign_status: "Ke každému úkolu přidat přizpůsobitelné stavové pole."
     assign_statuses: "Seznam stavů dostupných pro každý úkol. První stav je výchozí stav použitý pro každé nové přidělení."
     assignment_status_on_solve: "Když je téma vyřešeno, aktualizujte všechny úkoly na tento stav."

@@ -2,7 +2,7 @@
 
 RSpec.describe EmailStyleUpdater do
   fab!(:admin)
-  let(:default_html) { File.read("#{Rails.root}/app/views/email/default_template.html") }
+  let(:default_html) { File.read("#{Rails.root.join("app/views/email/default_template.html")}") }
   let(:updater) { EmailStyleUpdater.new(admin) }
 
   def expect_settings_to_be_unset
@@ -21,7 +21,7 @@ RSpec.describe EmailStyleUpdater do
       expect(SiteSetting.email_custom_css_compiled.strip).to eq("h1{color:blue}")
     end
 
-    it "will not store defaults" do
+    it "does not store default styles" do
       updater.update(html: default_html, css: "")
       expect_settings_to_be_unset
     end
@@ -47,7 +47,7 @@ RSpec.describe EmailStyleUpdater do
         false,
       )
       expect(updater.errors).to_not be_empty
-      expect(updater.errors.first).to include('Error: expected "}".')
+      expect(updater.errors.first).to include('expected "}".')
       expect_settings_to_be_unset
     end
   end

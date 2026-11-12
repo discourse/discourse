@@ -4,6 +4,8 @@ RSpec.describe StaticController do
   fab!(:upload)
 
   describe "#favicon" do
+    fab!(:user)
+
     let(:filename) { "smallest.png" }
     let(:file) { file_from_fixtures(filename) }
 
@@ -13,11 +15,23 @@ RSpec.describe StaticController do
 
     context "with local store" do
       it "returns the default favicon if favicon has not been configured" do
+        Upload.find(SiteIconManager::SKETCH_LOGO_ID).optimized_images.delete_all
+
         get "/favicon/proxied"
 
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
+      end
+
+      it "does not include a username in the cacheable response" do
+        SiteSetting.favicon = upload
+        sign_in(user)
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Username"]).to be_nil
       end
 
       it "returns the configured favicon" do
@@ -28,6 +42,33 @@ RSpec.describe StaticController do
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
+      end
+
+      it "serves the original ICO favicon with its content type" do
+        ico =
+          UploadCreator.new(
+            file_from_fixtures("smallest.ico", "images"),
+            "smallest.ico",
+            for_site_setting: true,
+          ).create_for(Discourse.system_user.id)
+        SiteSetting.favicon = ico
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("image/vnd.microsoft.icon")
+        expect(response.body.b).to eq(File.binread(file_from_fixtures("smallest.ico", "images")))
+      end
+
+      it "serves the default favicon when the file is not in the store" do
+        SiteSetting.favicon = upload
+        SiteIconManager.favicon.update_columns(url: "/403.html")
+
+        get "/favicon/proxied"
+
+        expect(response.body.b).to eq(
+          File.binread(Rails.public_path.join("images/default-favicon.png")),
+        )
       end
     end
 
@@ -69,37 +110,33 @@ RSpec.describe StaticController do
     let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
-      begin
-        assets_path = Rails.public_path.join("assets")
+      assets_path = Rails.public_path.join("assets")
 
-        FileUtils.mkdir_p(assets_path)
+      FileUtils.mkdir_p(assets_path)
 
-        file_path = assets_path.join("test.js.br")
-        File.write(file_path, "fake brotli file")
+      file_path = assets_path.join("test.js.br")
+      File.write(file_path, "fake brotli file")
 
-        get "/cdn_asset/#{site}/test.js.br"
+      get "/cdn_asset/#{site}/test.js.br"
 
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
-      ensure
-        File.delete(file_path)
-      end
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to match(/public/)
+    ensure
+      File.delete(file_path)
     end
 
     it "does not serve files outside the assets directory via path traversal" do
-      begin
-        secret_dir = Rails.public_path.join("assets-secret")
-        FileUtils.mkdir_p(secret_dir)
-        secret_file = secret_dir.join("leak.txt")
-        File.write(secret_file, "secret content")
+      secret_dir = Rails.public_path.join("assets-secret")
+      FileUtils.mkdir_p(secret_dir)
+      secret_file = secret_dir.join("leak.txt")
+      File.write(secret_file, "secret content")
 
-        get "/cdn_asset/#{site}/../assets-secret/leak.txt"
+      get "/cdn_asset/#{site}/../assets-secret/leak.txt"
 
-        expect(response.status).to eq(404)
-      ensure
-        File.delete(secret_file) if secret_file && File.exist?(secret_file)
-        FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
-      end
+      expect(response.status).to eq(404)
+    ensure
+      File.delete(secret_file) if secret_file && File.exist?(secret_file)
+      FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
     end
 
     context "with fallback_assets_path" do
@@ -132,6 +169,7 @@ RSpec.describe StaticController do
           expect(response.status).to eq(404)
         end
       end
+
       it "rejects fallback paths that traverse outside the fallback directory" do
         Dir.mktmpdir do |tmpdir|
           fallback_dir = File.join(tmpdir, "fallback_assets")
@@ -159,67 +197,128 @@ RSpec.describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response for /faq" do
+      it "returns the expected response for /faq" do
         get "/faq"
 
+        expect(response).to redirect_to("/guidelines")
+
+        get "/guidelines"
+
         expect(response.status).to eq(200)
-        expect(response.body).to include(I18n.t("js.faq"))
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include(I18n.t("js.guidelines"))
+        expect(response.body).to include("<title>Guidelines - Discourse</title>")
       end
     end
 
-    [
-      ["tos", :tos_url, I18n.t("js.tos")],
-      ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
-    ].each do |id, setting_name, text|
-      context "with #{id}" do
-        context "when #{setting_name} site setting is NOT set" do
-          it "renders the #{id} page" do
-            get "/#{id}"
+    shared_examples "a configured static information page" do |id:, setting_name:, text:|
+      context "when #{setting_name} site setting is NOT set" do
+        it "renders the #{id} page" do
+          get "/#{id}"
 
-            expect(response.status).to eq(200)
-            expect(response.body).to include(text)
-          end
+          expect(response.status).to eq(200)
+          expect(response.body).to include(text)
         end
+      end
 
-        context "when #{setting_name} site setting is set" do
-          before { SiteSetting.set(setting_name, "http://example.com/page") }
+      context "when #{setting_name} site setting is set" do
+        before { SiteSetting.set(setting_name, "http://example.com/page") }
 
-          it "redirects to the #{setting_name}" do
-            get "/#{id}"
+        it "redirects to the #{setting_name}" do
+          get "/#{id}"
 
-            expect(response).to redirect_to("http://example.com/page")
-          end
+          expect(response).to redirect_to("http://example.com/page")
         end
+      end
+    end
+
+    context "for the terms of service page" do
+      include_examples "a configured static information page",
+                       id: "tos",
+                       setting_name: :tos_url,
+                       text: I18n.t("js.tos")
+    end
+
+    context "for the privacy policy page" do
+      include_examples "a configured static information page",
+                       id: "privacy",
+                       setting_name: :privacy_policy_url,
+                       text: I18n.t("js.privacy")
+    end
+
+    it "renders the localized guidelines post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original guidelines body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳されたガイドライン本文",
+          cooked: "<p>翻訳されたガイドライン本文</p>",
+        )
+      SiteSetting.guidelines_topic_id = post.topic.id
+
+      get "/guidelines", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
+      end
+    end
+
+    it "renders the localized TOS post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original TOS body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳された利用規約本文",
+          cooked: "<p>翻訳された利用規約本文</p>",
+        )
+      SiteSetting.tos_topic_id = post.topic.id
+
+      get "/tos", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
       end
     end
 
     context "with a missing file" do
-      it "should respond 404" do
+      it "responds with 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
       end
 
       context "with modal pages" do
-        it "should return the right response for /signup" do
+        it "returns the expected response for /signup" do
           get "/signup"
           expect(response.status).to eq(200)
         end
 
-        it "should return the right response for /password-reset" do
+        it "returns the expected response for /password-reset" do
           get "/password-reset"
           expect(response.status).to eq(200)
         end
       end
     end
 
-    it "should redirect to / when logged in and path is /login without redirect" do
+    it "redirects a logged-in user from /login to /" do
       sign_in(Fabricate(:user))
       get "/login"
       expect(response).to redirect_to("/")
     end
 
-    it "should display the login template when login is required" do
+    it "displays the login template when login is required" do
       SiteSetting.login_required = true
 
       get "/login"
@@ -234,28 +333,65 @@ RSpec.describe StaticController do
     context "when login_required is enabled" do
       before { SiteSetting.login_required = true }
 
-      %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
+      it "faq page redirects to login page for anon" do
+        get "/faq"
+        expect(response).to redirect_to "/login"
+      end
 
-        it "#{page_name} page loads for logged in user" do
-          sign_in(Fabricate(:user))
+      it "guidelines page redirects to login page for anon" do
+        get "/guidelines"
+        expect(response).to redirect_to "/login"
+      end
 
-          get "/#{page_name}"
+      it "rules page redirects to login page for anon" do
+        get "/rules"
+        expect(response).to redirect_to "/login"
+      end
 
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("js.guidelines"))
-        end
+      it "conduct page redirects to login page for anon" do
+        get "/conduct"
+        expect(response).to redirect_to "/login"
+      end
+
+      it "guidelines page loads for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/guidelines"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("js.guidelines"))
+      end
+
+      it "faq page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/faq"
+
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "rules page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/rules"
+
+        expect(response).to redirect_to("/guidelines")
+      end
+
+      it "conduct page redirects to guidelines for logged in user" do
+        sign_in(Fabricate(:user))
+
+        get "/conduct"
+
+        expect(response).to redirect_to("/guidelines")
       end
     end
 
     context "with crawler view" do
-      it "should include correct title" do
-        get "/faq", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+      it "includes the correct title" do
+        get "/guidelines", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include("<title>Guidelines - Discourse</title>")
       end
     end
 
@@ -293,13 +429,13 @@ RSpec.describe StaticController do
             current_user&.locale == "pl" ? "test_some_other_topic_id" : "test_some_topic_id"
           end
 
-        get "/faq"
+        get "/guidelines"
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Regular FAQ")
 
         sign_in(Fabricate(:user, locale: "pl"))
-        get "/faq"
+        get "/guidelines"
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Polish FAQ")
@@ -453,6 +589,7 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/page/login/1")
       end
     end
+
     context "when the redirect path is invalid" do
       it "redirects to the root URL" do
         post "/login.json", params: { redirect: "test" }
@@ -484,43 +621,239 @@ RSpec.describe StaticController do
         end
       end
     end
+
+    context "with sso_destination_url cookie" do
+      before { SiteSetting.enable_discourse_connect_provider = true }
+
+      it "redirects to valid SSO destination URL when provider is configured" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://allowed-site.com/sso?token=abc"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("https://allowed-site.com/sso?token=abc")
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+
+      it "redirects to valid SSO destination URL with wildcard domain" do
+        SiteSetting.discourse_connect_provider_secrets = "*.allowed-domain.com|secret123"
+        cookies[:sso_destination_url] = "https://sub.allowed-domain.com/sso?token=abc"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("https://sub.allowed-domain.com/sso?token=abc")
+      end
+
+      it "ignores SSO destination URL when domain is not in provider secrets" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://evil-site.com/phishing"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+
+      it "ignores SSO destination URL when provider secrets is empty" do
+        SiteSetting.discourse_connect_provider_secrets = ""
+        cookies[:sso_destination_url] = "https://some-site.com/sso"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "ignores malformed SSO destination URL" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "not a valid url"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "ignores SSO destination URL when discourse_connect_provider is disabled" do
+        SiteSetting.enable_discourse_connect_provider = false
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://allowed-site.com/sso"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "deletes sso_destination_url cookie regardless of validity" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://evil-site.com/phishing"
+
+        post "/login.json"
+
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+    end
   end
 
   describe "#service_worker_asset" do
-    it "works" do
+    fab!(:user)
+
+    it "renders the requested static page" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
     end
+
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      get "/service-worker.js"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
   end
 
   describe "#llms_txt" do
-    it "returns 404 when no upload is set" do
+    def create_llms_upload(content)
+      file = Tempfile.new(%w[llms .txt])
+      file.binmode
+      file.write(content)
+      file.rewind
+      UploadCreator.new(file, "llms.txt").create_for(Discourse.system_user.id)
+    ensure
+      file&.close!
+    end
+
+    it "returns 404 when an admin opts out of the generated document" do
+      SiteSetting.enable_generated_llms_txt = false
+
       get "/llms.txt"
+
       expect(response.status).to eq(404)
     end
 
+    it "returns the generated document when the beta change is auto-promoted" do
+      SiteSetting.promote_upcoming_changes_on_status = "beta"
+
+      get "/llms.txt"
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq("text/plain; charset=utf-8")
+      expect(response.body).to start_with("# #{SiteSetting.title}\n")
+    end
+
+    it "returns the same generated document for anonymous and signed-in requesters" do
+      get "/llms.txt"
+      anonymous_body = response.body
+
+      sign_in(Fabricate(:user))
+      get "/llms.txt"
+      expect(response.body).to eq(anonymous_body)
+
+      sign_in(Fabricate(:admin))
+      get "/llms.txt"
+      expect(response.body).to eq(anonymous_body)
+    end
+
+    it "omits the public search link when anonymous users cannot search" do
+      SiteSetting.allow_anonymous_search = false
+
+      get "/llms.txt"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("#{Discourse.base_path}/search")
+      expect(response.body).to include("#{Discourse.base_path}/latest")
+    end
+
     context "with local store" do
-      it "returns content as plain text" do
-        SiteSetting.authorized_extensions = "txt"
+      before { SiteSetting.authorized_extensions = "txt" }
 
-        file = Tempfile.new(%w[llms .txt])
-        file.write("# Test LLMs Content")
-        file.rewind
+      it "serves exact custom bytes regardless of the generated-document rollout" do
+        custom_content = "# Custom LLMs Content\nCafé\n"
+        SiteSetting.llms_txt = create_llms_upload(custom_content)
 
-        upload = UploadCreator.new(file, "llms.txt").create_for(Discourse.system_user.id)
-        SiteSetting.llms_txt = upload
+        get "/llms.txt"
+        expect(response.status).to eq(200)
+        expect(response.body.bytes).to eq(custom_content.bytes)
 
+        SiteSetting.enable_generated_llms_txt = false
         get "/llms.txt"
 
         expect(response.status).to eq(200)
         expect(response.content_type).to start_with("text/plain")
-        expect(response.body).to eq("# Test LLMs Content")
-      ensure
-        file.close
-        file.unlink
+        expect(response.body.bytes).to eq(custom_content.bytes)
       end
+
+      it "returns 404 instead of generated content when the configured file is unavailable" do
+        configured_upload = create_llms_upload("custom")
+        SiteSetting.llms_txt = configured_upload
+        File.delete(Discourse.store.path_for(configured_upload))
+
+        get "/llms.txt"
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "with external store" do
+      let(:external_content) { "external Café\n" }
+      let(:external_upload) do
+        Upload.create!(
+          url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/llms.txt",
+          original_filename: "llms.txt",
+          filesize: external_content.bytesize,
+          sha1: SecureRandom.hex(20),
+          user_id: Discourse.system_user.id,
+        )
+      end
+
+      before do
+        SiteSetting.authorized_extensions = "txt"
+        setup_s3
+        SiteSetting.llms_txt = external_upload
+      end
+
+      it "downloads and serves exact custom bytes" do
+        file = Tempfile.new(%w[external-llms .txt])
+        file.binmode
+        file.write(external_content)
+        file.rewind
+        FileHelper.stubs(:download).returns(file)
+
+        get "/llms.txt"
+
+        expect(response.status).to eq(200)
+        expect(response.body.bytes).to eq(external_content.bytes)
+      ensure
+        file&.close!
+      end
+
+      it "returns 404 instead of generated content when the download is missing" do
+        FileHelper.stubs(:download).returns(nil)
+
+        get "/llms.txt"
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    it "does not redirect on login-required sites and omits public discovery links" do
+      SiteSetting.login_required = true
+
+      get "/llms.txt"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("llms_txt.account_required"))
+      expect(response.body).not_to include(
+        "## Public web access",
+        "/search",
+        "/filter",
+        "/latest",
+        "/categories",
+        "/sitemap.xml",
+        "/about",
+        "/guidelines",
+      )
     end
   end
 end

@@ -1,27 +1,37 @@
 /* eslint-disable ember/no-classic-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed, get } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
-import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("")
 @selectKitPropUtils
 export default class SelectedName extends Component {
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   name = null;
+
+  /** @type {unknown} */
   value = null;
+
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   headerTitle = null;
+
+  /** @type {string | null | undefined} */
   headerLang = null;
+
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   headerLabel = null;
+
+  /** @type {string | null} */
   id = null;
 
-  @reads("headerLang") lang;
+  @tracked _langOverride;
 
   init() {
     super.init(...arguments);
@@ -29,19 +39,16 @@ export default class SelectedName extends Component {
     this.set("id", guidFor(this));
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
+  @computed("headerLang")
+  get lang() {
+    if (this._langOverride !== undefined) {
+      return this._langOverride;
+    }
+    return this.headerLang;
+  }
 
-    // we can't listen on `item.nameProperty` given it's variable
-    this.setProperties({
-      headerLabel: this.getProperty(this.item, "labelProperty"),
-      headerTitle: this.getProperty(this.item, "titleProperty"),
-      headerLang: this.getProperty(this.item, "langProperty"),
-      name: this.getName(this.item),
-      renderIcon: this.canDisplayIcon,
-      value:
-        this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
-    });
+  set lang(value) {
+    this._langOverride = value;
   }
 
   @computed("selectKit.options.shouldDisplayIcon")
@@ -88,6 +95,21 @@ export default class SelectedName extends Component {
     return _icon.concat(icons).filter(Boolean);
   }
 
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    // we can't listen on `item.nameProperty` given it's variable
+    this.setProperties({
+      headerLabel: this.getProperty(this.item, "labelProperty"),
+      headerTitle: this.getProperty(this.item, "titleProperty"),
+      headerLang: this.getProperty(this.item, "langProperty"),
+      name: this.getName(this.item),
+      renderIcon: this.canDisplayIcon,
+      value:
+        this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
+    });
+  }
+
   _safeProperty(name, content) {
     if (!content) {
       return null;
@@ -99,22 +121,22 @@ export default class SelectedName extends Component {
   <template>
     {{#if this.selectKit.options.showFullTitle}}
       <div
+        class="select-kit-selected-name selected-name choice"
+        data-name={{this.name}}
+        data-value={{this.value}}
         lang={{this.lang}}
         title={{this.title}}
-        data-value={{this.value}}
-        data-name={{this.name}}
-        class="select-kit-selected-name selected-name choice"
       >
         {{#if this.selectKit.options.formName}}
           <input
-            type="hidden"
             name={{this.selectKit.options.formName}}
+            type="hidden"
             value={{this.value}}
           />
         {{/if}}
 
         {{#if (and this.renderIcon this.item.icon)}}
-          {{icon this.item.icon}}
+          {{dIcon this.item.icon}}
         {{/if}}
 
         <span class="name">
@@ -123,20 +145,20 @@ export default class SelectedName extends Component {
 
         {{#if this.shouldDisplayClearableButton}}
           <DButton
-            @icon="xmark"
+            class="btn-clear"
             @action={{fn this.selectKit.deselect this.item}}
             @ariaLabel="clear_input"
-            class="btn-clear"
+            @icon="xmark"
           />
         {{/if}}
       </div>
     {{else}}
       {{#if this.item.icon}}
         <div
-          lang={{this.lang}}
           class="select-kit-selected-name selected-name choice"
+          lang={{this.lang}}
         >
-          {{icon this.item.icon}}
+          {{dIcon this.item.icon}}
         </div>
       {{/if}}
     {{/if}}

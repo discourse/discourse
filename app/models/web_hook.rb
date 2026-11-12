@@ -117,14 +117,17 @@ class WebHook < ActiveRecord::Base
 
   def self.enqueue_post_hooks(event, post, payload = nil)
     if active_web_hooks(event).exists? && post.present?
+      topic = post.topic || Topic.with_deleted.find_by(id: post.topic_id)
+      return if topic.nil?
+
       payload ||= WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(
         :post,
         event,
         id: post.id,
-        category_id: post.topic&.category_id,
-        tag_ids: post.topic&.tags&.pluck(:id),
+        category_id: topic.category_id,
+        tag_ids: topic.tags.pluck(:id),
         payload: payload,
       )
     end
@@ -134,7 +137,7 @@ class WebHook < ActiveRecord::Base
     serializer ||= TagSerializer if type == :tag
     serializer ||= "WebHook#{type.capitalize}Serializer".constantize
 
-    serializer.new(object, scope: self.guardian, root: false).to_json
+    serializer.new(object, scope: guardian, root: false).to_json
   end
 
   private
@@ -156,7 +159,7 @@ class WebHook < ActiveRecord::Base
         false
       end
 
-    self.errors.add(:base, I18n.t("webhooks.payload_url.blocked_or_internal")) if !allowed
+    errors.add(:base, I18n.t("webhooks.payload_url.blocked_or_internal")) if !allowed
   end
 end
 
@@ -165,14 +168,14 @@ end
 # Table name: web_hooks
 #
 #  id                   :integer          not null, primary key
-#  payload_url          :string           not null
+#  active               :boolean          default(FALSE), not null
 #  content_type         :integer          default(1), not null
 #  last_delivery_status :integer          default(1), not null
-#  status               :integer          default(1), not null
+#  payload_url          :string           not null
 #  secret               :string           default("")
-#  wildcard_web_hook    :boolean          default(FALSE), not null
+#  status               :integer          default(1), not null
 #  verify_certificate   :boolean          default(TRUE), not null
-#  active               :boolean          default(FALSE), not null
+#  wildcard_web_hook    :boolean          default(FALSE), not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #

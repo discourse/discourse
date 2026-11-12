@@ -9,19 +9,56 @@ da:
     overall_sentiment:
       yaxis: "Dato"
     emotion_neutral:
-      title: "\U0001F610 Neutral"
+      title: "😐 Neutral"
   discourse_ai:
     tools:
       presets:
         image_generation_custom:
           name: "Tilpasset"
     ai_bot:
+      navigation:
+        users:
+          title: "Brugere"
+        groups:
+          title: "Grupper"
+        categories:
+          title: "Kategorier"
+        tags:
+          title: "Mærker"
+        themes:
+          title: "Temaer"
+        backups:
+          title: "Sikkerhedskopier"
+      read_post:
+        unknown_post: "indlæg"
+      chat_tool_approval:
+        topic_states:
+          open: "Åbn"
+          closed: "Lukket"
+          active: "Aktiv"
+          deleted: "Slettet"
+        solution_post: "Indlæg #%{number}"
+        duration_label: "Varighed:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dage"
+        posts_label: "Indlæg"
+        category_label: "Kategori"
+        category_fields:
+          name: "navn"
+          description: "beskrivelse"
+          color: "farve"
+          text_color: "tekst farve"
+        approve_label: "Ja"
+        reject_label: "Nej"
+        empty_value: "Tom"
       tool_summary:
         search: "Søg"
         time: "Tidspunkt"
         summarize: "Opsummer"
       tool_help:
         delete_topic: "Slet et emne"
+        create_category: "Opret en ny kategori"
       close_topic:
         errors:
           not_found: "Emne ikke fundet."
@@ -31,10 +68,13 @@ da:
       delete_topic:
         errors:
           not_found: "Emne ikke fundet."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Emne ikke fundet."
       edit_category:
+        errors:
+          not_found: "Denne kategori blev ikke fundet."
+      change_topic_category:
         errors:
           not_found: "Emne ikke fundet."
           category_not_found: "Denne kategori blev ikke fundet."
@@ -50,10 +90,28 @@ da:
       assign:
         errors:
           not_found: "Emne ikke fundet."
+    appearance_authoring:
+      default_theme: "Standard tema"
+      colors:
+        light:
+          header_background: "Sidehoved"
+      fonts:
+        base_font: "Indholds skrifttype"
+        heading_font: "Overskrifts skrifttype"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Godkend"
+        reject:
+          title: "Afvis"
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutral \U0001F610"
+          neutral: "Neutral 😐"
         sentiment_analysis:
           neutral: "Neutral"
     ai_staff_action_logger:

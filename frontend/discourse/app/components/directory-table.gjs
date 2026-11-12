@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DirectoryItem from "discourse/components/directory-item";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
 import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
+import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import { i18n } from "discourse-i18n";
 
 export default class DirectoryTable extends Component {
@@ -26,17 +26,17 @@ export default class DirectoryTable extends Component {
   }
 
   <template>
-    <ResponsiveTable {{didInsert this.setupTable}}>
+    <DResponsiveTable {{didInsert this.setupTable}}>
       <:header>
-        <TableHeaderToggle @field="username" @order={{@order}} @asc={{@asc}} />
+        <DTableHeaderToggle @asc={{@asc}} @field="username" @order={{@order}} />
         {{#each @columns as |column|}}
-          <TableHeaderToggle
-            @onToggle={{this.updateOrderAndAsc}}
-            @field={{column.name}}
-            @icon={{column.icon}}
-            @order={{@order}}
+          <DTableHeaderToggle
             @asc={{@asc}}
             @automatic={{directoryColumnIsAutomatic column=column}}
+            @field={{column.name}}
+            @icon={{column.icon}}
+            @onToggle={{this.updateOrderAndAsc}}
+            @order={{@order}}
             @translated={{column.user_field_id}}
           />
         {{/each}}
@@ -53,12 +53,12 @@ export default class DirectoryTable extends Component {
       <:body>
         {{#each @items as |item|}}
           <DirectoryItem
-            @item={{item}}
             @columns={{@columns}}
+            @item={{item}}
             @showTimeRead={{@showTimeRead}}
           />
         {{/each}}
       </:body>
-    </ResponsiveTable>
+    </DResponsiveTable>
   </template>
 }

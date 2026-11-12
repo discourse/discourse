@@ -50,7 +50,7 @@ class Auth::CurrentUserProvider
     raise NotImplementedError
   end
 
-  def log_off_user(session, cookie_jar)
+  def log_off_user(session, cookie_jar, push_subscription: nil)
     raise NotImplementedError
   end
 end

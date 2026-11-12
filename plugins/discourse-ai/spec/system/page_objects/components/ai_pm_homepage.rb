@@ -36,6 +36,18 @@ module PageObjects
         page.has_no_css?(HOMEPAGE_WRAPPER_CLASS)
       end
 
+      def has_anonymous_card?
+        page.has_css?(".ai-bot-anonymous-card")
+      end
+
+      def click_anonymous_card
+        page.find(".ai-bot-anonymous-card").click
+      end
+
+      def has_input_value?(value)
+        page.has_field?("ai-bot-conversations-input", with: value)
+      end
+
       def has_no_new_question_button?
         page.has_no_css?(".ai-new-question-button")
       end
@@ -66,6 +78,53 @@ module PageObjects
 
       def has_sidebar_back_link?
         page.has_css?(".sidebar-sections__back-to-forum")
+      end
+
+      def starred_section
+        page.find("#sidebar-section-content-starred-conversations")
+      end
+
+      def today_section
+        page.find("#sidebar-section-content-today")
+      end
+
+      def conversation_link(topic)
+        page.find("li[data-list-item-name='ai-conversation-#{topic.id}']")
+      end
+
+      def has_starred_conversations_section?
+        page.has_css?("#sidebar-section-content-starred-conversations")
+      end
+
+      def has_no_starred_conversations_section?
+        page.has_no_css?("#sidebar-section-content-starred-conversations")
+      end
+
+      def open_conversation_menu(topic)
+        conversation_link(topic).hover
+        conversation_link(topic).find(".sidebar-section-hover-button").click
+      end
+
+      def toggle_star_for_conversation(topic)
+        open_conversation_menu(topic)
+        page.find(".ai-conversation-sidebar-link-menu__star-conversation").click
+      end
+
+      def share_conversation(topic)
+        open_conversation_menu(topic)
+        page.find(".ai-conversation-sidebar-link-menu__share-conversation").click
+      end
+
+      def has_share_conversation_menu_item?
+        page.has_css?(".ai-conversation-sidebar-link-menu__share-conversation")
+      end
+
+      def has_no_star_conversation_menu_item?
+        page.has_no_css?(".ai-conversation-sidebar-link-menu__star-conversation")
+      end
+
+      def has_star_conversation_menu_item?
+        page.has_css?(".ai-conversation-sidebar-link-menu__star-conversation")
       end
 
       def has_no_sidebar_back_link?

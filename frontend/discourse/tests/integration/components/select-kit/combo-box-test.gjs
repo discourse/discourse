@@ -1,6 +1,8 @@
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -24,11 +26,42 @@ const setDefaultState = (ctx, options = {}) => {
   ctx.setProperties(properties);
 };
 
-module("Integration | Component | select-kit/combo-box", function (hooks) {
+module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.set("subject", selectKit());
+  });
+
+  test("selecting a row with a blank value", async function (assert) {
+    setDefaultState(this, {
+      content: [{ value: "", name: "default" }, ...DEFAULT_CONTENT],
+      value: "latest",
+      onChange: (value) => this.set("value", value),
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @nameProperty="name"
+          @onChange={{this.onChange}}
+          @options={{hash castInteger=true}}
+          @value={{this.value}}
+          @valueProperty="value"
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue("");
+
+    assert.strictEqual(this.value, "", "onChange receives the blank value");
+    assert.strictEqual(
+      this.subject.header().name(),
+      "default",
+      "the blank-value row displays as selected before any save"
+    );
   });
 
   test("options.clearable", async function (assert) {
@@ -42,10 +75,10 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
           @options={{hash clearable=this.clearable}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -72,12 +105,12 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash
             caretUpIcon=this.caretUpIcon
             caretDownIcon=this.caretDownIcon
           }}
+          @value={{this.value}}
         />
       </template>
     );
@@ -93,5 +126,88 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
     assert
       .dom(`.d-icon-${this.caretUpIcon}`, header)
       .exists("uses the icon provided");
+  });
+
+  test("refocuses the header after a change", async function (assert) {
+    setDefaultState(this, { onChange: () => {} });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".select-kit-header").isFocused();
+  });
+
+  test("keeps focus that onChange moved elsewhere", async function (assert) {
+    setDefaultState(this, {
+      onChange: () => document.querySelector(".other-input").focus(),
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+        <input class="other-input" />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".other-input").isFocused();
+  });
+
+  test("implicit mutation updates its own instance", async function (assert) {
+    // An `@action` gives the class an `actions` object on its prototype
+    class ActionComboBox extends ComboBox {
+      @action
+      noop() {}
+    }
+
+    setDefaultState(this, { firstValue: 1, secondValue: 1 });
+
+    await render(
+      <template>
+        <ActionComboBox
+          class="first"
+          @content={{this.content}}
+          @value={{this.firstValue}}
+        />
+        <ActionComboBox
+          class="second"
+          @content={{this.content}}
+          @value={{this.secondValue}}
+        />
+      </template>
+    );
+
+    const first = selectKit(".first");
+    const second = selectKit(".second");
+
+    // This exercises the deprecated write-back on purpose
+    await withSilencedDeprecationsAsync(
+      "discourse.select-kit.implicit-mutation",
+      async () => {
+        await first.expand();
+        await first.selectRowByValue(2);
+        await second.expand();
+        await second.selectRowByValue(3);
+      }
+    );
+
+    assert.strictEqual(first.header().value(), "2", "keeps the first value");
+    assert.strictEqual(second.header().value(), "3", "updates the second");
   });
 });

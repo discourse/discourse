@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import curryComponent from "ember-curry-component";
+import { modifier as modifierFn } from "ember-modifier";
+import DMenu from "discourse/float-kit/components/d-menu";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
@@ -21,110 +25,215 @@ import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTagChooser from "discourse/form-kit/components/fk/control/tag-chooser";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
-import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
 import FKFieldData from "discourse/form-kit/components/fk/field-data";
+import FKLabel from "discourse/form-kit/components/fk/label";
+import FKMeta from "discourse/form-kit/components/fk/meta";
+import FKOptional from "discourse/form-kit/components/fk/optional";
 import FKRow from "discourse/form-kit/components/fk/row";
+import FKText from "discourse/form-kit/components/fk/text";
+import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import deprecated from "discourse/lib/deprecated";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+
+const RowColWrapper = <template>
+  <FKRow as |row|>
+    <row.Col @size={{@size}}>
+      {{yield}}
+    </row.Col>
+  </FKRow>
+</template>;
+
+const EmptyWrapper = <template>
+  {{! eslint-disable ember/template-no-yield-only }}
+  {{yield}}
+</template>;
 
 export default class FKField extends Component {
-  @action
-  componentFor(component, field) {
-    const instance = this;
-    const baseArguments = {
-      get errors() {
-        return instance.args.errors;
-      },
-      unregisterField: instance.args.unregisterField,
-      registerField: instance.args.registerField,
-      component,
-      field,
-    };
+  // Modifier for setting control type class/data-attribute.
+  // Used by legacy path where type is set post-render by the control constructor.
+  // Also runs on the new path where type is set via @type, will be removed when legacy path is removed.
+  applyControlType = modifierFn((element, [field]) => {
+    const type = field.type;
 
+    if (type) {
+      element.dataset.controlType = type;
+      element.classList.add(`form-kit__field-${type}`);
+    }
+  });
+
+  get wrapper() {
+    if (this.args.size) {
+      return RowColWrapper;
+    } else {
+      return EmptyWrapper;
+    }
+  }
+
+  @action
+  legacyComponentFor(component, field) {
     if (!component.controlType) {
       throw new Error(
         `Static property \`controlType\` is required on component:\n\n ${component}`
       );
     }
 
-    return curryComponent(FKControlWrapper, baseArguments, getOwner(this));
+    return curryComponent(component, { field }, getOwner(this));
+  }
+
+  @action
+  legacyYield(field) {
+    deprecated(
+      '<form.Field> without @type is deprecated. Use `<form.Field @type="..." as |field|><field.Control />` instead of `<form.Field as |field|><field.Input />`.',
+      {
+        id: "discourse.form-kit.legacy-field-yield",
+        since: "2026.3",
+      }
+    );
+
+    return {
+      Custom: this.legacyComponentFor(FKControlCustom, field),
+      Code: this.legacyComponentFor(FKControlCode, field),
+      Question: this.legacyComponentFor(FKControlQuestion, field),
+      Textarea: this.legacyComponentFor(FKControlTextarea, field),
+      Checkbox: this.legacyComponentFor(FKControlCheckbox, field),
+      Color: this.legacyComponentFor(FKControlColor, field),
+      Image: this.legacyComponentFor(FKControlImage, field),
+      Password: this.legacyComponentFor(FKControlPassword, field),
+      Composer: this.legacyComponentFor(FKControlComposer, field),
+      Icon: this.legacyComponentFor(FKControlIcon, field),
+      Emoji: this.legacyComponentFor(FKControlEmoji, field),
+      Toggle: this.legacyComponentFor(FKControlToggle, field),
+      Menu: this.legacyComponentFor(FKControlMenu, field),
+      Select: this.legacyComponentFor(FKControlSelect, field),
+      TagChooser: this.legacyComponentFor(FKControlTagChooser, field),
+      Input: this.legacyComponentFor(FKControlInput, field),
+      RadioGroup: this.legacyComponentFor(FKControlRadioGroup, field),
+      Calendar: this.legacyComponentFor(FKControlCalendar, field),
+      errorId: field.errorId,
+      id: field.id,
+      name: field.name,
+      set: field.set,
+      get value() {
+        return field.value;
+      },
+    };
   }
 
   <template>
-    <FKFieldData
-      @name={{@name}}
-      @data={{@data}}
-      @emphasis={{@emphasis}}
-      @triggerRevalidationFor={{@triggerRevalidationFor}}
-      @title={{@title}}
-      @tooltip={{@tooltip}}
-      @description={{@description}}
-      @helpText={{@helpText}}
-      @showTitle={{@showTitle}}
-      @collectionIndex={{@collectionIndex}}
-      @set={{@set}}
-      @addError={{@addError}}
-      @validate={{@validate}}
-      @validation={{@validation}}
-      @onSet={{@onSet}}
-      @registerField={{@registerField}}
-      @format={{@format}}
-      @titleFormat={{@titleFormat}}
-      @descriptionFormat={{@descriptionFormat}}
-      @disabled={{@disabled}}
-      @parentName={{@parentName}}
-      @placeholderUrl={{@placeholderUrl}}
-      as |field|
-    >
-      {{#let
-        (hash
-          Custom=(this.componentFor FKControlCustom field)
-          Code=(this.componentFor FKControlCode field)
-          Question=(this.componentFor FKControlQuestion field)
-          Textarea=(this.componentFor FKControlTextarea field)
-          Checkbox=(this.componentFor FKControlCheckbox field)
-          Color=(this.componentFor FKControlColor field)
-          Image=(this.componentFor FKControlImage field)
-          Password=(this.componentFor FKControlPassword field)
-          Composer=(this.componentFor FKControlComposer field)
-          Icon=(this.componentFor FKControlIcon field)
-          Emoji=(this.componentFor FKControlEmoji field)
-          Toggle=(this.componentFor FKControlToggle field)
-          Menu=(this.componentFor FKControlMenu field)
-          Select=(this.componentFor FKControlSelect field)
-          TagChooser=(this.componentFor FKControlTagChooser field)
-          Input=(this.componentFor FKControlInput field)
-          RadioGroup=(this.componentFor FKControlRadioGroup field)
-          Calendar=(this.componentFor FKControlCalendar field)
-          emphasis=field.emphasis
-          errorId=field.errorId
-          id=field.id
-          name=field.name
-          set=field.set
-          value=field.value
-          isDirty=field.isDirty
-          isPristine=field.isPristine
-          rollback=field.rollback
-          resetPatches=@data.resetPatches
-        )
-        as |yieldArgs|
-      }}
-        {{#if @size}}
-          <FKRow as |row|>
-            <row.Col @size={{@size}}>
-              {{#if (has-block "body")}}
-                {{yield yieldArgs to="body"}}
-              {{else}}
-                {{yield yieldArgs}}
+    {{#let (curryComponent FKFieldData this.args) as |FieldData|}}
+      <FieldData as |field|>
+        <this.wrapper @size={{@size}}>
+          {{#if (or (has-block-params) (has-block "body"))}}
+            <div
+              class={{dConcatClass
+                "form-kit__container"
+                "form-kit__field"
+                (if field.type (concat "form-kit__field-" field.type))
+                (if field.error "has-error")
+                (if field.disabled "is-disabled")
+                (if field.emphasis "has-emphasis")
+                (if field.isDirty "is-dirty")
+                (if field.format (concat "--" field.format))
+              }}
+              data-disabled={{field.disabled}}
+              data-name={{field.name}}
+              id={{concat "control-" field.normalizedName}}
+              ...attributes
+              {{this.applyControlType field}}
+              {{didInsert (fn @registerField field.name field)}}
+              {{willDestroy (fn @unregisterField field.name)}}
+            >
+              {{#let
+                (hash
+                  Button=(component DButton class="form-kit__button btn-flat")
+                  Menu=(component DMenu class="form-kit__menu")
+                )
+                as |actions|
+              }}
+                {{#if (and field.showTitle (not (eq field.type "checkbox")))}}
+                  <FKLabel
+                    class={{dConcatClass
+                      "form-kit__container-title"
+                      (if field.labelFormat (concat "--" field.labelFormat))
+                    }}
+                    @fieldId={{field.id}}
+                  >
+                    <span>{{field.title}}</span>
+
+                    {{#if field.showOptional}}
+                      <FKOptional @field={{field}} />
+                    {{/if}}
+                    <FKTooltip @field={{field}} />
+
+                    {{#if (has-block "primaryActions")}}
+                      <div class="form-kit__container-primary-actions">
+                        {{yield actions field to="primaryActions"}}
+                      </div>
+                    {{/if}}
+
+                    {{#if (has-block "secondaryActions")}}
+                      <div class="form-kit__container-secondary-actions">
+                        {{yield actions field to="secondaryActions"}}
+                      </div>
+                    {{/if}}
+                  </FKLabel>
+                {{else if
+                  (or
+                    (has-block "primaryActions") (has-block "secondaryActions")
+                  )
+                }}
+                  {{! Checkboxes render their own title, so actions get their own row }}
+                  <div class="form-kit__container-title">
+                    {{#if (has-block "primaryActions")}}
+                      <div class="form-kit__container-primary-actions">
+                        {{yield actions field to="primaryActions"}}
+                      </div>
+                    {{/if}}
+
+                    {{#if (has-block "secondaryActions")}}
+                      <div class="form-kit__container-secondary-actions">
+                        {{yield actions field to="secondaryActions"}}
+                      </div>
+                    {{/if}}
+                  </div>
+                {{/if}}
+              {{/let}}
+
+              {{#if field.description}}
+                <FKText
+                  class={{dConcatClass
+                    "form-kit__container-description"
+                    (if field.labelFormat (concat "--" field.labelFormat))
+                  }}
+                  id={{field.descriptionId}}
+                >{{field.description}}</FKText>
               {{/if}}
-            </row.Col>
-          </FKRow>
-        {{else}}
-          {{#if (has-block "body")}}
-            {{yield yieldArgs to="body"}}
+
+              <div class="form-kit__container-content">
+                {{#if (has-block "body")}}
+                  {{yield field to="body"}}
+                {{else if field.hasExplicitType}}
+                  {{yield field}}
+                {{else}}
+                  {{yield (this.legacyYield field)}}
+                {{/if}}
+
+                {{#if field.helpText}}
+                  <FKText
+                    class="form-kit__container-help-text"
+                    id={{field.helpTextId}}
+                  >{{field.helpText}}</FKText>
+                {{/if}}
+
+                <FKMeta @error={{field.error}} @field={{field}} />
+              </div>
+            </div>
           {{else}}
-            {{yield yieldArgs}}
+            {{yield}}
           {{/if}}
-        {{/if}}
-      {{/let}}
-    </FKFieldData>
+        </this.wrapper>
+      </FieldData>
+    {{/let}}
   </template>
 }

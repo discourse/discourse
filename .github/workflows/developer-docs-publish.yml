@@ -30,7 +30,7 @@ jobs:
         working-directory: docs/developer-guides
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -57,7 +57,7 @@ jobs:
         working-directory: docs/developer-guides
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:

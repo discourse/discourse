@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Users directory", type: :system do
+describe "Users directory" do
   fab!(:user)
   let!(:initial_directory_events) { [] }
 

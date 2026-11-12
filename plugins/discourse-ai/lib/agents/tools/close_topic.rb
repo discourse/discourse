@@ -41,6 +41,10 @@ module DiscourseAi
           "close_topic"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           if !topic
@@ -66,6 +70,43 @@ module DiscourseAi
 
         def description_args
           { topic_id: parameters[:topic_id], closed: parameters[:closed] }
+        end
+
+        def approval_title
+          return super if !previewable?(topic)
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.topic_title",
+            topic: DiscourseAi::AiBot::ChatToolApproval.format_topic(topic),
+          )
+        end
+
+        def approval_changes
+          return [] if !previewable?(topic)
+
+          [
+            {
+              label: I18n.t("discourse_ai.ai_bot.chat_tool_approval.topic_status_label"),
+              before:
+                I18n.t(
+                  "discourse_ai.ai_bot.chat_tool_approval.topic_states.#{topic.closed ? "closed" : "open"}",
+                ),
+              after:
+                I18n.t(
+                  "discourse_ai.ai_bot.chat_tool_approval.topic_states.#{parameters[:closed] ? "closed" : "open"}",
+                ),
+            },
+          ]
+        end
+
+        def approval_parameters
+          []
+        end
+
+        private
+
+        def topic
+          @topic ||= Topic.find_by(id: parameters[:topic_id])
         end
       end
     end

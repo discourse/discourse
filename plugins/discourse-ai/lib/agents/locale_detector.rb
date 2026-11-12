@@ -7,6 +7,12 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
+      STATIC_LANGUAGE_CODES = %w[en es fr de it pt-BR ru zh-CN ja ko].freeze
+
       def system_prompt
         <<~PROMPT.strip
           You will be given a piece of text, and your task is to detect the locale (language) of the text and return it in a specific JSON format.
@@ -29,7 +35,7 @@ module DiscourseAi
           - Simplified Chinese: zh-CN
           - Japanese: ja
           - Korean: ko
-
+          #{configured_locale_lines}
           If the language is not in this list, use the appropriate IETF language tag code.
 
           5. Avoid using `und` and prefer `en` over `en-US` or `en-GB` unless the text specifically indicates a regional variant.
@@ -50,8 +56,27 @@ module DiscourseAi
         ]
       end
 
-      def temperature
-        0
+      private
+
+      def configured_locale_lines
+        settings =
+          SiteSetting.content_localization_supported_locales.to_s.split("|").reject(&:blank?)
+        return "" if settings.empty?
+
+        configured =
+          settings.filter_map do |locale|
+            lang =
+              LocaleSiteSetting.language_names[locale] ||
+                LocaleSiteSetting.language_names[locale.split("_").first]
+            next if lang.nil? || lang["name"].blank?
+
+            hyphenated = locale.tr("_", "-")
+            next if STATIC_LANGUAGE_CODES.include?(hyphenated)
+
+            "- #{lang["name"]}: #{hyphenated}"
+          end
+
+        configured.empty? ? "" : "#{configured.join("\n")}\n"
       end
     end
   end

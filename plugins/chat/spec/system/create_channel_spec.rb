@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Create channel", type: :system do
+RSpec.describe "Create channel" do
   fab!(:category_1, :category)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -64,6 +64,12 @@ RSpec.describe "Create channel", type: :system do
         context "when category is a child" do
           fab!(:group_2, :group)
           fab!(:child_category) do
+            private_category_1.update!(
+              permissions: {
+                group_1.name => :full,
+                group_2.name => :full,
+              },
+            )
             Fabricate(:private_category, parent_category_id: private_category_1.id, group: group_2)
           end
 
@@ -146,7 +152,7 @@ RSpec.describe "Create channel", type: :system do
         context "for a public category" do
           before do
             channel_modal.select_category(category_1)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
@@ -183,7 +189,7 @@ RSpec.describe "Create channel", type: :system do
           before do
             group_1.add(user_1)
             channel_modal.select_category(private_category)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
@@ -206,12 +212,13 @@ RSpec.describe "Create channel", type: :system do
             end
 
             it "displays the correct warning" do
+              sorted_names = [group_1.name, group_2.name].sort
               expect(dialog).to have_content(
                 I18n.t(
                   "js.chat.create_channel.auto_join_users.warning_2_groups",
                   count: 1,
-                  group1: "@#{group_1.name}",
-                  group2: "@#{group_2.name}",
+                  group1: "@#{sorted_names.first}",
+                  group2: "@#{sorted_names.second}",
                 ),
               )
             end
@@ -231,8 +238,9 @@ RSpec.describe "Create channel", type: :system do
             it "displays the correct warning" do
               # NOTE: This has to be hardcoded because the I18n module in ruby
               # does not support messageFormat.
+              first_group = [group_1.name, group_2.name, group_3.name].sort.first
               expect(dialog).to have_content(
-                "Automatically add 1 user from @#{group_1.name} and 2 other groups?",
+                "Automatically add 1 user from @#{first_group} and 2 other groups?",
               )
             end
           end
@@ -285,6 +293,35 @@ RSpec.describe "Create channel", type: :system do
           expect(page).to have_current_path(
             chat.channel_path(created_channel.slug, created_channel.id),
           )
+        end
+
+        it "persists the selected emoji" do
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          channel_modal.fill_name("Cats & Dogs")
+          channel_modal.select_emoji("cat")
+          channel_modal.click_primary_button
+
+          expect(channel_modal).to be_closed
+
+          created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
+          expect(created_channel.emoji).to eq("cat")
+        end
+
+        it "clears the emoji when reset before saving" do
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          channel_modal.fill_name("Cats & Dogs")
+          channel_modal.select_emoji("cat")
+          channel_modal.reset_emoji
+          channel_modal.click_primary_button
+
+          expect(channel_modal).to be_closed
+
+          created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
+          expect(created_channel.emoji).to be_nil
         end
       end
     end

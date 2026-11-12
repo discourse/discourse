@@ -21,14 +21,6 @@
     margin-right: 0.25em;
   }
 
-  .composer-popup & {
-    margin-left: 0.5em;
-  }
-
-  .assignee:not(:last-child)::after {
-    content: ", ";
-  }
-
   .more-button {
     padding-left: 0.3em;
     padding-right: 0.3em;

@@ -10,10 +10,7 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   def accept
     PolicyUser.add!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-
-    if @post.post_policy.add_users_to_group.present?
-      @post.post_policy.add_users_group.add(current_user)
-    end
+    @add_users_group&.add(current_user)
 
     render json: success_json
   end
@@ -21,10 +18,7 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   def unaccept
     PolicyUser.remove!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-
-    if @post.post_policy.add_users_to_group.present?
-      @post.post_policy.add_users_group.remove(current_user)
-    end
+    @add_users_group&.remove(current_user)
 
     render json: success_json
   end
@@ -69,6 +63,11 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
          user_id: current_user.id,
        ).exists?
       return render_json_error(I18n.t("discourse_policy.errors.user_missing"))
+    end
+
+    @add_users_group = @post.post_policy.add_users_group
+    if @add_users_group && !Guardian.new(@post.user).can_edit_group?(@add_users_group)
+      return render_json_error(I18n.t("discourse_policy.errors.policy_group_inaccessible"))
     end
 
     true

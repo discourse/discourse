@@ -12,14 +12,14 @@ module Slug
     slug =
       case method
       when :ascii
-        self.ascii_generator(string)
+        ascii_generator(string)
       when :encoded
-        self.encoded_generator(string)
+        encoded_generator(string)
       when :none
-        self.none_generator(string)
+        none_generator(string)
       end
 
-    slug = self.prettify_slug(slug, max_length: max_length)
+    slug = prettify_slug(slug, max_length: max_length)
     (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
 

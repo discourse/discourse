@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User preferences tracking page", type: :system do
+RSpec.describe "User preferences tracking page" do
   fab!(:user)
   fab!(:tag1) { Fabricate(:tag, name: "javascript") }
   fab!(:tag2) { Fabricate(:tag, name: "ruby") }

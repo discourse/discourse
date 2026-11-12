@@ -1,11 +1,27 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SecurityKeyForm extends Component {
+  get showSecurityKeyButton() {
+    // when the granular args aren't passed, keep the legacy single-button
+    // rendering driven by `@action`
+    return this.args.securityKeysEnabled ?? true;
+  }
+
+  get securityKeyAction() {
+    return this.args.securityKeyAction ?? this.args.action;
+  }
+
+  get securityKeyLabel() {
+    return this.args.passkeysEnabled
+      ? "login.use_security_key"
+      : "login.security_key_authenticate";
+  }
+
   @action
   useAnotherMethod(event) {
     event.preventDefault();
@@ -21,19 +37,30 @@ export default class SecurityKeyForm extends Component {
 
   <template>
     <div id="security-key">
-      <DButton
-        @action={{@action}}
-        @icon="key"
-        @label="login.security_key_authenticate"
-        id="security-key-authenticate-button"
-        class="btn-large btn-primary"
-      />
+      {{#if @passkeysEnabled}}
+        <DButton
+          class="btn-large btn-primary"
+          id="passkey-authenticate-button"
+          @action={{@passkeyAction}}
+          @icon="user"
+          @label="login.use_passkey"
+        />
+      {{/if}}
+      {{#if this.showSecurityKeyButton}}
+        <DButton
+          class="btn-large {{if @passkeysEnabled 'btn-default' 'btn-primary'}}"
+          id="security-key-authenticate-button"
+          @action={{this.securityKeyAction}}
+          @icon="key"
+          @label={{this.securityKeyLabel}}
+        />
+      {{/if}}
       <p>
         {{#if @otherMethodAllowed}}
           <a
-            {{on "click" this.useAnotherMethod}}
-            href
             class="toggle-second-factor-method"
+            href
+            {{on "click" this.useAnotherMethod}}
           >{{i18n "login.security_key_alternative"}}</a>
         {{/if}}
       </p>

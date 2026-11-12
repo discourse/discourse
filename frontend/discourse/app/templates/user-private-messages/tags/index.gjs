@@ -27,11 +27,11 @@ export default <template>
 
   {{#if @controller.model}}
     <TagList
-      @tags={{@controller.model}}
-      @sortProperties={{@controller.sortProperties}}
-      @titleKey="tagging.all_tags"
       @isPrivateMessage={{true}}
+      @sortProperties={{@controller.sortProperties}}
+      @tags={{@controller.model}}
       @tagsForUser={{@controller.tagsForUser}}
+      @titleKey="tagging.all_tags"
     />
   {{/if}}
 </template>

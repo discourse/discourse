@@ -1,12 +1,12 @@
 import { classNames } from "@ember-decorators/component";
-import avatar from "discourse/helpers/avatar";
 import formatUsername from "discourse/helpers/format-username";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 @classNames("user-row")
 export default class UserRow extends SelectKitRowComponent {
   <template>
-    {{avatar this.item imageSize="tiny"}}
+    {{dAvatar this.item imageSize="tiny"}}
 
     <span class="username">{{formatUsername this.item.username}}</span>
 

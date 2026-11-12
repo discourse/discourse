@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Chat Incoming Webhooks", type: :system do
+describe "Admin Chat Incoming Webhooks" do
   fab!(:current_user, :admin)
   fab!(:chat_channel_1, :chat_channel)
 

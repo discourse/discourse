@@ -29,6 +29,9 @@ RSpec.describe LlmQuotaUsage do
       expect(usage.reset_at).to eq_time(Time.current + llm_quota.duration_seconds.seconds)
       expect(usage.input_tokens_used).to eq(0)
       expect(usage.output_tokens_used).to eq(0)
+      expect(usage.cache_read_tokens_used).to eq(0)
+      expect(usage.cache_write_tokens_used).to eq(0)
+      expect(usage.cost_used).to eq(0)
       expect(usage.usages).to eq(0)
     end
 
@@ -39,6 +42,19 @@ RSpec.describe LlmQuotaUsage do
 
       expect(usage.id).to eq(existing.id)
     end
+
+    it "handles concurrent creation correctly" do
+      threads = []
+
+      5.times do
+        threads << Thread.new do
+          described_class.find_or_create_for(user: user, llm_quota: llm_quota)
+        end
+      end
+      threads.each(&:join)
+
+      expect(described_class.where(user: user, llm_quota: llm_quota).count).to eq(1)
+    end
   end
 
   describe "#reset_if_needed!" do
@@ -48,6 +64,9 @@ RSpec.describe LlmQuotaUsage do
       usage.update!(
         input_tokens_used: 100,
         output_tokens_used: 200,
+        cache_read_tokens_used: 300,
+        cache_write_tokens_used: 400,
+        cost_used: 0.12,
         usages: 5,
         reset_at: 1.minute.ago,
       )
@@ -58,6 +77,9 @@ RSpec.describe LlmQuotaUsage do
 
       expect(usage.reload.input_tokens_used).to eq(0)
       expect(usage.output_tokens_used).to eq(0)
+      expect(usage.cache_read_tokens_used).to eq(0)
+      expect(usage.cache_write_tokens_used).to eq(0)
+      expect(usage.cost_used).to eq(0)
       expect(usage.usages).to eq(0)
       expect(usage.started_at).to eq_time(Time.current)
       expect(usage.reset_at).to eq_time(Time.current + llm_quota.duration_seconds.seconds)
@@ -69,6 +91,9 @@ RSpec.describe LlmQuotaUsage do
       original_values = {
         input_tokens_used: 100,
         output_tokens_used: 200,
+        cache_read_tokens_used: 300,
+        cache_write_tokens_used: 400,
+        cost_used: 0.12,
         usages: 5,
         reset_at: 1.minute.from_now,
       }
@@ -79,6 +104,9 @@ RSpec.describe LlmQuotaUsage do
       usage.reload
       expect(usage.input_tokens_used).to eq(original_values[:input_tokens_used])
       expect(usage.output_tokens_used).to eq(original_values[:output_tokens_used])
+      expect(usage.cache_read_tokens_used).to eq(original_values[:cache_read_tokens_used])
+      expect(usage.cache_write_tokens_used).to eq(original_values[:cache_write_tokens_used])
+      expect(usage.cost_used).to eq(original_values[:cost_used])
       expect(usage.usages).to eq(original_values[:usages])
       expect(usage.reset_at).to eq_time(original_values[:reset_at])
     end
@@ -88,10 +116,19 @@ RSpec.describe LlmQuotaUsage do
     let(:usage) { Fabricate(:llm_quota_usage, user: user, llm_quota: llm_quota) }
 
     it "increments usage counts" do
-      usage.increment_usage!(input_tokens: 50, output_tokens: 30)
+      usage.increment_usage!(
+        input_tokens: 50,
+        output_tokens: 30,
+        cache_read_tokens: 20,
+        cache_write_tokens: 10,
+        cost: 0.123,
+      )
 
       expect(usage.reload.input_tokens_used).to eq(50)
       expect(usage.output_tokens_used).to eq(30)
+      expect(usage.cache_read_tokens_used).to eq(20)
+      expect(usage.cache_write_tokens_used).to eq(10)
+      expect(usage.cost_used).to eq(BigDecimal("0.123"))
       expect(usage.usages).to eq(1)
     end
 
@@ -103,10 +140,39 @@ RSpec.describe LlmQuotaUsage do
       expect(usage.usages).to eq(2)
     end
 
+    it "handles concurrent increments correctly" do
+      threads = []
+
+      5.times do
+        threads << Thread.new do
+          described_class.find(usage.id).increment_usage!(
+            input_tokens: 10,
+            output_tokens: 20,
+            cache_read_tokens: 30,
+            cache_write_tokens: 40,
+            cost: 0.50,
+          )
+        end
+      end
+
+      threads.each(&:join)
+
+      usage.reload
+      expect(usage.input_tokens_used).to eq(50)
+      expect(usage.output_tokens_used).to eq(100)
+      expect(usage.cache_read_tokens_used).to eq(150)
+      expect(usage.cache_write_tokens_used).to eq(200)
+      expect(usage.cost_used).to eq(BigDecimal("2.5"))
+      expect(usage.usages).to eq(5)
+    end
+
     it "resets counts if needed before incrementing" do
       usage.update!(
         input_tokens_used: 100,
         output_tokens_used: 200,
+        cache_read_tokens_used: 300,
+        cache_write_tokens_used: 400,
+        cost_used: 0.12,
         usages: 5,
         reset_at: 1.minute.ago,
       )
@@ -115,6 +181,9 @@ RSpec.describe LlmQuotaUsage do
 
       expect(usage.reload.input_tokens_used).to eq(50)
       expect(usage.output_tokens_used).to eq(30)
+      expect(usage.cache_read_tokens_used).to eq(0)
+      expect(usage.cache_write_tokens_used).to eq(0)
+      expect(usage.cost_used).to eq(0)
       expect(usage.usages).to eq(1)
     end
   end
@@ -134,6 +203,13 @@ RSpec.describe LlmQuotaUsage do
 
     it "raises error when max_usages exceeded" do
       usage.update!(usages: llm_quota.max_usages + 1)
+
+      expect { usage.check_quota! }.to raise_error(LlmQuotaUsage::QuotaExceededError, /exceeded/)
+    end
+
+    it "raises error when max_cost exceeded" do
+      usage.llm_quota.update!(max_cost: 0.01)
+      usage.update!(cost_used: 0.02)
 
       expect { usage.check_quota! }.to raise_error(LlmQuotaUsage::QuotaExceededError, /exceeded/)
     end
@@ -160,6 +236,12 @@ RSpec.describe LlmQuotaUsage do
 
     it "returns true when max_usages exceeded" do
       usage.update!(usages: llm_quota.max_usages + 1)
+      expect(usage.quota_exceeded?).to be true
+    end
+
+    it "returns true when max_cost exceeded" do
+      usage.llm_quota.update!(max_cost: 0.01)
+      usage.update!(cost_used: 0.02)
       expect(usage.quota_exceeded?).to be true
     end
 
@@ -215,6 +297,25 @@ RSpec.describe LlmQuotaUsage do
       end
     end
 
+    describe "#remaining_cost" do
+      it "calculates remaining cost when under limit" do
+        usage.llm_quota.update!(max_cost: 1.25)
+        usage.update!(cost_used: 0.25)
+        expect(usage.remaining_cost).to eq(BigDecimal("1.0"))
+      end
+
+      it "returns 0 when over limit" do
+        usage.llm_quota.update!(max_cost: 1.25)
+        usage.update!(cost_used: 1.50)
+        expect(usage.remaining_cost).to eq(0)
+      end
+
+      it "returns nil when no max_cost set" do
+        usage.llm_quota.update!(max_cost: nil)
+        expect(usage.remaining_cost).to be_nil
+      end
+    end
+
     describe "#percentage_tokens_used" do
       it "calculates percentage correctly" do
         usage.update!(input_tokens_used: 250, output_tokens_used: 250)
@@ -246,6 +347,25 @@ RSpec.describe LlmQuotaUsage do
       it "returns 0 when no max_usages set" do
         usage.llm_quota.update!(max_usages: nil)
         expect(usage.percentage_usages_used).to eq(0)
+      end
+    end
+
+    describe "#percentage_cost_used" do
+      it "calculates percentage correctly" do
+        usage.llm_quota.update!(max_cost: 1.00)
+        usage.update!(cost_used: 0.25)
+        expect(usage.percentage_cost_used).to eq(25)
+      end
+
+      it "caps at 100%" do
+        usage.llm_quota.update!(max_cost: 1.00)
+        usage.update!(cost_used: 2.00)
+        expect(usage.percentage_cost_used).to eq(100)
+      end
+
+      it "returns 0 when no max_cost set" do
+        usage.llm_quota.update!(max_cost: nil)
+        expect(usage.percentage_cost_used).to eq(0)
       end
     end
   end

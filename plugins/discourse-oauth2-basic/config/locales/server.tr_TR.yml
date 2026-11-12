@@ -27,7 +27,6 @@ tr_TR:
     oauth2_json_email_verified_path: "OAuth2 Kullanıcı JSON'unda kullanıcının e-posta doğrulama durumuna giden yol. ör.: user.email.verified. oauth2_email_verified, bu ayarın herhangi bir etkiye sahip olması için devre dışı bırakılmalıdır"
     oauth2_json_avatar_path: "Oauth2 Kullanıcı JSON'unda kullanıcının avatarına giden yol. ör.: user.avatar_url"
     oauth2_email_verified: "OAuth2 sitesi e-postayı doğruladıysa bunu kontrol edin"
-    oauth2_overrides_email: "Her oturum açma işleminde Discourse e-postasını uzak e-posta ile geçersiz kılın. \"auth_overrides_email\" ayarı ile aynı şekilde çalışır, ancak OAuth2 girişlerine özeldir."
     oauth2_send_auth_header: "İstemci giriş bilgilerini HTTP Yetkilendirme üstbilgisinde gönderin"
     oauth2_send_auth_body: "İstemci giriş bilgilerini talep gövdesinde gönderin"
     oauth2_debug_auth: "Günlüklerinize zengin hata ayıklama bilgileri ekleyin"

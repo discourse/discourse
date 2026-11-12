@@ -2,10 +2,10 @@ import { hash } from "@ember/helper";
 import IgnoredUserList from "discourse/components/ignored-user-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,11 +17,11 @@ export default <template>
       data-setting-name="user-ignored-users"
     >
       <div class="controls tracking-controls user-notifications">
-        <label>{{icon "far-eye-slash" class="icon"}}
+        <label>{{dIcon "far-eye-slash" class="icon"}}
           {{i18n "user.ignored_users"}}</label>
         <IgnoredUserList
-          @model={{@controller.model}}
           @items={{@controller.model.ignored_usernames}}
+          @model={{@controller.model}}
         />
       </div>
     </div>
@@ -31,13 +31,13 @@ export default <template>
     <div class="control-group user-mute" data-setting-name="user-muted-users">
       <div class="controls tracking-controls">
         <label>
-          {{icon "d-muted" class="icon"}}
+          {{dIcon "d-muted" class="icon"}}
           <span>{{i18n "user.muted_users"}}</span>
         </label>
         <UserChooser
-          @value={{@controller.mutedUsernames}}
           @onChange={{@controller.onChangeMutedUsernames}}
           @options={{hash excludeCurrentUser=true}}
+          @value={{@controller.mutedUsernames}}
         />
       </div>
       <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
@@ -53,8 +53,8 @@ export default <template>
       >
         <div class="controls">
           <PreferenceCheckbox
-            @labelKey="user.allow_private_messages"
             @checked={{@controller.model.user_option.allow_private_messages}}
+            @labelKey="user.allow_private_messages"
           />
         </div>
       </div>
@@ -65,17 +65,17 @@ export default <template>
       >
         <div class="controls">
           <PreferenceCheckbox
-            @labelKey="user.allow_private_messages_from_specific_users"
             @checked={{@controller.model.user_option.enable_allowed_pm_users}}
             @disabled={{@controller.disableAllowPmUsersSetting}}
+            @labelKey="user.allow_private_messages_from_specific_users"
           />
         </div>
         {{#if @controller.allowPmUsersEnabled}}
           <div class="controls tracking-controls">
             <UserChooser
-              @value={{@controller.allowedPmUsernames}}
               @onChange={{@controller.onChangeAllowedPmUsernames}}
               @options={{hash excludeCurrentUser=true}}
+              @value={{@controller.allowedPmUsernames}}
             />
           </div>
           <div class="instructions">{{i18n
@@ -88,15 +88,15 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>
 
-  <SaveControls
-    @model={{@controller.model}}
+  <DSaveControls
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

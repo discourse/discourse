@@ -5,8 +5,18 @@ module Roleable
 
   included do
     scope :admins, -> { where(admin: true) }
+    scope :active_admins, -> { real.admins.where(active: true) }
     scope :moderators, -> { where(moderator: true) }
     scope :staff, -> { where("moderator or admin ") }
+    scope :whisperers,
+          -> do
+            group_ids = SiteSetting.whispers_allowed_groups_map
+            next none if group_ids.empty?
+
+            members = GroupUser.where(group_id: group_ids).select(:user_id)
+            # A UNION keeps each side on its own index; an OR scans the users table.
+            where("users.id IN (#{admins.select(:id).to_sql} UNION #{members.to_sql})")
+          end
   end
 
   # any user that is either a moderator or an admin
@@ -19,13 +29,16 @@ module Roleable
   end
 
   def whisperer?
-    @whisperer ||=
-      begin
-        return false if SiteSetting.whispers_allowed_groups_map.empty?
-        return true if admin
-        return true if SiteSetting.whispers_allowed_groups_map.include?(primary_group_id)
-        group_users&.exists?(group_id: SiteSetting.whispers_allowed_groups_map)
-      end
+    return false if SiteSetting.whispers_allowed_groups_map.empty?
+    return true if admin
+    return @whisperer unless @whisperer.nil?
+
+    @whisperer = group_users.exists?(group_id: SiteSetting.whispers_allowed_groups_map)
+  end
+
+  def category_group_moderator?
+    SiteSetting.enable_category_group_moderation &&
+      CategoryModerationGroup.where(group_id: group_users.select(:group_id)).exists?
   end
 
   def grant_moderation!
@@ -54,13 +67,13 @@ module Roleable
 
   def save_and_refresh_staff_groups!
     transaction do
-      self.save!
+      save!
       Group.refresh_automatic_groups!(:admins, :moderators, :staff)
     end
   end
 
   def set_permission(permission_name, value)
-    self.public_send("#{permission_name}=", value)
+    public_send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
   end
 
@@ -83,7 +96,7 @@ module Roleable
       reviewable.perform(Discourse.system_user, :approve_user, send_email: false)
     else
       ReviewableUser.set_approved_fields!(self, Discourse.system_user)
-      self.save!
+      save!
     end
   end
 end

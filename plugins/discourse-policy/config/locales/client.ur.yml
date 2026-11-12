@@ -23,6 +23,7 @@ ur:
           label: اِیمیل بھیجیں?
       preferences:
         policy_emails:
+          label: جب پالیسی کو میرے جائزے کی ضرورت ہو تو مجھے ای میل کریں۔
           email_frequency_options:
             never: کبھی نہیں
             always: ہمیشہ

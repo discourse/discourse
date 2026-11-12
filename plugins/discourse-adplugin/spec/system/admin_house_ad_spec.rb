@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin House Ad", type: :system do
+describe "Admin House Ad" do
   fab!(:admin)
 
   let(:house_ads_page) { PageObjects::Pages::AdminHouseAds.new }
@@ -21,6 +21,43 @@ describe "Admin House Ad", type: :system do
       find("tr[data-plugin-name='discourse-adplugin'] a.admin-plugins-list__name").click
       expect(page).to have_current_path(%r{/admin/plugins/discourse-adplugin})
       expect(page).to have_no_css(".alert-error")
+    end
+
+    shared_examples "saving an advertisement category" do |lazy_load_categories:|
+      it "lets an admin search for a category and save it with lazy loading #{lazy_load_categories ? "enabled" : "disabled"}" do
+        SiteSetting.lazy_load_categories_groups =
+          lazy_load_categories ? Group::AUTO_GROUPS[:admins].to_s : ""
+        category = Fabricate(:category, name: "OpenPanel")
+        another_category = Fabricate(:category, name: "Security summary")
+        Fabricate(:category_sidebar_section_link, user: admin, linkable: category)
+        house_ads_page.visit_new
+
+        form.field("name").fill_in("Category ad")
+        form.field("html").fill_in("<p>Category ad</p>")
+        form.field("categories").select(category.name)
+        form.submit
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        page.refresh
+        expect(form.field("categories")).to have_value(category.id.to_s)
+        expect(house_ads_page).to have_selected_category(category)
+
+        form.field("categories").select(another_category.name)
+        form.submit
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        page.refresh
+        expect(house_ads_page).to have_selected_category(category)
+        expect(house_ads_page).to have_selected_category(another_category)
+      end
+    end
+
+    context "with category lazy loading disabled" do
+      include_examples "saving an advertisement category", lazy_load_categories: false
+    end
+
+    context "with category lazy loading enabled" do
+      include_examples "saving an advertisement category", lazy_load_categories: true
     end
 
     it "supports the full house ad lifecycle" do
@@ -88,7 +125,7 @@ describe "Admin House Ad", type: :system do
         "tr[data-plugin-name='discourse-adplugin'] .admin-plugins-list__enabled .d-toggle-switch__checkbox-slider",
       ).click
 
-      find(".admin-plugin-tab-nav-item[data-plugin-nav-tab-id='discourse-adplugin'] a").click
+      find("tr[data-plugin-name='discourse-adplugin'] .admin-plugins-list__name").click
 
       expect(page).to have_css(".admin-plugin-config-page__top-nav-item", text: "House Ads")
     end

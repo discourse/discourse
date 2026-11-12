@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar mobile", type: :system, mobile: true do
+describe "Viewing sidebar mobile", mobile: true do
   fab!(:user)
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:edit_categories_modal) { PageObjects::Modals::SidebarEditCategories.new }
 
   before { sign_in(user) }
 
@@ -34,6 +35,19 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
+  it "lets an admin edit categories from the sidebar action menu" do
+    user.update!(admin: true)
+    visit("/latest")
+
+    sidebar_dropdown.click
+    sidebar_dropdown.click_edit_categories_dropdown_option
+
+    expect(sidebar_dropdown).to be_hidden
+    expect(edit_categories_modal).to have_right_title(
+      I18n.t("js.sidebar.categories_form_modal.title"),
+    )
+  end
+
   it "collapses the sidebar when clicking on a link in the sidebar" do
     visit("/latest")
 
@@ -56,20 +70,5 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
     sidebar_dropdown.click_categories_header_button
 
     expect(sidebar_dropdown).to be_hidden
-  end
-
-  it "toggles to desktop view after clicking on the toggle to desktop view button" do
-    SiteSetting.viewport_based_mobile_mode = false
-
-    visit("/latest")
-
-    expect(page).to have_css(".mobile-view")
-
-    sidebar_dropdown.click
-    sidebar_dropdown.click_toggle_to_desktop_view_button
-
-    visit("/latest")
-
-    expect(page).to have_css(".desktop-view")
   end
 end

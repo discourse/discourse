@@ -70,6 +70,7 @@ RSpec.describe Chat::PinMessage do
         expect(pin_event).to be_present
         expect(pin_event.channel).to eq("/chat/#{channel.id}")
         expect(pin_event.data["chat_message_id"]).to eq(message.id)
+        expect(pin_event.data["pinned_message_count"]).to eq(1)
       end
     end
   end

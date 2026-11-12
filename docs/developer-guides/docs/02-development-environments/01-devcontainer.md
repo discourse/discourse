@@ -28,17 +28,27 @@ Dev Containers can be used in a number of different IDEs, or directly using thei
 
 1. Wait for the container to download and start. When it's done, the README will appear, and you'll see the Discourse filesystem in the sidebar.
 
-1. Run the default build task using <kbd>Ctrl + Shift + B</kbd> (<kbd>Cmd + Shift + B</kbd> on mac).
+1. Run the default build task using <kbd>Cmd/Ctrl + Shift + B</kbd>.
 
    This will install dependencies, migrate the database, and start the server. It'll take a few minutes, especially on the lower-end machines. You'll see "Build successful" in the terminal when it's done.
 
-1. Visit `http://localhost:4200` in your browser to see your new Discourse instance
+1. Run the `dev/admin/create` task. Open the command palette and search for "Tasks: Run Tasks". It will present a menu of tasks; select `dev/admin/create` off of that list. You'll be prompted to enter an email address and a password for your admin user.
+
+1. Visit `http://localhost:3000` in your browser to see your new Discourse instance
 
 1. All done! You can now make changes to Discourse's source code and see them reflected in the preview.
 
+## Running tests
+
+The first time you run tests, you'll need to install testing dependencies, including Playwright and the `discourse_test` DB. You can run the `deps/testing` task to install those. Open the command palette, select "Tasks: Run Tasks". It will present a menu of tasks; select `deps/testing` off of that list.
+
+Once the test dependencies are installed, you can run [`bin/lint`](https://meta.discourse.org/t/132947), [`bin/qunit`](https://meta.discourse.org/t/66857), or the [system specs](https://meta.discourse.org/t/325937)
+
 ## Applying config/container updates
 
-Every so often, the devcontainer config and the associated container image will be updated. VSCode should prompt you to "rebuild" to apply the changes. Alternatively, you can run "Dev Containers: Rebuild Container" from the VSCode command palette. The working directory, and your Redis/Postgres data will be preserved across rebuilds.
+Every so often, the devcontainer config will be updated. VSCode should prompt you to "rebuild" to apply the changes. Alternatively, you can run "Dev Containers: Rebuild Container" from the VSCode command palette. The working directory, and your Redis/Postgres data will be preserved across rebuilds.
+
+The container image uses the `release` tag, so VSCode will not prompt you when a new image is published. To update it, run `docker pull discourse/discourse_dev:release` and then rebuild the container. In GitHub Codespaces, run "Codespaces: Full Rebuild Container" instead.
 
 If you'd like to start from scratch with fresh database, you'll need to delete the `discourse-pg` and `discourse-redis` docker volumes. This can be done from the "Remote Explorer" tab of the VSCode sidebar.
 

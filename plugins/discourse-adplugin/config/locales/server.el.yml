@@ -7,6 +7,8 @@
 el:
   site_settings:
     dfp_through_trust_level: "Show your ads to users based on trust levels. Users with trust level higher than this value will not see ads."
+    dfp_target_above_site_header_key_code: "Input custom targeting keys - inventory Level"
+    dfp_target_above_site_header_value_code: "Input custom targeting values - inventory Level"
     dfp_topic_list_top_code: "Enter the unique Code of the ad unit to display above topic lists. This is the short code (max 100 chars) given to the ad unit when it was created, not the JavaScript code."
     dfp_topic_list_top_ad_sizes: "Choose your ad size for the ad unit above topic lists."
     dfp_mobile_topic_list_top_code: "Enter the unique Code of the ad unit to display above topic lists on mobile view. This is the short code (max 100 chars) given to the ad unit when it was created, not the JavaScript code."
@@ -30,6 +32,8 @@ el:
     dfp_target_post_bottom_key_code: "Input custom targeting keys - inventory Level"
     dfp_target_post_bottom_value_code: "Input custom targeting values - inventory Level"
     adsense_through_trust_level: "Show your ads to users based on trust levels. Users with trust level higher than this value will not see ads."
+    adsense_above_site_header_ad_sizes: "Choose your ad size"
+    adsense_mobile_above_site_header_ad_size: "Choose your ad size"
     adsense_topic_list_top_code: "Enter code of the ad unit to display at topic list top location. This is the number assigned to the ad unit, not the JavaScript code."
     adsense_mobile_topic_list_top_code: "Enter code of the ad unit to display mobile ads at topic list top location. This is the number assigned to the ad unit, not the JavaScript code."
     adsense_topic_list_top_ad_sizes: "Choose your ad size"
@@ -48,6 +52,10 @@ el:
     adsense_mobile_post_bottom_ad_size: "Choose your ad size"
     adsense_nth_post_code: "Show an ad after every N posts, where N is this value."
     amazon_through_trust_level: "Show your ads to users based on trust levels. Users with trust level higher than this value will not see ads."
+    amazon_above_site_header_ad_width_code: "Input your ad width"
+    amazon_above_site_header_ad_height_code: "Input your ad height"
+    amazon_mobile_above_site_header_ad_width_code: "Input your ad width (mobile)"
+    amazon_mobile_above_site_header_ad_height_code: "Input your ad height (mobile)"
     amazon_topic_list_top_src_code: "Enter src code to display at topic list top location"
     amazon_topic_list_top_ad_width_code: "Input your ad width"
     amazon_topic_list_top_ad_height_code: "Input your ad height"

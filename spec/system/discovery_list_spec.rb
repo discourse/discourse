@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discovery list", type: :system do
+describe "Discovery list" do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:reply) { Fabricate(:post, topic: topics.first) }
 
@@ -45,7 +45,7 @@ describe "Discovery list", type: :system do
     fab!(:post1) { create_post(user: user, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
-    it "should correctly show/hide the bulk select toggle for regular users" do
+    it "shows and hides the bulk-select toggle for regular users" do
       sign_in(user)
       visit("/unread")
 

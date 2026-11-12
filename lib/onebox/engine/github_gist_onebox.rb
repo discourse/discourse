@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require_relative "../mixins/github_api"
+
 module Onebox
   module Engine
     class GithubGistOnebox
       include Engine
       include LayoutSupport
       include JSON
+      include Onebox::Mixins::GithubApi
 
       MAX_FILES = 3
 
@@ -30,6 +33,8 @@ module Onebox
         @data ||= {
           title: "gist.github.com",
           link: link,
+          repository: "gist.github.com/#{URI(link).path.split("/")[1]}",
+          layout_class: "github-onebox",
           gist_files: gist_files.take(MAX_FILES),
           truncated_files?: truncated_files?,
           i18n: i18n,
@@ -38,6 +43,9 @@ module Onebox
 
       def i18n
         {
+          header: {
+            gist: I18n.t("onebox.github.header.gist"),
+          },
           truncated_file: I18n.t("onebox.github.truncated_file"),
           more_than_three_files: I18n.t("onebox.github.more_than_three_files"),
           show_original: I18n.t("onebox.github.show_original"),

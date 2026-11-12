@@ -11,7 +11,7 @@ module PostVoting
     end
 
     def is_post_voting_topic?
-      topic.is_post_voting?
+      topic&.is_post_voting?
     end
 
     def post_voting_last_voted(user_id)
@@ -27,7 +27,7 @@ module PostVoting
     end
 
     def comments
-      topic.posts.where(reply_to_post_number: self.post_number).order("post_number ASC")
+      topic.posts.where(reply_to_post_number: post_number).order("post_number ASC")
     end
 
     private

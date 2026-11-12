@@ -14,8 +14,8 @@ on:
       - "migrations/**"
 
 concurrency:
-  group: migration-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -26,7 +26,11 @@ jobs:
     name: Tests
     runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: 20
+    timeout-minutes: 25
+
+    defaults:
+      run:
+        shell: bash
 
     env:
       RAILS_ENV: test
@@ -38,7 +42,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -48,8 +52,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        run: |
-          redis-server /etc/redis/redis.conf &
+        run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
       - name: Start Postgres
         run: |
@@ -61,65 +64,52 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
-      - name: Setup gems
+      - parallel:
+          - name: Setup gems
+            run: |
+              bundle config set --local path vendor/bundle
+              bundle config set --local deployment true
+              bundle config set --local without development
+              bundle config set --local with migrations
+              bundle install --jobs $(($(nproc) - 1))
+              bundle clean
+
+          # The markdown engine specs build the parser bundle, which needs the
+          # checkout's frontend dependencies (vendored libraries, the
+          # pretty-text-processor build) - node, not Rails.
+          - name: pnpm install
+            run: pnpm install --frozen-lockfile
+
+      - parallel:
+          - name: RSpec (no Rails)
+            # The wrapper resolves the suites through the app's Gemfile, so the
+            # root lockfile governs the versions here, locally, and at runtime.
+            # Nothing boots Rails here; specs that need it are tagged `:rails`
+            # and run after the database is up.
+            run: |
+              for gem in core tooling converters importer; do
+                echo "== migrations-$gem =="
+                (cd "migrations/$gem" && ../bin/rspec --tag ~rails)
+              done
+
+          - name: Create and migrate database
+            run: |
+              bin/rake db:create
+              script/silence_successful_output bin/rake db:migrate
+
+      - name: Run all schema and converter checks (disco check)
         run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle config --local with migrations
-          bundle install --jobs $(($(nproc) - 1))
+          # Runs every check in dependency order: pending migrations, schema
+          # config validity, config ↔ database drift, committed generated files
+          # vs regeneration (in a temp directory), and converter coverage.
+          # Prints the actionable differences and fix commands on failure.
+          migrations/bin/disco check
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
-      - name: Fetch app state cache
-        uses: actions/cache@v4
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}
-
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
-
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
-
-      - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
+      - name: RSpec (Rails integration)
+        env:
+          MIGRATIONS_RAILS: "1"
         run: |
-          bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
-
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
-
-      - name: Validate IntermediateDB schema
-        run: |
-          migrations/bin/cli schema generate --db=intermediate_db
-
-          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
-            echo "IntermediateDB schema is not up to date."
-            echo "---------------------------------------------"
-            git -c color.ui=always diff migrations/db/intermediate_db_schema/
-            exit 1
-          fi
-
-      - name: RSpec
-        run: bin/rspec --default-path migrations/spec
+          for gem in core tooling converters importer; do
+            echo "== migrations-$gem (Rails integration) =="
+            (cd "migrations/$gem" && LD_PRELOAD="$RUBY_ALLOCATOR" ../bin/rspec --tag rails)
+          done

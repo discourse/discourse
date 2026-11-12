@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-describe "Tag Settings", type: :system do
+describe "Tag Settings" do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:tag_settings_page) { PageObjects::Pages::TagSettings.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
@@ -16,17 +17,42 @@ describe "Tag Settings", type: :system do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.edit_tags_allowed_groups = "1|2|14"
+    [admin, trust_level_4, user].each do |u|
+      u.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
+    end
   end
 
-  context "when experimental_tag_settings_page is enabled" do
-    before { SiteSetting.experimental_tag_settings_page = true }
+  context "when using the tag settings page" do
+    it "lets users set and clear the tag source language without assuming a default" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      sign_in(admin)
+      tag_settings_page.visit_tab(tag_1, "localizations")
+
+      expect(form.field("locale")).to have_value(
+        PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+      )
+      form.field("locale").select("ja")
+      tag_settings_page.click_save
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      page.refresh
+      expect(form.field("locale")).to have_value("ja")
+
+      form.field("locale").select_none
+      tag_settings_page.click_save
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      page.refresh
+      expect(form.field("locale")).to have_value(
+        PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+      )
+    end
 
     it "loads the tag edit page for tags with empty slugs" do
       tag_1.update_column(:slug, "")
       sign_in(admin)
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
 
       expect(tag_settings_page).to have_tag_settings_page
       expect(page).to have_current_path("/tag/#{tag_1.id}-tag/#{tag_1.id}/edit/general")
@@ -38,26 +64,45 @@ describe "Tag Settings", type: :system do
       sign_in(admin)
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(user)
       tags_page.visit_tag(tag_1)
 
-      expect(tags_page).to have_tag_info_btn
+      expect(tags_page).to have_no_edit_tag_btn
       visit("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
 
+    it "lets the user open tag settings from a direct placeholder slug URL in a new tab" do
+      sign_in(admin)
+
+      new_tab = open_new_window(:tab)
+      switch_to_window(new_tab)
+
+      page.visit "/tag/-/#{tag_1.id}/edit/general"
+
+      expect(tag_settings_page).to have_tag_settings_page
+      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(tag_settings_page).to have_name_value(tag_1.name)
+      expect(tag_settings_page).to have_slug_value(tag_1.slug)
+      expect(tag_settings_page).to have_description_value(tag_1.description)
+    end
+
     it "allows privileged users to edit tag, admin to delete tag" do
+      SiteSetting.content_localization_enabled = true
+      tag_1.update!(locale: "en")
+      Fabricate(:tag_localization, tag: tag_1, locale: "de", name: "gestaltung")
+
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
 
       expect(page).to have_no_css(".d-page-header__actions .btn-danger")
       expect(tag_settings_page).to have_name_value(tag_1.name)
@@ -81,17 +126,40 @@ describe "Tag Settings", type: :system do
       expect(tag_settings_page).to have_no_synonyms
 
       sign_in(admin)
+      tag_1.reload
+      tag_settings_page.visit_tab(tag_1, "localizations")
+      expect(tag_settings_page).to have_localizations
+      tag_settings_page.remove_localization
+      tag_settings_page.click_save
+
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+
+      page.refresh
+
+      expect(tag_settings_page).to have_no_localizations
+
       tags_page.visit_tag(tag_2)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       expect(page).to have_css(".d-page-header__actions .btn-danger")
       tag_settings_page.click_delete
       dialog.click_danger
       expect(page).to have_current_path("/tags")
 
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
+      tags_page.edit_tag_btn.click
       tag_settings_page.click_back
       expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}")
+    end
+
+    it "shows an error when the slug is invalid" do
+      sign_in(admin)
+
+      tag_settings_page.visit(tag_1)
+      tag_settings_page.fill_slug("a.a")
+      tag_settings_page.click_save
+
+      expect(form.field("slug")).to have_errors(I18n.t("js.tagging.settings.invalid_slug"))
+      expect(tag_1.reload.slug).to eq("design")
     end
 
     it "allows adding an existing tag as synonym" do
@@ -107,125 +175,41 @@ describe "Tag Settings", type: :system do
     end
   end
 
-  context "when experimental_tag_settings_page is disabled" do
-    before { SiteSetting.experimental_tag_settings_page = false }
+  context "when navigating to a synonym tag" do
+    fab!(:target_tag) { Fabricate(:tag, name: "broccoli") }
+    fab!(:synonym_tag) { Fabricate(:tag, name: "cauliflower", target_tag:) }
+    fab!(:target_tagged_topic) { Fabricate(:topic, tags: [target_tag]) }
 
-    context "when signed in as admin" do
-      before { sign_in(admin) }
+    let(:topic_list) { PageObjects::Components::TopicList.new }
 
-      it "allows the admin to edit a tag name and description, and delete the tag" do
-        tags_page.visit_tag(tag_1)
-        tags_page.tag_info_btn.click
-        tags_page.open_edit_tag
+    it "redirects to the target tag" do
+      tags_page.visit_tag(tag_2)
 
-        tags_page.fill_tag_name("ux")
-        tags_page.fill_tag_description("new description")
-        tags_page.save_edit
-        expect(tags_page.tag_info).to have_content("ux")
-        expect(tags_page.tag_info).to have_content("new description")
+      tags_page.tags_dropdown.expand
+      tags_page.tags_dropdown.search(synonym_tag.name)
+      tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
 
-        tags_page.delete_tag
-        expect(dialog).to be_open
-        dialog.click_danger
-        expect(tags_page).to have_no_tag("design")
-      end
-
-      it "does not error when editing a tag name to something then reverting back to the original name" do
-        tags_page.visit_tag(tag_1)
-        tags_page.tag_info_btn.click
-        tags_page.open_edit_tag
-        tags_page.fill_tag_name("ux")
-        tags_page.save_edit
-        expect(tags_page.tag_info).to have_content("ux")
-        tags_page.open_edit_tag
-        tags_page.fill_tag_name("design")
-        tags_page.save_edit
-        expect(tags_page.tag_info).to have_content("design")
-      end
-
-      it "allows adding tags as synonyms" do
-        tags_page.visit_tag(tag_1)
-        tags_page.tag_info_btn.click
-        tags_page.edit_synonyms_btn.click
-
-        tags_page.select_tag(index: 0)
-        tags_page.search_tags("kittehs")
-        tags_page.select_tag(value: "kittehs")
-        tags_page.add_synonym_btn.click
-
-        expect(tags_page.confirm_synonym_btn).to be_visible
-        tags_page.confirm_synonym_btn.click
-
-        expect(tags_page.tag_box(tag_2.name)).to be_visible
-        expect(tags_page.tag_box("kittehs")).to be_visible
-      end
+      expect(topic_list).to have_topic(target_tagged_topic)
+      expect(page).to have_current_path("/tag/#{target_tag.name}/#{target_tag.id}")
+      expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
     end
 
-    context "when signed in as a user allowed to edit tags" do
-      before { sign_in(trust_level_4) }
+    it "redirects to the target tag when within a category" do
+      category = Fabricate(:category)
+      target_tagged_topic.update!(category: category)
 
-      it "allows the user to edit a tag name and description, but cannot delete the tag" do
-        tags_page.visit_tag(tag_1)
-        tags_page.tag_info_btn.click
-        tags_page.open_edit_tag
+      page.visit("/tags/c/#{category.slug}/#{category.id}/#{tag_2.name}")
+      expect(page).to have_css(".tag-drop")
 
-        tags_page.fill_tag_name("ux")
-        tags_page.fill_tag_description("new description")
-        tags_page.save_edit
-        expect(tags_page.tag_info).to have_content("ux")
-        expect(tags_page.tag_info).to have_content("new description")
+      tags_page.tags_dropdown.expand
+      tags_page.tags_dropdown.search(synonym_tag.name)
+      tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
 
-        expect(tags_page.tag_info).to have_no_css(".delete-tag")
-      end
-    end
-
-    context "when signed in as a regular user" do
-      before { sign_in(user) }
-
-      it "does not allow the user to edit or delete the tag" do
-        tags_page.visit_tag(tag_1)
-        tags_page.tag_info_btn.click
-        expect(tags_page.tag_info).to have_no_css(".edit-tag")
-        expect(tags_page.tag_info).to have_no_css(".delete-tag")
-      end
-    end
-
-    context "when navigating to a synonym tag" do
-      fab!(:target_tag) { Fabricate(:tag, name: "broccoli") }
-      fab!(:synonym_tag) { Fabricate(:tag, name: "cauliflower", target_tag:) }
-      fab!(:target_tagged_topic) { Fabricate(:topic, tags: [target_tag]) }
-
-      let(:topic_list) { PageObjects::Components::TopicList.new }
-
-      it "redirects to the target tag" do
-        tags_page.visit_tag(tag_2)
-
-        tags_page.tags_dropdown.expand
-        tags_page.tags_dropdown.search(synonym_tag.name)
-        tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
-
-        expect(topic_list).to have_topic(target_tagged_topic)
-        expect(page).to have_current_path("/tag/#{target_tag.name}/#{target_tag.id}")
-        expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
-      end
-
-      it "redirects to the target tag when within a category" do
-        category = Fabricate(:category)
-        target_tagged_topic.update!(category: category)
-
-        page.visit("/tags/c/#{category.slug}/#{category.id}/#{tag_2.name}")
-        expect(page).to have_css(".tag-drop")
-
-        tags_page.tags_dropdown.expand
-        tags_page.tags_dropdown.search(synonym_tag.name)
-        tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
-
-        expect(topic_list).to have_topic(target_tagged_topic)
-        expect(page).to have_current_path(
-          "/tags/c/#{category.slug}/#{category.id}/#{target_tag.name}/#{target_tag.id}",
-        )
-        expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
-      end
+      expect(topic_list).to have_topic(target_tagged_topic)
+      expect(page).to have_current_path(
+        "/tags/c/#{category.slug}/#{category.id}/#{target_tag.name}/#{target_tag.id}",
+      )
+      expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
     end
   end
 end

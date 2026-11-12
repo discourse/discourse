@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { apiInitializer } from "discourse/lib/api";
-import AiTopicGist from "../components/ai-topic-gist";
-import BulkActionsAiRegenSummaries from "../components/bulk-actions/ai-regen-summaries";
-import AiRegenSummariesModal from "../components/modal/ai-regen-summaries-modal";
+import AiTopicGist from "../components/ai-topic-gist.gjs";
+import BulkActionsAiRegenSummaries from "../components/bulk-actions/ai-regen-summaries.gjs";
+import AiRegenSummariesModal from "../components/modal/ai-regen-summaries-modal.gjs";
 
 export default apiInitializer((api) => {
   const settings = api.container.lookup("service:site-settings");
@@ -12,7 +12,7 @@ export default apiInitializer((api) => {
   api.addBulkActionButton({
     label: "discourse_ai.summarization.topic.regenerate_ai_summaries",
     icon: "arrows-rotate",
-    class: "btn-default",
+    class: "regenerate-ai-summaries",
     visible: ({ topics, siteSettings, currentUser: user }) => {
       if (topics?.length > MAX_ALLOWED_REGEN) {
         return false;

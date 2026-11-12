@@ -8,6 +8,9 @@ sq:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Dështoi"
         reports:
           filters:
             sort_by:
@@ -34,29 +37,85 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      copied: "Kopjuar"
+      ai_decoded_transcript:
+        type: "Lloji"
+        error: "Gabim"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Imazhet"
+          name: "Emri"
+          type: "Lloji"
+          type_score: "Vlerësimi"
+      ai_tool_approval:
+        loading: "Duke ngarkuar..."
+        tool: "Veprimi"
+        user: "User"
+        approve: "Aprovo"
+        reject: "Refuzo"
+        approved: "Aprovuar"
+        rejected: "Rejected"
       llm_selector:
         none: "Asnjë"
       features:
-        back: "Kthehu mbrapa"
-        disabled: "(e çaktivizuar)"
-        groups: "Grupet:"
+        table:
+          status: "Status"
+          enabled: "Aktivizuar"
+          groups: "Grupet"
+        chatbot:
+          places:
+            personal_messages: "Mesazhe personale"
+            chat_direct_messages: "Mesazhet e bisedës"
+            none: "I padisponueshëm"
         no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
         edit: "Rregullimet"
-        expand_list:
-          one: "(%{count} tjetër)"
-          other: "(%{count} të tjera)"
-        collapse_list: "(shfaq më pak)"
+        nav:
+          enabled: "Aktivizuar"
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
+        sentiment:
+          enabled: "Aktivizuar"
         search:
           name: "Kërko"
+        image_caption:
+          setting_groups:
+            settings: "Rregullimet"
         spam:
           name: "Spam"
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            label: "Mesazhe personale"
+            choices:
+              none: "Asnjë"
+              all: "Të gjitha"
+          content_localization_language_switcher:
+            choices:
+              none: "Asnjëri"
+              all: "Të gjithë"
+        model_progress:
+          detail:
+            columns:
+              pending: "Në pritje"
+              total: "Total"
+          targets:
+            post:
+              title: "Postime"
+            topic:
+              title: "Topics"
+            category:
+              title: "Categories"
+            tag:
+              title: "Etiketat"
+        admin_actions:
+          enabled: "Aktivizuar"
         stats:
           eta_minutes:
             one: "%{count} minutë"
@@ -73,6 +132,8 @@ sq:
             other: "%{count} postime"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Asnjë"
+        no_decision_model_selected: "Asnjë"
         enable: "Aktivizo"
         test_modal:
           spam: "Spam"
@@ -83,8 +144,31 @@ sq:
         total: "Total"
         periods:
           custom: "Me porosi..."
+      logs:
+        short_title: "Ditari"
+        apply: "Apliko"
+        failed: "Dështoi"
+        unknown: "I panjohur"
+        time: "Koha"
+        when: "Kur"
+        request: "Kërkesë"
+        user: "User"
+        context: "Konteksti"
+        topic: "Topic"
+        post: "Postim"
+        post_short: "Postimi %{id}"
+        duration: "Kohëzgjatja"
+        actions: "Veprimet"
+        view_details: "Detaje"
+        periods:
+          custom: "Grupet e krijuara"
+        detail:
+          request: "Kërkesë"
+          context: "Konteksti"
+        retention:
+          summary_stage: "Përmbledhja"
+          save: "Ruani"
       ai_agent:
-        back: "Kthehu mbrapa"
         name: "Emri"
         edit: "Redaktoni"
         export: "Eksporto"
@@ -94,6 +178,12 @@ sq:
         save: "Ruani"
         enabled: "Aktivizuar?"
         delete: "Fshij"
+        thinking_effort_options:
+          none: "Asnjë"
+          low: "I ulët"
+          medium: "Mesatar"
+          high: "I lartë"
+          max: "Maksimumi"
         response_format:
           open_modal: "Redaktoni"
         filters:
@@ -102,7 +192,6 @@ sq:
         uploads:
           uploading: "Duke ngarkuar..."
       tools:
-        back: "Kthehu mbrapa"
         export: "Eksporto"
         import: "Importo"
         name: "Emri"
@@ -118,16 +207,42 @@ sq:
         short_title: "Kredencialet"
         name: "Emri"
         secret: "Vlera"
-        back: "Kthehu mbrapa"
         save: "Ruani"
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
-      llms:
+      decision_models:
+        no_preset: "Asnjë"
         display_name: "Emri"
+        edit: "Redaktoni"
+        delete: "Fshij"
+      mcp_servers:
+        name: "Emri"
+        description: "Përshkrimi"
+        url: "URL"
+        oauth_connect: "Lidhu"
+        enabled: "Aktivizuar"
         save: "Ruani"
         edit: "Redaktoni"
-        back: "Kthehu mbrapa"
+        delete: "Fshij"
+        tools_modal:
+          required: "E nevojshme"
+      models:
+        name: "Emri"
+        type: "Lloji"
+        edit: "Redaktoni"
+        select_type: "Zgjidhni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Të gjitha llojet"
+      llms:
+        display_name: "Emri"
+        vision_modes:
+          disabled:
+            title: "E çaktivizuar"
+        save: "Ruani"
+        edit: "Redaktoni"
         delete: Fshij
         quotas:
           group: "Grupi"
@@ -146,7 +261,6 @@ sq:
         next:
           title: "Vazhdo përpara"
         providers:
-          google: "Google"
           fake: "Grupet e krijuara"
       ai_helper:
         context_menu:
@@ -161,10 +275,7 @@ sq:
         thumbnail_suggestions:
           select: "Zgjidhni"
           try_again: "Provoni përsëri"
-        image_caption:
-          save_caption: "Ruani"
       embeddings:
-        back: "Kthehu mbrapa"
         save: "Ruani"
         delete: "Fshij"
         edit: "Redaktoni"
@@ -172,8 +283,18 @@ sq:
         providers:
           google: "Google"
           fake: "Grupet e krijuara"
+      ai_artifact:
+        editor:
+          version: "Versioni"
+          default: "Paracaktuar"
+          apply: "Apliko"
+        share: "Shpërndaje"
+        create_link: "Krijoni lidhje"
+        copy_link: "Kopjoni lidhjen"
+        filter_all: "Të gjitha"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Kohëzgjatja:"
           request: "Kërkesë"
           next_log: "Vazhdo përpara"
           previous_log: "I kaluar"
@@ -194,9 +315,18 @@ sq:
       summarization:
         chat:
           summarize: "Përmblidhni"
+      ai_search:
+        related_replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        tabs:
+          topics: "Topics"
+          messages: "Mesazhet"
       discobot_discoveries:
-        regular_results: "Topics"
-        collapse: "Zvogëloni"
-        tooltip:
-          actions:
-            disable: "Çaktivizoni"
+        legacy:
+          regular_results: "Topics"
+          collapse: "Zvogëloni"
+          tooltip:
+            actions:
+              disable: "Çaktivizoni"
+        search_messages: "Mesazhet"

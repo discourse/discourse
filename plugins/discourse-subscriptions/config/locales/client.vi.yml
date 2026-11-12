@@ -35,7 +35,7 @@ vi:
           TR: "Thổ Nhĩ Kỳ"
           VN: "Việt Nam"
       billing:
-        email: Email
+        email: Thư điện tử (Email)
       admin:
         dashboard:
           title: Bảng điều khiển

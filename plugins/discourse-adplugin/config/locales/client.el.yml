@@ -20,7 +20,7 @@ el:
           new: "Νέο"
           settings: "Ρυθμίσεις"
           save: "Αποθήκευση"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           html: "HTML"
           categories: "Κατηγορίες"
           groups: "Ομάδες"

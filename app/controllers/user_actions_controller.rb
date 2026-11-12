@@ -11,10 +11,13 @@ class UserActionsController < ApplicationController
       )
     offset = [0, user_actions_params[:offset].to_i].max
     action_types = (user_actions_params[:filter] || "").split(",").map(&:to_i)
-    limit = user_actions_params.fetch(:limit, 30).to_i
+    limit = [user_actions_params.fetch(:limit, 30).to_i, 100].min
 
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
+    ensure_user_actions_visible!(user, action_types)
+
+    if action_types.empty? && !guardian.can_see_user_actions?(user, UserAction.private_types)
+      action_types = UserAction.types.values - UserAction.private_types
+    end
 
     opts = {
       user_id: user.id,
@@ -29,7 +32,9 @@ class UserActionsController < ApplicationController
 
     stream = UserAction.stream(opts).to_a
 
-    response = { user_actions: serialize_data(stream, UserActionSerializer) }
+    response = {
+      user_actions: serialize_data(stream, UserActionSerializer, localization_opts(stream)),
+    }
 
     if guardian.can_lazy_load_categories?
       category_ids = stream.map(&:category_id).compact.uniq
@@ -42,10 +47,38 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
+    stream_item = UserAction.stream_item(params[:id], guardian)
+    raise Discourse::NotFound if stream_item.blank?
+
+    user = User.find_by(id: stream_item.target_user_id)
+    raise Discourse::NotFound if user.blank?
+
+    ensure_user_actions_visible!(user, [stream_item.action_type])
+
+    render_serialized(stream_item, UserActionSerializer, localization_opts([stream_item]))
   end
 
   private
+
+  def localization_opts(stream)
+    return {} if !SiteSetting.content_localization_enabled
+
+    {
+      localized_topics:
+        Topic.where(id: stream.map(&:topic_id)).includes(:localizations).index_by(&:id),
+      localized_posts:
+        Post
+          .with_deleted
+          .where(id: stream.map(&:cooked_post_id))
+          .includes(:localizations)
+          .index_by(&:id),
+    }
+  end
+
+  def ensure_user_actions_visible!(user, action_types)
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
+  end
 
   def user_actions_params
     @user_actions_params ||= params.permit(:username, :filter, :offset, :acting_username, :limit)

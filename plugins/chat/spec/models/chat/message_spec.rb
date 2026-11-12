@@ -75,7 +75,35 @@ describe Chat::Message do
 
     let(:blocks) { nil }
 
+    def button_blocks(style: nil, icon: nil)
+      button = { type: "button", text: { text: "Foo", type: "plain_text" } }
+      button[:style] = style if style
+      button[:icon] = icon if icon
+
+      [{ type: "actions", elements: [button] }]
+    end
+
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    context "when button presentation is provided" do
+      it "allows every supported style and an icon at the maximum length" do
+        aggregate_failures do
+          Chat::Schemas::BUTTON_STYLES.each do |style|
+            expect(message).to allow_value(
+              button_blocks(style:, icon: "a" * Chat::Schemas::BUTTON_ICON_MAX_LENGTH),
+            ).for(:blocks)
+          end
+        end
+      end
+
+      it "rejects an unsupported style" do
+        expect(message).not_to allow_value(button_blocks(style: "warning")).for(:blocks)
+      end
+
+      it "rejects an icon longer than 255 characters" do
+        expect(message).not_to allow_value(button_blocks(icon: "a" * 256)).for(:blocks)
+      end
+    end
 
     context "when blocks format is invalid" do
       let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
@@ -88,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -201,7 +233,85 @@ describe Chat::Message do
     end
   end
 
+  describe "#cook" do
+    fab!(:editor, :user)
+
+    it "uses the message author for a /me command after another user edits it" do
+      message.message = "/me waves"
+      message.last_editor = editor
+      message.cook
+
+      expect(message.cooked).to match_html(
+        %(<p><em class="chat-message-action">#{message.user.username} waves</em></p>),
+      )
+    end
+  end
+
   describe ".cook" do
+    context "with a /me command" do
+      it "renders the action with the author's username" do
+        cooked = described_class.cook("/me waves", author_username: "ducks")
+
+        expect(cooked).to match_html('<p><em class="chat-message-action">ducks waves</em></p>')
+      end
+
+      it "supports inline Markdown in the action" do
+        cooked = described_class.cook("/me waves **enthusiastically**", author_username: "ducks")
+
+        expect(cooked).to match_html(
+          '<p><em class="chat-message-action">ducks waves <strong>enthusiastically</strong></em></p>',
+        )
+      end
+
+      it "keeps links inline with the action" do
+        cooked = described_class.cook("/me visits https://example.com", author_username: "ducks")
+
+        expect(cooked).to match_html(
+          '<p><em class="chat-message-action">ducks visits <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a></em></p>',
+        )
+      end
+
+      it "does not match other commands or multiline messages" do
+        expect(described_class.cook("/message waves", author_username: "ducks")).to match_html(
+          "<p>/message waves</p>",
+        )
+        expect(described_class.cook("hello /me waves", author_username: "ducks")).to match_html(
+          "<p>hello /me waves</p>",
+        )
+        expect(described_class.cook("/me waves\nhello", author_username: "ducks")).to match_html(
+          "<p>/me waves<br>\nhello</p>",
+        )
+      end
+    end
+
+    context "with text expansion slash commands" do
+      it "expands /shrug with or without preceding text" do
+        expect(described_class.cook("/shrug")).to match_html("<p>¯\\_(ツ)_/¯</p>")
+        expect(described_class.cook("/shrug not sure")).to match_html("<p>not sure ¯\\_(ツ)_/¯</p>")
+      end
+
+      it "expands /tableflip with or without preceding text" do
+        expect(described_class.cook("/tableflip")).to match_html("<p>(╯°□°)╯︵ ┻━┻</p>")
+        expect(described_class.cook("/tableflip enough")).to match_html(
+          "<p>enough (╯°□°)╯︵ ┻━┻</p>",
+        )
+      end
+
+      it "supports inline Markdown in preceding text" do
+        expect(described_class.cook("/shrug **maybe**")).to match_html(
+          "<p><strong>maybe</strong> ¯\\_(ツ)_/¯</p>",
+        )
+      end
+
+      it "only matches commands at the start of single-line messages" do
+        expect(described_class.cook("hello /shrug")).to match_html("<p>hello /shrug</p>")
+        expect(described_class.cook("/shrugging")).to match_html("<p>/shrugging</p>")
+        expect(described_class.cook("/tableflip\nhello")).to match_html(
+          "<p>/tableflip<br>\nhello</p>",
+        )
+      end
+    end
+
     context "with enable_emoji_shortcuts site setting" do
       context "when enabled" do
         before { SiteSetting.enable_emoji_shortcuts = true }
@@ -431,14 +541,14 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span></div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg2.id}" title="#{msg2.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
         <p>and another cool one</p></div>
@@ -496,6 +606,16 @@ describe Chat::Message do
     end
 
     it "supports onebox markdown plugin" do
+      cooked = described_class.cook("https://www.example.com")
+
+      expect(cooked).to eq(
+        "<p><a href=\"https://www.example.com\" class=\"onebox\" target=\"_blank\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
+      )
+    end
+
+    it "ignores max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 0
+
       cooked = described_class.cook("https://www.example.com")
 
       expect(cooked).to eq(
@@ -577,6 +697,33 @@ describe Chat::Message do
       expect(message.build_excerpt).to eq "cat.gif"
     end
 
+    it "escapes upload filenames in excerpts" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", uploads: [upload])
+
+      expect(message.build_excerpt).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
+    it "bounds escaped upload filenames before saving excerpts" do
+      upload = Fabricate(:upload, original_filename: "#{"&" * 250}.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      excerpt = message.build_excerpt
+
+      message.update!(excerpt:)
+
+      expect(excerpt.length).to be <= 1000
+      expect(excerpt).to eq("&amp;" * described_class::EXCERPT_LENGTH)
+      expect(message.reload.excerpt).to eq(excerpt)
+    end
+
+    it "escapes persisted upload filenames for display" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+
+      expect(message.excerpt_for_display).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
     it "supports autolink with <>" do
       cooked = described_class.cook("<https://github.com/discourse/discourse-chat/pull/468>")
 
@@ -634,7 +781,9 @@ describe Chat::Message do
         user = Fabricate(:unicode_user)
         cooked = described_class.cook("<h1>@#{user.username}</h1>")
 
-        expect(cooked).to eq("<p>&lt;h1&gt;@#{user.username}&lt;/h1&gt;</p>")
+        expect(cooked).to eq(
+          "<p>&lt;h1&gt;<a class=\"mention\" href=\"/u/#{user.encoded_username(lower: true)}\">@#{user.username}</a>&lt;/h1&gt;</p>",
+        )
       end
     end
   end
@@ -679,6 +828,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 

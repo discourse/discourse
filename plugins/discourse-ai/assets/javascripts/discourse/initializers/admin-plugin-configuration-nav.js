@@ -25,9 +25,9 @@ export default {
           description: "discourse_ai.usage.subheader_description",
         },
         {
-          label: "discourse_ai.llms.short_title",
-          route: "adminPlugins.show.discourse-ai-llms",
-          description: "discourse_ai.llms.preconfigured.description",
+          label: "discourse_ai.models.short_title",
+          route: "adminPlugins.show.discourse-ai-models",
+          description: "discourse_ai.models.description",
         },
         {
           label: "discourse_ai.secrets.short_title",
@@ -40,14 +40,10 @@ export default {
           description: "discourse_ai.ai_agent.agent_description",
         },
         {
-          label: "discourse_ai.embeddings.short_title",
-          route: "adminPlugins.show.discourse-ai-embeddings",
-          description: "discourse_ai.embeddings.description",
-        },
-        {
           label: "discourse_ai.tools.short_title",
           route: "adminPlugins.show.discourse-ai-tools",
           description: "discourse_ai.tools.subheader_description",
+          keywords: "discourse_ai.tools.keywords",
         },
         {
           label: "discourse_ai.spam.short_title",
@@ -58,6 +54,11 @@ export default {
           label: "discourse_ai.translations.title",
           route: "adminPlugins.show.discourse-ai-translations",
           description: "discourse_ai.translations.description",
+        },
+        {
+          label: "discourse_ai.logs.short_title",
+          route: "adminPlugins.show.discourse-ai-logs",
+          description: "discourse_ai.logs.description",
         },
       ]);
     });

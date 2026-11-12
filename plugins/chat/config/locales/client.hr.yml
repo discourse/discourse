@@ -45,6 +45,8 @@ hr:
       cancel: "Odustani"
       cancel_reply: "Otkaži odgovor"
       chat_channels: "Kanali"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       move_to_channel:
         title: "Premještanje poruka na kanal"
@@ -55,8 +57,6 @@ hr:
         confirm_move: "Premjesti poruke"
       channel_settings:
         title: "Postavke kanala"
-        edit: "Uredi"
-        add: "Dodaj"
         leave_channel: "Napusti kanal"
         notification_settings_context: "Obavijesti"
         join: "Pridružite se"
@@ -93,8 +93,6 @@ hr:
       edited: "uredio"
       muted: "utišano"
       joined: "prijavljen"
-      empty_state:
-        direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
       email_frequency:
         never: "Nikad"
       header_indicator_preference:
@@ -169,32 +167,37 @@ hr:
         filter_all: Sve
         filter_open: Otvori
         filter_closed: Zatvoreno
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružio/la se"
       chat_message_separator:
         today: Danas
         yesterday: Jučer
       search_view:
         filter_placeholder: Pretražite poruke
       about_view:
-        title: Naslov
         name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"
         tabs:
           members: Članovi
+          preferences: Postavke
           settings: Postavke
           search: Pretraživanje
         remove_member: "Ukloni"
+        members_title: "%{channel} članova"
       new_message_modal:
         no_items: "Nema stvari"
         filter: "Filter"
       channel_edit_name_slug_modal:
-        title: Uredi kanal
         input_placeholder: Dodajte ime
         name: Naziv kanala
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"
+      channel:
+        preview_card:
+          log_in: "Prijavite se"
       create_channel:
         auto_join_users:
           warning_1_group:
@@ -212,6 +215,7 @@ hr:
             one: 'Korisnici u %{group} i %{count} drugoj grupi će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             few: 'Korisnici u %{group} i %{count} druge grupe će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             other: 'Korisnici u %{group} i %{count} drugih grupa će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+        description: "Opis"
         name: "Naziv kanala"
         type: "Tip"
         types:
@@ -232,6 +236,7 @@ hr:
         auto_join_users_info_no_category: "Provjeri svaki sat koji su korisnici bili aktivni u posljednja 3 mjeseca. Dodaj ih na ovaj kanal ako imaju pristup odabranoj kategoriji."
         follow: "Pridružite se"
         followed: "Prijavljen"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Omogućeno"
         threading_disabled: "Onemogućeno"
         notifications: "Obavijest"
@@ -239,8 +244,6 @@ hr:
         save: "Spremi"
         saved: "Spremljeno"
         unfollow: "Napustiti"
-        admin_title: "Administrator"
-        settings_title: "Postavke"
         category_label: "Kategorija"
         history_label: "Povijest"
         members_label: "Članovi"
@@ -255,6 +258,11 @@ hr:
         sort:
           relevance: "Relevantnost"
           latest: "Posljednje"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spominjanja"
       incoming_webhooks:
         back: "Natrag"
         description: "Opis"
@@ -356,3 +364,21 @@ hr:
       panels:
         chat:
           label: "Čavrljanje"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        targets:
+          channel: "Kanal"
+        channel_id: "Kanal"
+        message: "Poruka"
+      chat_approval:
+        message: "Poruka"
+        buttons: "Gumbi"
+        value: "Vrijednost"
+        style: "Stil"
+        style_default: "Zadano"
+        style_primary: "Primarna"
+        style_success: "Uspjeh"
+        icon: "Ikona"
+        channel_id: "Kanal"

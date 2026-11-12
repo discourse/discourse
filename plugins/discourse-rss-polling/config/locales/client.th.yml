@@ -11,3 +11,12 @@ th:
         feed_url: URL
         discourse_category: หมวดหมู่
         discourse_tags: ป้าย
+        feeds:
+          edit: แก้ไข
+          delete: ลบ
+          save: บันทึก
+        test:
+          title: แสดงตัวอย่าง
+          dismiss: ซ่อน
+        status:
+          disabled: ปิดใช้งานแล้ว

@@ -32,6 +32,8 @@ cs:
         cta: "Vytvořte si svůj první žebříček"
         none: "Zatím nebyly vytvořeny žádné žebříčky."
         confirm_destroy: "Opravdu chcete tento žebříček odstranit?"
+        section:
+          groups: "Skupiny"
         date:
           range: "Časové období od/do"
           from: "Od data"
@@ -46,6 +48,9 @@ cs:
         default_period: "Výchozí období"
         default_period_help: "Nastavte výchozí časové období, pro které se má zobrazit tento žebříček."
         period_filter_disabled: "Zakázat filtr časového období"
+        weight:
+          post_created: "Příspěvek vytvořen"
+          solution: "Řešení"
         period:
           all_time: "Za celou dobu"
           yearly: "Ročně"
@@ -59,9 +64,7 @@ cs:
       close: "Zavřít"
       delete: "Smazat"
       edit: "Upravit"
-      back: "Zpět"
       save: "Uložit"
-      apply: "Použít"
       recalculate: "Přepočítat skóre"
       recalculating: "Přepočítávání skóre..."
       completed: "Hotovo! Skóre bylo úspěšně přepočítáno."
@@ -82,4 +85,11 @@ cs:
       admin:
         title: "Gamifikace"
         name: "Název"
+        created_by: "Vytvořil/a"
         period: "Období"
+    discourse_workflows:
+      gamification_score:
+        username: "Uživatel"
+        date: "Datum"
+        description: "Popis"
+        category_id: "Kategorie"

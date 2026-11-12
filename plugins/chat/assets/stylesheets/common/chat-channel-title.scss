@@ -4,10 +4,6 @@
   align-items: center;
   gap: 0.5rem;
 
-  .chat-channel-preview-card & {
-    max-width: 100%;
-  }
-
   &__user-info {
     overflow: hidden;
   }

@@ -1,11 +1,14 @@
+@use "lib/container";
+
 .chat-channel-card {
   --chat-channel-card-border: transparent;
   display: grid;
   grid-template-areas:
-    "title cta"
-    "membercount ."
-    "description description";
-  grid-template-rows: auto auto 1fr;
+    "title"
+    "membercount"
+    "description"
+    "cta";
+  grid-template-rows: auto auto auto 1fr;
   align-items: center;
   position: relative;
   padding: 0.75rem 1rem;
@@ -15,6 +18,15 @@
   min-width: 0;
   border-left: 5px solid transparent;
   border-color: var(--chat-channel-card-border);
+  gap: var(--space-1) var(--space-2);
+
+  @include container.from(sm) {
+    grid-template-areas:
+      "title cta"
+      "membercount membercount"
+      "description description";
+    grid-template-rows: auto auto 1fr;
+  }
 
   &.--closed,
   &.--archived {
@@ -23,10 +35,12 @@
 
   &__header {
     @include ellipsis;
-    align-items: center;
     display: flex;
-    grid-area: title;
     height: min-content;
+
+    @include container.from(sm) {
+      grid-area: title;
+    }
   }
 
   &__read-restricted,
@@ -46,27 +60,40 @@
     @include line-clamp(2);
     align-self: flex-start;
     color: var(--primary-medium);
-    padding-top: 0.5rem;
-    grid-area: description;
+    font-size: var(--font-down-1-rem);
+
+    @include container.from(sm) {
+      grid-area: description;
+      font-size: var(--font-0);
+    }
   }
 
   &__members {
     font-size: var(--font-down-1-rem);
-    grid-area: membercount;
+
+    @include container.from(sm) {
+      grid-area: membercount;
+    }
   }
 
   &__name {
     @include ellipsis;
+
+    .emoji {
+      vertical-align: -0.1em;
+    }
   }
 
   &__name-container {
     display: flex;
-    gap: 0.25em;
     align-items: center;
     color: var(--primary);
-    font-size: var(--font-up-1-rem);
     text-decoration: none;
     min-width: 0;
+
+    @include container.from(sm) {
+      font-size: var(--font-up-1-rem);
+    }
 
     &:visited,
     &:hover {
@@ -74,17 +101,17 @@
     }
   }
 
-  &__leave-btn {
-    padding-right: 0;
-
-    &:focus {
-      @include default-focus;
-    }
-  }
-
   &__cta {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+
+    @include container.until(sm) {
+      margin-top: auto;
+      grid-area: cta;
+    }
+
+    @include container.from(sm) {
+      justify-content: flex-end;
+    }
   }
 }

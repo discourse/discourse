@@ -4,10 +4,58 @@ RSpec.describe CurrentUserSerializer do
   fab!(:user)
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 
-  let(:guardian) { Guardian.new(user) }
+  let(:guardian) { user.guardian }
+
+  describe "#can_use_dsa_account_email" do
+    before { enable_dsa_reporting }
+
+    it "allows a reporter to use their confirmed account email" do
+      user.activate
+
+      expect(serializer.as_json[:can_use_dsa_account_email]).to eq(true)
+    end
+
+    it "requires email verification when the account email is unconfirmed" do
+      Fabricate(:email_token, user:)
+
+      expect(serializer.as_json[:can_use_dsa_account_email]).to eq(false)
+    end
+
+    it "requires a contact email for a shadow account after anonymous mode is disabled" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      reporter = Fabricate(:user, trust_level: TrustLevel[3])
+      shadow = AnonymousShadowCreator.get(reporter)
+      SiteSetting.allow_anonymous_mode = false
+
+      payload = described_class.new(shadow, scope: shadow.guardian, root: false).as_json
+
+      expect(payload[:can_use_dsa_account_email]).to eq(false)
+    end
+
+    it "omits the capability when DSA reporting is disabled" do
+      SiteSetting.dsa_reporting_enabled = false
+
+      expect(serializer.as_json).not_to have_key(:can_use_dsa_account_email)
+    end
+  end
+
+  it "includes notification types with remaining read or unread notifications" do
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        read: true,
+      )
+    expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
+    notification.destroy!
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+  end
 
   context "when SSO is not enabled" do
-    it "should not include the external_id field" do
+    it "does not include external_id" do
       payload = serializer.as_json
       expect(payload).not_to have_key(:external_id)
     end
@@ -20,7 +68,7 @@ RSpec.describe CurrentUserSerializer do
       user
     end
 
-    it "should include the external_id" do
+    it "includes external_id" do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
       SiteSetting.discourse_connect_secret = "12345678910"
       SiteSetting.enable_discourse_connect = true
@@ -34,12 +82,12 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category2, :category)
     fab!(:category3, :category)
 
-    it "should include empty top_category_ids array" do
+    it "includes an empty top_category_ids array" do
       payload = serializer.as_json
       expect(payload[:top_category_ids]).to eq([])
     end
 
-    it "should include correct id in top_category_ids array" do
+    it "includes the correct ID in top_category_ids" do
       _category = Category.first
       CategoryUser.create!(
         user_id: user.id,
@@ -77,12 +125,12 @@ RSpec.describe CurrentUserSerializer do
 
     it "includes muted tags" do
       payload = serializer.as_json
-      expect(payload[:muted_tags]).to eq([{ id: tag.id, name: tag.name }])
+      expect(payload[:muted_tags]).to eq([{ id: tag.id, name: tag.name, slug: tag.slug }])
     end
   end
 
   describe "#second_factor_enabled" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:json) { serializer.as_json }
 
     it "is false by default" do
@@ -107,19 +155,17 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#groups" do
-    it "should only show visible groups" do
-      Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
-      hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+    it "shows only visible groups" do
+      Fabricate(:group, visibility_level: Group.visibility_levels[:public])
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       public_group =
-        Fabricate.build(
+        Fabricate(
           :group,
           visibility_level: Group.visibility_levels[:public],
           name: "UppercaseGroupName",
         )
       hidden_group.add(user)
-      hidden_group.save!
       public_group.add(user)
-      public_group.save!
       payload = serializer.as_json
 
       expect(payload[:groups]).to contain_exactly(
@@ -129,7 +175,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#can_ignore_users" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
 
     context "when user is a regular one" do
@@ -149,8 +195,32 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_create_admin_invite" do
+    let(:payload) { serializer.as_json }
+
+    it "is true for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+      user.update!(admin: true)
+
+      expect(payload[:can_create_admin_invite]).to eq(true)
+    end
+
+    it "is absent for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
+      user.update!(admin: true)
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+
+    it "is absent for regular users when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+  end
+
   describe "#can_review" do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
 
     context "when user is a regular one" do
@@ -170,6 +240,19 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_set_topic_timer" do
+    let(:payload) { serializer.as_json }
+
+    it "reflects the topic_timers_allowed_groups setting" do
+      group = Fabricate(:group)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      expect(payload[:can_set_topic_timer]).to eq(true)
+    end
+  end
+
   describe "#pending_posts_count" do
     subject(:pending_posts_count) { serializer.pending_posts_count }
 
@@ -185,7 +268,7 @@ RSpec.describe CurrentUserSerializer do
   describe "#status" do
     fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
-    let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
+    let(:serializer) { described_class.new(user, scope: user.guardian, root: false) }
 
     it "adds user status when enabled" do
       SiteSetting.enable_user_status = true
@@ -208,7 +291,7 @@ RSpec.describe CurrentUserSerializer do
       SiteSetting.enable_user_status = true
 
       user.user_status.ends_at = 1.minute.ago
-      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+      serializer = described_class.new(user, scope: user.guardian, root: false)
       json = serializer.as_json
 
       expect(json.keys).not_to include :status
@@ -250,6 +333,18 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "content localization preferences" do
+    it "computes the legacy JSON preference from automatically_translate" do
+      user.user_option.automatically_translate = false
+      user.user_option.show_original_content = false
+
+      expect(serializer.as_json[:user_option]).to include(
+        automatically_translate: false,
+        show_original_content: true,
+      )
+    end
+  end
+
   describe "#associated_account_ids" do
     before do
       UserAssociatedAccount.create(
@@ -262,11 +357,11 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "should not include associated account ids by default" do
+    it "does not include associated account IDs by default" do
       expect(serializer.as_json[:associated_account_ids]).to be_nil
     end
 
-    it "should include associated account ids when site setting enabled" do
+    it "includes associated account IDs when enabled" do
       SiteSetting.include_associated_account_ids = true
       expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
     end
@@ -300,15 +395,15 @@ RSpec.describe CurrentUserSerializer do
         Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
 
       # warmup
-      described_class.new(user, scope: Guardian.new(user), root: false).as_json
+      described_class.new(user, scope: user.guardian, root: false).as_json
 
       initial_count =
         track_sql_queries do
-          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+          serialized = described_class.new(user, scope: user.guardian, root: false).as_json
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id],
           )
         end.count
@@ -318,11 +413,11 @@ RSpec.describe CurrentUserSerializer do
 
       final_count =
         track_sql_queries do
-          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+          serialized = described_class.new(user, scope: user.guardian, root: false).as_json
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
           )
         end.count
@@ -419,6 +514,194 @@ RSpec.describe CurrentUserSerializer do
         :slug,
         :posts_count,
       )
+    end
+  end
+
+  describe "#show_site_owner_onboarding" do
+    fab!(:admin)
+    fab!(:topic)
+    fab!(:another_admin, :admin)
+
+    let(:admin_serializer) { described_class.new(admin, scope: Guardian.new(admin), root: false) }
+
+    before { SiteSetting.enable_site_owner_onboarding = true }
+
+    it "is not included for non-admin users" do
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is not included when setting is disabled" do
+      SiteSetting.enable_site_owner_onboarding = false
+      payload = admin_serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is true for the first admin on a new site" do
+      payload = admin_serializer.as_json
+      expect(payload[:show_site_owner_onboarding]).to eq(true)
+    end
+
+    it "is not included for a second admin" do
+      serializer2 =
+        described_class.new(another_admin, scope: Guardian.new(another_admin), root: false)
+      payload = serializer2.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is not included when the site is older than the max days setting" do
+      SiteSetting.site_owner_onboarding_max_days = 5
+      admin.created_at = 6.days.ago
+      admin.save!
+      payload = admin_serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+  end
+
+  describe "#can_run_design_wizard" do
+    fab!(:admin)
+
+    let(:admin_serializer) { described_class.new(admin, scope: Guardian.new(admin), root: false) }
+
+    it "is not included for non-admin users" do
+      expect(serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true for an admin on a site that still uses a core theme" do
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "remains available when Concord is installed and selected as the default" do
+      SiteSetting.concord_in_wizard = true
+      concord =
+        Fabricate(
+          :theme,
+          remote_theme:
+            Fabricate(
+              :remote_theme,
+              remote_url: "https://github.com/discourse/discourse-concord-theme",
+            ),
+        )
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      concord.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+
+      SiteSetting.concord_in_wizard = false
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included once a theme is installed" do
+      Fabricate(:theme)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included once a component is installed" do
+      Fabricate(:theme, component: true)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included when the default theme is not a core theme" do
+      custom_theme = Fabricate(:theme)
+      custom_theme.set_default!
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true while the only other theme is an appearance change's palette theme" do
+      Fabricate(:theme_appearance_change).theme.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "is not included once files are added to an appearance change's theme" do
+      theme = Fabricate(:theme_appearance_change).theme
+      theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+      theme.save!
+
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+  end
+
+  describe "#has_new_upcoming_changes" do
+    def serialize_for(user)
+      described_class.new(user, scope: user.guardian, root: false).as_json
+    end
+
+    it "is false for an admin created during the new-site window, regardless of `added` events" do
+      Discourse.stubs(:site_creation_date).returns(10.minutes.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "some_setting",
+        created_at: 5.minutes.ago,
+      )
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "future_setting",
+        created_at: 1.minute.from_now,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "ignores `added` events that predate the user when no last_visited is set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "old_setting",
+        created_at: 1.year.ago,
+      )
+      admin = Fabricate(:admin)
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "shows `added` events created after the user when no last_visited is set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "fresh_setting",
+        created_at: 1.minute.from_now,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
+    end
+
+    it "ignores backfilled `added` events" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        event_data: {
+          backfilled: true,
+        },
+        upcoming_change_name: "backfilled_setting",
+        created_at: 1.minute.from_now,
+      )
+
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
+    it "honors last_visited_upcoming_changes_at when set" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      admin.custom_fields["last_visited_upcoming_changes_at"] = 1.hour.ago.iso8601
+      admin.save_custom_fields
+
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "before_visit",
+        created_at: 2.hours.ago,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        upcoming_change_name: "after_visit",
+        created_at: 1.minute.ago,
+      )
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
     end
   end
 end

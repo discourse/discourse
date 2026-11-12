@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Locale choice", type: :system do
+RSpec.describe "Locale choice" do
   it "loads english locale successfully" do
     visit "/"
     expect(page).to have_css("html[lang='en']")
@@ -64,6 +64,7 @@ RSpec.describe "Locale choice", type: :system do
         },
       )
     end
+
     after { JsLocaleHelper.clear_cache! }
 
     it "handles fallback correctly" do
@@ -81,7 +82,6 @@ RSpec.describe "Locale choice", type: :system do
       SiteSetting.default_locale = "uk"
 
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(page.evaluate_script("I18n.locale")).to eq("uk")
       expect(page.evaluate_script("Object.keys(I18n.translations)")).to contain_exactly("uk", "en")
@@ -123,12 +123,15 @@ RSpec.describe "Locale choice", type: :system do
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
+
+      # update_columns skips the model layer, so burst the bundle digest cache
+      # like TranslationOverride.upsert! would have.
+      ExtraLocalesController.clear_cache!
     end
 
     it "works for english" do
       SiteSetting.default_locale = "en"
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(page.evaluate_script("Object.keys(I18n._mfMessages._data)")).to eq(["en"])
       expect(
@@ -145,7 +148,6 @@ RSpec.describe "Locale choice", type: :system do
     it "works for other locales" do
       SiteSetting.default_locale = "fr"
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(page.evaluate_script("Object.keys(I18n._mfMessages._data)")).to contain_exactly(
         "en",
@@ -184,7 +186,6 @@ RSpec.describe "Locale choice", type: :system do
     it "does not throw error for invalid plural keys" do
       SiteSetting.default_locale = "ja"
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(page.evaluate_script("Object.keys(I18n._mfMessages._data)")).to contain_exactly(
         "ja",
@@ -197,8 +198,9 @@ RSpec.describe "Locale choice", type: :system do
 
     it "does not throw error for malformed messages" do
       SiteSetting.default_locale = "zh_TW"
-      visit "/"
-      expect(page).to have_css("#site-logo")
+
+      # Suppress the expected error from the intentionally malformed zh_TW MF string
+      silence_stdout { visit "/" }
 
       expect(page.evaluate_script("Object.keys(I18n._mfMessages._data)").length).to eq(0)
       expect(

@@ -455,6 +455,18 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(response.parsed_body["output"]).to eq("hi there")
     end
 
+    it "rejects output in the wrong shape from a tool used as an Ask AI source" do
+      SiteSetting.ai_ask_ai_external_sources = ai_tool.id.to_s
+      ai_tool.update!(script: "function invoke() { return [{ title: 'No link' }]; }")
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        [I18n.t("discourse_ai.ask_ai.external_sources.invalid_result", position: 1)],
+      )
+    end
+
     it "returns an error for invalid tool_id" do
       post "/admin/plugins/discourse-ai/ai-tools/-1/test.json",
            params: {
@@ -543,6 +555,35 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["output"]["key"]).to eq(ai_secret.secret)
+    end
+
+    it "passes the admin user's guardian via context for staged user discourse operations" do
+      category = Fabricate(:category)
+      staged_user = Fabricate(:user, staged: true)
+
+      guardians_used = []
+      original_pc = PostCreator.instance_method(:initialize)
+      PostCreator.define_method(:initialize) do |user, opts = {}|
+        guardians_used << opts[:guardian] if opts[:guardian]
+        original_pc.bind(self).call(user, opts)
+      end
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json",
+           params: {
+             ai_tool: {
+               script:
+                 "function invoke(params) { return discourse.createTopic({ title: 'Test topic from tool test action', raw: 'This is a test body for the topic created during tool testing', category_id: #{category.id}, username: '#{staged_user.username}' }); }",
+             },
+             parameters: {
+               input: "test",
+             },
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["output"]["success"]).to eq(true)
+      expect(guardians_used).not_to be_empty
+      expect(guardians_used.last.user.id).to eq(admin.id)
+    ensure
+      PostCreator.define_method(:initialize, original_pc)
     end
   end
 end

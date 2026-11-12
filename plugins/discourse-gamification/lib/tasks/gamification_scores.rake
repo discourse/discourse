@@ -8,6 +8,6 @@ task "gamification_scores:backfill_scores_from", [:date] => [:environment] do |_
     exit 1
   end
 
-  DiscourseGamification::GamificationScore.calculate_scores(since_date: date)
+  DiscourseGamification::GamificationLeaderboardScore.calculate_all(since_date: date)
   puts "Scores updated"
 end

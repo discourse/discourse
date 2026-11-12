@@ -1,16 +1,16 @@
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-<template>
+export default <template>
   <li
-    role="link"
     class="schema-setting-editor__tree-node --child"
+    role="link"
     ...attributes
     {{on "click" @onChildClick}}
   >
     <div class="schema-setting-editor__tree-node-text">
       <span>{{@generateSchemaTitle @object @schema @index}}</span>
-      {{icon "chevron-right"}}
+      {{dIcon "chevron-right"}}
     </div>
   </li>
 </template>

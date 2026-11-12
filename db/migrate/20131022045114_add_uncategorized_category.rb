@@ -2,24 +2,31 @@
 
 class AddUncategorizedCategory < ActiveRecord::Migration[4.2]
   def up
-    result = execute "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
-    name = +"Uncategorized"
-    name << SecureRandom.hex if result.count > 0
+    needs_uncategorized =
+      execute(
+        "SELECT 1 FROM topics WHERE archetype = 'regular' AND category_id IS NULL LIMIT 1",
+      ).any?
 
-    result =
-      execute "INSERT INTO categories
-            (name,color,slug,description,text_color, user_id, created_at, updated_at, position)
-     VALUES ('#{name}', '0088CC', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 0 )
-     RETURNING id
-    "
-    category_id = result[0]["id"].to_i
+    if needs_uncategorized
+      result = execute "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
+      name = +"Uncategorized"
+      name << SecureRandom.hex if result.count > 0
 
-    execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
-             VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
+      result =
+        execute "INSERT INTO categories
+              (name,color,slug,description,text_color, user_id, created_at, updated_at, position)
+       VALUES ('#{name}', '0088CC', 'uncategorized', '', 'FFFFFF', -1, now(), now(), 0 )
+       RETURNING id
+      "
+      category_id = result[0]["id"].to_i
 
-    execute "DELETE from site_settings where name in ('uncategorized_name', 'uncategorized_text_color', 'uncategorized_color')"
+      execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+               VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
 
-    execute "UPDATE topics SET category_id = #{category_id} WHERE archetype = 'regular' AND category_id IS NULL"
+      execute "DELETE from site_settings where name in ('uncategorized_name', 'uncategorized_text_color', 'uncategorized_color')"
+
+      execute "UPDATE topics SET category_id = #{category_id} WHERE archetype = 'regular' AND category_id IS NULL"
+    end
 
     execute "ALTER table topics ADD CONSTRAINT has_category_id CHECK (category_id IS NOT NULL OR archetype <> 'regular')"
   end

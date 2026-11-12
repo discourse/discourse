@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Amazon Associated Account Preferences", type: :system do
+RSpec.describe "Amazon Associated Account Preferences" do
   fab!(:user)
 
   let!(:user_account_preferences_page) { PageObjects::Pages::UserPreferencesAccount.new }
@@ -42,6 +42,7 @@ RSpec.describe "Amazon Associated Account Preferences", type: :system do
 
     describe "with user revoke enabled" do
       before { SiteSetting.login_with_amazon_user_can_revoke = true }
+
       it "shows the revoke button" do
         sign_in(user)
         user_account_preferences_page.visit(user)
@@ -55,6 +56,7 @@ RSpec.describe "Amazon Associated Account Preferences", type: :system do
 
     describe "with user revoke disabled" do
       before { SiteSetting.login_with_amazon_user_can_revoke = false }
+
       it "shows the revoke button" do
         sign_in(user)
         user_account_preferences_page.visit(user)

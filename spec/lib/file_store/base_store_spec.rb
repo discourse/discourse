@@ -6,6 +6,13 @@ RSpec.describe FileStore::BaseStore do
     Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest("9999"))
   end
 
+  describe "#get_path_for" do
+    it "uses only the file name of the sha1 and extension" do
+      store = described_class.new
+      expect(store.get_path_for("original", 1, "a/b/x", ".png")).to eq("original/1X/x.png")
+    end
+  end
+
   describe "#get_path_for_upload" do
     def expect_correct_path(expected_path)
       expect(described_class.new.get_path_for_upload(upload)).to eq(expected_path)
@@ -14,19 +21,19 @@ RSpec.describe FileStore::BaseStore do
     context "with empty URL" do
       before { upload.update!(url: "") }
 
-      it "should return the right path" do
+      it "builds the original upload path from its SHA1" do
         expect_correct_path("original/2X/4/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
       end
 
       describe "when Upload#extension has not been set" do
-        it "should return the right path" do
+        it "infers the extension when building the upload path" do
           upload.update!(extension: nil)
           expect_correct_path("original/2X/4/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
         end
       end
 
       describe "when id is negative" do
-        it "should return the right depth" do
+        it "uses a single directory level" do
           upload.update!(id: -999)
           expect_correct_path("original/1X/4170ac2a2782a1516fe9e13d7322ae482c1bd594.png")
         end
@@ -110,14 +117,14 @@ RSpec.describe FileStore::BaseStore do
     let!(:optimized_path) { "optimized/1X/#{upload.sha1}_1_100x200.png" }
 
     context "with empty URL" do
-      it "should return the right path" do
+      it "builds the optimized image path" do
         optimized = Fabricate.build(:optimized_image, upload: upload, version: 1)
         expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(
           optimized_path,
         )
       end
 
-      it "should return the right path for `nil` version" do
+      it "defaults a nil version to version 1 in the image path" do
         optimized = Fabricate.build(:optimized_image, upload: upload, version: nil)
         expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(
           optimized_path,
@@ -185,7 +192,7 @@ RSpec.describe FileStore::BaseStore do
     let(:upload_s3) { Fabricate(:upload_s3) }
     let(:store) { FileStore::BaseStore.new }
 
-    it "should return consistent encodings for fresh and cached downloads" do
+    it "returns consistent encodings for fresh and cached downloads" do
       first_encoding = File.read(store.download(upload_s3)).encoding
       second_encoding = File.read(store.download(upload_s3)).encoding
 
@@ -193,14 +200,14 @@ RSpec.describe FileStore::BaseStore do
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
-    it "should return a file path" do
+    it "returns a file path" do
       path = store.download(upload_s3)
 
       expect(path).to be_a(String)
       expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the path when s3 cdn enabled" do
+    it "returns the path when the S3 CDN is enabled" do
       SiteSetting.s3_cdn_url = "https://cdn.s3.#{SiteSetting.s3_region}.amazonaws.com"
       stub_request(:get, Discourse.store.cdn_url(upload_s3.url)).to_return(
         status: 200,
@@ -213,12 +220,13 @@ RSpec.describe FileStore::BaseStore do
       expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the path when secure uploads are enabled" do
+    it "returns the path when secure uploads are enabled" do
       SiteSetting.login_required = true
       SiteSetting.secure_uploads = true
 
       stub_request(:head, "https://s3-upload-bucket.s3.#{SiteSetting.s3_region}.amazonaws.com/")
-      signed_url = Discourse.store.signed_url_for_path(upload_s3.url)
+      signed_url =
+        Discourse.store.signed_url_for_path(upload_s3.url, include_content_disposition: false)
       stub_request(:get, signed_url).to_return(status: 200, body: "Hello world")
 
       path = store.download(upload_s3)
@@ -257,6 +265,14 @@ RSpec.describe FileStore::BaseStore do
     end
   end
 
+  describe "#get_cache_path_for" do
+    it "uses a per-site directory and only the file name" do
+      expect(described_class.new.get_cache_path_for("a/b/c.png")).to eq(
+        File.join(FileStore::BaseStore::CACHE_DIR, "default", "c.png"),
+      )
+    end
+  end
+
   describe "#cache_file" do
     let(:store) { FileStore::BaseStore.new }
     let(:cache_dir) { FileStore::BaseStore::CACHE_DIR }
@@ -288,7 +304,7 @@ RSpec.describe FileStore::BaseStore do
         end
       end
 
-      remaining = Dir.glob("#{cache_dir}*")
+      remaining = Dir.glob(File.join(cache_dir, "*", "*"))
       expect(remaining.length).to eq(5)
       expect(File.exist?(store.get_cache_path_for("cached_0.tmp"))).to eq(false)
       expect(File.exist?(store.get_cache_path_for("cached_1.tmp"))).to eq(false)

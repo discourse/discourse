@@ -9,16 +9,52 @@ gl:
     overall_sentiment:
       yaxis: "Data"
     emotion_neutral:
-      title: "\U0001F610 Neutro"
+      title: "😐 Neutro"
   discourse_ai:
     tools:
       presets:
         image_generation_custom:
           name: "Personalizado"
     ai_bot:
+      navigation:
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        categories:
+          title: "Categorías"
+        tags:
+          title: "Etiquetas"
+        themes:
+          title: "Temas"
+        backups:
+          title: "Copias de seguranza"
+      read_post:
+        unknown_post: "publicación"
+      chat_tool_approval:
+        topic_states:
+          open: "Abrir"
+          closed: "Pechado"
+          active: "Activo"
+          deleted: "Eliminado"
+        solution_post: "Publicación #%{number}"
+        duration_label: "Duración:"
+        user_duration:
+          one: "%{count} día"
+          other: "%{count} días"
+        posts_label: "Publicacións"
+        category_label: "Categoría"
+        category_fields:
+          name: "nome"
+          description: "descrición"
+          color: "cor"
+        approve_label: "Si"
+        reject_label: "Non"
       tool_summary:
         search: "Buscar"
         time: "Hora"
+      tool_help:
+        create_category: "Crear unha nova categoría"
       close_topic:
         errors:
           not_found: "Non foi posíbel atopar o tema."
@@ -28,10 +64,13 @@ gl:
       delete_topic:
         errors:
           not_found: "Non foi posíbel atopar o tema."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Non foi posíbel atopar o tema."
       edit_category:
+        errors:
+          not_found: "Non foi posíbel atopar a categoría."
+      change_topic_category:
         errors:
           not_found: "Non foi posíbel atopar o tema."
           category_not_found: "Non foi posíbel atopar a categoría."
@@ -47,10 +86,27 @@ gl:
       assign:
         errors:
           not_found: "Non foi posíbel atopar o tema."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Cabeceira"
+      fonts:
+        base_font: "Tipo de letra do corpo"
+        heading_font: "Tipo de letra de título"
+    mcp_theme_access:
+      none: "ningunha"
+    mcp_app_setup:
+      none: "ningunha"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprobar"
+        reject:
+          title: "Rexeitar"
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutro \U0001F610"
+          neutral: "Neutro 😐"
         sentiment_analysis:
           neutral: "Neutro"
     ai_staff_action_logger:

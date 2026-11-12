@@ -1,9 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -18,19 +18,13 @@ export default class UserActivityBookmarksController extends Controller {
 
   queryParams = ["q"];
 
+  /** @type {string | null | undefined} */
   q = null;
   loading = false;
   loadingMore = false;
   permissionDenied = false;
 
   bulkSelectHelper = new BulkSelectHelper(this);
-
-  @notEmpty("q") inSearchMode;
-
-  @dependentKeyCompat
-  get noContent() {
-    return this.model?.bookmarks?.length === 0;
-  }
 
   @computed("q")
   get searchTerm() {
@@ -39,6 +33,16 @@ export default class UserActivityBookmarksController extends Controller {
 
   set searchTerm(value) {
     this._searchTerm = value;
+  }
+
+  @computed("q")
+  get inSearchMode() {
+    return !isEmpty(this.q);
+  }
+
+  @dependentKeyCompat
+  get noContent() {
+    return this.model?.bookmarks?.length === 0;
   }
 
   @computed()
@@ -91,6 +95,19 @@ export default class UserActivityBookmarksController extends Controller {
     this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
   }
 
+  transform(bookmark) {
+    const bookmarkModel = Bookmark.create(bookmark);
+    bookmarkModel.topicStatus = EmberObject.create({
+      closed: bookmark.closed,
+      archived: bookmark.archived,
+      is_warning: bookmark.is_warning,
+      pinned: false,
+      unpinned: false,
+      invisible: bookmark.invisible,
+    });
+    return bookmarkModel;
+  }
+
   _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
       return Promise.resolve();
@@ -126,18 +143,5 @@ export default class UserActivityBookmarksController extends Controller {
       this.model.bookmarks.push(...bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }
-  }
-
-  transform(bookmark) {
-    const bookmarkModel = Bookmark.create(bookmark);
-    bookmarkModel.topicStatus = EmberObject.create({
-      closed: bookmark.closed,
-      archived: bookmark.archived,
-      is_warning: bookmark.is_warning,
-      pinned: false,
-      unpinned: false,
-      invisible: bookmark.invisible,
-    });
-    return bookmarkModel;
   }
 }

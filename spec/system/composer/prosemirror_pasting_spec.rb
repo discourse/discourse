@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Pasting content", type: :system do
+describe "Composer - ProseMirror - Pasting content" do
   include_context "with prosemirror editor"
 
   it "creates a mention when pasting an HTML anchor with class mention" do
@@ -38,7 +38,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     open_composer
     cdp.copy_paste('<img src="image.png" alt="alt text" data-base62-sha1="1234567890">', html: true)
     expect(rich).to have_css(
-      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
+      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
     )
   end
 
@@ -67,6 +67,27 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
   end
 
+  it "lets the user paste bold text as plain text inside backtick and tilde code fences" do
+    open_composer
+    composer.toggle_rich_editor
+    html = "<strong>bold</strong>"
+    plain_text = "bold"
+
+    composer.fill_content("```\nprefix \n```")
+    composer.move_cursor_after("prefix ")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("```\nprefix bold\n```")
+
+    composer.fill_content("~~~console\nprefix \n~~~")
+    composer.move_cursor_after("prefix ")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("~~~console\nprefix bold\n~~~")
+
+    composer.fill_content("```\n~~~\n```\n")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("```\n~~~\n```\n**bold**")
+  end
+
   it "removes newlines from alt/title in pasted image" do
     cdp.allow_clipboard
     open_composer
@@ -87,13 +108,14 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     )
   end
 
-  xit "ignores text/html content if Files are present" do
+  it "ignores text/html content if Files are present" do
     open_composer
-    paste_and_click_image(cdp)
-    expect(rich).to have_css("img[data-orig-src]", count: 1)
+    paste_and_click_image
+    expect(composer).to have_no_animated_images
+    expect(rich).to have_no_css("img[src^='data:']")
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor
-    expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
+    expect(composer).to have_value(%r{\A!\[image\|244x66\]\(upload://\w+\.png\)\z})
   end
 
   it "handles multiple data URI images pasted simultaneously" do
@@ -128,6 +150,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
   context "when unauthorized to upload" do
     before { SiteSetting.authorized_extensions = "" }
+
     it "allows pasting text" do
       cdp.allow_clipboard
       open_composer
@@ -195,6 +218,57 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     expect(rich).to have_css("a", text: "lin")
   end
 
+  it "continues a bullet list when pasting multi-line text into an empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* ")
+    cdp.copy_paste("apple\nbanana\ncoconut")
+
+    expect(rich).to have_css("ul li", count: 3)
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
+    expect(rich).to have_css("ul li", text: "coconut")
+  end
+
+  it "continues an ordered list when pasting multi-line text into an empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("1. ")
+    cdp.copy_paste("apple\nbanana\ncoconut")
+
+    expect(rich).to have_css("ol li", count: 3)
+    expect(rich).to have_css("ol li", text: "apple")
+    expect(rich).to have_css("ol li", text: "banana")
+    expect(rich).to have_css("ol li", text: "coconut")
+  end
+
+  it "skips blank lines when continuing a list from pasted multi-line text" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* ")
+    cdp.copy_paste("apple\n\nbanana")
+
+    expect(rich).to have_css("ul li", count: 2)
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
+  end
+
+  it "keeps default paste behavior in a non-empty list item" do
+    cdp.allow_clipboard
+    open_composer
+
+    composer.type_content("* existing")
+    cdp.copy_paste("\napple\nbanana")
+
+    expect(rich).to have_css("ul li", count: 1)
+    expect(rich).to have_css("ul li", text: "existing")
+    expect(rich).to have_css("ul li", text: "apple")
+    expect(rich).to have_css("ul li", text: "banana")
+  end
+
   it "clears closed marks from stored marks when using markInputRule" do
     open_composer
     composer.type_content("[`something`](link) word")
@@ -215,6 +289,20 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
   end
 
+  it "pastes web page text without leaving literal span markup" do
+    cdp.allow_clipboard
+    open_composer
+    cdp.copy_paste(
+      # the space sits inside the first span, where a surviving span node eats it
+      %(<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>),
+      html: true,
+    )
+    expect(rich).to have_css("p", text: "So I have heard. At one time.")
+    expect(rich).to have_no_css("span[lang]")
+    composer.toggle_rich_editor
+    expect(composer).to have_value("So I have heard. At one time.")
+  end
+
   it "converts newlines to hard breaks when parsing `white-space: pre` HTML" do
     cdp.allow_clipboard
     open_composer
@@ -228,7 +316,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
   end
 
   context "when pasting tables" do
-    it "fills incomplete rows" do
+    it "normalizes pasted tables and handles empty rows" do
       cdp.allow_clipboard
       open_composer
 
@@ -259,11 +347,9 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "normalizes column counts when header has fewer columns than body rows" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>
@@ -288,11 +374,9 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "normalizes nested table column counts" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>
@@ -320,12 +404,9 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       composer.toggle_rich_editor
 
-      # The inner table header should be properly normalized
+      # Nested tables are flattened - the inner table content is preserved
+      # The outer table structure is dropped since ProseMirror can't represent nested tables
       markdown = <<~MARKDOWN
-        |  |
-        |----|
-
-
         | CLOSED DOWNSTREAM |  |
         |----|----|
         |  |  |
@@ -333,18 +414,12 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
         | Product: | name |
         | Component: | general |
 
-
-        |  |  |
-        |----|----|
-
       MARKDOWN
 
       expect(composer).to have_value(markdown)
-    end
-
-    it "handles tables with empty rows without crashing" do
-      cdp.allow_clipboard
-      open_composer
+      composer.clear_content
+      composer.toggle_rich_editor
+      composer.focus
 
       html = <<~HTML
         <table>
@@ -359,7 +434,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("|  |\n|----|\n\nAfter table")
+      expect(composer).to have_value("After table")
     end
   end
 end

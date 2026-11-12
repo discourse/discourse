@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 ro:
+  category_types:
+    support:
+      title: "suport"
   discourse_solved:
     category_type:
       allow_accepted_answers:

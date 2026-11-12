@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
-import ColorPalettePickerRow from "./color-palette-picker/color-palette-picker-row";
-import ComboBox from "./combo-box";
-import { pluginApiIdentifiers } from "./select-kit";
+import ColorPalettePickerRow from "./color-palette-picker/color-palette-picker-row.gjs";
+import ComboBox from "./combo-box.js";
+import { pluginApiIdentifiers } from "./select-kit.js";
 
 @classNames("color-palette-picker")
 @pluginApiIdentifiers(["color-palette-picker"])

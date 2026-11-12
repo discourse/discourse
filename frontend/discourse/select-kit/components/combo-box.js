@@ -1,12 +1,12 @@
-import { gte } from "@ember/object/computed";
+import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import SingleSelectComponent from "discourse/select-kit/components/single-select";
-import ComboBoxHeader from "./combo-box/combo-box-header";
+import ComboBoxHeader from "./combo-box/combo-box-header.gjs";
 import {
   FILTER_VISIBILITY_THRESHOLD,
   pluginApiIdentifiers,
   selectKitOptions,
-} from "./select-kit";
+} from "./select-kit.js";
 
 @classNames("combobox", "combo-box")
 @pluginApiIdentifiers(["combo-box"])
@@ -19,5 +19,8 @@ import {
   shouldDisplayIcon: false,
 })
 export default class ComboBox extends SingleSelectComponent {
-  @gte("content.length", FILTER_VISIBILITY_THRESHOLD) autoFilterable;
+  @computed("content.length")
+  get autoFilterable() {
+    return this.content?.length >= FILTER_VISIBILITY_THRESHOLD;
+  }
 }

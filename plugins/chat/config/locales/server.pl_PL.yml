@@ -10,9 +10,9 @@ pl_PL:
     chat_enabled: "Włącz czat."
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
-    chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
-    chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Dodanie użytkowników anonimowych pozwala również wyszukiwarkom indeksować kanały publiczne. Należy pamiętać, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
+    chat_channel_retention_days: "Wiadomości czatu w standardowych kanałach będą przechowywane przez tyle dni. Ustaw „0”, aby zachować wiadomości na zawsze. Gdy anonimowi użytkownicy mogą przeglądać czat, usunięte wiadomości z czasem znikają z wyników wyszukiwania, więc krótki czas przechowywania ogranicza liczbę historii czatu, którą można znaleźć za pomocą wyszukiwarki."
+    chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
     chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
     chat_allowed_messages_for_other_trust_levels: "Liczba wiadomości, które użytkownicy z poziomami zaufania 1-4 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
@@ -23,17 +23,18 @@ pl_PL:
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
     chat_show_copy_button_on_codeblocks: "Pokaż przycisk kopiowania w blokach kodu w wiadomościach czatu."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
-    direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
+    direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie prywatnych czatów między użytkownikami. Uwaga: personel zawsze może tworzyć prywatne czaty, a użytkownicy będą mogli odpowiadać na prywatne czaty inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
     chat_pinning_messages_allowed_groups: "Użytkownicy w tych grupach mogą przypinać wiadomości czatu w kanałach, do których mają dostęp. Pamiętaj, że administratorzy i moderatorzy zawsze mogą przypinać wiadomości czatu. Każdy członek czatu grupowego lub wiadomości prywatnej może przypinać tam wiadomości."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
+    chat_homepage_channel: "Kanał, na którym trafiają osoby, gdy {{setting:default_homepage}} jest ustawione na kanał czatu. Osoby, które nie mają dostępu do kanału, widzą zamiast tego pierwszy element w {{setting:top_menu}} , w tym anonimowi goście, chyba że {{setting:chat_allowed_groups}} obejmuje użytkowników anonimowych."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
-    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
+    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom anonimowo przeglądającym Twoją witrynę korzystanie z czatu. To ustawienie wymaga włączenia ustawienia {{setting:allow_anonymous_mode}}."
     chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
@@ -62,11 +63,40 @@ pl_PL:
 
         Odwiedź kanał pod adresem %{channel_url}, aby spróbować ponownie.
   chat:
+    design_wizard_homepage_name: "Czat"
+    design_wizard_homepage_description: "Otwórz kanał %{channel} , gdy członkowie odwiedzą Twoją stronę główną."
     deleted_chat_username: usunięte
+    crawler:
+      directory_title: "Kanały czatu"
+      nav_title: "Czat"
+      last_activity: "Ostatnia aktywność"
+      retention_notice:
+        one: "Wiadomości starsze niż %{count} dzień są usuwane, z wyjątkiem wiadomości przypiętych."
+        few: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        many: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        other: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+      messages_count:
+        one: "%{count} wiadomość"
+        few: "%{count} wiadomości"
+        many: "%{count} wiadomości"
+        other: "%{count} wiadomości"
+      members_count:
+        one: "%{count} członek"
+        few: "%{count} członków"
+        many: "%{count} członków"
+        other: "%{count} członków"
+      thread_title: "Wątek w %{channel}"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
     errors:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
+      public_channels_disabled: "Nie można utworzyć kanału, ponieważ kanały publiczne są wyłączone. Administrator może włączyć ustawienie witryny „Włącz kanały publiczne”."
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
         closed: "Kanał jest zamknięty, nie można wysyłać nowych wiadomości"
@@ -101,7 +131,7 @@ pl_PL:
       actor_ignoring_target_user: "Ignorujesz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości."
-      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie osobistych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
+      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
       not_reachable: "Przepraszamy, %{username} nie używa czatu."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
@@ -163,6 +193,10 @@ pl_PL:
         ignore:
           title: "Ignoruj flagę"
           description: "Usuń z kolejki bez podejmowania żadnych działań."
+        unsilence_user:
+          title: "Autor bez wyciszenia"
+          description: "Zakończ wyciszenie autora. Ta flaga pozostaje w kolejce."
+          complete: "Autor już nie jest wyciszony."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
@@ -255,14 +289,67 @@ pl_PL:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
         other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
       direct_message_chat_mention:
-        direct: "%{username} wspomniał(a) o Tobie na czacie osobistym"
-        other_type: "%{username} oznaczył %{identifier} na czacie osobistym"
+        direct: "%{username} wspomniał(a) o Tobie na prywatnym czacie"
+        other_type: "%{username} oznaczył %{identifier} na prywatnym czacie"
       new_chat_message: '%{username} wysłał(a) wiadomość w "%{channel}"'
-      new_direct_chat_message: "%{username} wysłał(a) wiadomość w osobistym czacie"
+      new_direct_chat_message: "%{username} wysłał(a) wiadomość na prywatnym czacie"
+    actions:
+      chat_reply:
+        title: Odpowiedz
+        placeholder: Odpowiedz…
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Wyślij wiadomość na czacie
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Zatwierdź"
+      default_deny_label: "Odrzuć"
+    errors:
+      send_chat_message:
+        invalid_params: "Wiadomość jest nieprawidłowa: %{errors}"
+        channel_not_found: "Nie znaleziono kanału: %{channel_id}"
+        channel_blocked: "Nie można publikować na kanale %{channel_id}: %{reason}"
+        failed: "Nie udało się wysłać wiadomości czatu (nieudany krok: %{step})."
+        recipient_blank: "Nie podano nazw użytkowników odbiorców."
+        recipient_staged: "'%{username}' jest użytkownikiem testowym i nie może korzystać z czatu."
+        recipient_suspended: "'%{username}' jest zawieszony i nie można odbierać wiadomości bezpośrednich."
+        recipient_inactive: "'%{username}' nie aktywował jeszcze swojego konta."
+        recipient_chat_disabled: "Użytkownik '%{username}' wyłączył czat w swoich preferencjach."
+        recipient_cannot_chat: "'%{username}' nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_anonymous: "Wiadomości czatu nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
+        sender_chat_disabled: "Nadawca '%{sender}' wyłączył czat w swoich preferencjach."
+        sender_cannot_chat: "Nadawca „%{sender}” nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_cannot_create_dm: "Nadawca '%{sender}' nie ma uprawnień do wysyłania wiadomości bezpośrednich (zobacz ustawienie „grupy z włączonymi wiadomościami bezpośrednimi”)."
+        sender_dms_disabled: "Nadawca '%{sender}' wyłączył wiadomości prywatne w swoich preferencjach."
+        sender_cannot_post: "Nadawca „%{sender}” nie ma uprawnień do publikowania wpisów na kanale %{channel_id}."
+        sender_not_member: "Nadawca „%{sender}” nie jest członkiem kanału %{channel_id}. Najpierw dołącz do kanału jako ten użytkownik."
+        user_blocked: "'%{sender}' nie można wysłać bezpośredniej wiadomości do '%{username}': %{reason}"
+        group_blocked: "'%{sender}' nie można wysłać wiadomości grupowej bezpośrednio do %{usernames}: %{reason}"
+      chat_approval:
+        channel_not_found: "Nie udało się wysłać wiadomości na czacie: kanał %{channel_id} nie został znaleziony."
+        invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
+        channel_blocked: "Nie można wysłać wiadomości na czacie: nie można pisać na kanale %{channel_id}: %{reason}"
+        failed_step: "Nie udało się wysłać wiadomości na czacie (nieudany krok: %{step})."
+        timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
+        invalid_timeout_action: "Nieprawidłowa czynność limitu czasu: %{action}."
+        buttons_required: "Wymagany jest co najmniej jeden przycisk zatwierdzający czat."
+        too_many_buttons: "Zatwierdzenie czatu obsługuje maksymalnie przyciski %{max}."
+        button_label_required: "Przycisk zatwierdzania czatu %{position} wymaga etykiety."
+        button_label_too_long: "Etykieta przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+        button_value_required: "Przycisk zatwierdzania czatu %{position} wymaga podania wartości."
+        button_value_too_long: "Wartość przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+        button_style_invalid: "Przycisk zatwierdzania czatu %{position} musi mieć jeden z następujących stylów: %{styles}."
+        button_icon_too_long: "Ikona przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+    hints:
+      send_chat_message:
+        self_message: "Nadawca i odbiorca to „%{username}”, więc wiadomość została opublikowana w ich osobistym czacie."
+        preferences_bypassed: "„%{username}” nie przyjmuje bezpośrednich wiadomości od „%{sender}”, ale wiadomość została dostarczona, bo nadawca jest członkiem personelu."
+    logs:
+      send_chat_message:
+        sent_to_channel: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} na kanał %{channel_id}."
+        sent_to_user: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do '%{username}'."
+        sent_to_group: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do grupy w wiadomościach bezpośrednich za pomocą %{usernames}."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"
@@ -290,31 +377,61 @@ pl_PL:
           few: "[%{site_name}] Nowe wiadomości"
           many: "[%{site_name}] Nowe wiadomości"
           other: "[%{site_name}] Nowe wiadomości"
+        private_email_improved:
+          one: "Nowa wiadomość"
+          few: "Nowe wiadomości"
+          many: "Nowe wiadomości"
+          other: "Nowe wiadomości"
         watched_thread:
           one: "[%{site_name}] Nowa wiadomość wątku w %{channel}"
           few: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
           many: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
           other: "[%{site_name}] Nowe wiadomość wątku w %{channel}"
+        watched_thread_improved:
+          one: "Nowa wiadomość wątku w %{channel}"
+          few: "Nowe wiadomości wątku w %{channel}"
+          many: "Nowe wiadomości wątku w %{channel}"
+          other: "Nowe wiadomości wątku w %{channel}"
         watched_threads:
           one: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innym kanale"
           few: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
           many: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
           other: "[%{site_name}] Nowe wiadomości wątku na %{channel} i %{count} innych kanałach"
+        watched_threads_improved:
+          one: "Nowe wiadomości wątku w %{channel} i %{count} innym kanale"
+          few: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
+          many: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
+          other: "Nowe wiadomości wątku w %{channel} i %{count} innych kanałach"
         chat_dm_1:
           one: "[%{site_name}] Nowa wiadomość od %{name}"
           few: "[%{site_name}] Nowe wiadomości od %{name}"
           many: "[%{site_name}] Nowe wiadomości od %{name}"
           other: "[%{site_name}] Nowe wiadomości od %{name}"
+        chat_dm_1_improved:
+          one: "Nowa wiadomość od %{name}"
+          few: "Nowe wiadomości od %{name}"
+          many: "Nowe wiadomości od %{name}"
+          other: "Nowe wiadomości od %{name}"
         chat_dm_2: "[%{site_name}] Nowe wiadomości od %{name_1} i %{name_2}"
+        chat_dm_2_improved: "Nowe wiadomości od %{name_1} i %{name_2}"
         chat_dm_3_or_more: "[%{site_name}] Nowe wiadomości z %{name} i %{count} innych kanałów wiadomości bezpośrednich"
+        chat_dm_3_or_more_improved: "Nowe wiadomości z %{name} i %{count} innych kanałów wiadomości bezpośrednich"
         chat_channel_1:
           one: "[%{site_name}] Nowa wiadomość w %{channel}"
           few: "[%{site_name}] Nowe wiadomości w %{channel}"
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
+        chat_channel_1_improved:
+          one: "Nowa wiadomość w %{channel}"
+          few: "Nowe wiadomości w %{channel}"
+          many: "Nowe wiadomości w %{channel}"
+          other: "Nowe wiadomości w %{channel}"
         chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
+        chat_channel_2_improved: "Nowe wiadomości w %{channel_1} i %{channel_2}"
         chat_channel_3_or_more: "[%{site_name}] Nowe wiadomości na %{channel} i %{count} innych kanałach"
+        chat_channel_3_or_more_improved: "Nowe wiadomości w %{channel} i %{count} innych kanałach"
         chat_channel_and_dm: "[%{site_name}] Nowe wiadomości w %{channel} i od %{name}"
+        chat_channel_and_dm_improved: "Nowe wiadomości w %{channel} i z %{name}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

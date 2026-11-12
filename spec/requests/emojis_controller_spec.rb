@@ -36,6 +36,14 @@ RSpec.describe EmojisController do
         ],
       )
     end
+
+    it "flags the emojis that have an animation" do
+      get "/emojis.json"
+
+      emojis = response.parsed_body.values.flatten.index_by { _1["name"] }
+      expect(emojis.dig("wink", "animated")).to eq(true)
+      expect(emojis.dig("abacus", "animated")).to eq(false)
+    end
   end
 
   describe "#search_aliases" do
@@ -43,8 +51,18 @@ RSpec.describe EmojisController do
       get "/emojis/search-aliases.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["grinning_face"]).to eq(
-        %w[cheerful cheery face grin grinning happy laugh nice smile smiling teeth],
+      expect(response.parsed_body["grinning_face"]).to include(
+        "cheerful",
+        "cheery",
+        "face",
+        "grin",
+        "grinning",
+        "happy",
+        "laugh",
+        "nice",
+        "smile",
+        "smiling",
+        "teeth",
       )
     end
   end

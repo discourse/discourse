@@ -12,8 +12,8 @@ class IntegerSettingValidator
 
   def valid_value?(val)
     return false if val.to_i.to_s != val.to_s
-    return false if @opts[:min] && @opts[:min].to_i > (val.to_i)
-    return false if @opts[:max] && @opts[:max].to_i < (val.to_i)
+    return false if @opts[:min] && @opts[:min].to_i > val.to_i
+    return false if @opts[:max] && @opts[:max].to_i < val.to_i
     true
   end
 

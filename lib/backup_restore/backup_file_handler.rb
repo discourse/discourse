@@ -74,7 +74,7 @@ module BackupRestore
     def download_archive_to_tmp_directory
       log "Downloading archive from URL to tmp directory..."
       tmpfile = self.class.download(@url)
-      Discourse::Utils.execute_command("mv", tmpfile.path, @archive_path)
+      FileUtils.mv(tmpfile.path, @archive_path)
     ensure
       tmpfile&.unlink
     end
@@ -117,6 +117,18 @@ module BackupRestore
         *path_transformation,
         failure_message: "Failed to decompress archive.",
       )
+
+      ensure_only_files_and_directories
+    end
+
+    def ensure_only_files_and_directories
+      special_files =
+        Discourse::Utils.execute_command(
+          "find",
+          @tmp_directory,
+          *%w[! -type f ! -type d -print -quit],
+        )
+      raise "The archive contains unsupported file types." if special_files.present?
     end
 
     def extract_db_dump

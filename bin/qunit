@@ -11,8 +11,15 @@ require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
+  DEFAULT_BROWSER_START_TIMEOUT = 45
+  DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+  # the filter ends up in the test page URL; the dev server rejects query strings over 10KB
+  MAX_FILE_PATH_FILTER_LENGTH = 8 * 1024
+  TEST_FILE_GLOB = "*-test.{js,gjs,ts,gts}"
+
   def initialize(args)
-    @file_paths = []
+    @paths = []
+    @test_files = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
@@ -29,6 +36,11 @@ class QunitRunner
     @plugin_targets = []
 
     @headless = true
+    @browser_watchdog = boolean_env("QUNIT_BROWSER_WATCHDOG", default: true)
+    @browser_start_timeout =
+      positive_integer_env("QUNIT_BROWSER_START_TIMEOUT", DEFAULT_BROWSER_START_TIMEOUT)
+    @browser_inactivity_timeout =
+      positive_integer_env("QUNIT_BROWSER_INACTIVITY_TIMEOUT", DEFAULT_BROWSER_INACTIVITY_TIMEOUT)
 
     parse_options(args)
   end
@@ -56,9 +68,11 @@ class QunitRunner
         opts.separator ""
         opts.separator "Options:"
 
-        opts.on("-f", "--filter FILTER", "Run tests matching this filter") do |filter|
-          @filter = filter
-        end
+        opts.on(
+          "-f",
+          "--filter FILTER",
+          "Run tests matching this filter against \"module: test name\" (case-insensitive substring, or a slash-wrapped regex like /foo/i)",
+        ) { |filter| @filter = filter }
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
@@ -108,8 +122,31 @@ class QunitRunner
           @report_requests = true
         end
 
+        opts.on("--report-memory", "Report JS heap usage after the tests") { @report_memory = true }
+
         opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
           @headless = h
+        end
+
+        opts.on(
+          "--[no-]browser-watchdog",
+          "Fail fast if the browser stalls on startup or between tests (env: QUNIT_BROWSER_WATCHDOG)",
+        ) { |enabled| @browser_watchdog = enabled }
+
+        opts.on(
+          "--browser-start-timeout SECONDS",
+          Integer,
+          "Browser connection timeout (default: 45; env: QUNIT_BROWSER_START_TIMEOUT)",
+        ) do |seconds|
+          @browser_start_timeout = positive_integer(seconds, "--browser-start-timeout")
+        end
+
+        opts.on(
+          "--browser-inactivity-timeout SECONDS",
+          Integer,
+          "Browser inactivity timeout outside active tests (default: 30; env: QUNIT_BROWSER_INACTIVITY_TIMEOUT)",
+        ) do |seconds|
+          @browser_inactivity_timeout = positive_integer(seconds, "--browser-inactivity-timeout")
         end
 
         opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
@@ -122,10 +159,12 @@ class QunitRunner
         opts.separator <<~NOTES
           \nExamples:
             bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit frontend/discourse/tests/unit/  # Run all tests in directory
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
             bin/qunit --standalone --filter "Acceptance: Emoji"
+            bin/qunit --standalone --filter "/DButton|DIconGridPicker/i"
         NOTES
       end
 
@@ -140,7 +179,7 @@ class QunitRunner
 
     ensure_supported_target!
 
-    @file_paths = args
+    @paths = args
 
     detect_plugin_targets!
     expand_directory_paths!
@@ -170,7 +209,7 @@ class QunitRunner
         # Check if plugin has tests
         test_dirs = %w[test/javascripts test].map { |subdir| File.join(plugin_path, subdir) }
         test_dirs.any? do |test_dir|
-          Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", "*-test.{js,gjs}")).any?
+          Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", TEST_FILE_GLOB)).any?
         end
       end
       .map { |plugin_dir_name| resolve_plugin_namespace(plugin_dir_name) }
@@ -179,11 +218,15 @@ class QunitRunner
   def expand_directory_paths!
     expanded = []
 
-    @file_paths.each do |path|
+    @paths.each do |path|
       if File.directory?(path)
-        test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
+        if !test_directory?(path)
+          abort "Error: #{path} is not a test directory. Pass frontend/discourse/tests, one of its subdirectories, or a plugin directory."
+        end
+
+        test_files = Dir.glob(File.join(path, "**", TEST_FILE_GLOB))
         if test_files.empty?
-          puts "Warning: No test files found in directory: #{path}" if @verbose
+          abort "Error: No test files found in directory: #{path}"
         else
           expanded.concat(test_files)
         end
@@ -194,21 +237,25 @@ class QunitRunner
       end
     end
 
-    @file_paths = expanded.uniq
+    @test_files = expanded.uniq
+  end
+
+  # Directories become path-prefix filters, so they must map onto test module paths
+  def test_directory?(path)
+    expanded = File.expand_path(path)
+    "#{expanded}/".start_with?("#{frontend_dir}/tests/") || plugin_path?(expanded)
   end
 
   def run_tests
-    ensure_file_paths_exist!
-
-    if @file_paths && @verbose
-      puts "Files to test: #{@file_paths.length}"
-      puts "  #{@file_paths.join("\n  ")}"
+    if @verbose
+      puts "Files to test: #{@test_files.length}"
+      puts "  #{@test_files.join("\n  ")}"
     end
 
     target = resolved_target
     puts "Target: #{target}" if @verbose
 
-    file_path_filter = build_file_path_filter(@file_paths)
+    file_path_filter = build_file_path_filter(@paths)
 
     run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
   end
@@ -237,11 +284,13 @@ class QunitRunner
 
     env = {}
     env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
-    env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
     env["QUNIT_HEADLESS"] = "0" if !@headless
+    env["QUNIT_BROWSER_WATCHDOG"] = @browser_watchdog ? "1" : "0"
+    env["QUNIT_BROWSER_START_TIMEOUT"] = @browser_start_timeout.to_s
+    env["QUNIT_BROWSER_INACTIVITY_TIMEOUT"] = @browser_inactivity_timeout.to_s
 
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
@@ -296,26 +345,17 @@ class QunitRunner
     end
 
     if path.include?("/frontend/discourse/tests/")
-      return path.split("/frontend/discourse/").last
+      return path.split("/frontend/discourse/tests/").last
     elsif path.include?("/tests/")
-      return path.split("/tests/").last.prepend("tests/")
+      return path.split("/tests/").last
     end
 
     parts = path.split("/")
     if idx = parts.index("tests")
-      return parts[idx..-1].join("/")
+      return parts[(idx + 1)..-1].join("/")
     end
 
     file_path
-  end
-
-  def ensure_file_paths_exist!
-    @file_paths.each do |file_path|
-      next if File.exist?(file_path)
-
-      puts "Error: File not found: #{file_path}"
-      exit 1
-    end
   end
 
   def check_dev_environment!
@@ -366,21 +406,30 @@ class QunitRunner
     ensure_pnpm_installed!
     install_node_dependencies!
 
-    @rails_port = next_available_port(60_098)
-    unicorn_env = build_unicorn_environment(@rails_port)
-    unicorn_pid = nil
+    @rails_port = next_available_port(4_566)
+    server_env = build_server_environment(@rails_port)
+    server_pid = nil
+    log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
 
     begin
       if @dry_run
-        puts "[dry-run] skipping unicorn startup"
+        puts "[dry-run] skipping server startup"
       else
-        unicorn_pid =
-          Process.spawn(unicorn_env, File.join(rails_root, "bin", "pitchfork"), pgroup: true)
+        server_pid =
+          Process.spawn(
+            server_env,
+            File.join(rails_root, "bin", "pitchfork"),
+            pgroup: true,
+            out: log_path,
+            err: %i[child out],
+          )
       end
-      wait_for_rails_server(@rails_port)
+
+      wait_for_rails_server(@rails_port, log_path)
+
       yield
     ensure
-      stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
+      stop_server(server_pid, server_env["UNICORN_PID_PATH"]) if server_pid
     end
   end
 
@@ -397,7 +446,9 @@ class QunitRunner
 
     node_modules_outdated =
       begin
-        File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
+        # pnpm copies only the last document of the lockfile into node_modules
+        File.read("node_modules/.pnpm/lock.yaml") !=
+          File.read("pnpm-lock.yaml").split(/^---\n/).last
       rescue Errno::ENOENT
         true
       end
@@ -425,16 +476,16 @@ class QunitRunner
     false
   end
 
-  def build_unicorn_environment(unicorn_port)
-    pid_path = File.join(rails_root, "tmp/pids", "unicorn_test_#{unicorn_port}.pid")
+  def build_server_environment(server_port)
+    pid_path = File.join(rails_root, "tmp/pids", "test_server_#{server_port}.pid")
     env = {
       "RAILS_ENV" => @rails_env || "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => pid_path,
-      "UNICORN_PORT" => unicorn_port.to_s,
+      "UNICORN_PORT" => server_port.to_s,
       "UNICORN_SIDEKIQS" => "0",
       "DISCOURSE_SKIP_CSS_WATCHER" => "1",
-      "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
+      "UNICORN_LISTENER" => "127.0.0.1:#{server_port}",
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
@@ -445,7 +496,7 @@ class QunitRunner
     env
   end
 
-  def wait_for_rails_server(port)
+  def wait_for_rails_server(port, log_path)
     if @dry_run
       puts "[dry-run] skipping Rails server warm-up"
       return
@@ -467,6 +518,9 @@ class QunitRunner
       end
 
       puts "Timed out. Cannot connect to forked server!"
+      puts File.read(log_path) if File.exist?(log_path)
+      puts "\n--- Sockets on port #{port} ---"
+      system("ss -tlnp 'sport = :#{port}' 2>/dev/null || ss -tlnp | grep ':#{port} '")
       exit 1
     end
 
@@ -479,27 +533,48 @@ class QunitRunner
       return
     end
 
-    system("script/assemble_ember_build.rb", chdir: rails_root, exception: true)
+    system(
+      { "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0" },
+      "script/assemble_ember_build.rb",
+      chdir: rails_root,
+      exception: true,
+    )
   end
 
   def build_theme_test_pages(query)
     pages =
       if ENV["THEME_IDS"] && !ENV["THEME_IDS"].empty?
-        ENV["THEME_IDS"]
-          .split("|")
-          .map { |theme_id| "#{@qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+        ENV["THEME_IDS"].split("|").map { |theme_id| "#{@qunit_path}?#{query}&id=#{theme_id}" }
       else
-        ["#{@qunit_path}?#{query}&testem=1"]
+        ["#{@qunit_path}?#{query}"]
       end
 
     pages.shuffle.join(",")
   end
 
+  # Directories are passed as prefixes rather than expanded, to keep the filter within
+  # MAX_FILE_PATH_FILTER_LENGTH
   def build_file_path_filter(paths)
-    return nil if paths.empty?
+    return nil if paths.empty? || paths.any? { |path| core_tests_root?(path) }
 
-    relative_paths = paths.map { |path| convert_to_ember_relative_path(path) }
-    relative_paths.join(",")
+    filter = paths.map { |path| file_path_filter_entry(path) }.uniq.join(",")
+    return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
+
+    abort <<~MESSAGE
+      Error: Too many test files to filter by path. The filter is #{(filter.length / 1024.0).ceil}KB, but the test page URL allows #{MAX_FILE_PATH_FILTER_LENGTH / 1024}KB.
+      Pass directories instead, e.g. bin/qunit frontend/discourse/tests/unit
+    MESSAGE
+  end
+
+  def core_tests_root?(path)
+    File.expand_path(path) == "#{frontend_dir}/tests"
+  end
+
+  def file_path_filter_entry(path)
+    relative = convert_to_ember_relative_path(path)
+    return relative if !File.directory?(path)
+
+    plugin_path?(path) ? "#{relative}/" : "./#{relative}/"
   end
 
   def build_query
@@ -514,13 +589,15 @@ class QunitRunner
     params["theme_id"] = @theme_id if @theme_id
     params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
+    params["report_memory"] = "1" if @report_memory
+    params["testem"] = "1"
 
     encode_query_string(params)
   end
 
-  def stop_unicorn(pid, pid_path)
+  def stop_server(pid, pid_path)
     if @dry_run
-      puts "[dry-run] skipping unicorn shutdown"
+      puts "[dry-run] skipping server shutdown"
       return
     end
     Process.kill("-KILL", pid)
@@ -540,7 +617,7 @@ class QunitRunner
   def resolved_target
     @resolved_target ||=
       begin
-        implicit_target = (target_from_paths(@file_paths) if @file_paths.any?)
+        implicit_target = (target_from_paths(@paths) if @paths.any?)
 
         if @target && implicit_target && @target != implicit_target
           puts "Files are for '#{implicit_target}', but target was configured as '#{@target}'"
@@ -569,7 +646,7 @@ class QunitRunner
   end
 
   def target_from_path(path)
-    match = path.match(%r{(?:^|/)plugins/([^/]+)/})
+    match = path.match(%r{(?:^|/)plugins/([^/]+)(?:/|\z)})
     return "core" unless match
 
     resolve_plugin_namespace(match[1])
@@ -591,6 +668,28 @@ class QunitRunner
 
     str = value.to_s
     str.empty? ? nil : str
+  end
+
+  def boolean_env(name, default:)
+    value = ENV[name]
+    return default if value.nil?
+    return true if %w[1 true].include?(value.downcase)
+    return false if %w[0 false].include?(value.downcase)
+
+    abort "Error: #{name} must be one of: 1, 0, true, false"
+  end
+
+  def positive_integer_env(name, default)
+    value = ENV[name]
+    return default if value.nil?
+
+    positive_integer(Integer(value, exception: false), name)
+  end
+
+  def positive_integer(value, name)
+    abort "Error: #{name} must be greater than 0" if !value || value <= 0
+
+    value
   end
 
   def resolve_plugin_namespace(directory_name)
@@ -617,7 +716,7 @@ class QunitRunner
   end
 
   def normalize_plugin_test_path(path)
-    path.sub(%r{\Atests?/javascripts/}, "")
+    path.to_s.sub(%r{\Atests?/javascripts(?:/|\z)|\Atests?\z}, "")
   end
 
   def plugin_names_from_filter(filter)

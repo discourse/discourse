@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class AuthButtons extends Component {
   @service header;
@@ -31,8 +31,8 @@ export default class AuthButtons extends Component {
         <DButton
           class="btn-primary btn-small login-button"
           @action={{@showLogin}}
-          @label="log_in"
           @icon="user"
+          @label="log_in"
         />
       {{/if}}
     </span>

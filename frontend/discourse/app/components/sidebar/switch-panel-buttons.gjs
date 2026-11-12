@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class SwitchPanelButtons extends Component {
   @service router;
@@ -36,12 +36,12 @@ export default class SwitchPanelButtons extends Component {
   <template>
     {{#each @buttons as |button|}}
       <DButton
-        @action={{fn this.switchPanel button}}
-        @icon={{button.switchButtonIcon}}
-        @disabled={{this.isSwitching}}
-        @translatedLabel={{button.switchButtonLabel}}
-        data-key={{button.key}}
         class="btn-default sidebar__panel-switch-button"
+        data-key={{button.key}}
+        @action={{fn this.switchPanel button}}
+        @disabled={{this.isSwitching}}
+        @icon={{button.switchButtonIcon}}
+        @translatedLabel={{button.switchButtonLabel}}
       />
     {{/each}}
   </template>

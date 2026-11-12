@@ -18,6 +18,10 @@ class RouterStub extends Service {
 
   on() {}
   off() {}
+
+  isActive(routeName) {
+    return routeName === this.currentRouteName;
+  }
 }
 
 export function setupRenderingTest(hooks, opts = {}) {
@@ -27,11 +31,9 @@ export function setupRenderingTest(hooks, opts = {}) {
   opts.stubRouter ??= false;
 
   hooks.beforeEach(function () {
-    if (!hooks.usingDiscourseModule) {
-      this.siteSettings = currentSettings();
-      this.registry ||= this.owner.__registry__;
-      this.container = this.owner;
-    }
+    this.siteSettings = currentSettings();
+    this.registry = this.owner.__registry__;
+    this.container = this.owner;
 
     this.site = Site.current();
     this.session = Session.current();
@@ -68,6 +70,5 @@ export function setupRenderingTest(hooks, opts = {}) {
     }
 
     autoLoadModules(this.owner, this.registry);
-    this.owner.lookup("service:store");
   });
 }

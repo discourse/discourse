@@ -15,7 +15,7 @@ describe ChatSDK::Thread do
     end
 
     context "when missing param" do
-      it "fails" do
+      it "raises a missing keyword error" do
         params.delete(:thread_id)
 
         expect { described_class.update_title(**params) }.to raise_error(
@@ -24,10 +24,24 @@ describe ChatSDK::Thread do
       end
     end
 
+    context "when guardian is silenced" do
+      fab!(:current_user, :user)
+      fab!(:thread_1) { Fabricate(:chat_thread, original_message_user: current_user) }
+
+      before do
+        params[:guardian] = current_user.guardian
+        UserSilencer.new(current_user).silence
+      end
+
+      it "raises a silenced guardian error" do
+        expect { described_class.update_title(**params) }.to raise_error("Guardian is silenced")
+      end
+    end
+
     context "when guardian can't see the channel" do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: Fabricate(:private_category_channel)) }
 
-      it "fails" do
+      it "raises a channel visibility error" do
         params[:guardian] = Fabricate(:user).guardian
 
         expect { described_class.update_title(**params) }.to raise_error(
@@ -37,7 +51,7 @@ describe ChatSDK::Thread do
     end
 
     context "when guardian can't edit the thread" do
-      it "fails" do
+      it "raises a thread permission error" do
         params[:guardian] = Fabricate(:user).guardian
 
         expect { described_class.update_title(**params) }.to raise_error(
@@ -49,7 +63,7 @@ describe ChatSDK::Thread do
     context "when the threading is not enabled" do
       before { thread_1.channel.update!(threading_enabled: false) }
 
-      it "fails" do
+      it "raises a threading-disabled error" do
         expect { described_class.update_title(**params) }.to raise_error(
           "Threading is not enabled for this channel",
         )
@@ -57,7 +71,7 @@ describe ChatSDK::Thread do
     end
 
     context "when the thread doesn't exist" do
-      it "fails" do
+      it "raises a missing-thread error" do
         params[:thread_id] = -999
         expect { described_class.update_title(**params) }.to raise_error(
           "Couldn’t find thread with id: `-999`",
@@ -127,7 +141,7 @@ describe ChatSDK::Thread do
     end
 
     context "when target_message doesn’t exist" do
-      it "fails" do
+      it "raises a missing-message error" do
         expect { described_class.messages(**params, target_message_id: -999) }.to raise_error(
           "Target message doesn't exist",
         )

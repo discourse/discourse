@@ -5,15 +5,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;
+
+  /** @type {string | null | undefined} */
   @tracked newOwner = null;
   @tracked flash;
 
@@ -60,17 +62,17 @@ export default class ChangeOwnerModal extends Component {
 
   @action
   async updateNewOwner(selected) {
-    this.newOwner = selected.firstObject;
+    this.newOwner = selected[0];
   }
 
   <template>
     <DModal
+      class="change-ownership-modal"
       @bodyClass="change-ownership"
       @closeModal={{@closeModal}}
-      @title={{i18n "topic.change_owner.title"}}
       @flash={{this.flash}}
       @flashType="error"
-      class="change-ownership-modal"
+      @title={{i18n "topic.change_owner.title"}}
     >
       <:body>
         <span>
@@ -88,21 +90,23 @@ export default class ChangeOwnerModal extends Component {
         </span>
 
         <EmailGroupUserChooser
-          @value={{this.newOwner}}
           @autofocus={{true}}
           @onChange={{this.updateNewOwner}}
           @options={{hash
             maximum=1
             filterPlaceholder="topic.change_owner.placeholder"
+            filterIcon="magnifying-glass"
+            useHeaderFilter=true
           }}
+          @value={{this.newOwner}}
         />
       </:body>
       <:footer>
         <DButton
-          {{on "click" this.changeOwnershipOfPosts}}
+          class="btn-primary"
           @disabled={{this.buttonDisabled}}
           @label={{if this.saving "saving" "topic.change_owner.action"}}
-          class="btn-primary"
+          {{on "click" this.changeOwnershipOfPosts}}
         />
       </:footer>
     </DModal>

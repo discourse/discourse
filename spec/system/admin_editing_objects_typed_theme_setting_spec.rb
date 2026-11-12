@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin editing objects type", type: :system do
+RSpec.describe "Admin editing objects type" do
   let(:admin_objects_setting_editor_page) { PageObjects::Pages::AdminObjectsSettingEditor.new }
 
   fab!(:admin)
@@ -9,26 +9,23 @@ RSpec.describe "Admin editing objects type", type: :system do
   describe "when editing a theme setting of objects type" do
     fab!(:theme)
 
-    let(:objects_setting) do
+    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+
+    before do
       theme.set_field(
         target: :settings,
         name: "yaml",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        value: File.read(Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")),
       )
 
       theme.save!
-      theme.settings[:objects_setting]
     end
 
-    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
-
-    before { objects_setting }
-
-    it "should display the right label and description for each property if the label and description has been configured in a locale file" do
+    it "displays property labels and descriptions from the locale file" do
       theme.set_field(
         target: :translations,
         name: "en",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        value: File.read(Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")),
       )
 
       theme.save!
@@ -59,7 +56,7 @@ RSpec.describe "Admin editing objects type", type: :system do
       expect(admin_objects_setting_editor_page).to have_setting_field_label("url", "URL")
     end
 
-    it "should allow admin to edit the theme setting of objects type" do
+    it "allows admins to edit an objects theme setting" do
       visit("/admin/customize/themes/#{theme.id}")
 
       expect(admin_customize_themes_page).to have_no_overriden_setting("objects_setting")
@@ -98,12 +95,8 @@ RSpec.describe "Admin editing objects type", type: :system do
     end
 
     it "displays the validation errors when an admin tries to save the setting with an invalid value" do
-      visit("/admin/customize/themes/#{theme.id}")
-
-      admin_objects_theme_setting_editor =
-        admin_customize_themes_page.click_edit_objects_setting_button("objects_setting")
-
-      admin_objects_theme_setting_editor
+      admin_objects_setting_editor_page
+        .visit_theme(theme, "objects_setting")
         .fill_in_field("name", "")
         .click_link("section 2")
         .fill_in_field("name", "")
@@ -114,6 +107,29 @@ RSpec.describe "Admin editing objects type", type: :system do
       expect(find(".schema-setting-editor__errors")).to have_text(
         "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
       )
+    end
+
+    it "allows an admin to type a decimal into a float property" do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        ratios:
+          type: objects
+          default:
+            - {}
+          schema:
+            name: ratio
+            properties:
+              ratio:
+                type: float
+      YAML
+      theme.save!
+
+      admin_objects_setting_editor_page
+        .visit_theme(theme, "ratios")
+        .type_in_field("ratio", "7.5")
+        .save
+
+      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+      expect(theme.reload.settings[:ratios].value).to eq([{ "ratio" => 7.5 }])
     end
 
     it "allows an admin to edit a theme setting of objects type via the settings editor" do
@@ -160,7 +176,7 @@ RSpec.describe "Admin editing objects type", type: :system do
   describe "when editing a site setting of objects type" do
     before do
       SiteSetting.load_settings(
-        File.join("#{Rails.root}/spec/fixtures/site_settings/object_settings.yml"),
+        Rails.root.join("spec/fixtures/site_settings/object_settings.yml").to_s,
       )
     end
 

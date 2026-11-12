@@ -22,6 +22,7 @@ class Auth::Result
     failed_reason
     failed_code
     associated_groups
+    user_field_values
     overrides_email
     overrides_username
     overrides_name
@@ -40,6 +41,7 @@ class Auth::Result
     extra_data
     skip_email_validation
     associated_groups
+    user_field_values
     overrides_email
     overrides_username
     overrides_name
@@ -83,7 +85,13 @@ class Auth::Result
     change_made = false
     if (SiteSetting.auth_overrides_username? || overrides_username) &&
          (resolved_username = resolve_username).present?
-      change_made = UsernameChanger.override(user, resolved_username)
+      if user.new_record?
+        user.username = resolved_username
+        change_made = true
+      else
+        user.username = user.username_in_database
+        change_made = UsernameChanger.override(user, resolved_username)
+      end
     end
 
     if (
@@ -122,6 +130,13 @@ class Auth::Result
 
       user.update(associated_group_ids: associated_group_ids)
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
+    end
+
+    if user && user_field_values.present?
+      user_field_values.each do |field_id, value|
+        user.custom_fields["user_field_#{field_id}"] = value
+      end
+      user.save_custom_fields
     end
 
     # refreshes automatic group membership (despite the name, it doesn't change TLs)
@@ -172,6 +187,7 @@ class Auth::Result
 
     if SiteSetting.enable_names?
       result[:name] = name.presence
+      result[:name_from_provider] = name.present?
       result[:name] ||= User.suggest_name(username || email) if can_edit_name
     end
 
@@ -205,7 +221,7 @@ class Auth::Result
 
     UserNameSuggester.suggest(
       *username_suggester_attributes,
-      current_username: user&.username,
+      current_username: user&.username_in_database,
       allow_generic_fallback: false,
     )
   end

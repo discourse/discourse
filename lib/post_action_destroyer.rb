@@ -53,6 +53,7 @@ class PostActionDestroyer
     ).performed!
 
     post_action.remove_act!(@destroyed_by)
+    remove_reviewable_score if post_action.is_flag?
     if post_action.staff_took_action
       post_action.post.acting_user = @destroyed_by
       post_action.post.unhide!
@@ -80,10 +81,6 @@ class PostActionDestroyer
 
   protected
 
-  def self.notify_types
-    @notify_types ||= PostActionType.notify_flag_types.keys
-  end
-
   def notify_subscribers
     name = post_action_type_view.types[@post_action_type_id]
     if name == :like
@@ -91,9 +88,26 @@ class PostActionDestroyer
         :unliked,
         { likes_count: @post.like_count, user_id: @destroyed_by.id },
       )
-    elsif self.class.notify_types.include?(name)
+    elsif post_action_type_view.notify_flag_type_ids.include?(@post_action_type_id)
       @post.publish_change_to_clients!(:acted)
     end
+  end
+
+  def remove_reviewable_score
+    reviewable = @post.reviewable_flag
+    return if reviewable.blank?
+
+    deleted_count =
+      ReviewableScore
+        .pending
+        .where(
+          reviewable: reviewable,
+          user: @destroyed_by,
+          reviewable_score_type: @post_action_type_id,
+        )
+        .delete_all
+
+    reviewable.recalculate_score if deleted_count > 0
   end
 
   def guardian

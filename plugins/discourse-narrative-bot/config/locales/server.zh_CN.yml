@@ -248,11 +248,11 @@ zh_CN:
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后在选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
         instructions: |-
-          如果你想了解更多信息，请选择下面的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 和 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **将此个人消息加入书签**。如果这样做，你未来可能会获得 :gift:！
+          如果你想了解更多信息，请选择下面的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 和 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **将此个人消息添加为书签**。如果这样做，你未来可能会获得 :gift:！
         reply: |-
           太棒了！现在，您随时可以轻松地从[您个人资料上的“书签”标签页](%{bookmark_url})返回到我们的对话。只需在右上角 &#8599; 选择您的个人资料照片即可
         not_found: |-
-          哎呀，我没有在此话题中看到任何书签。你看到每个帖子下方的“加入书签”按钮了吗？如果需要，使用“显示更多”<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示更多操作。
+          哎呀，我没有在此话题中看到任何书签。你看到每个帖子下方的“添加为书签”按钮了吗？如果需要，使用“显示更多”<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示更多操作。
       emoji:
         instructions: |-
           你可能已经看到我在回复中使用了小图片 :blue_car::dash:，这些图片被称为[表情符号](https://en.wikipedia.org/wiki/Emoji)。你可以在回复中**添加表情符号**吗？任何一个都可以：

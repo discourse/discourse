@@ -77,6 +77,14 @@ RSpec.describe EmailStyle do
         expect(matches[1]).to include("padding-top:5px") # div.body
       end
 
+      it "does not include the author's name when names are disabled" do
+        SiteSetting.enable_names = false
+        SiteSetting.prioritize_username_in_ux = false
+
+        expect(mail_html).to include(response_by_user.username)
+        expect(mail_html).not_to include(response_by_user.name)
+      end
+
       # TODO: translation override
     end
 
@@ -96,13 +104,6 @@ RSpec.describe EmailStyle do
             SiteSetting.default_locale,
             "user_notifications.signup.text_body_template",
             "CLICK THAT LINK: %{base_url}/u/activate-account/%{email_token}",
-          )
-        end
-
-        after do
-          TranslationOverride.revert!(
-            SiteSetting.default_locale,
-            ["user_notifications.signup.text_body_template"],
           )
         end
 

@@ -1,3 +1,4 @@
+import EmbedMode from "discourse/lib/embed-mode";
 import Session from "discourse/models/session";
 
 const ANON_TOPIC_IDS = 2;
@@ -8,7 +9,7 @@ const PROMPT_HIDE_DURATION = ONE_DAY;
 export default {
   initialize(owner) {
     const appEvents = owner.lookup("service:app-events");
-    const { canSignUp } = owner.lookup("controller:application");
+    const applicationController = owner.lookup("controller:application");
     const currentUser = owner.lookup("service:current-user");
     const keyValueStore = owner.lookup("service:key-value-store");
     const screenTrack = owner.lookup("service:screen-track");
@@ -23,14 +24,18 @@ export default {
     if (!enable_signup_cta) {
       return;
     }
-    if (!canSignUp) {
+    if (login_required) {
       return;
     }
-    if (login_required) {
+    if (EmbedMode.enabled) {
       return;
     }
 
     function checkSignupCtaRequirements() {
+      if (!applicationController.canSignUp) {
+        return; // signup is unavailable
+      }
+
       if (session.get("showSignupCta")) {
         return; // already shown
       }

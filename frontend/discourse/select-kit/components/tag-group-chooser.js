@@ -9,7 +9,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import TagChooserRow from "./tag-chooser-row";
+import TagChooserRow from "./tag-chooser-row.gjs";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({
@@ -22,10 +22,6 @@ import TagChooserRow from "./tag-chooser-row";
 export default class TagGroupChooser extends MultiSelectComponent {
   @service tagUtils;
 
-  modifyComponentForRow() {
-    return TagChooserRow;
-  }
-
   @computed("tagGroups.[]")
   get value() {
     return uniqueItemsFromArray(makeArray(this.tagGroups));
@@ -36,6 +32,10 @@ export default class TagGroupChooser extends MultiSelectComponent {
     return uniqueItemsFromArray(makeArray(this.tagGroups)).map((t) =>
       this.defaultItem(t, t)
     );
+  }
+
+  modifyComponentForRow() {
+    return TagChooserRow;
   }
 
   validateCreate(filter, content) {
@@ -73,7 +73,7 @@ export default class TagGroupChooser extends MultiSelectComponent {
 
   @bind
   _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return [];
     }
     return json.results

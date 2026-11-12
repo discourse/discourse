@@ -1,24 +1,24 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import PlaceholdersList from "../placeholders-list";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import PlaceholdersList from "../placeholders-list.gjs";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class TextField extends BaseField {
   <template>
     <section class="field text-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="field-wrapper">
             <Input
-              @value={{@field.metadata.value}}
               disabled={{@field.isDisabled}}
-              {{on "input" this.mutText}}
               name={{@field.name}}
+              @value={{@field.metadata.value}}
+              {{on "input" this.mutText}}
             />
 
             <DAFieldDescription @description={{@description}} />
@@ -26,8 +26,8 @@ export default class TextField extends BaseField {
             {{#if this.displayPlaceholders}}
               <PlaceholdersList
                 @currentValue={{@field.metadata.value}}
-                @placeholders={{@placeholders}}
                 @onCopy={{this.mutValue}}
+                @placeholders={{@placeholders}}
               />
             {{/if}}
           </div>

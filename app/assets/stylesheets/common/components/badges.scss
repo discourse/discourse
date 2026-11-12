@@ -6,7 +6,9 @@
 // --------------------------------------------------
 :root {
   --category-badge-size: 0.75em;
-  --category-badge-border-radius: 0px;
+  --category-badge-border-radius: 2px;
+  --d-new-indicator-size: 0.5rem;
+  --d-new-indicator-color: var(--tertiary-med-or-tertiary);
 }
 
 %badge {
@@ -122,19 +124,33 @@
     font-weight: dark-light-choose(normal, bold);
   }
 
-  &.new-topic {
+  &.new-topic,
+  &.new-replies {
     background-color: transparent;
     padding-left: 0.15em;
   }
 
-  &.new-topic::before {
+  &.new-topic::before,
+  &.new-replies::before {
     content: "";
-    background: var(--tertiary-med-or-tertiary);
     display: inline-block;
-    height: 8px;
-    width: 8px;
-    border-radius: 50%;
+    width: var(--d-new-indicator-size);
+    height: var(--d-new-indicator-size);
+    border-radius: 100vmax;
+    background: var(--d-new-indicator-color);
   }
+}
+
+// "New/unread" dot. Contexts resize or recolor it by setting
+// --d-new-indicator-size / --d-new-indicator-color rather than the box,
+// so dots stay in proportion wherever they render.
+.d-new-indicator {
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--d-new-indicator-size);
+  height: var(--d-new-indicator-size);
+  border-radius: 100vmax;
+  background: var(--d-new-indicator-color);
 }
 
 // Posts badge

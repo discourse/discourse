@@ -6,6 +6,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :created_post_id,
     :created_post_topic_id,
     :remove_reviewable_ids,
+    :reviewable_updates,
     :version,
     :reviewable_count,
     :unseen_reviewable_count,
@@ -13,6 +14,17 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def success
     object.success?
+  end
+
+  def reviewable_updates
+    Reviewable
+      .where(id: object.affected_reviewable_ids)
+      .pluck(:id, :status)
+      .to_h { |id, status| [id, { status: Reviewable.statuses[status] }] }
+  end
+
+  def include_reviewable_updates?
+    object.affected_reviewable_ids.present?
   end
 
   def version

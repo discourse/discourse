@@ -1,12 +1,21 @@
 @use "sass:math";
+@use "lib/viewport";
 
-.fk-d-menu[data-identifier="usercard"] {
+.fk-d-menu[data-identifier="usercard"],
+.fk-d-menu[data-identifier="category-card"] {
   max-width: calc(100vw - 2em);
   width: auto;
 
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
+    border-radius: var(--d-border-radius-large);
+  }
+
+  @include viewport.until(sm) {
+    &[data-content] {
+      z-index: z("max");
+    }
   }
 }
 
@@ -41,9 +50,10 @@
   }
 }
 
-// shared styles for user and group cards
+// shared styles for user, group, and category cards
 .user-card,
-.group-card {
+.group-card,
+.category-card {
   --card-width: 39em;
   --avatar-width: 8em;
   --avatar-margin: -3.3em; // extends the avatar above the card
@@ -52,16 +62,24 @@
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  position: unset !important;
-  margin: 0 !important;
-  border-radius: var(--d-border-radius) !important;
-  box-shadow: unset !important;
-  z-index: unset !important;
+  position: unset;
+  margin: 0;
+  border-radius: var(--d-border-radius-large);
+  box-shadow: unset;
+  z-index: unset;
+
+  @include viewport.until(sm) {
+    box-sizing: border-box;
+    max-width: 95vw;
+    max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
+  }
 
   .card-content {
+    container-type: inline-size;
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-border-radius-large);
+    border: 5px solid var(--secondary);
 
     &::after {
       content: "";
@@ -85,13 +103,31 @@
 
   // avatar - names - controls
   .first-row {
+    display: flex;
+
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+
     .names {
       padding-left: 1.25em;
+      flex: 1 1 auto;
+
+      @include viewport.until(sm) {
+        box-sizing: border-box;
+        flex: 1 1 0;
+      }
 
       .user-profile-link {
         display: flex;
         align-items: center;
         outline: none;
+
+        &:focus-visible {
+          border: 1px solid;
+
+          @include default-focus;
+        }
       }
 
       .d-icon {
@@ -114,8 +150,41 @@
       list-style-type: none;
       margin: 0;
 
+      @include viewport.until(sm) {
+        width: 100%; // always wraps to next line
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1em;
+        gap: 0.5em;
+
+        li {
+          flex: 1 0 45%;
+          min-width: 8em;
+
+          &:empty {
+            display: none;
+          }
+
+          button {
+            margin: 0;
+
+            .d-button-label {
+              @include ellipsis;
+            }
+          }
+        }
+      }
+
+      @include viewport.from(sm) {
+        max-width: 225px;
+      }
+
       button {
         width: 100%;
+
+        @include viewport.from(sm) {
+          min-width: 150px;
+        }
       }
     }
   }
@@ -127,16 +196,29 @@
   .names__primary {
     @include ellipsis;
     line-height: var(--line-height-medium);
-    font-size: var(--font-up-5);
+    font-size: var(--font-up-3);
     font-weight: bold;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-5);
+    }
 
     .d-icon {
       color: var(--primary);
+      font-size: var(--font-down-1);
+
+      @include viewport.until(sm) {
+        font-size: var(--font-down-2);
+      }
     }
   }
 
   .names__secondary {
     font-size: var(--font-up-1);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-0);
+    }
   }
 
   .metadata {
@@ -179,15 +261,21 @@
 
   // avatar - names - controls
   .first-row {
-    display: flex;
-
     .avatar-placeholder {
       width: var(--avatar-width);
       height: var(--avatar-width);
     }
 
-    .user-card-avatar {
+    .user-card-avatar-wrapper {
       margin-top: var(--avatar-margin);
+      position: relative;
+
+      @include viewport.until(sm) {
+        flex: 0 0 auto;
+      }
+    }
+
+    .user-card-avatar {
       max-height: var(--avatar-width);
       position: relative;
 
@@ -330,6 +418,19 @@
     margin: 0;
     text-align: left;
 
+    @include viewport.until(sm) {
+      max-height: 40vh;
+      overflow-y: auto;
+
+      .public-user-field {
+        @include line-clamp(3);
+      }
+    }
+
+    @media screen and (height <= 550px) {
+      max-height: 12vh;
+    }
+
     .user-field-value-list-item:not(:last-of-type) {
       &::after {
         // create comma separated list
@@ -345,12 +446,33 @@
     flex-wrap: wrap;
     gap: var(--space-1);
 
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
       border: 1px solid var(--content-border-color);
       color: var(--primary);
       border-radius: var(--d-border-radius);
+
+      @include viewport.until(sm) {
+        display: flex;
+        margin: 0;
+        width: 100%;
+
+        .badge-display-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      @include viewport.from(sm) {
+        display: block;
+        max-width: 185px;
+      }
     }
 
     .user-card-badge-link {
@@ -361,32 +483,77 @@
     .more-user-badges {
       vertical-align: top;
       display: inline-block;
+
+      @include viewport.until(sm) {
+        display: flex;
+        box-sizing: border-box;
+
+        a {
+          width: 100%;
+          display: flex;
+        }
+      }
     }
 
-    .more-user-badges a {
-      @extend .user-badge;
+    .more-user-badges {
+      @include viewport.from(sm) {
+        max-width: 125px;
+      }
+
+      a {
+        @extend .user-badge;
+      }
     }
   }
 
   .user-status {
     display: flex;
     align-items: center;
+    gap: var(--space-1);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(calc((var(--avatar-width) / 3)));
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100cqi - 50% - var(--avatar-width) / 3);
+    background: var(--primary-very-low);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 9999px;
+    border: 5px solid var(--secondary);
+    box-shadow:
+      0 0 0 1px var(--primary-low),
+      0 2px 12px rgb(0, 0, 0, 0.1);
+    font-size: var(--font-down-1);
 
-    img.emoji {
-      margin-right: 0.3em;
+    &.--empty {
+      font-style: italic;
+
+      .user-status__description {
+        padding-inline-end: 0.15em;
+      }
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+    }
+
+    .emoji {
+      width: 1.35em;
+      height: 1.35em;
     }
 
     .relative-date {
       flex: 1 0 auto;
       text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 0.5em;
-      margin-left: 0.6em;
+      font-size: var(--font-down-2);
+      margin-left: var(--space-half);
       color: var(--primary-medium);
     }
 
     &__description {
       @include ellipsis;
+      min-width: 0;
     }
   }
 }
@@ -395,28 +562,13 @@
 .group-card {
   // avatar - names and controls
   .first-row {
-    display: flex;
-
     .group-card-avatar {
       margin-top: var(--avatar-margin);
     }
 
     .avatar-flair {
-      display: flex;
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: var(--avatar-width);
-      height: var(--avatar-width);
+      --avatar-flair-size: var(--avatar-width);
       color: var(--primary);
-
-      .d-icon {
-        margin: auto;
-        font-size: calc(var(--avatar-width) / 1.5);
-      }
-
-      &.rounded {
-        border-radius: 50%;
-      }
     }
   }
 
@@ -439,6 +591,36 @@
         max-height: 60px;
         overflow: hidden;
       }
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .card-cloak {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: z("mobile-composer") + 1; // 1101
+    height: 100vh;
+    width: 100vw;
+    background-color: #000;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s,
+      visibility 0s 0.3s;
+
+    &.--visible {
+      pointer-events: all;
+      opacity: 0.6;
+      visibility: visible;
+      transition:
+        opacity 0.3s,
+        visibility 0s;
+    }
+
+    @media (prefers-reduced-motion) {
+      transition-duration: 0s;
     }
   }
 }

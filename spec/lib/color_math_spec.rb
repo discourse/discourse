@@ -2,20 +2,31 @@
 
 describe ColorMath do
   describe "#brightness" do
-    it "works" do
+    it "returns the brightness of grayscale colors" do
       expect(ColorMath.brightness("000")).to eq(0)
       expect(ColorMath.brightness("fff")).to eq(255)
     end
   end
 
   describe "#scale_color_lightness" do
-    it "works" do
+    it "scales the lightness of grayscale colors" do
       expect(ColorMath.scale_color_lightness("000", 0.5)).to eq("808080")
       expect(ColorMath.scale_color_lightness("fff", -0.5)).to eq("808080")
     end
 
     it "works with non-greyscale colors" do
       expect(ColorMath.scale_color_lightness("f00", 0.5)).to eq("ff8080")
+    end
+  end
+
+  describe "#contrast_ratio" do
+    it "follows WCAG 2 and doesn't depend on the order of the colors" do
+      expect(ColorMath.contrast_ratio("000000", "ffffff")).to eq(21.0)
+      expect(ColorMath.contrast_ratio("fff", "ffffff")).to eq(1.0)
+      expect(ColorMath.contrast_ratio("767676", "ffffff")).to be_within(0.005).of(4.54)
+      expect(ColorMath.contrast_ratio("ffffff", "767676")).to eq(
+        ColorMath.contrast_ratio("767676", "ffffff"),
+      )
     end
   end
 

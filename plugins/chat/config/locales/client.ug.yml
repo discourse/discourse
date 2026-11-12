@@ -65,6 +65,8 @@ ug:
       cancel_reply: "جاۋابتىن ۋازكەچ"
       chat_channels: "قانال"
       starred: "يۇلتۇزلانغان"
+      pinned_bar:
+        title: "چوققىلاندى"
       pinned: "چوققىلاندى"
       browse_all_channels: "بارلىق قانالغا كۆز يۈگۈرتىدۇ"
       see_in: "قاراڭ"
@@ -80,8 +82,6 @@ ug:
           other: "بۇ %{count} ئۇچۇرنى راستتىنلا ئۆچۈرەمسىز؟"
       channel_settings:
         title: "قانال تەڭشىكى"
-        edit: "تەھرىر"
-        add: "قوش"
         close_channel: "قانالنى تاقا"
         open_channel: "ئوچۇق قانال"
         archive_channel: "ئارخىپ قانىلى"
@@ -115,7 +115,7 @@ ug:
         process_started: "قانالنى ئۆچۈرۈش جەريانى باشلاندى. بۇ كۆزنەك تېزلا تاقىلىدۇ، ئۆچۈرۈلگەن قانالنى ئەمدى كۆرەلمەيسىز."
       channels_list_popup:
         browse: "قانالغا كۆز يۈگۈرت"
-        create: "يېڭى قانال"
+        create: "يېڭى قانال..."
       close: "تاقا"
       remove: "چىقىرىۋەت"
       collapse: "سۆھبەت تارتمىسىنى يىغ"
@@ -130,8 +130,6 @@ ug:
       muted: "ئۈنسىزلەندى"
       joined: "قوشۇلدى"
       empty_state:
-        direct_message_cta: "شەخسىي سۆھبەت باشلايدۇ"
-        direct_message: "سىزمۇ بىر ياكى بىر قانچە ئىشلەتكۈچى بىلەن شەخسىي سۆھبەت باشلىيالايسىز."
         title: "ھېچقانداق قانال تېپىلمىدى"
         my_threads: "ھازىرچە ھېچقانداق تېما يوق. سىز قاتناشقان تېما بۇ يەردە كۆرسىتىلىدۇ."
       email_frequency:
@@ -146,11 +144,6 @@ ug:
         never: "ھەرگىز"
       separate_sidebar_mode:
         title: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ"
-      send_shortcut:
-        enter:
-          label: "Enter بېسىلسا يوللايدۇ"
-        meta_enter:
-          label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"
@@ -246,8 +239,6 @@ ug:
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
       chat_notifications_title: "سۆھبەت ئۇقتۇرۇشى"
-      only_chat_push_notifications:
-        title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
       ignore_channel_wide_mention:
         title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
       show_thread_title_prompts:
@@ -278,7 +269,6 @@ ug:
       retry_staged_message:
         title: "تور خاتالىقى"
         action: "قايتا يوللامدۇ؟"
-      unreliable_network: "تور مۇقىم ئەمەس، ئۇچۇر يوللاش ۋە دەسلەپكى نۇسخىدا ساقلاش ئىشلىمەسلىكى مۇمكىن"
       bookmark_message: "خەتكۈچ"
       bookmark_message_edit: "خەتكۈچ تەھرىر"
       restore: "ئۆچۈرۈلگەن ئۇچۇرنى ئەسلىگە قايتۇر"
@@ -296,8 +286,6 @@ ug:
         title: "ئۈستەل يۈزى سۆھبەت ئۇقتۇرۇشىنىڭ ئاۋازى"
       sounds:
         none: "يوق"
-        bell: "قوڭغۇراق"
-        ding: "دىڭ"
       title: "سۆھبەت"
       title_capitalized: "سۆھبەت"
       upload: "ھۆججەت يۈكلە"
@@ -328,6 +316,8 @@ ug:
         filter_closed: تاقالدى
         filter_archived: ئارخىپلاشتۇرۇلغان
         filter_input_placeholder: ئىسمى بويىچە قانال ئىزدە
+        filter_joined_all: "ھەممىسى"
+        filter_joined_joined: "قوشۇلدى"
       chat_message_separator:
         today: بۈگۈن
         yesterday: تۈنۈگۈن
@@ -336,21 +326,22 @@ ug:
       members_view:
         filter_placeholder: ئەزا ئىزدە
         add_member: ئەزا قوش
-        back_to_settings: "تەڭشەكلەرگە قايت"
       about_view:
         associated_topic: ئۇلانغان تېما
         associated_category: ئۇلانغان سەھىپە
-        title: ماۋزۇ
         name: ئىسمى
         description: چۈشەندۈرۈش
       channel_info:
         back_to_all_channels: "بارلىق قانالل"
         back_to_channel: "كەينى"
+        nav_label: "قانال ئۇچۇرى"
         tabs:
           members: ئەزا
+          preferences: مايىللىق
           settings: تەڭشەك
           search: ئىزدە
         remove_member: "چىقىرىۋەت"
+        members_title: "%{channel} ئەزا"
       new_message_modal:
         title: ئۇچۇر يوللا
         add_user_long: <kbd>shift + چېكىش</kbd> ياكى <kbd>shift + enter</kbd><span>قوش @%{username}</span>
@@ -370,15 +361,11 @@ ug:
         create_new_group_chat: "گۇرۇپپا سۆھبىتى قۇر"
         group_with_too_many_members: "ئەزالىرى بەك كۆپ (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: قانال تەھرىر
         input_placeholder: ئات قوش
         slug_description: تور ئادرېسىدا قانال ئىسمىنى ئىشلەتمەي قانال قىسقارتىلما ئىشلىتىدۇ
         name: قانال ئىسمى
-        slug: قانال قىسقارتىلمىسى (تاللاشچان)
       channel_edit_description_modal:
-        title: چۈشەندۈرۈش تەھرىر
         input_placeholder: چۈشەندۈرۈش قوش
-        description: كىشىلەرگە بۇ قانال ھەققىدە چۈشەندۈرۈش بېرىدۇ
       direct_message_creator:
         add_to_channel: "قانالغا قوش"
         title: يېڭى ئۇچۇر
@@ -395,6 +382,9 @@ ug:
         memberships_count:
           one: "%{count} ئەزا"
           other: "%{count} ئەزا"
+        preview_card:
+          log_in: "تىزىمغا كىرىش"
+          sign_up: "تىزىملىتىڭ"
       create_channel:
         threading:
           label: "تېما رەتلەشنى قوزغات"
@@ -431,9 +421,8 @@ ug:
             one: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
             other: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
         create: "قانال قۇر"
-        description: "چۈشەندۈرۈش (تاللاشچان)"
+        description: "چۈشەندۈرۈش"
         name: "قانال ئىسمى"
-        slug: "قانال قىسقارتىلمىسى (تاللاشچان)"
         title: "يېڭى قانال"
         type: "تىپى"
         types:
@@ -470,7 +459,6 @@ ug:
         always: "ھەممە پائالىيەت ئۈچۈن"
       settings:
         channel_wide_mentions_label: "@All ۋە @here ئاتاشقا يول قويىدۇ"
-        channel_wide_mentions_description: "ئىشلەتكۈچى @all ئارقىلىق #%{channel} نىڭ ھەممە ئەزالىرىغا ياكى @here ئارقىلىق نۆۋەتتىكى ئاكتىپ ئىشلەتكۈچىگە ئۇقتۇرالايدۇ"
         channel_threading_label: "تېما رەتلەش"
         channel_threading_description: "تېما رەتلەش قوزغىتىلسا، سۆھبەت ئۇچۇرىغا جاۋاب بېرىش ئايرىم سۆھبەت ھاسىل قىلىدۇ، بۇ ئاساسىي قانالنىڭ يېنىدا بولىدۇ."
         auto_join_users_label: "ئىشلەتكۈچىنى ئاپتوماتىك قوش"
@@ -481,6 +469,9 @@ ug:
         follow: "قوشۇل"
         followed: "قوشۇلدى"
         mute: "قانالنى ئۈنسىزلە"
+        muted_until_hint: "%{until} غىچە"
+        mute_options:
+          "off": "تاقاق"
         threading_enabled: "قوزغىتىلدى"
         threading_disabled: "چەكلەندى"
         muted_on: "ئوچۇق"
@@ -490,9 +481,6 @@ ug:
         save: "ساقلا"
         saved: "ساقلاندى"
         unfollow: "ئايرىل"
-        admin_title: "باشقۇرغۇچى"
-        settings_title: "تەڭشەك"
-        info_title: "قانال ئۇچۇرى"
         category_label: "سەھىپە"
         history_label: "تارىخ"
         members_label: "ئەزا"
@@ -518,14 +506,19 @@ ug:
       direct_messages:
         title: "بىۋاسىتە ئۇچۇر"
         aria_label: "بىۋاسىتە ئۇچۇرغا ئالماشتۇر"
-        new: "شەخسىي سۆھبەت قۇر"
+        new_group: "يېڭى گۇرۇپپا سۆھبىتى"
         create: "باشلا"
-        leave: "بۇ شەخسىي سۆھبەتتىن ئايرىل"
-        close: "بۇ شەخسىي سۆھبەتنى تاقا"
+        leave: "قانالدىن ئايرىل"
+        close: "قانالنى تاقا"
         cannot_create: "كەچۈرۈڭ، بىۋاسىتە ئۇچۇر يوللىيالمايسىز."
       channel_list:
         title: "قانال"
         aria_label: "قانال تىزىمىغا ئالماش"
+        options:
+          filter: "سۈزگۈچ"
+        filter:
+          all: "بارلىق قانالل"
+          mentions: "ئاتاش"
       incoming_webhooks:
         back: "كەينى"
         channel_placeholder: "قانال تاللىنىدۇ"
@@ -675,11 +668,6 @@ ug:
           direct_html: '<span>%{username}</span> <span>«%{channel}» دا سىزنى ئاتىدى</span>'
           other_plain: '«%{channel}» دا «%{identifier}» ئاتالدى'
           other_html: '<span>%{username}</span> <span>«%{channel}» دا %{identifier} ئاتالدى</span>'
-        direct_message_chat_mention:
-          direct: "شەخسىي سۆھبەتتە ئاتالدىڭىز"
-          direct_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە سىزنى ئاتىدى</span>"
-          other_plain: "شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
-          other_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە %{identifier} ئاتالدى</span>"
         chat_message: "يېڭى سۆھبەت ئۇچۇرى"
         chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
       titles:
@@ -748,9 +736,27 @@ ug:
         chat:
           title: سۆھبەت
     sidebar:
-      start_new_dm:
-        text: يېڭى بىۋاسىتە ئۇچۇر باشلا
-        title: شەخسىي سۆھبەت قۇر
       panels:
         chat:
           label: "سۆھبەت"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "سۆھبەت ئۇچۇرى يوللا"
+      chat_message_created:
+        channel_id: "قانال"
+      send_chat_message:
+        targets:
+          channel: "قانال"
+        channel_id: "قانال"
+        message: "ئۇچۇر"
+        actor_username: "يوللىغۇچى"
+      chat_approval:
+        message: "ئۇچۇر"
+        buttons: "توپچە"
+        value: "قىممەت"
+        style: "ئۇسلۇب"
+        style_default: "كۆڭۈلدىكى"
+        style_primary: "ئاساسىي"
+        style_success: "مۇۋەپپەقىيەتلىك"
+        icon: "سىنبەلگە"
+        channel_id: "قانال"

@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class Transcript extends DiscourseRoute {
@@ -16,7 +16,7 @@ export default class Transcript extends DiscourseRoute {
     }
 
     await this.router
-      .replaceWith(`discovery.${defaultHomepage()}`)
+      .replaceWith(homepageNavigationDestination())
       .followRedirects();
 
     try {

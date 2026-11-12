@@ -6,21 +6,23 @@
 
 sl:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Raziskovalec podatkov"
     errors:
       explorer:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
         dirty: "Pred zagonom morate poizvedbo shraniti."
     explorer:
-      default_query: "Privzeto"
       or: "ali"
       admins_only: "Raziskovalec podatkov je na voljo samo skrbnikom."
       allow_groups: "Dovoli skupinam dostop do te poizvedbe"
       title: "Raziskovalec podatkov"
-      create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
-      import:
-        label: "Uvozi"
+      ai:
+        generate: "Ustvari"
       help:
         label: "Pomoč"
       schema:
@@ -32,32 +34,36 @@ sl:
           yes: "Da"
           no: "Ne"
           null_: "Null"
-      export: "Izvozi"
       run: "Zaženi"
-      edit: "Uredi"
       delete: "Izbriši"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabela"
-      show_graph: "Graf"
-      others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Stolpični"
       run_time: "Poizvedba končana v %{value} ms."
       result_count:
         one: "%{count} zadetek."
         two: "%{count} zadetka."
         few: "%{count} zadetki."
         other: "%{count} zadetkov."
-      query_name: "Poizvedba"
+      name: "Ime"
       query_groups: "Skupine"
+      query_tags: "Oznake"
       link: "Povezava za"
       report_name: "Poročilo"
       query_description: "Opis"
       query_time: "Zadnja izvedba"
       query_user: "Ustvaril"
       column: "Stolpec %{number}"
-      explain_label: "Vključi načrt poizvedbe?"
       reset_params: "Ponastavi"
-      search_placeholder: "Išči..."
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
     group:
       reports: "Poročila"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Raziskovalec podatkov"
+      sql:
+        query_id: "Poizvedba"
+        param_value: "Stanje"
+        output:
+          results: "Rezultati"

@@ -1,9 +1,9 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
+import ReactionsTopics from "../fixtures/reactions-topic-fixtures.js";
 
-acceptance("Discourse Reactions - API Error Rollback", function (needs) {
+acceptance("API Error Rollback", function (needs) {
   needs.user();
 
   needs.settings({

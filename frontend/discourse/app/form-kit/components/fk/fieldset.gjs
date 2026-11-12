@@ -1,7 +1,7 @@
 import FKText from "discourse/form-kit/components/fk/text";
 
 const FKFieldset = <template>
-  <fieldset name={{@name}} class="form-kit__fieldset" ...attributes>
+  <fieldset class="form-kit__fieldset" name={{@name}} ...attributes>
     {{#if @title}}
       <legend class="form-kit__fieldset-title">{{@title}}</legend>
     {{/if}}

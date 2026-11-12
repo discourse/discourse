@@ -4,17 +4,64 @@
 // not provide an accurate lookup for hashtags without a ::type suffix in those
 // cases if there are conflcting types of resources with the same slug.
 
+import { hasAllowedBoundaries } from "./text-post-process.js";
+
+const MATCHER =
+  /(?<!\/)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-](?:[\u00C0-\u1FFF\u2C00-\uD7FF\w:.-]{0,99}[\u00C0-\u1FFF\u2C00-\uD7FF\w:-])?)/;
+
+export function scanHashtags(raw) {
+  const found = [];
+  const matcher = new RegExp(MATCHER.source, "g");
+  let match;
+
+  while ((match = matcher.exec(raw))) {
+    const end = match.index + match[0].length;
+    if (!hasAllowedBoundaries(raw, match.index, end)) {
+      continue;
+    }
+
+    found.push({ index: match.index, length: match[0].length, ref: match[1] });
+  }
+
+  return found;
+}
+
+export function spliceHashtags(raw, replacements) {
+  let spliced = "";
+  let last = 0;
+
+  scanHashtags(raw).forEach((candidate, i) => {
+    const replacement = replacements[i];
+    if (replacement === undefined || replacement === null) {
+      return;
+    }
+
+    spliced += raw.slice(last, candidate.index) + "#" + replacement;
+    last = candidate.index + candidate.length;
+  });
+
+  return spliced + raw.slice(last);
+}
+
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const slug = matches[1];
   const hashtagLookup = options.hashtagLookup;
+  let result;
 
-  // NOTE: The lookup function is only run when cooking
-  // server-side, and will only return a single result based on the
-  // slug lookup.
-  const result =
-    hashtagLookup &&
-    hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder);
+  if (hashtagLookup) {
+    const cache = (options.hashtagLookupCache ??= new Map());
+    const limit = options.hashtagLookupLimit ?? Infinity;
+
+    if (!cache.has(slug) && cache.size < limit) {
+      cache.set(
+        slug,
+        hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder)
+      );
+    }
+
+    result = cache.get(slug);
+  }
 
   // NOTE: When changing the HTML structure here, you must also change
   // it in the placeholder HTML code inside lib/hashtag-autocomplete, and vice-versa.
@@ -71,11 +118,9 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
-    token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
     token.content = matches[0];
     buffer.push(token);
-    token = new state.Token("span_close", "span", -1);
 
     token = new state.Token("span_close", "span", -1);
     buffer.push(token);
@@ -114,7 +159,7 @@ function addIconPlaceholder(buffer, state) {
 export function setup(helper) {
   helper.registerPlugin((md) => {
     const rule = {
-      matcher: /(?<!\/)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})/,
+      matcher: MATCHER,
       onMatch: addHashtag,
     };
 

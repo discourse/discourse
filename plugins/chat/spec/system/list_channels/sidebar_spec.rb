@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | sidebar", type: :system do
+RSpec.describe "List channels | sidebar" do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -87,7 +87,7 @@ RSpec.describe "List channels | sidebar", type: :system do
         drawer_page.visit_index
         drawer_page.click_channels
 
-        expect(drawer_page).to have_channel_at_position(channel_1, 1)
+        expect(drawer_page).to have_channel_at_position(channel_2, 1)
 
         expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
           ".channel-#{channel_2.id}",

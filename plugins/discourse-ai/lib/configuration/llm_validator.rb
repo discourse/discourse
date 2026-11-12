@@ -3,6 +3,13 @@
 module DiscourseAi
   module Configuration
     class LlmValidator
+      TEST_PROMPT = "How much is 1 + 1?"
+      # Must finish well inside the web worker timeout, or the worker is killed
+      # before the provider's error reaches the admin.
+      TEST_TIMEOUT_SECONDS = 20
+
+      attr_reader :last_failed_mode
+
       def initialize(opts = {})
         @opts = opts
       end
@@ -31,20 +38,35 @@ module DiscourseAi
       end
 
       def run_test(val)
-        DiscourseAi::Completions::Llm
-          .proxy(val)
-          .generate(
-            "How much is 1 + 1?",
-            user: @opts[:user] || Discourse.system_user,
-            feature_name: "llm_validator",
-            temperature: 0.7,
-            top_p: 0.9,
-          )
-          .present?
+        llm = DiscourseAi::Completions::Llm.proxy(val)
+        cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: TEST_TIMEOUT_SECONDS)
+        cancel_manager.start_monitor { cancel_manager.expired? }
+
+        @last_failed_mode = :non_streaming
+        response = within_deadline(cancel_manager) { probe(llm, cancel_manager) }
+        raise empty_response_error if response.blank?
+
+        @last_failed_mode = :streaming
+        streamed = +""
+        within_deadline(cancel_manager) do
+          probe(llm, cancel_manager) { |partial| streamed << partial.to_s if partial.is_a?(String) }
+        end
+        raise empty_response_error if streamed.blank?
+
+        @last_failed_mode = nil
+        true
+      ensure
+        cancel_manager&.stop_monitor
       end
 
       def is_using(llm_model)
         in_use_by = AiAgent.where(default_llm_id: llm_model.id).pluck(:name)
+        in_use_by.concat(
+          LlmModel
+            .where(vision_llm_model_id: llm_model.id)
+            .order(:display_name)
+            .pluck(:display_name),
+        )
 
         in_use_by << "ai_default_llm_model" if SiteSetting.ai_default_llm_model.to_i == llm_model.id
 
@@ -73,6 +95,42 @@ module DiscourseAi
           ai_summarization_enabled
           ai_translation_enabled
         ]
+      end
+
+      private
+
+      def probe(llm, cancel_manager, &blk)
+        llm.generate(
+          TEST_PROMPT,
+          user: @opts[:user] || Discourse.system_user,
+          feature_name: "llm_validator",
+          top_p: 0.9,
+          cancel_manager: cancel_manager,
+          &blk
+        )
+      end
+
+      # A transport timeout can fire just before the monitor cancels, surfacing as a
+      # network error instead, so judge by the deadline rather than the error type.
+      def within_deadline(cancel_manager)
+        result = yield
+        raise timeout_error if cancel_manager.cancelled?
+        result
+      rescue StandardError => e
+        raise timeout_error if cancel_manager.expired?
+        raise
+      end
+
+      def timeout_error
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new(
+          I18n.t("discourse_ai.llm.configuration.test_timeout", count: TEST_TIMEOUT_SECONDS),
+        )
+      end
+
+      def empty_response_error
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new(
+          I18n.t("discourse_ai.llm.configuration.empty_response"),
+        )
       end
     end
   end

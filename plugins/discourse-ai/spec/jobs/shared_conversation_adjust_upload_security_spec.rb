@@ -1,28 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
+  subject(:run_job) { described_class.new.execute(params) }
+
   let(:params) { {} }
 
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
 
-  fab!(:bot_user) do
-    enable_current_plugin
-    toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = "10"
-    SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
-    claude_2.reload.user
-  end
+  fab!(:agent) { Fabricate(:ai_agent, default_llm: claude_2).tap(&:ensure_user!) }
+  fab!(:bot_user) { agent.user }
 
   fab!(:user)
   fab!(:topic) { Fabricate(:private_message_topic, user: user, recipient: bot_user) }
   fab!(:post_1) { Fabricate(:post, topic: topic, user: bot_user) }
   fab!(:post_2) { Fabricate(:post, topic: topic, user: user) }
   fab!(:conversation) { SharedAiConversation.share_conversation(user, topic) }
-
-  def run_job
-    described_class.new.execute(params)
-  end
 
   before { enable_current_plugin }
 
@@ -63,9 +55,9 @@ RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
       run_job
     end
 
-    it "doesn't attempt to run the topic upload security manager if the topic has been deleted" do
-      TopicUploadSecurityManager.any_instance.expects(:run).never
+    it "runs the topic upload security manager if the topic has been trashed" do
       topic.trash!
+      TopicUploadSecurityManager.any_instance.expects(:run).once
       run_job
     end
   end

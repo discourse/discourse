@@ -7,6 +7,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
@@ -66,6 +67,14 @@ acceptance("User Routes", function (needs) {
       .hasClass("user-invites-page", "has the body class");
   });
 
+  test("Invites - non-staff user viewing own page sees invite tabs", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
+    await visit("/u/eviltrout/invited/pending");
+    assert
+      .dom(".user-navigation.user-navigation-secondary")
+      .exists("renders the invite tabs navigation");
+  });
+
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
@@ -120,6 +129,23 @@ acceptance("User Routes", function (needs) {
     assert
       .dom(".d-editor-input")
       .exists("composer is visible after resuming a draft");
+  });
+});
+
+acceptance("User Routes - names disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_names: false, prioritize_username_in_ux: false });
+  needs.pretender((server, helper) => {
+    const response = cloneJSON(userFixtures["/u/eviltrout.json"]);
+    server.get("/u/eviltrout.json", () => helper.response(response));
+  });
+
+  test("does not display a name present in the profile payload", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.dom(".user-profile-names .username").includesText("eviltrout");
+    assert.dom(".user-profile-names .full-name").doesNotExist();
+    assert.dom(".user-profile-names").doesNotIncludeText("Robin Ward");
   });
 });
 
@@ -343,9 +369,18 @@ acceptance("User - Invalid view_user_route setting", function (needs) {
   });
 
   test("It defaults to summary", async function (assert) {
+    const stub = sinon.stub(console, "error");
+
     await visit("/u/eviltrout");
 
     assert.strictEqual(currentRouteName(), "user.summary");
+    assert.true(
+      stub.calledWith(
+        "Invalid value for view_user_route 'user.X'. Falling back to 'summary'."
+      )
+    );
+
+    stub.restore();
   });
 });
 
@@ -407,5 +442,56 @@ acceptance("User - /my/ shortcuts for anon users", function () {
 
     await visitWithRedirects("/my/preferences/account");
     assert.strictEqual(currentURL(), "/login-preferences");
+  });
+});
+
+acceptance("User - Invites - viewing another user", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    const eviltroutInvites = {
+      invites: [],
+      can_see_invite_details: true,
+      counts: { pending: 0, expired: 0, redeemed: 0, total: 0 },
+    };
+    server.get("/u/charlie/invited.json", () =>
+      helper.response(eviltroutInvites)
+    );
+  });
+
+  test("hides the create invite button when viewing another user's invited page", async function (assert) {
+    await visit("/u/charlie/invited/pending");
+    assert.dom(".invite-button").doesNotExist();
+    assert.dom(".empty-state .empty-state__cta").doesNotExist();
+  });
+
+  test("shows the create invite button when viewing your own invited page", async function (assert) {
+    await visit("/u/eviltrout/invited/pending");
+    assert.dom(".invite-button").exists();
+  });
+});
+
+acceptance("User - Hidden profile", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/u/hideme.json", () =>
+      helper.response({
+        user: {
+          id: 1234,
+          username: "hideme",
+          name: null,
+          avatar_template: "/letter_avatar_proxy/v4/letter/h/8edcca/{size}.png",
+          profile_hidden: true,
+          title: null,
+          primary_group_name: null,
+        },
+      })
+    );
+  });
+
+  test("does not render the invites tab", async function (assert) {
+    await visit("/u/hideme");
+    assert.dom(".user-nav__invites").doesNotExist();
   });
 });

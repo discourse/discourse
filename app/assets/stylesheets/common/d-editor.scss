@@ -87,7 +87,7 @@
 
 .d-editor-input {
   border: 0;
-  padding: 10px;
+  padding: var(--space-2);
   height: 100%;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -113,7 +113,8 @@
   }
 }
 
-.hide-preview .d-editor-preview-wrapper {
+.hide-preview .d-editor-preview-wrapper,
+.--rich-editor-enabled .d-editor-preview-wrapper {
   display: none;
   flex: 0;
 }
@@ -314,69 +315,12 @@
 
 .d-editor-button-bar__wrap {
   position: relative;
+  flex-shrink: 0;
   min-width: 0;
-  margin-left: 1px;
-  margin-right: 1px;
   overflow: clip;
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
-}
-
-.d-editor-button-bar__scroll-btn {
-  --fade-width: 2rem;
-  --fade-color: var(--secondary);
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 2;
-  background: var(--fade-color);
-  border: none;
-  padding: 0 var(--space-1);
-  margin-block: 1px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: var(--primary-high);
-
-  .discourse-touch & {
-    width: 0;
-    padding: 0;
-    overflow: visible;
-    pointer-events: none;
-    color: transparent;
-  }
-
-  .discourse-no-touch &:hover {
-    color: var(--primary);
-  }
-
-  &.--left {
-    left: 0;
-
-    &::after {
-      content: "";
-      position: absolute;
-      left: 100%;
-      height: 100%;
-      width: var(--fade-width);
-      background: linear-gradient(to right, var(--fade-color), transparent);
-      pointer-events: none;
-    }
-  }
-
-  &.--right {
-    right: 0;
-
-    &::before {
-      content: "";
-      position: absolute;
-      right: 100%;
-      height: 100%;
-      width: var(--fade-width);
-      background: linear-gradient(to left, var(--fade-color), transparent);
-      pointer-events: none;
-    }
-  }
+  margin-inline: var(--space-2);
 }
 
 .d-editor-button-bar {
@@ -388,12 +332,13 @@
   padding-block: var(--space-1);
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   max-width: 100%;
 
-  &::-webkit-scrollbar {
-    display: none;
+  // the toolbar can be rendered outside .d-editor-textarea-wrapper, so the
+  // disabled state is carried on the bar itself
+  &.--disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .btn:focus-visible {
@@ -460,6 +405,7 @@
 
   &.--active {
     background: var(--d-selected);
+    color: var(--d-selected-text-color);
 
     &.btn:hover .d-icon {
       color: var(--primary-high);

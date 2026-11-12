@@ -3,6 +3,7 @@
 RSpec.describe SecondFactor::AuthManager do
   fab!(:user)
   let(:guardian) { Guardian.new(user) }
+
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
 
   def create_request(request_method: "GET", path: "/")
@@ -43,6 +44,17 @@ RSpec.describe SecondFactor::AuthManager do
       server_session["current_second_factor_auth_challenge"] = challenge.to_json
     end
     [challenge[:nonce], server_session]
+  end
+
+  describe "#allowed_methods" do
+    it "allows totp, security keys and passkeys by default" do
+      manager = create_manager(create_action)
+      expect(manager.allowed_methods).to contain_exactly(
+        UserSecondFactor.methods[:totp],
+        UserSecondFactor.methods[:security_key],
+        UserSecondFactor.methods[:passkey],
+      )
+    end
   end
 
   describe "#allow_backup_codes!" do

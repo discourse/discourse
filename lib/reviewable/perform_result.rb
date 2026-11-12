@@ -8,16 +8,21 @@ class Reviewable < ActiveRecord::Base
     attr_accessor(
       :transition_to,
       :remove_reviewable_ids,
+      :affected_reviewable_ids,
       :errors,
       :recalculate_score,
       :update_flag_stats,
       :after_commit,
+      :post_revision,
+      :deleted_user,
+      :removed_avatar,
     )
 
     def initialize(reviewable, status)
       @status = status
       @reviewable = reviewable
       @remove_reviewable_ids = success? ? [reviewable.id] : []
+      @affected_reviewable_ids = []
     end
 
     def created_post=(created_post)

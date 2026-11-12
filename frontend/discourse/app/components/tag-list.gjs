@@ -1,50 +1,47 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { sort } from "@ember/object/computed";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
+import { arraySortedByProperties } from "discourse/lib/array-tools";
+import { slugify } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class TagList extends Component {
-  isPrivateMessage = false;
+  get isPrivateMessage() {
+    return this.args.isPrivateMessage ?? false;
+  }
 
-  @sort("tags", "sortProperties") sortedTags;
+  get sortedTags() {
+    return arraySortedByProperties(this.args.tags, this.args.sortProperties);
+  }
 
-  @computed("titleKey")
   get title() {
-    return this.titleKey && i18n(this.titleKey);
+    return this.args.titleKey && i18n(this.args.titleKey);
   }
 
-  @computed("categoryId")
   get category() {
-    return this.categoryId && Category.findById(this.categoryId);
+    return this.args.categoryId && Category.findById(this.args.categoryId);
   }
 
-  @computed("category.fullSlug")
   get categoryClass() {
     return this.category?.fullSlug && `tag-list-${this.category?.fullSlug}`;
   }
 
-  @computed("tagGroupName")
-  get tagGroupNameClass() {
-    if (this.tagGroupName) {
-      const groupName = this.tagGroupName
-        .replace(/\s+/g, "-")
-        .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
-        .toLowerCase();
-      return groupName && `tag-group-${groupName}`;
+  get tagGroupNameSlug() {
+    if (this.args.tagGroupName) {
+      return slugify(this.args.tagGroupName);
     }
+  }
+
+  get tagGroupNameClass() {
+    return this.tagGroupNameSlug && `tag-group-${this.tagGroupNameSlug}`;
   }
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "tags-list"
         "tag-list"
         this.categoryClass
@@ -58,20 +55,24 @@ export default class TagList extends Component {
       {{#if this.category}}
         <CategoryTitleLink @category={{this.category}} />
       {{/if}}
-      {{#if this.tagGroupName}}
-        <h3>{{this.tagGroupName}}</h3>
+      {{#if @tagGroupName}}
+        <h3 id={{this.tagGroupNameSlug}}><a
+            aria-label={{i18n "post.heading_anchor"}}
+            class="anchor"
+            href="#{{this.tagGroupNameSlug}}"
+          ></a>{{@tagGroupName}}</h3>
       {{/if}}
       {{#each this.sortedTags as |tag|}}
         <div class="tag-box">
-          {{discourseTag
+          {{dDiscourseTag
             tag
             description=tag.description
             isPrivateMessage=this.isPrivateMessage
             pmOnly=tag.pmOnly
-            tagsForUser=this.tagsForUser
+            tagsForUser=@tagsForUser
           }}
           {{#if tag.pmOnly}}
-            {{icon "envelope"}}
+            {{dIcon "envelope"}}
           {{/if}}
           {{#if tag.totalCount}}
             <span class="tag-count">

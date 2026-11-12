@@ -164,7 +164,7 @@
     font-size: var(--font-down-1);
   }
 
-  div.discourse-tags {
+  .discourse-tags {
     font-size: var(--font-down-1);
   }
 
@@ -198,9 +198,7 @@
   }
 
   ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include unstyled-list;
   }
 
   .panel-body {

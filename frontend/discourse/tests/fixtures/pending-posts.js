@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const pendingPostsFixtures = {
   "/posts/eviltrout/pending.json": {
     pending_posts: [
       {
@@ -27,6 +32,21 @@ export default {
         topic_url: "/t/lorem-ipsum-dolor-sit-amet/130",
         username: "eviltrout",
       },
+      {
+        id: 3,
+        avatar_template: "/user_avatar/localhost/eviltrout/{size}/5275.png",
+        category_id: 2,
+        created_at: "2021-10-19T08:38:35.110Z",
+        created_by_id: 19,
+        name: "Robin Ward",
+        raw_text: "This pending topic will be moderated.",
+        title: "A queued topic",
+        topic_id: null,
+        topic_url: null,
+        username: "eviltrout",
+      },
     ],
   },
 };
+
+export default pendingPostsFixtures;

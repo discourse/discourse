@@ -5,12 +5,12 @@ import { cancel, next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -18,12 +18,38 @@ export default class TopicTimerInfo extends Component {
   clockIcon = trustHTML(`${iconHTML("far-clock")}`);
   trashLabel = i18n("post.controls.remove_timer");
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   title = null;
+
+  /** @type {import("@ember/template").TrustedHTML | null} */
   notice = null;
+
+  /** @type {boolean | null} */
   showTopicTimer = null;
+
+  /** @type {(() => void) | null | undefined} */
   showTopicTimerModal = null;
+
+  /** @type {(() => void) | null | undefined} */
   removeTopicTimer = null;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _delayedRerender = null;
+
+  @computed("currentUser.canSetTopicTimer")
+  get canModifyTimer() {
+    return this.currentUser?.get("canSetTopicTimer");
+  }
+
+  @computed("canModifyTimer", "removeTopicTimer")
+  get showTrashCan() {
+    return this.canModifyTimer && this.removeTopicTimer;
+  }
+
+  @computed("canModifyTimer", "showTopicTimerModal")
+  get showEdit() {
+    return this.canModifyTimer && this.showTopicTimerModal;
+  }
 
   @on("didReceiveAttrs")
   setupRenderer() {
@@ -35,21 +61,6 @@ export default class TopicTimerInfo extends Component {
     if (this._delayedRerender) {
       cancel(this._delayedRerender);
     }
-  }
-
-  @computed
-  get canModifyTimer() {
-    return this.currentUser && this.currentUser.get("canManageTopic");
-  }
-
-  @computed("canModifyTimer", "removeTopicTimer")
-  get showTrashCan() {
-    return this.canModifyTimer && this.removeTopicTimer;
-  }
-
-  @computed("canModifyTimer", "showTopicTimerModal")
-  get showEdit() {
-    return this.canModifyTimer && this.showTopicTimerModal;
   }
 
   additionalOpts() {
@@ -110,13 +121,15 @@ export default class TopicTimerInfo extends Component {
       if (categoryId) {
         const category = Category.findById(categoryId);
 
-        options = Object.assign(
-          {
-            categoryName: category.get("slug"),
-            categoryUrl: category.get("url"),
-          },
-          options
-        );
+        if (category) {
+          options = Object.assign(
+            {
+              categoryName: category.get("slug"),
+              categoryUrl: category.get("url"),
+            },
+            options
+          );
+        }
       }
 
       options = Object.assign(options, this.additionalOpts());
@@ -159,6 +172,9 @@ export default class TopicTimerInfo extends Component {
     if (this.basedOnLastPost && statusType === "close") {
       statusType = "close_after_last_post";
     }
+    if (this.basedOnLastPost && statusType === "delete") {
+      statusType = "delete_after_last_post";
+    }
 
     return `topic.status_update_notice.auto_${statusType}`;
   }
@@ -174,18 +190,18 @@ export default class TopicTimerInfo extends Component {
           <div class="topic-timer-modify">
             {{#if this.showEdit}}
               <DButton
-                @title="post.controls.edit_timer"
-                @icon="pencil"
-                @action={{this.showTopicTimerModal}}
                 class="topic-timer-edit no-text"
+                @action={{this.showTopicTimerModal}}
+                @icon="pencil"
+                @title="post.controls.edit_timer"
               />
             {{/if}}
             {{#if this.showTrashCan}}
               <DButton
-                @title="post.controls.remove_timer"
-                @icon="trash-can"
-                @action={{this.removeTopicTimer}}
                 class="topic-timer-remove no-text"
+                @action={{this.removeTopicTimer}}
+                @icon="trash-can"
+                @title="post.controls.remove_timer"
               />
             {{/if}}
           </div>

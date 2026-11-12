@@ -29,13 +29,35 @@ RSpec.describe ScreenedUrl do
 
     let(:record) { described_class.new(params) }
 
-    %w[http:// HTTP:// https:// HTTPS://].each do |prefix|
-      context "with #{prefix} prefix" do
-        let(:params) { valid_params.merge(url: url.gsub("http://", prefix)) }
+    context "with http:// prefix" do
+      let(:params) { valid_params.merge(url: url) }
 
-        it "strips it" do
-          expect(normalized.url).to eq(url.gsub("http://", ""))
-        end
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
+
+    context "with HTTP:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "HTTP://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
+
+    context "with https:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "https://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
+      end
+    end
+
+    context "with HTTPS:// prefix" do
+      let(:params) { valid_params.merge(url: url.gsub("http://", "HTTPS://")) }
+
+      it "strips it" do
+        expect(normalized.url).to eq(url.gsub("http://", ""))
       end
     end
 

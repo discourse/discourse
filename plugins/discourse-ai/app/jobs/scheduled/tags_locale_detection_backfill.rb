@@ -7,12 +7,11 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Tag)
 
-      llm_model = find_llm_model
-      return if llm_model.blank?
+      return if !DiscourseAi::Translation.locale_detector_configured?
 
-      unless LlmCreditAllocation.credits_available?(llm_model)
+      unless DiscourseAi::Translation.credits_available_for_locale_detection?
         Rails.logger.info(
           "Tags locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
         )
@@ -27,26 +26,15 @@ module Jobs
       return if tags.empty?
 
       tags.each do |tag|
-        begin
-          DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{tags.size} tag locales")
-    end
-
-    private
-
-    def find_llm_model
-      agent_klass = AiAgent.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_agent)
-      return nil if agent_klass.blank?
-
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

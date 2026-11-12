@@ -12,6 +12,10 @@ id:
         link_to_settings: "Pengaturan"
         refresh: "Segarkan"
         name: "Nama"
+        section:
+          groups: "Grup"
+        weight:
+          solution: "Solusi"
         period:
           all_time: "Sepanjang Waktu"
       create: "Buat"
@@ -19,9 +23,7 @@ id:
       close: "Tutup"
       delete: "Hapus"
       edit: "Ubah"
-      back: "Kembali"
       save: "Simpan"
-      apply: "menerapkan"
       update_range:
         last_10_days: "10 hari terakhir"
         last_30_days: "30 hari terakhir"
@@ -30,3 +32,9 @@ id:
       custom_range_from: "Dari"
       admin:
         name: "Nama"
+    discourse_workflows:
+      gamification_score:
+        username: "Pengguna"
+        date: "Tanggal"
+        description: "Deskripsi"
+        category_id: "Kategori"

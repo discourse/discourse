@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Interface color selector", type: :system do
+describe "Interface color selector" do
   let!(:light_scheme) do
     ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
   end
@@ -64,6 +64,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "is not available if the user uses the same scheme for dark mode as the light mode" do
+    light_scheme.update!(user_selectable: true)
     user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: light_scheme.id)
     sign_in(user)
 

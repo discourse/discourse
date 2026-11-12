@@ -21,11 +21,9 @@ MemoryProfiler
 
     # load up all models and schema
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
-        table.classify.constantize.first
-      rescue StandardError
-        nil
-      end
+      table.classify.constantize.first
+    rescue StandardError
+      nil
     end
   end
   .pretty_print

@@ -7,22 +7,61 @@
 zh_TW:
   js:
     discourse_policy:
+      title: "政策"
+      accepted_tooltip: "已接受此政策的使用者"
+      not_accepted_tooltip: "尚未接受此政策的使用者"
+      accept_policy: "接受政策"
+      revoke_policy: "撤回政策"
+      edit_reason: "政策設定已修改"
+      no_possible_users: "此政策沒有符合資格的使用者"
+      accept_policy_template: "我接受此政策"
       builder:
+        title: 政策
+        attach: 建立政策
+        save: 儲存變更
+        edit: 編輯政策設定
         insert: 插入
+        errors:
+          group: 必須選取群組
+          version: 必須填寫版本
         groups:
           label: 群組
+          description: 與此政策相關聯的群組
         version:
           label: 版本
+          description: 政策版本；提高版本會強制使用者重新接受此政策
+        renew:
+          label: 續期
+          description: 每隔 x 天續期此政策
+        renew-start:
+          label: 續期開始日
+          description: 政策應於何時續期
+        reminder:
+          label: 提醒
+          description: 發送政策接受提醒通知的頻率
+          no_reminder: '（不提醒）'
         accept:
           label: 接受
+          description: 接受按鈕上使用的文字
         revoke:
           label: 撤回
+          description: 撤回按鈕上使用的文字
         private:
           label: 私密?
+          description: 僅允許管理員查看政策狀態
         send-email:
           label: 送出電子郵件?
+          description: 透過電子郵件通知使用者新政策
+        add-users-to-group:
+          label: 將使用者加入群組
+          description: 當使用者接受此政策時，將其加入下列群組
       preferences:
+        title: 政策
         policy_emails:
+          always_description: 只有當您也選擇接收新活動電子郵件時，我們才會寄送電子郵件給您。
+          away_description: 只有在政策狀態變更時，系統發現您最近 10 分鐘內未上線，且您也已選擇接收新活動電子郵件時，我們才會寄送電子郵件給您。
+          label: 當政策需要我審閱時寄電子郵件通知我
           email_frequency_options:
             never: 永不
+            when_away: 僅在離開時
             always: 總是

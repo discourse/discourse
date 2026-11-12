@@ -5,13 +5,23 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import DButton from "discourse/components/d-button";
+import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsFilterControls extends Component {
+  @service capabilities;
+
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
-  @tracked isMenuOpen = false;
+
+  /** @type {HTMLElement | null} */
+  menuTrigger = null;
+
+  @action
+  registerMenuTrigger(element) {
+    this.menuTrigger = element;
+  }
 
   @action
   clearFilter() {
@@ -50,8 +60,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @action
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.args.onToggleMenu();
+    this.args.onToggleMenu(this.menuTrigger);
   }
 
   <template>
@@ -62,27 +71,28 @@ export default class AdminSiteSettingsFilterControls extends Component {
     >
       <div class="controls">
         <div class="inline-form">
-          {{#if @showMenu}}
+          {{#if (and @showMenu (not this.capabilities.viewport.sm))}}
             <DButton
+              class="btn-default menu-toggle"
               @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "xmark" "bars"}}
-              class="menu-toggle"
+              @icon="bars"
+              {{didInsert this.registerMenuTrigger}}
             />
           {{/if}}
           <input
-            {{on "input" this.onChangeFilterInput}}
-            id="setting-filter"
-            class="no-blur admin-site-settings-filter-controls__input"
-            placeholder={{i18n "type_to_filter"}}
             autocomplete="off"
+            class="no-blur admin-site-settings-filter-controls__input"
+            id="setting-filter"
+            placeholder={{i18n "type_to_filter"}}
             type="text"
             value={{this.filter}}
+            {{on "input" this.onChangeFilterInput}}
           />
           <DButton
+            class="btn-default"
+            id="clear-filter"
             @action={{this.clearFilter}}
             @label="admin.site_settings.clear_filter"
-            id="clear-filter"
-            class="btn-default"
           />
         </div>
       </div>
@@ -90,10 +100,10 @@ export default class AdminSiteSettingsFilterControls extends Component {
       <div class="search controls">
         <label>
           <Input
-            @type="checkbox"
-            @checked={{this.onlyOverridden}}
             class="toggle-overridden"
             id="setting-filter-toggle-overridden"
+            @checked={{this.onlyOverridden}}
+            @type="checkbox"
             {{on "click" this.onToggleOverridden}}
           />
           {{i18n "admin.settings.show_overriden"}}

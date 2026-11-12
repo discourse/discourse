@@ -32,10 +32,6 @@ export default class TextareaInteractor extends EmberObject {
     registerDestructor(this, (instance) => instance.teardown());
   }
 
-  teardown() {
-    this.textarea.removeEventListener("paste", this.textManipulation.paste);
-  }
-
   set value(value) {
     this.textarea.value = value;
     const event = new Event("input", {
@@ -43,6 +39,10 @@ export default class TextareaInteractor extends EmberObject {
       cancelable: true,
     });
     this.textarea.dispatchEvent(event);
+  }
+
+  teardown() {
+    this.textarea.removeEventListener("paste", this.textManipulation.paste);
   }
 
   @bind
@@ -114,6 +114,11 @@ export default class TextareaInteractor extends EmberObject {
   @bind
   addText() {
     return this.textManipulation.addText(...arguments);
+  }
+
+  @bind
+  applyLink() {
+    return this.textManipulation.applyLink(...arguments);
   }
 
   @bind

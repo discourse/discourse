@@ -16,6 +16,14 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
     it_behaves_like "an engine"
 
     describe "#to_html" do
+      it "shows the preview type and repository in the header" do
+        header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+        expect(header.at_css(".github-onebox__label").text.strip).to eq("Folder")
+        expect(header.at_css("a").text.strip).to eq("discourse/discourse")
+        expect(header.at_css("a")["href"]).to eq(link)
+      end
+
       it "includes link to folder with truncated display path" do
         expect(html).to include(
           '<a href="https://github.com/discourse/discourse/tree/main/spec/fixtures" target="_blank" rel="noopener">main/spec/fixtures</a>',
@@ -65,6 +73,22 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
       expect(@onebox.to_html).to include(
         "<a href=\"https://github.com/ruby/rdoc#description-\" target=\"_blank\" rel=\"noopener\">GitHub - ruby/rdoc: RDoc produces HTML and online documentation for Ruby... - Description¶ ↑</a>",
       )
+    end
+  end
+
+  context "without opengraph tags" do
+    before do
+      @link = "https://github.com/organization/repo-foobar/tree/main/models"
+      @uri = "https://github.com/organization/repo-foobar/tree/main/models"
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubfolder-no-og"))
+      @onebox = described_class.new(@link)
+    end
+
+    it "falls back to URL-derived title and path" do
+      html = @onebox.to_html
+      expect(html).to include("organization/repo-foobar")
+      expect(html).to include("main/models")
     end
   end
 

@@ -1,0 +1,101 @@
+import Component from "@glimmer/component";
+import { fn, get } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import { i18n } from "discourse-i18n";
+
+const STATUS_CLASSES = {
+  passing: "--success",
+  failing: "--critical",
+};
+
+const STATUS_LABELS = {
+  passing: i18n("admin.config.problem_checks.passing"),
+  failing: i18n("admin.config.problem_checks.failing"),
+};
+
+export default class ProblemCheckItem extends Component {
+  @service router;
+
+  @action
+  async ignore(tracker) {
+    try {
+      await ajax(`/admin/problem_checks/${tracker.id}/ignore.json`, {
+        type: "PUT",
+      });
+      this.router.refresh();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async watch(tracker) {
+    try {
+      await ajax(`/admin/problem_checks/${tracker.id}/watch.json`, {
+        type: "PUT",
+      });
+      this.router.refresh();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  <template>
+    <tr class="d-table__row --{{@tracker.status}}">
+      <td class="d-table__cell --overview">
+        <div class="status-label {{get STATUS_CLASSES @tracker.status}}">
+          <div class="status-label-indicator"></div>
+          <div class="status-label-text">
+            {{get STATUS_LABELS @tracker.status}}
+          </div>
+        </div>
+      </td>
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">{{i18n
+            "admin.config.problem_checks.identifier"
+          }}</div>
+        {{@tracker.identifier}}
+      </td>
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">{{i18n
+            "admin.config.problem_checks.target"
+          }}</div>
+        {{#if (neq @tracker.target "__NULL__")}}
+          {{@tracker.target}}
+        {{/if}}
+      </td>
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">{{i18n
+            "admin.config.problem_checks.last_run_at"
+          }}</div>
+        {{#if @tracker.last_run_at}}
+          {{dFormatDate @tracker.last_run_at leaveAgo="true"}}
+        {{/if}}
+      </td>
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
+          {{#if @tracker.ignored}}
+            <DButton
+              class="btn-default btn-small"
+              @action={{fn this.watch @tracker}}
+              @icon="eye"
+              @label="admin.config.problem_checks.watch"
+            />
+          {{else}}
+            <DButton
+              class="btn-default btn-small"
+              @action={{fn this.ignore @tracker}}
+              @icon="eye-slash"
+              @label="admin.config.problem_checks.ignore"
+            />
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </template>
+}

@@ -3,13 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
 import { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -38,11 +36,17 @@ export default class SignupPageController extends Controller {
   @tracked skipConfirmation;
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
+  @tracked codeSignupStep = "email";
+  @tracked signupContext;
   @autoTrackedArray rejectedEmails = [];
+
+  queryParams = [{ signupContext: "signup_context" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
+
+  /** @type {string | null} */
   prefilledUsername = null;
   maskPassword = true;
   emailValidationVisible = false;
@@ -54,7 +58,7 @@ export default class SignupPageController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -69,9 +73,20 @@ export default class SignupPageController extends Controller {
     showValidationOnInit: false,
   });
 
-  @notEmpty("authOptions") hasAuthOptions;
-  @setting("enable_local_logins") canCreateLocal;
-  @setting("require_invite_code") requireInviteCode;
+  @computed("authOptions")
+  get hasAuthOptions() {
+    return !isEmpty(this.authOptions);
+  }
+
+  @computed("siteSettings.enable_local_logins")
+  get canCreateLocal() {
+    return this.siteSettings.enable_local_logins;
+  }
+
+  @computed("siteSettings.require_invite_code")
+  get requireInviteCode() {
+    return this.siteSettings.require_invite_code;
+  }
 
   @dependentKeyCompat
   get userFields() {
@@ -106,30 +121,34 @@ export default class SignupPageController extends Controller {
     return this.nameValidationHelper.forceValidationReason;
   }
 
-  @bind
-  actionOnEnter(event) {
-    if (!this.submitDisabled && event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.createAccount();
-      return false;
-    }
-  }
-
-  @bind
-  selectKitFocus(event) {
-    const target = document.getElementById(event.target.getAttribute("for"));
-    if (target?.classList.contains("select-kit")) {
-      event.preventDefault();
-      target.querySelector(".select-kit-header").click();
-    }
-  }
-
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
-      (this.hasAuthOptions || this.canCreateLocal) && !this.skipConfirmation
+      (this.hasAuthOptions || this.canCreateLocal) &&
+      !this.skipConfirmation &&
+      !this.showCodeSignupForm
     );
+  }
+
+  @computed(
+    "hasAuthOptions",
+    "canCreateLocal",
+    "siteSettings.enable_local_logins_via_code",
+    "siteSettings.enable_local_logins_via_email",
+    "skipConfirmation"
+  )
+  get showCodeSignupForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.canCreateLocal &&
+      !this.hasAuthOptions &&
+      !this.skipConfirmation
+    );
+  }
+
+  get codeSignupOnEmailStep() {
+    return this.codeSignupStep === "email";
   }
 
   @computed("site.desktopView", "hasAuthOptions")
@@ -142,7 +161,12 @@ export default class SignupPageController extends Controller {
     return this.formSubmitted;
   }
 
-  @computed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")
+  @computed(
+    "userFields",
+    "hasAtLeastOneLoginButton",
+    "hasAuthOptions",
+    "showCodeSignupForm"
+  )
   get bodyClasses() {
     const classes = [];
     if (this.userFields) {
@@ -153,6 +177,9 @@ export default class SignupPageController extends Controller {
     }
     if (!this.canCreateLocal) {
       classes.push("no-local-logins");
+    }
+    if (this.showCodeSignupForm) {
+      classes.push("passwordless-signup");
     }
     return classes.join(" ");
   }
@@ -281,6 +308,81 @@ export default class SignupPageController extends Controller {
     });
   }
 
+  get emailDisabled() {
+    return (
+      this.authOptions?.email === this.accountEmail &&
+      this.authOptions?.email_valid
+    );
+  }
+
+  // Determines whether at least one login button is enabled
+  @computed
+  get hasAtLeastOneLoginButton() {
+    return findAll().length > 0;
+  }
+
+  @computed("hasAtLeastOneLoginButton", "canCreateLocal", "hasAuthOptions")
+  get hasNoLoginOptions() {
+    return (
+      !this.hasAtLeastOneLoginButton &&
+      !this.canCreateLocal &&
+      !this.hasAuthOptions
+    );
+  }
+
+  @computed(
+    "authOptions",
+    "hasAtLeastOneLoginButton",
+    "showCodeSignupForm",
+    "codeSignupStep"
+  )
+  get showRightSide() {
+    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
+      return false;
+    }
+    return !this.authOptions && this.hasAtLeastOneLoginButton;
+  }
+
+  @computed("authOptions")
+  get progressBarStep() {
+    return this.authOptions ? "activate" : "signup";
+  }
+
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
+      return;
+    }
+    return i18n("create_account.associate", {
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
+    });
+  }
+
+  @bind
+  actionOnEnter(event) {
+    if (!this.submitDisabled && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.createAccount();
+      return false;
+    }
+  }
+
+  @bind
+  selectKitFocus(event) {
+    const target = document.getElementById(event.target.getAttribute("for"));
+    if (target?.classList.contains("select-kit")) {
+      event.preventDefault();
+      target.querySelector(".select-kit-header").click();
+    }
+  }
+
+  @action
+  updateCodeSignupStep(step) {
+    this.codeSignupStep = step;
+  }
+
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
@@ -303,7 +405,7 @@ export default class SignupPageController extends Controller {
 
     return User.checkEmail(this.accountEmail)
       .then((result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -332,13 +434,6 @@ export default class SignupPageController extends Controller {
           serverEmailValidation: null,
         });
       });
-  }
-
-  get emailDisabled() {
-    return (
-      this.authOptions?.email === this.accountEmail &&
-      this.authOptions?.email_valid
-    );
   }
 
   authProviderDisplayName(name) {
@@ -374,22 +469,6 @@ export default class SignupPageController extends Controller {
     }
   }
 
-  // Determines whether at least one login button is enabled
-  @computed
-  get hasAtLeastOneLoginButton() {
-    return findAll().length > 0;
-  }
-
-  @computed("authOptions", "hasAtLeastOneLoginButton")
-  get showRightSide() {
-    return !this.authOptions && this.hasAtLeastOneLoginButton;
-  }
-
-  @computed("authOptions")
-  get progressBarStep() {
-    return this.authOptions ? "activate" : "signup";
-  }
-
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress
@@ -398,7 +477,7 @@ export default class SignupPageController extends Controller {
 
     this._hpPromise = ajax("/session/hp.json")
       .then((json) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -457,7 +536,7 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -478,7 +557,11 @@ export default class SignupPageController extends Controller {
 
             let { destination_url } = this.authOptions || {};
 
-            if (destination_url && destination_url !== "/signup") {
+            if (
+              result.active &&
+              destination_url &&
+              destination_url !== "/signup"
+            ) {
               set("redirect", destination_url);
             } else {
               set("redirect", userPath("account-created"));
@@ -508,17 +591,6 @@ export default class SignupPageController extends Controller {
         return this.set("flash", i18n("create_account.failed"));
       }
     );
-  }
-
-  @computed("authOptions.associate_url", "authOptions.auth_provider")
-  get associateHtml() {
-    if (!this.authOptions?.associate_url) {
-      return;
-    }
-    return i18n("create_account.associate", {
-      associate_link: this.authOptions?.associate_url,
-      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
-    });
   }
 
   @action

@@ -1,5 +1,37 @@
 #frozen_string_literal: true
 
+module FakeExternalPlugin
+  class FakeExternalTool < DiscourseAi::Agents::Tools::Tool
+    def self.signature
+      { name: "fake_external_tool", description: "A fake tool", parameters: [] }
+    end
+
+    def self.name
+      "fake_external_tool"
+    end
+
+    def invoke
+      { result: "ok" }
+    end
+  end
+end
+
+class FakeExternalAgent < DiscourseAi::Agents::Agent
+  def tools
+    [FakeExternalPlugin::FakeExternalTool]
+  end
+
+  def system_prompt
+    "Test agent"
+  end
+end
+
+class FakeExternalBotAgent < FakeExternalAgent
+  def self.supports_bot_user?
+    true
+  end
+end
+
 class TestAgent < DiscourseAi::Agents::Agent
   def tools
     [
@@ -15,6 +47,7 @@ class TestAgent < DiscourseAi::Agents::Agent
       {site_title}
       {site_description}
       {participants}
+      {username}
       {time}
       {date}
       {resource_url}
@@ -35,6 +68,8 @@ RSpec.describe DiscourseAi::Agents::Agent do
   let(:resource_url) { "https://path-to-resource" }
   let(:inferred_concepts) { %w[bulbassaur charmander squirtle].join(", ") }
 
+  let(:context_user) { User.new(username: "alice") }
+
   let(:context) do
     DiscourseAi::Agents::BotContext.new(
       site_url: Discourse.base_url,
@@ -42,6 +77,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
       site_description: "test site description",
       time: Time.zone.now,
       participants: topic_with_users.allowed_users.map(&:username).join(", "),
+      user: context_user,
       resource_url: resource_url,
       inferred_concepts: inferred_concepts,
     )
@@ -58,6 +94,36 @@ RSpec.describe DiscourseAi::Agents::Agent do
     AiAgent.agent_cache.flush!
   end
 
+  it "includes read_post in the configurable tool catalog" do
+    expect(described_class.all_available_tools).to include(DiscourseAi::Agents::Tools::ReadPost)
+  end
+
+  it "never resolves a custom spawn_agent through the fallback tool path" do
+    custom_tool = Fabricate(:ai_tool, tool_name: "spawn_agent")
+    child = Fabricate(:ai_agent)
+    agent_record = Fabricate(:ai_agent, subagent_ids: [child.id])
+    agent_record.update_columns(tools: [["custom-#{custom_tool.id}", nil, false]])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        id: "spawn-1",
+        name: "spawn_agent",
+        parameters: {
+          agent_id: child.id,
+          prompt: "Check this",
+        },
+      )
+
+    resolved =
+      agent_record.class_instance.new.find_tool(
+        tool_call,
+        bot_user: user,
+        llm: nil,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+
+    expect(resolved).to be_nil
+  end
+
   it "renders the system prompt" do
     freeze_time
 
@@ -68,6 +134,8 @@ RSpec.describe DiscourseAi::Agents::Agent do
     expect(system_message).to include("test site title")
     expect(system_message).to include("test site description")
     expect(system_message).to include("joe, jane")
+    expect(system_message).to include("alice")
+    expect(system_message).not_to include("{username}")
     expect(system_message).to include(Time.zone.now.to_s)
     expect(system_message).to include(resource_url)
     expect(system_message).to include(inferred_concepts)
@@ -79,6 +147,24 @@ RSpec.describe DiscourseAi::Agents::Agent do
 
     # needs to be configured so it is not available
     expect(tools.find { |t| t.name == "image" }).to be_nil
+  end
+
+  it "leaves {username} literal when no user is present" do
+    context_without_user =
+      DiscourseAi::Agents::BotContext.new(
+        site_url: Discourse.base_url,
+        site_title: "test site title",
+        site_description: "test site description",
+        time: Time.zone.now,
+        participants: topic_with_users.allowed_users.map(&:username).join(", "),
+        resource_url: resource_url,
+        inferred_concepts: inferred_concepts,
+      )
+
+    rendered = agent.craft_prompt(context_without_user)
+    system_message = rendered.messages.first[:content]
+
+    expect(system_message).to include("{username}")
   end
 
   it "can parse string that are wrapped in quotes" do
@@ -193,7 +279,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
   end
 
   describe "available agents" do
-    it "includes all agents by default" do
+    it "includes enabled agents by default" do
       Group.refresh_automatic_groups!
 
       SiteSetting.ai_google_custom_search_api_key = "abc"
@@ -221,6 +307,12 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::SqlHelper,
       )
 
+      expect(agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
+      )
+
       # it should allow staff access to WebArtifactCreator
       admin_agents =
         DiscourseAi::Agents::Agent
@@ -240,6 +332,12 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::WebArtifactCreator,
       )
 
+      expect(admin_agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
+      )
+
       # omits agents if key is missing
       SiteSetting.ai_google_custom_search_api_key = ""
       SiteSetting.ai_artifact_security = "disabled"
@@ -253,7 +351,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
           .map(&:superclass)
           .reject { |klass| klass == DiscourseAi::Agents::Agent }
 
-      expect(system_agent_classes).to contain_exactly(
+      expect(system_agent_classes).to include(
         DiscourseAi::Agents::General,
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::SettingsExplorer,
@@ -285,6 +383,141 @@ RSpec.describe DiscourseAi::Agents::Agent do
     end
   end
 
+  describe ".sync_external_registry!" do
+    fab!(:fake_plugin) do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
+      plugin
+    end
+
+    def register_fake_feature(
+      module_name: :test_module,
+      feature: :test_feature,
+      agent_klass: FakeExternalAgent
+    )
+      DiscoursePluginRegistry.register_external_ai_feature(
+        { module_name:, feature:, agent_klass:, enabled_by_setting: nil },
+        fake_plugin,
+      )
+    end
+
+    def external_agent_row(agent_klass)
+      AiAgent.new(system: true, id: described_class.external_agent_id(agent_klass))
+    end
+
+    def reset_external_registry!
+      described_class.instance_variable_set(:@external_registry_signature, nil)
+      described_class.instance_variable_set(:@system_agents, nil)
+      described_class.instance_variable_set(:@system_agents_by_id, nil)
+      described_class.instance_variable_set(:@external_tools_by_name, nil)
+    end
+
+    before do
+      # reset cache so sync runs fresh
+      reset_external_registry!
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+        entry[:value][:module_name] == :test_module
+      end
+      DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+        entry[:plugin] == fake_plugin
+      end
+      # remove fake entries from the registry
+      reset_external_registry!
+    end
+
+    it "registers standalone tools without an agent" do
+      DiscourseAi.register_tools([FakeExternalPlugin::FakeExternalTool], plugin: fake_plugin)
+
+      expect(described_class.external_tools).to include(FakeExternalPlugin::FakeExternalTool)
+      expect(AiAgent.new(tools: ["FakeExternalTool"]).class_instance.new.tools).to eq(
+        [FakeExternalPlugin::FakeExternalTool],
+      )
+    end
+
+    it "raises when two plugins register tools with the same class name" do
+      impostor = Class.new(DiscourseAi::Agents::Tools::Tool)
+      impostor.define_singleton_method(:to_s) { "OtherPlugin::FakeExternalTool" }
+      DiscourseAi.register_tools(
+        [FakeExternalPlugin::FakeExternalTool, impostor],
+        plugin: fake_plugin,
+      )
+
+      2.times do
+        expect { described_class.external_tools }.to raise_error(
+          ArgumentError,
+          /FakeExternalTool.*already registered/,
+        )
+      end
+    end
+
+    it "raises when a tool name normalises to a built-in tool" do
+      %w[OtherPlugin::SearchTool OtherPlugin::Tags].each do |name|
+        reset_external_registry!
+        impostor = Class.new(DiscourseAi::Agents::Tools::Tool)
+        impostor.define_singleton_method(:to_s) { name }
+        DiscourseAi.register_tools([impostor], plugin: fake_plugin)
+
+        expect { described_class.external_tools }.to raise_error(
+          ArgumentError,
+          /#{name.demodulize}.*built-in/,
+        )
+
+        DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+          entry[:plugin] == fake_plugin
+        end
+      end
+    end
+
+    it "registers an external agent once under a stable id, with its tools" do
+      register_fake_feature(feature: :feature_one)
+      register_fake_feature(feature: :feature_two)
+
+      expected_id = described_class.external_agent_id(FakeExternalAgent)
+      expect(described_class.system_agents[FakeExternalAgent]).to eq(expected_id)
+      expect(described_class.system_agents_by_id[expected_id]).to eq(FakeExternalAgent)
+      expect(FakeExternalAgent.new.available_tools).to include(FakeExternalPlugin::FakeExternalTool)
+
+      described_class.instance_variable_set(:@external_tools_by_name, nil)
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+    end
+
+    it "lets an external agent opt into a bot user" do
+      register_fake_feature(feature: :bot_feature, agent_klass: FakeExternalBotAgent)
+      register_fake_feature
+
+      opted_in = external_agent_row(FakeExternalBotAgent)
+      default = external_agent_row(FakeExternalAgent)
+
+      expect(opted_in.can_have_bot_user?).to eq(true)
+      expect(default.can_have_bot_user?).to eq(false)
+    end
+
+    it "does not overwrite a builtin agent when registered as an external agent_klass" do
+      builtin_id = described_class.system_agents[DiscourseAi::Agents::SqlHelper]
+
+      register_fake_feature(feature: :sql_feature, agent_klass: DiscourseAi::Agents::SqlHelper)
+
+      expect(described_class.system_agents[DiscourseAi::Agents::SqlHelper]).to eq(builtin_id)
+    end
+
+    it "keeps the external agent in system_agents even when the plugin is disabled" do
+      register_fake_feature
+
+      expect(described_class.system_agents).to have_key(FakeExternalAgent)
+
+      fake_plugin.stubs(:enabled?).returns(false)
+      reset_external_registry!
+
+      expect(described_class.system_agents).to have_key(FakeExternalAgent)
+    end
+  end
+
   describe "#craft_prompt" do
     fab!(:vector_def, :embedding_definition)
 
@@ -301,213 +534,70 @@ RSpec.describe DiscourseAi::Agents::Agent do
       context
     end
 
-    context "when a agent has no uploads" do
-      it "doesn't include RAG guidance" do
-        guidance_fragment =
-          "The following texts will give you additional guidance to elaborate a response."
-
-        expect(ai_agent.craft_prompt(with_cc).messages.first[:content]).not_to include(
-          guidance_fragment,
-        )
-      end
+    def prompt_tool_names(prompt)
+      prompt.tools.map(&:name)
     end
 
-    context "when RAG is running with a question consolidator" do
-      let(:consolidated_question) { "what is the time in france?" }
-
-      fab!(:llm_model, :fake_model)
-
-      fab!(:custom_ai_agent) do
-        Fabricate(
-          :ai_agent,
-          name: "custom",
-          rag_conversation_chunks: 3,
-          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-          question_consolidator_llm_id: llm_model.id,
+    context "when a agent has no uploads" do
+      it "doesn't expose the uploaded document search tool" do
+        expect(prompt_tool_names(ai_agent.craft_prompt(with_cc))).not_to include(
+          "search_uploaded_documents",
         )
-      end
-
-      before do
-        context_embedding = vector_def.dimensions.times.map { rand(-1.0...1.0) }
-        EmbeddingsGenerationStubs.hugging_face_service(consolidated_question, context_embedding)
-
-        UploadReference.ensure_exist!(target: custom_ai_agent, upload_ids: [upload.id])
-      end
-
-      it "will run the question consolidator" do
-        custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-        # this means that we will consolidate
-        context.messages = [
-          { content: "Tell me the time", type: :user },
-          { content: "the time is 1", type: :model },
-          { content: "in france?", type: :user },
-        ]
-
-        DiscourseAi::Completions::Endpoints::Fake.with_fake_content(consolidated_question) do
-          custom_agent.craft_prompt(context).messages.first[:content]
-        end
-
-        message =
-          DiscourseAi::Completions::Endpoints::Fake.last_call[:dialect].prompt.messages.last[
-            :content
-          ]
-        expect(message).to include("Tell me the time")
-        expect(message).to include("the time is 1")
-        expect(message).to include("in france?")
-      end
-
-      context "when there are messages with uploads" do
-        let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
-        let(:image_upload) do
-          UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
-        end
-
-        it "the question consolidator works" do
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-          context.messages = [
-            { content: "Tell me the time", type: :user },
-            { content: "the time is 1", type: :model },
-            { content: ["in france?", { upload_id: image_upload.id }], type: :user },
-          ]
-
-          DiscourseAi::Completions::Endpoints::Fake.with_fake_content(consolidated_question) do
-            custom_agent.craft_prompt(context).messages.first[:content]
-          end
-
-          message =
-            DiscourseAi::Completions::Endpoints::Fake.last_call[:dialect].prompt.messages.last[
-              :content
-            ]
-          expect(message).to include("Tell me the time")
-          expect(message).to include("the time is 1")
-          expect(message).to include("in france?")
-        end
       end
     end
 
     context "when a agent has RAG uploads" do
-      let(:embedding_value) { 0.04381 }
-      let(:prompt_cc_embeddings) { [embedding_value] * vector_def.dimensions }
-
-      def stub_fragments(fragment_count, agent: ai_agent)
-        schema = DiscourseAi::Embeddings::Schema.for(RagDocumentFragment)
-
-        fragment_count.times do |i|
-          fragment =
-            Fabricate(
-              :rag_document_fragment,
-              fragment: "fragment-n#{i}",
-              target_id: agent.id,
-              target_type: "AiAgent",
-              upload: upload,
-            )
-
-          # Similarity is determined left-to-right.
-          embeddings = [embedding_value + "0.000#{i}".to_f] * vector_def.dimensions
-
-          schema.store(fragment, embeddings, "test")
-        end
-      end
-
       before do
         stored_ai_agent = AiAgent.find(ai_agent.id)
         UploadReference.ensure_exist!(target: stored_ai_agent, upload_ids: [upload.id])
+      end
 
-        EmbeddingsGenerationStubs.hugging_face_service(
-          with_cc.messages.dig(0, :content),
-          prompt_cc_embeddings,
+      it "exposes uploaded documents as a tool instead of injecting snippets into the prompt" do
+        prompt = ai_agent.craft_prompt(with_cc)
+
+        expect(prompt_tool_names(prompt)).to include("search_uploaded_documents")
+        expect(prompt.messages.first[:content]).to include("search_uploaded_documents")
+        expect(prompt.messages.first[:content]).not_to include(
+          "The following texts will give you additional guidance",
         )
       end
 
-      context "when agent allows for less fragments" do
-        it "will only pick 3 fragments" do
-          custom_ai_agent =
-            Fabricate(
-              :ai_agent,
-              name: "custom",
-              rag_conversation_chunks: 3,
-              allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-            )
-
-          stub_fragments(3, agent: custom_ai_agent)
-
-          UploadReference.ensure_exist!(target: custom_ai_agent, upload_ids: [upload.id])
-
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: custom_ai_agent.id, user: user).new
-
-          expect(custom_agent.class.rag_conversation_chunks).to eq(3)
-
-          crafted_system_prompt = custom_agent.craft_prompt(with_cc).messages.first[:content]
-
-          expect(crafted_system_prompt).to include("fragment-n0")
-          expect(crafted_system_prompt).to include("fragment-n1")
-          expect(crafted_system_prompt).to include("fragment-n2")
-          expect(crafted_system_prompt).not_to include("fragment-n3")
-        end
-      end
-
-      context "when the reranker is available" do
-        before do
-          SiteSetting.ai_hugging_face_tei_reranker_endpoint = "https://test.reranker.com"
-          stub_fragments(15)
-        end
-
-        it "uses the re-ranker to reorder the fragments and pick the top 10 candidates" do
-          skip "This test is flaky needs to be investigated ordering does not come back as expected"
-          # The re-ranker reverses the similarity search, but return less results
-          # to act as a limit for test-purposes.
-          expected_reranked = (4..14).to_a.reverse.map { |idx| { index: idx } }
-
-          WebMock.stub_request(:post, "https://test.reranker.com/rerank").to_return(
-            status: 200,
-            body: JSON.dump(expected_reranked),
+      it "finds the uploaded document search tool" do
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "search_uploaded_documents",
+            id: "call_uploaded_docs",
+            parameters: {
+              query: "time",
+            },
           )
 
-          crafted_system_prompt = ai_agent.craft_prompt(with_cc).messages.first[:content]
+        tool = ai_agent.find_tool(tool_call, bot_user: nil, llm: nil, context: with_cc)
 
-          expect(crafted_system_prompt).to include("fragment-n14")
-          expect(crafted_system_prompt).to include("fragment-n13")
-          expect(crafted_system_prompt).to include("fragment-n12")
-          expect(crafted_system_prompt).not_to include("fragment-n4") # Fragment #11 not included
-        end
+        expect(tool).to be_a(DiscourseAi::Agents::Tools::SearchUploadedDocuments)
+        expect(tool.agent).to eq(ai_agent)
+      end
+    end
+
+    context "when the agent has examples" do
+      fab!(:examples_agent) do
+        Fabricate(
+          :ai_agent,
+          examples: [["User message", "assistant response"]],
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        )
       end
 
-      context "when the reranker is not available" do
-        before { stub_fragments(10) }
+      it "includes them before the context messages" do
+        custom_agent = DiscourseAi::Agents::Agent.find_by(id: examples_agent.id, user: user).new
 
-        it "picks the first 10 candidates from the similarity search" do
-          crafted_system_prompt = ai_agent.craft_prompt(with_cc).messages.first[:content]
+        post_system_prompt_msgs = custom_agent.craft_prompt(with_cc).messages.last(3)
 
-          expect(crafted_system_prompt).to include("fragment-n0")
-          expect(crafted_system_prompt).to include("fragment-n1")
-          expect(crafted_system_prompt).to include("fragment-n2")
-
-          expect(crafted_system_prompt).not_to include("fragment-n10") # Fragment #10 not included
-        end
-      end
-
-      context "when the agent has examples" do
-        fab!(:examples_agent) do
-          Fabricate(
-            :ai_agent,
-            examples: [["User message", "assistant response"]],
-            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-          )
-        end
-
-        it "includes them before the context messages" do
-          custom_agent = DiscourseAi::Agents::Agent.find_by(id: examples_agent.id, user: user).new
-
-          post_system_prompt_msgs = custom_agent.craft_prompt(with_cc).messages.last(3)
-
-          expect(post_system_prompt_msgs).to contain_exactly(
-            { content: "User message", type: :user },
-            { content: "assistant response", type: :model },
-            { content: "Tell me the time", type: :user },
-          )
-        end
+        expect(post_system_prompt_msgs).to contain_exactly(
+          { content: "User message", type: :user },
+          { content: "assistant response", type: :model },
+          { content: "Tell me the time", type: :user },
+        )
       end
     end
   end

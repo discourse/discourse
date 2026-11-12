@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
-import CustomReaction from "../../models/discourse-reactions-custom-reaction";
+import CustomReaction from "../../models/discourse-reactions-custom-reaction.js";
 
 export default class UserActivityReactions extends Controller {
   @service siteSettings;
@@ -12,34 +12,6 @@ export default class UserActivityReactions extends Controller {
   @tracked loading = false;
   @tracked beforeLikeId = null;
   @tracked beforeReactionUserId = null;
-
-  #getLastIdFrom(array) {
-    return array.length ? array[array.length - 1].reaction_user_id : null;
-  }
-
-  #updateBeforeIds(reactionUsers) {
-    if (this.includeLikes) {
-      const mainReaction =
-        this.siteSettings.discourse_reactions_reaction_for_like;
-      const [likes, reactions] = reactionUsers.reduce(
-        (memo, elem) => {
-          if (elem.reaction.reaction_value === mainReaction) {
-            memo[0].push(elem);
-          } else {
-            memo[1].push(elem);
-          }
-
-          return memo;
-        },
-        [[], []]
-      );
-
-      this.beforeLikeId = this.#getLastIdFrom(likes);
-      this.beforeReactionUserId = this.#getLastIdFrom(reactions);
-    } else {
-      this.beforeReactionUserId = this.#getLastIdFrom(reactionUsers);
-    }
-  }
 
   @action
   async loadMore() {
@@ -82,6 +54,34 @@ export default class UserActivityReactions extends Controller {
       return flattened;
     } finally {
       this.loading = false;
+    }
+  }
+
+  #getLastIdFrom(array) {
+    return array.length ? array[array.length - 1].reaction_user_id : null;
+  }
+
+  #updateBeforeIds(reactionUsers) {
+    if (this.includeLikes) {
+      const mainReaction =
+        this.siteSettings.discourse_reactions_reaction_for_like;
+      const [likes, reactions] = reactionUsers.reduce(
+        (memo, elem) => {
+          if (elem.reaction.reaction_value === mainReaction) {
+            memo[0].push(elem);
+          } else {
+            memo[1].push(elem);
+          }
+
+          return memo;
+        },
+        [[], []]
+      );
+
+      this.beforeLikeId = this.#getLastIdFrom(likes);
+      this.beforeReactionUserId = this.#getLastIdFrom(reactions);
+    } else {
+      this.beforeReactionUserId = this.#getLastIdFrom(reactionUsers);
     }
   }
 }

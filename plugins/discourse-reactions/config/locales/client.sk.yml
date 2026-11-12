@@ -13,19 +13,21 @@ sk:
   js:
     discourse_reactions:
       reactions_title: "Reakcie"
-      state_panel:
-        more_users: "a %{count} ďalšie..."
-      reaction:
-        forbidden: "Táto reakcia vznikla príliš dávno. Už sa nedá upraviť ani odstrániť."
       picker:
         react_with: "Reagujte na tento príspevok pomocou: %{reaction}"
         cant_remove_reaction: "Už nemôžete odstrániť svoju reakciu"
         remove_reaction: "Odstráňte túto reakciu %{reaction}"
+      users_popup:
+        all: "Všetky"
       main_reaction:
         add: "Páči sa mi tento príspevok"
         remove: "Odstrániť toto páči sa mi to"
         cant_remove: "Už nemôžete odstrániť svoj like"
         unauthenticated: "Pre označenie „Páči sa mi to“ sa prosím zaregistrujte alebo prihláste."
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Pridané"
+        changes_removed: "Odstránené"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagoval na %{count} váš príspevok"

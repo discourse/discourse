@@ -1,29 +1,28 @@
-import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trustHTML } from "@ember/template";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
-import AssignButton from "../components/assign-button";
-import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
-import EditTopicAssignments from "../components/modal/edit-topic-assignments";
-import PostAssignmentsDisplay from "../components/post-assignments-display";
-import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
+import AssignButton from "../components/assign-button.gjs";
+import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user.gjs";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments.gjs";
+import PostAssignmentsDisplay from "../components/post-assignments-display.gjs";
+import TopicLevelAssignMenu from "../components/topic-level-assign-menu.js";
 import {
   assignedToGroupPath,
   assignedToPostPath,
   assignedToUserPath,
-} from "../lib/url";
-import { extendTopicModel } from "../models/topic";
+} from "../lib/url.js";
+import { extendTopicModel } from "../models/topic.js";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
   "topic.assigned_to_group",
+  "topic.can_assign",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
   "topic.assigned_to_user.name",
@@ -38,6 +37,10 @@ function defaultTitle(topic) {
   } else {
     return i18n("discourse_assign.assign.help");
   }
+}
+
+function canAssignTopic(context) {
+  return context.topic?.can_assign ?? context.currentUser?.can_assign;
 }
 
 function registerTopicFooterButtons(api) {
@@ -63,7 +66,7 @@ function registerTopicFooterButtons(api) {
       return i18n("discourse_assign.assign.title");
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -90,7 +93,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       return (
-        this.currentUser?.can_assign &&
+        canAssignTopic(this) &&
         !this.topic.isAssigned() &&
         !this.topic.hasAssignedPosts()
       );
@@ -112,27 +115,27 @@ function registerTopicFooterButtons(api) {
 
       if (user) {
         return trustHTML(
-          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
+          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${escapeExpression(
             user.username
-          }</span></span>&nbsp;${renderAvatar(user, {
+          )}</span></span>&nbsp;${renderAvatar(user, {
             imageSize: "small",
             ignoreTitle: true,
           })}`
         );
       } else if (group) {
         return trustHTML(
-          `<span class="unassign-label">${label}</span> @${group.name}`
+          `<span class="unassign-label">${label}</span> @${escapeExpression(group.name)}`
         );
       }
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.currentUser?.can_assign && this.site.mobileView;
+      return canAssignTopic(this) && this.site.mobileView;
     },
   });
 
@@ -155,7 +158,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -166,16 +169,14 @@ function registerTopicFooterButtons(api) {
       taskActions.unassign(this.topic.id);
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
       return (
-        this.currentUser?.can_assign &&
-        this.site.mobileView &&
-        this.topic.isAssigned()
+        canAssignTopic(this) && this.site.mobileView && this.topic.isAssigned()
       );
     },
   });
@@ -199,7 +200,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -211,7 +212,7 @@ function registerTopicFooterButtons(api) {
       await taskActions.reassignUserToTopic(this.currentUser, this.topic);
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -219,7 +220,7 @@ function registerTopicFooterButtons(api) {
       return (
         // only display the button in the mobile view
         this.site.mobileView &&
-        this.currentUser?.can_assign &&
+        canAssignTopic(this) &&
         this.topic.isAssigned() &&
         this.topic.assigned_to_user?.username !== this.currentUser.username
       );
@@ -245,7 +246,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -257,13 +258,13 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.currentUser?.can_assign && this.site.mobileView;
+      return canAssignTopic(this) && this.site.mobileView;
     },
   });
 }
@@ -271,8 +272,9 @@ function registerTopicFooterButtons(api) {
 function initialize(api) {
   const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
+  const canAssignGlobally = currentUser?.can_assign_globally;
 
-  if (siteSettings.assigns_public || currentUser?.can_assign) {
+  if (siteSettings.assigns_public || canAssignGlobally) {
     api.addNavigationBarItem({
       name: "unassigned",
       customFilter: (category) => {
@@ -295,14 +297,14 @@ function initialize(api) {
       },
       before: "top",
     });
+  }
 
-    if (api.getCurrentUser()?.can_assign) {
-      customizePostMenu(api);
-    }
+  if (currentUser?.can_assign) {
+    customizePostMenu(api);
   }
 
   api.addAdvancedSearchOptions(
-    api.getCurrentUser()?.can_assign
+    canAssignGlobally
       ? {
           inOptionsForUsers: [
             {
@@ -318,21 +320,12 @@ function initialize(api) {
       : {}
   );
 
-  api.modifyClass(
-    "model:bookmark",
-    (Superclass) =>
-      class extends Superclass {
-        @computed("assigned_to_user")
-        get assignedToUserPath() {
-          return assignedToUserPath(this.assigned_to_user);
-        }
-
-        @computed("assigned_to_group")
-        get assignedToGroupPath() {
-          return assignedToGroupPath(this.assigned_to_group);
-        }
-      }
-  );
+  api.addModelGetter("bookmark", "assignedToUserPath", function () {
+    return assignedToUserPath(this.assigned_to_user);
+  });
+  api.addModelGetter("bookmark", "assignedToGroupPath", function () {
+    return assignedToGroupPath(this.assigned_to_group);
+  });
 
   api.modifyClass(
     "component:topic-notifications-button",
@@ -418,43 +411,13 @@ function initialize(api) {
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
         note
-      )}">${name}</span></${tagName}>`;
+      )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
-    // is there's one assignment just return the tag
-    if (assignedTo.length === 1) {
-      return createTagHtml(assignedTo[0]);
-    }
-
-    // join multiple assignments with a separator
-    let result = "";
-    assignedTo.forEach((assignment, index) => {
-      result += createTagHtml(assignment);
-
-      // add separator if not the last tag
-      if (index < assignedTo.length - 1) {
-        const separator = applyValueTransformer("tag-separator", ",", {
-          topic,
-          index,
-        });
-        result += `<span class="discourse-tags__tag-separator">${separator}</span>`;
-      }
-    });
-
-    return result;
+    return assignedTo.map((assignment) => createTagHtml(assignment));
   });
 
-  api.modifyClass(
-    "model:group",
-    (Superclass) =>
-      class extends Superclass {
-        asJSON() {
-          return Object.assign({}, super.asJSON(...arguments), {
-            assignable_level: this.assignable_level,
-          });
-        }
-      }
-  );
+  api.addModelSaveProperty("group", "assignable_level");
 
   api.modifyClass(
     "controller:topic",
@@ -490,7 +453,9 @@ function initialize(api) {
               }
 
               if (data.post_id) {
+                topic.indirectly_assigned_to ||= {};
                 if (data.type === "assigned") {
+                  topic.indirectly_assigned_to[data.post_id] ||= {};
                   topic.indirectly_assigned_to[data.post_id].assigned_to =
                     data.assigned_to;
                 } else if (data.type === "unassigned") {
@@ -539,29 +504,16 @@ function customizePost(api, siteSettings) {
     "assigned_to_user",
     "assigned_to_user_id",
     "assignment_note",
-    "assignment_status"
+    "assignment_status",
+    "can_assign"
   );
 
-  api.modifyClass(
-    "model:post",
-    (Superclass) =>
-      class extends Superclass {
-        get can_edit() {
-          return isAssignSmallAction(this.action_code) ? true : super.can_edit;
-        }
+  api.registerValueTransformer("post-can-edit", ({ value, context }) =>
+    isAssignSmallAction(context.post.action_code) ? true : value
+  );
 
-        // overriding tracked properties requires overriding both the getter and the setter.
-        // otherwise the superclass will throw an error when the application sets the field value
-        set can_edit(value) {
-          super.can_edit = value;
-        }
-
-        get isSmallAction() {
-          return isAssignSmallAction(this.action_code)
-            ? true
-            : super.isSmallAction;
-        }
-      }
+  api.registerValueTransformer("post-is-small-action", ({ value, context }) =>
+    isAssignSmallAction(context.post.action_code) ? true : value
   );
 
   api.renderAfterWrapperOutlet(
@@ -648,8 +600,16 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-assigned",
+        route: "userActivity.assigned",
+        label: "discourse_assign.assigned",
+        icon: "user-plus",
+        displayed: ({ currentUser }) => currentUser?.can_assign_globally,
+      });
+
       const currentUser = container.lookup("service:current-user");
-      if (currentUser?.can_assign) {
+      if (currentUser?.can_assign_globally) {
         api.modifyClass(
           "component:search-advanced-options",
           (Superclass) =>
@@ -703,9 +663,11 @@ export default {
         id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
-        class: "btn-default assign-topics",
-        action({ setComponent }) {
-          setComponent(BulkActionsAssignUser);
+        class: "assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
+        action({ setComponent, performAndRefresh }) {
+          setComponent(BulkActionsAssignUser, { onPerform: performAndRefresh });
         },
         actionType: "setComponent",
       });
@@ -714,7 +676,9 @@ export default {
         id: "unassign-topics",
         label: "topics.bulk.unassign",
         icon: "user-xmark",
-        class: "btn-default unassign-topics",
+        class: "unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },

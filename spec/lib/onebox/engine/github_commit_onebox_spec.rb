@@ -17,6 +17,14 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     it_behaves_like "an engine"
 
     describe "#to_html" do
+      it "shows the preview type and repository in the header" do
+        header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+        expect(header.at_css(".github-onebox__label").text.strip).to eq("Commit")
+        expect(header.at_css("a").text.strip).to eq("discourse/discourse")
+        expect(header.at_css("a")["href"]).to eq(link)
+      end
+
       it "includes repository name" do
         expect(html).to include("discourse/discourse")
       end
@@ -131,6 +139,31 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
           "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
         ).with(headers: { "Authorization" => "Bearer github_pat_1234" })
       end
+    end
+  end
+
+  describe "#inline_data" do
+    let(:link) do
+      "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+    end
+
+    before do
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+      ).to_return(status: 200, body: onebox_response("githubcommit"))
+    end
+
+    it "returns nil when no access token is configured" do
+      expect(described_class.new(link).inline_data).to be_nil
+    end
+
+    it "returns the commit title from the API when an access token is configured" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+      expect(described_class.new(link).inline_data).to eq(
+        title:
+          "Fixed GitHub auth, GitHub can provide us with a valid email - so automatically log in for those cases - discourse/discourse@803d023 - GitHub",
+      )
     end
   end
 

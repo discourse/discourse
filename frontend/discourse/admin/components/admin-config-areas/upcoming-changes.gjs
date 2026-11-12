@@ -1,14 +1,64 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
+
+// most mature first, as those are closest to being enabled automatically
+const STATUS_ORDER = ["stable", "beta", "alpha", "experimental"];
+
+const DEFAULT_SORT = "recently_updated";
+
+function compareNames(a, b) {
+  return a.humanized_name.localeCompare(b.humanized_name);
+}
+
+function compareStatuses(a, b) {
+  return (
+    STATUS_ORDER.indexOf(a.upcoming_change.status) -
+    STATUS_ORDER.indexOf(b.upcoming_change.status)
+  );
+}
+
+// changes not yet seen by the tracking job have no timestamp, but are the newest
+function compareRecentlyUpdated(a, b) {
+  const aTime = a.upcoming_change.status_changed_at
+    ? Date.parse(a.upcoming_change.status_changed_at)
+    : Infinity;
+  const bTime = b.upcoming_change.status_changed_at
+    ? Date.parse(b.upcoming_change.status_changed_at)
+    : Infinity;
+
+  return aTime === bTime ? 0 : bTime > aTime ? 1 : -1;
+}
+
+function compareBy(...comparators) {
+  return (a, b) => {
+    for (const compare of comparators) {
+      const result = compare(a, b);
+      if (result !== 0) {
+        return result;
+      }
+    }
+    return 0;
+  };
+}
+
+const SORTS = {
+  recently_updated: compareBy(
+    compareRecentlyUpdated,
+    compareStatuses,
+    compareNames
+  ),
+  status: compareBy(compareStatuses, compareRecentlyUpdated, compareNames),
+  name: compareNames,
+};
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
   @service site;
@@ -16,9 +66,17 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
-      change.upcoming_change = new TrackedObject(change.upcoming_change);
-      return new TrackedObject(change);
+      change.upcoming_change = trackedObject(change.upcoming_change);
+      return trackedObject(change);
     });
+  }
+
+  get sortOptions() {
+    return Object.entries(SORTS).map(([value, compareFn]) => ({
+      value,
+      label: i18n(`admin.upcoming_changes.sort.${value}`),
+      compareFn,
+    }));
   }
 
   get staffGroupName() {
@@ -54,11 +112,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           value: "stable",
           filterFn: (change) => change.upcoming_change.status === "stable",
         },
-        {
-          label: i18n("admin.upcoming_changes.filter.status_permanent"),
-          value: "permanent",
-          filterFn: (change) => change.upcoming_change.status === "permanent",
-        },
       ],
       type: [
         {
@@ -76,6 +129,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           label: i18n("admin.upcoming_changes.filter.impact_type_other"),
           value: "other",
           filterFn: (change) => change.upcoming_change.impact_type === "other",
+        },
+        {
+          label: i18n(
+            "admin.upcoming_changes.filter.impact_type_site_setting_default"
+          ),
+          value: "site_setting_default",
+          filterFn: (change) =>
+            change.upcoming_change.impact_type === "site_setting_default",
         },
       ],
       impactRole: [
@@ -130,7 +191,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
             staffGroupName: this.staffGroupName,
           }),
           value: "enabled_for_staff",
-          filterFn: (change) => change.upcoming_change.enabled_for === "staff",
+          filterFn: (change) =>
+            change.upcoming_change.enabled_for === this.staffGroupName,
         },
         {
           label: i18n(
@@ -156,23 +218,33 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   <template>
-    <AdminFilterControls
+    <DFilterControls
       @array={{this.upcomingChanges}}
-      @searchableProps={{array
-        "humanized_name"
-        "description"
-        "plugin_identifier"
-        "setting"
+      @defaultSort={{DEFAULT_SORT}}
+      @dropdownFilterQueryParams={{hash
+        status="status"
+        type="type"
+        impactRole="impactRole"
+        enabled="enabled"
       }}
       @dropdownOptions={{this.dropdownOptions}}
+      @initialTextFilter={{@changeNamesFilter}}
       @inputPlaceholder={{i18n
         "admin.upcoming_changes.filter.search_placeholder"
       }}
       @noResultsMessage={{i18n
         "admin.upcoming_changes.filter.search_placeholder"
       }}
-      @initialTextFilter={{@changeNamesFilter}}
       @onResetFilters={{@onClearChangeNamesFilter}}
+      @searchableProps={{array
+        "humanized_name"
+        "description"
+        "plugin_identifier"
+        "setting"
+      }}
+      @sortOptions={{this.sortOptions}}
+      @sortQueryParam="sort"
+      @textFilterQueryParam="changeNamesFilter"
     >
       <:content as |upcomingChanges|>
         <table class="d-table upcoming-changes-table">
@@ -182,8 +254,11 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
+                class="d-table__header-cell upcoming-change__availability-header"
+              >{{i18n "admin.upcoming_changes.availability"}}</th>
+              <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
+              >{{i18n "admin.upcoming_changes.enabled"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">
@@ -196,7 +271,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           </tbody>
         </table>
       </:content>
-    </AdminFilterControls>
+    </DFilterControls>
 
     {{#unless this.upcomingChanges}}
       <AdminConfigAreaEmptyList

@@ -4,11 +4,31 @@ module DiscourseAi
   module AiBot
     class SharedAiConversationsController < ::ApplicationController
       requires_plugin PLUGIN_NAME
-      requires_login only: %i[create destroy preview]
+      requires_login only: %i[index create destroy preview]
       before_action :require_site_settings!
 
       skip_before_action :preload_json, :check_xhr, only: %i[show asset]
       skip_before_action :redirect_to_login_if_required, :verify_authenticity_token, only: %i[asset]
+
+      def index
+        if params.key?(:user_id) && !params[:user_id].to_s.match?(/\A[1-9]\d{0,9}\z/)
+          raise Discourse::InvalidParameters.new(:user_id)
+        end
+        owner = params.key?(:user_id) ? User.find_by(id: params[:user_id]) : current_user
+        guardian.ensure_can_inspect_ai_shares!(owner)
+        can_manage = owner.id == current_user.id
+
+        render json:
+                 SharedConversationsQuery
+                   .new(
+                     user: owner,
+                     published_only: !can_manage,
+                     order: params[:order],
+                     cursor: params[:cursor],
+                   )
+                   .call
+                   .merge(user_id: owner.id, can_manage: can_manage)
+      end
 
       def create
         ensure_allowed_create!
@@ -39,7 +59,9 @@ module DiscourseAi
 
       def show
         @shared_conversation = SharedAiConversation.find_by(share_key: params[:share_key])
-        raise Discourse::NotFound if @shared_conversation.blank?
+        if @shared_conversation.blank? || !@shared_conversation.publicly_visible?
+          raise Discourse::NotFound
+        end
 
         expires_in 1.minute, public: true
         response.headers["X-Robots-Tag"] = "noindex"
@@ -87,9 +109,10 @@ module DiscourseAi
       private
 
       def require_site_settings!
-        if !SiteSetting.discourse_ai_enabled ||
-             !SiteSetting.ai_bot_public_sharing_allowed_groups_map.any? ||
-             !SiteSetting.ai_bot_enabled
+        raise Discourse::NotFound if !SiteSetting.discourse_ai_enabled
+        return if action_name.in?(%w[index destroy])
+
+        if !SiteSetting.ai_bot_public_sharing_allowed_groups_map.any? || !SiteSetting.ai_bot_enabled
           raise Discourse::NotFound
         end
       end
@@ -101,7 +124,7 @@ module DiscourseAi
         @shared_conversation = SharedAiConversation.find_by(target: @topic)
 
         @error = DiscourseAi::AiBot::EntryPoint.ai_share_error(@topic, guardian)
-        if @error == :not_allowed
+        if @error
           raise Discourse::InvalidAccess.new(
                   nil,
                   nil,

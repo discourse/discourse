@@ -87,9 +87,54 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "staff action logs accessible"
+
+      it "filters bot creation as a native staff action" do
+        bot = Fabricate(:user, id: -1234)
+        creation = StaffActionLogger.new(admin).log_bot_creation(bot)
+        StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:create_bot],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"]).to contain_exactly(
+          include("id" => creation.id, "action_name" => "create_bot"),
+        )
+        expect(response.parsed_body["extras"]["user_history_actions"]).to include(
+          "id" => "create_bot",
+          "action_id" => UserHistory.actions[:create_bot],
+        )
+      end
+
+      it "retains stored full names for administrators when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        expect(logs_by_action["delete_user"]["details"]).to include(user.name)
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => "Previous Private Name",
+          "new_value" => "New Private Name",
+        )
+      end
 
       it "generates logs with pages" do
         4.times do |idx|
@@ -128,8 +173,40 @@ RSpec.describe Admin::StaffActionLogsController do
         expect(response.parsed_body["staff_action_logs"].first["details"]).to include(pm.title)
       end
 
+      describe "reviewable_id" do
+        it "is included when the staff action log is linked to a reviewable" do
+          reviewable = Fabricate(:reviewable_queued_post_topic)
+          UserHistory.create!(
+            action: UserHistory.actions[:post_approved],
+            acting_user_id: admin.id,
+            reviewable_id: reviewable.id,
+          )
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:post_approved],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first["reviewable_id"]).to eq(
+            reviewable.id,
+          )
+        end
+
+        it "is omitted when the staff action log has no reviewable" do
+          StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
+
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                action_id: UserHistory.actions[:change_site_setting],
+              }
+
+          expect(response.parsed_body["staff_action_logs"].first).not_to have_key("reviewable_id")
+        end
+      end
+
       context "when staff actions are extended" do
         let(:plugin_extended_action) { :confirmed_ham }
+
         before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }
         after { UserHistory.unstub(:staff_actions) }
 
@@ -147,6 +224,68 @@ RSpec.describe Admin::StaffActionLogsController do
       before { sign_in(moderator) }
 
       include_examples "staff action logs accessible"
+
+      it "hides stored full names when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private\nFull Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        topic = Fabricate(:topic, user: user, title: "Welcome to the community (2026 edition)")
+        post =
+          Fabricate(
+            :post,
+            user: user,
+            topic: topic,
+            raw: "Quoting the old log (below)\ntopic: Forged title",
+          )
+        StaffActionLogger.new(admin).log_post_deletion(post)
+        StaffActionLogger.new(admin).log_topic_delete_recover(topic)
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("Previous Private Name", "New Private Name")
+
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        name_details =
+          logs_by_action
+            .values_at("delete_user", "delete_post", "delete_topic")
+            .pluck("details")
+            .join
+        expect(name_details).not_to include(*user.name.lines(chomp: true))
+        expect(logs_by_action["delete_topic"]["details"]).to include("title: #{topic.title}\n")
+        expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
+        expect(logs_by_action["delete_post"]["details"]).to include(
+          "user: #{user.username}\ntopic: #{topic.title}\npost_number: #{post.post_number}\n",
+        )
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => nil,
+          "new_value" => nil,
+        )
+      end
+
+      it "keeps post content that quotes an author line when the author was deleted" do
+        SiteSetting.enable_names = false
+        post =
+          Fabricate(
+            :post,
+            raw: "Copied from the log:\nuser: someone (quoted in the post)\nraw: more text",
+          )
+        post.update_columns(user_id: nil)
+        StaffActionLogger.new(admin).log_post_recover(post.reload)
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].sole["details"]).to include(
+          "user: (deleted user)\nraw: #{post.raw}",
+        )
+      end
 
       it "does not see admin-only actions" do
         StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")
@@ -327,7 +466,7 @@ RSpec.describe Admin::StaffActionLogsController do
         parsed = response.parsed_body
 
         name_diff = <<-HTML
-          <h3>name</h3><p></p><table class="markdown"><tr><td class="--previous diff-del"><del>#{tag_group1.name}</del></td><td class="--current diff-ins"><ins>#{tag_group2.name}</ins></td></tr></table>
+          <h3>name</h3><p></p><table class="markdown"><tr><td class="--previous"><del>#{tag_group1.name}</del></td><td class="--current"><ins>#{tag_group2.name}</ins></td></tr></table>
         HTML
         expect(parsed["side_by_side"]).to include(name_diff.strip)
         expect(parsed["side_by_side"]).to include("<del>#{tag1.name}</del>")
@@ -377,7 +516,10 @@ RSpec.describe Admin::StaffActionLogsController do
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        admin.update!(last_seen_at: 1.day.ago)
+        sign_in(admin)
+      end
 
       include_examples "theme diffs accessible"
       include_examples "tag_group diffs accessible"

@@ -80,7 +80,7 @@ RSpec.describe DistributedMutex do
   end
 
   describe "executions" do
-    it "should not allow critical sections to overlap" do
+    it "prevents critical sections from overlapping" do
       connections = 3.times.map { DiscourseRedis.new }
 
       scenario =
@@ -93,22 +93,20 @@ RSpec.describe DistributedMutex do
 
           3.times do |i|
             execution.spawn do
-              begin
-                redis = Concurrency::RedisWrapper.new(connections[i], execution)
+              redis = Concurrency::RedisWrapper.new(connections[i], execution)
 
-                2.times do
-                  DistributedMutex.synchronize("mutex_key", redis: redis) do
-                    raise "already locked #{execution.path}" if locked
-                    locked = true
+              2.times do
+                DistributedMutex.synchronize("mutex_key", redis: redis) do
+                  raise "already locked #{execution.path}" if locked
+                  locked = true
 
-                    execution.yield
+                  execution.yield
 
-                    raise "already unlocked #{execution.path}" unless locked
-                    locked = false
-                  end
+                  raise "already unlocked #{execution.path}" unless locked
+                  locked = false
                 end
-              rescue Redis::ConnectionError
               end
+            rescue Redis::ConnectionError
             end
           end
         end

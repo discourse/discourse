@@ -18,12 +18,14 @@ en:
 
     errors:
       chat_integration_slack_api_configs_are_empty: "You must enter either an outbound webhook URL, or an access token"
+      chat_integration_telegram_api_base_url_invalid: "The Telegram API base URL must be a valid HTTPS URL without credentials, a query string, or a fragment"
 
     #######################################
     ######### TELEGRAM SETTINGS ###########
     #######################################
     chat_integration_telegram_enabled: "Enable the Telegram chat-integration provider"
     chat_integration_telegram_access_token: "Your bot's access token from the Telegram botfather"
+    chat_integration_telegram_api_base_url: "Base URL used for Telegram Bot API requests. Change this only when routing requests through a trusted HTTPS proxy. Hosts on private networks must also be added to the allowed internal hosts site setting."
     chat_integration_telegram_excerpt_length: "Telegram post excerpt length"
     chat_integration_telegram_enable_slash_commands: "Allow telegram subscriptions to be managed using 'slash commands'"
 
@@ -80,12 +82,6 @@ en:
     chat_integration_gitter_enabled: "Enable the Gitter chat integration provider"
 
     #######################################
-    ########## FLOWDOCK SETTINGS ##########
-    #######################################
-    chat_integration_flowdock_enabled: "Enable the Flowdock chat integration provider"
-    chat_integration_flowdock_excerpt_length: "Flowdock post excerpt length"
-
-    #######################################
     ########## GROUPME SETTINGS ##########
     #######################################
     chat_integration_groupme_enabled: "Enable the Groupme chat integration provider"
@@ -119,7 +115,7 @@ en:
 
   dashboard:
     problem:
-      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/chat-integration'>the chat integration section</a> to find out more."
+      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more."
 
   discourse_automation:
     scriptables:
@@ -127,8 +123,17 @@ en:
         title: Send Slack message
       send_chat_integration_message:
         title: Send Chat-Integration message
-  chat_integration:
 
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Channel not found: %{channel_id}"
+        provider_disabled: "Chat integration provider is disabled or missing: %{provider}"
+        provider_failed: "The %{provider} provider could not send the message"
+        provider_failed_with_details: "The %{provider} provider could not send the message: %{details}"
+        message_required: "A message is required"
+
+  chat_integration:
     all_categories: "(all categories)"
     deleted_category: "(deleted category)"
     deleted_group: "(deleted group)"
@@ -136,11 +141,15 @@ en:
     group_mention_template: "mentions of: @%{name}"
     group_message_template: "messages to: @%{name}"
 
-
     topic_tag_changed:
       added_and_removed: "Added %{added} and removed %{removed}"
       added: "Added %{added}"
       removed: "Removed %{removed}"
+
+    errors:
+      provider_already_enabled: "Provider '%{name}' is already enabled"
+      provider_not_found: "Provider '%{name}' not found"
+      setting_update_failed: "Failed to update settings: %{errors}"
 
     provider:
 
@@ -148,6 +157,10 @@ en:
       ########## SLACK STRINGS ##############
       #######################################
       slack:
+        errors:
+          auth_error: "The provided authentication token is invalid"
+          action_prohibited: "The bot does not have permission to post to that channel"
+          channel_not_found: "The specified channel does not exist on Slack"
         status:
           header: |
             *Rules for this channel*
@@ -312,12 +325,6 @@ en:
                     ~~~quote
                     %{excerpt}
                     ~~~
-
-      #######################################
-      ########### FLOWDOCK STRINGS ##########
-      #######################################
-      flowdock:
-        message_title: "posted"
 
       #######################################
       ############ GOOGLE STRINGS ###########

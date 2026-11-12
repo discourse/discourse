@@ -9,54 +9,54 @@
   }
 
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
-    var(--space-4);
+  --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
+    var(--space-2) var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
-  --d-sidebar-background: var(--secondary);
-  --d-sidebar-admin-background: var(--primary-very-low);
+  --d-sidebar-background: var(--token-color-surface);
 
   // must be rgba for gradient
-  --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
-  --d-sidebar-header-color: var(--primary-medium);
-  --d-sidebar-header-icon-color: var(--primary-medium);
-  --d-sidebar-header-font-weight: bold;
-  --d-sidebar-section-border-color: var(--content-border-color);
-  --d-sidebar-border-color: var(--content-border-color);
-  --d-sidebar-link-color: var(--primary-high);
-  --d-sidebar-link-icon-color: var(--primary-500);
-  --d-sidebar-link-badge-color: var(--primary-700); // example: new count
+  --d-sidebar-footer-fade: rgb(from var(--token-color-surface) r g b / 1);
+  --d-sidebar-header-color: var(--token-color-text-subtle);
+  --d-sidebar-header-icon-color: var(--token-color-text-subtle);
+  --d-sidebar-header-font-weight: var(--token-font-weight-semibold);
+  --d-sidebar-section-border-color: var(--token-color-border-default);
+  --d-sidebar-border-color: var(--token-color-border-default);
+  --d-sidebar-link-color: var(--token-color-text-subtle);
+  --d-sidebar-link-icon-color: var(--token-color-icon-subtle);
+  --d-sidebar-link-badge-color: var(--token-color-text-subtle);
 
+  // example: new count
   // example: chat participant count
-  --d-sidebar-prefix-background: var(--primary-low);
+  --d-sidebar-prefix-background: var(--token-color-surface-pressed);
   --d-sidebar-prefix-color: var(--d-sidebar-link-color);
 
   // example: unread dot
-  --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-suffix-color: var(--token-color-background-accent-subtle);
 
   // highlight applies to both hover and focus states
-  --d-sidebar-highlight-background: var(--d-hover);
-  --d-sidebar-highlight-color: var(--primary-high);
-  --d-sidebar-highlight-prefix-background: var(--primary-300);
-  --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
-  --d-sidebar-highlight-suffix-color: var(--tertiary-med-or-tertiary);
-  --d-sidebar-highlight-hover-background: var(
-    --primary-medium
-  ); // example: hovering a button within a highlighted section
+  --d-sidebar-highlight-background: var(--token-color-surface-hovered);
+  --d-sidebar-highlight-color: var(--token-color-text-default);
+  --d-sidebar-highlight-prefix-background: var(--token-color-surface-pressed);
+  --d-sidebar-highlight-prefix-color: var(--d-sidebar-link-color);
+  --d-sidebar-highlight-suffix-color: var(--d-sidebar-suffix-color);
+  --d-sidebar-highlight-hover-background: var(--token-color-surface-pressed);
 
-  --d-sidebar-highlight-hover-icon: var(
-    --primary-very-low
-  ); // example: hovering a button within a highlighted section
+  // example: hovering a button within a highlighted section
+  --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color);
 
-  --d-sidebar-active-background: var(--d-selected);
-  --d-sidebar-active-color: var(--d-sidebar-link-color);
-  --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
-  --d-sidebar-active-prefix-background: var(--primary-200);
-  --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
-  --d-sidebar-active-font-weight: bold; // example: active section link
+  // example: hovering a button within a highlighted section
+  --d-sidebar-active-background: var(--token-color-surface-selected);
+  --d-sidebar-active-color: var(--token-color-text-default);
+  --d-sidebar-active-icon-color: var(--token-color-icon-default);
+  --d-sidebar-active-prefix-background: var(--token-color-surface-hovered);
+  --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color);
+  --d-sidebar-active-font-weight: var(
+    --token-font-weight-semibold
+  ); // example: active section link
 
   @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
@@ -64,6 +64,38 @@
 
   @include viewport.until(lg) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
+  }
+}
+
+.sidebar-link-drop-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-block: var(--space-1);
+  padding: var(--space-3);
+  color: var(--token-color-text-default);
+  background: var(--token-color-surface-selected);
+  border-radius: var(--d-border-radius);
+  font-weight: var(--token-font-weight-semibold);
+  animation: sidebar-link-drop-target-reveal 0.15s ease-out;
+
+  /* Native drag hit-testing honors this, so while it applies the zone cannot
+     take a drop. */
+
+  &.is-arming {
+    pointer-events: none;
+  }
+
+  &.is-active {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes sidebar-link-drop-target-reveal {
+  from {
+    opacity: 0;
   }
 }
 
@@ -85,12 +117,18 @@
   align-self: start;
   overflow-y: auto;
 
+  @include viewport.until(md) {
+    // height gets in the way in slide-out mode
+    height: auto;
+  }
+
   // back-compat for themes
   --1dvh: 1dvh;
 
   @include unselectable;
 
   .sidebar-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -118,7 +156,7 @@
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
-    --scrollbarThumbBg: var(--primary-low);
+    --scrollbarThumbBg: var(--token-color-surface-hovered);
     --scrollbarWidth: var(--space-2);
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
@@ -169,7 +207,7 @@
       }
 
       .texts .name {
-        font-weight: normal;
+        font-weight: var(--token-font-weight-regular);
       }
     }
   }
@@ -182,7 +220,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    color: var(--primary-medium);
+    color: var(--token-color-icon-subtlest);
     align-self: center;
     margin-left: auto;
     margin-right: auto;
@@ -220,11 +258,112 @@
     }
   }
 
+  .sidebar-section-form__links-label {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    color: var(--token-color-text-subtle);
+    font-weight: var(--token-font-weight-bold);
+  }
+
+  .sidebar-section-form__source-locale {
+    margin-bottom: 1em;
+
+    label {
+      display: block;
+      font-weight: var(--token-font-weight-bold);
+    }
+
+    .sidebar-section-form__source-locale-select {
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  .sidebar-section-form__source-locale-description {
+    margin: 0.25em 0 1.5em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+
+  .sidebar-section-form__manage-translations {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .sidebar-section-form__translations-incomplete {
+    margin-inline-start: 0.5em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+  }
+
+  .sidebar-section-translations__back {
+    margin-bottom: 1em;
+    padding-inline-start: 0;
+  }
+
+  .sidebar-section-translations__language {
+    margin-bottom: 1.5em;
+    padding: 0.75em;
+    border: 1px solid var(--token-color-border);
+    border-radius: var(--d-border-radius);
+  }
+
+  .sidebar-section-translations__language-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    margin-bottom: 0.75em;
+
+    .sidebar-section-translations__language-select {
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  .sidebar-section-translations__caption {
+    margin-bottom: 0.25em;
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+    font-weight: var(--token-font-weight-bold);
+  }
+
+  .sidebar-section-translations__row {
+    display: grid;
+    grid-template-columns: minmax(6em, 1fr) 2fr;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+
+    @include viewport.until(sm) {
+      grid-template-columns: 1fr;
+      gap: 0.25em;
+    }
+
+    .sidebar-section-translations__source {
+      overflow-wrap: anywhere;
+      font-weight: var(--token-font-weight-regular);
+    }
+
+    .sidebar-section-translations__value {
+      width: 100%;
+      margin-bottom: 0;
+
+      &.--untranslated {
+        border-style: dashed;
+      }
+    }
+
+    .warning {
+      grid-column: 1 / -1;
+    }
+  }
+
   .row-wrapper {
     display: grid;
     grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
     padding: 0.55em 0 0.7em;
-    -webkit-user-drag: none;
     cursor: default;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
@@ -243,11 +382,11 @@
     }
 
     &.drag-above {
-      border-top: 2px solid var(--tertiary);
+      border-top: 2px solid var(--token-color-border-accent);
     }
 
     &.drag-below {
-      border-bottom: 2px solid var(--tertiary);
+      border-bottom: 2px solid var(--token-color-border-accent);
     }
 
     .link-icon {
@@ -269,25 +408,10 @@
 
   .always-public-tooltip {
     padding-right: 0.5rem;
-  }
 
-  .btn-flat.add-link {
-    margin-top: 0.5em;
-    margin-left: -0.5em;
-
-    &:active,
-    &:focus {
-      background: none;
-    }
-
-    svg {
-      color: var(--tertiary);
-      width: 0.75em;
-      height: 0.75em;
-    }
-
-    &:hover svg {
-      color: var(--tertiary-hover);
+    .fk-d-tooltip__trigger-container {
+      align-items: center;
+      gap: var(--space-1);
     }
   }
 
@@ -335,32 +459,15 @@
     min-width: 220px;
   }
 
-  .reset-link {
-    margin-right: 0;
-
-    .discourse-no-touch & {
-      &:hover {
-        .d-icon {
-          color: var(--tertiary-hover);
-        }
-      }
-    }
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--tertiary);
-    }
-  }
-
   .delete-link {
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--token-color-text-subtle);
     }
 
     .discourse-no-touch & {
       &:hover {
         .d-icon {
-          color: var(--danger);
+          color: var(--token-color-icon-danger);
         }
       }
     }
@@ -376,53 +483,24 @@
 }
 
 .sidebar-filter {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  border: 1px solid var(--primary-400);
-  border-radius: var(--d-input-border-radius);
-  background: var(--secondary);
-  width: calc(
-    var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding)
-  );
-
-  &:focus-within {
-    border-color: var(--tertiary);
-    outline: 1px solid var(--tertiary);
-    outline-offset: -1px;
-  }
+  width: 100%;
 
   &__input-container {
     position: relative;
     display: flex;
     align-items: center;
-    background: var(--secondary);
-    border-radius: var(--d-input-border-radius);
-  }
-
-  &__shortcut-hint {
-    background-color: rgb(var(--tertiary-rgb) / 10%);
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-3);
-    color: var(--primary-medium);
   }
 
   &__input[type="text"] {
-    border: 0;
-    background: none;
-    margin-bottom: 0;
-    height: 2em;
     width: 100%;
-
-    &:focus-within {
-      outline: 0;
-    }
+    margin: 1em 0;
   }
 
   &__clear {
     width: 2em;
     height: 2em;
-    color: var(--primary-medium);
-    background-color: var(--secondary);
+    position: absolute;
+    right: 0;
   }
 }
 
@@ -432,7 +510,7 @@
     var(--d-sidebar-row-horizontal-padding);
 
   &__title {
-    font-weight: bold;
+    font-weight: var(--token-font-weight-bold);
   }
 }
 
@@ -442,12 +520,12 @@
   &__input-container {
     display: flex;
     align-items: center;
-    border: 1px solid var(--primary-400);
-    background: var(--d-input-bg-color);
+    border: var(--token-border-width) solid var(--token-color-border-input);
+    background: var(--token-color-background-input);
     box-sizing: border-box;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--token-radius-normal);
     overflow: hidden;
     padding-inline: var(--d-sidebar-row-horizontal-padding);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
@@ -457,16 +535,12 @@
     flex-shrink: 0;
     font-size: var(--d-sidebar-section-link-icon-size);
     border: 0;
-    background: var(--d-input-bg-color);
+    background: var(--token-color-background-input);
     width: var(--d-sidebar-section-link-prefix-width);
     padding: 0;
 
     &:hover {
-      background: var(--d-input-bg-color) !important;
-    }
-
-    .d-icon:hover {
-      color: var(--primary-high);
+      background: transparent !important;
     }
   }
 
@@ -484,11 +558,7 @@
   }
 
   &__shortcut-hint {
-    background-color: rgb(var(--tertiary-rgb), 0.1);
-    min-width: 26px;
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-3);
-    color: var(--primary-medium);
+    margin-right: var(--space-2);
   }
 }
 
@@ -509,5 +579,103 @@
   svg {
     width: 0.75em;
     height: 0.85em;
+  }
+}
+
+/* The section form's links region behind `enable_new_reordering_controls`.
+   Keyed on the classes the shared list puts on its own root and rows, so every
+   rule here outranks the legacy one it replaces without depending on stylesheet
+   order, and none of it applies while the legacy rows render.
+
+   TODO (ui-kit-reorderable-list-cleanup) fold back into the blocks above once
+   the change ships. */
+
+.sidebar-section-form-modal {
+  /* The tracks live on the wrapper and every row reaches them through subgrid,
+     so the header and the rows resolve one set of columns. */
+
+  .sidebar-section-form__links-wrapper.d-reorderable-list {
+    display: grid;
+    grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
+
+    @include viewport.until(sm) {
+      /* grip, icon, name, delete; the url line spans beneath them. */
+      grid-template-columns: auto 4em 1fr min-content;
+    }
+  }
+
+  .row-wrapper.d-reorderable-list__row {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+
+    /* One midline for every cell, which otherwise stretch and each settle at
+       their own height. */
+    align-items: center;
+
+    .link-icon {
+      grid-column: 2;
+    }
+
+    @include viewport.until(sm) {
+      row-gap: 0.5em;
+
+      /* A phone-width row cannot fit every column, so the url takes a second
+         line and the controls flank both. */
+
+      .d-reorderable-list__handle {
+        grid-row: 1 / 3;
+      }
+
+      .link-url {
+        grid-row: 2;
+        grid-column: 2 / -1;
+      }
+
+      .delete-link {
+        grid-row: 1;
+        grid-column: 4;
+      }
+    }
+
+    /* Drawn on the row's own reserved border so adjacent rows keep sharing one
+       gutter. The shared primitive's inserted line is dropped rather than
+       overridden, or both would show at once. */
+
+    &.--drag-above {
+      border-top: 2px solid var(--d-drag-indicator-color);
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &.--drag-below {
+      border-bottom: 2px solid var(--d-drag-indicator-color);
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  /* The header is the list's own block, not one of its rows, so it is reached
+     through the list root rather than the row selector.
+
+     Two-line rows have no columns for these to head; each control names itself,
+     and the picker shows its icon. */
+
+  .d-reorderable-list .row-wrapper.header {
+    /* The tracks live on the wrapper, so the header has to reach them the same
+       way a row does or its labels stop sitting over the columns they name. */
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+
+    @include viewport.until(sm) {
+      display: none;
+    }
+  }
+
+  [data-drag-source].--dragging {
+    opacity: 0.4;
   }
 }

@@ -4,7 +4,7 @@ en:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Allows AI search"
               stream_completion: "Allows streaming AI agent completions"
               update_agents: "Allows updating AI agents"
@@ -14,9 +14,72 @@ en:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Ask AI"
+        ask_ai:
+          title: "Ask AI"
+          reports:
+            title: "What users are asking"
+            overlap: "Subjects may overlap"
+            confirm_period: "Group questions from %{period} by subject to see what users are asking about."
+            send_to_groups: "Also send a PM to %{groups}"
+            generate: "Generate report"
+            empty: "No reports generated yet."
+            empty_help: "Generate a report to explore the subjects in users’ questions."
+            no_asks: "There are no asks in the selected period."
+            report_period: "Report period"
+            report_settings: "Report site settings"
+            questions: "Example questions"
+            logged_answer: "Logged answer"
+            loading_answer: "Loading answer…"
+            answer_failed: "This log could not be loaded. It may no longer be available."
+            no_stored_answer: "No answer text was stored for this ask."
+            subject_count:
+              one: "%{count} question"
+              other: "%{count} questions"
+            show_all: "Show all %{count} subjects"
+            show_fewer: "Show fewer subjects"
+            retry_questions: "Retry"
+            loading_questions: "Loading questions…"
+            questions_failed: "Questions could not be loaded."
+            more_questions: "Show more questions"
+            no_questions: "The original asks are no longer available."
+            no_valid_questions: "No valid questions were linked to this subject."
+            loading: "Loading reports…"
+            queued: "Queued"
+            running: "Generating…"
+            failed: "Failed — generate again to retry. If this keeps happening, consider reducing <a href='%{max_asks_url}' target='_blank' rel='noopener noreferrer'>max asks</a>."
+            view_pm: "View report PM"
+            view_pm_new_tab: "View report PM (opens in a new tab)"
+            load_failed: "Reports could not be loaded."
+            reload: "Reload reports"
+            coverage: "%{count} of %{total} questions analyzed"
+          questions: "Questions asked"
+          askers: "Users asking"
+          latency: "Answer latency"
+          latency_tooltip: "Average time from when the server accepts a query until it sends the first answer update, including queue time. This excludes network delivery time to the user."
+          seconds: "%{seconds} s"
+          not_available: "—"
+          activity: "Asks over time"
+          date: "Date"
+          percentage: "%{value}%"
+          outcomes_title: "Ask outcomes"
+          outcomes:
+            answered: "Answer provided"
+            no_answer: "No answer provided"
+            failed: "Failed"
+            cancelled: "Cancelled"
+            pending: "Not completed"
+          outcome_note: "An answer being provided does not tell us whether it helped. User success is not yet measured."
+          summary:
+            one: "%{count} question asked in this period"
+            other: "%{count} questions asked in this period"
+          empty: "No asks were logged in this period."
+          fetch_error: "Ask AI metrics could not be loaded."
         emotion:
           title: "Emotion"
-          description: "The table lists a count of posts classified with a determined emotion. Classified with the model 'SamLowe/roberta-base-go_emotions'."
+          description: "The table counts posts classified with each emotion using the selected emotion classification backend."
         reports:
           filters:
             group_by:
@@ -40,12 +103,34 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_decision_model: "Create AI decision model"
+            update_ai_decision_model: "Update AI decision model"
+            delete_ai_decision_model: "Delete AI decision model"
             create_ai_secret: "Create AI secret"
             update_ai_secret: "Update AI secret"
             delete_ai_secret: "Delete AI secret"
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Quiet (one sentence, no heading)"
+          balanced: "Balanced (one short paragraph)"
+          detailed: "Detailed (two or three short paragraphs)"
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Requires the AI plugin to be enabled"
+        requires_decision_model: "Requires a decision model"
+        requires_ai_translation: "Requires AI translation to be configured"
+      nodes:
+        "action:ai_agent": "AI Agent"
+        "action:classify": "Classify"
+        "trigger:post_locale_detected": "Post language detected"
+      node_descriptions:
+        "action:ai_agent": "Run an AI agent to process data or generate content"
+        "action:classify": "Ask a decision model questions about each item"
+        "trigger:post_locale_detected": "Fires when the language of a new or edited post is detected"
     discourse_automation:
       scriptables:
         llm_report:
@@ -225,36 +310,162 @@ en:
 
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Suggest with AI"
+        updated: "Classification updated"
+        no_suggestion: "The AI could not suggest a classification"
+      copied: "Copied"
+      view_raw: "View raw"
+      view_decoded: "View decoded"
+      ai_decoded_transcript:
+        thinking: "Thinking"
+        tool_calls: "Tool calls"
+        tool_results: "Tool results"
+        tool: "Tool"
+        arguments: "Arguments"
+        tool_result: "Tool result"
+        call_id: "Call ID"
+        type: "Type"
+        error: "Error"
+        response: "Response"
+      post_image_captions:
+        edit: "Edit AI image caption"
+        title: "Edit AI image caption"
+        description: "Caption"
+        save: "Save caption"
+        saved: "AI image caption saved"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          forced_llm_notice_description: "This agent is locked to its configured default LLM. The workflow cannot override it."
+          llm_model_id: "LLM model"
+          llm_model_default: "Use agent default"
+          llm_model_default_with_name: "Use agent default (%{value})"
+          mode: "Mode"
+          mode_description: "Choose whether the agent runs once per input item or once for all of them. Each run is a separate request to the LLM."
+          mode_run_once_for_each_item: "Run once for each item"
+          mode_run_once_for_all_items: "Run once for all items"
+          prompt: "Prompt"
+          runner_username: "Run as"
+          runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
+          upload_ids: "Upload IDs"
+          upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Select an agent..."
+        classify:
+          decision_model_id: "Decision model"
+          text: "Text"
+          text_description: "What the decision model reads for each item."
+          upload_ids: "Images"
+          upload_ids_description: "Upload IDs of images the decision model looks at, such as the post's upload_ids. Other uploads are skipped. Needs a decision model that reads images."
+          questions: "Questions"
+          questions_description: "Each answer is added to the item as classification.NAME, where NAME is the question name."
+          add_question: "Add question"
+          name: "Name"
+          type: "Type"
+          type_yes_no: "Yes/no"
+          type_choice: "Choice"
+          type_score: "Score"
+          instructions: "Question"
+          choices: "Choices"
+          levels: "Levels"
+          levels_description: "From lowest to highest. The answer has the most likely level and a weighted score from 0 (first level) upwards."
+
+      bot_chats:
+        tab_label: "Bot chats"
+
+      ai_tool_approval:
+        loading: "Loading..."
+        load_error: "Couldn't load this pending action."
+        agent: "Agent"
+        tool: "Action"
+        user: "User"
+        approve: "Approve"
+        reject: "Reject"
+        approved: "Approved"
+        rejected: "Rejected"
+        awaiting_staff: "Awaiting staff approval"
 
       default_llm:
-        title: "Default LLM model"
-        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
+        title: "Default language model"
+        description: "Used by any AI feature or agent that doesn't specify its own language model. If none is set, the most recently added language model is used."
 
       llm_selector:
         none: "None"
-        saved: "Default LLM model updated successfully"
+        saved: "Default language model saved"
 
       features:
         short_title: "Features"
-        description: "These are the AI features available to visitors on your site. These can be configured to use specific agents and LLMs, and can be access controlled by groups."
-        back: "Back"
+        description: "Configure AI features for your site, including their agents, models, and access permissions where supported."
+        back: "Back to AI features"
         settings_save_error: "Some settings could not be saved."
-        disabled: "(disabled)"
-        agent:
-          one: "Agent:"
-          other: "Agents:"
-        groups: "Groups:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          module: "Module"
+          status: "Status"
+          enabled: "Enabled"
+          feature: "Feature"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Groups"
+          who_can_use: "Who can use"
+        who_can_use:
+          edit: "Edit who can use %{name}"
+          no_one: "No one"
+          no_one_warning: "With no groups, no one can use this feature."
+          shared: "Also changes who can use: %{features}"
+        status:
+          "on": "On"
+          "off": "Off"
+          needs_setup: "Needs setup"
+          on_with_features:
+            one: "On · %{enabled} of %{count} feature"
+            other: "On · %{enabled} of %{count} features"
+          on_with_languages:
+            one: "On · %{count} language"
+            other: "On · %{count} languages"
+          on_with_chatbot_agents:
+            one: "On · %{count} chatbot agent"
+            other: "On · %{count} chatbot agents"
+        chatbot:
+          available_in: "Available in"
+          column: "Chatbot"
+          toggle: "Use %{name} as a chatbot"
+          any_llm: "Chosen by the user"
+          new_agent: "New agent"
+          manage_agents: "Manage agents"
+          places:
+            personal_messages: "Personal messages"
+            topic_mentions: "Topic @mentions"
+            chat_direct_messages: "Chat messages"
+            chat_channel_mentions: "Chat @mentions"
+            none: "Not available"
+        status_notes:
+          no_languages: "No languages selected"
+          no_llm: "No language model available"
+          hidden_from_readers: "Hidden from readers"
+          no_image_generation_tool: "Add tool"
+          no_embedding_model: "Add model"
+          no_embedding_model_selected: "No model selected"
+          missing: "Missing: %{items}"
+        setup_items:
+          app_id: "application ID"
+          public_key: "public key"
+          allowed_servers: "allowed servers"
+          agent: "an agent with a bot user"
+        agentless_notes:
+          forum_search: "Forum search, no AI model"
+        toggle: "Enable %{name}"
+        set_up: "Set up"
         no_llm: "No LLM selected"
         no_agent: "Not set"
         no_groups: "None"
+        backends:
+          agent: "LLM agent"
+          decision_model: "Decision model"
+          classification_model: "Dedicated classification endpoint"
+        not_configured: "Not configured"
+        decision_model: "Decision model"
         edit: "Settings"
-        expand_list:
-          one: "(%{count} more)"
-          other: "(%{count} more)"
-        collapse_list: "(show less)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -265,16 +476,38 @@ en:
             ui_settings: "UI Settings"
             integrations: "Integrations"
         nav:
-          configured: "Configured"
-          unconfigured: "Unconfigured"
+          enabled: "Enabled"
+          not_enabled: "Not enabled"
         filters:
           all: "All"
-          text: "Search features, agents, LLMs, or groups..."
+          text: "Search features, agents, models, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
 
         no_automations: "There are no automations yet"
 
+        sentiment:
+          name: "Sentiment and emotion"
+          description: "Classifies the sentiment and emotion of posts in the background"
+          sentiment: "Sentiment"
+          emotion: "Emotion"
+          backend: "Backend"
+          enabled: "Enabled"
+          agent: "Agent"
+          decision_model: "Decision model"
+          posts_per_hour: "Posts per hour"
+          post_age_limit: "Post age limit (days)"
+          posts_per_hour_description: "Approximate rate. 0 stops the scan, including new posts. Edited posts are checked separately."
+          background_description: "Checks unclassified posts every 5 minutes, within these shared limits. Each enabled classifier may incur a request per post. Refusals may be retried."
+          emotion_scores: "Scores are distributed across 28 emotions."
+          model_change_warning: "Changing the selected model does not reclassify existing results."
+          dedicated_description: "Dedicated classification endpoints are configured in site settings."
+          configure_dedicated: "Configure dedicated classification endpoints"
+          manage_decision_models: "Manage decision models"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emotion"
+            background_processing: "Background processing"
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -287,20 +520,35 @@ en:
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
-          discoveries: "Discoveries"
+          discoveries: "Discover (deprecated)"
+          ask_ai: "Ask AI"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
+            ask_ai_reports: "Ask AI reports"
         embeddings:
           name: "Embeddings"
-          description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
-          hyde: "HyDE"
+          description: "Finds content by meaning. Powers related topics and AI search."
+          related_topics: "Related topics"
+          semantic_search: "AI search results"
+          quick_search: "AI results in quick search"
+          hyde: "Better search queries (HyDE)"
+          add_model: "Add embedding model"
+          no_models: "You need an embedding model first."
           setting_groups:
             model_settings: "Model Settings"
             related_topics: "Related Topics"
             semantic_search: "Semantic Search"
+        admin_dashboard:
+          name: "Admin Dashboard"
+          description: "Helps community managers spot meaningful shifts and decide where to look next"
+          highlights: "Highlights"
+          setting_groups:
+            settings: "Basic Settings"
         discord:
           name: "Discord integration"
-          description: "Adds the ability to search Discord channels"
+          description: "Lets people search this forum from Discord"
           search: "Discord search"
           setting_groups:
             settings: "Basic Settings"
@@ -318,7 +566,8 @@ en:
             agents: "Agents"
 
         ai_helper:
-          name: "Helper"
+          edit: "Edit AI helper settings"
+          name: "AI Helper"
           description: "Assists users in community interaction, such as creating topics, writing posts, and reading content"
           proofread: Proofread text
           title_suggestions: "Suggest titles"
@@ -328,7 +577,6 @@ en:
           translate: "Translate"
           markdown_tables: "Generate Markdown table"
           custom_prompt: "Custom prompt"
-          image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
           chat_thread_titles: "Chat thread titles"
@@ -338,6 +586,13 @@ en:
             automation: "Automation"
             agents: "Agents"
 
+        image_caption:
+          name: "Image Caption"
+          description: "Generates AI captions for post images and makes them available to readers and assistive technology"
+          post_image_captions: "Post image captions"
+          setting_groups:
+            settings: "Settings"
+
         translation:
           name: "Translation"
           description: "Translates content into supported languages"
@@ -346,14 +601,11 @@ en:
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
           schedule_untranslated: "Schedule translations"
+          schedule_topic_only_success: "Scheduled translation for the topic."
           schedule_topic_success:
             one: "Scheduled translation for %{count} untranslated post."
             other: "Scheduled translation for %{count} untranslated posts."
           schedule_topic_error: "Failed to schedule translations. Please try again."
-          setting_groups:
-            settings: "Basic Settings"
-            agents: "Agents"
-            backfill_and_limits: "Backfill & Limits"
 
         spam:
           name: "Spam"
@@ -378,16 +630,168 @@ en:
       translations:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
-        supported_locales: "Supported languages"
-        supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        sections:
+          languages: "Languages"
+          scope: "What to translate"
+          backfill: "Existing content"
+          readers: "Readers"
+          agents: "Agents and models"
+          advanced: "Advanced"
+        hidden_from_readers: 'Translations are being generated but are hidden from readers. Update the <a href="#ai-translations-readers">Readers settings</a> to make them visible.'
+        more_language_settings: "More language settings"
+        waiting_for_languages: "Translation is on, but nothing is translated until you select at least one language."
+        settings:
+          content_localization_supported_locales:
+            label: "Translate into"
+            description: "Content is translated into these languages. Your site's default language is always included."
+          ai_translation_category_scope:
+            label: "Categories"
+            description: "Which categories to translate. Personal messages are set separately."
+          ai_translation_categories:
+            label: "Selected categories"
+            description: "The categories included or excluded above."
+          ai_translation_personal_messages:
+            label: "Personal messages"
+            description: "Which personal messages to translate."
+            choices:
+              none: "None"
+              group: "Group messages only"
+              all: "All"
+          ai_translation_include_bot_content:
+            label: "Translate content written by bots"
+            description: "Also translate posts by bot accounts."
+          ai_translation_backfill_start_date:
+            label: "Translate existing content since"
+            description: "Posts and topics created on or after this date (UTC) are translated in the background. Leave blank to translate only new content."
+          ai_translation_backfill_hourly_rate:
+            label: "Existing content per hour"
+            description: "How many existing posts and topics to translate each hour. Set to 0 to pause."
+          content_localization_enabled:
+            label: "Show translations to readers"
+            description: "Readers see content in their preferred language when a translation exists."
+          content_localization_language_switcher:
+            label: "Language switcher"
+            description: "Who can pick a language from the header."
+            choices:
+              none: "Nobody"
+              anonymous: "Anonymous visitors"
+              all: "Everyone"
+          allow_user_locale:
+            label: "Let users choose their language"
+            description: "Signed-in users can set their preferred language. Required for the language switcher and language links."
+          set_locale_from_param:
+            label: "Language links"
+            description: "Anyone can open a page in a language by adding it to the address, for example ?tl=es."
+          content_localization_crawler_param:
+            label: "Let search engines index translations"
+            description: "Serve translated content to search engines that follow language links."
+          content_localization_use_default_locale_when_unsupported:
+            label: "Fall back to the default language"
+            description: "Readers whose language is not selected above see content in your site's default language."
+          ai_translation_locale_detector_agent:
+            label: "Language detection agent"
+            description: "Detects which language content is written in."
+          ai_translation_locale_detector_decision_model:
+            label: "Language detection decision model"
+            description: "Detects languages it can place confidently before the language detection agent is asked. Leave blank to use only the agent."
+          ai_translation_post_raw_translator_agent:
+            label: "Post translation agent"
+            description: "Translates posts."
+          ai_translation_topic_title_translator_agent:
+            label: "Topic title translation agent"
+            description: "Translates topic titles."
+          ai_translation_short_text_translator_agent:
+            label: "Short text translation agent"
+            description: "Translates categories, tags and other short text."
+          ai_translation_verbose_logs:
+            label: "Verbose logs"
+            description: "Writes detailed translation job logs for troubleshooting."
+        settings_save_error: "Some settings could not be saved. Please check the errors below."
+        max_locales_reached: "You can only select up to %{max} languages."
+        locale_count: "%{count}/%{max} selected"
+        cached_results_notice: "Showing cached results from %{relative_time}."
+        model_progress:
+          loading: "Loading translation progress"
+          overview_label: "Translation progress by content type"
+          detail:
+            loading: "Loading %{target} details..."
+            load_error: "%{target} details could not be loaded."
+            retry: "Retry"
+            empty: "No language progress is available."
+            progress_label: "%{translated} of %{total} translated into %{language}"
+            columns:
+              locale: "Locale"
+              translated: "Translated"
+              pending: "Pending"
+              eligible: "Eligible"
+              total: "Total"
+              progress: "Progress"
+            eligible_help: "Content already in this language is excluded."
+            pending_help: "Includes content that still needs language detection."
+          targets:
+            post:
+              title: "Posts"
+              eligible_total:
+                one: "There is %{count} eligible post for translation."
+                other: "There are %{count} eligible posts for translation."
+              translated:
+                one: "%{count} post has been fully translated."
+                other: "%{count} posts have been fully translated."
+              needs_language_detection:
+                one: "%{count} post still needs language detection."
+                other: "%{count} posts still need language detection."
+              all_translated:
+                one: "The eligible post is fully translated."
+                other: "All %{count} eligible posts are fully translated."
+            topic:
+              title: "Topics"
+              eligible_total:
+                one: "There is %{count} eligible topic for translation."
+                other: "There are %{count} eligible topics for translation."
+              translated:
+                one: "%{count} topic has been fully translated."
+                other: "%{count} topics have been fully translated."
+              needs_language_detection:
+                one: "%{count} topic still needs language detection."
+                other: "%{count} topics still need language detection."
+              all_translated:
+                one: "The eligible topic is fully translated."
+                other: "All %{count} eligible topics are fully translated."
+            category:
+              title: "Categories"
+              eligible_total:
+                one: "There is %{count} eligible category for translation."
+                other: "There are %{count} eligible categories for translation."
+              translated:
+                one: "%{count} category has been fully translated."
+                other: "%{count} categories have been fully translated."
+              needs_language_detection:
+                one: "%{count} category still needs language detection."
+                other: "%{count} categories still need language detection."
+              all_translated:
+                one: "The eligible category is fully translated."
+                other: "All %{count} eligible categories are fully translated."
+            tag:
+              title: "Tags"
+              total:
+                one: "There is %{count} tag for translation."
+                other: "There are %{count} tags for translation."
+              translated:
+                one: "%{count} tag has been fully translated."
+                other: "%{count} tags have been fully translated."
+              needs_language_detection:
+                one: "%{count} tag still needs language detection."
+                other: "%{count} tags still need language detection."
+              all_translated:
+                one: "The tag is fully translated."
+                other: "All %{count} tags are fully translated."
         admin_actions:
-          translation_settings: "Translation settings"
-          localization_settings: "Localization settings"
-          enable_translations: "Enable automatic translations"
+          enabled: "Enabled"
+          enable_translations_disabled: "You must add a supported language to enable translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date}."
           eta_minutes:
             one: "%{count} minute"
             other: "%{count} minutes"
@@ -404,6 +808,15 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        theme_translations:
+          translate:
+            label: "Translate"
+            title: "Translate to all supported languages using the selected language as the source"
+            confirm: "Translate from %{language} to:"
+            override_existing: "Also override existing translations"
+            no_targets: "No other target languages are configured. Add languages to the content localization supported locales setting."
+            queued: "Translation queued"
+            failed: "Failed to queue translation"
         translations_menu:
           translate:
             label: "Translate post"
@@ -417,6 +830,10 @@ en:
         short_title: "Spam"
         title: "Configure spam handling"
         select_llm: "Select LLM"
+        no_llm_selected: "None"
+        select_decision_model: "Select decision model"
+        no_decision_model_selected: "None"
+        decision_model_help: "A decision model rates every post on its own when it is confident and leaves unsure posts to the LLM. Without an LLM, the decision model decides every post."
         select_agent: "Select agent"
         custom_instructions: "Custom instructions"
         custom_instructions_help: "Custom instructions specific to your site to help guide the AI in identifying spam, e.g. 'Be more aggressive about scanning posts not in English'."
@@ -427,6 +844,7 @@ en:
         spam_detected: "Spam detected"
         custom_instructions_placeholder: "Site-specific instructions for the AI to help identify spam more accurately"
         enable: "Enable"
+        enabled_locked_tip: "AI spam detection can't be disabled on this site."
         spam_tip: "AI spam detection will scan the first 3 posts by all new users on public topics. It will flag them for review and block users if they are likely spam."
         settings_saved: "Settings saved"
         spam_description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
@@ -440,6 +858,8 @@ en:
           result: "Result"
           reason: "Reasoning"
           llm: "LLM"
+          decision_model: "Decision model"
+          spam_probability: "Spam probability"
           scan_history: "Scan History"
           sent_message: "Sent Message"
           system_prompt: "System Prompt"
@@ -505,37 +925,165 @@ en:
           custom: "Custom..."
         credit_allocations: "Credit allocations"
 
+      logs:
+        short_title: "Logs"
+        description: "Inspect individual requests sent to AI models and their responses"
+        refresh: "Refresh logs"
+        retry: "Try again"
+        apply: "Apply"
+        clear_filters: "Clear all filters"
+        all_outcomes: "All outcomes"
+        all_models: "All models"
+        all_features: "All features"
+        successful: "Successful"
+        failed: "Failed"
+        unknown: "Unknown"
+        has_retries: "Has retries"
+        retried: "Retried"
+        unattributed: "Unattributed"
+        search_placeholder: "Search by @username or ID (e.g. @user1 topic:123 log:45)"
+        feature_placeholder: "Feature name"
+        time: "Time"
+        when: "When"
+        outcome: "Outcome"
+        feature: "Feature"
+        model: "Model"
+        request: "Request"
+        provider: "Provider"
+        user: "User"
+        tokens: "Tokens"
+        tokens_pair: "%{request} → %{response}"
+        tokens_aria: "%{request} input tokens and %{response} output tokens"
+        reasoning_tokens: "Reasoning tokens"
+        stop_reason: "Stop reason"
+        empty: "Empty response"
+        truncated: "Truncated"
+        truncated_description: "Truncated at output limit"
+        tokens_unavailable: "Token counts unavailable"
+        cache_read_tokens: "Cache read"
+        cache_write_tokens: "Cache write"
+        context: "Context"
+        topic: "Topic"
+        topic_short: "Topic %{id}"
+        post: "Post"
+        post_short: "Post %{id}"
+        duration: "Duration"
+        tokens_direction: "Tokens (in → out)"
+        first_token: "First token"
+        cost: "Cost"
+        actions: "Actions"
+        table_caption: "AI requests sent to language models and their outcomes"
+        view_details: "Details"
+        no_results: "No AI logs match these filters."
+        no_logs: "No retained AI logs were found."
+        new_logs_count:
+          one: "See %{count} new log"
+          other: "See %{count} new logs"
+        periods:
+          hour: "Last hour"
+          day: "Last 24 hours"
+          week: "Last 7 days"
+          custom: "Custom"
+        detail:
+          title: "AI log #%{id}"
+          request: "Request"
+          response: "Response"
+          context: "Context"
+          attempts: "Attempts"
+          tabs_label: "AI log payload sections"
+          copy_request: "Copy request"
+          copy_response: "Copy response"
+          copy_raw_response: "Copy raw response"
+          copy_context: "Copy context"
+          payload_unavailable: "Payload not available"
+          payload_truncated: "This payload is too large to display completely and has been truncated."
+          load_error: "This log could not be found. It may have been removed by the retention policy."
+          generic_load_error: "This log could not be loaded. Try again."
+          network_error: "Network error"
+          outcome_with_status: "%{outcome} (%{status})"
+          duration_seconds: "%{seconds} s"
+          attempt: "Status %{status}, delay %{delay} ms"
+        retention:
+          configure: "Configure retention"
+          title: "Log retention"
+          lifecycle_label: "Logs are kept first as full payloads, then as summaries, then deleted."
+          detailed_stage: "Full payload"
+          summary_stage: "Summary"
+          deleted_stage: "Deleted"
+          hint: "Days are counted from the request date. 0 means no separate limit."
+          detailed_title: "Full payloads (days)"
+          detailed_help: "Raw requests and responses. 0 keeps them until the summary is deleted."
+          summary_title: "Summaries (days)"
+          summary_help: "Audit metadata. 0 keeps it forever."
+          invalid_order: "Summaries must be kept at least as long as payloads."
+          valid_range: "Enter a whole number from 0 to %{max}."
+          destructive_warning: "Shorter retention permanently deletes data at the next cleanup. This cannot be undone."
+          meta: "Using %{size} · Cleanup runs daily · Usage data is unaffected"
+          save: "Save"
+          saved: "Retention saved. Cleanup runs within 24 hours."
+          lifecycle:
+            complete_forever: "Logs kept forever"
+            detail_until_delete: "Full logs kept %{summary} days, then deleted"
+            summary_forever: "Payloads kept %{detailed} days, summaries kept forever"
+            finite: "Payloads kept %{detailed} days, summaries %{summary} days, then deleted"
+
       ai_agent:
+        automatic_image_tools: "Automatically uses all enabled image-generation tools"
+        no_image_tools: "No enabled image-generation tools."
+        new_bot_option:
+          label: "AI agent"
+          description: "Creates the bot together with its language model, prompt, tools, and permissions."
         ai_tools: "Tools"
+        native_tools_help: "Provider-native tools, such as web search or page fetch, appear when \"Always use default language model\" is enabled and the selected default language model supports them."
+        mcp_servers: "MCP servers"
+        subagents: "Subagents"
+        subagents_help: "Allow this agent to delegate tasks to selected agents. A spawn tool is added only when at least one selected agent is available."
+        subagents_summary:
+          one: "This agent can delegate to %{count} agent."
+          other: "This agent can delegate to %{count} agents."
+        subagent_disabled: "%{name} (disabled)"
+        subagent_tool_name: "Subagent delegation (upper bound)"
+        invalid_subagent_ids: "Subagent IDs must be a list of integers"
+        too_many_subagents: "An agent can have at most %{max} subagents"
+        subagent_self: "An agent cannot select itself as a subagent"
+        subagents_not_found: "The selected subagent IDs do not exist: %{ids}"
+        subagent_tool_collision: "An agent with subagents cannot configure a tool named spawn_agent"
+        mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
+        mcp_server_tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} tool enabled"
+          other: "%{count} tools enabled"
+        mcp_server_all_tools_enabled: "All tools enabled"
+        mcp_server_enabled_tools:
+          one: "%{count} of %{total} tool enabled"
+          other: "%{count} of %{total} tools enabled"
+        mcp_server_choose_tools: "Choose tools"
+        mcp_server_edit_tools: "Edit tools"
         tool_strategies:
           all: "Apply to all replies"
           replies:
             one: "Apply to first reply only"
             other: "Apply to first %{count} replies"
-        back: "Back"
+        back: "Back to agents"
         name: "Name"
         edit: "Edit"
         export: "Export"
         import: "Import"
         import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing agent?"
+        import_error_missing_subagents: "The following subagents must exist before importing this agent: %{names}."
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
         use_parent_llm: "Use agent's language model"
-        max_context_posts: "Max context posts"
-        max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
-        execution_mode: "Execution Mode"
-        execution_mode_help: "Controls how the agent manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
-        execution_mode_options:
-          default: "Default (Fixed Limits)"
-          agentic: "Agentic (Token Budget)"
-        max_turn_tokens: "Max Turn Tokens"
-        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty for default limits."
-        compression_threshold: "Compression Threshold"
+        max_turn_tokens: "Turn work allowance"
+        max_turn_tokens_help: "Limits new output and tool results per reply, shared with child agents. Previous conversation does not count. This is not a spending limit. Leave empty to use 500,000 tokens."
+        compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
-        vision_enabled: Vision enabled
-        vision_enabled_help: If enabled, the AI will attempt to understand images users post in the topic, depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI.
-        vision_max_pixels: Supported image size
+        vision_enabled: Include image uploads
+        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model uses native image input or delegates image handling to another model.
+        vision_max_pixels: Maximum image size
         vision_max_pixel_sizes:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
@@ -548,9 +1096,7 @@ en:
         create_user: Create user
         create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
-        question_consolidator_llm: Language Model for Question Consolidator
-        question_consolidator_llm_help: The language model to use for the question consolidator, you may choose a less powerful model to save costs.
+        default_llm_help: The default language model to use for this agent. When blank, the site default language model is used.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
@@ -561,6 +1107,8 @@ en:
         allow_personal_messages_help: "If enabled, users in allowed groups can send personal messages to this agent."
         allow_topic_mentions: "Allow topic mentions"
         allow_topic_mentions_help: "If enabled, users in allowed groups can mention this agent in topics."
+        require_approval: "Require approval for moderation tools"
+        require_approval_help: "When enabled, moderation actions (close, delete, edit, etc.) will be sent to the review queue for moderator approval before execution."
         force_default_llm: "Always use default language model"
         save: "Save"
         saved: "Agent saved"
@@ -568,7 +1116,27 @@ en:
         tools: "Enabled tools"
         tokens: "tokens"
         context_cost: "Context Cost"
+        token_usage: "Token Usage"
+        tool_count: "Tool Count"
+        tool_count_value:
+          one: "%{count} tool"
+          other: "%{count} tools"
         tool_tokens_total: "~%{tokens} Tokens"
+        mcp_server_cost_name: "%{name} (MCP server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} tool"
+          other: "~%{tokens} tokens, %{count} tools"
+        mcp_server_tokens_only: "~%{tokens} tokens"
+        mcp_tools_modal:
+          title: "%{name} tools"
+          summary: "By default this agent can use every tool from this server. Select a smaller set to limit access and reduce prompt cost."
+          filter_placeholder: "Filter tools"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          selection_summary:
+            one: "%{count} of %{total} tool selected"
+            other: "%{count} of %{total} tools selected"
+          empty: "No tools match this filter."
         tool_severity_medium: "Moderate capacity"
         tool_severity_high: "High capacity"
         tool_severity_too_many: "Too many tools"
@@ -578,7 +1146,12 @@ en:
         allowed_groups: "Allowed groups"
         confirm_delete: "Are you sure you want to delete this agent?"
         new: "New agent"
+        new_group: "New or duplicate agent"
+        duplicate: "Duplicate"
+        duplicate_search: "Duplicate an agent"
+        copy_name: "Copy of %{name}"
         no_agents: "You have not created any agents yet"
+        manage_agents: "Manage agents"
         title: "Agents"
         short_title: "Agents"
         delete: "Delete"
@@ -586,6 +1159,17 @@ en:
         temperature_help: "Temperature to use for the LLM. Increase to increase creativity (leave empty to use model default, generally a value from 0.0 to 2.0)"
         top_p: "Top P"
         top_p_help: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default, generally a value from 0.0 to 1.0)"
+        thinking_effort: "Thinking effort"
+        thinking_effort_help: "How much reasoning-capable models should think before answering. Higher values may improve difficult tasks but can increase latency and cost. Unsupported providers ignore this setting."
+        thinking_effort_options:
+          default: "Model default"
+          none: "None"
+          minimal: "Minimal"
+          low: "Low"
+          medium: "Medium"
+          high: "High"
+          xhigh: "Extra high"
+          max: "Max"
         priority: "Priority"
         priority_help: "Priority agents are displayed to users at the top of the agent list. If multiple agents have priority, they will be sorted alphabetically."
         tool_options: "Tool options"
@@ -629,6 +1213,25 @@ en:
 
       rag:
         title: "RAG"
+        sources:
+          title: "URL sources"
+          description: "Web pages that are periodically fetched and indexed as agent knowledge."
+          urls: "URLs"
+          urls_description: "Enter one URL per line."
+          refresh_interval_hours: "Refresh every (hours)"
+          add: "Add URL sources"
+          edit: "Edit URL sources"
+          save: "Save URL sources"
+          modal_title: "Configure URL sources"
+          empty: "No URL sources configured."
+          summary:
+            one: "%{count} URL source"
+            other: "%{count} URL sources"
+          more:
+            one: "And %{count} more URL"
+            other: "And %{count} more URLs"
+          too_many: "Enter no more than %{count} URLs."
+          invalid_url: "Invalid URL: %{url}"
         options:
           rag_chunk_tokens: "Upload chunk tokens"
           rag_chunk_tokens_help: "The number of tokens to use for each chunk in the RAG model. Increase to increase the amount of context the AI can use. (changing will re-index all uploads)"
@@ -651,8 +1254,10 @@ en:
           remove: "Remove upload"
 
       tools:
-        back: "Back"
+        back: "Back to tools"
         short_title: "Tools"
+        keywords: "mcp|mcp server|model context protocol"
+        script_tools: "Script tools"
         export: "Export"
         import: "Import"
         import_error_conflict: "Tool already exists, would you like to update it?"
@@ -665,7 +1270,7 @@ en:
         tool_name_help: "Tool Name is presented to the large language model. It is not distinct, but it is distinct per agent. (agent validates on save)"
         description: "Description"
         description_help: "A clear description of the tool's purpose for the language model"
-        subheader_description: "Tools extend the capabilities of AI bots with user-defined JavaScript functions."
+        subheader_description: "Tools and MCP servers extend the capabilities of AI agents."
         summary: "Summary"
         summary_help: "Summary of tools purpose to be displayed to end users"
         script: "Script"
@@ -699,7 +1304,7 @@ en:
 
       secrets:
         short_title: "Credentials"
-        description: "Manage authentication credentials shared across LLMs, embeddings, and tools."
+        description: "Manage authentication credentials shared across LLMs, embeddings, decision models, and tools."
         name: "Name"
         secret: "Value"
         select_secret: "Select a credential..."
@@ -711,7 +1316,7 @@ en:
         no_secrets: "No credentials yet"
         new_title: "New credential"
         edit_title: "Edit credential"
-        back: "Back"
+        back: "Back to credentials"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -720,9 +1325,170 @@ en:
         embedding: "Embedding"
         cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
         tool: "Tool"
+        mcp_server: "MCP server"
+        mcp_server_oauth_client_secret: "MCP server OAuth client secret"
+        decision_model: "Decision model"
         modal:
           title: "Create new credential"
 
+      decision_models:
+        seeded_description: "Pre-configured model"
+        manage: "Manage decision models"
+        start_from: "Start from"
+        no_preset: "None"
+        preset_descriptions:
+          none: "Settings for any compatible decision model endpoint"
+          jev-latest: "TypeSafe's hosted decision model, text only"
+          jev-latest-vision: "TypeSafe's hosted decision model with experimental image support"
+          vllm-sr-d3: "Open-source multimodal decision model, self-hosted with vLLM"
+          cloudflare-clef: "Cloudflare's open-source multimodal decision model on Workers AI"
+          cloudflare-clef-flash: "Smaller, faster version of Clef on Workers AI"
+          gpt-6-luna: "OpenAI's decision model on the Decisions API, with image support"
+        display_name: "Name"
+        model: "Model"
+        provider: "Provider"
+        url: "Endpoint URL"
+        api_key: "Credential"
+        vision_enabled: "Supports image input"
+        custom_headers:
+          title: "Custom headers"
+          name: "Header name"
+          value: "Header value"
+          add: "Add header"
+          remove: "Remove header"
+        edit: "Edit"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to delete this decision model? Features and workflows that use it will stop working."
+        saved: "Decision model saved"
+        test: "Run test"
+        test_success: "The decision model answered the test question (yes: %{percentage}%)."
+        providers:
+          system_one: "System One"
+          typesafe: "TypeSafe"
+          open_ai: "OpenAI Decisions"
+          CDCK: "CDCK"
+
+      mcp_servers:
+        short_title: "MCP servers"
+        new: "New MCP server"
+        name: "Name"
+        description: "Description"
+        url: "URL"
+        auth_type: "Authentication"
+        auth_types:
+          none: "No authentication"
+          header_secret: "Header credential"
+          oauth: "OAuth"
+        secret: "Credential"
+        auth_header: "Auth header"
+        auth_scheme: "Auth scheme"
+        oauth_client_registration: "OAuth client registration"
+        oauth_client_registration_types:
+          client_metadata_document: "Client metadata document"
+          manual: "Manual client credentials"
+        oauth_client_id: "OAuth client ID"
+        oauth_client_secret: "OAuth client secret"
+        oauth_scopes: "OAuth scopes"
+        oauth_authorization_params: "OAuth authorization params"
+        oauth_authorization_params_help: "Optional JSON object merged into the authorization request. Use null to remove a default parameter."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth token params"
+        oauth_token_params_help: "Optional JSON object merged into token requests. Use null to remove a default parameter."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Require refresh token"
+        oauth_require_refresh_token_help: "Fail the OAuth connection if the provider does not return a refresh token."
+        oauth_json_object_required: "%{field} must be a JSON object."
+        oauth_show_advanced_options: "Show advanced options"
+        oauth_hide_advanced_options: "Hide advanced options"
+        oauth_connection: "OAuth connection"
+        oauth_status: "OAuth status"
+        oauth_statuses:
+          disconnected: "Disconnected"
+          connected: "Connected"
+          refresh_failed: "Refresh failed"
+          error: "Needs attention"
+        oauth_connect: "Connect"
+        oauth_reconnect: "Reconnect"
+        oauth_disconnect: "Disconnect"
+        oauth_connect_help: "Use Connect to save the server and authorize it."
+        oauth_client_metadata_url: "Client metadata URL"
+        oauth_granted_scopes: "Granted scopes"
+        oauth_access_token_expires_at: "Access token expires at"
+        oauth_authorization_endpoint: "Authorization endpoint"
+        oauth_token_endpoint: "Token endpoint"
+        oauth_revocation_endpoint: "Revocation endpoint"
+        oauth_issuer: "Issuer"
+        oauth_last_error: "Last OAuth error"
+        oauth_show_details: "Show details"
+        oauth_hide_details: "Hide details"
+        timeout_seconds: "Request timeout (seconds)"
+        timeout_seconds_tooltip: "How long Discourse waits for the MCP server before the request fails. Keep 30 unless the server is consistently slow."
+        enabled: "Enabled"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        test: "Test connection"
+        saved: "MCP server saved"
+        confirm_delete: "Are you sure you want to delete this MCP server?"
+        back: "Back to tools"
+        health: "Health"
+        healthy: "Healthy"
+        unhealthy: "Needs attention"
+        tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        tools_modal:
+          title: "%{name} tools"
+          summary:
+            one: "This server currently exposes %{count} tool."
+            other: "This server currently exposes %{count} tools."
+          parameters: "Parameters"
+          required: "Required"
+          no_parameters: "This tool does not require any parameters."
+        test_result: "Connection result"
+        test_summary:
+          one: "Discovered %{count} tool using protocol %{version}."
+          other: "Discovered %{count} tools using protocol %{version}."
+
+      models:
+        short_title: "Models"
+        description: "Connect the models that power AI features and workflows."
+        new: "New model"
+        back: "Back to models"
+        back_to_types: "Back to model types"
+        empty: "You haven't set up any models yet"
+        name: "Name"
+        type: "Type"
+        provider: "Provider"
+        edit: "Edit"
+        seeded_warning: "This is pre-configured on your site and cannot be edited."
+        choose_type: "What kind of model do you want to add?"
+        select_type: "Select"
+        types:
+          llm: "Large language"
+          embedding: "Embedding"
+          decision: "Decision"
+        type_titles:
+          llm: "Large language model"
+          embedding: "Embedding model"
+          decision: "Decision model"
+        type_descriptions:
+          llm: "Generates text for features like the AI bot, summaries, and the AI helper"
+          embedding: "Turns content into vectors for semantic search and related topics"
+          decision: "Answers typed questions about content (yes/no, choice, score) with probabilities, for use in AI features and workflows"
+        type_filters:
+          llm: "Large language models"
+          embedding: "Embedding models"
+          decision: "Decision models"
+        templates:
+          llm: "Choose a language model template"
+          embedding: "Choose an embedding template"
+          decision: "Choose a decision model template"
+        filters:
+          all: "All types"
+          text: "Filter by name or provider"
+          no_results: "No models match your filters"
+          reset: "Reset filters"
       llms:
         short_title: "LLMs"
         no_llms: "No LLMs yet"
@@ -735,9 +1501,21 @@ en:
         max_output_tokens: "Max output tokens"
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
-        vision_enabled: "Vision enabled"
-        allowed_attachment_types: "Allowed attachments"
-        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, docx)"
+        vision_enabled: "Supports image input"
+        vision_mode: "Image handling"
+        vision_mode_help: "Disabled prevents image processing. Use another model adds a view image tool backed by a native vision model. Native image input sends images directly to this model."
+        vision_modes:
+          disabled:
+            title: "Disabled"
+          delegated:
+            title: "Use another model"
+          native:
+            title: "Native image input"
+        vision_model: "Vision model"
+        vision_model_help: "Delegation adds model requests, latency, and cost. Only models with native image input are available."
+        no_native_vision_models: "Configure a model with native image input before using another model for vision."
+        allowed_attachment_types: "Allowed document attachments"
+        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
@@ -747,7 +1525,7 @@ en:
         save: "Save"
         edit: "Edit"
         saved: "LLM model saved"
-        back: "Back"
+        back: "Back to LLMs"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
         quotas:
@@ -756,6 +1534,7 @@ en:
           group: "Group"
           max_tokens: "Max tokens"
           max_usages: "Max uses"
+          max_cost: "Max cost"
           duration: "Duration"
           confirm_delete: "Are you sure you want to delete this quota?"
           add: "Add quota"
@@ -767,9 +1546,11 @@ en:
             custom: "Custom..."
           hours: "hours"
           max_tokens_help: "Maximum number of tokens (words and characters) that each user in this group can use within the specified duration. Tokens are the units used by AI models to process text - roughly 1 token = 4 characters or 3/4 of a word."
-          max_tokens_required: "Must be set if max usages is not set"
+          max_tokens_required: "Must be set if max uses and max cost are not set"
           max_usages_help: "Maximum number of times each user in this group can use the AI model within the specified duration. This quota is tracked per individual user, not shared across the group."
-          max_usages_required: "Must be set if max tokens is not set"
+          max_usages_required: "Must be set if max tokens and max cost are not set"
+          max_cost_help: "Maximum estimated cost each user in this group can spend on this AI model within the specified duration. Cost is based on the model's configured input, output, cached input, and cache write prices."
+          max_cost_required: "Must be set if max tokens and max uses are not set"
         credit_allocation:
           credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
           soft_limit_warning: "This model has %{percentage}% of AI credits remaining today"
@@ -778,32 +1559,36 @@ en:
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Image caption"
+          ai_image_caption: "Image caption"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"
           ai_spam: "Spam"
           automation: "Automation (%{agent})"
+          vision_delegate: "Vision for model (%{agent})"
         in_use_warning:
           one: "This model is currently used by %{settings}. If misconfigured, the feature won't work as expected."
           other: "This model is currently used by the following: %{settings}. If misconfigured, features won't work as expected. "
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
-          anthropic-claude-haiku-4-5: "Fast and cost-effective"
-          google-gemini-3-pro: "Google's most intelligent model"
-          google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-2: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost"
-          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
-          open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
-          open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
-          open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
-          open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
+          anthropic-claude-fable-5-1: "Anthropic's maximum-capability model for demanding reasoning and long-running agents"
+          anthropic-claude-opus-5: "Anthropic's flagship for complex agentic coding, deep reasoning, and enterprise work"
+          anthropic-claude-sonnet-5: "Best balance of speed and intelligence for coding, agents, and everyday knowledge work"
+          anthropic-claude-haiku-4-5-20251001: "Fast, economical model for high-volume and latency-sensitive workloads"
+          google-gemini-3-1-pro-preview: "Google's Pro model for advanced reasoning, complex problem-solving, and agentic coding"
+          google-gemini-3-8-flash: "Google's most intelligent Flash model for long-horizon software engineering and autonomous agents"
+          google_vertex_ai-google-gemini-3-8-flash: "Gemini 3.8 Flash through Vertex AI for multimodal, agentic, and enterprise workloads"
+          open_ai-gpt-5-6-sol: "OpenAI's flagship GPT-5.6 model for complex professional, coding, and agentic work"
+          open_ai-gpt-5-6-terra: "Balanced GPT-5.6 model for strong intelligence at lower cost"
+          open_ai-gpt-5-6-luna: "Fast, economical GPT-5.6 model for high-volume and well-defined tasks"
+          open_router-z-ai-glm-5-3-flash: "Fast, inexpensive multimodal reasoning model for coding and long-running agents"
+          open_router-deepseek-deepseek-v4-flash-vision-exp: "Experimental multimodal DeepSeek model for economical coding, reasoning, and image understanding"
+          open_router-tencent-hy4-preview: "Preview reasoning model for coding agents, complex tool use, and sustained multi-step work"
+          open_router-xiaomi-mimo-v2-5: "Low-cost omnimodal model for agents and image, audio, and video understanding"
+          open_router-moonshotai-kimi-k3: "Frontier multimodal model for complex coding, repository navigation, and long-running agents"
+          open_router-minimax-minimax-m3: "Long-context multimodal model for sustained coding, tool use, and multi-step agents"
+          open_router-x-ai-grok-4-6: "Frontier multimodal reasoning model for coding, tool use, and long-context workloads"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -825,14 +1610,16 @@ en:
           success: "Success!"
           invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
+          failure_non_streaming: "Non-streaming request failed: %{error}"
+          failure_streaming: "Streaming request failed: %{error}"
 
         hints:
           max_prompt_tokens: "The maximum number of tokens the model can process in a single request"
           max_output_tokens: "The maximum number of tokens the model can generate in a single request"
           display_name: "The name used to reference this model across your site's interface."
           name: "We include this in the API call to specify which model we'll use"
-          vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
-          allowed_attachment_types: "Choose which attachment types are forwarded to the model. Leave blank to disallow attachments. Images are controlled via vision."
+          vision_enabled: "Whether this model/provider can receive and understand images."
+          allowed_attachment_types: "Choose which document attachment types can be converted or forwarded. Leave blank to disallow document attachments. Images are controlled separately."
           cost_input: "The input cost per 1M tokens for this model"
           cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
           cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
@@ -840,12 +1627,15 @@ en:
           cost_measure: "$/1M tokens"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
+          google: "Google Gemini (Legacy API)"
+          gemini_interactions: "Google Gemini"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -858,7 +1648,9 @@ en:
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
           role_arn: "AWS Bedrock Role ARN"
-          region: "AWS Bedrock region"
+          inference_profile_arn: "AWS Bedrock application inference profile ARN"
+          region: "Region"
+          project_id: "GCP Project ID"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"
           enable_native_tool: "Enable native tool support"
@@ -868,11 +1660,16 @@ en:
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
+          reasoning_mode: "Reasoning mode"
           service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
+          reasoning_parser: "vLLM reasoning parser"
+          thinking_override: "Thinking override"
+          thinking_token_budget: "Thinking token budget"
           enable_reasoning: "Enable reasoning (only applicable to reasoning models)"
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
           thinking_level: "Thinking level (Gemini 3 models - controls reasoning depth)"
+          gemini_interactions_thinking_level: "Thinking level"
           thinking_tokens: "Number of tokens used for thinking"
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
@@ -883,6 +1680,14 @@ en:
           prompt_caching_always: "Always - Always use prompt caching"
           effort: "Effort level"
 
+        provider_field_hints:
+          reasoning_mode: "Standard mode uses the provider default. Pro mode requires the Responses API and support from the selected model, and increases latency and token usage."
+          azure_reasoning_effort: "Available effort levels depend on the model deployed in Azure. Unsupported values are rejected by Azure."
+          reasoning_parser: "Must match the vLLM server --reasoning-parser setting. Discourse cannot switch parsers per request; it uses this to shape request options."
+          thinking_override: "Optionally force supported vLLM chat templates to enable or disable thinking for each request. Unsupported parsers keep the server default."
+          reasoning_effort: "Sends vLLM's reasoning_effort request option for parsers that support it."
+          thinking_token_budget: "Optional cap for reasoning tokens. Requires a vLLM reasoning parser and is ignored when reasoning effort is None."
+
       related_topics:
         title: "Related topics"
         pill: "Related"
@@ -890,11 +1695,10 @@ en:
         title: "Suggest changes using AI"
         description: "Choose one of the options below, and the AI will suggest you a new version of the text."
         selection_hint: "Hint: You can also select a portion of the text before opening the helper to rewrite only that."
-        suggest: "Suggest with AI"
+        suggest: "Show AI suggestions"
+        choose: "Choose for me"
+        suggestions: "Suggestions"
         suggest_errors:
-          too_many_tags:
-            one: "You can only have up to %{count} tag"
-            other: "You can only have up to %{count} tags"
           no_suggestions: "No suggestions available"
         missing_content: "Please enter some content to generate suggestions."
         context_menu:
@@ -928,11 +1732,6 @@ en:
           select: "Select"
           selected: "Selected"
           try_again: "Try Again"
-        image_caption:
-          button_label: "Caption with AI"
-          generating: "Generating caption..."
-          credits: "Captioned by AI"
-          save_caption: "Save"
         no_content_error: "Add content first to perform AI actions on it"
 
       errors:
@@ -946,12 +1745,17 @@ en:
       reviewables:
         model_used: "Model used:"
         accuracy: "Accuracy:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameters"
+          post: "Triggering Post"
 
       embeddings:
         short_title: "Embeddings"
         description: "Embeddings are numerical representations of data that capture meaning and relationships, enabling Discourse AI features like Related Topics and AI Search to understand and connect content."
         new: "New embedding"
-        back: "Back"
+        back: "Back to embeddings"
         save: "Save"
         saved: "Embedding configuration saved"
         delete: "Delete"
@@ -959,8 +1763,17 @@ en:
         empty: "You haven't setup embeddings yet"
         presets: "Select a preset..."
         configure_manually: "Configure manually"
+        preset_descriptions:
+          manual: "Settings for any embedding service, including self-hosted ones"
+          bge-large-en: "Open-source English-only model, self-hosted"
+          bge-m3: "Open-source multilingual model for longer content, self-hosted"
+          multilingual-e5-large: "Open-source multilingual model, self-hosted"
+          cohere-embed-v4: "Cohere's multilingual model, hosted on AWS Bedrock"
+          gemini-embedding-001: "Google's hosted multilingual model"
+          text-embedding-3-large: "OpenAI's most accurate embedding model"
+          text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
+          text-embedding-ada-002: "OpenAI's previous-generation model, superseded by text-embedding-3-small"
         edit: "Edit"
-        seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
           title: "Run test"
           running: "Running test..."
@@ -968,6 +1781,7 @@ en:
           failure: "Attempting to generate an embedding resulted in: %{error}"
         hints:
           dimensions_warning: "Once saved, this value can't be changed."
+          bedrock_api_key: "A Bedrock API key, or the secret access key when an access key ID is set. Leave empty to use an IAM role or the server's AWS credentials."
           matryoshka_dimensions: "Defines the size of nested embeddings used for hierarchical or multi-layered representation of data, similar to how nested dolls fit within each other."
           embed_prompt: "Task instruction prefix when generating embeddings of forum content. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
           search_prompt: "Task instruction prefix when generating embeddings of search queries. ONLY for embeddings models that require prefixes, like nomic-embed or stella. Not needed for most models."
@@ -993,34 +1807,111 @@ en:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Custom"
         provider_fields:
           model_name: "Model name"
+          model_id: "Model ID or inference profile"
+          region: "AWS region"
+          access_key_id: "AWS access key ID"
+          role_arn: "IAM role ARN"
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:
-          toggle: "AI results"
-          unavailable: "AI results unavailable"
-          zero_results_expanded: "Zero results found, showing %{count} AI results"
+          toggle: "Related results"
+          unavailable: "Related results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} related results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
-          invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          invalid_sort: "Search results must be sorted by relevance to display related results"
           not_submitted: "Submit a search to enable AI results"
           no_results: "No AI results found for this search"
-        semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
-        ai_generated_result: "Search result found using AI"
+        semantic_search_unavailable_tooltip: "Search results must be sorted by relevance to display related results"
+        ai_generated_result: "Related search result found using AI"
+        ai_results_notice:
+          no_results: "No exact matches, but here are some related results."
+          few_results:
+            one: "%{count} match found - showing related results."
+            other: "%{count} matches found - showing related results."
         quick_search:
           suffix: "in all topics and posts with AI"
 
       ai_artifact:
+        editor:
+          title: "AI artifact"
+          edit_options: "Edit options"
+          reference: "Reference"
+          share_reference_description: "Share key or a shared artifact link from this site."
+          source_reference_description: "Source artifact ID."
+          version: "Version"
+          version_description: "Leave blank for the base artifact."
+          autorun: "Run automatically"
+          autorun_default_description: "Only applies when artifact security is set to hybrid mode."
+          autorun_strict: "This site requires a click to run."
+          autorun_lax: "This site runs artifacts automatically."
+          height: "Height (px)"
+          height_description: "1–2000 pixels. Leave blank for the default height."
+          seamless: "Seamless display"
+          seamless_description: "Hide the footer when the artifact runs."
+          summary_autorun: "Run automatically: %{value}"
+          summary_height: "Height: %{value}"
+          summary_height_value: "%{height} px"
+          summary_seamless: "Seamless: %{value}"
+          default: "Default"
+          option_on: "On"
+          option_off: "Off"
+          apply: "Apply"
+          invalid_share: "Enter a valid share key or a link to a shared artifact on this site."
+          invalid_source: "Enter a positive source artifact ID (up to 19 digits)."
+          invalid_version: "Enter a positive version number (up to 19 digits), or leave blank."
+          invalid_height: "Enter a height from 1 to 2000 pixels, or leave blank."
         expand_view_label: "Expand view"
         collapse_view_label: "Exit Fullscreen (ESC or Back button)"
         click_to_run_label: "Run Artifact"
+        share: "Share"
+        privacy_notice: "Anyone with the link can view this version. Your conversation stays private."
+        privacy_notice_login_required: "Signed-in users with the link can view this version. Your conversation stays private."
+        create_link: "Create link"
+        version_label: "Version %{version}"
+        copied: "Copied to clipboard"
+        copy_link: "Copy link"
+        copy_embed: "Copy embed"
+        embed_post: "Embed in post"
+        embed_post_title: "Copy the code to embed this artifact in a post"
+        embed_website: "Embed on website"
+        embed_website_title: "Copy the HTML to embed this artifact on a website"
+        new_tab: "Show in new tab"
+        update_pin: "Update pinned version"
+        pin_updated: "Shared version updated"
+        revoke: "Revoke link"
+        revoke_conversation: "Revoke conversation share"
+        confirm_revoke_standalone_title: "Revoke link?"
+        confirm_revoke_standalone_message: "This link and its embeds will stop working. This cannot be undone."
+        confirm_revoke_conversation_title: "Revoke conversation share?"
+        confirm_revoke_conversation_message: "This permanently stops the shared conversation and its artifact embeds. Standalone links are not revoked."
+        shared_artifacts: "Shared AI artifacts"
+        filter_shares: "Filter shares"
+        filter_all: "All"
+        filter_standalone: "Standalone"
+        filter_conversation: "Conversation"
+        standalone: "Standalone share"
+        conversation: "Shared with conversation"
+        empty_shares: "No shared AI artifacts yet."
+        unavailable: "This link is no longer available. You can still revoke it."
+        retry_loading: "Retry loading"
+        newest_first: "Newest first"
+        oldest_first: "Oldest first"
+
+      shared_ai_conversations:
+        title: "Shared AI conversations"
+        empty: "No shared AI conversations yet."
+        unavailable: "This conversation link is no longer available. You can still revoke it."
 
       ai_bot:
-        agent: "Agent"
-        llm: "Model"
+        title: "AI bot"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
@@ -1037,10 +1928,17 @@ en:
           title: "View AI interaction"
           copy_request: "Copy request"
           copy_response: "Copy response"
-          request_tokens: "Request tokens:"
-          response_tokens: "Response tokens:"
-          cache_read_tokens: "Cache read tokens:"
-          cache_write_tokens: "Cache write tokens:"
+          payload_unavailable: "Payload not available"
+          this_turn: "This turn:"
+          whole_conversation: "Conversation:"
+          tokens_summary: "%{request_tokens} in → %{response_tokens} out"
+          duration_label: "Duration:"
+          duration: "%{duration_seconds} secs (first token: %{first_token_seconds} secs)"
+          duration_without_first_token: "%{duration_seconds} secs (first token: —)"
+          duration_unavailable: "— (first token: —)"
+          cache_both: "(cache %{read} read, %{write} write)"
+          cache_read_only: "(cache %{read} read)"
+          cache_write_only: "(cache %{write} write)"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -1086,6 +1984,10 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "AI bot conversations"
+          preview:
+            title: "Log in to ask a question"
+            body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
           disclaimer: "Generative AI can make mistakes. Verify important information."
@@ -1095,16 +1997,22 @@ en:
             one: "Message must be %{count} character or longer"
             other: "Message must be %{count} characters or longer"
           messages_sidebar_title: "Conversations"
+          starred: "Starred"
+          star_conversation: "Star conversation"
+          unstar_conversation: "Unstar conversation"
+          open_conversation_menu: "Open conversation menu"
           today: "Today"
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
           upload_files: "Upload files"
           uploads_in_progress: "Cannot submit while uploads are in progress"
+          show_toolbar: "Show formatting toolbar"
+          hide_toolbar: "Hide formatting toolbar"
+          scroll_to_bottom: "Scroll to bottom"
+          streaming_below: "New content below"
+          editing_post: "Editing post"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Sentiment overview"
           analysis: "Sentiment analysis"
         sentiment_analysis:
           share_chart: "Copy link to chart"
@@ -1136,15 +2044,11 @@ en:
           bulk_regen_description: "Choose which type of AI summary to regenerate for the selected topics."
           regenerate_gists_option: "Short summaries (gists)"
           regenerate_summaries_option: "Topic summaries"
-          regenerate_gists_success:
-            one: "Short summary regenerated successfully"
-            other: "%{count} short summaries regenerated successfully"
+          regenerate_gists_started: "Regenerating short summaries…"
           regenerate_gists_error:
             one: "Failed to regenerate short summary"
             other: "Failed to regenerate %{count} short summaries"
-          regenerate_topic_summary_success:
-            one: "Topic summary regenerated successfully"
-            other: "%{count} topic summaries regenerated successfully"
+          regenerate_topic_summaries_started: "Regenerating topic summaries…"
           regenerate_topic_summary_error:
             one: "Failed to regenerate topic summary"
             other: "Failed to regenerate %{count} topic summaries"
@@ -1154,27 +2058,95 @@ en:
             expanded: "Expanded"
             expanded_description: "with AI summaries"
 
+      ai_search:
+        related_topics: "Related topics"
+        related_replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        answer_label: "AI answer"
+        follow_up_label: "Ask a follow-up question"
+        follow_up_placeholder: "Ask a follow-up…"
+        ask: "Ask"
+        references_title: "Cited topics"
+        references_empty: "Topics the answers cite appear here."
+        tabs:
+          label: "Search results"
+          ask: "Ask AI"
+          topics: "Topics"
+          this_topic: "This topic"
+          messages: "Messages"
+          no_answer: "No AI answer found"
+        no_keyword_matches: "No keyword matches found."
+        no_answer: "AI couldn’t find a clear answer. %{askLink}"
+        ask_community: "Ask the community."
+        scope:
+          this_topic: "this topic"
+          messages: "your messages"
+          fallback: "Nothing found in %{name}, so this answer is from the whole site."
       discobot_discoveries:
-        main_title: "Discobot discoveries"
-        regular_results: "Topics"
-        tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        main_title: "Ask AI"
         loading_convo: "Loading conversation"
-        collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
+        timed_out: "Ask AI took too long to complete this search. Try again or use Search."
+        request_failed: "Ask AI could not start this search. Try again or use Search."
+        no_answer: "AI couldn’t find a clear answer. Ask the community."
+        create_topic: "Create topic"
+        asking: "Asking AI…"
+        answer_label: "AI answer"
+        answer_ready: "Ask AI answer ready."
         user_setting: "Enable AI search discoveries"
-        tooltip:
-          header: "AI powered search"
-          content: "Natural language search powered by %{model}"
-          actions:
-            info: "How does it work?"
-            disable: "Disable"
-
+        legacy:
+          main_title: "Discobot discoveries"
+          regular_results: "Topics"
+          tell_me_more: "Tell me more..."
+          continue_convo: "Continue conversation..."
+          loading_convo: "Loading conversation"
+          collapse: "Collapse"
+          timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+          tooltip:
+            header: "AI powered search"
+            content: "Natural language search powered by %{model}"
+            actions:
+              info: "How does it work?"
+              disable: "Disable"
+        search_placeholder: "Search or Ask AI"
+        search_type: "AI"
+        ask_button: "Ask"
+        tip_ask: "asks AI instead of searching"
+        tip_search: "searches instead of asking AI"
+        make_default: "Make AI my default search option"
+        dismiss_default_preference: "Hide this setting"
+        default_preference_dismissed: "This setting is also available in your user preferences"
+        shortcut_hint: "or %{shortcut}"
+        search_options: "Search options"
+        advanced_with_shortcut: "Open advanced search (%{shortcut})"
+        search_all_topics: "All topics"
+        search_this_topic: "This topic"
+        search_in_context: "In %{name}"
+        search_group_messages: "Messages in %{group}"
+        search_user_posts: "Posts by %{username}"
+        search_messages: "Messages"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Related topics"
+          show_all_matching: "Show all matching topics"
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool approved"
+        rejected_tool_action:
+          title: "Tool rejected"
       types:
+        discourse_ai_triage:
+          title: "AI triage"
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:
           title: "AI-Flagged chat message"
+        reviewable_ai_tool_action:
+          title: "AI Tool Action"

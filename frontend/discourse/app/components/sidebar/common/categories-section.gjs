@@ -17,7 +17,7 @@ export default class SidebarCommonCategoriesSection extends Component {
   /**
    * Override in child
    *
-   * @returns {Object[]} An array of Category objects
+   * @returns {Category[] | undefined} An array of Category objects
    */
   get categories() {}
 

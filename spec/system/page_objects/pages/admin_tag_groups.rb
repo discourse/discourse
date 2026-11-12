@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_name?(name)
-        find(".group-name input").value == name
+        within(".group-name") { page.has_field?(with: name) }
       end
 
       def has_tag_in_group?(tag_name)
@@ -84,6 +84,27 @@ module PageObjects
         find("#visible-permission").checked?
       end
 
+      def has_private_permission_checked?
+        find("#private-permission").checked?
+      end
+
+      def has_public_permission_checked?
+        find("#public-permission").checked?
+      end
+
+      def has_private_group?(group_name)
+        has_css?(
+          ".group-visibility-option:has(#private-permission) .group-chooser",
+          text: group_name,
+        )
+      end
+
+      def private_group_chooser
+        PageObjects::Components::SelectKit.new(
+          ".group-visibility-option:has(#private-permission) .group-chooser",
+        )
+      end
+
       def save
         find(".tag-group-controls .btn-primary").click
         self
@@ -95,7 +116,7 @@ module PageObjects
       end
 
       def click_tag_group(name)
-        find(".tag-groups-sidebar li", text: name).click
+        find(".tag-groups-sidebar li a", text: name).click
         self
       end
     end

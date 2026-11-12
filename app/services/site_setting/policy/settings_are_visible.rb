@@ -19,6 +19,7 @@ class SiteSetting::Policy::SettingsAreVisible < Service::PolicyBase
 
   def validate_setting(setting_name)
     return false if options.allow_changing_hidden.include?(setting_name)
+    return false if SiteSetting.upcoming_change_site_settings.include?(setting_name)
     SiteSetting.hidden_settings.include?(setting_name)
   end
 end

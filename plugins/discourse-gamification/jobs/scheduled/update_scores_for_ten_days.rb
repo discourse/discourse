@@ -5,7 +5,11 @@ module Jobs
     every 1.day
 
     def execute(args = nil)
-      DiscourseGamification::GamificationScore.calculate_scores(since_date: 10.days.ago.midnight)
+      return unless SiteSetting.discourse_gamification_enabled
+
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all(
+        since_date: 10.days.ago.midnight,
+      )
     end
   end
 end

@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { match } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { alertSkippedComponents } from "discourse/admin/components/skipped-theme-components";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
@@ -10,7 +10,29 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
 
-  @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+  @computed("model.remote_theme.remote_url")
+  get sourceIsHttp() {
+    return /^http(s)?:\/\//.test(this.model?.remote_theme?.remote_url);
+  }
+
+  @computed("model.remote_theme.remote_url")
+  get prettyRemoteUrl() {
+    const remoteUrl = this.model?.remote_theme?.remote_url;
+
+    if (/^https?:\/\/github\.com\//.test(remoteUrl)) {
+      return remoteUrl.replace(/^https?:\/\//, "").replace(/\.git$/, "");
+    }
+
+    return remoteUrl;
+  }
+
+  @computed("model.remote_theme.local_compat_ref", "model.remote_theme.branch")
+  get displayBranch() {
+    return (
+      this.model?.remote_theme?.local_compat_ref ||
+      this.model?.remote_theme?.branch
+    );
+  }
 
   @computed("model.remote_theme.remote_url", "model.remote_theme.branch")
   get remoteThemeLink() {
@@ -24,17 +46,9 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return this.model?.remoteError && !this.updatingRemote;
   }
 
-  @computed(
-    "model.remote_theme.remote_url",
-    "model.remote_theme.local_version",
-    "model.remote_theme.commits_behind"
-  )
+  @computed("model.remote_theme.placeholder")
   get finishInstall() {
-    return (
-      this.model?.remote_theme?.remote_url &&
-      !this.model?.remote_theme?.local_version &&
-      !this.model?.remote_theme?.commits_behind
-    );
+    return this.model?.remote_theme?.placeholder;
   }
 
   @action
@@ -60,6 +74,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.set("updatingRemote", true);
     this.model
       .updateToLatest()
+      .then((result) => {
+        this.send("routeRefreshModel");
+        alertSkippedComponents(this.dialog, result.responseJson);
+      })
       .catch(popupAjaxError)
       .finally(() => {
         this.set("updatingRemote", false);
@@ -74,7 +92,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
           this.router.transitionTo("adminConfig.customize.themes");

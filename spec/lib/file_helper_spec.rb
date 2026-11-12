@@ -4,7 +4,7 @@ require "file_helper"
 
 RSpec.describe FileHelper do
   let(:url) { "https://eviltrout.com/trout.png" }
-  let(:png) { File.read("#{Rails.root}/spec/fixtures/images/cropped.png") }
+  let(:png) { File.read("#{Rails.root.join("spec/fixtures/images/cropped.png")}") }
 
   before do
     stub_request(:any, %r{https://eviltrout.com})
@@ -17,18 +17,28 @@ RSpec.describe FileHelper do
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do
-        begin
-          FileHelper.download(
-            url,
-            max_file_size: 10_000,
-            tmp_file_name: "trouttmp",
-            follow_redirect: true,
-          )
-        rescue => e
-          expect(e.io.status[0]).to eq("404")
-          raise
-        end
+        FileHelper.download(
+          url,
+          max_file_size: 10_000,
+          tmp_file_name: "trouttmp",
+          follow_redirect: true,
+        )
+      rescue => e
+        expect(e.io.status[0]).to eq("404")
+        raise
       end.to raise_error(OpenURI::HTTPError, "404 Error")
+    end
+
+    it "exposes the response headers on the raised error" do
+      url = "http://toomany.com/429"
+      stub_request(:get, url).to_return(status: 429, headers: { "Retry-After" => "120" })
+
+      expect do
+        FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
+      rescue => e
+        expect(e.io.meta["retry-after"]).to eq("120")
+        raise
+      end.to raise_error(OpenURI::HTTPError, "429 Error")
     end
 
     it "does not follow redirects if instructed not to" do
@@ -73,49 +83,43 @@ RSpec.describe FileHelper do
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do
-        begin
-          FileHelper.download(
-            url,
-            max_file_size: 10_000,
-            tmp_file_name: "trouttmp",
-            follow_redirect: false,
-          )
-        rescue => e
-          expect(e.io.status[0]).to eq("404")
-          raise
-        end
+        FileHelper.download(
+          url,
+          max_file_size: 10_000,
+          tmp_file_name: "trouttmp",
+          follow_redirect: false,
+        )
+      rescue => e
+        expect(e.io.status[0]).to eq("404")
+        raise
       end.to raise_error(OpenURI::HTTPError)
     end
 
     it "returns a file with the image" do
-      begin
-        tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
+      tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
 
-        expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
-      ensure
-        tmpfile&.close
-        tmpfile&.unlink
-      end
+      expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+    ensure
+      tmpfile&.close
+      tmpfile&.unlink
     end
 
     it "works with a protocol relative url" do
-      begin
-        tmpfile =
-          FileHelper.download(
-            "//eviltrout.com/trout.png",
-            max_file_size: 10_000,
-            tmp_file_name: "trouttmp",
-          )
+      tmpfile =
+        FileHelper.download(
+          "//eviltrout.com/trout.png",
+          max_file_size: 10_000,
+          tmp_file_name: "trouttmp",
+        )
 
-        expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
-      ensure
-        tmpfile&.close
-        tmpfile&.unlink
-      end
+      expect(Base64.encode64(tmpfile.read)).to eq(Base64.encode64(png))
+    ensure
+      tmpfile&.close
+      tmpfile&.unlink
     end
 
     describe "when max_file_size is exceeded" do
-      it "should return nil" do
+      it "returns nil" do
         tmpfile =
           FileHelper.download(
             "//eviltrout.com/trout.png",
@@ -127,37 +131,127 @@ RSpec.describe FileHelper do
       end
 
       it "is able to retain the tmpfile" do
-        begin
-          tmpfile =
-            FileHelper.download(
-              "//eviltrout.com/trout.png",
-              max_file_size: 1,
-              tmp_file_name: "trouttmp",
-              retain_on_max_file_size_exceeded: true,
-            )
+        tmpfile =
+          FileHelper.download(
+            "//eviltrout.com/trout.png",
+            max_file_size: 1,
+            tmp_file_name: "trouttmp",
+            retain_on_max_file_size_exceeded: true,
+          )
 
-          expect(tmpfile.closed?).to eq(false)
-        ensure
-          tmpfile&.close
-          tmpfile&.unlink
-        end
+        expect(tmpfile.closed?).to eq(false)
+      ensure
+        tmpfile&.close
+        tmpfile&.unlink
       end
     end
 
     describe "when url is a jpeg" do
       let(:url) { "https://eviltrout.com/trout.jpg" }
 
-      it "should prioritize the content type returned by the response" do
-        begin
-          stub_request(:get, url).to_return(body: png, headers: { "content-type": "image/png" })
+      it "prefers the response content type" do
+        stub_request(:get, url).to_return(body: png, headers: { "content-type": "image/png" })
 
-          tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
+        tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
 
-          expect(File.extname(tmpfile)).to eq(".png")
-        ensure
-          tmpfile&.close
-          tmpfile&.unlink
-        end
+        expect(File.extname(tmpfile)).to eq(".png")
+      ensure
+        tmpfile&.close
+        tmpfile&.unlink
+      end
+    end
+  end
+
+  describe ".optimize_image!" do
+    def with_optimizer_input(fixture)
+      Tempfile.create(["optimizer-spec-", File.extname(fixture)]) do |file|
+        FileUtils.cp(file_from_fixtures(fixture).path, file.path)
+        yield file.path
+      end
+    end
+
+    it "reduces PNG size" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original_size = File.size(path)
+
+        expect(described_class.optimize_image!(path)).to eq(path)
+
+        expect(File.size(path)).to be < original_size
+        expect(FastImage.type(path)).to eq(:png)
+      end
+    end
+
+    it "keeps the input intact if replacing the optimized image fails" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original = File.binread(path)
+        File.stubs(:rename).raises(Errno::EACCES)
+
+        expect { described_class.optimize_image!(path) }.to raise_error(Errno::EACCES)
+
+        expect(File.binread(path)).to eq(original)
+      end
+    end
+
+    it "reduces PNG size further when quantization is enabled" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original = File.binread(path)
+        described_class.optimize_image!(path)
+        lossless_size = File.size(path)
+        File.binwrite(path, original)
+
+        described_class.optimize_image!(path, allow_pngquant: true)
+
+        expect(File.size(path)).to be < lossless_size
+        expect(FastImage.type(path)).to eq(:png)
+      end
+    end
+
+    it "optimizes JPEGs with the configured metadata policy" do
+      with_optimizer_input("unoptimized_with_metadata.jpg") do |path|
+        original = File.binread(path)
+        SiteSetting.composer_media_optimization_image_enabled = false
+        SiteSetting.strip_image_metadata = false
+        described_class.optimize_image!(path)
+        expect(File.binread(path)).to include("Exif")
+        expect(File.size(path)).to be < original.bytesize
+
+        File.binwrite(path, original)
+        SiteSetting.strip_image_metadata = true
+        described_class.optimize_image!(path)
+        expect(File.binread(path)).not_to include("Exif")
+        expect(FastImage.type(path)).to eq(:jpeg)
+        expect(File.size(path)).to be < original.bytesize
+      end
+    end
+
+    it "keeps the input when optimization fails or cannot reduce its size" do
+      with_optimizer_input("logo.png") do |path|
+        described_class.optimize_image!(path)
+        optimized = File.binread(path)
+
+        expect(described_class.optimize_image!(path)).to be_nil
+        expect(File.binread(path)).to eq(optimized)
+
+        invalid_png = "\x89PNG\r\n\x1a\n".b
+        File.binwrite(path, invalid_png)
+
+        expect(described_class.optimize_image!(path)).to be_nil
+        expect(File.binread(path)).to eq(invalid_png)
+      end
+    end
+
+    it "emits one image-processing measurement" do
+      SiteSetting.instrument_image_processing = true
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        events =
+          DiscourseEvent.track_events(:image_processing_finished) do
+            expect(described_class.optimize_image!(path)).to eq(path)
+          end
+
+        expect(events.size).to eq(1)
+        payload = events.first[:params].first
+        expect(payload.except(:duration_seconds)).to eq(operation: "image_optim", success: true)
+        expect(payload[:duration_seconds]).to be >= 0
       end
     end
   end
@@ -238,6 +332,27 @@ RSpec.describe FileHelper do
 
       it "excludes SVG" do
         expect(FileHelper.inline_safe_files).not_to include("svg")
+      end
+
+      it "only contains extensions that map to a non-scriptable content type" do
+        scriptable_content_types = %w[
+          text/html
+          application/xhtml+xml
+          image/svg+xml
+          application/xml
+          text/xml
+        ]
+
+        offenders =
+          FileHelper.inline_safe_files.select do |extension|
+            content_type = MiniMime.lookup_by_filename("file.#{extension}")&.content_type
+            next false if content_type.blank?
+
+            scriptable_content_types.include?(content_type) ||
+              content_type.match?(/(java|ecma)script/)
+          end
+
+        expect(offenders).to be_empty
       end
     end
   end

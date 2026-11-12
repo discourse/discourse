@@ -1,89 +1,20 @@
-import { LinkTo } from "@ember/routing";
-import DashboardProblems from "discourse/admin/components/dashboard-problems";
-import VersionChecks from "discourse/admin/components/version-checks";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { i18n } from "discourse-i18n";
+import RedesignedAdminDashboard from "discourse/admin/components/redesigned-admin-dashboard";
 
 export default <template>
-  <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
-
-  <DPageHeader
-    @titleLabel={{i18n "admin.dashboard.title"}}
-    @descriptionLabel={{i18n "admin.config.dashboard.header_description"}}
-    @hideTabs={{true}}
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-      <DBreadcrumbsItem
-        @path="/admin"
-        @label={{i18n "admin.dashboard.title"}}
-      />
-    </:breadcrumbs>
-  </DPageHeader>
-
-  <PluginOutlet @name="admin-dashboard-after-header" @connectorTagName="div" />
-
-  {{#if @controller.showVersionChecks}}
-    <div class="section-top">
-      <div class="version-checks">
-        <VersionChecks @versionCheck={{@controller.versionCheck}} />
-      </div>
-    </div>
-  {{/if}}
-
-  <DashboardProblems
-    @loadingProblems={{@controller.loadingProblems}}
+  <RedesignedAdminDashboard
+    @loadedSections={{@controller.loadedSections}}
+    @loadingSections={{@controller.loadingSections}}
+    @onIgnoreProblem={{@controller.ignoreProblem}}
+    @onRefreshProblems={{@controller.refreshSiteAdvice}}
     @problems={{@controller.problems}}
-    @problemsTimestamp={{@controller.problemsTimestamp}}
-    @refreshProblems={{@controller.refreshProblems}}
+    @refreshSections={{@controller.fetchSections}}
+    @reorderSections={{@controller.reorderSections}}
+    @requestedEndDate={{@controller.endDate}}
+    @requestedPeriod={{@controller.safePeriod}}
+    @requestedStartDate={{@controller.startDate}}
+    @sectionsFetchError={{@controller.sectionsFetchError}}
+    @setCustomDateRange={{@controller.setCustomDateRange}}
+    @setPeriod={{@controller.setPeriod}}
+    @toggleSection={{@controller.toggleSection}}
   />
-  <nav>
-    <ul class="nav nav-pills">
-      <li class="navigation-item settings">
-        <LinkTo @route="adminReports.dashboardSettings" class="navigation-link">
-          {{i18n "admin.config.reports.sub_pages.settings.title"}}
-        </LinkTo>
-      </li>
-
-      <li class="navigation-item general">
-        <LinkTo @route="admin.dashboard.general" class="navigation-link">
-          {{i18n "admin.dashboard.general_tab"}}
-        </LinkTo>
-      </li>
-
-      {{#if @controller.isModerationTabVisible}}
-        <li class="navigation-item moderation">
-          <LinkTo @route="admin.dashboardModeration" class="navigation-link">
-            {{i18n "admin.dashboard.moderation_tab"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-
-      {{#if @controller.isSecurityTabVisible}}
-        <li class="navigation-item security">
-          <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
-            {{i18n "admin.dashboard.security_tab"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-
-      {{#if @controller.isReportsTabVisible}}
-        <li class="navigation-item reports">
-          <LinkTo @route="admin.dashboardReports" class="navigation-link">
-            {{i18n "admin.dashboard.reports_tab"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-
-      <PluginOutlet @name="admin-dashboard-tabs-after" />
-    </ul>
-  </nav>
-
-  {{outlet}}
-
-  <span>
-    <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
-  </span>
 </template>

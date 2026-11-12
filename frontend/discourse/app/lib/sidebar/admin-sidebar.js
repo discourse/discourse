@@ -19,6 +19,16 @@ import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
 
+// Section headers can only render links, so anything that is an action rather
+// than a destination is resolved here by the id the nav map declares.
+const SECTION_HEADER_ACTIONS = {
+  design_wizard: {
+    available: ({ currentUser }) => currentUser?.can_run_design_wizard,
+    action: ({ designWizard, router }) =>
+      designWizard.launch({ returnUrl: router.currentURL }),
+  },
+};
+
 // For testing.
 export function clearAdditionalAdminSidebarSectionLinks() {
   additionalAdminSidebarSectionLinks = {};
@@ -153,7 +163,8 @@ function defineAdminSection(
   adminNavSectionData,
   adminSidebarStateManager,
   router,
-  currentUser
+  currentUser,
+  headerActionContext
 ) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
@@ -199,6 +210,37 @@ function defineAdminSection(
 
     get collapsedByDefault() {
       return this.adminNavSectionData.name !== "root";
+    }
+
+    get actionsIcon() {
+      return this.#headerActions.length > 1
+        ? "ellipsis-vertical"
+        : this.#headerActions[0]?.icon;
+    }
+
+    @cached
+    get actions() {
+      return this.#headerActions.map((headerAction) => ({
+        id: headerAction.id,
+        title: i18n(headerAction.label),
+        action: () =>
+          SECTION_HEADER_ACTIONS[headerAction.id].action(headerActionContext),
+      }));
+    }
+
+    // a header action is how its section's own feature is reached, so unlike
+    // the personal sidebar's editing controls it cannot wait for a hover
+    get persistentActions() {
+      return this.#headerActions.length > 0;
+    }
+
+    get #headerActions() {
+      return (this.adminNavSectionData.headerActions ?? []).filter(
+        (headerAction) =>
+          SECTION_HEADER_ACTIONS[headerAction.id]?.available(
+            headerActionContext
+          )
+      );
     }
   };
 
@@ -347,9 +389,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:site-settings"
     );
     const site = getOwnerWithFallback(this).lookup("service:site");
-    const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
+    const designWizard = getOwnerWithFallback(this).lookup(
+      "service:design-wizard"
+    );
 
     this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-state-manager"
@@ -359,18 +403,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:admin-nav-manager"
     );
 
+    this.adminNavManager.resetNavMap();
+
     if (!session.get("safe_mode")) {
-      const existingPluginLinkNames = this.adminNavManager
-        .findSection("plugins")
-        .links.map((link) => link.name);
-      const pluginLinksToAdd = pluginAdminRouteLinks(router)
-        .map((pluginLink) => {
-          if (!existingPluginLinkNames.includes(pluginLink.name)) {
-            return pluginLink;
-          }
-        })
-        .filter((item) => item != null);
-      this.adminNavManager.amendLinksToSection("plugins", pluginLinksToAdd);
+      this.adminNavManager.amendLinksToSection(
+        "plugins",
+        pluginAdminRouteLinks(router)
+      );
 
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_installed_plugins",
@@ -378,45 +417,18 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
 
       if (site.admin_config_login_routes) {
-        const adminLoginRoutesToAdd = () => {
-          const routes = [];
-
-          site.admin_config_login_routes.forEach((routeName) => {
-            routes.push({
-              name: `admin_login_${routeName}`,
-              route: `adminConfig.login.plugin-tab`,
-              routeModels: [routeName],
-              icon: "unlock",
-              label: `admin.config.login.sub_pages.${routeName}`,
-              settings_area: routeName,
-            });
-          });
-          return routes;
-        };
-
         this.adminNavManager.amendLinksToSubSection(
           "admin_login",
-          adminLoginRoutesToAdd()
+          site.admin_config_login_routes.map((routeName) => ({
+            name: `admin_login_${routeName}`,
+            route: `adminConfig.login.plugin-tab`,
+            routeModels: [routeName],
+            icon: "unlock",
+            label: `admin.config.login.sub_pages.${routeName}`,
+            settings_area: routeName,
+          }))
         );
       }
-    }
-
-    // Mods cannot access themes
-    if (currentUser.admin) {
-      store.findAll("theme").then((themes) => {
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.content
-            .filter((theme) => !theme.component)
-            .map((theme) => theme.name)
-        );
-        this.adminSidebarStateManager.setLinkKeywords(
-          "admin_themes_and_components",
-          themes.content
-            .filter((theme) => theme.component)
-            .map((theme) => theme.name)
-        );
-      });
     }
 
     if (siteSettings.enable_form_templates) {
@@ -431,22 +443,29 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
-    const rootSection = this.adminNavManager.findSection("root");
-    const linkExists = rootSection?.links.some(
-      (link) => link.name === "admin_upcoming_changes"
-    );
-    if (!linkExists) {
-      this.adminNavManager.amendLinksToSection("root", [
+    if (siteSettings.enable_gifs) {
+      this.adminNavManager.amendLinksToSection("appearance", [
         {
-          name: "admin_upcoming_changes",
-          route: "adminConfig.upcomingChanges",
-          label: "admin.config.upcoming_changes.title",
-          description: "admin.config.upcoming_changes.header_description",
-          icon: "flask",
-          keywords: "admin.config.upcoming_changes.keywords",
+          name: "admin_gifs",
+          route: "adminConfig.gifs.settings",
+          label: "admin.config.gifs.title",
+          description: "admin.config.gifs.header_description",
+          icon: "gif",
+          settings_area: "gifs",
         },
       ]);
     }
+
+    this.adminNavManager.amendLinksToSection("root", [
+      {
+        name: "admin_upcoming_changes",
+        route: "adminConfig.upcomingChanges",
+        label: "admin.config.upcoming_changes.title",
+        description: "admin.config.upcoming_changes.header_description",
+        icon: "flask",
+        keywords: "admin.config.upcoming_changes.keywords",
+      },
+    ]);
 
     for (const [sectionName, additionalLinks] of Object.entries(
       additionalAdminSidebarSectionLinks
@@ -470,7 +489,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         section,
         this.adminSidebarStateManager,
         router,
-        currentUser
+        currentUser,
+        { currentUser, designWizard, router }
       );
     });
   }
@@ -489,17 +509,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     return !currentUser.admin && currentUser.moderator;
   }
 
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
+  }
+
   filterNoResultsDescription(filter) {
     const escapedFilter = escapeExpression(filter);
 
     i18n("sidebar.no_results.description_admin_search", {
       filter: escapedFilter,
     });
-  }
-
-  get onSearchClick() {
-    getOwnerWithFallback(this)
-      .lookup("service:modal")
-      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

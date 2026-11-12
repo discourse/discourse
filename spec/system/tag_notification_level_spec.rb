@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag notification level", type: :system do
+describe "Tag notification level" do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:notifications_tracking) do
     PageObjects::Components::NotificationsTracking.new(".tag-notifications-tracking")
@@ -12,7 +12,7 @@ describe "Tag notification level", type: :system do
   before { sign_in(current_user) }
 
   describe "when changing a tag's notification level" do
-    it "should change instantly" do
+    it "changes the notification level immediately" do
       tags_page.visit_tag(tag_1)
 
       expect(notifications_tracking).to have_selected_level_name("regular")

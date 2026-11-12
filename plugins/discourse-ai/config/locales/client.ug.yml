@@ -10,12 +10,18 @@ ug:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "قايتا سىنا"
+          date: "چېسلا"
+          outcomes:
+            failed: "مەغلۇب بولدى"
         reports:
           filters:
             sort_by:
@@ -46,33 +52,103 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      copied: "كۆچۈرۈلدى"
+      ai_decoded_transcript:
+        arguments: "ئۆزگەرگۈچى"
+        type: "تىپى"
+        error: "خاتالىق"
+        response: "ئىنكاس"
+      discourse_workflows:
+        ai_agent:
+          mode: "ھالەت"
+        classify:
+          text: "تېكىست"
+          upload_ids: "سۈرەت"
+          name: "ئىسمى"
+          type: "تىپى"
+          type_score: "نومۇر"
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:
-        back: "كەينى"
-        disabled: "(چەكلەندى)"
-        groups: "گۇرۇپپا:"
+        table:
+          status: "ھالەت"
+          enabled: "قوزغىتىلدى"
+          feature: "ئىقتىدار"
+          llm: "LLM"
+          groups: "گۇرۇپپا"
+        who_can_use:
+          no_one: "ھېچكىم"
+        status:
+          "on": "ئوچۇق"
+          "off": "تاقاق"
+        chatbot:
+          places:
+            personal_messages: "شەخسىي ئۇچۇر"
+            chat_direct_messages: "سۆھبەت ئۇچۇرى"
+            none: "ئىشلەتكىلى بولمايدۇ"
         no_agent: "تەڭشەلمىدى"
         no_groups: "يوق"
         edit: "تەڭشەك"
-        expand_list:
-          one: "(%{count} تېخىمۇ كۆپ)"
-          other: "(%{count} تېخىمۇ كۆپ)"
-        collapse_list: "(ئازراق كۆرسەت)"
+        nav:
+          enabled: "قوزغىتىلدى"
         filters:
           all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
+        sentiment:
+          enabled: "قوزغىتىلدى"
         search:
           name: "ئىزدە"
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        sections:
+          advanced: "ئالىي"
+        settings:
+          ai_translation_category_scope:
+            label: "سەھىپە"
+          ai_translation_personal_messages:
+            label: "شەخسىي ئۇچۇر"
+            choices:
+              none: "يوق"
+              all: "ھەممىسى"
+          content_localization_language_switcher:
+            choices:
+              none: "ھېچكىم"
+              all: "ھەممەيلەن"
+        model_progress:
+          detail:
+            retry: "قايتا سىنا"
+            columns:
+              locale: "يەرلىك"
+              pending: "كۈتۈۋاتىدۇ"
+              total: "جەمئىي"
+          targets:
+            post:
+              title: "يازما"
+            topic:
+              title: "تېما"
+            category:
+              title: "سەھىپە"
+            tag:
+              title: "بەلگە"
+        admin_actions:
+          enabled: "قوزغىتىلدى"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"
@@ -89,6 +165,8 @@ ug:
             other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
+        no_llm_selected: "يوق"
+        no_decision_model_selected: "يوق"
         enable: "قوزغات"
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
@@ -104,8 +182,38 @@ ug:
         total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
+      logs:
+        short_title: "خاتىرە"
+        apply: "قوللان"
+        successful: "مۇۋەپپەقىيەتلىك"
+        failed: "مەغلۇب بولدى"
+        unknown: "يوچۇن"
+        time: "ۋاقىت"
+        when: "قاچان"
+        outcome: "نەتىجە"
+        feature: "ئىقتىدار"
+        request: "ئىلتىماس"
+        user: "ئىشلەتكۈچى"
+        context: "مەزمۇن"
+        topic: "تېما"
+        post: "يازما"
+        post_short: "%{id} يازما"
+        duration: "داۋاملىشىش ۋاقتى"
+        actions: "مەشغۇلات"
+        view_details: "تەپسىلاتى"
+        periods:
+          hour: "ئاخىرقى %{count} سائەت"
+          week: "ئۆتكەن 7 كۈن"
+          custom: "ئىختىيارى"
+        detail:
+          request: "ئىلتىماس"
+          response: "ئىنكاس"
+          context: "مەزمۇن"
+          network_error: "تور خاتالىقى"
+        retention:
+          summary_stage: "خۇلاسە"
+          save: "ساقلا"
       ai_agent:
-        back: "كەينى"
         name: "ئىسمى"
         edit: "تەھرىر"
         export: "چىقار"
@@ -113,7 +221,17 @@ ug:
         user: ئىشلەتكۈچى
         save: "ساقلا"
         enabled: "قوزغىتىلدى؟"
+        mcp_tools_modal:
+          select_all: "ھەممىنى تاللا"
+          clear_all: "ھەممىنى تازىلا"
+        duplicate: "كۆپەيت"
+        copy_name: "%{name} نىڭ كۆچۈرۈلمىسى"
         delete: "ئۆچۈر"
+        thinking_effort_options:
+          none: "يوق"
+          low: "تۆۋەن"
+          medium: "ئوتتۇرا"
+          high: "يۇقىرى"
         response_format:
           open_modal: "تەھرىر"
           modal:
@@ -126,7 +244,6 @@ ug:
           title: "يۈكلەنمە"
           uploading: "يۈكلەۋاتىدۇ..."
       tools:
-        back: "كەينى"
         export: "چىقار"
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -145,16 +262,49 @@ ug:
         short_title: "ئىسپاتنامە"
         name: "ئىسمى"
         secret: "قىممەت"
-        back: "كەينى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
-      llms:
+      decision_models:
+        no_preset: "يوق"
         display_name: "ئىسمى"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        test: "سىناقنى ئىجرا قىل"
+      mcp_servers:
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        url: "تور ئادرېسى"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "باغلاندى"
+        oauth_connect: "ئۇلا"
+        oauth_hide_details: "تەپسىلاتنى يوشۇر"
+        enabled: "قوزغىتىلدى"
         save: "ساقلا"
         edit: "تەھرىر"
-        back: "كەينى"
+        delete: "ئۆچۈر"
+        tools_modal:
+          required: "زۆرۈر"
+      models:
+        name: "ئىسمى"
+        type: "تىپى"
+        edit: "تەھرىر"
+        select_type: "تاللا"
+        types:
+          embedding: "سىڭدۈرمە"
+        filters:
+          all: "ھەممە تىپ"
+          reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
+      llms:
+        display_name: "ئىسمى"
+        vision_modes:
+          disabled:
+            title: "چەكلەندى"
+        save: "ساقلا"
+        edit: "تەھرىر"
         delete: ئۆچۈر
         quotas:
           group: "گۇرۇپپا"
@@ -176,7 +326,6 @@ ug:
           title: "سىناقنى ئىجرا قىل"
           success: "مۇۋەپپەقىيەتلىك!"
         providers:
-          google: "Google"
           fake: "ئىختىيارى"
       ai_helper:
         context_menu:
@@ -192,10 +341,7 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
-        back: "كەينى"
         save: "ساقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"
@@ -206,8 +352,20 @@ ug:
         providers:
           google: "Google"
           fake: "ئىختىيارى"
+      ai_artifact:
+        editor:
+          version: "نەشرى"
+          default: "كۆڭۈلدىكى"
+          option_on: "ئوچۇق"
+          option_off: "تاقاق"
+          apply: "قوللان"
+        share: "ھەمبەھىر"
+        create_link: "ئۇلانما قۇر"
+        copy_link: "ئۇلانما كۆچۈر"
+        filter_all: "ھەممىسى"
       ai_bot:
         debug_ai_modal:
+          duration_label: "داۋاملىشىش ۋاقتى:"
           request: "ئىلتىماس"
           response: "ئىنكاس"
           next_log: "كېيىنكى"
@@ -217,7 +375,10 @@ ug:
         share_modal:
           copy: "كۆچۈر"
         conversations:
+          starred: "يۇلتۇزلانغان"
           today: "بۈگۈن"
+          scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
+          editing_post: "يازما تەھرىرلىنىۋاتىدۇ"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -236,9 +397,19 @@ ug:
           since:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
+      ai_search:
+        related_replies:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        tabs:
+          topics: "تېما"
+          messages: "ئۇچۇر"
       discobot_discoveries:
-        regular_results: "تېما"
-        collapse: "يىغ"
-        tooltip:
-          actions:
-            disable: "چەكلە"
+        legacy:
+          regular_results: "تېما"
+          collapse: "يىغ"
+          tooltip:
+            actions:
+              disable: "چەكلە"
+        search_all_topics: "بارلىق تېما"
+        search_messages: "ئۇچۇر"

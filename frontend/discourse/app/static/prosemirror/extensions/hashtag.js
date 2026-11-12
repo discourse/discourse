@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import { getHashtagAutocompleteCache } from "discourse/lib/hashtag-autocomplete";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_HASHTAGS = new Map();
@@ -21,12 +22,23 @@ const extension = {
       selectable: false,
       parseDOM: [
         {
-          tag: "a.hashtag-cooked",
+          tag: "a.hashtag-cooked, a.hashtag",
+          priority: 60,
           preserveWhitespace: "full",
           getAttrs: (dom) => {
+            let name = dom.dataset.name ?? dom.dataset.ref;
+
+            if (!name && dom.dataset.slug) {
+              name = `${dom.dataset.slug}${
+                dom.dataset.type ? `::${dom.dataset.type}` : ""
+              }`;
+            }
+
+            name ??= dom.textContent.slice(1);
+
             return {
-              name: dom.getAttribute("data-name"),
-              processed: dom.getAttribute("data-processed"),
+              name,
+              processed: dom.dataset.processed,
             };
           },
         },
@@ -47,7 +59,8 @@ const extension = {
 
   inputRules: [
     {
-      match: /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
+      match:
+        /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-](?:[\u00C0-\u1FFF\u2C00-\uD7FF\w:.-]{0,99}[\u00C0-\u1FFF\u2C00-\uD7FF\w:-])?)\s$/,
       handler: (state, match, start, end) => {
         const hashtagStart = start + match[1].length;
         const name = match[2].slice(1);
@@ -167,7 +180,7 @@ const extension = {
                   );
                 }
 
-                view.dispatch(change);
+                view.dispatch(change.setMeta("addToHistory", false));
 
                 const domNode = view.nodeDOM(pos);
                 if (!validHashtag || !domNode) {
@@ -178,13 +191,14 @@ const extension = {
                 const displayText = validHashtag?.text || name;
                 const tagText =
                   typeof displayText === "string"
-                    ? emojiUnescape(displayText)
+                    ? emojiUnescape(escapeExpression(displayText))
                     : displayText;
                 const hashtagTypeClass =
                   getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML =
                   validHashtag.iconHtml ||
-                  hashtagTypeClass.generateIconHTML(validHashtag).trim();
+                  hashtagTypeClass?.generateIconHTML(validHashtag).trim() ||
+                  "";
 
                 domNode.innerHTML = `${hashtagIconHTML}${tagText}`;
               }

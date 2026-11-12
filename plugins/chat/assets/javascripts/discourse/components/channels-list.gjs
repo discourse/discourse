@@ -9,9 +9,9 @@ export default class ChannelsList extends Component {
 
   <template>
     <div
-      role="region"
       aria-label={{i18n "chat.aria_roles.channels_list"}}
       class="channels-list"
+      role="region"
     >
       <ChannelsListPublic />
 

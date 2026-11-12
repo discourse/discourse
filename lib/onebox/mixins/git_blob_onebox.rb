@@ -155,7 +155,7 @@ module Onebox
         end
 
         def match
-          @match ||= @url.match(self.raw_regexp)
+          @match ||= @url.match(raw_regexp)
         end
 
         def sha1
@@ -188,19 +188,18 @@ module Onebox
 
             if @lang == "stl" && link.match?(%r{\Ahttps?://(www\.)?github\.com.*/blob/})
               @model_file = @lang.dup
-              @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
+              @raw = "https://render.githubusercontent.com/view/solid?url=" + raw_template(m)
             else
-              contents =
-                URI
-                  .parse(self.raw_template(m))
-                  .open({ read_timeout: timeout }.merge(self.auth_headers(m)))
-                  .read
+              contents = fetch_raw(raw_template(m), auth_headers(m)).to_s
+              utf8_contents = contents.dup.force_encoding(Encoding::UTF_8)
 
-              if contents.encoding == Encoding::BINARY || contents.bytes.include?(0)
+              if contents.bytes.include?(0) || !utf8_contents.valid_encoding?
                 @raw = nil
                 @binary = true
                 return
               end
+
+              contents = utf8_contents
 
               contents_lines = contents.lines #get contents lines
               contents_lines_size = contents_lines.size #get number of lines
@@ -238,6 +237,10 @@ module Onebox
               @raw = contents
             end
           end
+        end
+
+        def fetch_raw(url, headers)
+          URI.parse(url).open({ read_timeout: timeout }.merge(headers)).read
         end
 
         def data

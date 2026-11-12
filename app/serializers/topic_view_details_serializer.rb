@@ -23,6 +23,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
       can_edit_staff_notes
       can_toggle_topic_visibility
       can_pin_unpin_topic
+      can_banner_topic
       can_moderate_category
     ]
   end
@@ -157,6 +158,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_pin_unpin_topic?
     scope.can_pin_unpin_topic?(object.topic)
+  end
+
+  def include_can_banner_topic?
+    scope.can_banner_topic?(object.topic)
   end
 
   def can_perform_action_available_to_group_moderators?

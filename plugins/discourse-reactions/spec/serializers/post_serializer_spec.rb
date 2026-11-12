@@ -26,6 +26,7 @@ describe PostSerializer do
       created_at: 20.minutes.ago,
     )
   end
+
   fab!(:like) do
     Fabricate(
       :post_action,
@@ -64,6 +65,29 @@ describe PostSerializer do
 
     json = PostSerializer.new(post_1, scope: Guardian.new(user_2), root: false).as_json
 
+    expect(json[:reaction_users_count]).to eq(4)
+  end
+
+  it "subtracts ignored users' reactions and likes from reactions and reaction_users_count" do
+    Fabricate(:ignored_user, user: user_2, ignored_user: user_4)
+    Fabricate(:ignored_user, user: user_2, ignored_user: user_3)
+
+    json = PostSerializer.new(post_1, scope: Guardian.new(user_2), root: false).as_json
+
+    expect(json[:reactions]).to contain_exactly({ id: "otter", type: :emoji, count: 2 })
+    expect(json[:reaction_users_count]).to eq(2)
+  end
+
+  it "does not subtract for anonymous viewers" do
+    Fabricate(:ignored_user, user: user_2, ignored_user: user_4)
+
+    json = PostSerializer.new(post_1, scope: Guardian.new, root: false).as_json
+
+    expect(json[:reactions]).to contain_exactly(
+      { id: "+1", type: :emoji, count: 1 },
+      { id: "heart", type: :emoji, count: 1 },
+      { id: "otter", type: :emoji, count: 2 },
+    )
     expect(json[:reaction_users_count]).to eq(4)
   end
 

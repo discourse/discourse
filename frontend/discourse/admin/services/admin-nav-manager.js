@@ -6,8 +6,13 @@ import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 export default class AdminNavManager extends Service {
   @service currentUser;
 
-  #adminNavMap = cloneJSON(ADMIN_NAV_MAP);
-  #filteredNavMap = null;
+  #adminNavMap;
+  #filteredNavMap;
+
+  constructor() {
+    super(...arguments);
+    this.resetNavMap();
+  }
 
   get filteredNavMap() {
     if (this.#filteredNavMap) {
@@ -30,6 +35,11 @@ export default class AdminNavManager extends Service {
     this.#filteredNavMap = navConfig;
 
     return this.#filteredNavMap;
+  }
+
+  resetNavMap() {
+    this.#adminNavMap = cloneJSON(ADMIN_NAV_MAP);
+    this.#filteredNavMap = null;
   }
 
   findSection(sectionName) {

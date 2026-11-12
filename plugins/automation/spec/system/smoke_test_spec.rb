@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | smoke test", type: :system do
+describe "DiscourseAutomation | smoke test" do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "test") }
   fab!(:badge) { Fabricate(:badge, name: "badge") }
@@ -53,7 +53,7 @@ describe "DiscourseAutomation | smoke test", type: :system do
     end
   end
 
-  it "works" do
+  it "creates an enabled group membership automation" do
     visit("/admin/plugins/automation")
 
     find(".admin-config-area-empty-list__cta-button").click

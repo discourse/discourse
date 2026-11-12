@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ChatReplyingIndicator extends Component {
@@ -14,27 +14,6 @@ export default class ChatReplyingIndicator extends Component {
   @service presence;
 
   @tracked presenceChannel = null;
-
-  @action
-  async updateSubscription() {
-    await this.unsubscribe();
-    await this.subscribe();
-  }
-
-  @action
-  async subscribe() {
-    this.presenceChannel = this.presence.getChannel(
-      this.args.presenceChannelName
-    );
-    await this.presenceChannel.subscribe();
-  }
-
-  @action
-  async unsubscribe() {
-    if (this.presenceChannel?.subscribed) {
-      await this.presenceChannel.unsubscribe();
-    }
-  }
 
   get users() {
     return (
@@ -79,10 +58,31 @@ export default class ChatReplyingIndicator extends Component {
     return isPresent(this.usernames);
   }
 
+  @action
+  async updateSubscription() {
+    await this.unsubscribe();
+    await this.subscribe();
+  }
+
+  @action
+  async subscribe() {
+    this.presenceChannel = this.presence.getChannel(
+      this.args.presenceChannelName
+    );
+    await this.presenceChannel.subscribe();
+  }
+
+  @action
+  async unsubscribe() {
+    if (this.presenceChannel?.subscribed) {
+      await this.presenceChannel.unsubscribe();
+    }
+  }
+
   <template>
     {{#if @presenceChannelName}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-replying-indicator"
           (if this.presenceChannel.subscribed "is-subscribed")
         }}

@@ -1,0 +1,74 @@
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { trustHTML } from "@ember/template";
+import CodeEditor from "discourse/components/code-editor";
+import { escapeExpression } from "discourse/lib/utilities";
+
+export function normalizeCodeEditorValue(value, lang = "text") {
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (lang?.toString() === "json" || typeof value === "object") {
+    return JSON.stringify(value, null, 2);
+  }
+
+  return String(value);
+}
+
+export default class CodeControl extends Component {
+  get height() {
+    return this.args.schema?.control_options?.height;
+  }
+
+  get lang() {
+    return this.args.schema?.control_options?.lang;
+  }
+
+  get content() {
+    return normalizeCodeEditorValue(this.args.field.value, this.lang);
+  }
+
+  get style() {
+    if (!this.height) {
+      return;
+    }
+
+    return trustHTML(`height: ${escapeExpression(this.height)}px`);
+  }
+
+  @action
+  normalizeFieldValue() {
+    if (this.content !== this.args.field.value) {
+      this.args.field.set(this.content);
+    }
+  }
+
+  @action
+  handleInput(content) {
+    this.args.field.set(content);
+  }
+
+  <template>
+    <div class="workflows-code-control" {{didInsert this.normalizeFieldValue}}>
+      <CodeEditor
+        class="form-kit__control-code"
+        name={{@field.name}}
+        style={{this.style}}
+        @describedBy={{@field.describedBy}}
+        @disabled={{@field.disabled}}
+        @inputId={{@field.id}}
+        @invalid={{if @field.error true}}
+        @language={{this.lang}}
+        @onChange={{this.handleInput}}
+        @resizable={{true}}
+        @value={{this.content}}
+      />
+    </div>
+  </template>
+}

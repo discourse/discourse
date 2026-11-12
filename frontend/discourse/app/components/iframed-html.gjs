@@ -13,13 +13,13 @@ export default class IframedHtml extends Component {
   }
 
   <template>
-    {{! template-lint-disable require-iframe-title }}
+    {{! eslint-disable ember/template-require-iframe-title }}
     <iframe
+      class={{if @html "iframed-html"}}
+      sandbox="allow-same-origin"
+      ...attributes
       {{didInsert this.writeHtml}}
       {{didUpdate this.witeHtml @html}}
-      sandbox="allow-same-origin"
-      class={{if @html "iframed-html"}}
-      ...attributes
     ></iframe>
   </template>
 }

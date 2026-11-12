@@ -5,7 +5,7 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | select-kit/group-chooser", function (hooks) {
+module("Integration | Component | SelectKit | GroupChooser", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

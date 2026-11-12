@@ -63,26 +63,26 @@ export default class AdminEmbeddingHostForm extends Component {
   }
 
   <template>
-    <BackButton @route="adminEmbedding" @label="admin.embedding.back" />
+    <BackButton @label="admin.embedding.back" @route="adminEmbedding" />
     <div class="admin-config-area">
       <div class="admin-config-area__primary-content admin-embedding-host-form">
         <AdminConfigAreaCard @heading={{this.header}}>
           <:content>
-            <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+            <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
               <form.Field
+                @format="large"
                 @name="host"
                 @title={{i18n "admin.embedding.host"}}
-                @validation="required"
-                @format="large"
                 @type="input"
+                @validation="required"
                 as |field|
               >
                 <field.Control placeholder="example.com" />
               </form.Field>
               <form.Field
+                @format="large"
                 @name="allowed_paths"
                 @title={{i18n "admin.embedding.allowed_paths"}}
-                @format="large"
                 @type="input"
                 as |field|
               >
@@ -96,9 +96,9 @@ export default class AdminEmbeddingHostForm extends Component {
               >
                 <field.Control>
                   <CategoryChooser
-                    @value={{field.value}}
-                    @onChange={{field.set}}
                     class="admin-embedding-host-form__category"
+                    @onChange={{field.set}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
@@ -110,31 +110,31 @@ export default class AdminEmbeddingHostForm extends Component {
               >
                 <field.Control>
                   <TagChooser
-                    @tags={{field.value}}
+                    class="admin-embedding-host-form__tags"
                     @everyTag={{true}}
                     @excludeSynonyms={{true}}
-                    @unlimitedTagCount={{true}}
                     @onChange={{field.set}}
                     @options={{hash
                       filterPlaceholder="category.tags_placeholder"
                     }}
-                    class="admin-embedding-host-form__tags"
+                    @tags={{field.value}}
+                    @unlimitedTagCount={{true}}
                   />
                 </field.Control>
               </form.Field>
               <form.Field
+                @description={{i18n "admin.embedding.post_author_description"}}
                 @name="user"
                 @title={{i18n "admin.embedding.post_author"}}
-                @description={{i18n "admin.embedding.post_author_description"}}
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <UserChooser
-                    @value={{field.value}}
+                    class="admin-embedding-host-form__post_author"
                     @onChange={{field.set}}
                     @options={{hash maximum=1 excludeCurrentUser=false}}
-                    class="admin-embedding-host-form__post_author"
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>

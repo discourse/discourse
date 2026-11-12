@@ -6,50 +6,14 @@
   max-width: 300px;
 }
 
-.admin-controls.admin-site-settings-filter-controls .menu-toggle {
-  margin-left: 0.5em;
+.fk-d-menu-modal.admin-site-settings-category-nav-content {
+  .admin-site-settings-category-nav__list a.active {
+    background: var(--d-selected);
+  }
 }
 
 .admin-filtered-site-settings {
   padding: 1em;
-}
-
-.admin-changes-banner {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  bottom: var(--space-3);
-  padding: var(--space-3);
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
-  box-shadow: var(--shadow-card);
-  z-index: 1;
-
-  .footer-nav-visible & {
-    bottom: calc(
-      var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-4)
-    );
-  }
-
-  @include viewport.until(sm) {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: var(--space-3);
-  }
-
-  .controls {
-    display: flex;
-    gap: var(--space-3);
-  }
-
-  em {
-    font-style: normal;
-    font-weight: 700;
-  }
 }
 
 .admin-theme-site-settings-row {
@@ -59,7 +23,7 @@
     }
 
     .setting-description {
-      color: var(--primary-medium);
+      color: var(--primary-high);
       font-size: var(--font-down-1);
     }
   }

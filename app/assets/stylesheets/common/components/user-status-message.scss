@@ -10,7 +10,7 @@
 
 [data-content][data-identifier="user-status-message-tooltip"] {
   .fk-d-tooltip__inner-content {
-    gap: 0.65em;
+    gap: var(--space-1);
   }
 
   .emoji {

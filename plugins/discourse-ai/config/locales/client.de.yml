@@ -10,16 +10,27 @@ de:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Ermöglicht KI-Suche"
+              stream_completion: "Ermöglicht das Streamen von KI-Agent-Vervollständigungen"
+              update_agents: "Ermöglicht die Aktualisierung von KI-Agenten"
               manage_artifacts: "Ermöglicht die Verwaltung von KI-Artefakten (auflisten, anzeigen, erstellen, aktualisieren, löschen)"
       site_settings:
         categories:
           discourse_ai: "Discourse KI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "KI fragen"
+        ask_ai:
+          title: "KI fragen"
+          reports:
+            retry_questions: "Erneut versuchen"
+          date: "Datum"
+          outcomes:
+            failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
-          description: "Die Tabelle listet die Anzahl der Beiträge auf, die mit einer bestimmten Emotion klassifiziert wurden. Klassifiziert mit dem Modell „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -34,6 +45,9 @@ de:
             create_ai_llm_model: "LLM-Modell erstellen"
             update_ai_llm_model: "LLM-Modell aktualisieren"
             delete_ai_llm_model: "LLM-Modell löschen"
+            create_ai_agent: "KI-Agent erstellen"
+            update_ai_agent: "KI-Agent aktualisieren"
+            delete_ai_agent: "KI-Agent löschen"
             create_ai_tool: "KI-Tool erstellen"
             update_ai_tool: "KI-Tool aktualisieren"
             delete_ai_tool: "KI-Tool löschen"
@@ -45,6 +59,13 @@ de:
             delete_ai_secret: "KI-Geheimschlüssel löschen"
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Erfordert die Aktivierung des KI-Plug-ins."
+      nodes:
+        "action:ai_agent": "KI-Agent"
+      node_descriptions:
+        "action:ai_agent": "Lass einen KI-Agenten laufen, um Daten zu verarbeiten oder Inhalte zu generieren"
     discourse_automation:
       scriptables:
         llm_report:
@@ -109,6 +130,9 @@ de:
             top_p:
               label: "Top P"
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            agent_id:
+              label: "Agent"
+              description: "KI-Agent für die Berichterstellung"
         ai_tool_action:
           fields:
             tool:
@@ -119,12 +143,20 @@ de:
               description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Agent"
+              description: "KI-Agent, der für die Sichtung verwendet werden soll (Standard-LLM und -Benutzer müssen eingestellt sein)"
             whisper:
               label: "Als Flüstern antworten"
+              description: "Ob die Antwort des Agenten ein Flüstern sein soll"
             silent_mode:
               label: "Stiller Modus"
+              description: "Im stillen Modus empfängt der Agent den Inhalt, schreibt aber nichts in das Forum – nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
+            triage_agent:
+              label: "Agent"
+              description: "Agent, der für die Triage verwendet wird. Achte darauf, dass er mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -170,6 +202,9 @@ de:
             whisper:
               label: "Als Flüstern antworten"
               description: "Ob die Antwort der KI ein Flüstern sein soll"
+            reply_agent:
+              label: "Antwort-Agent"
+              description: "KI-Agent, der für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -178,6 +213,9 @@ de:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
             discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
+            tagger_agent:
+              label: "KI-Agent"
+              description: "Der KI-Agent, der Themen analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -204,28 +242,89 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      dsa_classification:
+        suggest: "Mit KI vorschlagen"
+      copied: "Kopiert"
+      ai_decoded_transcript:
+        thinking: "Ich denke"
+        tool: "Tool"
+        arguments: "Argumente"
+        type: "Typ"
+        error: "Fehler"
+        response: "Antwort"
+      post_image_captions:
+        edit: "KI-Bildbeschriftung bearbeiten"
+        title: "KI-Bildbeschriftung bearbeiten"
+        description: "Beschriftung"
+        save: "Bildbeschriftung speichern"
+        saved: "KI-Bildbeschriftung gespeichert"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          forced_llm_notice_description: "Dieser Agent ist an sein konfiguriertes Standard-LLM gebunden. Der Workflow kann dies nicht überschreiben."
+          llm_model_id: "LLM-Modell"
+          llm_model_default: "Agenten-Standard verwenden"
+          llm_model_default_with_name: "Agenten-Standard verwenden (%{value})"
+          mode: "Modus"
+          prompt: "Aufforderung"
+          runner_username: "Ausführen als"
+          runner_username_tooltip: "Benutzer, dessen Berechtigungen für die Sichtbarkeit von Uploads und KI-Agent-Tools verwendet werden. Nutze das System für die automatisierte Abwicklung von Workflows."
+          upload_ids: "Upload-IDs"
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Wähle einen Agenten aus …"
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Name"
+          type: "Typ"
+          type_score: "Score"
+      bot_chats:
+        tab_label: "Bot-Chats"
+      ai_tool_approval:
+        loading: "Wird geladen …"
+        load_error: "Diese ausstehende Aktion konnte nicht geladen werden."
+        agent: "Agent"
+        tool: "Aktion"
+        user: "Nutzer"
+        approve: "Genehmigen"
+        reject: "Ablehnen"
+        approved: "Genehmigt"
+        rejected: "Abgelehnt"
+        awaiting_staff: "Warte auf Genehmigung durch das Team"
       default_llm:
-        title: "Standard-LLM-Modell"
+        title: "Standard-Sprachmodell"
       llm_selector:
         none: "Keine Auswahl"
-        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        back: "Zurück"
+        back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
-        disabled: "(deaktiviert)"
-        groups: "Gruppen:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Status"
+          enabled: "Aktiviert"
+          feature: "Funktion"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Gruppen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "An"
+          "off": "Aus"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Neuer Agent"
+          manage_agents: "Agenten verwalten"
+          places:
+            personal_messages: "Persönliche Nachrichten"
+            chat_direct_messages: "Chat-Nachrichten"
+            none: "Nicht verfügbar"
+        toggle: "%{name} aktivieren"
+        set_up: "Einrichten"
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
         edit: "Einstellungen"
-        expand_list:
-          one: "(%{count} weitere)"
-          other: "(%{count} weitere)"
-        collapse_list: "(weniger anzeigen)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -236,13 +335,21 @@ de:
             ui_settings: "Oberflächen-Einstellungen"
             integrations: "Integrationen"
         nav:
-          configured: "Konfiguriert"
-          unconfigured: "Nicht konfiguriert"
+          enabled: "Aktiviert"
+          not_enabled: "Nicht aktiviert"
         filters:
           all: "Gesamt"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
+        sentiment:
+          sentiment: "Stimmung"
+          emotion: "Emotion"
+          enabled: "Aktiviert"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Stimmung"
+            emotion: "Emotion"
         summarization:
           name: "Zusammenfassungen"
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
@@ -255,20 +362,26 @@ de:
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
-          discoveries: "Entdeckungen"
+          ask_ai: "KI fragen"
           setting_groups:
             settings: "Grundlegende Einstellungen"
+            agents: "Agenten"
+            access_control: "Zugriffskontrolle"
         embeddings:
           name: "Einbettungen"
-          description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
-          hyde: "HyDE"
+          related_topics: "Verwandte Themen"
           setting_groups:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
+        admin_dashboard:
+          name: "Admin-Dashboard"
+          description: "Hilft Community-Managern dabei, wichtige Veränderungen zu erkennen und zu entscheiden, worauf sie als Nächstes achten sollten"
+          highlights: "Highlights"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
-          description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
           setting_groups:
             settings: "Grundlegende Einstellungen"
@@ -283,8 +396,10 @@ de:
             settings: "Grundlegende Einstellungen"
             topic_criteria: "Kriterien für Themen"
             post_criteria: "Kriterien für Beiträge"
+            agents: "Agenten"
         ai_helper:
-          name: "Helfer"
+          edit: "Einstellungen für KI-Helfer bearbeiten"
+          name: "KI-Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
           proofread: Text korrekturlesen
           title_suggestions: "Titel vorschlagen"
@@ -294,7 +409,6 @@ de:
           translate: "Übersetzen"
           markdown_tables: "Markdown-Tabelle generieren"
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
-          image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
           chat_thread_titles: "Titel von Chat-Threads"
@@ -302,6 +416,13 @@ de:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
+            agents: "Agenten"
+        image_caption:
+          name: "Bildbeschriftung"
+          description: "Generiert KI-Bildbeschriftungen für Beitragsbilder und stellt diese Lesern und assistiven Technologien zur Verfügung."
+          post_image_captions: "Bildbeschriftungen für Beiträge"
+          setting_groups:
+            settings: "Einstellungen"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -314,9 +435,6 @@ de:
             one: "Geplante Übersetzung für %{count} unübersetzten Beitrag."
             other: "Geplante Übersetzung für %{count} unübersetzte Beiträge."
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -335,16 +453,102 @@ de:
       translations:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
-        supported_locales: "Unterstützte Sprachen"
-        supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
+        sections:
+          advanced: "Erweitert "
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorien"
+          ai_translation_personal_messages:
+            label: "Persönliche Nachrichten"
+            choices:
+              none: "Keine Erfassung"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Alle"
+        cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
+        model_progress:
+          loading: "Übersetzungsfortschritt wird geladen"
+          overview_label: "Übersetzungsfortschritt nach Inhaltstyp"
+          detail:
+            loading: "Details zu %{target} werden geladen..."
+            load_error: "Details zu %{target} konnten nicht geladen werden."
+            retry: "Erneut versuchen"
+            empty: "Es sind keine Sprachfortschritte verfügbar."
+            progress_label: "%{translated} von %{total} übersetzt auf %{language}"
+            columns:
+              locale: "Gebietsschema"
+              translated: "Übersetzt"
+              pending: "Ausstehend"
+              eligible: "Geeignet"
+              total: "Gesamt"
+              progress: "Fortschritt"
+            eligible_help: "Inhalte, die bereits in dieser Sprache vorliegen, sind ausgeschlossen."
+            pending_help: "Enthält Inhalte, die noch einer Spracherkennung bedürfen."
+          targets:
+            post:
+              title: "Beiträge"
+              eligible_total:
+                one: "Es gibt %{count} Beitrag, der für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Beiträge, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Beitrag wurde vollständig übersetzt."
+                other: "%{count} Beiträge wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Beitrag benötigt noch eine Spracherkennung."
+                other: "%{count} Beiträge benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Der geeignete Beitrag wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Beiträge wurden vollständig übersetzt."
+            topic:
+              title: "Themen"
+              eligible_total:
+                one: "Es gibt %{count} Thema, das für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Themen, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Thema wurde vollständig übersetzt."
+                other: "%{count} Themen wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Thema benötigt noch eine Spracherkennung."
+                other: "%{count} Themen benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Das geeignete Thema wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Themen wurden vollständig übersetzt."
+            category:
+              title: "Kategorien"
+              eligible_total:
+                one: "Es gibt %{count} Kategorie, die für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Kategorien, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Kategorie wurde vollständig übersetzt."
+                other: "%{count} Kategorien wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Kategorie benötigt noch eine Spracherkennung."
+                other: "%{count} Kategorien benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Die geeignete Kategorie wurde vollständig übersetzt."
+                other: "Alle %{count} geeigneten Kategorien wurden vollständig übersetzt."
+            tag:
+              title: "Schlagwörter"
+              total:
+                one: "Es gibt %{count} Schlagwort, das für die Übersetzung geeignet ist."
+                other: "Es gibt %{count} Schlagwörter, die für die Übersetzung geeignet sind."
+              translated:
+                one: "%{count} Schlagwort wurde vollständig übersetzt."
+                other: "%{count} Schlagwörter wurden vollständig übersetzt."
+              needs_language_detection:
+                one: "%{count} Schlagwort benötigt noch eine Spracherkennung."
+                other: "%{count} Schlagwörter benötigen noch eine Spracherkennung."
+              all_translated:
+                one: "Das Schlagwort wurde vollständig übersetzt."
+                other: "Alle %{count} Schlagwörter wurden vollständig übersetzt."
         admin_actions:
-          translation_settings: "Übersetzungseinstellungen"
-          localization_settings: "Lokalisierungseinstellungen"
-          enable_translations: "Automatische Übersetzungen aktivieren"
+          enabled: "Aktiviert"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
-          backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
+          backfill_message: "Die <a href='%{settingsUrl}'>Einstellungen für rückwirkendes Ergänzen</a> sind so konfiguriert, dass alle Beiträge nach dem %{date} übersetzt werden."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -361,6 +565,12 @@ de:
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
+        theme_translations:
+          translate:
+            label: "Übersetzen"
+            title: "In alle unterstützten Sprachen übersetzen, wobei die ausgewählte Sprache als Ausgangssprache dient"
+            queued: "Übersetzung in Warteschlange"
+            failed: "Übersetzung konnte nicht in die Warteschlange gestellt werden"
         translations_menu:
           translate:
             label: "Beitrag übersetzen"
@@ -373,6 +583,9 @@ de:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
+        no_llm_selected: "Keine Erfassung"
+        no_decision_model_selected: "Keine Erfassung"
+        select_agent: "Agent auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
         last_seven_days: "Letzte 7 Tage"
@@ -382,6 +595,7 @@ de:
         spam_detected: "Spam erkannt"
         custom_instructions_placeholder: "Websitespezifische Anweisungen für die KI zur genaueren Identifizierung von Spam"
         enable: "Aktivieren"
+        enabled_locked_tip: "Die KI-Spam-Erkennung lässt sich auf dieser Website nicht deaktivieren."
         spam_tip: "Die KI-Spamerkennung scannt die ersten 3 Beiträge aller neuen Benutzer zu öffentlichen Themen. Sie meldet sie zur Überprüfung und blockiert Benutzer, wenn es sich wahrscheinlich um Spam handelt."
         settings_saved: "Einstellungen gespeichert"
         spam_description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -458,26 +672,83 @@ de:
           last_month: "Letzter Monat"
           custom: "Benutzerdefiniert …"
         credit_allocations: "Guthabenzuweisungen"
+      logs:
+        short_title: "Protokolle"
+        retry: "Erneut versuchen"
+        apply: "Anwenden"
+        all_models: "Alle Modelle"
+        all_features: "Alle Funktionen"
+        successful: "Erfolgreich"
+        failed: "Fehlgeschlagen"
+        unknown: "Unbekannt"
+        time: "Zeit"
+        when: "Wann"
+        outcome: "Ergebnis"
+        feature: "Funktion"
+        model: "Modell"
+        request: "Anfrage"
+        provider: "Anbieter"
+        user: "Nutzer"
+        context: "Kontext"
+        topic: "Thema"
+        post: "Beitrag"
+        post_short: "Beitrag %{id}"
+        duration: "Dauer"
+        cost: "Kosten"
+        actions: "Aktionen"
+        view_details: "Details"
+        periods:
+          hour: "Letzte Stunde"
+          day: "Letzte 24 Stunden"
+          week: "Letzte 7 Tage"
+          custom: "Benutzerdefiniert"
+        detail:
+          request: "Anfrage"
+          response: "Antwort"
+          context: "Kontext"
+          copy_request: "Anfrage kopieren"
+          copy_response: "Antwort kopieren"
+          network_error: "Netzwerkfehler"
+        retention:
+          summary_stage: "Zusammenfassung"
+          deleted_stage: "Gelöscht"
+          save: "Speichern"
       ai_agent:
         ai_tools: "Tools"
+        native_tools_help: "Anbietereigene Tools wie die Websuche oder das Abrufen von Seiten werden angezeigt, wenn „Immer das Standard-Sprachmodell verwenden“ aktiviert ist und das ausgewählte Standard-Sprachmodell diese unterstützt."
+        mcp_servers: "MCP-Server"
+        mcp_server_tools_help: "Ausgewählte MCP-Server stellen standardmäßig alle ihre Tools bereit. Um den Tokenverbrauch zu reduzieren und die Toolauswahl übersichtlicher zu gestalten, kann die Auswahl pro Agent eingeschränkt werden."
+        mcp_server_tool_count:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} Tool aktiviert"
+          other: "%{count} Tools aktiviert"
+        mcp_server_all_tools_enabled: "Alle Tools aktiviert"
+        mcp_server_enabled_tools:
+          one: "%{count} von %{total} Tool aktiviert"
+          other: "%{count} von %{total} Tools aktiviert"
+        mcp_server_choose_tools: "Tools auswählen"
+        mcp_server_edit_tools: "Tools bearbeiten"
         tool_strategies:
           all: "Auf alle Antworten anwenden"
           replies:
             one: "Nur auf die erste Antwort anwenden"
             other: "Auf die ersten %{count} Antworten anwenden"
-        back: "Zurück"
+        back: "Zurück zu Agenten"
         name: "Name"
         edit: "Bearbeiten"
         export: "Exportieren"
         import: "Importieren"
+        import_error_conflict: "Beim Import von %{name} wurde ein Konflikt festgestellt. Möchtest du den vorhandenen Agenten aktualisieren?"
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
-        max_context_posts: "Max. Kontext-Beiträge"
-        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
-        vision_enabled: Sehen aktiviert
-        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Nutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
-        vision_max_pixels: Unterstützte Bildgröße
+        use_parent_llm: "Sprachmodell des Agenten verwenden"
+        compression_threshold: "Kompressionsschwelle"
+        compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
+        vision_enabled: Bild-Uploads einbeziehen
+        vision_max_pixels: Maximale Bildgröße
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
@@ -485,32 +756,88 @@ de:
         show_thinking: Denken anzeigen
         show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
-        user: Nutzer
+        mentionable_help: Wenn diese Funktion aktiviert ist, können Benutzer in zulässigen Gruppen diesen Benutzer in Beiträgen erwähnen und die KI wird als dieser Agent antworten.
+        user: Benutzer
         create_user: Benutzer erstellen
+        create_user_help: Du kannst diesem Agenten optional einen Benutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
-        question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
-        question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
+        allow_chat_direct_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen Direktnachrichten an diesen Agenten senden."
         allow_chat_channel_mentions: "Chat-Kanal-Erwähnungen zulassen"
+        allow_chat_channel_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Chatkanälen erwähnen."
         allow_personal_messages: "Persönliche Nachrichten zulassen"
+        allow_personal_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen persönliche Nachrichten an diesen Agenten senden."
         allow_topic_mentions: "Themenerwähnungen zulassen"
+        allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Themen erwähnen."
+        require_approval: "Genehmigung für Moderationstools erforderlich"
+        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch einen Moderator an die Überprüfungswarteschlange gesendet."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
+        saved: "Agent gespeichert"
         enabled: "Aktiviert?"
         tools: "Aktivierte Tools"
+        tokens: "Token"
+        context_cost: "Kontextkosten"
+        token_usage: "Token-Nutzung"
+        tool_count: "Anzahl der Tools"
+        tool_count_value:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
+        tool_tokens_total: "~%{tokens} Token"
+        mcp_server_cost_name: "%{name} (MCP-Server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} Token, %{count} Tool"
+          other: "~%{tokens} Tokens, %{count} Tools"
+        mcp_server_tokens_only: "~%{tokens} Token"
+        mcp_tools_modal:
+          title: "%{name} Tools"
+          summary: "Standardmäßig kann dieser Agent alle Tools von diesem Server nutzen. Wähle eine kleinere Menge, um den Zugriff zu begrenzen und die Kosten für die Eingabeaufforderung zu reduzieren."
+          filter_placeholder: "Tools filtern"
+          select_all: "Alle auswählen"
+          clear_all: "Alle löschen"
+          selection_summary:
+            one: "%{count} von %{total} Tool ausgewählt"
+            other: "%{count} von %{total} Tools ausgewählt"
+          empty: "Keine Tools entsprechen diesem Filter."
+        tool_severity_medium: "Mäßige Kapazität"
+        tool_severity_high: "Hohe Kapazität"
+        tool_severity_too_many: "Zu viele Tools"
+        tool_tokens_warning: "Überflüssige Tools verschlechtern die KI-Leistung, da sie wertvollen Konversationsspeicher beanspruchen. Ziehe in Erwägung, nicht benötigte Tools zu entfernen."
+        tool_count_warning: "Die Definitionen der einzelnen Tools werden bei jeder Anfrage an das Modell gesendet. Viele Tools erhöhen den Tokenverbrauch und können das Modell verwirren, was zu einer schlechteren Toolauswahl führt. Behalte nur Tools, die der Agent tatsächlich benötigt."
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
+        confirm_delete: "Bist du sicher, dass du diesen Agenten löschen möchtest?"
+        new: "Neuer Agent"
+        duplicate: "Duplizieren"
+        copy_name: "Kopie von %{name}"
+        no_agents: "Du hast noch keine Agenten erstellt"
+        manage_agents: "Agenten verwalten"
+        title: "Agenten"
+        short_title: "Agenten"
         delete: "Löschen"
         temperature: "Temperatur"
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        thinking_effort: "Denkanstrengung"
+        thinking_effort_help: "Wie lange sollen Modelle mit Argumentationsfähigkeit nachdenken, bevor sie antworten? Höhere Werte können die Lösung schwieriger Aufgaben verbessern, führen aber möglicherweise zu einer höheren Latenz und höheren Kosten. Nicht unterstützte Anbieter ignorieren diese Einstellung."
+        thinking_effort_options:
+          default: "Modellstandard"
+          none: "Keine Auswahl"
+          minimal: "Minimal"
+          low: "Niedrig"
+          medium: "Mittel"
+          high: "Hoch"
+          xhigh: "Besonders hoch"
+          max: "Höchstwert"
         priority: "Priorität"
+        priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
         rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
+        agent_description: "Agenten sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
           title: "JSON-Antwortformat"
           no_format: "Kein JSON-Format angegeben"
@@ -530,8 +857,11 @@ de:
           enabled: "KI-Bot?"
         ai_bot:
           title: "KI-Bot-Optionen"
+          save_first: "Weitere KI-Bot-Optionen werden verfügbar, sobald du den Agenten gespeichert hast."
         filters:
+          text: "Finde einen Agenten"
           reset: "Zurücksetzen"
+          no_results: "Es wurden keine Agenten gefunden, die deinen Filtern entsprechen."
           all_features: "Jede Funktion"
         features_list:
           one: "Funktion:"
@@ -560,8 +890,10 @@ de:
           uploading: "Wird hochgeladen …"
           remove: "Upload entfernen"
       tools:
-        back: "Zurück"
+        back: "Zurück zu Tools"
         short_title: "Tools"
+        keywords: "mcp|mcp-Server|Modellkontextprotokoll"
+        script_tools: "Skript-Tools"
         export: "Exportieren"
         import: "Importieren"
         import_error_conflict: "Tool existiert bereits, möchtest du es aktualisieren?"
@@ -571,15 +903,17 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
+        tool_name_help: "Der Name des Tools wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
-        subheader_description: "Tools erweitern die Fähigkeiten von KI-Bots mit benutzerdefinierten JavaScript-Funktionen."
+        subheader_description: "Tools und MCP-Server erweitern die Fähigkeiten von KI-Agenten."
         summary: "Zusammenfassung"
         summary_help: "Zusammenfassung des Zwecks der Tools, die den Endnutzern angezeigt werden soll"
         script: "Skript"
         parameters: "Parameter"
         save: "Speichern"
         parameter_type: "Parametertyp"
+        parameter_item_type: "Objekttyp"
         add_parameter: "Parameter hinzufügen"
         remove_parameter: "Entfernen"
         parameter_required: "Erforderlich"
@@ -605,7 +939,6 @@ de:
           result: "Testergebnis"
       secrets:
         short_title: "Anmeldedaten"
-        description: "Verwalte Authentifizierungsdaten, die von allen LLMs, Einbettungen und Tools gemeinsam genutzt werden."
         name: "Name"
         secret: "Wert"
         select_secret: "Wähle Anmeldedaten aus …"
@@ -617,7 +950,7 @@ de:
         no_secrets: "Noch keine Anmeldedaten"
         new_title: "Neue Anmeldedaten"
         edit_title: "Anmeldedaten bearbeiten"
-        back: "Zurück"
+        back: "Zurück zu den Anmeldedaten"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
@@ -626,8 +959,116 @@ de:
         embedding: "Einbettung"
         cannot_delete_in_use: "Diese Anmeldedaten können nicht gelöscht werden. Sie werden verwendet von:"
         tool: "Tool"
+        mcp_server: "MCP-Server"
+        mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      decision_models:
+        no_preset: "Keine Erfassung"
+        display_name: "Name"
+        model: "Modell"
+        provider: "Anbieter"
+        api_key: "Anmeldedaten"
+        vision_enabled: "Unterstützt Bildeingabe"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        test: "Test ausführen"
+        providers:
+          CDCK: "CDCK"
+      mcp_servers:
+        short_title: "MCP-Server"
+        new: "Neuer MCP-Server"
+        name: "Name"
+        description: "Beschreibung"
+        url: "URL"
+        auth_type: "Authentifizierung"
+        auth_types:
+          none: "Keine Authentifizierung"
+          header_secret: "Header-Anmeldedaten"
+          oauth: "OAuth"
+        secret: "Anmeldedaten"
+        auth_header: "Auth-Header"
+        auth_scheme: "Auth-Schema"
+        oauth_client_registration: "OAuth Client-Tegistrierung"
+        oauth_client_registration_types:
+          client_metadata_document: "Client-Metadatendokument"
+          manual: "Manuelle Client-Anmeldedaten"
+        oauth_client_id: "OAuth Client-ID"
+        oauth_client_secret: "OAuth Client-Geheimnis"
+        oauth_scopes: "OAuth Bereiche"
+        oauth_authorization_params: "Parameter der OAuth-Autorisierung"
+        oauth_authorization_params_help: "Optionales JSON-Objekt, das in die Autorisierungsanfrage eingefügt wird. Verwende „null“, um einen Standardparameter zu entfernen."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Parameter des OAuth-Tokens"
+        oauth_token_params_help: "Optionales JSON-Objekt, das in Token-Anfragen eingefügt wird. Verwende „null“, um einen Standardparameter zu entfernen."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Aktualisierungstoken erforderlich"
+        oauth_require_refresh_token_help: "Die OAuth-Verbindung ist fehlgeschlagen, wenn der Anbieter kein Aktualisierungstoken zurückgibt."
+        oauth_json_object_required: "%{field} muss ein JSON-Objekt sein."
+        oauth_show_advanced_options: "Erweiterte Optionen anzeigen"
+        oauth_hide_advanced_options: "Erweiterte Optionen ausblenden"
+        oauth_connection: "OAuth Verbindung"
+        oauth_status: "OAuth Status"
+        oauth_statuses:
+          disconnected: "Getrennt"
+          connected: "Verbunden"
+          refresh_failed: "Aktualisieren fehlgeschlagen"
+          error: "Aufmerksamkeit erforderlich"
+        oauth_connect: "Verbinden"
+        oauth_reconnect: "Erneut verbinden"
+        oauth_disconnect: "Trennen"
+        oauth_connect_help: "Verwende „Verbinden“, um den Server zu speichern und ihn zu autorisieren."
+        oauth_client_metadata_url: "Client-Metadaten-URL"
+        oauth_granted_scopes: "Gewährte Bereiche"
+        oauth_access_token_expires_at: "Zugriffstoken läuft ab:"
+        oauth_authorization_endpoint: "Autorisierungsendpunkt"
+        oauth_token_endpoint: "Token-Endpunkt"
+        oauth_revocation_endpoint: "Widerrufsendpunkt"
+        oauth_issuer: "Aussteller"
+        oauth_last_error: "Letzter OAuth-Fehler"
+        oauth_show_details: "Details anzeigen"
+        oauth_hide_details: "Details ausblenden"
+        timeout_seconds: "Anfrage-Timeout (Sekunden)"
+        timeout_seconds_tooltip: "Wie lange Discourse auf den MCP-Server wartet, bevor die Anfrage fehlschlägt. Auf 30 lassen, es sei denn, der Server ist konstant langsam."
+        enabled: "Aktiviert"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        test: "Verbindung testen"
+        saved: "MCP-Server gespeichert"
+        confirm_delete: "Bist du sicher, dass du diesen MCP-Server löschen möchtest?"
+        back: "Zurück zu Tools"
+        health: "Zustand"
+        healthy: "Einwandfrei"
+        unhealthy: "Aufmerksamkeit erforderlich"
+        tool_count:
+          one: "%{count} Tool"
+          other: "%{count} Tools"
+        tools_modal:
+          title: "%{name} Tools"
+          summary:
+            one: "Dieser Server stellt aktuell %{count} Tool zur Verfügung."
+            other: "Dieser Server stellt aktuell %{count} Tools zur Verfügung."
+          parameters: "Parameter"
+          required: "Erforderlich"
+          no_parameters: "Dieses Tool benötigt keine Parameter."
+        test_result: "Verbindungsergebnis"
+        test_summary:
+          one: "%{count} Tool entdeckt mit Protokoll %{version}."
+          other: "%{count} Tools entdeckt mit Protokoll %{version}."
+      models:
+        new: "Neues Modell"
+        name: "Name"
+        type: "Typ"
+        provider: "Anbieter"
+        edit: "Bearbeiten"
+        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
+        select_type: "Auswählen"
+        types:
+          embedding: "Einbettung"
+        filters:
+          all: "Alle Arten"
+          reset: "Filter zurücksetzen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -640,9 +1081,12 @@ de:
         max_output_tokens: "Maximale Ausgabetoken"
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
-        vision_enabled: "Sehen aktiviert"
-        allowed_attachment_types: "Zulässige Anhänge"
-        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, docx)"
+        vision_enabled: "Unterstützt Bildeingabe"
+        vision_modes:
+          disabled:
+            title: "Deaktiviert"
+        allowed_attachment_types: "Erlaubte Dokumentanhänge"
+        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"
@@ -651,7 +1095,7 @@ de:
         save: "Speichern"
         edit: "Bearbeiten"
         saved: "LLM-Modell gespeichert"
-        back: "Zurück"
+        back: "Zurück zu LLM"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
         quotas:
@@ -660,6 +1104,7 @@ de:
           group: "Gruppe"
           max_tokens: "Max. Token"
           max_usages: "Max. Verwendungen"
+          max_cost: "Max. Kosten"
           duration: "Dauer"
           confirm_delete: "Bist du sicher, dass du dieses Kontingent löschen willst?"
           add: "Kontingent hinzufügen"
@@ -671,9 +1116,11 @@ de:
             custom: "Benutzerdefiniert …"
           hours: "Stunden"
           max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
-          max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
+          max_tokens_required: "Muss gesetzt werden, wenn die maximalen Verwendungen und maximalen Kosten nicht festgelegt sind"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
-          max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
+          max_usages_required: "Muss gesetzt werden, wenn die maximalen Token und maximalen Kosten nicht festgelegt sind"
+          max_cost_help: "Die maximal geschätzten Kosten, die jeder Benutzer dieser Gruppe innerhalb des angegebenen Zeitraums für dieses KI-Modell ausgeben kann, basieren auf den konfigurierten Eingabe-, Ausgabe-, zwischengespeicherten Eingabe- und Cache-Schreib-Preisen des Modells."
+          max_cost_required: "Muss gesetzt werden, wenn die maximalen Token und maximalen Verwendungen nicht festgelegt sind"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
           soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
@@ -682,7 +1129,8 @@ de:
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{agent})"
-          ai_helper_image_caption: "Bildbeschriftungen"
+          ai_image_caption: "Bildbeschriftungen"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
           ai_spam: "Spam"
@@ -692,20 +1140,6 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-6: "Das intelligenteste Modell von Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
-          anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
-          google-gemini-3-pro: "Googles intelligentestes Modell"
-          google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-2: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
-          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
-          open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
-          open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
-          open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
-          open_router-minimax-minimax-m2-5: "Das multimodale Modell von MiniMax mit großem Kontext"
-          open_router-z-ai-glm-5: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
-          open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"
@@ -724,13 +1158,15 @@ de:
           success: "Erfolg!"
           invalid_config: "Behebe zunächst die folgenden Fehler in deiner Konfiguration:"
           failure: "Beim Versuch, das Modell zu kontaktieren, wurde dieser Fehler zurückgegeben: %{error}"
+          failure_non_streaming: "Nicht-Streaming-Anfrage fehlgeschlagen: %{error}"
+          failure_streaming: "Streaming-Anfrage fehlgeschlagen: %{error}"
         hints:
           max_prompt_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage verarbeiten kann"
           max_output_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage generieren kann"
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
-          vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
-          allowed_attachment_types: "Lege fest, welche Arten von Anhängen an das Modell weitergeleitet werden. Lass das Feld leer, um Anhänge nicht zuzulassen. Bilder werden über \"Sehen\" kontrolliert."
+          vision_enabled: "Ob dieses Modell/dieser Anbieter Bilder empfangen und verstehen kann."
+          allowed_attachment_types: "Wähle aus, welche Arten von Dokumentanhängen konvertiert oder weitergeleitet werden dürfen. Lass das Feld leer, um Dokumentanhänge zu unterbinden. Bilder werden separat geregelt."
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
           cost_cached_input: "Die Kosten für zwischengespeicherte Eingabetoken pro 1 Mio. Token für dieses Modell (beim Lesen aus dem Aufforderungs-Zwischenspeicher)."
           cost_cache_write: "Die Kosten für zwischengespeicherte Schreibtoken pro 1 Mio. Token für dieses Modell (beim Schreiben in den Aufforderungs-Zwischenspeicher)."
@@ -738,12 +1174,13 @@ de:
           cost_measure: "$/1M Token"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -755,7 +1192,9 @@ de:
         provider_fields:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
           role_arn: "AWS Bedrock-Rollen-ARN"
-          region: "AWS-Bedrock-Region"
+          inference_profile_arn: "AWS Bedrock Anwendungs-Inferenzprofil ARN"
+          region: "Region"
+          project_id: "GCP-Projekt-ID"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"
@@ -765,6 +1204,11 @@ de:
           provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
+          reasoning_mode: "Argumentationsmodus"
+          service_tier: "Service-Stufe (Flex = geringere Kosten/höhere Latenzzeit, Priority = schnellere Verarbeitung)"
+          reasoning_parser: "vLLM-Schlussfolgerungs-Parser"
+          thinking_override: "Denken überschreiben"
+          thinking_token_budget: "Token-Budget für das Denken"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
           adaptive_thinking: "Aktiviere adaptives Denken (empfohlen für Claude-4.6-Modelle)"
           enable_thinking: "Aktiviere das Denken (Gemini-2.5-Modelle – verwendet Token-Budget)"
@@ -778,6 +1222,13 @@ de:
           prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
           effort: "Anstrengungsgrad"
+        provider_field_hints:
+          reasoning_mode: "Im Standardmodus wird die Standardeinstellung des Anbieters verwendet. Der Pro-Modus erfordert die Responses-API und die Unterstützung durch das ausgewählte Modell und führt zu einer höheren Latenz sowie einem höheren Token-Verbrauch."
+          azure_reasoning_effort: "Die verfügbaren Anstrengungsgrade vom in Azure bereitgestellten Modell ab. Nicht unterstützte Werte werden von Azure abgelehnt."
+          reasoning_parser: "Muss mit der Einstellung „--reasoning-parser“ des vLLM-Servers übereinstimmen. Discourse kann den Parser nicht pro Anfrage wechseln; es nutzt diese Einstellung, um die Anfrageoptionen anzupassen."
+          thinking_override: "Erzwinge optional, dass unterstützte vLLM-Chat-Vorlagen das Denken für jede Anfrage aktivieren oder deaktivieren. Nicht unterstützte Parser behalten den Serverstandard bei."
+          reasoning_effort: "Sendet die vLLM-Option „reasoning_effort“ an Parser, die diese unterstützen."
+          thinking_token_budget: "Optionale Obergrenze für das Schlussfolgerungstoken. Erfordert einen vLLM-Reasoning-Parser und wird ignoriert, wenn der Schlussfolgerungsaufwand „None“ ist."
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -785,11 +1236,10 @@ de:
         title: "Änderungen mit KI vorschlagen"
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
-        suggest: "Mit KI vorschlagen"
+        suggest: "KI-Vorschläge anzeigen"
+        choose: "Entscheide für mich"
+        suggestions: "Vorschläge"
         suggest_errors:
-          too_many_tags:
-            one: "Du kannst höchstens %{count} Schlagwort haben."
-            other: "Du kannst höchstens %{count} Schlagwörter haben."
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
         context_menu:
@@ -823,11 +1273,6 @@ de:
           select: "Auswählen"
           selected: "Ausgewählt"
           try_again: "Erneut versuchen"
-        image_caption:
-          button_label: "Beschriftung mit KI"
-          generating: "Beschriftung wird generiert …"
-          credits: "Beschriftet durch KI"
-          save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
       errors:
         credit_limit_dialog:
@@ -839,11 +1284,16 @@ de:
       reviewables:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameter"
+          post: "Auslösender Beitrag"
       embeddings:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück"
+        back: "Zurück zu Einbettungen"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -852,7 +1302,6 @@ de:
         presets: "Wähle eine Voreinstellung aus …"
         configure_manually: "Manuell konfigurieren"
         edit: "Bearbeiten"
-        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         tests:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
@@ -884,30 +1333,45 @@ de:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Benutzerdefiniert"
         provider_fields:
           model_name: "Modellname"
         semantic_search: "Themen (semantisch)"
-        semantic_search_results:
-          toggle: "KI-Ergebnisse"
-          unavailable: "KI-Ergebnisse nicht verfügbar"
-          zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
-          invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
           not_submitted: "Führe eine Suche aus, um KI-Ergebnisse zu sehen."
           no_results: "Für diese Suche wurden keine KI-Ergebnisse gefunden."
-        semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
-        ai_generated_result: "Suchergebnis mit KI gefunden"
+        ai_results_notice:
+          no_results: "Keine exakten Treffer, aber hier sind einige verwandte Ergebnisse."
+          few_results:
+            one: "%{count} Treffer gefunden – verwandte Ergebnisse werden angezeigt."
+            other: "%{count} Treffer gefunden – verwandte Ergebnisse werden angezeigt."
         quick_search:
           suffix: "in allen Themen und Beiträgen mit KI"
       ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          option_on: "An"
+          option_off: "Aus"
+          apply: "Anwenden"
         expand_view_label: "Ansicht erweitern"
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
+        share: "Teilen"
+        create_link: "Link erstellen"
+        copied: "Wurde in Zwischenablage kopiert"
+        copy_link: "Link kopieren"
+        copy_embed: "Einbettung kopieren"
+        new_tab: "In neuer Registerkarte anzeigen"
+        filter_all: "Alle"
+        filter_standalone: "Einzeln"
       ai_bot:
-        llm: "Modell"
+        title: "KI-Bot"
+        agent: "Agent:"
+        llm: "Modell:"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"
@@ -924,10 +1388,13 @@ de:
           title: "KI-Interaktion ansehen"
           copy_request: "Anfrage kopieren"
           copy_response: "Antwort kopieren"
-          request_tokens: "Anfrage-Token:"
-          response_tokens: "Antwort-Token:"
-          cache_read_tokens: "Zwischengespeicherte Lesetoken:"
-          cache_write_tokens: "Zwischengespeicherte Schreibtoken:"
+          this_turn: "Diese Runde:"
+          whole_conversation: "Unterhaltung"
+          tokens_summary: "%{request_tokens} eingehend → %{response_tokens} ausgehend"
+          duration_label: "Dauer:"
+          cache_both: "(Cache %{read} gelesen, %{write} geschrieben)"
+          cache_read_only: "(Cache %{read} gelesen)"
+          cache_write_only: "(Cache %{write} geschrieben)"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"
@@ -976,16 +1443,22 @@ de:
             one: "Nachricht muss mindestens %{count} Zeichen lang sein"
             other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
+          starred: "Mit Sternchen"
+          star_conversation: "Unterhaltung mit Sternchen markieren"
+          unstar_conversation: "Sternchen von Unterhaltung entfernen"
+          open_conversation_menu: "Unterhaltungsmenü öffnen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"
           upload_files: "Dateien hochladen"
           uploads_in_progress: "Absenden nicht möglich, solange Uploads nicht abgeschlossen sind"
+          show_toolbar: "Formatierungsleiste anzeigen"
+          hide_toolbar: "Formatierungsleiste ausblenden"
+          scroll_to_bottom: "Nach unten scrollen"
+          streaming_below: "Neuer Inhalt unten"
+          editing_post: "Beitrag wird bearbeitet "
       sentiments:
-        dashboard:
-          title: "Stimmung"
         sidebar:
-          overview: "Stimmungsübersicht"
           analysis: "Stimmungsanalyse"
         sentiment_analysis:
           share_chart: "Link zur Tabelle kopieren"
@@ -1016,15 +1489,11 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
-          regenerate_gists_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
+          regenerate_gists_started: "Kurzzusammenfassungen werden neu generiert…"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
-          regenerate_topic_summary_success:
-            one: "Themenzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
+          regenerate_topic_summaries_started: "Themenzusammenfassungen werden neu generiert…"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"
@@ -1033,26 +1502,52 @@ de:
             compact: "Kompakt"
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
+      ai_search:
+        related_topics: "Verwandte Themen"
+        related_replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        tabs:
+          ask: "KI fragen"
+          topics: "Themen"
+          messages: "Nachrichten"
       discobot_discoveries:
-        main_title: "Discobot Entdeckungen"
-        regular_results: "Themen"
-        tell_me_more: "Erzähl mir mehr..."
-        continue_convo: "Unterhaltung fortsetzen..."
+        main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"
-        collapse: "Zuklappen"
-        timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        create_topic: "Thema erstellen"
         user_setting: "KI-Suchentdeckungen aktivieren"
-        tooltip:
-          header: "KI-gestützte Suche"
-          content: "Natürliche Sprachsuche unterstützt von %{model}"
-          actions:
-            info: "Wie funktioniert es?"
-            disable: "Deaktivieren"
+        legacy:
+          main_title: "Discobot Entdeckungen"
+          regular_results: "Themen"
+          tell_me_more: "Erzähl mir mehr..."
+          continue_convo: "Unterhaltung fortsetzen..."
+          loading_convo: "Unterhaltung wird geladen"
+          collapse: "Zuklappen"
+          timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+          tooltip:
+            header: "KI-gestützte Suche"
+            content: "Natürliche Sprachsuche unterstützt von %{model}"
+            actions:
+              info: "Wie funktioniert es?"
+              disable: "Deaktivieren"
+        search_type: "KI"
+        search_all_topics: "Alle Themen"
+        search_messages: "Nachrichten"
+        ask_ai: "KI"
+        sources:
+          related_discussions: "Verwandte Themen"
       user_preferences:
         empty: "Zurzeit sind keine relevanten Einstellungen verfügbar"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool genehmigt"
+        rejected_tool_action:
+          title: "Tool abgelehnt"
       types:
         reviewable_ai_post:
           title: "KI-gemeldeter Beitrag"
         reviewable_ai_chat_message:
           title: "KI-gemeldete Chat-Nachricht"
+        reviewable_ai_tool_action:
+          title: "KI-Tool Aktion"

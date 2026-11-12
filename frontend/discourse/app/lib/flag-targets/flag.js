@@ -9,6 +9,9 @@ export default class Flag {
     return true;
   }
 
+  /**
+   * @returns {Promise<boolean>} resolves `false` when the flag was not created
+   */
   create(flagModal, opts) {
     // an instance of ActionSummary
     const postAction = this.postActionFor(flagModal);
@@ -20,8 +23,12 @@ export default class Flag {
     );
 
     flagModal.args.closeModal();
-    postAction
+    return postAction
       .act(flagModal.args.model.flagModel, opts)
-      .catch((error) => popupAjaxError(error));
+      .then((result) => !!result?.acted)
+      .catch((error) => {
+        popupAjaxError(error);
+        return false;
+      });
   }
 }

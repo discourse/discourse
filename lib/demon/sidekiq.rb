@@ -33,6 +33,9 @@ class Demon::Sidekiq < ::Demon::Base
 
       running_sidekiq_process = sidekiq_processes_for_current_hostname[daemon.pid]
 
+      # A newly forked process may not have registered its first heartbeat yet.
+      next if !running_sidekiq_process && daemon.starting?
+
       if !running_sidekiq_process ||
            (Time.now.to_i - running_sidekiq_process["beat"]) >
              SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS
@@ -77,6 +80,18 @@ class Demon::Sidekiq < ::Demon::Base
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
   end
 
+  def run
+    super
+    @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  def starting?
+    return false unless @started_at
+
+    Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at <
+      SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS
+  end
+
   def stop_signal
     "TERM"
   end
@@ -112,16 +127,6 @@ class Demon::Sidekiq < ::Demon::Base
     require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
-    if defined?(Unicorn)
-      # Unicorn uses USR1 to indicate that log files have been rotated
-      Signal.trap("USR1") { reopen_logs }
-
-      Signal.trap("USR2") do
-        sleep 1
-        reopen_logs
-      end
-    end
-
     options = [
       "-c",
       GlobalSetting.sidekiq_workers.to_s,
@@ -140,11 +145,14 @@ class Demon::Sidekiq < ::Demon::Base
 
     # Sidekiq not as high priority as web, in this environment it is forked so a web is very
     # likely running
-    Discourse::Utils.execute_command("renice", "-n", "5", "-p", Process.pid.to_s)
+    Process.setpriority(Process::PRIO_PROCESS, Process.pid, 5)
 
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
-    cli.run
+
+    # This process inherits the heap warmed by the mold.
+    # Warming it again compacts it, copying every page shared with the parent.
+    cli.run(warmup: false)
   rescue => error
     log(
       "Error encountered while starting Sidekiq: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
@@ -152,22 +160,5 @@ class Demon::Sidekiq < ::Demon::Base
     )
 
     exit 1
-  end
-
-  private
-
-  def reopen_logs
-    begin
-      log_in_trap("Sidekiq reopening logs...")
-      Unicorn::Util.reopen_logs
-      log_in_trap("Sidekiq done reopening logs...")
-    rescue => error
-      log_in_trap(
-        "Error encountered while reopening logs: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
-        level: :error,
-      )
-
-      exit 1
-    end
   end
 end

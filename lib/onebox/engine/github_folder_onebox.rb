@@ -21,10 +21,10 @@ module Onebox
 
         max_length = 250
 
-        display_path = extract_path(og.url, max_length)
+        display_path, fallback_title = extract_path(max_length)
         display_description = clean_description(og.description, og.title, max_length)
 
-        title = og.title
+        title = og.title || fallback_title
 
         fragment = Addressable::URI.parse(url).fragment
         if fragment
@@ -41,6 +41,13 @@ module Onebox
 
         {
           link: url,
+          layout_class: "github-onebox",
+          repository: URI(url).path.split("/")[1, 2].join("/"),
+          i18n: {
+            header: {
+              folder: I18n.t("onebox.github.header.folder"),
+            },
+          },
           title: Onebox::Helpers.truncate(title, 250),
           path: display_path,
           description: display_description,
@@ -48,13 +55,14 @@ module Onebox
         }
       end
 
-      def extract_path(root, max_length)
-        path = url.split("#")[0].split("?")[0]
-        path = path["#{root}/tree/".length..-1]
+      def extract_path(max_length)
+        clean_url = url.split("#")[0].split("?")[0]
+        match = clean_url.match(%r{github\.com/([\w\-]+/[\w\-]+)/tree/(.+)})
 
-        return unless path
+        return unless match
 
-        path.length > max_length ? path[-max_length..-1] : path
+        title, path = match.captures
+        [path.length > max_length ? path[-max_length..] : path, title]
       end
 
       def clean_description(description, title, max_length)

@@ -1,11 +1,24 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  fixturesByUrl,
+} from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
+
+function latestCategorySavePayload() {
+  const request = pretender.handledRequests.findLast(
+    ({ method, requestBody }) => method === "PUT" && requestBody
+  );
+
+  return JSON.parse(request.requestBody);
+}
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -24,12 +37,14 @@ acceptance("Category Edit", function (needs) {
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
     assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.dom(".category-style .badge-category__name").hasText("testing");
+    assert
+      .dom(".edit-category-tab-general .badge-category__name")
+      .hasText("testing");
 
-    await click(".edit-category-topic-template a");
+    await visit("/c/bug/edit/topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click("#save-category");
+    await click(".d-floating-control-bar .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/topic-template",
@@ -37,11 +52,9 @@ acceptance("Category Edit", function (needs) {
     );
 
     await visit("/c/bug/edit/settings");
-    const searchPriorityChooser = selectKit("#category-search-priority");
-    await searchPriorityChooser.expand();
-    await searchPriorityChooser.selectRowByValue(1);
+    await formKit().field("search_priority").select(1);
 
-    await click("#save-category");
+    await click(".d-floating-control-bar .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
@@ -60,70 +73,56 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    assert.dom(".minimum-required-tags").exists();
+    assert.dom("#category-minimum-tags").exists();
 
-    assert.dom(".required-tag-groups").exists();
-    assert.dom(".required-tag-group-row").doesNotExist();
-
-    await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection").doesNotExist();
 
     await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 2 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
+
+    await click(".add-required-tag-group");
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 2 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     const tagGroupChooser = selectKit(
-      ".required-tag-group-row .tag-group-chooser"
+      ".form-kit__collection .form-kit__row .tag-group-chooser"
     );
     await tagGroupChooser.expand();
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
-    await click("#save-category");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    await click(".d-floating-control-bar .btn-primary");
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert.dom(".form-kit__collection").doesNotExist();
 
-    await click("#save-category");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert
+      .dom(".d-floating-control-bar")
+      .exists("save banner stays visible when collection is emptied");
   });
 
   test("Editing allowed tags and tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    const allowedTagChooser = selectKit("#category-allowed-tags");
-    await allowedTagChooser.expand();
-    await allowedTagChooser.selectRowByName("monkey");
+    await formKit().field("allowed_tags").selectByName("monkey");
+    await formKit().control("#category-allowed-tag-groups").select("TagGroup1");
 
-    await allowedTagChooser.collapse();
-    const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.selectRowByValue("TagGroup1");
+    await click(".d-floating-control-bar .btn-primary");
 
-    await click("#save-category");
-
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
-    await allowedTagGroupChooser.collapse();
-    await allowedTagChooser.expand();
-    await allowedTagChooser.deselectItemByName("monkey");
+    await formKit().field("allowed_tags").deselectByName("monkey");
+    await formKit()
+      .control("#category-allowed-tag-groups")
+      .deselectByValue("TagGroup1");
 
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.deselectItemByValue("TagGroup1");
+    await click(".d-floating-control-bar .btn-primary");
 
-    await click("#save-category");
-
-    const removePayload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const removePayload = latestCategorySavePayload();
     assert.deepEqual(removePayload.allowed_tags, []);
     assert.deepEqual(removePayload.allowed_tag_groups, []);
   });
@@ -139,7 +138,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 
@@ -154,7 +153,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 
@@ -179,8 +178,10 @@ acceptance("Category Edit", function (needs) {
 
   test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
-    await fillIn(".email-in", "duplicate@example.com");
-    await click("#save-category");
+
+    // eslint-disable-next-line ember/require-valid-css-selector-in-test-helpers -- FormKit fillIn(value), not Ember fillIn(selector)
+    await formKit().field("email_in").fillIn("duplicate@example.com");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -193,13 +194,15 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Nested subcategory error when saving", async function (assert) {
+    this.siteSettings.max_category_nesting = 3;
+
     await visit("/c/bug/edit");
 
     const categoryChooser = selectKit(".category-chooser.single-select");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click("#save-category");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -220,16 +223,16 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Subcategory list settings", async function (assert) {
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist("subcategory list style isn't visible by default");
 
-    await click(".show-subcategory-list-field input[type=checkbox]");
+    await formKit().field("show_subcategory_list").toggle();
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .exists(
         "subcategory list style is shown if show subcategory list is checked"
       );
@@ -242,18 +245,277 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(3);
 
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".show-subcategory-list-field")
+      .dom("[data-name='show_subcategory_list']")
       .doesNotExist("show subcategory list isn't visible for child categories");
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist(
         "subcategory list style isn't visible for child categories"
       );
   });
 });
+
+acceptance(
+  "Category Edit - parent category permission inheritance",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      // Sub-category with only moderator permissions
+      server.get("/c/restricted-group/find_by_slug.json", () =>
+        helper.response(200, {
+          category: {
+            id: 2481,
+            name: "restricted-group",
+            color: "e9dd00",
+            text_color: "000000",
+            style_type: "square",
+            slug: "restricted-group",
+            read_restricted: true,
+            can_edit: true,
+            permission: 1,
+            available_groups: ["admins", "moderators", "staff", "custom_group"],
+            group_permissions: [
+              { permission_type: 1, group_name: "moderators", group_id: 2 },
+            ],
+            custom_fields: {},
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+          },
+        })
+      );
+
+      // Parent with moderators + custom_group permissions
+      server.get("/c/3/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 3,
+            name: "meta",
+            color: "aaaaaa",
+            text_color: "FFFFFF",
+            slug: "meta",
+            read_restricted: true,
+            available_groups: ["admins", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "moderators", group_id: 2 },
+              { permission_type: 1, group_name: "custom_group", group_id: 4 },
+            ],
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+          },
+        })
+      );
+
+      // Parent with only custom_group permissions
+      server.get("/c/6/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 6,
+            name: "support",
+            color: "b99",
+            text_color: "FFFFFF",
+            slug: "support",
+            read_restricted: true,
+            available_groups: ["admins", "moderators", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "custom_group", group_id: 4 },
+            ],
+            category_types: {
+              support: {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+          },
+        })
+      );
+
+      // Public parent (everyone full permissions)
+      server.get("/c/4/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 4,
+            name: "faq",
+            color: "33b",
+            text_color: "FFFFFF",
+            slug: "faq",
+            read_restricted: false,
+            available_groups: ["admins", "moderators", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "everyone", group_id: 0 },
+            ],
+            category_types: {
+              support: {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+          },
+        })
+      );
+
+      // Sub-category with partial permissions (everyone: read, staff: full)
+      server.get("/c/partial-group/find_by_slug.json", () =>
+        helper.response(200, {
+          category: {
+            id: 2482,
+            name: "partial-group",
+            color: "e9dd00",
+            text_color: "000000",
+            style_type: "square",
+            slug: "partial-group",
+            read_restricted: false,
+            can_edit: true,
+            permission: 1,
+            available_groups: ["admins", "moderators", "custom_group"],
+            group_permissions: [
+              { permission_type: 3, group_name: "everyone", group_id: 0 },
+              { permission_type: 1, group_name: "staff", group_id: 3 },
+            ],
+            custom_fields: {},
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
+          },
+        })
+      );
+    });
+
+    test("retains sub-category permissions when sub is more restrictive than new parent", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(3);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
+    test("adopts parent permissions when parent is more restrictive than sub", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(6);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { custom_group: 1 });
+    });
+
+    test("retains sub-category permissions when changing to a public parent", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(4);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
+    test("retains permissions when removing the parent from an existing sub-category", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(3);
+      const clearButton = categoryChooser.clearButton();
+      assert.true(Boolean(clearButton), "shows the clear button");
+      await click(clearButton);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
+    test("retains partial permissions (everyone=readonly + staff=full) when changing to a fully public parent", async function (assert) {
+      await visit("/c/partial-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(4);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { everyone: 3, staff: 1 });
+    });
+
+    test("adopts private parent permissions when sub has partial public permissions", async function (assert) {
+      await visit("/c/partial-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(6);
+
+      await click(".d-floating-control-bar .btn-primary");
+
+      const payload = latestCategorySavePayload();
+      assert.deepEqual(payload.permissions, { custom_group: 1 });
+    });
+  }
+);
 
 acceptance("Category Edit - no permission to edit", function (needs) {
   needs.user();
@@ -275,5 +537,281 @@ acceptance("Category Edit - no permission to edit", function (needs) {
   test("returns 404", async function (assert) {
     await visit("/c/bug/edit");
     assert.strictEqual(currentURL(), "/404");
+  });
+});
+
+function seededCategory(overrides) {
+  const category = cloneJSON(fixturesByUrl["/c/1/show.json"]).category;
+  return { ...category, can_edit: true, ...overrides };
+}
+
+acceptance("Category Edit - resetting selects to default", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({
+          default_view: "top",
+          sort_order: "views",
+          sort_ascending: false,
+        }),
+      })
+    );
+  });
+
+  test("sends null for cleared selects instead of dropping them", async function (assert) {
+    await visit("/c/bug/edit/images");
+
+    assert.strictEqual(
+      formKit().field("default_view").value(),
+      "top",
+      "seeds the default view"
+    );
+    assert.strictEqual(
+      formKit().field("sort_order").value(),
+      "views",
+      "seeds the sort order"
+    );
+    assert.strictEqual(
+      formKit().field("sort_ascending").value(),
+      "false",
+      "seeds the sort direction"
+    );
+
+    await formKit().field("default_view").select(NO_VALUE_OPTION);
+    await formKit().field("sort_order").select(NO_VALUE_OPTION);
+
+    assert
+      .dom("[data-name='sort_ascending']")
+      .doesNotExist("hides the sort direction once the sort order is cleared");
+
+    await click(".d-floating-control-bar .btn-primary");
+
+    const payload = latestCategorySavePayload();
+
+    assert.strictEqual(payload.default_view, null, "clears the default view");
+    assert.strictEqual(payload.sort_order, null, "clears the sort order");
+    assert.strictEqual(
+      payload.sort_ascending,
+      null,
+      "clears the sort direction alongside the sort order"
+    );
+  });
+});
+
+acceptance(
+  "Category Edit - sort order stored outside the core list",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/c/bug/find_by_slug.json", () =>
+        helper.response(200, {
+          category: seededCategory({ sort_order: "votes" }),
+        })
+      );
+    });
+
+    test("renders the stored value, and can clear it", async function (assert) {
+      await visit("/c/bug/edit/images");
+
+      assert
+        .dnativeselect("[data-name='sort_order'] .d-native-select")
+        .hasSelectedOption(
+          { value: "votes", label: "votes" },
+          "renders and selects a stored value the core list doesn't provide"
+        );
+
+      await formKit().field("sort_order").select(NO_VALUE_OPTION);
+      await click(".d-floating-control-bar .btn-primary");
+
+      assert.strictEqual(
+        latestCategorySavePayload().sort_order,
+        null,
+        "clears the stored value"
+      );
+    });
+  }
+);
+
+acceptance("Category Edit - emoji disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_emoji: false });
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({ style_type: "emoji", emoji: "wave" }),
+      })
+    );
+  });
+
+  test("hides the emoji style and shows emoji categories as square", async function (assert) {
+    await visit("/c/bug/edit/general");
+
+    assert
+      .dom(".form-kit__control-radio[value='emoji']")
+      .doesNotExist("emoji style isn't offered");
+    assert
+      .dom(".form-kit__control-radio[value='square']")
+      .isChecked("emoji category resolves to square");
+  });
+});
+
+acceptance("Category Edit - saved value types", function (needs) {
+  needs.user();
+
+  const discussionType = {
+    id: "discussion",
+    name: "Discussion",
+    configuration_schema: {},
+  };
+
+  let seed, failSave;
+
+  needs.hooks.beforeEach(() => {
+    seed = {};
+    failSave = false;
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({
+          sort_order: "views",
+          category_types: { discussion: discussionType },
+          ...seed,
+        }),
+      })
+    );
+
+    server.put("/categories/:id", () => {
+      if (failSave) {
+        return helper.response(422, { errors: ["Something went wrong"] });
+      }
+      return helper.response(200, {
+        success: "OK",
+        category: seededCategory({
+          sort_order: "views",
+          category_types: { discussion: discussionType },
+        }),
+      });
+    });
+  });
+
+  test("saves the sort direction as a boolean", async function (assert) {
+    seed = { sort_ascending: false };
+
+    await visit("/c/bug/edit/images");
+    await formKit().field("sort_ascending").select("true");
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.true(
+      latestCategorySavePayload().sort_ascending,
+      "sends true, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves a descending sort direction as false", async function (assert) {
+    seed = { sort_ascending: true };
+
+    await visit("/c/bug/edit/images");
+    await formKit().field("sort_ascending").select("false");
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.false(
+      latestCategorySavePayload().sort_ascending,
+      "sends false, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves the search priority as a number", async function (assert) {
+    seed = { search_priority: 0 };
+
+    await visit("/c/bug/edit/settings");
+    await formKit().field("search_priority").select(1);
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.strictEqual(
+      latestCategorySavePayload().search_priority,
+      1,
+      "sends the number, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("saves a zero search priority as 0", async function (assert) {
+    seed = { search_priority: 2 };
+
+    await visit("/c/bug/edit/settings");
+    await formKit().field("search_priority").select(0);
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.strictEqual(
+      latestCategorySavePayload().search_priority,
+      0,
+      "sends 0, not the string the select reports"
+    );
+    assert.dom(".dialog-body").doesNotExist("the save succeeds");
+  });
+
+  test("keeps the category's types when the save fails", async function (assert) {
+    failSave = true;
+
+    await visit("/c/bug/edit/general");
+    const model = this.owner.lookup("controller:edit-category/tabs").model;
+    const typesBefore = cloneJSON(model.category_types);
+
+    await fillIn("input.category-name", "renamed");
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.deepEqual(
+      latestCategorySavePayload().category_types,
+      ["discussion"],
+      "still sends the selected type ids"
+    );
+    assert.deepEqual(
+      typesBefore,
+      { discussion: discussionType },
+      "the category starts with its type map"
+    );
+    assert.deepEqual(
+      cloneJSON(model.category_types),
+      typesBefore,
+      "the category keeps its type map instead of the request's id list"
+    );
+  });
+});
+
+acceptance("Category Edit - deleting", function (needs) {
+  needs.user();
+
+  let deleteRequests;
+
+  needs.hooks.beforeEach(() => (deleteRequests = []));
+
+  needs.pretender((server, helper) => {
+    server.delete("/categories/:id", (request) => {
+      deleteRequests.push(request.params.id);
+      return helper.response(200, { success: "OK" });
+    });
+  });
+
+  test("deletes the category and returns to the categories list", async function (assert) {
+    await visit("/c/testing/edit/settings");
+    await click(".edit-category__delete-actions .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.deepEqual(deleteRequests, ["11"], "deletes the category by id");
+    assert.strictEqual(currentURL(), "/categories");
+  });
+
+  test("cancelling the confirmation keeps the category", async function (assert) {
+    await visit("/c/testing/edit/settings");
+    await click(".edit-category__delete-actions .btn-danger");
+    await click(".dialog-footer .btn-default");
+
+    assert.deepEqual(deleteRequests, [], "does not delete the category");
+    assert.strictEqual(currentURL(), "/c/testing/edit/settings");
   });
 });

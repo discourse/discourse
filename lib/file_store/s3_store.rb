@@ -105,10 +105,7 @@ module FileStore
       # Only serve inline for allowlisted safe file types (non-SVG images and PDFs)
       # to prevent XSS via HTML/XML/SVG uploads. All other files force download.
       # See https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53
-      options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-        disposition: FileHelper.is_inline_safe?(filename) ? "inline" : "attachment",
-        filename: filename,
-      )
+      options[:content_disposition] = self.class.content_disposition_for(filename)
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
@@ -245,12 +242,19 @@ module FileStore
     def signed_url_for_path(
       path,
       expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
-      force_download: false
+      force_download: false,
+      filename: nil,
+      include_content_disposition:
     )
       key = path.sub(absolute_base_url + "/", "")
+      raise Discourse::NotFound if !current_site_key?(key)
 
-      filename = force_download ? File.basename(path) : false
-      presigned_get_url(key, expires_in:, force_download:, filename:)
+      presigned_get_url(
+        key,
+        expires_in:,
+        force_download:,
+        filename: include_content_disposition ? (filename || File.basename(path)) : nil,
+      )
     end
 
     def signed_request_for_temporary_upload(
@@ -269,9 +273,11 @@ module FileStore
     end
 
     def temporary_upload_path(file_name)
-      folder_prefix =
-        s3_bucket_folder_path.nil? ? upload_path : File.join(s3_bucket_folder_path, upload_path)
-      FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: folder_prefix)
+      FileStore::BaseStore.temporary_upload_path(file_name, folder_prefix: temporary_folder_prefix)
+    end
+
+    def temporary_folder_prefix
+      s3_bucket_folder_path.nil? ? upload_path : File.join(s3_bucket_folder_path, upload_path)
     end
 
     def object_from_path(path)
@@ -343,8 +349,8 @@ module FileStore
       update_access_control(file_path, secure, remove_existing_acl:)
     end
 
-    def download_file(upload, destination_path)
-      s3_helper.download_file(get_upload_key(upload), destination_path)
+    def download_file(upload, destination_path, **options)
+      s3_helper.download_file(get_upload_key(upload), destination_path, **options)
     end
 
     def copy_from(source_path)
@@ -429,7 +435,52 @@ module FileStore
       self.class.default_s3_options(secure:)
     end
 
+    # S3 limits total request header/metadata size to 2 KB. Content-Disposition
+    # includes the filename twice (filename= and filename*=UTF-8''), so we
+    # limit the full header to 1600 bytes to stay within that budget.
+    MAX_CONTENT_DISPOSITION_BYTES = 1_600
+
+    def self.content_disposition_for(filename, disposition: nil)
+      disposition ||= FileHelper.is_inline_safe?(filename) ? "inline" : "attachment"
+      return "" if filename.blank?
+
+      header = ActionDispatch::Http::ContentDisposition.format(disposition:, filename:)
+      return header if header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
+
+      extension = File.extname(filename)
+      basename = File.basename(filename, extension)
+
+      # Binary search for the longest basename that fits within the limit
+      low = 1
+      high = basename.length
+
+      while low < high
+        mid = (low + high + 1) / 2
+        candidate = "#{basename[0...mid]}#{extension}"
+        test_header =
+          ActionDispatch::Http::ContentDisposition.format(disposition:, filename: candidate)
+        if test_header.bytesize <= MAX_CONTENT_DISPOSITION_BYTES
+          low = mid
+        else
+          high = mid - 1
+        end
+      end
+
+      ActionDispatch::Http::ContentDisposition.format(
+        disposition:,
+        filename: "#{basename[0...low]}#{extension}",
+      )
+    end
+
     private
+
+    def current_site_key?(key)
+      return true if !Rails.configuration.multisite
+
+      key = key.delete_prefix(TEMPORARY_UPLOAD_PREFIX)
+      key = key.delete_prefix(File.join(s3_bucket_folder_path, "")) if s3_bucket_folder_path
+      key.start_with?(File.join(upload_path, ""))
+    end
 
     def presigned_get_url(
       url,
@@ -439,10 +490,12 @@ module FileStore
     )
       opts = { expires_in: expires_in }
 
-      if force_download && filename
+      if filename
+        disposition =
+          (force_download || !FileHelper.is_inline_safe?(filename)) ? "attachment" : "inline"
         opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: "attachment",
-          filename: filename,
+          disposition:,
+          filename:,
         )
       end
 
@@ -463,7 +516,7 @@ module FileStore
 
       if acl.present? || remove_existing_acl
         begin
-          object = object_from_path(key).acl.put(acl:)
+          object_from_path(key).acl.put(acl:)
         rescue Aws::S3::Errors::NotImplemented => err
           Discourse.warn_exception(
             err,

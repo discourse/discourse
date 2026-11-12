@@ -25,7 +25,8 @@ module DiscourseAi
         end
 
         true
-      rescue Net::HTTPBadResponse => e
+      rescue DiscourseAi::Inference::EmbeddingInferenceError,
+             DiscourseAi::Embeddings::ProviderPausedError
         false
       end
 

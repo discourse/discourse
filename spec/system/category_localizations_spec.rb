@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Category Localizations", type: :system do
-  SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+describe "Category Localizations" do
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:admin)
   fab!(:category) do
@@ -17,7 +17,7 @@ describe "Category Localizations", type: :system do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
-  let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+  let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
   before do
     SiteSetting.content_localization_supported_locales = "es|ja|fr"
@@ -36,7 +36,7 @@ describe "Category Localizations", type: :system do
   context "when content localization setting is disabled" do
     before { SiteSetting.content_localization_enabled = false }
 
-    it "should not show the localization tab" do
+    it "hides the localization tab" do
       sign_in(admin)
 
       category_page.visit_settings(category)
@@ -68,20 +68,53 @@ describe "Category Localizations", type: :system do
     describe "Category Settings" do
       before { sign_in(admin) }
 
-      it "should show the localization tab" do
+      it "shows the localization tab" do
         category_page.visit_settings(category)
         expect(category_page).to have_setting_tab("localizations")
+      end
+
+      it "shows no language when category has no locale" do
+        category_without_locale = Fabricate(:category, locale: nil)
+        category_page.visit_edit_localizations(category_without_locale)
+
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
+      end
+
+      it "loads the saved locale correctly" do
+        category_page.visit_edit_localizations(category)
+
+        expect(form.field("locale")).to have_value("en")
+      end
+
+      it "allows setting and persisting the category locale" do
+        category_without_locale = Fabricate(:category, locale: nil)
+        category_page.visit_edit_localizations(category_without_locale)
+
+        form.field("locale").select("ja")
+        category_page.save_settings
+
+        page.refresh
+        expect(form.field("locale")).to have_value("ja")
+
+        form.field("locale").select_none
+        category_page.save_settings
+        page.refresh
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
       end
 
       describe "when editing a category with no category localizations" do
         fab!(:mono_category, :category)
 
-        it "should show info hint to add new localizations" do
+        it "shows a hint to add new localizations" do
           category_page.visit_edit_localizations(mono_category)
           expect(form).to have_an_alert(I18n.t("js.category.localization.hint"))
         end
 
-        it "should allow you to add new localizations" do
+        it "allows adding new localizations" do
           category_page.visit_edit_localizations(mono_category)
           category_page.find(".edit-category-tab-localizations .add-localization").click
           form.field("localizations.0.locale").select("es")
@@ -136,14 +169,20 @@ describe "Category Localizations", type: :system do
             count: 2,
           )
           expect(
-            page.all(".form-kit__control-select option.--selected").map(&:text),
+            page.all(".form-kit__collection .form-kit__control-select option.--selected").map(
+              &:text
+            ),
           ).to contain_exactly("Spanish (Español)", "Japanese (日本語)")
 
           page.find(".edit-category-tab-localizations .remove-localization", match: :first).click
           category_page.save_settings
           page.refresh
 
-          expect(category_page).to_not have_css("#control-localizations-0-locale option.--selected")
+          expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
+          expect(category_page).to have_selector(
+            ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+            count: 1,
+          )
         end
       end
     end
@@ -252,7 +291,6 @@ describe "Category Localizations", type: :system do
 
             category_page.visit(category)
             category_page.click_edit_category
-            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

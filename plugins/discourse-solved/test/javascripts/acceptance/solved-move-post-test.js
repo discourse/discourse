@@ -2,9 +2,9 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
+import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers.js";
 
-acceptance("Discourse Solved | Move Solution Post", function (needs) {
+acceptance("Move Solution Post", function (needs) {
   needs.user({ admin: true });
 
   needs.settings({

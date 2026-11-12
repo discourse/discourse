@@ -106,7 +106,7 @@ module Hijack
 
           io.write "\r\n"
           io.write body
-        rescue Errno::EPIPE, IOError
+        rescue Errno::EPIPE, Errno::ECONNRESET, IOError
           # happens if client terminated before we responded, ignore
           io = nil
         ensure

@@ -13,17 +13,18 @@ module Jobs
 
       topic = post.topic
       reply_to = post.reply_to_post
+      guardian = user.guardian
 
-      return unless user.guardian.can_see?(post)
+      return unless guardian.can_see?(post)
 
       helper_mode = args[:prompt]
 
       if helper_mode == DiscourseAi::AiHelper::Assistant::EXPLAIN
         input = <<~TEXT.strip
-          <term>#{args[:text]}</term>
-          <context>#{post.raw}</context>
-          <topic>#{topic.title}</topic>
-          #{reply_to ? "<replyTo>#{reply_to.raw}</replyTo>" : nil}
+          <term>#{escape_prompt_tag_value(args[:text])}</term>
+          <context>#{escape_prompt_tag_value(post.raw)}</context>
+          <topic>#{escape_prompt_tag_value(topic.title)}</topic>
+          #{reply_to && guardian.can_see?(reply_to) ? "<replyTo>#{escape_prompt_tag_value(reply_to.raw)}</replyTo>" : nil}
         TEXT
       else
         input = args[:text]
@@ -44,6 +45,10 @@ module Jobs
     end
 
     private
+
+    def escape_prompt_tag_value(value)
+      ERB::Util.html_escape(value.to_s)
+    end
 
     def publish_error(channel, user, exception)
       allocation = exception.allocation

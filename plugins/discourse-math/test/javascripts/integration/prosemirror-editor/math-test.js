@@ -13,7 +13,6 @@ module(
     setupRenderingTest(hooks);
 
     test("renders inline math and preserves markdown", async function (assert) {
-      this.siteSettings.rich_editor = true;
       this.siteSettings.discourse_math_enabled = true;
 
       const markdown = "Inline $E=mc^2$ math.";
@@ -30,7 +29,6 @@ module(
     });
 
     test("renders block math and preserves markdown", async function (assert) {
-      this.siteSettings.rich_editor = true;
       this.siteSettings.discourse_math_enabled = true;
 
       const markdown = "$$\nE=mc^2\n$$";
@@ -50,7 +48,6 @@ module(
     });
 
     test("edits math via modal", async function (assert) {
-      this.siteSettings.rich_editor = true;
       this.siteSettings.discourse_math_enabled = true;
 
       const markdown = "Inline $E=mc^2$ math.";

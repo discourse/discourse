@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Restore message", type: :system do
+RSpec.describe "Restore message" do
   fab!(:admin_user, :admin)
   fab!(:regular_user, :user)
   fab!(:another_user, :user)

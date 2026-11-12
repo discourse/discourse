@@ -4,25 +4,26 @@ import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import Yaml from "js-yaml";
+import { waitForPromise } from "@ember/test-waiters";
 import FormTemplate from "discourse/models/form-template";
-import CheckboxField from "./checkbox";
-import ComposerField from "./composer";
-import DropdownField from "./dropdown";
-import InputField from "./input";
-import MultiSelectField from "./multi-select";
-import TagChooserField from "./tag-chooser";
-import TextareaField from "./textarea";
-import UploadField from "./upload";
+import CheckboxField from "./checkbox.gjs";
+import ComposerField from "./composer.gjs";
+import DropdownField from "./dropdown.gjs";
+import InputField from "./input.gjs";
+import MultiSelectField from "./multi-select.gjs";
+import TagChooserField from "./tag-chooser.gjs";
+import TextareaField from "./textarea.gjs";
+import UploadField from "./upload.gjs";
 
 const FormTemplateField = <template>
   <@component
-    @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
+    @id={{@content.id}}
+    @onChange={{@onChange}}
+    @uppyComposerUpload={{@uppyComposerUpload}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
-    @onChange={{@onChange}}
   />
 </template>;
 
@@ -30,7 +31,10 @@ export default class FormTemplateFieldWrapper extends Component {
   @service composer;
   @service siteSettings;
 
+  /** @type {unknown} */
   @tracked error = null;
+
+  /** @type {unknown} */
   @tracked parsedTemplate = null;
 
   initialValues = this.args.initialValues ?? {};
@@ -65,13 +69,9 @@ export default class FormTemplateFieldWrapper extends Component {
     });
   }
 
-  _loadTemplate(templateContent) {
-    try {
-      this.parsedTemplate = Yaml.load(templateContent);
-      this.args.onSelectFormTemplate?.(this.parsedTemplate);
-    } catch (e) {
-      this.error = e;
-    }
+  // child components expect an onChange function
+  get onChange() {
+    return this.args.onChange || (() => {});
   }
 
   @action
@@ -83,15 +83,22 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._fetchTemplate(this.args.id);
   }
 
+  async _loadTemplate(templateContent) {
+    try {
+      const promise = import("js-yaml");
+      waitForPromise(promise);
+      const { load } = await promise;
+      this.parsedTemplate = load(templateContent);
+      this.args.onSelectFormTemplate?.(this.parsedTemplate);
+    } catch (e) {
+      this.error = e;
+    }
+  }
+
   async _fetchTemplate(id) {
     const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
     return this._loadTemplate(templateContent);
-  }
-
-  // child components expect an onChange function
-  get onChange() {
-    return this.args.onChange || (() => {});
   }
 
   <template>
@@ -106,6 +113,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
             @onChange={{this.onChange}}
+            @uppyComposerUpload={{@uppyComposerUpload}}
           />
         {{/each}}
       </div>

@@ -113,8 +113,9 @@ module DiscourseAi
         DiscourseAi::Embeddings::Vector.new(embedding_def).vector_from("this is a test")
 
         render json: { success: true }
-      rescue Net::HTTPBadResponse => e
-        render json: { success: false, error: e.message }
+      rescue DiscourseAi::Inference::EmbeddingInferenceError,
+             DiscourseAi::Embeddings::ProviderPausedError => error
+        render json: { success: false, error: error.message }
       end
 
       private
@@ -142,7 +143,7 @@ module DiscourseAi
             params.dig(:ai_embedding, :provider_params)&.slice(*extra_field_names.keys)
 
           if received_prov_params.present?
-            permitted[:provider_params] = received_prov_params.permit!
+            permitted[:provider_params] = received_prov_params.permit(*extra_field_names.keys)
           end
         end
 

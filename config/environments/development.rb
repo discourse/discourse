@@ -50,6 +50,9 @@ Discourse::Application.configure do
 
   config.log_level = ENV["DISCOURSE_DEV_LOG_LEVEL"] if ENV["DISCOURSE_DEV_LOG_LEVEL"]
 
+  require_relative "../../lib/dev_log_formatter"
+  config.log_formatter = DevLogFormatter.new
+
   config.active_record.logger = nil if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1" ||
     ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
   config.active_record.verbose_query_logs = true if ENV["RAILS_VERBOSE_QUERY_LOGS"] == "1"
@@ -57,8 +60,8 @@ Discourse::Application.configure do
   if defined?(BetterErrors)
     BetterErrors::Middleware.allow_ip! ENV["TRUSTED_IP"] if ENV["TRUSTED_IP"]
 
-    if (defined?(Unicorn) || defined?(Pitchfork)) && ENV["UNICORN_WORKERS"].to_i != 1
-      # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
+    if defined?(Pitchfork) && ENV["UNICORN_WORKERS"].to_i != 1
+      # BetterErrors doesn't work with multiple workers. Disable it to avoid confusion
       Rails.configuration.middleware.delete BetterErrors::Middleware
     end
   end
@@ -80,8 +83,7 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" &&
-       (defined?(Rails::Server) || defined?(Puma) || defined?(Unicorn) || defined?(Pitchfork))
+  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" && (defined?(Rails::Server) || defined?(Pitchfork))
     require "stylesheet/watcher"
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch

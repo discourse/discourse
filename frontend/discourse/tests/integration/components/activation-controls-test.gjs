@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import ActivationControls from "discourse/components/activation-controls";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | activation-controls", function (hooks) {
+module("Integration | Component | ActivationControls", function (hooks) {
   setupRenderingTest(hooks);
 
   test("hides change email button", async function (assert) {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "chat transcripts in rich editor", type: :system do
+describe "chat transcripts in rich editor" do
   fab!(:current_user) do
     Fabricate(
       :user,
@@ -9,10 +9,22 @@ describe "chat transcripts in rich editor", type: :system do
     )
   end
   fab!(:channel, :chat_channel)
+  fab!(:channel_with_quotation_marks) do
+    Fabricate(:chat_channel, name: 'Channel with a "special" name')
+  end
   fab!(:message_1) do
     Fabricate(:chat_message, user: current_user, chat_channel: channel, created_at: 2.days.ago)
   end
   fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, created_at: 1.day.ago) }
+
+  fab!(:message_3) do
+    Fabricate(
+      :chat_message,
+      user: current_user,
+      chat_channel: channel_with_quotation_marks,
+      created_at: 2.days.ago,
+    )
+  end
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -48,6 +60,31 @@ describe "chat transcripts in rich editor", type: :system do
     expect(rich).to have_css(".chat-transcript .chat-transcript-messages", text: message_1.message)
   end
 
+  it "works for channel name with quotation marks in its name" do
+    page.visit "/new-topic"
+    expect(composer).to be_opened
+    composer.focus
+
+    markdown =
+      Chat::TranscriptService.new(
+        channel_with_quotation_marks,
+        current_user,
+        messages_or_ids: [message_3],
+      ).generate_markdown
+
+    cdp.copy_paste(
+      markdown,
+      css_selector: PageObjects::Components::Composer.new.composer_input_selector,
+    )
+
+    expect(rich).to have_css(".chat-transcript", text: channel_with_quotation_marks.name)
+    expect(rich).to have_css(
+      ".chat-transcript .chat-transcript-user .chat-transcript-username",
+      text: message_3.user.username,
+    )
+    expect(rich).to have_css(".chat-transcript .chat-transcript-messages", text: message_3.message)
+  end
+
   it "works for multiple messages" do
     page.visit "/new-topic"
     expect(composer).to be_opened
@@ -66,10 +103,7 @@ describe "chat transcripts in rich editor", type: :system do
     )
 
     expect(rich).to have_css(".chat-transcript.chat-transcript-chained", count: 2)
-    expect(rich).to have_css(
-      ".chat-transcript .chat-transcript-meta",
-      text: "Originally sent in #{channel.name}",
-    )
+    expect(rich).to have_css(".chat-transcript .chat-transcript-group__channel", text: channel.name)
     expect(rich).to have_css(
       ".chat-transcript:nth-of-type(1) .chat-transcript-user .chat-transcript-username",
       text: message_1.user.username,
@@ -147,6 +181,36 @@ describe "chat transcripts in rich editor", type: :system do
 
         expect(rich).to have_css(".chat-transcript")
       end
+    end
+
+    it "keeps a channel ID which closes the href inside the href" do
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+      composer.focus
+
+      channel_id = %q(" onmouseover="alert(1)" x=")
+      markdown = <<~MARKDOWN
+        [chat quote="hunter;29856;2025-03-20T07:13:04Z" channel="design" channelId='#{channel_id}' multiQuote=true]
+        haha
+        [/chat]
+      MARKDOWN
+
+      cdp.copy_paste(markdown, css_selector: composer.composer_input_selector)
+
+      expect(rich).to have_css(".chat-transcript-group__channel")
+
+      attributes = page.evaluate_script(<<~JS)
+        Object.fromEntries(
+          Array.from(
+            document.querySelector(".d-editor-input.ProseMirror .chat-transcript-group__channel").attributes
+          ).map((attribute) => [attribute.name, attribute.value])
+        )
+      JS
+
+      expect(attributes).to eq(
+        "class" => "hashtag-cooked chat-transcript-group__channel",
+        "href" => "/chat/c/-/%22%20onmouseover%3D%22alert(1)%22%20x%3D%22",
+      )
     end
   end
 end

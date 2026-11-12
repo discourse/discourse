@@ -1,22 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import { combinedSearchActive } from "../../lib/ai-search-scope.js";
 
 const MAX_RESULTS_FOR_ADDING_AI = 3;
 
 export default class AiQuickSearch extends Component {
-  static shouldRender(args, { siteSettings }) {
-    return siteSettings.ai_embeddings_semantic_quick_search_enabled;
+  static shouldRender(args, { siteSettings, currentUser }) {
+    return (
+      siteSettings.ai_embeddings_semantic_quick_search_enabled &&
+      !combinedSearchActive(siteSettings, currentUser)
+    );
   }
 
+  @service appEvents;
   @service search;
   @service siteSettings;
 
@@ -29,26 +34,18 @@ export default class AiQuickSearch extends Component {
       return;
     }
 
-    const resultsContainer = document.querySelector(".search-menu .results");
-    if (resultsContainer) {
-      resultsContainer.classList.add("has-ai-search-results");
-    }
-
     const resultTypes = this.search.results?.resultTypes || [];
     resultTypes.forEach((resultType) => {
       resultType.results?.forEach((result) => {
         if (result.aiGenerated) {
           const topicId = result.topic?.id || result.topic_id;
           if (topicId) {
-            const listItem = document
+            document
               .querySelector(
                 `.search-menu .list .item [data-topic-id="${topicId}"]`
               )
-              ?.closest(".item");
-
-            if (listItem) {
-              listItem.classList.add("ai-search-result");
-            }
+              ?.closest(".item")
+              ?.classList.add("ai-search-result");
           }
         }
       });
@@ -88,15 +85,23 @@ export default class AiQuickSearch extends Component {
   }
 
   @action
+  onInsert() {
+    const resultTypes = this.search.results?.resultTypes || [];
+    const hasExistingAiResults = resultTypes.some((resultType) =>
+      resultType.results?.some((result) => result.aiGenerated)
+    );
+
+    if (hasExistingAiResults) {
+      this.lastSearchTerm = this.search.activeGlobalSearchTerm;
+      this.hasAiResults = true;
+    }
+  }
+
+  @action
   onSearchTermChange() {
     this.hasAiResults = false;
     this.searchingWithAi = false;
     this.lastSearchTerm = null;
-
-    const resultsContainer = document.querySelector(".search-menu .results");
-    if (resultsContainer) {
-      resultsContainer.classList.remove("has-ai-search-results");
-    }
   }
 
   @action
@@ -118,6 +123,10 @@ export default class AiQuickSearch extends Component {
     if (this.totalResults === 0) {
       this.search.noResults = false;
     }
+
+    this.appEvents.trigger("ai-quick-search:state-changed", {
+      searching: true,
+    });
 
     try {
       const results = await ajax("/discourse-ai/embeddings/quick-search", {
@@ -145,44 +154,10 @@ export default class AiQuickSearch extends Component {
       }
     } finally {
       this.searchingWithAi = false;
-    }
-  }
-
-  #removeExistingAiResults() {
-    if (!this.search.results) {
-      return;
-    }
-
-    if (this.search.results.posts) {
-      this.search.results.posts = this.search.results.posts.filter(
-        (post) => !post.aiGenerated
-      );
-    }
-
-    const resultTypes = this.search.results.resultTypes || [];
-    resultTypes.forEach((resultType) => {
-      if (resultType.results) {
-        resultType.results = resultType.results.filter(
-          (result) => !result.aiGenerated
-        );
-      }
-    });
-  }
-
-  #getExistingTopicIds() {
-    const existingTopicIds = new Set();
-    const resultTypes = this.search.results?.resultTypes || [];
-
-    resultTypes.forEach((resultType) => {
-      resultType.results?.forEach((result) => {
-        const topicId = result.topic?.id || result.topic_id;
-        if (topicId) {
-          existingTopicIds.add(topicId);
-        }
+      this.appEvents.trigger("ai-quick-search:state-changed", {
+        searching: false,
       });
-    });
-
-    return existingTopicIds;
+    }
   }
 
   appendResults(aiResults) {
@@ -226,19 +201,50 @@ export default class AiQuickSearch extends Component {
     this.search.noResults = false;
   }
 
+  #removeExistingAiResults() {
+    if (!this.search.results) {
+      return;
+    }
+
+    if (this.search.results.posts) {
+      this.search.results.posts = this.search.results.posts.filter(
+        (post) => !post.aiGenerated
+      );
+    }
+
+    const resultTypes = this.search.results.resultTypes || [];
+    resultTypes.forEach((resultType) => {
+      if (resultType.results) {
+        resultType.results = resultType.results.filter(
+          (result) => !result.aiGenerated
+        );
+      }
+    });
+  }
+
+  #getExistingTopicIds() {
+    const existingTopicIds = new Set();
+    const resultTypes = this.search.results?.resultTypes || [];
+
+    resultTypes.forEach((resultType) => {
+      resultType.results?.forEach((result) => {
+        const topicId = result.topic?.id || result.topic_id;
+        if (topicId) {
+          existingTopicIds.add(topicId);
+        }
+      });
+    });
+
+    return existingTopicIds;
+  }
+
   <template>
     <div
+      {{didInsert this.onInsert}}
       {{didUpdate this.onSearchTermChange this.search.activeGlobalSearchTerm}}
       {{didUpdate this.checkAndAddAiResults this.totalResults}}
       {{this.markAiResults}}
     >
-      {{#if this.searchingWithAi}}
-        <div class="ai-quick-search-loading">
-          <div class="ai-quick-search-loading__content">
-            {{loadingSpinner}}
-          </div>
-        </div>
-      {{/if}}
     </div>
   </template>
 }

@@ -31,11 +31,11 @@ module PageObjects
         find(".sidebar-section-link[data-link-name='everything']").click
       end
 
-      def click_toggle_to_desktop_view_button
-        page.click_button(
-          I18n.t("js.desktop_view"),
-          class: "sidebar-footer-actions-toggle-mobile-view",
-        )
+      def click_edit_categories_dropdown_option
+        find("[data-section-name='categories'] .sidebar-section-header-dropdown").click
+        find(
+          ".sidebar-section-header-dropdown-menu-content [data-menu-option-id='edit-categories']",
+        ).click
       end
 
       def click_outside

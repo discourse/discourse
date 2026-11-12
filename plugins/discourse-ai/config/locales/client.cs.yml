@@ -8,6 +8,16 @@ cs:
   admin_js:
     admin:
       dashboard:
+        sections:
+          ask_ai:
+            title: "Zeptejte se AI"
+        ask_ai:
+          title: "Zeptejte se AI"
+          reports:
+            retry_questions: "Zkuste znovu"
+          date: "Datum"
+          outcomes:
+            failed: "Neúspěšný"
         reports:
           filters:
             sort_by:
@@ -38,38 +48,114 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      dsa_classification:
+        suggest: "Navrhnout s AI"
+      copied: "Zkopírováno"
+      ai_decoded_transcript:
+        tool: "Nástroj"
+        type: "Typ"
+        error: "Chyba"
+        response: "Odpověď"
+      discourse_workflows:
+        ai_agent:
+          mode: "Režim"
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Jméno"
+          type: "Typ"
+          type_score: "Skóre"
+      ai_tool_approval:
+        loading: "Načítá se..."
+        tool: "Akce"
+        user: "Uživatel"
+        approve: "Schválení"
+        reject: "Odmítnout"
+        approved: "Schválen"
+        rejected: "Odmítnuto"
       llm_selector:
         none: "Žádný"
       features:
-        back: "Zpět"
-        disabled: "(vypnuto)"
-        groups: "Skupiny:"
+        table:
+          status: "Stav"
+          enabled: "Zapnuto"
+          feature: "Funkce"
+          groups: "Skupiny"
+        who_can_use:
+          no_one: "Nikdo"
+        status:
+          "on": "Zapnuto"
+          "off": "Vypnuto"
+        chatbot:
+          places:
+            personal_messages: "Soukromé zprávy"
+            chat_direct_messages: "Zprávy v chatu"
+            none: "Není k dispozici"
         no_agent: "Nenastaveno"
         no_groups: "Žádná"
         edit: "Nastavení"
-        expand_list:
-          one: "(%{count} další)"
-          few: "(%{count} další)"
-          many: "(%{count} další)"
-          other: "(%{count} další)"
-        collapse_list: "(zobrazit méně)"
+        nav:
+          enabled: "Zapnuto"
         filters:
           all: "Vše"
           reset: "obnovit výchozí"
+        sentiment:
+          sentiment: "Sentiment"
+          enabled: "Zapnuto"
+          setting_groups:
+            sentiment: "Sentiment"
         search:
           name: "Vyhledávání"
+          ask_ai: "Zeptejte se AI"
+        embeddings:
+          related_topics: "Související témata"
         ai_helper:
           proofread: Korektura textu
           explain: "Vysvětlit"
           smart_dates: "Chytré datumy"
           markdown_tables: "Generovat Markdown tabulku"
           custom_prompt: "Vlastní pokyn"
+        image_caption:
+          setting_groups:
+            settings: "Nastavení"
         spam:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        sections:
+          advanced: "Pokročilé"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorie"
+          ai_translation_personal_messages:
+            label: "Soukromé zprávy"
+            choices:
+              none: "Žádný"
+              all: "Vše"
+          content_localization_language_switcher:
+            choices:
+              none: "Nikdo"
+              all: "Všichni"
+        model_progress:
+          detail:
+            retry: "Zkuste znovu"
+            columns:
+              locale: "Jazyk"
+              pending: "Čeká na schválení"
+              total: "Celkem"
+          targets:
+            post:
+              title: "Příspěvky"
+            topic:
+              title: "Témata"
+            category:
+              title: "Kategorie"
+            tag:
+              title: "Štítky"
+        admin_actions:
+          enabled: "Zapnuto"
         stats:
           eta_minutes:
             one: "%{count} minutu"
@@ -94,6 +180,8 @@ cs:
             other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Žádný"
+        no_decision_model_selected: "Žádný"
         last_seven_days: "Posledních 7 dní"
         enable: "Zapnout"
         save_button: "Uložit změny"
@@ -112,8 +200,44 @@ cs:
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
+      logs:
+        short_title: "Protokoly"
+        retry: "Zkusit znovu"
+        apply: "Použít"
+        successful: "Úspěšný"
+        failed: "Neúspěšný"
+        unknown: "Neznámá"
+        time: "Čas"
+        when: "Kdy"
+        outcome: "Výsledky"
+        feature: "Funkce"
+        model: "Model"
+        request: "Požadavek"
+        user: "Uživatel"
+        context: "Kontext"
+        topic: "Témata"
+        post: "Příspěvek"
+        post_short: "Příspěvek č. %{id}"
+        duration: "Doba trvání"
+        actions: "Akce"
+        view_details: "Podrobnosti"
+        periods:
+          hour: "Poslední hodina"
+          day: "Posledních 24 hodin"
+          week: "Posledních 7 dní"
+          custom: "Přizpůsobené"
+        detail:
+          request: "Požadavek"
+          response: "Odpověď"
+          context: "Kontext"
+          copy_request: "Kopírovat požadavek"
+          copy_response: "Kopírovat odpověď"
+          network_error: "Chyba sítě"
+        retention:
+          summary_stage: "Souhrn"
+          deleted_stage: "Smazáno"
+          save: "Uložit"
       ai_agent:
-        back: "Zpět"
         name: "Jméno"
         edit: "Upravit"
         export: "Export"
@@ -122,7 +246,18 @@ cs:
         user: Uživatel
         save: "Uložit"
         enabled: "Zapnuto?"
+        mcp_tools_modal:
+          select_all: "Vybrat vše"
+          clear_all: "Zrušit vše"
+        duplicate: "Duplikovat"
+        copy_name: "Kopie %{name}"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:
@@ -135,7 +270,6 @@ cs:
           button: "Přidat soubory"
           uploading: "Nahrává se..."
       tools:
-        back: "Zpět"
         export: "Export"
         import: "Import"
         name: "Název"
@@ -154,17 +288,53 @@ cs:
         short_title: "Pověření"
         name: "Název"
         secret: "Hodnota"
-        back: "Zpět"
         save: "Uložit"
         edit: "Upravit"
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
-      llms:
-        display_name: "Název"
+      decision_models:
+        no_preset: "Žádný"
+        display_name: "Jméno"
+        model: "Model"
+        edit: "Upravit"
+        delete: "Smazat"
+        test: "Spustit test"
+        providers:
+          CDCK: "CDCK"
+      mcp_servers:
+        name: "Název"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Připojeno"
+        oauth_connect: "Připojit"
+        oauth_hide_details: "Skrýt podrobnosti"
+        enabled: "Zapnuto"
         save: "Uložit"
         edit: "Upravit"
-        back: "Zpět"
+        delete: "Smazat"
+        tools_modal:
+          required: "Povinné"
+      models:
+        name: "Jméno"
+        type: "Typ"
+        edit: "Upravit"
+        select_type: "Vybrat"
+        types:
+          embedding: "Zabudování"
+        filters:
+          all: "Všechny typy"
+          reset: "Odstranit filtry"
+      llms:
+        display_name: "Název"
+        vision_modes:
+          disabled:
+            title: "Vypnuto"
+        save: "Uložit"
+        edit: "Upravit"
         delete: Smazat
         quotas:
           group: "Skupina"
@@ -180,9 +350,6 @@ cs:
         usage:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
         tests:
@@ -195,7 +362,6 @@ cs:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -203,6 +369,8 @@ cs:
           mistral: "Mistral"
           open_router: "OpenRouter"
           fake: "Přizpůsobené"
+        provider_fields:
+          region: "Region"
       related_topics:
         title: "Související témata"
         pill: "Související"
@@ -210,13 +378,7 @@ cs:
         title: "Navrhněte změny pomocí AI"
         description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
         selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
-        suggest: "Navrhnout s AI"
         suggest_errors:
-          too_many_tags:
-            one: "Můžete mít max. %{count} štítek"
-            few: "Můžete mít max. %{count} štítky"
-            many: "Můžete mít max. %{count} štítků"
-            other: "Můžete mít max. %{count} štítků"
           no_suggestions: "Nejsou k dispozici žádné návrhy"
         missing_content: "Chcete-li generovat návrhy, zadejte nějaký obsah."
         context_menu:
@@ -250,14 +412,11 @@ cs:
           select: "Vybrat"
           selected: "Zaškrtnuté"
           try_again: "Zkusit znovu"
-        image_caption:
-          button_label: "Popisek pomocí AI"
-          generating: "Generování popisku..."
-          credits: "Popisek od AI"
-          save_caption: "Uložit"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
+      reviewables:
+        ai_tool_action:
+          tool: "Nástroj"
       embeddings:
-        back: "Zpět"
         save: "Uložit"
         delete: "Smazat"
         edit: "Upravit"
@@ -269,18 +428,28 @@ cs:
           hugging_face: "Hugging Face"
           open_ai: "OpenAI"
           google: "Google"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Přizpůsobené"
-        semantic_search_results:
-          unavailable: "Výsledky AI nejsou k dispozici"
         semantic_search_tooltips:
           results_explanation: "Pokud je tato funkce povolena, budou níže přidány další výsledky vyhledávání pomocí umělé inteligence."
-        ai_generated_result: "Výsledek hledání nalezen pomocí AI"
         quick_search:
           suffix: "ve všech tématech a příspěvcích s AI"
       ai_artifact:
+        editor:
+          version: "Verze"
+          default: "Výchozí"
+          option_on: "Zapnuto"
+          option_off: "Vypnuto"
+          apply: "Použít"
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
+        share: "Sdílet"
+        create_link: "Vytvořit odkaz"
+        copy_link: "Kopírovat odkaz"
+        filter_all: "Vše"
+        filter_standalone: "Samostatná"
       ai_bot:
+        llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
         try_again: "Zkusit znovu"
@@ -294,8 +463,7 @@ cs:
           title: "Zobrazit interakci s umělou inteligencí"
           copy_request: "Kopírovat požadavek"
           copy_response: "Kopírovat odpověď"
-          request_tokens: "Tokeny požadavku:"
-          response_tokens: "Tokeny odpovědi:"
+          duration_label: "Doba trvání:"
           request: "Požadavek"
           response: "Odpověď"
           next_log: "Další"
@@ -340,13 +508,14 @@ cs:
           placeholder: "Zeptejte se..."
           new: "Nová otázka"
           messages_sidebar_title: "Konverzace"
+          starred: "Oblíbené"
           today: "Dnes"
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
           upload_files: "Nahrát soubory"
+          scroll_to_bottom: "Přejít na konec"
+          editing_post: "Příspěvek je upravován"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sentiment_analysis:
           filter_types:
             all: "Vše"
@@ -374,11 +543,28 @@ cs:
             compact: "Kompaktní"
             expanded: "Rozšířený"
             expanded_description: "se souhrny AI"
+      ai_search:
+        related_topics: "Související témata"
+        related_replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
+        tabs:
+          ask: "Zeptejte se AI"
+          topics: "Témata"
+          messages: "Zprávy"
       discobot_discoveries:
-        regular_results: "Témata"
-        collapse: "Sbalit"
-        tooltip:
-          actions:
-            disable: "Vypnout"
+        main_title: "Zeptejte se AI"
+        legacy:
+          regular_results: "Témata"
+          collapse: "Sbalit"
+          tooltip:
+            actions:
+              disable: "Vypnout"
+        search_all_topics: "Všechna témata"
+        search_messages: "Zprávy"
+        sources:
+          related_discussions: "Související témata"
       user_preferences:
         empty: "Momentálně nejsou k dispozici žádná relevantní nastavení."

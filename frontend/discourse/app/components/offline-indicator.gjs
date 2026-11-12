@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class OfflineIndicator extends Component {
@@ -21,9 +21,9 @@ export default class OfflineIndicator extends Component {
       <div class="offline-indicator">
         <span>{{i18n "offline_indicator.no_internet"}}</span>
         <DButton
-          @label="offline_indicator.refresh_page"
-          @display="link"
           @action={{this.refresh}}
+          @display="link"
+          @label="offline_indicator.refresh_page"
         />
       </div>
     {{/if}}

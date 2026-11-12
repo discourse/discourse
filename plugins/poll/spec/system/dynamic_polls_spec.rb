@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Dynamic polls", type: :system do
+describe "Dynamic polls" do
   fab!(:admin)
   fab!(:topic)
 
@@ -12,12 +12,8 @@ describe "Dynamic polls", type: :system do
     SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
   end
 
-  def cook_poll(raw)
-    PostCreator.create!(admin, topic_id: topic.id, raw: raw)
-  end
-
   it "allows editing poll options after window while preserving votes on existing options" do
-    post = cook_poll(<<~MD)
+    post = PostCreator.create!(admin, topic_id: topic.id, raw: <<~MD)
       [poll dynamic=true]
       * A
       * B

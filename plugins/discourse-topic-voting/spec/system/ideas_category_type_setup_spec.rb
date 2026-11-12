@@ -1,0 +1,138 @@
+# frozen_string_literal: true
+
+RSpec.describe "Ideas Category Type Setup" do
+  fab!(:admin)
+
+  let(:category_page) { PageObjects::Pages::Category.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:toast) { PageObjects::Components::Toasts.new }
+
+  before { sign_in(admin) }
+
+  it "works with correct defaults and configures site settings and category setting automatically" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("ideas").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
+
+    expect(form.field("name").value).to eq("Ideas")
+    expect(
+      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
+        "checked"
+      ],
+    ).to eq(true)
+    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq("bulb")
+
+    expect(banner).to be_visible
+    banner.click_save
+
+    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
+    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-ideas")
+    expect(SiteSetting.topic_voting_enabled).to eq(true)
+    category = Category.find_by(name: "Ideas")
+    expect(Category.can_vote?(category.id)).to eq(true)
+  end
+
+  it "can remove the ideas type picked on the setup screen while creating a category" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("ideas").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
+
+    form.field("name").fill_in("No longer ideas")
+
+    category_page.toggle_advanced_settings
+
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.remove_selected_option("Ideas")
+    banner.click_save
+
+    expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
+    category = Category.find_by(name: "No longer ideas")
+    expect(category.category_types.keys).to eq(%i[discussion])
+    expect(Category.can_vote?(category.id)).to eq(false)
+  end
+
+  context "when a related site setting has been customized" do
+    before { SiteSetting.topic_voting_tl0_vote_limit = 10 }
+
+    it "prefills the customized value and keeps it when creating an ideas category" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("ideas").click
+      find(".edit-category-ideas").click
+
+      expect(form.field("category_type_site_settings.topic_voting_tl0_vote_limit").value).to eq(
+        "10",
+      )
+
+      banner.click_save
+      expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
+
+      expect(SiteSetting.topic_voting_tl0_vote_limit).to eq(10)
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "topic_voting_tl0_vote_limit",
+        ),
+      ).to be_empty
+    end
+  end
+
+  context "when there is an ideas category already configured" do
+    fab!(:category)
+
+    before do
+      DiscourseTopicVoting::Categories::Types::Ideas.configure_category(
+        category,
+        guardian: admin.guardian,
+      )
+    end
+
+    it "does not preload basic data for the ideas category type" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("ideas").click
+
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
+      expect(form.field("name").value).to eq("")
+      expect(
+        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
+          "checked"
+        ],
+      ).to eq(nil)
+    end
+
+    it "can edit the settings of the ideas category in a tab" do
+      visit("/c/#{category.slug}/edit/ideas")
+
+      form.field("category_type_site_settings.topic_voting_show_who_voted").toggle
+
+      banner.click_save
+      expect(toast).to have_success(I18n.t("js.saved"))
+
+      expect(SiteSetting.topic_voting_show_who_voted).to eq(false)
+    end
+
+    it "hides vote limit settings when limit member votes is unchecked" do
+      visit("/c/#{category.slug}/edit/ideas")
+
+      expect(page).to have_field("category_type_site_settings.topic_voting_tl0_vote_limit")
+
+      form.field("category_type_site_settings.topic_voting_enable_vote_limits").toggle
+
+      expect(page).to have_no_field("category_type_site_settings.topic_voting_tl0_vote_limit")
+      expect(page).to have_no_field("category_type_site_settings.topic_voting_alert_votes_left")
+    end
+  end
+
+  context "when visiting the Ideas tab for a non-ideas category" do
+    fab!(:category)
+
+    it "shows the not ideas type message" do
+      visit("/c/#{category.slug}/edit/ideas")
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "ideas"),
+      )
+    end
+  end
+end

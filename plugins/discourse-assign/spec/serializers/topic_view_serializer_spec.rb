@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe TopicViewSerializer do
   fab!(:user)
   fab!(:topic)
@@ -12,7 +10,7 @@ RSpec.describe TopicViewSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   it "includes assigned user in serializer" do
@@ -21,6 +19,19 @@ RSpec.describe TopicViewSerializer do
     expect(serializer.as_json[:topic_view][:assigned_to_user][:name]).to eq(user.name)
     expect(serializer.as_json[:topic_view][:assigned_to_user][:username]).to eq(user.username)
     expect(serializer.as_json[:topic_view][:assigned_to_group]).to be nil
+  end
+
+  it "omits the assigned user's name when names are disabled" do
+    SiteSetting.enable_names = false
+    Assigner.new(topic, user).assign(user)
+
+    assigned_user =
+      TopicViewSerializer.new(TopicView.new(topic), scope: guardian).as_json[:topic_view][
+        :assigned_to_user
+      ]
+
+    expect(assigned_user[:username]).to eq(user.username)
+    expect(assigned_user).not_to have_key(:name)
   end
 
   it "includes assigned group in serializer" do

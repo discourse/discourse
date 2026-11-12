@@ -1,0 +1,40 @@
+/* eslint-disable ember/no-classic-components */
+import Component from "@ember/component";
+import { computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/ui-kit/d-button";
+import { i18n } from "discourse-i18n";
+
+@tagName("")
+export default class DSaveControls extends Component {
+  @computed("model.isSaving", "saveDisabled")
+  get buttonDisabled() {
+    return this.model?.isSaving || this.saveDisabled;
+  }
+
+  @computed("model.isSaving")
+  get savingText() {
+    return this.model?.isSaving ? "saving" : "save";
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.set("saved", false);
+  }
+
+  <template>
+    <div class="controls save-button" ...attributes>
+      <DButton
+        class="btn-primary save-changes"
+        @action={{this.action}}
+        @disabled={{this.buttonDisabled}}
+        @label={{this.savingText}}
+      />
+      {{#if this.saved}}
+        <span class="saved">{{i18n "saved"}}</span>
+      {{/if}}
+
+      {{yield}}
+    </div>
+  </template>
+}

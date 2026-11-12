@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "htmlentities"
+
 class ExcerptParser < Nokogiri::XML::SAX::Document
   attr_reader :excerpt
 
@@ -34,7 +36,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     return "" if html.blank?
 
     length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
-    me = self.new(length, options)
+    me = new(length, options)
     parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
     catch(:done) { parser.parse(html) }
     excerpt = me.excerpt.strip
@@ -42,6 +44,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       options[:keep_onebox_body]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
     excerpt
+  end
+
+  def self.to_plain_text(excerpt)
+    @html_entities ||= HTMLEntities.new
+    @html_entities.decode(excerpt.to_s.gsub(/<[^>]*>/, "")).presence
   end
 
   def escape_attribute(v)
@@ -115,7 +122,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "article"
       @in_quote = !@keep_onebox_body if attributes.include?(%w[class onebox-body])
     when "header"
-      @in_quote = !@keep_onebox_source if attributes.include?(%w[class source])
+      classes = attributes.to_h["class"].to_s.split
+      @in_quote = !@keep_onebox_source if classes.include?("source")
     when "div", "span"
       attributes = Hash[*attributes.flatten]
 

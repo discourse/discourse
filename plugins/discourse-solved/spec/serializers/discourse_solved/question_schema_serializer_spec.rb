@@ -18,6 +18,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["upvoteCount"]).to eq(2)
       expect(json["answerCount"]).to eq(0)
       expect(json["datePublished"]).to eq(topic.created_at)
+      expect(json["dateModified"]).to be_present
     end
 
     it "serializes the author" do
@@ -26,8 +27,9 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       )
     end
 
-    it "does not include acceptedAnswer" do
+    it "does not include acceptedAnswer or suggestedAnswer" do
       expect(json).not_to have_key("acceptedAnswer")
+      expect(json).not_to have_key("suggestedAnswer")
     end
   end
 
@@ -37,7 +39,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
 
     subject(:json) do
       described_class
-        .new(topic, root: false, accepted_answer: answer_post)
+        .new(topic, root: false, accepted_answers: [answer_post])
         .serializable_hash
         .deep_stringify_keys
     end
@@ -46,13 +48,62 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["answerCount"]).to eq(1)
     end
 
-    it "includes the accepted answer" do
-      accepted = json["acceptedAnswer"]
+    it "includes accepted answer as an array of Answer objects" do
+      accepted = json["acceptedAnswer"].sole
       expect(accepted["@type"]).to eq("Answer")
+      expect(accepted["text"]).to be_present
+      expect(accepted["datePublished"]).to be_present
+      expect(accepted["dateModified"]).to be_present
       expect(accepted["upvoteCount"]).to eq(7)
       expect(accepted["author"]).to eq(
         { "@type" => "Person", "name" => answer_user.username, "url" => answer_user.full_url },
       )
+    end
+  end
+
+  context "with suggested answers" do
+    fab!(:answer_post) { Fabricate(:post, topic: topic) }
+    fab!(:suggested_post) { Fabricate(:post, topic: topic) }
+
+    subject(:json) do
+      described_class
+        .new(
+          topic,
+          root: false,
+          accepted_answers: [answer_post],
+          suggested_answers: [suggested_post],
+        )
+        .serializable_hash
+        .deep_stringify_keys
+    end
+
+    it "sets answerCount to total of accepted and suggested" do
+      expect(json["answerCount"]).to eq(2)
+    end
+
+    it "includes suggestedAnswer as an array of Answer objects" do
+      suggested = json["suggestedAnswer"].sole
+      expect(suggested["@type"]).to eq("Answer")
+      expect(suggested["text"]).to be_present
+      expect(suggested["datePublished"]).to be_present
+      expect(suggested["dateModified"]).to be_present
+      expect(suggested["upvoteCount"]).to eq(0)
+    end
+  end
+
+  context "with a first post longer than the excerpt limit" do
+    fab!(:long_topic, :topic)
+    fab!(:long_post) do
+      Fabricate(:post, topic: long_topic, raw: Array.new(120) { |i| "word#{i}" }.join(" "))
+    end
+
+    subject(:json) do
+      described_class.new(long_topic, root: false).serializable_hash.deep_stringify_keys
+    end
+
+    it "uses the full text of the first post" do
+      expect(long_post.raw.length).to be > SiteSetting.post_excerpt_maxlength
+      expect(json["text"]).to eq(long_post.raw)
     end
   end
 end

@@ -5,7 +5,7 @@
   max-width: 600px;
   display: flex;
   padding: 0;
-  z-index: z("dropdown");
+  z-index: calc(z("composer", "dropdown") + 1);
 
   &__trigger {
     .touch & {
@@ -56,10 +56,6 @@
     overflow: auto;
   }
 
-  .btn {
-    border-radius: 0;
-  }
-
   .arrow {
     position: absolute;
     color: var(--secondary);
@@ -96,55 +92,28 @@
 // should probably be renamed fk-d-menu__list
 .dropdown-menu {
   min-width: 200px;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-sidebar-vertical-gap);
+  padding: var(--space-1);
   margin: 0;
   list-style: none;
 
   &__item {
     .btn {
-      padding: 0.5em 1rem;
-      width: 100%;
-      justify-content: flex-start;
-      background: rgb(0, 0, 0, 0);
-      border-radius: 0;
-
-      &.-selected {
-        background: var(--d-hover);
-      }
-
-      &.btn-danger {
-        color: var(--danger);
-
-        .d-icon {
-          color: inherit;
-        }
-      }
-
-      &:hover,
-      &:focus,
-      &:focus-visible {
-        .discourse-no-touch & {
-          background: var(--d-hover);
-          color: var(--primary);
-
-          .d-icon {
-            color: inherit;
-          }
-
-          &.btn-danger {
-            background: var(--danger-low);
-            color: var(--danger);
-
-            .d-icon {
-              color: var(--danger-hover);
-            }
-          }
-        }
-      }
+      @include menu-item;
     }
   }
 
   &__divider {
     margin: 0;
+  }
+
+  &__subheader {
+    padding: var(--space-2) var(--d-sidebar-row-horizontal-padding)
+      var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    font-weight: bold;
   }
 }

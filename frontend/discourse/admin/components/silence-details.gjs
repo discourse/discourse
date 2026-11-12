@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
-import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -11,13 +10,13 @@ export default class SilenceDetails extends Component {
     <div class="penalty-reason-controls">
       <label>
         <div class="silence-reason-label">
-          {{trustHTML (i18n "admin.user.silence_reason_label")}}
+          {{i18n "admin.user.silence_reason_title"}}
         </div>
       </label>
-      <TextField
-        @value={{this.reason}}
-        @placeholderKey="admin.user.silence_reason_placeholder"
+      <DTextField
         class="silence-reason"
+        @placeholderKey="admin.user.silence_reason_placeholder"
+        @value={{this.reason}}
       />
     </div>
 
@@ -27,9 +26,9 @@ export default class SilenceDetails extends Component {
       </div>
     </label>
     <Textarea
-      @value={{this.message}}
       class="silence-message"
       placeholder={{i18n "admin.user.silence_message_placeholder"}}
+      @value={{this.message}}
     />
   </template>
 }

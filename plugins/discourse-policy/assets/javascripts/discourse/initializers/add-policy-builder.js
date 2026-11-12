@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import PolicyBuilder from "../components/modal/policy-builder";
+import PolicyBuilder from "../components/modal/policy-builder.gjs";
 
 function initializePolicyBuilder(api, container) {
   const currentUser = api.getCurrentUser();

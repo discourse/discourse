@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
@@ -52,7 +52,9 @@ export default class ReviewableIpLookup extends Component {
 
   get queryData() {
     return {
-      ip: this.ipAddress,
+      same_ip_user_id: this.target,
+      user_id: this.target,
+      ip_type: "last",
       exclude: this.target,
       order: "trust_level DESC",
     };
@@ -73,12 +75,12 @@ export default class ReviewableIpLookup extends Component {
         this.location = await ajax("/admin/users/ip-info", {
           data: { ip: this.ipAddress },
         });
-
-        const result = await ajax("/admin/users/total-others-with-same-ip", {
-          data: this.queryData,
-        });
-        this.totalOthersWithSameIP = result.total;
       }
+
+      const result = await ajax("/admin/users/total-others-with-same-ip", {
+        data: this.queryData,
+      });
+      this.totalOthersWithSameIP = result.total;
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -146,7 +148,7 @@ export default class ReviewableIpLookup extends Component {
   <template>
     {{#if this.showIpLookup}}
       {{#if this.loading}}
-        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       {{else if this.location}}
         <div class="reviewable-ip-lookup">
           <div class="review-insight__item">
@@ -181,9 +183,9 @@ export default class ReviewableIpLookup extends Component {
               {{#if this.totalOthersWithSameIP}}
                 <div class="review-insight__description">
                   <button
+                    class="btn-link ip-lookup-other-accounts-link"
                     type="button"
                     {{on "click" this.showOtherAccountsModal}}
-                    class="btn-link ip-lookup-other-accounts-link"
                   >
                     {{i18n
                       "ip_lookup.other_accounts_with_ip"
@@ -202,18 +204,18 @@ export default class ReviewableIpLookup extends Component {
 
 const OtherAccountsModal = <template>
   <DModal
+    class="ip-lookup-other-accounts-modal"
+    @closeModal={{@closeModal}}
     @title={{i18n
       "ip_lookup.other_accounts_with_ip"
       count=@model.totalOthersWithSameIP
     }}
-    @closeModal={{@closeModal}}
-    class="ip-lookup-other-accounts-modal"
   >
     <:body>
       {{#if @model.otherAccountsLoading}}
-        <ConditionalLoadingSpinner
-          @size="small"
+        <DConditionalLoadingSpinner
           @condition={{@model.otherAccountsLoading}}
+          @size="small"
         />
       {{else if @model.otherAccounts}}
         <IpLookupAccountsTable @accounts={{@model.otherAccounts}} />
@@ -222,13 +224,13 @@ const OtherAccountsModal = <template>
     <:footer>
       {{#if @model.canDeleteOtherAccounts}}
         <DButton
+          class="btn-danger"
           @action={{@model.deleteOtherAccounts}}
           @icon="triangle-exclamation"
           @translatedLabel={{i18n
             "ip_lookup.delete_other_accounts"
             count=@model.otherAccountsToDelete
           }}
-          class="btn-danger"
         />
       {{/if}}
     </:footer>

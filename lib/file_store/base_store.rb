@@ -40,7 +40,7 @@ module FileStore
     def upload_path
       path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
       return path if !Rails.env.test?
-      File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+      File.join(path, "test_#{Discourse.test_env_number}")
     end
 
     def self.temporary_upload_path(file_name, folder_prefix: "")
@@ -118,7 +118,7 @@ module FileStore
     def get_path_for(type, id, sha, extension)
       depth = get_depth_for(id)
       tree = File.join(*sha[0, depth].chars, "")
-      "#{type}/#{depth + 1}X/#{tree}#{sha}#{extension}"
+      "#{type}/#{depth + 1}X/#{tree}#{File.basename("#{sha}#{extension}")}"
     end
 
     def get_path_for_upload(upload)
@@ -153,12 +153,17 @@ module FileStore
       get_path_for("optimized", upload.id, upload.sha1, extension)
     end
 
-    CACHE_DIR = "#{Rails.root}/tmp/download_cache/"
+    CACHE_DIR =
+      if Rails.env.test?
+        "#{Rails.root.join("tmp/download_cache_test_#{Discourse.test_env_number}/")}"
+      else
+        "#{Rails.root.join("tmp/download_cache/")}"
+      end
     CACHE_MAXIMUM_SIZE = 500
     CACHE_EVICT_COUNT = 100
 
     def get_cache_path_for(filename)
-      "#{CACHE_DIR}#{filename}"
+      File.join(CACHE_DIR, RailsMultisite::ConnectionManagement.current_db, File.basename(filename))
     end
 
     def get_from_cache(filename)
@@ -173,7 +178,7 @@ module FileStore
       FileUtils.cp(file.path, path)
 
       DiskCacheEviction.evict(
-        dir: CACHE_DIR,
+        dir: File.join(CACHE_DIR, "*"),
         max_entries: CACHE_MAXIMUM_SIZE,
         evict_count: CACHE_EVICT_COUNT,
       )
@@ -194,7 +199,8 @@ module FileStore
           ].max.kilobytes
 
           if object.respond_to?(:secure) ? object.secure? : object.upload.secure?
-            url = Discourse.store.signed_url_for_path(object.url)
+            url =
+              Discourse.store.signed_url_for_path(object.url, include_content_disposition: false)
           else
             url = Discourse.store.cdn_url(object.url)
           end

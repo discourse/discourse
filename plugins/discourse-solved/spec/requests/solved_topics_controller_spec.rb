@@ -4,6 +4,7 @@ describe DiscourseSolved::SolvedTopicsController do
   fab!(:user)
   fab!(:another_user, :user)
   fab!(:admin)
+  fab!(:tl4_user, :trust_level_4)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic:) }
   fab!(:answer_post) { Fabricate(:post, topic:, user:) }
@@ -21,6 +22,34 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(result["user_solved_posts"]).to be_present
         expect(result["user_solved_posts"].length).to eq(1)
         expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post.id)
+      end
+
+      it "returns the translated topic_title and excerpt" do
+        viewer = Fabricate(:user, locale: "ja")
+        SiteSetting.content_localization_enabled = true
+        topic.update!(locale: "en")
+        answer_post.update!(raw: "Original answer body", locale: "en")
+        Fabricate(:topic_localization, topic: topic, locale: "ja", fancy_title: "翻訳された題名")
+        Fabricate(:post_localization, post: answer_post, locale: "ja", cooked: "<p>翻訳された回答</p>")
+
+        sign_in(viewer)
+        get "/solution/by_user.json", params: { username: user.username }
+
+        solved_post = response.parsed_body["user_solved_posts"][0]
+        expect(solved_post["topic_title"]).to eq("翻訳された題名")
+        expect(solved_post["excerpt"]).to eq("翻訳された回答")
+      end
+
+      it "returns escaped topic_title" do
+        topic.update_columns(title: "<script>alert('xss')</script> test", fancy_title: nil)
+        sign_in(user)
+
+        get "/solution/by_user.json", params: { username: user.username }
+
+        expect(response.status).to eq(200)
+        title = response.parsed_body["user_solved_posts"][0]["topic_title"]
+
+        expect(title).to eq("&lt;script&gt;alert(&lsquo;xss&rsquo;)&lt;/script&gt; test")
       end
 
       it "returns 404 for a non-existent user" do
@@ -51,6 +80,84 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(response.status).to eq(200)
         result = response.parsed_body
         expect(result["user_solved_posts"].length).to eq(1)
+      end
+
+      describe "with multiple solutions enabled" do
+        fab!(:answer_post2) { Fabricate(:post, topic:, user:) }
+        fab!(:topic_answer2) { Fabricate(:topic_answer, solved_topic:, post: answer_post2) }
+        before { SiteSetting.solved_allow_multiple_solutions = true }
+
+        it "returns multiple solved posts from the same topic for the specified user" do
+          sign_in(admin)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_present
+          expect(result["user_solved_posts"].length).to eq(2)
+          expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post2.id)
+          expect(result["user_solved_posts"][1]["post_id"]).to eq(answer_post.id)
+        end
+      end
+    end
+
+    context "with activity visibility restrictions" do
+      before { SiteSetting.hide_new_user_profiles = false }
+
+      it "allows the target user and administrators to see hidden activity" do
+        SiteSetting.hide_user_activity_tab = true
+
+        sign_in(user)
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        sign_in(admin)
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+      end
+
+      it "blocks another user's activity only when activity is hidden" do
+        SiteSetting.hide_user_activity_tab = false
+        sign_in(another_user)
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        SiteSetting.hide_user_activity_tab = true
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
+      end
+
+      it "blocks anonymous access to activity only when activity is hidden" do
+        SiteSetting.login_required = false
+        SiteSetting.hide_user_profiles_from_public = false
+        SiteSetting.hide_user_activity_tab = false
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["user_solved_posts"].pluck("post_id")).to eq([answer_post.id])
+
+        SiteSetting.hide_user_activity_tab = true
+
+        get "/solution/by_user.json", params: { username: user.username }
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
+      end
+
+      it "blocks moderators from viewing another user's hidden activity" do
+        SiteSetting.hide_user_activity_tab = true
+        sign_in(Fabricate(:moderator))
+
+        get "/solution/by_user.json", params: { username: user.username }
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.parsed_body).not_to have_key("user_solved_posts")
       end
     end
 
@@ -111,6 +218,100 @@ describe DiscourseSolved::SolvedTopicsController do
         expect(response.status).to eq(200)
         result = response.parsed_body
         expect(result["user_solved_posts"]).to be_empty
+      end
+
+      context "with posts hidden from the current user" do
+        before do
+          answer_post.update_columns(
+            raw: "secret hidden accepted answer raw",
+            cooked: "<p>secret hidden accepted answer cooked</p>",
+            hidden: true,
+            hidden_at: Time.zone.now,
+            hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+          )
+          answer_post.reload
+        end
+
+        it "does not return hidden posts or whispers" do
+          whisper_answer_post =
+            Fabricate(
+              :post,
+              topic: Fabricate(:topic),
+              user:,
+              raw: "secret whisper accepted answer raw",
+            )
+          whisper_answer_post.update_columns(
+            post_type: Post.types[:whisper],
+            cooked: "<p>secret whisper accepted answer cooked</p>",
+          )
+          Fabricate(
+            :solved_topic,
+            topic: whisper_answer_post.topic,
+            answer_post: whisper_answer_post,
+          )
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_empty
+          expect(response.body).not_to include(answer_post.raw)
+          expect(response.body).not_to include(answer_post.cooked)
+          expect(response.body).not_to include(whisper_answer_post.raw)
+          expect(response.body).not_to include(whisper_answer_post.cooked)
+        end
+      end
+
+      context "with invisible topics" do
+        before { topic.update!(visible: false) }
+
+        it "does not return posts in invisible topics to another user" do
+          sign_in(another_user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_empty
+        end
+
+        it "does not return posts in invisible topics to anonymous users" do
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_empty
+        end
+
+        it "returns posts in invisible topics to the post owner" do
+          sign_in(user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
+
+        it "returns posts in invisible topics to trust level 4 users" do
+          sign_in(tl4_user)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
+
+        it "returns posts in invisible topics to staff" do
+          sign_in(admin)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"].length).to eq(1)
+        end
       end
     end
   end

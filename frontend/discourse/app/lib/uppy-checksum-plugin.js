@@ -11,16 +11,18 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
     this.capabilities = opts.capabilities;
   }
 
+  install() {
+    this._install(this._generateChecksum);
+  }
+
+  uninstall() {
+    this._uninstall(this._generateChecksum);
+  }
+
   _canUseSubtleCrypto() {
     if (!this._secureContext()) {
       this._consoleWarn(
         "Cannot generate cryptographic digests in an insecure context (not HTTPS)."
-      );
-      return false;
-    }
-    if (this.capabilities.isIE11) {
-      this._consoleWarn(
-        "The required cipher suite is unavailable in Internet Explorer 11."
       );
       return false;
     }
@@ -94,13 +96,5 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
 
   _hasCryptoCipher() {
     return window.crypto?.subtle?.digest;
-  }
-
-  install() {
-    this._install(this._generateChecksum);
-  }
-
-  uninstall() {
-    this._uninstall(this._generateChecksum);
   }
 }

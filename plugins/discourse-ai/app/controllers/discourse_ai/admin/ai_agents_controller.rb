@@ -3,6 +3,8 @@
 module DiscourseAi
   module Admin
     class AiAgentsController < ::Admin::AdminController
+      InvalidSubagentIds = Class.new(StandardError)
+
       requires_plugin PLUGIN_NAME
 
       before_action :find_ai_agent, only: %i[edit update destroy create_user export]
@@ -11,7 +13,7 @@ module DiscourseAi
         ai_agents =
           AiAgent
             .ordered
-            .includes(:user, :uploads)
+            .includes(:user, :uploads, :rag_document_sources, ai_agent_mcp_servers: :ai_mcp_server)
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
@@ -35,7 +37,21 @@ module DiscourseAi
             }
           end
 
+        DiscourseAi::Completions::NativeTools.all.each do |native_tool|
+          tools << {
+            id: "#{DiscourseAi::Completions::NativeTools::PREFIX}#{native_tool.id}",
+            name: native_tool.name,
+            help: native_tool.help,
+            native: true,
+          }
+        end
+
         llms = DiscourseAi::Configuration::LlmEnumerator.values_for_serialization
+        mcp_servers =
+          AiMcpServer
+            .where(enabled: true)
+            .order(:name)
+            .map { |server| serialize_mcp_server(server) }
 
         sorted_tools = tools.sort_by { |t| t.try(:name) || t[:name] || "" }
 
@@ -44,6 +60,7 @@ module DiscourseAi
                  meta: {
                    tools: sorted_tools,
                    llms: llms,
+                   mcp_servers: mcp_servers,
                    settings: {
                      rag_images_enabled: SiteSetting.ai_rag_images_enabled,
                    },
@@ -59,33 +76,59 @@ module DiscourseAi
       end
 
       def create
-        ai_agent = AiAgent.new(ai_agent_params.except(:rag_uploads))
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
+        mcp_server_tool_names = params.delete(:mcp_server_tool_names) || {}
+        ai_agent = AiAgent.new(params.except(:rag_uploads))
+
         if ai_agent.save
-          RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids)
+          ensure_ai_agent_user(ai_agent)
+          if mcp_server_ids
+            sync_mcp_server_assignments(ai_agent, mcp_server_ids, mcp_server_tool_names)
+          end
+          RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids(ai_agent))
           log_ai_agent_creation(ai_agent)
 
           render_ai_agent_resource(ai_agent, status: :created)
         else
           render_json_error ai_agent
         end
+      rescue InvalidSubagentIds => e
+        render_json_error e.message, status: :unprocessable_entity
       end
 
       def create_user
+        raise Discourse::InvalidAccess if !@ai_agent.supports_bot_user?
+
         user = @ai_agent.create_user!
         render json: BasicUserSerializer.new(user, root: "user")
       end
 
       def update
+        params = ai_agent_params
+        mcp_server_ids = params.delete(:ai_mcp_server_ids)
+        mcp_server_tool_names = params.delete(:mcp_server_tool_names) || {}
         initial_attributes = @ai_agent.attributes.dup
+        initial_spam_settings = AiModerationSetting.spam if params.key?(:default_llm_id)
 
-        if @ai_agent.update(ai_agent_params.except(:rag_uploads))
-          RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids)
+        if @ai_agent.update(params.except(:rag_uploads))
+          ensure_ai_agent_user(@ai_agent)
+          if mcp_server_ids
+            sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
+          end
+          if params.key?(:rag_uploads) || params.key?(:rag_chunk_tokens) ||
+               params.key?(:rag_chunk_overlap_tokens)
+            RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
+          end
           log_ai_agent_update(@ai_agent, initial_attributes)
+          log_ai_spam_model_update(initial_spam_settings)
 
           render_ai_agent_resource(@ai_agent)
         else
           render_json_error @ai_agent
         end
+      rescue InvalidSubagentIds => e
+        render_json_error e.message, status: :unprocessable_entity
       end
 
       def destroy
@@ -126,15 +169,21 @@ module DiscourseAi
 
           if existing_agent && force_update
             agent = importer.import!(overwrite: true)
+            ensure_ai_agent_user(agent)
             log_ai_agent_update(agent, initial_attributes)
             render_ai_agent_resource(agent)
           else
             agent = importer.import!(overwrite: force_update)
+            ensure_ai_agent_user(agent)
             log_ai_agent_creation(agent)
             render_ai_agent_resource(agent, status: :created)
           end
         rescue DiscourseAi::AgentImporter::ImportError => e
-          render_json_error e.message, status: :unprocessable_entity
+          render json: {
+                   errors: [e.message],
+                   conflicts: e.conflicts,
+                 },
+                 status: :unprocessable_entity
         rescue StandardError => e
           Rails.logger.error("AI Agent import failed: #{e.message}")
           render_json_error "Import failed: #{e.message}", status: :unprocessable_entity
@@ -170,6 +219,7 @@ module DiscourseAi
           DiscourseAi::AiBot::ResponseHttpStreamer.queue_streamed_reply(
             io: io,
             agent: nil,
+            llm_model: nil,
             user: nil,
             topic: nil,
             query: "",
@@ -189,7 +239,7 @@ module DiscourseAi
 
         return render_json_error(I18n.t("discourse_ai.errors.agent_disabled")) if !agent.enabled
 
-        if agent.default_llm.blank?
+        if agent.default_llm.blank? && SiteSetting.ai_default_llm_model.blank?
           return render_json_error(I18n.t("discourse_ai.errors.no_default_llm"))
         end
 
@@ -225,12 +275,22 @@ module DiscourseAi
           end
         end
 
+        route =
+          DiscourseAi::AiBot::ConversationRoute.resolve(
+            authorization_user: current_user,
+            modality: :streaming,
+            agent_id: agent.id,
+            selection_source: :snapshot,
+            allow_general_fallback: false,
+          )
+
         hijack = request.env["rack.hijack"]
         io = hijack.call
 
         DiscourseAi::AiBot::ResponseHttpStreamer.queue_streamed_reply(
           io: io,
-          agent: agent,
+          agent: route.agent_record,
+          llm_model: route.model,
           user: user,
           topic: topic,
           query: params[:query].to_s,
@@ -238,6 +298,8 @@ module DiscourseAi
           current_user: current_user,
           custom_tools: custom_tools,
         )
+      rescue DiscourseAi::AiBot::ConversationRoute::Error => error
+        render_json_error error.message
       end
 
       private
@@ -403,8 +465,17 @@ module DiscourseAi
         @ai_agent = AiAgent.find(params[:id])
       end
 
-      def attached_upload_ids
-        ai_agent_params[:rag_uploads].to_a.map { |h| h[:id] }
+      def attached_upload_ids(agent)
+        return agent.uploads.pluck(:id) unless ai_agent_params.key?(:rag_uploads)
+
+        manual_upload_ids = ai_agent_params[:rag_uploads].to_a.map { |upload| upload[:id] }
+        source_upload_ids = agent.rag_document_sources.where.not(upload_id: nil).pluck(:upload_id)
+
+        manual_upload_ids.concat(source_upload_ids).uniq
+      end
+
+      def ensure_ai_agent_user(agent)
+        agent.ensure_user! if agent.needs_user?
       end
 
       def ai_agent_params
@@ -418,16 +489,15 @@ module DiscourseAi
             :priority,
             :top_p,
             :temperature,
+            :thinking_effort,
             :default_llm_id,
             :user_id,
-            :max_context_posts,
             :vision_enabled,
             :vision_max_pixels,
             :rag_chunk_tokens,
             :rag_chunk_overlap_tokens,
             :rag_conversation_chunks,
             :rag_llm_model_id,
-            :question_consolidator_llm_id,
             :allow_chat_channel_mentions,
             :allow_chat_direct_messages,
             :allow_topic_mentions,
@@ -435,12 +505,30 @@ module DiscourseAi
             :show_thinking,
             :forced_tool_count,
             :force_default_llm,
-            :execution_mode,
             :max_turn_tokens,
             :compression_threshold,
+            :require_approval,
             allowed_group_ids: [],
+            mcp_server_ids: [],
             rag_uploads: [:id],
+            rag_document_sources_attributes: %i[id url refresh_interval_hours _destroy],
           )
+
+        if payload[:mcp_server_ids].is_a?(Array)
+          permitted[:ai_mcp_server_ids] = payload[:mcp_server_ids].filter_map(&:presence).map(
+            &:to_i
+          )
+          permitted.delete(:mcp_server_ids)
+        end
+
+        if payload.key?(:subagent_ids)
+          permitted[:subagent_ids] = normalize_subagent_ids(payload[:subagent_ids])
+        end
+
+        permitted[:mcp_server_tool_names] = normalize_mcp_server_tool_names(
+          payload[:mcp_server_tool_names],
+          permitted[:ai_mcp_server_ids],
+        )
 
         if tools = payload[:tools]
           permitted[:tools] = permit_tools(tools)
@@ -503,6 +591,87 @@ module DiscourseAi
         examples.map { |example_arr| example_arr.take(2).map(&:to_s) }
       end
 
+      def normalize_subagent_ids(raw_ids)
+        unless raw_ids.is_a?(Array)
+          raise InvalidSubagentIds, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids")
+        end
+
+        raw_ids
+          .map do |id|
+            valid_id = id.is_a?(Integer) || id.is_a?(String) && id.match?(/\A-?\d+\z/)
+            unless valid_id
+              raise InvalidSubagentIds, I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids")
+            end
+
+            id.is_a?(Integer) ? id : Integer(id, 10)
+          end
+          .uniq
+      end
+
+      def normalize_mcp_server_tool_names(raw_tool_names, allowed_server_ids)
+        return {} if !raw_tool_names.respond_to?(:to_unsafe_h) && !raw_tool_names.is_a?(Hash)
+
+        allowed_ids = Array(allowed_server_ids).map(&:to_i).to_set
+        raw_hash =
+          if raw_tool_names.respond_to?(:to_unsafe_h)
+            raw_tool_names.to_unsafe_h
+          else
+            raw_tool_names
+          end
+
+        raw_hash.each_with_object({}) do |(server_id, tool_names), hash|
+          normalized_server_id = server_id.to_i
+          next if !allowed_ids.include?(normalized_server_id)
+          next if !tool_names.is_a?(Array)
+
+          normalized_tool_names = tool_names.filter_map { |name| name.to_s.presence }.uniq
+          next if normalized_tool_names.blank?
+
+          hash[normalized_server_id.to_s] = normalized_tool_names
+        end
+      end
+
+      def sync_mcp_server_assignments(ai_agent, submitted_server_ids, mcp_server_tool_names)
+        submitted_server_ids = Array(submitted_server_ids).map(&:to_i)
+        preserved_disabled_server_ids =
+          hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)
+        ai_agent.ai_mcp_server_ids = (submitted_server_ids + preserved_disabled_server_ids).uniq
+
+        ai_agent.ai_agent_mcp_servers.each do |assignment|
+          next if preserved_disabled_server_ids.include?(assignment.ai_mcp_server_id)
+
+          assignment.update!(
+            selected_tool_names: mcp_server_tool_names[assignment.ai_mcp_server_id.to_s],
+          )
+        end
+
+        ai_agent.bump_cache
+      end
+
+      def hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)
+        ai_agent
+          .ai_agent_mcp_servers
+          .includes(:ai_mcp_server)
+          .filter_map do |assignment|
+            next if submitted_server_ids.include?(assignment.ai_mcp_server_id)
+            next if assignment.ai_mcp_server&.enabled?
+
+            assignment.ai_mcp_server_id
+          end
+      end
+
+      def serialize_mcp_server(server)
+        {
+          id: server.id,
+          name: server.name,
+          tool_count: server.tool_count,
+          token_count: server.token_count,
+          last_health_status: server.last_health_status,
+          last_checked_at: server.last_checked_at,
+          tools: server.tools_for_serialization,
+        }
+      end
+
       def ai_agent_logger_fields
         {
           name: {
@@ -524,8 +693,6 @@ module DiscourseAi
           },
           user_id: {
           },
-          max_context_posts: {
-          },
           vision_enabled: {
           },
           vision_max_pixels: {
@@ -537,8 +704,6 @@ module DiscourseAi
           rag_conversation_chunks: {
           },
           rag_llm_model_id: {
-          },
-          question_consolidator_llm_id: {
           },
           allow_chat_channel_mentions: {
           },
@@ -555,14 +720,16 @@ module DiscourseAi
           },
           force_default_llm: {
           },
-          execution_mode: {
-          },
           max_turn_tokens: {
           },
           compression_threshold: {
           },
+          require_approval: {
+          },
+          subagent_ids: {
+          },
           # JSON fields
-          json_fields: %i[tools response_format examples allowed_group_ids],
+          json_fields: %i[tools response_format examples allowed_group_ids ai_mcp_server_ids],
         }
       end
 
@@ -585,6 +752,23 @@ module DiscourseAi
           initial_attributes,
           ai_agent_logger_fields,
           entity_details,
+        )
+      end
+
+      def log_ai_spam_model_update(settings)
+        return if settings.blank? || settings.ai_agent_id != @ai_agent.id
+
+        previous_model_id = settings.llm_model_id
+        settings.reload
+        return if settings.llm_model_id == previous_model_id
+
+        previous_model_name =
+          LlmModel.find_by(id: previous_model_id)&.display_name || previous_model_id
+        logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
+        logger.log_custom(
+          "update_ai_spam_settings",
+          subject: I18n.t("discourse_ai.spam_detection.logging_subject"),
+          llm_model_id: "#{previous_model_name} → #{settings.llm_model.display_name}",
         )
       end
 

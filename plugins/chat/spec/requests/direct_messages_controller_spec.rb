@@ -22,7 +22,7 @@ RSpec.describe Chat::DirectMessagesController do
 
   describe "#index" do
     context "when user is not allowed to chat" do
-      before { SiteSetting.chat_allowed_groups = nil }
+      before { SiteSetting.chat_allowed_groups = "" }
 
       it "returns a forbidden error" do
         get "/chat/direct_messages.json", params: { usernames: user1.username }

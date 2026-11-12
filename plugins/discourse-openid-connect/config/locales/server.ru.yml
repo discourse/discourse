@@ -17,7 +17,6 @@ ru:
     openid_connect_allow_association_change: "Разрешить пользователям отключать и повторно подключать свои аккаунты Discourse к поставщику OpenID Connect"
     openid_connect_verbose_logging: "Записывать подробную информацию об аутентификации openid-connect в `/logs`. Держите эту функцию отключённой во время обычного использования."
     openid_connect_authorize_parameters: "Параметры URL-адреса, которые будут включены в перенаправление из /auth/oidc на конечную точку авторизации поставщика удостоверений"
-    openid_connect_overrides_email: "Заменять электронную почту пользователя значением из «openid-connect» при каждом входе в систему. Работает так же, как параметр `auth_overrides_email`, но только при входе в систему через OpenID Connect."
     openid_connect_claims: "Явным образом определить требования для использования с поставщиками, которые не передают данные обратно, на основе областей. (JSON)"
     openid_connect_match_by_email: "Использовать адрес электронной почты для сопоставления аутентификаций OpenID Connect с существующими аккаунтами пользователей Discourse."
     openid_connect_use_pkce: "Включить Proof Key for Code Exchange (PKCE) для аутентификации OpenID Connect."

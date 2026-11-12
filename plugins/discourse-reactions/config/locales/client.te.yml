@@ -7,8 +7,14 @@
 te:
   js:
     discourse_reactions:
+      users_popup:
+        all: "అన్నీ"
       main_reaction:
         add: "ఈ టపాను ఇష్టపడు"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "చేర్చబడింది"
+        changes_removed: "తీసివేయబడింది"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:

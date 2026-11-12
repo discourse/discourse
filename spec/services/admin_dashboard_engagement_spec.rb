@@ -1,0 +1,480 @@
+# frozen_string_literal: true
+
+describe AdminDashboardEngagement do
+  describe ".build" do
+    before do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+      Discourse.cache.clear
+    end
+
+    it "returns a kpis array keyed by report type" do
+      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+      expect(result[:kpis]).to be_an(Array)
+      types = result[:kpis].map { |k| k[:type] }
+      expect(types).to include(:dau_mau, :daily_engaged_users, :new_signups)
+    end
+
+    it "computes value, previous_value and percent_change for new_signups" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
+      Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
+
+      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      signups = result[:kpis].find { |k| k[:type] == :new_signups }
+
+      expect(signups[:value]).to eq(2)
+      expect(signups[:previous_value]).to eq(1)
+      expect(signups[:percent_change]).to eq(100.0)
+    end
+
+    it "emits report_type and report_query for drill-down" do
+      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      engaged = result[:kpis].find { |k| k[:type] == :daily_engaged_users }
+
+      expect(engaged[:report_type]).to eq("daily_engaged_users")
+      expect(engaged[:report_query]).to eq(start_date: "2026-04-01", end_date: "2026-04-28")
+    end
+
+    it "averages daily_engaged_users and reports a decline when daily engagement falls" do
+      engaged_now = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+      Fabricate(
+        :user_action,
+        user: engaged_now,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 23, 12),
+      )
+      Fabricate(
+        :user_action,
+        user: engaged_now,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 24, 12),
+      )
+
+      4.times do
+        engaged_before = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+        Fabricate(
+          :user_action,
+          user: engaged_before,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 16, 12),
+        )
+        Fabricate(
+          :user_action,
+          user: engaged_before,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 17, 12),
+        )
+      end
+
+      result = described_class.build(start_date: "2026-04-22", end_date: "2026-04-28")
+      engaged = result[:kpis].find { |k| k[:type] == :daily_engaged_users }
+
+      expect(engaged[:value]).to eq(1.0)
+      expect(engaged[:previous_value]).to eq(4.0)
+      expect(engaged[:percent_change]).to eq(-75.0)
+    end
+
+    it "falls back to a default 30-day window when params are blank" do
+      result = described_class.build(start_date: nil, end_date: nil)
+      expect(result[:kpis]).to be_an(Array)
+      expect(result[:kpis]).not_to be_empty
+    end
+
+    it "falls back to defaults when params are unparseable" do
+      result = described_class.build(start_date: "garbage", end_date: "also-garbage")
+      expect(result[:kpis]).to be_an(Array)
+      expect(result[:kpis]).not_to be_empty
+    end
+
+    it "ignores unicode garbage in date params" do
+      result = described_class.build(start_date: "字字字", end_date: "字字字")
+      expect(result[:kpis]).to be_an(Array)
+      expect(result[:kpis]).not_to be_empty
+    end
+
+    it "skips a KPI when its report errors out" do
+      original = Report.method(:find)
+      Report.define_singleton_method(:find) do |type, *args, **kwargs|
+        if type == "signups"
+          r = original.call(type, *args, **kwargs)
+          r.error = :timeout
+          r
+        else
+          original.call(type, *args, **kwargs)
+        end
+      end
+
+      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      expect(result[:kpis].map { |k| k[:type] }).not_to include(:new_signups)
+    ensure
+      Report.define_singleton_method(:find, &original)
+    end
+
+    describe "posters" do
+      it "includes the posters block with rows, total, and the default groups selection" do
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        posters = result[:posters]
+
+        expect(posters[:rows].map { |r| r[:type] }).to eq(%w[new_members returning staff])
+        expect(posters).to have_key(:total)
+        expect(posters[:groups]).to eq(%w[new_members returning staff])
+      end
+
+      it "includes a persisted group, and omits it for a viewer who can't see the group" do
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: ["staff", Report.group_token(group.id)],
+          },
+        )
+
+        admin_result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:admin),
+          )
+        expect(admin_result[:posters][:groups]).to eq(["staff", Report.group_token(group.id)])
+
+        regular_user_result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+        expect(regular_user_result[:posters][:groups]).to eq(["staff"])
+      end
+
+      it "omits a persisted group whose members are hidden, even when the group itself is visible" do
+        group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: ["staff", Report.group_token(group.id)],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+
+        expect(result[:posters][:groups]).to eq(["staff"])
+      end
+
+      it "falls back to the default groups when every persisted group becomes invisible" do
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: [Report.group_token(group.id)],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+
+        expect(result[:posters][:groups]).to eq(%w[new_members returning staff])
+      end
+
+      it "honours category visibility when current_user is a moderator" do
+        moderator = Fabricate(:moderator)
+        returning_poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        topic = Fabricate(:topic, category: private_cat)
+        Fabricate(
+          :post,
+          user: returning_poster,
+          topic: topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        expect(result[:posters][:total]).to eq(0)
+      end
+
+      it "lets an admin see posts in restricted categories" do
+        admin = Fabricate(:admin)
+        returning_poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        topic = Fabricate(:topic, category: private_cat)
+        Fabricate(
+          :post,
+          user: returning_poster,
+          topic: topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: admin,
+          )
+
+        expect(result[:posters][:total]).to eq(1)
+      end
+
+      it "restricts counted posts to the persisted category selection" do
+        selected = Fabricate(:category)
+        other = Fabricate(:category)
+        poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        selected_topic = Fabricate(:topic, category: selected)
+        other_topic = Fabricate(:topic, category: other)
+        Fabricate(
+          :post,
+          user: poster,
+          topic: selected_topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+        Fabricate(:post, user: poster, topic: other_topic, created_at: Time.zone.local(2026, 4, 10))
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [selected.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        expect(result[:posters][:total]).to eq(1)
+      end
+
+      it "omits categories the current user cannot see from the persisted selection" do
+        moderator = Fabricate(:moderator)
+        visible = Fabricate(:category)
+        private_group = Fabricate(:group)
+        restricted = Fabricate(:private_category, group: private_group, read_restricted: true)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [visible.id, restricted.id],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        expect(result[:posters][:category_ids]).to contain_exactly(visible.id)
+      end
+
+      it "preserves the saved order of the persisted category selection" do
+        first = Fabricate(:category)
+        second = Fabricate(:category)
+        third = Fabricate(:category)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [third.id, first.id, second.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        expect(result[:posters][:category_ids]).to eq([third.id, first.id, second.id])
+      end
+    end
+
+    describe "activity_by_category" do
+      def page_views_for(result, category)
+        result[:activity_by_category][:rows].find { |row| row[:category_id] == category.id }[
+          :page_views
+        ]
+      end
+
+      it "includes the activity_by_category block with rows and total" do
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        activity = result[:activity_by_category]
+
+        expect(activity).to have_key(:rows)
+        expect(activity).to have_key(:total)
+      end
+
+      it "invalidates the cached rows when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        category = Fabricate(:category)
+        Fabricate(
+          :category_activity_daily_rollup,
+          category: category,
+          date: "2026-04-10",
+          topics: 0,
+          posts: 0,
+          page_views: 10,
+          likely_crawler_page_views: 4,
+        )
+
+        first = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(first, category)).to eq(10)
+
+        SiteSetting.improved_crawler_detection = true
+        second = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        expect(page_views_for(second, category)).to eq(6)
+      end
+
+      it "honours category visibility when current_user is a moderator" do
+        moderator = Fabricate(:moderator)
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).not_to include(private_cat.id)
+      end
+
+      it "lets an admin see restricted categories" do
+        admin = Fabricate(:admin)
+        private_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
+        Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: admin,
+          )
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).to include(private_cat.id)
+      end
+
+      it "restricts rows to the persisted category selection" do
+        selected = Fabricate(:category)
+        other = Fabricate(:category)
+        Fabricate(:topic, category: selected, created_at: Time.zone.local(2026, 4, 10))
+        Fabricate(:topic, category: other, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "activity_by_category",
+          attrs: {
+            category_ids: [selected.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).to contain_exactly(selected.id)
+      end
+
+      it "omits categories the current user cannot see from the persisted selection" do
+        moderator = Fabricate(:moderator)
+        visible = Fabricate(:category)
+        private_group = Fabricate(:group)
+        restricted = Fabricate(:private_category, group: private_group, read_restricted: true)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "activity_by_category",
+          attrs: {
+            category_ids: [visible.id, restricted.id],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        expect(result[:activity_by_category][:category_ids]).to contain_exactly(visible.id)
+      end
+
+      it "keeps restricted categories in the persisted selection for an admin" do
+        admin = Fabricate(:admin)
+        visible = Fabricate(:category)
+        private_group = Fabricate(:group)
+        restricted = Fabricate(:private_category, group: private_group, read_restricted: true)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "activity_by_category",
+          attrs: {
+            category_ids: [visible.id, restricted.id],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: admin,
+          )
+
+        expect(result[:activity_by_category][:category_ids]).to contain_exactly(
+          visible.id,
+          restricted.id,
+        )
+      end
+    end
+
+    describe "trust_level_pipeline" do
+      it "includes per-TL rows, a trend object, and total_members" do
+        Fabricate(:user, trust_level: TrustLevel[1])
+        Fabricate(:user, trust_level: TrustLevel[2])
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        pipeline = result[:trust_level_pipeline]
+
+        expect(pipeline[:rows].length).to eq(5)
+        expect(pipeline[:rows].first).to include(
+          :trust_level,
+          :count,
+          :share,
+          :promoted_in,
+          :demoted_in,
+          :signups,
+        )
+        expect(pipeline[:trend]).to include(:direction, :net)
+        expect(pipeline[:total_members]).to be >= 2
+      end
+    end
+  end
+end

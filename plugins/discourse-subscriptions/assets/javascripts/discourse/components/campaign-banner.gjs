@@ -2,21 +2,19 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import formatCurrency from "../helpers/format-currency";
+import formatCurrency from "../helpers/format-currency.js";
 
 const SIDEBAR_BODY_CLASS = "subscription-campaign-sidebar";
 
@@ -26,36 +24,6 @@ export default class CampaignBanner extends Component {
 
   dismissed = false;
   loading = false;
-
-  @setting("discourse_subscriptions_campaign_banner_shadow_color")
-  dropShadowColor;
-
-  @setting("discourse_subscriptions_campaign_banner_bg_image")
-  backgroundImageUrl;
-
-  @equal(
-    "siteSettings.discourse_subscriptions_campaign_banner_location",
-    "Sidebar"
-  )
-  isSidebar;
-
-  @setting("discourse_subscriptions_campaign_subscribers") subscribers;
-
-  @equal("siteSettings.discourse_subscriptions_campaign_type", "Subscribers")
-  subscriberGoal;
-
-  @setting("discourse_subscriptions_currency") currency;
-
-  @setting("discourse_subscriptions_campaign_amount_raised") amountRaised;
-
-  @setting("discourse_subscriptions_campaign_goal") goalTarget;
-
-  @setting("discourse_subscriptions_campaign_product") product;
-
-  @setting("discourse_subscriptions_pricing_table_enabled") pricingTableEnabled;
-
-  @setting("discourse_subscriptions_campaign_show_contributors")
-  showContributors;
 
   init() {
     super.init(...arguments);
@@ -92,37 +60,65 @@ export default class CampaignBanner extends Component {
     }
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
-      document.body.classList.add(SIDEBAR_BODY_CLASS);
-    } else {
-      document.body.classList.remove(SIDEBAR_BODY_CLASS);
-    }
-
-    // makes sure to only play animation once, & not repeat on reload
-    if (this.isGoalMet) {
-      const successAnimationKey = this.keyValueStore.get(
-        "campaign_success_animation"
-      );
-
-      if (!successAnimationKey) {
-        later(() => {
-          this.keyValueStore.set({
-            key: "campaign_success_animation",
-            value: Date.now(),
-          });
-          document.body.classList.add("success-animation-off");
-        }, 7000);
-      } else {
-        document.body.classList.add("success-animation-off");
-      }
-    }
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_shadow_color")
+  get dropShadowColor() {
+    return this.siteSettings
+      .discourse_subscriptions_campaign_banner_shadow_color;
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    document.body.classList.remove(SIDEBAR_BODY_CLASS);
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_bg_image")
+  get backgroundImageUrl() {
+    return this.siteSettings.discourse_subscriptions_campaign_banner_bg_image;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_location")
+  get isSidebar() {
+    return (
+      this.siteSettings?.discourse_subscriptions_campaign_banner_location ===
+      "Sidebar"
+    );
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_subscribers")
+  get subscribers() {
+    return this.siteSettings.discourse_subscriptions_campaign_subscribers;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_type")
+  get subscriberGoal() {
+    return (
+      this.siteSettings?.discourse_subscriptions_campaign_type === "Subscribers"
+    );
+  }
+
+  @computed("siteSettings.discourse_subscriptions_currency")
+  get currency() {
+    return this.siteSettings.discourse_subscriptions_currency;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_amount_raised")
+  get amountRaised() {
+    return this.siteSettings.discourse_subscriptions_campaign_amount_raised;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_goal")
+  get goalTarget() {
+    return this.siteSettings.discourse_subscriptions_campaign_goal;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_product")
+  get product() {
+    return this.siteSettings.discourse_subscriptions_campaign_product;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_pricing_table_enabled")
+  get pricingTableEnabled() {
+    return this.siteSettings.discourse_subscriptions_pricing_table_enabled;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_show_contributors")
+  get showContributors() {
+    return this.siteSettings.discourse_subscriptions_campaign_show_contributors;
   }
 
   @computed("backgroundImageUrl")
@@ -177,13 +173,6 @@ export default class CampaignBanner extends Component {
     );
   }
 
-  @observes("dismissed")
-  _updateBodyClasses() {
-    if (this.dismissed) {
-      document.body.classList.remove(SIDEBAR_BODY_CLASS);
-    }
-  }
-
   @computed("dismissed")
   get visible() {
     const dismissedBannerKey = this.keyValueStore.get(
@@ -216,6 +205,39 @@ export default class CampaignBanner extends Component {
     return currentVolume >= this.goalTarget;
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
+      document.body.classList.add(SIDEBAR_BODY_CLASS);
+    } else {
+      document.body.classList.remove(SIDEBAR_BODY_CLASS);
+    }
+
+    // makes sure to only play animation once, & not repeat on reload
+    if (this.isGoalMet) {
+      const successAnimationKey = this.keyValueStore.get(
+        "campaign_success_animation"
+      );
+
+      if (!successAnimationKey) {
+        later(() => {
+          this.keyValueStore.set({
+            key: "campaign_success_animation",
+            value: Date.now(),
+          });
+          document.body.classList.add("success-animation-off");
+        }, 7000);
+      } else {
+        document.body.classList.add("success-animation-off");
+      }
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    document.body.classList.remove(SIDEBAR_BODY_CLASS);
+  }
+
   @action
   dismissBanner() {
     this.set("dismissed", true);
@@ -223,6 +245,13 @@ export default class CampaignBanner extends Component {
       key: "dismissed_campaign_banner",
       value: Date.now(),
     });
+  }
+
+  @observes("dismissed")
+  _updateBodyClasses() {
+    if (this.dismissed) {
+      document.body.classList.remove(SIDEBAR_BODY_CLASS);
+    }
   }
 
   <template>
@@ -234,7 +263,7 @@ export default class CampaignBanner extends Component {
             (concat "box-shadow: 5px 5px #" this.dropShadowColor)
           }}
         >
-          <DButton @icon="xmark" @action={{this.dismissBanner}} class="close" />
+          <DButton class="close" @action={{this.dismissBanner}} @icon="xmark" />
 
           <div
             class="campaign-banner-info"
@@ -259,22 +288,22 @@ export default class CampaignBanner extends Component {
 
               {{#if this.product}}
                 <LinkTo
-                  @route="subscribe.show"
-                  @model={{this.product}}
-                  @disabled={{this.product.subscribed}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @disabled={{this.product.subscribed}}
+                  @model={{this.product}}
+                  @route="subscribe.show"
                 >
-                  {{icon "far-heart"}}
-                  {{icon "heart" class="hover-heart"}}
+                  {{dIcon "far-heart"}}
+                  {{dIcon "heart" class="hover-heart"}}
                   {{i18n "discourse_subscriptions.campaign.button"}}
                 </LinkTo>
               {{else}}
                 <LinkTo
-                  @route={{this.subscribeRoute}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @route={{this.subscribeRoute}}
                 >
-                  {{icon "far-heart"}}
-                  {{icon "heart" class="hover-heart"}}
+                  {{dIcon "far-heart"}}
+                  {{dIcon "heart" class="hover-heart"}}
                   {{i18n "discourse_subscriptions.campaign.button"}}
                 </LinkTo>
               {{/if}}
@@ -314,7 +343,7 @@ export default class CampaignBanner extends Component {
                 </p>
 
                 {{#if this.showContributors}}
-                  <ConditionalLoadingSpinner
+                  <DConditionalLoadingSpinner
                     @condition={{this.loading}}
                     @size="small"
                   >
@@ -329,7 +358,7 @@ export default class CampaignBanner extends Component {
 
                       <div class="campaign-banner-progress-users-avatars">
                         {{#each this.contributors as |contributor|}}
-                          {{avatar
+                          {{dAvatar
                             contributor
                             avatarTemplatePath="avatar_template"
                             usernamePath="username"
@@ -339,15 +368,15 @@ export default class CampaignBanner extends Component {
                         {{/each}}
                       </div>
                     </div>
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 {{/if}}
               {{/if}}
             {{else}}
               {{#if this.subscriberGoal}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.subscribers}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.subscribers}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
@@ -363,8 +392,8 @@ export default class CampaignBanner extends Component {
               {{else}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.amountRaised}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.amountRaised}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
@@ -380,7 +409,7 @@ export default class CampaignBanner extends Component {
               {{/if}}
 
               {{#if this.showContributors}}
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @condition={{this.loading}}
                   @size="small"
                 >
@@ -395,7 +424,7 @@ export default class CampaignBanner extends Component {
 
                     <div class="campaign-banner-progress-users-avatars">
                       {{#each this.contributors as |contributor|}}
-                        {{avatar
+                        {{dAvatar
                           contributor
                           avatarTemplatePath="avatar_template"
                           usernamePath="username"
@@ -405,7 +434,7 @@ export default class CampaignBanner extends Component {
                       {{/each}}
                     </div>
                   </div>
-                </ConditionalLoadingSpinner>
+                </DConditionalLoadingSpinner>
               {{/if}}
             {{/if}}
           </div>

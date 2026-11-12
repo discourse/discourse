@@ -1,0 +1,276 @@
+import * as fs from "fs";
+import { basename, relative } from "path";
+import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
+import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
+import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
+import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
+import discourseSourceImports from "./lib/discourse-source-imports.mjs";
+import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
+import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
+import maybeBabel from "./lib/maybe-babel.mjs";
+import optimizedEmber from "./lib/optimized-ember.mjs";
+import productionEmberDeprecations from "./lib/production-ember-deprecations.mjs";
+import { exitIfDevServerRunning } from "./lib/rolldown-devserver-lock.mjs";
+import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
+
+exitIfDevServerRunning();
+
+writeResolverConfig(
+  {
+    staticAppPaths: ["static", "admin", "workers"],
+    splitAtRoutes: [{ type: "string", value: "wizard" }],
+  },
+  {
+    options: {
+      staticInvokables: false,
+      allowUnsafeDynamicComponents: false,
+    },
+  }
+);
+
+const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
+
+const aliases = [
+  { find: "pretty-text", replacement: "discourse/pretty-text" },
+  {
+    find: "ember-buffered-proxy/helpers",
+    replacement: "ember-buffered-proxy/addon/helpers",
+  },
+  {
+    find: "ember-buffered-proxy/mixin",
+    replacement: "ember-buffered-proxy/addon/mixin",
+  },
+  {
+    find: "ember-buffered-proxy/proxy",
+    replacement: "ember-buffered-proxy/addon/proxy",
+  },
+
+  {
+    find: "ember-exam/test-support/load",
+    replacement: "ember-exam/addon-test-support/load",
+  },
+];
+
+export function buildConfig({ devMode } = {}) {
+  const isProduction = process.env.EMBER_ENV === "production";
+
+  if (!isProduction) {
+    process.env.NODE_ENV = "development";
+  }
+
+  let importMap = {};
+
+  return {
+    tsconfig: false,
+    resolve: {
+      extensions,
+      conditionNames: isProduction ? ["production"] : ["development"],
+    },
+    experimental: {
+      incrementalBuild: true,
+      resolveNewUrlToAsset: true,
+      nativeMagicString: true,
+    },
+    moduleTypes: {
+      ".wasm": "asset",
+      ".gjs": "js",
+      ".gts": "ts",
+    },
+    input: {
+      discourse: "discourse.js",
+      ...(!isProduction || process.env.FORCE_BUILD_TESTS
+        ? {
+            "test-entrypoint": "tests/test-entrypoint.js",
+            "qunit-live-reload": "qunit-live-reload.js",
+          }
+        : undefined),
+    },
+    output: {
+      minify: isProduction || process.env.DISCOURSE_CI_MINIFY === "1",
+      dir: "dist",
+      sourcemap: true,
+      cleanDir: !devMode,
+      hashCharacters: "base36",
+      assetFileNames: "assets/js/[name]-[hash].digested[extname]",
+      chunkFileNames: "assets/js/[name]-[hash].digested.js", // See also: discourseChunkNamesPlugin
+      entryFileNames: "assets/js/[name]-[hash].digested.js",
+    },
+    watch: {
+      clearScreen: false,
+    },
+    plugins: [
+      viteAliasPlugin({ entries: aliases }),
+      dynamicChunkUrlPlugin(),
+      discourseSourceImports(),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
+      optimizedEmber(),
+      viteImportGlobPlugin(),
+      maybeBabel({
+        babelHelpers: "runtime",
+        extensions,
+        parallel: true,
+        skipPreflightCheck: true, // Skip per-file config verification
+        babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
+      }),
+      wrapTestModulesPlugin({ root: import.meta.dirname }),
+      discourseChunkNamesPlugin(),
+      chunkImportMapPlugin({
+        root: import.meta.dirname,
+        noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
+        onImportMap: (map) => (importMap = map),
+      }),
+      {
+        name: "require-relative-import-extensions",
+        resolveId: {
+          filter: { id: /^\.\.?\// },
+          handler(source, importer) {
+            if (
+              !importer ||
+              importer.includes("/node_modules/") ||
+              source.includes("/node_modules/") ||
+              source.includes("?") ||
+              /\.(m?js|c?js|[mc]?ts|gjs|gts|json|s?css|hbs|wasm)$/.test(source)
+            ) {
+              return null;
+            }
+            this.error(
+              `Relative import "${source}" from ${relative(import.meta.dirname, importer)} must include the file extension.`
+            );
+          },
+        },
+      },
+      {
+        name: "forbid-plugin-imports",
+        resolveId: {
+          filter: { id: /^discourse\/plugins\// },
+          handler(source, importer) {
+            this.error(
+              `Forbidden import of plugin module "${source}"` +
+                (importer
+                  ? ` from ${relative(import.meta.dirname, importer)}`
+                  : "") +
+                ". Core cannot import plugin modules."
+            );
+          },
+        },
+      },
+      {
+        name: "css-loader",
+        transform: {
+          filter: {
+            id: /\.css$/,
+          },
+          handler(code, id) {
+            return {
+              code: `
+                const style = document.createElement("style");
+                style.innerHTML = ${JSON.stringify(code)};
+                style.dataset.rolldownModuleId = ${JSON.stringify(relative(import.meta.dirname, id))};
+                document.head.append(style);
+              `,
+              moduleType: "js",
+              map: { mappings: "" },
+            };
+          },
+        },
+      },
+      {
+        name: "move-sourcemaps",
+        generateBundle(_options, bundle) {
+          const mapEntries = Object.entries(bundle).filter(([f]) =>
+            f.endsWith(".map")
+          );
+
+          for (const [oldFileName, asset] of mapEntries) {
+            // assets/js/foo.js.map → assets/map/foo.js.map
+            const newFileName = oldFileName.replace(
+              /^assets\/js\//,
+              "assets/map/"
+            );
+
+            this.emitFile({
+              type: "asset",
+              fileName: newFileName,
+              source: asset.source,
+            });
+
+            delete bundle[oldFileName];
+
+            // Patch the corresponding JS chunk
+            const jsFileName = oldFileName.slice(0, -4);
+            const chunk = bundle[jsFileName];
+            if (chunk?.code) {
+              chunk.code = chunk.code.replace(
+                /\/\/# sourceMappingURL=.+/,
+                `//# sourceMappingURL=../map/${basename(oldFileName)}`
+              );
+            }
+          }
+        },
+      },
+      brotliAssetsPlugin({ enabled: isProduction }),
+      bundleAnalyzerPlugin({
+        compress: isProduction,
+        root: import.meta.dirname,
+      }),
+      {
+        name: "bundle-manifest",
+        generateBundle(_outputOptions, bundle) {
+          const manifest = {
+            entrypoints: {},
+            dynamicEntrypoints: {},
+            chunks: {},
+            importMap,
+          };
+
+          for (const [fileName, chunk] of Object.entries(bundle)) {
+            if (chunk.type !== "chunk") {
+              continue;
+            }
+
+            const facadeModuleId = chunk.facadeModuleId
+              ? relative(import.meta.dirname, chunk.facadeModuleId)
+              : null;
+
+            if (chunk.isEntry) {
+              manifest.entrypoints[chunk.name] = fileName;
+            } else if (
+              chunk.isDynamicEntry &&
+              facadeModuleId &&
+              !facadeModuleId.startsWith("../")
+            ) {
+              manifest.dynamicEntrypoints[facadeModuleId] = fileName;
+            }
+
+            manifest.chunks[fileName] = {
+              file: fileName,
+              facadeModuleId,
+              name: chunk.name,
+              isEntry: chunk.isEntry,
+              isDynamicEntry: chunk.isDynamicEntry,
+              imports: chunk.imports,
+            };
+          }
+
+          if (devMode) {
+            // Workaround rolldown devEngine bug?
+            fs.mkdirSync("./dist/manifest", { recursive: true });
+            fs.writeFileSync(
+              "./dist/manifest/manifest.json",
+              JSON.stringify(manifest, null, 2)
+            );
+          } else {
+            this.emitFile({
+              type: "asset",
+              fileName: "manifest/manifest.json",
+              source: JSON.stringify(manifest, null, 2),
+            });
+          }
+        },
+      },
+    ],
+  };
+}
+
+export default buildConfig({ devMode: false });

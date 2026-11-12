@@ -28,6 +28,12 @@ RSpec.describe Chat::CreateThread do
     let(:params) { { original_message_id: message_1.id, channel_id: channel_1.id, title: } }
     let(:dependencies) { { guardian: } }
 
+    before do
+      SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
     context "when all steps pass" do
       it { is_expected.to run_successfully }
 
@@ -106,6 +112,21 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end
 
+    context "when user can only see a readonly category channel" do
+      fab!(:group) { Fabricate(:group, users: [current_user]) }
+      fab!(:category) do
+        Fabricate(
+          :private_category,
+          group: group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:channel_1) { Fabricate(:category_channel, chatable: category, threading_enabled: true) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
+    end
+
     context "when channel is not open" do
       context "when channel is read_only" do
         before { channel_1.update!(status: :read_only) }
@@ -138,7 +159,7 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
 
-    context "when original message is not found" do
+    context "when the original message belongs to another channel" do
       fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
 
       before { params[:channel_id] = channel_2.id }
@@ -146,7 +167,7 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_to_find_a_model(:original_message) }
     end
 
-    context "when original message is not found" do
+    context "when the original message has been destroyed" do
       before { message_1.destroy! }
 
       it { is_expected.to fail_to_find_a_model(:original_message) }

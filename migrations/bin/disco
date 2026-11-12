@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Convenience launcher for the migrations CLI.
+#
+# The real executable is the `disco` binary shipped by the migrations-core gem
+# (migrations/core/bin/disco), which is also runnable via `bundle exec disco`.
+# This thin wrapper exposes it at the familiar migrations/bin/ location; all of
+# the logic lives in Migrations::CLI::Bootstrap.
+exec(File.expand_path("../core/bin/disco", __dir__), *ARGV)

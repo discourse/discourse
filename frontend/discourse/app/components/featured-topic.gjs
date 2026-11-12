@@ -1,41 +1,24 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
-import Component from "@ember/component";
 import { trustHTML } from "@ember/template";
-import {
-  attributeBindings,
-  classNameBindings,
-} from "@ember-decorators/component";
-import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import TopicStatus from "./topic-status";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import TopicStatus from "./topic-status.gjs";
 
-@classNameBindings(":featured-topic")
-@attributeBindings("topic.id:data-topic-id")
-export default class FeaturedTopic extends Component {
-  click(e) {
-    if (e.target.closest(".last-posted-at")) {
-      this.appEvents.trigger("topic-entrance:show", {
-        topic: this.topic,
-        position: $(e.target).offset(),
-      });
-      return false;
-    }
-  }
-
-  <template>
-    <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
-    <a href={{this.topic.lastUnreadUrl}} class="title">{{trustHTML
-        this.topic.fancyTitle
+const FeaturedTopic = <template>
+  <div class="featured-topic" ...attributes data-topic-id={{@topic.id}}>
+    <TopicStatus @disableActions={{true}} @topic={{@topic}} />
+    <a class="title" href={{@topic.lastUnreadUrl}}>{{trustHTML
+        @topic.fancyTitle
       }}</a>
     <TopicPostBadges
-      @unreadPosts={{this.topic.unread_posts}}
-      @unseen={{this.topic.unseen}}
-      @url={{this.topic.lastUnreadUrl}}
+      @unreadPosts={{@topic.unread_posts}}
+      @unseen={{@topic.unseen}}
+      @url={{@topic.lastUnreadUrl}}
     />
 
-    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{ageWithTooltip
-        this.topic.last_posted_at
+    <a class="last-posted-at" href={{@topic.lastPostUrl}}>{{dAgeWithTooltip
+        @topic.last_posted_at
       }}</a>
-  </template>
-}
+  </div>
+</template>;
+
+export default FeaturedTopic;

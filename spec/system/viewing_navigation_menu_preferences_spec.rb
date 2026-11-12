@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar preferences", type: :system do
+describe "Viewing sidebar preferences" do
   let(:user_preferences_navigation_menu_page) do
     PageObjects::Pages::UserPreferencesNavigationMenu.new
   end
@@ -13,7 +13,7 @@ describe "Viewing sidebar preferences", type: :system do
 
     before { sign_in(admin) }
 
-    it "should be able to view navigation menu preferences of another user" do
+    it "shows another user's navigation-menu preferences" do
       user.user_option.update!(
         sidebar_link_to_filtered_list: true,
         sidebar_show_count_of_new_items: true,

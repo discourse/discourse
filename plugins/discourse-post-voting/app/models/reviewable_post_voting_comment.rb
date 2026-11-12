@@ -3,6 +3,10 @@
 class ReviewablePostVotingComment < Reviewable
   include ReviewableActionBuilder
 
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def serializer
     ReviewablePostVotingCommentSerializer
   end
@@ -10,8 +14,7 @@ class ReviewablePostVotingComment < Reviewable
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_delete,
-      agree_and_silence: :agree_and_delete,
-      agree_and_suspend: :agree_and_delete,
+      agree_and_keep_deleted: :agree_and_keep_comment,
       delete_and_agree: :agree_and_delete,
     }
   end
@@ -21,11 +24,11 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   def post
-    nil
+    @post ||= comment&.post
   end
 
   def comment
-    @comment ||= (target || PostVotingComment.with_deleted.find_by(id: target_id))
+    @comment ||= target || PostVotingComment.with_deleted.find_by(id: target_id)
   end
 
   def comment_creator
@@ -84,14 +87,6 @@ class ReviewablePostVotingComment < Reviewable
     end
   end
 
-  def perform_no_action_comment(performed_by, args)
-    if comment.deleted_at?
-      create_result(:success, :approved, [created_by_id], true)
-    else
-      create_result(:success, :rejected, [created_by_id], true)
-    end
-  end
-
   def perform_agree_and_keep_comment(performed_by, args)
     agree
   end
@@ -100,16 +95,30 @@ class ReviewablePostVotingComment < Reviewable
     agree { comment.recover! }
   end
 
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
+  end
+
   def perform_agree_and_delete(performed_by, args)
     agree { comment.trash!(performed_by) }
   end
 
   def perform_disagree_and_restore(performed_by, args)
-    disagree { comment.recover! }
+    disagree(performed_by) { comment.recover! }
   end
 
   def perform_disagree(performed_by, args)
-    disagree
+    disagree(performed_by)
   end
 
   def perform_ignore(performed_by, args)
@@ -122,6 +131,50 @@ class ReviewablePostVotingComment < Reviewable
 
   private
 
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
+         :agree_and_keep_hidden
+      {
+        decision_facts: "The flagged voting comment was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: comment.created_at.to_date.iso8601,
+        automated_detection: "No",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts: "The author of the flagged voting comment was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of the flagged voting comment had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    end
+  end
+
   def agree
     yield if block_given?
     create_result(:success, :approved) do |result|
@@ -130,10 +183,12 @@ class ReviewablePostVotingComment < Reviewable
     end
   end
 
-  def disagree
+  def disagree(performed_by)
     yield if block_given?
 
-    UserSilencer.unsilence(comment_creator)
+    if UserSilencer.was_silenced_for?(post)
+      UserSilencer.unsilence(comment_creator, performed_by, reviewable_id: id)
+    end
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }
@@ -154,34 +209,35 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
-#  type                    :string           not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
-#  version                 :integer          default(0), not null
+#  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
-#  type_source             :string           default("unknown"), not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

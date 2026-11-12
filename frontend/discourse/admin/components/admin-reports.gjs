@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
-import AsyncContent from "discourse/components/async-content";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
 const REPORT_GROUPS = {
@@ -50,18 +49,16 @@ const REPORT_GROUPS = {
     "trending_search",
     "user_to_user_private_messages_with_replies",
   ],
-  moderation: [
-    "flags",
-    "flags_status",
-    "moderators_activity",
-    "user_flagging_ratio",
-  ],
-  security: [
+  moderation_and_security: [
+    "admin_logins",
     "associated_accounts_by_provider",
     "consolidated_api_requests",
     "emails",
-    "staff_logins",
+    "flags",
+    "flags_status",
+    "moderators_activity",
     "suspicious_logins",
+    "user_flagging_ratio",
     "web_crawlers",
     "web_hook_events_daily_aggregate",
   ],
@@ -69,24 +66,10 @@ const REPORT_GROUPS = {
 };
 
 export default class AdminReports extends Component {
-  @service siteSettings;
-
   @bind
   async loadReports() {
     const response = await ajax("/admin/reports");
     return response.reports;
-  }
-
-  @bind
-  filterReports(reports) {
-    if (!reports) {
-      return [];
-    }
-
-    const hiddenReports = (this.siteSettings.dashboard_hidden_reports || "")
-      .split("|")
-      .filter(Boolean);
-    return reports.filter((report) => !hiddenReports.includes(report.type));
   }
 
   @bind
@@ -154,47 +137,55 @@ export default class AdminReports extends Component {
     return groupedReports;
   }
 
+  @bind
+  groupDropdownOptions(reports) {
+    const groups = this.groupReports(reports);
+
+    return [
+      {
+        value: "all",
+        label: i18n("admin.reports.all_groups"),
+        filterFn: () => true,
+      },
+      ...groups.map((group) => ({
+        value: group.key,
+        label: group.name,
+        filterFn: (report) => group.reports.includes(report),
+      })),
+    ];
+  }
+
   <template>
-    <AsyncContent @asyncData={{this.loadReports}}>
+    <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
-        <AdminFilterControls
-          @array={{this.filterReports reports}}
-          @searchableProps={{array "title" "description"}}
+        <DFilterControls
+          @array={{reports}}
+          @dropdownFilterQueryParam="group"
+          @dropdownOptions={{this.groupDropdownOptions reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
+          @searchableProps={{array "title" "description"}}
+          @textFilterQueryParam="filter"
         >
           <:content as |filteredReports|>
-            {{#if this.siteSettings.reporting_improvements}}
-              {{#each (this.groupReports filteredReports) as |group|}}
-                <section class="admin-reports-group">
-                  <h2 class="admin-reports-group__title">{{group.name}}</h2>
-                  <AdminSectionLandingWrapper class="admin-reports-list">
-                    {{#each group.reports as |report|}}
-                      <AdminSectionLandingItem
-                        @titleLabelTranslated={{report.title}}
-                        @descriptionLabelTranslated={{report.description}}
-                        @titleRoute="adminReports.show"
-                        @titleRouteModel={{report.type}}
-                      />
-                    {{/each}}
-                  </AdminSectionLandingWrapper>
-                </section>
-              {{/each}}
-            {{else}}
-              <AdminSectionLandingWrapper class="admin-reports-list">
-                {{#each filteredReports as |report|}}
-                  <AdminSectionLandingItem
-                    @titleLabelTranslated={{report.title}}
-                    @descriptionLabelTranslated={{report.description}}
-                    @titleRoute="adminReports.show"
-                    @titleRouteModel={{report.type}}
-                  />
-                {{/each}}
-              </AdminSectionLandingWrapper>
-            {{/if}}
+            {{#each (this.groupReports filteredReports) as |group|}}
+              <section class="admin-reports-group">
+                <h2 class="admin-reports-group__title">{{group.name}}</h2>
+                <AdminSectionLandingWrapper class="admin-reports-list">
+                  {{#each group.reports as |report|}}
+                    <AdminSectionLandingItem
+                      @descriptionLabelTranslated={{report.description}}
+                      @titleLabelTranslated={{report.title}}
+                      @titleRoute="adminReports.show"
+                      @titleRouteModel={{report.type}}
+                    />
+                  {{/each}}
+                </AdminSectionLandingWrapper>
+              </section>
+            {{/each}}
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </:content>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }

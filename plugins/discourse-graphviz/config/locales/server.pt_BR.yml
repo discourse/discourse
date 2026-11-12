@@ -7,4 +7,3 @@
 pt_BR:
   site_settings:
     discourse_graphviz_enabled: "Ativar plugin do Graphviz"
-    graphviz_default_svg: "Padrão para renderização SVG em vez de por imagem, pode ser personalizado por gráfico com o elemento \"svg=true|false\"."

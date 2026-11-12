@@ -7,6 +7,7 @@ module Stylesheet
     include GlobalPath
 
     THEME_TARGETS = %w[embedded_theme common_theme mobile_theme desktop_theme]
+    FONT_TARGETS = %w[embed publish]
 
     def self.plugin_assets
       @plugin_assets ||= {}
@@ -16,7 +17,7 @@ module Stylesheet
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
-        ["", "mobile", "desktop"].each do |type|
+        ["", "mobile", "desktop", "admin"].each do |type|
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
           stylesheets =
             (
@@ -39,13 +40,33 @@ module Stylesheet
 
     register_imports!
 
+    # The font definitions for the given font keys, as plain CSS. Staff
+    # previews use it to try fonts before the site does.
+    def self.font_definitions(base_font:, heading_font:)
+      new({}).font_definitions(base_font, heading_font)
+    end
+
     def font
-      body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
-      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+      contents = font_definitions(SiteSetting.base_font, SiteSetting.heading_font)
+
+      contents << <<~CSS
+        #{font_css(jetbrains_mono)}
+        #{render_font_special_properties(jetbrains_mono, "body")}
+        :root {
+          --d-font-family--monospace: #{jetbrains_mono[:stack]};
+        }
+
+      CSS
+
+      contents
+    end
+
+    def font_definitions(base_font_key, heading_font_key)
+      body_font = DiscourseFonts.fonts.find { |f| f[:key] == base_font_key }
+      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == heading_font_key }
       contents = +""
 
       contents << <<~CSS if body_font.present?
-          // Body font definition
           #{font_css(body_font)}
           #{render_font_special_properties(body_font, "body")}
           :root {
@@ -55,7 +76,6 @@ module Stylesheet
         CSS
 
       contents << <<~CSS if heading_font.present?
-          // Heading font definition
           #{font_css(heading_font)}
           #{render_font_special_properties(heading_font, "heading")}
           :root {
@@ -63,24 +83,6 @@ module Stylesheet
           }
 
         CSS
-
-      if SiteSetting.rich_editor
-        contents << <<~CSS
-          #{font_css(jetbrains_mono)}
-          #{render_font_special_properties(jetbrains_mono, "body")}
-          :root {
-            --d-font-family--monospace: #{jetbrains_mono[:stack]};
-          }
-
-        CSS
-      else
-        contents << <<~CSS
-          :root {
-            --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
-          }
-
-        CSS
-      end
 
       contents
     end
@@ -164,7 +166,7 @@ module Stylesheet
           rescue StandardError
             ColorScheme.base_colors
           end
-      elsif (@theme_id && !theme.component)
+      elsif @theme_id && !theme.component
         colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,

@@ -7,12 +7,8 @@ module TopicVotingCategory
     ".nav-item_votes.votes"
   end
 
-  def topic_with_vote_count(vote_count)
-    "tr.topic-list-item a.list-vote-count.vote-count-#{vote_count}"
-  end
-
   def select_topic(topic)
-    find("tr[data-topic-id=\"#{topic.id}\"] a.list-vote-count.vote-count-0").click
+    find("tr[data-topic-id=\"#{topic.id}\"] a.raw-link").click
   end
 end
 

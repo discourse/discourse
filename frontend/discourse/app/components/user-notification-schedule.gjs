@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import UserNotificationScheduleDay from "discourse/components/user-notification-schedule-day";
 import { i18n } from "discourse-i18n";
@@ -17,19 +16,14 @@ const DAYS = [
 ];
 
 class Day extends EmberObject {
+  /** @type {number | null} */
   id = null;
+
+  /** @type {Array<{ name: string, value: number }> | null} */
   startTimeOptions = null;
+
+  /** @type {import("discourse/models/user").default | null} */
   model = null;
-
-  @action
-  onChangeStartTime(val) {
-    this.startingTimeChangedForDay(val);
-  }
-
-  @action
-  onChangeEndTime(val) {
-    this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
-  }
 
   @computed("model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time")
   get startTimeValue() {
@@ -46,6 +40,16 @@ class Day extends EmberObject {
   @computed("model.user_notification_schedule.day_{0,1,2,3,4,5,6}_end_time")
   get endTimeValue() {
     return this.model?.user_notification_schedule[`day_${this.id}_end_time`];
+  }
+
+  @action
+  onChangeStartTime(val) {
+    this.startingTimeChangedForDay(val);
+  }
+
+  @action
+  onChangeEndTime(val) {
+    this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
   }
 
   startingTimeChangedForDay(val) {
@@ -67,72 +71,66 @@ class Day extends EmberObject {
     if (startTime === -1) {
       return null;
     }
-    return this.buildTimeOptions(startTime + 30, {
+    return buildTimeOptions(startTime + 30, {
       includeNone: false,
       showMidnight: true,
     });
   }
 }
 
-@tagName("")
+function buildTimeOptions(
+  startAt,
+  opts = { includeNone: false, showMidnight: true }
+) {
+  let timeOptions = [];
+
+  if (opts.includeNone) {
+    timeOptions.push({
+      name: i18n("user.notification_schedule.none"),
+      value: -1,
+    });
+  }
+
+  for (let timeInMin = startAt; timeInMin <= 1440; timeInMin += 30) {
+    let hours = Math.floor(timeInMin / 60);
+    let minutes = timeInMin % 60;
+
+    if (minutes === 0) {
+      minutes = "00";
+    }
+    if (hours === 24) {
+      if (opts.showMidnight) {
+        timeOptions.push({
+          name: i18n("user.notification_schedule.midnight"),
+          value: 1440,
+        });
+      }
+      break;
+    }
+    timeOptions.push({
+      name: moment().set("hour", hours).set("minute", minutes).format("LT"),
+      value: timeInMin,
+    });
+  }
+  return timeOptions;
+}
+
 export default class UserNotificationSchedule extends Component {
-  days = null;
+  @cached
+  get days() {
+    const startTimeOptions = buildTimeOptions(0, {
+      includeNone: true,
+      showMidnight: false,
+    });
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.set(
-      "startTimeOptions",
-      this.buildTimeOptions(0, {
-        includeNone: true,
-        showMidnight: false,
-      })
-    );
-
-    const days = DAYS.map((day, index) =>
+    return DAYS.map((day, index) =>
       Day.create({
         id: index,
         day,
-        model: this.model,
-        buildTimeOptions: this.buildTimeOptions,
-        startTimeOptions: this.startTimeOptions,
+        model: this.args.model,
+        startTimeOptions,
       })
     );
-
-    this.set("days", days);
-  }
-
-  buildTimeOptions(startAt, opts = { includeNone: false, showMidnight: true }) {
-    let timeOptions = [];
-
-    if (opts.includeNone) {
-      timeOptions.push({
-        name: i18n("user.notification_schedule.none"),
-        value: -1,
-      });
-    }
-
-    for (let timeInMin = startAt; timeInMin <= 1440; timeInMin += 30) {
-      let hours = Math.floor(timeInMin / 60);
-      let minutes = timeInMin % 60;
-
-      if (minutes === 0) {
-        minutes = "00";
-      }
-      if (hours === 24) {
-        if (opts.showMidnight) {
-          timeOptions.push({
-            name: i18n("user.notification_schedule.midnight"),
-            value: 1440,
-          });
-        }
-        break;
-      }
-      timeOptions.push({
-        name: moment().set("hour", hours).set("minute", minutes).format("LT"),
-        value: timeInMin,
-      });
-    }
-    return timeOptions;
   }
 
   <template>
@@ -145,11 +143,11 @@ export default class UserNotificationSchedule extends Component {
           "user.notification_schedule.title"
         }}</label>
       <PreferenceCheckbox
+        @checked={{@model.user_notification_schedule.enabled}}
         @labelKey="user.notification_schedule.label"
-        @checked={{this.model.user_notification_schedule.enabled}}
       />
 
-      {{#if this.model.user_notification_schedule.enabled}}
+      {{#if @model.user_notification_schedule.enabled}}
         <div class="instruction">{{i18n "user.notification_schedule.tip"}}</div>
 
         <table class="notification-schedule-table">
@@ -157,12 +155,12 @@ export default class UserNotificationSchedule extends Component {
             {{#each this.days as |day|}}
               <UserNotificationScheduleDay
                 @day={{day.day}}
-                @startTimeOptions={{day.startTimeOptions}}
-                @startTimeValue={{day.startTimeValue}}
-                @onChangeStartTime={{day.onChangeStartTime}}
                 @endTimeOptions={{day.endTimeOptions}}
                 @endTimeValue={{day.endTimeValue}}
                 @onChangeEndTime={{day.onChangeEndTime}}
+                @onChangeStartTime={{day.onChangeStartTime}}
+                @startTimeOptions={{day.startTimeOptions}}
+                @startTimeValue={{day.startTimeValue}}
               />
             {{/each}}
           </tbody>

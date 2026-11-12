@@ -20,6 +20,38 @@ module PageObjects
           self
         end
 
+        def open_upcoming_changes_menu
+          find(".dev-tools-toolbar .toggle-upcoming-changes-menu").click
+          self
+        end
+
+        def close_upcoming_changes_menu
+          if has_upcoming_changes_menu?
+            find(".dev-tools-toolbar .toggle-upcoming-changes-menu").click
+          end
+
+          self
+        end
+
+        def has_upcoming_changes_menu?
+          page.has_css?(".upcoming-changes-debug-menu")
+        end
+
+        def has_no_upcoming_changes_menu?
+          page.has_no_css?(".upcoming-changes-debug-menu")
+        end
+
+        def toggle_upcoming_changes_menu_item(item_name)
+          find(".upcoming-changes-debug-menu label", text: item_name).click
+          self
+        end
+
+        def upcoming_change_site_setting_value(site_setting_name)
+          page.evaluate_script(
+            "Discourse.__container__.lookup('service:site-settings').#{site_setting_name}",
+          )
+        end
+
         def open_blocks_menu
           find(".dev-tools-toolbar .toggle-blocks").click
           self
@@ -48,6 +80,11 @@ module PageObjects
           open_blocks_menu
           find(".block-debug-menu label", text: "Outlet boundaries").click
           close_blocks_menu
+          self
+        end
+
+        def open_bundle_analyzer
+          find(".dev-tools-toolbar .bundle-analyzer-button").click
           self
         end
 

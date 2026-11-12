@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Toolbar", type: :system do
+describe "Composer - ProseMirror - Toolbar" do
   include_context "with prosemirror editor"
 
   describe "toolbar state updates" do
@@ -203,6 +203,40 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
 
       expect(rich).to have_css("ol li", text: "A list item")
     end
+
+    it "splits multi-line plain text into bullet list items" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
+
+      expect(rich).to have_css("ul li", count: 3)
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
+      expect(rich).to have_css("ul li", text: "coconut")
+    end
+
+    it "splits multi-line plain text into ordered list items" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
+
+      expect(rich).to have_css("ol li", count: 3)
+      expect(rich).to have_css("ol li", text: "apple")
+      expect(rich).to have_css("ol li", text: "banana")
+      expect(rich).to have_css("ol li", text: "coconut")
+    end
   end
 
   describe "heading toolbar" do
@@ -233,18 +267,16 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       heading_menu.collapse
 
       composer.select_range_rich_editor(0, 0)
-      try_until_success(reason: "Toolbar state updates asynchronously after selection change") do
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
-      end
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
       heading_menu.collapse
 
       composer.select_all
-      try_until_success(reason: "Toolbar state updates asynchronously after selection change") do
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
-        expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
-      end
+      expect(page).to have_no_css(".toolbar__button.heading.--active")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
     end
 
     it "can change heading level or reset to paragraph" do
@@ -275,6 +307,52 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
 
       composer.type_content("This is a test")
       expect(rich).to have_css("h2", text: "This is a test")
+    end
+
+    it "lets the user apply and remove small text" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "5"])
+
+      expect(rich).to have_css("p small", text: "This is a test")
+
+      rich.find("small").click
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
+      heading_menu.option("[data-name='heading-small']").click
+
+      expect(rich).to have_no_css("small")
+      expect(rich).to have_css("p", text: "This is a test")
+    end
+
+    it "lets the user switch between a heading and small text" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+      expect(rich).to have_css("h2", text: "This is a test")
+
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-small']").click
+
+      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_no_css("h2")
+
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+
+      expect(rich).to have_css("h2", text: "This is a test")
+      expect(rich).to have_no_css("small")
     end
   end
 end

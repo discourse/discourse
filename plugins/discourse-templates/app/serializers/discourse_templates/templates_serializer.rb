@@ -13,7 +13,7 @@ module DiscourseTemplates
     end
 
     def tags
-      object.tags.map(&:name).sort
+      object.visible_tags(scope || Guardian.new).map(&:name).sort
     end
 
     def usages

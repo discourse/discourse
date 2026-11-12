@@ -137,6 +137,23 @@ RSpec.describe PublishedPagesController do
           )
         end
 
+        it "omits hidden tags from body classes" do
+          hidden_tag = Fabricate(:tag, name: "admins-only")
+          hidden_tag_group =
+            Fabricate(:tag_group, name: "Admins only", tag_names: [hidden_tag.name])
+          hidden_tag_group.permissions = [
+            [Group::AUTO_GROUPS[:admins], TagGroupPermission.permission_types[:full]],
+          ]
+          hidden_tag_group.save!
+          published_page.topic.tags << hidden_tag
+
+          get published_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include("recipes")
+          expect(response.body).not_to include(hidden_tag.name)
+        end
+
         context "when login is required" do
           before do
             SiteSetting.login_required = true

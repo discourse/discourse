@@ -50,16 +50,23 @@ RSpec.shared_context "with shared backup restore context" do
     RailsMultisite::ConnectionManagement.expects(:establish_connection).once
   end
 
+  # A real reconnect drops the test transaction.
+  def stub_db_reconnect
+    ActiveRecord::Base.connection.stubs(:reconnect!)
+  end
+
   def execute_stubbed_restore(
     stub_readonly_functions: true,
     stub_psql: true,
     stub_migrate: true,
+    stub_reconnect: true,
     dump_file_path: "foo.sql"
   )
     expect_table_move
     expect_create_readonly_functions if stub_readonly_functions
     expect_psql if stub_psql
     expect_db_migrate if stub_migrate
+    stub_db_reconnect if stub_reconnect
     subject.restore(dump_file_path)
   end
 

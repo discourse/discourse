@@ -10,6 +10,11 @@ class UserHistory < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
   belongs_to :category
+  belongs_to :reviewable, optional: true
+
+  # Subjects logged alongside the :admin_onboarding_step_completed action, one
+  # per step of the admin onboarding panel.
+  ADMIN_ONBOARDING_STEPS = %w[select_theme create_category invite_collaborators].freeze
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
@@ -166,6 +171,18 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
+        notified_about_composer_education: 125, # not used anymore
+        recover_post: 126,
+        change_access_control_list_permissions: 127,
+        admin_onboarding_step_completed: 128,
+        admin_onboarding_completed: 129,
+        admin_onboarding_dismissed: 130,
+        removed_avatar: 131,
+        create_group: 132,
+        add_access_control_list_owner: 133,
+        remove_access_control_list_owner: 134,
+        assume_access_control_ownership: 135,
+        create_bot: 136,
       )
   end
 
@@ -173,6 +190,7 @@ class UserHistory < ActiveRecord::Base
   def self.staff_actions
     @staff_actions ||= %i[
       delete_user
+      create_bot
       change_trust_level
       change_site_setting
       change_theme
@@ -220,6 +238,7 @@ class UserHistory < ActiveRecord::Base
       post_edit
       topic_published
       recover_topic
+      recover_post
       post_approved
       create_badge
       change_badge
@@ -271,6 +290,8 @@ class UserHistory < ActiveRecord::Base
       deleted_tag
       chat_channel_status_change
       chat_auto_remove_membership
+      poll_closed
+      poll_opened
       create_watched_word_group
       update_watched_word_group
       delete_watched_word_group
@@ -293,6 +314,15 @@ class UserHistory < ActiveRecord::Base
       upcoming_change_toggled
       change_site_setting_groups
       upcoming_change_available
+      change_access_control_list_permissions
+      admin_onboarding_step_completed
+      admin_onboarding_completed
+      admin_onboarding_dismissed
+      removed_avatar
+      create_group
+      add_access_control_list_owner
+      remove_access_control_list_owner
+      assume_access_control_ownership
     ]
   end
 
@@ -344,6 +374,7 @@ class UserHistory < ActiveRecord::Base
       :post_staff_note_destroy,
       :delete_post,
       :delete_post_permanently,
+      :recover_post,
       :permanently_delete_post_revisions,
       # topics
       :topic_published,
@@ -408,12 +439,12 @@ class UserHistory < ActiveRecord::Base
   end
 
   def self.for(user, action_type)
-    self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    where(target_user_id: user.id, action: UserHistory.actions[action_type])
   end
 
   def self.exists_for_user?(user, action_type, opts = nil)
     opts = opts || {}
-    result = self.where(target_user_id: user.id, action: UserHistory.actions[action_type])
+    result = where(target_user_id: user.id, action: UserHistory.actions[action_type])
     result = result.where(topic_id: opts[:topic_id]) if opts[:topic_id]
     result.exists?
   end
@@ -429,12 +460,11 @@ class UserHistory < ActiveRecord::Base
     if custom_staff
       opts[:custom_type] = opts[:action_name]
     else
-      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+      opts[:action_id] = actions[opts[:action_name].to_sym] if opts[:action_name]
     end
 
     query =
-      self
-        .with_filters(opts.slice(*staff_filters))
+      with_filters(opts.slice(*staff_filters))
         .only_staff_actions
         .order("id DESC")
         .includes(:acting_user, :target_user, :topic, :post, :category)
@@ -448,7 +478,7 @@ class UserHistory < ActiveRecord::Base
   end
 
   def set_admin_only
-    self.admin_only = UserHistory.admin_only_action_ids.include?(self.action)
+    self.admin_only = UserHistory.admin_only_action_ids.include?(action)
     self
   end
 
@@ -469,22 +499,24 @@ end
 #
 #  id             :integer          not null, primary key
 #  action         :integer          not null
-#  acting_user_id :integer
-#  target_user_id :integer
+#  admin_only     :boolean          default(FALSE)
+#  context        :string
+#  custom_type    :string
 #  details        :text
+#  email          :string
+#  expires_at     :datetime
+#  ip_address     :string
+#  new_value      :text
+#  previous_value :text
+#  subject        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string
-#  ip_address     :string
-#  email          :string
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
-#  topic_id       :integer
-#  admin_only     :boolean          default(FALSE)
-#  post_id        :integer
-#  custom_type    :string
+#  acting_user_id :integer
 #  category_id    :integer
+#  post_id        :integer
+#  reviewable_id  :bigint
+#  target_user_id :integer
+#  topic_id       :integer
 #
 # Indexes
 #
@@ -492,6 +524,7 @@ end
 #  index_user_histories_on_action_and_id                           (action,id)
 #  index_user_histories_on_category_id                             (category_id)
 #  index_user_histories_on_post_id                                 (post_id)
+#  index_user_histories_on_reviewable_id                           (reviewable_id)
 #  index_user_histories_on_subject_and_id                          (subject,id)
 #  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
 #  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)

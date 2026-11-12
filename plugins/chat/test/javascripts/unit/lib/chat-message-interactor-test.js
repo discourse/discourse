@@ -8,7 +8,7 @@ import {
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
+module("Unit | chat-message-interactor", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -134,6 +134,42 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "butterfly", "heart"]
     );
+  });
+
+  test("emojiReactions keeps its order once read", function (assert) {
+    assert.deepEqual(
+      this.messageInteractor.emojiReactions.map((r) => r.emoji),
+      ["+1", "heart", "tada"]
+    );
+
+    this.emojiStore.trackEmojiForContext("butterfly", "chat");
+
+    assert.deepEqual(
+      this.messageInteractor.emojiReactions.map((r) => r.emoji),
+      ["+1", "heart", "tada"],
+      "reacting does not reorder the controls under the user"
+    );
+  });
+
+  test("emojiReactions keeps the identity of the models it did not change", function (assert) {
+    const before = this.messageInteractor.emojiReactions;
+
+    this.messageInteractor.message.react(
+      "+1",
+      "add",
+      this.currentUser,
+      this.currentUser.id
+    );
+
+    const after = this.messageInteractor.emojiReactions;
+
+    assert.notStrictEqual(
+      after[0],
+      before[0],
+      "the reacted emoji gets a model"
+    );
+    assert.strictEqual(after[1], before[1], "heart is the same model");
+    assert.strictEqual(after[2], before[2], "tada is the same model");
   });
 
   test("canRestoreMessage allows moderators to restore deleted messages", function (assert) {

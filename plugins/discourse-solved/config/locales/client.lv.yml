@@ -5,7 +5,19 @@
 # https://translate.discourse.org/
 
 lv:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Personāls"
+              member: "Dalībnieki"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Noņemts"
+        tag_names: "Birkas"
     notifications:
       alt:
         solved:
@@ -16,6 +28,14 @@ lv:
         all: "Viss"
       move_post_cancel: "Atcelt"
       confirm_solved_removal_cancel: "Atcelt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tēmas"
+            category: "Sadaļa"
     discourse_automation:
       triggerables:
         first_accepted_solution:

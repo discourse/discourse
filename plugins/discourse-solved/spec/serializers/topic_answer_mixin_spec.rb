@@ -7,7 +7,7 @@ describe DiscourseSolved::TopicAnswerMixin do
 
   before { Fabricate(:solved_topic, topic: topic, answer_post: post) }
 
-  it "should have true for `has_accepted_answer` field in each serializer" do
+  it "sets has_accepted_answer in each serializer" do
     [
       TopicListItemSerializer,
       SearchTopicListItemSerializer,

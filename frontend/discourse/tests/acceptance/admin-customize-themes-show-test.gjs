@@ -1,7 +1,8 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Admin - Customize - Themes - Show", function (needs) {
   needs.user();
@@ -67,6 +68,50 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
             child_themes: [],
             parent_themes: [],
             remote_theme: null,
+            translations: [
+              {
+                key: "theme_metadata.description",
+                value: "The classic Discourse theme...",
+                default: "The classic Discourse theme...",
+              },
+            ],
+          },
+          {
+            id: 42,
+            name: "Git theme",
+            created_at: "2025-06-11T23:50:31.187Z",
+            updated_at: "2025-06-12T03:09:26.162Z",
+            default: false,
+            component: false,
+            user_selectable: false,
+            auto_update: false,
+            remote_theme_id: 42,
+            settings: [],
+            supported: true,
+            enabled: true,
+            theme_fields: [],
+            system: false,
+            color_scheme: null,
+            user: {
+              id: -1,
+              username: "system",
+              name: "system",
+              avatar_template: "/images/discourse-logo-sketch-small.png",
+              title: null,
+            },
+            child_themes: [],
+            parent_themes: [],
+            remote_theme: {
+              id: 42,
+              remote_url: "https://github.com/example/theme.git",
+              remote_version: "def456",
+              local_version: "abc123",
+              commits_behind: 2,
+              branch: "main",
+              is_git: true,
+              local_compat_ref: "d-compat/2026.5",
+              remote_compat_ref: "d-compat/2026.5",
+            },
             translations: [],
           },
         ],
@@ -105,4 +150,154 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
         "This is a custom element that replaces the included components setting."
       );
   });
+
+  test("admin-customize-theme-translation-selector plugin outlet exposes the theme", async function (assert) {
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "admin-customize-theme-translation-selector",
+        <template>
+          <span class="theme-translation-outlet-test">
+            theme:{{@outletArgs.theme.id}}
+          </span>
+        </template>
+      );
+    });
+
+    await visit("/admin/customize/themes/-1");
+    assert
+      .dom(".translation-selector-container .theme-translation-outlet-test")
+      .hasText(
+        "theme:-1",
+        "the theme id is exposed via outletArgs on the translation selector outlet"
+      );
+  });
+
+  test("shows the compatibility-pinned ref for the pending update", async function (assert) {
+    await visit("/admin/customize/themes/42");
+
+    assert
+      .dom(".status-message")
+      .includesText(
+        "Theme is 2 commits behind d-compat/2026.5",
+        "the compat ref is interpolated into the commits-behind message"
+      );
+    assert
+      .dom(".status-message code")
+      .hasText("d-compat/2026.5", "the ref is rendered inside a code tag");
+  });
 });
+
+acceptance(
+  "Admin - Customize - Themes - Show - Color palettes",
+  function (needs) {
+    needs.user();
+
+    let savedThemes = [];
+
+    needs.pretender((server, helper) => {
+      const theme = {
+        id: 7,
+        name: "Palette theme",
+        default: false,
+        component: false,
+        color_scheme_id: 1,
+        dark_color_scheme_id: 2,
+        user_selectable: false,
+        auto_update: false,
+        remote_theme_id: null,
+        settings: [],
+        supported: true,
+        enabled: true,
+        theme_fields: [],
+        system: false,
+        color_scheme: null,
+        child_themes: [],
+        parent_themes: [],
+        remote_theme: null,
+        translations: [],
+      };
+
+      server.get("/admin/themes", () => {
+        return helper.response({
+          themes: [theme],
+          extras: {
+            color_schemes: [
+              { id: 1, name: "Morning" },
+              { id: 2, name: "Night", is_dark: true },
+              { id: 3, name: "Noon" },
+              { id: 4, name: "Midnight", is_dark: true },
+            ],
+          },
+        });
+      });
+
+      server.put("/admin/themes/7", (request) => {
+        const saved = JSON.parse(request.requestBody).theme;
+        savedThemes.push(saved);
+        return helper.response({ theme: { ...theme, ...saved } });
+      });
+
+      server.get("/admin/config/customize/themes", () => {
+        return helper.response({ themes: [] });
+      });
+    });
+
+    needs.hooks.beforeEach(() => (savedThemes = []));
+
+    test("saves the selected light color palette", async function (assert) {
+      await visit("/admin/customize/themes/7");
+
+      assert
+        .dom(".submit-light-edit")
+        .doesNotExist("does not offer to save an unchanged palette");
+
+      const lightPalette = selectKit(
+        ".theme-settings__light-color-scheme .color-palette-picker"
+      );
+      await lightPalette.expand();
+      await lightPalette.selectRowByValue(3);
+
+      assert.strictEqual(
+        lightPalette.header().value(),
+        "3",
+        "shows the chosen palette"
+      );
+
+      await click(".submit-light-edit");
+
+      assert.deepEqual(
+        savedThemes,
+        [{ color_scheme_id: 3 }],
+        "saves the chosen palette as the light palette"
+      );
+    });
+
+    test("saves the selected dark color palette", async function (assert) {
+      await visit("/admin/customize/themes/7");
+
+      assert
+        .dom(".submit-dark-edit")
+        .doesNotExist("does not offer to save an unchanged palette");
+
+      const darkPalette = selectKit(
+        ".theme-settings__dark-color-scheme .color-palette-picker"
+      );
+      await darkPalette.expand();
+      await darkPalette.selectRowByValue(4);
+
+      assert.strictEqual(
+        darkPalette.header().value(),
+        "4",
+        "shows the chosen palette"
+      );
+
+      await click(".submit-dark-edit");
+
+      assert.deepEqual(
+        savedThemes,
+        [{ dark_color_scheme_id: 4 }],
+        "saves the chosen palette as the dark palette"
+      );
+    });
+  }
+);

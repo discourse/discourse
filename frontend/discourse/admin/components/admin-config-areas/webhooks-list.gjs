@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import WebhookItem from "discourse/admin/components/webhook-item";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasWebhooksList extends Component {
@@ -30,7 +30,7 @@ export default class AdminConfigAreasWebhooksList extends Component {
   <template>
     <div class="container admin-api_keys">
       {{#if @webhooks.content}}
-        <LoadMore @action={{@webhooks.loadMore}}>
+        <DLoadMore @action={{@webhooks.loadMore}}>
           <table class="d-table admin-web_hooks__items">
             <thead class="d-table__header">
               <tr class="d-table__row">
@@ -51,15 +51,15 @@ export default class AdminConfigAreasWebhooksList extends Component {
             <tbody class="d-table__body">
               {{#each @webhooks.content as |webhook|}}
                 <WebhookItem
-                  @webhook={{webhook}}
                   @deliveryStatuses={{@webhooks.extras.delivery_statuses}}
                   @destroy={{this.destroyWebhook}}
+                  @webhook={{webhook}}
                 />
               {{/each}}
               {{#if @webhooks.loadingMore}}
                 <tr class="d-table__row">
                   <td class="d-table__cell" colspan="4">
-                    <ConditionalLoadingSpinner
+                    <DConditionalLoadingSpinner
                       @condition={{@webhooks.loadingMore}}
                     />
                   </td>
@@ -67,12 +67,12 @@ export default class AdminConfigAreasWebhooksList extends Component {
               {{/if}}
             </tbody>
           </table>
-        </LoadMore>
+        </DLoadMore>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="admin-web_hooks__add-web_hook"
           @ctaLabel="admin.web_hooks.add"
           @ctaRoute="adminWebHooks.new"
-          @ctaClass="admin-web_hooks__add-web_hook"
           @emptyLabel="admin.web_hooks.none"
         />
       {{/if}}

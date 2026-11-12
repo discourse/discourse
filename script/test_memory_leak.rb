@@ -26,7 +26,7 @@ def bin_diff(current)
   $baseline[:arenas].each_with_index do |arena, i|
     next if !arena || !arena[:bins]
     arena[:bins].each do |size, stat|
-      allocated = (current.dig(:arenas, i, :bins, size, :allocated) || 0)
+      allocated = current.dig(:arenas, i, :bins, size, :allocated) || 0
       diff = allocated - stat[:allocated]
       puts "bin #{size} delta #{diff}"
     end

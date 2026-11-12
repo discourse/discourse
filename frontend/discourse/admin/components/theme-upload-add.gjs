@@ -4,10 +4,10 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
@@ -120,18 +120,18 @@ export default class ThemeUploadAdd extends Component {
   <template>
     <DModal
       class="add-upload-modal"
-      @title={{i18n "admin.customize.theme.add_upload"}}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "admin.customize.theme.add_upload"}}
     >
       <:body>
         <div class="inputs">
           <section class="field">
             <input
-              {{on "change" this.updateName}}
-              type="file"
-              id="file-input"
               accept="*"
+              id="file-input"
+              type="file"
+              {{on "change" this.updateName}}
             />
             <label for="file-input">
               {{i18n "admin.customize.theme.upload_file_tip"}}
@@ -152,16 +152,16 @@ export default class ThemeUploadAdd extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.upload}}
           @disabled={{this.disabled}}
           @icon="upload"
           @label="admin.customize.theme.upload"
-          class="btn-primary"
         />
         <DButton
+          class="btn-transparent d-modal-cancel"
           @action={{@closeModal}}
           @label="cancel"
-          class="btn-transparent d-modal-cancel"
         />
       </:footer>
     </DModal>

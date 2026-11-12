@@ -68,6 +68,22 @@ RSpec.describe PostActionCreator do
       expect(post_action.related_post).to be_present
       expect(post_action.related_post.raw).to include("another special message")
     end
+
+    context "with a custom flag created after an earlier flag" do
+      after { Flag.reset_flag_settings! }
+
+      it "notifies subscribers" do
+        PostActionCreator.spam(admin, Fabricate(:post))
+        flag = Fabricate(:flag, name: "custom flag", notify_type: true)
+
+        messages =
+          MessageBus.track_publish("/topic/#{post.topic_id}") do
+            PostActionCreator.new(user, post, flag.id).perform
+          end
+
+        expect(messages.map { |message| message.data[:type] }).to include(:acted)
+      end
+    end
   end
 
   describe "perform" do
@@ -167,10 +183,25 @@ RSpec.describe PostActionCreator do
       expect(event[:params].first).to be_instance_of(PostAction)
       expect(event[:params].second).to be_instance_of(PostActionCreator)
     end
+
+    it "forbids non-staff from creating warning post actions" do
+      target_post = Fabricate(:post)
+
+      result =
+        PostActionCreator.new(
+          user,
+          target_post,
+          PostActionType.types[:notify_user],
+          is_warning: true,
+          message: "this is a test",
+        ).perform
+
+      expect(result.forbidden).to eq(true)
+    end
   end
 
   describe "flags" do
-    it "will create a reviewable if one does not exist" do
+    it "creates a reviewable if one does not exist" do
       result = PostActionCreator.create(user, post, :inappropriate)
       expect(result.success?).to eq(true)
 
@@ -200,6 +231,42 @@ RSpec.describe PostActionCreator do
           locale: :en,
         ),
       )
+    end
+
+    it "does not auto-hide a post when the same TL2 user repeatedly retracts and recreates a flag" do
+      Reviewable.set_priorities(high: 12.5)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:medium]
+      attacker = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+
+      2.times do
+        expect(PostActionCreator.inappropriate(attacker, post)).to be_success
+        expect(PostActionDestroyer.destroy(attacker, post, :inappropriate)).to be_success
+      end
+
+      result = PostActionCreator.inappropriate(attacker, post)
+      reviewable = result.reviewable.reload
+
+      expect(result).to be_success
+      expect(post.reload).not_to be_hidden
+      expect(reviewable.score).to eq(ReviewableScore.user_flag_score(attacker))
+      expect(reviewable.reviewable_scores.pending.count).to eq(1)
+    end
+
+    it "lets a flag agreed with again hide the post after the author's edit removed the user's earlier flag" do
+      reviewable = PostActionCreator.create(user, post, :inappropriate).reviewable
+      reviewable.perform(admin, :agree_and_hide)
+
+      freeze_time 10.minutes.from_now
+      PostRevisor.new(post.reload).revise!(post.user, raw: "#{post.raw} with an edit by its author")
+
+      freeze_time 10.minutes.from_now
+      result = PostActionCreator.create(user, post.reload, :inappropriate)
+
+      expect(PostAction.active.where(post:, user:)).to contain_exactly(result.post_action)
+
+      result.reviewable.perform(admin, :agree_and_hide)
+
+      expect(post.reload).to be_hidden
     end
 
     describe "Auto hide spam flagged posts" do
@@ -332,7 +399,7 @@ RSpec.describe PostActionCreator do
   end
 
   describe "take_action" do
-    it "will hide the post" do
+    it "hides the post" do
       PostActionCreator
         .new(
           Fabricate(:moderator, refresh_auto_groups: true),
@@ -350,7 +417,7 @@ RSpec.describe PostActionCreator do
         PostActionCreator.create(Fabricate(:user, refresh_auto_groups: true), post, :inappropriate)
       end
 
-      it "will agree with the old reviewable" do
+      it "agrees with the old reviewable" do
         reviewable =
           PostActionCreator
             .new(

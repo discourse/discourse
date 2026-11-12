@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Posts page", type: :system do
+describe "Posts page" do
   fab!(:post)
   fab!(:post_2, :post)
   fab!(:post_3, :post)

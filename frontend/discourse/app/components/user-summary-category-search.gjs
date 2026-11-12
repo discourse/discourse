@@ -1,16 +1,14 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 
-@tagName("")
 export default class UserSummaryCategorySearch extends Component {
-  @computed("user", "category")
+  @service site;
+
   get searchParams() {
-    let query = `@${this.get("user.username")} #${this.get("category.slug")}`;
-    if (this.searchOnlyFirstPosts) {
+    let query = `@${this.args.user?.username} #${this.args.category?.slug}`;
+    if (this.args.searchOnlyFirstPosts) {
       query += " in:first";
     }
     return query;
@@ -18,9 +16,13 @@ export default class UserSummaryCategorySearch extends Component {
 
   <template>
     {{#if @count}}
-      <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
+      {{#if this.site.can_search}}
+        <LinkTo @query={{hash q=this.searchParams}} @route="full-page-search">
+          {{@count}}
+        </LinkTo>
+      {{else}}
         {{@count}}
-      </LinkTo>
+      {{/if}}
     {{else}}
       &ndash;
     {{/if}}

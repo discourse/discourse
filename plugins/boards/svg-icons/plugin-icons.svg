@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="boards" viewBox="0 0 512 512">
+    <path fill="currentColor" fill-rule="evenodd" d="M149 64C94 64 64 94 64 149v214c0 55 30 85 85 85h214c55 0 85-30 85-85V149c0-55-30-85-85-85H149Zm0 43c-28 0-42 14-42 42v214c0 28 14 42 42 42h214c28 0 42-14 42-42V149c0-28-14-42-42-42H149Z" clip-rule="evenodd"/>
+    <rect width="43" height="171" x="149" y="128" fill="currentColor" rx="21.5"/>
+    <rect width="43" height="107" x="234.5" y="128" fill="currentColor" rx="21.5"/>
+    <rect width="43" height="256" x="320" y="128" fill="currentColor" rx="21.5"/>
+  </symbol>
+</svg>

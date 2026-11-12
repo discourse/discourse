@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -83,52 +83,52 @@ export default class ActivityCalendar extends Component {
           <thead>
             <tr>
               <td
-                colspan="5"
                 class="activity-header-cell"
+                colspan="5"
               >{{this.getAbbreviatedMonth 0}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 1}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 2}}</td>
               <td
-                colspan="5"
                 class="activity-header-cell"
+                colspan="5"
               >{{this.getAbbreviatedMonth 3}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 4}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 5}}</td>
               <td
-                colspan="5"
                 class="activity-header-cell"
+                colspan="5"
               >{{this.getAbbreviatedMonth 6}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 7}}</td>
               <td
-                colspan="5"
                 class="activity-header-cell"
+                colspan="5"
               >{{this.getAbbreviatedMonth 8}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 9}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 10}}</td>
               <td
-                colspan="4"
                 class="activity-header-cell"
+                colspan="4"
               >{{this.getAbbreviatedMonth 11}}</td>
             </tr>
           </thead>
@@ -137,12 +137,12 @@ export default class ActivityCalendar extends Component {
               <tr>
                 {{#each row as |cell|}}
                   <td
-                    data-date={{cell.date}}
-                    title={{this.computeCellTitle cell}}
-                    class={{concatClass
+                    class={{dConcatClass
                       "rewind-calendar-cell"
                       (this.computeClass cell.post_count)
                     }}
+                    data-date={{cell.date}}
+                    title={{this.computeCellTitle cell}}
                   ></td>
                 {{/each}}
               </tr>

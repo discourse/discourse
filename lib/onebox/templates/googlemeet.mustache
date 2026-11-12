@@ -1,0 +1,26 @@
+<div class="google-meet-onebox">
+  <div class="google-meet-onebox__icon">
+    <svg class="fa d-icon d-icon-video svg-icon svg-string" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <use href="#video"></use>
+    </svg>
+  </div>
+
+  <div class="google-meet-onebox__content">
+    <h3 class="google-meet-onebox__title">
+      <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+    </h3>
+
+    {{#meeting_code}}
+      <p class="google-meet-onebox__code">
+        <span class="google-meet-onebox__code-label">{{meeting_code_label}}</span>
+        <code class="google-meet-onebox__code-value">{{meeting_code}}</code>
+      </p>
+    {{/meeting_code}}
+
+    {{#description}}
+      <p class="google-meet-onebox__description">{{description}}</p>
+    {{/description}}
+
+    <a class="google-meet-onebox__join" href="{{link}}" target="_blank" rel="noopener">{{join_label}}</a>
+  </div>
+</div>

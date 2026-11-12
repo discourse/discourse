@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Channel - Info - Members page", type: :system do
+RSpec.describe "Channel - Info - Members page" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
   fab!(:current_user, :user)
@@ -42,18 +42,15 @@ RSpec.describe "Channel - Info - Members page", type: :system do
         Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 
-      xit "shows all members" do
+      it "loads more members on scroll" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 60)
+        expect(page).to have_css("li.c-channel-members__list-item", minimum: 20)
+        initial_count = page.all("li.c-channel-members__list-item").count
 
-        scroll_to(find(".c-channel-members__list-item:nth-child(60)"))
+        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
-
-        scroll_to(find(".c-channel-members__list-item:nth-child(100)"))
-
-        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
+        expect(page).to have_css("li.c-channel-members__list-item", minimum: initial_count + 1)
       end
 
       context "with filter" do
@@ -61,23 +58,20 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           chat_page.visit_channel_members(channel_1)
           find(".c-channel-members__filter").fill_in(with: "cat")
 
-          expect(page).to have_selector(
-            ".c-channel-members__list-item .-user-info",
-            count: 1,
-            text: "cat",
-          )
+          expect(page).to have_selector(".c-channel-members__list-item", count: 1, text: "cat")
         end
       end
 
       context "with user status" do
-        xit "renders status next to name" do
+        it "renders status next to name" do
           SiteSetting.enable_user_status = true
           current_user.set_status!("walking the dog", "dog")
 
           chat_page.visit_channel_members(channel_1)
+          find(".c-channel-members__filter").fill_in(with: current_user.username)
 
           expect(page).to have_selector(
-            ".-member .user-status-message img[alt='#{current_user.user_status.emoji}']",
+            ".c-channel-members__list-item .user-status-message img[alt='#{current_user.user_status.emoji}']",
           )
         end
       end
@@ -88,7 +82,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     it "doesn’t allow to add members" do
       chat_page.visit_channel_members(channel_1)
 
-      expect(chat_page).to have_no_css(".c-channel-members__list-item.-add-member")
+      expect(chat_page).to have_no_css(".c-channel-members__add-member")
     end
   end
 
@@ -105,7 +99,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     it "allows to add members" do
       new_user = Fabricate(:user)
       chat_page.visit_channel_members(channel_1)
-      chat_page.find(".c-channel-members__list-item.-add-member").click
+      chat_page.find(".c-channel-members__add-member").click
       chat_page.find(".chat-message-creator__members-input").fill_in(with: new_user.username)
       chat_page.find(".chat-message-creator__list-item").click
       chat_page.find(".add-to-channel").click
@@ -139,7 +133,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       chat_page.visit_channel_members(channel_1)
       expect(chat_page).to have_add_member_button
 
-      chat_page.find(".c-channel-members__list-item.-add-member").click
+      chat_page.find(".c-channel-members__add-member").click
       chat_page.find(".chat-message-creator__members-input").fill_in(with: new_user.username)
       chat_page.find(".chat-message-creator__list-item").click
       chat_page.find(".add-to-channel").click
@@ -188,7 +182,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       it "allows removing members" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(chat_page).to have_css(".c-channel-members__list-item .-remove-member")
+        expect(chat_page).to have_css(".c-channel-members__list-item .remove-member")
       end
     end
 
@@ -205,7 +199,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       it "allows removing members" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(chat_page).to have_css(".c-channel-members__list-item .-remove-member")
+        expect(chat_page).to have_css(".c-channel-members__list-item .remove-member")
       end
     end
 
@@ -222,17 +216,17 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       it "does not allow removing members" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(chat_page).to have_no_css(".c-channel-members__list-item .-remove-member")
+        expect(chat_page).to have_no_css(".c-channel-members__list-item .remove-member")
       end
     end
   end
 
   context "when on mobile", mobile: true do
-    it "has a link to the settings" do
+    it "has a tab for the settings" do
       chat_page.visit_channel_members(channel_1)
 
       expect(page).to have_css(
-        ".c-back-button[href='/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings']",
+        ".c-channel-info__nav a[href='/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings']",
       )
     end
   end

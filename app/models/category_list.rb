@@ -13,6 +13,7 @@ class CategoryList
   self.preloaded_topic_custom_fields = Set.new
 
   attr_accessor :categories, :uncategorized
+  attr_reader :next_page
 
   def self.register_included_association(association)
     @included_associations ||= []
@@ -20,13 +21,13 @@ class CategoryList
   end
 
   def self.included_associations
-    [
-      :uploaded_background,
-      :uploaded_background_dark,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url],
+    %i[
+      uploaded_background
+      uploaded_background_dark
+      uploaded_logo
+      uploaded_logo_dark
+      topic_only_relative_url
+      subcategories
     ].concat(@included_associations || [])
   end
 
@@ -81,6 +82,7 @@ class CategoryList
           include_uncategorized: false,
         ) # perf optimization since category featured topics can't have `category_id` set to null
         .listable_topics
+        .visible
         .joins(
           "INNER JOIN category_featured_topics ON topics.id = category_featured_topics.topic_id",
         )
@@ -142,21 +144,7 @@ class CategoryList
   end
 
   def find_categories
-    query = Category.includes(CategoryList.included_associations).secured(@guardian)
-
-    if SiteSetting.content_localization_enabled
-      locale = I18n.locale.to_s
-      query =
-        query.joins(
-          ActiveRecord::Base.sanitize_sql_array(
-            [
-              "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = ?",
-              locale,
-            ],
-          ),
-        )
-    end
-
+    query = Category.secured(@guardian)
     query = self.class.order_categories(query)
 
     paginate = paginate_results?
@@ -177,16 +165,11 @@ class CategoryList
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    if SiteSetting.content_localization_enabled
-      query =
-        query.group("categories.id").select(
-          "categories.*,
-           MAX(COALESCE(cl.name, categories.name)) AS name,
-           MAX(COALESCE(cl.description, categories.description)) AS description",
-        )
-    end
-
     @categories = query.to_a
+
+    if paginate && @options[:include_pagination] && query.offset(page * CATEGORIES_PER_PAGE).exists?
+      @next_page = page + 1
+    end
 
     if paginate && @options[:parent_category_id].blank?
       categories_with_rownum =
@@ -195,15 +178,12 @@ class CategoryList
           .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
           .where(parent_category_id: @categories.map { |c| c.id })
 
-      @categories +=
-        Category.includes(CategoryList.included_associations).where(
+      subcategories_query =
+        Category.where(
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )
-    end
-
-    if Site.preloaded_category_custom_fields.any?
-      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
+      @categories += subcategories_query
     end
 
     include_subcategories = @options[:include_subcategories] == true
@@ -238,7 +218,25 @@ class CategoryList
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 
-    Category.preload_user_fields!(@guardian, categories_with_descendants)
+    displayed_categories = categories_with_descendants
+    associations = CategoryList.included_associations
+    associations << :localizations if SiteSetting.content_localization_enabled
+    ActiveRecord::Associations::Preloader.new(
+      records: displayed_categories,
+      associations: associations,
+    ).call
+
+    if SiteSetting.content_localization_enabled
+      displayed_categories.each do |c|
+        LocalizationAttributesReplacer.localize_category(c, I18n.locale)
+      end
+    end
+
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(displayed_categories, Site.preloaded_category_custom_fields)
+    end
+
+    Category.preload_user_fields!(@guardian, displayed_categories)
   end
 
   def prune_empty

@@ -1,0 +1,380 @@
+# frozen_string_literal: true
+
+require_dependency "reviewable"
+
+class ReviewableAiToolAction < Reviewable
+  def created_new!
+    super
+
+    self.topic ||= target_post&.topic
+    self.category_id ||= topic&.category_id
+  end
+
+  def target_post
+    return @target_post if defined?(@target_post)
+
+    post_id = target&.post_id
+    @target_post = post_id ? Post.find_by(id: post_id) : nil
+  end
+
+  def build_actions(actions, guardian, args)
+    return actions if !pending?
+    return actions if !Reviewable.viewable_by(guardian.user).exists?(id: id)
+
+    approve =
+      actions.add_bundle(
+        "#{id}-approve",
+        icon: "check",
+        label: "discourse_ai.reviewables.ai_tool_action.approve.title",
+      )
+
+    build_action(actions, :approve, icon: "check", bundle: approve)
+
+    reject =
+      actions.add_bundle(
+        "#{id}-reject",
+        icon: "xmark",
+        label: "discourse_ai.reviewables.ai_tool_action.reject.title",
+      )
+
+    build_action(actions, :reject, icon: "xmark", bundle: reject)
+  end
+
+  def perform_approve(performed_by, args)
+    ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    tool, tool_class, context = build_tool!
+    context.user = performed_by if tool_class.attribute_to_approver?
+
+    # Suppress automation re-triggers caused by the tool's side effects
+    # (e.g. change_topic_tags → topic_tags_changed → automation fires again → loop).
+    result =
+      if defined?(DiscourseAutomation)
+        DiscourseAutomation.suppress_triggers { tool.invoke }
+      else
+        tool.invoke
+      end
+
+    ensure_tool_succeeded!(result)
+
+    resolution_result(:approved, args, tool_result: result)
+  end
+
+  def perform_reject(performed_by, args)
+    ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    resolution_result(:rejected, args)
+  end
+
+  def approval_resolved_title
+    tool, = build_tool!
+    tool.approval_resolved_title
+  rescue Discourse::InvalidAccess
+    nil
+  end
+
+  private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return unless action_id == :approve
+
+    parameters = target.tool_parameters
+
+    case target.tool_name
+    when "close_topic"
+      return unless parameters["closed"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was closed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "unlist_topic"
+      return unless parameters["unlisted"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was unlisted.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DEMOTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "delete_topic"
+      return unless parameters["deleted"]
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "lock_post"
+      return unless parameters["locked"]
+
+      post = Post.with_deleted.find(parameters["post_id"])
+
+      {
+        decision_facts: "The post was locked.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "set_slow_mode"
+      return unless parameters["slow_mode_seconds"].to_i.positive?
+
+      post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
+
+      {
+        decision_facts: "The topic was placed in slow mode, limiting how often users can reply.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "edit_post"
+      post = Post.with_deleted.find(parameters["post_id"])
+
+      {
+        decision_facts: "The post was edited.",
+        decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+        decision_visibility_other: "Content edited",
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }
+    when "suspend_user"
+      user = User.find_by_username(parameters["username"])
+
+      {
+        decision_facts: "The account was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }.compact
+    when "silence_user"
+      user = User.find_by_username(parameters["username"])
+
+      {
+        decision_facts: "The account had its ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "Yes",
+        automated_decision: "AUTOMATED_DECISION_PARTIALLY",
+      }.compact
+    end
+  end
+
+  def resolution_result(status, args, tool_result: nil)
+    result = create_result(:success, status)
+    inline_post_id = args[:post_id] || args["post_id"]
+    chat_message_id = args[:chat_message_id] || args["chat_message_id"]
+    return result if inline_post_id.blank? && chat_message_id.blank?
+
+    payload["continuation"] = if chat_message_id.present?
+      { chat_message_id: chat_message_id.to_i, tool_result: tool_result }
+    else
+      { post_id: inline_post_id.to_i, tool_result: tool_result }
+    end
+    result.after_commit = -> do
+      DB.after_commit { Jobs.enqueue(:resume_ai_tool_approval, reviewable_id: id) }
+    end
+    result
+  end
+
+  # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
+  # context]; the caller sets context.user for audit attribution as needed.
+  def build_tool!
+    tool_action = target
+    if tool_action.blank?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.target_missing"),
+            )
+    end
+
+    tool_class =
+      DiscourseAi::Agents::Agent.all_available_tools.find { |t| t.name == tool_action.tool_name }
+
+    if tool_class.blank?
+      raise Discourse::InvalidAccess.new(
+              I18n.t(
+                "discourse_ai.reviewables.ai_tool_action.tool_not_found",
+                tool_name: tool_action.tool_name,
+              ),
+            )
+    end
+
+    bot_user = User.find_by(id: tool_action.bot_user_id)
+    if bot_user.blank?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.bot_user_missing"),
+            )
+    end
+
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.reviewable_id = id
+
+    tool =
+      tool_class.new(
+        tool_action.tool_parameters.symbolize_keys,
+        agent_options: tool_action.tool_options,
+        bot_user:,
+        llm: nil,
+        context:,
+      )
+
+    [tool, tool_class, context]
+  end
+
+  def ensure_inline_post_contains_approval!(args)
+    inline_post_id = args[:post_id] || args["post_id"]
+    return if inline_post_id.blank?
+
+    approval_post =
+      Post.find_by(
+        id: inline_post_id,
+        topic_id: topic_id,
+        user_id: [target&.bot_user_id, target&.ai_agent&.user_id].compact,
+        deleted_at: nil,
+      )
+    approval_marker = "data-ai-tool-approval-reviewable-id='#{id}'"
+
+    if approval_post.blank? || !approval_post.raw.include?(approval_marker)
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
+            )
+    end
+  end
+
+  def ensure_chat_message_contains_approval!(args)
+    message_id = args[:chat_message_id] || args["chat_message_id"]
+    return if message_id.blank?
+
+    message = ::Chat::Message.find_by(id: message_id)
+    source = ::Chat::Message.find_by(id: payload["chat_message_id"])
+    action_id = DiscourseAi::AiBot::ChatToolApproval.build_action_id("approve", id)
+    valid_block =
+      message&.blocks.to_a.any? do |block|
+        block["elements"].to_a.any? { |element| element["action_id"] == action_id }
+      end
+    valid_context =
+      !source ||
+        (
+          source.chat_channel_id == message&.chat_channel_id &&
+            (
+              source.thread_id == message&.thread_id ||
+                (message&.thread_id.nil? && source.thread&.original_message_id == source.id)
+            )
+        )
+
+    if !message || !message.chat_channel.direct_message_channel? ||
+         ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
+         !valid_block || !valid_context
+      raise Discourse::InvalidAccess
+    end
+  end
+
+  def ensure_performed_by_is_a_real_person!(performed_by)
+    if performed_by.blank? || performed_by.bot?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.performer_not_human"),
+            )
+    end
+  end
+
+  # The replayed tool reports precondition/service failures as an error hash
+  # (e.g. the approver lost permission, or the target was already actioned
+  # between enqueue and approval). Surface the reason to the moderator and let
+  # the surrounding transaction roll back so the reviewable stays pending,
+  # instead of recording a phantom approval for an action that never ran.
+  def ensure_tool_succeeded!(result)
+    return unless result.is_a?(Hash) && result[:status].to_s == "error"
+
+    error =
+      result[:error].to_s.presence ||
+        I18n.t("discourse_ai.reviewables.ai_tool_action.execution_error_unknown")
+
+    raise Discourse::InvalidAccess.new(
+            "ai_tool_action_execution_error",
+            nil,
+            custom_message: "discourse_ai.reviewables.ai_tool_action.execution_error",
+            custom_message_params: {
+              error: error,
+            },
+          )
+  end
+
+  def build_action(actions, id, icon:, bundle: nil)
+    actions.add(id, bundle: bundle) do |action|
+      action.icon = icon
+      action.label = "discourse_ai.reviewables.ai_tool_action.#{id}.title"
+    end
+  end
+end
+
+# == Schema Information
+#
+# Table name: reviewables
+#
+#  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
+#
+# Indexes
+#
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
+#  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
+#

@@ -6,5 +6,11 @@
 
 sl:
   js:
+    discourse_reactions:
+      users_popup:
+        all: "Vsi"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Dodano"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

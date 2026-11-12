@@ -3,10 +3,7 @@ import loaderShim from "discourse/lib/loader-shim";
 
 // Soon-to-be-deprecated discourse-common imports
 loaderShim("discourse-common/helpers/base-path", () =>
-  importSync("discourse/helpers/base-path")
-);
-loaderShim("discourse-common/helpers/base-url", () =>
-  importSync("discourse/helpers/base-url")
+  importSync("discourse/ui-kit/helpers/d-base-path")
 );
 loaderShim("discourse-common/helpers/bound-i18n", () =>
   importSync("discourse/helpers/bound-i18n")
@@ -18,10 +15,7 @@ loaderShim("discourse-common/helpers/component-for-row", () =>
   importSync("discourse/helpers/component-for-row")
 );
 loaderShim("discourse-common/helpers/d-icon", () =>
-  importSync("discourse/helpers/d-icon")
-);
-loaderShim("discourse-common/helpers/fa-icon", () =>
-  importSync("discourse/helpers/fa-icon")
+  importSync("discourse/ui-kit/helpers/d-icon")
 );
 loaderShim("discourse-common/helpers/get-url", () =>
   importSync("discourse/lib/get-url")
@@ -36,9 +30,6 @@ loaderShim("discourse-common/helpers/i18n", () =>
   importSync("discourse/helpers/i18n")
 );
 
-loaderShim("discourse-common/lib/attribute-hook", () =>
-  importSync("discourse/lib/attribute-hook")
-);
 loaderShim("discourse-common/lib/avatar-utils", () =>
   importSync("discourse/lib/avatar-utils")
 );
@@ -108,9 +99,6 @@ loaderShim("discourse-common/utils/handle-descriptor", () =>
 );
 loaderShim("discourse-common/utils/is-descriptor", () =>
   importSync("discourse/lib/is-descriptor")
-);
-loaderShim("discourse-common/utils/macro-alias", () =>
-  importSync("discourse/lib/macro-alias")
 );
 loaderShim("discourse-common/utils/multi-cache", () =>
   importSync("discourse/lib/multi-cache")

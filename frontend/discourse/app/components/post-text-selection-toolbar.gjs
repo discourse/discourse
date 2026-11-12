@@ -3,13 +3,13 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
-import { clipboardCopy, postUrl } from "discourse/lib/utilities";
+import { clipboardCopyAsync, postUrl } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class PostTextSelectionToolbar extends Component {
@@ -69,8 +69,11 @@ export default class PostTextSelectionToolbar extends Component {
 
   @action
   async copyQuoteToClipboard() {
-    const text = await this.args.data.buildQuote();
-    clipboardCopy(text);
+    await clipboardCopyAsync(() =>
+      this.args.data
+        .buildQuote()
+        .then((text) => new Blob([text], { type: "text/plain" }))
+    );
     this.toasts.success({
       duration: "short",
       data: { message: i18n("post.quote_copied_to_clipboard") },
@@ -88,29 +91,29 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    <div class={{concatClass "quote-button" "visible"}}>
+    <div class={{dConcatClass "quote-button" "visible"}}>
       <div class="buttons">
         <PluginOutlet
-          @name="post-text-buttons"
           @defaultGlimmer={{true}}
+          @name="post-text-buttons"
           @outletArgs={{lazyHash data=@data post=this.post}}
         >
           {{#if this.embedQuoteButton}}
             <DButton
+              class="btn-flat insert-quote"
+              @action={{@data.insertQuote}}
               @icon="quote-left"
               @label="post.quote_reply"
               @title="post.quote_reply_shortcut"
-              class="btn-flat insert-quote"
-              @action={{@data.insertQuote}}
             />
           {{/if}}
 
           {{#if @data.canEditPost}}
             <DButton
+              class="btn-flat quote-edit-label"
               @icon="pencil"
               @label="post.quote_edit"
               @title="post.quote_edit_shortcut"
-              class="btn-flat quote-edit-label"
               {{on
                 "click"
                 (fn @data.toggleFastEdit this.quoteState @data.supportsFastEdit)
@@ -120,33 +123,33 @@ export default class PostTextSelectionToolbar extends Component {
 
           {{#if @data.canCopyQuote}}
             <DButton
+              class="btn-flat copy-quote"
               @icon="copy"
               @label="post.quote_copy"
               @title="post.quote_copy"
-              class="btn-flat copy-quote"
               {{on "click" this.copyQuoteToClipboard}}
             />
           {{/if}}
 
           <PluginOutlet
-            @name="quote-share-buttons-before"
             @connectorTagName="span"
+            @name="quote-share-buttons-before"
             @outletArgs={{lazyHash data=@data}}
           />
 
           {{#if this.quoteSharingEnabled}}
             {{#each this.quoteSharingSources as |source|}}
               <DButton
-                @action={{fn this.share source}}
-                @translatedTitle={{source.title}}
-                @icon={{source.icon}}
                 class="btn-flat"
+                @action={{fn this.share source}}
+                @icon={{source.icon}}
+                @translatedTitle={{source.title}}
               />
             {{/each}}
 
             <PluginOutlet
-              @name="quote-share-buttons-after"
               @connectorTagName="span"
+              @name="quote-share-buttons-after"
               @outletArgs={{lazyHash data=@data}}
             />
           {{/if}}
@@ -154,7 +157,7 @@ export default class PostTextSelectionToolbar extends Component {
       </div>
 
       <div class="extra">
-        <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
+        <PluginOutlet @connectorTagName="div" @name="quote-button-after" />
       </div>
     </div>
   </template>

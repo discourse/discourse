@@ -15,6 +15,54 @@ RSpec.describe "api keys" do
     expect(response.status).to eq(404)
   end
 
+  it "does not allow overloaded requests to bypass granular API key scopes" do
+    global_setting :reject_anonymous_min_queue_seconds, 1.0
+
+    admin = Fabricate(:admin)
+    topic = Fabricate(:topic)
+    Fabricate(:post, topic: topic)
+    scoped_api_key =
+      Fabricate(
+        :api_key,
+        user: admin,
+        api_key_scopes: [Fabricate.build(:api_key_scope, resource: "topics", action: "read")],
+      )
+
+    put "/t/#{topic.id}.json",
+        params: {
+          title: "This is an unauthorized title change",
+        },
+        headers: {
+          HTTP_API_KEY: scoped_api_key.key,
+          HTTP_X_REQUEST_START: "t=0",
+        }
+
+    expect(response.status).to eq(503)
+    expect(response.body).to eq(
+      "Server is currently experiencing high load. Please try again later.",
+    )
+    expect(topic.reload.title).not_to eq("This is an unauthorized title change")
+  end
+
+  it "does not let an empty-named parameter satisfy a parameter restriction" do
+    scope =
+      ApiKeyScope.new(resource: "topics", action: "write", allowed_parameters: { topic_id: ["3"] })
+    scoped_api_key = Fabricate(:api_key, user: Fabricate(:admin), api_key_scopes: [scope])
+
+    post "/posts.json",
+         params: {
+           :title => "A topic this key may not start",
+           :raw => "This topic is outside the scope of the key.",
+           "" => "3",
+         },
+         headers: {
+           HTTP_API_KEY: scoped_api_key.key,
+         },
+         as: :json
+
+    expect(response.status).to eq(403)
+  end
+
   it "allows parameters on ics routes" do
     get "/u/#{user.username}/bookmarks.ics?api_key=#{api_key.key}&api_username=#{user.username.downcase}"
     expect(response.status).to eq(200)

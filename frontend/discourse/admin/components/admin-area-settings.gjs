@@ -2,17 +2,20 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "discourse/admin/components/admin-filtered-site-settings";
 import AdminSiteSettingsChangesBanner from "discourse/admin/components/admin-site-settings-changes-banner";
 import SiteSetting from "discourse/admin/models/site-setting";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminAreaSettings extends Component {
+  @service adminSiteSettingStore;
+
   @tracked settings = [];
   @tracked loading = false;
 
@@ -29,9 +32,18 @@ export default class AdminAreaSettings extends Component {
     return !this.loading && this.settings.length > 0;
   }
 
+  get filter() {
+    return this.args.filter ?? "";
+  }
+
   @action
   async reloadSettings() {
     await this.#loadSettings();
+  }
+
+  @action
+  adminSettingsFilterChangedCallback(filterData) {
+    this.args.adminSettingsFilterChangedCallback(filterData.filter);
   }
 
   @bind
@@ -45,13 +57,15 @@ export default class AdminAreaSettings extends Component {
           categories: this.args.categories,
         },
       });
+      const siteSettings = result.site_settings.map((setting) =>
+        SiteSetting.create(setting)
+      );
+      this.adminSiteSettingStore.register(siteSettings);
       this.settings = [
         {
           name: "All",
           nameKey: "all_results",
-          siteSettings: result.site_settings.map((setting) =>
-            SiteSetting.create(setting)
-          ),
+          siteSettings,
         },
       ];
     } catch (error) {
@@ -62,18 +76,9 @@ export default class AdminAreaSettings extends Component {
     }
   }
 
-  get filter() {
-    return this.args.filter ?? "";
-  }
-
-  @action
-  adminSettingsFilterChangedCallback(filterData) {
-    this.args.adminSettingsFilterChangedCallback(filterData.filter);
-  }
-
   <template>
     {{#if this.showBreadcrumb}}
-      <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+      <DBreadcrumbsItem @label={{i18n "settings"}} @path={{@path}} />
     {{/if}}
 
     <div
@@ -88,11 +93,11 @@ export default class AdminAreaSettings extends Component {
           @settings={{this.settings}}
         />
       {{else}}
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
           <AdminConfigAreaEmptyList
             @emptyLabelTranslated={{i18n "admin.settings.not_found"}}
           />
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       {{/if}}
     </div>
 

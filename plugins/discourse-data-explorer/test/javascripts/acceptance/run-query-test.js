@@ -1,15 +1,52 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  find,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
-acceptance("Data Explorer Plugin | Run Query", function (needs) {
+function stubPluginDetails(server, helper) {
+  server.get("/admin/plugins/discourse-data-explorer.json", () =>
+    helper.response({
+      id: "discourse-data-explorer",
+      name: "discourse-data-explorer",
+      enabled: true,
+      has_settings: true,
+      humanized_name: "Data Explorer",
+      is_discourse_owned: true,
+      admin_route: {
+        label: "explorer.title",
+        location: "discourse-data-explorer",
+        use_new_show_route: true,
+      },
+    })
+  );
+}
+
+acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
+  let updateParams;
+  let query2Tags;
+  let query2Deletes;
+
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
+    updateParams = null;
+    query2Tags = ["custom", "existing"];
+    query2Deletes = 0;
   });
 
   needs.hooks.afterEach(() => {
@@ -17,21 +54,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/discourse-data-explorer.json", () => {
-      return helper.response({
-        id: "discourse-data-explorer",
-        name: "discourse-data-explorer",
-        enabled: true,
-        has_settings: true,
-        humanized_name: "Data Explorer",
-        is_discourse_owned: true,
-        admin_route: {
-          label: "explorer.title",
-          location: "discourse-data-explorer",
-          use_new_show_route: true,
-        },
-      });
-    });
+    stubPluginDetails(server, helper);
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([
@@ -108,32 +131,12 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
-      return helper.response({
-        queries: [
-          {
-            id: -6,
-            name: "Top 100 Likers",
-            description:
-              "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2021-02-11T08:29:59.337Z",
-            user_id: -1,
-            is_default: true,
-          },
-          {
-            id: 2,
-            name: "What about 0?",
-            description: "",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2023-05-04T22:16:23.858Z",
-            user_id: 1,
-            is_default: false,
-          },
-        ],
-      });
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "existing"])
+    );
+
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {
@@ -155,6 +158,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
           created_at: "2021-02-02T12:21:11.449Z",
           username: "system",
           group_ids: [],
+          tags: ["default", "existing"],
+          automatic_tags: ["default"],
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
@@ -174,6 +179,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
           created_at: "2023-05-04T22:16:06.007Z",
           username: "system",
           group_ids: [],
+          tags: query2Tags,
+          automatic_tags: ["custom"],
           last_run_at: "2023-05-04T22:16:23.858Z",
           hidden: false,
           user_id: 1,
@@ -230,6 +237,57 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         colrender: {},
         rows: [[0, null, false]],
       });
+    });
+
+    server.put(
+      "/admin/plugins/discourse-data-explorer/queries/2",
+      (request) => {
+        updateParams = new URLSearchParams(request.requestBody);
+        query2Tags = updateParams
+          .getAll("query[tags][]")
+          .map((tag) => tag.toLowerCase());
+        return helper.response({
+          query: {
+            id: 2,
+            sql: 'SELECT 0 zero, null "null", false "false"',
+            name: "What about 0?",
+            description: "",
+            param_info: [],
+            group_ids: [],
+            tags: query2Tags,
+            automatic_tags: ["custom"],
+            hidden: false,
+            user_id: 1,
+          },
+        });
+      }
+    );
+
+    server.put(
+      "/admin/plugins/discourse-data-explorer/queries/-6",
+      (request) => {
+        updateParams = new URLSearchParams(request.requestBody);
+        return helper.response({
+          query: {
+            id: -6,
+            sql: "SELECT 1",
+            name: "Top 100 Likers",
+            description: "",
+            param_info: [],
+            group_ids: [],
+            tags: ["default", "monthly"],
+            automatic_tags: ["default"],
+            hidden: false,
+            user_id: -1,
+            is_default: true,
+          },
+        });
+      }
+    );
+
+    server.delete("/admin/plugins/discourse-data-explorer/queries/2", () => {
+      query2Deletes += 1;
+      return helper.response({ success: true, errors: [] });
     });
 
     server.get("/session/csrf.json", function () {
@@ -296,28 +354,28 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert.dom("div.query-edit").exists("the query code was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    assert.dom("canvas").exists("the chart was rendered by default");
+
+    await click(".query-results-modes input[value='table']");
 
     assert
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
     assert
-      .dom("div.result-info button:nth-child(3) span")
-      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-
-    await click("div.result-info button:nth-child(3)");
-
-    assert.dom("canvas").exists("the chart was rendered");
+      .dom(".query-results-modes")
+      .exists("the chart/table toggle buttons were rendered");
   });
 
   test("runs query and is able to download the results", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/-6");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
 
     const createElement = document.createElement.bind(document);
     const appendChild = document.body.appendChild.bind(document.body);
@@ -360,7 +418,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click(".query-action-bar__right .query-result-download-buttons");
+    await click(".query-result-export__results-json");
 
     await finishedForm;
 
@@ -393,10 +452,15 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       .hasText("What about 0?", "the query name was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    // Default view is chart for chartable data; switch to table to inspect cells.
+    if (document.querySelector(".query-results-modes input[value='table']")) {
+      await click(".query-results-modes input[value='table']");
+    }
 
     assert
       .dom("div.query-results tbody td:nth-child(1)")
@@ -409,19 +473,318 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert
       .dom("div.query-results tbody td:nth-child(3)")
       .hasText("false", "renders 'false' values");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/2",
+      "running a query without inputs does not add a null params query string"
+    );
+  });
+
+  test("deleting a query asks for confirmation first", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("explorer.delete_confirm"), "the confirmation is shown");
+    assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
+
+    await click(".dialog-footer .btn-default");
+
+    assert.dom(".dialog-body").doesNotExist("cancelling closes the dialog");
+    assert.strictEqual(query2Deletes, 0, "cancelling does not delete");
+
+    await click(".query-action-bar__right .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.strictEqual(query2Deletes, 1, "confirming deletes the query");
+    assert
+      .dom(".query-action-bar__right .btn-danger")
+      .doesNotExist("the delete button is gone after deleting");
+    assert
+      .dom(".query-action-bar__right")
+      .includesText(i18n("explorer.recover"), "the undelete button is offered");
+  });
+
+  test("adds a new tag while editing a query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "default"),
+      "the system-only default tag is not offered on user queries"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created on user queries"
+    );
+    await tags.emptyFilter();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
+
+    assert
+      .dom(".query-run-split__primary span")
+      .hasText(i18n("explorer.saverun"), "changing tags marks the query dirty");
+
+    await click(".query-run-split__primary");
+
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["custom", "existing", "Monthly"],
+      "the edited tags are saved"
+    );
+    assert.strictEqual(
+      updateParams.get("query[group_ids_present]"),
+      "true",
+      "the group selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[group_ids][]"),
+      [],
+      "an empty group selection sends no group IDs"
+    );
+  });
+
+  test("removes the last tag while editing a query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    await tags.deselectItemByValue("existing");
+    await click(".query-run-split__primary");
+
+    assert.strictEqual(
+      updateParams.get("query[tags_present]"),
+      "true",
+      "the empty tag selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["custom"],
+      "the removed tag is absent from the request"
+    );
+
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    assert
+      .dom(".query-edit .query-tag-chooser .selected-choice")
+      .doesNotExist("the removed tag stays absent after reloading the query");
+
+    await tags.expand();
+    assert
+      .dom(".query-edit .query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag remains");
+  });
+
+  test("edits additional tags on a default query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/-6");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("default", "the default tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "custom"),
+      "the custom tag is not offered on default queries"
+    );
+
+    await tags.deselectItemByValue("existing");
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
+    await click(".query-run-split__primary");
+
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["default", "Monthly"],
+      "additional tags can be removed and added"
+    );
   });
 
   test("automatically runs query when run query parameter is present", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/2?run");
 
-    assert
-      .dom("div.query-results table tbody tr")
-      .exists({ count: 1 }, "query results should be displayed");
+    assert.dom("div.query-results").exists("query results should be displayed");
   });
 
   test("automatically runs query when run query parameter is present on group report route", async function (assert) {
     await visit("/g/testgroup/reports/2?run=1");
 
     assert.dom("div.query-results").exists("query results should be displayed");
+  });
+
+  test("dragging the grippie resizes the editor panes", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const startingHeight = panes.clientHeight;
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    // No sideways movement: a vertical resize must not need any.
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
+    await settleGestureFrame();
+
+    assert.strictEqual(
+      panes.style.height,
+      `${startingHeight + 40}px`,
+      "the panes grow by the pointer's vertical travel"
+    );
+    // Asserted mid-gesture as well as after: absence on release alone would
+    // pass against a resize that never held the cursor at all.
+    assert
+      .dom(document.body)
+      .hasClass("d-resizing-ns", "the cursor is held while the drag runs");
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
+    assert
+      .dom(document.body)
+      .doesNotHaveClass(
+        "d-resizing-ns",
+        "the held cursor is given back on release"
+      );
+  });
+
+  test("the grippie is an operable separator", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+
+    assert
+      .dom(grippie)
+      .hasAttribute("role", "separator")
+      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute("tabindex", "0")
+      .hasAttribute("data-resize-axis", "vertical");
+    assert
+      .dom(grippie)
+      .hasAttribute(
+        "aria-label",
+        i18n("explorer.resize_editor"),
+        "the separator says what it resizes rather than announcing a bare splitter"
+      );
+
+    const panes = find(".query-editor .panels-flex");
+    const startingHeight = panes.clientHeight;
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+
+    assert.true(
+      parseInt(panes.style.height, 10) > startingHeight,
+      "arrow keys resize it without a pointer"
+    );
+  });
+
+  test("the separator announces a size inside the bounds it announces", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const read = (name) => parseFloat(grippie.getAttribute(name));
+
+    // Asserted against each other, not against pixels. The numbers depend on the
+    // stylesheet and the window; a size outside its own range is wrong regardless.
+    assert.true(
+      Number.isFinite(read("aria-valuenow")),
+      "a size is announced once the panes are measured"
+    );
+    assert.true(
+      read("aria-valuemin") <= read("aria-valuenow"),
+      "the announced size is not below the announced minimum"
+    );
+    assert.true(
+      read("aria-valuenow") <= read("aria-valuemax"),
+      "the announced size is not above the announced maximum"
+    );
+  });
+
+  test("dragging far past the maximum stops at it", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const ceiling = parseFloat(grippie.getAttribute("aria-valuemax"));
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+    await settleGestureFrame();
+    await triggerEvent(grippie, "pointerup", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+
+    assert.true(
+      parseFloat(panes.style.height) <= ceiling,
+      "the panes stop at the maximum rather than following the pointer"
+    );
+  });
+
+  test("a separator torn down mid-gesture writes nothing afterwards", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 260 });
+    await settleGestureFrame();
+    const heightWhenTornDown = panes.style.height;
+
+    // Leaving the route with the gesture still held: the separator goes, and the
+    // controller is a singleton that outlives it.
+    await visit("/admin/plugins/discourse-data-explorer");
+    await triggerEvent(document, "pointerup", { pointerId: 1, clientY: 900 });
+
+    assert.strictEqual(
+      panes.style.height,
+      heightWhenTornDown,
+      "the detached panes keep the size they had when the separator went"
+    );
+  });
+});
+
+acceptance("Run Query | non-admin", function (needs) {
+  needs.user({ admin: false });
+  needs.settings({ data_explorer_enabled: true });
+
+  needs.pretender((server, helper) => {
+    stubPluginDetails(server, helper);
+  });
+
+  test("shows the admins only error page", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/62");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
+  });
+
+  test("shows the admins only error page for a new query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
   });
 });

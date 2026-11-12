@@ -1,14 +1,12 @@
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
-import { setting } from "discourse/lib/computed";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
+import { getCurrentPushSubscription } from "discourse/lib/push-notifications";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -21,7 +19,9 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service composer;
   @service currentUser;
   @service dialog;
+  @service exception;
   @service documentTitle;
+  @service embedAuthFlow;
   @service historyStore;
   @service loadingSlider;
   @service modal;
@@ -29,8 +29,15 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service site;
   @service restrictedRouting;
 
-  @setting("title") siteTitle;
-  @setting("short_site_description") shortSiteDescription;
+  @computed("siteSettings.title")
+  get siteTitle() {
+    return this.siteSettings.title;
+  }
+
+  @computed("siteSettings.short_site_description")
+  get shortSiteDescription() {
+    return this.siteSettings.short_site_description;
+  }
 
   @action
   loading(transition) {
@@ -66,39 +73,21 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  toggleMobileView() {
-    mobile.toggleMobileView();
-  }
-
-  @action
   toggleSidebar() {
     this.controllerFor("application").send("toggleSidebar");
   }
 
   @action
-  logout() {
+  async logout() {
     const { isReadOnly, isStaffWritesOnly } = this.site;
 
     if (isReadOnly && !isStaffWritesOnly) {
       this.dialog.alert(i18n("read_only_mode.logout_disabled"));
     } else if (this.currentUser) {
-      this.currentUser
-        .destroySession()
-        .then((response) => logout({ redirect: response["redirect_url"] }));
+      const pushSubscription = await getCurrentPushSubscription();
+      const response = await this.currentUser.destroySession(pushSubscription);
+      logout({ redirect: response["redirect_url"] });
     }
-  }
-
-  @action
-  _collectTitleTokens(tokens) {
-    tokens.push(this.siteTitle);
-    if (
-      (window.location.pathname === getURL("/") ||
-        window.location.pathname === getURL("/login")) &&
-      this.shortSiteDescription !== ""
-    ) {
-      tokens.push(this.shortSiteDescription);
-    }
-    this.documentTitle.setTitle(tokens.join(" - "));
   }
 
   @action
@@ -128,7 +117,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   error(err, transition) {
     const xhrOrErr = err.jqXHR ? err.jqXHR : err;
-    const exceptionController = this.controllerFor("exception");
     let shouldBubble = false;
 
     const themeOrPluginSource = identifySource(err);
@@ -152,11 +140,6 @@ export default class ApplicationRoute extends DiscourseRoute {
       }
     }
 
-    exceptionController.setProperties({
-      lastTransition: transition,
-      thrown: xhrOrErr,
-    });
-
     if (transition.intent.url) {
       if (transition.method === "replace") {
         DiscourseURL.replaceState(transition.intent.url);
@@ -165,14 +148,18 @@ export default class ApplicationRoute extends DiscourseRoute {
       }
     }
 
-    this.intermediateTransitionTo("exception");
+    this.exception.show(xhrOrErr, transition);
     return shouldBubble;
   }
 
   @action
   showLogin(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 
@@ -188,7 +175,11 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showCreateAccount(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/signup"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "signup" });
+      } else {
+        window.open(getURL("/signup"), "_blank");
+      }
       return;
     }
 
@@ -228,35 +219,15 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  createNewTopicViaParams(title, body, categoryId, tags) {
-    deprecated(
-      "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewTopicViaParams" }
-    );
-    this.composer.openNewTopic({
-      title,
-      body,
-      categoryId,
-      tags,
-    });
-  }
-
-  @action
-  createNewMessageViaParams({
-    recipients = "",
-    topicTitle = "",
-    topicBody = "",
-    hasGroups = false,
-  } = {}) {
-    deprecated(
-      "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewMessageViaParams" }
-    );
-    this.composer.openNewMessage({
-      recipients,
-      title: topicTitle,
-      body: topicBody,
-      hasGroups,
-    });
+  _collectTitleTokens(tokens) {
+    tokens.push(this.siteTitle);
+    if (
+      (window.location.pathname === getURL("/") ||
+        window.location.pathname === getURL("/login")) &&
+      this.shortSiteDescription !== ""
+    ) {
+      tokens.push(this.shortSiteDescription);
+    }
+    this.documentTitle.setTitle(tokens.join(" - "));
   }
 }

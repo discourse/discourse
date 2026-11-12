@@ -10,12 +10,18 @@ el:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Επιτρέπει την αναζήτηση AI"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Επανάληψη"
+          date: "Ημερομηνία"
+          outcomes:
+            failed: "Απέτυχε"
         reports:
           filters:
             group_by:
@@ -92,31 +98,77 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      copied: "Αντιγράφηκε"
+      ai_decoded_transcript:
+        arguments: "Παράμετροι"
+        type: "Τύπος"
+        error: "Σφάλμα"
+        response: "Απάντηση"
+      discourse_workflows:
+        ai_agent:
+          mode: "Λειτουργία"
+        classify:
+          text: "Κείμενο"
+          upload_ids: "Εικόνες"
+          name: "Όνομα"
+          type: "Τύπος"
+          type_score: "Βαθμολογία"
+      bot_chats:
+        tab_label: "Συνομιλίες bot"
+      ai_tool_approval:
+        loading: "Φόρτωση... "
+        tool: "Ενέργεια"
+        user: "Χρήστης"
+        approve: "Έγκριση"
+        reject: "Απόρριψη"
+        approved: "Εγκρίθηκε "
+        rejected: "Απορρίφθηκε"
       llm_selector:
         none: "Κανένα"
       features:
-        back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
-        disabled: "(απενεργοποιημένο)"
-        groups: "Ομάδες:"
+        table:
+          status: "Κατάσταση"
+          enabled: "Ενεργοποιημένη"
+          feature: "Λειτουργία"
+          groups: "Ομάδες"
+        who_can_use:
+          no_one: "Κανέναν"
+        status:
+          "on": "Ενεργό"
+          "off": "Ανενεργό"
+        chatbot:
+          places:
+            personal_messages: "Προσωπικά μηνύματα"
+            chat_direct_messages: "Μηνύματα συνομιλίας"
+            none: "Μη διαθέσιμο "
+        toggle: "Ενεργοποίηση %{name}"
         no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
         edit: "Ρυθμίσεις"
-        expand_list:
-          one: "(%{count} περισσότερο)"
-          other: "(%{count} περισσότερα)"
-        collapse_list: "(δείξε λιγότερα)"
+        nav:
+          enabled: "Ενεργοποιημένη"
+          not_enabled: "Μη ενεργοποιημένη"
         filters:
           all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
+        sentiment:
+          enabled: "Ενεργοποιημένη"
         search:
           name: "Αναζήτηση"
+        admin_dashboard:
+          highlights: "Σημαντικά σημεία"
+          setting_groups:
+            settings: "Βασικές ρυθμίσεις"
         ai_helper:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        image_caption:
+          setting_groups:
+            settings: "Ρυθμίσεις"
         translation:
           post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:
@@ -125,6 +177,37 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        sections:
+          advanced: "Προχωρημένα"
+        settings:
+          ai_translation_category_scope:
+            label: "Κατηγορίες"
+          ai_translation_personal_messages:
+            label: "Προσωπικά μηνύματα"
+            choices:
+              none: "Κανένα"
+              all: "Όλα"
+          content_localization_language_switcher:
+            choices:
+              none: "Κανένας"
+              all: "Όλοι"
+        model_progress:
+          detail:
+            retry: "Επανάληψη"
+            columns:
+              pending: "Εκρεμείς"
+              total: "Σύνολο"
+          targets:
+            post:
+              title: "Αναρτήσεις"
+            topic:
+              title: "Θέματα"
+            category:
+              title: "Κατηγορίες"
+            tag:
+              title: "Ετικέτες"
+        admin_actions:
+          enabled: "Ενεργοποιημένη"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"
@@ -139,8 +222,13 @@ el:
           bar_done:
             one: "%{count} ανάρτηση"
             other: "%{count} αναρτήσεις"
+        theme_translations:
+          translate:
+            label: "Μετάφραση"
       spam:
         short_title: "Ανεπιθύμητα"
+        no_llm_selected: "Κανένα"
+        no_decision_model_selected: "Κανένα"
         last_seven_days: "Τελευταίες 7 ημέρες"
         false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
@@ -148,6 +236,8 @@ el:
         test_modal:
           result: "Αποτέλεσμα"
           spam: "Ανεπιθύμητα"
+        errors:
+          resolved: "Το σφάλμα έχει επιλυθεί!"
       usage:
         summary: "Περίληψη"
         model: "Μοντέλο"
@@ -157,8 +247,49 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
+      logs:
+        short_title: "Αρχεία καταγραφής"
+        retry: "Δοκιμάστε ξανά"
+        apply: "Εφαρμογή"
+        successful: "Επιτυχής"
+        failed: "Απέτυχε"
+        unknown: "Άγνωστο"
+        time: "Ώρα"
+        when: "Πότε"
+        outcome: "Αποτέλεσμα"
+        feature: "Λειτουργία"
+        model: "Μοντέλο"
+        request: "Αίτημα"
+        provider: "Πάροχος"
+        user: "Χρήστης"
+        context: "Πλαίσιο αναφοράς"
+        topic: "Νήμα"
+        post: "Ανάρτηση"
+        post_short: "Ανάρτηση %{id}"
+        duration: "Διάρκεια"
+        actions: "Ενέργειες"
+        view_details: "Λεπτομέρειες"
+        periods:
+          day: "Τελευταίες 24 ώρες"
+          week: "Τελευταίες 7 ημέρες"
+          custom: "Προσαρμοσμένο"
+        detail:
+          request: "Αίτημα"
+          response: "Απάντηση"
+          context: "Πλαίσιο αναφοράς"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          network_error: "Σφάλμα δικτύου"
+        retention:
+          summary_stage: "Περίληψη"
+          deleted_stage: "Διαγράφηκε"
+          save: "Αποθήκευση"
       ai_agent:
-        back: "Πίσω"
+        mcp_server_enabled_tools:
+          one: "%{count} από %{total} εργαλείο ενεργοποιημένο"
+          other: "%{count} από %{total} εργαλεία ενεργοποιημένα"
+        mcp_server_choose_tools: "Επιλογή εργαλείων"
+        mcp_server_edit_tools: "Επεξεργασία εργαλείων"
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
@@ -171,20 +302,38 @@ el:
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
+        mcp_tools_modal:
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        duplicate: "Διπλότυπο"
+        copy_name: "Αντίγραφο του %{name}"
+        delete: "Διαγραφή"
+        thinking_effort_options:
+          none: "Κανένα"
+          low: "Χαμηλή"
+          medium: "Μεσαία"
+          high: "Υψηλή"
+          max: "Μέγιστο"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
+            root_title: "Δομή απόκρισης"
             key_title: "Κλειδί"
+        examples:
+          title: Παραδείγματα
+          remove: Διαγραφή παραδείγματος
         filters:
           reset: "Επαναφορά"
+        features_list:
+          one: "Λειτουργία:"
+          other: "Λειτουργίες:"
       rag:
         uploads:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
-        back: "Πίσω"
+        back: "Πίσω στα εργαλεία"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
@@ -197,24 +346,78 @@ el:
         credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
         test: "Δοκιμή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
-        back: "Πίσω"
+        back: "Πίσω στα διαπιστευτήρια"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      decision_models:
+        no_preset: "Κανένα"
+        display_name: "Όνομα"
+        model: "Μοντέλο"
+        provider: "Πάροχος"
+        api_key: "Διαπιστευτήρια"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        test: "Εκτέλεση δοκιμής"
+      mcp_servers:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "Διαπιστευτήρια"
+        oauth_client_registration: "Εγγραφή πελάτη OAuth"
+        oauth_client_registration_types:
+          client_metadata_document: "Έγγραφο μεταδεδομένων πελάτη"
+        oauth_authorization_params: "Παράμετροι εξουσιοδότησης OAuth"
+        oauth_token_params: "Παράμετροι διακριτικού OAuth"
+        oauth_json_object_required: "Το %{field} πρέπει να είναι αντικείμενο JSON."
+        oauth_show_advanced_options: "Εμφάνιση προχωρημένων επιλογών"
+        oauth_hide_advanced_options: "Απόκρυψη προχωρημένων επιλογών"
+        oauth_statuses:
+          connected: "Συνδεδεμένος"
+        oauth_connect: "Συνδεθείτε"
+        oauth_issuer: "Εκδότης"
+        oauth_show_details: "Εμφάνιση λεπτομερειών"
+        oauth_hide_details: "Απόκρυψη λεπτομερειών"
+        enabled: "Ενεργοποιημένα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        test: "Δοκιμή σύνδεσης"
+        back: "Πίσω στα εργαλεία"
+        healthy: "Υγιής"
+        tools_modal:
+          required: "Απαιτείται"
+        test_result: "Αποτέλεσμα σύνδεσης"
+      models:
+        name: "Όνομα"
+        type: "Τύπος"
+        provider: "Πάροχος"
+        edit: "Επεξεργασία"
+        select_type: "Επιλογή"
+        types:
+          embedding: "Ενσωμάτωση"
+        filters:
+          all: "Όλοι οι τύποι"
+          reset: "Επαναφορά φίλτρων"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
-        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
+        vision_modes:
+          disabled:
+            title: "Απενεργοποιημένος"
+        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, csv, docx, xlsx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        back: "Πίσω"
-        delete: Σβήσιμο
+        back: "Πίσω στα LLM"
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -234,8 +437,9 @@ el:
         tests:
           success: "Επιτυχία!"
         providers:
-          google: "Google"
           fake: "Προσαρμοσμένο"
+        provider_fields:
+          region: "Περιοχή"
       ai_helper:
         context_menu:
           cancel: "Άκυρο"
@@ -251,12 +455,13 @@ el:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
           try_again: "Δοκίμασε ξανά"
-        image_caption:
-          save_caption: "Αποθήκευση"
+      errors:
+        credit_limit_dialog:
+          message_user: "Αυτή η κοινότητα έχει φτάσει το όριο πίστωσης AI για σήμερα. Δοκιμάστε ξανά μετά από %{reset_time} ή επικοινωνήστε με τον διαχειριστή του ιστότοπού σας για περισσότερες πληροφορίες."
       embeddings:
-        back: "Πίσω"
+        back: "Πίσω στις ενσωματώσεις"
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"
@@ -264,8 +469,22 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+      ai_artifact:
+        editor:
+          version: "Έκδοση"
+          default: "Προεπιλογή"
+          option_on: "Ενεργό"
+          option_off: "Ανενεργό"
+          apply: "Εφαρμογή"
+        share: "Κοινοποίηση"
+        create_link: "Δημιουργία συνδέσμου"
+        copy_link: "Αντιγραφή συνδέσμου"
+        filter_all: "Όλα"
+        filter_standalone: "Αυτόνομη"
+        filter_conversation: "Συνομιλία"
       ai_bot:
-        llm: "Μοντέλο"
+        title: "AI bot"
+        llm: "Μοντέλο:"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"
@@ -274,14 +493,15 @@ el:
           title: "Προβολή αλληλεπίδρασης AI"
           copy_request: "Αντιγραφή αιτήματος"
           copy_response: "Αντιγραφή απάντησης"
-          request_tokens: "Διακριτικά αιτήματος:"
-          response_tokens: "Διακριτικά απάντησης:"
-          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
-          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
+          this_turn: "Αυτός ο γύρος:"
+          whole_conversation: "Συνομιλία:"
+          duration_label: "Διάρκεια:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
           previous_log: "Προηγούμενο"
+        share_full_topic_modal:
+          update: "Ενημέρωση και αντιγραφή συνδέσμου"
         invite_ai_conversation:
           button: "Πρόσκληση"
         share_modal:
@@ -289,9 +509,15 @@ el:
         conversations:
           placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
+          open_conversation_menu: "Άνοιγμα μενού συζήτησης"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
+          show_toolbar: "Εμφάνιση γραμμής εργαλείων μορφοποίησης"
+          hide_toolbar: "Απόκρυψη γραμμής εργαλείων μορφοποίησης"
+          scroll_to_bottom: "Κύλιση προς τα κάτω"
+          streaming_below: "Νέο περιεχόμενο παρακάτω"
+          editing_post: "Γίνεται επεξεργασία ανάρτησης"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -304,13 +530,29 @@ el:
       summarization:
         chat:
           summarize: "Συνοψίστε"
+      ai_search:
+        related_replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        tabs:
+          topics: "Θέματα"
+          messages: "Μηνύματα"
       discobot_discoveries:
-        regular_results: "Θέματα"
-        collapse: "Σύμπτυξη"
-        tooltip:
-          actions:
-            disable: "Απενεργοποίηση"
+        create_topic: "Δημιουργία θέματος"
+        legacy:
+          regular_results: "Θέματα"
+          collapse: "Σύμπτυξη"
+          tooltip:
+            actions:
+              disable: "Απενεργοποίηση"
+        search_all_topics: "Όλα τα θέματα"
+        search_messages: "Μηνύματα"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Εργαλείο εγκρίθηκε"
+        rejected_tool_action:
+          title: "Εργαλείο απορρίφθηκε"
       types:
         reviewable_ai_post:
           title: "Αναφερόμενη από AI ανάρτηση"

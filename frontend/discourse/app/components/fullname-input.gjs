@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import InputTip from "discourse/components/input-tip";
-import TextField from "discourse/components/text-field";
 import valueEntered from "discourse/helpers/value-entered";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class FullnameInput extends Component {
@@ -18,15 +18,15 @@ export default class FullnameInput extends Component {
 
   <template>
     <div ...attributes>
-      <TextField
-        {{on "focusin" @onFocusIn}}
-        @disabled={{@nameDisabled}}
-        @value={{@accountName}}
-        @id="new-account-name"
+      <DTextField
         aria-describedby="fullname-validation fullname-validation-more-info"
         aria-invalid={{@nameValidation.failed}}
         class={{valueEntered @accountName}}
         name="name"
+        @disabled={{@nameDisabled}}
+        @id="new-account-name"
+        @value={{@accountName}}
+        {{on "focusin" @onFocusIn}}
       />
       <label class="alt-placeholder" for="new-account-name">
         {{@nameTitle}}
@@ -37,7 +37,7 @@ export default class FullnameInput extends Component {
           {{i18n "user.name.instructions_required"}}
         </span>
       {{else}}
-        <InputTip @validation={{@nameValidation}} id="fullname-validation" />
+        <DInputTip id="fullname-validation" @validation={{@nameValidation}} />
       {{/if}}
     </div>
   </template>

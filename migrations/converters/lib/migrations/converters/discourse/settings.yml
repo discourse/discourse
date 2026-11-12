@@ -1,0 +1,33 @@
+intermediate_db:
+  path: "/shared/import/intermediate.db"
+
+# All `source_db` keys are passed through to libpq (`PG::Connection`), so any
+# libpq connection parameter is valid here. For a database on the same machine
+# the simplest setup is the Unix socket with peer authentication — set `host`
+# to the socket directory and drop `port`, `user` and `password`:
+#
+#   source_db:
+#     host: "/var/run/postgresql"
+#     dbname: "discourse_source_db"
+source_db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "username"
+  password: "password"
+  dbname: "discourse_source_db"
+
+categories:
+  map_seeded_categories: true
+
+# The source site's own address, so absolute internal links
+# (`https://forum.example.com/t/slug/123`) can be rewritten at import. Without
+# it only relative links (`/t/slug/123`) are rewritten. Add `former_domains`
+# when the site moved and old posts still link to the old host. Scheme and
+# port are ignored, the path is not: for a subfolder install include it
+# (`https://www.example.com/forum`), so only links under it count as the
+# forum's. Each entry can have its own prefix.
+#
+#   source_site:
+#     base_url: "https://forum.example.com/forum"
+#     former_domains:
+#       - "https://old.example.com"

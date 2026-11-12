@@ -16,8 +16,34 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
+  it "shows the bot challenge error message when the response is a verification challenge" do
+    url = "https://challenged.example.com/page"
+    %i[head get].each do |method|
+      stub_request(method, url).to_return(
+        status: 202,
+        headers: {
+          "x-amzn-waf-action" => "challenge",
+        },
+      )
+    end
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.bot_challenge").sub(" :cry:", ""),
+    )
+  end
+
+  it "shows the status code error message for a plain error response" do
+    url = "https://error.example.com/page"
+    %i[head get].each { |method| stub_request(method, url).to_return(status: 403) }
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.error_response", status_code: 403).sub(" :cry:", ""),
+    )
+  end
+
   describe "#invalidate" do
     let(:url) { "http://test.com" }
+
     it "clears the cached preview for the onebox URL and the failed URL cache" do
       Discourse.cache.write(Oneboxer.onebox_cache_key(url), "test")
       Discourse.cache.write(Oneboxer.onebox_failed_cache_key(url), true)
@@ -140,13 +166,15 @@ RSpec.describe Oneboxer do
 
     it "links to an user profile" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       expect(preview("/u/does-not-exist")).to match_html(link("/u/does-not-exist"))
       expect(preview("/u/#{user.username}")).to include(user.name)
     end
 
-    it "should respect enable_names site setting" do
+    it "respects the enable_names site setting" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       SiteSetting.enable_names = true
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -164,6 +192,7 @@ RSpec.describe Oneboxer do
 
     it "strips HTML from user profile location" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
       profile = user.reload.user_profile
 
       expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
@@ -237,8 +266,127 @@ RSpec.describe Oneboxer do
     end
   end
 
+  describe "localized internal topic oneboxes" do
+    fab!(:viewer, :user)
+    fab!(:category)
+    fab!(:linked_topic) do
+      Fabricate(:topic, title: "Sun Tzu's strategies", category: category, locale: "en")
+    end
+    fab!(:first_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 1,
+        locale: "en",
+        raw: "The supreme art of war is to subdue the enemy without fighting.",
+      )
+    end
+    fab!(:second_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 2,
+        locale: "en",
+        raw: "Every battle is won before it is ever fought.",
+      )
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    def card(url, locale: nil)
+      Oneboxer.onebox(
+        "#{Discourse.base_url}#{url}",
+        user_id: viewer.id,
+        category_id: category.id,
+        locale: locale,
+      ).to_s
+    end
+
+    it "shows the topic title and first-post preview in the target locale" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法")
+      expect(html).to include("戦わずして勝つ")
+      expect(html).not_to include("Sun Tzu")
+      expect(html).not_to include("subdue the enemy")
+    end
+
+    it "shows the linked post's own translation, not another post's" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      Fabricate(:post_localization, post: second_post, locale: "ja", cooked: "<p>戦う前に勝つ</p>")
+
+      html = card(second_post.url, locale: "ja")
+
+      expect(html).to include(%{data-post="2"})
+      expect(html).to include("戦う前に勝つ")
+      expect(html).not_to include("戦わずして勝つ")
+    end
+
+    it "keeps the preview original when only the title is translated" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法")
+      expect(html).to include("subdue the enemy")
+    end
+
+    it "falls back to the original when no translation exists" do
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("Sun Tzu")
+      expect(html).to include("subdue the enemy")
+    end
+
+    it "keeps the original when the linked topic is already in the target locale" do
+      # topic is authored in ja and only carries an en translation; a ja reader
+      # must see the original ja, never the en default-locale fallback.
+      SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      ja_topic = Fabricate(:topic, title: "孫子の兵法に関する詳細な考察と議論", category: category, locale: "ja")
+      ja_post = Fabricate(:post, topic: ja_topic, post_number: 1, locale: "ja", raw: "戦わずして勝つのが最善")
+      Fabricate(:topic_localization, topic: ja_topic, locale: "en", title: "The Art of War")
+      Fabricate(
+        :post_localization,
+        post: ja_post,
+        locale: "en",
+        cooked: "<p>Win without fighting</p>",
+      )
+
+      html = card(ja_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法に関する詳細な考察と議論")
+      expect(html).not_to include("The Art of War")
+      expect(html).not_to include("Win without fighting")
+    end
+
+    it "leaves the card original when no locale is requested" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: nil)
+
+      expect(html).to include("Sun Tzu")
+      expect(html).not_to include("孫子の兵法")
+    end
+
+    it "leaves the card original when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("Sun Tzu")
+      expect(html).not_to include("孫子の兵法")
+    end
+  end
+
   describe ".onebox_raw" do
-    it "should escape the onebox URL before processing" do
+    it "escapes the onebox URL before processing" do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes
@@ -305,6 +453,21 @@ RSpec.describe Oneboxer do
       expect(result[:preview]).to eq(
         "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
       )
+    end
+
+    it "renders external metadata as text in generic media oneboxes" do
+      url = "https://example.com/picture"
+      description = "x'><div class='injected'>Sign in</div>"
+      stub_request(:head, url)
+      stub_request(:get, url).to_return(body: <<~HTML)
+        <meta property="og:type" content="image">
+        <meta property="og:image" content="https://example.com/picture.png">
+        <meta name="twitter:description" content="#{CGI.escapeHTML(description)}">
+      HTML
+
+      onebox = Nokogiri::HTML5.fragment(described_class.onebox_raw(url)[:onebox])
+
+      expect(onebox.at_css("img")["alt"]).to eq(description)
     end
 
     context "when URL contains non-ASCII characters" do
@@ -437,6 +600,14 @@ RSpec.describe Oneboxer do
         stub_request(:head, "https://cat.com/end").to_return(status: 200, body: "", headers: {})
 
         result = Oneboxer.external_onebox("https://cat.com/start")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+      end
+
+      it "does not return onebox for domains in ignore_redirects when blocked" do
+        SiteSetting.blocked_onebox_domains = "x.com"
+
+        result = Oneboxer.external_onebox("https://x.com/someone/status/123")
         expect(result[:onebox]).to be_empty
         expect(result[:preview]).to be_empty
       end
@@ -763,6 +934,35 @@ RSpec.describe Oneboxer do
         expect(redirect_head_stub).to have_been_requested
       end
     end
+
+    context "with ignore_redirects for Reddit URLs" do
+      before { Discourse.cache.clear }
+
+      it "resolves Reddit URLs without requesting the source URL" do
+        reddit_url =
+          "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition"
+
+        head_stub =
+          stub_request(:head, reddit_url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => "#{reddit_url}/",
+            },
+          )
+
+        get_stub = stub_request(:get, reddit_url).to_return(status: 200, body: html)
+
+        result = Oneboxer.external_onebox(reddit_url)
+
+        expect(result[:onebox]).to be_present
+        expect(result[:onebox]).to include("https://embed.reddit.com/r/colors/comments/b4d5xm/")
+        expect(result[:preview]).to include("placeholder-icon generic")
+
+        expect(head_stub).not_to have_been_requested
+        expect(get_stub).not_to have_been_requested
+      end
+    end
   end
 
   describe "onebox custom user agent" do
@@ -925,6 +1125,77 @@ RSpec.describe Oneboxer do
     )
   end
 
+  it "blocks oEmbed iframes whose source only prefix-matches an allowed onebox origin" do
+    page_url = "https://attacker.example/page"
+    oembed_url = "https://attacker.example/oembed.json"
+    malicious_iframe_src = "https://www.youtube.com.attacker.example/payload"
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: "<iframe src='#{malicious_iframe_src}' width='560' height='315'></iframe>",
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    expect(onebox).not_to include(malicious_iframe_src)
+  end
+
+  it "blocks oEmbed iframes whose wildcard allowlist suffix is only in a query or fragment" do
+    page_url = "https://attacker.example/wildcard-page"
+    oembed_url = "https://attacker.example/wildcard-oembed.json"
+    malicious_iframe_sources = %w[
+      https://attacker.example?.kaltura.com/
+      https://attacker.example#.kaltura.com/
+    ]
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: malicious_iframe_sources.map { |source| "<iframe src='#{source}'></iframe>" }.join,
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    malicious_iframe_sources.each { |source| expect(onebox).not_to include(source) }
+  end
+
   describe "missing attributes" do
     before { stub_request(:head, url) }
 
@@ -1053,6 +1324,50 @@ RSpec.describe Oneboxer do
         <p>Onebox</p>
         <div><svg><path></path></svg></div>
       HTML
+    end
+
+    it "gives every occurrence of a URL its own slot" do
+      url = "https://example.com"
+      html = "<p><a href='#{url}' class='onebox'>#{url}</a></p>" * 5
+
+      cooked = Oneboxer.apply(html, limit: 2) { "<div>onebox</div>" }
+
+      expect(cooked.to_html).to have_tag("div", text: "onebox", count: 2)
+      expect(cooked.to_html).to have_tag("a", without: { class: "onebox" }, count: 3)
+    end
+
+    it "claims slots in document order" do
+      inline_url = "https://example.com/inline"
+      onebox_url = "https://example.com/onebox"
+      html = <<~HTML
+        <div>
+          <a href="#{inline_url}" class="#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}">#{inline_url}</a>
+          <a href="#{onebox_url}" class="onebox">#{onebox_url}</a>
+        </div>
+      HTML
+
+      cooked =
+        Oneboxer.apply(
+          html,
+          extra_paths: ".#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}",
+          limit: 1,
+        ) { nil }
+
+      expect(cooked.to_html).to have_tag(
+        "a.#{Oneboxer::INLINE_ONEBOX_LOADING_CSS_CLASS}",
+        with: {
+          href: inline_url,
+        },
+      )
+      expect(cooked.to_html).to have_tag(
+        "a",
+        with: {
+          href: onebox_url,
+        },
+        without: {
+          class: "onebox",
+        },
+      )
     end
   end
 

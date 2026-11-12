@@ -4,36 +4,36 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <PluginOutlet @name="admin-email-templates-edit" @connectorTagName="div">
+  <PluginOutlet @connectorTagName="div" @name="admin-email-templates-edit">
     <div class="email-template">
       <div class="back-to-email-templates">
         <LinkTo @route="adminEmailTemplates">
-          {{icon "angle-left"}}
+          {{dIcon "angle-left"}}
           {{i18n "admin.customize.email_templates.back"}}
         </LinkTo>
       </div>
       <label>{{i18n "admin.customize.email_templates.subject"}}</label>
       {{#if @controller.hasMultipleSubjects}}
         <h3><LinkTo
-            @route="adminSiteText"
-            @query={{hash q=@controller.hasMultipleSubjects}}
             class="email-template__has-multiple-subjects"
+            @query={{hash q=@controller.hasMultipleSubjects}}
+            @route="adminSiteText"
           >{{i18n
               "admin.customize.email_templates.multiple_subjects"
             }}</LinkTo></h3>
       {{else}}
         <Input
-          @value={{@controller.buffered.subject}}
           class="email-template__subject"
+          @value={{@controller.buffered.subject}}
           {{on "focusin" @controller.trackTextarea}}
           {{on "focusout" @controller.saveCursorPos}}
         />
@@ -44,18 +44,18 @@ export default <template>
 
       {{#if @controller.hasMultipleBodyTemplates}}
         <h3><LinkTo
-            @route="adminSiteText"
-            @query={{hash q=@controller.hasMultipleBodyTemplates}}
             class="email-template__has-multiple-bodies"
+            @query={{hash q=@controller.hasMultipleBodyTemplates}}
+            @route="adminSiteText"
           >{{i18n
               "admin.customize.email_templates.multiple_bodies"
             }}</LinkTo></h3>
       {{else}}
         <DEditor
-          {{didInsert @controller.registerTextarea}}
-          @value={{@controller.buffered.body}}
-          @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
           class="email-template__body"
+          @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
+          @value={{@controller.buffered.body}}
+          {{didInsert @controller.registerTextarea}}
           {{on "focusin" @controller.trackTextarea}}
           {{on "focusout" @controller.saveCursorPos}}
         />
@@ -66,9 +66,9 @@ export default <template>
         @onInsertKey={{@controller.insertInterpolationKey}}
       />
 
-      <SaveControls
-        @model={{@controller.emailTemplate}}
+      <DSaveControls
         @action={{@controller.saveChanges}}
+        @model={{@controller.emailTemplate}}
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >
@@ -78,7 +78,7 @@ export default <template>
             @label="admin.customize.email_templates.revert"
           />
         {{/if}}
-      </SaveControls>
+      </DSaveControls>
     </div>
   </PluginOutlet>
 </template>

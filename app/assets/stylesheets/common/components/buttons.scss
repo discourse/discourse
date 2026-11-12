@@ -217,6 +217,7 @@
   @include hover {
     background-color: transparent;
     color: var(--tertiary-hover);
+    border: 0;
 
     .d-icon {
       color: var(--tertiary-hover);
@@ -541,20 +542,5 @@
     --d-button-transparent-icon-color: var(--tertiary);
     margin-bottom: 1em;
     padding-left: 0;
-  }
-}
-
-.btn-mini-toggle {
-  border-radius: var(--d-border-radius);
-  padding: 0.4em 0.467em;
-
-  .d-icon {
-    color: var(--primary-medium);
-  }
-
-  @include hover {
-    .d-icon {
-      color: var(--primary);
-    }
   }
 }

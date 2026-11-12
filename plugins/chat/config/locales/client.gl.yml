@@ -22,10 +22,10 @@ gl:
         yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
+      pinned_bar:
+        title: "Fixado"
       pinned: "Fixado"
       channel_settings:
-        edit: "Editar"
-        add: "Engadir"
         notification_settings_context: "Notificacións"
         join: "Participar"
         leave: "Abandonar"
@@ -57,19 +57,21 @@ gl:
         filter_all: Todas
         filter_open: Abrir
         filter_closed: Pechado
+        filter_joined_all: "Todas"
+        filter_joined_joined: "Uniuse"
       chat_message_separator:
         today: Hoxe
         yesterday: Onte
       search_view:
         filter_placeholder: Buscar mensaxes
       about_view:
-        title: Título
         name: Nome
         description: Descrición
       channel_info:
         back_to_channel: "Volver"
         tabs:
           members: Membros
+          preferences: Preferencias
           settings: Configuración
           search: Buscar
         remove_member: "Retirar"
@@ -80,6 +82,7 @@ gl:
         title: Nova mensaxe
         prefix: "A:"
       create_channel:
+        description: "Descrición"
         type: "Tipo"
         types:
           category: "Categoría"
@@ -95,6 +98,7 @@ gl:
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        muted_until_hint: "ata %{until}"
         threading_enabled: "Activado"
         threading_disabled: "Desactivado"
         notifications: "Notificacións"
@@ -102,8 +106,6 @@ gl:
         save: "Gardar"
         saved: "Gardado"
         unfollow: "Abandonar"
-        admin_title: "Administrador"
-        settings_title: "Configuración"
         category_label: "Categoría"
         history_label: "Historial"
         members_label: "Membros"
@@ -113,6 +115,11 @@ gl:
         sort:
           relevance: "Relevancia"
           latest: "Últimos"
+      channel_list:
+        options:
+          filter: "Filtro"
+        filter:
+          mentions: "Mencións"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"
@@ -170,3 +177,20 @@ gl:
           fields:
             message:
               label: Mensaxe
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Canle"
+      send_chat_message:
+        targets:
+          channel: "Canle"
+        channel_id: "Canle"
+        message: "Mensaxe"
+      chat_approval:
+        message: "Mensaxe"
+        buttons: "Botóns"
+        value: "Valor"
+        style_default: "Predeterminado"
+        style_primary: "Primario"
+        style_success: "Feito"
+        icon: "Icona"
+        channel_id: "Canle"

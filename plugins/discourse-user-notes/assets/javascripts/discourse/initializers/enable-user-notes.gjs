@@ -3,8 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import PostMetadataUserNotes from "../components/post-metadata-user-notes";
-import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes";
+import PostMetadataUserNotes from "../components/post-metadata-user-notes.gjs";
+import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes.js";
 
 /**
  * Plugin initializer for enabling user notes functionality
@@ -94,6 +94,7 @@ function customizePostMenu(api, container) {
     return {
       icon: "pen-to-square",
       label: "user_notes.attach",
+      title: "user_notes.attach_note_description",
       action: (post) => {
         showUserNotes(
           store,

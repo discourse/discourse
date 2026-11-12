@@ -7,45 +7,19 @@ describe DiscourseAi::Translation::TagCandidates do
       expect(DiscourseAi::Translation::TagCandidates.get.count).to eq(Tag.count)
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is enabled" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    it "includes tags in restricted tag groups" do
+      tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      TagGroupPermission.where(tag_group: tag_group).destroy_all
+      restricted_group = Fabricate(:group)
+      TagGroupPermission.create!(
+        tag_group: tag_group,
+        group_id: restricted_group.id,
+        permission_type: TagGroupPermission.permission_types[:full],
+      )
 
-      it "includes tags not in any tag group" do
-        tag = Fabricate(:tag)
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).to include(tag)
-      end
-
-      it "includes tags in tag groups visible to everyone" do
-        tag = Fabricate(:tag)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        TagGroupPermission.create!(
-          tag_group: tag_group,
-          group_id: Group::AUTO_GROUPS[:everyone],
-          permission_type: TagGroupPermission.permission_types[:full],
-        )
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).to include(tag)
-      end
-
-      it "excludes tags in tag groups not visible to everyone" do
-        tag = Fabricate(:tag)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        # remove default everyone permission if exists
-        TagGroupPermission.where(tag_group: tag_group).destroy_all
-        # add restricted permission
-        restricted_group = Fabricate(:group)
-        TagGroupPermission.create!(
-          tag_group: tag_group,
-          group_id: restricted_group.id,
-          permission_type: TagGroupPermission.permission_types[:full],
-        )
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).not_to include(tag)
-      end
+      tags = DiscourseAi::Translation::TagCandidates.get
+      expect(tags).to include(tag)
     end
   end
 
@@ -126,6 +100,53 @@ describe DiscourseAi::Translation::TagCandidates do
     it "returns 0 for done and total when no tags are present" do
       completion = DiscourseAi::Translation::TagCandidates.calculate_completion_per_locale("pt")
       expect(completion).to eq({ done: 0, total: 0 })
+    end
+  end
+
+  describe ".progress_summary" do
+    before do
+      Tag.destroy_all
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+    end
+
+    it "counts all, fully translated, and undetected tags" do
+      fully_translated_tag = Fabricate(:tag, locale: "en_US")
+      Fabricate(:tag_localization, tag: fully_translated_tag, locale: "fr")
+      Fabricate(:tag, locale: "en_US")
+      Fabricate(:tag, locale: nil)
+
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "tag",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
+      )
+    end
+  end
+
+  describe ".progress_details" do
+    before do
+      Tag.destroy_all
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+    end
+
+    it "returns translated, pending, and total counts per configured locale" do
+      translated_tag = Fabricate(:tag, locale: "EN-US")
+      Fabricate(:tag_localization, tag: translated_tag, locale: "FR-fr")
+      Fabricate(:tag, locale: "en-US")
+      Fabricate(:tag, locale: nil)
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "tag",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, total_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, total_count: 3 },
+          ],
+        },
+      )
     end
   end
 end

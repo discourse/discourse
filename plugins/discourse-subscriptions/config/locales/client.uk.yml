@@ -404,8 +404,8 @@ uk:
         confirm_payment: Підтвердити платіж
         success: Повернутися назад
       admin:
-        unconfigured: 'Stripe налаштовано неправильно. Для отримання інформації, будь ласка, перегляньте Discourse.'
-        on_meta: Discourse Підписки на Meta
+        unconfigured: "Stripe налаштовано неправильно. Будь ласка, дивіться <a href='%{url}' target='_blank'>документацію на Discourse Meta</a> для отримання детальної інформації."
+        configure_stripe: Перейдіть до налаштувань
         dashboard:
           title: Майстерня
           table:

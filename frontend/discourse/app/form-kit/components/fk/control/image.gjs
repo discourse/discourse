@@ -6,6 +6,10 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 export default class FKControlImage extends FKBaseControl {
   static controlType = "image";
 
+  get imageUrl() {
+    return isBlank(this.args.field.value) ? null : this.args.field.value;
+  }
+
   @action
   setImage(upload) {
     this.args.field.set(upload);
@@ -13,23 +17,20 @@ export default class FKControlImage extends FKBaseControl {
 
   @action
   removeImage() {
-    this.setImage(undefined);
-  }
-
-  get imageUrl() {
-    return isBlank(this.args.field.value) ? null : this.args.field.value;
+    this.setImage(null);
   }
 
   <template>
     <UppyImageUploader
+      class="form-kit__control-image no-repeat contain-image"
+      @additionalParams={{@additionalParams}}
+      @disabled={{@field.disabled}}
       @id="{{@field.id}}-{{@field.name}}"
       @imageUrl={{this.imageUrl}}
-      @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
-      @type={{@type}}
-      @disabled={{@field.disabled}}
+      @onUploadDone={{this.setImage}}
       @placeholderUrl={{@placeholderUrl}}
-      class="form-kit__control-image no-repeat contain-image"
+      @type={{@type}}
     />
   </template>
 }

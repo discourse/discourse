@@ -48,12 +48,12 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  ad_type               :integer          not null
+#  clicked_at            :datetime
 #  placement             :string           not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  ad_plugin_house_ad_id :bigint
 #  user_id               :integer
-#  clicked_at            :datetime
 #
 # Indexes
 #

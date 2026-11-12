@@ -77,6 +77,10 @@ upload_setting:
   type: upload
   default: "default-upload"
 
+icon_setting:
+  type: icon
+  default: "heart"
+
 invalid_json_schema_setting:
   default: ""
   json_schema: '{ "type": "array", "invalid json"'

@@ -39,7 +39,7 @@ class UserField < ActiveRecord::Base
   end
 
   def queue_index_search
-    Jobs.enqueue(:index_user_fields_for_search, user_field_id: self.id)
+    Jobs.enqueue(:index_user_fields_for_search, user_field_id: id)
   end
 
   private
@@ -53,7 +53,7 @@ class UserField < ActiveRecord::Base
 
   def sanitize_description
     if description_changed?
-      self.description = sanitize_field(self.description, additional_attributes: ["target"])
+      self.description = sanitize_field(description, additional_attributes: ["target"])
     end
   end
 end

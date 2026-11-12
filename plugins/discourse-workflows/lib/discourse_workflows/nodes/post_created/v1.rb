@@ -1,0 +1,94 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  module Nodes
+    module PostCreated
+      class V1 < NodeType
+        description(
+          name: "trigger:post_created",
+          version: "1.0",
+          defaults: {
+            icon: "comment",
+            color: "indigo",
+          },
+          group: "discourse_triggers",
+          event: :post_created,
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
+          ],
+          properties: {
+            **TOPIC_TYPE_FILTER_PROPERTIES,
+            group_inbox_id: {
+              type: :integer,
+              required: false,
+              type_options: {
+                load_options_method: "groups",
+              },
+              display_options: {
+                show: {
+                  topic_type: %w[personal_messages],
+                },
+              },
+              ui: {
+                control: :group_select,
+              },
+              control_options: {
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.post_created.group_inbox_id_placeholder",
+              },
+            },
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
+          },
+        )
+
+        def self.load_options_context(context)
+          case context.method_name
+          when "groups"
+            ::Group
+              .order(:name)
+              .pluck(:id, :name)
+              .select { |_, name| context.matches_filter?(name) }
+              .map { |id, name| { id:, name: } }
+          end
+        end
+
+        def initialize(post, opts = nil, *)
+          super(parameters: {})
+          @post = post
+          @opts = opts
+        end
+
+        def valid?
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
+            !@opts&.dig(:skip_workflows)
+        end
+
+        def output
+          {
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+          }
+        end
+
+        def matches?(trigger_ctx)
+          topic = @post.topic
+
+          return false if !matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(topic, trigger_ctx)
+
+          matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
+        end
+      end
+    end
+  end
+end

@@ -7,47 +7,121 @@ class ReviewableUser < Reviewable
     create(created_by_id: Discourse.system_user.id, target: user)
   end
 
+  after_create :retain_avatar_snapshot
+
+  def title_for_notification(user)
+    target&.username || payload&.dig("username") ||
+      I18n.t("js.review.user_label", locale: user.effective_locale)
+  end
+
+  def self.payload_for(user)
+    profile = user.user_profile
+    avatar = user.uploaded_avatar
+
+    {
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      bio: profile&.bio_raw,
+      website: profile&.website,
+      avatar_upload_id: avatar&.id,
+      avatar_url: avatar && Discourse.store.cdn_url(avatar.url),
+    }
+  end
+
   def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
-    if status == "rejected" && !payload["scrubbed_by"]
-      build_action(actions, :scrub, client_action: "scrub")
-    end
-    if status == "pending"
-      if is_a_suspect_user?
-        confirm_spam_bundle =
-          actions.add_bundle(
-            "#{id}-confirm-spam",
-            icon: "user-xmark",
-            label: "reviewables.actions.confirm_spam.title",
-          )
-        delete_user_actions(actions, confirm_spam_bundle, require_reject_reason: false)
+    build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
-        if guardian.can_approve?(target)
-          actions.add(:approve_user, bundle: nil) do |a|
-            a.icon = "user-plus"
-            a.label = "reviewables.actions.not_spam.title"
-            a.description = "reviewables.actions.not_spam.description"
-            a.completed_message = "reviewables.actions.approve_user.complete"
-          end
+    suspect_pending = status == "pending" && is_a_suspect_user?
+
+    # For suspect users the destructive "confirm spam" bundle must be added
+    # before the approve action so it renders first in the queue UI.
+    if suspect_pending
+      bundle =
+        actions.add_bundle(
+          "#{id}-confirm-spam",
+          icon: "user-xmark",
+          label: "reviewables.actions.confirm_spam.title",
+        )
+
+      build_penalty_actions(
+        actions,
+        bundle:,
+        silence: :silence_user,
+        suspend: :suspend_user,
+        dsa_classification_required: true,
+      )
+
+      delete_user_actions(
+        actions,
+        bundle,
+        require_reject_reason: false,
+        dsa_classification_required: true,
+      )
+    end
+
+    if status == "pending" && target&.uploaded_avatar_id.present?
+      build_action(
+        actions,
+        :remove_avatar,
+        icon: "user-xmark",
+        secondary: true,
+        dsa_classification_required: is_a_suspect_user?,
+      )
+    end
+
+    # Reviewed items must not offer approval in the queue, but approving an
+    # unapproved user directly (e.g. from the admin user page) still goes
+    # through this action, so those callers opt in with `allow_reviewed`.
+    if (pending? || args[:allow_reviewed]) && guardian.can_approve?(target)
+      actions.add(:approve_user, bundle: nil) do |a|
+        a.icon = "user-plus"
+        a.completed_message = "reviewables.actions.approve_user.complete"
+        if suspect_pending
+          a.label = "reviewables.actions.not_spam.title"
+          a.description = "reviewables.actions.not_spam.description"
+        else
+          a.label = "reviewables.actions.approve_user.title"
         end
-      else
-        if guardian.can_approve?(target)
-          actions.add(:approve_user, bundle: nil) do |a|
-            a.icon = "user-plus"
-            a.label = "reviewables.actions.approve_user.title"
-          end
-        end
-        delete_user_actions(actions, require_reject_reason: true)
       end
+    end
+
+    if status == "pending" && !suspect_pending
+      delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
 
   def build_actions(actions, guardian, args)
     return if approved?
     super
+  end
+
+  def perform_remove_avatar(performed_by, args)
+    avatar = target.uploaded_avatar
+    target.remove_avatar!(performed_by)
+
+    create_result(:success) { |result| result.removed_avatar = avatar }
+  end
+
+  def perform_silence_user(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
   end
 
   def perform_approve_user(performed_by, args)
@@ -59,7 +133,7 @@ class ReviewableUser < Reviewable
     if args[:send_email] != false && SiteSetting.must_approve_users?
       Jobs.enqueue(:critical_user_email, type: "signup_after_approval", user_id: target.id)
     end
-    StaffActionLogger.new(performed_by).log_user_approve(target)
+    StaffActionLogger.new(performed_by).log_user_approve(target, reviewable_id: id)
 
     create_result(:success, :approved)
   end
@@ -84,11 +158,11 @@ class ReviewableUser < Reviewable
         )
 
       self.payload = {
-        scrubbed_by: guardian.current_user.username,
-        scrubbed_reason: reason,
-        scrubbed_at:,
+        "scrubbed_by" => guardian.current_user.username,
+        "scrubbed_reason" => reason,
+        "scrubbed_at" => scrubbed_at,
       }
-      self.save!
+      save!
 
       result = create_result(:success)
 
@@ -109,12 +183,12 @@ class ReviewableUser < Reviewable
         self.reject_reason = args[:reject_reason]
 
         # Without this, we end up sending the email even if this reject_reason is too long.
-        self.validate!
+        validate!
 
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
           Jobs::CriticalUserEmail.new.execute(
-            { type: :signup_after_reject, user_id: target.id, reject_reason: self.reject_reason },
+            { type: :signup_after_reject, user_id: target.id, reject_reason: reject_reason },
           )
         end
 
@@ -126,7 +200,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
-        delete_args[:from_reviewable] = true
+        delete_args[:reviewable_id] = id
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess
@@ -157,6 +231,83 @@ class ReviewableUser < Reviewable
   def is_a_suspect_user?
     reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
   end
+
+  private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return if !is_a_suspect_user? && !target&.approved?
+
+    case action_id
+    when :suspend_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :silence_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account had its ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_user_block
+      user = target
+      return unless user&.destroyed?
+
+      {
+        decision_facts: "The reviewed account was deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :remove_avatar
+      {
+        decision_facts: "The reviewed account's avatar was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_IMAGE"],
+        content_date: result.removed_avatar.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
+
+  def retain_avatar_snapshot
+    upload_id = payload&.dig("avatar_upload_id")
+    return if upload_id.blank?
+
+    UploadReference.ensure_exist!(
+      upload_ids: [upload_id],
+      target_type: self.class.polymorphic_name,
+      target_id: id,
+    )
+  end
+
+  def scrubbable?
+    username = payload&.dig("username")
+    return false if !rejected? || username.blank?
+
+    target.blank? || username != target.username
+  end
 end
 
 # == Schema Information
@@ -164,34 +315,35 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

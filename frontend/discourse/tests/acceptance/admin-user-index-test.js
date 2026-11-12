@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 let deleteAndBlock;
+let deleteData;
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
@@ -28,6 +29,18 @@ acceptance("Admin - User Index", function (needs) {
     server.put("/users/sam/preferences/username", () => {
       return helper.response({ id: 2, username: "new-sam" });
     });
+
+    server.get("/admin/users/-1234.json", () =>
+      helper.response({
+        id: -1234,
+        username: "helper_bot",
+        name: "Helper bot",
+        active: true,
+        admin: false,
+        moderator: false,
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/f0a364/{size}.png",
+      })
+    );
 
     server.get("/admin/users/3.json", () => {
       return helper.response({
@@ -116,6 +129,7 @@ acceptance("Admin - User Index", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
+      deleteData = data;
       deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
@@ -215,10 +229,52 @@ acceptance("Admin - User Index", function (needs) {
         post_count: 50,
       });
     });
+
+    server.get("/admin/users/13.json", () => {
+      return helper.response({
+        id: 13,
+        username: "merge_source",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_be_merged: true,
+      });
+    });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "merge_target",
+            name: null,
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+          },
+        ],
+      });
+    });
   });
 
   needs.hooks.beforeEach(() => {
     deleteAndBlock = null;
+    deleteData = null;
+  });
+
+  test("identifies bot accounts on the user details page", async function (assert) {
+    await visit("/admin/users/-1234/helper_bot");
+    assert
+      .dom(".admin-user__bot-indicator .value")
+      .hasText(i18n("admin.user.bot"), "the bot account is identified");
+    assert
+      .dom(".admin-user__bot-indicator .d-icon-robot")
+      .exists("the indicator includes the bot icon");
+
+    await visit("/admin/users/2/sam");
+    assert
+      .dom(".admin-user__bot-indicator")
+      .doesNotExist("human accounts have no bot indicator");
   });
 
   test("can edit username", async function (assert) {
@@ -340,23 +396,54 @@ acceptance("Admin - User Index", function (needs) {
 
   test("delete user - delete without blocking works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
-    await click(".btn-user-delete");
+
+    const dropdown = selectKit(".btn-user-delete");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_dont_block");
 
     assert
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .delete-dont-block");
+    await click(
+      ".delete-user-modal.delete-dont-block .dialog-footer .btn-danger"
+    );
 
     assert.false(deleteAndBlock, "user does not get blocked");
   });
 
   test("delete user - delete and block works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
-    await click(".btn-user-delete");
-    await click(".dialog-footer .delete-and-block");
+
+    const dropdown = selectKit(".btn-user-delete");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_and_block");
+
+    await click(
+      ".delete-user-modal.delete-and-block .dialog-footer .btn-danger"
+    );
 
     assert.true(deleteAndBlock, "user does get blocked");
+  });
+
+  test("delete user - delete and block email only blocks the email, not the IP", async function (assert) {
+    await visit("/admin/users/5/user5");
+
+    const dropdown = selectKit(".btn-user-delete");
+    await dropdown.expand();
+    await dropdown.selectRowByValue("delete_and_block_email");
+
+    await click(
+      ".delete-user-modal.delete-and-block .dialog-footer .btn-danger"
+    );
+
+    assert.strictEqual(deleteData.block_email, "true", "blocks the email");
+    assert.strictEqual(deleteData.block_ip, undefined, "does not block the IP");
+    assert.strictEqual(
+      deleteData.block_urls,
+      undefined,
+      "does not block external URLs"
+    );
   });
 
   test("delete explanation - shows admin-specific message when admin cannot be deleted", async function (assert) {
@@ -429,5 +516,33 @@ acceptance("Admin - User Index", function (needs) {
         i18n("admin.user.delete_posts_forbidden_because_admin"),
         "moderators don't get the admin-specific message for delete posts"
       );
+  });
+
+  test("merge user - the chosen target user is carried to the confirmation", async function (assert) {
+    await visit("/admin/users/13/merge_source");
+    await click(".btn-user-merge");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("cannot merge before a target user is chosen");
+
+    const targetUser = selectKit(".d-modal .email-group-user-chooser");
+    await targetUser.expand();
+    await targetUser.fillInFilter("merge_target");
+    await targetUser.selectRowByValue("merge_target");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isEnabled("can merge once a target user is chosen");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.dom(".d-modal__body").includesText(
+      i18n("admin.user.merge.confirmation.text", {
+        username: "merge_source",
+        targetUsername: "merge_target",
+      }),
+      "asks to confirm merging into the chosen user"
+    );
   });
 });

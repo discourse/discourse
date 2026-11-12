@@ -172,11 +172,20 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     assert
       .dom('.popular-theme-item[data-name="Graceful"] .popular-theme-buttons')
       .hasText(i18n("admin.customize.theme.installed"));
+    assert
+      .dom('.popular-theme-item[data-name="Graceful"] img')
+      .hasAttribute(
+        "alt",
+        i18n("admin.customize.theme.screenshot", { name: "Graceful" })
+      );
 
     assert
       .dom(
         '.popular-theme-item[data-name="Mint"] .popular-theme-buttons button'
       )
       .exists("install button is shown for not installed themes");
+    assert
+      .dom('.popular-theme-item[data-name="Mint"] .popular-theme-screenshot')
+      .doesNotHaveAttribute("href", "screenshot is not linked");
   });
 });

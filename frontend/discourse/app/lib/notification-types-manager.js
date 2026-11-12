@@ -12,8 +12,10 @@ import LikedConsolidated from "discourse/lib/notification-types/liked-consolidat
 import LinkedConsolidated from "discourse/lib/notification-types/linked-consolidated";
 import MembershipRequestAccepted from "discourse/lib/notification-types/membership-request-accepted";
 import MembershipRequestConsolidated from "discourse/lib/notification-types/membership-request-consolidated";
+import Mentioned from "discourse/lib/notification-types/mentioned";
 import MovedPost from "discourse/lib/notification-types/moved-post";
 import NewFeatures from "discourse/lib/notification-types/new-features";
+import Replied from "discourse/lib/notification-types/replied";
 import UpcomingChangeAutomaticallyPromoted from "discourse/lib/notification-types/upcoming-change-automatically-promoted";
 import UpcomingChangeAvailable from "discourse/lib/notification-types/upcoming-change-available";
 import WatchingFirstPost from "discourse/lib/notification-types/watching-first-post";
@@ -31,9 +33,11 @@ const CLASS_FOR_TYPE = {
   linked_consolidated: LinkedConsolidated,
   membership_request_accepted: MembershipRequestAccepted,
   membership_request_consolidated: MembershipRequestConsolidated,
+  mentioned: Mentioned,
   moved_post: MovedPost,
   new_features: NewFeatures,
   admin_problems: AdminProblems,
+  replied: Replied,
   upcoming_change_available: UpcomingChangeAvailable,
   upcoming_change_automatically_promoted: UpcomingChangeAutomaticallyPromoted,
   watching_first_post: WatchingFirstPost,

@@ -16,6 +16,8 @@ export default class BulkSelectHelper {
   @tracked bulkSelectEnabled = false;
   @tracked autoAddTopicsToBulkSelect = false;
   @tracked autoAddBookmarksToBulkSelect = false;
+
+  /** @type {string | null | undefined} */
   @tracked lastCheckedElementId = null;
 
   @autoTrackedArray selected;
@@ -29,6 +31,26 @@ export default class BulkSelectHelper {
     setOwner(this, getOwner(context));
   }
 
+  get onBulkSelectToggle() {
+    return this._onBulkSelectToggle;
+  }
+
+  set onBulkSelectToggle(callback) {
+    this._onBulkSelectToggle = callback;
+  }
+
+  get onResetNew() {
+    return this._onResetNew;
+  }
+
+  set onResetNew(callback) {
+    this._onResetNew = callback;
+  }
+
+  get selectedCategoryIds() {
+    return uniqueItemsFromArray(this.selected.map((item) => item.category_id));
+  }
+
   clear() {
     this.selected.length = 0;
     this.lastCheckedElementId = null;
@@ -40,18 +62,6 @@ export default class BulkSelectHelper {
 
   setTopics(topics) {
     this.selected = topics;
-  }
-
-  get onBulkSelectToggle() {
-    return this._onBulkSelectToggle;
-  }
-
-  set onBulkSelectToggle(callback) {
-    this._onBulkSelectToggle = callback;
-  }
-
-  get selectedCategoryIds() {
-    return uniqueItemsFromArray(this.selected.map((item) => item.category_id));
   }
 
   @action
@@ -90,6 +100,8 @@ export default class BulkSelectHelper {
 
       this.modal.close();
       this.router.refresh();
+      this.bulkSelectEnabled = false;
+      this.clear();
     });
   }
 }

@@ -69,6 +69,8 @@ cs:
       starred: "Oblíbené"
       starred_channels: "Oblíbené kanály"
       starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
+      pinned_bar:
+        title: "Připnuto"
       pinned: "Připnuto"
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
@@ -89,8 +91,6 @@ cs:
           other: "Jste si jisti, že chcete odstranit těchto %{count} zpráv?"
       channel_settings:
         title: "Nastavení kanálu"
-        edit: "Upravit"
-        add: "přidat"
         star_channel: "Nastavit jako oblíbený"
         unstar_channel: "Odebrat z oblíbených"
         close_channel: "Zavřít kanál"
@@ -100,7 +100,6 @@ cs:
         join_channel: "Připojit se k kanálu"
         leave_channel: "Opustit kanál"
         leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
-        notification_settings: "Nastavení oznámení"
         notification_settings_context: "Upozornění"
         join: "Přidat se ke skupině"
         leave: "Opustit"
@@ -127,7 +126,7 @@ cs:
         process_started: "Proces smazání kanálu byl zahájen. Tento dialog se brzy uzavře, smazaný kanál již nikde neuvidíte."
       channels_list_popup:
         browse: "Procházet kanály"
-        create: "Nový kanál"
+        create: "Nový kanál..."
       close: "Zavřít"
       remove: "Smazat"
       collapse: "Sbalit panel chatu"
@@ -144,8 +143,6 @@ cs:
       muted: "ztišení"
       joined: "účet vytvořen"
       empty_state:
-        direct_message_cta: "Zahájení soukromého chatu"
-        direct_message: "Můžete také zahájit soukromou konverzaci s jedním nebo více uživateli."
         title: "Nebyly nalezeny žádné kanály"
         my_threads: "Zatím nemáte žádná vlákna. Zde se zobrazí vlákna, kterých se účastníte."
       email_frequency:
@@ -161,12 +158,6 @@ cs:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
-      send_shortcut:
-        title: "Zkratka pro odeslání"
-        enter:
-          label: "Odeslat pomocí Enter"
-        meta_enter:
-          label: "Odeslat pomocí %{meta_key} + Enter"
       enable: "Povolit chat"
       flag: "Nahlášení"
       emoji: "Vložit emotikon"
@@ -270,8 +261,6 @@ cs:
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       chat_notifications_title: "Upozornění chatu"
-      only_chat_push_notifications:
-        title: "Odesílat pouze push notifikace chatu"
       personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
         title: "Ignorovat zmínky v rámci celého kanálu"
@@ -303,7 +292,6 @@ cs:
       retry_staged_message:
         title: "Chyba sítě"
         action: "Poslat znovu?"
-      unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
       bookmark_message_edit: "Upravit záložku"
       restore: "Obnovit smazanou zprávu"
@@ -323,8 +311,6 @@ cs:
         title: "Zvuk upozornění na ploše"
       sounds:
         none: "Žádná"
-        bell: "Zvonek"
-        ding: "Cink"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Připojit soubor"
@@ -357,6 +343,8 @@ cs:
         filter_closed: Zavřené
         filter_archived: Archivované
         filter_input_placeholder: Vyhledat kanál podle názvu
+        filter_joined_all: "Vše"
+        filter_joined_joined: "Účet vytvořen"
       chat_message_separator:
         today: Dnes
         yesterday: Včera
@@ -369,21 +357,22 @@ cs:
       members_view:
         filter_placeholder: Najít členy
         add_member: Přidat člena
-        back_to_settings: "Zpět na nastavení"
       about_view:
         associated_topic: Propojené téma
         associated_category: Propojená kategorie
-        title: Název
         name: Jméno
         description: Popis
       channel_info:
         back_to_all_channels: "Všechny kanály"
         back_to_channel: "Zpět"
+        nav_label: "Informace o kanálu"
         tabs:
           members: Členové
+          preferences: Nastavení
           settings: Nastavení
           search: Vyhledat
         remove_member: "Smazat"
+        members_title: "%{channel} členů"
       new_message_modal:
         title: Odeslání zprávy
         add_user_long: <kbd>shift + kliknutí</kbd> nebo <kbd>shift + enter</kbd><span>Přidat @%{username}</span>
@@ -403,17 +392,12 @@ cs:
         create_new_group_chat: "Vytvoření skupinové konverzace"
         group_with_too_many_members: "má příliš mnoho členů (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Úprava kanálu
         input_placeholder: Přidat název
         slug_description: Zkratka kanálu se používá v URL adrese místo názvu kanálu
         name: Název kanálu
-        slug: URL kanálu (volitelná)
-        emoji: Emotikon kanálu (volitelné)
         reset_emoji: Obnovit emotikon
       channel_edit_description_modal:
-        title: Úprava popisu
         input_placeholder: Přidejte popis
-        description: Řekněte lidem, o čem je tento kanál
       direct_message_creator:
         add_to_channel: "Přidat do kanálu"
         title: Nová zpráva
@@ -434,6 +418,9 @@ cs:
           few: "%{count} členové"
           many: "%{count} členů"
           other: "%{count} členů"
+        preview_card:
+          log_in: "Přihlásit se"
+          sign_up: "Registrace"
       create_channel:
         threading:
           label: "Povolit vlákna"
@@ -496,16 +483,14 @@ cs:
             many: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
             other: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
         create: "Vytvořit kanál"
-        description: "Popis (volitelný)"
+        description: "Popis"
         name: "Název kanálu"
-        slug: "URL kanálu (volitelná)"
         title: "Nový kanál"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Témata"
         emoji:
-          label: "Emotikon kanálu (volitelné)"
           reset: "Obnovit emotikon"
       reviewable:
         type: "Zpráva chatu"
@@ -542,7 +527,6 @@ cs:
         always: "Pro všechny aktivity"
       settings:
         channel_wide_mentions_label: "Povolit zmínky @all a @here"
-        channel_wide_mentions_description: "Umožněte uživatelům upozornit všechny členy #%{channel} pomocí @all nebo pouze ty, kteří jsou v danou chvíli aktivní, pomocí @here."
         channel_threading_label: "Vlákna"
         channel_threading_description: "Když je povoleno vytváření vláken, odpovědi na zprávy chatu vytvoří samostatnou konverzaci, která bude existovat vedle hlavního kanálu."
         auto_join_users_label: "Automaticky přidávat uživatele"
@@ -554,6 +538,9 @@ cs:
         followed: "Účet vytvořen"
         mute: "Ztlumit kanál"
         unmute: "Zrušit ztlumení kanálu"
+        muted_until_hint: "až %{until}"
+        mute_options:
+          "off": "Vypnuto"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         muted_on: "Zapnuto"
@@ -563,9 +550,6 @@ cs:
         save: "Uložit"
         saved: "Uloženo"
         unfollow: "Opustit"
-        admin_title: "Administrace"
-        settings_title: "Nastavení"
-        info_title: "Informace o kanálu"
         category_label: "Kategorie"
         history_label: "Historie"
         members_label: "Členové"
@@ -591,14 +575,19 @@ cs:
       direct_messages:
         title: "Soukromé zprávy"
         aria_label: "Přepnutí na přímé zprávy"
-        new: "Vytvořit osobní chat"
+        new_group: "Nová skupinová konverzace"
         create: "Přejít"
-        leave: "Opustit tento osobní chat"
-        close: "Zavřít tento osobní chat"
+        leave: "Opustit kanál"
+        close: "Zavřít kanál"
         cannot_create: "Je nám líto, ale přímé zprávy nelze odesílat."
       channel_list:
         title: "Kanály"
         aria_label: "Přepnout na seznam kanálů"
+        options:
+          filter: "Filtr"
+        filter:
+          all: "Všechny kanály"
+          mentions: "Zmínky"
       incoming_webhooks:
         back: "Zpět"
         channel_placeholder: "Vyberte kanál"
@@ -771,11 +760,6 @@ cs:
           direct_html: '<span>%{username}</span> <span>vás zmínil v "%{channel}"</span>'
           other_plain: 'zmínil %{identifier} v "%{channel}"'
           other_html: '<span>%{username}</span> <span>zmínil %{identifier} v "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "vás zmínil/a v osobním chatu"
-          direct_html: "<span>%{username}</span> <span>vás zmínil/a v osobním chatu</span>"
-          other_plain: "zmínil/a %{identifier} v osobním chatu"
-          other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v soukromém chatu</span>"
         chat_message: "Nová zpráva chatu"
         chat_quoted: "%{username} citoval vaši zprávu v chatu"
       titles:
@@ -847,9 +831,27 @@ cs:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Začít novou SZ
-        title: Vytvořit osobní chat
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Odeslat zprávu chatu"
+      chat_message_created:
+        channel_id: "Kanál"
+      send_chat_message:
+        targets:
+          channel: "Kanál"
+        channel_id: "Kanál"
+        message: "Odeslat"
+        actor_username: "Odesílatel"
+      chat_approval:
+        message: "Odeslat"
+        buttons: "Tlačítka"
+        value: "Hodnota"
+        style: "Styl"
+        style_default: "Výchozí"
+        style_primary: "Primární"
+        style_success: "Úspěch"
+        icon: "Ikona"
+        channel_id: "Kanál"

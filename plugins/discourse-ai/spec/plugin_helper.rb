@@ -4,7 +4,17 @@ module DiscourseAi::ChatBotHelper
   def toggle_enabled_bots(bots: [])
     SiteSetting.ai_bot_enabled = true if bots.any?
     SiteSetting.ai_bot_enabled_llms = bots.map(&:id).join("|")
-    DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
+  end
+
+  def prepare_ai_bot_fixtures(bots:)
+    SiteSetting.provider.save(:discourse_ai_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(:ai_bot_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(
+      :ai_bot_enabled_llms,
+      bots.map(&:id).join("|"),
+      SiteSetting.types[:list],
+    )
+    SiteSetting.refresh!
   end
 
   def assign_fake_provider_to(setting_name)
@@ -18,6 +28,14 @@ module DiscourseAi::ChatBotHelper
       SiteSetting.public_send("#{setting_name}=", p.id)
     end
   end
+
+  def enable_legacy_discover
+    SiteSetting.provider.save(:ai_discover_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.refresh!
+  end
 end
 
-RSpec.configure { |config| config.include DiscourseAi::ChatBotHelper }
+RSpec.configure do |config|
+  config.include DiscourseAi::ChatBotHelper
+  config.before { AiAgent.agent_cache.flush! }
+end

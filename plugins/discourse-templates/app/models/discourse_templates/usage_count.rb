@@ -15,10 +15,10 @@ end
 # Table name: discourse_templates_usage_count
 #
 #  id          :bigint           not null, primary key
-#  topic_id    :integer          not null
 #  usage_count :integer          default(0), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  topic_id    :integer          not null
 #
 # Indexes
 #

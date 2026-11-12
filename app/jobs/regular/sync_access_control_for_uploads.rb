@@ -15,18 +15,16 @@ module Jobs
         .where(id: args[:upload_ids])
         .find_in_batches do |uploads|
           uploads.each do |upload|
-            begin
-              Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
-            rescue => err
-              Discourse.warn_exception(
-                err,
-                message: "Failed to update upload access control",
-                env: {
-                  upload_id: upload.id,
-                  filename: upload.original_filename,
-                },
-              )
-            end
+            Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
+          rescue => err
+            Discourse.warn_exception(
+              err,
+              message: "Failed to update upload access control",
+              env: {
+                upload_id: upload.id,
+                filename: upload.original_filename,
+              },
+            )
           end
         end
     end

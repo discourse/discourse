@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin Backups Page", type: :system do
+describe "Admin Backups Page" do
   fab!(:current_user, :admin)
   let(:backups_page) { PageObjects::Pages::AdminBackups.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
@@ -32,6 +32,7 @@ describe "Admin Backups Page", type: :system do
       root_directory + "/" + RailsMultisite::ConnectionManagement.current_db,
     )
   end
+
   after { teardown_local_backups(root_directory: root_directory) }
 
   it "shows a list of backups" do

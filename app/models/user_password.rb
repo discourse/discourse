@@ -21,7 +21,7 @@ class UserPassword < ActiveRecord::Base
   def password=(pw)
     return if pw.blank?
 
-    self.password_hash_will_change!
+    password_hash_will_change!
     @raw_password = pw
   end
 
@@ -78,13 +78,13 @@ end
 # Table name: user_passwords
 #
 #  id                  :integer          not null, primary key
-#  user_id             :integer          not null
-#  password_hash       :string(64)       not null
-#  password_salt       :string(32)       not null
 #  password_algorithm  :string(64)       not null
 #  password_expired_at :datetime
+#  password_hash       :string(64)       not null
+#  password_salt       :string(32)       not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  user_id             :integer          not null
 #
 # Indexes
 #

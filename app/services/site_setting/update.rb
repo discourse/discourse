@@ -3,11 +3,15 @@
 class SiteSetting::Update
   include Service::Base
 
+  class Conflict < StandardError
+  end
+
   Setting = Struct.new(:name, :value, :backfill, :change)
 
   options do
     attribute :allow_changing_hidden, :array, default: []
-    attribute :overridden_setting_names, default: {}
+    attribute :overridden_setting_names, default: -> { {} }
+    attribute :expected_values, default: -> { {} }
   end
 
   policy :current_user_is_admin
@@ -19,8 +23,7 @@ class SiteSetting::Update
       dependent_order = SiteSetting.type_supervisor.dependencies.order
 
       self.settings =
-        self
-          .settings
+        settings
           .to_a
           .map do |setting|
             Setting.new(
@@ -37,7 +40,7 @@ class SiteSetting::Update
 
     after_validation do
       self.settings =
-        self.settings.map do |setting|
+        settings.map do |setting|
           raw_value = setting.value
 
           setting.value =
@@ -71,9 +74,13 @@ class SiteSetting::Update
   policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
 
   try do
-    transaction do
-      step :save
-      step :backfill
+    lock do
+      step :ensure_expected_values
+
+      transaction do
+        step :save
+        step :backfill
+      end
     end
   end
 
@@ -81,6 +88,23 @@ class SiteSetting::Update
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def ensure_expected_values(options:)
+    options.expected_values.each do |name, expected_value|
+      stored_setting = SiteSetting.provider.find(name)
+      current_value =
+        if stored_setting
+          SiteSetting.type_supervisor.to_rb_value(
+            name,
+            stored_setting.value,
+            stored_setting.data_type,
+          )
+        else
+          SiteSetting.public_send(name)
+        end
+      raise Conflict if current_value.to_s != expected_value.to_s
+    end
   end
 
   def save(params:, options:, guardian:)

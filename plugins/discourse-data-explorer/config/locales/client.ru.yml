@@ -5,27 +5,59 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Исследователь данных Discourse"
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Проводник данных"
+          description: "Генерация запросов на основе ИИ для Data Explorer"
+          query_generation: "Генерация запросов"
     errors:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."
         dirty: "Вы должны сохранить запрос перед его выполнением."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Нет результатов"
     explorer:
-      default_query: "Домашнюю страницу"
+      default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
+      view_query: "Вид"
+      queries: "Запросы"
+      query_created: "Запрос создан!"
+      mode:
+        manual: "Напишите SQL-запрос"
+        ai: "Генерация с помощью ИИ"
       or: "или"
       admins_only: "Исследование данных доступно только для администраторов."
       allow_groups: "Разрешить группам доступ к этому запросу"
       title: "Проводник данных"
-      create: "Создать"
       create_placeholder: "Имя запроса..."
       description_placeholder: "Введите описание"
+      ai:
+        description_title: "Генерация с помощью ИИ"
+        description_hint: "Опишите свои потребности простым языком. Мы сгенерируем для вас SQL-запрос, название и описание."
+        description_placeholder: "Например, показать мне количество регистраций за определенный период времени."
+        generate: "Сгенерировать"
+        generating: "Генерация запросов с помощью ИИ..."
+        generation_timeout: "Истекло время ожидания генерации запроса ИИ. Вы можете написать SQL-запрос вручную."
+        generation_error: "При формировании запроса произошла ошибка."
+        save_query: "Сохранить запрос"
+        write_manually: "Напишите SQL-запрос вручную."
+        sql_label: "SQL"
       import:
-        label: "Импорт"
         unparseable_json: "Невозможно распарсить JSON-файл."
         wrong_json: "Неверный формат JSON-файла. Файл должен содержать объект 'запрос', у которого как минимум должно быть свойство 'sql'."
       help:
         label: "Помощь"
         modal_title: "Проводник данных. Справка."
+        custom_params: "<h2>Создание настраиваемых параметров</h2> <p>Чтобы создать настраиваемые параметры для ваших запросов, поместите эти данные в верхней части запроса, придерживаясь следующего формата:</p> <pre><code>- [params]\n- int: num = 1\n\nSELECT: num</code></pre> <p><i>Примечание. : первая строка с [params] обязательна, с двумя дефисами перед ней и всеми настраиваемыми параметрами, которые вы хотите объявить.</i></p>"
+        default_values: "<h3>Значения по умолчанию</h3> <p>Вы можете объявлять параметры со значениями по умолчанию или без них. Значения по умолчанию будут отображаться в текстовом поле под редактором запросов, которое вы можете отредактировать в соответствии со своими потребностями. Параметры, объявленные без значений по умолчанию, по-прежнему будут создавать текстовое поле, но оно будет пустым и выделено красным цветом.</p> <pre><code>-- [параметры]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Типы данных</h3> <p>Вот распространенные типы данных, которые вы можете использовать:</p> <ul> <li><b>integer</b> - четырехбайтовое знаковое целое число</li> <li><b>text</b> - строка переменной длины</li> <li><b>boolean</b> – правда/ложь</li> <li><b>date</b> - календарная дата (год, месяц, день)</li> <li><b>current_user_id</b> - ID пользователя, выполняющего запрос (автоматически внедряется, полезно для групповых отчетов)</li> </ul> <p>Для получения дополнительной информации о типах данных посетите <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>этот веб-сайт</a>.</p>"
       schema:
         title: "Схема базы данных"
         filter: "Поиск…"
@@ -35,20 +67,23 @@ ru:
           yes: "Да"
           no: "Нет"
           null_: "Null"
-      export: "Экспорт"
       view_json: "Просмотреть JSON"
-      view: "Вид"
       save: "Сохранить изменения"
+      saverun: "Сохраните изменения и запустите"
       run: "Выполнить запрос"
       undo: "Отменить изменения"
-      edit: "Изменить"
       delete: "Удалить"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Таблица"
-      show_graph: "График"
-      others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
+      sql_label: "SQL"
+      chart:
+        form:
+          label: "Тип диаграммы"
+          bar: "Гистограмма"
+      export_as:
+        label: "Экспортировать как…"
+        results_json: "Результаты (JSON)"
+        results_csv: "Результаты (CSV)"
       run_time: "Запрос завершен за %{value} мс."
+      cached_result_notice: "Отображение кэшированных результатов из %{relative_time}."
       result_count:
         one: "%{count} результат."
         few: "%{count} результата."
@@ -59,31 +94,48 @@ ru:
         few: "Показаны %{count} лучших результата."
         many: "Показаны %{count} лучших результатов."
         other: "Показаны %{count} лучшего результата."
-      query_name: "Запрос"
+      name: "Название"
       query_groups: "Группы"
+      query_tags: "Теги"
       link: "Ссылка для"
       report_name: "Отчёт"
       query_description: "Описание"
       query_time: "Время выполнения последнего запроса"
       query_user: "Создано"
       column: "Колонка %{number}"
-      explain_label: "Отобразить план запроса"
+      save_params: "Установить значения по умолчанию"
       reset_params: "Сбросить"
-      search_placeholder: "Поиск…"
       no_search_results: "К сожалению, мы не смогли найти результаты, соответствующие вашему запросу."
       form:
         errors:
           invalid: "Недопустимое значение"
           no_such_category: "Нет такой категории"
           no_such_group: "Нет такой группы"
+          invalid_date: "%{date} — недействительная дата"
+          invalid_time: "%{time} — недопустимое время"
     group:
       reports: "Отчеты"
     admin:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
+    discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Для работы требуется включить плагин Data Explorer."
+      nodes:
+        "action:sql": "Проводник данных"
+      node_descriptions:
+        "action:sql": "Выполните SQL-запрос только для чтения к базе данных."
+      sql:
+        operation_description: "Как выполнить запрос"
+        query_id: "Запрос"
+        add_param: "Добавить параметр"
+        param_value: "Значение"
+        output:
+          results: "Результаты"
+          no_results: "Нет результатов"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

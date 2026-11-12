@@ -3,18 +3,39 @@
 module PageObjects
   module Pages
     class Review < PageObjects::Pages::Base
-      POST_BODY_TOGGLE_SELECTOR = ".post-body__toggle-btn"
-      POST_BODY_COLLAPSED_SELECTOR = ".post-body.is-collapsed"
       REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
+
+      def has_no_standalone_classification?
+        has_no_css?(".review-item__classify, .dsa-classification")
+      end
 
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
         self
       end
 
-      def select_bundled_action(reviewable, value)
+      # Reaching a reviewable through the user menu keeps the app running, which
+      # is the only way to exercise the state a reviewable item carries over from
+      # the previously displayed one. `visit_reviewable` always starts afresh.
+      def visit_reviewable_from_user_menu(reviewable)
+        PageObjects::Components::UserMenu.new.open.click_review_queue_tab.click_reviewable(
+          reviewable,
+        )
+        reviewable_by_id(reviewable.id)
+        self
+      end
+
+      def select_bundled_action(reviewable, value, bundle_index: nil)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
+          dropdown =
+            if bundle_index
+              PageObjects::Components::SelectKit.new(
+                "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{bundle_index})",
+              )
+            else
+              reviewable_action_dropdown
+            end
+          dropdown.select_row_by_value(value)
         end
       end
 
@@ -24,24 +45,11 @@ module PageObjects
         end
       end
 
-      def click_post_body_toggle
-        find(POST_BODY_TOGGLE_SELECTOR).click
-      end
-
-      def has_post_body_toggle?
-        page.has_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_no_post_body_toggle?
-        page.has_no_css?(POST_BODY_TOGGLE_SELECTOR)
-      end
-
-      def has_post_body_collapsed?
-        page.has_css?(POST_BODY_COLLAPSED_SELECTOR)
-      end
-
-      def has_no_post_body_collapsed?
-        page.has_no_css?(POST_BODY_COLLAPSED_SELECTOR)
+      # Pass confirm: false for reviewables that require a rejection reason, as
+      # those open a modal instead of the confirmation dialog.
+      def delete_user_from_reviewable(reviewable, action, confirm: true)
+        select_bundled_action(reviewable, action, bundle_index: 1)
+        PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
       def has_reviewable_action_dropdown?
@@ -50,6 +58,16 @@ module PageObjects
 
       def has_no_reviewable_action_dropdown?
         page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
+      end
+
+      def has_no_reviewable_actions?(reviewable)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
+        end
+      end
+
+      def has_help_resources?
+        has_css?(".review-item__resources", text: I18n.t("js.review.need_help"))
       end
 
       def has_reviewable_items?(count:)
@@ -64,11 +82,7 @@ module PageObjects
       end
 
       def has_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".scrub-rejected-user button") }
-      end
-
-      def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".scrub-rejected-user button") }
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
       end
 
       def click_scrub_user_button
@@ -144,6 +158,12 @@ module PageObjects
         end
       end
 
+      def has_no_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".review-item__aside-title", text: text)
+        end
+      end
+
       def flag_reason_component
         PageObjects::Components::Review::FlagReason.new
       end
@@ -154,6 +174,14 @@ module PageObjects
 
       def has_history_items?(count:)
         page.has_css?(".timeline-event", count: count)
+      end
+
+      def has_note?(content)
+        page.has_css?(".timeline-event__description", text: content, normalize_ws: true)
+      end
+
+      def has_no_note?(content)
+        page.has_no_css?(".timeline-event__description", text: content, normalize_ws: true)
       end
 
       def has_claimed_history_item?(user)
@@ -175,6 +203,12 @@ module PageObjects
 
       def click_insights_tab
         find(".action-list li.insights").click
+      end
+
+      def has_reviewable_with_status?(reviewable, status)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__status.--#{status}")
+        end
       end
 
       def has_reviewable_with_approved_status?(reviewable)

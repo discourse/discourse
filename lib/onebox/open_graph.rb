@@ -11,13 +11,14 @@ module Onebox
     end
 
     def title_attr
-      !title.nil? ? "title='#{title}'" : ""
+      text = title
+      text.nil? ? "" : "title='#{ERB::Util.html_escape(text)}'"
     end
 
     def secure_image_url
       secure_url = URI(get(:image))
       secure_url.scheme = "https"
-      secure_url.to_s
+      Onebox::Helpers.normalize_url_for_output(secure_url.to_s)
     end
 
     private
@@ -39,7 +40,7 @@ module Onebox
             key = $1.tr("-:", "_").to_sym
             data[key] ||= value
             if key.in?(COLLECTIONS)
-              collection_name = "#{key}s".to_sym
+              collection_name = :"#{key}s"
               data[collection_name] ||= []
               data[collection_name] << value
             end

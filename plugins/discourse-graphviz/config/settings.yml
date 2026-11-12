@@ -2,5 +2,3 @@ plugins:
   discourse_graphviz_enabled:
     default: false
     client: true
-  graphviz_default_svg:
-    default: true

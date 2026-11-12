@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class TopicTimer < BaseTimer
+  EVENT_ATTRIBUTES = %w[
+    status_type
+    execute_at
+    category_id
+    user_id
+    based_on_last_post
+    duration_minutes
+  ].freeze
+  REMOVAL_REASONS = %i[cancelled completed].freeze
+
   belongs_to :user
   belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
@@ -26,7 +36,7 @@ class TopicTimer < BaseTimer
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
-    self.public_type = self.public_type?
+    self.public_type = public_type?
   end
 
   # These actions are in place to make sure the topic is in the correct
@@ -38,13 +48,36 @@ class TopicTimer < BaseTimer
   # which change the topic's status straight away and set a timer to do the
   # opposite action in the future.
   after_save do
-    if (saved_change_to_execute_at? || saved_change_to_user_id?)
+    if saved_change_to_execute_at? || saved_change_to_user_id?
       if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
         topic.update_status("closed", false, user) if topic.closed?
       end
       if status_type == TopicTimer.types[:open]
         topic.update_status("closed", true, user) if topic.open?
       end
+    end
+  end
+
+  after_save :publish_timer_change
+  after_destroy do
+    DiscourseEvent.trigger(:topic_timer_changed, self, :cancelled, nil) unless trashed?
+  end
+
+  def trash!(trashed_by = nil)
+    finish!(:cancelled, by_user: trashed_by)
+  end
+
+  def finish!(reason, by_user: Discourse.system_user)
+    if REMOVAL_REASONS.exclude?(reason)
+      raise ArgumentError, "Unknown timer removal reason: #{reason}"
+    end
+
+    with_lock do
+      next false if trashed?
+
+      trash_update(Time.current, by_user&.id)
+      DiscourseEvent.trigger(:topic_timer_changed, self, reason, nil)
+      true
     end
   end
 
@@ -55,6 +88,19 @@ class TopicTimer < BaseTimer
   end
 
   private
+
+  def publish_timer_change
+    if previously_new_record?
+      DiscourseEvent.trigger(:topic_timer_changed, self, :created, nil)
+      return
+    end
+
+    changes = saved_changes.slice(*EVENT_ATTRIBUTES)
+    return if changes.empty?
+
+    previous = attributes.slice(*EVENT_ATTRIBUTES).merge(changes.transform_values(&:first))
+    DiscourseEvent.trigger(:topic_timer_changed, self, :updated, previous)
+  end
 
   def executed_at_in_future?
     return if created_at.blank? || (execute_at > created_at)
@@ -91,6 +137,10 @@ class TopicTimer < BaseTimer
 
   def schedule_auto_delete_job
     Jobs.enqueue(TopicTimer.type_job_map[:delete], topic_timer_id: id)
+  end
+
+  def schedule_auto_reminder_job
+    # Reminders are handled by bookmarks; legacy topic timers have no action.
   end
 
   def schedule_auto_clear_slow_mode_job

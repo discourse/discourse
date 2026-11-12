@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const userFixtures = {
   "/u/eviltrout.json": {
     user_badges: [
       {
@@ -3115,7 +3120,6 @@ export default {
         enable_quoting: true,
         enable_smart_lists: true,
         enable_markdown_monospace_font: false,
-        enable_defer: false,
         digest_after_minutes: 1440,
         automatically_unpin_topics: true,
         auto_track_topics_after_msecs: 240000,
@@ -3591,3 +3595,5 @@ export default {
     recent_searches: ["yellow", "blue"],
   },
 };
+
+export default userFixtures;

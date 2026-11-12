@@ -92,6 +92,7 @@
   text-align: left;
   font-weight: normal;
   color: var(--primary-high);
+  vertical-align: bottom;
 }
 
 .d-table__row {
@@ -205,6 +206,17 @@
   }
 }
 
+/* The drag handle's column, sized to the handle. A table shares its free width
+   out among its columns, so without a width of its own this one takes a share of
+   the table to hold a 24px control. A width below the content's minimum is
+   raised to it, which is what makes `1px` mean "no wider than the handle". */
+
+.d-table__cell.--drag-handle,
+.d-table__header-cell.--drag-handle {
+  width: 1px;
+  white-space: nowrap;
+}
+
 .d-table__cell.--controls {
   text-align: right;
   width: auto;
@@ -235,4 +247,55 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
+}
+
+.d-table__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  min-height: var(--space-8);
+}
+
+.d-table-badge {
+  display: flex;
+  font-size: var(--font-down-2);
+  border-radius: var(--d-button-border-radius);
+  color: var(--primary-very-high);
+  background: var(--tertiary-very-low);
+  letter-spacing: 0.25px;
+
+  // Only badges that are links react to hover.
+  &:is(a) {
+    &:visited,
+    &:active {
+      color: var(--primary-very-high);
+    }
+
+    &:hover {
+      color: var(--d-link-color);
+    }
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0 var(--space-1);
+  }
+
+  &__content {
+    padding: var(--space-half) var(--space-2);
+  }
+
+  &__info {
+    border-left: 1px solid var(--secondary);
+    border-radius: 0 var(--d-button-border-radius) var(--d-button-border-radius)
+      0;
+    padding: var(--space-half) var(--space-1);
+  }
+
+  svg {
+    font-size: var(--font-down-2);
+    color: var(--primary-high);
+  }
 }

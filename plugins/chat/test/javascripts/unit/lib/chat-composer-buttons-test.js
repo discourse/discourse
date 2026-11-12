@@ -6,7 +6,7 @@ import {
   registerChatComposerButton,
 } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 
-module("Discourse Chat | Unit | chat-composer-buttons", function (hooks) {
+module("Unit | chat-composer-buttons", function (hooks) {
   hooks.beforeEach(function () {
     registerChatComposerButton({
       id: "foo",

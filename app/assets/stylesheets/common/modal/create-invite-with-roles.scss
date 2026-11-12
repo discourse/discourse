@@ -1,0 +1,63 @@
+.create-invite-with-roles-modal {
+  .d-modal__container {
+    width: 100%;
+    max-width: 32em;
+  }
+
+  &__role {
+    margin-bottom: 1em;
+  }
+
+  &__staff-role-description {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__sent-to {
+    margin-top: 0;
+  }
+
+  &__link-share {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+
+    input.invite-link {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  &__summary-rows {
+    margin: 0;
+  }
+
+  &__summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.5em 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
+    dt {
+      color: var(--primary-medium);
+      font-weight: normal;
+    }
+
+    dd {
+      margin: 0;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__email-sent {
+    h3 {
+      margin-top: 0;
+    }
+  }
+}

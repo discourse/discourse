@@ -3,7 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Unit | Models | chat-channel", function (hooks) {
+module("Unit | Models | chat-channel", function (hooks) {
   setupTest(hooks);
 
   module("unreadThreadsCount", function () {
@@ -30,6 +30,15 @@ module("Discourse Chat | Unit | Models | chat-channel", function (hooks) {
       const channel = new ChatFabricators(getOwner(this)).channel();
       channel.threadingEnabled = false;
       channel.currentUserMembership.lastViewedAt = new Date(2000, 0, 1);
+      channel.threadsManager.markThreadUnread(1, new Date());
+
+      assert.strictEqual(channel.unreadThreadsCountSinceLastViewed, 0);
+    });
+
+    test("returns 0 when current user membership is missing", function (assert) {
+      const channel = new ChatFabricators(getOwner(this)).channel();
+      channel.threadingEnabled = true;
+      channel.currentUserMembership = null;
       channel.threadsManager.markThreadUnread(1, new Date());
 
       assert.strictEqual(channel.unreadThreadsCountSinceLastViewed, 0);

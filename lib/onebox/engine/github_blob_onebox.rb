@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/git_blob_onebox"
-require_relative "../mixins/github_auth_header"
+require_relative "../github_access"
 
 module Onebox
   module Engine
     class GithubBlobOnebox
-      include Onebox::Mixins::GithubAuthHeader
-
       def self.git_regexp
         %r{^https?://(www\.)?github\.com.*/blob/}
       end
@@ -20,6 +18,10 @@ module Onebox
 
       def i18n
         {
+          header: {
+            binary_file: I18n.t("onebox.github.header.binary_file"),
+            file: I18n.t("onebox.github.header.file"),
+          },
           binary_file: I18n.t("onebox.github.binary_file"),
           truncated_file: I18n.t("onebox.github.truncated_file"),
           show_original: I18n.t("onebox.github.show_original"),
@@ -35,14 +37,24 @@ module Onebox
         "https://raw.githubusercontent.com/#{match[:org]}/#{match[:repo]}/#{match[:sha1]}/#{match[:file]}"
       end
 
-      def auth_headers(match)
-        github_auth_header(match[:org])
+      def auth_headers(_match)
+        {}
+      end
+
+      def fetch_raw(url, _headers)
+        Onebox::GithubAccess.client(match[:org]).raw_get(url)
+      rescue ::Discourse::GithubApi::Error => e
+        raise OpenURI::HTTPError.new(e.message, nil)
       end
 
       private
 
       def data
-        super.merge({ domain: "github.com/#{match[:org]}/#{match[:repo]}" })
+        super.merge(
+          domain: "github.com/#{match[:org]}/#{match[:repo]}",
+          repository: "#{match[:org]}/#{match[:repo]}",
+          layout_class: "github-onebox",
+        )
       end
     end
   end

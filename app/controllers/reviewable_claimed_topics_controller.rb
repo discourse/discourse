@@ -9,14 +9,15 @@ class ReviewableClaimedTopicsController < ApplicationController
     guardian.ensure_can_claim_reviewable_topic!(topic, automatic)
 
     begin
-      ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id, automatic:)
+      claim =
+        ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id, automatic:)
     rescue ActiveRecord::RecordInvalid
       return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
+    claim.log_topic_history(:claimed, current_user)
+    claim.publish_change(current_user, claimed: true)
 
-    notify_users(topic, current_user, automatic)
     render json: success_json
   end
 
@@ -26,33 +27,9 @@ class ReviewableClaimedTopicsController < ApplicationController
     if topic.blank? || !guardian.can_claim_reviewable_topic?(topic, automatic)
       raise Discourse::NotFound
     end
-    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
-    if deleted_count > 0
-      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
-    end
 
-    notify_users(topic, current_user, automatic, claimed: false)
+    ReviewableClaimedTopic.find_by(topic_id: topic.id)&.release(current_user)
+
     render json: success_json
-  end
-
-  private
-
-  def notify_users(topic, user, automatic, claimed: true)
-    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
-
-    if SiteSetting.enable_category_group_moderation? && topic.category
-      group_ids.merge(topic.category.moderating_group_ids)
-    end
-
-    data = {
-      topic_id: topic.id,
-      user: BasicUserSerializer.new(user, root: false).as_json,
-      automatic:,
-      claimed:,
-    }
-
-    MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
-
-    Jobs.enqueue(:refresh_users_reviewable_counts, group_ids: group_ids.to_a)
   end
 end

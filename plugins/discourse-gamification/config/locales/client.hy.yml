@@ -12,6 +12,10 @@ hy:
         link_to_settings: "Կարգավորումներ"
         refresh: "Թարմացնել"
         name: "Անուն"
+        section:
+          groups: "Խմբեր"
+        weight:
+          solution: "Լուծում"
         period:
           all_time: "Ամբողջ Ժամանակվա"
           yearly: "Տարվա Ընթացքում"
@@ -24,11 +28,16 @@ hy:
       close: "Փակել"
       delete: "Ջնջել"
       edit: "Խմբագրել"
-      back: "Ետ"
       save: "Պահպանել"
-      apply: "Կիրառել"
       update_range:
         all_time: "Ամբողջ Ժամանակվա"
       custom_range_from: "Ում կողմից"
       admin:
         name: "Անուն"
+        created_by: "Ստեղծել է՝"
+    discourse_workflows:
+      gamification_score:
+        username: "Օգտատեր"
+        date: "Ամսաթիվ"
+        description: "Նկարագրություն"
+        category_id: "Կատեգորիա"

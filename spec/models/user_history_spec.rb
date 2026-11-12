@@ -12,6 +12,16 @@ RSpec.describe UserHistory do
       it "'change_site_text' should be at 29th position" do
         expect(actions[:change_site_text]).to eq(29)
       end
+
+      it "keeps ACL owner actions at their assigned positions" do
+        expect(
+          actions.values_at(:add_access_control_list_owner, :remove_access_control_list_owner),
+        ).to eq([133, 134])
+        expect(described_class.staff_actions).to include(
+          :add_access_control_list_owner,
+          :remove_access_control_list_owner,
+        )
+      end
     end
   end
 

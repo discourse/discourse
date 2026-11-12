@@ -1,5 +1,7 @@
-import { visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
+import groupFixtures from "discourse/tests/fixtures/group-fixtures";
 import {
   acceptance,
   updateCurrentUser,
@@ -18,10 +20,6 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     });
 
     await visit("/g/alternative-group/manage/interaction");
-
-    assert
-      .dom(".groups-form-visibility-level")
-      .exists("displays visibility level selector");
 
     assert
       .dom(".groups-form-mentionable-level")
@@ -50,10 +48,6 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/discourse/manage/interaction");
 
     assert
-      .dom(".groups-form-visibility-level")
-      .doesNotExist("does not display visibility level selector");
-
-    assert
       .dom(".groups-form-mentionable-level")
       .exists("displays mentionable level selector");
 
@@ -68,6 +62,36 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     assert
       .dom(".groups-form-default-notification-level")
       .exists("displays default notification level input");
+  });
+});
+
+acceptance("Managing Automatic Group Incoming Email", function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ email_in: true });
+
+  needs.pretender((server, helper) => {
+    server.get("/groups/moderators.json", () => {
+      const fixture = cloneJSON(groupFixtures["/groups/moderators.json"]);
+      fixture.group.can_admin_group = true;
+      return helper.response(fixture);
+    });
+    server.put("/groups/50", (request) => {
+      const { group } = helper.parsePostData(request.requestBody);
+      return helper.response(
+        group.incoming_email === "moderators@example.com" ? 200 : 422,
+        { success: "OK" }
+      );
+    });
+  });
+
+  test("admins can set an automatic group's incoming email", async function (assert) {
+    await visit("/g/moderators/manage/interaction");
+
+    assert.dom(".groups-form-incoming-email").exists();
+    await fillIn("input[name='incoming_email']", "moderators@example.com");
+    await click(".group-manage-save");
+
+    assert.dom(".group-manage-save-button > span").hasText("Saved!");
   });
 });
 

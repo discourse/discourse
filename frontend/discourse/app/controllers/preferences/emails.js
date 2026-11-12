@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -13,12 +12,6 @@ const EMAIL_LEVELS = {
 
 export default class EmailsController extends Controller {
   subpageTitle = i18n("user.preferences_nav.emails");
-
-  @equal("model.user_option.email_messages_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
-  emailMessagesLevelAway;
-
-  @equal("model.user_option.email_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
-  emailLevelAway;
 
   previousRepliesOptions = [
     { name: i18n("user.email_previous_replies.always"), value: 0 },
@@ -43,6 +36,19 @@ export default class EmailsController extends Controller {
     { name: i18n("user.email_digests.every_month"), value: 43200 },
     { name: i18n("user.email_digests.every_six_months"), value: 259200 },
   ];
+
+  @computed("model.user_option.email_messages_level")
+  get emailMessagesLevelAway() {
+    return (
+      this.model?.user_option?.email_messages_level ===
+      EMAIL_LEVELS.ONLY_WHEN_AWAY
+    );
+  }
+
+  @computed("model.user_option.email_level")
+  get emailLevelAway() {
+    return this.model?.user_option?.email_level === EMAIL_LEVELS.ONLY_WHEN_AWAY;
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(

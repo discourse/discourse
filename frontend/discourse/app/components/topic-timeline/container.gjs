@@ -6,26 +6,26 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
+import TopicContentLanguagePreferences from "discourse/components/topic-content-language-preferences";
 import UserTip from "discourse/components/user-tip";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
-import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BackButton from "./back-button";
-import Scroller from "./scroller";
+import BackButton from "./back-button.gjs";
+import Scroller from "./scroller.gjs";
 
 export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
@@ -60,7 +60,6 @@ export default class TopicTimelineScrollArea extends Component {
   @service currentUser;
   @service composer;
 
-  @tracked showButton = false;
   @tracked current;
   @tracked percentage = this._percentFor(
     this.args.model,
@@ -68,27 +67,34 @@ export default class TopicTimelineScrollArea extends Component {
   );
   @tracked total;
   @tracked date;
+
+  /** @type {number | null} */
   @tracked lastReadPercentage = null;
   @tracked lastRead;
-  @tracked lastReadTop;
   @tracked before;
   @tracked after;
+  @tracked scrollareaHeight;
   @tracked timelineScrollareaStyle;
   @tracked dragging = false;
   @tracked excerpt = "";
 
+  /** @type {IntersectionObserver | null} */
   intersectionObserver = null;
+
+  /** @type {HTMLElement | null} */
   scrollareaElement = null;
+
+  /** @type {HTMLElement | null} */
   scrollerElement = null;
+
+  /** @type {number | null} */
   dragOffset = null;
 
   constructor() {
     super(...arguments);
 
     if (this.site.desktopView) {
-      // listen for scrolling event to update timeline
       this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
-      // listen for composer sizing changes to update timeline
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
@@ -107,13 +113,17 @@ export default class TopicTimelineScrollArea extends Component {
       }
     });
 
+    // The timeline is usually rendered on a topic page where both of these
+    // anchors exist. When it's rendered outside of that context (for example,
+    // a modal opened from a floating composer on a non-topic route), they
+    // may be absent — skip observing rather than crashing.
     const elements = [
       document.querySelector(".container.posts"),
       document.querySelector("#topic-bottom"),
-    ];
+    ].filter(Boolean);
 
-    for (let i = 0; i < elements.length; i++) {
-      this.intersectionObserver.observe(elements[i]);
+    for (const element of elements) {
+      this.intersectionObserver.observe(element);
     }
 
     this.calculatePosition();
@@ -123,10 +133,9 @@ export default class TopicTimelineScrollArea extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (this.site.desktopView) {
-      this.intersectionObserver?.disconnect();
-      this.intersectionObserver = null;
+    this.intersectionObserver.disconnect();
 
+    if (this.site.desktopView) {
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
@@ -138,7 +147,7 @@ export default class TopicTimelineScrollArea extends Component {
   get displaySummary() {
     return (
       this.siteSettings.summary_timeline_button &&
-      !this.args.fullScreen &&
+      !this.args.fullscreen &&
       this.args.model.has_summary &&
       !this.args.model.postStream.summary
     );
@@ -180,10 +189,6 @@ export default class TopicTimelineScrollArea extends Component {
     );
   }
 
-  get style() {
-    return trustHTML(`height: ${this.scrollareaHeight}px`);
-  }
-
   get beforePadding() {
     return trustHTML(`height: ${this.before}px`);
   }
@@ -192,18 +197,18 @@ export default class TopicTimelineScrollArea extends Component {
     return trustHTML(`height: ${this.after}px`);
   }
 
-  get showDockedButton() {
-    return this.site.desktopView && this.hasBackPosition && !this.showButton;
-  }
-
   get hasBackPosition() {
     return (
-      this.lastRead &&
-      this.lastRead > 3 &&
-      this.lastRead > this.current &&
-      Math.abs(this.lastRead - this.current) > 3 &&
-      Math.abs(this.lastRead - this.total) > 1 &&
-      this.lastRead !== this.total
+      this.lastRead - this.current > 3 &&
+      Math.abs(this.lastRead - this.total) > 1
+    );
+  }
+
+  get showLastRead() {
+    return (
+      this.hasBackPosition &&
+      (this.before + SCROLLER_HEIGHT - 5 < this.lastReadHeight ||
+        this.before > this.lastReadHeight + 25)
     );
   }
 
@@ -215,31 +220,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   get topPosition() {
     const bottom = this.scrollareaHeight - LAST_READ_HEIGHT / 2;
-    return this.lastReadTop > bottom ? bottom : this.lastReadTop;
-  }
-
-  get scrollareaHeight() {
-    const composerHeight = this.composer.isPreviewVisible
-        ? document.getElementById("reply-control").offsetHeight || 0
-        : 0,
-      headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
-
-    // scrollarea takes up about half of the timeline's height
-    const availableHeight =
-      (window.innerHeight - composerHeight - headerHeight) / 2;
-
-    const minHeight = this.site.mobileView
-      ? DEFAULT_MIN_SCROLLAREA_HEIGHT
-      : this.composer.isPreviewVisible
-        ? desktopMinScrollAreaHeight
-        : DEFAULT_MIN_SCROLLAREA_HEIGHT;
-    const maxHeight = this.site.mobileView
-      ? DEFAULT_MAX_SCROLLAREA_HEIGHT
-      : this.composer.isPreviewVisible
-        ? desktopMaxScrollAreaHeight
-        : DEFAULT_MAX_SCROLLAREA_HEIGHT;
-
-    return Math.max(minHeight, Math.min(availableHeight, maxHeight));
+    return Math.min(this.lastReadHeight, bottom);
   }
 
   get startDate() {
@@ -266,6 +247,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   calculatePosition() {
+    this.scrollareaHeight = this.#measureScrollareaHeight();
     this.timelineScrollareaStyle = trustHTML(
       `height: ${this.scrollareaHeight}px`
     );
@@ -280,69 +262,44 @@ export default class TopicTimelineScrollArea extends Component {
     this.current = this.clamp(this.scrollPosition, 1, this.total);
     const daysAgo = postStream.closestDaysAgoFor(this.current);
 
-    let date;
-    if (daysAgo === undefined) {
-      const post = postStream.posts.find(
-        (p) => p.id === postStream.stream[this.current]
-      );
-
-      if (post) {
-        date = new Date(post.created_at);
-      }
-    } else if (daysAgo !== null) {
-      date = new Date();
-      date.setDate(date.getDate() - daysAgo || 0);
-    } else {
-      date = null;
-    }
-
-    this.date = date;
+    this.date =
+      daysAgo === undefined
+        ? null
+        : moment().subtract(daysAgo, "days").toDate();
 
     const lastReadNumber = topic.last_read_post_number;
     const lastReadId = topic.last_read_post_id;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.stream.indexOf(lastReadId) + 1;
+      const idx = postStream.progressIndexOfPostId({
+        id: lastReadId,
+        post_number: lastReadNumber,
+      });
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
     }
 
-    if (this.position !== this.scrollPosition) {
-      this.position = this.scrollPosition;
+    if (this.position !== this.current) {
+      this.position = this.current;
       this.updateScrollPosition(this.current);
     }
 
-    this.before = this.scrollareaRemaining() * this.percentage;
+    this.before = (this.scrollareaHeight - SCROLLER_HEIGHT) * this.percentage;
     this.after = this.scrollareaHeight - this.before - SCROLLER_HEIGHT;
-
-    if (this.percentage === null) {
-      return;
-    }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * this.scrollareaHeight
-      );
-      this.showButton =
-        this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
-        this.before > this.lastReadTop + 25;
-    }
   }
 
   @debounce(50)
   updateScrollPosition(scrollPosition) {
-    // only ran on mobile
     if (!this.args.fullscreen) {
       return;
     }
 
     const stream = this.args.model.postStream;
 
-    if (!this.position === scrollPosition) {
+    if (this.position !== scrollPosition) {
       return;
     }
 
-    // we have an off by one, stream is zero based,
     stream.excerpt(scrollPosition - 1).then((info) => {
       if (info && this.position === scrollPosition) {
         let excerpt = "";
@@ -366,9 +323,7 @@ export default class TopicTimelineScrollArea extends Component {
   updatePercentage(e) {
     e.preventDefault();
 
-    const currentCursorY = e.pageY || e.touches[0].pageY;
-
-    const desiredScrollerCentre = currentCursorY - this.dragOffset;
+    const desiredScrollerCentre = e.pageY - this.dragOffset;
 
     const areaTop = domUtils.offset(this.scrollareaElement).top;
     const areaHeight = this.scrollareaElement.offsetHeight;
@@ -379,20 +334,18 @@ export default class TopicTimelineScrollArea extends Component {
     const scrollableHeight = areaHeight - scrollerHeight;
 
     this.percentage = this.clamp(
-      parseFloat(desiredScrollerCentre - scrollableTop) / scrollableHeight
+      (desiredScrollerCentre - scrollableTop) / scrollableHeight
     );
     this.commit();
   }
 
   @bind
   didStartDrag(event) {
-    const y = event.pageY || event.touches[0].pageY;
-
     const scrollerCentre =
       domUtils.offset(this.scrollerElement).top +
       this.scrollerElement.offsetHeight / 2;
 
-    this.dragOffset = y - scrollerCentre;
+    this.dragOffset = event.pageY - scrollerCentre;
     this.dragging = true;
   }
 
@@ -425,7 +378,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   dockCheck() {
     const timeline = document.querySelector(".timeline-container");
-    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
+    const timelineHeight = timeline?.offsetHeight || 400;
 
     const prevDockAt = this.dockAt;
     const positionTop = headerOffset() + window.pageYOffset;
@@ -433,15 +386,15 @@ export default class TopicTimelineScrollArea extends Component {
     const postStream = this.args.model.postStream;
     const allPostsLoaded = postStream.loadedAllPosts;
 
-    this.dockBottom = false;
+    let dockBottom = false;
     if (positionTop < this.topicTop) {
       this.dockAt = parseInt(this.topicTop, 10);
     } else if (allPostsLoaded && currentPosition > this.topicBottom) {
-      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
-      this.dockBottom = true;
-      if (this.dockAt < 0) {
-        this.dockAt = 0;
-      }
+      this.dockAt = Math.max(
+        0,
+        parseInt(this.topicBottom - timelineHeight, 10)
+      );
+      dockBottom = true;
     } else {
       this.dockAt = null;
     }
@@ -449,7 +402,7 @@ export default class TopicTimelineScrollArea extends Component {
     if (this.dockAt !== prevDockAt) {
       if (this.dockAt) {
         this.args.setDocked(true);
-        if (this.dockBottom) {
+        if (dockBottom) {
           this.args.setDockedBottom(true);
         }
       } else {
@@ -475,25 +428,6 @@ export default class TopicTimelineScrollArea extends Component {
     return Math.max(Math.min(p, max), min);
   }
 
-  scrollareaRemaining() {
-    return this.scrollareaHeight - SCROLLER_HEIGHT;
-  }
-
-  _percentFor(topic, postIndex) {
-    const total = topic.postStream.filteredPostsCount;
-    switch (postIndex) {
-      // if first post, no top padding
-      case 0:
-        return 0;
-      // if last, no bottom padding
-      case total - 1:
-        return 1;
-      // otherwise, calculate
-      default:
-        return this.clamp(parseFloat(postIndex) / total);
-    }
-  }
-
   @action
   registerScrollarea(element) {
     this.scrollareaElement = element;
@@ -504,14 +438,47 @@ export default class TopicTimelineScrollArea extends Component {
     this.scrollerElement = element;
   }
 
+  #measureScrollareaHeight() {
+    const composerHeight = this.composer.isPreviewActive
+      ? document.getElementById("reply-control")?.offsetHeight || 0
+      : 0;
+    const headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
+
+    const availableHeight =
+      (window.innerHeight - composerHeight - headerHeight) / 2;
+
+    const desktopPreview =
+      !this.site.mobileView && this.composer.isPreviewActive;
+    const minHeight = desktopPreview
+      ? desktopMinScrollAreaHeight
+      : DEFAULT_MIN_SCROLLAREA_HEIGHT;
+    const maxHeight = desktopPreview
+      ? desktopMaxScrollAreaHeight
+      : DEFAULT_MAX_SCROLLAREA_HEIGHT;
+
+    return Math.max(minHeight, Math.min(availableHeight, maxHeight));
+  }
+
+  _percentFor(topic, postIndex) {
+    const total = topic.postStream.filteredPostsCount;
+    switch (postIndex) {
+      case 0:
+        return 0;
+      case total - 1:
+        return 1;
+      default:
+        return this.clamp(postIndex / total);
+    }
+  }
+
   <template>
     {{#if @fullscreen}}
       <div class="title">
         <h2>
           <a
-            {{on "click" @jumpTop}}
-            href={{@model.firstPostUrl}}
             class="fancy-title"
+            href={{@model.firstPostUrl}}
+            {{on "click" @jumpTop}}
           >{{this.topicTitle}}</a>
         </h2>
 
@@ -519,7 +486,15 @@ export default class TopicTimelineScrollArea extends Component {
           <div class="topic-header-extra">
             {{#if this.showTags}}
               <div class="list-tags">
-                {{discourseTags @model mode="list" tags=@model.tags}}
+                <PluginOutlet
+                  @name="timeline-tags-wrapper"
+                  @outletArgs={{lazyHash
+                    topic=@model
+                    tags=@model.visibleListTags
+                  }}
+                >
+                  {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                </PluginOutlet>
               </div>
             {{/if}}
             {{#if this.siteSettings.topic_featured_link_enabled}}
@@ -531,9 +506,9 @@ export default class TopicTimelineScrollArea extends Component {
         {{#if (and (not @model.isPrivateMessage) @model.category)}}
           <div class="topic-category">
             {{#if @model.category.parentCategory}}
-              {{categoryLink @model.category.parentCategory}}
+              {{dCategoryLink @model.category.parentCategory}}
             {{/if}}
-            {{categoryLink @model.category}}
+            {{dCategoryLink @model.category}}
           </div>
         {{/if}}
 
@@ -551,46 +526,46 @@ export default class TopicTimelineScrollArea extends Component {
         />
 
         <TopicAdminMenu
-          @topic={{@model}}
-          @toggleMultiSelect={{@toggleMultiSelect}}
-          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @convertToPrivateMessage={{@convertToPrivateMessage}}
+          @convertToPublicTopic={{@convertToPublicTopic}}
           @deleteTopic={{@deleteTopic}}
           @recoverTopic={{@recoverTopic}}
-          @toggleClosed={{@toggleClosed}}
-          @toggleArchived={{@toggleArchived}}
-          @toggleVisibility={{@toggleVisibility}}
-          @showTopicTimerModal={{@showTopicTimerModal}}
-          @showFeatureTopic={{@showFeatureTopic}}
-          @showChangeTimestamp={{@showChangeTimestamp}}
           @resetBumpDate={{@resetBumpDate}}
-          @convertToPublicTopic={{@convertToPublicTopic}}
-          @convertToPrivateMessage={{@convertToPrivateMessage}}
+          @showChangeTimestamp={{@showChangeTimestamp}}
+          @showFeatureTopic={{@showFeatureTopic}}
+          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @showTopicTimerModal={{@showTopicTimerModal}}
+          @toggleArchived={{@toggleArchived}}
+          @toggleClosed={{@toggleClosed}}
+          @toggleMultiSelect={{@toggleMultiSelect}}
+          @toggleVisibility={{@toggleVisibility}}
+          @topic={{@model}}
         />
 
         {{#if @model.has_localized_content}}
-          <TopicLocalizedContentToggle @topic={{@model}} />
+          <TopicContentLanguagePreferences />
         {{/if}}
       </div>
     {{/if}}
 
     {{#if this.displayTimeLineScrollArea}}
       <UserTip
-        @id="topic_timeline"
-        @titleText={{i18n "user_tips.topic_timeline.title"}}
         @contentText={{i18n "user_tips.topic_timeline.content"}}
+        @id="topic_timeline"
         @placement="left"
         @portalOutletSelector=".timeline-scrollarea-wrapper"
-        @triggerSelector=".timeline-scrollarea"
         @priority={{900}}
+        @titleText={{i18n "user_tips.topic_timeline.title"}}
+        @triggerSelector=".timeline-scrollarea"
       />
 
       <div class="timeline-scrollarea-wrapper">
         <div class="timeline-date-wrapper">
           <a
-            {{on "click" this.updatePercentage}}
+            class="start-date"
             href={{@model.firstPostUrl}}
             title={{i18n "topic_entrance.jump_top_button_title"}}
-            class="start-date"
+            {{on "click" this.updatePercentage}}
           >
             <span>
               {{this.startDate}}
@@ -599,40 +574,41 @@ export default class TopicTimelineScrollArea extends Component {
         </div>
 
         <div
-          class="timeline-scrollarea"
+          class={{dConcatClass
+            "timeline-scrollarea"
+            (if this.dragging "--dragging")
+          }}
           style={{this.timelineScrollareaStyle}}
           {{didInsert this.registerScrollarea}}
         >
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
-            {{on "click" this.updatePercentage}}
-            style={{this.beforePadding}}
             class="timeline-padding"
+            style={{this.beforePadding}}
+            {{on "click" this.updatePercentage}}
           ></div>
 
           <Scroller
             @current={{this.current}}
-            @total={{this.total}}
-            @onGoBack={{this.onGoBack}}
-            @fullscreen={{@fullscreen}}
-            @showDockedButton={{this.showDockedButton}}
             @date={{this.date}}
+            @didEndDrag={{this.didEndDrag}}
             @didStartDrag={{this.didStartDrag}}
             @dragMove={{this.dragMove}}
-            @didEndDrag={{this.didEndDrag}}
+            @fullscreen={{@fullscreen}}
+            @total={{this.total}}
             {{didInsert this.registerScroller}}
           />
 
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
-            {{on "click" this.updatePercentage}}
-            style={{this.afterPadding}}
             class="timeline-padding"
+            style={{this.afterPadding}}
+            {{on "click" this.updatePercentage}}
           ></div>
 
-          {{#if (and this.hasBackPosition this.showButton)}}
+          {{#if this.showLastRead}}
             <div class="timeline-last-read" style={{this.lastReadStyle}}>
-              {{icon "minus" class="progress"}}
+              {{dIcon "minus" class="progress"}}
               <BackButton @onGoBack={{this.goBack}} />
             </div>
           {{/if}}
@@ -640,12 +616,12 @@ export default class TopicTimelineScrollArea extends Component {
 
         <div class="timeline-date-wrapper">
           <a
-            {{on "click" this.updatePercentage}}
-            href={{@model.lastPostUrl}}
             class="now-date"
+            href={{@model.lastPostUrl}}
+            {{on "click" this.updatePercentage}}
           >
             <span>
-              {{ageWithTooltip this.nowDate this.nowDateOptions}}
+              {{dAgeWithTooltip this.nowDate this.nowDateOptions}}
             </span>
           </a>
         </div>
@@ -654,39 +630,37 @@ export default class TopicTimelineScrollArea extends Component {
       <div class="timeline-footer-controls">
         {{#if this.displaySummary}}
           <DButton
+            class="show-summary btn-default btn-small"
+            title={{i18n "summary.short_title"}}
             @action={{@showTopReplies}}
             @icon="layer-group"
             @label="summary.short_label"
-            title={{i18n "summary.short_title"}}
-            class="show-summary btn-default btn-small"
           />
         {{/if}}
 
-        {{#if (and this.currentUser (not @fullscreen))}}
-          {{#if this.canCreatePost}}
-            <DButton
-              @action={{fn @replyToPost null}}
-              @icon="reply"
-              title={{i18n "topic.reply.help"}}
-              class="btn-default create reply-to-post"
-            />
-          {{/if}}
+        {{#if (and this.currentUser (not @fullscreen) this.canCreatePost)}}
+          <DButton
+            class="btn-default create reply-to-post"
+            title={{i18n "topic.reply.help"}}
+            @action={{fn @replyToPost null}}
+            @icon="reply"
+          />
         {{/if}}
 
         {{#if @fullscreen}}
           <DButton
+            class="timeline-open-jump-to-post-prompt-btn jump-to-post"
+            title={{i18n "topic.progress.jump_prompt_long"}}
             @action={{@jumpToPostPrompt}}
             @label="topic.progress.jump_prompt"
-            title={{i18n "topic.progress.jump_prompt_long"}}
-            class="timeline-open-jump-to-post-prompt-btn jump-to-post"
           />
         {{/if}}
 
         {{#if (and this.currentUser this.site.desktopView)}}
           <TopicNotificationsButton
             @contentClass="topic-timeline-notifications-tracking-content"
-            @topic={{@model}}
             @expanded={{false}}
+            @topic={{@model}}
           />
         {{/if}}
 

@@ -3,6 +3,8 @@
 class AiSpamSerializer < ApplicationSerializer
   attributes :is_enabled,
              :llm_id,
+             :decision_model_id,
+             :available_decision_models,
              :custom_instructions,
              :available_llms,
              :stats,
@@ -18,6 +20,16 @@ class AiSpamSerializer < ApplicationSerializer
 
   def llm_id
     settings&.llm_model&.id
+  end
+
+  def decision_model_id
+    settings&.decision_model_id
+  end
+
+  def available_decision_models
+    DiscourseAi::Configuration::DecisionModelEnumerator.values.map do |hash|
+      { id: hash[:value], name: hash[:name] }
+    end
   end
 
   def ai_agent_id
@@ -63,6 +75,6 @@ class AiSpamSerializer < ApplicationSerializer
   def spam_scanning_user
     user = DiscourseAi::AiModeration::SpamScanner.flagging_user
 
-    user.serializable_hash(only: %i[id username name admin]) if user.present?
+    user.presence&.serializable_hash(only: %i[id username name admin])
   end
 end

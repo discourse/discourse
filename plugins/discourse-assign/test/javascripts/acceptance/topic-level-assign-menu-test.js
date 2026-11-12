@@ -5,12 +5,12 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
-acceptance(`Discourse Assign | Topic level assign menu`, function (needs) {
+acceptance("Topic level assign menu", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,

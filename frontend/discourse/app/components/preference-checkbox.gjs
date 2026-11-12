@@ -1,11 +1,11 @@
 import { Input } from "@ember/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const PreferenceCheckbox = <template>
-  <div class={{concatClass "controls" @class}} ...attributes>
+  <div class={{dConcatClass "controls" @class}} ...attributes>
     <label class="checkbox-label">
-      <Input @type="checkbox" @checked={{@checked}} disabled={{@disabled}} />
+      <Input disabled={{@disabled}} @checked={{@checked}} @type="checkbox" />
 
       {{#if @labelCount}}
         {{i18n @labelKey count=@labelCount}}

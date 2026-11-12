@@ -10,15 +10,24 @@ it:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Consente la ricerca IA"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Chiedi all'IA"
+        ask_ai:
+          title: "Chiedi all'IA"
+          reports:
+            retry_questions: "Riprova"
+          date: "Data"
+          outcomes:
+            failed: "Non riuscito"
         emotion:
           title: "Emozione"
-          description: "La tabella elenca un conteggio di messaggi classificati con un'emozione determinata. Classificati con il modello 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -154,38 +163,75 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggerisci con l'IA"
+      copied: "Copiato"
+      ai_decoded_transcript:
+        tool: "Strumento"
+        type: "Tipo"
+        error: "Errore"
+        response: "Risposta"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modalità"
+        classify:
+          text: "Testo"
+          upload_ids: "Immagini"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Punteggio"
+      ai_tool_approval:
+        loading: "In caricamento..."
+        tool: "Azione"
+        user: "Utente"
+        approve: "Approva"
+        reject: "Rifiuta"
+        approved: "Approvato"
+        rejected: "Rifiutata"
       default_llm:
-        title: "Modello LLM predefinito"
+        title: "Modello linguistico predefinito"
       llm_selector:
         none: "Nessuna"
       features:
         short_title: "Funzionalità"
-        back: "Indietro"
-        disabled: "(disabilitati)"
-        groups: "Gruppi:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Stato"
+          enabled: "Abilitato"
+          feature: "Funzionalità"
+          llm: "LLM"
+          groups: "Gruppi"
+        status:
+          "on": "On"
+          "off": "Off"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Messaggi personali"
+            chat_direct_messages: "Messaggi di chat"
+            none: "Non disponibile"
+        set_up: "Configura"
         no_llm: "Nessun LLM selezionato"
         no_agent: "Non impostato"
         no_groups: "Nessuna"
         edit: "Impostazioni"
-        expand_list:
-          one: "(%{count} altro)"
-          other: "(altri %{count})"
-        collapse_list: "(mostra meno)"
         bot:
           bot: "Chatbot"
           name: "Bot"
           description: "Un chatbot in grado di rispondere alle domande e assistere gli utenti nei messaggi personali, nei forum e in chat"
         nav:
-          configured: "Configurate"
-          unconfigured: "Non configurate"
+          enabled: "Abilitato"
         filters:
           all: "Tutte"
           no_results: "Nessuna funzionalità trovata per i filtri impostati."
           reset: "Annulla"
         no_automations: "Non ci sono ancora automazioni"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Emozione"
+          enabled: "Abilitato"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Emozione"
         summarization:
           name: "Riepiloghi"
           description: "Rende disponibile un pulsante attraverso cui i visitatori possono ottenere un riepilogo degli argomenti"
@@ -194,16 +240,14 @@ it:
         search:
           name: "Cerca"
           description: "Migliora l'esperienza di ricerca rispondendo alle query con risposte generate con l'IA"
-          discoveries: "Scoperte"
+          ask_ai: "Chiedi all'IA"
         embeddings:
           name: "Integrazioni"
-          description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
-          hyde: "HyDE"
+          related_topics: "Argomenti correlati"
           setting_groups:
             related_topics: "Argomenti correlati"
         discord:
           name: "Integrazione Discord"
-          description: "Aggiunge l'opzione di cercare tra i canali di Discord"
           search: "Ricerca Discord"
         inference:
           name: "Concetti dedotti"
@@ -212,7 +256,6 @@ it:
           match_concepts: "Corrispondenza dei concetti"
           deduplicate_concepts: "Deduplicazione dei concetti"
         ai_helper:
-          name: "Assistente"
           description: "Assiste gli utenti nelle interazioni con la community, come la creazione di argomenti, la scrittura di messaggi e la lettura di contenuti"
           proofread: Testo corretto
           title_suggestions: "Suggerisci titoli"
@@ -222,11 +265,13 @@ it:
           translate: "Traduci"
           markdown_tables: "Genera tabella di markdown"
           custom_prompt: "Comando personalizzato"
-          image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
           post_illustrator: "Assistente messaggi illustrati"
           setting_groups:
             automation: "Automazione"
+        image_caption:
+          setting_groups:
+            settings: "Impostazioni"
         translation:
           name: "Traduzione"
           description: "Traduce i contenuti nelle lingue supportate"
@@ -251,6 +296,38 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        sections:
+          advanced: "Avanzato"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorie"
+          ai_translation_personal_messages:
+            label: "Messaggi personali"
+            choices:
+              none: "Nessuna"
+              all: "Tutte"
+          content_localization_language_switcher:
+            choices:
+              none: "Nessuno"
+              all: "Chiunque"
+        model_progress:
+          detail:
+            retry: "Riprova"
+            columns:
+              locale: "Localizzazione"
+              pending: "In attesa"
+              total: "Totale"
+          targets:
+            post:
+              title: "Messaggi"
+            topic:
+              title: "Argomenti"
+            category:
+              title: "Categorie"
+            tag:
+              title: "Etichette"
+        admin_actions:
+          enabled: "Abilitato"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -265,10 +342,15 @@ it:
           bar_done:
             one: "%{count} messaggio"
             other: "%{count} messaggi"
+        theme_translations:
+          translate:
+            label: "Traduci"
       spam:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
         select_llm: "Seleziona LLM"
+        no_llm_selected: "Nessuna"
+        no_decision_model_selected: "Nessuna"
         custom_instructions: "Istruzioni personalizzate"
         custom_instructions_help: "Istruzioni personalizzate specifiche per il tuo sito per aiutare l'intelligenza artificiale a identificare lo spam, ad esempio \"Sii più aggressivo nell'analizzare i post in una lingua diversa dall'italiano\"."
         last_seven_days: "Ultimi 7 giorni"
@@ -341,6 +423,46 @@ it:
           last_week: "Ultima settimana"
           last_month: "Ultimo mese"
           custom: "Personalizza..."
+      logs:
+        short_title: "Log"
+        retry: "Riprova"
+        apply: "Applica"
+        all_models: "Tutti i modelli"
+        all_features: "Tutte le funzionalità"
+        successful: "Completato"
+        failed: "Non riuscito"
+        unknown: "Sconosciuto"
+        time: "Ora"
+        when: "Quando"
+        outcome: "Esito"
+        feature: "Funzionalità"
+        model: "Modello"
+        request: "Richiesta"
+        provider: "Fornitore"
+        user: "Utente"
+        context: "Contesto"
+        topic: "Argomento"
+        post: "Messaggio"
+        post_short: "Messaggio %{id}"
+        duration: "Durata"
+        actions: "Azioni"
+        view_details: "Dettagli"
+        periods:
+          hour: "Ultima ora"
+          day: "Ultime 24 ore"
+          week: "Ultimi 7 giorni"
+          custom: "Personalizzato"
+        detail:
+          request: "Richiesta"
+          response: "Risposta"
+          context: "Contesto"
+          copy_request: "Copia richiesta"
+          copy_response: "Copia risposta"
+          network_error: "Errore di rete"
+        retention:
+          summary_stage: "Riepilogo"
+          deleted_stage: "Eliminato"
+          save: "Salva"
       ai_agent:
         ai_tools: "Strumenti"
         tool_strategies:
@@ -348,7 +470,6 @@ it:
           replies:
             one: "Applica solo alla prima risposta"
             other: "Applica alle prime %{count} risposte"
-        back: "Indietro"
         name: "Nome"
         edit: "Modifica"
         export: "Esporta"
@@ -356,11 +477,6 @@ it:
         overwrite: "Sovrascrivi"
         description: "Descrizione"
         no_llm_selected: "Nessun modello linguistico selezionato"
-        max_context_posts: "Numero massimo di messaggi di contesto"
-        max_context_posts_help: "Il numero massimo di post da utilizzare come contesto per l'IA quando si risponde a un utente. (vuoto per impostazione predefinita)"
-        vision_enabled: Visione abilitata
-        vision_enabled_help: Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini che gli utenti pubblicano nell'argomento, a seconda del modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI.
-        vision_max_pixels: Dimensione immagine supportata
         vision_max_pixel_sizes:
           low: 'Bassa qualità: più veloce (256x256)'
           medium: Qualità media (512x512)
@@ -369,8 +485,6 @@ it:
         user: Utente
         create_user: Crea utente
         default_llm: Modello linguistico predefinito
-        question_consolidator_llm: Modello linguistico per il consolidatore di domande
-        question_consolidator_llm_help: Il modello linguistico da utilizzare per il consolidatore di domande. È possibile scegliere un modello meno potente per risparmiare sui costi.
         system_prompt: Comando di sistema
         forced_tool_strategy: Strategia degli strumenti forzati
         allow_chat_direct_messages: "Consenti messaggi diretti in chat"
@@ -381,13 +495,23 @@ it:
         save: "Salva"
         enabled: "Abilitato?"
         tools: "Strumenti abilitati"
+        mcp_tools_modal:
+          clear_all: "Deseleziona tutto"
         forced_tools: "Strumenti forzati"
         allowed_groups: "Gruppi ammessi"
+        duplicate: "Duplica"
+        copy_name: "Copia di %{name}"
         delete: "Elimina"
         temperature: "Temperatura"
         temperature_help: "Temperatura da utilizzare per LLM. Aumenta per aumentare la creatività (lascia vuoto per utilizzare il modello predefinito, generalmente un valore compreso tra 0,0 e 2,0)"
         top_p: "P superiore"
         top_p_help: "P superiore da utilizzare per LLM, aumenta per aumentare la casualità (lascia vuoto per utilizzare l'impostazione predefinita del modello, generalmente un valore compreso tra 0,0 e 1,0)"
+        thinking_effort_options:
+          none: "Nessuna"
+          low: "Bassa"
+          medium: "Media"
+          high: "Alta"
+          max: "Massimo"
         priority: "Priorità"
         tool_options: "Opzioni dello strumento"
         rag_conversation_chunks: "Cerca blocchi di conversazione"
@@ -441,7 +565,6 @@ it:
           uploading: "Caricamento..."
           remove: "Rimuovi caricamento"
       tools:
-        back: "Indietro"
         short_title: "Strumenti"
         export: "Esporta"
         import: "Importa"
@@ -454,7 +577,6 @@ it:
         tool_name: "Nome strumento"
         description: "Descrizione"
         description_help: "Una descrizione chiara dello scopo dello strumento per il modello linguistico"
-        subheader_description: "Gli strumenti estendono le capacità dei bot di intelligenza artificiale con funzioni JavaScript definite dall'utente."
         summary: "Riepilogo"
         summary_help: "Il riepilogo degli strumenti ha lo scopo di essere visualizzato agli utenti finali"
         script: "Script"
@@ -483,12 +605,51 @@ it:
         short_title: "Credenziali"
         name: "Nome"
         secret: "Valore"
-        back: "Indietro"
         save: "Salva"
         edit: "Modifica"
         delete: "Elimina"
         embedding: "Integrazione"
         tool: "Strumento"
+      decision_models:
+        no_preset: "Nessuna"
+        display_name: "Nome"
+        model: "Modello"
+        provider: "Fornitore"
+        edit: "Modifica"
+        delete: "Elimina"
+        test: "Esegui test"
+        providers:
+          CDCK: "CDCK"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrizione"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Connesso"
+        oauth_connect: "Connetti"
+        oauth_hide_details: "Nascondi dettagli"
+        enabled: "Abilitato"
+        save: "Salva"
+        edit: "Modifica"
+        delete: "Elimina"
+        tools_modal:
+          parameters: "Parametri"
+          required: "Obbligatorie"
+      models:
+        new: "Nuovo modello"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornitore"
+        edit: "Modifica"
+        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
+        select_type: "Seleziona"
+        types:
+          embedding: "Integrazione"
+        filters:
+          all: "Tutti i tipi"
+          reset: "Reimposta i filtri"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"
@@ -501,7 +662,9 @@ it:
         max_output_tokens: "Massimo token di output"
         url: "URL del servizio che ospita il modello"
         api_key: "Chiave API del servizio che ospita il modello"
-        vision_enabled: "Visione abilitata"
+        vision_modes:
+          disabled:
+            title: "Disabilitati"
         ai_bot_user: "Utente bot IA"
         cost_input: "Costo di input"
         cost_cached_input: "Costo di ingresso in cache"
@@ -509,7 +672,6 @@ it:
         save: "Salva"
         edit: "Modifica"
         saved: "Modello LLM salvato"
-        back: "Indietro"
         confirm_delete: Vuoi davvero eliminare questo modello?
         delete: Elimina
         quotas:
@@ -529,13 +691,11 @@ it:
             custom: "Personalizza..."
           hours: "ore"
           max_tokens_help: "Numero massimo di token (parole e caratteri) che ogni utente di questo gruppo può utilizzare entro la durata specificata. I token sono le unità utilizzate dai modelli IA per elaborare il testo: circa 1 token = 4 caratteri o 3/4 di parola."
-          max_tokens_required: "Deve essere impostato se non è impostato un limite di utilizzo massimo"
           max_usages_help: "Numero massimo di volte in cui ogni utente in questo gruppo può usare il modello IA entro la durata specificata. Questa quota viene tracciata per singolo utente, non condivisa tra il gruppo."
-          max_usages_required: "Deve essere impostato se non è impostato un limite di token massimo"
         usage:
           ai_bot: "Bot IA"
           ai_helper: "Assistente (%{agent})"
-          ai_helper_image_caption: "Didascalia immagine"
+          ai_image_caption: "Didascalia immagine"
           ai_summarization: "Riassumi"
           ai_embeddings_semantic_search: "Ricerca IA"
           ai_spam: "Spam"
@@ -545,10 +705,6 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-6: "Il modello più intelligente di Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilibrio ottimale tra velocità e costi"
-          anthropic-claude-haiku-4-5: "Veloce e conveniente"
-          open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
         configured:
           title: "LLM configurati"
@@ -571,7 +727,6 @@ it:
           max_output_tokens: "Il numero massimo di token che il modello può generare in una singola richiesta"
           display_name: "Il nome utilizzato per fare riferimento a questo modello nell'interfaccia del sito."
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
-          vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
           cost_input: "Il costo di input di 1 milione di token per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"
@@ -582,7 +737,6 @@ it:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -592,7 +746,7 @@ it:
           fake: "Personalizzato"
         provider_fields:
           access_key_id: "ID chiave di accesso AWS Bedrock"
-          region: "Regione AWS Bedrock"
+          region: "Regione"
           organization: "ID organizzazione OpenAI facoltativo"
           disable_system_prompt: "Disabilita il messaggio di sistema nei comandi"
           enable_native_tool: "Abilita il supporto degli strumenti nativi"
@@ -613,11 +767,7 @@ it:
         title: "Suggerisci modifiche utilizzando l'IA"
         description: "Scegli una delle opzioni seguenti e l'IA ti suggerirà una nuova versione del testo."
         selection_hint: "Suggerimento: puoi anche selezionare una parte del testo prima di aprire l'assistente per riscrivere solo quel pezzo."
-        suggest: "Suggerisci con l'IA"
         suggest_errors:
-          too_many_tags:
-            one: "Puoi avere solo fino a %{count} etichetta"
-            other: "Puoi avere solo fino a %{count} etichette"
           no_suggestions: "Nessun suggerimento disponibile"
         missing_content: "Inserisci alcuni contenuti per generare suggerimenti."
         context_menu:
@@ -651,20 +801,17 @@ it:
           select: "Seleziona"
           selected: "Selezionato"
           try_again: "Riprova"
-        image_caption:
-          button_label: "Didascalia con IA"
-          generating: "Generazione didascalia in corso..."
-          credits: "Didascalia da IA"
-          save_caption: "Salva"
         no_content_error: "Aggiungi prima il contenuto per eseguire azioni IA su di esso"
       reviewables:
         model_used: "Modello utilizzato:"
         accuracy: "Precisione:"
+        ai_tool_action:
+          tool: "Strumento"
+          parameters: "Parametri"
       embeddings:
         short_title: "Integrazioni"
         description: "Le integrazioni sono rappresentazione numeriche in grado di cogliere il significato e le relazioni, rendendo possibile alle funzionalità IA di Discourse come Argomenti correlati e Ricerca IA di comprendere e collegare i contenuti."
         new: "Nuova integrazione"
-        back: "Indietro"
         save: "Salva"
         saved: "Configurazione di integrazione salvata"
         delete: "Elimina"
@@ -673,7 +820,6 @@ it:
         presets: "Seleziona una preimpostazione..."
         configure_manually: "Configura manualmente"
         edit: "Modifica"
-        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."
@@ -705,26 +851,37 @@ it:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizzato"
         provider_fields:
           model_name: "Nome del modello"
         semantic_search: "Argomenti (semantici)"
-        semantic_search_results:
-          unavailable: "Risultati IA non disponibili"
         semantic_search_tooltips:
           results_explanation: "Se abilitata, verranno aggiunti ulteriori risultati di ricerca IA di seguito."
-          invalid_sort: "I risultati della ricerca devono essere ordinati in base alla pertinenza per visualizzare i risultati IA"
-        semantic_search_unavailable_tooltip: "I risultati della ricerca devono essere ordinati in base alla pertinenza per visualizzare i risultati IA"
-        ai_generated_result: "Risultato della ricerca trovato utilizzando l'intelligenza artificiale"
         quick_search:
           suffix: "in tutti gli argomenti e i post con IA"
       ai_artifact:
+        editor:
+          version: "Versione"
+          default: "Predefinito"
+          option_on: "On"
+          option_off: "Off"
+          apply: "Applica"
         expand_view_label: "Espandi vista"
         collapse_view_label: "Esci dalla modalità a schermo intero (tasto ESC o Indietro)"
         click_to_run_label: "Esegui artefatto"
+        share: "Condividi"
+        create_link: "Crea link"
+        copied: "Copiato negli appunti"
+        copy_link: "Copia link"
+        copy_embed: "Copia incorporato"
+        new_tab: "Mostra in nuova scheda"
+        filter_all: "Tutte"
+        filter_standalone: "Evento autonomo"
       ai_bot:
-        llm: "Modello"
+        title: "Bot IA"
+        llm: "Modello:"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
         try_again: "Riprova"
@@ -741,8 +898,7 @@ it:
           title: "Visualizza l'interazione dell'IA"
           copy_request: "Copia richiesta"
           copy_response: "Copia risposta"
-          request_tokens: "Token richieste:"
-          response_tokens: "Token risposte:"
+          duration_label: "Durata:"
           request: "Richiesta"
           response: "Risposta"
           next_log: "Avanti"
@@ -796,11 +952,9 @@ it:
           last_30_days: "Ultimi 30 giorni"
           upload_files: "Carica file"
           uploads_in_progress: "Impossibile caricare mentre sono in corso altri caricamenti"
+          scroll_to_bottom: "Scorri fino in fondo"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Panoramica del sentimento"
           analysis: "Analisi del sentimento"
         sentiment_analysis:
           share_chart: "Copia il link al grafico"
@@ -832,20 +986,38 @@ it:
             compact: "Compatto"
             expanded: "Espanso"
             expanded_description: "con riepiloghi IA"
+      ai_search:
+        related_topics: "Argomenti correlati"
+        related_replies:
+          one: "%{count} risposta"
+          other: "%{count} risposte"
+        tabs:
+          ask: "Chiedi all'IA"
+          topics: "Argomenti"
+          messages: "Messaggi"
       discobot_discoveries:
-        main_title: "Scoperte del discobot"
-        regular_results: "Argomenti"
-        tell_me_more: "Dimmi di più..."
-        continue_convo: "Continua la conversazione..."
+        main_title: "Chiedi all'IA"
         loading_convo: "Caricamento conversazione"
-        collapse: "Comprimi"
-        timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
-        tooltip:
-          header: "Ricerca con IA"
-          content: "Ricerca in linguaggio naturale basata su %{model}"
-          actions:
-            info: "Come funziona?"
-            disable: "Disabilita"
+        legacy:
+          main_title: "Scoperte del discobot"
+          regular_results: "Argomenti"
+          tell_me_more: "Dimmi di più..."
+          continue_convo: "Continua la conversazione..."
+          loading_convo: "Caricamento conversazione"
+          collapse: "Comprimi"
+          timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
+          tooltip:
+            header: "Ricerca con IA"
+            content: "Ricerca in linguaggio naturale basata su %{model}"
+            actions:
+              info: "Come funziona?"
+              disable: "Disabilita"
+        search_type: "IA"
+        search_all_topics: "Tutti gli argomenti"
+        search_messages: "Messaggi"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Argomenti correlati"
       user_preferences:
         empty: "Al momento non sono disponibili impostazioni rilevanti"
     review:

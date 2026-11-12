@@ -15,18 +15,25 @@ module DiscourseUserNotes
     end
 
     def create
+      raw = params[:user_note][:raw]
+      if raw.to_s.length > SiteSetting.max_post_length
+        return(
+          render_json_error(I18n.t("user_notes.note_too_long", max: SiteSetting.max_post_length))
+        )
+      end
+
       user = User.where(id: params[:user_note][:user_id]).first
       raise Discourse::NotFound if user.blank?
       extras = {}
       if post_id = params[:user_note][:post_id]
-        extras[:post_id] = post_id
+        post = Post.with_deleted.find_by(id: post_id)
+        extras[:post_id] = post_id if post && guardian.can_see_post?(post)
       end
       if reviewable_id = params[:user_note][:reviewable_id]
         extras[:reviewable_id] = reviewable_id
       end
 
-      user_note =
-        DiscourseUserNotes.add_note(user, params[:user_note][:raw], current_user.id, extras)
+      user_note = DiscourseUserNotes.add_note(user, raw, current_user.id, extras)
 
       render json: create_json(user_note)
     end
@@ -52,11 +59,13 @@ module DiscourseUserNotes
         Post.with_deleted.where(id: obj.map { |o| o[:post_id] }).each { |p| posts_by_id[p.id] = p }
         obj.each do |o|
           o[:created_by] = users_by_id[o[:created_by].to_i]
-          o[:post] = posts_by_id[o[:post_id].to_i]
+          post = posts_by_id[o[:post_id].to_i]
+          o[:post] = post if post && guardian.can_see_post?(post)
         end
       else
         obj[:created_by] = User.where(id: obj[:created_by]).first
-        obj[:post] = Post.with_deleted.where(id: obj[:post_id]).first
+        post = Post.with_deleted.where(id: obj[:post_id]).first
+        obj[:post] = post if post && guardian.can_see_post?(post)
       end
 
       serialize_data(obj, ::UserNoteSerializer)

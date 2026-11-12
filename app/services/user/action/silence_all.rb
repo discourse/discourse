@@ -4,8 +4,9 @@ class User::Action::SilenceAll < Service::ActionBase
   option :users, []
   option :actor
   option :params
+  option :raise_on_failure, default: -> { false }
 
-  delegate :message, :post_id, :silenced_till, :reason, to: :params, private: true
+  delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
   def call
     silenced_users.first.try(:user_history).try(:details)
@@ -15,6 +16,8 @@ class User::Action::SilenceAll < Service::ActionBase
 
   def silenced_users
     users.map do |user|
+      next if raise_on_failure && user.silenced?
+
       UserSilencer
         .new(
           user,
@@ -24,9 +27,13 @@ class User::Action::SilenceAll < Service::ActionBase
           silenced_till:,
           reason:,
           post_id:,
+          reviewable_id:,
         )
         .tap do |silencer|
-          next unless silencer.silence
+          unless silencer.silence
+            raise ActiveRecord::RecordInvalid.new(user) if raise_on_failure
+            next
+          end
           Jobs.enqueue(
             :critical_user_email,
             type: "account_silenced",
@@ -35,6 +42,7 @@ class User::Action::SilenceAll < Service::ActionBase
           )
         end
     rescue => err
+      raise if raise_on_failure
       Discourse.warn_exception(err, message: "failed to silence user with ID #{user.id}")
     end
   end

@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module DiscordProvider
       PROVIDER_NAME = "discord"
+      POPULARITY_SCORE = 100
       PROVIDER_ENABLED_SETTING = :chat_integration_discord_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
@@ -43,7 +44,7 @@ module DiscourseChatIntegration
         if topic.category
           category =
             (
-              if (topic.category.parent_category)
+              if topic.category.parent_category
                 "[#{topic.category.parent_category.name}/#{topic.category.name}]"
               else
                 "[#{topic.category.name}]"
@@ -56,7 +57,7 @@ module DiscourseChatIntegration
           embeds: [
             {
               title:
-                "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}",
+                "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
               color: topic.category ? topic.category.color.to_i(16) : nil,
               description:
                 post.excerpt(

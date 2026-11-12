@@ -5,12 +5,12 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { and, not, or } from "discourse/truth-helpers";
+import UserChooser from "discourse/select-kit/components/user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
@@ -19,7 +19,7 @@ export default class GroupAddMembers extends Component {
 
   @tracked loading = false;
   @tracked setOwner = false;
-  @tracked notifyUsers = false;
+  @tracked notifyUsers = true;
   @tracked usernamesAndEmails = [];
   @tracked flash;
 
@@ -43,9 +43,6 @@ export default class GroupAddMembers extends Component {
   setUsernamesAndEmails(usernamesAndEmails) {
     this.usernamesAndEmails = usernamesAndEmails;
     if (this.emails) {
-      if (!this.usernames) {
-        this.notifyUsers = false;
-      }
       this.setOwner = false;
     }
   }
@@ -83,37 +80,49 @@ export default class GroupAddMembers extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
-      @closeModal={{@closeModal}}
       class="group-add-members-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{this.title}}
     >
       <:body>
         <form class="form-vertical group-add-members">
-          <p>{{i18n "groups.add_members.description"}}</p>
+          <p>{{i18n
+              (if
+                this.currentUser.can_invite_to_forum
+                "groups.add_members.description"
+                "groups.add_members.description_usernames_only"
+              )
+            }}</p>
           <div class="input-group">
-            <EmailGroupUserChooser
-              @value={{this.usernamesAndEmails}}
-              @onChange={{this.setUsernamesAndEmails}}
-              @options={{hash
-                allowEmails=this.currentUser.can_invite_to_forum
-                filterPlaceholder=(if
-                  this.currentUser.can_invite_to_forum
-                  "groups.add_members.usernames_or_emails_placeholder"
-                  "groups.add_members.usernames_placeholder"
-                )
-              }}
-            />
+            {{#if this.currentUser.can_invite_to_forum}}
+              <EmailGroupUserChooser
+                @onChange={{this.setUsernamesAndEmails}}
+                @options={{hash
+                  allowEmails=true
+                  filterPlaceholder="groups.add_members.usernames_or_emails_placeholder"
+                }}
+                @value={{this.usernamesAndEmails}}
+              />
+            {{else}}
+              <UserChooser
+                @onChange={{this.setUsernamesAndEmails}}
+                @options={{hash
+                  filterPlaceholder="groups.add_members.usernames_placeholder"
+                }}
+                @value={{this.usernamesAndEmails}}
+              />
+            {{/if}}
           </div>
 
           {{#if @model.can_admin_group}}
             <div class="input-group">
               <label>
                 <Input
-                  id="set-owner"
-                  @type="checkbox"
-                  @checked={{this.setOwner}}
                   disabled={{this.emails}}
+                  id="set-owner"
+                  @checked={{this.setOwner}}
+                  @type="checkbox"
                 />
                 {{i18n "groups.add_members.set_owner"}}
               </label>
@@ -122,11 +131,7 @@ export default class GroupAddMembers extends Component {
 
           <div class="input-group">
             <label>
-              <Input
-                @type="checkbox"
-                @checked={{this.notifyUsers}}
-                disabled={{and (not this.usernames) this.emails}}
-              />
+              <Input @checked={{this.notifyUsers}} @type="checkbox" />
               {{i18n "groups.add_members.notify_users"}}
             </label>
           </div>
@@ -134,10 +139,10 @@ export default class GroupAddMembers extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.addMembers}}
           class="add btn-primary"
-          @icon="plus"
+          @action={{this.addMembers}}
           @disabled={{or this.loading (not this.usernamesAndEmails)}}
+          @icon="plus"
           @label="groups.add"
         />
       </:footer>

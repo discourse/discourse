@@ -23,8 +23,16 @@ RSpec.describe Email::Renderer do
     expect(renderer.text).to eq("Key & Peele")
   end
 
+  it "sanitizes the preview of a text-only email" do
+    text_only = Mail.new(body: "Key & Peele")
+    text_only.header["X-Discourse-Email-Preview"] = "<b onclick='alert(1)'>hi</b>"
+
+    expect(Email::Renderer.new(text_only).html).to include("<b>hi</b>")
+  end
+
   context "with email_renderer_html modifier" do
     after { DiscoursePluginRegistry.reset! }
+
     it "can modify the html" do
       Plugin::Instance
         .new

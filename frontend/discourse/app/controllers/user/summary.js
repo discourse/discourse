@@ -1,6 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { duration } from "discourse/lib/formatter";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
@@ -9,7 +8,14 @@ const MAX_BADGES = 6;
 export default class UserSummaryController extends Controller {
   @controller("user") userController;
 
-  @alias("userController.model") user;
+  @computed("userController.model")
+  get user() {
+    return this.userController?.model;
+  }
+
+  set user(value) {
+    set(this, "userController.model", value);
+  }
 
   @computed("model.badges.length")
   get moreBadges() {

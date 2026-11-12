@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User Notes", type: :system do
+RSpec.describe "User Notes" do
   fab!(:admin)
   fab!(:user)
 

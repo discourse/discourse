@@ -7,8 +7,8 @@ module DiscourseAi
         false
       end
 
-      def temperature
-        0.1
+      def thinking_effort
+        "none"
       end
 
       def system_prompt

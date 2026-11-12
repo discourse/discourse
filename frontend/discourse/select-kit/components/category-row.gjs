@@ -6,10 +6,10 @@ import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import dirSpan from "discourse/helpers/dir-span";
 import Category from "discourse/models/category";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryRow extends Component {
@@ -127,9 +127,9 @@ export default class CategoryRow extends Component {
         hideParent: !this.hasParentCategory,
         ancestors: this.hideParentCategory ? [] : this.category?.predecessors,
         topicCount: this.topicCount,
-        subcategoryCount: this.args.item?.category
-          ? this.category.subcategory_count
-          : 0,
+        hasSubcategories: this.args.item?.category
+          ? this.category.has_children
+          : false,
         readOnly: this.isReadOnly,
       })
     );
@@ -178,7 +178,7 @@ export default class CategoryRow extends Component {
       return;
     }
 
-    if (!this.isDestroying || !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.args.selectKit.onHover(this.rowValue, this.args.item);
     }
     return false;
@@ -275,29 +275,29 @@ export default class CategoryRow extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <div
-      class={{concatClass
+      aria-checked={{this.isSelected}}
+      class={{dConcatClass
         "category-row"
         "select-kit-row"
         (if this.isSelected "is-selected")
         (if this.isHighlighted "is-highlighted")
         (if this.isNone "is-none")
       }}
-      role="menuitemradio"
+      data-guid={{this.guid}}
       data-index={{@index}}
       data-name={{this.rowName}}
-      data-value={{this.rowValue}}
       data-title={{this.title}}
+      data-value={{this.rowValue}}
+      role="menuitemradio"
+      tabindex="-1"
       title={{this.title}}
-      data-guid={{this.guid}}
       {{on "focusin" this.handleFocusIn}}
       {{on "mousedown" this.handleMouseDown}}
       {{on "mouseenter" this.handleMouseEnter passive=true}}
       {{on "click" this.handleClick}}
       {{on "keydown" this.handleKeyDown}}
-      aria-checked={{this.isSelected}}
-      tabindex="-1"
     >
 
       {{#if this.category}}
@@ -306,8 +306,8 @@ export default class CategoryRow extends Component {
         </div>
 
         {{#if this.shouldDisplayDescription}}
-          <div class="category-desc" aria-hidden="true">
-            {{dirSpan this.descriptionText htmlSafe="true"}}
+          <div aria-hidden="true" class="category-desc">
+            {{dDirSpan this.descriptionText htmlSafe="true"}}
           </div>
         {{/if}}
       {{else}}

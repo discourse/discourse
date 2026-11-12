@@ -1,0 +1,85 @@
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import DiscourseRoute from "discourse/routes/discourse";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
+import { rememberedMode } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+
+export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
+  @service siteSettings;
+
+  queryParams = {
+    autoRun: {
+      as: "run",
+      refreshModel: false,
+    },
+  };
+
+  async model(params, transition) {
+    const data = {};
+    const urlParams = transition.to.queryParams.params;
+    if (urlParams) {
+      data.params = urlParams;
+    }
+
+    const [groups, schema, availableTags, queryResponse] = await Promise.all([
+      ajax("/admin/plugins/discourse-data-explorer/groups.json"),
+      ajax("/admin/plugins/discourse-data-explorer/schema.json", {
+        cache: true,
+      }),
+      ajax("/admin/plugins/discourse-data-explorer/queries/tags.json"),
+      ajax(
+        `/admin/plugins/discourse-data-explorer/queries/${params.query_id}`,
+        { data }
+      ),
+    ]);
+    const groupNames = {};
+    groups.forEach((group) => {
+      groupNames[group.id] = group.name;
+    });
+    const model = this.store.createRecord("query", queryResponse.query);
+    model.set(
+      "group_names",
+      (model.group_ids || []).map((id) => groupNames[id])
+    );
+
+    return { model, schema, groups, availableTags };
+  }
+
+  setupController(controller, model, transition) {
+    controller._teardownAi();
+
+    const cachedResult = model.model.cached_result;
+    const shouldAutoRun = !!transition.to.queryParams.run;
+    const showCachedResult = !!cachedResult && !shouldAutoRun;
+    const aiAvailable =
+      dataExplorerAiQueriesEnabled(this.siteSettings) &&
+      !model.model.is_default;
+    const defaultMode = aiAvailable ? (rememberedMode() ?? "ai") : "manual";
+
+    controller.setProperties({
+      ...model,
+      results: showCachedResult ? cachedResult : null,
+      showResults: showCachedResult,
+      isCachedResult: showCachedResult,
+      dashboardMounted: !!model.model.dashboard_mounted,
+      dashboardMountable: !!model.model.dashboard_mountable,
+      shouldAutoRun,
+      mode: defaultMode,
+      aiPrompt: "",
+      lastGeneratedPrompt: null,
+    });
+    controller.snapshotPristine();
+    controller.initView();
+  }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller._teardownAi();
+      controller.releasePanes();
+    }
+  }
+
+  titleToken() {
+    return this.currentModel?.model?.name;
+  }
+}

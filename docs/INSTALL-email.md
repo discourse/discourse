@@ -13,8 +13,8 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
 #### [Brevo, previously SendInBlue, GDPR][sb] &mdash; 300 email per day free
 
     SMTP server address? smtp-relay.brevo.com
-    SMTP user name?      [SMTP credentials for your domain under [SMTP-Key tab](https://app.brevo.com/settings/keys/smtp)]
-    SMTP password?       [SMTP credentials for your domain under [SMTP-Key tab](https://app.brevo.com/settings/keys/smtp)]
+    SMTP user name?      [SMTP credentials in [SMTP & API page](https://app.brevo.com/settings/keys/smtp)]
+    SMTP password?       [SMTP credentials in [SMTP & API page](https://app.brevo.com/settings/keys/smtp)]
     Port:                587
     
 #### [Mailgun][gun] &mdash; 50k emails/month on a 30 day trial OR 10k emails/month with no trial
@@ -59,3 +59,11 @@ NOTE: By default, Elastic Email will add an additional UNSUBSCRIBE link at the b
 ### Bounce Handling
 
 When using a third party email service, you will need to enable VERP, or activate their **webhooks** in order to handle bouncing emails. [Full details here.](https://meta.discourse.org/t/handling-bouncing-e-mails/45343)
+
+For Amazon SES bounce notifications delivered through SNS:
+
+- Subscribe `https://<your-discourse-host>/webhooks/aws` to the bounce notification topic.
+- Add the exact topic ARN to the `aws_sns_topic_arn_allowlist` site setting.
+- Enable **Include original email headers** for bounce notifications on the SES sending identity. Discourse uses the original `Message-ID` and bounced recipient to match a sent email. The SES-assigned message ID alone cannot identify the email in Discourse, so notifications without the original Message-ID are ignored.
+
+See the [AWS notification contents documentation](https://docs.aws.amazon.com/ses/latest/dg/notification-contents.html) for the distinction between the original and SES-assigned message IDs.

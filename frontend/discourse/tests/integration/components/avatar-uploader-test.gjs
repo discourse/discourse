@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | avatar-uploader", function (hooks) {
+module("Integration | Component | AvatarUploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("uploading", async function (assert) {
@@ -23,7 +23,7 @@ module("Integration | Component | avatar-uploader", function (hooks) {
 
     await render(
       <template>
-        <AvatarUploader @id="avatar-uploader" @done={{callback}} />
+        <AvatarUploader @done={{callback}} @id="avatar-uploader" />
       </template>
     );
 

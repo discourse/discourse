@@ -1,7 +1,8 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import Site from "discourse/models/site";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Category Edit - Security", function (needs) {
@@ -15,23 +16,19 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("removing a permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
 
-    await availableGroups.expand();
-    assert.false(
-      availableGroups.rowByValue("everyone").exists(),
-      "everyone is already used and is not in the available groups"
-    );
+    assert
+      .dom(".available-groups option[value='0']")
+      .doesNotExist(
+        "everyone is already used and is not in the available groups"
+      );
 
     await click(".row-body .remove-permission");
-    await availableGroups.expand();
 
-    assert.true(
-      availableGroups.rowByValue("everyone").exists(),
-      "everyone has been removed and appears in the available groups"
-    );
+    assert
+      .dom(".available-groups option[value='0']")
+      .exists("everyone has been removed and appears in the available groups");
     assert
       .dom(".row-empty")
       .hasText(
@@ -41,12 +38,9 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("adding a permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("staff");
+    await formKit().field("security_add_group_id").select("3");
 
     assert.dom("[data-group-name='staff'] .group-name-link").hasText("staff");
     assert
@@ -58,8 +52,6 @@ acceptance("Category Edit - Security", function (needs) {
   });
 
   test("adding a previously removed permission", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
-
     await visit("/c/bug/edit/security");
     await click(".row-body .remove-permission");
 
@@ -67,8 +59,7 @@ acceptance("Category Edit - Security", function (needs) {
       .dom(".row-body")
       .doesNotExist("removes the permission from the list");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("everyone");
+    await formKit().field("security_add_group_id").select("0");
 
     assert.dom(".row-body").exists("adds back the permission to the list");
 
@@ -80,9 +71,37 @@ acceptance("Category Edit - Security", function (needs) {
       .exists({ count: 1 }, "adds only 'See' permission for a new row");
   });
 
-  test("editing permissions", async function (assert) {
-    const availableGroups = selectKit(".available-groups");
+  test("remove all permissions", async function (assert) {
+    await visit("/c/bug/edit/security");
 
+    assert
+      .dom(".remove-all-permissions")
+      .doesNotExist("button is hidden below the group threshold");
+
+    await formKit().field("security_add_group_id").select("3");
+
+    assert
+      .dom(".remove-all-permissions")
+      .doesNotExist("button is still hidden with two groups");
+
+    await formKit().field("security_add_group_id").select("1");
+
+    assert
+      .dom(".remove-all-permissions")
+      .exists("button appears once three or more groups are configured");
+
+    await click(".remove-all-permissions");
+
+    assert.dom(".row-body").doesNotExist("removes every group permission");
+    assert
+      .dom(".row-empty")
+      .hasText(
+        i18n("category.permissions.no_groups_selected"),
+        "shows the empty message after removing all groups"
+      );
+  });
+
+  test("editing permissions", async function (assert) {
     await visit("/c/bug/edit/security");
 
     assert
@@ -91,8 +110,7 @@ acceptance("Category Edit - Security", function (needs) {
       )
       .exists({ count: 2 }, "everyone has full permissions by default");
 
-    await availableGroups.expand();
-    await availableGroups.selectRowByValue("staff");
+    await formKit().field("security_add_group_id").select("3");
 
     assert
       .dom(
@@ -145,6 +163,89 @@ acceptance("Category Edit - Security", function (needs) {
       .exists(
         { count: 2 },
         "staff group has full permissions (inherited from everyone)"
+      );
+  });
+});
+
+acceptance("Category Edit - Logged-in permissions", function (needs) {
+  let parentCategoryId;
+  needs.hooks.beforeEach(() => {
+    parentCategoryId = null;
+  });
+  needs.user();
+  needs.settings({ granular_anonymous_and_logged_in_groups_permissions: true });
+  needs.site({
+    groups: [
+      { id: 4, name: "anonymous_users", automatic: true },
+      { id: 5, name: "logged_in_users", automatic: true },
+      { id: 42, name: "custom_group" },
+    ],
+  });
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response({
+        category: {
+          id: 1,
+          name: "bug",
+          slug: "bug",
+          parent_category_id: parentCategoryId,
+          can_edit: true,
+          available_groups: ["everyone", "logged_in_users", "custom_group"],
+          permission_groups: [
+            { id: 0, name: "everyone" },
+            { id: 5, name: "logged_in_users" },
+            { id: 42, name: "custom_group" },
+          ],
+          group_permissions: [
+            { group_id: 5, group_name: "logged_in_users", permission_type: 3 },
+          ],
+        },
+      })
+    );
+  });
+
+  test("category choices retain everyone and exclude anonymous users", async function (assert) {
+    await visit("/c/bug/edit/security");
+
+    assert
+      .dom(".available-groups option[value='0']")
+      .exists(
+        "public access remains available when the UC hides everyone globally"
+      );
+    assert
+      .dom(".available-groups option[value='4']")
+      .doesNotExist("anonymous grants are unavailable for categories");
+    assert
+      .dom("[data-group-name='logged_in_users']")
+      .exists("the saved logged-in grant remains visible");
+
+    await formKit().field("security_add_group_id").select("0");
+
+    assert
+      .dom("[data-group-name='everyone']")
+      .exists("adding public access uses the category-specific group name");
+  });
+  test("a logged-in parent permits custom-group children but excludes public access", async function (assert) {
+    parentCategoryId = 99;
+    Site.current().updateCategory({
+      id: parentCategoryId,
+      name: "Logged-in parent",
+      slug: "logged-in-parent",
+      available_groups: ["logged_in_users"],
+      group_permissions: [
+        { group_id: 5, group_name: "logged_in_users", permission_type: 3 },
+      ],
+    });
+
+    await visit("/c/bug/edit/security");
+
+    assert
+      .dom(".available-groups option[value='42']")
+      .exists("custom group members can access the logged-in parent");
+    assert
+      .dom(".available-groups option[value='0']")
+      .doesNotExist(
+        "a public child would expose content beyond the parent audience"
       );
   });
 });

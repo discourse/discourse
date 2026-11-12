@@ -30,4 +30,20 @@ module DiscourseReactions::PostActionExtension
       AND discourse_reactions_reactions.reaction_value IN (:valid_reactions)
     SQL
   end
+
+  # Suppresses shadow likes for any user who has a reaction on the post, regardless of
+  # whether the reaction's value is currently in discourse_reactions_enabled_reactions
+  # Required if `SiteSetting.discourse_reactions_allow_any_emoji` is enabled
+  def self.strict_filter_reaction_likes_sql
+    <<~SQL
+      post_actions.post_action_type_id = :like
+      AND post_actions.deleted_at IS NULL
+      AND NOT EXISTS (
+        SELECT 1
+        FROM discourse_reactions_reaction_users
+        WHERE discourse_reactions_reaction_users.user_id = post_actions.user_id
+          AND discourse_reactions_reaction_users.post_id = post_actions.post_id
+      )
+    SQL
+  end
 end

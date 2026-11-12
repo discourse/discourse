@@ -5,7 +5,7 @@ module DiscourseAutomation
     attributes :id, :name, :metadata
 
     def metadata
-      ((options[:trigger_metadata] || {}).stringify_keys).merge(object.metadata || {})
+      (options[:trigger_metadata] || {}).stringify_keys.merge(object.metadata || {})
     end
   end
 end

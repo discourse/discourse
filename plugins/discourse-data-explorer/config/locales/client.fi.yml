@@ -6,21 +6,27 @@
 
 fi:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Dataselain"
     errors:
       explorer:
         no_semicolons: "Poista puolipisteet kyselystä."
         dirty: "Kysely täytyy tallentaa ennen suorittamista."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Ei tuloksia"
     explorer:
-      default_query: "Oletus"
       or: "tai"
       admins_only: "Dataselain on vain ylläpitäjille."
       allow_groups: "Salli ryhmien käyttää tätä kyselyä"
       title: "Dataselain"
-      create: "Luo"
       create_placeholder: "Kyselyn nimi..."
       description_placeholder: "Kirjoita kuvaus tähän"
+      ai:
+        generate: "Luo"
       import:
-        label: "Tuo"
         unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."
         wrong_json: "Väärä JSON-tiedosto. JSON-tiedoston tulisi sisältää query-objekti, jolla tulisi olla ainakin sql-ominaisuus."
       help:
@@ -35,18 +41,15 @@ fi:
           yes: "Kyllä"
           no: "Ei"
           null_: "Tyhjä"
-      export: "Vie"
       view_json: "Näytä JSON"
       save: "Tallenna muutokset"
       run: "Suorita"
       undo: "Hylkää muutokset"
-      edit: "Muokkaa"
       delete: "Poista"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Taulukko"
-      show_graph: "Kaavio"
-      others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
+      chart:
+        form:
+          label: "Kuvaajan tyyppi"
+          bar: "Pylväs"
       run_time: "Kysely suoritettu %{value} millisekunnissa."
       result_count:
         one: "%{count} tulos."
@@ -54,17 +57,16 @@ fi:
       max_result_count:
         one: "Näytetään osuvin %{count} tulos."
         other: "Näytetään osuvimmat %{count} tulosta."
-      query_name: "Kysely"
+      name: "Nimi"
       query_groups: "Ryhmät"
+      query_tags: "Tunnisteet"
       link: "Linkki:"
       report_name: "Raportti"
       query_description: "Kuvaus"
       query_time: "Viimeisin suoritus"
       query_user: "Luonut"
       column: "Sarake %{number}"
-      explain_label: "Sisällytä kyselysuunnitelma?"
       reset_params: "Palauta"
-      search_placeholder: "Hae..."
       no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."
       form:
         errors:
@@ -77,8 +79,18 @@ fi:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Dataselain"
+      sql:
+        query_id: "Kysely"
+        add_param: "Lisää parametri"
+        param_value: "Arvo"
+        output:
+          results: "Tulokset"
+          no_results: "Ei tuloksia"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

@@ -1,7 +1,7 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { trackedMap } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -17,9 +17,9 @@ const HANDLED_TRANSITIONS = new WeakSet();
  */
 @disableImplicitInjections
 export default class HistoryStore extends Service {
-  #routeData = new TrackedMap();
+  #routeData = trackedMap();
   #uuid;
-  #pendingStore = DEBUG && isTesting() ? new TrackedMap() : null;
+  #pendingStore = DEBUG && isTesting() ? trackedMap() : null;
 
   get #currentStore() {
     return this.#pendingStore || this.#dataFor(this.#uuid);
@@ -31,28 +31,6 @@ export default class HistoryStore extends Service {
    */
   get isPoppedState() {
     return !!this.get(HISTORIC_KEY);
-  }
-
-  /**
-   * Fetch a value from the current route's key/value store
-   */
-  get(key) {
-    return this.#currentStore.get(key);
-  }
-
-  /**
-   * Set a value in the current route's key/value store. Will persist for the lifetime
-   * of the route, and will be restored if the user navigates 'back' to the route.
-   */
-  set(key, value) {
-    return this.#currentStore.set(key, value);
-  }
-
-  /**
-   * Delete a value from the current route's key/value store
-   */
-  delete(key) {
-    return this.#currentStore.delete(key);
   }
 
   @cached
@@ -83,25 +61,26 @@ export default class HistoryStore extends Service {
     return false;
   }
 
-  #pruneOldData() {
-    while (this.#routeData.size > HISTORY_SIZE) {
-      // JS Map guarantees keys will be returned in insertion order
-      const oldestUUID = this.#routeData.keys().next().value;
-      this.#routeData.delete(oldestUUID);
-    }
+  /**
+   * Fetch a value from the current route's key/value store
+   */
+  get(key) {
+    return this.#currentStore.get(key);
   }
 
-  #dataFor(uuid) {
-    let data = this.#routeData.get(uuid);
-    if (data) {
-      return data;
-    }
+  /**
+   * Set a value in the current route's key/value store. Will persist for the lifetime
+   * of the route, and will be restored if the user navigates 'back' to the route.
+   */
+  set(key, value) {
+    return this.#currentStore.set(key, value);
+  }
 
-    data = new TrackedMap();
-    this.#routeData.set(uuid, data);
-    this.#pruneOldData();
-
-    return data;
+  /**
+   * Delete a value from the current route's key/value store
+   */
+  delete(key) {
+    return this.#currentStore.delete(key);
   }
 
   /**
@@ -129,12 +108,12 @@ export default class HistoryStore extends Service {
       // A normal ember transition. The history uuid will only change **after** models are resolved.
       // To allow routes to store data for the upcoming uuid, we set up a temporary data store
       // and then persist it if/when the transition succeeds.
-      pendingStoreForThisTransition = new TrackedMap();
+      pendingStoreForThisTransition = trackedMap();
     } else {
       // A transition initiated by the browser back/forward buttons. We might already have some stored
       // data for this route. If so, take a copy of it and use that as the pending store. As with normal transitions,
       // it'll be persisted if/when the transition succeeds.
-      pendingStoreForThisTransition = new TrackedMap(
+      pendingStoreForThisTransition = trackedMap(
         this.#dataFor(window.history.state?.uuid)?.entries()
       );
     }
@@ -151,5 +130,26 @@ export default class HistoryStore extends Service {
           this.#pendingStore = null;
         }
       });
+  }
+
+  #pruneOldData() {
+    while (this.#routeData.size > HISTORY_SIZE) {
+      // JS Map guarantees keys will be returned in insertion order
+      const oldestUUID = this.#routeData.keys().next().value;
+      this.#routeData.delete(oldestUUID);
+    }
+  }
+
+  #dataFor(uuid) {
+    let data = this.#routeData.get(uuid);
+    if (data) {
+      return data;
+    }
+
+    data = trackedMap();
+    this.#routeData.set(uuid, data);
+    this.#pruneOldData();
+
+    return data;
   }
 }

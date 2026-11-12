@@ -1,7 +1,9 @@
 import { getOwner } from "@ember/owner";
+import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Post from "discourse/models/post";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -124,6 +126,26 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
+  test("highlightQuoteOnRender keeps only the latest quote", function (assert) {
+    const postStream = buildStream.call(this, 1232);
+
+    postStream.highlightQuoteOnRender(3, "first quote");
+    postStream.highlightQuoteOnRender(4);
+    assert.strictEqual(
+      postStream.quoteHighlights.get(3).quote,
+      "first quote",
+      "keeps the quote when a jump has nothing to highlight"
+    );
+
+    postStream.highlightQuoteOnRender(5, "second quote");
+    assert.false(postStream.quoteHighlights.has(3), "drops the previous quote");
+    assert.strictEqual(
+      postStream.quoteHighlights.get(5).quote,
+      "second quote",
+      "stores the latest quote"
+    );
+  });
+
   test("closestPostNumberFor", function (assert) {
     const postStream = buildStream.call(this, 1231);
     const store = getOwner(this).lookup("service:store");
@@ -207,6 +229,62 @@ module("Unit | Model | post-stream", function (hooks) {
     assert.strictEqual(postStream.extra_property, 12);
   });
 
+  test("updateFromJson - post-stream-update-from-json behavior transformer", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+    let transformerCalled = false;
+    let receivedContext = null;
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          transformerCalled = true;
+          receivedContext = context;
+          next();
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }],
+      stream: [1],
+    });
+
+    assert.true(transformerCalled, "the transformer is called");
+    assert.strictEqual(
+      receivedContext.postStream,
+      postStream,
+      "the transformer receives the postStream as context"
+    );
+    assert.strictEqual(postStream.posts.length, 1, "posts are loaded normally");
+  });
+
+  test("updateFromJson - behavior transformer can modify stream after default behavior", function (assert) {
+    const postStream = buildStream.call(this, 1231);
+
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-update-from-json",
+        ({ next, context }) => {
+          next();
+          // Truncate stream to first element after default behavior runs
+          context.postStream.stream.length = 1;
+        }
+      );
+    });
+
+    postStream.updateFromJson({
+      posts: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      stream: [1, 2, 3],
+    });
+
+    assert.deepEqual(
+      [...postStream.stream],
+      [1],
+      "the transformer can modify the stream after next()"
+    );
+  });
+
   test("removePosts", function (assert) {
     const postStream = buildStream.call(this, 10000001, [1, 2, 3]);
     const store = getOwner(this).lookup("service:store");
@@ -272,6 +350,22 @@ module("Unit | Model | post-stream", function (hooks) {
       postStream.findPostIdForPostNumber(8),
       60,
       "it respects gaps"
+    );
+
+    postStream.set("isMegaTopic", true);
+    postStream.appendPost(
+      postStream.store.createRecord("post", { id: 99, post_number: 1 })
+    );
+
+    assert.strictEqual(
+      postStream.findPostIdForPostNumber(1),
+      99,
+      "it finds loaded posts on mega topics"
+    );
+    assert.strictEqual(
+      postStream.findPostIdForPostNumber(5),
+      undefined,
+      "it ignores the stream on mega topics"
     );
   });
 
@@ -833,6 +927,302 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
+  test("triggerChangedPost ignores delayed older events", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 1,
+      cooked: "first",
+      updated_at: "2026-08-28T08:00:02.000Z",
+    });
+    postStream.appendPost(post);
+    let requestCount = 0;
+
+    pretender.get("/posts/1", () => {
+      requestCount += 1;
+      return response({
+        id: 1,
+        post_number: 1,
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:02.000Z",
+      });
+    });
+
+    await postStream.triggerChangedPost(1, "2026-08-28T08:00:01.000Z");
+    assert.strictEqual(requestCount, 0, "an older event causes no refresh");
+    assert.strictEqual(
+      post.updated_at,
+      "2026-08-28T08:00:02.000Z",
+      "the loaded timestamp does not regress"
+    );
+
+    await postStream.triggerChangedPost(1, "2026-08-28T08:00:03.000Z");
+    assert.strictEqual(requestCount, 1, "a newer event refreshes the post");
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "the response is accepted when its persisted timestamp predates the event"
+    );
+  });
+
+  test("refreshPost accepts an unchanged timestamp", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        version: 2,
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+
+    pretender.get("/posts/1", () => {
+      return response({
+        id: 1,
+        post_number: 1,
+        version: 1,
+        updated_at: "2026-08-28T08:00:01.000Z",
+      });
+    });
+
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).version,
+      1,
+      "the authoritative state is stored"
+    );
+  });
+
+  test("refreshPost ignores responses older than the loaded post", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 1,
+      cooked: "first",
+      updated_at: "2026-08-28T08:00:01.000Z",
+    });
+    postStream.appendPost(post);
+    let resolveRequest;
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolve) => (resolveRequest = resolve));
+    });
+
+    const refresh = postStream.refreshPost(1);
+    await waitUntil(() => resolveRequest);
+    post.updated_at = "2026-08-28T08:00:03.000Z";
+    post.cooked = "third";
+    resolveRequest(
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:02.000Z",
+      })
+    );
+    await refresh;
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "the newer loaded state is retained"
+    );
+  });
+
+  test("refreshPost ignores a timestamp-less response to a timestamped post", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "current",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+
+    pretender.get("/posts/1", () => {
+      return response({ id: 1, post_number: 1, cooked: "incomplete" });
+    });
+
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "current",
+      "an incomplete response cannot replace timestamped state"
+    );
+  });
+
+  test("triggerChangedPost keeps the newest concurrent response", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const olderRequest = postStream.triggerChangedPost(
+      1,
+      "2026-08-28T08:00:02.000Z"
+    );
+    const newerRequest = postStream.triggerChangedPost(
+      1,
+      "2026-08-28T08:00:03.000Z"
+    );
+    await waitUntil(() => resolveRequests.length === 2);
+
+    resolveRequests[1](
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "third",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+    await newerRequest;
+    resolveRequests[0](
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+    await olderRequest;
+
+    const loadedPost = postStream.findLoadedPost(1);
+    assert.strictEqual(
+      loadedPost.updated_at,
+      "2026-08-28T08:00:01.000Z",
+      "response ordering does not depend on persisted timestamps"
+    );
+    assert.strictEqual(
+      loadedPost.cooked,
+      "third",
+      "the cooked HTML stays current"
+    );
+  });
+
+  test("refreshPost falls back when a newer request fails", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const olderRequest = postStream.refreshPost(1);
+    const newerRequest = postStream.refreshPost(1);
+    await waitUntil(() => resolveRequests.length === 2);
+
+    assert.strictEqual(
+      olderRequest,
+      newerRequest,
+      "concurrent callers share the reconciliation promise"
+    );
+    resolveRequests[0](response({ id: 1, post_number: 1, cooked: "second" }));
+    resolveRequests[1](response(500, { errors: ["failed"] }));
+    await newerRequest;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "the successful older response is used as a fallback"
+    );
+  });
+
+  test("refreshPost clears a failed batch", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+
+    pretender.get("/posts/1", () => response(500, { errors: ["failed"] }));
+    await assert.rejects(postStream.refreshPost(1), "the failed batch rejects");
+
+    pretender.get("/posts/1", () =>
+      response({ id: 1, post_number: 1, cooked: "second" })
+    );
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "a later refresh can succeed"
+    );
+  });
+
+  test("refreshPost keeps authoritative cooked content when requests overlap", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const fullRefresh = postStream.refreshPost(1);
+    const preservingRefresh = postStream.refreshPost(1, {
+      preserveCooked: true,
+    });
+    await waitUntil(() => resolveRequests.length === 2);
+
+    resolveRequests[1](response({ id: 1, post_number: 1, cooked: "third" }));
+    await preservingRefresh;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "a full refresh keeps cooked content authoritative for the batch"
+    );
+
+    resolveRequests[0](response({ id: 1, post_number: 1, cooked: "second" }));
+    await fullRefresh;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "the older response is ignored"
+    );
+  });
+
   test("triggerRecoveredPost", async function (assert) {
     const postStream = buildStream.call(this, 4567);
     const store = getOwner(this).lookup("service:store");
@@ -898,7 +1288,7 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
-  test("triggerNewPostInStream for ignored posts", async function (assert) {
+  test("triggerNewPostsInStream for ignored posts", async function (assert) {
     const postStream = buildStream.call(this, 280, [1]);
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", {
@@ -1051,6 +1441,34 @@ module("Unit | Model | post-stream", function (hooks) {
     await assert.rejects(
       postStream.loadIntoIdentityMap([1]),
       (error) => error.jqXHR && error.jqXHR.status === 500
+    );
+  });
+
+  test("stagePost keeps the server's shape for last_posted_at", function (assert) {
+    const postStream = buildStream.call(this, 10101, [1]);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", { id: 1, post_number: 1, topic_id: 10101 })
+    );
+    const user = store.createRecord("user", { username: "eviltrout", id: 321 });
+    const stagedPost = store.createRecord("post", {
+      raw: "hello world this is my new post",
+      topic_id: 10101,
+    });
+    postStream.topic.setProperties({ posts_count: 1, highest_post_number: 1 });
+
+    postStream.stagePost(stagedPost, user);
+
+    const lastPostedAt = postStream.topic.last_posted_at;
+    assert.strictEqual(
+      typeof lastPostedAt,
+      "string",
+      "last_posted_at is a string, like the server sends"
+    );
+    assert.strictEqual(
+      new Date(lastPostedAt).toISOString(),
+      lastPostedAt,
+      "last_posted_at is an ISO 8601 timestamp"
     );
   });
 });

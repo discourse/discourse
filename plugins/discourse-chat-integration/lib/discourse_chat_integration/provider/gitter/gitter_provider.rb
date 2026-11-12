@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module GitterProvider
       PROVIDER_NAME = "gitter"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_gitter_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
@@ -37,8 +38,10 @@ module DiscourseChatIntegration
           (
             if parent_category
               "[#{parent_category.name}/#{topic.category.name}]"
-            else
+            elsif topic.category
               "[#{topic.category.name}]"
+            else
+              ""
             end
           )
 

@@ -2,21 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
-import DModal, {
-  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-} from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
@@ -28,6 +22,14 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal, {
+  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+} from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
@@ -43,20 +45,20 @@ export default class BookmarkModal extends Component {
   @service site;
   @service keyboardShortcuts;
 
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalDate = null;
+
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalTime = null;
+
+  /** @type {string | null | undefined} */
   @tracked postDetectedLocalTimezone = null;
+
+  /** @type {string | import("moment").Moment | null} */
   @tracked prefilledDatetime = null;
+
+  /** @type {string | null} */
   @tracked flash = null;
-  @tracked showOptions = this.args.model.bookmark.id ? true : false;
-
-  @notEmpty("userTimezone") userHasTimezoneSet;
-
-  @notEmpty("bookmark.id") showDelete;
-
-  @notEmpty("bookmark.id") editingExistingBookmark;
-
-  @and("bookmark.id", "bookmark.reminderAt") existingBookmarkHasReminder;
 
   @tracked _closeWithoutSaving = false;
   @tracked _savingBookmarkManually = false;
@@ -70,6 +72,26 @@ export default class BookmarkModal extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
     this.keyboardShortcuts.unpause();
+  }
+
+  @computed("userTimezone")
+  get userHasTimezoneSet() {
+    return !isEmpty(this.userTimezone);
+  }
+
+  @computed("bookmark.id")
+  get showDelete() {
+    return !isEmpty(this.bookmark?.id);
+  }
+
+  @computed("bookmark.id")
+  get editingExistingBookmark() {
+    return !isEmpty(this.bookmark?.id);
+  }
+
+  @computed("bookmark.id", "bookmark.reminderAt")
+  get existingBookmarkHasReminder() {
+    return this.bookmark?.id && this.bookmark?.reminderAt;
   }
 
   get userTimezone() {
@@ -182,11 +204,6 @@ export default class BookmarkModal extends Component {
       .finally(() => {
         this._saving = false;
       });
-  }
-
-  @action
-  toggleShowOptions() {
-    this.showOptions = !this.showOptions;
   }
 
   @action
@@ -353,62 +370,58 @@ export default class BookmarkModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{this.closingModal}}
-      @title={{this.modalTitle}}
-      @flash={{this.flash}}
-      @flashType="error"
-      id="bookmark-reminder-modal"
       class="bookmark-reminder-modal"
       data-bookmark-id={{this.bookmark.id}}
+      id="bookmark-reminder-modal"
+      @closeModal={{this.closingModal}}
+      @flash={{this.flash}}
+      @flashType="error"
+      @title={{this.modalTitle}}
       {{didInsert this.didInsert}}
     >
       <:headerPrimaryAction>
         <DButton
-          @label="bookmarks.save"
-          @action={{this.saveAndClose}}
-          @title="modal.close"
           class="btn-transparent"
+          @action={{this.saveAndClose}}
+          @label="bookmarks.save"
+          @title="modal.close"
         />
       </:headerPrimaryAction>
 
       <:body>
-        <div class="control-group bookmark-name-wrap">
+        <div class="control-group">
           <Input
-            id="bookmark-name"
-            @value={{this.bookmark.name}}
-            name="bookmark-name"
-            class="bookmark-name"
-            placeholder={{i18n "post.bookmarks.name_placeholder"}}
             aria-label={{i18n "post.bookmarks.name_input_label"}}
-          />
-          <DButton
-            @icon="gear"
-            @action={{this.toggleShowOptions}}
-            @ariaLabel="post.bookmarks.options"
-            @title="post.bookmarks.options"
-            class="bookmark-options-button"
+            class="bookmark-name"
+            id="bookmark-name"
+            name="bookmark-name"
+            placeholder={{i18n "post.bookmarks.name_placeholder"}}
+            @value={{this.bookmark.name}}
           />
         </div>
 
-        {{#if this.showOptions}}
-          <div class="bookmark-options-panel">
-            <label
-              class="control-label"
-              for="bookmark_auto_delete_preference"
-            >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-            <ComboBox
-              @content={{this.autoDeletePreferences}}
-              @value={{this.bookmark.autoDeletePreference}}
-              @id="bookmark-auto-delete-preference"
-              @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
-              class="bookmark-option-selector"
-            />
-          </div>
-        {{/if}}
+        <PluginOutlet
+          @name="bookmark-modal-after-name"
+          @outletArgs={{lazyHash bookmark=this.bookmark}}
+        />
+
+        <div class="bookmark-options-panel">
+          <label
+            class="control-label"
+            for="bookmark_auto_delete_preference"
+          >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+          <ComboBox
+            class="bookmark-option-selector"
+            @content={{this.autoDeletePreferences}}
+            @id="bookmark-auto-delete-preference"
+            @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
+            @value={{this.bookmark.autoDeletePreference}}
+          />
+        </div>
 
         {{#if this.showExistingReminderAt}}
           <div class="alert alert-info existing-reminder-at-alert">
-            {{icon "far-clock"}}
+            {{dIcon "far-clock"}}
             <span>{{i18n
                 "bookmarks.reminders.existing_reminder"
                 at_date_time=this.existingReminderAtFormatted
@@ -422,17 +435,17 @@ export default class BookmarkModal extends Component {
           </label>
 
           {{#if this.userHasTimezoneSet}}
-            <TimeShortcutPicker
-              @timeShortcuts={{this.timeOptions}}
-              @prefilledDatetime={{this.prefilledDatetime}}
-              @onTimeSelected={{this.onTimeSelected}}
-              @hiddenOptions={{this.hiddenTimeShortcutOptions}}
-              @customLabels={{this.customTimeShortcutLabels}}
+            <DTimeShortcutPicker
               @_itsatrap={{this._itsatrap}}
+              @customLabels={{this.customTimeShortcutLabels}}
+              @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+              @onTimeSelected={{this.onTimeSelected}}
+              @prefilledDatetime={{this.prefilledDatetime}}
+              @timeShortcuts={{this.timeOptions}}
             />
           {{else}}
             <div class="alert alert-info">{{trustHTML
-                (i18n "bookmarks.no_timezone" basePath=(basePath))
+                (i18n "bookmarks.no_timezone" basePath=(dBasePath))
               }}</div>
           {{/if}}
         </div>
@@ -441,21 +454,21 @@ export default class BookmarkModal extends Component {
       <:footer>
         {{#if this.site.desktopView}}
           <DButton
-            @label="bookmarks.save"
-            @action={{this.saveAndClose}}
-            id="save-bookmark"
             class="btn-primary"
+            id="save-bookmark"
+            @action={{this.saveAndClose}}
+            @label="bookmarks.save"
           />
           <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
         {{/if}}
         {{#if this.showDelete}}
           <DButton
-            @icon="trash-can"
+            class="delete-bookmark btn-danger"
+            id="delete-bookmark"
             @action={{this.delete}}
             @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
+            @icon="trash-can"
             @title="post.bookmarks.actions.delete_bookmark.name"
-            id="delete-bookmark"
-            class="delete-bookmark btn-danger"
           />
         {{/if}}
       </:footer>

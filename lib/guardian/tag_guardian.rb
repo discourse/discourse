@@ -3,6 +3,7 @@
 module TagGuardian
   def can_see_tag?(tag)
     return false if !SiteSetting.tagging_enabled
+    return false if !tag
     return false if hidden_tag_names.include?(tag.name)
     true
   end
@@ -11,8 +12,12 @@ module TagGuardian
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.create_tag_allowed_groups_map)
   end
 
-  def can_edit_tag?(_tag = nil)
+  def can_edit_tag_names?
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.edit_tags_allowed_groups_map)
+  end
+
+  def can_edit_tag?(tag)
+    can_edit_tag_names? && can_see_tag?(tag)
   end
 
   def can_tag_topics?
@@ -24,9 +29,7 @@ module TagGuardian
     return false if !authenticated?
     return true if @user.is_system_user?
 
-    group_ids = SiteSetting.pm_tags_allowed_for_groups_map
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.group_users.exists?(group_id: group_ids)
+    @user.in_any_groups?(SiteSetting.pm_tags_allowed_for_groups_map)
   end
 
   def can_admin_tags?
@@ -37,14 +40,16 @@ module TagGuardian
     is_staff? && SiteSetting.tagging_enabled
   end
 
+  def visible_tag_ids
+    @visible_tag_ids ||= DiscourseTagging.visible_tags(self).pluck(:id).to_set
+  end
+
   def hidden_tag_names
     @hidden_tag_names ||=
-      begin
-        if SiteSetting.tagging_enabled && !is_admin?
-          DiscourseTagging.hidden_tag_names(self)
-        else
-          []
-        end
+      if SiteSetting.tagging_enabled && !is_admin?
+        DiscourseTagging.hidden_tag_names(self)
+      else
+        []
       end
   end
 end

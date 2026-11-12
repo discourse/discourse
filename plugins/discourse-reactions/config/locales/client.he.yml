@@ -13,25 +13,26 @@ he:
   js:
     discourse_reactions:
       reactions_title: "תחושות"
-      state_panel:
-        more_users: "ו־%{count} נוספות..."
-      reaction:
-        forbidden: "תחושה זו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותה."
       picker:
         react_with: "להוסיף תחושה לפוסט הזה: %{reaction}"
         cant_remove_reaction: "כבר אין לך אפשרות להסיר את התחושה שלך"
         remove_reaction: "להסיר את התחושה %{reaction}"
+      users_popup:
+        all: "הכול"
       main_reaction:
         add: "תנו לייק לפוסט זה"
         remove: "הסרת הלייק הזה"
         cant_remove: "כבר אין לך אפשרות להסיר את הלייק שלך"
         unauthenticated: "נא להירשם או להיכנס כדי לסמן את הפוסט הזה בלייק"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "הוסיף"
+        changes_removed: "הוסרה"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} ועוד %{count}"
         two: "%{username} ועוד %{count}"
-        many: "%{username} ועוד %{count}"
         other: "%{username} ועוד %{count}"
       titles:
         reaction: "תגובת אמוג׳י חדשה"

@@ -14,6 +14,7 @@ RSpec.describe DiscourseAi::AgentExporter do
 
       it "returns JSON containing the agent and its custom tool" do
         expect(export_json["agent"]["name"]).to eq(ai_agent.name)
+        expect(export_json["agent"]["allowed_group_ids"]).to eq(ai_agent.allowed_group_ids)
         expect(export_json["agent"]["tools"].first.first).to eq("custom-#{ai_tool.tool_name}")
 
         custom_tool = export_json["custom_tools"].first
@@ -29,6 +30,47 @@ RSpec.describe DiscourseAi::AgentExporter do
 
       it "returns JSON with an empty custom_tools array" do
         expect(export_json["custom_tools"]).to eq([])
+      end
+    end
+
+    context "when the agent has subagents" do
+      fab!(:first_subagent) { Fabricate(:ai_agent, name: "zebra") }
+      fab!(:second_subagent) { Fabricate(:ai_agent, name: "Alpha") }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          subagent_ids: [first_subagent.id, second_subagent.id, first_subagent.id],
+        )
+      end
+
+      let(:exporter) { described_class.new(agent: ai_agent) }
+
+      it "preserves subagent selection order" do
+        expect(export_json["agent"]["subagents"]).to eq(%w[zebra Alpha])
+      end
+    end
+
+    context "when the agent has assigned mcp servers" do
+      fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, name: "Jira") }
+      fab!(:ai_agent) { Fabricate(:ai_agent, tools: []) }
+
+      let(:exporter) { described_class.new(agent: ai_agent) }
+
+      before { ai_agent.ai_mcp_servers << ai_mcp_server }
+
+      it "exports mcp server names" do
+        expect(export_json["agent"]["mcp_servers"]).to eq([{ "name" => "Jira" }])
+      end
+
+      it "exports selected MCP tool names when present" do
+        ai_agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: ai_mcp_server.id)
+          .update!(selected_tool_names: ["search_issues"])
+
+        expect(export_json["agent"]["mcp_servers"]).to eq(
+          [{ "name" => "Jira", "selected_tool_names" => ["search_issues"] }],
+        )
       end
     end
 

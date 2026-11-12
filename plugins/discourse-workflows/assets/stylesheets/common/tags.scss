@@ -1,0 +1,21 @@
+.workflows-tags-editor {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+
+  &__manage {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    padding: var(--space-half) var(--space-2);
+    min-height: 0;
+  }
+
+  .list-setting {
+    min-width: 16em;
+
+    .select-kit-header {
+      background: var(--secondary);
+    }
+  }
+}

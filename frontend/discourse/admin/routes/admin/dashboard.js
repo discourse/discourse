@@ -8,8 +8,12 @@ export default class AdminDashboardRoute extends DiscourseRoute {
   }
 
   activate() {
-    this.controllerFor("admin.dashboard").fetchProblems();
-    this.controllerFor("admin.dashboard").fetchDashboard();
     scrollTop();
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    controller.fetchSections();
   }
 }

@@ -179,6 +179,7 @@ module Jobs
           invite_opts = {
             email: email,
             topic: topic,
+            invite_to_topic: topic.present?,
             group_ids: groups.map(&:id),
             skip_email: @skip_email,
           }

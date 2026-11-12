@@ -150,7 +150,12 @@ class BadgeGranter
         end
 
         skip_new_user_tips = @user.user_option.skip_new_user_tips
-        unless self.class.suppress_notification?(@badge, user_badge.granted_at, skip_new_user_tips)
+        unless @opts[:suppress_notification] ||
+                 self.class.suppress_notification?(
+                   @badge,
+                   user_badge.granted_at,
+                   skip_new_user_tips,
+                 )
           notification =
             self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
           user_badge.update!(notification_id: notification.id)
@@ -570,6 +575,12 @@ class BadgeGranter
     is_old_bronze_badge = badge.badge_type_id == BadgeType::Bronze && granted_at < 2.days.ago
     skip_beginner_badge = skip_new_user_tips && badge.for_beginners?
 
-    is_old_bronze_badge || skip_beginner_badge
+    DiscoursePluginRegistry.apply_modifier(
+      :badge_granter_suppress_notification,
+      is_old_bronze_badge || skip_beginner_badge,
+      badge,
+      granted_at,
+      skip_new_user_tips,
+    )
   end
 end

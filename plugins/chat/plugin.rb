@@ -16,7 +16,8 @@ register_asset "stylesheets/common/index.scss"
 register_asset "stylesheets/desktop/index.scss", :desktop
 register_asset "stylesheets/mobile/index.scss", :mobile
 
-register_svg_icon "comments"
+register_service_worker "service-worker/chat-service-worker-extensions.js"
+
 register_svg_icon "comment-slash"
 register_svg_icon "comment-dots"
 register_svg_icon "lock"
@@ -28,6 +29,7 @@ register_svg_icon "circle-stop"
 register_svg_icon "filter"
 register_svg_icon "filter-circle-xmark"
 register_svg_icon "sort"
+register_svg_icon "thumbtack-slash"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
@@ -44,9 +46,26 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
-
 after_initialize do
-  register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
+  register_bot_creation_param(:chat_discoverable) do |bot, value|
+    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  add_to_serializer(
+    :admin_detailed_user,
+    :chat_discoverable,
+    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
+  ) { object.chat_discoverable_bot.present? }
+
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
+  register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
@@ -86,16 +105,73 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reaction_type)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reactions_custom)
-  UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
+  UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_dms)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_dms)
+  UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
   UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
+  # When a user opts into chat-only push notifications, suppress every push that
+  # isn't a chat message/mention. Registered here (rather than in core) so it's
+  # only active while chat is enabled, and runs alongside core's other filters.
+  register_push_notification_filter do |user, payload|
+    if user.user_option.push_notification_level_chat_only? && user.user_option.chat_enabled
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
+    else
+      true
+    end
+  end
+
   register_reviewable_type Chat::ReviewableMessage
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::SendChatMessage::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V1,
+        DiscourseWorkflows::Nodes::ChatApproval::V2,
+        DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
+      ]
+    end
+
+    on(:chat_message_interaction) do |interaction|
+      next unless SiteSetting.enable_discourse_workflows
+
+      action_id = interaction.action.is_a?(Hash) ? interaction.action["action_id"].to_s : ""
+      next if action_id.blank?
+      resume_request =
+        DiscourseWorkflows::InteractiveResume.from_action_id(
+          action_id,
+          expected_node_type: "action:chat_approval",
+          allowed_actions:
+            DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS +
+              DiscourseWorkflows::Nodes::ChatApproval::V2::ACTION_IDS,
+        )
+      next if resume_request.blank?
+
+      if DiscourseWorkflows::Nodes::ChatApproval::V1::ACTION_IDS.include?(resume_request.action)
+        Jobs.enqueue(
+          Jobs::Chat::ResumeWorkflowApproval,
+          action_id: action_id,
+          channel_id: interaction.message.chat_channel_id,
+        )
+      else
+        next if interaction.id.blank?
+
+        Jobs.enqueue(Jobs::Chat::ResumeWorkflowApprovalInteraction, interaction_id: interaction.id)
+      end
+    end
+  end
 
   reloadable_patch do |plugin|
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
@@ -107,6 +183,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
+    Upload.prepend Chat::UploadExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
@@ -132,7 +209,7 @@ after_initialize do
         "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists?
+      ).exists? || Chat::MessageHotlinkedMedia.where(upload_id: upload.id).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do
@@ -207,7 +284,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
-      self.scope,
+      scope,
       following: false,
       limit: 1,
       status: :open,
@@ -235,7 +312,7 @@ after_initialize do
       @has_chat_enabled =
         SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
     end,
-  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
+  ) { Chat::ChannelFetcher.unreads_total(scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
@@ -244,10 +321,6 @@ after_initialize do
     :chat_sound,
     include_condition: -> { object.chat_sound.present? },
   ) { object.chat_sound }
-
-  add_to_serializer(:user_option, :only_chat_push_notifications) do
-    object.only_chat_push_notifications
-  end
 
   add_to_serializer(:user_option, :ignore_channel_wide_mention) do
     object.ignore_channel_wide_mention
@@ -258,6 +331,56 @@ after_initialize do
   add_to_serializer(:current_user_option, :show_thread_title_prompts) do
     object.show_thread_title_prompts
   end
+
+  add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
+
+  add_to_serializer(:user_option, :chat_channel_list_filter) { object.chat_channel_list_filter }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter) do
+    object.chat_channel_list_filter
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_dms) { object.chat_channel_list_sort_dms }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_dms) do
+    object.chat_channel_list_sort_dms
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_announce_new_messages) do
+    object.chat_announce_new_messages
+  end
+
+  add_to_serializer(:user_option, :chat_new_message_sound) { object.chat_new_message_sound }
+
+  add_to_serializer(:current_user_option, :chat_new_message_sound) { object.chat_new_message_sound }
 
   add_to_serializer(:user_option, :chat_email_frequency) { object.chat_email_frequency }
 
@@ -275,9 +398,11 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
-  add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+  # TODO(2027-01): compatibility alias for cached JS bundles that still read
+  # chat_send_shortcut; remove alongside the chat_send_shortcut column drop.
+  add_to_serializer(:user_option, :chat_send_shortcut) { object.send_shortcut }
 
-  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.send_shortcut }
 
   add_to_serializer(:user_option, :chat_quick_reaction_type) { object.chat_quick_reaction_type }
   add_to_serializer(:current_user_option, :chat_quick_reaction_type) do
@@ -327,6 +452,51 @@ after_initialize do
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_modifier(:design_wizard_homepages) do |options|
+    next options if !SiteSetting.enable_public_channels
+
+    channel = Chat::CategoryChannel.find_by(chatable_id: SiteSetting.general_category_id)
+    next options if !channel || channel.archived? || channel.read_restricted?
+
+    options +
+      [
+        {
+          id: "chat",
+          name: I18n.t("chat.design_wizard_homepage_name"),
+          description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
+          icon: "comments",
+          illustration: "conversation",
+          path: channel.relative_url.delete_prefix(Discourse.base_path),
+          settings: {
+            chat_homepage_channel: channel.id.to_s,
+          },
+        },
+      ]
+  end
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
+
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
     PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
@@ -350,14 +520,6 @@ after_initialize do
       config.allowed_group_ids = chat_channel.allowed_group_ids
       config.allowed_user_ids = chat_channel.allowed_user_ids
       config.public = !chat_channel.read_restricted?
-    end
-  end
-
-  register_push_notification_filter do |user, payload|
-    if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
-    else
-      true
     end
   end
 
@@ -488,7 +650,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
@@ -514,6 +676,7 @@ after_initialize do
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
+  register_hashtag_content_store(Chat::MessageHashtagStore)
   register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
@@ -526,6 +689,7 @@ after_initialize do
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,
+    onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
 
@@ -548,4 +712,98 @@ after_initialize do
   end
 end
 
-Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f } if Rails.env.test?
+after_initialize do
+  require_relative "lib/chat/mcp_tools"
+
+  register_mcp_tool(
+    "chat_channel_list",
+    title: "List chat channels",
+    description:
+      "Lists chat channels followed by the authenticated user, including direct-message channels.",
+    implementation: Chat::McpTools::ListChannels,
+    output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
+    description: "Reads a bounded page of messages from a visible chat channel.",
+    implementation: Chat::McpTools::ListMessages,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        page_size: {
+          type: "integer",
+          minimum: 1,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+      required: ["channel_id"],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_create",
+    title: "Create chat message",
+    description: "Creates a message in a chat channel as the authenticated user.",
+    implementation: Chat::McpTools::CreateMessage,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        message: {
+          type: "string",
+          minLength: 1,
+        },
+        thread_id: {
+          type: "integer",
+        },
+        reply_to_message_id: {
+          type: "integer",
+        },
+      },
+      required: %w[channel_id message],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.chat_enabled },
+  )
+end

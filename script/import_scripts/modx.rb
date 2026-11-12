@@ -490,17 +490,15 @@ FROM #{TABLE_PREFIX}discuss_users
     max = Post.count
 
     Post.find_each do |post|
-      begin
-        new_raw = postprocess_post_raw(post.raw)
-        if new_raw != post.raw
-          post.raw = new_raw
-          post.save
-        end
-      rescue PrettyText::JavaScriptError
-        nil
-      ensure
-        print_status(current += 1, max)
+      new_raw = postprocess_post_raw(post.raw)
+      if new_raw != post.raw
+        post.raw = new_raw
+        post.save
       end
+    rescue PrettyText::JavaScriptError
+      nil
+    ensure
+      print_status(current += 1, max)
     end
   end
 

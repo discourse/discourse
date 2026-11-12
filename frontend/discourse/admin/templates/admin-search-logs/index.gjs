@@ -1,25 +1,25 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-title">
     <PeriodChooser
-      @period={{@controller.period}}
       @onChange={{fn (mut @controller.period)}}
+      @period={{@controller.period}}
     />
     <ComboBox
-      @content={{@controller.searchTypeOptions}}
-      @value={{@controller.searchType}}
-      @onChange={{fn (mut @controller.searchType)}}
       class="search-logs-filter"
+      @content={{@controller.searchTypeOptions}}
+      @onChange={{fn (mut @controller.searchType)}}
+      @value={{@controller.searchType}}
     />
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     {{#if @controller.model.length}}
 
       <table class="search-logs-list grid">
@@ -39,9 +39,9 @@ export default <template>
             <tr class="admin-list-item">
               <td class="col term">
                 <LinkTo
-                  @route="adminSearchLogs.term"
-                  @query={{hash term=item.term period=@controller.period}}
                   class="test"
+                  @query={{hash term=item.term period=@controller.period}}
+                  @route="adminSearchLogs.term"
                 >
                   {{item.term}}
                 </LinkTo>
@@ -60,5 +60,5 @@ export default <template>
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

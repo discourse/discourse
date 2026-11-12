@@ -51,6 +51,10 @@ module DiscourseAi
           "assign"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           if !defined?(::Assigner)
             return(error_response(I18n.t("discourse_ai.ai_bot.assign.errors.plugin_not_installed")))

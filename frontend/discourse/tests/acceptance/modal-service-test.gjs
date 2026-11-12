@@ -5,14 +5,14 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DModal, {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
   CLOSE_INITIATED_BY_MODAL_SHOW,
-} from "discourse/components/d-modal";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
+} from "discourse/ui-kit/d-modal";
 
 class MyModalClass extends Component {
   <template>
@@ -24,8 +24,8 @@ class MyModalClass extends Component {
       Modal content is
       {{@model.text}}
       <button
-        type="button"
         class="custom-data"
+        type="button"
         {{on "click" this.closeWithCustomData}}
       ></button>
     </DModal>
@@ -154,19 +154,15 @@ acceptance("Modal service: component-based API", function () {
   });
 
   test("alongside declarative modals", async function (assert) {
-    class State {
-      @tracked showDeclarativeModal;
-    }
-
-    const testState = new State();
-    const closeModal = () => (testState.showDeclarativeModal = false);
+    const showDeclarativeModal = tracked(undefined);
+    const closeModal = () => (showDeclarativeModal.value = false);
 
     const MyConnector = <template>
-      {{#if testState.showDeclarativeModal}}
+      {{#if showDeclarativeModal.value}}
         <DModal
           class="declarative-modal"
-          @title="Declarative modal"
           @closeModal={{closeModal}}
+          @title="Declarative modal"
         >
           <span class="declarative-modal-content">Declarative modal content</span>
         </DModal>
@@ -186,7 +182,7 @@ acceptance("Modal service: component-based API", function () {
     await settled();
     assert.dom(".d-modal.service-modal").exists("modal should appear");
 
-    testState.showDeclarativeModal = true;
+    showDeclarativeModal.value = true;
     await settled();
     assert
       .dom(".d-modal.declarative-modal")
@@ -201,6 +197,47 @@ acceptance("Modal service: component-based API", function () {
 
     await click(".d-modal.service-modal .modal-close");
     assert.dom(".d-modal").doesNotExist("all modals closed");
+  });
+
+  test("refocuses trigger element on close", async function (assert) {
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    await click(".header-sidebar-toggle button");
+    const triggerElement = document.activeElement;
+
+    modalService.show(MyModalClass, { model: { text: "working" } });
+    await settled();
+    assert.dom(".d-modal").exists();
+
+    await click(".d-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist();
+    assert.strictEqual(
+      document.activeElement,
+      triggerElement,
+      "focus returns to trigger element"
+    );
+  });
+
+  test("does not error when trigger element is removed from DOM", async function (assert) {
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    const button = document.createElement("button");
+    button.className = "temporary-trigger";
+    document.body.appendChild(button);
+    button.focus();
+
+    modalService.show(MyModalClass, { model: { text: "working" } });
+    await settled();
+    assert.dom(".d-modal").exists();
+
+    button.remove();
+
+    await click(".d-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist();
   });
 
   // (See also, `tests/integration/component/d-modal-test.js`)

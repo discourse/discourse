@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reply to message - smoke", type: :system do
+RSpec.describe "Reply to message - smoke" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
@@ -19,7 +19,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
   end
 
   context "when two users create a thread on the same message" do
-    it "works" do
+    it "opens the same thread for both users" do
       sign_in(user_1)
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(original_message)

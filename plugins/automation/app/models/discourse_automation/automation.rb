@@ -57,8 +57,8 @@ module DiscourseAutomation
       change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
         target.reload
         ids = Array(target.custom_fields[custom_field_key])
-        if !ids.include?(self.id)
-          ids << self.id
+        if !ids.include?(id)
+          ids << id
           ids = ids.compact.uniq
           target.custom_fields[custom_field_key] = ids
           target.save_custom_fields
@@ -74,9 +74,9 @@ module DiscourseAutomation
       change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
         target.reload
         ids = Array(target.custom_fields[custom_field_key])
-        if ids.include?(self.id)
+        if ids.include?(id)
           ids = ids.compact.uniq
-          ids.delete(self.id)
+          ids.delete(id)
           target.custom_fields[custom_field_key] = ids
           target.save_custom_fields
         end
@@ -130,6 +130,8 @@ module DiscourseAutomation
           new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
         elsif v.is_a?(ActiveRecord::Base)
           new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
+        elsif v.is_a?(Date) || v.is_a?(Time)
+          new_context[k] = v.iso8601
         else
           new_context[k] = v
         end
@@ -146,22 +148,23 @@ module DiscourseAutomation
     end
 
     def trigger!(context = {})
-      if enabled
-        return if active_id = DiscourseAutomation.get_active_automation
+      return if !enabled
+      return if DiscourseAutomation.triggers_suppressed?
 
-        begin
-          DiscourseAutomation.set_active_automation(self.id)
-          if scriptable.background && !running_in_background
-            trigger_in_background!(context)
-          else
-            Stat.log(id) do
-              triggerable&.on_call&.call(self, serialized_fields)
-              scriptable.script.call(context, serialized_fields, self)
-            end
+      return if DiscourseAutomation.recursion_depth >= DiscourseAutomation.max_recursion_depth
+
+      begin
+        DiscourseAutomation.increment_recursion_depth
+        if scriptable.background && !running_in_background
+          trigger_in_background!(context)
+        else
+          Stat.log(id) do
+            triggerable&.on_call&.call(self, serialized_fields)
+            scriptable.script.call(context, serialized_fields, self)
           end
-        ensure
-          DiscourseAutomation.set_active_automation(nil)
         end
+      ensure
+        DiscourseAutomation.decrement_recursion_depth
       end
     end
 
@@ -189,7 +192,7 @@ module DiscourseAutomation
     end
 
     def new_user_custom_field_name
-      "automation_#{self.id}_new_user"
+      "automation_#{id}_new_user"
     end
 
     private
@@ -255,11 +258,11 @@ end
 # Table name: discourse_automation_automations
 #
 #  id                 :bigint           not null, primary key
+#  enabled            :boolean          default(FALSE), not null
 #  name               :string
 #  script             :string           not null
-#  enabled            :boolean          default(FALSE), not null
+#  trigger            :string
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  last_updated_by_id :integer          not null
-#  trigger            :string
 #

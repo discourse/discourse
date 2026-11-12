@@ -40,6 +40,8 @@ RSpec.describe Chat::CreateMessageInteraction do
     end
     let(:dependencies) { { guardian: } }
 
+    before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
     context "when all steps pass" do
       before { message.chat_channel.add(current_user) }
 

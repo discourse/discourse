@@ -54,7 +54,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets the list of active workflows.
-   * @return {Object[]} Array of active workflow configurations
+   * @returns {Array<{ handler: string[], matchId: string | RegExp, env: string[] }>} Array of active workflow configurations
    */
   get list() {
     return this.#activeWorkflows;
@@ -62,7 +62,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets Ember-specific workflows formatted for Ember CLI.
-   * @return {Object[]} Array of formatted Ember workflow configurations
+   * @returns {Array<{ handler: string, matchId: string | RegExp, env: string[] }>} Array of formatted Ember workflow configurations
    */
   get emberWorkflowList() {
     return this.#activeWorkflows
@@ -80,7 +80,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Sets the current environment and updates active workflows.
-   * @param {Object} environment - Environment object
+   * @param {{ isProduction: () => boolean, isTesting: () => boolean, isRailsTesting: () => boolean } | null | undefined} environment - Environment object
    */
   setEnvironment(environment) {
     this.#environment = environment;
@@ -308,7 +308,6 @@ export class DiscourseDeprecationWorkflow {
  * - "notify-admin": Display admin notification for this deprecation (incompatible with "silence")
  */
 const workflows = [
-  { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
   {
     handler: "silence",
@@ -318,70 +317,41 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // The component is deprecated but still under test until it is removed.
   {
-    handler: "log",
-    matchId: /^discourse\.native-array-extensions\..+$/,
+    handler: "silence",
+    matchId: "discourse.ace-editor",
+    env: "qunit-test",
   },
-  // widget-related code should fail on all CI tests, including plugins and custom themes
-  {
-    handler: "throw",
-    matchId: "discourse.widgets-decommissioned",
-    env: "test",
-  },
-
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
-  { handler: "notify-admin", matchId: "discourse.add-flag-property" },
-  { handler: "notify-admin", matchId: "discourse.add-header-panel" },
-  { handler: "notify-admin", matchId: "discourse.bootbox" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategories",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategoriesSorted",
-  },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.parentCategory" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.component-template-resolving",
-  },
-  { handler: "notify-admin", matchId: "discourse.decorate-plugin-outlet" },
-  { handler: "notify-admin", matchId: "discourse.ember-computed-decorators" },
-  { handler: "notify-admin", matchId: "discourse.globals.site" },
-  { handler: "notify-admin", matchId: "discourse.globals.user" },
-  { handler: "notify-admin", matchId: "discourse.header-widget-overrides" },
-  { handler: "notify-admin", matchId: "discourse.jquery-cookie" },
-  { handler: "notify-admin", matchId: "discourse.markdown-it.whitelist" },
-  { handler: "notify-admin", matchId: "discourse.modal-controllers" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.nav-item.built-list-site-settings",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.plugin-outlet-classic-args-clash",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.post-stream-widget-overrides",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.post-stream.trigger-new-post",
-  },
-  { handler: "notify-admin", matchId: "discourse.qunit.acceptance-function" },
-  { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
-  { handler: "notify-admin", matchId: "discourse.resolver-resolutions" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
-  { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
-  { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
+  ...[
+    "discourse.bound-date",
+    "discourse.component-template-resolving",
+    "discourse.deprecated-resolver-normalization",
+    "discourse.ember-computed-decorators",
+    "discourse.form-kit.legacy-field-yield",
+    "discourse.format-age",
+    "discourse.hbs-extension",
+    "discourse.es6-extension",
+    "discourse.html-safe-helper",
+    "discourse.modify-class-model",
+    "discourse.native-array-extensions.firstObject",
+    "discourse.native-array-extensions.lastObject",
+    "discourse.plugin-outlet-args",
+    "discourse.plugin-outlet-classic-args-clash",
+    "discourse.plugin-outlet-classic-hooks",
+    "discourse.post-stream.first-post-id",
+    "discourse.qunit-helpers.jquery-selector",
+    "discourse.qunit-helpers.query-all",
+    "discourse.register-connector-class-legacy",
+    "discourse.resolver-resolutions",
+    "discourse.select-kit-resolved-components",
+    "discourse.static-viewport-initialization",
+    "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
+    "discourse.user.userOptions",
+  ].map((matchId) => ({ handler: "notify-admin", matchId })),
 
   // used in system specs
   {

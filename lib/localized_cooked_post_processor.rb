@@ -6,7 +6,7 @@ class LocalizedCookedPostProcessor
   def initialize(post_localization, post, opts = {})
     @post_localization = post_localization
     @post = post
-    @opts = opts
+    @opts = (opts || {}).merge(locale: post_localization.locale)
     @doc = Loofah.html5_fragment(@post_localization.cooked)
     @cooking_options = @post.cooking_options || {}
     @cooking_options[:topic_id] = @post.topic_id
@@ -14,12 +14,12 @@ class LocalizedCookedPostProcessor
     @model = @post
     @category_id = @post&.topic&.category_id
     @omit_nofollow = @post.omit_nofollow?
-    @size_cache = {}
   end
 
   def post_process
     post_process_oneboxes
     post_process_images
+    DiscourseEvent.trigger(:post_process_localized_cooked, @doc, @post, @post_localization)
     @post_localization.link_post_uploads(fragments: @doc)
   end
 

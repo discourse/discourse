@@ -27,7 +27,6 @@ sv:
     oauth2_json_email_verified_path: "Sökväg i OAuth2-användarens JSON till verifieringsstatus för användarens e-postadress: user.email.verified. oauth2_email_verified måste ha inaktiverats för att den här inställningen ska ha någon verkan"
     oauth2_json_avatar_path: "Sökväg i Oauth2-användaren JSON till användarens avatar: user.avatar_url"
     oauth2_email_verified: "Kontrollera detta om OAuth2-webbplatsen har verifierat e-postadressen"
-    oauth2_overrides_email: "Skriv över Discourse e-postadressen med externa e-postadressen vid varje inloggning. Fungerar precis som inställningen `auth_overrides_email` men är specifik för OAuth2-inloggningar."
     oauth2_send_auth_header: "Skicka klientbehörighet i rubriken för HTTP-auktorisation"
     oauth2_send_auth_body: "Skicka klientbehörighet i begärans meddelandetext"
     oauth2_debug_auth: "Omfatta utförlig felsökningsinformation i dina loggar"

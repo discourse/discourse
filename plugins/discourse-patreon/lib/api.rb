@@ -11,12 +11,11 @@ module Patreon
     INVALID_RESPONSE = "patreon.error.invalid_response"
 
     def self.campaign_data
-      get(
-        "/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page[count]=100",
-      )
+      adapter = ApiVersion.current
+      get(adapter.campaign_data_url, base_url: adapter.api_base_url)
     end
 
-    def self.get(uri)
+    def self.get(uri, base_url: ApiVersion.current.api_base_url)
       limiter_hr =
         RateLimiter.new(nil, "patreon_api_hr", SiteSetting.max_patreon_api_reqs_per_hr, 1.hour)
       limiter_day =
@@ -26,19 +25,40 @@ module Patreon
 
       limiter_day.performed! unless limiter_day.can_perform?
 
+      if uri.start_with?("http")
+        full_url = uri
+        base_url = nil
+      else
+        full_url = "#{base_url}#{uri}"
+      end
+
+      Rails.logger.warn("Patreon API request: GET #{full_url}") if SiteSetting.patreon_verbose_log
+
       response =
         Faraday.new(
-          url: "https://api.patreon.com",
+          url: base_url,
           headers: {
             "Authorization" => "Bearer #{SiteSetting.patreon_creator_access_token}",
+            "User-Agent" => "Discourse Patreon Plugin/#{Discourse::VERSION::STRING}",
           },
-        ).get(uri)
+        ).get(full_url)
 
       limiter_hr.performed!
       limiter_day.performed!
 
+      if SiteSetting.patreon_verbose_log
+        Rails.logger.warn(
+          "Patreon API response: status=#{response.status} body_size=#{response.body&.size || 0}",
+        )
+      end
+
       case response.status
       when 200
+        # An inline check is never re-evaluated elsewhere, so a successful
+        # response is the only thing that can resolve it.
+        tracker = ProblemCheckTracker[:access_token_invalid]
+        tracker.no_problem! if tracker.failing?
+
         return JSON.parse response.body
       when 401
         ProblemCheckTracker[:access_token_invalid].problem!

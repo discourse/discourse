@@ -32,6 +32,11 @@ uk:
         cta: "Зробіть вашу першу таблицю лідерів"
         none: "Жодної таблиці лідерів ще не створено."
         confirm_destroy: "Ви впевнені, що хочете видалити цю таблицю лідерів?"
+        section:
+          time_period: "Період часу"
+          time_period_description: "Керуйте діапазоном дат і періодом за замовчуванням для цієї таблиці лідерів."
+          groups: "Групи"
+          groups_description: "Контролюйте, які користувачі включені до таблиці лідерів і можуть її переглядати."
         date:
           range: "Діапазон дат від / до"
           from: "Від дати"
@@ -46,6 +51,27 @@ uk:
         default_period: "Типовий період"
         default_period_help: "Встановіть проміжок часу за замовчуванням для відображення цієї таблиці лідерів."
         period_filter_disabled: "Вимкнути фільтр періоду часу"
+        scoring_configuration: "Конфігурація оцінки"
+        scoring_configuration_description: "Перевизначити глобальні правила підрахунку очок для цього лідерборду. Залиште поля порожніми, щоб використовувати глобальні значення за замовчуванням."
+        scorable_categories: "Категорії, що підлягають оцінюванню"
+        score_overrides: "Вага балів"
+        score_overrides_help: "Перевизначте значення балів для кожної дії. Залиште поле порожнім, щоб використовувати глобальне значення за замовчуванням. Встановіть значення 0, щоб вимкнути."
+        weight:
+          like_given: "Вподобання надано"
+          like_received: "Вподобання отримано"
+          post_created: "Пост створено"
+          topic_created: "Тему створено"
+          solution: "Рішення"
+          day_visited: "День відвідування"
+          flag_created: "Прапор створено"
+          post_read: "Допис прочитано"
+          time_read: "Час читання"
+          user_invited: "Запрошений користувач"
+          reaction_given: "Реакція надана"
+          reaction_received: "Отримано реакцію"
+          chat_message_created: "Повідомлення чату створено"
+          chat_reaction_given: "Реакція в чаті надана"
+          chat_reaction_received: "Реакцію чату отримано"
         period:
           all_time: "Весь час"
           yearly: "Щорічно"
@@ -59,9 +85,7 @@ uk:
       close: "Закрити"
       delete: "Видалити"
       edit: "Редагувати"
-      back: "Назад"
       save: "Зберегти"
-      apply: "Застосувати"
       recalculate: "Перерахувати бали"
       recalculating: "Перерахунок балів..."
       completed: "Готово! Бали успішно перераховано."
@@ -82,4 +106,21 @@ uk:
       admin:
         title: "Гейміфікація"
         name: "Імʼя"
+        created_by: "Створено"
         period: "Період"
+    discourse_workflows:
+      node_unavailable:
+        requires_gamification: "Потрібно ввімкнути плагін Gamification"
+      nodes:
+        "action:gamification_score": "Оцінка нагороди"
+      node_descriptions:
+        "action:gamification_score": "Додавання або віднімання балів гейміфікації для користувача"
+      gamification_score:
+        username: "Користувач"
+        points: "Бали"
+        points_description: "Кількість балів для нарахування. Використовуйте від’ємне значення для віднімання балів."
+        date: "Дата"
+        date_description: "Дата, до якої застосовуються ці бали (РРРР-ММ-ДД). За замовчуванням — сьогодні."
+        description: "Опис"
+        description_description: "Додаткова примітка, що відображається поруч із подією оцінки."
+        category_id: "Категорія"

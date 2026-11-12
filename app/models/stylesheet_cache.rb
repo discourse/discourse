@@ -34,6 +34,17 @@ class StylesheetCache < ActiveRecord::Base
     ActiveRecord::Base.logger = old_logger if Rails.env.development? && old_logger
   end
 
+  def self.write_to_disk(relation, location, source_map: false)
+    return true if File.exist?(location)
+
+    content = relation.pick(source_map ? :source_map : :content)
+    return false if content.nil?
+
+    FileUtils.mkdir_p(File.dirname(location))
+    Discourse::Utils.atomic_write_file(location, content)
+    true
+  end
+
   def self.clean_up
     StylesheetCache.where("created_at < ?", CLEANUP_AFTER_DAYS.days.ago).delete_all
   end
@@ -44,13 +55,13 @@ end
 # Table name: stylesheet_cache
 #
 #  id         :integer          not null, primary key
-#  target     :string           not null
-#  digest     :string           not null
 #  content    :text             not null
+#  digest     :string           not null
+#  source_map :text
+#  target     :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  theme_id   :integer          default(-1), not null
-#  source_map :text
 #
 # Indexes
 #

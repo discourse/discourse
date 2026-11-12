@@ -4,7 +4,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SmoothStreamer from "discourse/plugins/discourse-ai/discourse/lib/smooth-streamer";
 
-module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
+module("Unit | Lib | smooth-streamer", function (hooks) {
   setupTest(hooks);
 
   test("it initializes correctly", function (assert) {
@@ -42,8 +42,7 @@ module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
       "Hello",
       "Realtime text should be updated immediately"
     );
-    // eslint-disable-next-line qunit/no-loose-assertions
-    assert.ok(
+    assert.true(
       streamer.streamedText.length > 0,
       "Streamed text should start appearing"
     );
@@ -75,6 +74,35 @@ module("Discourse AI | Unit | Lib | smooth-streamer", function (hooks) {
       "Done text",
       "Realtime text should match the final input"
     );
+  });
+
+  test("it can finish a stream without jumping to the final text", async function (assert) {
+    let mockText = "";
+    const getRealtimeText = () => mockText;
+    const setRealtimeText = (val) => (mockText = val);
+    const streamer = new SmoothStreamer(getRealtimeText, setRealtimeText, 1, {
+      smoothCompletion: true,
+    });
+    const finalText =
+      "A complete answer that arrived before the animation caught up.";
+
+    await streamer.updateResult({ text: "A comp", done: false }, "text");
+    await streamer.updateResult({ text: finalText, done: true }, "text");
+
+    assert.true(
+      streamer.isStreaming,
+      "the final update keeps animating briefly"
+    );
+    assert.notStrictEqual(
+      streamer.renderedText,
+      finalText,
+      "the remaining answer is not revealed in one jump"
+    );
+
+    await settled();
+
+    assert.false(streamer.isStreaming, "animation ends after catching up");
+    assert.strictEqual(streamer.renderedText, finalText);
   });
 
   test("resetStreaming clears all progress", function (assert) {

@@ -18,6 +18,7 @@ class PostValidator < ActiveModel::Validator
       max_embedded_media_validator(record)
       max_attachments_validator(record)
       max_links_validator(record)
+      max_quotes_validator(record)
       force_edit_last_validator(record)
     end
   end
@@ -148,6 +149,14 @@ class PostValidator < ActiveModel::Validator
     end
 
     post.errors.add(:base, I18n.t(:links_require_trust))
+  end
+
+  def max_quotes_validator(post)
+    max = SiteSetting.max_quotes_per_post
+    return if max <= 0
+
+    count = post.raw.to_s.scan(/\[quote[=\]]/i).size
+    post.errors.add(:base, I18n.t(:too_many_quotes, count: max)) if count > max
   end
 
   def force_edit_last_validator(post)

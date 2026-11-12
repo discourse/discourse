@@ -76,14 +76,8 @@ OptionParser
 
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
-  if !enable_system_tests
-    STDERR.puts "Not running system tests since it wasn't explicitly specified"
-  end
-
-  run_system_tests = !!enable_system_tests
-
   files = Dir.glob("spec/**/*_spec.rb")
-  files.reject! { |file| File.fnmatch("*spec/system*", file) } if !run_system_tests
+  files.reject! { |file| File.fnmatch("*spec/system*", file) } if !enable_system_tests
 
   use_runtime_info = true if use_runtime_info.nil?
 else
@@ -110,6 +104,11 @@ requires.each { |f| require(f) }
 formatters << { name: "progress", outputs: [] } if formatters.empty?
 
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
+
+if formatters.any? { |formatter| formatter[:name] == "RspecPerformanceFormatter" }
+  ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] = "1"
+  require "./spec/support/rspec_performance_formatter"
+end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
 if files.size > 5

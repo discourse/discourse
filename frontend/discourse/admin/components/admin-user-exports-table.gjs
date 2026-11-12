@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import UserExport from "discourse/admin/models/user-export";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
@@ -18,10 +18,9 @@ export default class extends Component {
   @service messageBus;
   @service toasts;
 
+  /** @type {import("discourse/admin/models/user-export").default | null} */
   @tracked userExport = null;
   @tracked userExportReloading = false;
-
-  @notEmpty("userExport") userExportAvailable;
 
   constructor() {
     super(...arguments);
@@ -36,6 +35,17 @@ export default class extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
+  }
+
+  @computed("userExport")
+  get userExportAvailable() {
+    return !isEmpty(this.userExport);
+  }
+
+  get userExportExpiry() {
+    return i18n("admin.user.exports.download.expires_in", {
+      count: this.userExport.retain_hours,
+    });
   }
 
   @bind
@@ -78,12 +88,6 @@ export default class extends Component {
     });
   }
 
-  get userExportExpiry() {
-    return i18n("admin.user.exports.download.expires_in", {
-      count: this.userExport.retain_hours,
-    });
-  }
-
   <template>
     <section class="details">
       <h1>{{i18n "admin.user.exports.title"}}</h1>
@@ -105,15 +109,15 @@ export default class extends Component {
           {{/if}}
         </div>
         <div class="controls">
-          <ConditionalLoadingSpinner @condition={{this.userExportReloading}}>
+          <DConditionalLoadingSpinner @condition={{this.userExportReloading}}>
 
             <DButton
+              class="btn-default"
               @action={{this.triggerUserExport}}
               @icon="download"
               @label="admin.user.exports.download.button"
-              class="btn-default"
             />
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </div>
       </div>
     </section>

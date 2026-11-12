@@ -11,7 +11,7 @@ class ComposerMessagesController < ApplicationController
     if params[:topic_id].present?
       topic = Topic.where(id: params[:topic_id]).first
       if guardian.can_see?(topic)
-        json[:extras] = { duplicate_lookup: TopicLink.duplicate_lookup(topic) }
+        json[:extras] = { duplicate_lookup: TopicLink.duplicate_lookup(topic, guardian) }
       end
     end
 
@@ -22,15 +22,6 @@ class ComposerMessagesController < ApplicationController
     usernames = params.require(:usernames)
     users = ComposerMessagesFinder.user_not_seen_in_a_while(usernames)
     user_count = users.count
-
-    if user_count > 0
-      message_locale =
-        if user_count == 1
-          "education.user_not_seen_in_a_while.single"
-        else
-          "education.user_not_seen_in_a_while.multiple"
-        end
-    end
 
     json = {
       user_count: user_count,

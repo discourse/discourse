@@ -20,6 +20,10 @@ class TagHashtagDataSource
     "icon"
   end
 
+  def self.ref_for(tag_id)
+    Tag.where(id: tag_id).pick(:name)
+  end
+
   def self.tag_to_hashtag_item(tag, guardian)
     topic_count_column = Tag.topic_count_column(guardian)
 

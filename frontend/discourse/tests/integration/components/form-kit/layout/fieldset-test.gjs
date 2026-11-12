@@ -13,9 +13,9 @@ module(
         <template>
           <Form as |form|>
             <form.Fieldset
-              @title="Title"
               @description="Description"
               @name="a-fieldset"
+              @title="Title"
             >
               Yielded content
             </form.Fieldset>

@@ -9,11 +9,11 @@ import { service } from "@ember/service";
 import AdminFormRow from "discourse/admin/components/admin-form-row";
 import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasApiKeysShow extends Component {
@@ -80,7 +80,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
   }
 
   <template>
-    <BackButton @route="adminApiKeys.index" @label="admin.api_keys.back" />
+    <BackButton @label="admin.api_keys.back" @route="adminApiKeys.index" />
 
     <div class="api-key api-key-show">
       <AdminFormRow @label="admin.api.key">
@@ -90,11 +90,11 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       <AdminFormRow @label="admin.api.description">
         {{#if this.editingDescription}}
           <Input
+            maxlength="255"
+            name="description"
+            placeholder={{i18n "admin.api.description_placeholder"}}
             @value={{@apiKey.description}}
             {{on "input" this.setNewDescription}}
-            name="description"
-            maxlength="255"
-            placeholder={{i18n "admin.api.description_placeholder"}}
           />
         {{else}}
           <span>
@@ -109,18 +109,20 @@ export default class AdminConfigAreasApiKeysShow extends Component {
         <div class="controls">
           {{#if this.editingDescription}}
             <DButton
+              class="btn-default"
               @action={{this.saveDescription}}
               @label="admin.api_keys.save"
             />
             <DButton
+              class="btn-default"
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.cancel"
             />
           {{else}}
             <DButton
+              class="btn-default"
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.edit"
-              class="btn-default"
             />
           {{/if}}
         </div>
@@ -128,8 +130,8 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
       <AdminFormRow @label="admin.api.user">
         {{#if @apiKey.user}}
-          <LinkTo @route="adminUser" @model={{@apiKey.user}}>
-            {{avatar @apiKey.user imageSize="small"}}
+          <LinkTo @model={{@apiKey.user}} @route="adminUser">
+            {{dAvatar @apiKey.user imageSize="small"}}
             {{@apiKey.user.username}}
           </LinkTo>
         {{else}}
@@ -138,16 +140,16 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.created">
-        {{formatDate @apiKey.created_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.created_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.updated">
-        {{formatDate @apiKey.updated_at leaveAgo="true"}}
+        {{dFormatDate @apiKey.updated_at leaveAgo="true"}}
       </AdminFormRow>
 
       <AdminFormRow @label="admin.api.last_used">
         {{#if @apiKey.last_used_at}}
-          {{formatDate @apiKey.last_used_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.last_used_at leaveAgo="true"}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
@@ -155,26 +157,27 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
       <AdminFormRow @label="admin.api.revoked">
         {{#if @apiKey.revoked_at}}
-          {{formatDate @apiKey.revoked_at leaveAgo="true"}}
+          {{dFormatDate @apiKey.revoked_at leaveAgo="true"}}
         {{else}}
           <span>{{i18n "no_value"}}</span>
         {{/if}}
         <div class="controls">
           {{#if @apiKey.revoked_at}}
             <DButton
+              class="btn-default"
               @action={{fn this.undoRevokeKey @apiKey}}
               @label="admin.api.undo_revoke"
             />
             <DButton
+              class="btn-danger"
               @action={{fn this.deleteKey @apiKey}}
               @label="admin.api.delete"
-              class="btn-danger"
             />
           {{else}}
             <DButton
+              class="btn-danger"
               @action={{fn this.revokeKey @apiKey}}
               @label="admin.api.revoke"
-              class="btn-danger"
             />
           {{/if}}
         </div>
@@ -199,7 +202,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                 <td>
                   {{scope.action}}
                   <DTooltip
-                    @icon="circle-question"
+                    class="scope-tooltip"
                     @content={{i18n
                       (concat
                         "admin.api.scopes.descriptions."
@@ -208,14 +211,14 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                         scope.key
                       )
                     }}
-                    class="scope-tooltip"
+                    @icon="circle-question"
                   />
                 </td>
                 <td>
                   <DButton
-                    @icon="link"
-                    @action={{fn this.showURLs scope.urls}}
                     class="btn-info"
+                    @action={{fn this.showURLs scope.urls}}
+                    @icon="link"
                   />
                 </td>
                 <td>

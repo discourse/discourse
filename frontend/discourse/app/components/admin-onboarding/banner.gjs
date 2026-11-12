@@ -1,26 +1,87 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedArray, trackedSet } from "@ember/reactive/collections";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
-import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
-import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
-import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
-import DButton from "discourse/components/d-button";
-import CreateInvite from "discourse/components/modal/create-invite";
-import { getAbsoluteURL } from "discourse/lib/get-url";
+import {
+  CREATE_CATEGORY_STEP,
+  logOnboardingEvent,
+  onboardingStepKey,
+} from "discourse/lib/admin-onboarding";
+import { homepagePath } from "discourse/lib/homepage-router-overrides";
+import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
+import { defaultHomepage } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
+const DEFAULT_LOCATION = "above_main_container";
+
 const STEPS = [
+  class SelectTheme extends OnboardingStep {
+    static name = "select_theme";
+
+    @service designWizard;
+
+    icon = "paintbrush";
+
+    #onComplete = () => this.markAsCompleted();
+
+    constructor() {
+      super(...arguments);
+      this.designWizard.resumeAfterThemePreview({
+        onComplete: this.#onComplete,
+      });
+    }
+
+    // a homepage preview routes away from this component while the sheet lives on
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.designWizard.clearCompletionCallback(this.#onComplete);
+    }
+
+    @action
+    prefetch() {
+      this.designWizard.prefetch();
+    }
+
+    @action
+    performAction() {
+      this.designWizard.start({ onComplete: this.#onComplete });
+    }
+  },
+  class CreateCategory extends OnboardingStep {
+    static name = CREATE_CATEGORY_STEP;
+
+    @service categoryTypeChooser;
+
+    icon = "folder-open";
+
+    constructor() {
+      super(...arguments);
+
+      // completed by the category form, away from the banner, so this may be
+      // the first chance to notice that it was the last step left
+      if (this.completed) {
+        this.args.onCompleted?.(this.name);
+      }
+    }
+
+    @action
+    performAction() {
+      this.categoryTypeChooser.createCategory();
+    }
+  },
   class InviteCollaborators extends OnboardingStep {
     static name = "invite_collaborators";
 
-    @service modal;
     @service appEvents;
 
     icon = "paper-plane";
@@ -37,118 +98,37 @@ const STEPS = [
 
     @action
     performAction() {
-      this.modal.show(CreateInvite, {
-        model: { invites: new TrackedArray() },
+      showCreateInviteModal(this, {
+        model: { invites: trackedArray(), defaultRole: "admin" },
       });
-    }
-  },
-  class StartPosting extends OnboardingStep {
-    static name = "start_posting";
-
-    @service composer;
-    @service appEvents;
-    @service modal;
-    @service siteSettings;
-
-    icon = "comments";
-
-    constructor() {
-      super(...arguments);
-
-      this.appEvents.on("topic:created", this, this.completeStep);
-      this.appEvents.on(
-        "admin-onboarding:posting-complete",
-        this,
-        this.completeStep
-      );
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-
-      this.appEvents.off("topic:created", this, this.completeStep);
-      this.appEvents.off(
-        "admin-onboarding:posting-complete",
-        this,
-        this.completeStep
-      );
-    }
-
-    completeStep() {
-      this.markAsCompleted();
-    }
-
-    showStartPostingOptions() {
-      const options = applyValueTransformer(
-        "admin-onboarding-start-posting-options",
-        [PredefinedTopicOption]
-      );
-
-      if (options.length === 1) {
-        // show predefined topics directly if it's the only option available
-        return this.modal.show(PredefinedTopicsOptionsModal);
-      }
-
-      this.modal.show(StartPostingOptions, {
-        model: {
-          options,
-        },
-      });
-    }
-
-    openTopic(topicKey) {
-      this.composer.openNewTopic({
-        title: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
-        ),
-        body: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
-        ),
-      });
-    }
-
-    @action
-    async performAction() {
-      this.showStartPostingOptions();
-    }
-  },
-  class SpreadTheWord extends OnboardingStep {
-    static name = "spread_the_word";
-    @service toasts;
-
-    @tracked icon = "copy";
-
-    @action
-    performAction() {
-      clipboardCopy(getAbsoluteURL("/"));
-
-      this.toasts.success({
-        data: {
-          message: i18n(
-            "admin_onboarding_banner.spread_the_word.copied_to_clipboard"
-          ),
-        },
-      });
-
-      this.markAsCompleted();
     }
   },
 ];
 
 export default class AdminOnboardingBanner extends Component {
-  @service siteSettings;
-  @service currentUser;
   @service appEvents;
+  @service currentUser;
   @service keyValueStore;
   @service router;
   @service toasts;
+
+  @tracked dismissed = false;
+  @tracked minimized = false;
+  // the key value store isn't reactive, but the progress count must be
+  completedStepNames = trackedSet(
+    this.steps
+      .filter((Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name)))
+      .map((Step) => Step.name)
+  );
+
+  #heightContainer;
 
   constructor() {
     super(...arguments);
     this.appEvents.on(
       "onboarding-step:completed",
       this,
-      this.checkIfOnboardingIsComplete
+      this.markStepCompleted
     );
   }
 
@@ -157,79 +137,186 @@ export default class AdminOnboardingBanner extends Component {
     this.appEvents.off(
       "onboarding-step:completed",
       this,
-      this.checkIfOnboardingIsComplete
+      this.markStepCompleted
+    );
+  }
+
+  get #currentHomepage() {
+    const routeName = this.router.currentRouteName;
+    return (Site.current()?.homepage_choices ?? []).find(
+      (choice) =>
+        routeName === `discovery.${choice}` ||
+        routeName?.startsWith(`${choice}.`)
+    );
+  }
+
+  // Where the banner renders. A customization can return a location of its
+  // own and render the banner there, as long as it passes a matching @location
+  get location() {
+    return applyValueTransformer(
+      "admin-onboarding-banner-location",
+      DEFAULT_LOCATION,
+      { homepage: this.#currentHomepage ?? defaultHomepage() }
+    );
+  }
+
+  // A bare <AdminOnboardingBanner> without @location renders regardless of the chosen location
+  get matchesLocation() {
+    return (
+      this.args.location === undefined || this.args.location === this.location
     );
   }
 
   get shouldDisplay() {
-    if (!this.currentUser) {
+    if (this.dismissed) {
       return false;
     }
 
-    if (!this.siteSettings.enable_site_owner_onboarding) {
+    if (!this.currentUser?.show_site_owner_onboarding) {
       return false;
     }
 
-    if (!this.currentUser.admin) {
+    if (!this.matchesLocation) {
       return false;
     }
 
-    const { currentRouteName } = this.router;
-    return currentRouteName === `discovery.${defaultHomepage()}`;
+    const { currentRouteName, currentURL } = this.router;
+    const path = currentURL?.split(/[?#]/)[0];
+
+    return (
+      this.#currentHomepage !== undefined ||
+      currentRouteName === `discovery.${defaultHomepage()}` ||
+      path === "/" ||
+      path === homepagePath()
+    );
   }
 
-  checkIfOnboardingIsComplete() {
-    const allStepsAreDone = STEPS.every(
-      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+  /**
+   * @returns {(typeof OnboardingStep)[]}
+   */
+  @cached
+  get steps() {
+    return applyValueTransformer("admin-onboarding-steps", [...STEPS], {
+      homepage: this.#currentHomepage ?? defaultHomepage(),
+    });
+  }
+
+  get completedSteps() {
+    return this.completedStepNames.size;
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
+  }
+
+  @action
+  async checkIfOnboardingIsComplete() {
+    const allStepsAreDone = this.steps.every(
+      (Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name))
     );
 
     if (allStepsAreDone) {
-      this.endOnboarding({ skipped: false });
+      await this.endOnboarding({ skipped: false });
     }
+  }
+
+  @action
+  minimize() {
+    this.minimized = !this.minimized;
+  }
+
+  @action
+  updateHeight(entries) {
+    const element = entries[0].target;
+    this.#heightContainer = element.parentElement;
+    this.#heightContainer.style.setProperty(
+      "--admin-onboarding-banner-height",
+      `${element.getBoundingClientRect().height}px`
+    );
+  }
+
+  @action
+  clearHeight() {
+    this.#heightContainer?.style.removeProperty(
+      "--admin-onboarding-banner-height"
+    );
+    this.#heightContainer = undefined;
   }
 
   @action
   async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
-    STEPS.forEach((Step) => {
-      this.keyValueStore.remove(`onboarding_step_${Step.name}`);
+    await logOnboardingEvent(skipped ? "dismissed" : "completed");
+    this.dismissed = true;
+    this.steps.forEach((Step) => {
+      this.keyValueStore.remove(onboardingStepKey(Step.name));
     });
+    this.completedStepNames.clear();
 
-    const label = skipped
-      ? "admin_onboarding_banner.skipped"
-      : "admin_onboarding_banner.congrats_onboarding_complete";
-
-    this.toasts.success({
-      data: {
-        message: i18n(label),
-      },
-    });
+    if (!skipped) {
+      this.toasts.success({
+        data: {
+          message: i18n("admin_onboarding_banner.congrats_onboarding_complete"),
+        },
+      });
+    }
   }
 
   <template>
     {{#if this.shouldDisplay}}
-      <div class="admin-onboarding-banner">
+      <div
+        class="admin-onboarding-banner"
+        {{dOnResize this.updateHeight}}
+        {{willDestroy this.clearHeight}}
+      >
         <div class="admin-onboarding-banner__wrap">
           <div class="admin-onboarding-banner__header">
-            <h2>
-              {{i18n
-                "admin_onboarding_banner.launch_in_easy_steps"
-                (hash step_count=STEPS.length)
-              }}
-            </h2>
-            <DButton
-              @action={{this.endOnboarding}}
-              @icon="xmark"
-              class="btn no-text btn-transparent btn-close"
-            />
-          </div>
-          <div class="admin-onboarding-banner__content">
-            <div class="admin-onboarding-banner__steps">
-              {{#each STEPS as |Step|}}
-                <Step />
-              {{/each}}
+            <div class="admin-onboarding-banner__header-text">
+              <span class="admin-onboarding-banner__title">
+                {{dIcon "list" class="admin-onboarding-banner__title-icon"}}
+                {{i18n "admin_onboarding_banner.launch_in_easy_steps"}}
+              </span>
+              {{#if this.minimized}}
+                <span class="admin-onboarding-banner__subtitle">
+                  {{i18n
+                    "admin_onboarding_banner.launch_in_easy_steps_subtitle"
+                    (hash
+                      completed_steps=this.completedSteps
+                      step_count=this.steps.length
+                    )
+                  }}
+                </span>
+              {{/if}}
+            </div>
+            <div class="admin-onboarding-banner__header-actions">
+              <DButton
+                class="btn no-text btn-transparent btn-minimize"
+                @action={{this.minimize}}
+                @ariaLabel={{if
+                  this.minimized
+                  "admin_onboarding_banner.expand"
+                  "admin_onboarding_banner.collapse"
+                }}
+                @icon={{if this.minimized "angle-down" "angle-up"}}
+              />
+              <DButton
+                class="btn no-text btn-transparent btn-close"
+                @action={{this.endOnboarding}}
+                @ariaLabel="admin_onboarding_banner.dismiss"
+                @icon="xmark"
+              />
             </div>
           </div>
+          {{#unless this.minimized}}
+            <div class="admin-onboarding-banner__content">
+              <div class="admin-onboarding-banner__steps">
+                {{#each this.steps as |Step|}}
+                  <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
+                {{/each}}
+              </div>
+            </div>
+          {{/unless}}
         </div>
       </div>
     {{/if}}

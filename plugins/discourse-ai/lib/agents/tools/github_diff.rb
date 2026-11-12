@@ -167,41 +167,14 @@ module DiscourseAi
         end
 
         def fetch_diff(api_url, type)
-          info = nil
-          diff_body = nil
-          response_code = "unknown error"
+          info = github_client.get(api_url)
+          diff_body = github_client.raw_get(api_url, accept: "application/vnd.github.v3.diff")
 
-          send_http_request(
-            api_url,
-            headers: {
-              "Accept" => "application/json",
-            },
-            authenticate_github: true,
-          ) do |response|
-            response_code = response.code
-            info = JSON.parse(read_response_body(response)) if response_code == "200"
-          end
-
-          if response_code == "200"
-            send_http_request(
-              api_url,
-              headers: {
-                "Accept" => "application/vnd.github.v3.diff",
-              },
-              authenticate_github: true,
-            ) do |response|
-              response_code = response.code
-              diff_body = read_response_body(response)
-            end
-          end
-
-          if response_code == "200" && info && diff_body
-            diff = self.class.sort_and_shorten_diff(diff_body)
-            diff = truncate(diff, max_length: 20_000, percent_length: 0.3, llm: llm)
-            yield(info, diff)
-          else
-            { error: "Failed to retrieve the #{type} information. Status code: #{response_code}" }
-          end
+          diff = self.class.sort_and_shorten_diff(diff_body)
+          diff = truncate(diff, max_length: 20_000, percent_length: 0.3, llm: llm)
+          yield(info, diff)
+        rescue Discourse::GithubApi::Error => e
+          { error: "Failed to retrieve the #{type} information. #{e.message}" }
         end
       end
     end

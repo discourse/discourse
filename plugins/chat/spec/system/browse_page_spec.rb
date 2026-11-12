@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Browse page", type: :system do
+RSpec.describe "Browse page" do
   fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -9,15 +9,6 @@ RSpec.describe "Browse page", type: :system do
   before do
     sign_in(current_user)
     chat_system_bootstrap
-  end
-
-  context "when user has chat disabled" do
-    before { current_user.user_option.update!(chat_enabled: false) }
-
-    it "redirects to homepage" do
-      visit("/chat/browse") # no page object here as we actually don't load it
-      expect(page).to have_current_path("/latest")
-    end
   end
 
   context "when public channels are disabled" do
@@ -139,7 +130,7 @@ RSpec.describe "Browse page", type: :system do
         context "when loading more" do
           before { 25.times { Fabricate(:chat_channel, status: :open) } }
 
-          it "works" do
+          it "loads the remaining channels" do
             chat_page.visit_browse(:all)
             scroll_to(find(".chat-channel-card:last-child"))
 

@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
-import onResize from "discourse/modifiers/on-resize";
-import Actions from "./actions";
-import BackButton from "./back-button";
-import ChannelTitle from "./channel-title";
-import Title from "./title";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
+import Actions from "./actions.gjs";
+import BackButton from "./back-button.gjs";
+import ChannelTitle from "./channel-title.gjs";
+import Title from "./title.gjs";
 
 export default class ChatNavbar extends Component {
   @action
@@ -26,11 +26,11 @@ export default class ChatNavbar extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
-      class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
+      class={{dConcatClass "c-navbar-container" (if @onClick "-clickable")}}
       {{on "click" (if @onClick @onClick (noop))}}
-      {{onResize this.handleResize}}
+      {{dOnResize this.handleResize}}
     >
       <nav class="c-navbar">
         {{yield

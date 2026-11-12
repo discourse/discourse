@@ -11,6 +11,7 @@ class GroupMentionsUpdater
         posts.each do |post|
           post.raw.gsub!(/(^|\s)(@#{previous_name})(\s|$)/, "\\1@#{current_name}\\3")
           post.save!(validate: false)
+          post.sync_first_post_caches
         end
       end
   end

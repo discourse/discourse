@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat composer draft", type: :system do
+RSpec.describe "Chat composer draft" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) do
@@ -23,12 +23,6 @@ RSpec.describe "Chat composer draft", type: :system do
       create_draft(channel_1, user: current_user)
       channel_1.add(current_user)
       sign_in(current_user)
-    end
-
-    xit "loads the draft" do
-      chat_page.visit_channel(channel_1)
-
-      expect(channel_page.composer).to have_value("draft")
     end
 
     context "when loading another channel and back" do
@@ -86,16 +80,7 @@ RSpec.describe "Chat composer draft", type: :system do
     end
 
     context "with uploads" do
-      fab!(:upload_1) do
-        Fabricate(
-          :upload,
-          url: "/images/logo-dark.png",
-          original_filename: "logo_dark.png",
-          width: 400,
-          height: 300,
-          extension: "png",
-        )
-      end
+      fab!(:upload_1, :image_upload)
 
       before do
         create_draft(channel_1, user: current_user, data: { message: "draft", uploads: [upload_1] })
@@ -130,9 +115,7 @@ RSpec.describe "Chat composer draft", type: :system do
         )
       end
 
-      # TODO: Failing consistently and often on CI, needs investigation.
-      # https://github.com/discourse/discourse/actions/runs/17905331817/job/50905399086
-      xit "loads the draft with replied to message" do
+      it "loads the draft with replied to message" do
         chat_page.visit_channel(channel_1)
 
         expect(channel_page.composer).to have_value("draft")
@@ -215,16 +198,7 @@ RSpec.describe "Chat composer draft", type: :system do
     end
 
     context "with uploads" do
-      fab!(:upload_1) do
-        Fabricate(
-          :upload,
-          url: "/images/logo-dark.png",
-          original_filename: "logo_dark.png",
-          width: 400,
-          height: 300,
-          extension: "png",
-        )
-      end
+      fab!(:upload_1, :image_upload)
 
       before do
         create_draft(

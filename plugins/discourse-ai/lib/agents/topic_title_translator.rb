@@ -7,69 +7,73 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
-        examples = [
-          {
-            input: {
-              content: "New Update for Minecraft Adds Underwater Temples",
-              target_locale: "es",
-            }.to_json,
-            output: "Nueva actualización para Minecraft añade templos submarinos",
-          },
-          {
-            input: {
-              content: "Toyota announces revolutionary battery technology",
-              target_locale: "fr",
-            }.to_json,
-            output: "Toyota annonce une technologie de batteries révolutionnaire",
-          },
-          {
-            input: {
-              content:
-                "Heathrow fechado: paralisação de voos deve continuar nos próximos dias, diz gestora do aeroporto de Londres",
-              target_locale: "en",
-            }.to_json,
-            output:
-              "Heathrow closed: flight disruption expected to continue in coming days, says London airport management",
-          },
-        ]
-
         <<~PROMPT.strip
-          You are a translation service specializing in translating forum post titles from English to the asked target_locale. Your task is to provide accurate and contextually appropriate translations while adhering to the following guidelines:
+          You are a friendly human linguist and translator specializing in translating forum post titles. Your goal is to produce translations that read naturally to native speakers, as if originally written in the target language — indistinguishable from content written by a human. Follow these guidelines:
 
-          1. Translate the given title from English to target_locale asked.
+          1. Translate the given title to the target_locale.
           2. Keep proper nouns and technical terms in their original language.
           3. Attempt to keep the translated title length close to the original when possible.
-          4. Ensure the translation maintains the original meaning and tone.
-
-          To complete this task:
-
-          1. Read and understand the title carefully.
-          2. Identify any proper nouns or technical terms that should remain untranslated.
-          3. Translate the remaining words and phrases into the target_locale, ensuring the meaning is preserved.
-          4. Adjust the translation if necessary to keep the length similar to the original title.
-          5. Review your translation for accuracy and naturalness in the target_locale.
-
-          Here are three examples of correct translations:
-
-          Input: #{examples[0][:input]}
-          Output: #{examples[0][:output]}
-
-          Input: #{examples[1][:input]}
-          Output: #{examples[1][:output]}
-
-          Input: #{examples[2][:input]}
-          Output: #{examples[2][:output]}
+          4. Match the tone and register of the source text. Do not default to formal address unless the source is itself formal.
+          5. For ambiguous terms or phrases, do not translate word-for-word in isolation. Derive the intended meaning from the full context of the title before choosing a translation.
+          6. Never use ASCII double quotes (") inside the translation. For quoted text or UI labels, use the target language's native quotation marks — for example German „…“, French «…», Japanese 「…」.
 
           The text to translate will be provided in JSON format with the following structure:
           {"content": "Title to translate", "target_locale": "Target language code"}
 
-          Remember to keep proper nouns like "Minecraft" and "Toyota" in their original form. You are being consumed via an API that expects only the translated title. Only return the translated title in the correct language. Do not add questions or explanations.
+          Format your response as a JSON object with a single key named "output", which has the translated title as the value.
+          Your output should be in the following format:
+
+          {"output": "xx"}
+
+          Where "xx" is replaced by the translated title.
+          reply with valid JSON only
         PROMPT
       end
 
-      def temperature
-        0.3
+      def response_format
+        [{ "key" => "output", "type" => "string" }]
+      end
+
+      def examples
+        [
+          [
+            {
+              content: "New Update for Minecraft Adds Underwater Temples",
+              target_locale: "es",
+            }.to_json,
+            { output: "Nueva actualización para Minecraft añade templos submarinos" }.to_json,
+          ],
+          [
+            {
+              content: "Toyota announces revolutionary battery technology",
+              target_locale: "fr",
+            }.to_json,
+            { output: "Toyota annonce une technologie de batteries révolutionnaire" }.to_json,
+          ],
+          [
+            {
+              content:
+                "Heathrow fechado: paralisação de voos deve continuar nos próximos dias, diz gestora do aeroporto de Londres",
+              target_locale: "en",
+            }.to_json,
+            {
+              output:
+                "Heathrow closed: flight disruption expected to continue in coming days, says London airport management",
+            }.to_json,
+          ],
+          [
+            {
+              content: "Permanently Delete does not show (even after 5 minutes)",
+              target_locale: "de",
+            }.to_json,
+            { output: "„Endgültig löschen“ wird nicht angezeigt (auch nach 5 Minuten)" }.to_json,
+          ],
+        ]
       end
     end
   end

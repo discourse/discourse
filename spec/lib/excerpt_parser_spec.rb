@@ -40,6 +40,27 @@ RSpec.describe ExcerptParser do
     )
   end
 
+  describe ".get_excerpt" do
+    let(:html) { <<~HTML }
+        <aside class="onebox">
+          <header class="custom-header source">Merged discourse/discourse</header>
+          <article class="onebox-body">Add audio onebox #5</article>
+        </aside>
+      HTML
+
+    it "returns only the body text when keep_onebox_body is true and the header has other classes" do
+      expect(ExcerptParser.get_excerpt(html, 200, keep_onebox_body: true)).to eq(
+        "Add audio onebox #5",
+      )
+    end
+
+    it "returns only the header text when keep_onebox_source is true and the header has other classes" do
+      expect(ExcerptParser.get_excerpt(html, 200, keep_onebox_source: true)).to eq(
+        "Merged discourse/discourse",
+      )
+    end
+  end
+
   describe "keep_onebox_body parameter" do
     it "keeps the body content for external oneboxes" do
       html = <<~HTML.strip
@@ -139,7 +160,7 @@ RSpec.describe ExcerptParser do
   end
 
   describe "keep_quotes parameter" do
-    it "should keep the quoted content in html" do
+    it "keeps quoted content in the HTML" do
       html = <<~HTML.strip
         <aside class="quote">
           <blockquote>
@@ -277,6 +298,50 @@ RSpec.describe ExcerptParser do
         expect(result).to include('<img src="/1.jpg" alt="a">')
         expect(result).to include('<img src="/2.jpg" alt="b">')
       end
+    end
+  end
+
+  describe ".to_plain_text" do
+    it "decodes the entities emitted by the excerpt generator" do
+      excerpt =
+        ExcerptParser.get_excerpt("<p>Tom &amp; Jerry&rsquo;s \"tale\" of 1 &lt; 2</p>", 100, {})
+
+      expect(excerpt).to eq("Tom &amp; Jerry’s &quot;tale&quot; of 1 &lt; 2")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq(%(Tom & Jerry’s "tale" of 1 < 2))
+    end
+
+    it "decodes the &hellip; truncation marker" do
+      excerpt = ExcerptParser.get_excerpt("<p>Lorem ipsum dolor</p>", 5, {})
+
+      expect(excerpt).to eq("Lorem&hellip;")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("Lorem…")
+    end
+
+    it "keeps entities the user literally typed" do
+      excerpt = ExcerptParser.get_excerpt("<p>the &amp;hellip; entity</p>", 100, {})
+
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("the &hellip; entity")
+    end
+
+    it "strips the markup the parser keeps for hashtags" do
+      html =
+        '<p>see <a class="hashtag-cooked" href="/c/general"><span class="hashtag-icon-placeholder"><svg class="fa d-icon"><use href="#folder"></use></svg></span><span>general</span></a> please</p>'
+      excerpt = ExcerptParser.get_excerpt(html, 100, strip_links: true, strip_images: true)
+
+      expect(excerpt).to include("<span")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("see general please")
+    end
+
+    it "neutralizes markup in values that bypassed the generator" do
+      expect(ExcerptParser.to_plain_text(%(pwned "><script>alert(1)</script>))).to eq(
+        %(pwned ">alert(1)),
+      )
+    end
+
+    it "returns nil when nothing is left" do
+      expect(ExcerptParser.to_plain_text(nil)).to be_nil
+      expect(ExcerptParser.to_plain_text("")).to be_nil
+      expect(ExcerptParser.to_plain_text("<span></span>")).to be_nil
     end
   end
 end

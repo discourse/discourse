@@ -22,6 +22,53 @@ const SEARCH_SCORES = {
   pageBonusScore: 20,
 };
 
+/**
+ * @typedef {object} AdminNavLink
+ * @property {string} [name]
+ * @property {string} [route]
+ * @property {unknown[]} [routeModels]
+ * @property {string} [href]
+ * @property {string} [label] Translation key, used when `text` is absent.
+ * @property {string} [text]
+ * @property {string} [keywords] Translation key for `|`-separated keywords.
+ * @property {string} [description] Translated text, or a translation key.
+ */
+
+/**
+ * @typedef {object} AdminNavSection
+ * @property {string} [label] Translation key, used when `text` is absent.
+ * @property {string} [text]
+ */
+
+/**
+ * @typedef {object} AdminSearchSetting
+ * @property {string} setting
+ * @property {string} [humanized_name]
+ * @property {string} [description]
+ * @property {string[]} [keywords]
+ * @property {string} [plugin]
+ * @property {string | null} [primary_area]
+ * @property {string} [category]
+ */
+
+/**
+ * @typedef {object} AdminSearchPlugin
+ * @property {{ label?: string, location: string, use_new_show_route?: boolean }} admin_route
+ */
+
+/**
+ * @typedef {object} AdminSettingPageMap
+ * @property {Record<string, string>} categories URL of each settings category page.
+ * @property {Record<string, string>} areas URL of each config area page.
+ */
+
+/**
+ * @typedef {object} AdminSearchUpcomingChange
+ * @property {string} setting
+ * @property {string} humanized_name
+ * @property {string} description
+ */
+
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
 }
@@ -41,10 +88,10 @@ function buildKeywords(...keywords) {
 export class PageLinkFormatter {
   /**
    * @param {DiscourseRouter} router - The ember router service
-   * @param {Object} navMapSection - The section of the admin nav map that the link belongs to,
+   * @param {AdminNavSection | null} navMapSection - The section of the admin nav map that the link belongs to,
    *                                 used for the parent label.
-   * @param {Object} link - The link object from the admin nav map, with name/route/label etc.
-   * @param {String} parentLabel - The parent label of the link, if any, this should be translated.
+   * @param {AdminNavLink} link - The link object from the admin nav map, with name/route/label etc.
+   * @param {string | null} [parentLabel] - The parent label of the link, if any, this should be translated.
    */
   constructor(router, navMapSection, link, parentLabel = null) {
     this.router = router;
@@ -53,17 +100,19 @@ export class PageLinkFormatter {
     this.parentLabel = parentLabel;
   }
 
-  format() {
-    let url;
+  url() {
     if (this.link.route) {
       if (this.link.routeModels) {
-        url = this.router.urlFor(this.link.route, ...this.link.routeModels);
-      } else {
-        url = this.router.urlFor(this.link.route);
+        return this.router.urlFor(this.link.route, ...this.link.routeModels);
       }
+      return this.router.urlFor(this.link.route);
     } else if (this.link.href) {
-      url = getURL(this.link.href);
+      return getURL(this.link.href);
     }
+  }
+
+  format() {
+    const url = this.url();
 
     const sectionLabel = labelOrText(this.navMapSection);
     const linkLabel = labelOrText(this.link);
@@ -101,9 +150,9 @@ export class PageLinkFormatter {
 export class SettingLinkFormatter {
   /**
    * @param {DiscourseRouter} router - The ember router service
-   * @param {Object} setting - The setting object from the site settings API
-   * @param {Object} plugins - The plugins object built from the visible plugins in preload store
-   * @param {Object} settingPageMap - The setting page map object with categories and areas.
+   * @param {AdminSearchSetting} setting - The setting object from the site settings API
+   * @param {Record<string, AdminSearchPlugin>} plugins - The plugins object built from the visible plugins in preload store
+   * @param {AdminSettingPageMap} settingPageMap - The setting page map object with categories and areas.
    *                                 This points to the URL of the relevant setting page
    */
   constructor(router, setting, plugins, settingPageMap) {
@@ -111,17 +160,13 @@ export class SettingLinkFormatter {
     this.setting = setting;
     this.plugins = plugins;
     this.settingPageMap = settingPageMap;
-    this.settingPluginNames = {};
+  }
+
+  get dasherizedPluginName() {
+    return this.setting.plugin?.replaceAll("_", "-");
   }
 
   format() {
-    if (this.setting.plugin) {
-      if (!this.settingPluginNames[this.setting.plugin]) {
-        this.settingPluginNames[this.setting.plugin] =
-          this.setting.plugin.replaceAll("_", "-");
-      }
-    }
-
     const [rootLabel, fullLabel] = this.buildLabel();
     const url = this.buildURL();
 
@@ -145,7 +190,7 @@ export class SettingLinkFormatter {
     let rootLabel;
 
     if (this.setting.plugin) {
-      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      const plugin = this.plugins[this.dasherizedPluginName];
       if (plugin) {
         rootLabel = plugin.admin_route?.label
           ? i18n(plugin.admin_route?.label)
@@ -174,7 +219,7 @@ export class SettingLinkFormatter {
     // to focus/highlight on a specific element on the page, for now though the filter is fine.
     let url;
     if (this.setting.plugin) {
-      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      const plugin = this.plugins[this.dasherizedPluginName];
       const settingPluginCategoryName = this.setting.plugin.replace(/-/g, "_");
 
       if (plugin && plugin.admin_route.use_new_show_route) {
@@ -205,6 +250,31 @@ export class SettingLinkFormatter {
   }
 }
 
+export class UpcomingChangeLinkFormatter {
+  /**
+   * @param {AdminSearchUpcomingChange} upcomingChange - The upcoming change object from the upcoming changes API
+   */
+  constructor(upcomingChange) {
+    this.upcomingChange = upcomingChange;
+  }
+
+  format() {
+    return {
+      label: this.upcomingChange.humanized_name,
+      description: this.upcomingChange.description,
+      url: getURL(
+        `/admin/config/upcoming-changes?changeNamesFilter=${this.upcomingChange.setting}`
+      ),
+      keywords: buildKeywords(
+        this.upcomingChange.humanized_name,
+        this.upcomingChange.setting
+      ),
+      type: "upcoming_change",
+      icon: "flask",
+    };
+  }
+}
+
 export default class AdminSearchDataSource extends Service {
   @service router;
   @service adminNavManager;
@@ -215,10 +285,12 @@ export default class AdminSearchDataSource extends Service {
   themeDataSourceItems = [];
   componentDataSourceItems = [];
   reportDataSourceItems = [];
+  upcomingChangeDataSourceItems = [];
   settingPageMap = {
     categories: {},
     areas: {},
   };
+  #settingLinkDataCached = false;
   @tracked _mapCached = false;
 
   async buildMap() {
@@ -242,6 +314,7 @@ export default class AdminSearchDataSource extends Service {
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
+    this.#processUpcomingChanges(allItems.upcoming_changes);
     this._mapCached = true;
   }
 
@@ -283,11 +356,11 @@ export default class AdminSearchDataSource extends Service {
     const labelPartialRegex = new RegExp(`\\b${escapedFilterRegExp}`, "i");
     const exactKeywordRegexes = escapedFilterRegExp
       .split(" ")
-      .filter((keyword) => keyword.length > 3)
+      .filter((keyword) => keyword.length >= 3)
       .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
     const partialKeywordRegexes = escapedFilterRegExp
       .split(" ")
-      .filter((keyword) => keyword.length > 3)
+      .filter((keyword) => keyword.length >= 3)
       .map((keyword) => new RegExp(`\\b${keyword}`, "i"));
     const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
 
@@ -316,7 +389,10 @@ export default class AdminSearchDataSource extends Service {
         ) {
           dataSourceItem.score += SEARCH_SCORES.partialKeyword;
         }
-        if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
+        if (
+          filter.length >= 3 &&
+          dataSourceItem.keywords.match(fallbackRegex)
+        ) {
           dataSourceItem.score += SEARCH_SCORES.fallback;
         }
 
@@ -335,6 +411,17 @@ export default class AdminSearchDataSource extends Service {
     return filteredResults.sort((a, b) => b.score - a.score);
   }
 
+  urlForSetting({ setting, primaryArea, category, plugin }) {
+    this.#ensureSettingLinkData();
+
+    return new SettingLinkFormatter(
+      this.router,
+      { setting, plugin, primary_area: primaryArea, category },
+      this.plugins,
+      this.settingPageMap
+    ).buildURL();
+  }
+
   #addPageLink(navMapSection, link, parentLabel = null) {
     const formattedPageLink = new PageLinkFormatter(
       this.router,
@@ -345,20 +432,7 @@ export default class AdminSearchDataSource extends Service {
 
     // Cache the setting area + category URLs for later use
     // when building the setting list via #processSettings.
-    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
-      this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
-        ? `${formattedPageLink.url}/settings`
-        : formattedPageLink.url;
-    }
-
-    if (
-      link.settings_category &&
-      !this.settingPageMap.categories[link.settings_category]
-    ) {
-      this.settingPageMap.categories[link.settings_category] = link.multi_tabbed
-        ? `${formattedPageLink.url}/settings`
-        : formattedPageLink.url;
-    }
+    this.#cacheSettingPageURL(link, formattedPageLink.url);
 
     this.pageDataSourceItems.push({
       label: formattedPageLink.label,
@@ -370,6 +444,53 @@ export default class AdminSearchDataSource extends Service {
     });
 
     return formattedPageLink.label;
+  }
+
+  // Builds just the data needed to resolve a setting's config page URL (the
+  // area/category -> page map and the plugins map) without the network request
+  // that buildMap performs for the full admin search index.
+  #ensureSettingLinkData() {
+    if (this._mapCached || this.#settingLinkDataCached) {
+      return;
+    }
+
+    this.adminNavManager.filteredNavMap.forEach((navMapSection) => {
+      navMapSection.links.forEach((link) => {
+        this.#cacheSettingPageURLFromLink(link);
+        link.links?.forEach((subLink) =>
+          this.#cacheSettingPageURLFromLink(subLink)
+        );
+      });
+    });
+
+    this.plugins = this.buildPluginsMap();
+    this.#settingLinkDataCached = true;
+  }
+
+  #cacheSettingPageURLFromLink(link) {
+    if (!link.settings_area && !link.settings_category) {
+      return;
+    }
+
+    this.#cacheSettingPageURL(
+      link,
+      new PageLinkFormatter(this.router, null, link).url()
+    );
+  }
+
+  #cacheSettingPageURL(link, url) {
+    const pageURL = link.multi_tabbed ? `${url}/settings` : url;
+
+    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
+      this.settingPageMap.areas[link.settings_area] = pageURL;
+    }
+
+    if (
+      link.settings_category &&
+      !this.settingPageMap.categories[link.settings_category]
+    ) {
+      this.settingPageMap.categories[link.settings_category] = pageURL;
+    }
   }
 
   #processSettings(settings) {
@@ -434,6 +555,16 @@ export default class AdminSearchDataSource extends Service {
         keywords: buildKeywords(report.title, report.description, report.type),
         type: "report",
       });
+    });
+  }
+
+  #processUpcomingChanges(upcomingChanges) {
+    upcomingChanges.forEach((upcomingChange) => {
+      const formattedUpcomingChangeLink = new UpcomingChangeLinkFormatter(
+        upcomingChange
+      ).format();
+
+      this.upcomingChangeDataSourceItems.push(formattedUpcomingChangeLink);
     });
   }
 }

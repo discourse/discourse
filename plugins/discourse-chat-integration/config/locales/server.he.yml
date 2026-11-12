@@ -47,8 +47,6 @@ he:
     chat_integration_rocketchat_webhook_url: "כתובת התליית השילוב עם Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Rocket Chat"
     chat_integration_gitter_enabled: "הפעלת ספק שילוב הצ׳אט עם Gitter"
-    chat_integration_flowdock_enabled: "הפעלת ספק שילוב הצ׳אט עם Flowdock"
-    chat_integration_flowdock_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Flowdock"
     chat_integration_groupme_enabled: "הפעלת ספק שילוב הצ׳אט עם Groupme"
     chat_integration_groupme_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Groupme"
     chat_integration_teams_enabled: "הפעלת ספק שילוב הצ׳אט עם Microsoft Teams"
@@ -59,9 +57,6 @@ he:
     chat_integration_webex_excerpt_length: "אורך מהפוסט שמופיע בתקציר Webex Teams"
     chat_integration_google_enabled: "הפעלת ספק שילוב הצ׳אט עם ‚Google Chat’"
     chat_integration_google_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "בחלק מערוצי שילובי הצ׳אט יש שגיאות. נא לבקר ב<a href='%{base_path}/admin/plugins/chat-integration'>אגף שילובי הצ׳אט</a> כדי להבין יותר."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -78,8 +73,15 @@ he:
       added_and_removed: "נוספו %{added} והוסרו %{removed}"
       added: "נוספו %{added}"
       removed: "הוסרו %{removed}"
+    errors:
+      provider_already_enabled: "הספק ‚%{name}’ כבר פעיל"
+      provider_not_found: "הספק ‚%{name}’ לא נמצא"
+      setting_update_failed: "עדכון ההגדרות נכשל: %{errors}"
     provider:
       slack:
+        errors:
+          action_prohibited: "לבוט אין הרשה לפרסם לערוץ הזה"
+          channel_not_found: "הערוץ שצוין לא קיים ב־Slack"
         status:
           header: |
             *כללים לערוץ זה*
@@ -217,8 +219,6 @@ he:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "פורסם"
       google:
         new_post: "פוסט חדש באתר %{site_title}"
         new_topic: "נושא חדש באתר %{site_title}"

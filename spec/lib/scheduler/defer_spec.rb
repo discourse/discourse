@@ -120,6 +120,13 @@ RSpec.describe Scheduler::Defer do
     let!(:ivar) { Concurrent::IVar.new }
     let!(:responses) { Thread::Queue.new }
 
+    before do
+      # "site1"/"site2" here are fairness-queue tags, not real dbs
+      allow(RailsMultisite::ConnectionManagement).to receive(:with_connection) do |_db, &blk|
+        blk.call
+      end
+    end
+
     def later(db, current_user, request)
       @defer.later(nil, db, current_user: current_user) do
         ivar.value

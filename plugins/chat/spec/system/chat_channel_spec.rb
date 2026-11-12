@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat channel", type: :system do
+RSpec.describe "Chat channel" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
@@ -161,8 +161,7 @@ RSpec.describe "Chat channel", type: :system do
   context "when a new message is created" do
     before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
-    # this is skipped cause it is not correct
-    xit "doesn’t append the message when not at bottom" do
+    it "holds it behind the scroll-to-bottom arrow while newer history is unloaded" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
@@ -170,10 +169,10 @@ RSpec.describe "Chat channel", type: :system do
       new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
-      # sleep 5 <- this will cause this to consistently fail, cause the message
-      # has always actually been unconditionally appended, we don't have logic to
-      # prevent that yet
-      expect(channel_page.messages).to have_no_message(id: new_message.id)
+
+      find(".chat-channel:not(.loading) .chat-scroll-to-bottom__button.visible").click
+
+      expect(channel_page.messages).to have_message(id: new_message.id)
     end
   end
 
@@ -432,47 +431,5 @@ RSpec.describe "Chat channel", type: :system do
     chat_page.visit_channel(channel_1)
 
     expect(page).to have_title("#🐕 Dogs - Chat - Discourse")
-  end
-
-  context "when messages are sent with client timestamps" do
-    it "orders messages by client timestamp rather than server timestamp" do
-      first_message =
-        Chat::CreateMessage.call(
-          params: {
-            chat_channel_id: channel_1.id,
-            message: "I was created first but should appear second",
-            client_created_at: 30.seconds.ago.iso8601,
-          },
-          guardian: current_user.guardian,
-        ).message_instance
-
-      second_message =
-        Chat::CreateMessage.call(
-          params: {
-            chat_channel_id: channel_1.id,
-            message: "I was created second but should appear first",
-            client_created_at: 45.seconds.ago.iso8601,
-          },
-          guardian: current_user.guardian,
-        ).message_instance
-
-      chat_page.visit_channel(channel_1)
-
-      expect(page).to have_selector(
-        ".chat-message-container[data-id='#{first_message.id}'] .chat-message-text",
-        text: "I was created first but should appear second",
-      )
-      expect(page).to have_selector(
-        ".chat-message-container[data-id='#{second_message.id}'] .chat-message-text",
-        text: "I was created second but should appear first",
-      )
-
-      messages = page.all(".chat-message-container[data-id]")
-      message_ids = messages.map { |msg| msg["data-id"].to_i }
-      second_message_index = message_ids.index(second_message.id)
-      first_message_index = message_ids.index(first_message.id)
-
-      expect(second_message_index).to be < first_message_index
-    end
   end
 end

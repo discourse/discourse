@@ -1,0 +1,32 @@
+/* The handle's own cursor, keyed off the component's class and its axis attribute
+   rather than `aria-orientation`: that describes the element to assistive
+   technology, and what a thing promises AT should not decide how it looks. Note the
+   attribute names the axis being RESIZED, which is the opposite of the separator's
+   announced orientation. */
+
+.d-resize-separator[data-resize-axis="vertical"] {
+  cursor: ns-resize;
+}
+
+.d-resize-separator[data-resize-axis="horizontal"] {
+  cursor: ew-resize;
+}
+
+/* Held on the body by `DResizeSeparator` for the length of a gesture.
+
+   The handle's own cursor is not enough: whether the cursor of the element a drag
+   began on survives the pointer leaving it is engine-dependent, and these handles
+   are only a few pixels thick, so the pointer spends most of a resize outside the
+   one it grabbed. Stating it on the body keeps the cursor for the whole gesture.
+
+   It reaches only what inherits `cursor`, so a link or a button passed over
+   mid-drag still shows its own. A gesture that must hold the cursor absolutely
+   everywhere wants an overlay rather than this. */
+
+body.d-resizing-ns {
+  cursor: ns-resize;
+}
+
+body.d-resizing-ew {
+  cursor: ew-resize;
+}

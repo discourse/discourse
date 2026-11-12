@@ -5,11 +5,31 @@
 # https://translate.discourse.org/
 
 et:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Aktsepteeritud lahendused"
+        sections:
+          support:
+            answerers:
+              staff: "Meeskond"
+              member: "Liikmed"
+              basic: "Tavakasutaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tund"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Sildid"
     notifications:
       alt:
         solved:
           accepted_notification: "aktsepteeritud"
+          topic_solved_notification: "lahendatud"
     solved:
       title: "Lahendatud"
       has_no_accepted_answer: "Sellel teemal pole lahendust"
@@ -24,9 +44,17 @@ et:
         solved: "lahendatud"
       move_post_cancel: "Loobu"
       confirm_solved_removal_cancel: "Loobu"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Teema"
+            category: "Kategooriad"
     discourse_automation:
       triggerables:
         first_accepted_solution:

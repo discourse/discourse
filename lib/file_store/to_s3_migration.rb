@@ -177,9 +177,12 @@ module FileStore
 
       local_files = []
       IO
-        .popen("cd #{public_directory} && find uploads/#{@current_db}/original -type f")
-        .each do |file|
-          local_files << file.chomp
+        .popen(
+          ["find", "uploads/#{@current_db}/original", "-type", "f", "-print0"],
+          chdir: public_directory,
+        )
+        .each("\0", chomp: true) do |file|
+          local_files << file
           putc "." if local_files.size % 1000 == 0
         end
 
@@ -212,12 +215,22 @@ module FileStore
           Thread.new do
             while obj = queue.pop
               opts_with_file = obj[:options].merge(body: File.open(obj[:path], "rb"))
-              if s3.put_object(opts_with_file)
-                putc "."
-                lock.synchronize { synced += 1 }
-              else
-                putc "X"
-                lock.synchronize { failed << obj[:path] }
+              begin
+                if s3.put_object(opts_with_file)
+                  putc "."
+                  lock.synchronize { synced += 1 }
+                else
+                  putc "X"
+                  lock.synchronize { failed << obj[:path] }
+                end
+              rescue Aws::S3::Errors::MetadataTooLarge
+                if opts_with_file[:content_disposition].present?
+                  opts_with_file.delete(:content_disposition)
+                  opts_with_file[:body].rewind if opts_with_file[:body].respond_to?(:rewind)
+                  retry
+                else
+                  raise
+                end
               end
             end
           end
@@ -243,26 +256,15 @@ module FileStore
           key: key,
         }.merge(FileStore::S3Store.default_s3_options(secure: false))
 
-        if !FileHelper.is_supported_image?(name)
-          upload = Upload.find_by(url: "/#{file}")
+        upload = Upload.find_by(url: "/#{file}")
 
-          if upload&.original_filename
-            options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-              disposition: "attachment",
-              filename: upload.original_filename,
-            )
-          end
+        options[:content_disposition] = FileStore::S3Store.content_disposition_for(
+          upload&.original_filename || name,
+        )
 
-          if upload&.secure
-            options[:acl] = FileStore::S3Store.acl_option_value(secure: true)
-            options[:tagging] = FileStore::S3Store.visibility_tagging_option_value(secure: true)
-          end
-        elsif !FileHelper.is_svg?(name)
-          upload = Upload.find_by(url: "/#{file}")
-          options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-            disposition: "attachment",
-            filename: upload&.original_filename || name,
-          )
+        if upload&.secure
+          options[:acl] = FileStore::S3Store.acl_option_value(secure: true)
+          options[:tagging] = FileStore::S3Store.visibility_tagging_option_value(secure: true)
         end
 
         if @dry_run

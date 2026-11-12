@@ -15,6 +15,7 @@ pl_PL:
       create_zendesk_issue: "Utwórz zgłoszenie Zendesk"
       view_zendesk_issue: "Zobacz w Zendesk"
     zendesk:
+      ticket_created: "Utworzono zgłoszenie w Zendesk"
       credentials_not_setup: Nie skonfigurowałeś swoich danych uwierzytelniających Zendesk.
       url_not_set: Twój adres URL Zendesk nie jest obecnie ustawiony.
       general_error: Coś poszło nie tak.

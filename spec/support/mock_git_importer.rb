@@ -27,7 +27,7 @@ class MockGitImporter < ThemeStore::GitImporter
     end
 
     def reset!
-      repos = nil
+      @repos = nil
     end
 
     private
@@ -52,5 +52,6 @@ class MockGitImporter < ThemeStore::GitImporter
     end
 
     Discourse::Utils.execute_command("git", "clone", path, @temp_folder)
+    checkout_compatible_version!
   end
 end

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import DMenu from "float-kit/components/d-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 
 export default class FKMenu extends Component {
   @action
@@ -26,31 +26,31 @@ export default class FKMenu extends Component {
   }
 
   <template>
-    <DMenu @identifier={{@field.name}} @icon="gear" @triggerClass="btn-flat">
+    <DMenu @icon="gear" @identifier={{@field.name}} @triggerClass="btn-flat">
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              @label="reset_setting"
               class="btn-transparent"
               @action={{this.resetSetting}}
+              @label="reset_setting"
             />
           </dropdown.item>
           <dropdown.item>
             <DButton
-              @label="copy_setting"
               class="btn-transparent"
               @action={{this.copyLinkToSetting}}
+              @label="copy_setting"
             />
           </dropdown.item>
           <dropdown.item>
             <DButton
-              @label="setting_history"
               class="btn-transparent"
               @action={{this.showSettingHistory}}
+              @label="setting_history"
             />
           </dropdown.item>
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

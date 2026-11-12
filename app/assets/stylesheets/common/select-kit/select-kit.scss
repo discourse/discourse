@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .select-kit {
   @include unselectable;
   border: none;
@@ -27,6 +29,17 @@
 
   &.is-disabled {
     pointer-events: none;
+  }
+
+  &.is-placed-above.is-expanded {
+    .select-kit-body {
+      flex-direction: column-reverse;
+    }
+
+    .select-kit-collection {
+      display: flex;
+      flex-direction: column-reverse;
+    }
   }
 
   &.is-expanded {
@@ -82,7 +95,7 @@
   }
 
   .d-icon {
-    color: var(--primary-high);
+    color: var(--primary-medium);
   }
 
   .select-kit-header {
@@ -98,6 +111,10 @@
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
       padding-right: 0.5em;
+    }
+
+    &.btn-small {
+      font-size: var(--font-down-1);
     }
 
     /* hide native indicator */
@@ -171,7 +188,15 @@
       margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
-      color: inherit;
+      color: var(--primary-medium);
+    }
+
+    &.btn-primary .angle-icon {
+      color: var(--d-button-primary-icon-color);
+    }
+
+    &.btn-danger .angle-icon {
+      color: var(--d-button-danger-icon-color);
     }
 
     .d-button-label {
@@ -210,6 +235,10 @@
     justify-content: flex-start;
     padding: 0.5em;
 
+    @include viewport.until(sm) {
+      padding-block: 0.75em;
+    }
+
     &.disabled {
       pointer-events: none;
       opacity: 0.4;
@@ -238,6 +267,7 @@
     &.is-selected,
     &.is-selected.is-highlighted {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
 
     .discourse-tag,
@@ -311,6 +341,10 @@
       width: 100%;
       box-sizing: border-box;
       min-height: 30px;
+
+      @include viewport.until(sm) {
+        font-size: var(--font-0);
+      }
     }
 
     &.is-hidden {

@@ -9,7 +9,7 @@ import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-cha
 
 const CHANNEL_NAME_LABEL = ".chat-channel-name__label";
 
-module("Discourse Chat | Component | <ChannelName />", function (hooks) {
+module("Component | <ChannelName />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel - label", async function (assert) {

@@ -155,24 +155,55 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
+  describe "group message operations" do
+    fab!(:other_user, :user)
+    fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
+
+    it "rejects archive_messages when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "archive_messages" },
+          group: group.name,
+        ).perform!
+
+      expect(topic_ids).to be_empty
+    end
+
+    it "rejects move_messages_to_inbox when the selected group is not a message recipient" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [private_message.id],
+          { type: "move_messages_to_inbox" },
+          group: group.name,
+        ).perform!
+
+      expect(topic_ids).to be_empty
+    end
+  end
+
   describe "change_category" do
     fab!(:category)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     describe "silent option" do
       fab!(:admin)
+      fab!(:topic_watcher, :user)
+      fab!(:category_watcher, :user)
 
       before do
         Jobs.run_immediately!
         PostActionNotifier.enable
-        SiteSetting.create_revision_on_bulk_topic_moves = true
         TopicUser.change(
-          Fabricate(:user),
+          topic_watcher,
           topic.id,
           notification_level: TopicUser.notification_levels[:watching],
         )
         CategoryUser.set_notification_level_for_category(
-          Fabricate(:user),
+          category_watcher,
           CategoryUser.notification_levels[:watching_first_post],
           category.id,
         )
@@ -197,50 +228,30 @@ RSpec.describe TopicsBulkAction do
             [topic.id],
             type: "change_category",
             category_id: category.id,
+            silent: false,
           ).perform!
         end.to change { Notification.count }
       end
     end
 
     context "when the user can edit the topic" do
-      context "when create_revision_on_bulk_topic_moves is enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+      it "changes category and creates a revision attributed to the acting user" do
+        old_category_id = topic.category_id
 
-        it "changes category and creates revision" do
-          old_category_id = topic.category_id
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+          ).perform!
 
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.category).to eq(category)
 
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.category).to eq(category)
-
-          revision = topic.first_post.revisions.last
-          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
-        end
-      end
-
-      context "when create_revision_on_bulk_topic_moves is disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
-
-        it "changes category without revision" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.category).to eq(category)
-          expect(topic.first_post.revisions.last).to be_nil
-        end
+        revision = topic.first_post.revisions.last
+        expect(revision.user_id).to eq(topic.user.id)
+        expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
       end
 
       it "does nothing when category stays the same" do
@@ -274,20 +285,65 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when the user can't move topics to the destination category" do
+      it "records an error and creates no revision" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        original_category = topic.category
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: restricted_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.category).to eq(original_category)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+        )
+      end
+
+      it "records an error when a moderator cannot see the destination category" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        original_category = topic.category
+
+        bulk_action =
+          TopicsBulkAction.new(
+            Fabricate(:moderator),
+            [topic.id],
+            type: "change_category",
+            category_id: restricted_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.category).to eq(original_category)
+        expect(bulk_action.errors).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+        )
+      end
+    end
+
     context "when destination category does not allow the topic's tags" do
       fab!(:destination_category, :category)
       fab!(:other_tag) { Fabricate(:tag, name: "other-tag") }
       fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
       fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
       fab!(:admin)
-      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
-      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+      fab!(:moderator)
+      fab!(:topic_with_tag) do
+        Fabricate(:topic, user:, category: source_category, tags: [restricted_tag])
+      end
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag, user:) }
 
       before { destination_category.update!(tags: [other_tag]) }
 
-      it "does not change category" do
-        original_category = topic_with_tag.category
-
+      it "allows admins to change category" do
         topic_ids =
           TopicsBulkAction.new(
             admin,
@@ -296,33 +352,65 @@ RSpec.describe TopicsBulkAction do
             category_id: destination_category.id,
           ).perform!
 
-        expect(topic_ids).to eq([])
-        expect(topic_with_tag.reload.category).to eq(original_category)
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+        expect(topic_with_tag.tags).to contain_exactly(restricted_tag)
       end
 
-      it "logs a warning with error details" do
-        Rails.logger.expects(:warn).with(includes("restricted-tag"))
-
-        TopicsBulkAction.new(
-          admin,
-          [topic_with_tag.id],
-          type: "change_category",
-          category_id: destination_category.id,
-        ).perform!
-      end
-
-      it "exposes errors via attr_reader" do
-        operator =
+      it "does not change category for moderators" do
+        topic_ids =
           TopicsBulkAction.new(
-            admin,
+            moderator,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+      end
+
+      it "does not change category for regular users" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+      end
+
+      it "names the disallowed tags when the user can see them" do
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
             [topic_with_tag.id],
             type: "change_category",
             category_id: destination_category.id,
           )
-        operator.perform!
+        bulk_action.perform!
 
-        expect(operator.errors).to be_present
-        expect(operator.errors.values.sum).to eq(1)
+        expect(bulk_action.errors.keys).to contain_exactly(include("restricted-tag"))
+      end
+
+      it "does not reveal tags the user cannot see" do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [restricted_tag.name])
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+        expect(bulk_action.errors).to eq(I18n.t("category.errors.disallowed_tags_generic") => 1)
       end
     end
 
@@ -370,6 +458,88 @@ RSpec.describe TopicsBulkAction do
         expect(topic_with_tag.reload.category).to eq(destination_category)
       end
     end
+
+    context "when destination category disallows global tags" do
+      fab!(:global_tag) { Fabricate(:tag, name: "global-tag") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [restricted_tag]) }
+      fab!(:source_category, :category)
+      fab!(:destination_category) do
+        Fabricate(:category, tag_groups: [tag_group], allow_global_tags: false)
+      end
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:topic_with_global_tag) do
+        Fabricate(:topic, category: source_category, tags: [global_tag])
+      end
+      fab!(:first_post) { Fabricate(:post, topic: topic_with_global_tag) }
+
+      it "allows admin to move topic with global tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_global_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_global_tag.id])
+        expect(topic_with_global_tag.reload.category).to eq(destination_category)
+      end
+
+      it "prevents moderator from moving topic with global tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            moderator,
+            [topic_with_global_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_global_tag.reload.category).to eq(source_category)
+      end
+    end
+
+    context "when tags violate one-per-topic tag group rule" do
+      fab!(:tag1) { Fabricate(:tag, name: "priority-high") }
+      fab!(:tag2) { Fabricate(:tag, name: "priority-low") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2], one_per_topic: true) }
+      fab!(:source_category, :category)
+      fab!(:destination_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:topic_with_conflicting_tags) do
+        Fabricate(:topic, category: source_category, tags: [tag1, tag2])
+      end
+      fab!(:first_post) { Fabricate(:post, topic: topic_with_conflicting_tags) }
+
+      it "allows admin to move topic with conflicting tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_conflicting_tags.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_conflicting_tags.id])
+        expect(topic_with_conflicting_tags.reload.category).to eq(destination_category)
+      end
+
+      it "prevents moderator from moving topic with conflicting tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            moderator,
+            [topic_with_conflicting_tags.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_conflicting_tags.reload.category).to eq(source_category)
+      end
+    end
   end
 
   describe "destroy_post_timing" do
@@ -383,17 +553,48 @@ RSpec.describe TopicsBulkAction do
       expect { topic_ids = tba.perform! }.to change { PostTiming.count }.by(-1)
       expect(topic_ids).to contain_exactly(topic.id)
     end
+
+    it "skips topics the user can't see" do
+      pm = Fabricate(:private_message_topic)
+      pm_post = Fabricate(:post, topic: pm)
+      stranger = Fabricate(:user)
+
+      topic_ids = nil
+      expect {
+        topic_ids = TopicsBulkAction.new(stranger, [pm.id], type: "destroy_post_timing").perform!
+      }.not_to change { pm_post.reload.reads }
+
+      expect(topic_ids).to eq([])
+    end
   end
 
   describe "delete" do
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:moderator)
 
-    it "deletes the topic" do
+    it "deletes the topic and returns its id" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
-      tba.perform!
-      topic.reload
-      expect(topic).to be_trashed
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+    end
+
+    it "skips topics the user can't delete" do
+      tba = TopicsBulkAction.new(user, [topic.id], type: "delete")
+
+      expect(tba.perform!).to be_empty
+      expect(topic.reload).not_to be_trashed
+    end
+
+    it "deletes the topic when its first post was already deleted" do
+      reply = Fabricate(:post, topic: topic)
+      topic.first_post.trash!(moderator)
+
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+      expect(reply.reload).not_to be_trashed
     end
   end
 
@@ -426,55 +627,83 @@ RSpec.describe TopicsBulkAction do
       expect(TopicUser.get(topic, topic.user)).to be_blank
     end
 
-    ["", nil, :missing].each do |invalid_value|
-      it "raises error when notification_level_id is #{invalid_value.inspect}" do
-        options = { type: "change_notification_level" }
-        options[:notification_level_id] = invalid_value unless invalid_value == :missing
+    it "raises error when notification_level_id is \"\"" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = ""
 
-        expect do
-          TopicsBulkAction.new(topic.user, [topic.id], **options).perform!
-        end.to raise_error(Discourse::InvalidParameters, /notification_level_id/)
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+
+    it "raises error when notification_level_id is nil" do
+      options = { type: "change_notification_level" }
+      options[:notification_level_id] = nil
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+
+    it "raises error when notification_level_id is :missing" do
+      options = { type: "change_notification_level" }
+
+      expect do TopicsBulkAction.new(topic.user, [topic.id], **options).perform! end.to raise_error(
+        Discourse::InvalidParameters,
+        /notification_level_id/,
+      )
+    end
+  end
+
+  shared_examples "moderating topics in bulk" do |action:|
+    it "#{action}s topic when user can moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(true)
+      Guardian.any_instance.expects(:can_create?).returns(true)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      case action
+      when "close"
+        expect(topic).to be_closed
+      when "archive"
+        expect(topic).to be_archived
+      when "unlist"
+        expect(topic).not_to be_visible
+      end
+    end
+
+    it "doesn't #{action} topic when user can't moderate" do
+      Guardian.any_instance.expects(:can_moderate?).returns(false)
+
+      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+
+      expect(topic_ids).to be_blank
+      topic.reload
+      case action
+      when "close"
+        expect(topic).not_to be_closed
+      when "archive"
+        expect(topic).not_to be_archived
+      when "unlist"
+        expect(topic).to be_visible
       end
     end
   end
 
-  %w[close archive unlist].each do |action|
-    describe action do
-      it "#{action}s topic when user can moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(true)
-        Guardian.any_instance.expects(:can_create?).returns(true)
+  context "when closing topics" do
+    include_examples "moderating topics in bulk", action: "close"
+  end
 
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
+  context "when archiving topics" do
+    include_examples "moderating topics in bulk", action: "archive"
+  end
 
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        case action
-        when "close"
-          expect(topic).to be_closed
-        when "archive"
-          expect(topic).to be_archived
-        when "unlist"
-          expect(topic).not_to be_visible
-        end
-      end
-
-      it "doesn't #{action} topic when user can't moderate" do
-        Guardian.any_instance.expects(:can_moderate?).returns(false)
-
-        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: action).perform!
-
-        expect(topic_ids).to be_blank
-        topic.reload
-        case action
-        when "close"
-          expect(topic).not_to be_closed
-        when "archive"
-          expect(topic).not_to be_archived
-        when "unlist"
-          expect(topic).to be_visible
-        end
-      end
-    end
+  context "when unlisting topics" do
+    include_examples "moderating topics in bulk", action: "unlist"
   end
 
   describe "reset_bump_dates" do
@@ -501,10 +730,124 @@ RSpec.describe TopicsBulkAction do
       expect(topic_ids).to eq([])
       expect(topic.reload.bumped_at).to eq_time(bumped_at)
     end
+
+    it "skips topics the user can't see" do
+      trust_level_4 = Fabricate(:trust_level_4)
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      pm = Fabricate(:private_message_topic)
+      bumped_at = 1.hour.ago
+      [private_topic, pm].each do |restricted_topic|
+        Fabricate(:post, topic: restricted_topic, created_at: 1.day.ago)
+        restricted_topic.update!(bumped_at: bumped_at)
+      end
+
+      topic_ids =
+        TopicsBulkAction.new(
+          trust_level_4,
+          [private_topic.id, pm.id],
+          type: "reset_bump_dates",
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(private_topic.reload.bumped_at).to eq_time(bumped_at)
+      expect(pm.reload.bumped_at).to eq_time(bumped_at)
+    end
+  end
+
+  describe "#pin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "pins topics in category when user can moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic.pinned_globally).to eq(false)
+      expect(topic_2.reload.pinned_at).to be_present
+      expect(topic_2.pinned_globally).to eq(false)
+    end
+
+    it "pins topics globally with pinned_until when provided" do
+      pinned_until = 3.days.from_now.beginning_of_minute.to_s
+
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: true,
+          pinned_until: pinned_until,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_globally).to eq(true)
+      expect(topic.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      expect(topic_2.reload.pinned_globally).to eq(true)
+      expect(topic_2.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+    end
+
+    it "does not pin when user cannot moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+    end
+  end
+
+  describe "#unpin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "unpins multiple pinned topics and clears pinned_until when user can moderate" do
+      topic.update_pinned(true, false, 3.days.from_now.to_s)
+      topic_2.update_pinned(true, true, 5.days.from_now.to_s)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic.pinned_until).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+      expect(topic_2.pinned_until).to be_nil
+    end
+
+    it "skips topics that are not pinned" do
+      topic.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([topic.id])
+    end
+
+    it "does not unpin when user cannot moderate" do
+      topic.update_pinned(true, false)
+      topic_2.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic_2.reload.pinned_at).to be_present
+    end
   end
 
   describe "change_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
@@ -564,7 +907,7 @@ RSpec.describe TopicsBulkAction do
       fab!(:tag3, :tag)
 
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -576,6 +919,24 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when the user can't tag topics" do
+      fab!(:tag3, :tag)
+
+      it "records an error and creates no revision" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        bulk_action =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tag_ids: [tag3.id])
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(I18n.t("tags.user_not_permitted") => 1)
       end
     end
 
@@ -595,13 +956,14 @@ RSpec.describe TopicsBulkAction do
           [topic.id],
           type: "change_tags",
           tag_ids: [fab_tag3.id],
+          silent: true,
         ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
 
   describe "append_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
@@ -659,7 +1021,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -689,13 +1051,14 @@ RSpec.describe TopicsBulkAction do
           [topic.id],
           type: "append_tags",
           tag_ids: [tag3.id],
+          silent: true,
         ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
 
   describe "remove_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
@@ -719,7 +1082,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't remove the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
@@ -738,8 +1101,418 @@ RSpec.describe TopicsBulkAction do
       )
 
       expect do
-        TopicsBulkAction.new(Fabricate(:admin), [topic.id], type: "remove_tags").perform!
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "remove_tags",
+          silent: true,
+        ).perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
+    end
+  end
+
+  describe "convert_to_public_topic" do
+    fab!(:admin)
+    fab!(:category)
+    fab!(:pm, :private_message_topic)
+    fab!(:pm_post) { Fabricate(:post, topic: pm, user: pm.user) }
+
+    it "converts PMs and skips non-PMs" do
+      regular = Fabricate(:post).topic
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [pm.id, regular.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+
+      expect(changed).to eq([pm.id])
+      expect(pm.reload.archetype).to eq(Archetype.default)
+      expect(pm.category_id).to eq(category.id)
+    end
+
+    it "records a revision but stays silent (no bump, no small action) by default" do
+      Jobs.run_immediately!
+      bumped_at = pm.bumped_at
+
+      expect do
+        TopicsBulkAction.new(
+          admin,
+          [pm.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+      end.to change { PostRevision.count }.by(1)
+
+      expect(pm.reload.bumped_at).to be_within(1.second).of(bumped_at)
+      expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
+    end
+
+    it "keeps the PM private when a moderator cannot see the destination category" do
+      moderator = Fabricate(:moderator)
+      own_message = Fabricate(:private_message_topic, user: moderator)
+      Fabricate(:post, topic: own_message, user: moderator)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+      bulk_action =
+        TopicsBulkAction.new(
+          moderator,
+          [own_message.id],
+          type: "convert_to_public_topic",
+          category_id: private_category.id,
+        )
+
+      expect(bulk_action.perform!).to eq([])
+      expect(own_message.reload.archetype).to eq(Archetype.private_message)
+      expect(bulk_action.errors).to eq(
+        I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+      )
+    end
+  end
+
+  describe "convert_to_private_message" do
+    fab!(:admin)
+    fab!(:public_topic, :topic)
+    fab!(:public_first_post) { Fabricate(:post, topic: public_topic, user: public_topic.user) }
+
+    it "converts public topics and skips PMs" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm, user: pm.user)
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [public_topic.id, pm.id],
+          type: "convert_to_private_message",
+        ).perform!
+
+      expect(changed).to eq([public_topic.id])
+      expect(public_topic.reload.archetype).to eq(Archetype.private_message)
+    end
+
+    it "surfaces errors and does not mark topic as changed when cap is exceeded" do
+      SiteSetting.max_allowed_message_recipients = 1
+      Fabricate(:post, topic: public_topic)
+
+      operator = TopicsBulkAction.new(admin, [public_topic.id], type: "convert_to_private_message")
+      changed = operator.perform!
+
+      expect(changed).to be_empty
+      expect(public_topic.reload.archetype).to eq(Archetype.default)
+      expect(operator.errors).to be_present
+    end
+  end
+
+  describe "#manage_tags" do
+    fab!(:tag_1, :tag)
+    fab!(:tag_2, :tag)
+    fab!(:tag_3, :tag)
+    fab!(:tag_4, :tag)
+    fab!(:topic_1) { Fabricate(:topic_with_op, user: user, tags: [tag_1, tag_2]) }
+    fab!(:topic_2) { Fabricate(:topic_with_op, user: user, tags: [tag_2, tag_3]) }
+    fab!(:topic_3) { Fabricate(:topic_with_op, user: user, tags: [tag_1]) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    end
+
+    it "adds tags to each topic on top of its existing tags" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_3.id, tag_4.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2, tag_3, tag_4)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_3, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_1, tag_3, tag_4)
+    end
+
+    it "removes specific tags only from topics that have them" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          remove_tag_ids: [tag_1.id, tag_2.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to be_empty
+      expect(topic_2.reload.tags).to contain_exactly(tag_3)
+      expect(topic_3.reload.tags).to be_empty
+    end
+
+    it "replaces tags on topics that have the source tag" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          replace_tags: [
+            { from_tag_id: tag_2.id, to_tag_id: tag_3.id },
+            { from_tag_id: tag_3.id, to_tag_id: tag_4.id },
+          ],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_3)
+      expect(topic_2.reload.tags).to contain_exactly(tag_3, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_1)
+    end
+
+    it "applies remove, then add, then replace in that order" do
+      TopicsBulkAction.new(
+        user,
+        [topic_1.id, topic_2.id, topic_3.id],
+        type: "manage_tags",
+        remove_tag_ids: [tag_1.id, tag_2.id],
+        add_tag_ids: [tag_1.id, tag_3.id],
+        replace_tags: [
+          { from_tag_id: tag_1.id, to_tag_id: tag_4.id },
+          { from_tag_id: tag_3.id, to_tag_id: tag_2.id },
+        ],
+      ).perform!
+
+      expect(topic_1.reload.tags).to contain_exactly(tag_2, tag_4)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_4)
+      expect(topic_3.reload.tags).to contain_exactly(tag_2, tag_4)
+    end
+
+    it "can clear all tags with remove_all_tags" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id, topic_2.id, topic_3.id],
+          type: "manage_tags",
+          remove_all_tags: true,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      expect(topic_1.reload.tags).to be_empty
+      expect(topic_2.reload.tags).to be_empty
+      expect(topic_3.reload.tags).to be_empty
+    end
+
+    it "applies replacements sequentially so the first matching pair wins" do
+      TopicsBulkAction.new(
+        user,
+        [topic_1.id, topic_2.id, topic_3.id],
+        type: "manage_tags",
+        replace_tags: [
+          { from_tag_id: tag_1.id, to_tag_id: tag_2.id },
+          { from_tag_id: tag_1.id, to_tag_id: tag_3.id },
+        ],
+      ).perform!
+
+      expect(topic_1.reload.tags).to contain_exactly(tag_2)
+      expect(topic_2.reload.tags).to contain_exactly(tag_2, tag_3)
+      expect(topic_3.reload.tags).to contain_exactly(tag_2)
+    end
+
+    it "records a revision without bumping or notifying watchers when silent" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      PostActionNotifier.enable
+      TopicUser.change(
+        topic_watcher,
+        topic_1.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      topic_1.update!(bumped_at: 1.week.ago)
+
+      bumped_at_before = topic_1.bumped_at
+      version_before = topic_1.first_post.version
+
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic_1.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_4.id],
+          silent: true,
+        ).perform!
+      end.to not_change { Notification.count }
+
+      expect(topic_1.first_post.reload.version).to eq(version_before + 1)
+      expect(topic_1.reload.bumped_at).to be_within(1.second).of(bumped_at_before)
+    end
+
+    it "records the bulk change as its own revision instead of rewriting an earlier user's revision (meta t/402693)" do
+      earlier_editor = Fabricate(:admin)
+      acting_user = Fabricate(:admin)
+
+      original_tags = [tag_1.name, tag_2.name]
+      after_earlier_edit = [tag_1.name, tag_2.name, tag_3.name]
+      after_bulk_removal = [tag_2.name, tag_3.name]
+
+      PostRevisor.new(topic_1.first_post).revise!(
+        earlier_editor,
+        { tags: after_earlier_edit },
+        force_new_version: true,
+      )
+      earlier_revision = topic_1.first_post.reload.revisions.last
+      expect(earlier_revision.user_id).to eq(earlier_editor.id)
+      earlier_diff = earlier_revision.modifications["tags"]
+
+      TopicsBulkAction.new(
+        acting_user,
+        [topic_1.id],
+        type: "manage_tags",
+        remove_tag_ids: [tag_1.id],
+      ).perform!
+
+      post = topic_1.first_post.reload
+
+      expect(post.revisions.count).to eq(2)
+      bulk_revision = post.revisions.last
+      expect(bulk_revision.user_id).to eq(acting_user.id)
+      expect(bulk_revision.modifications["tags"]).to eq(
+        [after_earlier_edit.sort, after_bulk_removal.sort],
+      )
+
+      expect(earlier_revision.reload.modifications["tags"]).to eq(earlier_diff)
+
+      guardian = Guardian.new(acting_user)
+      [
+        [earlier_revision, earlier_editor, original_tags, after_earlier_edit],
+        [bulk_revision, acting_user, after_earlier_edit, after_bulk_removal],
+      ].each do |revision, user, previous_tags, current_tags|
+        json = PostRevisionSerializer.new(revision, scope: guardian, root: false).as_json
+        expect(json[:username]).to eq(user.username_lower)
+        expect(json[:tags_changes]).to eq(previous: previous_tags.sort, current: current_tags.sort)
+      end
+    end
+
+    it "only updates topics the acting user can edit" do
+      other_user = Fabricate(:user, refresh_auto_groups: true)
+      other_topic = Fabricate(:topic_with_op, user: other_user, tags: [tag_1])
+
+      topic_ids =
+        TopicsBulkAction.new(
+          other_user,
+          [topic_1.id, other_topic.id],
+          type: "manage_tags",
+          add_tag_ids: [tag_4.id],
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(other_topic.id)
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2)
+      expect(other_topic.reload.tags).to contain_exactly(tag_1, tag_4)
+    end
+
+    it "ignores unknown tag ids" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic_1.id],
+          type: "manage_tags",
+          add_tag_ids: [999_999],
+        ).perform!
+
+      expect(topic_ids).to be_empty
+      expect(topic_1.reload.tags).to contain_exactly(tag_1, tag_2)
+    end
+  end
+
+  describe "#enable_nested_view" do
+    fab!(:admin)
+    fab!(:topic_2, :topic)
+
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "creates NestedTopic records for selected topics when user is staff" do
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id]).count).to eq(2)
+    end
+
+    it "is idempotent when a NestedTopic already exists" do
+      Fabricate(:nested_topic, topic: topic)
+
+      expect {
+        TopicsBulkAction.new(admin, [topic.id], type: "enable_nested_view").perform!
+      }.not_to change { NestedTopic.count }
+    end
+
+    it "skips private messages" do
+      pm = Fabricate(:private_message_topic)
+
+      topic_ids = TopicsBulkAction.new(admin, [pm.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: pm.id)).not_to exist
+    end
+
+    it "does nothing when user is not staff" do
+      topic_ids =
+        TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id])).not_to exist
+    end
+
+    it "does nothing when nested_replies_enabled is off" do
+      SiteSetting.nested_replies_enabled = false
+
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.count).to eq(0)
+    end
+
+    it "does nothing when nested_replies_default is on" do
+      SiteSetting.nested_replies_default = true
+
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "enable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.count).to eq(0)
+    end
+  end
+
+  describe "#disable_nested_view" do
+    fab!(:admin)
+    fab!(:topic_2, :topic)
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      Fabricate(:nested_topic, topic: topic_2)
+    end
+
+    it "destroys NestedTopic records for selected topics when user is staff" do
+      topic_ids =
+        TopicsBulkAction.new(admin, [topic.id, topic_2.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id])).not_to exist
+    end
+
+    it "is a no-op for topics without a NestedTopic record" do
+      topic_3 = Fabricate(:topic)
+
+      topic_ids = TopicsBulkAction.new(admin, [topic_3.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to eq([topic_3.id])
+    end
+
+    it "does nothing when user is not staff" do
+      topic_ids =
+        TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "disable_nested_view").perform!
+
+      expect(topic_ids).to be_empty
+      expect(NestedTopic.where(topic_id: [topic.id, topic_2.id]).count).to eq(2)
     end
   end
 end

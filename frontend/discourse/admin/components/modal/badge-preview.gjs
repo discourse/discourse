@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BadgePreview extends Component {
@@ -13,7 +14,7 @@ export default class BadgePreview extends Component {
 
       if (grant.post_id) {
         i18nKey += "_post";
-        i18nParams.link = `<a href="/p/${grant.post_id}" data-auto-route="true">
+        i18nParams.link = `<a href="${getURL(`/p/${grant.post_id}`)}" data-auto-route="true">
           ${escapeExpression(grant.title)}
         </a>`;
       }
@@ -56,9 +57,9 @@ export default class BadgePreview extends Component {
 
   <template>
     <DModal
+      class="badge-query-preview"
       @closeModal={{@closeModal}}
       @title={{i18n "admin.badges.preview.modal_title"}}
-      class="badge-query-preview"
     >
       <:body>
         {{#if @model.badge.errors}}
@@ -83,7 +84,7 @@ export default class BadgePreview extends Component {
           {{#if this.countWarning}}
             <div class="count-warning">
               <p class="heading">
-                {{icon "triangle-exclamation"}}
+                {{dIcon "triangle-exclamation"}}
                 {{i18n "admin.badges.preview.bad_count_warning.header"}}
               </p>
               <p class="body">

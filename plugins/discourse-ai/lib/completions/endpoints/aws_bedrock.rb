@@ -14,33 +14,19 @@ module DiscourseAi
           llm_model.provider == "aws_bedrock"
         end
 
+        def self.requires_configured_url?
+          false
+        end
+
         def default_options(dialect)
           options =
             if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
-              max_tokens = 4096
-              max_tokens = 8192 if bedrock_model_id.match?(/3.[57]/)
-
-              result = { anthropic_version: "bedrock-2023-05-31" }
-              if llm_model.lookup_custom_param("adaptive_thinking")
-                max_tokens = 32_000
-                result[:thinking] = { type: "adaptive" }
-              elsif llm_model.lookup_custom_param("enable_reasoning")
-                # we require special headers to go over 64k output tokens, lets
-                # wait for feature requests before enabling this
-                reasoning_tokens =
-                  llm_model.lookup_custom_param("reasoning_tokens").to_i.clamp(1024, 32_768)
-
-                # this allows for ample tokens beyond reasoning
-                max_tokens = reasoning_tokens + 30_000
-                result[:thinking] = { type: "enabled", budget_tokens: reasoning_tokens }
-              end
-              result[:max_tokens] = max_tokens
-
-              # effort parameter
-              effort = llm_model.lookup_custom_param("effort")
-              result[:output_config] = { effort: effort } if %w[low medium high max].include?(
-                effort,
-              )
+              result = {
+                anthropic_version: "bedrock-2023-05-31",
+                max_tokens: effective_max_output_tokens,
+              }
+              apply_anthropic_thinking_config!(result)
+              apply_anthropic_effort_config!(result)
 
               result
             else
@@ -54,54 +40,26 @@ module DiscourseAi
 
         private
 
-        def bedrock_model_id
-          case llm_model.name
-          when "claude-2"
-            "anthropic.claude-v2:1"
-          when "claude-3-haiku", "claude-3-haiku-20240307"
-            "anthropic.claude-3-haiku-20240307-v1:0"
-          when "claude-3-sonnet"
-            "anthropic.claude-3-sonnet-20240229-v1:0"
-          when "claude-instant-1"
-            "anthropic.claude-instant-v1"
-          when "claude-3-opus"
-            "anthropic.claude-3-opus-20240229-v1:0"
-          when "claude-3-5-sonnet", "claude-3-5-sonnet-20241022", "claude-3-5-sonnet-latest"
-            "anthropic.claude-3-5-sonnet-20241022-v2:0"
-          when "claude-3-5-sonnet-20240620"
-            "anthropic.claude-3-5-sonnet-20240620-v1:0"
-          when "claude-3-5-haiku", "claude-3-5-haiku-20241022", "claude-3-5-haiku-latest"
-            "anthropic.claude-3-5-haiku-20241022-v1:0"
-          when "claude-3-7-sonnet", "claude-3-7-sonnet-20250219", "claude-3-7-sonnet-latest"
-            "anthropic.claude-3-7-sonnet-20250219-v1:0"
-          when "claude-opus-4-1", "claude-opus-4-1-20250805"
-            "anthropic.claude-opus-4-1-20250805-v1:0"
-          when "claude-opus-4", "claude-opus-4-20250514"
-            "anthropic.claude-opus-4-20250514-v1:0"
-          when "claude-sonnet-4", "claude-sonnet-4-20250514"
-            "anthropic.claude-sonnet-4-20250514-v1:0"
-          when "claude-opus-4-5"
-            "anthropic.claude-opus-4-5-20250918-v1:0"
-          when "claude-sonnet-4-5"
-            "anthropic.claude-sonnet-4-5-20250514-v1:0"
-          when "claude-opus-4-6"
-            "anthropic.claude-opus-4-6-v1"
-          when "claude-sonnet-4-6"
-            "anthropic.claude-sonnet-4-6-v1"
-          else
-            llm_model.name
-          end
+        def supports_anthropic_thinking?
+          bedrock_model_id.include?("anthropic") || bedrock_model_id.include?("claude")
         end
 
         def model_uri
           region = llm_model.lookup_custom_param("region")
+          inference_profile_arn = llm_model.lookup_custom_param("inference_profile_arn")
 
-          if region.blank? || bedrock_model_id.blank?
+          model_id =
+            if inference_profile_arn.present?
+              URI.encode_www_form_component(inference_profile_arn)
+            else
+              bedrock_model_id
+            end
+
+          if region.blank? || model_id.blank?
             raise CompletionFailed.new(I18n.t("discourse_ai.llm_models.bedrock_invalid_url"))
           end
 
-          api_url =
-            "https://bedrock-runtime.#{region}.amazonaws.com/model/#{bedrock_model_id}/invoke"
+          api_url = "https://bedrock-runtime.#{region}.amazonaws.com/model/#{model_id}/invoke"
 
           api_url = @streaming_mode ? (api_url + "-with-response-stream") : api_url
 
@@ -217,6 +175,23 @@ module DiscourseAi
             log.request_tokens = processor.input_tokens if processor.input_tokens
             log.response_tokens = processor.output_tokens if processor.output_tokens
           end
+        end
+
+        def reset_attempt_state!
+          super
+          @raw_response = nil
+        end
+
+        def output_stop_reason
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
+        end
+
+        def output_limit_reached?
+          dialect.is_a?(DiscourseAi::Completions::Dialects::Claude) && super
+        end
+
+        def reported_reasoning_tokens
+          super if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
         end
 
         def processor

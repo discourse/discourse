@@ -1,6 +1,7 @@
 /* eslint-disable ember/routes-segments-snake-case */
 export default function () {
   this.route("chat", function () {
+    this.route("disabled");
     this.route("search");
 
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
@@ -27,6 +28,7 @@ export default function () {
       { path: "/c/:channelTitle/:channelId/info" },
       function () {
         this.route("members");
+        this.route("preferences");
         this.route("settings");
       }
     );

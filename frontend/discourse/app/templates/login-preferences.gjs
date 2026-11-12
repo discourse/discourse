@@ -1,5 +1,5 @@
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -9,9 +9,9 @@ export default <template>
     <p style="margin-top: 1em">{{i18n "login.preferences"}}</p>
 
     <DButton
+      class="btn-primary"
       @action={{routeAction "showLogin"}}
       @label="log_in"
-      class="btn-primary"
     />
   </div>
 </template>

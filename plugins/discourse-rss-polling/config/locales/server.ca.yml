@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 ca:
-  site_settings:
-    rss_polling_frequency: "[RSS Polling] Freqüència del mostratge del canal (en minuts)"

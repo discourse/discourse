@@ -21,8 +21,6 @@ ro:
     patreon_donation_prompt_enabled: "Activezi solicitarea de donații?"
     patreon_donation_prompt_show_after_topics: "Afișează solicitarea de donații după n subiecte"
     patreon_donation_prompt_campaign_url: "URL-ul campaniei de solicitare a donațiilor"
-    errors:
-      patreon_creator_username_not_set: "Trebuie să configurezi numele de utilizator Discourse pentru creator Patreon înainte de a activa conectarea Patreon."
   dashboard:
     problem:
       access_token_invalid: "Valorile jetoanelor de acces și de reîmprospătare ale creatorului Patreon sunt incorecte. Trebuie să copiezi și să lipești noile jetoane de pe <a href='https://www.patreon.com/platform/documentation/clients'>site-ul web Patreon</a> în <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>setările site-ului</a>."

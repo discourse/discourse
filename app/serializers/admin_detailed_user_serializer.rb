@@ -21,6 +21,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
+             :full_silence_reason,
              :silence_reason,
              :penalty_counts,
              :next_penalty,
@@ -152,6 +153,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.api_keys.active.count
   end
 
+  def include_external_ids?
+    scope.is_admin?
+  end
+
   def external_ids
     external_ids = {}
 
@@ -195,5 +200,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def include_upcoming_changes_stats?
     scope.is_staff?
+  end
+
+  def groups
+    object.groups.visible_groups(scope.user)
   end
 end

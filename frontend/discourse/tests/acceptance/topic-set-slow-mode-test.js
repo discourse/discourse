@@ -1,10 +1,9 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
   fakeTime,
   loggedInUser,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -45,10 +44,8 @@ acceptance("Topic - Set Slow Mode", function (needs) {
 
     await click(".future-date-input-selector-header");
 
-    const options = Array.from(
-      queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
-        x.innerText.trim()
-      )
+    const options = findAll(`ul.select-kit-collection li span.name`).map((x) =>
+      x.innerText.trim()
     );
 
     const expected = [

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Interface", type: :system do
+describe "User preferences | Interface" do
   fab!(:user)
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
   let(:user_preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
@@ -26,6 +26,22 @@ describe "User preferences | Interface", type: :system do
           bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
         ),
       ).to be_truthy
+    end
+  end
+
+  describe "Send shortcut" do
+    it "changes the send shortcut preference" do
+      user_preferences_page.visit(user)
+      click_link(I18n.t("js.user.preferences_nav.interface"))
+
+      dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
+
+      expect(dropdown).to have_selected_value("enter")
+
+      dropdown.select_row_by_value("meta_enter")
+      click_button(I18n.t("js.save"))
+
+      expect(UserOption.exists?(user_id: user.id, send_shortcut: "meta_enter")).to be_truthy
     end
   end
 

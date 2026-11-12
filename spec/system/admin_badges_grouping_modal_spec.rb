@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Badges Grouping Modal", type: :system do
+describe "Admin Badges Grouping Modal" do
   before { SiteSetting.enable_badges = true }
 
   fab!(:current_user, :admin)

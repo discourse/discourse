@@ -7,7 +7,7 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import NotificationsButtonRow from "./notifications-button/notifications-button-row";
+import NotificationsButtonRow from "./notifications-button/notifications-button-row.js";
 
 @classNames("notifications-button")
 @selectKitOptions({
@@ -20,6 +20,11 @@ import NotificationsButtonRow from "./notifications-button/notifications-button-
 export default class NotificationsButton extends DropdownSelectBoxComponent {
   content = allLevels;
   nameProperty = "key";
+
+  @computed("value")
+  get buttonForValue() {
+    return buttonDetails(this.value);
+  }
 
   getTitle(key) {
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
@@ -44,10 +49,5 @@ export default class NotificationsButton extends DropdownSelectBoxComponent {
       icon: this.buttonForValue.icon,
     });
     return content;
-  }
-
-  @computed("value")
-  get buttonForValue() {
-    return buttonDetails(this.value);
   }
 }

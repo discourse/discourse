@@ -2,9 +2,11 @@
 
 require_relative "page_objects/components/user_color_palette_selector"
 
-describe "Horizon theme | High level", type: :system do
-  let!(:theme) do
+describe "Horizon theme | High level" do
+  let!(:horizon_theme) do
     horizon_theme = upload_theme
+    # the bundled Horizon's palettes share these names, and the menu matches by name
+    ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"]).update_all(user_selectable: false)
     ColorScheme
       .where(theme_id: horizon_theme.id)
       .where.not("name LIKE '%Dark%'")
@@ -20,6 +22,7 @@ describe "Horizon theme | High level", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
+
   fab!(:incorrect_scheme) do
     Fabricate(:color_scheme, name: "Incorrect Scheme", user_selectable: true)
   end
@@ -36,6 +39,28 @@ describe "Horizon theme | High level", type: :system do
     #
     # NOTE(martin): Maybe there is a better way to do this in a qunit test instead.
     topic_item = find(topic_list.topic_list_item_class(topic_1))
+    expect(topic_item.all("td").map { |el| el["class"] }).to eq(["hc-topic-card"])
+
+    # Can see a topic in the list and navigate to it successfully.
+    topic_list.visit_topic(topic_1)
+    expect(topic_page).to have_topic_title(topic_1.title)
+
+    # Can change site colors from the sidebar palette, which are remembered
+    # across page reloads.
+    marigold_palette = horizon_theme.color_schemes.find_by(name: "Marigold")
+    palette_selector.open_palette_menu
+    palette_selector.click_palette_menu_item(marigold_palette.name)
+    expect(palette_selector).to have_no_palette_menu
+
+    page.refresh
+    expect(palette_selector).to have_selected_palette(marigold_palette)
+    expect(palette_selector).to have_tertiary_color(marigold_palette)
+
+    # Navigating topic list when high context topic cards are not enabled
+    horizon_theme.update_setting(:topic_card_high_context, false)
+    horizon_theme.save!
+    page.refresh
+    visit "/"
     expect(topic_item.all("td").map { |el| el["class"] }).to eq(
       [
         "main-link topic-list-data",
@@ -44,21 +69,8 @@ describe "Horizon theme | High level", type: :system do
         "topic-activity-data",
       ],
     )
-
-    # Can see a topic in the list and navigate to it successfully.
     topic_list.visit_topic(topic_1)
     expect(topic_page).to have_topic_title(topic_1.title)
-
-    # Can change site colors from the sidebar palette, which are remembered
-    # across page reloads.
-    marigold_palette = theme.color_schemes.find_by(name: "Marigold")
-    palette_selector.open_palette_menu
-    palette_selector.click_palette_menu_item(marigold_palette.name)
-    expect(palette_selector).to have_no_palette_menu
-
-    page.refresh
-    expect(palette_selector).to have_selected_palette(marigold_palette)
-    expect(palette_selector).to have_tertiary_color(marigold_palette)
   end
 
   it "works for anon" do
@@ -69,7 +81,7 @@ describe "Horizon theme | High level", type: :system do
   context "for signed in users" do
     before { sign_in(current_user) }
 
-    it "works" do
+    it "passes the high-level checks for a signed-in user" do
       visit "/"
       run_all_high_level_tests
     end

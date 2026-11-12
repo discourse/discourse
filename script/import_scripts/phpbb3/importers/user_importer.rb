@@ -106,21 +106,16 @@ module ImportScripts::PhpBB3
     end
 
     def user_fields
-      @user_fields ||=
-        begin
-          UserField.all.index_by(&:name)
-        end
+      @user_fields ||= UserField.all.index_by(&:name)
     end
 
     def field_mappings
       @field_mappings ||=
-        begin
-          @settings.custom_fields.map do |field|
-            {
-              phpbb_field_name: "pf_#{field[:phpbb_field_name]}".to_sym,
-              discourse_user_field: user_fields[field[:discourse_field_name]],
-            }
-          end
+        @settings.custom_fields.map do |field|
+          {
+            phpbb_field_name: :"pf_#{field[:phpbb_field_name]}",
+            discourse_user_field: user_fields[field[:discourse_field_name]],
+          }
         end
     end
 

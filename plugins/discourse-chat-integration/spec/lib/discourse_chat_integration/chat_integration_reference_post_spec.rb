@@ -11,6 +11,51 @@ RSpec.describe DiscourseChatIntegration::ChatIntegrationReferencePost do
     }
   end
 
+  describe "when no topic is provided" do
+    subject(:post) do
+      described_class.new(user: Discourse.system_user, kind: :workflow, raw: "A custom message")
+    end
+
+    it "provides standalone site context", :aggregate_failures do
+      expect(post.id).to be_nil
+      expect(post.user).to eq(Discourse.system_user)
+      expect(post.topic.id).to be_nil
+      expect(post.topic.title).to eq(SiteSetting.title)
+      expect(post.topic.category).to be_nil
+      expect(post.topic.tags).to be_empty
+      expect(post.topic.posts).to be_empty
+      expect(post.topic.custom_fields).to be_empty
+      expect(post.full_url).to eq(Discourse.base_url)
+      expect(post.excerpt).to eq("A custom message")
+      expect(post).to be_is_first_post
+    end
+
+    it "can be formatted by every chat-integration provider" do
+      messages = [
+        DiscourseChatIntegration::Provider::SlackProvider.slack_message(post, "#alerts", ""),
+        DiscourseChatIntegration::Provider::DiscordProvider.generate_discord_message(post),
+        DiscourseChatIntegration::Provider::TelegramProvider.message_text(post),
+        DiscourseChatIntegration::Provider::MattermostProvider.mattermost_message(post, "alerts"),
+        DiscourseChatIntegration::Provider::MatrixProvider.generate_matrix_message(post),
+        DiscourseChatIntegration::Provider::RocketchatProvider.rocketchat_message(post, "#alerts"),
+        DiscourseChatIntegration::Provider::WebexProvider.get_message(post),
+        DiscourseChatIntegration::Provider::GuildedProvider.generate_guilded_message(post),
+        DiscourseChatIntegration::Provider::GroupmeProvider.generate_groupme_message(post),
+        DiscourseChatIntegration::Provider::ZulipProvider.generate_zulip_message(
+          post,
+          "alerts",
+          "subject",
+        ),
+        DiscourseChatIntegration::Provider::GitterProvider.gitter_message(post),
+        DiscourseChatIntegration::Provider::GoogleProvider.get_message(post),
+        DiscourseChatIntegration::Provider::TeamsProvider.get_message(post),
+        DiscourseChatIntegration::Provider::PowerAutomateProvider.get_message(post),
+      ]
+
+      expect(messages).to all(be_present)
+    end
+  end
+
   describe "when creating when topic tags change" do
     before do
       context["kind"] = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED

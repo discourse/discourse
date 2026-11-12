@@ -4,7 +4,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const topic = topicWithAssignedPosts();
 const firstReply = topic.post_stream.posts[1];
@@ -12,7 +12,7 @@ const secondReply = topic.post_stream.posts[2];
 const new_assignee_1 = "user_1";
 const new_assignee_2 = "user_2";
 
-acceptance(`Discourse Assign | Edit assignments modal`, function (needs) {
+acceptance("Edit assignments modal", function (needs) {
   needs.user({ can_assign: true });
   needs.settings({
     assign_enabled: true,
@@ -30,13 +30,8 @@ acceptance(`Discourse Assign | Edit assignments modal`, function (needs) {
     ];
     server.get("/assign/suggestions", () =>
       helper.response({
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions,
-      })
-    );
-    server.get("/u/search/users", () =>
-      helper.response({
-        users: suggestions,
       })
     );
   });

@@ -1,0 +1,114 @@
+{
+  "name": "Welcome new members",
+  "description": "Sends a welcome personal message to new members shortly after their first login.",
+  "nodes": [
+    {
+      "id": "user-first-logged-in",
+      "type": "trigger:user_first_logged_in",
+      "typeVersion": "1.0",
+      "name": "User first logged in",
+      "parameters": {},
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "wait",
+      "type": "flow:wait",
+      "typeVersion": "1.0",
+      "name": "Wait",
+      "parameters": {
+        "resume": "time_interval",
+        "wait_amount": 10,
+        "wait_unit": "minutes"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "id": "send-personal-message",
+      "type": "action:send_personal_message",
+      "typeVersion": "1.0",
+      "name": "Send personal message",
+      "parameters": {
+        "title": "=Welcome to {{ $site_settings.title }}!",
+        "raw": "=Hey @{{ $json.user.username }} — welcome to {{ $site_settings.title }}!\n\nTake some time to explore the community or jump right in and start participating. If you need any help, don't hesitate to ask. Our staff team is happy to assist with anything.\n\nThanks for joining. We're glad you're here!",
+        "sender_username": "system",
+        "recipient_usernames": "={{ $json.user.username }}"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 480,
+        "y": 0
+      }
+    },
+    {
+      "id": "note-wait",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Wait\" to change how long after the first login the welcome message is sent. By default, 10 minutes.",
+        "width": 220,
+        "height": 250,
+        "color": "orange"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 220,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-message",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "**Highly recommended!** Double-click \"Send personal message\" to customize the text with popular categories, where to get help, etc., and to send it from a real staff member so new users can reply.",
+        "width": 260,
+        "height": 250,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 460,
+        "y": -110
+      }
+    }
+  ],
+  "connections": {
+    "User first logged in": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send personal message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

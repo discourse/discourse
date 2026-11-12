@@ -1,7 +1,9 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CreateInvite from "discourse/components/modal/create-invite";
+import Invite from "discourse/models/invite";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
 module("Integration | Component | CreateInvite", function (hooks) {
@@ -174,6 +176,104 @@ module("Integration | Component | CreateInvite", function (hooks) {
       formKit().field("maxRedemptions").value(),
       98,
       "uses invite_link_max_redemptions_limit as the default value if it's smaller than 10"
+    );
+  });
+
+  test("focuses the description field after expanding advanced options", async function (assert) {
+    const model = {};
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".edit-link-options");
+
+    assert
+      .dom("input[name='description']")
+      .isFocused(
+        "the description input receives focus when advanced options expand, so screen reader users land inside the form"
+      );
+  });
+
+  test("focuses the copy/share button after the invite link is created", async function (assert) {
+    const model = {};
+    pretender.post("/invites", () =>
+      response({
+        id: 42,
+        link: "https://example.com/invites/abc123",
+      })
+    );
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".save-invite");
+
+    assert
+      .dom(".link-share-container button")
+      .isFocused(
+        "focus moves to the copy/share button after the invite is created"
+      );
+  });
+
+  test("clearing the restrictTo field of a domain invite", async function (assert) {
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 42,
+        domain: "example.com",
+        expires_at: "2030-01-01",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/42", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({ id: 42, domain: null });
+    });
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await formKit().field("restrictTo").fillIn("");
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "",
+      "sends a blank domain so the server drops the restriction"
+    );
+  });
+
+  test("changing the restrictTo field of a domain invite", async function (assert) {
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 42,
+        domain: "example.com",
+        expires_at: "2030-01-01",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/42", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({ id: 42, domain: "other.com" });
+    });
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await formKit().field("restrictTo").fillIn("other.com");
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "other.com",
+      "sends the new domain"
     );
   });
 

@@ -1,0 +1,75 @@
+// Theming tokens (fill, shimmer, duration, radius) are deliberately not declared
+// here: left undeclared they can be set by a consumer class on the skeleton or
+// scoped from any ancestor, and their defaults live at the point of use below.
+// Layout tokens are declared, so an ancestor cannot silently relay out a nested
+// skeleton that had nothing to do with the intent — but at zero specificity, so
+// a consumer's own class still outranks them whatever order the stylesheets load
+// in. Variant blocks override this one and must follow it.
+:where(.d-skeleton) {
+  --d-skeleton-gap: 0.5em;
+  --d-skeleton-display: flex;
+  --d-skeleton-item-width: auto;
+}
+
+// A lone line matches the real element's line box; stacked lines drop to ink
+// height and sit one leading apart, so a paragraph reads as separate lines. The
+// two are mutually exclusive rather than ordered, so moving one cannot change
+// what wins.
+:where(.d-skeleton--text:not(.d-skeleton--multiline)) {
+  --d-skeleton-item-height: 1lh;
+}
+
+:where(.d-skeleton--text.d-skeleton--multiline) {
+  --d-skeleton-item-height: 1em;
+
+  // The leading is deliberately not derived from the item height a caller may
+  // have supplied. That value can be taller than the line box, or `auto`, or a
+  // variable resolving to nothing — each of which either bottoms the
+  // subtraction out or makes it uncomputable, closing the gap entirely.
+  --d-skeleton-gap: max(0.25em, calc(1lh - 1em));
+}
+
+:where(.d-skeleton--rect) {
+  --d-skeleton-item-height: 2.5em;
+}
+
+:where(.d-skeleton--circle) {
+  --d-skeleton-item-height: 2em;
+  --d-skeleton-item-width: 2em;
+  --d-skeleton-radius: 50%;
+}
+
+// Structure keeps its normal specificity: only the tokens above are meant to be
+// overridden.
+.d-skeleton {
+  display: var(--d-skeleton-display);
+  flex-direction: column;
+  gap: var(--d-skeleton-gap);
+
+  &__item {
+    width: var(--d-skeleton-item-width);
+    height: var(--d-skeleton-item-height, 1em);
+
+    // The reserved height is the point, so don't let a constrained parent
+    // compress it.
+    flex-shrink: 0;
+    background: var(--d-skeleton-fill, var(--primary-very-low));
+    border-radius: var(--d-skeleton-radius, var(--d-border-radius, 0.25em));
+
+    @media (prefers-reduced-motion: no-preference) {
+      &.placeholder-animation {
+        background-image: linear-gradient(
+          to right,
+          var(--d-skeleton-fill, var(--primary-very-low)),
+          var(--d-skeleton-shimmer, var(--primary-low)) 50%,
+          var(--d-skeleton-fill, var(--primary-very-low))
+        );
+
+        // fixed band matching the shared keyframe's 2100px travel, so the
+        // shimmer loops seamlessly at a width-independent speed
+        background-size: 2100px 100%;
+        animation-duration: var(--d-skeleton-duration, 2.5s);
+      }
+    }
+  }
+}

@@ -19,5 +19,9 @@ class TestRequestsController < ApplicationController
 
       render json: net_http_get
     end
+
+    def test_postgres_readonly
+      raise PG::ReadOnlySqlTransaction, "cannot execute INSERT in a read-only transaction"
+    end
   end
 end

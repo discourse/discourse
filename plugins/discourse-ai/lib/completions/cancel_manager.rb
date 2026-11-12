@@ -4,11 +4,17 @@
 module DiscourseAi
   module Completions
     class CancelManager
+      MIN_TRANSPORT_TIMEOUT = 0.1
+
       attr_reader :cancelled
       attr_reader :callbacks
 
-      def initialize
+      # @param timeout [Numeric, nil] seconds after which transports should give up;
+      #   endpoints bound their own network timeouts by what remains.
+      def initialize(timeout: nil)
+        @deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout if timeout
         @cancelled = false
+        @cancel_event = Concurrent::Event.new
         @callbacks = Concurrent::Array.new
         @mutex = Mutex.new
         @monitor_thread = nil
@@ -28,28 +34,26 @@ module DiscourseAi
 
           @monitor_thread =
             Thread.new do
-              begin
-                loop do
-                  done = false
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  break if done
-                  sleep delay
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  @mutex.synchronize { done = true if cancelled? }
-                  break if done
+              loop do
+                done = false
+                @mutex.synchronize { done = true if @stop_monitor }
+                break if done
+                sleep delay
+                @mutex.synchronize { done = true if @stop_monitor }
+                @mutex.synchronize { done = true if cancelled? }
+                break if done
 
-                  should_cancel = false
-                  RailsMultisite::ConnectionManagement.with_connection(db) do
-                    should_cancel = block.call
-                  end
-
-                  @mutex.synchronize { cancel! if should_cancel }
-
-                  break if cancelled?
+                should_cancel = false
+                RailsMultisite::ConnectionManagement.with_connection(db) do
+                  should_cancel = block.call
                 end
-              ensure
-                @mutex.synchronize { @monitor_thread = nil }
+
+                @mutex.synchronize { cancel! if should_cancel }
+
+                break if cancelled?
               end
+            ensure
+              @mutex.synchronize { @monitor_thread = nil }
             end
         end
       end
@@ -77,8 +81,27 @@ module DiscourseAi
         @cancelled
       end
 
+      def remaining_seconds
+        return if !@deadline
+        [@deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC), 0].max
+      end
+
+      def expired?
+        remaining_seconds&.zero? || false
+      end
+
+      # Caps a transport timeout so it cannot outlive the deadline.
+      def bound_timeout(timeout)
+        remaining = remaining_seconds
+        remaining ? [timeout, [remaining, MIN_TRANSPORT_TIMEOUT].max].min : timeout
+      end
+
       def add_callback(cb)
         @callbacks << cb
+      end
+
+      def wait_for_cancel(timeout)
+        @cancel_event.wait(timeout)
       end
 
       def remove_callback(cb)
@@ -87,6 +110,7 @@ module DiscourseAi
 
       def cancel!
         @cancelled = true
+        @cancel_event.set
         monitor_thread = @monitor_thread
         if monitor_thread && monitor_thread != Thread.current
           monitor_thread.wakeup
@@ -97,11 +121,9 @@ module DiscourseAi
           end
         end
         @callbacks.each do |cb|
-          begin
-            cb.call
-          rescue StandardError
-            # ignore cause this may have already been cancelled
-          end
+          cb.call
+        rescue StandardError
+          # ignore cause this may have already been cancelled
         end
       end
     end

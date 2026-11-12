@@ -1,0 +1,352 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+import processNode from "../../lib/process-node.js";
+import NestedPost from "./post.gjs";
+
+export default class NestedPostChildren extends Component {
+  @service appEvents;
+  @service store;
+  @service siteSettings;
+
+  @tracked childNodes = [];
+  @tracked loading = false;
+  @tracked page = 0;
+  @tracked hasMore = false;
+  @tracked loadingMore = false;
+  @tracked loaded = false;
+
+  // Tracks whether we've fetched from the server yet (vs only having preloaded data)
+  _fetchedFromServer = false;
+
+  /** @type {string | null} */
+  _identityKey = null;
+
+  /** @type {string | null} */
+  _activeCacheKey = null;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      "nested-replies:child-created",
+      this,
+      this._onChildCreated
+    );
+
+    this._hydrateFromArgs();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "nested-replies:child-created",
+      this,
+      this._onChildCreated
+    );
+    this._reportToCache();
+  }
+
+  get identityKey() {
+    return [
+      this.args.topic?.id,
+      this.args.parentPostNumber,
+      this.args.sort,
+    ].join(":");
+  }
+
+  get childDepth() {
+    return this.args.depth + 1;
+  }
+
+  get usesFlatDescendantPagination() {
+    return (
+      this.siteSettings.nested_replies_cap_nesting_depth &&
+      this.childDepth >= this.siteSettings.nested_replies_max_depth
+    );
+  }
+
+  get expectedCount() {
+    return this.usesFlatDescendantPagination
+      ? this.args.totalDescendantCount || this.args.directReplyCount || 0
+      : this.args.directReplyCount || 0;
+  }
+
+  get remainingCount() {
+    return Math.max(this.expectedCount - this.childNodes.length, 0);
+  }
+
+  get loadMoreLabel() {
+    const count = this.remainingCount;
+    if (count > 0) {
+      return i18n("nested_replies.load_more_children", { count });
+    }
+    return i18n("nested_replies.load_more_children_generic");
+  }
+
+  @action
+  hydrateFromArgs() {
+    this._hydrateFromArgs();
+  }
+
+  async loadChildren() {
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
+    this.loading = true;
+    try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
+      const data = await ajax(
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
+      );
+      if (this.isDestroying || this.identityKey !== identityKey) {
+        return;
+      }
+      this.childNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
+      );
+      this.page = data.page;
+      this.hasMore = data.has_more || false;
+      this.loaded = true;
+      this._fetchedFromServer = true;
+      this._reportToCache();
+    } catch (e) {
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loading = false;
+      }
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore || !this.hasMore) {
+      return;
+    }
+
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
+    this.loadingMore = true;
+    try {
+      // First server fetch after preloaded data: get page 0 and merge
+      // to preserve expanded state on already-loaded nodes.
+      // Subsequent fetches: normal pagination.
+      const nextPage = this._fetchedFromServer ? this.page + 1 : 0;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
+      const data = await ajax(
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
+      );
+      if (this.isDestroying || this.identityKey !== identityKey) {
+        return;
+      }
+      const newNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
+      );
+
+      if (!this._fetchedFromServer) {
+        // Merge: keep preloaded children (may have expanded subtrees),
+        // append only siblings not already present.
+        const existing = new Set(
+          this.childNodes.map((n) => n.post.post_number)
+        );
+        const additional = newNodes.filter(
+          (n) => !existing.has(n.post.post_number)
+        );
+        this.childNodes = [...this.childNodes, ...additional];
+        this._fetchedFromServer = true;
+      } else {
+        const additional = newNodes.filter(
+          (node) => !this._includesPost(this.childNodes, node.post)
+        );
+        this.childNodes = [...this.childNodes, ...additional];
+      }
+
+      this.page = data.page;
+      this.hasMore = data.has_more || false;
+      this._reportToCache();
+    } catch (e) {
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loadingMore = false;
+      }
+    }
+  }
+
+  _cacheKeyFor(
+    parentPostNumber = this.args.parentPostNumber,
+    topicId = this.args.topic?.id
+  ) {
+    return `${topicId}:${parentPostNumber}`;
+  }
+
+  _hydrateFromArgs() {
+    if (this._identityKey === this.identityKey) {
+      return;
+    }
+
+    this._identityKey = this.identityKey;
+    this._activeCacheKey = this._cacheKeyFor();
+    this.childNodes = [];
+    this.loading = false;
+    this.page = 0;
+    this.hasMore = false;
+    this.loadingMore = false;
+    this.loaded = false;
+    this._fetchedFromServer = false;
+
+    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
+    if (cached) {
+      this.childNodes = cached.childNodes;
+      this.page = cached.page;
+      this.hasMore = this.usesFlatDescendantPagination
+        ? this.expectedCount > this.childNodes.length
+        : cached.hasMore;
+      this.loaded = true;
+      this._fetchedFromServer = cached.fetchedFromServer;
+      return;
+    }
+
+    if (this.args.preloadedChildren?.length > 0) {
+      this.childNodes = this.args.preloadedChildren;
+      this.loaded = true;
+      this.hasMore = this.expectedCount > this.childNodes.length;
+    } else if (this.args.directReplyCount > 0) {
+      this.loadChildren();
+    }
+  }
+
+  _reportToCache(cacheKey = this._activeCacheKey) {
+    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
+      return;
+    }
+    this.args.fetchedChildrenCache.set(cacheKey, {
+      childNodes: this.childNodes,
+      page: this.page,
+      hasMore: this.hasMore,
+      fetchedFromServer: this._fetchedFromServer,
+    });
+  }
+
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
+      return;
+    }
+
+    const alreadyExists = this._includesPost(this.childNodes, post);
+    if (alreadyExists) {
+      return;
+    }
+
+    this.childNodes = [{ post, children: [] }, ...this.childNodes];
+    this.loaded = true;
+    this._reportToCache();
+  }
+
+  _childrenForTopic(children, topicId) {
+    return (children || []).filter(
+      (child) =>
+        child.topic_id != null && String(child.topic_id) === String(topicId)
+    );
+  }
+
+  _processNode(nodeData) {
+    return processNode(this.store, this.args.topic, nodeData);
+  }
+
+  _includesPost(nodes, post) {
+    return nodes.some(
+      (node) =>
+        node.post.id === post.id || node.post.post_number === post.post_number
+    );
+  }
+
+  <template>
+    <div
+      class="nested-post-children"
+      {{didUpdate this.hydrateFromArgs @topic.id @parentPostNumber @sort}}
+    >
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
+        {{#each this.childNodes key="post.id" as |node|}}
+          <NestedPost
+            @captureScrollAnchor={{@captureScrollAnchor}}
+            @changeNotice={{@changeNotice}}
+            @changePostOwner={{@changePostOwner}}
+            @children={{node.children}}
+            @collapseFromDepth={{@collapseFromDepth}}
+            @collapseParent={{@collapseParent}}
+            @deletePost={{@deletePost}}
+            @depth={{this.childDepth}}
+            @editPost={{@editPost}}
+            @expansionState={{@expansionState}}
+            @fetchedChildrenCache={{@fetchedChildrenCache}}
+            @focusPost={{@focusPost}}
+            @grantBadge={{@grantBadge}}
+            @highlightParentLine={{@highlightParentLine}}
+            @lockPost={{@lockPost}}
+            @multiSelect={{@multiSelect}}
+            @parentLineHighlighted={{@parentLineHighlighted}}
+            @path={{@path}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @post={{node.post}}
+            @postSelected={{@postSelected}}
+            @rebakePost={{@rebakePost}}
+            @recoverPost={{@recoverPost}}
+            @registerPost={{@registerPost}}
+            @replyToPost={{@replyToPost}}
+            @scrollAnchor={{@scrollAnchor}}
+            @selectBelow={{@selectBelow}}
+            @selectReplies={{@selectReplies}}
+            @showFlags={{@showFlags}}
+            @showHistory={{@showHistory}}
+            @showPagePublish={{@showPagePublish}}
+            @sort={{@sort}}
+            @togglePostSelection={{@togglePostSelection}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @topic={{@topic}}
+            @unhidePost={{@unhidePost}}
+            @unhighlightParentLine={{@unhighlightParentLine}}
+            @unlockPost={{@unlockPost}}
+          />
+        {{/each}}
+
+        {{#if this.hasMore}}
+          <DButton
+            class={{dConcatClass
+              "btn-flat"
+              "nested-post-children__load-more"
+              (if @parentLineHighlighted "--parent-line-highlighted")
+            }}
+            @action={{this.loadMore}}
+            @disabled={{this.loadingMore}}
+            @translatedLabel={{this.loadMoreLabel}}
+          />
+        {{/if}}
+      </DConditionalLoadingSpinner>
+    </div>
+  </template>
+}

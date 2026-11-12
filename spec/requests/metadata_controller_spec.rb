@@ -33,10 +33,29 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
-      expect(manifest["share_target"]).to be_present
-      expect(manifest["share_target"]["params"]["title"]).to eq("title")
-      expect(manifest["share_target"]["params"]["text"]).to eq("body")
-      expect(manifest["share_target"]["params"]["url"]).to eq("title")
+      share_target = manifest["share_target"]
+      expect(share_target).to be_present
+      expect(share_target["action"]).to end_with("/share-target")
+      expect(share_target["method"]).to eq("POST")
+      expect(share_target["enctype"]).to eq("multipart/form-data")
+      expect(share_target["params"]["title"]).to eq("title")
+      expect(share_target["params"]["text"]).to eq("text")
+      expect(share_target["params"]["url"]).to eq("url")
+      expect(share_target["params"]["files"].first["name"]).to eq("files")
+    end
+
+    it "derives the share target accepted files from authorized_extensions" do
+      SiteSetting.authorized_extensions = "png|pdf"
+      get "/manifest.webmanifest"
+      accept = JSON.parse(response.body)["share_target"]["params"]["files"].first["accept"]
+      expect(accept).to contain_exactly(".png", ".pdf")
+    end
+
+    it "accepts any file type when all extensions are authorized" do
+      SiteSetting.authorized_extensions = "*"
+      get "/manifest.webmanifest"
+      accept = JSON.parse(response.body)["share_target"]["params"]["files"].first["accept"]
+      expect(accept).to eq(["*/*"])
     end
 
     it "can guess mime types" do
@@ -59,6 +78,21 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
       expect(manifest["icons"].first["type"]).to eq("image/png")
+    end
+
+    it "returns a manifest without icons when the configured icon is an ICO image" do
+      ico =
+        UploadCreator.new(
+          file_from_fixtures("smallest.ico", "images"),
+          "smallest.ico",
+          for_site_setting: true,
+        ).create_for(Discourse.system_user.id)
+      SiteSetting.manifest_icon = ico
+
+      get "/manifest.webmanifest"
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["icons"]).to be_empty
     end
 
     it "defaults to display standalone for Android" do

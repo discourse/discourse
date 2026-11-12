@@ -1,9 +1,17 @@
+import { tracked } from "@glimmer/tracking";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
+  @tracked
+  value = this.args.value?.map((tag) => {
+    if (this.args.sendTagIds && typeof tag === "number") {
+      return this.args.tagRecords.get(tag) || { id: tag, name: String(tag) };
+    }
+    return tag;
+  });
+
   type = "tags";
 
   get tagChooserOption() {
@@ -14,16 +22,25 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   }
 
   onChange(tags) {
-    return tags.map((tag) => tag.name);
+    if (!this.args.sendTagIds) {
+      return tags.map((tag) => tag.name);
+    }
+
+    return tags.map((tag) => {
+      if (typeof tag.id === "number") {
+        this.args.tagRecords.set(tag.id, tag);
+      }
+      return tag.id;
+    });
   }
 
   <template>
     <TagChooser
-      @tags={{this.value}}
+      class={{if this.validationErrorMessage "--invalid"}}
+      @everyTag={{@spec.every_tag}}
       @onChange={{this.onInput}}
       @options={{this.tagChooserOption}}
-      @everyTag={{@spec.every_tag}}
-      class={{if this.validationErrorMessage "--invalid"}}
+      @tags={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

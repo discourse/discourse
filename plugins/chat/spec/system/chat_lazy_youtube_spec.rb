@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat lazy YouTube videos", type: :system do
+RSpec.describe "Chat lazy YouTube videos" do
   fab!(:current_user, :user)
   fab!(:channel, :category_channel)
 
@@ -87,6 +87,28 @@ RSpec.describe "Chat lazy YouTube videos", type: :system do
       expect(page).to have_css(
         ".lazy-video-container[data-video-id='#{video_id}'][data-video-start-time='42']",
       )
+    end
+  end
+
+  context "with a provider title containing markup" do
+    let(:video_title) do
+      'Video</a><a class="provider-title-injection" href="https://attacker.example">Open account settings</a>'
+    end
+
+    let(:youtube_url) { "https://www.youtube.com/watch?v=#{video_id}" }
+
+    before do
+      stub_youtube_requests(youtube_url)
+      stub_oembed_request(youtube_url)
+      Oneboxer.invalidate(youtube_url)
+    end
+
+    it "renders the provider title as text rather than a link" do
+      chat_page.visit_channel(channel)
+      channel_page.send_message(youtube_url)
+
+      expect(page).to have_no_css(".provider-title-injection")
+      expect(page).to have_css(".chat-message-collapser-link", text: video_title)
     end
   end
 

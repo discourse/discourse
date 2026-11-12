@@ -42,23 +42,19 @@ RSpec.describe OneboxController do
       html
     end
 
-    def bypass_limiting
-      Oneboxer.onebox_previewed!(user.id)
-    end
-
     before { sign_in(user) }
 
     it "invalidates the cache if refresh is passed" do
       stub_request(:head, url)
       stub_request(:get, url).to_return(status: 200, body: html).then.to_raise
 
-      bypass_limiting
+      Oneboxer.onebox_previewed!(user.id)
       Discourse.cache.delete("onebox__#{url}")
       get "/onebox.json", params: { url: url }
       expect(response.status).to eq(200)
       expect(response.body).to include("Onebox1")
 
-      bypass_limiting
+      Oneboxer.onebox_previewed!(user.id)
       stub_request(:get, url).to_return(status: 200, body: html2).then.to_raise
       get "/onebox.json", params: { url: url, refresh: "true" }
       expect(response.status).to eq(200)
@@ -82,6 +78,53 @@ RSpec.describe OneboxController do
         expect(response.status).to eq(200)
         expect(response.body).to include("Onebox1")
         expect(response.body).to include("bodycontent")
+      end
+    end
+
+    describe "hotlinked media policy" do
+      let(:url) { "https://example.com/preview-with-image" }
+      let(:image_url) { "https://images.example.com/thumbnail.jpg" }
+      let(:html) { <<~HTML }
+          <html><head>
+            <meta property="og:title" content="Image preview">
+            <meta property="og:description" content="A useful summary">
+            <meta property="og:image" content="#{image_url}">
+          </head></html>
+        HTML
+
+      before do
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
+
+      it "honors the current hotlink policy for fresh and cached previews" do
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("img", with: { src: image_url })
+
+        SiteSetting.block_hotlinked_media = true
+        2.times do
+          get "/onebox.json", params: { url: url }
+          expect(response.status).to eq(200)
+          expect(response.body).not_to have_tag("img[src]")
+          expect(response.body).to have_tag("h3", text: "Image preview")
+        end
+        expect(Oneboxer.cached_onebox(url)).to have_tag("img", with: { src: image_url })
+
+        stub_request(:get, url).to_return(
+          body: %(<html><head><link rel="icon" href="#{image_url}"></head></html>),
+        )
+        get "/onebox.json", params: { url: url, refresh: "true" }
+        expect(response.body).to have_tag("aside.preview-error")
+        expect(response.body).not_to have_tag("img[src]")
+
+        SiteSetting.block_hotlinked_media_exceptions = "https://images.example.com"
+        get "/onebox.json", params: { url: url }
+        expect(response.body).to have_tag("img", with: { src: image_url })
+
+        SiteSetting.block_hotlinked_media = false
+        get "/onebox.json", params: { url: url }
+        expect(response.body).to have_tag("img", with: { src: image_url })
       end
     end
 
@@ -148,14 +191,14 @@ RSpec.describe OneboxController do
     end
 
     it "does not onebox when you have no permission on category" do
-      post = create_post
+      post = create_post(category: Fabricate(:category))
       url = Discourse.base_url + post.url
 
       get "/onebox.json", params: { url: url, category_id: post.topic.category_id }
       expect(response.body).to include("blockquote")
 
       post.topic.category.set_permissions(staff: :full)
-      post.topic.category.save
+      post.topic.category.save!
 
       get "/onebox.json", params: { url: url, category_id: post.topic.category_id }
       expect(response.body).not_to include("blockquote")
@@ -206,6 +249,68 @@ RSpec.describe OneboxController do
 
         get "/onebox.json", params: { url: staff_category.url }
         expect(response.body).not_to include("aside")
+      end
+    end
+
+    context "with local user profiles" do
+      fab!(:hidden_user, :user)
+
+      before do
+        hidden_user.user_profile.update!(
+          bio_raw: "secret bio content",
+          location: "secret location",
+          website: "https://secret.example.com",
+        )
+        SiteSetting.allow_users_to_hide_profile = true
+        hidden_user.user_option.update!(hide_profile: true)
+      end
+
+      it "does not onebox a hidden user profile" do
+        url = "#{Discourse.base_url}/u/#{hidden_user.username}"
+
+        get "/onebox.json", params: { url: url }
+
+        expect(response.body).not_to include("secret bio content")
+        expect(response.body).not_to include("secret location")
+        expect(response.body).not_to include("secret.example.com")
+      end
+
+      it "does not expose a no-post user's hidden profile fields to a trust level 1 viewer" do
+        new_user = Fabricate(:user, trust_level: TrustLevel[1])
+        new_user.user_stat.update!(post_count: 0)
+        new_user.user_profile.update!(
+          bio_raw: "private new user biography",
+          location: "private new user location",
+          website: "https://private-new-user.example.com",
+        )
+        SiteSetting.hide_new_user_profiles = true
+
+        get "/u/#{new_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("user", "profile_hidden")).to eq(true)
+        expect(response.body).not_to include(new_user.user_profile.bio_raw)
+        expect(response.body).not_to include(new_user.user_profile.location)
+        expect(response.body).not_to include(new_user.user_profile.website)
+
+        get "/onebox.json", params: { url: "#{Discourse.base_url}/u/#{new_user.username}" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(new_user.user_profile.bio_raw)
+        expect(response.body).not_to include(new_user.user_profile.location)
+        expect(response.body).not_to include(new_user.user_profile.website)
+      end
+
+      it "oneboxes a user profile when the viewer can see the profile" do
+        visible_user = Fabricate(:user)
+        visible_user.user_stat.update!(post_count: 1)
+        visible_user.user_profile.update!(location: "visible location")
+        url = "#{Discourse.base_url}/u/#{visible_user.username}"
+
+        get "/onebox.json", params: { url: url }
+
+        expect(response.body).to include(visible_user.username)
+        expect(response.body).to include("visible location")
       end
     end
   end

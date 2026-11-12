@@ -12,6 +12,10 @@ module TopicTagsMixin
     scope.can_see_tags?(topic)
   end
 
+  def include_tags_descriptions?
+    include_tags?
+  end
+
   def tags
     all_tags.map { |tag| { id: tag.id, name: localized_tag_name(tag), slug: tag.slug_for_url } }
   end

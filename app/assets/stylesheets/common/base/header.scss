@@ -1,5 +1,13 @@
 @use "lib/viewport";
 
+:root {
+  --d-header-icon-color: var(--header_primary-low-mid);
+  --d-header-icon-color--hover: var(--header_primary);
+  --d-header-icon-color--active: var(--header_primary-medium);
+  --d-header-icon-background--hover: var(--d-hover);
+  --d-header-icon-background--active: var(--secondary);
+}
+
 .d-header-wrap {
   position: sticky;
   top: 0;
@@ -7,6 +15,8 @@
 }
 
 .d-header {
+  --d-header-badge-top: -4px;
+  --d-header-badge-right: -2px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -179,7 +189,11 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus-visible {
-      background-color: var(--d-hover);
+      background-color: var(--d-header-icon-background--hover);
+
+      > .d-icon {
+        color: var(--d-header-icon-color--hover);
+      }
     }
   }
 
@@ -187,11 +201,11 @@
     .active .icon,
     .header-color-scheme-toggle .-expanded {
       position: relative;
-      background-color: var(--secondary);
+      background-color: var(--d-header-icon-background--active);
       cursor: default;
 
       > .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-header-icon-color--active);
       }
     }
   }
@@ -201,7 +215,7 @@
     font-size: var(--font-up-4);
     line-height: var(--line-height-large);
     display: inline-block;
-    color: var(--header_primary-low-mid);
+    color: var(--d-header-icon-color);
   }
 
   .notifications {
@@ -215,10 +229,11 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    top: -4px;
+    top: var(--d-header-badge-top);
     min-width: 0.6em;
     left: auto;
-    right: -3px;
+    right: var(--d-header-badge-right);
+    z-index: 1; // overhangs the neighboring icon's hover background
 
     &.with-icon {
       &.new-pms {
@@ -247,6 +262,9 @@
   }
 
   .language-switcher {
+    display: flex;
+    align-items: center;
+
     &__locale {
       color: var(--header_primary-high);
       font-size: var(--font-down-1);
@@ -256,7 +274,6 @@
       border: 1px solid var(--header_primary-low-mid);
       margin-right: var(--space-2);
       gap: var(--space-1);
-      align-self: center;
       padding: var(--space-1) var(--space-2);
 
       html.anon & {
@@ -268,19 +285,21 @@
       .d-icon {
         font-size: var(--font-down-2);
         width: 1em;
-        color: var(--header_primary-high);
+        color: var(--d-header-icon-color);
       }
 
       .discourse-no-touch & {
         &:hover {
+          color: var(--d-header-icon-color--hover);
           border: 1px solid var(--header_primary-medium);
+          background: var(--d-header-icon-background--hover);
 
           .language-switcher__locale {
             color: var(--header_primary);
           }
 
           .d-icon {
-            color: var(--header_primary-high);
+            color: var(--d-header-icon-color--hover);
           }
         }
       }
@@ -422,12 +441,22 @@
 
     .discourse-tags {
       display: inline;
+      color: var(--header_primary-high);
+
+      li {
+        flex-wrap: nowrap;
+        max-width: 100%;
+      }
 
       @include ellipsis;
 
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
+      }
+
+      li:has(.assigned-to) {
+        display: inline;
       }
     }
 
@@ -514,13 +543,6 @@ $mobile-avatar-height: 1.532em;
   }
 }
 
-.d-header-mode {
-  .fk-d-button-tooltip .fk-d-tooltip__trigger {
-    color: var(--header_primary-high);
-    background: transparent;
-  }
-}
-
 #additional-panel-wrapper {
   position: absolute;
 
@@ -545,13 +567,11 @@ $mobile-avatar-height: 1.532em;
 
 .impersonation-notice {
   background-color: var(--header_background);
+  color: var(--header_primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: var(--space-2);
   text-align: center;
-
-  button {
-    margin-left: 10px;
-  }
+  gap: var(--space-2);
 }

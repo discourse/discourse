@@ -55,6 +55,9 @@ en:
             ads: "Ads"
             settings: "Settings"
 
+          above_site_header:
+            title: "Above site header"
+            description: "Ads to show at the top of the page, above the site header."
           topic_list_top:
             title: "Topic list top ads"
             description: "Ads to show at the top of topic list pages."
@@ -70,3 +73,6 @@ en:
           topic_list_between:
             title: "Between topics"
             description: "Ads to show in between topics, after every N topics."
+          nested_roots_between:
+            title: "Between nested roots"
+            description: "Ads to show in between root replies in the nested replies view, after every N roots."

@@ -8,6 +8,7 @@ import {
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import {
   isPushNotificationsEnabled,
@@ -69,7 +70,9 @@ class SubscribeUserNotificationsInit {
 
     this.messageBus.subscribe("/client_settings", this.onClientSettings);
 
-    this.pmTopicTrackingState.startTracking();
+    if (!EmbedMode.enabled) {
+      this.pmTopicTrackingState.startTracking();
+    }
 
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
@@ -83,7 +86,7 @@ class SubscribeUserNotificationsInit {
           this.router,
           this.appEvents
         );
-      } else {
+      } else if (!this.currentUser.isInDoNotDisturb()) {
         unsubscribePushNotifications(this.currentUser);
       }
     }
@@ -140,6 +143,13 @@ class SubscribeUserNotificationsInit {
     const oldUnread = this.currentUser.unread_notifications;
     const oldHighPriority = this.currentUser.unread_high_priority_notifications;
     const oldAllUnread = this.currentUser.all_unread_notifications_count;
+
+    if ("available_notification_types" in data) {
+      this.currentUser.set(
+        "available_notification_types",
+        data.available_notification_types
+      );
+    }
 
     this.currentUser.setProperties({
       unread_notifications: data.unread_notifications,

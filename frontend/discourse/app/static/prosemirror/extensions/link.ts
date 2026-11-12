@@ -1,0 +1,376 @@
+import type { Node, ResolvedPos, Slice } from "prosemirror-model";
+import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
+import type { EditorProps, EditorView } from "prosemirror-view";
+import type {
+  PluginParams,
+  RichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
+import {
+  getChangedRanges,
+  markInputRule,
+} from "discourse/static/prosemirror/lib/plugin-utils";
+
+/** ProseMirror's `isText`, narrowing `text` to the string every text node has. */
+function isTextNode(node: Node): node is Node & { text: string } {
+  return node.isText;
+}
+
+const extension: RichEditorExtension = {
+  markSpec: {
+    link: {
+      attrs: {
+        href: {},
+        title: { default: null },
+        // same value from the markdown-it token
+        // null for [link](...), "autolink" for <...>, and "linkify" for plain URLs
+        markup: { default: null },
+        attachment: { default: false },
+        "data-orig-href": { default: null },
+      },
+      inclusive: false,
+      parseDOM: [
+        {
+          tag: "a[href]:not(.lightbox)",
+          getAttrs(dom) {
+            if (dom.textContent.trim() === dom.getAttribute("href")) {
+              return false;
+            }
+
+            return {
+              href: dom.getAttribute("href"),
+              title: dom.getAttribute("title"),
+              attachment: dom.classList.contains("attachment"),
+              "data-orig-href": dom.getAttribute("data-orig-href"),
+              markup: dom.getAttribute("data-markup"),
+            };
+          },
+        },
+      ],
+      toDOM(node) {
+        return [
+          "a",
+          {
+            href: node.attrs.href,
+            title: node.attrs.title,
+            class: node.attrs.attachment ? "attachment" : undefined,
+            "data-orig-href": node.attrs["data-orig-href"] || undefined,
+            "data-markup": node.attrs.markup || undefined,
+          },
+          0,
+        ];
+      },
+    },
+  },
+  parse: {
+    link: {
+      mark: "link",
+      getAttrs(tok, tokens, i) {
+        // Link text may span multiple tokens when it contains inline formatting.
+        let attachment = false;
+        for (let j = i + 1; j < tokens.length; j++) {
+          if (tokens[j].type === "link_close") {
+            break;
+          }
+          if (
+            tokens[j].type === "text" &&
+            tokens[j].content.endsWith("|attachment")
+          ) {
+            tokens[j].content = tokens[j].content.slice(0, -11);
+            attachment = true;
+            break;
+          }
+        }
+
+        return {
+          href: tok.attrGet("href"),
+          title: tok.attrGet("title") || null,
+          markup: tok.markup || null,
+          attachment,
+          "data-orig-href": tok.attrGet("data-orig-href"),
+        };
+      },
+    },
+  },
+  serializeMark: {
+    // override mark serializer to support "|attachment"
+    link: {
+      open(state, mark) {
+        state.linkMarkup = mark.attrs.markup;
+
+        if (state.linkMarkup === "autolink") {
+          state.inAutolink = true;
+          return "<";
+        }
+
+        if (state.linkMarkup === "linkify") {
+          state.inAutolink = true;
+          return "";
+        }
+
+        return "[";
+      },
+      close(state, mark) {
+        state.inAutolink = undefined;
+
+        const { linkMarkup } = state;
+        state.linkMarkup = undefined;
+
+        if (linkMarkup === "autolink") {
+          return ">";
+        }
+
+        if (linkMarkup === "linkify") {
+          state.linkifyEnd = state.out.length;
+          return "";
+        }
+
+        const attachment = mark.attrs.attachment ? "|attachment" : "";
+        const href =
+          mark.attrs["data-orig-href"] ??
+          mark.attrs.href.replace(/[()"]/g, "\\$&");
+        const title = mark.attrs.title
+          ? ` "${mark.attrs.title.replace(/"/g, '\\"')}"`
+          : "";
+
+        return `${attachment}](${href}${title})`;
+      },
+      mixable: true,
+    },
+  },
+  inputRules: ({ schema }) => [
+    markInputRule(
+      /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
+      schema.marks.link,
+      (match) => {
+        return { href: match[2], title: match[3] };
+      }
+    ),
+    markInputRule(
+      // AUTOLINK_RE from https://github.com/markdown-it/markdown-it/blob/master/lib/rules_inline/autolink.mjs
+      /<([a-zA-Z][a-zA-Z0-9+.-]{1,31}:[^<>\x00-\x20]*)>$/,
+      schema.marks.link,
+      (match) => {
+        return { href: match[1], markup: "autolink" };
+      }
+    ),
+  ],
+  plugins: ({ pmState: { Plugin }, utils }) => {
+    // Auto-linkify plain-text pasted URLs over a selection
+    function parseClipboardText(
+      text: string,
+      $context: ResolvedPos,
+      plain: boolean,
+      view: EditorView
+    ): Slice | undefined {
+      if (view.state.selection.empty || !utils.getLinkify().test(text)) {
+        return;
+      }
+
+      return addLinkMark(view, text, utils);
+    }
+
+    return new Plugin({
+      props: {
+        // prosemirror-view keeps the first truthy result and otherwise uses its
+        // default parser, but types this hook as always returning a Slice.
+        clipboardTextParser:
+          parseClipboardText as EditorProps["clipboardTextParser"],
+        // Auto-linkify pasted rich content with a single text node that is a URL over a selection
+        transformPasted(slice, view) {
+          if (view.state.selection.empty) {
+            return slice;
+          }
+
+          let node = null;
+
+          if (slice.content.childCount === 1) {
+            const only = slice.content.child(0);
+            if (only.isText) {
+              node = only;
+            } else if (
+              only.type.name === "paragraph" &&
+              only.childCount === 1 &&
+              only.child(0).isText
+            ) {
+              node = only.child(0);
+            }
+          }
+
+          if (
+            !node?.text ||
+            node?.marks.some(
+              (mark) => mark.type.name === "link" || mark.type.name === "code"
+            ) ||
+            !utils.getLinkify().test(node.text)
+          ) {
+            return slice;
+          }
+
+          // Every transformPasted hook receives the previous one's result, so
+          // hand the slice on unchanged when the text is not a lone link.
+          return addLinkMark(view, node.text, utils) ?? slice;
+        },
+      },
+
+      // Automatically adds and removes link marks when typing
+      appendTransaction(transactions, prevState, state) {
+        const transaction = prevState.tr;
+        transactions
+          .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
+          .flatMap((tr) => tr.steps)
+          .forEach((step) => {
+            if (
+              step instanceof ReplaceStep ||
+              step instanceof ReplaceAroundStep
+            ) {
+              transaction.step(step);
+            }
+          });
+
+        const changedRanges = getChangedRanges(transaction);
+
+        const tr = state.tr;
+
+        changedRanges.forEach((change) => {
+          let from = change.new.from;
+          let to = change.new.to;
+          if (from === to) {
+            from = Math.max(from - 1, 0);
+            to = Math.min(to + 1, state.doc.nodeSize - 2);
+          }
+
+          // stores the nodes visited ahead, skipping a node if already seen in nodeAfter
+          const visited = new Set();
+          state.doc.nodesBetween(from, to, (node, pos) => {
+            if (
+              visited.has(node) ||
+              !isTextNode(node) ||
+              node.marks.some(
+                (mark) =>
+                  (mark.type.name === "link" &&
+                    mark.attrs.markup !== "linkify") ||
+                  mark.type.name === "code"
+              )
+            ) {
+              return true;
+            }
+
+            const text = node.text;
+
+            const changeStart = Math.max(0, change.new.from - pos);
+            const changeEnd = Math.min(text.length, change.new.to - pos);
+
+            let wordStart = changeStart;
+            while (wordStart > 0 && !utils.isWhiteSpace(text[wordStart - 1])) {
+              wordStart--;
+            }
+            let wordEnd = changeEnd;
+            while (
+              wordEnd < text.length &&
+              !utils.isWhiteSpace(text[wordEnd])
+            ) {
+              wordEnd++;
+            }
+
+            const textSlice = text.slice(wordStart, wordEnd);
+
+            const nodeBefore = state.doc.nodeAt(pos - 1);
+            let textBefore = "";
+
+            if (
+              wordStart === 0 &&
+              nodeBefore &&
+              isTextNode(nodeBefore) &&
+              !utils.isWhiteSpace(
+                nodeBefore.text[nodeBefore.text.length - 1]
+              ) &&
+              !utils.isWhiteSpace(text[0]) &&
+              !nodeBefore.marks.some(
+                (mark) =>
+                  mark.type.name === "link" && mark.attrs.markup !== "linkify"
+              )
+            ) {
+              textBefore = nodeBefore.text;
+            }
+
+            const nodeAfter = state.doc.nodeAt(pos + node.nodeSize);
+            let textAfter = "";
+            if (
+              wordEnd === text.length &&
+              nodeAfter &&
+              isTextNode(nodeAfter) &&
+              !utils.isWhiteSpace(text[text.length - 1]) &&
+              !utils.isWhiteSpace(nodeAfter.text[0]) &&
+              nodeAfter.marks.length === 1 &&
+              nodeAfter.marks.some(
+                (mark) =>
+                  mark.type.name === "link" && mark.attrs.markup === "linkify"
+              )
+            ) {
+              textAfter = nodeAfter.text;
+              visited.add(nodeAfter);
+            }
+
+            const fullText = textBefore + textSlice + textAfter;
+
+            const startPos = pos + wordStart - textBefore.length;
+
+            tr.removeMark(
+              startPos,
+              startPos + fullText.length,
+              state.schema.marks.link
+            );
+
+            if (!utils.getLinkify().test(fullText)) {
+              return;
+            }
+
+            utils
+              .getLinkify()
+              .match(fullText)
+              ?.forEach((match) => {
+                // ignore if the match is just after a `
+                if (fullText[match.index - 1] === "`") {
+                  return;
+                }
+
+                tr.addMark(
+                  startPos + match.index,
+                  startPos + match.index + match.raw.length,
+                  state.schema.marks.link.create({
+                    href: match.url,
+                    markup: "linkify",
+                  })
+                );
+              });
+          });
+        });
+
+        return tr;
+      },
+    });
+  },
+};
+
+function addLinkMark(
+  view: EditorView,
+  text: string,
+  utils: PluginParams["utils"]
+): Slice | undefined {
+  const matches = utils.getLinkify().match(text);
+  const isFullMatch = matches?.length === 1 && matches[0].raw === text;
+
+  if (!isFullMatch) {
+    return;
+  }
+
+  const { from, to } = view.state.selection;
+  const tr = view.state.tr;
+
+  // used only when replacing the selection, so no markup: linkify
+  tr.addMark(from, to, view.state.schema.marks.link.create({ href: text }));
+
+  return tr.doc.slice(from, to);
+}
+
+export default extension;

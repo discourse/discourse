@@ -20,12 +20,13 @@ class Themes::ThemeSiteSettingManager
     validates :theme_id, presence: true
     validates :name, presence: true
 
-    after_validation { self.name = self.name.to_sym if self.name.present? }
+    after_validation { self.name = name.to_sym if name.present? }
   end
 
   policy :current_user_is_admin
   policy :ensure_setting_is_themeable
   model :theme
+  policy :can_edit_theme
   model :existing_theme_site_setting, optional: true
 
   transaction do
@@ -48,6 +49,10 @@ class Themes::ThemeSiteSettingManager
 
   def fetch_theme(params:)
     Theme.find_by(id: params.theme_id)
+  end
+
+  def can_edit_theme(guardian:, theme:)
+    guardian.can_edit_theme?(theme)
   end
 
   def fetch_existing_theme_site_setting(params:, theme:)

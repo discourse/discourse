@@ -8,10 +8,11 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-topic-voting
 
 register_asset "stylesheets/common/topic-voting.scss"
-register_asset "stylesheets/desktop/topic-voting.scss", :desktop
-register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
 register_svg_icon "check-to-slot"
+register_svg_icon "lightbulb"
+register_svg_icon "vote-up"
+register_svg_icon "vote-up-filled"
 
 enabled_site_setting :topic_voting_enabled
 
@@ -23,14 +24,28 @@ Discourse.anonymous_filters.push(:votes)
 module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
   ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
+  VOTER_PREVIEW_LIMIT = 104
+  BADGE_NAMES = %w[Daydreamer Brainstormer Innovator Visionary].freeze
 end
 
+require_relative "lib/discourse_topic_voting/badge_queries"
 require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V2,
+      ]
+    end
+  end
+
   reloadable_patch do
-    CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
+    register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)
     Topic.prepend(DiscourseTopicVoting::TopicExtension)
@@ -63,7 +78,7 @@ after_initialize do
       if options[:state] == "my_votes"
         result =
           result.joins(
-            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
+            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id} AND topic_voting_votes.archive = FALSE",
           )
       end
     end
@@ -112,6 +127,11 @@ after_initialize do
     )
   end
 
+  register_modifier(:badge_granter_suppress_notification) do |suppress, badge, granted_at, _|
+    next true if DiscourseTopicVoting::BADGE_NAMES.include?(badge.name) && granted_at < 2.weeks.ago
+    suppress
+  end
+
   register_modifier(:topics_filter_options) do |results, _guardian|
     results.concat(
       [
@@ -141,7 +161,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
   add_to_serializer(:current_user, :votes_count) { object.vote_count }
-  add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
+  add_to_serializer(:current_user, :votes_left) { object.votes_left }
   add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
 
   topic_votes_value_from = ->(values) do
@@ -165,11 +185,9 @@ after_initialize do
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
   end
 
-  filter_order_votes = ->(scope, order_direction, _guardian) do
+  add_filter_custom_filter("order:votes") do |scope, order_direction, _guardian|
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
   end
-
-  add_filter_custom_filter("order:votes", &filter_order_votes)
 
   on(:topic_status_updated) do |topic, status, enabled|
     next if topic.trashed?
@@ -212,48 +230,7 @@ after_initialize do
     end
   end
 
-  on(:topic_merged) do |orig, dest|
-    moved_votes = 0
-    duplicated_votes = 0
-
-    who_voted = orig.votes.map(&:user)
-    if who_voted.present? && orig.closed
-      who_voted.each do |user|
-        next if user.blank?
-
-        user_votes = user.topics_with_vote.pluck(:topic_id)
-        user_archived_votes = user.topics_with_archived_vote.pluck(:topic_id)
-
-        if user_votes.include?(orig.id) || user_archived_votes.include?(orig.id)
-          if user_votes.include?(dest.id) || user_archived_votes.include?(dest.id)
-            duplicated_votes += 1
-            user.votes.destroy_by(topic_id: orig.id)
-          else
-            user
-              .votes
-              .find_by(topic_id: orig.id, user_id: user.id)
-              .update!(topic_id: dest.id, archive: dest.closed)
-            moved_votes += 1
-          end
-        else
-          next
-        end
-      end
-    end
-
-    if moved_votes > 0
-      orig.update_vote_count
-      dest.update_vote_count
-
-      if moderator_post = orig.ordered_posts.where(action_code: "split_topic").last
-        moderator_post.raw << "\n\n#{I18n.t("topic_voting.votes_moved", count: moved_votes)}"
-        if duplicated_votes > 0
-          moderator_post.raw << " #{I18n.t("topic_voting.duplicated_votes", count: duplicated_votes)}"
-        end
-        moderator_post.save!
-      end
-    end
-  end
+  on(:topic_merged) { |orig, dest| DiscourseTopicVoting::TopicMerger.merge(orig, dest) }
 
   on(:merging_users) do |source_user, target_user|
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
@@ -272,4 +249,45 @@ after_initialize do
           username: RouteFormat.username,
         }
   end
+
+  register_anonymous_action("vote_topic") do |user, params|
+    DiscourseTopicVoting::Votes::Cast.call(
+      params: {
+        topic_id: params["topic_id"],
+      },
+      guardian: user.guardian,
+    )
+  end
+end
+
+after_initialize do
+  require_relative "lib/discourse_topic_voting/mcp_tools"
+  register_mcp_tool(
+    "discourse_topic_voting_vote_set",
+    title: "Set topic vote",
+    description: "Casts or removes the authenticated user's vote on a visible votable topic.",
+    implementation: DiscourseTopicVoting::McpTools::SetVote,
+    input_schema: {
+      type: "object",
+      properties: {
+        topic_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        voted: {
+          type: "boolean",
+        },
+      },
+      required: %w[topic_id voted],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseTopicVoting::McpTools::SetVote::OUTPUT_SCHEMA,
+    required_scopes: DiscourseTopicVoting::McpTools::SetVote::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.topic_voting_enabled },
+  )
 end

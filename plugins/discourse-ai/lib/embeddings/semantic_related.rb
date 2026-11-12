@@ -36,6 +36,9 @@ module DiscourseAi
               end
           end
       rescue DiscourseAi::Embeddings::Schema::MissingEmbeddingError
+        definition = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
+        return [] if DiscourseAi::Embeddings::ProviderHealth.paused?(definition)
+
         # avoid a flood of jobs when visiting topic
         if Discourse.redis.set(
              build_semantic_suggested_key(topic.id),

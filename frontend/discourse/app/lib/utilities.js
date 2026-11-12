@@ -1,32 +1,17 @@
-/* eslint-disable ember/no-jquery */
-import $ from "jquery";
-import * as AvatarUtils from "discourse/lib/avatar-utils";
+import { cancel } from "@ember/runloop";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
+import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
+import Site from "discourse/models/site";
 import { capabilities } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
 
 let _defaultHomepage;
-
-function deprecatedAvatarUtil(name) {
-  return function () {
-    deprecated(
-      `${name} should be imported from discourse/lib/avatar-utils instead of discourse/lib/utilities`,
-      { id: "discourse.avatar-utils" }
-    );
-    return AvatarUtils[name](...arguments);
-  };
-}
-
-export const translateSize = deprecatedAvatarUtil("translateSize");
-export const getRawSize = deprecatedAvatarUtil("getRawSize");
-export const getRawAvatarSize = deprecatedAvatarUtil("getRawAvatarSize");
-export const avatarUrl = deprecatedAvatarUtil("avatarUrl");
-export const avatarImg = deprecatedAvatarUtil("avatarImg");
-export const tinyAvatar = deprecatedAvatarUtil("tinyAvatar");
 
 export function splitString(str, separator = ",") {
   if (typeof str === "string") {
@@ -113,7 +98,50 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
-export function selectedText() {
+// Whether everything before `node` in its parent is insignificant whitespace,
+// i.e. `node` is effectively the first thing in its parent. (Cooked HTML has
+// whitespace text nodes between blocks, so a strict firstChild check fails.)
+function isFirstMeaningfulChild(node) {
+  for (let sibling = node.previousSibling; sibling; ) {
+    if (sibling.nodeType !== Node.TEXT_NODE || sibling.textContent.trim()) {
+      return false;
+    }
+    sibling = sibling.previousSibling;
+  }
+  return true;
+}
+
+// A triple-click (and similar) leaves the selection's end at the very start of
+// the following block (endOffset 0). cloneContents() would then materialize
+// that block as an empty husk (e.g. <blockquote><p></p></blockquote>) that
+// serializes to stray markdown like a lone "> ". Pull the end back past the
+// husk — to the topmost ancestor it starts — so it is never cloned.
+// Returns the original range when there's nothing to trim.
+function rangeWithoutTrailingHusk(range) {
+  if (range.endOffset !== 0) {
+    return range;
+  }
+
+  const common = range.commonAncestorContainer;
+  let boundary = range.endContainer;
+  while (
+    boundary !== common &&
+    boundary.parentNode !== common &&
+    isFirstMeaningfulChild(boundary)
+  ) {
+    boundary = boundary.parentNode;
+  }
+
+  if (boundary === common || !boundary.parentNode) {
+    return range;
+  }
+
+  const trimmed = range.cloneRange();
+  trimmed.setEndBefore(boundary);
+  return trimmed;
+}
+
+export function selectedHTML() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
     return "";
@@ -146,7 +174,11 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const effectiveRange = rangeWithoutTrailingHusk(range);
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(effectiveRange.cloneContents());
+      processSelectionFragment(fragmentContainer, effectiveRange);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 
@@ -154,19 +186,16 @@ export function selectedText() {
     element.replaceWith(element.dataset.oneboxSrc);
   });
 
-  div
-    .querySelectorAll("div.video-placeholder-container[data-video-src]")
-    .forEach((element) => {
-      const videoBase62Sha1 = element.dataset.videoBase62Sha1;
-      if (videoBase62Sha1) {
-        element.replaceWith(`![|video](upload://${videoBase62Sha1})`);
-      } else {
-        // Fallback for old posts that don't contain data-video-base62-sha1
-        element.replaceWith(`![|video](${element.dataset.videoSrc})`);
-      }
-    });
+  return div.outerHTML;
+}
 
-  return toMarkdown(div.outerHTML);
+export async function selectedText() {
+  const html = selectedHTML();
+  if (!html) {
+    return "";
+  }
+
+  return await toMarkdown(html);
 }
 
 export function selectedNode() {
@@ -221,11 +250,21 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
+export function siteDefaultHomepage(siteSettings) {
+  const configured = siteSettings.default_homepage;
+
+  const choices = Site.current()?.homepage_choices;
+  if (configured && (!choices || choices.includes(configured))) {
+    return configured;
+  }
+
+  return siteSettings.top_menu.split("|")[0].split(",")[0];
+}
+
 export function initializeDefaultHomepage(siteSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
-    sel?.getAttribute("content") ||
-    siteSettings.top_menu.split("|")[0].split(",")[0];
+    sel?.getAttribute("content") || siteDefaultHomepage(siteSettings);
   setDefaultHomepage(homepage);
 }
 
@@ -270,26 +309,6 @@ export function determinePostReplaceSelection({
     // Selection starts (and ends) behind needle.
     return { start: selection.start + diff, end: selection.end + diff };
   }
-}
-
-export function isAppleDevice() {
-  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
-  // This will apply hack on all iDevices
-  let caps = capabilities;
-  return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
-}
-
-export function safariHacksDisabled() {
-  deprecated(
-    "`safariHacksDisabled()` is deprecated, it now always returns `false`",
-    {
-      since: "2.8.0.beta8",
-      dropFrom: "2.9.0.beta1",
-      id: "discourse.safari-hacks-disabled",
-    }
-  );
-
-  return false;
 }
 
 const toArray = (items) => {
@@ -473,7 +492,22 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
+/**
+ * Replaces modifier names in a shortcut string with their platform spelling.
+ *
+ * @deprecated To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`),
+ * which carries the accessible markup too. For the string alone use
+ * `formatShortcut` from `discourse/lib/shortcut-format`.
+ */
 export function translateModKey(string, separator = " ") {
+  deprecated(
+    "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
+    {
+      since: "2026.9.0",
+      id: "discourse.translate-mod-key",
+    }
+  );
+
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
@@ -623,8 +657,7 @@ export function mergeSortedLists(list1, list2, comparator) {
 }
 
 export function getCaretPosition(element, options) {
-  const jqueryElement = $(element);
-  const position = jqueryElement.caretPosition(options);
+  const position = caretCoordinates(element, options);
 
   // Get the position of the textarea on the page
   const textareaRect = element.getBoundingClientRect();
@@ -639,90 +672,11 @@ export function getCaretPosition(element, options) {
 }
 
 /**
- * Generate markdown table from an array of objects
- * Inspired by https://github.com/Ygilany/array-to-table
- *
- * @param  {Array<Record<string, string | undefined>>}          array       Array of objects
- * @param  {String[]}                                           columns     Column headings
- * @param  {String}                                             colPrefix   Table column prefix
- * @param  {("left" | "center" | "right" | null)[] | undefined} alignments  Table alignments
- *
- * @return {String} Markdown table
- */
-export function arrayToTable(array, cols, colPrefix = "col", alignments) {
-  let table = "";
-
-  // Generate table headers
-  table += "|";
-  table += cols.join(" | ");
-  table += "|\n|";
-
-  const alignMap = {
-    left: ":--",
-    center: ":-:",
-    right: "--:",
-  };
-
-  // Generate table header separator
-  table += cols
-    .map((_, index) => alignMap[String(alignments?.[index])] || "---")
-    .join(" | ");
-  table += "|\n";
-
-  // Generate table body
-  array.forEach(function (item) {
-    table += "|";
-
-    table +=
-      cols
-        .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "")
-            .replace(/\r?\n|\r/g, " ")
-            .replaceAll("|", "\\|");
-        })
-        .join(" | ") + "|\n";
-  });
-
-  return table;
-}
-
-/**
  *
  * @returns a regular expression finding all markdown tables
  */
 export function findTableRegex() {
   return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
-}
-
-export function replaceTableRaw(raw, lineRange, newTableRaw) {
-  const lines = raw.split("\n");
-  const before = lines.slice(0, lineRange[0]);
-  const after = lines.slice(lineRange[1]);
-  return [...before, ...newTableRaw.trimEnd().split("\n"), ...after].join("\n");
-}
-
-export function tokenRange(tokens, start, end) {
-  const contents = [];
-  let startPushing = false;
-  let items = [];
-
-  tokens.forEach((token) => {
-    if (token.type === start) {
-      startPushing = true;
-    }
-
-    if (token.type === end) {
-      contents.push(items);
-      items = [];
-      startPushing = false;
-    }
-
-    if (startPushing) {
-      items.push(token);
-    }
-  });
-
-  return contents;
 }
 
 export function allowOnlyNumericInput(event, allowNegative = false) {
@@ -770,18 +724,35 @@ export function getElement(node) {
 }
 
 export function isPrimaryTab() {
-  return new Promise((resolve) => {
-    if (capabilities.supportsServiceWorker) {
-      navigator.serviceWorker.addEventListener("message", (event) => {
-        resolve(event.data.primaryTab);
-      });
+  if (!capabilities.supportsServiceWorker) {
+    return Promise.resolve(true);
+  }
 
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.active.postMessage({ action: "primaryTab" });
-      });
-    } else {
-      resolve(true);
-    }
+  return new Promise((resolve) => {
+    let timer;
+
+    const finish = (isPrimary) => {
+      cancel(timer);
+      navigator.serviceWorker.removeEventListener("message", onMessage);
+      resolve(isPrimary);
+    };
+
+    const onMessage = (event) => {
+      // the service worker also posts unrelated messages on this channel
+      if (typeof event.data?.primaryTab === "boolean") {
+        finish(event.data.primaryTab);
+      }
+    };
+
+    navigator.serviceWorker.addEventListener("message", onMessage);
+
+    // if the service worker never answers (no active registration), assume
+    // primary rather than hanging forever and silently dropping the action
+    timer = discourseLater(() => finish(true), 1000);
+
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active?.postMessage({ action: "primaryTab" });
+    });
   });
 }
 

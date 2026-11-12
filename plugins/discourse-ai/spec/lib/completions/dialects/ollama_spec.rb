@@ -10,6 +10,30 @@ RSpec.describe DiscourseAi::Completions::Dialects::Ollama do
   before { enable_current_plugin }
 
   describe "#translate" do
+    it "embeds participant names in user message content" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, id: "admin", content: "Who am I?" }],
+        )
+
+      expect(dialect_class.new(prompt, model).translate).to eq(
+        [{ role: "user", content: "admin: Who am I?" }],
+      )
+    end
+
+    it "does not embed blank participant names" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, id: "", content: "Who am I?" }],
+        )
+
+      expect(dialect_class.new(prompt, model).translate).to eq(
+        [{ role: "user", content: "Who am I?" }],
+      )
+    end
+
     context "when native tool support is enabled" do
       it "translates a prompt written in our generic format to the Ollama format" do
         ollama_version = [
@@ -92,19 +116,19 @@ RSpec.describe DiscourseAi::Completions::Dialects::Ollama do
         model.update!(provider_params: { enable_native_tool: false })
 
         tool = { name: "noop", description: "do nothing" }
+        tool_id = "tool-1"
         messages = [
           { type: :user, content: "echo away" },
-          { type: :tool_call, content: "{}", name: "noop" },
-          { type: :tool, content: "{}", name: "noop" },
+          { type: :tool_call, id: tool_id, content: "{}", name: "noop" },
+          { type: :tool, id: tool_id, content: "{}", name: "noop" },
         ]
         prompt = DiscourseAi::Completions::Prompt.new("a bot", tools: [tool], messages: messages)
         dialect = dialect_class.new(prompt, model)
 
-        expected = %w[system user assistant user]
-        roles = dialect.translate.map { |x| x[:role] }
+        translated = dialect.translate
 
-        # notice, no tool role
-        expect(roles).to eq(expected)
+        expect(translated.map { |message| message[:role] }).to eq(%w[system user assistant user])
+        expect(translated.map { |message| message[:content] }.join).not_to include(tool_id)
       end
     end
   end

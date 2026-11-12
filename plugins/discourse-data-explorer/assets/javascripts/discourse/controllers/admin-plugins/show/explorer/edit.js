@@ -1,0 +1,662 @@
+import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
+import { measuredMin } from "discourse/lib/resize-measurements";
+import { i18n } from "discourse-i18n";
+import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
+import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
+import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import {
+  dataExplorerStore,
+  rememberMode,
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlLanguageOptions from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-language-options";
+import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
+
+const HIDE_SCHEMA_KEY = "hide_schema";
+const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
+
+export default class PluginsExplorerController extends Controller {
+  @service modal;
+  @service dialog;
+  @service siteSettings;
+  @service messageBus;
+  @service toasts;
+
+  @tracked params;
+  @tracked editingName = false;
+  @tracked loading = false;
+  @tracked showResults = false;
+  @tracked results = this.model.results;
+  @tracked dirty = false;
+  @tracked isCachedResult = false;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
+  @tracked view = "table";
+  @tracked mode = "manual";
+  @tracked aiPrompt = "";
+  @tracked aiGenerating = false;
+  @tracked lastGeneratedPrompt = null;
+  @tracked dashboardBusy = false;
+  @tracked dashboardMounted = false;
+  @tracked dashboardMountable = false;
+
+  queryParams = ["params"];
+  order = null;
+  form = null;
+  shouldAutoRun = false;
+
+  /**
+   * A weak handle on the panes the live separator resolved, rather than a global
+   * query that would find whichever editor comes first in the document.
+   *
+   * Weak because this controller is an app-lifetime singleton and the separator
+   * can go without telling it, so a strong reference would hold a detached
+   * subtree until something else replaced it.
+   */
+  #resolvedPanes = null;
+  _pristine = null;
+  _teardownAiGeneration = null;
+  _aiGenerationToken = 0;
+
+  constructor() {
+    super(...arguments);
+    if (this.model?.results) {
+      this.initView();
+    }
+    if (this.model) {
+      this.snapshotPristine();
+    }
+  }
+
+  // While a query is running (or AI is generating) the actions in the action
+  // bar shouldn't be usable — the interstitial "Save changes and run" state
+  // is confusing otherwise.
+  get actionsBusy() {
+    return this.loading || this.aiGenerating;
+  }
+
+  get sqlLanguageOptions() {
+    return sqlLanguageOptions(this.schema);
+  }
+
+  get saveDisabled() {
+    return !this.dirty || this.actionsBusy;
+  }
+
+  get runDisabled() {
+    return this.model.destroyed || this.actionsBusy;
+  }
+
+  get parsedParams() {
+    return this.params ? JSON.parse(this.params) : null;
+  }
+
+  get cachedAt() {
+    if (this.isCachedResult && this.results?.cached_at) {
+      return this.results.cached_at;
+    }
+    return null;
+  }
+
+  get editDisabled() {
+    return this.model.is_default;
+  }
+
+  get editingQuery() {
+    return !this.editDisabled && !this.model.destroyed;
+  }
+
+  get editorDisabled() {
+    return this.model.destroyed;
+  }
+
+  get groupOptions() {
+    return this.groups
+      .filter(
+        (group) =>
+          group.id !== AUTO_GROUPS.everyone.id &&
+          group.id !== AUTO_GROUPS.anonymous_users.id &&
+          group.id !== AUTO_GROUPS.logged_in_users.id
+      )
+      .map((group) => {
+        return { id: group.id, name: group.name };
+      });
+  }
+
+  get hasResults() {
+    return !!this.results?.rows?.length;
+  }
+
+  get runButtonLabel() {
+    return this.dirty ? "explorer.saverun" : "explorer.run";
+  }
+
+  get aiQueriesEnabled() {
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
+  }
+
+  get regenerateDisabled() {
+    const trimmed = this.aiPrompt.trim();
+    return (
+      this.aiGenerating || !trimmed || trimmed === this.lastGeneratedPrompt
+    );
+  }
+
+  get showDashboardToggle() {
+    return !this.model.destroyed;
+  }
+
+  get dashboardToggleIcon() {
+    return this.dashboardMounted ? "thumbtack-slash" : "thumbtack";
+  }
+
+  get dashboardToggleLabel() {
+    return this.dashboardMounted
+      ? "explorer.dashboard.remove"
+      : "explorer.dashboard.add";
+  }
+
+  get dashboardToggleDisabled() {
+    return (
+      this.actionsBusy ||
+      this.dashboardBusy ||
+      (!this.dashboardMounted && !this.dashboardMountable)
+    );
+  }
+
+  get dashboardToggleTitle() {
+    if (this.dashboardMounted || this.dashboardMountable) {
+      return null;
+    }
+    return i18n("explorer.dashboard.unmountable");
+  }
+
+  get viewItems() {
+    const items = [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+    ];
+    if (this.mode === "ai") {
+      items.push({ value: "sql", icon: "code" });
+    }
+    return items;
+  }
+
+  /** The one place the weak handle is dereferenced. */
+  get #panes() {
+    return this.#resolvedPanes?.deref() ?? null;
+  }
+
+  snapshotPristine() {
+    if (!this.model) {
+      return;
+    }
+    this._pristine = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
+    };
+    this.dirty = false;
+  }
+
+  recomputeDirty() {
+    if (!this._pristine) {
+      this.dirty = true;
+      return;
+    }
+    const current = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
+    };
+    this.dirty =
+      current.name !== this._pristine.name ||
+      current.description !== this._pristine.description ||
+      current.sql !== this._pristine.sql ||
+      current.group_ids !== this._pristine.group_ids ||
+      current.tags !== this._pristine.tags;
+  }
+
+  initView() {
+    const queryId = this.model?.id;
+    const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
+    const validViews =
+      this.mode === "ai" ? ["chart", "table", "sql"] : ["chart", "table"];
+    if (validViews.includes(stored)) {
+      this.view = stored;
+    } else if (this.mode === "ai" && !this.hasResults) {
+      this.view = "sql";
+    } else {
+      this.view = defaultView(this.results);
+    }
+  }
+
+  /**
+   * The panes the separator resizes, found from the separator's own position.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
+  @bind
+  panesFor(separator) {
+    const panes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    this.#resolvedPanes = panes ? new WeakRef(panes) : null;
+    // The element, not the handle. It goes straight to a ResizeObserver.
+    return panes;
+  }
+
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header. This page scrolls, so growing
+   * the panes lengthens it rather than pushing anything out of view.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, measuredMin(this.#panes, "vertical"));
+  }
+
+  @bind
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
+
+    panes.style.height = `${size}px`;
+  }
+
+  /** Lets go of the panes. Called by the route on exit. */
+  releasePanes() {
+    this.#resolvedPanes = null;
+  }
+
+  @action
+  setView(value) {
+    this.view = value;
+    const queryId = this.model?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
+    }
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
+  }
+
+  @action
+  setMode(value) {
+    this.mode = value;
+    rememberMode(value);
+    if (value !== "ai") {
+      this._teardownAi();
+      this.aiPrompt = "";
+      this.lastGeneratedPrompt = null;
+    }
+  }
+
+  @action
+  updateAiPrompt(event) {
+    this.aiPrompt = event.target.value;
+  }
+
+  @action
+  async regenerate() {
+    if (this.regenerateDisabled) {
+      return;
+    }
+
+    this._teardownAi();
+    this.aiGenerating = true;
+    const token = this._aiGenerationToken;
+
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-data-explorer/queries/generate.json",
+        {
+          type: "POST",
+          data: {
+            ai_description: this.aiPrompt.trim(),
+            existing_sql: this.model.sql || undefined,
+          },
+        }
+      );
+
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+
+      this._teardownAiGeneration = subscribeToAiGeneration({
+        messageBus: this.messageBus,
+        generationId: response.generation_id,
+        onComplete: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.model.set("sql", data.sql);
+          this.recomputeDirty();
+          this.lastGeneratedPrompt = this.aiPrompt.trim();
+          this.aiGenerating = false;
+          if (this.view === "chart" || this.view === "table") {
+            this.run();
+          } else {
+            this.setView("sql");
+          }
+        },
+        onError: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: {
+              message: data.error || i18n("explorer.ai.generation_error"),
+            },
+          });
+        },
+        onTimeout: () => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: { message: i18n("explorer.ai.generation_timeout") },
+          });
+        },
+      });
+    } catch (error) {
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+      this.aiGenerating = false;
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async save() {
+    try {
+      this.loading = true;
+      await this.model.save();
+
+      this.snapshotPristine();
+      this.editingName = false;
+    } catch (error) {
+      popupAjaxError(error);
+      throw error;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  async toggleDashboard() {
+    const mounted = this.dashboardMounted;
+    this.dashboardBusy = true;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: {
+          source: DASHBOARD_REPORT_SOURCE,
+          identifier: String(this.model.id),
+        },
+      });
+      this.dashboardMounted = !mounted;
+      this.toasts.success({
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.dashboardBusy = false;
+    }
+  }
+
+  @action
+  updateGroupIds(value) {
+    this.model.set("group_ids", value);
+    this.recomputeDirty();
+  }
+
+  @action
+  updateTags(value) {
+    const automaticTags = this.model.automatic_tags ?? [];
+    const tags = [
+      ...automaticTags,
+      ...value.filter((tag) => !automaticTags.includes(tag)),
+    ];
+    this.model.set("tags", tags);
+    this.recomputeDirty();
+  }
+
+  @action
+  editName() {
+    this.editingName = true;
+  }
+
+  @action
+  showHelpModal() {
+    this.modal.show(QueryHelp);
+  }
+
+  @action
+  resetParams() {
+    this.model.resetParams();
+  }
+
+  @action
+  async discard() {
+    try {
+      this.loading = true;
+      const result = await this.store.find("query", this.model.id);
+      this.model.setProperties(result.getProperties(Query.updatePropertyNames));
+      if (!this.model.group_ids || !Array.isArray(this.model.group_ids)) {
+        this.model.set("group_ids", []);
+      }
+      this.snapshotPristine();
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  confirmDestroyQuery() {
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: () => this.destroyQuery(),
+    });
+  }
+
+  @action
+  async destroyQuery() {
+    try {
+      this.loading = true;
+      this.showResults = false;
+      await this.store.destroyRecord("query", this.model);
+      this.model.set("destroyed", true);
+      this.dashboardMounted = false;
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  async recover() {
+    try {
+      this.loading = true;
+      this.showResults = true;
+      await this.model.save();
+      this.model.set("destroyed", false);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  onRegisterApi(form) {
+    this.form = form;
+  }
+
+  @action
+  setDirty() {
+    this.recomputeDirty();
+  }
+
+  @action
+  updateSql(value) {
+    if (this.model.sql === value) {
+      return;
+    }
+    this.model.set("sql", value);
+    this.recomputeDirty();
+  }
+
+  @action
+  exitEdit() {
+    this.editingName = false;
+  }
+
+  @action
+  async run(explain = false) {
+    // catch any dirty state that onChange may not have flushed yet
+    this.recomputeDirty();
+
+    if (this.dirty) {
+      try {
+        await this.save();
+      } catch {
+        // save() already shows popupAjaxError
+        return;
+      }
+    }
+
+    let params = null;
+    if (this.model.hasParams) {
+      try {
+        params = await this.form?.submit();
+      } catch (err) {
+        if (err instanceof ParamValidationError) {
+          return;
+        }
+      }
+      if (params == null) {
+        return;
+      }
+    }
+    const stringifiedParams = JSON.stringify(params);
+    this.setProperties({
+      loading: true,
+      showResults: false,
+      params: params === null ? null : stringifiedParams,
+    });
+
+    ajax(
+      "/admin/plugins/discourse-data-explorer/queries/" +
+        this.model.id +
+        "/run",
+      {
+        type: "POST",
+        data: {
+          params: stringifiedParams,
+          explain,
+        },
+      }
+    )
+      .then((result) => {
+        this.results = result;
+        this.isCachedResult = false;
+        if (!result.success) {
+          this.showResults = false;
+          return;
+        }
+        this.showResults = true;
+        // After a successful run, jump out of the SQL view so the user sees
+        // the results they just asked for.
+        if (this.view === "sql") {
+          this.setView(defaultView(this.results));
+        } else {
+          this.initView();
+        }
+      })
+      .catch((err) => {
+        this.showResults = false;
+        if (err.jqXHR && err.jqXHR.status === 422 && err.jqXHR.responseJSON) {
+          this.results = err.jqXHR.responseJSON;
+        } else {
+          popupAjaxError(err);
+        }
+      })
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  runOnLoad() {
+    if (this.shouldAutoRun) {
+      this.run();
+    }
+  }
+
+  _teardownAi() {
+    this._aiGenerationToken++;
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
+    this.aiGenerating = false;
+  }
+
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  }
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
+    }
+    query.id = 0; // 0 means no Id yet
+    return query;
+  }
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
+  }
+}

@@ -9,6 +9,7 @@ class ListController < ApplicationController
   before_action :set_category,
                 only: [
                   :category_default,
+                  :category_none_default,
                   # filtered topics lists
                   Discourse.filters.map { |f| :"category_#{f}" },
                   Discourse.filters.map { |f| :"category_none_#{f}" },
@@ -30,6 +31,7 @@ class ListController < ApplicationController
                   Discourse.anonymous_filters.map { |f| "#{f}_feed" },
                   # anonymous categorized filters
                   :category_default,
+                  :category_none_default,
                   Discourse.anonymous_filters.map { |f| :"category_#{f}" },
                   Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
                   # category feeds
@@ -58,13 +60,12 @@ class ListController < ApplicationController
     define_method(filter) do |options = nil|
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
-      user = list_target_user
       if params[:category].blank? && filter == :latest &&
            !SiteSetting.show_category_definitions_in_topic_lists
         list_opts[:no_definitions] = true
       end
 
-      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
@@ -75,7 +76,7 @@ class ListController < ApplicationController
           # destination are this category
           shared_drafts =
             TopicQuery.new(
-              user,
+              current_user,
               category: SiteSetting.shared_drafts_category,
               destination_category_id: list_opts[:category],
             ).list_latest
@@ -91,8 +92,11 @@ class ListController < ApplicationController
 
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
-        @rss = filter
-        @rss_description = filter
+
+        if feed_route_exists?(filter)
+          @rss = filter
+          @rss_description = filter
+        end
 
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
@@ -116,19 +120,19 @@ class ListController < ApplicationController
     end
 
     define_method("category_#{filter}") do
-      canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-      self.public_send(filter, category: @category.id)
+      canonical_list_url(@category.url)
+      public_send(filter, category: @category.id)
     end
 
     define_method("category_none_#{filter}") do
-      self.public_send(filter, category: @category.id, no_subcategories: true)
+      public_send(filter, category: @category.id, no_subcategories: true)
     end
   end
 
   def filter
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
-    %i[page q].each do |key|
+    %i[page q subset].each do |key|
       if params.key?(key.to_s)
         value = params[key]
         raise Discourse::InvalidParameters.new(key) if !TopicQuery.validate?(key, value)
@@ -136,7 +140,7 @@ class ListController < ApplicationController
       end
     end
 
-    user = list_target_user
+    user = current_user
     list = TopicQuery.new(user, topic_query_opts).list_filter
     list.more_topics_url = construct_url_with(:next, topic_query_opts)
     list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
@@ -145,11 +149,12 @@ class ListController < ApplicationController
   end
 
   def category_default
-    canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
-    view_method = @category.default_view
-    view_method = "latest" if %w[hot latest top].exclude?(view_method)
+    canonical_list_url(@category.url)
+    public_send(category_default_view, category: @category.id)
+  end
 
-    self.public_send(view_method, category: @category.id)
+  def category_none_default
+    public_send(category_default_view, category: @category.id, no_subcategories: true)
   end
 
   def topics_by
@@ -173,8 +178,7 @@ class ListController < ApplicationController
   def group_topics
     group = Group.find_by(name: params[:group_name])
     raise Discourse::NotFound unless group
-    guardian.ensure_can_see_group!(group)
-    guardian.ensure_can_see_group_members!(group)
+    guardian.ensure_can_see_group_and_members!(group)
 
     list_opts = build_topic_list_options
     list = generate_list_for("group_topics", group, list_opts)
@@ -197,9 +201,13 @@ class ListController < ApplicationController
       )
 
     case action
-    when :private_messages_unread, :private_messages_new, :private_messages_group_new,
-         :private_messages_group_unread
+    when :private_messages_unread, :private_messages_new
       raise Discourse::NotFound if target_user.id != current_user.id
+    when :private_messages_group_new, :private_messages_group_unread
+      raise Discourse::NotFound if target_user.id != current_user.id
+      group = Group.find_by("LOWER(name) = ?", params[:group_name].downcase)
+      raise Discourse::NotFound if !group
+      raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
     when :private_messages_tag
       raise Discourse::NotFound if target_user.id != current_user.id
       raise Discourse::NotFound if !guardian.can_tag_pms?
@@ -238,13 +246,11 @@ class ListController < ApplicationController
   def latest_feed
     discourse_expires_in 1.minute
 
-    options = { order: "created" }.merge(build_topic_list_options)
-
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
-    @link = "#{Discourse.base_url}/latest"
-    @atom_link = "#{Discourse.base_url}/latest.rss"
+    @link = filtered_topic_list_url("#{Discourse.base_url}/latest")
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/latest.rss")
     @description = I18n.t("rss_description.latest")
-    @topic_list = TopicQuery.new(nil, options).list_latest
+    @topic_list = topic_query(nil, order: "created").list_latest
 
     render "list", formats: [:rss]
   end
@@ -253,13 +259,13 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.top")}"
-    @link = "#{Discourse.base_url}/top"
-    @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
     period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
     TopTopic.validate_period(period)
+    @link = filtered_topic_list_url("#{Discourse.base_url}/top", period: period)
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/top.rss", period: period)
 
-    @topic_list = TopicQuery.new(nil).list_top_for(period)
+    @topic_list = topic_query(nil).list_top_for(period)
 
     render "list", formats: [:rss]
   end
@@ -268,11 +274,11 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.hot")}"
-    @link = "#{Discourse.base_url}/hot"
-    @atom_link = "#{Discourse.base_url}/hot.rss"
+    @link = filtered_topic_list_url("#{Discourse.base_url}/hot")
+    @atom_link = filtered_topic_list_url("#{Discourse.base_url}/hot.rss")
     @description = I18n.t("rss_description.hot")
 
-    @topic_list = TopicQuery.new(nil).list_hot
+    @topic_list = topic_query(nil).list_hot
 
     render "list", formats: [:rss]
   end
@@ -282,11 +288,13 @@ class ListController < ApplicationController
     discourse_expires_in 1.minute
 
     @title = "#{@category.name} - #{SiteSetting.title}"
-    @link = "#{Discourse.base_url_no_prefix}#{@category.url}"
-    @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
+    @link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}", category: nil)
+    @atom_link =
+      filtered_topic_list_url("#{Discourse.base_url_no_prefix}#{@category.url}.rss", category: nil)
     @description =
       "#{I18n.t("topics_in_category", category: @category.name)} #{@category.description}"
-    @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
+    @topic_list = topic_query.list_new_in_category(@category)
 
     render "list", formats: [:rss]
   end
@@ -298,11 +306,11 @@ class ListController < ApplicationController
 
     @title =
       "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{target_user.full_url}/activity/topics"
-    @atom_link = "#{target_user.full_url}/activity/topics.rss"
+    @link = filtered_topic_list_url("#{target_user.full_url}/activity/topics")
+    @atom_link = filtered_topic_list_url("#{target_user.full_url}/activity/topics.rss")
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
 
-    @topic_list = TopicQuery.new(nil, order: "created").public_send("list_topics_by", target_user)
+    @topic_list = topic_query(nil, order: "created").public_send("list_topics_by", target_user)
 
     render "list", formats: [:rss]
   end
@@ -331,7 +339,7 @@ class ListController < ApplicationController
       top_options[:per_page] = top_options[:per_page].presence ||
         SiteSetting.topics_per_period_in_top_page
 
-      user = list_target_user
+      user = current_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
@@ -343,12 +351,10 @@ class ListController < ApplicationController
       respond_with_list(list)
     end
 
-    define_method("category_top_#{period}") do
-      self.public_send("top_#{period}", category: @category.id)
-    end
+    define_method("category_top_#{period}") { public_send("top_#{period}", category: @category.id) }
 
     define_method("category_none_top_#{period}") do
-      self.public_send("top_#{period}", category: @category.id, no_subcategories: true)
+      public_send("top_#{period}", category: @category.id, no_subcategories: true)
     end
 
     # rss feed
@@ -357,9 +363,9 @@ class ListController < ApplicationController
 
       @description = I18n.t("rss_description.top_#{period}")
       @title = "#{SiteSetting.title} - #{@description}"
-      @link = "#{Discourse.base_url}/top?period=#{period}"
-      @atom_link = "#{Discourse.base_url}/top.rss?period=#{period}"
-      @topic_list = TopicQuery.new(nil).list_top_for(period)
+      @link = filtered_topic_list_url("#{Discourse.base_url}/top", period: period)
+      @atom_link = filtered_topic_list_url("#{Discourse.base_url}/top.rss", period: period)
+      @topic_list = topic_query(nil).list_top_for(period)
 
       render "list", formats: [:rss]
     end
@@ -382,6 +388,40 @@ class ListController < ApplicationController
 
   private
 
+  def self.feed_route_exists?(filter)
+    @feed_route_exists ||= {}
+    @feed_route_exists.fetch(filter) do
+      @feed_route_exists[filter] = begin
+        Rails.application.routes.url_for(
+          controller: "list",
+          action: "#{filter}_feed",
+          only_path: true,
+        )
+        true
+      rescue ActionController::UrlGenerationError
+        false
+      end
+    end
+  end
+
+  def feed_route_exists?(filter)
+    self.class.feed_route_exists?(filter)
+  end
+
+  def topic_query(user = current_user, opts = {})
+    TopicQuery.new(user, build_topic_list_options.merge(opts))
+  end
+
+  def filtered_topic_list_url(base_url, extra_params = {})
+    query_params =
+      build_topic_list_options
+        .merge(extra_params)
+        .except(:api_key, :api_username, :user_api_key)
+        .compact
+
+    query_params.present? ? "#{base_url}?#{query_params.to_query}" : base_url
+  end
+
   def page_params
     route_params = { format: "json" }
 
@@ -394,6 +434,15 @@ class ListController < ApplicationController
     end
 
     route_params
+  end
+
+  # `default_view` is free-form, so only ever dispatch to a filter this request
+  # could have reached directly at /c/<slug>/<id>/l/<filter>.
+  def category_default_view
+    filters = current_user ? Discourse.filters : Discourse.anonymous_list_filters
+
+    view = @category.default_view
+    filters.include?(view&.to_sym) ? view : "latest"
   end
 
   def set_category
@@ -420,24 +469,17 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      path = CGI.unescape(request.path)
-      query = request.query_string
-      new_path = path.gsub(current_slug, real_slug)
-      url = query.present? ? "#{new_path}?#{query}" : new_path
-      if ActionController::Base.config.relative_url_root
-        url = url.sub(ActionController::Base.config.relative_url_root, "")
-      end
-
-      return redirect_to path(url), status: :moved_permanently
+      return(
+        redirect_to category_redirect_url(category_slug_path_with_id, real_slug),
+                    status: :moved_permanently
+      )
     end
 
     @description_meta =
       if @category.uncategorized?
         I18n.t("category.uncategorized_description", locale: SiteSetting.default_locale)
-      elsif @category.description_text.present?
-        @category.description_text
       else
-        SiteSetting.site_description
+        @category.plain_text_description || SiteSetting.site_description
       end
 
     if use_crawler_layout?
@@ -445,12 +487,21 @@ class ListController < ApplicationController
     end
   end
 
-  def list_target_user
-    if params[:user_id] && guardian.is_staff?
-      User.find(params[:user_id].to_i)
-    else
-      current_user
-    end
+  # The canonical URL of the category, keeping whatever followed the slug path
+  # in the request (such as "/l/latest" or ".json") and the query string.
+  #
+  # `canonical_slug_path` comes from `Category#url` and is already encoded. It
+  # is used rather than substituting into the request path: with encoded slugs
+  # the decoded path contains raw non-ASCII characters, which Rails refuses to
+  # redirect to.
+  def category_redirect_url(requested_slug_path, canonical_slug_path)
+    requested_prefix = "/c/#{requested_slug_path}"
+    path_info = UrlHelper.unencode(request.path_info)
+    rest = path_info.start_with?(requested_prefix) ? path_info.delete_prefix(requested_prefix) : ""
+
+    url = "#{Discourse.base_path}/c/#{canonical_slug_path}#{rest}"
+    url = "#{url}?#{request.query_string}" if request.query_string.present?
+    url
   end
 
   def generate_list_for(action, target_user, opts)
@@ -506,6 +557,10 @@ class ListController < ApplicationController
           SiteSetting.top_page_default_timeframe
       ).to_sym
 
+    default_period = SiteSetting.top_page_default_timeframe.to_sym if TopTopic.periods.exclude?(
+      default_period,
+    )
+
     best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
   end
 
@@ -515,7 +570,7 @@ class ListController < ApplicationController
     default_period = SiteSetting.top_page_default_timeframe
   )
     best_periods_for(previous_visit_at, default_period.to_sym).find do |period|
-      top_topics = TopTopic.where("#{period}_score > 0")
+      top_topics = TopTopic.where("#{TopTopic.score_column_for_period(period)} > 0")
       top_topics =
         top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)

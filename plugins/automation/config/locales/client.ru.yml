@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Запустите автоматизацию через API"
   js:
     admin:
       logs:
@@ -210,9 +217,9 @@ ru:
               description: "Необязательный параметр, ограничивает срабатывание только для публикаций с этими характеристиками"
           created: Создано
           edited: Изменено
-          topics: Все темы
-          personal_messages: Личные сообщения
-          public_topics: Публичные темы (исключая все защищенные категории)
+          topics: Темы (все категории)
+          personal_messages: Только личные сообщения
+          public_topics: Темы (только общедоступные категории)
           with_images: Изображения
           with_links: Ссылки
           with_code: Код
@@ -289,6 +296,7 @@ ru:
           fields:
             email_template:
               label: Шаблон электронного письма
+              description: Поддерживает заполнители автоматизации
             recipients:
               label: Получатели
               description: Пользователи или адреса электронной почты для уведомления
@@ -314,6 +322,12 @@ ru:
             tags:
               label: Теги
               description: Список тегов для добавления в тему.
+            closed_automatically:
+              label: Автоматически закрытые темы
+              description: Добавляйте теги к автоматически закрываемым темам.
+            closed_manually:
+              label: Темы, закрытые вручную
+              description: Добавьте теги к темам, закрытым вручную.
         post:
           fields:
             creator:
@@ -441,6 +455,11 @@ ru:
               label: "Название настраиваемого поля пользователя"
         set_topic_timer:
           title: Установить таймер темы
+          fields:
+            type:
+              label: Тип таймера
+            duration:
+              label: Длительность таймера
       unnamed_automation: "Автоматизация без названия"
       models:
         script:

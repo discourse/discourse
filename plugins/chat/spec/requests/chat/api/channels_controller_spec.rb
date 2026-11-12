@@ -13,6 +13,29 @@ RSpec.describe Chat::Api::ChannelsController do
 
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns an error" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not return private category channels" do
+          Fabricate(:private_category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "as disallowed user" do
@@ -97,6 +120,20 @@ RSpec.describe Chat::Api::ChannelsController do
                 )
               end
             end
+
+            context "when the only group with access is destroyed" do
+              before { group_1.destroy! }
+
+              it "returns nothing" do
+                expect(channel_1.chatable.reload.read_restricted).to eq(true)
+                expect(channel_1.chatable.category_groups).to be_empty
+
+                get "/chat/api/channels"
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["channels"]).to be_blank
+              end
+            end
           end
         end
       end
@@ -107,6 +144,35 @@ RSpec.describe Chat::Api::ChannelsController do
         it "doesn't return direct message channels" do
           get "/chat/api/channels"
           expect(response.parsed_body["channels"]).to be_blank
+        end
+      end
+
+      context "when filtering with an unsupported chatable type" do
+        fab!(:channel_1, :category_channel)
+        fab!(:private_message_topic)
+
+        it "does not reveal private-message topic existence" do
+          get "/chat/api/channels",
+              params: {
+                chatable_id: private_message_topic.id,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
+
+          get "/chat/api/channels",
+              params: {
+                chatable_id: Topic.maximum(:id) + 1,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
         end
       end
 
@@ -207,6 +273,28 @@ RSpec.describe Chat::Api::ChannelsController do
         get "/chat/api/channels/-999"
 
         expect(response.status).to eq(403)
+      end
+
+      it "returns public channel data when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("channel")).to include(
+          "id" => channel.id,
+          "meta" => a_hash_including("can_join_chat_channel" => false, "user_silenced" => true),
+        )
+      end
+
+      it "hides private category channels when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:private_category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(404)
       end
     end
 
@@ -345,6 +433,53 @@ RSpec.describe Chat::Api::ChannelsController do
       expect(new_channel.description).to eq(params[:channel][:description])
       expect(new_channel.chatable_type).to eq(category.class.name)
       expect(new_channel.chatable_id).to eq(category.id)
+    end
+
+    context "when the user cannot post in the category" do
+      fab!(:moderator)
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group:) }
+
+      before do
+        sign_in(moderator)
+        params[:channel][:chatable_id] = private_category.id
+      end
+
+      it "does not create a channel or membership" do
+        expect {
+          post "/chat/api/channels", params:, headers: { "ACCEPT" => "application/json" }
+        }.to not_change { Chat::Channel.count }.and not_change {
+                Chat::UserChatChannelMembership.count
+              }
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
+    end
+
+    context "when public channels are disabled" do
+      before { SiteSetting.enable_public_channels = false }
+
+      it "returns an actionable error message" do
+        expect { post "/chat/api/channels", params: }.to not_change { Chat::Channel.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.public_channels_disabled"),
+        )
+      end
+
+      context "when the user is not staff" do
+        fab!(:user)
+
+        before { sign_in(user) }
+
+        it "returns a generic permission error" do
+          post "/chat/api/channels", params: params
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
     end
 
     it "creates a channel using the user-provided slug" do
@@ -486,6 +621,30 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when user provides an emoji that is too long" do
+      fab!(:user, :admin)
+      fab!(:channel, :category_channel)
+
+      before { sign_in(user) }
+
+      it "rejects the update" do
+        long_emoji = "a" * 2800
+        expected_error = "Emoji #{I18n.t("errors.messages.too_long", count: 100)}"
+
+        put "/chat/api/channels/#{channel.id}",
+            params: {
+              channel: {
+                emoji: long_emoji,
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(expected_error)
+        expect(channel.reload.emoji).to be_nil
+      end
+    end
+
     context "when user provided an empty name" do
       fab!(:user, :admin)
       fab!(:channel) do
@@ -540,6 +699,66 @@ RSpec.describe Chat::Api::ChannelsController do
         put "/chat/api/channels/#{channel.id}", params: { channel: { slug: " " } }
 
         expect(channel.reload.slug).to eq("something-else")
+      end
+    end
+
+    context "when user is a direct message channel participant" do
+      fab!(:attacker, :user)
+      fab!(:attacker_recipient, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [attacker, attacker_recipient],
+          threading_enabled: false,
+        )
+      end
+      fab!(:victim, :user)
+      fab!(:victim_recipient, :user)
+      fab!(:victim_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [victim, victim_recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:victim_thread) do
+        Fabricate(:chat_thread, channel: victim_channel, original_message_user: victim_recipient)
+      end
+      fab!(:victim_reply) do
+        Fabricate(
+          :chat_message,
+          thread: victim_thread,
+          chat_channel: victim_channel,
+          user: victim_recipient,
+        )
+      end
+
+      before do
+        Jobs.run_immediately!
+        victim_thread.add(victim)
+        victim_thread.update!(last_message: victim_reply)
+        sign_in(attacker)
+      end
+
+      it "preserves unread threads in inaccessible direct messages" do
+        expect(victim_channel.chatable.user_can_access?(attacker)).to be(false)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
+
+        put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("channel", "threading_enabled")).to be(true)
+        expect(
+          Chat::ThreadUnreadsQuery
+            .call(channel_ids: [victim_channel.id], user_id: victim.id)
+            .first
+            .unread_count,
+        ).to eq(1)
       end
     end
 
@@ -603,24 +822,46 @@ RSpec.describe Chat::Api::ChannelsController do
       end
 
       describe "when updating threading_enabled" do
-        it "sets the new value" do
+        it "can enable threading" do
           expect {
             put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
           }.to change { channel.reload.threading_enabled }.from(false).to(true)
 
           expect(response.parsed_body["channel"]["threading_enabled"]).to eq(true)
         end
+
+        it "can disable threading" do
+          channel.update!(threading_enabled: true)
+
+          expect {
+            put "/chat/api/channels/#{channel.id}",
+                params: {
+                  channel: {
+                    threading_enabled: false,
+                  },
+                },
+                as: :json
+          }.to change { channel.reload.threading_enabled }.from(true).to(false)
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channel"]["threading_enabled"]).to eq(false)
+        end
       end
 
       describe "when updating allow_channel_wide_mentions" do
-        it "sets the new value" do
-          put "/chat/api/channels/#{channel.id}",
-              params: {
-                channel: {
-                  allow_channel_wide_mentions: false,
-                },
-              }
+        it "can disable allow_channel_wide_mentions" do
+          channel.update!(allow_channel_wide_mentions: true)
 
+          expect {
+            put "/chat/api/channels/#{channel.id}",
+                params: {
+                  channel: {
+                    allow_channel_wide_mentions: false,
+                  },
+                }
+          }.to change { channel.reload.allow_channel_wide_mentions }.from(true).to(false)
+
+          expect(response.status).to eq(200)
           expect(response.parsed_body["channel"]["allow_channel_wide_mentions"]).to eq(false)
         end
       end

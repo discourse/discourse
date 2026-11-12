@@ -59,6 +59,15 @@ Fabricator(:fake_model, from: :llm_model) do
   url "https://fake.test/"
 end
 
+Fabricator(:gemini_interactions_model, from: :llm_model) do
+  display_name "Gemini Interactions"
+  name "gemini-2.5-flash"
+  provider "gemini_interactions"
+  tokenizer "DiscourseAi::Tokenizer::GeminiTokenizer"
+  max_prompt_tokens 1_000_000
+  url "https://generativelanguage.googleapis.com/v1/interactions"
+end
+
 Fabricator(:gemini_model, from: :llm_model) do
   display_name "Gemini"
   name "gemini-1.5-pro"
@@ -71,6 +80,14 @@ end
 Fabricator(:bedrock_model, from: :anthropic_model) do
   url ""
   provider "aws_bedrock"
+  api_key "asd-asd-asd"
+  name "claude-3-sonnet"
+  provider_params { { region: "us-east-1", access_key_id: "123456" } }
+end
+
+Fabricator(:bedrock_converse_model, from: :anthropic_model) do
+  url ""
+  provider "aws_bedrock_converse"
   api_key "asd-asd-asd"
   name "claude-3-sonnet"
   provider_params { { region: "us-east-1", access_key_id: "123456" } }

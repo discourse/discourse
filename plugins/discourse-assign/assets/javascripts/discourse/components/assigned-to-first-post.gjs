@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { escapeExpression } from "discourse/lib/utilities";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   assignedToGroupPath,
   assignedToPostPath,
   assignedToUserPath,
-} from "../lib/url";
+} from "../lib/url.js";
 
 export default class AssignedToFirstPost extends Component {
   @service siteSettings;
@@ -44,11 +45,17 @@ export default class AssignedToFirstPost extends Component {
     });
   }
 
+  get hasIndirectAssignments() {
+    return this.indirectlyAssignedTo
+      ? Object.keys(this.indirectlyAssignedTo).length > 0
+      : false;
+  }
+
   get isAssigned() {
     return !!(
       this.assignedToUser ||
       this.assignedToGroup ||
-      this.args.post?.topic?.indirectly_assigned_to
+      this.hasIndirectAssignments
     );
   }
 
@@ -65,17 +72,24 @@ export default class AssignedToFirstPost extends Component {
       : assignee.username;
   }
 
+  @bind
+  escapedPrioritizedAssigneeName(assignee) {
+    return escapeExpression(this.prioritizedAssigneeName(assignee));
+  }
+
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
-        {{icon this.icon}}
+        {{dIcon this.icon}}
         {{#if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">
               {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
-                  username=(this.prioritizedAssigneeName this.assignedToUser)
+                  username=(this.escapedPrioritizedAssigneeName
+                    this.assignedToUser
+                  )
                   path=(assignedToUserPath this.assignedToUser)
                 )
               }}
@@ -89,7 +103,9 @@ export default class AssignedToFirstPost extends Component {
               {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
-                  username=this.assignedToGroup.name
+                  username=(this.escapedPrioritizedAssigneeName
+                    this.assignedToGroup
+                  )
                   path=(assignedToGroupPath this.assignedToGroup)
                 )
               }}
@@ -102,13 +118,13 @@ export default class AssignedToFirstPost extends Component {
             {{i18n "discourse_assign.assigned"}}
           </span>
         {{/if}}
-        {{#if this.indirectlyAssignedTo}}
+        {{#if this.hasIndirectAssignments}}
           {{#each
             this.indirectAssignments key="postId"
             as |indirectAssignment|
           }}
             <span class="assignee">
-              <a href={{indirectAssignment.url}} class="assigned-indirectly">
+              <a class="assigned-indirectly" href={{indirectAssignment.url}}>
                 {{i18n
                   "discourse_assign.assign_post_to_multiple"
                   post_number=indirectAssignment.postNumber

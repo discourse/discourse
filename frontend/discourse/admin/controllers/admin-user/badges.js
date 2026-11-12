@@ -1,18 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, empty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   arraySortedByProperties,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { grantableBadges } from "discourse/lib/grant-badge-utils";
+import {
+  grantableBadgeOptions,
+  grantableBadges,
+} from "discourse/lib/grant-badge-utils";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
@@ -26,10 +28,21 @@ export default class AdminUserBadgesController extends Controller {
   @autoTrackedArray badges;
   @autoTrackedArray expandedBadges = [];
 
-  @alias("adminUser.model") user;
-  @empty("availableBadges") noAvailableBadges;
-
   badgeSortOrder = ["granted_at:desc"];
+
+  @computed("adminUser.model")
+  get user() {
+    return this.adminUser?.model;
+  }
+
+  set user(value) {
+    set(this, "adminUser.model", value);
+  }
+
+  @computed("availableBadges.length")
+  get noAvailableBadges() {
+    return isEmpty(this.availableBadges);
+  }
 
   @dependentKeyCompat
   get sortedBadges() {
@@ -49,6 +62,11 @@ export default class AdminUserBadgesController extends Controller {
   @dependentKeyCompat
   get availableBadges() {
     return grantableBadges(this.allBadges, this.userBadges);
+  }
+
+  @dependentKeyCompat
+  get badgeOptions() {
+    return grantableBadgeOptions(this.availableBadges);
   }
 
   get groupedBadges() {
@@ -118,7 +136,7 @@ export default class AdminUserBadgesController extends Controller {
         // Update the selected badge ID after the combobox has re-rendered.
         const newSelectedBadge = this.availableBadges[0];
         if (newSelectedBadge) {
-          this.set("selectedBadgeId", newSelectedBadge.get("id"));
+          this.set("selectedBadgeId", newSelectedBadge.id);
         }
       });
     } catch (error) {

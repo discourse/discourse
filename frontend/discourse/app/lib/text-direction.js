@@ -34,6 +34,10 @@ export function siteDir() {
   return _siteDir;
 }
 
+export function resetSiteDirForTesting() {
+  _siteDir = null;
+}
+
 export function isDocumentRTL() {
   return siteDir() === "rtl";
 }

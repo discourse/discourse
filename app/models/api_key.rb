@@ -13,14 +13,14 @@ class ApiKey < ActiveRecord::Base
   scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
 
   validates :description, length: { maximum: 255 }
-  validate :at_least_one_granular_scope
+  validate :valid_scope_mode_scopes
 
   enum :scope_mode, %i[global read_only granular].freeze
 
   after_initialize :generate_key
 
   def generate_key
-    if !self.key_hash
+    if !key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB
       self.truncated_key = key[0..3]
       self.key_hash = ApiKey.hash_key(key)
@@ -101,7 +101,9 @@ class ApiKey < ActiveRecord::Base
     if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(Rack::Request.new(env).ip) }
       return false
     end
-    return true if RouteMatcher.new(methods: :get, actions: "session#scopes").match?(env: env)
+    if RouteMatcher.new(methods: :get, actions: %w[session#scopes about#index]).match?(env: env)
+      return true
+    end
 
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
@@ -115,13 +117,20 @@ class ApiKey < ActiveRecord::Base
 
   private
 
-  def at_least_one_granular_scope
-    if scope_mode == "granular" && api_key_scopes.empty?
+  def valid_scope_mode_scopes
+    if granular? && api_key_scopes.empty?
       errors.add(
         :api_key_scopes,
         I18n.t("activerecord.errors.models.api_key.base.at_least_one_granular_scope"),
       )
+    elsif read_only? && !valid_read_only_scope?
+      errors.add(:api_key_scopes, I18n.t("activerecord.errors.models.api_key.base.read_only_scope"))
     end
+  end
+
+  def valid_read_only_scope?
+    api_key_scopes.size == 1 && api_key_scopes.first.resource == "global" &&
+      api_key_scopes.first.action == "read"
   end
 end
 
@@ -130,18 +139,18 @@ end
 # Table name: api_keys
 #
 #  id            :integer          not null, primary key
-#  user_id       :integer
-#  created_by_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
 #  allowed_ips   :inet             is an Array
+#  description   :text
 #  hidden        :boolean          default(FALSE), not null
+#  key_hash      :string           not null
 #  last_used_at  :datetime
 #  revoked_at    :datetime
-#  description   :text
-#  key_hash      :string           not null
-#  truncated_key :string           not null
 #  scope_mode    :integer
+#  truncated_key :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer
+#  user_id       :integer
 #
 # Indexes
 #

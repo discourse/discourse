@@ -8,7 +8,7 @@ import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -113,8 +113,14 @@ function _searchGeneric(term, contextualHashtagConfiguration) {
 }
 
 function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
+  // Only request types the client can actually render. Plugin-contributed
+  // types may be missing when their JS isn't loaded (e.g. in safe mode).
+  const registeredTypes = getHashtagTypeClassesNew();
+  const order = contextualHashtagConfiguration.filter(
+    (type) => type in registeredTypes
+  );
   currentSearch = ajax("/hashtags/search.json", {
-    data: { term, order: contextualHashtagConfiguration },
+    data: { term, order },
   });
   currentSearch
     .then((response) => {
@@ -142,7 +148,9 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         }
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.iconHtml = hashtagType.generateIconHTML(opts);
+        if (hashtagType) {
+          result.iconHtml = hashtagType.generateIconHTML(opts);
+        }
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })

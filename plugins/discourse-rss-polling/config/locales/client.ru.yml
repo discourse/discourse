@@ -14,14 +14,27 @@ ru:
     rss_polling:
       title: RSS-опрос
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: создать RSS-ленту
+            update_rss_polling_feed: обновить RSS-ленту
+            destroy_rss_polling_feed: удалить RSS-ленту
+            enable_rss_polling_feed: включить RSS-ленту
+            disable_rss_polling_feed: отключить RSS-ленту
       rss_polling:
-        feed: Настройки ленты
-        discourse: Настройки Discourse
         author: Автор
         feed_url: URL-адрес
         discourse_category: Категория
         discourse_tags: Теги
-        feed_category_filter: Фильтр категорий
-        documentation: Документация по настройке RSS-опроса
-        destroy_feed:
-          confirm: "Действительно удалить эту ленту?"
+        feeds:
+          edit: Изменить
+          delete: Удалить
+          save: Сохранить
+          confirm_delete: "Действительно удалить эту ленту?"
+        test:
+          title: Предпросмотр
+          dismiss: Закрыть
+        status:
+          enabled: Включено
+          disabled: Отключен

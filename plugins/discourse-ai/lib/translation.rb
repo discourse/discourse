@@ -2,13 +2,44 @@
 
 module DiscourseAi
   module Translation
+    PENDING_LOCALIZATION_WINDOW = 5.minutes
+
     def self.enabled?
       SiteSetting.discourse_ai_enabled && SiteSetting.ai_translation_enabled && has_llm_model? &&
         SiteSetting.content_localization_supported_locales.present?
     end
 
+    # @return [Hash, nil] the admin features list status, nil for the generic off status
+    def self.admin_status
+      locales = SiteSetting.content_localization_supported_locales.split("|")
+      return { state: "setup", note_key: "no_languages" } if locales.empty?
+      return if !SiteSetting.ai_translation_enabled
+      return { state: "setup", note_key: "no_llm" } if !has_llm_model?
+
+      {
+        state: "on",
+        label_key: "on_with_languages",
+        count: locales.size,
+        note_key: ("hidden_from_readers" if !SiteSetting.content_localization_enabled),
+      }.compact
+    end
+
     def self.locales
       SiteSetting.content_localization_locales
+    end
+
+    def self.supported_locale_bases_cte
+      <<~SQL
+        supported AS MATERIALIZED (
+          SELECT COALESCE(
+            array_agg(
+              DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
+            ) FILTER (WHERE locale IS NOT NULL),
+            ARRAY[]::text[]
+          ) AS bases
+          FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
+        )
+      SQL
     end
 
     def self.has_llm_model?
@@ -33,9 +64,139 @@ module DiscourseAi
       end
     end
 
-    def self.backfill_enabled?
+    def self.backfill_enabled?(target: nil)
       enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 &&
-        SiteSetting.ai_translation_backfill_max_age_days > 0
+        (![Post, Topic].include?(target) || backfill_start_at.present?)
+    end
+
+    def self.backfill_start_at
+      value = SiteSetting.ai_translation_backfill_start_date
+      return if value.blank?
+
+      date = Date.iso8601(value)
+      Time.utc(date.year, date.month, date.day)
+    end
+
+    def self.category_ids
+      SiteSetting.ai_translation_categories.to_s.split("|").filter_map { |id| id.presence&.to_i }
+    end
+
+    def self.category_ids_with_subcategories
+      category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }.uniq
+    end
+
+    def self.category_scope_cache_key
+      ids =
+        case SiteSetting.ai_translation_category_scope
+        when "include", "exclude"
+          category_ids_with_subcategories
+        else
+          category_ids
+        end
+
+      "#{SiteSetting.ai_translation_category_scope}:#{ids.sort.join("|")}"
+    end
+
+    def self.category_scope_condition(category_column:)
+      case SiteSetting.ai_translation_category_scope
+      when "all"
+        ["#{category_column} IS NOT NULL", {}]
+      when "include"
+        ids = category_ids_with_subcategories
+        return "1 = 0", {} if ids.blank?
+
+        ["#{category_column} IN (:category_ids)", { category_ids: ids }]
+      when "include_strict"
+        ids = category_ids
+        return "1 = 0", {} if ids.blank?
+
+        ["#{category_column} IN (:category_ids)", { category_ids: ids }]
+      when "exclude"
+        ids = category_ids_with_subcategories
+        return "#{category_column} IS NOT NULL", {} if ids.blank?
+
+        [
+          "#{category_column} IS NOT NULL AND #{category_column} NOT IN (:category_ids)",
+          { category_ids: ids },
+        ]
+      when "exclude_strict"
+        ids = category_ids
+        return "#{category_column} IS NOT NULL", {} if ids.blank?
+
+        [
+          "#{category_column} IS NOT NULL AND #{category_column} NOT IN (:category_ids)",
+          { category_ids: ids },
+        ]
+      else
+        [
+          "#{category_column} IS NOT NULL AND EXISTS (
+            SELECT 1 FROM categories category_scope_categories
+            WHERE category_scope_categories.id = #{category_column}
+              AND category_scope_categories.read_restricted = false
+          )",
+          {},
+        ]
+      end
+    end
+
+    def self.category_allowed?(category)
+      category_id = category.respond_to?(:id) ? category.id : category
+      return false if category_id.blank?
+
+      case SiteSetting.ai_translation_category_scope
+      when "all"
+        true
+      when "include"
+        category_ids_with_subcategories.include?(category_id)
+      when "include_strict"
+        category_ids.include?(category_id)
+      when "exclude"
+        !category_ids_with_subcategories.include?(category_id)
+      when "exclude_strict"
+        !category_ids.include?(category_id)
+      else
+        if category.respond_to?(:read_restricted)
+          !category.read_restricted
+        else
+          Category.where(id: category_id, read_restricted: false).exists?
+        end
+      end
+    end
+
+    # Whether new posts like this one get translated as soon as they are created.
+    def self.post_translatable?(post)
+      return false if post.user_id <= 0 && !SiteSetting.ai_translation_include_bot_content
+
+      topic = post.topic
+      return false if topic.blank?
+
+      if topic.archetype == Archetype.private_message
+        case SiteSetting.ai_translation_personal_messages
+        when "all"
+          true
+        when "group"
+          TopicAllowedGroup.exists?(topic_id: topic.id)
+        else
+          false
+        end
+      else
+        category_allowed?(topic.category)
+      end
+    end
+
+    # Whether a translation of a just-created post into `locale` is still being produced.
+    def self.post_localization_pending?(post, locale)
+      return false if !enabled?
+      return false if post.created_at < PENDING_LOCALIZATION_WINDOW.ago
+      return false if locales.none? { |l| LocaleNormalizer.is_same?(l, locale) }
+      return false if !post_translatable?(post)
+      return false if !credits_available_for_post_detection?
+
+      # Detection hasn't run yet, so a translation may still be needed.
+      return true if post.locale.blank?
+      return false if LocaleNormalizer.is_same?(post.locale, locale)
+
+      post.localizations.none? { |l| LocaleNormalizer.is_same?(l.locale, locale) }
     end
 
     def self.llm_model_for_agent(agent_id)
@@ -58,23 +219,30 @@ module DiscourseAi
       models.all? { |model| LlmCreditAllocation.credits_available?(model) }
     end
 
+    def self.locale_detector_configured?
+      DecisionLocaleDetector.decision_model.present? ||
+        llm_model_for_agent(SiteSetting.ai_translation_locale_detector_agent).present?
+    end
+
+    # The detector agent only fills in for a decision model, so the decision model's credits
+    # are what detection depends on.
+    def self.credits_available_for_locale_detection?
+      if (decision_model = DecisionLocaleDetector.decision_model)
+        DecisionModelCreditAllocation.credits_available?(
+          decision_model,
+          DecisionLocaleDetector::FEATURE_NAME,
+        )
+      else
+        credits_available_for_agent_ids?([SiteSetting.ai_translation_locale_detector_agent])
+      end
+    end
+
     def self.credits_available_for_post_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_post_localization?
     end
 
     def self.credits_available_for_topic_detection?
-      credits_available_for_agent_ids?(
-        [
-          SiteSetting.ai_translation_locale_detector_agent,
-          SiteSetting.ai_translation_topic_title_translator_agent,
-          SiteSetting.ai_translation_post_raw_translator_agent,
-        ],
-      )
+      credits_available_for_locale_detection? && credits_available_for_topic_localization?
     end
 
     def self.credits_available_for_post_localization?
@@ -100,6 +268,10 @@ module DiscourseAi
     end
 
     def self.credits_available_for_tag_localization?
+      credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
+    end
+
+    def self.credits_available_for_sidebar_localization?
       credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
     end
   end

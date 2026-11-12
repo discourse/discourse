@@ -10,6 +10,10 @@ ru:
       llm_model:
         name: "Идентификатор модели"
         max_prompt_tokens: "Контекстное окно"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "%{model_name} осталось всего %{percentage_remaining}% кредитов. Кредиты будут обнулены при %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
+      ai_credit_hard_limit: "У вас закончились кредиты ИИ на %{model_name}. Функции ИИ будут недоступны до %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -38,7 +42,7 @@ ru:
         description: "Автоматически отмечать темы с помощью ИИ"
   site_settings:
     discourse_ai_enabled: "Включить плагин AI для Discourse."
-    ai_default_llm_model: "Модель LLM по умолчанию для всех AI-функций"
+    enable_ai_bot_starred_conversations: "Предоставьте пользователям возможность отмечать диалоги с ИИ-ботами звездочкой и отображать их в боковой панели в разделе «Избранное»."
     ai_artifact_security: "Система AI-артефактов генерирует IFRAME с исполняемым кодом. В режиме Strict требуется дополнительный клик для запуска кода. В режиме Lax код запускается сразу. В режиме Hybrid пользователь может указать data-ai-artifact-autorun, чтобы запускать код автоматически. В режиме Disabled система артефактов не используется."
     ai_toxicity_enabled: "Включить модуль проверки на токсичность."
     ai_toxicity_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля проверки на токсичность"
@@ -53,10 +57,8 @@ ru:
     ai_toxicity_flag_threshold_threat: "Угроза"
     ai_toxicity_flag_threshold_sexual_explicit: "Контент сексуального характера"
     ai_toxicity_groups_bypass: "Сообщения пользователей в этих группах не будут оцениваться модулем проверки на токсичность."
-    ai_sentiment_enabled: "Включить модуль оценки настроения."
     ai_sentiment_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля оценки настроения"
     ai_sentiment_inference_service_api_key: "API-ключ для API оценки настроения"
-    ai_sentiment_models: "Модели, используемые для оценки. Настроение публикации определяется как позитивное, нейтральное или негативное. Эмоции распределяются по следующим категориям: гнев, отвращение, страх, радость, нейтральность, печаль, удивление."
     ai_nsfw_detection_enabled: "Включить модуль проверки на NSFW-контент."
     ai_nsfw_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля проверки на NSFW-контент"
     ai_nsfw_inference_service_api_key: "API-ключ для API проверки на NSFW-контент"
@@ -68,16 +70,16 @@ ru:
     ai_nsfw_flag_threshold_sexy: "Пороговое значение, при котором изображение, отнесенное к категории «сексуальное», определяется как NSFW-контент."
     ai_nsfw_models: "Модели, используемые для оценки NSFW-контента."
     ai_spam_detection_enabled: "Включить AI-модуль обнаружения спама"
+    ai_spam_detection_max_post_count: "Максимальное количество сообщений, которое может разместить пользователь, прежде чем его перестанут проверять на спам."
+    ai_spam_detection_max_trust_level: "Максимальный уровень доверия пользователей к сканированию на спам."
     ai_openai_api_key: "Ключ API для OpenAI. Используется ТОЛЬКО для создания и редактирования изображений. Для GPT используйте вкладку конфигурации LLM."
     ai_helper_enabled: "Включить AI-помощника"
     composer_ai_helper_allowed_groups: "Для пользователей в этих группах будет отображаться кнопка AI-помощника в редакторе."
     ai_helper_allowed_in_pm: "Включить AI-помощник для редактора в личных сообщениях."
     ai_helper_automatic_chat_thread_title_delay: "Задержка в минутах, прежде чем AI-помощник автоматически установит заголовок темы чата."
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
-    ai_helper_enabled_features: "Выберите функции, которые нужно включить в AI-помощнике."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
-    ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
     ai_embeddings_semantic_related_topics_enabled: "Использовать семантический поиск для связанных тем."
     ai_embeddings_semantic_related_topics: "Максимальное количество тем для показа в разделе связанных тем."
     ai_embeddings_backfill_batch_size: "Количество векторных представлений для обратного заполнения каждые 15 минут."
@@ -86,26 +88,28 @@ ru:
     ai_embeddings_semantic_quick_search_enabled: "Включить опцию семантического поиска во всплывающем меню поиска."
     ai_embeddings_semantic_related_include_closed_topics: "Включать в результаты семантического поиска закрытые темы"
     ai_embeddings_per_post_enabled: Генерировать эмбеддинги для каждой публикации
+    ai_admin_dashboard_enabled: "Включите функции искусственного интеллекта на панели администратора."
+    ai_admin_dashboard_highlights_agent: "Агент, который объясняет важные изменения в сообществе на панели администратора."
     ai_summarization_enabled: "Включить функцию резюмирования"
+    ai_summarization_agent: "Агент для использования функции суммирования"
     ai_pm_summarization_allowed_groups: "Группам разрешено создавать и просматривать сводки в личных сообщениях."
     ai_summary_gists_enabled: "Автоматически создает краткие сводки последних ответов в темах"
-    ai_summary_backfill_maximum_topics_per_hour: "Число сводок по теме для заполнения за час."
     ai_bot_enabled: "Включить модуль AI-бота."
-    ai_bot_allowed_groups: "Если у GPT-бота есть доступ к личным сообщениям, он будет отвечать участникам указанных групп."
     ai_bot_debugging_allowed_groups: "Разрешить этим группам видеть в публикациях кнопку отладки, которая отображает необработанный запрос и ответ AI."
     ai_bot_public_sharing_allowed_groups: "Разрешить этим группам делиться личными сообщениями AI с общественностью по уникальной общедоступной ссылке. Примечание: если ваш сайт требует входа, для доступа также потребуется вход."
     ai_bot_github_access_token: "Токен доступа к GitHub для использования с инструментами GitHub AI (требуется для поддержки поиска)"
+    ai_bot_enable_docked_composer: "Вместо стандартного плавающего редактора диалогов с ИИ-ботами используйте закрепленный редактор в стиле чата."
     ai_discover_enabled: "Включить функцию поиска по обнаруженным данным"
+    ai_discover_agent: "Агент для использования в функции поиска."
     ai_google_custom_search_api_key: "API-ключ для API программируемого поиска Google — см. https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX для API программируемого поиска Google"
     ai_discord_search_enabled: "Включает функцию поиска Discord"
     ai_discord_app_id: "ID приложения Discord, к которому вы хотите подключить поиск Discord"
     ai_discord_app_public_key: "Открытый ключ приложения Discord, к которому вы хотите подключить поиск Discord"
     ai_discord_search_mode: "Выберите режим поиска, который будет использоваться при поиске в Discord"
+    ai_discord_search_agent: "Агент для поиска в Discord."
     ai_discord_allowed_guilds: "Серверы Discord (гильдии), на которых боту разрешено выполнять поиск"
-    ai_translation_backfill_limit_to_public_content: "Если параметр включен, будет переводиться только контент из общедоступных категорий. Если отключен — на перевод также будет отправляться контент из групповых ЛС и закрытых категорий."
-    ai_translation_max_post_length: "Максимальное количество символов для перевода сообщения. Сообщения длиннее этого значения не будут переведены."
-    ai_translation_backfill_max_age_days: "Максимальный возраст публикации и темы для перевода. Публикации и темы старше этого значения переводиться не будут. Значение 0 отключает перевод старого контента, но не отключает перевод новых публикаций."
+    ai_translation_personal_messages: "Управляет тем, какие личные сообщения будут переводиться. 'none' отключает перевод личных сообщений. 'group' переводит только групповые личные сообщения. 'all' переводит все личные сообщения."
   reviewables:
     reasons:
       flagged_by_toxicity: Плагин AI определил этот контент как токсичный и отправил жалобу.
@@ -116,93 +120,64 @@ ru:
       description: "В этом отчете представлен анализ настроений публикаций по категориям: для каждой публикации и категории указываются положительные, отрицательные и нейтральные оценки."
     overall_sentiment:
       title: "Общее настроение"
-      description: 'На диаграмме сравнивается количество публикаций, классифицированных как позитивные или негативные на основе того, превышают ли их оценки установленные пороговые значения. Нейтральные публикации и личные сообщения (ЛС) в расчет не включаются. Классификация выполнена с помощью модели "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Позитивные(%)"
       yaxis: "Дата"
     emotion_admiration:
-      title: "\U0001F929 Восхищение"
-      description: "Публикации, классифицированные AI по эмоции «восхищение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🤩 Восхищение"
     emotion_amusement:
-      title: "\U0001F604 Веселье"
-      description: "Публикации, классифицированные AI по эмоции «веселье» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😄 Веселье"
     emotion_anger:
-      title: "\U0001F620 Гнев"
-      description: "Публикации, классифицированные AI по эмоции «гнев» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😠 Гнев"
     emotion_annoyance:
-      title: "\U0001F612 Недовольство"
-      description: "Публикации, классифицированные AI по эмоции «недовольство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😒 Недовольство"
     emotion_approval:
-      title: "\U0001F44D Одобрение"
-      description: "Публикации, классифицированные AI по эмоции «одобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "👍 Одобрение"
     emotion_caring:
-      title: "\U0001F917 Забота"
-      description: "Публикации, классифицированные AI по эмоции «забота» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🤗 Забота"
     emotion_confusion:
-      title: "\U0001F615 Замешательство"
-      description: "Публикации, классифицированные AI по эмоции «замешательство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😕 Замешательство"
     emotion_curiosity:
-      title: "\U0001F914 Любопытство"
-      description: "Публикации, классифицированные AI по эмоции «любопытство» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🤔 Любопытство"
     emotion_desire:
-      title: "\U0001F60D Восторг"
-      description: "Публикации, классифицированные AI по эмоции «восторг» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😍 Восторг"
     emotion_disappointment:
-      title: "\U0001F61E Разочарование"
-      description: "Публикации, классифицированные AI по эмоции «разочарование» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😞 Разочарование"
     emotion_disapproval:
-      title: "\U0001F44E Неодобрение"
-      description: "Публикации, классифицированные AI по эмоции «неодобрение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "👎 Неодобрение"
     emotion_disgust:
-      title: "\U0001F922 Отвращение"
-      description: "Публикации, классифицированные AI по эмоции «отвращение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🤢 Отвращение"
     emotion_embarrassment:
-      title: "\U0001F633 Смущение"
-      description: "Публикации, классифицированные AI по эмоции «смущение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😳 Смущение"
     emotion_excitement:
-      title: "\U0001F92A Волнение"
-      description: "Публикации, классифицированные AI по эмоции «волнение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🤪 Волнение"
     emotion_fear:
-      title: "\U0001F628 Страх"
-      description: "Публикации, классифицированные AI по эмоции «страх» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😨 Страх"
     emotion_gratitude:
-      title: "\U0001F64F Благодарность"
-      description: "Публикации, классифицированные AI по эмоции «благодарность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🙏 Благодарность"
     emotion_grief:
-      title: "\U0001F622 Печаль"
-      description: "Публикации, классифицированные AI по эмоции «печаль» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😢 Печаль"
     emotion_joy:
-      title: "\U0001F60A Радость"
-      description: "Публикации, классифицированные AI по эмоции «радость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😊 Радость"
     emotion_love:
       title: '❤️ Любовь'
-      description: "Публикации, классифицированные AI по эмоции «любовь» с помощью модели 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Тревога"
-      description: "Публикации, классифицированные AI по эмоции «тревога» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😰 Тревога"
     emotion_neutral:
-      title: "\U0001F610 Нейтральность"
-      description: "Публикации, классифицированные AI по эмоции «нейтральность» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😐 Нейтральность"
     emotion_optimism:
-      title: "\U0001F31F Оптимизм"
-      description: "Публикации, классифицированные AI по эмоции «оптимизм» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🌟 Оптимизм"
     emotion_pride:
-      title: "\U0001F981 Гордость"
-      description: "Публикации, классифицированные AI по эмоции «гордость» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "🦁 Гордость"
     emotion_realization:
-      title: "\U0001F4A1 Озарение"
-      description: "Публикации, классифицированные AI по эмоции «озарение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "💡 Озарение"
     emotion_relief:
-      title: "\U0001F60C Облегчение"
-      description: "Публикации, классифицированные AI по эмоции «облегчение» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😌 Облегчение"
     emotion_remorse:
-      title: "\U0001F614 Сожаление"
-      description: "Публикации, классифицированные AI по эмоции «сожаление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😔 Сожаление"
     emotion_sadness:
-      title: "\U0001F62D Грусть"
-      description: "Публикации, классифицированные AI по эмоции «грусть» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😭 Грусть"
     emotion_surprise:
-      title: "\U0001F632 Удивление"
-      description: "Публикации, классифицированные AI по эмоции «удивление» с помощью модели 'SamLowe/roberta-base-go_emotions'."
+      title: "😲 Удивление"
   discourse_ai:
     ai_artifact:
       errors:
@@ -227,28 +202,35 @@ ru:
           name: "Обменный курс"
         stock_quote:
           name: "Котировка акций (AlphaVantage)"
+        image_generation_category:
+          name: "Генерация изображений..."
         image_generation_custom:
           name: "Другое"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Начать с нуля..."
       name:
         characters: "может содержать только цифры, буквы и символы подчеркивания"
+    mcp_servers:
+      errors:
+        invalid_response: "Сервер MCP вернул недействительный ответ."
+        request_failed: "Запрос к серверу MCP завершился с ошибкой со статусом %{status}."
+        session_expired: "Сессия MCP завершилась."
+        timeout: "Время ожидания запроса к серверу MCP истекло."
+        oauth_refresh_token_required: "Сервер авторизации OAuth не вернул токен обновления. Измените расширенные параметры OAuth и повторно подключитесь к этому серверу MCP."
     ai_helper:
       errors:
         completion_request_failed: "При попытке дать рекомендации произошла ошибка. Попробуйте еще раз."
+        no_image_generated: "Не удалось сгенерировать изображение. Пожалуйста, попробуйте еще раз или проверьте настройки вашего инструмента."
+        llm_model_not_configured: "Для генерации изображений не настроена языковая модель. Пожалуйста, настройте языковую модель по умолчанию в настройках вашего сайта."
+        unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
-        generate_titles: Предложить названия для темы
         proofread: Вычитать текст
         markdown_table: Сгенерировать таблицу в формате Markdown
         custom_prompt: "Пользовательский запрос"
         explain: "Объяснить"
         illustrate_post: "Проиллюстрировать публикацию"
         replace_dates: "Умные даты"
-      image_caption:
-        attribution: "Подпись к изображению от AI"
     share_ai:
       read_more: "Прочитать полное содержимое"
       onebox_title: "Разговор AI с пользователем %{llm_name}"
@@ -268,11 +250,61 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      sources:
+        historical: "AI для Discourse"
+        spam_detection: "Обнаружение спама"
+      navigation:
+        settings:
+          title: "Настройки сайта"
+        users:
+          title: "По пользователям"
+        groups:
+          title: "Группы"
+        review:
+          title: "Очередь проверки"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Теги"
+        themes:
+          title: "тем"
+        authentication:
+          title: "Вход и аутентификация"
+        backups:
+          title: "Резервные копии"
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
+      read_post:
+        unknown_post: "публикация"
+      chat_tool_approval:
+        topic_states:
+          open: "Открытые"
+          closed: "Закрытое"
+          active: "Активна"
+          deleted: "Удалённые"
+        solution_post: "Cообщение #%{number}"
+        duration_label: "Продолжительность:"
+        user_duration:
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дней"
+          other: "%{count} дня"
+        post_states:
+          locked: "Заблокировано"
+        posts_label: "Количество сообщений"
+        category_label: "Категория"
+        category_fields:
+          name: "Название"
+          description: "описание"
+          color: "цвет"
+          text_color: "цвет текста"
+        approve_label: "Да"
+        reject_label: "Нет"
+        empty_value: "Пустой"
       agents:
-        default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
+        admin_dashboard_highlights:
+          description: "Составляет краткий отчет, отображаемый в верхней части административной панели, с объяснением изменений и моментов, заслуживающих внимания в этот период."
         github_helper:
           name: "Помощник по GitHub"
           description: "AI-бот, специализирующийся на оказании помощи в решении задач и вопросов, связанных с GitHub"
@@ -407,15 +439,22 @@ ru:
             name: "Базовый поисковый запрос"
             description: "Базовый запрос, используемый при поиске. Пример: '#urgent' добавит '#urgent' к поисковому запросу и будет включать только темы со срочной категорией или тегом."
       tool_summary:
+        read_artifact: "Прочитать веб-артефакт"
         update_artifact: "Обновить веб-артефакт"
         create_artifact: "Создать веб-артефакт"
         web_browser: "Просмотр веб-страниц"
         github_search_files: "Поиск файлов на GitHub"
         github_search_code: "Поиск кода на GitHub"
         github_file_content: "Контент файла на GitHub"
+        github_diff: "GitHub diff"
         random_picker: "Случайный выбор"
         categories: "Вывод списка категорий"
         flag_post: "Пометить публикацию"
+        suspend_user: "Заблокировать пользователя"
+        silence_user: "Заморозка пользователя"
+        edit_post: "Редактировать пост"
+        edit_tag: "Редактировать тег"
+        create_category: "Создать категорию"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"
@@ -441,9 +480,18 @@ ru:
         github_search_code: "Поиск кода в репозитории GitHub"
         github_search_files: "Поиск файлов в репозитории GitHub"
         github_file_content: "Извлечение контента файлов из репозитория на GitHub"
+        github_diff: "Получить запрос на слияние (pull request) или разницу в коммитах (commit diff) на GitHub."
         random_picker: "Выбирает случайное число или случайный элемент списка"
         categories: "Вывод всех общедоступных категорий на форуме"
+        flag_post: "Пометить текущую публикацию для проверки сотрудниками"
         delete_topic: "Удаление темы"
+        create_category: "Создать новую категорию"
+        change_topic_category: "Переместить тему в другую категорию"
+        set_slow_mode: "Включить или отключить медленный режим для темы"
+        move_posts: "Переместить сообщения в новую или существующую тему"
+        grant_badge: "Назначение награды пользователю"
+        assign: "Назначить или отменить назначение темы пользователю или группе."
+        mark_as_solved: "Отметьте или снимите отметку с сообщения как с принятого решения."
         search: "Поиск по всем общедоступным темам на форуме"
         tags: "Вывод всех тегов на форуме"
         time: "Определить время в разных часовых поясах"
@@ -470,6 +518,20 @@ ru:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Получен контент файла %{file_paths} из репозитория %{repo_name}@%{branch}"
         random_picker: "Выбор из %{options}, выбрано: %{result}"
+        flag_post: "Отметка сообщения %{post_id} (flag_post: %{flag_post})"
+        close_topic: "Закрытие темы %{topic_id} (закрыто: %{closed})"
+        unlist_topic: "Снятие темы с публикации %{topic_id} (не указано: %{unlisted})"
+        lock_post: "Блокировка поста %{post_id} (заблокировано: %{locked})"
+        delete_topic: "Удаление темы %{topic_id} (удалено: %{deleted})"
+        edit_post: "Редактирование поста %{post_id}"
+        change_topic_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
+        change_topic_category: "Переместить тему %{topic_id} в категорию %{category_id}"
+        set_topic_timer: "Установка таймера %{timer_type} для темы %{topic_id} (%{duration_hours}ч)"
+        set_slow_mode: "Установка медленного режима для темы %{topic_id} (%{slow_mode_seconds}с)"
+        move_posts: "Перемещение сообщений %{post_ids} из темы %{topic_id}"
+        grant_badge: "Присвоение значка '%{badge_name}' пользователю %{username}"
+        assign: "Назначение темы %{topic_id} (назначено: %{assigned})"
+        mark_as_solved: "Отмечаю сообщение %{post_id} как решенное (решено: %{solved})"
         read: "Чтение: <a href='%{url}'>%{title}</a>"
         time: "Время по часовому поясу %{timezone} — %{time}"
         summarize: "Получена сводка: <a href='%{url}'>%{title}</a>"
@@ -519,37 +581,138 @@ ru:
           few: "Найдено %{count} результата по запросу «%{query}»"
           many: "Найдено %{count} результатов по запросу «%{query}»"
           other: "Найдено %{count} результата по запросу «%{query}»"
-      discoveries:
-        continue_conversation:
-          raw: "Во время поиска «%{query}» вы предоставили мне следующие сведения:\n\n%{context}\n\nДавайте продолжим разговор."
+      flag_post:
+        already_flagged: "Сообщение уже помечено для проверки."
+        flagged: "Сообщение помечено для проверки."
+        reason: "ИИ-бот пометил этот пост как неприемлемый.\n\nПричина: %{reason}"
       close_topic:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Закрывать или открывать эту тему запрещено."
+          no_reason: "Для закрытия или открытия темы необходимо указать причину."
+        success: "Тема успешно обновлена."
+      suspend_user:
+        errors:
+          not_found: "Пользователь не найден."
+      silence_user:
+        errors:
+          not_found: "Пользователь не найден."
       unlist_topic:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешается исключать эту тему из списка или добавлять ее в список."
+          no_reason: "Для того чтобы убрать или добавить тему в список, необходимо указать причину."
+        success: "Тема успешно обновлена."
+      lock_post:
+        errors:
+          not_found: "Пост не найден."
+          not_allowed: "Вы не можете заблокировать или разблокировать этот пост."
+          no_reason: "Для блокировки или разблокировки публикации необходимо указать причину."
+        success: "Пост успешно обновлен."
       delete_topic:
         errors:
           not_found: "Тема не найдена."
-      edit_tags:
+          not_allowed: "Вам не разрешается удалять или восстанавливать эту тему."
+          no_reason: "Для удаления или восстановления темы необходимо указать причину."
+        success: "Тема успешно обновлена."
+      edit_post:
+        errors:
+          not_found: "Пост не найден."
+          not_allowed: "Вам не разрешено редактировать этот пост."
+          no_reason: "Необходимо указать причину редактирования."
+        success: "Пост успешно отредактирован."
+      change_topic_tags:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено редактировать теги в этой теме."
+          no_reason: "Для редактирования тегов необходима причина."
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
+        success: "Теги успешно обновлены."
+      create_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
+      edit_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
       edit_category:
         errors:
+          not_found: "Категория не найдена."
+      change_topic_category:
+        errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено перемещать эту тему."
           category_not_found: "Категория не найдена."
+          no_reason: "Для переноса темы необходима причина."
+          revision_failed: "Не удалось перенести тему."
+        success: "Тема успешно перенесена."
       set_topic_timer:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено устанавливать таймер для этой темы."
+          no_reason: "Для установки таймера для темы необходимо указать причину."
+          invalid_timer_type: "Недопустимый тип таймера. Должен быть одним из следующих: закрыт, открыт, удален, тихо закрыт, bump."
+        success: "Таймер темы успешно обновлен."
       set_slow_mode:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено устанавливать медленный режим в этой теме."
+          no_reason: "Для установки медленного режима требуется причина."
+        success: "Медленный режим успешно обновлен."
       move_posts:
         errors:
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено перемещать сообщения в этой теме."
+          no_reason: "Для перемещения поста необходима причина."
+          no_destination: "Необходимо указать либо destination_topic_id, либо new_title."
+          move_failed: "Не удалось переместить посты."
+        success: "Посты успешно перемещены."
+      grant_badge:
+        errors:
+          user_not_found: "Пользователь не найден."
+          badge_not_found: "Значок не найден."
+          not_allowed: "Вам не разрешается выдавать значки."
+          no_reason: "Для выдачи значка необходимо указать причину."
+          badge_disabled: "Значок не активирован."
+          grant_failed: "Не удалось выдать значок."
+        success: "Значок успешно получен."
       assign:
         errors:
+          plugin_not_installed: "Плагин discourse-assign не установлен."
           not_found: "Тема не найдена."
+          not_allowed: "Вам не разрешено назначать эту тему."
+          assignee_not_found: "Пользователь или группа не найдены."
+          assign_failed: "Не удалось назначить тему."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "Плагин discourse-solved не установлен."
+          no_reason: "Чтобы пометить или снять отметку с сообщения как решенную, требуется указать причину."
+          action_failed: "Не удалось обновить статус \"решено\"."
+        success: "Статус \"Решено\" успешно обновлен."
+    appearance_authoring:
+      default_theme: "Тема по умолчанию"
+      colors:
+        light:
+          header_background: "В заголовке"
+      fonts:
+        base_font: "Шрифт текста"
+        heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Включено"
+      "off": "Выключено"
+      none: "нет"
+    mcp_app_setup:
+      none: "нет"
+    reviewables:
+      ai_tool_action:
+        title: "Действие инструмента ИИ"
+        approve:
+          title: "Одобрить"
+        reject:
+          title: "Отклонить"
+        target_missing: "Цель инструмента действия больше не существует."
+        tool_not_found: "Инструмент '%{tool_name}' больше недоступен."
+        bot_user_missing: "Пользователь бота больше не существует."
+        execution_error: "Выполнение инструмента завершилось с ошибкой: %{error}"
     summarization:
       configuration_hint:
         one: "Сначала настройте параметр `%{setting}`."
@@ -562,13 +725,13 @@ ru:
       reports:
         overall_sentiment: "Общее настроение (позитивное — негативное)"
         post_emotion:
-          sadness: "Грусть \U0001F622"
-          surprise: "Удивление \U0001F631"
-          neutral: "Нейтральность \U0001F610"
-          fear: "Страх \U0001F628"
-          anger: "Гнев \U0001F621"
-          joy: "Радость \U0001F600"
-          disgust: "Отвращение \U0001F922"
+          sadness: "Грусть 😢"
+          surprise: "Удивление 😱"
+          neutral: "Нейтральность 😐"
+          fear: "Страх 😨"
+          anger: "Гнев 😡"
+          joy: "Радость 😀"
+          disgust: "Отвращение 🤢"
         sentiment_analysis:
           positive: "Позитивное"
           negative: "Негативное"
@@ -579,8 +742,11 @@ ru:
         disable_modules_first: "Сначала необходимо отключить эти модули: %{settings}"
         set_llm_first: "Сначала задайте %{setting}"
         model_unreachable: "Мы не смогли получить ответ от этой модели. Проверьте настройки."
+        empty_response: "Модель вернула пустой ответ."
         invalid_seeded_model: "Эту модель нельзя использовать с этой функцией"
+        invalid_agent_response_format: "Выбранный агент должен иметь формат ответа с логическим полем, содержащим имя «спам»."
         must_select_model: "Сначала вам нужно выбрать LLM"
+        invalid_llm_id: "Выбранная модель LLM недействительна."
       endpoints:
         not_configured: "%{display_name} (не настроено)"
         configuration_hint:
@@ -599,10 +765,15 @@ ru:
     embeddings:
       delete_failed: "Эта модель сейчас используется. Сначала обновите параметр `ai embeddings selected model`."
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
+      secret_required: "Необходимо выбрать учетные данные."
+      secret_not_found: "Выбранные учетные данные не существуют."
+      missing_provider_param: "Параметр %{param} не может быть пустым"
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."
         model_test_failed: "Не удалось создать тестовую встраиваемую модель с этой моделью. Проверьте правильность её настройки."
+    decision_models:
+      secret_not_found: "Выбранные учетные данные не существуют."
     llm_models:
       missing_provider_param: "Параметр %{param} не может быть пустым"
       bedrock_invalid_url: "Чтобы использовать эту модель, заполните все поля."
@@ -613,14 +784,21 @@ ru:
     translation:
       errors:
         disabled: "Функция перевода с помощью ИИ настроена не полностью."
+        all_posts_translated: "Все сообщения в этой теме уже переведены."
+    llm_credit_allocation:
+      limit_exceeded_user: "В этом сообществе исчерпан лимит кредитов ИИ на сегодня. Пожалуйста, попробуйте снова через %{reset_time} или обратитесь к администратору сайта за дополнительной информацией."
+      limit_exceeded_admin: "Вы достигли лимита кредитов ИИ. Пожалуйста, попробуйте снова через %{reset_time}."
     errors:
       quota_exceeded: "Вы превысили квоту для этой модели. Повторите попытку через %{relative_time}."
-      quota_required: "Необходимо указать максимальное количество токенов или использований для этой модели"
       no_query_specified: Параметр запроса обязателен, укажите его.
+      no_user_for_agent: Указанный агент не имеет связанного с ним пользователя.
+      agent_not_found: "Указанный агент не существует. Проверьте параметры agent_name или agent_id (устаревшие: persona_name или persona_id)."
       no_user_specified: Параметры user_unique_id или username обязательны, укажите нужное.
       user_not_found: Указанный пользователь не существует. Проверьте параметр username.
+      agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: persona_name или persona_id)."
       user_not_allowed: Пользователю не разрешено участвовать в теме.
       prompt_message_length: Сообщение %{idx} превышает ограничение в 1000 символов.
+      agent_already_exists: Агент с именем %{name} уже существует.
       custom_tool_exists:
         one: "Пользовательский инструмент с названием %{names} уже существует."
         few: "Пользовательские инструменты с названиями %{names} уже существует."

@@ -1,7 +1,7 @@
 import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
-import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
+import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation.gjs";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
@@ -45,7 +45,11 @@ export default {
 
             solvedStateChanged = oldAllowed !== newAllowed;
 
-            if (model.accepted_answer && oldAllowed && !newAllowed) {
+            if (
+              model.accepted_answers?.length > 0 &&
+              oldAllowed &&
+              !newAllowed
+            ) {
               const showConfirmation =
                 localStorage.getItem(STORAGE_KEY) !== "true";
 

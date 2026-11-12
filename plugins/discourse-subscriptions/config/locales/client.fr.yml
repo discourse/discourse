@@ -54,7 +54,7 @@ fr:
         subscribers: Abonnés
         goal_comparison: "<strong>%{current}</strong> sur <strong>%{goal}</strong>"
         raised: Récoltés
-        button: Soutenir
+        button: Assistance
         recent_contributors: Contributeurs récents
         goal: Nous avons atteint notre objectif
         one_click_campaign: Créer automatiquement une campagne d'assistance
@@ -404,8 +404,6 @@ fr:
         confirm_payment: Confirmer le paiement
         success: Retour
       admin:
-        unconfigured: 'Stripe n''est pas configuré correctement. Veuillez consulter Discourse Meta pour obtenir plus d''informations.'
-        on_meta: Discourse Subscriptions sur Meta
         dashboard:
           title: Tableau de bord
           table:

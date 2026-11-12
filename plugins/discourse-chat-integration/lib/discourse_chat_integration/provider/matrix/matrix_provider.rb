@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module MatrixProvider
       PROVIDER_NAME = "matrix"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_matrix_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

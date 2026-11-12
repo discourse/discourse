@@ -23,6 +23,38 @@ module PageObjects
         self
       end
 
+      def full_app_mode_toggle
+        PageObjects::Components::DToggleSwitch.new(
+          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox",
+        )
+      end
+
+      def click_full_app_mode_toggle
+        full_app_mode_toggle.toggle
+        self
+      end
+
+      def has_full_app_mode_enabled?
+        full_app_mode_toggle.checked?
+      end
+
+      def has_full_app_mode_disabled?
+        full_app_mode_toggle.unchecked?
+      end
+
+      def expand_snippet
+        find(".admin-embedding-index__code .admin-config-area-card__toggle-button").click
+        self
+      end
+
+      def has_snippet_containing?(text)
+        page.has_css?(".admin-embedding-index__code code", text: text)
+      end
+
+      def has_no_snippet_containing?(text)
+        page.has_no_css?(".admin-embedding-index__code code", text: text)
+      end
+
       def click_delete
         open_embedding_host_menu
         find(".admin-embeddable-host-item__delete").click

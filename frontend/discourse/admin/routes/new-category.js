@@ -45,6 +45,12 @@ export default class NewCategory extends DiscourseRoute {
       style_type: "icon",
       icon: "square-full",
       group_permissions,
+      permission_groups: [
+        this.site.groupsById[AUTO_GROUPS.everyone.id],
+        ...this.site.groups.filter(
+          (group) => group.id !== AUTO_GROUPS.everyone.id
+        ),
+      ],
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,
       topic_featured_link_allowed: true,
@@ -54,6 +60,7 @@ export default class NewCategory extends DiscourseRoute {
       required_tag_groups: [],
       form_template_ids: [],
       minimum_required_tags: 0,
+      subcategory_list_style: "rows_with_featured_topics",
       category_localizations: [],
     });
   }

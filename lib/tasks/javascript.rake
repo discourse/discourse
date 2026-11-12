@@ -7,7 +7,7 @@ def write_template(path, task_name, template)
   JS
 
   basename = File.basename(path)
-  output_path = "#{Rails.root}/frontend/#{path}"
+  output_path = "#{Rails.root.join("frontend/#{path}")}"
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
@@ -17,6 +17,9 @@ end
 
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
+
+  category_additional_assign_allowed_groups =
+    DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
 
   auto_groups =
     Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
@@ -32,7 +35,7 @@ task "javascript:update_constants" => :environment do
 
     export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
+    export const SYSTEM_FLAG_IDS = #{Flag.unscoped.where(id: 0...Flag::MAX_SYSTEM_FLAG_ID).order(:id).pluck(:name_key, :id).to_h.to_json};
 
     export const REPORT_MODES = #{Report::MODES.to_json};
 
@@ -46,6 +49,13 @@ task "javascript:update_constants" => :environment do
 
     export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
+
+  send_shortcuts =
+    UserOption
+      .send_shortcuts
+      .keys
+      .map { |key| %(export const SEND_SHORTCUT_#{key.upcase} = "#{key}";) }
+      .join("\n")
 
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
@@ -66,6 +76,8 @@ task "javascript:update_constants" => :environment do
 
     export const CATEGORY_TEXT_COLORS = #{Category::DEFAULT_TEXT_COLORS};
 
+    export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "#{category_additional_assign_allowed_groups}";
+
     // NOTE: Group names are changed based on the site's locale, see
     // Group.refresh_automatic_group! for more details
     export const AUTO_GROUPS = #{auto_groups.to_json};
@@ -73,8 +85,6 @@ task "javascript:update_constants" => :environment do
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
 
     export const GROUP_VISIBILITY_LEVELS = #{Group.visibility_levels.to_json};
-
-    export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 
@@ -90,7 +100,11 @@ task "javascript:update_constants" => :environment do
 
     export const INVITE_DESCRIPTION_MAX_LENGTH = #{Invite::DESCRIPTION_MAX_LENGTH};
 
+    export const POSTING_REVIEW_GROUP_BASED_MODES = #{CategorySetting::GROUP_BASED_MODES.to_json};
+
     export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
+
+    #{send_shortcuts}
 
     export const UPCOMING_CHANGES_USER_ENABLED_REASONS = #{UpcomingChanges.user_enabled_reasons.to_json};
 
@@ -109,15 +123,18 @@ task "javascript:update_constants" => :environment do
     };
   JS
 
-  write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
+  require "emoji/regex_generator"
+
+  write_template("discourse/pretty-text/emoji/data.ts", task_name, <<~JS)
     export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
-    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
-    export const replacements = #{Emoji.unicode_replacements_json};
+    export const aliases: Record<string, string[]> = #{Emoji.aliases.inspect.gsub("=>", ":")};
+    export const translations: Record<string, string> = #{Emoji.translations.inspect.gsub("=>", ":")};
+    export const replacements: Record<string, string> = #{Emoji.unicode_replacements_json};
+    export const emojiReplacementRegex = "#{Emoji::RegexGenerator.generate}";
   JS
 
-  write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
+  write_template("discourse/pretty-text/emoji/version.ts", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
 end

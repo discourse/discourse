@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::WebexProvider
   PROVIDER_NAME = "webex"
+  POPULARITY_SCORE = 50
   PROVIDER_ENABLED_SETTING = :chat_integration_webex_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
@@ -51,7 +52,7 @@ module DiscourseChatIntegration::Provider::WebexProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"
@@ -60,7 +61,8 @@ module DiscourseChatIntegration::Provider::WebexProvider
     end
 
     markdown = "**#{topic.title}**: #{category}"
-    markdown += " #{topic.tags.map(&:name).join(", ")} " if topic.tags.present?
+    markdown +=
+      " #{DiscourseChatIntegration::Provider.display_tag_names(topic)} " if topic.tags.present?
     markdown += "(#{post.full_url}) from #{display_name}:\n"
     markdown +=
       post.excerpt(

@@ -14,8 +14,32 @@ RSpec.describe Stylesheet::Manager do
   end
 
   it "still returns something for no themes" do
-    link = manager.stylesheet_link_tag(:desktop, "all")
+    link = manager.stylesheet_link_tag(:common, "all")
     expect(link).not_to eq("")
+  end
+
+  describe "#stylesheet_details" do
+    it "refreshes hrefs when a font setting changes" do
+      href = manager.stylesheet_details(:embed)[0][:new_href]
+
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      expect(manager.stylesheet_details(:embed)[0][:new_href]).not_to eq(href)
+    end
+  end
+
+  describe "Builder#compile" do
+    it "hydrates from StylesheetCache instead of recompiling when the file is missing" do
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
+      Stylesheet::Manager.rm_cache_folder
+      StylesheetCache.where(target: builder.qualified_target, digest: builder.digest).delete_all
+      StylesheetCache.add(builder.qualified_target, builder.digest, "body{}", nil)
+      Stylesheet::Compiler.expects(:compile_asset).never
+
+      builder.compile
+
+      expect(File.read(builder.stylesheet_fullpath)).to eq("body{}")
+    end
   end
 
   describe "themes with components" do
@@ -58,7 +82,7 @@ RSpec.describe Stylesheet::Manager do
     it "generates the right links for non-theme targets" do
       manager = manager(nil)
 
-      hrefs = manager.stylesheet_details(:desktop, "all")
+      hrefs = manager.stylesheet_details(:common, "all")
 
       expect(hrefs.length).to eq(1)
     end
@@ -254,9 +278,9 @@ RSpec.describe Stylesheet::Manager do
     it "outputs tags for non-theme targets for theme component" do
       child_theme = Fabricate(:theme, component: true)
 
-      hrefs = manager(child_theme.id).stylesheet_details(:desktop, "all")
+      hrefs = manager(child_theme.id).stylesheet_details(:common, "all")
 
-      expect(hrefs.count).to eq(1) # desktop
+      expect(hrefs.count).to eq(1) # common
     end
 
     it "does not output tags for component targets with no styles" do
@@ -298,7 +322,7 @@ RSpec.describe Stylesheet::Manager do
       hrefs = manager.stylesheet_details(:admin, "all")
       expect(hrefs.count).to eq(1)
 
-      hrefs = manager.stylesheet_details(:mobile, "all")
+      hrefs = manager.stylesheet_details(:common, "all")
       expect(hrefs.count).to eq(1)
     end
   end
@@ -307,11 +331,27 @@ RSpec.describe Stylesheet::Manager do
     after { DiscoursePluginRegistry.reset! }
 
     it "can correctly account for plugins in default digest" do
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
       digest1 = builder.digest
 
       DiscoursePluginRegistry.stylesheets["fake"] = Set.new(["fake_file"])
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
+    it "accounts for the asset cachebuster in theme digests" do
+      theme = Fabricate(:theme)
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      digest1 = builder.digest
+
+      Stylesheet::Manager.stubs(:fs_asset_cachebuster).returns("changed")
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
@@ -449,9 +489,33 @@ RSpec.describe Stylesheet::Manager do
 
       builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
       expect(builder.digest).to eq(builder.default_digest)
+    end
 
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
-      expect(builder.digest).to eq(builder.default_digest)
+    it "accounts for the default theme's color scheme in default and component digests" do
+      scheme = Fabricate(:color_scheme)
+      SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+      component = Fabricate(:theme, component: true)
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+      component_common = -> do
+        Stylesheet::Manager::Builder.new(
+          target: :common_theme,
+          theme: component,
+          manager: manager,
+        ).digest
+      end
+
+      expect {
+        ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
+      }.to change(&common).and change(&component_common)
+    end
+
+    it "accounts for fonts in the default digest of font-bearing targets only" do
+      embed = -> { Stylesheet::Manager::Builder.new(target: :embed, manager: manager).digest }
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+
+      expect { SiteSetting.base_font = DiscourseFonts.fonts[2][:key] }.to change(
+        &embed
+      ).and not_change(&common)
     end
 
     it "returns different digest based on hostname" do
@@ -467,7 +531,7 @@ RSpec.describe Stylesheet::Manager do
       initial_color_scheme_digest =
         Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
       initial_default_digest =
-        Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+        Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest
 
       SiteSetting.force_hostname = "host2.example.com"
       new_theme_digest =
@@ -479,7 +543,7 @@ RSpec.describe Stylesheet::Manager do
       new_color_scheme_digest =
         Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
       new_default_digest =
-        Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+        Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest
 
       expect(initial_theme_digest).not_to eq(new_theme_digest)
       expect(initial_color_scheme_digest).not_to eq(new_color_scheme_digest)
@@ -870,9 +934,7 @@ RSpec.describe Stylesheet::Manager do
   end
 
   describe ".precompile_css" do
-    let(:core_targets) do
-      %w[common desktop mobile admin wizard common_rtl desktop_rtl mobile_rtl admin_rtl wizard_rtl]
-    end
+    let(:core_targets) { %w[common admin wizard common_rtl admin_rtl wizard_rtl] }
 
     let(:theme_targets) do
       %i[
@@ -889,6 +951,8 @@ RSpec.describe Stylesheet::Manager do
       STDERR.stubs(:write)
       StylesheetCache.destroy_all
       default_theme.set_default!
+      # the counts below cover these examples' own palettes, not the seeded ones
+      ColorScheme.update_all(user_selectable: false)
     end
 
     after do
@@ -924,6 +988,31 @@ RSpec.describe Stylesheet::Manager do
       expect(StylesheetCache.pluck(:target)).to contain_exactly(*core_targets)
     end
 
+    it "hydrates core CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+
+      expect(output.scan(/\(cached\)/).length).to eq(core_targets.length)
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(core_targets.length)
+    end
+
+    it "hydrates theme CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+      cached_count = StylesheetCache.count
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+
+      expect(output).to include("(cached)")
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(cached_count)
+    end
+
     it "generates precompiled CSS - only themes" do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
 
@@ -937,7 +1026,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(16) # 10 core targets + 2 theme (ltr/rtl) + 4 color schemes
+      expect(results.size).to eq(12) # 6 core targets + 2 theme (ltr/rtl) + 4 color schemes
 
       expect(results.count { |target| target =~ /^common_theme_/ }).to eq(2) # ltr/rtl
     end
@@ -949,7 +1038,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(18) # 10 core targets + 2 theme rtl/ltr + 6 color schemes
+      expect(results.size).to eq(14) # 6 core targets + 2 theme rtl/ltr + 6 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(
@@ -1062,8 +1151,25 @@ RSpec.describe Stylesheet::Manager do
   end
 
   describe ".fs_asset_cachebuster" do
-    it "returns a number in test/development mode" do
-      expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A.*:[0-9]+\z/)
+    context "when memoizing via the filesystem manifest (production / test)" do
+      after do
+        path = Stylesheet::Manager.send(:manifest_full_path)
+        File.delete(path) if File.exist?(path)
+        Stylesheet::Manager.recalculate_fs_asset_cachebuster!
+      end
+
+      it "returns a content hash" do
+        expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A.*:[0-9a-f]{40}\z/)
+      end
+    end
+
+    context "when memoizing in-process via mtime (development)" do
+      before { Stylesheet::Manager.stubs(:use_file_hash_for_cachebuster?).returns(false) }
+      after { Stylesheet::Manager.recalculate_fs_asset_cachebuster! }
+
+      it "returns an mtime number" do
+        expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A.*:[0-9]+\z/)
+      end
     end
 
     context "with production mode enabled" do
@@ -1072,11 +1178,6 @@ RSpec.describe Stylesheet::Manager do
       after do
         path = Stylesheet::Manager.send(:manifest_full_path)
         File.delete(path) if File.exist?(path)
-      end
-
-      it "returns a hash" do
-        cachebuster = Stylesheet::Manager.fs_asset_cachebuster
-        expect(cachebuster).to match(/\A.*:[0-9a-f]{40}\z/)
       end
 
       it "caches the value on the filesystem" do
@@ -1091,12 +1192,18 @@ RSpec.describe Stylesheet::Manager do
         initial_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
 
         additional_file_path =
-          "#{Rails.root}/spec/fixtures/plugins/scss_plugin/assets/stylesheets/colors.scss"
+          "#{Rails.root.join("spec/fixtures/plugins/scss_plugin/assets/stylesheets/colors.scss")}"
         Stylesheet::Manager.stubs(:list_files).returns(original_files + [additional_file_path])
 
         new_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
         expect(new_cachebuster).not_to eq(initial_cachebuster)
       end
+    end
+
+    it "includes the variable rename map in its inputs" do
+      expect(Stylesheet::Manager.send(:list_files)).to include(
+        Stylesheet::Manager::VARIABLE_RENAMES_PATH.to_s,
+      )
     end
   end
 end

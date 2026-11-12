@@ -2,7 +2,7 @@
 
 include SystemHelpers
 
-RSpec.describe "AI Composer Proofreading Features", type: :system do
+RSpec.describe "AI Composer Proofreading Features" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   before do
@@ -21,6 +21,50 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
   let(:toasts) { PageObjects::Components::Toasts.new }
   let(:diff_modal) { PageObjects::Modals::DiffModal.new }
   let(:keyboard_shortcut) { [PLATFORM_KEY_MODIFIER, :alt, "p"] }
+
+  it "shows proofreader with Everyone allowed and granular permissions disabled" do
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    AiAgent.find(SiteSetting.ai_helper_proofreader_agent).update!(
+      allowed_group_ids: [Fabricate(:group).id, Group::AUTO_GROUPS[:everyone]],
+    )
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+    SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+    Fabricate(:category)
+    sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+    visit "/new-topic"
+    composer.fill_content("hello worrld")
+    composer.click_toolbar_button("ai-helper-trigger")
+
+    menu = PageObjects::Components::AiComposerHelperMenu.new
+    expect(menu).to have_option(DiscourseAi::AiHelper::Assistant::PROOFREAD)
+    DiscourseAi::Completions::Llm.with_prepared_responses(["hello world"]) do
+      menu.select_helper_model(DiscourseAi::AiHelper::Assistant::PROOFREAD)
+      expect(diff_modal).to have_diff("worrld", "world")
+    end
+  end
+
+  it "shows proofreader with Everyone allowed and granular permissions enabled" do
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+    AiAgent.find(SiteSetting.ai_helper_proofreader_agent).update!(
+      allowed_group_ids: [Fabricate(:group).id, Group::AUTO_GROUPS[:everyone]],
+    )
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+    SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+    Fabricate(:category)
+    sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+    visit "/new-topic"
+    composer.fill_content("hello worrld")
+    composer.click_toolbar_button("ai-helper-trigger")
+
+    menu = PageObjects::Components::AiComposerHelperMenu.new
+    expect(menu).to have_option(DiscourseAi::AiHelper::Assistant::PROOFREAD)
+    DiscourseAi::Completions::Llm.with_prepared_responses(["hello world"]) do
+      menu.select_helper_model(DiscourseAi::AiHelper::Assistant::PROOFREAD)
+      expect(diff_modal).to have_diff("worrld", "world")
+    end
+  end
 
   context "when triggering via keyboard shortcut" do
     it "proofreads selected text" do
@@ -85,8 +129,6 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
     end
 
     context "when using rich text editor" do
-      before { SiteSetting.rich_editor = true }
-
       it "proofreads selected text and replaces it" do
         visit "/new-topic"
         expect(composer).to be_opened

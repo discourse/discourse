@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  find,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -9,11 +10,17 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   chromeTest,
+  fakeTime,
   publishToMessageBus,
   selectText,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -40,7 +47,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -60,7 +67,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new message", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -321,7 +328,26 @@ acceptance(`Topic featured links`, function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert.dom(".topic-admin-pin").exists("should show the multi select menu");
+    assert.dom(".topic-admin-pin").exists("should show the pin menu item");
+  });
+
+  test("Bannering unlisted topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-visible .btn");
+
+    await click(".toggle-admin-menu");
+    assert
+      .dom(".topic-admin-pin")
+      .exists(
+        "should show the pin menu item for unlisted topics with can_banner_topic"
+      );
+
+    await click(".topic-admin-pin .btn");
+    assert
+      .dom(".make-banner")
+      .exists("should show the banner button for unlisted topics");
   });
 
   test("selecting posts", async function (assert) {
@@ -447,6 +473,11 @@ acceptance(`Topic featured links`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
   needs.user({ admin: true });
+  needs.pretender((server, helper) => {
+    server.put("/t/a-topic-with-group-category-moderators/2480/status", () =>
+      helper.response({ success: "OK" })
+    );
+  });
 
   test("Admin pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
@@ -459,6 +490,79 @@ acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
       .exists("should show the 'Pin Topic' button");
 
     assert.dom(".make-banner").exists("should show the 'Banner Topic' button");
+
+    const futureDateInput = selectKit(".pin-until .future-date-input-selector");
+    await futureDateInput.expand();
+    await futureDateInput.selectRowByValue("tomorrow");
+    await visit("/");
+
+    assert.strictEqual(currentURL(), "/", "navigates without confirmation");
+  });
+
+  test("Pinning a topic until a custom date and time", async function (assert) {
+    let pinnedUntil;
+    pretender.put(
+      "/t/a-topic-with-group-category-moderators/2480/status",
+      (request) => {
+        pinnedUntil = parsePostData(request.requestBody).until;
+        return response({ success: "OK" });
+      }
+    );
+
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    const futureDateInput = selectKit(".pin-until .future-date-input-selector");
+    await futureDateInput.expand();
+    await futureDateInput.selectRowByValue("custom");
+
+    await fillIn(".pin-until .date-picker", "2100-11-24");
+
+    const timeInput = find(".pin-until .time-input");
+    await fillIn(timeInput, "01:00");
+    await fillIn(timeInput, "13:45");
+
+    await click(".feature-topic .btn-primary");
+
+    assert.strictEqual(
+      pinnedUntil.slice(0, 16),
+      "2100-11-24 13:45",
+      "pins until the typed date and time"
+    );
+  });
+
+  test("Pinning a topic should consider user's timezone when selecting the later today date shortcut", async function (assert) {
+    const timezone = "America/Los_Angeles";
+    updateCurrentUser({ "user_option.timezone": timezone });
+    // Now:         2100-12-13 14:00 local / 2100-12-13 22:00 UTC
+    // Later today: 2100-12-13 17:00 local / 2100-12-14 01:00 UTC
+    //              emitted as "2100-12-13 17:00-08:00"
+    // Without timezone: parsed as 2100-12-13 17:00 UTC which is before
+    // now (2100-12-13 22:00 UTC)
+    const clock = fakeTime("2100-12-13T14:00:00", timezone, true);
+
+    try {
+      await visit("/t/topic-for-group-moderators/2480");
+
+      await click(".toggle-admin-menu");
+      await click(".topic-admin-pin .btn");
+
+      const futureDateInput = selectKit(
+        ".pin-until .future-date-input-selector"
+      );
+      await futureDateInput.expand();
+      await futureDateInput.selectRowByValue("later_today");
+
+      await click(".feature-topic .btn-primary");
+
+      assert
+        .dom(".d-modal.feature-topic")
+        .doesNotExist("topic is pinned and modal closes");
+    } finally {
+      clock.restore();
+    }
   });
 });
 
@@ -481,6 +585,11 @@ acceptance(`Topic pinning/unpinning as a staff member`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as a group moderator`, function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/2480/1.json"]);
+    delete topicResponse.details.can_banner_topic;
+    server.get("/t/2480.json", () => helper.response(topicResponse));
+  });
 
   test("Group category moderator pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
@@ -507,6 +616,15 @@ acceptance(`Topic last visit line`, function (needs) {
     assert
       .dom(".topic-post-visited-line.post-10")
       .exists("shows the last visited line on the right post");
+
+    assert
+      .dom(".topic-post-visited-line.post-10 .topic-post-visited-message")
+      .hasAria("level", "2", "the marker is part of heading navigation")
+      .hasAttribute(
+        "role",
+        "heading",
+        "the marker is part of heading navigation"
+      );
 
     await visit("/t/-/9");
 
@@ -753,5 +871,16 @@ acceptance(`Topic stats update automatically`, function () {
       expectedLikesCount,
       "updates the likes count on the topic stats"
     );
+  });
+});
+
+acceptance(`Topic - Anonymous search disabled`, function (needs) {
+  needs.site({ can_search: false });
+
+  test("shows the likes count without opening search-backed details", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert.dom("#post_1 .topic-map .topic-map__likes").exists();
+    assert.dom("#post_1 .topic-map .topic-map__likes-trigger").doesNotExist();
   });
 });

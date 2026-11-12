@@ -1,5 +1,7 @@
 import Flag from "discourse/lib/flag-targets/flag";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { i18n } from "discourse-i18n";
 
 export default class PostFlag extends Flag {
   title() {
@@ -12,6 +14,14 @@ export default class PostFlag extends Flag {
 
   submitLabel() {
     return "flagging.action";
+  }
+
+  anonymousFlagDescription(post, email) {
+    return i18n("anonymous_flagging.description", {
+      email,
+      topic_title: post.topic.title,
+      url: getAbsoluteURL(post.url),
+    });
   }
 
   flagCreatedEvent() {
@@ -45,8 +55,8 @@ export default class PostFlag extends Flag {
   }
 
   postActionFor(flagModal) {
-    return flagModal.args.model.flagModel.actions_summary.find(
-      (item) => item.id === flagModal.selected.id
-    );
+    return flagModal.args.model.flagModel.actionByName?.[
+      flagModal.selected.name_key
+    ];
   }
 }

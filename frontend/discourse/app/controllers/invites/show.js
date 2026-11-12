@@ -1,8 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -20,6 +19,7 @@ import { i18n } from "discourse-i18n";
 export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
+  @tracked codeInviteStep = "email";
   @tracked isDeveloper;
   @autoTrackedArray rejectedEmails = [];
 
@@ -32,7 +32,7 @@ export default class InvitesShowController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -45,22 +45,96 @@ export default class InvitesShowController extends Controller {
       this.site.get("user_fields")?.filter((f) => f.show_on_signup),
     getAccountPassword: () => this.accountPassword,
   });
+
+  /** @type {string | null} */
   successMessage = null;
-  @readOnly("model.is_invite_link") isInviteLink;
-  @readOnly("model.invited_by") invitedBy;
-  @alias("model.email") email;
-  @alias("email") accountEmail;
-  @readOnly("model.existing_user_id") existingUserId;
-  @readOnly("model.existing_user_can_redeem") existingUserCanRedeem;
-  @readOnly("model.existing_user_can_redeem_error") existingUserCanRedeemError;
-  @bool("existingUserId") existingUserRedeeming;
-  @alias("model.hidden_email") hiddenEmail;
-  @alias("model.email_verified_by_link") emailVerifiedByLink;
-  @alias("model.different_external_email") differentExternalEmail;
-  @not("externalAuthsOnly") passwordRequired;
+
+  /** @type {string | null} */
   errorMessage = null;
+
+  /** @type {import("@ember/object").default & { username?: string | null, name?: string | null, email?: string | null, email_valid?: boolean, auth_provider?: string, associate_url?: string, can_edit_username?: boolean, can_edit_name?: boolean } | null} */
   authOptions = null;
   maskPassword = true;
+
+  @computed("model.email")
+  get email() {
+    return this.model?.email;
+  }
+
+  set email(value) {
+    set(this, "model.email", value);
+  }
+
+  @computed("email")
+  get accountEmail() {
+    return this.email;
+  }
+
+  set accountEmail(value) {
+    set(this, "email", value);
+  }
+
+  @computed("model.hidden_email")
+  get hiddenEmail() {
+    return this.model?.hidden_email;
+  }
+
+  set hiddenEmail(value) {
+    set(this, "model.hidden_email", value);
+  }
+
+  @computed("model.email_verified_by_link")
+  get emailVerifiedByLink() {
+    return this.model?.email_verified_by_link;
+  }
+
+  set emailVerifiedByLink(value) {
+    set(this, "model.email_verified_by_link", value);
+  }
+
+  @computed("model.different_external_email")
+  get differentExternalEmail() {
+    return this.model?.different_external_email;
+  }
+
+  set differentExternalEmail(value) {
+    set(this, "model.different_external_email", value);
+  }
+
+  @computed("model.is_invite_link")
+  get isInviteLink() {
+    return this.model?.is_invite_link;
+  }
+
+  @computed("model.invited_by")
+  get invitedBy() {
+    return this.model?.invited_by;
+  }
+
+  @computed("model.existing_user_id")
+  get existingUserId() {
+    return this.model?.existing_user_id;
+  }
+
+  @computed("model.existing_user_can_redeem")
+  get existingUserCanRedeem() {
+    return this.model?.existing_user_can_redeem;
+  }
+
+  @computed("model.existing_user_can_redeem_error")
+  get existingUserCanRedeemError() {
+    return this.model?.existing_user_can_redeem_error;
+  }
+
+  @computed("existingUserId")
+  get existingUserRedeeming() {
+    return !!this.existingUserId;
+  }
+
+  @computed("externalAuthsOnly")
+  get passwordRequired() {
+    return !this.externalAuthsOnly;
+  }
 
   get userFields() {
     return this.userFieldsValidationHelper.userFields;
@@ -69,11 +143,6 @@ export default class InvitesShowController extends Controller {
   @dependentKeyCompat
   get userFieldsValidation() {
     return this.userFieldsValidationHelper.userFieldsValidation;
-  }
-
-  @action
-  setAccountUsername(event) {
-    this.accountUsername = event.target.value;
   }
 
   @dependentKeyCompat
@@ -93,20 +162,6 @@ export default class InvitesShowController extends Controller {
   @dependentKeyCompat
   get passwordValidation() {
     return this.passwordValidationHelper.passwordValidation;
-  }
-
-  authenticationComplete(options) {
-    const props = {
-      accountUsername: options.username,
-      accountName: options.name,
-      authOptions: EmberObject.create(options),
-    };
-
-    if (this.isInviteLink) {
-      props.email = options.email;
-    }
-
-    this.setProperties(props);
   }
 
   @computed
@@ -145,9 +200,29 @@ export default class InvitesShowController extends Controller {
     return !this.existingUserId;
   }
 
+  @computed("codeInviteStep", "showCodeInviteForm")
+  get showInviteIntroduction() {
+    return !this.showCodeInviteForm || this.codeInviteStep === "email";
+  }
+
   @computed("externalAuthsOnly", "discourseConnectEnabled")
   get showSignupProgressBar() {
     return !(this.externalAuthsOnly || this.discourseConnectEnabled);
+  }
+
+  @computed("codeInviteStep", "showCodeInviteForm", "successMessage")
+  get progressBarStep() {
+    if (this.showCodeInviteForm) {
+      if (this.codeInviteStep === "signup-details") {
+        return "login";
+      }
+
+      if (this.codeInviteStep !== "email") {
+        return "activate";
+      }
+    }
+
+    return this.successMessage ? "activate" : "signup";
   }
 
   @computed(
@@ -200,6 +275,15 @@ export default class InvitesShowController extends Controller {
           !this.emailValidation?.failed)) &&
       !this.siteSettings.enable_discourse_connect &&
       !this.existingUserRedeeming
+    );
+  }
+
+  get showCodeInviteForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins &&
+      !this.authOptions
     );
   }
 
@@ -286,13 +370,6 @@ export default class InvitesShowController extends Controller {
     });
   }
 
-  authProviderDisplayName(providerName) {
-    const matchingProvider = findLoginMethods().find((provider) => {
-      return provider.name === providerName;
-    });
-    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
-  }
-
   @computed
   get ssoPath() {
     return getUrl("/session/sso");
@@ -317,6 +394,37 @@ export default class InvitesShowController extends Controller {
       associate_link: this.authOptions?.associate_url,
       provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
+  }
+
+  @action
+  updateCodeInviteStep(step) {
+    this.codeInviteStep = step;
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  authenticationComplete(options) {
+    const props = {
+      accountUsername: options.username,
+      accountName: options.name,
+      authOptions: EmberObject.create(options),
+    };
+
+    if (this.isInviteLink) {
+      props.email = options.email;
+    }
+
+    this.setProperties(props);
+  }
+
+  authProviderDisplayName(providerName) {
+    const matchingProvider = findLoginMethods().find((provider) => {
+      return provider.name === providerName;
+    });
+    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
   }
 
   @action

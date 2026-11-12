@@ -4,20 +4,14 @@ RSpec.describe UpcomingChanges::Track do
   fab!(:admin_1, :admin)
   fab!(:admin_2, :admin)
 
-  let(:all_admins) { [admin_1, admin_2] }
-
   describe ".call" do
-    subject(:result) { described_class.call(all_admins:) }
+    subject(:result) { described_class.call }
 
-    let(:added_changes_result) do
-      { added_changes: [:added_change], notified_changes: [:notified_added] }
-    end
+    let(:added_changes_result) { [:added_change] }
 
     let(:removed_changes_result) { [:removed_change] }
 
-    let(:status_changes_result) do
-      { status_changes: { status_change: :data }, notified_changes: [:notified_status] }
-    end
+    let(:status_changes_result) { { status_change: :data } }
 
     before do
       allow(UpcomingChanges::Action::TrackAddedChanges).to receive(:call).and_return(
@@ -37,7 +31,9 @@ RSpec.describe UpcomingChanges::Track do
 
     it "calls TrackAddedChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackAddedChanges).to have_received(:call).with(all_admins:)
+      expect(UpcomingChanges::Action::TrackAddedChanges).to have_received(:call) do |args|
+        expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
+      end
     end
 
     it "calls TrackRemovedChanges" do
@@ -47,11 +43,11 @@ RSpec.describe UpcomingChanges::Track do
 
     it "calls TrackStatusChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackStatusChanges).to have_received(:call).with(
-        all_admins:,
-        added_changes: [:added_change],
-        removed_changes: [:removed_change],
-      )
+      expect(UpcomingChanges::Action::TrackStatusChanges).to have_received(:call) do |args|
+        expect(args[:all_admins]).to contain_exactly(admin_1, admin_2)
+        expect(args[:added_changes]).to eq([:added_change])
+        expect(args[:removed_changes]).to eq([:removed_change])
+      end
     end
 
     it "populates the context with results from actions" do
@@ -61,7 +57,6 @@ RSpec.describe UpcomingChanges::Track do
         status_changes: {
           status_change: :data,
         },
-        notified_admins_for_added_changes: %i[notified_added notified_status],
       )
     end
   end

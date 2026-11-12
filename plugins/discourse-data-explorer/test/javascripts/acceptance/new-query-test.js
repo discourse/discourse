@@ -1,10 +1,30 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import KeyValueStore from "discourse/lib/key-value-store";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
+import {
+  acceptance,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Data Explorer Plugin | New Query", function (needs) {
+acceptance("New Query", function (needs) {
   needs.user();
-  needs.settings({ data_explorer_enabled: true });
+  needs.settings({
+    data_explorer_enabled: true,
+    data_explorer_ai_queries_enabled: false,
+  });
+
+  const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+  let createParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+  });
+
+  needs.hooks.afterEach(() => {
+    dataExplorerStore.remove("hide_schema");
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/discourse-data-explorer.json", () => {
@@ -24,38 +44,47 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
-      return helper.response([]);
+      return helper.response([
+        { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
+        { id: 41, name: "support" },
+      ]);
     });
 
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
-      return helper.response({});
-    });
-
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
-        queries: [],
+        topics: [
+          {
+            column_name: "id",
+            data_type: "serial",
+            primary: true,
+          },
+        ],
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
+    );
+
+    server.get("/api/data-explorer/queries", () => {
+      return helper.response({ data: [] });
+    });
+
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
-          group_ids: [],
+          group_ids: [41],
+          tags: ["monthly"],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -67,18 +96,10 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [],
@@ -90,16 +111,424 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
   });
 
-  test("creates a new query", async function (assert) {
+  test("renders the manual create form and transitions on submit", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     await click(".d-page-subheader .btn-primary");
-    await fillIn(".query-create input", "foo");
-    await click(".query-create button");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/new"
+    );
+
+    assert
+      .dom(".query-new__manual-form .right-panel .schema")
+      .exists("schema sidebar renders");
+    assert
+      .dom(".query-new__manual-form .editor-panel .code-editor")
+      .exists("SQL editor renders alongside the schema sidebar");
+
+    await click(".query-new__manual-form .schema__toggle.--collapse");
+
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema sidebar can be hidden");
+
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await fillIn(
+      ".query-new__manual-form [data-name='description'] textarea",
+      "a test query"
+    );
+    const tags = selectKit(
+      ".query-new__manual-form [data-name='tags'] .query-tag-chooser"
+    );
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created manually"
+    );
+    await tags.emptyFilter();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["Monthly"],
+      "the newly created tag is sent with the query"
+    );
 
     assert.strictEqual(
       currentURL(),
       "/admin/plugins/discourse-data-explorer/queries/-15"
     );
+
+    assert
+      .dom(".query-editor.no-schema .schema__toggle.--expand")
+      .exists("schema hidden state persists across Data Explorer pages");
+  });
+
+  test("group access can be granted while creating the query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "groups that cannot be granted access are not offered"
+    );
+
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
+  });
+
+  test("group access survives creating a query with no SQL", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    await fillInCodeEditor(
+      ".query-new__manual-form .editor-panel .code-editor",
+      ""
+    );
+
+    const groups = selectKit(
+      ".query-new__manual-form [data-name='groupIds'] .query-group-select"
+    );
+    await groups.expand();
+    await groups.selectRowByValue(41);
+    await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
+    await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent even when there is no SQL to save"
+    );
+  });
+
+  test("starts with the schema hidden when the preference is stored", async function (assert) {
+    dataExplorerStore.set({ key: "hide_schema", value: "true" });
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-new__manual-form .query-editor.no-schema")
+      .exists("stored hidden state is applied");
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema search is hidden");
+    assert
+      .dom(".query-new__manual-form .schema__toggle.--expand")
+      .exists("schema can still be shown again");
+  });
+});
+
+acceptance("New Query - AI", function (needs) {
+  needs.user();
+  needs.settings({
+    data_explorer_enabled: true,
+    data_explorer_ai_queries_enabled: true,
+    discourse_ai_enabled: true,
+  });
+
+  const GENERATION_ID = "test-generation";
+  const PROMPT_INPUT = ".query-new__ai-section [data-name='prompt'] textarea";
+  let createParams;
+  let generateParams;
+
+  needs.hooks.beforeEach(() => {
+    createParams = null;
+    generateParams = null;
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () =>
+      helper.response([
+        { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
+        { id: 41, name: "support" },
+      ])
+    );
+    server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
+      helper.response({ topics: [] })
+    );
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "staff"])
+    );
+
+    server.post(
+      "/admin/plugins/discourse-data-explorer/queries/generate.json",
+      (request) => {
+        generateParams = new URLSearchParams(request.requestBody);
+        return helper.response({
+          generation_id: GENERATION_ID,
+          status: "generating",
+        });
+      }
+    );
+
+    server.post(
+      "/admin/plugins/discourse-data-explorer/queries/preview.json",
+      () =>
+        helper.response({
+          success: true,
+          errors: [],
+          colrender: [],
+          result_count: 1,
+          columns: ["my_value"],
+          rows: [[23]],
+          duration: 1.2,
+          default_limit: 1000,
+        })
+    );
+
+    server.post("/admin/plugins/discourse-data-explorer/queries", (request) => {
+      createParams = new URLSearchParams(request.requestBody);
+      return helper.response({
+        query: {
+          id: -15,
+          sql: "SELECT 23 AS my_value",
+          name: "Generated",
+          description: "",
+          param_info: [],
+          group_ids: [],
+          tags: ["staff"],
+          hidden: false,
+          user_id: -1,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/queries/-15", () =>
+      helper.response({
+        query: {
+          id: -15,
+          sql: "SELECT 23 AS my_value",
+          name: "Generated",
+          description: "",
+          param_info: [],
+          group_ids: [],
+          hidden: false,
+          user_id: -1,
+        },
+      })
+    );
+
+    server.post("/admin/plugins/discourse-data-explorer/queries/-15/run", () =>
+      helper.response({
+        success: true,
+        errors: [],
+        colrender: [],
+        result_count: 1,
+        columns: ["my_value"],
+        rows: [[23]],
+        duration: 1.2,
+        default_limit: 1000,
+      })
+    );
+  });
+
+  async function generate(prompt) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+    await fillIn(PROMPT_INPUT, prompt);
+    await click(".query-new__generate-btn");
+    await publishToMessageBus(
+      `/discourse-data-explorer/queries/ai-generation/${GENERATION_ID}`,
+      {
+        generation_id: GENERATION_ID,
+        status: "complete",
+        sql: "SELECT 23 AS my_value",
+        name: "Generated",
+        description: "",
+      }
+    );
+    await settled();
+  }
+
+  test("renders the manual form when Discourse AI is disabled", async function (assert) {
+    this.siteSettings.discourse_ai_enabled = false;
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-mode-switch")
+      .doesNotExist("the AI/manual mode switch is hidden");
+    assert
+      .dom(".query-new__manual-form")
+      .exists("the manual query form renders");
+    assert
+      .dom(".query-new__ai-section")
+      .doesNotExist("the AI generation form is hidden");
+  });
+
+  test("titles the card after the selected mode", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".admin-config-area-card__title")
+      .hasText("Generate with AI", "AI mode titles the card");
+
+    await click(".query-mode-switch input[value='manual']");
+
+    assert
+      .dom(".admin-config-area-card__title")
+      .hasText("New query", "manual mode titles the card");
+  });
+
+  test("requires a prompt before generating", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+    await click(".query-new__generate-btn");
+
+    assert
+      .dom(".query-new__ai-section [data-name='prompt'] .form-kit__errors")
+      .exists("an empty prompt shows a validation error");
+    assert.strictEqual(generateParams, null, "nothing is generated");
+  });
+
+  test("regenerating sends the updated prompt", async function (assert) {
+    await generate("show me a value");
+
+    await fillIn(PROMPT_INPUT, "limit it to 5 rows");
+    await click(".query-new__regenerate-btn");
+
+    assert.strictEqual(
+      generateParams.get("ai_description"),
+      "limit it to 5 rows",
+      "the edited prompt is sent"
+    );
+    assert.strictEqual(
+      generateParams.get("existing_sql"),
+      "SELECT 23 AS my_value",
+      "the generated SQL is sent to be refined"
+    );
+  });
+
+  test("save query is the primary action and the result is shown first", async function (assert) {
+    await generate("show me a value");
+
+    assert
+      .dom(".query-new__save-btn.btn-primary")
+      .exists("the save query button gets the primary treatment");
+    assert
+      .dom(".query-new__run-btn")
+      .exists("a run button is available before saving");
+    assert
+      .dom(".query-results-modes")
+      .exists("a chart/table/sql segmented control is shown");
+    assert
+      .dom(".query-new__result-bar .query-new__result-about")
+      .hasText(
+        /result/,
+        "the result count sits on the same line as the toggle"
+      );
+    assert
+      .dom(".query-new__preview .query-results-table-wrapper")
+      .exists("the result is run and shown first, not the SQL");
+
+    await click(".query-results-modes input[value='sql']");
+
+    assert
+      .dom(".query-new__sql-editor .code-editor")
+      .exists("the SQL is available behind its own tab");
+  });
+
+  test("group access can be granted before saving a generated query", async function (assert) {
+    await generate("show me a value");
+
+    const groups = selectKit(".query-new__fields .query-group-select");
+    await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "groups that cannot be granted access are not offered"
+    );
+
+    await groups.selectRowByValue(41);
+    const tags = selectKit(".query-new__fields .query-tag-chooser");
+    await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered in the AI form"
+    );
+    await tags.selectRowByValue("staff");
+    await click(".query-new__save-btn");
+
+    assert.deepEqual(
+      createParams.getAll("query[group_ids][]"),
+      ["41"],
+      "the selected groups are sent with the new query"
+    );
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["staff"],
+      "the selected tag is sent with the new query"
+    );
+  });
+
+  test("saving transitions to the edit page without running the query", async function (assert) {
+    await generate("show me a value");
+
+    await click(".query-new__save-btn");
+
+    assert.true(
+      currentURL().startsWith(
+        "/admin/plugins/discourse-data-explorer/queries/-15"
+      ),
+      "transitions to the saved query"
+    );
+    assert.false(
+      currentURL().includes("run="),
+      "does not run the saved query before parameters can be adjusted"
+    );
+  });
+
+  test("keeps edits to a generated query across a mode switch", async function (assert) {
+    await generate("show me a value");
+
+    await fillIn(".query-new__fields [data-name='name'] input", "Edited name");
+    await click(".query-mode-switch input[value='manual']");
+    await click(".query-mode-switch input[value='ai']");
+
+    assert
+      .dom(".query-new__fields [data-name='name'] input")
+      .hasValue("Edited name", "the edited name survives the mode switch");
+    assert
+      .dom(PROMPT_INPUT)
+      .hasValue("show me a value", "the prompt survives the mode switch");
   });
 });

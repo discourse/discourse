@@ -4,16 +4,19 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
-    Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
-      next if path =~ /ember_cli/
-
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
+    Dir["#{Rails.root.join("app/assets/stylesheets/*.scss")}"].each do |path|
       path = File.basename(path, ".scss")
+
+      # mobile and desktop scss files are intentionally empty stubs
+      next if path.start_with?("mobile", "desktop")
 
       it "can compile '#{path}' css" do
         css, _map = Stylesheet::Compiler.compile_asset(path)
         expect(css.length).to be > 500
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   context "with a theme" do

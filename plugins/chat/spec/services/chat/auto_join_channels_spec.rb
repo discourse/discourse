@@ -2,12 +2,47 @@
 
 RSpec.describe Chat::AutoJoinChannels do
   describe ".call" do
-    subject(:result) { described_class.call(params: {}) }
+    subject(:result) { described_class.call(params:) }
 
+    let(:params) { {} }
     let!(:previous_events) { DiscourseEvent.events.dup }
 
     before { DiscourseEvent.events.clear }
     after { previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
+
+    context "with logged-in category permissions" do
+      fab!(:user) { Fabricate(:user, trust_level: 1, last_seen_at: 5.minutes.ago) }
+
+      let(:params) { { user_id: user.id } }
+
+      before { SiteSetting.chat_enabled = true }
+
+      shared_examples "joining channels with logged in posting access" do |enabled:|
+        it "joins channels with posting access regardless of granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          channels =
+            %i[readonly create_post full].map do |permission|
+              category = Fabricate(:category, permissions: { logged_in_users: permission })
+              Fabricate(:chat_channel, chatable: category, auto_join_users: true)
+            end
+
+          expect(result).to run_successfully
+
+          expect(user.user_chat_channel_memberships.pluck(:chat_channel_id)).to contain_exactly(
+            channels[1].id,
+            channels[2].id,
+          )
+        end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "joining channels with logged in posting access", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "joining channels with logged in posting access", enabled: true
+      end
+    end
 
     context "when chat is disabled" do
       before { SiteSetting.chat_enabled = false }
@@ -89,6 +124,15 @@ RSpec.describe Chat::AutoJoinChannels do
             Group::AUTO_GROUPS[:everyone],
             Group::AUTO_GROUPS[:trust_level_3],
           ].join(",")
+
+          Fabricate(:user, trust_level:, last_seen_at:)
+
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.from(0).to(1)
+        end
+
+        it "automatically joins users when everyone is mapped to logged_in_users" do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
 
           Fabricate(:user, trust_level:, last_seen_at:)
 

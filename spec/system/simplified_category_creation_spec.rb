@@ -9,16 +9,51 @@ describe "Simplified Category Creation" do
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_simplified_category_creation = true
-    sign_in(admin)
+  before { sign_in(admin) }
+
+  describe "Selecting category type when setting up a new category" do
+    it "automatically skips category type selection when only one type (discussion) is available" do
+      category_page.visit_new_category
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_current_path("/new-category/general")
+    end
+
+    context "when multiple types are available" do
+      class MockCategoryType < ::Categories::Types::Base
+        type_id :mock_type
+
+        class << self
+          def category_matches?(category)
+            true
+          end
+
+          def find_matches
+            Category.none
+          end
+        end
+      end
+
+      before { Categories::TypeRegistry.register(MockCategoryType) }
+      after { Categories::TypeRegistry.reset! }
+
+      it "shows the category type selection cards" do
+        visit("/new-category/setup")
+
+        expect(category_type_card).to have_type_card("mock_type")
+        expect(category_type_card).to have_type_card("discussion")
+
+        category_type_card.find_type_card("discussion").click
+        expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+        expect(page).to have_current_path("/new-category/general")
+      end
+    end
   end
 
   describe "General Tab" do
     it "creates a basic category with name and color" do
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
       form.field("color").fill_in("FF5733")
@@ -73,29 +108,36 @@ describe "Simplified Category Creation" do
       expect(category.reload.category_groups.map(&:group_id)).to include(group.id)
     end
 
+    it "shows a warning instead of visibility options for a special category" do
+      category.set_permissions(staff: :full)
+      category.save!
+      SiteSetting.staff_category_id = category.id
+
+      category_page.visit_general(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_css("input.form-kit__control-radio[value='group_restricted']")
+
+      form.field("name").fill_in("Renamed staff")
+      category_page.save_settings
+
+      expect(category.reload.name).to eq("Renamed staff")
+
+      category_page.visit_security(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_content(I18n.t("js.category.permissions.specific_groups_have_access"))
+    end
+
     it "shows error when color is invalid" do
       category_page.visit_general(category)
 
       form.field("color").fill_in("GGGGGG")
       category_page.save_settings
 
-      expect(page).to have_content("Color is invalid")
-    end
-
-    it "shows error when icon is missing" do
-      category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
-
-      form.field("name").fill_in("Test Category")
-
-      icon_picker = PageObjects::Components::SelectKit.new(".form-kit__control-icon")
-      icon_picker.expand
-      icon_picker.clear
-      icon_picker.collapse
-
-      category_page.save_settings
-
-      expect(form.field("icon")).to have_errors(I18n.t("js.category.validations.icon_required"))
+      expect(form.field("color")).to have_errors(
+        I18n.t("js.category.color_validations.non_hexdecimal"),
+      )
     end
 
     it "shows advanced tabs when toggled" do
@@ -111,7 +153,6 @@ describe "Simplified Category Creation" do
       group2 = Fabricate(:group)
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Permission Test")
       form.choose_conditional("group_restricted")
@@ -142,7 +183,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -156,7 +196,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -164,6 +203,61 @@ describe "Simplified Category Creation" do
 
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
+    end
+
+    it "collapses long descriptions with a show more toggle" do
+      category_with_definition = Fabricate(:category_with_definition)
+      long_description = (["This is a long paragraph of text."] * 20).join(" ")
+      post = category_with_definition.topic.first_post
+      post.update!(cooked: "<p>#{long_description}</p>")
+      category_with_definition.update!(description: "<p>#{long_description}</p>")
+
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+      expect(page).to have_css(".toggle-description")
+
+      find(".toggle-description").click
+
+      expect(page).to have_no_css(".description-content.--collapsed")
+      expect(page).to have_css(".description-content.--overflowing")
+
+      find(".toggle-description").click
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+    end
+
+    it "does not show expand toggle for short descriptions" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content")
+      expect(page).to have_no_css(".toggle-description")
+      expect(page).to have_no_css(".description-content.--overflowing")
+    end
+
+    it "opens the composer to edit the category description and updates it after save" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
+    end
+
+    it "does not allow selecting other category types when creating a new category" do
+      category_page.visit_new_category
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_no_css(".category-type-selector")
     end
   end
 
@@ -188,7 +282,6 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".group-chooser")
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
       expect(page).to have_no_css(".group-chooser")
     end
 
@@ -213,14 +306,71 @@ describe "Simplified Category Creation" do
     end
   end
 
-  describe "Settings Tab" do
-    it "enables topic approval requirement" do
-      category_page.visit_settings(category)
+  describe "Moderation Tab" do
+    it "creates a category with a group-based posting review mode" do
+      category_page.visit_new_category
 
-      form.field("category_setting.require_topic_approval").toggle
+      form.field("name").fill_in("Review Test")
+      category_page.toggle_advanced_settings
+      find(".edit-category-moderation a").click
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_no_posting_review_groups_error
+
+      created_category = Category.find_by(name: "Review Test")
+      category_page.visit_moderation(created_category)
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
+    end
+
+    it "allows selecting 'everyone' mode" do
+      category_page.visit_moderation(category)
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone",
+      )
       category_page.save_settings
 
-      expect(category.reload.require_topic_approval?).to eq(true)
+      category_page.visit_moderation(category)
+      expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
+    end
+
+    it "allows selecting 'everyone_except' mode with groups" do
+      category_page.visit_moderation(category)
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+
+      category_page.visit_moderation(category)
+      expect(category_page).to have_no_posting_review_groups_error
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
     end
   end
 
@@ -231,18 +381,16 @@ describe "Simplified Category Creation" do
     end
 
     it "sets default view to latest" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
-      default_view_selector = PageObjects::Components::SelectKit.new("#category-default-view")
-      default_view_selector.expand
-      default_view_selector.select_row_by_value("latest")
+      form.field("default_view").select("latest")
       category_page.save_settings
 
       expect(category.reload.default_view).to eq("latest")
     end
 
     it "uploads a category logo" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
       attach_file(
         "category-logo-uploader__input",

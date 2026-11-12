@@ -15,5 +15,9 @@ module Chat
     def message
       { id: object.message.id, text: object.message.message, user_id: object.message.user.id }
     end
+
+    def action
+      object.action.except("value")
+    end
   end
 end

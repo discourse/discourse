@@ -2,8 +2,8 @@
  * A Changeset class that manages data and tracks changes.
  */
 import { tracked } from "@glimmer/tracking";
+import { trackedArray } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { applyPatches, enablePatches, produce } from "immer";
 
 enablePatches();
@@ -23,7 +23,7 @@ export default class FKFormData {
 
   /**
    * The errors associated with the changeset.
-   * @type {Object}
+   * @type {Record<string, { title: string, messages: string[] }>}
    */
   @tracked errors = {};
 
@@ -31,13 +31,13 @@ export default class FKFormData {
    * The patches to be applied.
    * @type {Array}
    */
-  @tracked patches = new TrackedArray();
+  @tracked patches = trackedArray();
 
   /**
    * The inverse patches to be applied, useful for rollback.
    * @type {Array}
    */
-  @tracked inversePatches = new TrackedArray();
+  @tracked inversePatches = trackedArray();
 
   /**
    * Creates an instance of Changeset.
@@ -49,7 +49,9 @@ export default class FKFormData {
       this.draftData = produce(data, () => {});
     } catch (e) {
       if (e.message.includes("[Immer]")) {
-        throw new Error("[FormKit]: the @data property expects a POJO.");
+        throw new Error("[FormKit]: the @data property expects a POJO.", {
+          cause: e,
+        });
       }
     }
   }
@@ -135,10 +137,10 @@ export default class FKFormData {
     if (name) {
       const patches = this.patches.filter((patch) => patch.path[0] === name);
       this.execute(patches);
-      this.patches = new TrackedArray(
+      this.patches = trackedArray(
         this.patches.filter((patch) => patch.path[0] !== name)
       );
-      this.inversePatches = new TrackedArray(
+      this.inversePatches = trackedArray(
         this.inversePatches.filter((patch) => patch.path[0] !== name)
       );
     } else {
@@ -243,10 +245,25 @@ export default class FKFormData {
   }
 
   /**
+   * Commits the current draft value of a specific field as the new baseline
+   * and removes only its patches from the history. Other fields' dirty state
+   * is unaffected.
+   * @param {string} name - The top-level property name to commit.
+   */
+  commitField(name) {
+    this.data = produce(this.data, (target) => {
+      target[name] = this.draftData[name];
+    });
+
+    this.patches = this.patches.filter((p) => p.path[0] !== name);
+    this.inversePatches = this.inversePatches.filter((p) => p.path[0] !== name);
+  }
+
+  /**
    * Resets the patches and inverse patches.
    */
   resetPatches() {
-    this.patches = new TrackedArray();
-    this.inversePatches = new TrackedArray();
+    this.patches = trackedArray();
+    this.inversePatches = trackedArray();
   }
 }

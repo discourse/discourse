@@ -3,26 +3,20 @@ import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class CategoriesField extends BaseField {
-  @action
-  onChangeCategories(categories) {
-    if (isBlank(categories)) {
-      this.mutValue(undefined);
-      return;
-    }
-
-    this.mutValue(categories.map((item) => item.id));
+  get categories() {
+    const ids = this.args.field?.metadata?.value || [];
+    return ids.map((id) => Category.findById(id)).filter(Boolean);
   }
 
   <template>
-    {{! template-lint-disable no-redundant-fn }}
     <section class="field categories-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <CategorySelector
@@ -37,8 +31,13 @@ export default class CategoriesField extends BaseField {
     </section>
   </template>
 
-  get categories() {
-    const ids = this.args.field?.metadata?.value || [];
-    return ids.map((id) => Category.findById(id)).filter(Boolean);
+  @action
+  onChangeCategories(categories) {
+    if (isBlank(categories)) {
+      this.mutValue(undefined);
+      return;
+    }
+
+    this.mutValue(categories.map((item) => item.id));
   }
 }

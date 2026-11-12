@@ -41,6 +41,8 @@ Dir
     docs.push(LocalDoc.new(frontmatter:, path:, content:))
   end
 
+docs.each { |doc| doc.all_docs = docs }
+
 puts "Validating local docs..."
 docs
   .group_by { |doc| doc.external_id }
@@ -51,6 +53,13 @@ docs
       exit 1
     end
   end
+
+broken_links = docs.flat_map { |doc| doc.broken_doc_links.map { |target| [doc.path, target] } }
+if broken_links.any?
+  puts "- links to unknown docs found:"
+  broken_links.each { |path, target| puts "- '#{target}' in #{path}" }
+  exit 1
+end
 
 exit 0 if !DOCS_API_KEY
 

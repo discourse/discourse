@@ -1,7 +1,36 @@
 # frozen_string_literal: true
 
 class Admin::Config::AboutController < Admin::AdminController
+  before_action :ensure_can_localize_site_settings, only: %i[localizations update_localizations]
+
   def index
+  end
+
+  def localizations
+    SiteSettingLocalizations::AboutConfig::Show.call(
+      service_params.deep_merge(params: { locale: params[:locale] }),
+    ) do
+      on_success { |payload:| render json: payload }
+      on_failed_contract { raise Discourse::InvalidParameters, :locale }
+      on_failed_policy(:can_localize_site_settings) { raise Discourse::InvalidAccess }
+      on_failed_policy(:locale_is_supported) { raise Discourse::InvalidParameters, :locale }
+    end
+  end
+
+  def update_localizations
+    SiteSettingLocalizations::AboutConfig::Update.call(
+      service_params.deep_merge(
+        params: {
+          locale: params[:locale],
+          general_settings: params[:general_settings],
+        },
+      ),
+    ) do
+      on_success { |payload:| render json: payload }
+      on_failed_contract { raise Discourse::InvalidParameters, :locale }
+      on_failed_policy(:can_localize_site_settings) { raise Discourse::InvalidAccess }
+      on_failed_policy(:locale_is_supported) { raise Discourse::InvalidParameters, :locale }
+    end
   end
 
   def update
@@ -50,6 +79,7 @@ class Admin::Config::AboutController < Admin::AdminController
 
     if your_organization = params[:your_organization]
       settings << { setting_name: "company_name", value: your_organization[:company_name] }
+      settings << { setting_name: "company_url", value: your_organization[:company_url] }
       settings << { setting_name: "governing_law", value: your_organization[:governing_law] }
       settings << {
         setting_name: "city_for_disputes",
@@ -101,5 +131,11 @@ class Admin::Config::AboutController < Admin::AdminController
         raise Discourse::InvalidParameters, policy.reason
       end
     end
+  end
+
+  private
+
+  def ensure_can_localize_site_settings
+    guardian.ensure_can_localize_site_settings!
   end
 end

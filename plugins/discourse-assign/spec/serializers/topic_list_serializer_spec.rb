@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe TopicListSerializer do
   fab!(:user)
 
@@ -35,7 +33,7 @@ RSpec.describe TopicListSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   describe "#assigned_messages_count" do
@@ -45,7 +43,7 @@ RSpec.describe TopicListSerializer do
 
     before { assigned_topic }
 
-    it "should include right attribute" do
+    it "includes assigned_messages_count" do
       expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(1)
     end
 
@@ -55,7 +53,7 @@ RSpec.describe TopicListSerializer do
       describe "as an admin user" do
         let(:guardian) { Guardian.new(Fabricate(:admin)) }
 
-        it "should not include the attribute" do
+        it "omits assigned_messages_count" do
           expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(nil)
         end
       end
@@ -63,7 +61,7 @@ RSpec.describe TopicListSerializer do
       describe "as an anon user" do
         let(:guardian) { Guardian.new }
 
-        it "should not include the attribute" do
+        it "omits assigned_messages_count" do
           expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(nil)
         end
       end
@@ -73,7 +71,7 @@ RSpec.describe TopicListSerializer do
       describe "as an anon user" do
         let(:guardian) { Guardian.new }
 
-        it "should not include the attribute" do
+        it "omits assigned_messages_count" do
           expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(nil)
         end
       end
@@ -82,7 +80,7 @@ RSpec.describe TopicListSerializer do
         let(:admin) { Fabricate(:admin) }
         let(:guardian) { Guardian.new(admin) }
 
-        it "should include the right attribute" do
+        it "includes assigned_messages_count" do
           expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(1)
         end
       end
@@ -90,7 +88,7 @@ RSpec.describe TopicListSerializer do
       describe "as a normal user" do
         let(:guardian) { Guardian.new(Fabricate(:user)) }
 
-        it "should not include the attribute" do
+        it "omits assigned_messages_count" do
           expect(serializer.as_json[:topic_list][:assigned_messages_count]).to eq(nil)
         end
       end

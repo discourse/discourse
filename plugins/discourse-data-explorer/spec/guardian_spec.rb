@@ -15,8 +15,8 @@ describe Guardian do
     query
   end
 
-  let(:user) { build(:user) }
-  let(:admin) { build(:admin) }
+  fab!(:user)
+  fab!(:admin)
   fab!(:group)
 
   describe "#user_is_a_member_of_group?" do

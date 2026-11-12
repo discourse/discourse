@@ -5,7 +5,7 @@ import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | form-template-field | checkbox",
+  "Integration | Component | FormTemplateField | Checkbox",
   function (hooks) {
     setupRenderingTest(hooks);
 

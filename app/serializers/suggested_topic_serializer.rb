@@ -16,6 +16,7 @@ class SuggestedTopicSerializer < ListableTopicSerializer
              :category_id,
              :featured_link,
              :featured_link_root_domain,
+             :is_nested_view,
              :op_like_count
   has_many :posters, serializer: SuggestedPosterSerializer, embed: :objects
 
@@ -37,5 +38,13 @@ class SuggestedTopicSerializer < ListableTopicSerializer
 
   def include_featured_link_root_domain?
     SiteSetting.topic_featured_link_enabled && object.featured_link
+  end
+
+  def is_nested_view
+    true
+  end
+
+  def include_is_nested_view?
+    object.nested_view?
   end
 end

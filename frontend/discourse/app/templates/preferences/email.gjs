@@ -1,11 +1,11 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,8 +18,8 @@ export default <template>
       <form class="form-vertical">
         {{#if @controller.success}}
           <div class="alert alert-success">{{@controller.successMessage}}</div>
-          <LinkTo @route="preferences.account" class="success-back">
-            {{icon "arrow-left"}}
+          <LinkTo class="success-back" @route="preferences.account">
+            {{dIcon "arrow-left"}}
             {{i18n "user.change_email.back_to_preferences"}}
           </LinkTo>
         {{else}}
@@ -37,11 +37,11 @@ export default <template>
               }}
             </label>
             <div class="controls">
-              <TextField
-                @value={{@controller.newEmail}}
-                @id="change-email"
-                @classNames="input-xxlarge"
+              <DTextField
                 @autofocus="autofocus"
+                @classNames="input-xxlarge"
+                @id="change-email"
+                @value={{@controller.newEmail}}
               />
               <div class="instructions">
                 {{#if @controller.taken}}
@@ -50,21 +50,21 @@ export default <template>
                   {{i18n "user.email.instructions"}}
                 {{/if}}
               </div>
-              <InputTip @validation={{@controller.emailValidation}} />
+              <DInputTip @validation={{@controller.emailValidation}} />
             </div>
           </div>
           <div class="controls save-button">
             <DButton
+              class="btn-primary"
+              type="submit"
               @action={{@controller.saveEmail}}
               @disabled={{@controller.saveDisabled}}
               @translatedLabel={{@controller.saveButtonText}}
-              type="submit"
-              class="btn-primary"
             />
             <LinkTo
-              @route="preferences.account"
-              @model={{@controller.model.username}}
               class="cancel"
+              @model={{@controller.model.username}}
+              @route="preferences.account"
             >
               {{i18n "cancel"}}
             </LinkTo>

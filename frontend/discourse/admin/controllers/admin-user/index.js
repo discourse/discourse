@@ -1,21 +1,22 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
-import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { deepEqual } from "discourse/lib/object";
+import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
-import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
-import MergeUsersProgressModal from "../../components/modal/merge-users-progress";
-import MergeUsersPromptModal from "../../components/modal/merge-users-prompt";
+import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation.gjs";
+import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation.gjs";
+import MergeUsersProgressModal from "../../components/modal/merge-users-progress.gjs";
+import MergeUsersPromptModal from "../../components/modal/merge-users-prompt.gjs";
 
 export default class AdminUserIndexController extends Controller {
   @service router;
@@ -24,25 +25,62 @@ export default class AdminUserIndexController extends Controller {
   @service siteSettings;
   @service modal;
 
+  /** @type {number[] | null} */
   @tracked customGroupIdsBuffer = null;
+
+  /** @type {number | null | undefined} */
   originalPrimaryGroupId = null;
+
+  /** @type {{ id: number, name: string, full_name?: string, display_name?: string, automatic: boolean, flair_url?: string | null, flair_bg_color?: string | null, flair_color?: string | null }[] | null} */
   availableGroups = null;
   userTitleValue = null;
+
+  /** @type {string | null} */
   ssoExternalEmail = null;
+
+  /** @type {string | null} */
   ssoLastPayload = null;
   isLoading = false;
 
-  @setting("enable_badges") showBadges;
-  @setting("moderators_view_emails") canModeratorsViewEmails;
-  @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
+  @computed("model.id")
+  get isBot() {
+    return Number.isInteger(this.model?.id) && this.model.id <= 0;
+  }
 
-  @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
-  primaryGroupDirty;
+  @computed("siteSettings.enable_badges")
+  get showBadges() {
+    return this.siteSettings.enable_badges;
+  }
 
-  @and("model.second_factor_enabled", "model.can_disable_second_factor")
-  canDisableSecondFactor;
+  @computed("siteSettings.moderators_view_emails")
+  get canModeratorsViewEmails() {
+    return this.siteSettings.moderators_view_emails;
+  }
 
-  @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
+  @computed("model.manual_locked_trust_level")
+  get hasLockedTrustLevel() {
+    return !isEmpty(this.model?.manual_locked_trust_level);
+  }
+
+  @computed("originalPrimaryGroupId", "model.primary_group_id")
+  get primaryGroupDirty() {
+    return !deepEqual(
+      this.originalPrimaryGroupId,
+      this.model?.primary_group_id
+    );
+  }
+
+  @computed("model.second_factor_enabled", "model.can_disable_second_factor")
+  get canDisableSecondFactor() {
+    return (
+      this.model?.second_factor_enabled && this.model?.can_disable_second_factor
+    );
+  }
+
+  @computed("model.username_lower")
+  get preferencesPath() {
+    return userPath(`${this.model?.username_lower}/preferences`);
+  }
 
   get customGroupIds() {
     return this.model.customGroups.map((group) => group.id);
@@ -65,7 +103,7 @@ export default class AdminUserIndexController extends Controller {
     return this.model.automaticGroups
       .map((group) => {
         const name = trustHTML(group.name);
-        return `<a href="/g/${name}">${name}</a>`;
+        return `<a href="${groupPath(name)}">${name}</a>`;
       })
       .join(", ");
   }
@@ -140,6 +178,15 @@ export default class AdminUserIndexController extends Controller {
     ).canAdminCheckEmails;
   }
 
+  @computed("ssoLastPayload")
+  get ssoPayload() {
+    return this.ssoLastPayload.split("&");
+  }
+
+  get deleteUserOptions() {
+    return this.adminTools.deleteUserOptions;
+  }
+
   groupAdded(added) {
     return this.model
       .groupAdded(added)
@@ -157,9 +204,13 @@ export default class AdminUserIndexController extends Controller {
       .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
-  @computed("ssoLastPayload")
-  get ssoPayload() {
-    return this.ssoLastPayload.split("&");
+  @action
+  openUserUpcomingChanges() {
+    this.modal.show(AdminUserUpcomingChanges, {
+      model: {
+        user: this.model,
+      },
+    });
   }
 
   @action
@@ -199,11 +250,6 @@ export default class AdminUserIndexController extends Controller {
   @action
   approve() {
     return this.model.approve(this.currentUser);
-  }
-
-  @action
-  _formatError(event) {
-    return `http: ${event.status} - ${event.body}`;
   }
 
   @action
@@ -280,7 +326,12 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   grantModeration() {
-    return this.model.grantModeration();
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.user.grant_moderation_confirm", {
+        username: this.model.username,
+      }),
+      didConfirm: () => this.model.grantModeration(),
+    });
   }
 
   @action
@@ -410,64 +461,20 @@ export default class AdminUserIndexController extends Controller {
   }
 
   @action
-  destroyUser() {
-    const postCount = this.get("model.post_count");
+  destroyUser(optionId) {
+    const postCount = this.model.post_count;
     const maxPostCount = this.siteSettings.delete_all_posts_max;
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
-      this.dialog.notice(i18n("admin.user.deleting_user"));
-      let formData = { context: location };
-      if (block) {
-        formData["block_email"] = true;
-        formData["block_urls"] = true;
-        formData["block_ip"] = true;
-      }
-      if (postCount <= maxPostCount) {
-        formData["delete_posts"] = true;
-      }
-      this.model
-        .destroy(formData)
-        .then((data) => {
-          if (data.deleted) {
-            if (/^\/admin\/users\/list\//.test(location)) {
-              document.location = location;
-            } else {
-              document.location = getURL("/admin/users/list/active");
-            }
-          } else {
-            this.dialog.alert(i18n("admin.user.delete_failed"));
-          }
-        })
-        .catch(() => {
-          this.dialog.alert(i18n("admin.user.delete_failed"));
-        });
-    };
-
-    this.dialog.alert({
-      title: i18n("admin.user.delete_confirm_title"),
-      message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+    this.adminTools.showDeleteUserModal(this.model.id, optionId, {
+      deletePosts: postCount <= maxPostCount,
+      onDeleted: () => {
+        if (/^\/admin\/users\/list\//.test(location)) {
+          document.location = location;
+        } else {
+          document.location = getURL("/admin/users/list/active");
+        }
+      },
     });
   }
 
@@ -538,6 +545,11 @@ export default class AdminUserIndexController extends Controller {
   @action
   showSilenceModal() {
     this.adminTools.showSilenceModal(this.model);
+  }
+
+  @action
+  toggleEditing(field) {
+    this.toggleProperty(field);
   }
 
   @action
@@ -667,5 +679,10 @@ export default class AdminUserIndexController extends Controller {
         deleteAllPosts: () => this.adminTools.deletePostsDecider(this.model),
       },
     });
+  }
+
+  @action
+  _formatError(event) {
+    return `http: ${event.status} - ${event.body}`;
   }
 }

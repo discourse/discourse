@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat New Message from params", type: :system do
+RSpec.describe "Chat New Message from params" do
   fab!(:current_user, :user)
   fab!(:user_1, :user)
   fab!(:user_2, :user)

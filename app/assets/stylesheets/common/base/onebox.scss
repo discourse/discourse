@@ -6,6 +6,7 @@
 }
 
 @mixin onebox-shadow($thickness) {
+  $thickness: var(--onebox-shadow-width, #{$thickness});
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -36,8 +37,8 @@ a.loading-onebox {
   margin-top: 15px;
   padding: 12px;
   font-size: var(--font-0);
-
-  @include post-aside;
+  background: var(--d-post-aside-background);
+  border-left: var(--d-post-aside-border);
 
   .onebox-result-body {
     padding-top: 5px;
@@ -172,7 +173,12 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img:not(.avatar, .onebox-avatar-inline, .emoji) {
+    img:not(
+      .avatar,
+      .onebox-avatar-inline,
+      .emoji,
+      .discourse-event-onebox__image
+    ) {
       max-height: 170px;
       max-width: 20%;
       height: auto;
@@ -332,6 +338,226 @@ aside.onebox {
   }
 }
 
+// The color, ratio and height are set client-side from the image when they're known. The frame is
+// 16:9 at most, but never taller than the image itself, so small or very wide images don't sit in
+// large bars.
+@mixin letterboxed-event-image {
+  background: var(--event-onebox-image-color, var(--primary-very-low));
+  height: min(
+    calc(100cqi * 9 / 16),
+    calc(100cqi * var(--event-onebox-image-ratio, 1)),
+    var(--event-onebox-image-height, 100cqi)
+  );
+
+  // Shrinks images that don't fit, but never enlarges small ones
+  object-fit: scale-down;
+  object-position: center;
+}
+
+aside.onebox:has(.discourse-event-onebox) {
+  container: event-onebox / inline-size;
+}
+
+.discourse-event-onebox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-4);
+
+  &__media {
+    align-self: start;
+    height: 5rem;
+    overflow: hidden;
+    position: relative;
+    width: 5rem;
+
+    &:not(:has(.discourse-event-onebox__image)) {
+      height: auto;
+      width: auto;
+
+      .discourse-event-onebox__date {
+        position: static;
+      }
+    }
+  }
+
+  &__image.thumbnail {
+    float: none;
+    height: 100%;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+
+    // Only affects images taller than their box, where the subject tends to sit high
+    object-position: 50% 0;
+    width: 100%;
+  }
+
+  &__date {
+    align-items: center;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    display: flex;
+    flex-direction: column;
+    height: 3em;
+    inset: 0;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+    position: absolute;
+    width: 3em;
+  }
+
+  &__month {
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  &__day {
+    font-size: var(--font-up-1);
+    font-weight: 400;
+    text-align: center;
+  }
+
+  &__content {
+    min-width: 0;
+  }
+
+  &__time,
+  &__recurrence {
+    align-items: center;
+    display: flex;
+    gap: var(--space-2);
+
+    .d-icon {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+      flex: 0 0 auto;
+    }
+  }
+
+  &__time {
+    margin-block: var(--space-3) var(--space-1);
+  }
+
+  &__recurrence {
+    margin-block-end: var(--space-1);
+  }
+
+  &__description {
+    align-items: flex-start;
+    display: flex;
+    gap: var(--space-2);
+    overflow-wrap: anywhere;
+
+    .d-icon {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+      flex: 0 0 auto;
+      margin-top: 0.2em;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &.--banner-image {
+    container-type: inline-size;
+
+    // Lets the image span the full width above the date and content
+    .discourse-event-onebox__media {
+      display: contents;
+    }
+
+    // Matches the event widget's 16:9 image. The height is derived from the width rather than
+    // set with aspect-ratio, which cooked images carry inline from their dimensions.
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-column: 1 / -1;
+      height: calc(100cqi * 9 / 16);
+    }
+
+    .discourse-event-onebox__date {
+      margin: 0;
+      position: static;
+    }
+  }
+
+  &.--letterboxed-image .discourse-event-onebox__image.thumbnail {
+    @include letterboxed-event-image;
+  }
+
+  &.--portrait-image {
+    // Flattens both wrappers so the date can sit beside the title while the image keeps its own column
+    grid-template:
+      "image date title" auto
+      "image time time" auto
+      "image recurrence recurrence" auto
+      "image description description" auto
+      "image . ." 1fr / 8rem auto minmax(0, 1fr);
+    row-gap: 0;
+
+    .discourse-event-onebox__media,
+    .discourse-event-onebox__content {
+      display: contents;
+    }
+
+    // Shows a 2:3 poster whole; anything taller is cropped from the bottom
+    .discourse-event-onebox__image.thumbnail {
+      border-radius: var(--d-border-radius);
+      grid-area: image;
+      height: auto;
+      max-height: 12rem;
+    }
+
+    .discourse-event-onebox__date {
+      grid-area: date;
+      margin: 0;
+      position: static;
+    }
+
+    .title-wrapper {
+      align-self: center;
+      grid-area: title;
+    }
+
+    .discourse-event-onebox__time {
+      grid-area: time;
+    }
+
+    .discourse-event-onebox__recurrence {
+      grid-area: recurrence;
+    }
+
+    .discourse-event-onebox__description {
+      grid-area: description;
+    }
+
+    // Two columns leave too little room for long titles in narrow spaces like phones or the chat
+    // drawer, so the image goes above, letterboxed into the same 16:9 frame as banner images
+    @container event-onebox (width < 30rem) {
+      container-type: inline-size;
+      grid-template:
+        "image image" auto
+        "date title" auto
+        ". time" auto
+        ". recurrence" auto
+        ". description" auto / auto minmax(0, 1fr);
+
+      .discourse-event-onebox__image.thumbnail {
+        @include letterboxed-event-image;
+        margin-bottom: var(--space-4);
+        max-height: none;
+      }
+    }
+  }
+}
+
 .chat-drawer-container .chat-message aside.onebox {
   @include onebox-shadow(3px);
 }
@@ -356,6 +582,69 @@ aside.onebox {
   @include gdocs-logo("slides");
   @include gdocs-logo("calendar");
   @include gdocs-logo("drive");
+}
+
+.google-meet-onebox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1em;
+  overflow-wrap: anywhere;
+
+  &__icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 3.25em;
+    height: 3.25em;
+    margin-block-start: 0.15em;
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__icon .d-icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+
+  &__content {
+    display: grid;
+    min-width: 0;
+    justify-items: start;
+    gap: 0.55em;
+  }
+
+  &__code,
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+  }
+
+  &__code {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em;
+  }
+
+  &__code-value {
+    padding: 0.15em 0.35em;
+    font-family: var(--d-font-family--monospace);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__join {
+    font-weight: 600;
+  }
+}
+
+aside.onebox .onebox-body .google-meet-onebox__title {
+  margin: 0;
 }
 
 // Google Calendar Placeholder
@@ -387,7 +676,8 @@ aside.onebox .onebox-body .onebox-avatar {
 
 blockquote {
   aside.onebox {
-    @include post-aside;
+    background: var(--d-post-aside-background);
+    border-left: var(--d-post-aside-border);
   }
 }
 
@@ -406,7 +696,9 @@ pre.onebox code ol.lines li::before {
   text-align: right;
   padding-right: 0.5em;
   font-size: var(--font-down-1);
-  line-height: calc((13 + 9.4) / 13); // matches the `code` line-height
+
+  // lines the gutter number up with the `min-height` of the line it labels
+  line-height: calc((13 + 9.4) / 13);
   content: counter(li-counter);
   counter-increment: li-counter;
 }
@@ -439,7 +731,7 @@ pre.onebox code ol {
 }
 
 pre.onebox code {
-  background-color: var(--primary-very-low);
+  // the template indents the line list; each line re-asserts `pre` for itself
   white-space: normal;
 }
 
@@ -476,6 +768,234 @@ pre.onebox code ol.lines li.selected {
     width: 20px;
     height: 20px;
     float: none;
+  }
+}
+
+aside.onebox.github-onebox {
+  --github-onebox-status-color: var(--primary-high);
+  --github-onebox-header-background: var(--primary-very-low);
+  --onebox-border-color: light-dark(#d1d9e0, #3d444d);
+  --onebox-shadow-color: transparent;
+  --onebox-shadow-width: var(--token-border-width);
+  container: github-onebox / inline-size;
+  padding: 0;
+  overflow: hidden;
+
+  &.--github-open,
+  &.--github-approved,
+  &.--github-success {
+    --github-onebox-status-color: light-dark(#1a7f37, #3fb950);
+    --github-onebox-header-background: light-dark(#dafbe1, #183c26);
+  }
+
+  &.--github-draft,
+  &.--github-unknown {
+    --github-onebox-status-color: light-dark(#59636e, #9198a1);
+    --github-onebox-header-background: light-dark(#818b981f, #292e36);
+  }
+
+  &.githubpullrequest.--github-open {
+    --github-onebox-status-color: var(--primary-high);
+
+    .github-onebox__label {
+      color: light-dark(#1a7f37, #3fb950);
+    }
+  }
+
+  &.githubpullrequest.--github-open,
+  &.--github-draft {
+    --github-onebox-header-background: color-mix(
+      in srgb,
+      var(--primary) 10%,
+      var(--secondary)
+    );
+  }
+
+  &.--github-changes_requested,
+  &.--github-pending {
+    --github-onebox-status-color: light-dark(#9a6700, #d29922);
+    --github-onebox-header-background: light-dark(#fff8c5, #3d2f12);
+  }
+
+  &.--github-merged {
+    --github-onebox-status-color: light-dark(#8250df, #a371f7);
+    --github-onebox-header-background: light-dark(#fbefff, #2e1b47);
+  }
+
+  &.--github-closed,
+  &.--github-failure {
+    --github-onebox-status-color: light-dark(#d1242f, #f85149);
+    --github-onebox-header-background: light-dark(#ffebe9, #3e191c);
+  }
+
+  &[class*="--github-"] {
+    --onebox-border-color: color-mix(
+      in srgb,
+      var(--github-onebox-status-color) 35%,
+      var(--secondary)
+    );
+  }
+
+  > .source.github-onebox__header {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
+    column-gap: 1em;
+    margin: 0;
+    padding: 0.5em 1em;
+    background: var(--github-onebox-header-background);
+    font-size: var(--font-down-1);
+
+    svg {
+      flex-shrink: 0;
+      fill: currentcolor;
+    }
+  }
+
+  .github-onebox__label,
+  .github-onebox__repo {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 0;
+  }
+
+  .github-onebox__label {
+    grid-area: 1 / 2;
+    justify-self: end;
+    color: var(--github-onebox-status-color);
+    font-weight: var(--token-font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .github-onebox__repo[href] {
+    grid-area: 1 / 1;
+    color: var(--primary);
+
+    > span {
+      @include ellipsis;
+    }
+  }
+
+  > .onebox-body {
+    padding: var(--space-3) var(--space-4);
+
+    h3,
+    h4 {
+      margin-block: 0 var(--space-2);
+      font-size: var(--font-0);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: var(--line-height-large);
+    }
+  }
+
+  &:is(.githubpullrequest, .githubissue, .githubcommit) > .onebox-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "branches" "info" "body";
+    gap: 0;
+  }
+
+  &.githubactions .github-row {
+    display: block;
+  }
+
+  .github-pull-request__title {
+    @include line-clamp(3);
+    overflow-wrap: anywhere;
+  }
+
+  .branches,
+  .labels {
+    margin-block-end: var(--space-1);
+  }
+
+  .branches {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-size: var(--font-down-2);
+
+    code {
+      @include ellipsis;
+      font-size: inherit;
+      border-radius: var(--token-radius-small);
+    }
+
+    code:first-of-type {
+      flex: 0 0 auto;
+      max-width: 45%;
+    }
+  }
+
+  .github-info {
+    gap: var(--space-1);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--token-color-text-subtle);
+
+    > div + div {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+
+      &::before {
+        content: "·";
+      }
+    }
+
+    .user a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      color: var(--primary);
+    }
+
+    .user a,
+    .discourse-local-date.cooked-date .relative-time {
+      text-decoration: underline dashed var(--primary-low-mid);
+      text-decoration-thickness: var(--token-border-width);
+      text-underline-offset: 0.2em;
+    }
+
+    .discourse-local-date.cooked-date {
+      border-bottom: 0;
+    }
+
+    .lines {
+      a {
+        display: flex;
+        gap: var(--space-1);
+      }
+    }
+  }
+
+  .onebox-avatar-inline {
+    width: var(--space-4);
+    height: var(--space-4);
+  }
+
+  .github-body-container {
+    margin: var(--space-3) 0 0;
+    max-width: 65ch;
+    font-family: inherit;
+    font-size: var(--font-down-1);
+    line-height: var(--cooked-line-height);
+    color: var(--token-color-text-default);
+  }
+
+  .github-repo-description,
+  .label1 {
+    font-size: var(--font-down-1);
+    line-height: var(--cooked-line-height);
+  }
+
+  @container github-onebox (width < 28rem) {
+    > .source.github-onebox__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .github-onebox__label[aria-label] > span {
+      display: none;
+    }
   }
 }
 
@@ -543,9 +1063,6 @@ pre.onebox code ol.lines li.selected {
   }
 
   .github-info-container {
-    width: 100%;
-    overflow-x: hidden;
-
     > span {
       // TODO: remove in a few months
       // replaced by .github-info in new commit oneboxes
@@ -558,7 +1075,6 @@ pre.onebox code ol.lines li.selected {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    width: 100%;
     gap: 0.15em 0.75em;
 
     .lines {
@@ -589,7 +1105,10 @@ pre.onebox code ol.lines li.selected {
     font-family: var(--d-font-family--monospace);
     font-size: 0.875em;
     line-height: calc((13 + 4) / 13);
-    box-sizing: border-box;
+
+    @include viewport.until(sm) {
+      max-height: 50vh;
+    }
 
     .show-more {
       font-family: var(--font-family);
@@ -600,7 +1119,7 @@ pre.onebox code ol.lines li.selected {
   }
 
   .onebox-avatar-inline {
-    border-radius: 2px;
+    border-radius: var(--token-radius-small);
     vertical-align: text-bottom;
   }
 
@@ -613,7 +1132,7 @@ pre.onebox code ol.lines li.selected {
       // !important required to override inline style attribute
       background-color: var(--primary-medium) !important;
       color: var(--secondary) !important;
-      padding: 2px 4px !important;
+      padding: var(--space-half) var(--space-1) !important;
       white-space: nowrap;
     }
   }
@@ -865,7 +1384,8 @@ aside.onebox.xkcd .onebox-body img {
 // allowlistedgeneric twitter labels
 .onebox.allowlistedgeneric,
 .onebox.whitelistedgeneric,
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   .label1,
   .label2 {
     color: var(--primary-med-or-secondary-med);
@@ -907,7 +1427,8 @@ aside.onebox.xkcd .onebox-body img {
   }
 }
 
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   h3 {
     width: 100%;
     margin-bottom: 0.2rem !important;
@@ -949,49 +1470,14 @@ aside.onebox.xkcd .onebox-body img {
   }
 }
 
-.onebox.reddit {
-  div.description {
-    color: var(--primary-med-or-secondary-med);
-  }
-
-  .onebox-body.reddit-preview-onebox {
-    display: flex;
-    gap: 0.75em;
-
-    .reddit-preview-thumbnail {
-      flex-shrink: 0;
-      max-width: 150px;
-
-      // neutralize the legacy float/absolute-position system
-      .aspect-image {
-        position: relative;
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: none;
-        float: none;
-        margin: 0;
-      }
-
-      .aspect-image img,
-      > img {
-        position: static;
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: 170px;
-        float: none;
-      }
-    }
-
-    .reddit-preview-details {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-  }
+iframe.reddit-onebox {
+  width: 100%;
+  max-width: 640px;
+  display: block;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--d-border-radius);
 }
 
 .onebox.githubfolder {
@@ -1139,7 +1625,8 @@ aside.onebox.mixcloud-preview {
 }
 
 iframe.vimeo-onebox,
-iframe.loom-onebox {
+iframe.loom-onebox,
+iframe.restream-onebox {
   width: 100%;
   height: auto;
   aspect-ratio: 16/9;

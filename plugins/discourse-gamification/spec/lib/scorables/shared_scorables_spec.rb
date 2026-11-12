@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Scores are read through a materialized view that filters on PostgreSQL's
+# CURRENT_DATE, which is pinned to the start of the test transaction. Fixtures
+# created from the wall clock fall outside it when a run straddles UTC midnight,
+# so every shared example freezes the clock.
 RSpec.shared_examples "Scorable Type" do
   fab!(:leaderboard, :gamification_leaderboard)
   let(:current_user) { Fabricate(:user) }
@@ -7,9 +11,12 @@ RSpec.shared_examples "Scorable Type" do
   let(:third_user) { Fabricate(:user) }
   let(:expected_score) { expected_score }
 
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
+
   describe "#{described_class} updates gamification score" do
     it "has correct total score" do
-      DiscourseGamification::GamificationScore.calculate_scores(
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
         since_date: "2022-1-1",
         only_subclass: described_class,
       )
@@ -29,15 +36,21 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
   let(:expected_score) { described_class.score_multiplier }
   let(:after_create_hook) { nil }
 
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
+
   describe "updates gamification score" do
     let!(:create_score) { class_action_fabricator }
     let!(:trigger_after_create_hook) { after_create_hook }
+
     before { DiscourseGamification::LeaderboardCachedView.create_all }
 
     it "#{described_class} updates scores for action in the category configured" do
       expect(user.gamification_score).to eq(0)
       SiteSetting.scorable_categories = category_allowed.id.to_s
-      DiscourseGamification::GamificationScore.calculate_scores(only_subclass: described_class)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
+        only_subclass: described_class,
+      )
       DiscourseGamification::LeaderboardCachedView.refresh_all
       expect(user.gamification_score).to eq(expected_score)
     end
@@ -45,7 +58,10 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
     it "#{described_class} doesn't updates scores for action in the category configured" do
       expect(user_2.gamification_score).to eq(0)
       SiteSetting.scorable_categories = category_not_allowed.id.to_s
-      DiscourseGamification::GamificationScore.calculate_scores(only_subclass: described_class)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
+        only_subclass: described_class,
+      )
       DiscourseGamification::LeaderboardCachedView.refresh_all
       expect(user_2.gamification_score).to eq(0)
     end
@@ -62,6 +78,8 @@ RSpec.shared_examples "No Score Value" do
   let(:class_action_fabricator_for_themselves) { nil }
   let(:after_create_hook) { nil }
 
+  before { freeze_time DateTime.parse("2024-01-01 12:00") }
+
   describe "#{described_class} awards no score value" do
     let!(:create_score_for_deleted_object) { class_action_fabricator_for_deleted_object }
     let!(:create_score_for_pm) { class_action_fabricator_for_pm }
@@ -70,7 +88,8 @@ RSpec.shared_examples "No Score Value" do
     let!(:trigger_after_create_hook) { after_create_hook }
 
     it "does not increase user gamification score" do
-      DiscourseGamification::GamificationScore.calculate_scores(
+      DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+        leaderboard,
         since_date: "2022-1-1",
         only_subclass: described_class,
       )
@@ -255,7 +274,7 @@ RSpec.describe DiscourseGamification::FlagCreated do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :reviewable, created_by: current_user) do
-        after_create { self.update(status: 1) }
+        after_create { update(status: 1) }
       end
     end
 
@@ -301,7 +320,7 @@ RSpec.describe DiscourseGamification::UserInvited do
         },
       ).to_return(status: 200, body: "", headers: {})
       Fabricate.times(10, :invite, invited_by: current_user) do
-        after_create { self.update(redemption_count: 1) }
+        after_create { update(redemption_count: 1) }
       end
     end
 

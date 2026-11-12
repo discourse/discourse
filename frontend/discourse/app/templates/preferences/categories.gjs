@@ -1,21 +1,21 @@
-import SaveControls from "discourse/components/save-controls";
 import Categories from "discourse/components/user-preferences/categories";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <Categories
     @canSee={{@controller.canSee}}
-    @model={{@controller.model}}
-    @selectedCategories={{@controller.selectedCategories}}
     @hideMutedTags={{@controller.hideMutedTags}}
+    @model={{@controller.model}}
     @save={{@controller.save}}
+    @selectedCategories={{@controller.selectedCategories}}
     @siteSettings={{@controller.siteSettings}}
   />
 
   {{#if @controller.canSave}}
-    <SaveControls
-      @model={{@controller.model}}
+    <DSaveControls
       @action={{@controller.save}}
+      @model={{@controller.model}}
       @saved={{@controller.saved}}
     />
   {{else}}

@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const watchedWordsFixtures = {
   "/admin/customize/watched_words.json": {
     actions: ["block", "censor", "require_approval", "flag", "replace", "tag"],
     words: [
@@ -39,3 +44,5 @@ export default {
     },
   },
 };
+
+export default watchedWordsFixtures;

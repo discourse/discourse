@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const groupFixtures = {
   "/groups/moderators.json": {
     group: {
       id: 50,
@@ -1331,3 +1336,5 @@ export default {
     },
   },
 };
+
+export default groupFixtures;

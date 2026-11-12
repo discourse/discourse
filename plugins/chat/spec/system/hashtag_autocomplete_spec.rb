@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Using #hashtag autocompletion to search for and lookup channels", type: :system do
+describe "Using #hashtag autocompletion to search for and lookup channels" do
   fab!(:user)
   fab!(:channel1) { Fabricate(:chat_channel, name: "Music Lounge", slug: "music") }
   fab!(:channel2) { Fabricate(:chat_channel, name: "Random", slug: "random") }
@@ -53,13 +53,16 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
     )
     chat_channel_page.click_send_message
 
-    message =
-      Chat::Message.find_by(
-        user: user,
-        message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
-      )
+    try_until_success do
+      message =
+        Chat::Message.find_by(
+          user: user,
+          message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
+        )
 
-    expect(chat_channel_page.messages).to have_message(id: message.id)
+      expect(message).not_to eq(nil)
+      expect(chat_channel_page.messages).to have_message(id: message.id)
+    end
 
     expect(page).to have_css(".hashtag-cooked[aria-label]", count: 3)
 

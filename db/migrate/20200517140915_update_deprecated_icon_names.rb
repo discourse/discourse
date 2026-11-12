@@ -11,9 +11,10 @@ class UpdateDeprecatedIconNames < ActiveRecord::Migration[6.0]
 
   def migrate_value(dir)
     icons =
-      File.open("#{Rails.root}/db/migrate/20200517140915_fa4_renames.json", "r:UTF-8") do |f|
-        JSON.parse(f.read)
-      end
+      File.open(
+        "#{Rails.root.join("db/migrate/20200517140915_fa4_renames.json")}",
+        "r:UTF-8",
+      ) { |f| JSON.parse(f.read) }
 
     icons.each do |key, value|
       from = dir == "up" ? key : value

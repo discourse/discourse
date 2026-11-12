@@ -26,6 +26,14 @@ module PageObjects
       def link_url_value
         find(LINK_URL_SELECTOR).value
       end
+
+      def has_link_text_field?
+        has_css?(LINK_TEXT_SELECTOR)
+      end
+
+      def has_no_link_text_field?
+        has_no_css?(LINK_TEXT_SELECTOR)
+      end
     end
   end
 end

@@ -86,6 +86,16 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized search text in full-page and header searches" do
+      term = (1..51).map { |number| "word#{number}" }.join(" ")
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+
+      get "/search/query.json", params: { term: term }
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -153,8 +163,80 @@ RSpec.describe SearchController do
       expect(data["users"][0]["id"]).to eq(user.id)
     end
 
+    context "with category-restricted tags" do
+      fab!(:tag_access_group, :group)
+      fab!(:private_category) { Fabricate(:private_category, group: tag_access_group) }
+      fab!(:category_tag) do
+        Fabricate(:tag, name: "classified-category-tag", description: "Category tag description")
+      end
+      fab!(:category_tag_group_tag) do
+        Fabricate(
+          :tag,
+          name: "classified-category-tag-group",
+          description: "Category tag group description",
+        )
+      end
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [category_tag_group_tag]) }
+      fab!(:regular_user, :user)
+      fab!(:authorized_user, :user)
+      fab!(:admin)
+
+      before do
+        SiteSetting.tagging_enabled = true
+        CategoryTag.create!(category: private_category, tag: category_tag)
+        CategoryTagGroup.create!(category: private_category, tag_group: tag_group)
+        tag_access_group.add(authorized_user)
+        SearchIndexer.index(category_tag, force: true)
+        SearchIndexer.index(category_tag_group_tag, force: true)
+      end
+
+      it "does not expose either restriction type to anonymous users" do
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["tags"]).to be_empty
+      end
+
+      it "does not expose either restriction type to unauthorized regular users" do
+        sign_in(regular_user)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["tags"]).to be_empty
+      end
+
+      it "exposes both restriction types to users who can access the category" do
+        sign_in(authorized_user)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(
+          response.parsed_body["tags"].map { |tag| tag.values_at("name", "description") },
+        ).to contain_exactly(
+          [category_tag.name, category_tag.description],
+          [category_tag_group_tag.name, category_tag_group_tag.description],
+        )
+      end
+
+      it "exposes both restriction types to admins" do
+        sign_in(admin)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(
+          response.parsed_body["tags"].map { |tag| tag.values_at("name", "description") },
+        ).to contain_exactly(
+          [category_tag.name, category_tag.description],
+          [category_tag_group_tag.name, category_tag_group_tag.description],
+        )
+      end
+    end
+
     context "when searching by topic id" do
-      it "should not be restricted by minimum search term length" do
+      it "is not restricted by the minimum search-term length" do
         SiteSetting.min_search_term_length = 20_000
 
         get "/search/query.json",
@@ -170,7 +252,7 @@ RSpec.describe SearchController do
         expect(data["topics"][0]["id"]).to eq(awesome_post.topic_id)
       end
 
-      it "should return the right result" do
+      it "returns the topic matching the requested ID" do
         get "/search/query.json",
             params: {
               term: user_post.topic_id,
@@ -187,6 +269,25 @@ RSpec.describe SearchController do
   end
 
   describe "#query" do
+    context "when anonymous search is disabled" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "requires an anonymous user to log in" do
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+
+      it "allows a logged-in user" do
+        sign_in(user)
+
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: "wookie" }
@@ -201,6 +302,22 @@ RSpec.describe SearchController do
       log = SearchLog.where(id: search_log_id).first
       expect(log).to be_present
       expect(log.term).to eq("wookie")
+    end
+
+    it "logs the pageview session the search was made from" do
+      SiteSetting.log_search_queries = true
+      session_id = SecureRandom.alphanumeric(32)
+
+      get "/search/query.json",
+          params: {
+            term: "wookie",
+          },
+          headers: {
+            "Discourse-Pageview-Session-Id" => session_id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(SearchLog.find_by(term: "wookie").session_id).to eq(session_id)
     end
 
     it "doesn't log when disabled" do
@@ -315,6 +432,26 @@ RSpec.describe SearchController do
   end
 
   describe "#show" do
+    context "when an anonymous user cannot search" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "redirects an HTML request to login and preserves the destination" do
+        get "/search", params: { q: "猫" }
+
+        expect(response).to redirect_to("/login")
+        expect(URI.parse(response.cookies["destination_url"]).request_uri).to eq(
+          "/search?q=%E7%8C%AB",
+        )
+      end
+
+      it "rejects a JSON request" do
+        get "/search.json", params: { q: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+    end
+
     it "doesn't raise an error when search term not specified" do
       get "/search"
       expect(response.status).to eq(200)
@@ -525,7 +662,7 @@ RSpec.describe SearchController do
         end
       end
 
-      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}" }
 
       it "returns extra categories and parent categories" do
         get "/search.json", params: { q: "hello" }
@@ -565,8 +702,8 @@ RSpec.describe SearchController do
         end
       end
 
-      context "when show_original cookie is set" do
-        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+      context "when automatic translation is disabled by cookie" do
+        before { cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false" }
 
         it "returns original blurb in search results" do
           with_search_indexer_enabled { SearchIndexer.index(localized_post.topic, force: true) }
@@ -674,6 +811,18 @@ RSpec.describe SearchController do
   end
 
   context "with search context" do
+    it "returns a 400 for a string search context on full-page search" do
+      get "/search.json", params: { q: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 for a string search context on search queries" do
+      get "/search/query.json", params: { term: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
     it "raises an error with an invalid context type" do
       get "/search/query.json",
           params: {

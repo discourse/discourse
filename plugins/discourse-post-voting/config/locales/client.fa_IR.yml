@@ -8,10 +8,14 @@ fa_IR:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "دیدگاه جدید"
     composer:
       composer_actions:
         remove_as_post_voting:
           desc: "موضوع در ساختار عادی ایجاد خواهد شد"
+    vote:
+      toggle_voters: "نمایش رای دهندگان"
     last_answer_lowercase: آخرین پاسخ
     answer_lowercase:
       one: پاسخ

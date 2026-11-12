@@ -7,10 +7,14 @@
 ko:
   js:
     discourse_reactions:
-      state_panel:
-        more_users: "그리고 %{count} 더..."
+      users_popup:
+        all: "모두"
       main_reaction:
         add: "좋아요"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "추가됨"
+        changes_removed: "제거됨"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

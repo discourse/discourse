@@ -3,7 +3,7 @@
 RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
   before do
     Rake::Task.clear
-    Discourse::Application.load_tasks
+    silence_warnings { Discourse::Application.load_tasks }
   end
 
   describe "#validate_and_get_db" do
@@ -21,7 +21,8 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
       default_db = RailsMultisite::ConnectionManagement::DEFAULT
       RailsMultisite::ConnectionManagement.stubs(:has_db?).with(db).returns(false)
 
-      result = validate_and_get_db(db)
+      result = nil
+      expect { result = validate_and_get_db(db) }.to output(/not found/).to_stdout
 
       expect(result).to eq(default_db)
     end
@@ -168,7 +169,8 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
     it "does nothing when theme is disabled" do
       disabled_theme = Fabricate(:theme, component: true, enabled: false)
 
-      result = enable_welcome_banner(disabled_theme)
+      result = nil
+      expect { result = enable_welcome_banner(disabled_theme) }.to output(/is disabled/).to_stdout
 
       expect(result).to be_nil
     end
@@ -176,7 +178,10 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
     it "skips when theme has no parent relations" do
       orphan_theme = Fabricate(:theme, component: true, enabled: true)
 
-      result = enable_welcome_banner(orphan_theme)
+      result = nil
+      expect { result = enable_welcome_banner(orphan_theme) }.to output(
+        /is not included in any of your themes/,
+      ).to_stdout
 
       expect(result).to be_nil
     end

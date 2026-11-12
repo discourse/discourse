@@ -9,6 +9,8 @@ class ThemeSettingsSerializer < ApplicationSerializer
              :description,
              :valid_values,
              :list_type,
+             :disallowed_groups,
+             :resolve_group_membership,
              :textarea,
              :json_schema,
              :objects_schema
@@ -30,7 +32,7 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def value
-    object.value
+    object.value_for_editing
   end
 
   def description
@@ -75,6 +77,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
     object.type == ThemeSetting.types[:list]
   end
 
+  def disallowed_groups
+    object.disallowed_groups
+  end
+
+  def include_disallowed_groups?
+    object.disallowed_groups.present?
+  end
+
   def textarea
     object.textarea
   end
@@ -97,6 +107,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_json_schema?
     object.type == ThemeSetting.types[:string] && object.json_schema.present?
+  end
+
+  def resolve_group_membership
+    object.resolve_group_membership?
+  end
+
+  def include_resolve_group_membership?
+    object.type == ThemeSetting.types[:list] && object.list_type == "group"
   end
 
   private

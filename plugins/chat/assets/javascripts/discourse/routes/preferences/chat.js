@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default class PreferencesChatRoute extends RestrictedUserRoute {
@@ -14,7 +14,7 @@ export default class PreferencesChatRoute extends RestrictedUserRoute {
       !this.siteSettings.chat_enabled ||
       (!user.can_chat && !this.currentUser?.admin)
     ) {
-      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(homepageNavigationDestination());
     }
 
     controller.set("model", user);

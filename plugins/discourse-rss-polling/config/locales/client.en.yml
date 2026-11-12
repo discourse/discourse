@@ -9,14 +9,96 @@ en:
       title: RSS Polling
 
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: create RSS feed
+            update_rss_polling_feed: update RSS feed
+            destroy_rss_polling_feed: delete RSS feed
+            enable_rss_polling_feed: enable RSS feed
+            disable_rss_polling_feed: disable RSS feed
+            poll_rss_polling_feed: poll RSS feed now
       rss_polling:
-        feed: Feed Settings
-        discourse: Discourse Settings
+        feed_settings: Feed settings
+        discourse_settings: Discourse settings
         author: Author
         feed_url: URL
+        feed_url_must_be_http: Enter a valid feed URL starting with http:// or https://.
         discourse_category: Category
         discourse_tags: Tags
-        feed_category_filter: Category Filter
-        documentation: RSS Polling configuration documentation
-        destroy_feed:
-          confirm: "Are you sure you want to delete this feed?"
+        required_tags_hint: "This category requires one of these tags — add one or imported topics will be rejected:"
+        required_tag_error: 'Add at least %{count} tag(s) from the "%{tag_group}" group, otherwise imported topics will be rejected.'
+        feed_category_filter: Category filter
+        feed_category_filter_description: Only import items whose feed category contains this text (case-insensitive). Leave blank to import everything.
+        showing: "Showing the first %{count} of %{total} items."
+        feeds:
+          title: Feeds
+          nav_description: Manage the RSS/Atom feeds that are imported into Discourse.
+          description: Configure the RSS/Atom feeds that are polled and imported as topics.
+          add: Add feed
+          add_header: Add feed
+          edit_header: Edit feed
+          empty: You haven't configured any feeds yet.
+          edit: Edit
+          delete: Delete
+          enable: Enable feed
+          disable: Disable feed
+          back: Back to feeds
+          save: Save
+          confirm_delete: "Are you sure you want to delete this feed?"
+          delete_success: Feed deleted
+          save_success: Feed saved
+          enable_success: Feed enabled
+          disable_success: Feed disabled
+        test:
+          button: Test feed
+          title: Preview
+          empty: This feed returned no items.
+          dismiss: Dismiss
+          would_import: Would import
+          summary:
+            would_import: "%{count} would import"
+            already_imported: "%{count} already imported"
+            skipped: "%{count} would skip"
+          already_imported: "Already imported — polling would update the <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>existing topic</a>."
+          already_imported_plain: "Already imported — polling would update the existing topic."
+          skip_reasons:
+            missing_content: Skipped — the item has no content.
+            missing_title: Skipped — the item has no title.
+            invalid_url: Skipped — the item has no valid link to import from.
+            category_filter_mismatch: "Skipped — item categories: %{categories}"
+            category_filter_mismatch_none: Skipped — the item has no categories.
+          errors:
+            fetch_failed: Couldn't fetch the feed. Check that the URL is correct and reachable.
+            parse_failed: The response doesn't look like a valid RSS or Atom feed.
+            invalid_feed: The feed couldn't be read because it's malformed.
+            blank_feed_url: Enter a feed URL to test.
+            category_deleted: The category this feed imports into no longer exists. Edit the feed and choose a new category.
+            unknown: Couldn't read this feed. It may be temporarily unavailable or returning unexpected content. Test the feed to diagnose, or check the logs for details.
+        status:
+          enabled: Enabled
+          disabled: Disabled
+          disabled_note: Won't poll on schedule
+        history:
+          recent: Recent polls
+          show_older: "Show %{count} older"
+          poll_now: Poll now
+          poll_now_dirty: Save your changes before polling.
+          poll_now_disabled: Enable the feed before polling.
+          poll_confirm: Polling now will fetch this feed and import or update topics. Continue?
+          poll_started: Polling started — the latest attempt will appear here shortly.
+          empty: This feed hasn't been polled yet.
+          no_items: No items were processed in this poll.
+          no_changes: No changes
+          imported_count: "%{count} imported"
+          updated_count: "%{count} updated"
+          skipped_count: "%{count} skipped"
+          failed_count: "%{count} failed"
+          imported: "Imported as a new <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>topic</a>."
+          imported_plain: "Imported as a new topic."
+          updated: "Updated the <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>existing topic</a>."
+          updated_plain: "Updated the existing topic."
+          failed: Failed to import.
+          failed_reasons:
+            import_rejected: "Couldn't be imported — the item doesn't have a valid link to import from."
+            import_error: "Couldn't be imported: %{error}"

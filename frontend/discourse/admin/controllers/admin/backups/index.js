@@ -1,21 +1,46 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { alias, equal } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import Backup from "discourse/admin/models/backup";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { computedI18n, setting } from "discourse/lib/computed";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;
   @controller("admin.backups") adminBackups;
 
-  @alias("adminBackups.model") status;
-  @computedI18n("admin.backups.upload.label") uploadLabel;
-  @setting("backup_location") backupLocation;
-  @equal("backupLocation", "local") localBackupStorage;
+  // Owned here so an upload outlives the uploader, which leaving the tab or closing the mobile
+  // actions menu destroys
+  uppyUpload = this.#createUppyUpload();
+
+  @computed("adminBackups.model")
+  get status() {
+    return this.adminBackups?.model;
+  }
+
+  set status(value) {
+    set(this, "adminBackups.model", value);
+  }
+
+  @dependentKeyCompat
+  get uploadLabel() {
+    return i18n(`admin.backups.upload.label`);
+  }
+
+  @computed("siteSettings.backup_location")
+  get backupLocation() {
+    return this.siteSettings.backup_location;
+  }
+
+  @computed("backupLocation")
+  get localBackupStorage() {
+    return this.backupLocation === "local";
+  }
 
   get restoreSettingsUrl() {
     return getURL("/admin/backups/settings?filter=allow_restore");
@@ -32,6 +57,15 @@ export default class AdminBackupsIndexController extends Controller {
     }
   }
 
+  @computed("status.isOperationRunning")
+  get deleteTitle() {
+    if (this.status.isOperationRunning) {
+      return "admin.backups.operations.is_running";
+    }
+
+    return "admin.backups.operations.destroy.title";
+  }
+
   @action
   async download(backup) {
     try {
@@ -42,12 +76,46 @@ export default class AdminBackupsIndexController extends Controller {
     }
   }
 
-  @computed("status.isOperationRunning")
-  get deleteTitle() {
-    if (this.status.isOperationRunning) {
-      return "admin.backups.operations.is_running";
-    }
+  #createUppyUpload() {
+    const backups = this;
 
-    return "admin.backups.operations.destroy.title";
+    return new UppyUpload(backups, {
+      id: "uppy-backup-uploader",
+      type: "backup",
+      uploadRootPath: "/admin/backups",
+      uploadUrl: "/admin/backups/upload",
+      validateUploadedFilesOptions: { skipValidation: true },
+
+      // local backups
+      get useChunkedUploads() {
+        return backups.localBackupStorage;
+      },
+
+      // direct s3 backups
+      useMultipartUploadsIfAvailable: true,
+
+      uploadDone: ({ file_name }) => {
+        if (backups.localBackupStorage) {
+          backups.dialog.alert(
+            i18n("admin.backups.upload.success", { filename: file_name })
+          );
+        } else {
+          backups.#refreshBackups();
+        }
+      },
+    });
+  }
+
+  async #refreshBackups() {
+    try {
+      const backups = await Backup.find();
+      this.model = trackedArray(backups.map((backup) => Backup.create(backup)));
+    } catch (error) {
+      this.dialog.alert(
+        i18n("admin.backups.backup_storage_error", {
+          error_message: extractError(error),
+        })
+      );
+    }
   }
 }

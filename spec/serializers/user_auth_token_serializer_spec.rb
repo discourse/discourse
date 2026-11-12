@@ -4,7 +4,7 @@ RSpec.describe UserAuthTokenSerializer do
   fab!(:user, :moderator)
   let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: "2a02:ea00::", staff: true) }
 
-  before(:each) { DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb")) }
+  before(:each) { DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
 
   it "serializes user auth tokens with respect to user locale" do
     I18n.locale = "de"

@@ -20,8 +20,12 @@ module Chat
     MULTIQUOTE_ATTR = "multiQuote=\"true\""
     NO_LINK_ATTR = "noLink=\"true\""
 
+    # Keep in sync with frontend/discourse-markdown-it/src/features/bbcode-block.js
+    QUOTATION_MARKS = ["\"\"", "''", "«»", "“”", "””", "‘’", "„“", "‚’", "‹›"].freeze
+
     class TranscriptBBCode
       attr_reader :channel,
+                  :channel_id,
                   :multiquote,
                   :chained,
                   :no_link,
@@ -31,6 +35,7 @@ module Chat
 
       def initialize(
         channel: nil,
+        channel_id: nil,
         acting_user: nil,
         multiquote: false,
         chained: false,
@@ -40,6 +45,7 @@ module Chat
         thread_ranges: {}
       )
         @channel = channel
+        @channel_id = channel&.id || channel_id
         @acting_user = acting_user
         @multiquote = multiquote
         @chained = chained
@@ -62,10 +68,8 @@ module Chat
       def render
         attrs = [quote_attr(@message_data.first[:message])]
 
-        if channel
-          attrs << channel_attr
-          attrs << channel_id_attr
-        end
+        attrs << channel_attr if channel
+        attrs << channel_id_attr if channel_id
 
         attrs << MULTIQUOTE_ATTR if multiquote
         attrs << CHAINED_ATTR if chained
@@ -128,11 +132,11 @@ module Chat
       end
 
       def channel_attr
-        "channel=\"#{channel.title(@acting_user)}\""
+        serialize_attr("channel", channel.title(@acting_user))
       end
 
       def channel_id_attr
-        "channelId=\"#{channel.id}\""
+        "channelId=\"#{channel_id}\""
       end
 
       def thread_id_attr
@@ -144,7 +148,17 @@ module Chat
 
         thread_title = thread.title.presence || I18n.t("chat.transcript.default_thread_title")
         thread_title += " (#{range})" if range.present?
-        "threadTitle=\"#{thread_title}\""
+        serialize_attr("threadTitle", thread_title)
+      end
+
+      def serialize_attr(name, value)
+        QUOTATION_MARKS.each do |pair|
+          open, close = pair.chars
+          next if value.include?(open) || value.include?(close)
+          return "#{name}=#{open}#{value}#{close}"
+        end
+
+        "#{name}=\"#{value.delete('"')}\""
       end
     end
 
@@ -171,7 +185,8 @@ module Chat
 
       # We are getting only the OP of the thread, let's expand it to
       # include all the replies for the thread.
-      if messages.count == 1 && thread&.original_message_id == messages.first.id
+      if !@opts[:no_thread_expansion] && messages.count == 1 &&
+           thread&.original_message_id == messages.first.id
         @messages = [messages.first] + messages.first.thread.replies
       end
 
@@ -199,8 +214,11 @@ module Chat
           rendered_markdown << open_bbcode_tag.render
           thread_id = threading_enabled ? message.thread_id : nil
 
+          # carries the channel id but not the name, so it renders as a
+          # continuation of the transcript with a linked timestamp
           open_bbcode_tag =
             TranscriptBBCode.new(
+              channel_id: @channel.id,
               acting_user: @acting_user,
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],
@@ -277,7 +295,10 @@ module Chat
     private
 
     def group_messages(messages)
-      messages.group_by { |msg| msg.thread_id || msg.id }.values
+      # Namespacing the key prevents collisions between chat_message id and chat_thread id.
+      messages
+        .group_by { |msg| msg.thread_id ? [:thread, msg.thread_id] : [:message, msg.id] }
+        .values
     end
 
     def messages

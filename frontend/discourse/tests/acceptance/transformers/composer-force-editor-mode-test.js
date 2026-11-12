@@ -8,7 +8,6 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("composer-force-editor-mode transformer", function (needs) {
   needs.user();
   needs.settings({
-    rich_editor: true,
     allow_uncategorized_topics: true,
   });
 

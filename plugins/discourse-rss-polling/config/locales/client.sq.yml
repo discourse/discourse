@@ -11,3 +11,13 @@ sq:
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Etiketat
+        feeds:
+          edit: Redaktoni
+          delete: Fshij
+          save: Ruani
+        test:
+          title: Parashikimi
+          dismiss: Hiqe
+        status:
+          enabled: Aktivizuar
+          disabled: E çaktivizuar

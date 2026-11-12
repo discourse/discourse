@@ -24,8 +24,12 @@ RSpec.describe PresenceChannel do
         PresenceChannel::Config.new(allowed_user_ids: [user.id])
       when "/test/allowedgroup"
         PresenceChannel::Config.new(allowed_group_ids: [group.id])
+      when "/test/allowedgroupwithoutusers"
+        PresenceChannel::Config.new(allowed_user_ids: [], allowed_group_ids: [group.id])
       when "/test/everyonegroup"
         PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:everyone]])
+      when "/test/loggedingroup"
+        PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:logged_in_users]])
       when "/test/noaccess"
         PresenceChannel::Config.new
       when "/test/countonly"
@@ -163,7 +167,7 @@ RSpec.describe PresenceChannel do
     expect(data[0]["leaving_user_ids"]).to contain_exactly(user.id)
   end
 
-  it "will return the messagebus last_id in the state payload" do
+  it "returns the MessageBus last_id in the state payload" do
     channel = PresenceChannel.new("/test/public1")
 
     channel.present(user_id: user.id, client_id: "a")
@@ -219,6 +223,7 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/loggedingroup").can_view?(user_id: nil)).to eq(false)
   end
 
   it "handles security correctly for a user" do
@@ -234,6 +239,7 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/alloweduser").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/loggedingroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: user.id)).to eq(false)
   end
 
@@ -252,6 +258,18 @@ RSpec.describe PresenceChannel do
         channel.present(user_id: user.id, client_id: "a")
       end
     expect(messages.count).to eq(1)
+    expect(messages[0].group_ids).to eq([group.id])
+  end
+
+  it "publishes group-protected messages when allowed users is empty" do
+    channel = PresenceChannel.new("/test/allowedgroupwithoutusers")
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
+
+    expect(messages.count).to eq(1)
+    expect(messages[0].user_ids).to eq(nil)
     expect(messages[0].group_ids).to eq([group.id])
   end
 

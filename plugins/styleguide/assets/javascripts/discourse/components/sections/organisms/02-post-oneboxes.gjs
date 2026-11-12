@@ -1,30 +1,30 @@
 import Post from "discourse/components/post";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-<template>
+export default <template>
   <StyleguideExample @title="Wikipedia onebox">
-    <Post @post={{@dummy.oneboxPosts.wikipedia}} @canCreatePost={{true}} />
+    <Post @canCreatePost={{true}} @post={{@dummy.oneboxPosts.wikipedia}} />
   </StyleguideExample>
 
   <StyleguideExample @title="GitHub Pull Request - Open">
-    <Post @post={{@dummy.oneboxPosts.githubPrOpen}} @canCreatePost={{true}} />
+    <Post @canCreatePost={{true}} @post={{@dummy.oneboxPosts.githubPrOpen}} />
   </StyleguideExample>
 
   <StyleguideExample @title="GitHub Pull Request - Approved">
     <Post
-      @post={{@dummy.oneboxPosts.githubPrApproved}}
       @canCreatePost={{true}}
+      @post={{@dummy.oneboxPosts.githubPrApproved}}
     />
   </StyleguideExample>
 
   <StyleguideExample @title="GitHub Pull Request - Changes Requested">
     <Post
-      @post={{@dummy.oneboxPosts.githubPrChangesRequested}}
       @canCreatePost={{true}}
+      @post={{@dummy.oneboxPosts.githubPrChangesRequested}}
     />
   </StyleguideExample>
 
   <StyleguideExample @title="GitHub Pull Request - Merged">
-    <Post @post={{@dummy.oneboxPosts.githubPrMerged}} @canCreatePost={{true}} />
+    <Post @canCreatePost={{true}} @post={{@dummy.oneboxPosts.githubPrMerged}} />
   </StyleguideExample>
 </template>

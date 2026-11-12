@@ -1,54 +1,47 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import DMultiSelect from "discourse/components/d-multi-select";
-import StyleguideComponent from "../../styleguide/component";
-import StyleguideExample from "../../styleguide-example";
+import { i18n } from "discourse-i18n";
+import MultiSelectExample from "../../examples/molecules/multi-select.gjs";
+import multiSelectSource from "../../examples/molecules/multi-select?source=file";
+import EmptyFooterExample from "../../examples/molecules/multi-select-footer-empty.gjs";
+import emptyFooterSource from "../../examples/molecules/multi-select-footer-empty?source=file";
+import ScrollFooterExample from "../../examples/molecules/multi-select-footer-scroll.gjs";
+import scrollFooterSource from "../../examples/molecules/multi-select-footer-scroll?source=file";
+import StyleguideComponent from "../../styleguide/component.gjs";
+import StyleguideExample from "../../styleguide-example.gjs";
 
-export default class MultiSelect extends Component {
-  @tracked selection = [{ id: 1, name: "foo" }];
-
-  multiSelectCode = `<DMultiSelect
-  @loadFn={{this.loadDummyData}}
-  @onChange={{this.onChange}}
-  @selection={{this.selection}}
->
-  <:result as |result|>{{result.name}}</:result>
-  <:selection as |result|>{{result.name}}</:selection>
-</DMultiSelect>`;
-
-  @action
-  onChange(selection) {
-    this.selection = selection;
-  }
-
-  @action
-  async loadDummyData(filter) {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    return [
-      { id: 1, name: "foo" },
-      { id: 2, name: "bar" },
-      { id: 3, name: "baz" },
-    ].filter((item) => {
-      return item.name.toLowerCase().includes(filter.toLowerCase());
-    });
-  }
-
-  <template>
-    <StyleguideExample @title="<DMultiSelect />" @code={{this.multiSelectCode}}>
-      <StyleguideComponent @tag="d-multi-select component">
-        <:sample>
-          <DMultiSelect
-            @loadFn={{this.loadDummyData}}
-            @onChange={{this.onChange}}
-            @selection={{this.selection}}
-          >
-            <:result as |result|>{{result.name}}</:result>
-            <:selection as |result|>{{result.name}}</:selection>
-          </DMultiSelect>
-        </:sample>
-      </StyleguideComponent>
-    </StyleguideExample>
-  </template>
-}
+export default <template>
+  <StyleguideExample @code={{multiSelectSource}} @title="<DMultiSelect />">
+    <StyleguideComponent @tag="d-multi-select component">
+      <:sample>
+        <MultiSelectExample />
+      </:sample>
+    </StyleguideComponent>
+  </StyleguideExample>
+  <StyleguideExample
+    @code={{emptyFooterSource}}
+    @description={{i18n
+      "styleguide.sections.multi_select.footer_empty_description"
+    }}
+    @title={{i18n "styleguide.sections.multi_select.footer_empty_title"}}
+    @tryThis={{i18n "styleguide.sections.multi_select.footer_empty_try_this"}}
+  >
+    <StyleguideComponent @tag="d-multi-select footer">
+      <:sample>
+        <EmptyFooterExample />
+      </:sample>
+    </StyleguideComponent>
+  </StyleguideExample>
+  <StyleguideExample
+    @code={{scrollFooterSource}}
+    @description={{i18n
+      "styleguide.sections.multi_select.footer_scroll_description"
+    }}
+    @title={{i18n "styleguide.sections.multi_select.footer_scroll_title"}}
+    @tryThis={{i18n "styleguide.sections.multi_select.footer_scroll_try_this"}}
+  >
+    <StyleguideComponent @tag="d-multi-select footer">
+      <:sample>
+        <ScrollFooterExample />
+      </:sample>
+    </StyleguideComponent>
+  </StyleguideExample>
+</template>

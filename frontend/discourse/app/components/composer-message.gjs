@@ -1,10 +1,10 @@
-import concatClass from "discourse/helpers/concat-class";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
-import DominatingTopicComposerMessage from "./composer-messages/dominating-topic";
-import EducationComposerMessage from "./composer-messages/education";
-import GetARoomComposerMessage from "./composer-messages/get-a-room";
-import GroupMentionedComposerMessage from "./composer-messages/group-mentioned";
-import SimilarTopicsComposerMessage from "./composer-messages/similar-topics";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DominatingTopicComposerMessage from "./composer-messages/dominating-topic.gjs";
+import EducationComposerMessage from "./composer-messages/education.gjs";
+import GetARoomComposerMessage from "./composer-messages/get-a-room.gjs";
+import GroupMentionedComposerMessage from "./composer-messages/group-mentioned.gjs";
+import SimilarTopicsComposerMessage from "./composer-messages/similar-topics.gjs";
 
 const COMPOSER_MESSAGES = {
   "dominating-topic": DominatingTopicComposerMessage,
@@ -31,15 +31,15 @@ function getComposerMessageComponent(templateName) {
 }
 
 const ComposerMessage = <template>
-  <div class={{concatClass "composer-popup" @message.extraClass}}>
+  <div class={{dConcatClass "composer-popup" @message.extraClass}}>
     {{#let
       (getComposerMessageComponent @message.templateName)
       as |MessageComponent|
     }}
       {{#if MessageComponent}}
         <MessageComponent
-          @message={{@message}}
           @closeMessage={{@closeMessage}}
+          @message={{@message}}
           @shareModal={{@shareModal}}
           @switchPM={{this.switchPM}}
         />

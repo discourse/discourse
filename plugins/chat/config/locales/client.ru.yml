@@ -20,6 +20,7 @@ ru:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Изменилась доступность чат-бота."
             chat_channel_status_change: "Изменение статуса канала чата"
             chat_channel_delete: "Удаление канала чата"
             chat_auto_remove_membership: "Участники автоматически удаляются из каналов"
@@ -51,7 +52,10 @@ ru:
         channel: "Канал"
         description: "Описание"
         actions: "Действия"
-        settings: "настроек"
+        settings: "Настроек"
+        no_channels: "В этой категории нет чат-каналов."
+        no_channels_body: "В каждой категории можно создать несколько каналов, доступных одним и тем же участникам в зависимости от настроек безопасности категории. <a href='%{chatBrowseUrl}'>Создать канал чата</a>."
+        include_subcategories: "Включить каналы подкатегорий"
       text_copied: Текст скопирован в буфер обмена
       link_copied: Ссылка скопирована в буфер обмена
       back_to_forum: "Форум"
@@ -67,9 +71,22 @@ ru:
       cancel_reply: "Отменить ответ"
       chat_channels: "Каналы"
       starred: "Отмечено звездочкой"
+      starred_channels: "Помеченные каналы"
+      starred_channels_empty: "Вы еще не добавили каналы в избранное. Добавьте каналы в избранное, чтобы они отображались здесь и имели быстрый доступ."
+      pinned_messages:
+        title: "Закрепленные сообщения"
+        close: "Закрыть закрепленные сообщения"
+        pinned_by_you: "Закреплено тобой"
+        pinned_by_user: "Закреплено пользователем %{username}"
+      pinned_bar:
+        title: "Закреплена"
+      no_pinned_messages: "В этом канале нет закрепленных сообщений."
+      pin_message: "Закрепить сообщение"
+      unpin_message: "Открепить сообщение"
       pinned: "Закреплена"
       browse_all_channels: "Просмотреть все каналы"
       see_in: "Смотреть в:"
+      open_channel_menu: "Открыть меню канала"
       move_to_channel:
         title: "Переместить сообщения в канал"
         instructions:
@@ -86,12 +103,16 @@ ru:
           other: "Точно удалить эти %{count} сообщения?"
       channel_settings:
         title: "Настройки канала"
-        edit: "Изменить"
-        add: "Добавить"
+        star_channel: "Помеченные каналы"
+        unstar_channel: "Убрать Избранное"
         close_channel: "Закрыть канал"
         open_channel: "Открыть канал"
+        open_channel_disabled_archived: "Архивированные каналы нельзя открыть повторно."
+        open_channel_disabled_read_only: "Каналы, доступные только для чтения, нельзя будет открыть повторно."
         archive_channel: "Архивировать канал"
         delete_channel: "Удалить канал"
+        danger_zone:
+          leave_description: "Вы перестанете получать сообщения и уведомления с этого канала. Вы можете присоединиться снова в любое время."
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
@@ -121,7 +142,7 @@ ru:
         process_started: "Процесс удаления канала запущен. Это окно закроется в ближайшее время, вы больше не увидите удалённый канал."
       channels_list_popup:
         browse: "Просмотр каналов"
-        create: "Новый канал"
+        create: "Новый канал..."
       close: "Закрыть"
       remove: "Удалить"
       collapse: "Свернуть чат"
@@ -138,8 +159,6 @@ ru:
       muted: "Отключённый"
       joined: "подписан"
       empty_state:
-        direct_message_cta: "Начать личный чат"
-        direct_message: "Вы также можете начать личный чат с одним или несколькими пользователями."
         title: "Каналы не обнаружены"
         my_threads: "У вас пока нет цепочек сообщений. Здесь появятся цепочки сообщений, в которых вы участвуете."
       email_frequency:
@@ -155,11 +174,6 @@ ru:
         never: "Никогда"
       separate_sidebar_mode:
         title: "Показывать отдельные режимы боковой панели для форума и чата"
-      send_shortcut:
-        enter:
-          label: "Отправить с помощью Enter"
-        meta_enter:
-          label: "Отправить с помощью %{meta_key} + Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
@@ -275,8 +289,7 @@ ru:
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       chat_notifications_title: "Уведомления чата"
-      only_chat_push_notifications:
-        title: "Отправлять только push-уведомления в чате"
+      personalization_title: "Персонализация"
       ignore_channel_wide_mention:
         title: "Игнорировать на канале массовые упоминания"
       show_thread_title_prompts:
@@ -307,7 +320,6 @@ ru:
       retry_staged_message:
         title: "Ошибка сети"
         action: "Отправить ещё раз?"
-      unreliable_network: "Сеть ненадёжна, отправка сообщений и сохранение черновиков могут не работать"
       bookmark_message: "Закладка"
       bookmark_message_edit: "Редактировать закладку"
       restore: "Восстановить удаленное сообщение"
@@ -327,8 +339,6 @@ ru:
         title: "Звук уведомления"
       sounds:
         none: "Нет"
-        bell: "Колокольчик"
-        ding: "Звонок"
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикрепить файл"
@@ -361,6 +371,8 @@ ru:
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию
+        filter_joined_all: "Все"
+        filter_joined_joined: "Регистрация"
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
@@ -369,24 +381,27 @@ ru:
         message_result_label: "Сообщение в чате от %{username}: %{preview} %{threadInfo}"
         in_thread: "в ветке %{title}"
         sr_instructions: "Нажмите Enter или Space, чтобы открыть сообщение. Используйте Tab для навигации между результатами."
+        results_list_label: "Результаты поиска сообщений в чате"
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
-        back_to_settings: "Назад к настройкам"
       about_view:
         associated_topic: Связанная тема
         associated_category: Связанная категория
-        title: Название
         name: Название
         description: Описание
       channel_info:
         back_to_all_channels: "Все каналы"
         back_to_channel: "Назад"
+        nav_label: "Информация о канале"
         tabs:
           members: Участники
+          preferences: Настройки
           settings: Настройки
           search: Искать
         remove_member: "Удалить"
+        members_title: "%{channel} участников"
+        preferences_title: "%{channel} настройки"
       new_message_modal:
         title: Отправка сообщения
         add_user_long: <kbd>Shift + щелчок</kbd> или <kbd>Shift + Ввод</kbd><span>Добавить пользователя @%{username}</span>
@@ -406,17 +421,12 @@ ru:
         create_new_group_chat: "Создать групповой чат"
         group_with_too_many_members: "имеет слишком много участников (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Изменение канала
         input_placeholder: Укажите название
         slug_description: Слаг канала используется в URL-адресе вместо названия канала.
         name: Название канала
-        slug: Слаг канала (необязательно)
-        emoji: Эмодзи канала (необязательно)
         reset_emoji: Сбросить эмодзи
       channel_edit_description_modal:
-        title: Изменить описание
         input_placeholder: Добавить описание
-        description: Расскажите, о чем этот канал
       direct_message_creator:
         add_to_channel: "Добавить в канал"
         title: Новое сообщение
@@ -437,6 +447,9 @@ ru:
           few: "%{count} участника"
           many: "%{count} участников"
           other: "%{count} участников"
+        preview_card:
+          log_in: "Войти"
+          sign_up: "Регистрация"
       create_channel:
         threading:
           label: "Включить цепочки сообщений"
@@ -499,16 +512,14 @@ ru:
             many: 'Пользователи группы «%{group}» и ещё %{count} групп будут иметь доступ к этому каналу в соответствии с <a href="%{settingLink}" target="_blank">настройками безопасности</a>'
             other: 'Пользователи группы «%{group}» и ещё %{count} группы будут иметь доступ к этому каналу в соответствии с <a href="%{settingLink}" target="_blank">настройками безопасности</a>'
         create: "Создать канал"
-        description: "Описание (необязательно)"
+        description: "Описание"
         name: "Название канала"
-        slug: "Слаг канала (необязательно)"
         title: "Новый канал"
         type: "Тип"
         types:
           category: "Категория"
           topic: "Тема"
         emoji:
-          label: "Эмодзи канала (необязательно)"
           reset: "Сбросить эмодзи"
       reviewable:
         type: "Сообщение чата"
@@ -524,6 +535,12 @@ ru:
           other: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
         single_user: "<span>%{username} отреагировал(-а) с эмодзи </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} и %{username} отреагировали с эмодзи </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} реакция"
+            few: "%{count} реакций"
+            many: "%{count} реакций"
+            other: "%{count} реакции"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
@@ -545,7 +562,6 @@ ru:
         always: "Для всех действий"
       settings:
         channel_wide_mentions_label: "Разрешить упоминания @all и @here"
-        channel_wide_mentions_description: "Разрешить пользователям уведомлять всех в канале #%{channel} (@all) и только активных участников (@here)"
         channel_threading_label: "Цепочки сообщений"
         channel_threading_description: "Если включить цепочки, ответы на сообщение чата будут создавать отдельный разговор параллельно с основным каналом."
         auto_join_users_label: "Автоматически добавлять пользователей"
@@ -556,6 +572,10 @@ ru:
         follow: "Подписаться"
         followed: "Подписан"
         mute: "Отключить канал"
+        unmute: "Отключить звук канала"
+        muted_until_hint: "блокировка до %{until}"
+        mute_options:
+          "off": "Выключено"
         threading_enabled: "Включено"
         threading_disabled: "Отключено"
         muted_on: "Включено"
@@ -565,13 +585,13 @@ ru:
         save: "Сохранить"
         saved: "Сохранено"
         unfollow: "Отписаться"
-        admin_title: "Администрирование"
-        settings_title: "Настройки"
-        info_title: "Информация о канале"
         category_label: "Категория"
         history_label: "История"
         members_label: "Участники"
       admin:
+        bot_discoverability:
+          label: "Показать в чате"
+          description: "Пусть пользователи находят этого бота при начале личного сообщения в чате."
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"
@@ -593,14 +613,21 @@ ru:
       direct_messages:
         title: "Прямые сообщения"
         aria_label: "Перейти к прямым сообщениям"
-        new: "Создать личный чат"
+        new_group: "Новый групповой чат"
         create: "Создать"
-        leave: "Выйти из личного чата"
-        close: "Закрыть личный чат"
+        leave: "Покинуть канал"
+        close: "Закрыть канал"
         cannot_create: "Вы не можете отправлять прямые сообщения."
       channel_list:
         title: "Каналы"
         aria_label: "Перейти к списку каналов"
+        options:
+          filter: "Фильтр"
+        filter:
+          all: "Все каналы"
+          mentions: "Упоминания"
+        sort:
+          priority: "Приоритет"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Выберите канал"
@@ -671,7 +698,9 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
+        chat_settings: "Настройки чата"
         indefinitely_short: "неограниченное время"
+        indefinitely_long: "%{chatSettingsLink} настроены на бессрочное сохранение сообщений канала."
         short:
           one: "%{count} день"
           few: "%{count} дня"
@@ -766,11 +795,6 @@ ru:
           direct_html: '<span>Пользователь %{username}</span> <span>упомянул вас на канале «%{channel}»</span>'
           other_plain: 'упомянул(а) %{identifier} в канале «%{channel}»'
           other_html: '<span>%{username}</span> <span>упомянул(а) %{identifier} в канале «%{channel}»</span>'
-        direct_message_chat_mention:
-          direct: "упомянул вас в личном чате"
-          direct_html: "<span>Пользователь %{username}</span> <span>упомянул вас в личном чате</span>"
-          other_plain: "упомянул(а) %{identifier} в личном чате"
-          other_html: "<span>%{username}</span> <span>упомянул(а) %{identifier} в личном чате</span>"
         chat_message: "Новое сообщение в чате"
         chat_quoted: "Пользователь %{username} процитировал ваше сообщение в чате"
       titles:
@@ -814,6 +838,7 @@ ru:
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"
+          drawer_toggle: "%{shortcut} Включить/выключить панель чата"
           drawer_close: "%{shortcut} Закрыть панель чата"
           mark_all_channels_read: "%{shortcut} Пометить все каналы прочитанными"
     topic_statuses:
@@ -841,9 +866,32 @@ ru:
         chat:
           title: Чат
     sidebar:
-      start_new_dm:
-        text: Начать новый DM
-        title: Создать личный чат
       panels:
         chat:
           label: "Чат"
+    discourse_workflows:
+      node_unavailable:
+        requires_chat: "Для работы требуется включить плагин чата."
+      nodes:
+        "action:send_chat_message": "Отправить сообщение в чат"
+        "trigger:chat_message_created": "Сообщение в чате создано"
+      chat_message_created:
+        channel_id: "Канал"
+      send_chat_message:
+        targets:
+          channel: "Канал"
+        channel_id: "Канал"
+        target_usernames: "Получатели"
+        message: "Сообщение"
+        actor_username: "Отправитель"
+      chat_approval:
+        message: "Сообщение"
+        buttons: "Кнопки"
+        value: "Значение"
+        style: "Стиль"
+        style_default: "Домашнюю страницу"
+        style_primary: "Основная"
+        style_success: "Успех"
+        icon: "Значок"
+        channel_id: "Канал"
+        timeout_minutes: "Тайм-аут (минуты)"

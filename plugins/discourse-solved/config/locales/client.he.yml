@@ -10,11 +10,33 @@ he:
       site_settings:
         categories:
           discourse_solved: "Discourse נפתר"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "פתרונות מקובלים"
+        sections:
+          support:
+            title: "תמיכה"
+            answerers:
+              staff: "סגל"
+              member: "חברים"
+              basic: "בסיסיים"
+            response_time:
+              buckets:
+                lt_1h: "< שעה"
+                gt_24h: "> 24 שעות"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "שינויים"
+        changes_removed: "הוסרה"
+        tag_names: "תגיות"
     notifications:
       alt:
         solved:
           accepted_notification: "התקבל"
+          topic_solved_notification: "נפתר"
     solutions: "פתרונות"
     solved:
       title: "נפתר"
@@ -29,9 +51,7 @@ he:
       solution_summary:
         one: "פתרון"
         two: "פתרונות"
-        many: "פתרונות"
         other: "פתרונות"
-      accepted_answer_solver_info: "נפתר על ידי %{user} ב־%{post}"
       accepted_answer_post_number: "פוסט %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -41,13 +61,15 @@ he:
       no_solved_topics_title: "עדיין לא פתרת אף נושא"
       no_solved_topics_title_others: "אין נושאים שנפתרו על ידי %{username} עדיין"
       no_solved_topics_body: "לאחר שכתבת תגובה מועילה לנושא, התגובה שלך עשויה להיבחר כפתרון על ידי בעלי הנושא או הסגל."
-      marked_solved_by: "סומן כפתור על ידי %{user}"
       move_post_cancel: "ביטול"
       confirm_solved_removal_confirm: "אישור"
       confirm_solved_removal_cancel: "ביטול"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: התשובה שלך נענתה?
         description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "הפוסט שלך סומן כפתרון"
       category_type_support:
@@ -61,6 +83,11 @@ he:
           solved: "נפתרו"
           unsolved: "לא נפתרו"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "נושא"
+            category: "קטגוריה"
       web_hooks:
         solved_event:
           group_name: "אירוע שנפתר"

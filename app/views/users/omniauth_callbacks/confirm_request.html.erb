@@ -1,11 +1,47 @@
-<div id='simple-container'>
-  <h2><%= t('login.omniauth_confirm_title', provider:(t "js.login.#{params[:provider]}.name", default: params[:provider])) %></h2>
-  <br/>
+<% provider_name = t("js.login.#{params[:provider]}.name", default: params[:provider].to_s.titleize) %>
 
-  <form method="post">
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-    <%= button_tag(type: "submit", class: "btn btn-primary") do %>
-        <%= SvgSprite.raw_svg('plug') %><%= t 'login.omniauth_confirm_button' %>
-    <% end %>
-  </form>
+<div class="omniauth-confirm">
+  <div class="omniauth-confirm__logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 103 104" width="56" height="56">
+      <g fill="none" fill-rule="nonzero">
+        <path fill="currentColor" d="M51.87 0C23.71 0 0 22.83 0 51v52.81l51.86-.05c28.16 0 51-23.71 51-51.87C102.86 23.73 80 0 51.87 0z"/>
+        <path fill="#FFF9AE" d="M52.37 19.74c-11.14.01-21.45 5.87-27.15 15.44-5.65 9.56-5.89 21.42-.59 31.22l-5.72 18.4 20.54-4.64c11.76 5.3 25.56 2.92 34.87-6.01 9.31-8.93 12.25-22.63 7.44-34.6-4.81-11.97-16.41-19.81-29.31-19.82h-.03z"/>
+        <path fill="#00AEEF" d="M77.09 70.91c-8.98 11.33-24.5 15.12-37.69 9.21l-20.54 4.7 20.91-2.47c13.86 8.12 31.61 4.55 41.25-8.3 9.64-12.85 8.1-30.89-3.56-41.93 8.77 11.49 8.62 27.47-.36 38.79z"/>
+        <path fill="#00A94F" d="M75.32 64.91c-7.75 12.2-22.78 17.59-36.52 13.09l-19.94 6.82 20.54-4.65c14.63 6.61 31.89 1.2 40.13-12.58 8.24-13.77 4.84-31.54-7.9-41.3 9.92 10.51 11.44 26.42 3.69 38.62z"/>
+        <path fill="#F15D22" d="M26.47 67.11c-5.72-13.8-1.01-29.72 11.31-38.18 12.32-8.45 28.87-7.13 39.69 3.18-10.02-13.15-28.47-16.36-42.34-7.36-13.87 8.99-18.47 27.15-10.55 41.65l-5.72 18.4 7.61-17.7z"/>
+        <path fill="#D0232B" d="M24.58 66.41c-7.1-13.12-4.07-29.42 7.29-39.1 11.35-9.68 27.93-10.11 39.76-1.01-11.35-11.95-29.98-13.18-42.8-2.81-12.82 10.37-15.52 28.84-6.2 42.44l-3.76 18.9 5.71-18.41z"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1 class="omniauth-confirm__title">
+    <%= t('login.omniauth_confirm_title', provider: provider_name) %>
+  </h1>
+
+  <p class="omniauth-confirm__subtitle">
+    <%= t('login.omniauth_confirm_description', provider: provider_name, site: SiteSetting.title) %>
+  </p>
+
+  <div class="omniauth-confirm__card">
+    <div class="omniauth-confirm__provider-info">
+      <div class="omniauth-confirm__provider-icon">
+        <%= SvgSprite.raw_svg('plug') %>
+      </div>
+      <div class="omniauth-confirm__provider-details">
+        <span class="omniauth-confirm__provider-name"><%= provider_name %></span>
+        <span class="omniauth-confirm__provider-description"><%= t('login.omniauth_confirm_provider_description') %></span>
+      </div>
+    </div>
+
+    <form method="post" class="omniauth-confirm__actions">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= button_tag(type: "submit", class: "btn btn-primary omniauth-confirm__continue-btn") do %>
+        <%= t('login.omniauth_confirm_button') %>
+      <% end %>
+    </form>
+  </div>
+
+  <p class="omniauth-confirm__footer">
+    <%= t('login.omniauth_confirm_footer_html', site: tag.strong(SiteSetting.title)) %>
+  </p>
 </div>

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class AdminStaffActionLogComponent extends Component {
@@ -25,10 +25,10 @@ export default class AdminStaffActionLogComponent extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.logs.staff_actions.modal_title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="theme-change-modal-body"
       class="history-modal"
+      @bodyClass="theme-change-modal-body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.logs.staff_actions.modal_title"}}
     >
       <:body>
         {{trustHTML this.diff}}

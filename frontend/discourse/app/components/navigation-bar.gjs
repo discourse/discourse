@@ -3,14 +3,14 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import NavigationItem from "discourse/components/navigation-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class NavigationBarComponent extends Component {
   @service site;
@@ -48,37 +48,37 @@ export default class NavigationBarComponent extends Component {
   }
 
   <template>
-    <ul id="navigation-bar" class="nav nav-pills">
+    <ul class="nav nav-pills" id="navigation-bar">
       {{#if this.showDropdown}}
         <li>
           <DMenu
-            @modalForMobile={{true}}
             @autofocus={{true}}
             @identifier="list-control-toggle-link"
+            @modalForMobile={{true}}
             @onRegisterApi={{this.onRegisterApi}}
           >
             <:trigger>
               <span
                 class="list-control-toggle-link__text"
               >{{this.selectedNavItem.displayName}}</span>
-              {{icon this.navigationBarIcon}}
+              {{dIcon this.navigationBarIcon}}
             </:trigger>
 
             <:content>
-              <DropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
+              <DDropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
                 {{#each @navItems as |navItem|}}
                   <NavigationItem
+                    class={{concat "nav-item_" navItem.name}}
+                    @category={{@category}}
                     @content={{navItem}}
                     @filterMode={{@filterMode}}
-                    @category={{@category}}
-                    class={{concat "nav-item_" navItem.name}}
                   />
 
                 {{/each}}
                 <dropdown.item>
                   <PluginOutlet
-                    @name="extra-nav-item"
                     @connectorTagName="span"
+                    @name="extra-nav-item"
                     @outletArgs={{lazyHash
                       category=@category
                       tag=@tag
@@ -86,29 +86,29 @@ export default class NavigationBarComponent extends Component {
                     }}
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </li>
         <li>
           <PluginOutlet
-            @name="inline-extra-nav-item"
             @connectorTagName="span"
+            @name="inline-extra-nav-item"
             @outletArgs={{lazyHash category=@category filterMode=@filterMode}}
           />
         </li>
       {{else}}
         {{#each @navItems as |navItem|}}
           <NavigationItem
+            class={{concat "nav-item_" navItem.name}}
+            @category={{@category}}
             @content={{navItem}}
             @filterMode={{@filterMode}}
-            @category={{@category}}
-            class={{concat "nav-item_" navItem.name}}
           />
         {{/each}}
         <PluginOutlet
-          @name="extra-nav-item"
           @connectorTagName="li"
+          @name="extra-nav-item"
           @outletArgs={{lazyHash
             category=@category
             tag=@tag

@@ -13,14 +13,14 @@ export default class Presence extends Component {
 
   <template>
     <div
+      class="topic-above-footer-buttons-outlet presence"
       style={{trustHTML
         (concat "--avatar-min-height: " this.avatarDimensions "px")
       }}
-      class="topic-above-footer-buttons-outlet presence"
     >
       <TopicPresenceDisplay
-        @topic={{@outletArgs.model}}
         @avatarSize={{AVATAR_SIZE}}
+        @topic={{@outletArgs.model}}
       />
     </div>
   </template>

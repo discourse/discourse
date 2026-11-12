@@ -5,9 +5,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 const INPUT_DELIMITER = "\n";
@@ -144,19 +144,19 @@ export default class SecretValueList extends Component {
           {{#each this.collection as |value index|}}
             <div class="value" data-index={{index}}>
               <DButton
+                class="btn-default remove-value-btn btn-small"
                 @action={{fn this.removeValue value}}
                 @icon="xmark"
-                class="btn-default remove-value-btn btn-small"
               />
               <Input
-                @value={{value.key}}
                 class="value-input"
+                @value={{value.key}}
                 {{on "focusout" (fn this.changeKey index)}}
               />
               <Input
-                @value={{value.secret}}
                 class="value-input"
                 @type={{if @isSecret "password" "text"}}
+                @value={{value.secret}}
                 {{on "focusout" (fn this.changeSecret index)}}
               />
             </div>
@@ -165,21 +165,21 @@ export default class SecretValueList extends Component {
       {{/if}}
 
       <div class="value">
-        <TextField
-          @value={{this.newKey}}
-          @placeholder={{this.setting.placeholder.key}}
+        <DTextField
           class="new-value-input key"
+          @placeholder={{this.setting.placeholder.key}}
+          @value={{this.newKey}}
         />
         <Input
-          @type={{if @isSecret "password" "text"}}
-          @value={{this.newSecret}}
           class="new-value-input secret"
           placeholder={{this.setting.placeholder.value}}
+          @type={{if @isSecret "password" "text"}}
+          @value={{this.newSecret}}
         />
         <DButton
+          class="add-value-btn btn-small"
           @action={{this.addValue}}
           @icon="plus"
-          class="add-value-btn btn-small"
         />
       </div>
     </div>

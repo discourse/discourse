@@ -11,11 +11,11 @@ end
 # Table name: discourse_subscriptions_subscriptions
 #
 #  id          :bigint           not null, primary key
-#  customer_id :bigint           not null
-#  external_id :string           not null
+#  status      :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  status      :string
+#  customer_id :bigint           not null
+#  external_id :string           not null
 #
 # Indexes
 #

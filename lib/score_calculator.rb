@@ -49,24 +49,27 @@ SQL
     limit = 20_000
 
     builder = DB.build <<~SQL
+      WITH eligible_posts AS (
+        SELECT posts.id, posts.topic_id, posts.score
+        FROM posts
+        JOIN topics ON posts.topic_id = topics.id
+        /*where*/
+      ), ranked_posts AS (
+        SELECT id, percent_rank()
+                     OVER (PARTITION BY topic_id ORDER BY score DESC) AS percent_rank
+        FROM eligible_posts
+      )
       UPDATE posts
       SET percent_rank = X.percent_rank
       FROM (
-        SELECT posts.id, Y.percent_rank
+        SELECT posts.id, ranked_posts.percent_rank
         FROM posts
-        JOIN (
-          SELECT id, percent_rank()
-                       OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
-          FROM posts
-         ) Y ON Y.id = posts.id
-         JOIN topics ON posts.topic_id = topics.id
-        /*where*/
+        JOIN ranked_posts ON ranked_posts.id = posts.id
+        WHERE posts.percent_rank IS NULL OR ranked_posts.percent_rank <> posts.percent_rank
         LIMIT #{limit}
       ) AS X
       WHERE posts.id = X.id
     SQL
-
-    builder.where("posts.percent_rank IS NULL OR Y.percent_rank <> posts.percent_rank")
 
     filter_topics(builder, opts)
 
@@ -76,6 +79,12 @@ SQL
 
   def update_topics_rank(opts)
     builder = DB.build <<~SQL
+      WITH eligible_posts AS (
+        SELECT p.topic_id, p.score
+        FROM posts AS p
+        JOIN topics ON p.topic_id = topics.id
+        /*where*/
+      )
       UPDATE topics AS topics
       SET has_summary = (topics.like_count >= :likes_required AND
                          topics.posts_count >= :posts_required AND
@@ -84,9 +93,17 @@ SQL
       FROM (SELECT p.topic_id,
                    MAX(p.score) AS max_score,
                    AVG(p.score) AS avg_score
-            FROM posts AS p
+            FROM eligible_posts AS p
             GROUP BY p.topic_id) AS x
-            /*where*/
+      WHERE x.topic_id = topics.id AND
+        (
+          (topics.score <> x.avg_score OR topics.score IS NULL) OR
+          (topics.has_summary IS NULL OR topics.has_summary <> (
+            topics.like_count >= :likes_required AND
+            topics.posts_count >= :posts_required AND
+            x.max_score >= :score_required
+          ))
+        )
     SQL
 
     defaults = {
@@ -95,21 +112,9 @@ SQL
       score_required: SiteSetting.summary_score_threshold,
     }
 
-    builder.where(<<~SQL, defaults)
-      x.topic_id = topics.id AND
-      (
-        (topics.score <> x.avg_score OR topics.score IS NULL) OR
-        (topics.has_summary IS NULL OR topics.has_summary <> (
-          topics.like_count >= :likes_required AND
-          topics.posts_count >= :posts_required AND
-          x.max_score >= :score_required
-        ))
-      )
-    SQL
-
     filter_topics(builder, opts)
 
-    builder.exec
+    builder.exec(defaults)
   end
 
   def filter_topics(builder, opts)

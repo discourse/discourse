@@ -2,7 +2,6 @@
 
 RSpec.describe Chat::StructuredChannelSerializer do
   fab!(:user1, :user)
-  fab!(:guardian) { Guardian.new(user1) }
   fab!(:user2, :user)
   fab!(:user3, :user)
   fab!(:channel1, :category_channel)
@@ -31,6 +30,8 @@ RSpec.describe Chat::StructuredChannelSerializer do
   fab!(:membership6) do
     Fabricate(:user_chat_channel_membership_for_dm, user: user3, chat_channel: channel4)
   end
+
+  let(:guardian) { Guardian.new(user1) }
 
   def fetch_data
     Chat::ChannelFetcher.structured(guardian)
@@ -127,6 +128,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             archive_status
             user_tracking_state
             user_has_threads
+            user_channel_mute
           ],
         )
       end
@@ -143,6 +145,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
               Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
               Chat::Publisher.user_tracking_state_message_bus_channel(user1.id),
               Chat::Publisher.user_has_threads_message_bus_channel(user1.id),
+              Chat::Publisher.user_channel_mute_message_bus_channel(user1.id),
               Chat::Publisher.new_messages_message_bus_channel(channel1.id),
               Chat::Publisher.new_mentions_message_bus_channel(channel1.id),
               Chat::Publisher.kick_users_message_bus_channel(channel1.id),
@@ -171,15 +174,17 @@ RSpec.describe Chat::StructuredChannelSerializer do
           .expects(:new)
           .with(
             channel1,
-            root: nil,
-            scope: guardian,
-            membership: membership1,
-            new_messages_message_bus_last_id: 0,
-            new_mentions_message_bus_last_id: 0,
-            kick_message_bus_last_id: 0,
-            channel_message_bus_last_id: 0,
-            can_join_chat_channel: true,
-            post_allowed_category_ids: nil,
+            has_entries(
+              root: nil,
+              scope: guardian,
+              membership: membership1,
+              new_messages_message_bus_last_id: 0,
+              new_mentions_message_bus_last_id: 0,
+              kick_message_bus_last_id: 0,
+              channel_message_bus_last_id: 0,
+              can_join_chat_channel: true,
+              post_allowed_category_ids: nil,
+            ),
           )
           .once
         described_class.new(data, scope: guardian).as_json

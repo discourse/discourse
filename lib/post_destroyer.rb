@@ -5,6 +5,8 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
+  TOPIC_CLOSED_BY_AUTHOR_DELETION = "topic_closed_by_author_deletion"
+
   def self.destroy_old_hidden_posts
     Post
       .where(deleted_at: nil, hidden: true)
@@ -46,14 +48,14 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable = nil, defer_reply_flags: true)
+  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ reviewable: reviewable, notify_responders: true, parent_post: post })
+      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -77,12 +79,14 @@ class PostDestroyer
 
     should_reset_bumped_at = @post.is_last_reply? && !@post.whisper?
 
-    if delete_removed_posts_after < 1 || post_is_reviewable? ||
-         Guardian.new(@user).can_moderate_topic?(@topic) || permanent?
+    if delete_removed_posts_after < 1 || post_is_reviewable? || can_moderate_this_topic? ||
+         permanent?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
     end
+
+    resolve_reviewables_for_author_deletion if @user.id == @post.user_id
 
     UserActionManager.post_destroyed(@post)
 
@@ -112,15 +116,16 @@ class PostDestroyer
   end
 
   def recover
-    if (post_is_reviewable? || Guardian.new(@user).can_moderate_topic?(@post.topic)) &&
-         @post.deleted_at
-      staff_recovered
-    elsif @user.staff? || @user.id == @post.user_id
-      user_recovered
-    end
+    staff_recovery = (post_is_reviewable? || can_moderate_this_topic?) && @post.deleted_at.present?
+    user_recovery = !staff_recovery && (@user.staff? || @user.id == @post.user_id)
+
+    staff_recovered if staff_recovery
+    user_recovered if user_recovery
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
-    @topic.recover!(@user) if @post.is_first_post?
+    if (staff_recovery || user_recovery) && @post.is_first_post? && @post.deleted_at.nil?
+      @topic.recover!(@user)
+    end
     @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
@@ -134,6 +139,7 @@ class PostDestroyer
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
       DiscourseEvent.trigger(:topic_recovered, @topic, @user)
+
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(
           @topic,
@@ -141,9 +147,12 @@ class PostDestroyer
           @opts.slice(:context),
         )
       end
+
       if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
         Discourse.clear_urls!
       end
+    else
+      StaffActionLogger.new(@user).log_post_recover(@post) if @user.id != @post.user_id
     end
   end
 
@@ -203,16 +212,18 @@ class PostDestroyer
       remove_associated_notifications
 
       if @user.id != @post.user_id && !@opts[:skip_staff_log]
+        logger = StaffActionLogger.new(@user)
+
         if @post.topic && @post.is_first_post?
-          StaffActionLogger.new(@user).log_topic_delete_recover(
+          logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context),
+            @opts.slice(:context, :reviewable_id),
           )
         else
-          StaffActionLogger.new(@user).log_post_deletion(
+          logger.log_post_deletion(
             @post,
-            **@opts.slice(:context),
+            **@opts.slice(:context, :reviewable_id),
             permanent: permanent?,
           )
         end
@@ -272,13 +283,17 @@ class PostDestroyer
         force_new_version: true,
         deleting_post: true,
         skip_validations: true,
+        bypass_slow_mode: true,
       )
 
       Post.transaction do
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
-        @post.topic.update_column(:closed, true) if @post.is_first_post?
-        resolve_reviewables_for_author_deletion
+
+        if @post.is_first_post? && @post.topic.open?
+          @post.topic.update_column(:closed, true)
+          @post.upsert_custom_fields(TOPIC_CLOSED_BY_AUTHOR_DELETION => true)
+        end
       end
     end
   end
@@ -289,24 +304,44 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.topic.update_column(:closed, false) if @post.is_first_post?
+
+      if @post.is_first_post? && @post.custom_fields.delete(TOPIC_CLOSED_BY_AUTHOR_DELETION)
+        @post.topic.update_column(:closed, false)
+        @post.save_custom_fields
+      end
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
-    last_revision = @post.revisions.last
-    if last_revision.present? && last_revision.modifications["raw"].present?
-      @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
+    deletion_revision = @post.revisions.where(user_id: @post.user_id).last
+    if deletion_revision&.number == @post.version && deletion_revision.modifications["raw"].present?
+      @post.revise(
+        @user,
+        { raw: deletion_revision.modifications["raw"][0] },
+        force_new_version: true,
+        bypass_slow_mode: true,
+        recovering_post: true,
+      )
     end
 
-    restore_reviewables_for_author_recovery if @user.id == @post.user_id
+    if @user.id == @post.user_id
+      restore_reviewables_for_author_recovery(deletion_revision&.created_at)
+    end
   end
 
   private
 
+  def guardian
+    @guardian ||= Guardian.new(@user)
+  end
+
+  def can_moderate_this_topic?
+    guardian.can_moderate_topic?(@topic) || guardian.can_delete_all_posts_and_topics?
+  end
+
   def post_is_reviewable?
     return true if @user.staff?
 
-    Guardian.new(@user).can_review_topic?(@topic) && Reviewable.exists?(target: @post)
+    guardian.can_review_topic?(@topic) && Reviewable.exists?(target: @post)
   end
 
   # we need topics to change if ever a post in them is deleted or created
@@ -327,7 +362,7 @@ class PostDestroyer
         .select(:created_at, :user_id, :post_number)
         .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
         .where.not(user_id: nil)
-        .where.not(post_type: Post.types[:whisper])
+        .where.not(post_type: [Post.types[:whisper], Post.types[:small_action]])
         .order("created_at desc")
         .first
 
@@ -379,7 +414,13 @@ class PostDestroyer
 
   def agree(reviewable)
     notify_deletion(reviewable)
-    result = reviewable.perform(@user, :agree_and_keep, post_was_deleted: true)
+    result =
+      reviewable.perform(
+        @user,
+        :agree_and_keep,
+        post_was_deleted: true,
+        guardian: Discourse.system_user.guardian,
+      )
     reviewable.transition_to(result.transition_to, @user)
   end
 
@@ -389,7 +430,9 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
-    if @opts[:reviewable]
+    return if @user.id == @post.user_id
+
+    if @opts[:reviewable_id]
       handle_explicit_reviewable
     elsif @post.reviewable_flag
       handle_post_reviewable_flag
@@ -397,8 +440,11 @@ class PostDestroyer
   end
 
   def handle_explicit_reviewable
+    reviewable = Reviewable.find_by(id: @opts[:reviewable_id])
+    return unless reviewable
+
     notify_deletion(
-      @opts[:reviewable],
+      reviewable,
       { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] },
     )
 
@@ -442,6 +488,7 @@ class PostDestroyer
           end
         ),
       message_options: {
+        **Dsa::AppealInstructions.message_options,
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,
@@ -550,12 +597,19 @@ class PostDestroyer
   end
 
   def resolve_reviewables_for_author_deletion
-    # Don't auto-ignore if user was penalized for this post - staff should review the penalty.
-    return if user_penalized_for_post?
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
 
-    Reviewable
-      .where(target: @post, status: Reviewable.statuses[:pending])
-      .find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
+    if user_penalized_for_post?
+      reviewables.find_each do |reviewable|
+        note = I18n.t("reviewables.post_deleted_by_author_after_penalty")
+        next if reviewable.reviewable_notes.exists?(user: Discourse.system_user, content: note)
+
+        reviewable.reviewable_notes.create!(user: Discourse.system_user, content: note)
+      end
+      return
+    end
+
+    reviewables.find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
   end
 
   def user_penalized_for_post?
@@ -567,17 +621,23 @@ class PostDestroyer
     )
   end
 
-  def restore_reviewables_for_author_recovery
-    # Only restore if it was reviewed by system user
-    reviewables =
-      Reviewable
-        .where(target: @post, status: Reviewable.statuses[:ignored])
-        .joins(
-          "LEFT JOIN reviewable_scores ON reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewed_by_id = #{Discourse::SYSTEM_USER_ID}",
-        )
-        .where("reviewable_scores.id IS NOT NULL")
+  def restore_reviewables_for_author_recovery(user_deleted_at)
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:ignored])
 
     reviewables.each do |reviewable|
+      restored_scores =
+        reviewable
+          .reviewable_scores
+          .ignored
+          .where(reviewed_by_id: Discourse::SYSTEM_USER_ID)
+          .where("reviewed_at >= ?", user_deleted_at || @post.created_at)
+          .update_all(
+            status: ReviewableScore.statuses[:pending],
+            reviewed_by_id: nil,
+            reviewed_at: nil,
+          )
+      next if restored_scores.zero?
+
       reviewable.reviewable_notes.create!(
         user: Discourse.system_user,
         content: I18n.t("reviewables.post_restored_by_author"),

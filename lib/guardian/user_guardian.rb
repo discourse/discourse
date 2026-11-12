@@ -2,17 +2,58 @@
 
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
+  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar current]
+
+  def can_edit_avatar?(target_user)
+    can_edit?(target_user) && !SiteSetting.auth_overrides_avatar &&
+      !SiteSetting.discourse_connect_overrides_avatar
+  end
+
+  def can_pick_avatar_source?(target_user, type)
+    return false unless can_edit_avatar?(target_user)
+
+    case type
+    when "system"
+      return true
+    when *AVATAR_TYPES_WITH_UPLOAD
+      return false if type == "gravatar" && !SiteSetting.gravatar_enabled?
+
+      return true if target_user.is_system_user?
+
+      return target_user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
+    when "associated_account"
+      unless target_user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
+        return false
+      end
+    else
+      return false
+    end
+
+    case SiteSetting.selectable_avatars_mode
+    when "no_one"
+      false
+    when "staff"
+      target_user.staff?
+    when /\Atl([1-4])\z/
+      target_user.staff? || target_user.trust_level >= Regexp.last_match(1).to_i
+    else
+      true
+    end
+  end
+
   def can_claim_reviewable_topic?(topic, automatic = false)
     (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
 
   def can_pick_avatar?(user_avatar, upload)
-    return false unless self.user
+    return false unless user
     return true if is_admin?
     # can always pick blank avatar
     return true if !upload
+    return true if user_avatar.user.uploaded_avatar_id == upload.id
     return true if user_avatar.contains_upload?(upload.id)
-    return true if upload.user_id == user_avatar.user_id || is_my_own?(upload)
+    return true if is_my_own?(upload)
+    return true if upload.user_id == user_avatar.user_id && can_see_upload?(upload)
 
     UserUpload.exists?(upload_id: upload.id, user_id: user.id)
   end
@@ -52,28 +93,33 @@ module UserGuardian
     is_me?(user) || is_admin?
   end
 
+  def can_see_bookmarks?(user)
+    is_me?(user) || is_admin?
+  end
+
   def can_silence_user?(user)
     user && is_staff? && not(user.staff?)
   end
 
   def can_unsilence_user?(user)
-    user && is_staff?
+    user && is_staff? && (!user.staff? || is_admin?)
   end
 
   def can_delete_user?(user)
     return false if user.nil? || user.admin?
 
     if is_me?(user)
-      !SiteSetting.enable_discourse_connect &&
-        !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
-    else
-      is_staff? &&
-        (
-          user.first_post_created_at.nil? ||
-            !user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT) ||
-            user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
-        )
+      return false if SiteSetting.enable_discourse_connect
+
+      return !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
     end
+
+    return false unless is_staff?
+    return false if user.moderator? && !is_admin?
+    return true if user.first_post_created_at.nil?
+    return true unless user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT)
+
+    user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
   end
 
   def can_anonymize_user?(user)
@@ -85,7 +131,7 @@ module UserGuardian
   end
 
   def can_merge_users?(source_user, target_user)
-    can_merge_user?(source_user) && !target_user.nil?
+    can_merge_user?(source_user) && !target_user.nil? && source_user.id != target_user.id
   end
 
   def can_see_warnings?(user)
@@ -101,6 +147,14 @@ module UserGuardian
   end
 
   def can_check_sso_details?(user)
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_view_sso_details))
+  end
+
+  def can_check_sso_email?(user)
+    user && is_admin?
+  end
+
+  def can_check_sso_payload?(user)
     user && is_admin?
   end
 
@@ -124,6 +178,7 @@ module UserGuardian
 
   def can_see_user_status?(user)
     return false if user.blank?
+    return false if user.user_option&.hide_profile?
 
     if user.silenced?
       is_me?(user) || is_staff?
@@ -140,12 +195,17 @@ module UserGuardian
     true
   end
 
+  def can_search_staged_users?(user_directory_search: false)
+    is_staff? || (user_directory_search == true && SiteSetting.enable_user_directory?)
+  end
+
   def public_can_see_profiles?
     !SiteSetting.hide_user_profiles_from_public || !anonymous?
   end
 
   def can_see_profile?(user)
     return false if user.blank?
+    return false unless public_can_see_profiles?
     return true if is_me?(user) || is_staff?
 
     profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
@@ -167,7 +227,7 @@ module UserGuardian
     !profile_hidden
   end
 
-  def can_see_user_actions?(user, action_types)
+  def can_see_user_actions?(user, action_types = [])
     return true if !@user.anonymous? && (is_me?(user) || is_admin?)
     return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
@@ -179,12 +239,10 @@ module UserGuardian
     is_staff_or_is_me = is_staff? || is_me?(user)
     cache_key = is_staff_or_is_me ? :staff_or_me : :other
 
-    @allowed_user_field_ids[cache_key] ||= begin
-      if is_staff_or_is_me
-        UserField.pluck(:id)
-      else
-        UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
-      end
+    @allowed_user_field_ids[cache_key] ||= if is_staff_or_is_me
+      UserField.pluck(:id)
+    else
+      UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
     end
   end
 
@@ -198,19 +256,18 @@ module UserGuardian
   end
 
   def can_see_review_queue?
-    is_staff? ||
-      (
-        SiteSetting.enable_category_group_moderation &&
-          Reviewable
-            .joins(
-              "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
-            )
-            .where(
-              category_id: allowed_category_ids,
-              "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
-            )
-            .exists?
+    return true if is_staff?
+    return false if !category_group_moderation_allowed? || !@user.category_group_moderator?
+
+    Reviewable
+      .joins(
+        "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
       )
+      .where(
+        category_id: allowed_category_ids,
+        "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
+      )
+      .exists?
   end
 
   def can_see_summary_stats?(target_user)
@@ -249,5 +306,45 @@ module UserGuardian
     # possible to use this modifier to open up theme creation permissions (e.g.
     # to non-admins)
     DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_theme, true, self)
+  end
+
+  def can_edit_theme?(theme)
+    return false if !is_admin? || theme.blank?
+    # theme imports and maintenance tasks run as the system user and have to
+    # apply a theme in full, so plugin restrictions don't apply to them
+    return true if @user.is_system_user?
+    # like the creation modifier, this one can only further restrict which
+    # themes can be changed or deleted
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_edit_theme, true, self, theme)
+  end
+
+  # Including a component in a theme, or removing it, changes where the
+  # component's code runs, so both sides of the change have to be editable.
+  def can_edit_theme_relations?(theme, child_theme_ids: nil, parent_theme_ids: nil)
+    return false if !can_edit_theme?(theme)
+
+    changed_ids = []
+    if !child_theme_ids.nil?
+      changed_ids.concat(changed_theme_ids(theme.child_theme_ids, child_theme_ids))
+    end
+    if !parent_theme_ids.nil?
+      changed_ids.concat(changed_theme_ids(theme.parent_theme_ids, parent_theme_ids))
+    end
+    return true if changed_ids.empty?
+
+    Theme.where(id: changed_ids.uniq).all? { |related| can_edit_theme?(related) }
+  end
+
+  def can_create_color_scheme?
+    return false if !is_admin?
+    # like the theme modifiers, this one can only further restrict palette creation
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_color_scheme, true, self)
+  end
+
+  private
+
+  def changed_theme_ids(current_ids, new_ids)
+    new_ids = Array(new_ids).map(&:to_i)
+    (current_ids - new_ids) | (new_ids - current_ids)
   end
 end

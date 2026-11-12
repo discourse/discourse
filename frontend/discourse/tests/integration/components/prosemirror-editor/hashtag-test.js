@@ -40,6 +40,13 @@ module(
               style_type: "square",
               id: 5,
             },
+            {
+              type: "category",
+              ref: "meeting-room",
+              text: '<b id="hashtag-injected">Meeting</b>',
+              style_type: "square",
+              id: 6,
+            },
           ],
           tags: [
             {
@@ -94,6 +101,11 @@ module(
         `<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=${v}\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>`,
         "#welcome",
       ],
+      "hashtag with HTML in text": [
+        "#meeting-room",
+        '<p><a class="hashtag-cooked" data-name="meeting-room" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-square hashtag-color--category-6"></span>&lt;b id="hashtag-injected"&gt;Meeting&lt;/b&gt;</a></p>',
+        "#meeting-room",
+      ],
       "anchor in link matching hashtag is not converted": [
         "[Docs](https://example.com/docs/#product)",
         '<p><a href="https://example.com/docs/#product">Docs</a></p>',
@@ -104,11 +116,34 @@ module(
     Object.entries(testCases).forEach(
       ([name, [markdown, expectedHtml, expectedMarkdown]]) => {
         test(name, async function (assert) {
-          this.siteSettings.rich_editor = true;
-
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       }
     );
+
+    test("renders without crashing when the server returns a type that isn't registered on the client", async function (assert) {
+      // Can happen in safe mode: plugin Ruby still runs and resolves the
+      // hashtag, but the plugin JS that would register the "channel" type
+      // class isn't loaded.
+      pretender.get("/hashtags", () =>
+        response({
+          channels: [
+            {
+              type: "channel",
+              ref: "unknown-type-channel",
+              icon: "comment",
+              id: 1,
+            },
+          ],
+        })
+      );
+
+      await testMarkdown(
+        assert,
+        "Hello #unknown-type-channel",
+        '<p>Hello <a class="hashtag-cooked" data-name="unknown-type-channel" data-processed="true" contenteditable="false" draggable="true">unknown-type-channel</a></p>',
+        "Hello #unknown-type-channel"
+      );
+    });
   }
 );

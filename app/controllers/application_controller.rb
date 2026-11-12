@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyMixin
+  include ArchivedSiteMixin
   include ThemeResolver
   include VaryHeader
 
@@ -40,8 +41,8 @@ class ApplicationController < ActionController::Base
   before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
-  before_action :set_mobile_view
   before_action :block_if_readonly_mode
+  before_action :block_if_archived
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
@@ -79,15 +80,24 @@ class ApplicationController < ActionController::Base
   helper_method :show_browser_update?
 
   def use_crawler_layout?
-    @use_crawler_layout ||=
-      request.user_agent && (request.media_type.blank? || request.media_type.include?("html")) &&
-        !%w[json rss].include?(params[:format]) &&
-        (
-          has_escaped_fragment? || params.key?("print") || show_browser_update? ||
-            CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
-        )
+    @use_crawler_layout ||= CrawlerDetection.crawler_layout_request?(request)
   end
   helper_method :use_crawler_layout?
+
+  # Kept in the env so that Middleware::CrawlerHooks rewrites links to match the page's tags.
+  def plain_url_serves_default_locale?
+    key = ContentLocalization::PLAIN_URL_SERVES_DEFAULT_LOCALE_ENV
+    return request.env[key] if request.env.key?(key)
+
+    request.env[key] = current_user.nil? &&
+      ContentLocalization.plain_url_serves_default_locale?(request)
+  end
+  helper_method :plain_url_serves_default_locale?
+
+  def include_splash_screen?
+    !Rails.env.test?
+  end
+  helper_method :include_splash_screen?
 
   def perform_refresh_session
     refresh_session(current_user) unless @readonly_mode
@@ -99,10 +109,15 @@ class ApplicationController < ActionController::Base
     response.cache_control[:extras] = ["immutable"]
   end
 
+  def bfcache_compatibility_mode?
+    SiteSetting.cache_control_bfcache_compatibility
+  end
+  helper_method :bfcache_compatibility_mode?
+
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.cache_control[:no_cache] = true
-      response.cache_control[:extras] = ["no-store"]
+      response.cache_control[:extras] = [bfcache_compatibility_mode? ? "private" : "no-store"]
     end
     response.headers["Discourse-No-Onebox"] = "1" if SiteSetting.login_required
   end
@@ -111,24 +126,15 @@ class ApplicationController < ActionController::Base
     response.headers.delete("X-Frame-Options") if SiteSetting.allow_embedding_site_in_an_iframe
   end
 
-  def ember_cli_required?
-    Rails.env.development? && ENV["ALLOW_EMBER_CLI_PROXY_BYPASS"] != "1" &&
-      request.headers["X-Discourse-Ember-CLI"] != "true"
-  end
-
-  def application_layout
-    ember_cli_required? ? "ember_cli" : "application"
-  end
-
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return application_layout
+      return "application"
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? "crawler" : application_layout
+    use_crawler_layout? ? "crawler" : "application"
   end
 
   class RenderEmpty < StandardError
@@ -139,6 +145,12 @@ class ApplicationController < ActionController::Base
 
   rescue_from RenderEmpty do
     with_resolved_locale { render "default/empty" }
+  end
+
+  rescue_from EmberAssets::BuildError do |e|
+    @build_error = e.details
+    response.headers["Cache-Control"] = "no-store"
+    render "default/build_error", layout: false, status: :service_unavailable
   end
 
   rescue_from ArgumentError do |e|
@@ -152,7 +164,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    rescue_with_handler(Discourse::ReadOnly) || raise
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -163,7 +175,7 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t("site_setting_missing", name: e.message), status: 500
   end
 
-  rescue_from ActionController::RoutingError, PluginDisabled do
+  rescue_from ActionController::RoutingError, ActionDispatch::MissingController, PluginDisabled do
     # This error is raised outside of the normal request response cycle and is called via the
     # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
     # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
@@ -254,6 +266,7 @@ class ApplicationController < ActionController::Base
       custom_message: e.custom_message,
       custom_message_params: e.custom_message_params,
       group: e.group,
+      authentication_failed: e.opts[:authentication_failed],
     )
   end
 
@@ -265,6 +278,21 @@ class ApplicationController < ActionController::Base
         end
         format.html do
           render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
+      end
+    end
+  end
+
+  rescue_from Discourse::SiteArchived do
+    unless response_body
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t("site_archived_error"), type: :site_archived, status: 503
+        end
+        format.html do
+          render status: :service_unavailable,
+                 layout: "no_ember",
+                 template: "exceptions/site_archived"
         end
       end
     end
@@ -295,8 +323,8 @@ class ApplicationController < ActionController::Base
     opts ||= {}
 
     show_json_errors =
-      (request.format && request.format.json?) || (request.xhr?) ||
-        ((params[:external_id] || "").to_s.ends_with?(".json"))
+      (request.format && request.format.json?) || request.xhr? ||
+        (params[:external_id] || "").to_s.ends_with?(".json")
 
     if type == :not_found && opts[:check_permalinks]
       url = opts[:original_path] || request.fullpath
@@ -304,7 +332,7 @@ class ApplicationController < ActionController::Base
 
       # there are some cases where we have a permalink but no url
       # cause category / topic was deleted
-      if permalink.present? && permalink.target_url
+      if permalink.present? && guardian.can_see_permalink_target?(permalink) && permalink.target_url
         # permalink present, redirect to that URL
         redirect_with_client_support permalink.target_url,
                                      status: :moved_permanently,
@@ -313,37 +341,41 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    message = title = nil
+    message = nil
     with_resolved_locale(check_current_user: false) do
-      if opts[:custom_message]
-        title = message = I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
-      else
-        message = I18n.t(type)
-        if status_code == 403
-          title = I18n.t("page_forbidden.title")
+      message =
+        if opts[:custom_message]
+          I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
         else
-          title = I18n.t("page_not_found.title")
+          I18n.t(type)
         end
-      end
     end
 
-    error_page_opts = { title: title, status: status_code, group: opts[:group] }
+    error_page_opts = {
+      status: status_code,
+      group: opts[:group],
+      custom_message: opts[:custom_message],
+      custom_message_params: opts[:custom_message_params],
+    }
 
     if show_json_errors
+      authentication_failed = opts[:authentication_failed]
       opts = { type: type, status: status_code }
 
-      with_resolved_locale(check_current_user: false) do
-        # Include error in HTML format for topics#show.
-        if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
-             (
-               request.params[:controller] == "categories" &&
-                 request.params[:action] == "find_by_slug"
-             )
-          opts[:extras] = {
-            title: I18n.t("page_not_found.page_title"),
-            html: build_not_found_page(error_page_opts),
-            group: error_page_opts[:group],
-          }
+      if !authentication_failed
+        with_resolved_locale do
+          # Include error in HTML format for topics#show.
+          if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
+               (
+                 request.params[:controller] == "categories" &&
+                   request.params[:action] == "find_by_slug"
+               )
+            opts[:extras] = {
+              title: I18n.t("page_not_found.page_title"),
+              html: build_not_found_page(error_page_opts),
+              group: error_page_opts[:group],
+            }
+          end
         end
       end
 
@@ -379,10 +411,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user_for_logs
-    if current_user
-      Logster.add_to_env(request.env, "username", current_user.username)
-      response.headers["X-Discourse-Username"] = current_user.username
-    end
+    Logster.add_to_env(request.env, "username", current_user.username) if current_user
     response.headers["X-Discourse-Route"] = "#{controller_path}/#{action_name}"
   end
 
@@ -443,10 +472,6 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(locale) { yield }
   end
 
-  def set_mobile_view
-    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
-  end
-
   NO_THEMES = "no_themes"
   NO_PLUGINS = "no_plugins"
   NO_UNOFFICIAL_PLUGINS = "no_unofficial_plugins"
@@ -480,7 +505,7 @@ class ApplicationController < ActionController::Base
   def guardian
     # sometimes we log on a user in the middle of a request so we should throw
     # away the cached guardian instance when we do that
-    if (@guardian&.user).blank? && current_user.present?
+    if @guardian&.user.blank? && current_user.present?
       @guardian = Guardian.new(current_user, request)
     end
     @guardian ||= Guardian.new(current_user, request)
@@ -567,6 +592,15 @@ class ApplicationController < ActionController::Base
     user
   end
 
+  def fetch_target_user
+    if params[:username].present? || params[:external_id].present?
+      raise Discourse::InvalidAccess if !is_api? || !guardian.is_admin?
+      fetch_user_from_params
+    else
+      current_user
+    end
+  end
+
   def post_ids_including_replies
     post_ids = params[:post_ids].map(&:to_i)
     post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_post_id) if params[
@@ -584,15 +618,14 @@ class ApplicationController < ActionController::Base
 
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
-    if permalink && permalink.target_url
+    if permalink && guardian.can_see_permalink_target?(permalink) && permalink.target_url
       redirect_to permalink.target_url, status: :moved_permanently
     end
   end
 
   def rate_limit_second_factor!(user)
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
+    rate_limit_second_factor_by_ip!
+    rate_limit_second_factor_by_account!(user)
   end
 
   def login_method
@@ -601,6 +634,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_second_factor_by_ip!
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def rate_limit_second_factor_by_account!(user)
+    return if params[:second_factor_token].blank? || user.blank?
+    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+  end
 
   # This method is intended to be a no-op.
   # The only reason this `before_action` callback continues to exist is for backwards compatibility purposes which we cannot easily
@@ -619,7 +662,7 @@ class ApplicationController < ActionController::Base
       ApplicationLayoutPreloader.new(
         guardian:,
         theme_id: @theme_id,
-        theme_target: view_context.mobile_view? ? :mobile : :desktop,
+        theme_target: view_context.mobile_device? ? :mobile : :desktop,
         login_method:,
       )
   end
@@ -635,6 +678,7 @@ class ApplicationController < ActionController::Base
   #   type    - a machine-readable description of the error
   #   status  - HTTP status code to return
   #   headers - extra headers for the response
+  #   skip_error_prefix - display a single error without the client's generic prefix
   def render_json_error(obj, opts = {})
     opts = { status: opts } if opts.is_a?(Integer)
     opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
@@ -704,8 +748,23 @@ class ApplicationController < ActionController::Base
     false
   end
 
+  def mini_profiler_flamegraph_request?
+    return false if !mini_profiler_enabled?
+
+    mini_profiler_matches_action?("flamegraph") ||
+      mini_profiler_matches_action?("async-flamegraph") ||
+      request.referer.to_s.match?(/pp=async-flamegraph/)
+  end
+
   def authorize_mini_profiler
     MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
+  end
+
+  def mini_profiler_matches_action?(action)
+    profile_parameter = Regexp.escape(MINI_PROFILER_CLASS.config.profile_parameter)
+
+    request.query_string.match?(/#{profile_parameter}=#{Regexp.escape(action)}/) ||
+      request.get_header("HTTP_X_RACK_MINI_PROFILER") == action
   end
 
   def check_xhr
@@ -781,7 +840,11 @@ class ApplicationController < ActionController::Base
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
-      return if request.path == path("/") && !cookies[:authentication_data]
+      # Only the login landing page is public; other routes at the root still require login.
+      if request.path == path("/") && !cookies[:authentication_data] &&
+           controller_name == "home_page" && action_name == "blank"
+        return
+      end
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")
@@ -797,6 +860,9 @@ class ApplicationController < ActionController::Base
     # - one_time_password scope is allowed
     if !current_user && params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect)
       begin
+        # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit
+        # length instead of parsing one, so reject non-strings before it.
+        raise OpenSSL::PKey::RSAError if !params[:user_api_public_key].is_a?(String)
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")
@@ -839,10 +905,8 @@ class ApplicationController < ActionController::Base
 
   def should_enforce_2fa?
     enforcing_2fa =
-      (
-        (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
-          SiteSetting.enforce_second_factor == "all"
-      )
+      (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
+        SiteSetting.enforce_second_factor == "all"
     !disqualified_from_2fa_enforcement && enforcing_2fa &&
       !current_user.has_any_second_factor_methods_enabled?
   end
@@ -869,6 +933,8 @@ class ApplicationController < ActionController::Base
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
+      cookies[:destination_url] = destination_url.presence
+
       rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
 
       if rate_limiter.performed!(raise_error: false)
@@ -917,10 +983,17 @@ class ApplicationController < ActionController::Base
 
     @container_class = "wrap not-found-container"
     @page_title = I18n.t("page_not_found.page_title")
-    @title = opts[:title] || I18n.t("page_not_found.title")
+    @title =
+      if opts[:custom_message]
+        I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
+      elsif opts[:status] == 403
+        I18n.t("page_forbidden.title")
+      else
+        I18n.t("page_not_found.title")
+      end
     @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
-    @hide_search = true if SiteSetting.login_required
+    @hide_search = true if SiteSetting.login_required || !guardian.can_search?
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
@@ -946,20 +1019,46 @@ class ApplicationController < ActionController::Base
 
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
-      if SiteSetting.allow_index_in_robots_txt
-        response.headers["X-Robots-Tag"] = "noindex"
-      else
-        response.headers["X-Robots-Tag"] = "noindex, nofollow"
-      end
+      response.headers["X-Robots-Tag"] = noindex_header_value
     end
   end
 
+  # "noindex", or "noindex, nofollow" when the whole site is kept out of
+  # search engines, so a page-level noindex never drops the site-wide
+  # directive.
+  def noindex_header_value
+    SiteSetting.allow_index_in_robots_txt ? "noindex" : "noindex, nofollow"
+  end
+
   def add_noindex_header_to_non_canonical
-    canonical = (@canonical_url || @default_canonical)
+    canonical = @canonical_url || @default_canonical
     if canonical.present? && canonical != request.url &&
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
     end
+  end
+
+  # Whether search engines are told not to index a topic. Core only keeps
+  # unlisted topics out; the `topic_noindex` modifier receives that decision
+  # and the topic, so a plugin can send noindex for other topics too. It runs
+  # on every request that reaches the controller, so a topic that is flagged
+  # or moved follows once the anonymous cache (one minute) has expired.
+  def topic_noindex?(topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
+  end
+
+  # Sends that decision on a response that reproduces the topic: its page in
+  # any format, or the raw text of its posts.
+  def add_topic_noindex_header(topic)
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic && topic_noindex?(topic)
+  end
+
+  # Whether search engines are told not to index a topic list that loads a
+  # category: its own pages, `?category=` lists and tag pages within it.
+  # Core indexes them all; the `category_noindex` modifier receives `false`
+  # and the category, so a plugin can send noindex for a category.
+  def category_noindex?(category)
+    DiscoursePluginRegistry.apply_modifier(:category_noindex, false, category)
   end
 
   def set_cross_origin_opener_policy_header
@@ -1042,7 +1141,11 @@ class ApplicationController < ActionController::Base
       links.push(*@asset_preload_links)
     end
 
-    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
+    return if links.blank?
+
+    # The header may already carry other links, such as a Markdown alternate.
+    name = GlobalSetting.early_hint_header_name
+    response.headers[name] = [response.headers[name], *links].compact.join(", ")
   end
 
   def spa_boot_request?
@@ -1051,6 +1154,10 @@ class ApplicationController < ActionController::Base
 
   def fetch_limit_from_params(params: self.params, default:, max:)
     fetch_int_from_params(:limit, params: params, default: default, max: max)
+  end
+
+  def fetch_page_from_params(params: self.params, default: 0, max: nil)
+    fetch_int_from_params(:page, params: params, default: default, min: 0, max: max)
   end
 
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
@@ -1064,7 +1171,7 @@ class ApplicationController < ActionController::Base
       value =
         begin
           Integer(params[key])
-        rescue ArgumentError
+        rescue ArgumentError, TypeError
           raise Discourse::InvalidParameters.new(key)
         end
 
@@ -1094,6 +1201,24 @@ class ApplicationController < ActionController::Base
     yield
   ensure
     dont_cache_page
+    set_current_user_header_for_logs
+  end
+
+  def set_current_user_header_for_logs
+    return if !current_user
+
+    cache_control = response.cache_control
+    extras = cache_control[:extras]
+    # `dont_cache_page` sets both of these through `extras` rather than as
+    # their own keys, and Rails only populates `cache_control[:private]` when
+    # the directive was set that way, so both spellings have to be checked.
+    no_store = cache_control[:no_store] || extras&.include?("no-store")
+    private_response =
+      cache_control[:private] || extras&.include?("private") ||
+        (cache_control[:max_age] && !cache_control[:public])
+    return if !private_response && !no_store
+
+    response.headers["X-Discourse-Username"] = current_user.username
   end
 
   def persist_locale_param_to_cookie

@@ -1,8 +1,18 @@
 import Controller from "@ember/controller";
-import { alias, gt } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 
 export default class AboutController extends Controller {
-  @gt("siteSettings.faq_url.length", 0) faqOverridden;
+  @computed("siteSettings.rename_faq_to_guidelines")
+  get renameFaqToGuidelines() {
+    return this.siteSettings?.rename_faq_to_guidelines;
+  }
 
-  @alias("siteSettings.rename_faq_to_guidelines") renameFaqToGuidelines;
+  set renameFaqToGuidelines(value) {
+    set(this, "siteSettings.rename_faq_to_guidelines", value);
+  }
+
+  @computed("siteSettings.faq_url.length")
+  get faqOverridden() {
+    return this.siteSettings?.faq_url?.length > 0;
+  }
 }

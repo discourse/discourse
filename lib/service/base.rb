@@ -61,9 +61,13 @@
 #     #   end
 #
 #     # @!scope class
-#     # @!method params(name = :default, default_values_from: nil, &block)
+#     # @!method params(name = :default, default_values_from: nil, base_class: Service::ContractBase, from_resource: nil, only: nil, except: nil, &block)
 #     # @param name [Symbol] name for this contract
 #     # @param default_values_from [Symbol] name of the model to get default values from
+#     # @param base_class [Class] base class for the contract
+#     # @param from_resource [Class] resource whose writable names and types are imported
+#     # @param only [Array<String, Symbol>] writable names to import
+#     # @param except [Array<String, Symbol>] writable names to exclude from the import
 #     # @param block [Proc] a block containing validations
 #     # Checks the validity of the input parameters.
 #     # Implements ActiveModel::Validations and ActiveModel::Attributes.
@@ -174,6 +178,28 @@
 #     #     step :update_post
 #     #     step :log_post_update
 #     #   end
+#
+#     # @!scope class
+#     # @!method each(collection_name, as: nil, persist: nil, &block)
+#     # @param collection_name [Symbol] the name of the context key holding the collection
+#     # @param as [Symbol] override the singularized item name
+#     # @param persist [Hash, Array, Symbol] keys that accumulate across iterations
+#     # @param block [Proc] a block containing steps to run for each item
+#     # Iterates over a collection and runs nested steps for each item.
+#     # The singularized item name and +index+ are provided as keyword
+#     # arguments. Iteration stops on first failure. Variables set inside
+#     # the loop are isolated unless listed in +persist+.
+#     #
+#     # @example basic iteration
+#     #   each :users do
+#     #     policy :can_delete
+#     #     step :destroy
+#     #   end
+#     #
+#     # @example accumulating results
+#     #   each :tag_names, persist: { results: -> { [] } } do
+#     #     step :create_tag
+#     #   end
 #   end
 
 module Service
@@ -230,7 +256,7 @@ module Service
     def run
       run!
     rescue Failure => exception
-      raise if context.object_id != exception.context.object_id
+      raise if !context.equal?(exception.context)
     end
 
     # @!visibility private
@@ -248,17 +274,7 @@ module Service
     private
 
     def initialize_params
-      klass =
-        Data.define(*context[:params].keys) do
-          alias to_hash to_h
-
-          delegate :slice, :merge, to: :to_h
-
-          def method_missing(*)
-            nil
-          end
-        end
-      context[:params] = klass.new(*context[:params].values)
+      context[:params] = RawParams.new(context[:params])
     end
   end
 end

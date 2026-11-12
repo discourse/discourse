@@ -24,12 +24,12 @@ RSpec.describe "spam rules for users" do
 
         before { PostActionCreator.create(user1, spam_post, :spam) }
 
-        it "should not hide the post" do
+        it "does not hide the post" do
           expect(spam_post.reload).to_not be_hidden
         end
 
         context "when spam posts are flagged enough times, but not by enough users" do
-          it "should not hide the post" do
+          it "does not hide the post" do
             PostActionCreator.create(user1, spam_post2, :spam)
 
             expect(spam_post.reload).to_not be_hidden
@@ -44,7 +44,7 @@ RSpec.describe "spam rules for users" do
           let!(:mod_pm_count) { moderator.private_topics_count }
           let!(:reviewable) { PostActionCreator.spam(user2, spam_post).reviewable }
 
-          it "should hide the posts" do
+          it "hides the posts" do
             expect(Guardian.new(spammer).can_create_topic?(nil)).to be(false)
             expect {
               PostCreator.create(
@@ -69,7 +69,7 @@ RSpec.describe "spam rules for users" do
           end
 
           context "when a post is deleted" do
-            it "should silence the spammer" do
+            it "silences the spammer" do
               spam_post.trash!(moderator)
               spammer.reload
               expect(spammer.reload).to be_silenced
@@ -77,7 +77,7 @@ RSpec.describe "spam rules for users" do
           end
 
           context "when spammer becomes trust level 1" do
-            it "should silence the spammer" do
+            it "silences the spammer" do
               spammer.change_trust_level!(TrustLevel[1])
               spammer.reload
               expect(spammer.reload).to be_silenced
@@ -86,7 +86,7 @@ RSpec.describe "spam rules for users" do
         end
 
         context "with hide_post_sensitivity" do
-          it "should silence the spammer" do
+          it "silences the spammer" do
             Reviewable.set_priorities(high: 2.0)
             SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
             PostActionCreator.create(user2, spam_post, :spam)
@@ -104,7 +104,7 @@ RSpec.describe "spam rules for users" do
         let!(:spam_post) { Fabricate(:post, user: spammer) }
         let!(:private_messages_count) { spammer.private_topics_count }
 
-        it "should not allow spammer to create new posts" do
+        it "prevents the spammer from creating new posts" do
           PostActionCreator.create(user1, spam_post, :spam)
           PostActionCreator.create(user2, spam_post, :spam)
 
@@ -123,19 +123,37 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    [[:user, trust_level: TrustLevel[2]], [:admin], [:moderator]].each do |spammer_args|
-      context "if spammer is trusted #{spammer_args[0]}" do
-        let!(:spammer) { Fabricate(*spammer_args) }
-        let!(:spam_post) { Fabricate(:post, user: spammer) }
-        let!(:private_messages_count) { spammer.private_topics_count }
+    shared_examples "protecting a trusted spam report target" do
+      it "keeps the post visible after multiple spam reports" do
+        PostActionCreator.create(user1, spam_post, :spam)
+        PostActionCreator.create(user2, spam_post, :spam)
 
-        it "should not hide the post" do
-          PostActionCreator.create(user1, spam_post, :spam)
-          PostActionCreator.create(user2, spam_post, :spam)
-
-          expect(spam_post.reload).to_not be_hidden
-        end
+        expect(spam_post.reload).to_not be_hidden
       end
+    end
+
+    context "if spammer is trusted user" do
+      let!(:spammer) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
+
+      include_examples "protecting a trusted spam report target"
+    end
+
+    context "if spammer is trusted admin" do
+      let!(:spammer) { Fabricate(:admin) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
+
+      include_examples "protecting a trusted spam report target"
+    end
+
+    context "if spammer is trusted moderator" do
+      let!(:spammer) { Fabricate(:moderator) }
+      let!(:spam_post) { Fabricate(:post, user: spammer) }
+      let!(:private_messages_count) { spammer.private_topics_count }
+
+      include_examples "protecting a trusted spam report target"
     end
   end
 end

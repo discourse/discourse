@@ -61,9 +61,6 @@ RSpec.describe ThemeField do
 
   it "extracts inline javascript to an external file" do
     html = <<~HTML
-      <script type="text/discourse-plugin" version="0.8">
-        console.log("inline discourse plugin");
-      </script>
       <script type="text/template" data-template="custom-template">
         <div>custom script type</div>
       </script>
@@ -87,12 +84,6 @@ RSpec.describe ThemeField do
     simple_extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
     expect(simple_extracted_scripts.length).to eq(3)
 
-    extracted_module_preloads =
-      baked_doc.css("link[rel=modulepreload][href^='/theme-javascripts/']")
-    expect(extracted_module_preloads.length).to eq(1)
-
-    expect(theme_field.javascript_cache.content).to include("inline discourse plugin")
-
     raw_js_cache_contents = theme_field.raw_javascript_caches.map(&:content)
     expect(raw_js_cache_contents).to contain_exactly(
       'console.log("inline raw script");',
@@ -101,24 +92,6 @@ RSpec.describe ThemeField do
     )
 
     expect(baked_doc.css("script[type='text/template']").length).to eq(1)
-  end
-
-  it "correctly logs errors for transpiled js" do
-    html = <<HTML
-<script type="text/discourse-plugin" version="0.8">
-   badJavaScript(;
-</script>
-HTML
-
-    field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
-    field.ensure_baked!
-    expect(field.value_baked).to include(
-      "<link rel=\"modulepreload\" href=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
-    )
-    expect(field.javascript_cache.content).to include("[THEME -1 'Foundation'] Compile error")
-
-    field.update!(value: "")
-    field.ensure_baked!
   end
 
   it "correctly extracts and generates errors for raw transpiled js" do
@@ -144,37 +117,11 @@ HTML
     expect(field.error).to eq(nil)
   end
 
-  it "allows us to use theme settings in handlebars templates" do
-    html = <<HTML
-<script type='text/x-handlebars' data-template-name='my-template'>
-    <div class="testing-div">{{themeSettings.string_setting}}</div>
-</script>
-HTML
-
-    ThemeField.create!(
-      theme_id: -1,
-      target_id: 3,
-      name: "yaml",
-      value: "string_setting: \"test text \\\" 123!\"",
-    ).ensure_baked!
-    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "head_tag", value: html)
-    theme_field.ensure_baked!
-    javascript_cache = theme_field.javascript_cache
-
-    expect(theme_field.value_baked).to include(
-      "<link rel=\"modulepreload\" href=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
-    )
-    expect(javascript_cache.content).to include("testing-div")
-    expect(javascript_cache.content).to include("string_setting")
-    expect(javascript_cache.content).to include("test text \\\" 123!")
-    expect(javascript_cache.content).to include('compatModules["discourse/templates/my-template"]')
-  end
-
   it "correctly generates errors for transpiled css" do
     css = "body {"
     field = theme.set_field(target: :common, name: :scss, value: css)
     theme.save!
-    expect(field.reload.error).to include('Error: expected "}"')
+    expect(field.reload.error).to include('expected "}"')
 
     theme.set_field(target: :common, name: :scss, value: <<~SCSS)
       body {
@@ -186,7 +133,7 @@ HTML
 
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
-    expect(field.reload.error).to include("Error: Can't find stylesheet to import.")
+    expect(field.reload.error).to include("Can't find stylesheet to import.")
 
     theme.set_field(target: :common, name: :scss, value: "body {color: blue};")
     theme.save!
@@ -268,16 +215,9 @@ HTML
     expect(js_field.value_baked).to eq("baked")
 
     # All together
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/templates/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery-2"]',
-    )
-    expect(theme.javascript_cache.content).to include("registerSettings(")
+    expect(theme.javascript_cache.content).to include('"discourse/templates/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery-2":')
     expect(theme.javascript_cache.content).to include(
       "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )
@@ -294,9 +234,8 @@ HTML
       "theme-#{theme.id}/discourse/templates/discovery.hbs",
       "theme-#{theme.id}/virtual:entrypoint:main",
       "theme-#{theme.id}/virtual:theme",
-      "theme-#{theme.id}/virtual:init-settings",
     )
-    expect(map["sourcesContent"].length).to eq(6)
+    expect(map["sourcesContent"].length).to eq(5)
   end
 
   def create_upload_theme_field!(name)
@@ -317,7 +256,7 @@ HTML
   end
 
   def get_fixture(type)
-    File.read("#{Rails.root}/spec/fixtures/theme_settings/#{type}_settings.yaml")
+    File.read("#{Rails.root.join("spec/fixtures/theme_settings/#{type}_settings.yaml")}")
   end
 
   def create_yaml_field(value)
@@ -333,38 +272,6 @@ HTML
   end
 
   let(:key) { "themes.settings_errors" }
-
-  it "forces re-transpilation of theme JS when settings YAML changes" do
-    settings_field =
-      ThemeField.create!(
-        theme: theme,
-        target_id: Theme.targets[:settings],
-        name: "yaml",
-        value: "setting: 5",
-      )
-
-    html = <<~HTML
-      <script type="text/discourse-plugin" version="0.8">
-        alert(settings.setting);
-      </script>
-    HTML
-
-    js_field =
-      ThemeField.create!(
-        theme: theme,
-        target_id: ThemeField.types[:html],
-        name: "header",
-        value: html,
-      )
-    old_value_baked = js_field.value_baked
-    settings_field.update!(value: "setting: 66")
-    js_field.reload
-
-    expect(js_field.value_baked).to eq(nil)
-    js_field.ensure_baked!
-    expect(js_field.value_baked).to be_present
-    expect(js_field.value_baked).not_to eq(old_value_baked)
-  end
 
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"
@@ -681,16 +588,13 @@ HTML
 
     describe "prefix injection" do
       it "injects into JS" do
-        html = <<~HTML
-          <script type="text/discourse-plugin" version="0.8">
-            console.log("inline discourse plugin", themePrefix("foo"));
-          </script>
-        HTML
-
-        theme_field =
-          ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)
-        theme_field.ensure_baked!
-        javascript_cache = theme_field.javascript_cache
+        theme.set_field(
+          target: :extra_js,
+          name: "discourse/initializers/my-init.js",
+          value: 'console.log("inline discourse plugin", themePrefix("foo"));',
+        )
+        theme.save!
+        javascript_cache = theme.reload.javascript_cache
         expect(javascript_cache.content).to include("inline discourse plugin")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")
       end
@@ -802,14 +706,6 @@ HTML
           upload_id: upload.id,
         )
 
-      common_field =
-        theme.set_field(
-          target: :common,
-          name: "head_tag",
-          value: "<script type='text/discourse-plugin' version='0.1'>let c = 'd';</script>",
-          type: :html,
-        )
-
       theme.set_field(target: :settings, type: :yaml, name: "yaml", value: "hello: world")
 
       theme.set_field(
@@ -820,31 +716,32 @@ HTML
 
       theme.save!
 
-      # a bit fragile, but at least we test it properly
-      [
-        theme.reload.javascript_cache.content,
-        common_field.reload.javascript_cache.content,
-      ].each do |js|
-        expected_local_js_cache_url = js_field.javascript_cache.local_url
-        expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
-        expect(js).to include(<<~JS)
-          registerSettings(#{theme.id}, {
-            "hello": "world",
-            "theme_uploads": {
-              "test_js": "#{js_field.upload.url}"
-            },
-            "theme_uploads_local": {
-              "test_js": "#{js_field.javascript_cache.local_url}"
-            }
-          });
-        JS
-      end
+      expected_local_js_cache_url = js_field.javascript_cache.local_url
+      expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
+      expect(theme.reload.cached_settings).to include(
+        :hello => "world",
+        "theme_uploads" => {
+          "test_js" => js_field.upload.url,
+        },
+        "theme_uploads_local" => {
+          "test_js" => js_field.javascript_cache.local_url,
+        },
+        "theme_setting_type_info" => {
+          hello: {
+            refresh: false,
+            resolve_group_membership: false,
+            textarea: false,
+            type: "string",
+          },
+        },
+      )
 
       # this is important, we do not want local_js_urls to leak into scss
       expect(theme.scss_variables).to include("$hello: unquote(\"world\");")
       expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
 
       expect(theme.scss_variables).not_to include("theme_uploads")
+      expect(theme.scss_variables).not_to include("theme_setting_type_info")
     end
   end
 

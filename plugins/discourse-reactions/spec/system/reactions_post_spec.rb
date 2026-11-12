@@ -12,10 +12,30 @@ describe "Reactions | Post reactions" do
   let(:reactions_list) do
     PageObjects::Components::PostReactionsList.new("#post_#{post_2.post_number}")
   end
+  let(:popup) { PageObjects::Components::PostReactionsPopup.new }
 
   before do
     SiteSetting.discourse_reactions_enabled = true
     sign_in(current_user)
+  end
+
+  context "when topic is archived" do
+    fab!(:unliked_post) { Fabricate(:post, topic:) }
+
+    before { topic.update!(archived: true) }
+
+    it "does not allow reacting to a post with no likes" do
+      visit unliked_post.url
+
+      selector = "#post_#{unliked_post.post_number}"
+
+      expect(page).to have_no_css("#{selector} .discourse-reactions-actions.can-toggle-reaction")
+
+      find("#{selector} .discourse-reactions-reaction-button").click
+
+      expect(page).to have_no_css(".dialog-body")
+      expect(DiscourseReactions::ReactionUser.where(user: current_user).count).to eq(0)
+    end
   end
 
   context "when user has reacted but like_count is 0 and undo window passed" do
@@ -48,6 +68,34 @@ describe "Reactions | Post reactions" do
     expect(reactions_button).to have_expanded_reactions_picker(post_2.id)
     reactions_button.pick_reaction("laughing")
     expect(reactions_list).to have_reaction("laughing")
+  end
+
+  context "when emojis are disabled" do
+    fab!(:other_user, :user)
+    fab!(:laughing) { Fabricate(:reaction, post: post_2, reaction_value: "laughing") }
+
+    before do
+      SiteSetting.enable_emoji = false
+      Fabricate(:reaction_user, reaction: laughing, user: other_user, post: post_2)
+    end
+
+    it "degrades reactions to likes" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction_icon("heart", "d-liked")
+      expect(reactions_list).to have_no_reaction("laughing")
+
+      reactions_button.hover_like_button(post_2.id)
+      expect(reactions_button).to have_no_expanded_reactions_picker(post_2.id)
+
+      reactions_button.click_like_button(post_2.id)
+      page.refresh
+      expect(reactions_list).to have_reaction_icon("heart", "d-liked")
+
+      reactions_list.click_counter
+      expect(popup).to have_no_filters
+      expect(popup).to have_user_reaction_icon(current_user, "d-liked")
+      expect(popup).to have_user_reaction_icon(other_user, "d-liked")
+    end
   end
 
   it "does not show emoji_deny_list emojis for post reactions" do
@@ -87,6 +135,28 @@ describe "Reactions | Post reactions" do
       reactions_button.open_emoji_picker
       reactions_button.filter_emoji_picker("middle_finger")
       expect(reactions_button).to have_no_emoji_picker_emoji("middle_finger")
+    end
+  end
+
+  context "when clicking a reaction whose value contains a URL-reserved character" do
+    fab!(:other_user, :user)
+
+    before do
+      DiscourseReactions::ReactionManager.new(
+        reaction_value: "+1",
+        user: other_user,
+        post: post_2,
+      ).toggle!
+    end
+
+    it "loads the reaction users in the popup" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction("+1")
+
+      reactions_list.click_reaction("+1")
+
+      expect(popup).to be_open
+      expect(popup).to have_user(other_user.username)
     end
   end
 end

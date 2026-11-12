@@ -9,11 +9,8 @@ const DummyTabComponent = <template>
   {{/if}}
 </template>;
 
-import { eq } from "discourse/truth-helpers";
-
 acceptance("Edit Category - Plugin Tab API", function (needs) {
   needs.user();
-  needs.settings({ enable_simplified_category_creation: true });
 
   test("registerEditCategoryTab adds a tab that renders", async function (assert) {
     withPluginApi((api) => {

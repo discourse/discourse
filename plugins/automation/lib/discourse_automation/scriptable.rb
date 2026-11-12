@@ -28,7 +28,7 @@ module DiscourseAutomation
       @version = 0
       @fields = []
       @placeholders = []
-      @triggerables = (@@plugin_triggerables[name&.to_sym] || [])
+      @triggerables = @@plugin_triggerables[name&.to_sym] || []
       @script = proc {}
       @on_reset = proc {}
       @not_found = false
@@ -167,6 +167,10 @@ module DiscourseAutomation
     end
 
     module Utils
+      class PlaceholdersTemplate < Mustache
+        self.context_access_security_level = 4
+      end
+
       def self.fetch_report(name, args = {})
         report = Report.find(name, args)
 
@@ -190,14 +194,24 @@ module DiscourseAutomation
       end
 
       def self.apply_placeholders(input, map = {})
-        input = input.dup
         map[:site_title] = SiteSetting.title
+        values = map.dup
 
-        input = apply_report_placeholder(input)
+        # Keys can be arbitrary (e.g. user field names) and aren't always valid Mustache tags
+        map.each do |key, value|
+          token = "placeholder_#{SecureRandom.hex}"
+          values[token] = value
+          input = input.gsub("%%#{key.upcase}%%", "{{{#{token}}}}")
+        end
 
-        map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
+        input =
+          input.gsub(REPORT_REGEX) do |pattern|
+            token = "report_#{SecureRandom.hex}"
+            values[token] = apply_report_placeholder(pattern)
+            "{{{#{token}}}}"
+          end
 
-        input = Mustache.render(input, map).to_s
+        PlaceholdersTemplate.render(input, values).to_s
       end
 
       REPORT_REGEX = /%%REPORT=(.*?)%%/

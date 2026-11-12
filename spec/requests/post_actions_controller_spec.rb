@@ -103,7 +103,31 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails when the user does not have permission to see the post" do
+    it "forbids illegal flags when DSA reporting is enabled" do
+      enable_dsa_reporting
+      sign_in(user)
+      target_post = Fabricate(:post, user: coding_horror)
+      reviewable =
+        PostActionCreator.off_topic(
+          Fabricate(:user, refresh_auto_groups: true),
+          target_post,
+        ).reviewable
+
+      post "/post_actions.json",
+           params: {
+             id: target_post.id,
+             post_action_type_id: PostActionType.types[:illegal],
+             message: "This content appears to be illegal.",
+           }
+
+      expect(response).to be_forbidden
+      expect(reviewable.reload.potentially_illegal?).to eq(false)
+      expect(
+        PostAction.where(post: target_post, post_action_type_id: PostActionType.types[:illegal]),
+      ).not_to exist
+    end
+
+    it "does not reveal private post existence" do
       sign_in(user)
       pm = Fabricate(:private_message_post, user: coding_horror)
 
@@ -113,7 +137,36 @@ RSpec.describe PostActionsController do
              post_action_type_id: PostActionType.types[:like],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(pm.raw)
+
+      post "/post_actions.json",
+           params: {
+             id: Post.maximum(:id) + 1,
+             post_action_type_id: PostActionType.types[:like],
+           }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when flagging a hidden topic" do
+      sign_in(user)
+      SiteSetting.detailed_404 = false
+      pm = Fabricate(:private_message_post, user: coding_horror)
+
+      get "/t/#{pm.topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
+
+      post "/post_actions.json",
+           params: {
+             id: pm.topic.id,
+             flag_topic: "true",
+             post_action_type_id: PostActionType.types[:inappropriate],
+           }
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
     end
 
     it "fails when the user tries to notify user that has disabled PM" do
@@ -136,6 +189,77 @@ RSpec.describe PostActionsController do
       expect(response.parsed_body["errors"].first).to eq(
         I18n.t(:not_accepting_pms, username: user2.username),
       )
+    end
+
+    describe "as a non-staff user" do
+      fab!(:target_post) { Fabricate(:post, user: coding_horror) }
+
+      before { sign_in(Fabricate(:user, refresh_auto_groups: true)) }
+
+      it "forbids sending warnings when the is_warning query param is true" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/post_actions.json",
+             params: {
+               id: target_post.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: "action message goes here",
+               is_warning: true,
+             },
+             as: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      it "forbids sending warnings when the is_warning query param is \"true\"" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/post_actions.json",
+             params: {
+               id: target_post.id,
+               post_action_type_id: PostActionType.types[:notify_user],
+               message: "action message goes here",
+               is_warning: "true",
+             },
+             as: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      shared_examples "notifying a user without an official warning" do |is_warning:|
+        it "creates the notification message without marking it as a warning" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+          message = "action message goes here"
+
+          expect do
+            post "/post_actions.json",
+                 params: {
+                   id: target_post.id,
+                   post_action_type_id: PostActionType.types[:notify_user],
+                   message: message,
+                   is_warning: is_warning,
+                 },
+                 as: :json
+          end.to change { PostAction.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          post_action = PostAction.last
+
+          expect(post_action.post_id).to eq(target_post.id)
+          expect(post_action.related_post.raw).to include(message)
+          expect(post_action.related_post.topic.is_official_warning?).to eq(false)
+        end
+      end
+
+      context "with a boolean false warning parameter" do
+        include_examples "notifying a user without an official warning", is_warning: false
+      end
+
+      context "with a string false warning parameter" do
+        include_examples "notifying a user without an official warning", is_warning: "false"
+      end
     end
 
     describe "as a moderator" do
@@ -164,7 +288,7 @@ RSpec.describe PostActionsController do
         expect(response.status).to eq(400)
       end
 
-      it "fails when the user doesn't have permission to see the post" do
+      it "does not reveal private post existence" do
         post_1 = Fabricate(:private_message_post, user: Fabricate(:user))
 
         post "/post_actions.json",
@@ -173,7 +297,7 @@ RSpec.describe PostActionsController do
                post_action_type_id: PostActionType.types[:like],
              }
 
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "allows us to create an post action on a post" do
@@ -241,20 +365,6 @@ RSpec.describe PostActionsController do
 
         expect(post.raw).to include(message)
         expect(post.topic.is_official_warning?).to eq(true)
-      end
-
-      it "doesn't create message as a warning if the user isn't staff" do
-        sign_in(Fabricate(:user))
-
-        post "/post_actions.json",
-             params: {
-               id: post_1.id,
-               post_action_type_id: PostActionType.types[:notify_user],
-               message: "action message goes here",
-               is_warning: true,
-             }
-
-        expect(response.status).to eq(403)
       end
 
       it "passes take_action through" do

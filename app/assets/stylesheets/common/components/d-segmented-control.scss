@@ -1,0 +1,124 @@
+.d-segmented-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--primary-very-low);
+  gap: var(--space-2);
+  border-radius: var(--d-border-radius);
+  padding: var(--space-1) var(--space-2);
+  height: var(--space-9);
+
+  &__legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &__slider {
+    position: absolute;
+    top: var(--space-1);
+    left: 0;
+    width: var(--slider-width, 0);
+    height: calc(100% - var(--space-2));
+    transform: translateX(var(--slider-x, 0));
+    background: var(--secondary);
+    border-radius: var(--d-border-radius);
+    box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
+    pointer-events: none;
+
+    &.is-animated {
+      transition:
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition-duration: 0ms;
+      }
+    }
+  }
+
+  &__input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  &.--full-width {
+    display: flex;
+    width: 100%;
+
+    .d-segmented-control__label {
+      flex: 1;
+    }
+  }
+
+  &--small {
+    gap: 2px;
+    padding: 1px;
+    height: auto;
+
+    .d-segmented-control__slider {
+      top: 1px;
+      height: calc(100% - 2px);
+    }
+
+    .d-segmented-control__label {
+      padding: 0 var(--space-1);
+      height: auto;
+      font-size: var(--font-down-2);
+
+      .d-icon {
+        font-size: var(--font-down-2);
+      }
+    }
+  }
+
+  &__label {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    padding: var(--space-1) var(--space-4);
+    margin: 0;
+    border-radius: var(--d-border-radius);
+    color: var(--primary-high);
+    height: var(--space-5);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--primary-low);
+      color: var(--primary);
+    }
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+
+    &:has(:checked),
+    &:has(:checked):hover {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    &.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+  }
+}

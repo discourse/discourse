@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "none"
+      end
+
       def system_prompt
         <<~PROMPT.strip
           You are a markdown table formatter, I will provide you text inside <input></input> XML tags and you will format it into a markdown table
@@ -23,10 +27,6 @@ module DiscourseAi
 
       def response_format
         [{ "key" => "output", "type" => "string" }]
-      end
-
-      def temperature
-        0.5
       end
 
       def examples

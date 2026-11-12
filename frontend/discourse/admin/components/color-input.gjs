@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import TextField from "discourse/components/text-field";
 import { isValidHex } from "discourse/lib/color-transformations";
+import DTextField from "discourse/ui-kit/d-text-field";
 
 /**
   An input field for a color.
@@ -98,22 +98,22 @@ export default class ColorInput extends Component {
   }
 
   <template>
-    {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField
-      @value={{this.hexValue}}
-      @maxlength={{this.maxlength}}
-      @input={{this.onHexInput}}
-      class="hex-input"
+    {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<DTextField
       aria-labelledby={{this.ariaLabelledby}}
+      class="hex-input"
+      @input={{this.onHexInput}}
+      @maxlength={{this.maxlength}}
+      @value={{this.hexValue}}
       {{on "blur" this.handleBlur}}
       {{on "paste" this.handlePaste}}
     />
     <input
+      aria-labelledby={{this.ariaLabelledby}}
       class="picker"
+      title={{this.valueForPicker}}
       type="color"
       value={{this.valueForPicker}}
-      title={{this.valueForPicker}}
       {{on "input" this.onPickerInput}}
-      aria-labelledby={{this.ariaLabelledby}}
     />
   </template>
 }

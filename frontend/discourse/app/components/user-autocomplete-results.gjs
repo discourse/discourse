@@ -7,10 +7,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import { formatUsername } from "discourse/lib/utilities";
-import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").UserEmailGroupResult} UserEmailGroupResult
@@ -28,21 +28,13 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
 
-  static RESULT_TYPE_CONFIG = {
-    isUser: {
-      titleKey: "name",
-      hasCustomClasses: true,
-    },
-    isEmail: {
-      titleKey: "username",
-    },
-    isGroup: {
-      titleKey: "full_name",
-    },
-  };
-
   @tracked isInitialRender = true;
 
+  /**
+   * @param {UserEmailGroupResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -61,38 +53,40 @@ export default class UserAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;
   }
 
+  /** @param {number} index */
   @action
   shouldSelect(index) {
     return index === this.args.selectedIndex;
   }
 
-  getResultConfig(result) {
-    for (const [key, config] of Object.entries(
-      UserAutocompleteResults.RESULT_TYPE_CONFIG
-    )) {
-      if (result[key]) {
-        return config;
-      }
-    }
-  }
-
+  /** @param {UserEmailGroupResult} result */
   @action
   getTitle(result) {
-    const config = this.getResultConfig(result);
-    return result[config.titleKey];
+    if (result.isUser === true) {
+      return result.name;
+    }
+    if (result.isEmail === true) {
+      return result.username;
+    }
+    return result.full_name;
   }
 
+  /**
+   * @param {UserEmailGroupResult} result
+   * @param {number} index
+   */
   @action
   getItemLinkClasses(result, index) {
-    const config = this.getResultConfig(result);
     let classes = "";
 
-    if (config.hasCustomClasses && result.cssClasses) {
+    // Only users carry custom classes.
+    if (result.isUser === true && result.cssClasses) {
       classes = result.cssClasses;
     }
 
@@ -113,16 +107,16 @@ export default class UserAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li
             data-index={{result.index}}
-            {{scrollIntoView (this.shouldScroll index)}}
+            {{dScrollIntoView (this.shouldScroll index)}}
           >
             <a
+              class={{this.getItemLinkClasses result index}}
               href
               title={{this.getTitle result}}
-              class={{this.getItemLinkClasses result index}}
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#if result.isUser}}
-                {{avatar result imageSize="tiny"}}
+                {{dAvatar result imageSize="tiny"}}
                 <span class="text-content">
                   <span class="username">{{formatUsername
                       result.username
@@ -135,12 +129,12 @@ export default class UserAutocompleteResults extends Component {
                   <span class="user-status"></span>
                 {{/if}}
               {{else if result.isEmail}}
-                {{icon "envelope"}}
+                {{dIcon "envelope"}}
                 <span class="text-content username">{{formatUsername
                     result.username
                   }}</span>
               {{else if result.isGroup}}
-                {{icon "users"}}
+                {{dIcon "users"}}
                 <span class="text-content">
                   <span class="username">{{result.name}}</span>
                   <span class="name">{{result.full_name}}</span>

@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import AiIndicatorWave from "../ai-indicator-wave";
+import AiIndicatorWave from "../ai-indicator-wave.gjs";
 
 export default class SpamTestModal extends Component {
   @tracked testResult;
@@ -18,6 +18,8 @@ export default class SpamTestModal extends Component {
   @tracked isSpam;
   @tracked reason;
   @tracked llmName;
+  @tracked decisionModelName;
+  @tracked spamProbability;
   @tracked systemPrompt;
   @tracked sentMessage;
   @tracked scanHistory;
@@ -33,7 +35,8 @@ export default class SpamTestModal extends Component {
           data: {
             post_url: this.postUrl,
             custom_instructions: this.args.model.customInstructions,
-            llm_id: this.args.model.llmId,
+            llm_id: this.args.model.llmId ?? "",
+            decision_model_id: this.args.model.decisionModelId ?? "",
           },
         }
       );
@@ -44,6 +47,11 @@ export default class SpamTestModal extends Component {
         : i18n("discourse_ai.spam.test_modal.not_spam");
       this.reason = response.reason;
       this.llmName = response.llm_name;
+      this.decisionModelName = response.decision_model_name;
+      this.spamProbability =
+        response.spam_probability == null
+          ? null
+          : `${Math.round(response.spam_probability * 100)}%`;
       this.systemPrompt = response.system_prompt;
       this.sentMessage = response.sent_message;
       this.scanHistory = response.scan_history;
@@ -56,20 +64,20 @@ export default class SpamTestModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.spam.test_modal.title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="spam-test-modal__body"
       class="spam-test-modal"
+      @bodyClass="spam-test-modal__body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.spam.test_modal.title"}}
     >
       <:body>
         <div class="control-group">
           <label>{{i18n "discourse_ai.spam.test_modal.post_url_label"}}</label>
           <input
-            {{on "input" (withEventValue (fn (mut this.postUrl)))}}
-            type="text"
             placeholder={{i18n
               "discourse_ai.spam.test_modal.post_url_placeholder"
             }}
+            type="text"
+            {{on "input" (withEventValue (fn (mut this.postUrl)))}}
           />
         </div>
 
@@ -105,6 +113,32 @@ export default class SpamTestModal extends Component {
                     }}</h4>
                   <div class="spam-test-modal__info-box-content">
                     {{this.llmName}}
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if this.decisionModelName}}
+                <div
+                  class="spam-test-modal__info-box spam-test-modal__info-box--decision-model"
+                >
+                  <h4 class="spam-test-modal__info-box-title">{{i18n
+                      "discourse_ai.spam.test_modal.decision_model"
+                    }}</h4>
+                  <div class="spam-test-modal__info-box-content">
+                    {{this.decisionModelName}}
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if this.spamProbability}}
+                <div
+                  class="spam-test-modal__info-box spam-test-modal__info-box--probability"
+                >
+                  <h4 class="spam-test-modal__info-box-title">{{i18n
+                      "discourse_ai.spam.test_modal.spam_probability"
+                    }}</h4>
+                  <div class="spam-test-modal__info-box-content">
+                    {{this.spamProbability}}
                   </div>
                 </div>
               {{/if}}
@@ -154,10 +188,10 @@ export default class SpamTestModal extends Component {
 
       <:footer>
         <DButton
-          @action={{this.runTest}}
-          @label="discourse_ai.spam.test_modal.run"
-          @disabled={{this.isLoading}}
           class="btn-primary spam-test-modal__run-button"
+          @action={{this.runTest}}
+          @disabled={{this.isLoading}}
+          @label="discourse_ai.spam.test_modal.run"
         >
           <AiIndicatorWave @loading={{this.isLoading}} />
         </DButton>

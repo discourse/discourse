@@ -1,4 +1,9 @@
-export default {
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
+const privateMessagesFixtures = {
   "/topics/private-messages/eviltrout.json": {
     users: [
       {
@@ -76,3 +81,5 @@ export default {
     },
   },
 };
+
+export default privateMessagesFixtures;

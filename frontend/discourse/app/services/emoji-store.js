@@ -1,7 +1,8 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
-import { isSkinTonableEmoji } from "pretty-text/emoji";
+import { isSkinTonableEmoji, normalizeEmoji } from "pretty-text/emoji";
+import { ajax } from "discourse/lib/ajax";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const SKIN_TONE_STORE_KEY = "emojiSelectedDiversity";
@@ -16,7 +17,9 @@ export default class EmojiStore extends Service {
 
   store = new KeyValueStore(STORE_NAMESPACE);
 
-  contexts = new TrackedObject();
+  contexts = trackedObject();
+
+  #listPromise;
 
   @tracked _diversity;
 
@@ -29,9 +32,36 @@ export default class EmojiStore extends Service {
     this.store.setObject({ key: SKIN_TONE_STORE_KEY, value });
   }
 
+  @cached
+  get animatedEmojis() {
+    return new Set(
+      Object.values(this.list ?? {})
+        .flat()
+        .filter((emoji) => emoji.animated)
+        .map((emoji) => emoji.name)
+    );
+  }
+
+  loadList() {
+    this.#listPromise ??= ajax("/emojis.json").then(
+      (list) => (this.list = list),
+      (error) => {
+        this.#listPromise = null;
+        throw error;
+      }
+    );
+    return this.#listPromise;
+  }
+
+  // The list names each emoji once, under its main name; tones share it.
+  isAnimated(code) {
+    const name = normalizeEmoji(code.replace(/:t\d$/, ""));
+    return this.animatedEmojis.has(name);
+  }
+
   trackEmojiForContext(emoji, context) {
     const recentEmojis = this.#addEmojiToContext(emoji, context);
-    this.contexts[context] = new TrackedArray(recentEmojis);
+    this.contexts[context] = trackedArray(recentEmojis);
     this.#persistRecentEmojisForContext(recentEmojis, context);
     return recentEmojis;
   }

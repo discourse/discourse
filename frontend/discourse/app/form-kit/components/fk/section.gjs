@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier as modifierFn } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers/index";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FKSection extends Component {
   sizeSection = modifierFn((element, [floating]) => {
@@ -33,19 +33,25 @@ export default class FKSection extends Component {
 
   <template>
     <div
-      {{this.sizeSection @floating}}
-      class={{concatClass "form-kit__section" @class}}
+      class={{dConcatClass "form-kit__section" @class}}
       ...attributes
+      {{this.sizeSection @floating}}
     >
-      {{#if (or @title @subtitle)}}
+      {{#if (or @title @subtitle (has-block "header"))}}
         <div class="form-kit__section-header">
-          {{#if @title}}
-            <h3 class="form-kit__section-title">{{@title}}</h3>
+          {{#if (or @title @subtitle)}}
+            <div class="form-kit__section-heading">
+              {{#if @title}}
+                <h3 class="form-kit__section-title">{{@title}}</h3>
+              {{/if}}
+
+              {{#if @subtitle}}
+                <span class="form-kit__section-subtitle">{{@subtitle}}</span>
+              {{/if}}
+            </div>
           {{/if}}
 
-          {{#if @subtitle}}
-            <span class="form-kit__section-subtitle">{{@subtitle}}</span>
-          {{/if}}
+          {{yield to="header"}}
         </div>
       {{/if}}
 

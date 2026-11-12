@@ -5,16 +5,6 @@ import { classNameBindings } from "@ember-decorators/component";
 
 @classNameBindings(":user-field", "field.field_type", "customFieldClass")
 export default class UserFieldBase extends Component {
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    let element = this.element.querySelector(
-      ".user-field.dropdown .select-kit-header"
-    );
-    element = element || this.element.querySelector("input");
-    this.field.element = element;
-  }
-
   @computed
   get noneLabel() {
     return "user_fields.none";
@@ -29,5 +19,15 @@ export default class UserFieldBase extends Component {
         .toLowerCase();
       return fieldName && `user-field-${fieldName}`;
     }
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    let element = this.element.querySelector(
+      ".user-field.dropdown .select-kit-header"
+    );
+    element = element || this.element.querySelector("input");
+    this.field.element = element;
   }
 }

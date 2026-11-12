@@ -1,7 +1,6 @@
 import { getProperties } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MessageBus from "message-bus-client";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -82,6 +81,21 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         last_read_post_number: 1,
         highest_post_number: 7,
         tags: null,
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 7,
+        deleted: true,
+        last_read_post_number: null,
+        tags: ["random"],
+        created_in_new_period: true,
+      },
+      {
+        topic_id: 8,
+        deleted: true,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        category_id: 7,
         notification_level: NotificationLevels.TRACKING,
       },
     ]);
@@ -405,7 +419,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("establishChannels - /delete MessageBus channel payloads processed", async function (assert) {
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
 
@@ -413,14 +427,45 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 111,
         deleted: false,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        category_id: 1,
+        created_in_new_period: true,
       },
     ]);
+    trackingState.trackIncoming("all");
+    trackingState.notifyIncoming({
+      topic_id: 111,
+      message_type: "new_topic",
+      payload: { category_id: 1 },
+    });
+
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1 }),
+      1,
+      "counts the topic as new"
+    );
+    assert.strictEqual(
+      trackingState.incomingCount,
+      1,
+      "counts the topic as incoming"
+    );
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
     assert.true(
       trackingState.findState(111).deleted,
       "marks the topic as deleted"
+    );
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1 }),
+      0,
+      "removes the deleted topic from the new count"
+    );
+    assert.strictEqual(
+      trackingState.incomingCount,
+      0,
+      "removes the deleted topic from incoming"
     );
     assert.strictEqual(
       trackingState.messageCount,
@@ -431,7 +476,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("establishChannels - /recover MessageBus channel payloads processed", async function (assert) {
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
 
@@ -462,7 +507,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     sinon.stub(DiscourseURL, "redirectTo");
 
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
     trackingState.loadStates([
@@ -748,7 +793,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
 
     this.trackingState = store.createRecord("topic-tracking-state", {
       currentUser: this.currentUser,
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
       siteSettings,
     });
     this.trackingState.establishChannels();
@@ -816,7 +861,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   });
 
   test("adds unread incoming to the new topic list if new new view is enabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
 
     this.trackingState.trackIncoming("new");
     await publishToMessageBus("/unread", unreadTopicPayload);
@@ -834,7 +879,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   });
 
   test("doesn't add unread incoming to the new topic list if new new view is disabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = false;
+    this.currentUser.unified_new_enabled = false;
 
     this.trackingState.trackIncoming("new");
     await publishToMessageBus("/unread", unreadTopicPayload);
@@ -998,7 +1043,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
 
     this.trackingState = store.createRecord("topic-tracking-state", {
       currentUser: this.currentUser,
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
       siteSettings,
     });
     this.trackingState.establishChannels();

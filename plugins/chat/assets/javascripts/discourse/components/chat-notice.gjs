@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import MentionWithoutMembership from "discourse/plugins/chat/discourse/components/chat/notices/mention_without_membership";
 
 const COMPONENT_DICT = {
@@ -12,13 +12,13 @@ const COMPONENT_DICT = {
 export default class ChatNotices extends Component {
   @service("chat-channel-notices-manager") noticesManager;
 
+  get component() {
+    return COMPONENT_DICT[this.args.notice.type];
+  }
+
   @action
   clearNotice() {
     this.noticesManager.clearNotice(this.args.notice);
-  }
-
-  get component() {
-    return COMPONENT_DICT[this.args.notice.type];
   }
 
   <template>
@@ -30,15 +30,15 @@ export default class ChatNotices extends Component {
       {{else}}
         <this.component
           @channel={{@channel}}
-          @notice={{@notice}}
           @clearNotice={{this.clearNotice}}
+          @notice={{@notice}}
         />
       {{/if}}
 
       <DButton
-        @icon="xmark"
-        @action={{this.clearNotice}}
         class="btn-transparent chat-notices__notice__clear"
+        @action={{this.clearNotice}}
+        @icon="xmark"
       />
     </div>
   </template>

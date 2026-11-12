@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import Button from "./elements/button";
-import CategoryElement from "./elements/category";
+import Button from "./elements/button.gjs";
+import CategoryElement from "./elements/category.gjs";
 
 export default class Element extends Component {
   get elementForType() {

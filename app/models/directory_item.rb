@@ -196,10 +196,8 @@ class DirectoryItem < ActiveRecord::Base
       visible_posts AS (
         SELECT p.id
         FROM posts p
-        JOIN visible_topics vt ON vt.id = p.topic_id
-        WHERE p.deleted_at IS NULL
-          AND p.post_type = :regular_post_type
-          AND NOT p.hidden
+        JOIN topics t ON t.id = p.topic_id
+        WHERE #{UserStat::COUNTABLE_POST_CONDITIONS}
       )
       SELECT
         ua.user_id,
@@ -242,18 +240,20 @@ end
 #
 # Table name: directory_items
 #
-#  id             :integer          not null, primary key
-#  days_visited   :integer          default(0), not null
-#  likes_given    :integer          not null
-#  likes_received :integer          not null
-#  period_type    :integer          not null
-#  post_count     :integer          not null
-#  posts_read     :integer          default(0), not null
-#  topic_count    :integer          not null
-#  topics_entered :integer          not null
-#  created_at     :datetime
-#  updated_at     :datetime
-#  user_id        :integer          not null
+#  id                 :integer          not null, primary key
+#  days_visited       :integer          default(0), not null
+#  gamification_score :integer          default(0)
+#  likes_given        :integer          not null
+#  likes_received     :integer          not null
+#  period_type        :integer          not null
+#  post_count         :integer          not null
+#  posts_read         :integer          default(0), not null
+#  solutions          :integer          default(0)
+#  topic_count        :integer          not null
+#  topics_entered     :integer          not null
+#  created_at         :datetime
+#  updated_at         :datetime
+#  user_id            :integer          not null
 #
 # Indexes
 #

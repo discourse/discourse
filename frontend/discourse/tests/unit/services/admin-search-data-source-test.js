@@ -5,6 +5,7 @@ import sinon from "sinon";
 import {
   PageLinkFormatter,
   SettingLinkFormatter,
+  UpcomingChangeLinkFormatter,
 } from "discourse/admin/services/admin-search-data-source";
 import PreloadStore from "discourse/lib/preload-store";
 import {
@@ -194,10 +195,39 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     assert.deepEqual(results[0].label, "About your site > Title");
   });
 
+  test("search - matches 3-character keywords like acronyms", async function (assert) {
+    this.subject.componentDataSourceItems = [];
+    this.subject.reportDataSourceItems = [];
+    this.subject.themeDataSourceItems = [];
+    this.subject.settingDataSourceItems = [];
+    this.subject.pageDataSourceItems = [
+      {
+        description: "Tools and MCP servers",
+        icon: "gear",
+        keywords: "mcp mcp server model context protocol",
+        label: "Plugins > Tools",
+        type: "page",
+        url: "/admin/plugins/discourse-ai/ai-tools",
+      },
+      {
+        description: "Unrelated page",
+        icon: "gear",
+        keywords: "something else entirely",
+        label: "Other Page",
+        type: "page",
+        url: "/admin/other",
+      },
+    ];
+    let results = this.subject.search("mcp");
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].label, "Plugins > Tools");
+  });
+
   test("search - prioritize pages", async function (assert) {
     this.subject.componentDataSourceItems = [];
     this.subject.reportDataSourceItems = [];
     this.subject.themeDataSourceItems = [];
+    this.subject.upcomingChangeDataSourceItems = [];
     this.subject.pageDataSourceItems = [
       {
         description: "first page",
@@ -221,6 +251,59 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     let results = this.subject.search("exact      setting");
     assert.deepEqual(results[0].label, "Page about whatever");
   });
+
+  test("urlForSetting - resolves a setting's primary area to its config page", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "title", primaryArea: "about" }),
+      "/admin/config/about?filter=title"
+    );
+  });
+
+  test("urlForSetting - appends /settings for multi-tabbed area pages", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "allow_flagging",
+        primaryArea: "flags",
+      }),
+      "/admin/config/flags/settings?filter=allow_flagging"
+    );
+  });
+
+  test("urlForSetting - resolves a setting's category when it has no area", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "min_post_length",
+        category: "security",
+      }),
+      "/admin/config/security?filter=min_post_length"
+    );
+  });
+
+  test("urlForSetting - prefers the area over the category", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "title",
+        primaryArea: "about",
+        category: "security",
+      }),
+      "/admin/config/about?filter=title"
+    );
+  });
+
+  test("urlForSetting - falls back to the all-settings page when nothing matches", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "some_unmapped_setting" }),
+      "/admin/site_settings/category/all_results?filter=some_unmapped_setting"
+    );
+  });
+
+  test("urlForSetting - works without buildMap having been called", function (assert) {
+    assert.false(this.subject._mapCached);
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "title", primaryArea: "about" }),
+      "/admin/config/about?filter=title"
+    );
+  });
 });
 
 module(
@@ -238,7 +321,7 @@ module(
         name: "root",
       };
       let link = {
-        route: "admin.dashboard.general",
+        route: "admin.dashboard",
       };
       let formatter = new PageLinkFormatter(this.router, navMapSection, link);
       assert.deepEqual(formatter.format().url, "/admin");
@@ -310,7 +393,7 @@ module(
       let link = {
         label: "admin.config.flags.title",
         description: "admin.config.flags.header_description",
-        route: "admin.dashboard.general",
+        route: "admin.dashboard",
         keywords: "admin.config.flags.keywords",
       };
 
@@ -425,7 +508,7 @@ module(
     test("url is correct for a setting that belongs to a plugin not using the new show page", async function (assert) {
       let setting = {
         plugin: "discourse-calendar",
-        setting: "calendar_enabled",
+        setting: "discourse_events_enabled",
       };
       let formatter = new SettingLinkFormatter(
         this.router,
@@ -435,7 +518,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().url,
-        "/admin/site_settings/category/discourse_calendar?filter=calendar_enabled",
+        "/admin/site_settings/category/discourse_calendar?filter=discourse_events_enabled",
         "url uses the admin site settings category and setting"
       );
     });
@@ -482,6 +565,35 @@ module(
         "/admin/plugins/chat?filter=enable_chat",
         "url uses the category and setting"
       );
+    });
+  }
+);
+
+module(
+  "Unit | Service | AdminSearchDataSource | UpcomingChangeLinkFormatter",
+  function () {
+    test("format returns correct label, description, url, keywords, type, and icon", function (assert) {
+      const upcomingChange = {
+        humanized_name: "New upload limits",
+        description: "Upload limits are changing to improve security",
+        setting: "max_upload_size",
+      };
+
+      const result = new UpcomingChangeLinkFormatter(upcomingChange).format();
+
+      assert.strictEqual(result.label, "New upload limits");
+      assert.strictEqual(
+        result.description,
+        "Upload limits are changing to improve security"
+      );
+      assert.strictEqual(
+        result.url,
+        "/admin/config/upcoming-changes?changeNamesFilter=max_upload_size"
+      );
+      assert.strictEqual(result.type, "upcoming_change");
+      assert.strictEqual(result.icon, "flask");
+      assert.true(result.keywords.includes("new upload limits"));
+      assert.true(result.keywords.includes("max_upload_size"));
     });
   }
 );

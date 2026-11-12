@@ -7,19 +7,17 @@ en:
   js:
     discourse_reactions:
       reactions_title: "Reactions"
-      state_panel:
-        more_users: "and %{count} more..."
-        show_users: "Show more users"
-        hide_users: "Show fewer users"
-        reaction_group:
-          one: "%{reaction}: %{count} user"
-          other: "%{reaction}: %{count} users"
       reaction:
-        forbidden: "That reaction was created too long ago. It can no longer be modified or removed."
+        forbidden: "You are not allowed to react or change your reaction to this post."
       picker:
         react_with: "React to this post with: %{reaction}"
         cant_remove_reaction: "You can no longer remove your reaction"
         remove_reaction: "Remove this %{reaction} reaction"
+      users_popup:
+        all: "All"
+        title:
+          one: "%{count} Reaction"
+          other: "%{count} Reactions"
       counter:
         aria_label:
           one: "%{count} reaction"
@@ -29,6 +27,31 @@ en:
         remove: "Remove this like"
         cant_remove: "You can no longer remove your like"
         unauthenticated: "Please sign up or log in to like this post"
+    discourse_workflows:
+      node_unavailable:
+        requires_reactions: "Requires the Reactions plugin to be enabled"
+      nodes:
+        "action:post_reaction": "React to post"
+        "trigger:post_reaction_changed": "Post reaction changed"
+      node_descriptions:
+        "action:post_reaction": "Add or remove a reaction on a post"
+        "trigger:post_reaction_changed": "Fires when a reaction on a post is added, replaced or removed. The user is the author; the actor is whoever reacted."
+        "trigger:post_reaction_changed_v1": "Fires when a reaction on a post is added, replaced or removed. The user is whoever reacted, not the author."
+      post_reaction:
+        operations:
+          add: "Add reaction"
+          remove: "Remove reaction"
+        reaction: "Reaction"
+        if_exists: "If the user already reacted"
+        if_exists_description: "Users can only have one reaction per post"
+        if_exists_keep: "Keep their reaction"
+        if_exists_replace: "Replace their reaction"
+      post_reaction_changed:
+        changes_added: "Added"
+        changes_replaced: "Replaced"
+        changes_removed: "Removed"
+        reaction: "Reaction"
+        reaction_description: "Only trigger when this reaction is added, replaced or removed. Leave empty to match any reaction."
     notifications:
       reaction_1_user_multiple_posts:
         one: "reacted to %{count} of your post"

@@ -1,6 +1,6 @@
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -22,8 +22,8 @@ export default <template>
           <tr>
             <td>
               <LinkTo
-                @route="group.reports.show"
                 @models={{array @controller.group.name query.id}}
+                @route="group.reports.show"
               >
                 {{query.name}}
               </LinkTo>
@@ -31,7 +31,7 @@ export default <template>
             <td>{{query.description}}</td>
             <td>
               {{#if query.last_run_at}}
-                {{ageWithTooltip query.last_run_at format="medium"}}
+                {{dAgeWithTooltip query.last_run_at format="medium"}}
               {{/if}}
             </td>
           </tr>

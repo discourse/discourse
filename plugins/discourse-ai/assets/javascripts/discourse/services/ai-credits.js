@@ -1,6 +1,6 @@
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { getAiCreditLimitMessage } from "../lib/ai-errors";
+import { getAiCreditLimitMessage } from "../lib/ai-errors.js";
 
 /**
  * Service for checking AI credit status across features.

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Bot - Homepage", type: :system do
+RSpec.describe "AI Bot - Homepage" do
   let(:cdp) { PageObjects::CDP.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -31,11 +31,19 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       display_name: "Duplicate",
     )
   end
+  fab!(:general_agent) do
+    AiAgent
+      .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+      .tap do |agent|
+        agent.update!(default_llm: claude_2)
+        agent.ensure_user!
+      end
+  end
   fab!(:bot_user) do
     enable_current_plugin
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.ai_bot_enabled = true
-    claude_2.reload.user
+    general_agent.user
   end
   fab!(:bot) do
     agent =
@@ -43,7 +51,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
         .class_instance
         .new
-    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: claude_2)
   end
 
   fab!(:pm) do
@@ -99,7 +107,9 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     enable_current_plugin
 
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
-    pm.save!
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = general_agent.id
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+    pm.save_custom_fields
 
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.navigation_menu = "sidebar"
@@ -133,7 +143,10 @@ RSpec.describe "AI Bot - Homepage", type: :system do
   end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }
+    before do
+      SiteSetting.ai_bot_add_to_header = true
+      SiteSetting.ai_bot_enable_docked_composer = true
+    end
 
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
@@ -253,15 +266,33 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
     end
 
+    it "allows navigating to a specific LLM and agent with slugified names" do
+      visit "/discourse-ai/ai-bot/conversations?agent=test-agent&llm=duplicate"
+
+      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
+      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+    end
+
+    it "keeps the URL in sync with the selected agent and LLM" do
+      ai_pm_homepage.visit
+
+      ai_pm_homepage.agent_selector.expand
+      ai_pm_homepage.agent_selector.select_row_by_name(agent.name)
+      expect(page).to have_current_path(/agent=test-agent/)
+
+      ai_pm_homepage.llm_selector.expand
+      ai_pm_homepage.llm_selector.select_row_by_name(claude_2_dup.display_name)
+      expect(page).to have_current_path(/agent=test-agent/)
+      expect(page).to have_current_path(/llm=duplicate/)
+    end
+
     it "removes agent from selector when allow_personal_messages is disabled" do
-      begin
-        agent.update!(allow_personal_messages: false)
-        ai_pm_homepage.visit
-        ai_pm_homepage.agent_selector.expand
-        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
-      ensure
-        agent.update!(allow_personal_messages: true)
-      end
+      agent.update!(allow_personal_messages: false)
+      ai_pm_homepage.visit
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
+    ensure
+      agent.update!(allow_personal_messages: true)
     end
 
     it "includes agent in selector when allow_personal_messages is enabled" do
@@ -325,7 +356,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
     it "displays the shuffle icon when on homepage or bot PM" do
       visit "/"
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
       header.click_bot_button
 
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
@@ -334,9 +365,9 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       ai_pm_homepage.click_fist_sidebar_conversation
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
 
-      # Go back home and assert that the icon is now robot again
+      # Go back home and assert that the icon is now discobot again
       header.click_bot_button
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     end
 
     it "displays 'new question' button on homepage and topic page" do
@@ -354,14 +385,15 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       expect(ai_pm_homepage).to have_homepage
     end
 
-    it "can send a new message to the bot" do
+    it "can send a new message to the bot via the docked composer" do
       topic_page.visit_topic(pm)
-      topic_page.click_reply_button
-      expect(composer).to be_opened
+      expect(page).to have_css(".ai-bot-docked-composer")
 
-      composer.fill_in(with: "Hello bot replying to you")
-      composer.submit
-      expect(page).to have_content("Hello bot replying to you")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
+        find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "Hello bot replying to you")
+        find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
+        expect(page).to have_content("Hello bot replying to you")
+      end
     end
 
     it "does not render custom sidebar on non-authored bot pms" do
@@ -412,12 +444,12 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         SiteSetting.ai_bot_add_to_header = true
       end
 
-      it "keeps robot icon in the header and doesn't display sidebar back link" do
+      it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "far-discobot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "shuffle")
         expect(ai_pm_homepage).to have_no_sidebar_back_link
       end
 

@@ -34,9 +34,9 @@ vi:
       tomorrow:
         empty: "Không thành viên nào có sinh nhật trong ngày mai."
     anniversaries:
-      title: "Kỷ niệm"
+      title: "Ngày kỷ niệm"
       month:
-        title: "Các kỷ niệm trong tháng"
+        title: "Ngày kỷ niệm trong tháng"
         empty: "Không có người dùng nào kỷ niệm trong tháng này."
       upcoming:
         title: "Những kỷ niệm từ %{start_date} - %{end_date}"

@@ -12,6 +12,7 @@ class User::Suspend
     attribute :post_id, :integer
     attribute :post_action, :string
     attribute :post_edit, :string
+    attribute :reviewable_id, :integer
 
     validates :user_id, presence: true
     validates :reason, presence: true, length: { maximum: 300 }
@@ -23,6 +24,8 @@ class User::Suspend
               },
               allow_blank: true
   end
+
+  options { attribute :raise_on_failure, :boolean, default: false }
 
   model :user
   policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
@@ -46,15 +49,25 @@ class User::Suspend
     users.all? { guardian.can_suspend?(it) }
   end
 
-  def suspend(guardian:, users:, params:)
-    context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, params:)
+  def suspend(guardian:, users:, params:, options:)
+    context[:full_reason] = User::Action::SuspendAll.call(
+      users:,
+      actor: guardian.user,
+      params:,
+      raise_on_failure: options.raise_on_failure,
+    )
   end
 
   def fetch_post(params:)
     Post.find_by(id: params.post_id)
   end
 
-  def perform_post_action(guardian:, post:, params:)
-    User::Action::TriggerPostAction.call(guardian:, post:, params:)
+  def perform_post_action(guardian:, post:, params:, options:)
+    User::Action::TriggerPostAction.call(
+      guardian:,
+      post:,
+      params:,
+      raise_on_failure: options.raise_on_failure,
+    )
   end
 end

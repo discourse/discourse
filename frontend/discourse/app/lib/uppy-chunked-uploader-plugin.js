@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import EventTracker from "@uppy/utils/lib/EventTracker";
+import { EventManager } from "@uppy/core";
 import { Promise } from "rsvp";
 import getURL from "discourse/lib/get-url";
 import UppyChunkedUpload from "discourse/lib/uppy-chunked-upload";
@@ -28,6 +28,14 @@ export default class UppyChunkedUploader extends UploaderPlugin {
 
     this.uploaders = Object.create(null);
     this.uploaderEvents = Object.create(null);
+  }
+
+  install() {
+    this._install(this._upload.bind(this));
+  }
+
+  uninstall() {
+    this._uninstall(this._upload.bind(this));
   }
 
   _resetUploaderReferences(fileID, opts = {}) {
@@ -83,9 +91,7 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       };
 
       const upload = new UppyChunkedUpload(file, {
-        getChunkSize: this.opts.getChunkSize
-          ? this.opts.getChunkSize.bind(this)
-          : null,
+        getChunkSize: this.opts.getChunkSize?.bind(this),
 
         onStart,
         onProgress,
@@ -101,7 +107,7 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       });
 
       this.uploaders[file.id] = upload;
-      this.uploaderEvents[file.id] = new EventTracker(this.uppy);
+      this.uploaderEvents[file.id] = new EventManager(this.uppy);
 
       next(() => {
         if (!file.isPaused) {
@@ -117,20 +123,6 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       this._onCancelAll(file.id, () => {
         this._resetUploaderReferences(file.id, { abort: true });
         resolve(`upload ${file.id} was canceled`);
-      });
-
-      this._onFilePause(file.id, (isPaused) => {
-        if (isPaused) {
-          upload.pause();
-        } else {
-          next(() => {
-            upload.start();
-          });
-        }
-      });
-
-      this._onPauseAll(file.id, () => {
-        upload.pause();
       });
 
       this._onResumeAll(file.id, () => {
@@ -154,23 +146,6 @@ export default class UppyChunkedUploader extends UploaderPlugin {
       if (fileID === file.id) {
         cb(file.id);
       }
-    });
-  }
-
-  _onFilePause(fileID, cb) {
-    this.uploaderEvents[fileID].on("upload-pause", (targetFileID, isPaused) => {
-      if (fileID === targetFileID) {
-        cb(isPaused);
-      }
-    });
-  }
-
-  _onPauseAll(fileID, cb) {
-    this.uploaderEvents[fileID].on("pause-all", () => {
-      if (!this.uppy.getFile(fileID)) {
-        return;
-      }
-      cb();
     });
   }
 
@@ -199,13 +174,5 @@ export default class UppyChunkedUploader extends UploaderPlugin {
     });
 
     return Promise.all(promises);
-  }
-
-  install() {
-    this._install(this._upload.bind(this));
-  }
-
-  uninstall() {
-    this._uninstall(this._upload.bind(this));
   }
 }

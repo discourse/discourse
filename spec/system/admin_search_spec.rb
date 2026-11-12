@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Search", type: :system do
+describe "Admin Search" do
   fab!(:current_user, :admin)
   let(:search_modal) { PageObjects::Modals::AdminSearch.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
@@ -75,6 +75,7 @@ describe "Admin Search", type: :system do
 
   it "opens search modal with keyboard shortcut" do
     visit "/admin"
+    expect(page).to have_css("#site-logo")
 
     send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])
     expect(search_modal).to be_open

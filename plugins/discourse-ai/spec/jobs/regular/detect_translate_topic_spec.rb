@@ -12,6 +12,8 @@ describe Jobs::DetectTranslateTopic do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -38,6 +40,23 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
+  it "enqueues a known source-locale gist when translation credits are unavailable" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    topic.update!(locale: "en")
+    DiscourseAi::Translation.expects(:credits_available_for_topic_detection?).returns(false)
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
+
+    expect(Jobs::FastTrackTopicGist.jobs.last["args"].first).to include(
+      "topic_id" => topic.id,
+      "locale" => "en",
+    )
+  end
+
   it "detects locale" do
     allow(DiscourseAi::Translation::TopicLocaleDetector).to receive(:detect_locale).with(
       topic,
@@ -55,11 +74,53 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
+  it "enqueues gists in the source and translated target locales" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    SiteSetting.content_localization_enabled = true
+    topic.update!(locale: "en")
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(2)
+
+    job_args = Jobs::FastTrackTopicGist.jobs.last(2).map { |queued_job| queued_job["args"].first }
+    expect(job_args).to contain_exactly(
+      include("topic_id" => topic.id, "locale" => "en"),
+      include("topic_id" => topic.id, "locale" => "ja"),
+    )
+  end
+
+  it "enqueues a source-locale gist when translation targets become empty" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    SiteSetting.content_localization_supported_locales = ""
+    topic.update!(locale: "en")
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
+
+    job_args = Jobs::FastTrackTopicGist.jobs.last["args"].first
+    expect(job_args).to include("topic_id" => topic.id, "locale" => "en")
+  end
+
   it "skips bot topics by default" do
     topic.update!(user: Discourse.system_user)
     DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
 
     job.execute({ topic_id: topic.id })
+  end
+
+  it "enqueues a known source gist when bot translation is disabled" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    topic.update!(user: Discourse.system_user, locale: "en")
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
   end
 
   it "translates bot topics when force is true" do
@@ -138,9 +199,11 @@ describe Jobs::DetectTranslateTopic do
     expect { job.execute({ topic_id: topic.id }) }.not_to raise_error
   end
 
-  describe "with public content and PM limitations" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+  describe "with category scope and PM scope" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
 
     fab!(:personal_pm_topic, :private_message_topic)
 
@@ -148,28 +211,62 @@ describe Jobs::DetectTranslateTopic do
       Fabricate(:group_private_message_topic, recipient_group: Fabricate(:group))
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is true" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before do
+      SiteSetting.ai_translation_category_scope = "exclude"
+      SiteSetting.ai_translation_categories = excluded_category.id.to_s
+    end
 
-      it "skips topics from restricted categories and PMs" do
-        DiscourseAi::Translation::TopicLocaleDetector
-          .expects(:detect_locale)
-          .with(private_topic)
-          .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(private_topic, any_parameters)
-          .never
-        job.execute({ topic_id: private_topic.id })
+    it "skips topics outside the category scope" do
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(excluded_topic)
+        .never
 
-        # Skip personal PMs
+      job.execute({ topic_id: excluded_topic.id })
+    end
+
+    it "processes topics in included categories" do
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
+
+      job.execute({ topic_id: included_topic.id })
+    end
+
+    it "processes regular topics when all categories are configured" do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
+
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
+
+      job.execute({ topic_id: included_topic.id })
+    end
+
+    it "skips subcategory topics in strict include mode" do
+      subcategory = Fabricate(:category, parent_category: included_category)
+      subcategory_topic = Fabricate(:topic, category: subcategory)
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
+
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(subcategory_topic)
+        .never
+
+      job.execute({ topic_id: subcategory_topic.id })
+    end
+
+    context "when pm_translation_scope is none" do
+      before { SiteSetting.ai_translation_personal_messages = "none" }
+
+      it "skips all PMs" do
         DiscourseAi::Translation::TopicLocaleDetector
           .expects(:detect_locale)
           .with(personal_pm_topic)
-          .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(personal_pm_topic, any_parameters)
           .never
         job.execute({ topic_id: personal_pm_topic.id })
 
@@ -177,25 +274,14 @@ describe Jobs::DetectTranslateTopic do
           .expects(:detect_locale)
           .with(group_pm_topic)
           .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(group_pm_topic, any_parameters)
-          .never
-
         job.execute({ topic_id: group_pm_topic.id })
       end
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is false" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
+    context "when pm_translation_scope is group" do
+      before { SiteSetting.ai_translation_personal_messages = "group" }
 
-      it "processes topics from private categories and group PMs but skips personal PMs" do
-        DiscourseAi::Translation::TopicLocaleDetector
-          .expects(:detect_locale)
-          .with(private_topic)
-          .once
-        job.execute({ topic_id: private_topic.id })
-
+      it "processes group PMs but skips personal PMs" do
         DiscourseAi::Translation::TopicLocaleDetector
           .expects(:detect_locale)
           .with(group_pm_topic)
@@ -206,10 +292,24 @@ describe Jobs::DetectTranslateTopic do
           .expects(:detect_locale)
           .with(personal_pm_topic)
           .never
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(personal_pm_topic, any_parameters)
-          .never
+        job.execute({ topic_id: personal_pm_topic.id })
+      end
+    end
+
+    context "when pm_translation_scope is all" do
+      before { SiteSetting.ai_translation_personal_messages = "all" }
+
+      it "processes all PMs" do
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_topic)
+          .once
+        job.execute({ topic_id: group_pm_topic.id })
+
+        DiscourseAi::Translation::TopicLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_topic)
+          .once
         job.execute({ topic_id: personal_pm_topic.id })
       end
     end
@@ -235,6 +335,8 @@ describe Jobs::DetectTranslateTopic do
     end
 
     it "publishes a MessageBus event to update the topic" do
+      SiteSetting.ai_translation_personal_messages = "all"
+
       allow(DiscourseAi::Translation::TopicLocaleDetector).to receive(:detect_locale).with(
         group_pm_topic,
       ).and_return("en")
@@ -246,6 +348,9 @@ describe Jobs::DetectTranslateTopic do
       expect(message.count).to eq(1)
       expect(message.first.channel).to eq("/topic/#{group_pm_topic.id}")
       expect(message.first.data).to eq(reload_topic: true)
+      expect(message.first.user_ids).to contain_exactly(
+        *group_pm_topic.secure_audience_publish_messages[:user_ids],
+      )
     end
   end
 end

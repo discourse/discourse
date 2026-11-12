@@ -8,7 +8,7 @@ import {
   MAX_DISPLAYED_USERNAMES,
 } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
-module("Discourse Chat | Unit | get-reaction-text", function (hooks) {
+module("Unit | get-reaction-text", function (hooks) {
   setupTest(hooks);
 
   test("no reaction", function (assert) {

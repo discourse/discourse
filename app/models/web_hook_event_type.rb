@@ -134,7 +134,7 @@ class WebHookEventType < ActiveRecord::Base
         ],
       )
     end
-    self.where.not(id: ids_to_exclude)
+    where.not(id: ids_to_exclude)
   end
 end
 
@@ -143,6 +143,6 @@ end
 # Table name: web_hook_event_types
 #
 #  id    :integer          not null, primary key
-#  name  :string           not null
 #  group :integer
+#  name  :string           not null
 #

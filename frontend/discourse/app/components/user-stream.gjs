@@ -7,9 +7,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
@@ -17,6 +14,9 @@ import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStreamComponent extends Component {
@@ -29,13 +29,6 @@ export default class UserStreamComponent extends Component {
   constructor() {
     super(...arguments);
     this.updateBulkSelectPosts();
-  }
-
-  @action
-  updateBulkSelectPosts() {
-    if (this.isDraftsRoute && this.args.stream?.content) {
-      this.bulkSelectHelper.updatePosts(this.args.stream.content);
-    }
   }
 
   get isDraftsRoute() {
@@ -81,6 +74,13 @@ export default class UserStreamComponent extends Component {
     }
 
     return "username";
+  }
+
+  @action
+  updateBulkSelectPosts() {
+    if (this.isDraftsRoute && this.args.stream?.content) {
+      this.bulkSelectHelper.updatePosts(this.args.stream.content);
+    }
   }
 
   @action
@@ -175,28 +175,28 @@ export default class UserStreamComponent extends Component {
       return;
     }
 
-    if (event.target.matches(".excerpt a")) {
+    if (event.target.closest(".excerpt a")) {
       return ClickTrack.trackClick(event, getOwner(this));
     }
   }
 
   <template>
     <PostList
-      @posts={{@stream.content}}
-      @isLoading={{@stream.loading}}
-      @idPath="post_id"
-      @urlPath="postUrl"
-      @usernamePath={{this.usernamePath}}
-      @fetchMorePosts={{this.loadMore}}
-      @titlePath="titleHtml"
+      class={{dConcatClass "user-stream" this.filterClassName}}
       @additionalItemClasses="user-stream-item"
-      @showUserInfo={{false}}
-      @resumeDraft={{this.resumeDraft}}
-      @removeDraft={{this.removeDraft}}
+      @bulkActions={{this.bulkActions}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @bulkSelectHelper={{this.showBulkSelectHelper}}
-      @bulkActions={{this.bulkActions}}
-      class={{concatClass "user-stream" this.filterClassName}}
+      @fetchMorePosts={{this.loadMore}}
+      @idPath="post_id"
+      @isLoading={{@stream.loading}}
+      @posts={{@stream.content}}
+      @removeDraft={{this.removeDraft}}
+      @resumeDraft={{this.resumeDraft}}
+      @showUserInfo={{false}}
+      @titlePath="titleHtml"
+      @urlPath="postUrl"
+      @usernamePath={{this.usernamePath}}
       {{on "click" this.handleClick}}
       {{didUpdate this.updateBulkSelectPosts @stream.content}}
     >
@@ -209,8 +209,8 @@ export default class UserStreamComponent extends Component {
       <:belowPostItemMetaData as |post|>
         <span>
           <PluginOutlet
-            @name="user-stream-item-header"
             @connectorTagName="div"
+            @name="user-stream-item-header"
             @outletArgs={{lazyHash item=post}}
           />
         </span>
@@ -218,21 +218,21 @@ export default class UserStreamComponent extends Component {
       <:abovePostItemExcerpt as |post|>
         <PostActionDescription
           @actionCode={{post.action_code}}
-          @username={{post.action_code_who}}
           @path={{post.action_code_path}}
+          @username={{post.action_code_who}}
         />
 
         {{#each post.children as |child|}}
           <div class="user-stream-item-actions">
-            {{icon child.icon class="icon"}}
+            {{dIcon child.icon class="icon"}}
             {{#each child.items as |grandChild|}}
               <a
-                href={{grandChild.userUrl}}
-                data-user-card={{grandChild.username}}
                 class="avatar-link"
+                data-user-card={{grandChild.username}}
+                href={{grandChild.userUrl}}
               >
                 <div class="avatar-wrapper">
-                  {{avatar
+                  {{dAvatar
                     grandChild
                     imageSize="tiny"
                     extraClasses="actor"

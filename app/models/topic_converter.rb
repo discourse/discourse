@@ -3,9 +3,10 @@
 class TopicConverter
   attr_reader :topic
 
-  def initialize(topic, user)
+  def initialize(topic, user, silent: false)
     @topic = topic
     @user = user
+    @silent = silent
   end
 
   def convert_to_public_topic(category_id = nil)
@@ -20,57 +21,90 @@ class TopicConverter
           .where.not(id: SiteSetting.uncategorized_category_id)
           .first
 
-      PostRevisor.new(@topic.first_post, @topic).revise!(
-        @user,
-        category_id: @category.id,
-        archetype: Archetype.default,
-      )
+      # PostRevisor skips a disallowed category change without failing, which
+      # would otherwise publish the message in the default category.
+      if !Guardian.new(@user).can_move_topic_to_category?(@category)
+        @topic.errors.add(:base, I18n.t("category.errors.move_topic_to_category_disallowed"))
+        raise ActiveRecord::Rollback
+      end
 
-      raise ActiveRecord::Rollback if !@topic.valid?
+      revised =
+        PostRevisor.new(@topic.first_post, @topic).revise!(
+          @user,
+          { category_id: @category.id, archetype: Archetype.default },
+          revise_opts,
+        )
+
+      raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
       update_user_stats
       update_post_uploads_secure_status
-      add_small_action("public_topic")
-      Tag.update_counters(@topic.tags, { public_topic_count: 1 }) if !@category.read_restricted
+      add_small_action("public_topic") unless @silent
+
+      update_tag_counters(1, include_public: !@category.read_restricted)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
-      watch_topic(@topic)
+      watch_topic(@topic) unless @silent
     end
 
     @topic
   end
 
   def convert_to_private_message
+    if exceeds_recipient_cap?
+      @topic.errors.add(
+        :base,
+        I18n.t(
+          "topic_converter.too_many_recipients",
+          max: SiteSetting.max_allowed_message_recipients,
+        ),
+      )
+      return @topic
+    end
+
     Topic.transaction do
       was_public = !@topic.category.read_restricted
       @topic.update_category_topic_count_by(-1) if @topic.visible
 
-      PostRevisor.new(@topic.first_post, @topic).revise!(
-        @user,
-        category_id: nil,
-        archetype: Archetype.private_message,
-      )
+      revised =
+        PostRevisor.new(@topic.first_post, @topic).revise!(
+          @user,
+          { category_id: nil, archetype: Archetype.private_message },
+          revise_opts,
+        )
 
-      raise ActiveRecord::Rollback if !@topic.valid?
+      raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
+      PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       add_allowed_users
       update_post_uploads_secure_status
-      add_small_action("private_topic")
-      Tag.update_counters(@topic.tags, { public_topic_count: -1 }) if was_public
+      add_small_action("private_topic") unless @silent
+
+      update_tag_counters(-1, include_public: was_public)
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
-      watch_topic(@topic)
+      watch_topic(@topic) unless @silent
     end
 
     @topic
   end
 
   private
+
+  def update_tag_counters(topic_count_delta, include_public:)
+    counters = { staff_topic_count: topic_count_delta, pm_topic_count: -topic_count_delta }
+    counters[:public_topic_count] = topic_count_delta if include_public
+    Tag.update_counters(@topic.tags, counters)
+  end
+
+  def revise_opts
+    { bypass_bump: @silent, silent: @silent, hidden: true }
+  end
 
   def posters
     @posters ||=
@@ -126,15 +160,17 @@ class TopicConverter
     existing_allowed_users = @topic.topic_allowed_users.pluck(:user_id)
     users_to_allow = posters << @user.id
 
-    if (users_to_allow | existing_allowed_users).length > SiteSetting.max_allowed_message_recipients
-      users_to_allow = [@user.id]
-    end
-
     (users_to_allow - existing_allowed_users).uniq.each do |user_id|
       @topic.topic_allowed_users.build(user_id: user_id)
     end
 
     @topic.save!
+  end
+
+  def exceeds_recipient_cap?
+    allowed_users = @topic.topic_allowed_users.pluck(:user_id)
+    total_recipients = (posters | allowed_users | [@user.id]).size
+    total_recipients > SiteSetting.max_allowed_message_recipients
   end
 
   def watch_topic(topic)

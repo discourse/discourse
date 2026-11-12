@@ -1,3 +1,4 @@
+import curryComponent from "ember-curry-component";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
@@ -38,18 +39,36 @@ const CONTROL_COMPONENTS = {
   toggle: FKControlToggle,
 };
 
-export function resolveFieldControl(type) {
+const _INPUT_CONTROL_COMPONENTS = new WeakMap();
+function getInputControlComponent(inputType, owner) {
+  let mapForOwner = _INPUT_CONTROL_COMPONENTS.get(owner);
+  if (!mapForOwner) {
+    mapForOwner = new Map();
+    _INPUT_CONTROL_COMPONENTS.set(owner, mapForOwner);
+  }
+  if (mapForOwner.has(inputType)) {
+    return mapForOwner.get(inputType);
+  }
+
+  const curried = curryComponent(
+    FKControlInput,
+    {
+      type: inputType,
+    },
+    owner
+  );
+  mapForOwner.set(inputType, curried);
+
+  return curried;
+}
+
+export function resolveFieldControl(type, owner) {
   if (!type) {
     throw new Error("@type is required on `<form.Field />`.");
   }
 
   if (type.startsWith("input-")) {
-    return {
-      component: FKControlInput,
-      args: {
-        type: type.slice("input-".length),
-      },
-    };
+    return getInputControlComponent(type.slice("input-".length), owner);
   }
 
   const component = CONTROL_COMPONENTS[type];
@@ -58,5 +77,5 @@ export function resolveFieldControl(type) {
     throw new Error(`Unsupported \`<form.Field @type>\` value: "${type}".`);
   }
 
-  return { component, args: {} };
+  return component;
 }

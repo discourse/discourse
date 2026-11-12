@@ -2,23 +2,18 @@
 
 module DiscourseAi
   module GuardianExtensions
-    def can_see_summary?(target)
+    def can_see_summary?(target, cached_summary: nil)
       return false if !SiteSetting.ai_summarization_enabled
 
       if target.class == Topic && target.private_message?
-        allowed =
-          SiteSetting.ai_pm_summarization_allowed_groups_map.any? do |group_id|
-            user.group_ids.include?(group_id)
-          end
-
-        return false if !allowed
+        return false if !in_any_groups?(SiteSetting.ai_pm_summarization_allowed_groups_map)
       end
 
-      has_cached_summary =
-        AiSummary.exists?(target: target, summary_type: AiSummary.summary_types[:complete])
-      return has_cached_summary if user.nil?
+      can_summarize = can_request_summary?
+      return true if can_summarize
+      return false if cached_summary.nil?
 
-      has_cached_summary || can_request_summary?
+      cached_summary.present? && !cached_summary.outdated
     end
 
     def can_see_gists?
@@ -28,11 +23,8 @@ module DiscourseAi
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summary_gists_agent)).blank?
         return false
       end
-      agent_groups = ai_agent.allowed_group_ids.to_a
-      return true if agent_groups.include?(Group::AUTO_GROUPS[:everyone])
-      return false if anonymous?
 
-      agent_groups.any? { |group_id| user.group_ids.include?(group_id) }
+      in_any_groups?(ai_agent.allowed_group_ids.to_a)
     end
 
     def can_request_gists?
@@ -53,12 +45,11 @@ module DiscourseAi
     def can_request_summary?
       return false if anonymous?
 
-      user_group_ids = user.group_ids
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)).blank?
         return false
       end
 
-      ai_agent.allowed_group_ids.to_a.any? { |group_id| user.group_ids.include?(group_id) }
+      in_any_groups?(ai_agent.allowed_group_ids.to_a)
     end
 
     def can_debug_ai_bot_conversation?(target)
@@ -71,7 +62,15 @@ module DiscourseAi
         return false
       end
 
-      user.in_any_groups?(SiteSetting.ai_bot_debugging_allowed_groups_map)
+      in_any_groups?(SiteSetting.ai_bot_debugging_allowed_groups_map)
+    end
+
+    def can_send_pm_to_ai_bot?(target)
+      return false if anonymous?
+      return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_bot_enabled
+      return false if !target.is_a?(::User)
+
+      DiscourseAi::AiBot::EntryPoint.personal_message_bot_user_ids(user).include?(target.id)
     end
 
     def can_share_ai_bot_conversation?(target)
@@ -82,7 +81,7 @@ module DiscourseAi
         return false
       end
 
-      return false if !user.in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
+      return false if !in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
 
       # In future we may add other valid targets for AI conversation sharing,
       # for now we only support topics.
@@ -108,6 +107,12 @@ module DiscourseAi
       end
 
       true
+    end
+
+    def can_inspect_ai_shares?(owner)
+      return false if anonymous? || !owner
+
+      owner.id == user.id || is_admin?
     end
 
     def can_destroy_shared_ai_bot_conversation?(conversation)

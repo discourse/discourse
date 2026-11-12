@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Post Validations", type: :system do
+describe "Composer Post Validations" do
   fab!(:tl0_user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:tl1_user) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -35,11 +35,13 @@ describe "Composer Post Validations", type: :system do
 
   describe "trust level 0 user" do
     before { sign_in(tl0_user) }
+
     include_examples "post length validation"
   end
 
   describe "trust level 1 user" do
     before { sign_in(tl1_user) }
+
     include_examples "post length validation"
   end
 

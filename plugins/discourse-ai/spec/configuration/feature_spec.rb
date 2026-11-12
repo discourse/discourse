@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Configuration::Feature do
-  fab!(:llm_model)
-  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
+  fab!(:llm_model) { Fabricate(:llm_model, vision_enabled: true) }
+  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id, vision_enabled: true) }
 
   before { assign_fake_provider_to(:ai_default_llm_model) }
 
@@ -11,6 +11,53 @@ RSpec.describe DiscourseAi::Configuration::Feature do
   end
 
   before { enable_current_plugin }
+
+  describe ".sentiment_features" do
+    it "toggles each capability separately and keeps module enablement as their union" do
+      sentiment, emotion = described_class.sentiment_features
+      sentiment_module =
+        DiscourseAi::Configuration::Module.find_by(
+          id: DiscourseAi::Configuration::Module::SENTIMENT_ID,
+        )
+
+      expect(sentiment_module.enabled_by_setting).to be_nil
+
+      [
+        [false, false],
+        [true, false],
+        [false, true],
+        [true, true],
+      ].each do |sentiment_enabled, emotion_enabled|
+        SiteSetting.ai_sentiment_enabled = sentiment_enabled
+        SiteSetting.ai_sentiment_emotion_enabled = emotion_enabled
+
+        expect(sentiment.enabled?).to eq(sentiment_enabled)
+        expect(emotion.enabled?).to eq(emotion_enabled)
+        expect(sentiment_module.enabled?).to eq(sentiment_enabled || emotion_enabled)
+      end
+    end
+
+    it "only reports agent usage for capabilities using the agent backend" do
+      SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+      SiteSetting.ai_sentiment_emotion_agent = ai_agent.id
+      SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+      SiteSetting.ai_sentiment_emotion_classification_strategy = "decision_model"
+
+      sentiment, emotion = described_class.sentiment_features
+
+      expect(sentiment.agent_ids).to eq([ai_agent.id])
+      expect(sentiment.llm_models).to eq([llm_model])
+      expect(sentiment.metadata).to eq(backend: "agent", ready: true)
+      expect(emotion.agent_ids).to eq([])
+      expect(emotion.llm_models).to eq([])
+      expect(emotion.metadata).to eq(backend: "decision_model", ready: false, decision_model: nil)
+      expect(
+        described_class
+          .find_features_using(agent_id: ai_agent.id)
+          .select { |feature| feature.module_name == "sentiment" },
+      ).to eq([sentiment])
+    end
+  end
 
   describe "#llm_model" do
     context "when agent is not found" do
@@ -174,10 +221,18 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
 
     it "returns only agents with at least one bot permission enabled" do
-      expected_ids = [chat_agent.id, dm_agent.id, topic_agent.id, pm_agent.id]
-      AiAgent.where.not(id: expected_ids).update_all(enabled: false)
-      expect(bot_feature.agent_ids).to match_array(expected_ids)
+      expected = [chat_agent, dm_agent, topic_agent, pm_agent]
+      expected.each(&:ensure_user!)
+      inactive_agent.ensure_user!
+      AiAgent.where.not(id: expected.map(&:id)).update_all(enabled: false)
+      expect(bot_feature.agent_ids).to match_array(expected.map(&:id))
       expect(bot_feature.agent_ids).not_to include(inactive_agent.id)
+    end
+
+    it "only returns agents people can talk to, which need a bot user" do
+      pm_agent.update_columns(user_id: nil)
+
+      expect(bot_feature.agent_ids).not_to include(pm_agent.id)
     end
 
     it "includes agents with multiple permissions enabled" do
@@ -191,8 +246,70 @@ RSpec.describe DiscourseAi::Configuration::Feature do
           allow_topic_mentions: true,
           allow_personal_messages: true,
         )
+      multi_permission_agent.ensure_user!
 
       expect(bot_feature.agent_ids).to include(multi_permission_agent.id)
+    end
+
+    it "does not include the image caption agent" do
+      pm_agent.update!(default_llm_id: bot_llm.id, vision_enabled: true)
+      bot_llm.update!(vision_enabled: true)
+      SiteSetting.ai_image_caption_agent = pm_agent.id
+
+      expect(bot_feature.agent_ids).not_to include(pm_agent.id)
+    end
+  end
+
+  describe ".image_caption_features" do
+    let(:image_caption_feature) { described_class.image_caption_features.first }
+
+    it "returns the post image captions feature with the image caption module configuration" do
+      expect(image_caption_feature.name).to eq("post_image_captions")
+      expect(image_caption_feature.agent_setting).to eq("ai_image_caption_agent")
+      expect(image_caption_feature.module_id).to eq(
+        DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+      )
+      expect(image_caption_feature.module_name).to eq(
+        DiscourseAi::Configuration::Module::IMAGE_CAPTION,
+      )
+    end
+
+    it "uses the selected image caption agent" do
+      SiteSetting.ai_image_caption_agent = ai_agent.id
+
+      expect(image_caption_feature.agent_ids).to eq([ai_agent.id])
+    end
+  end
+
+  describe ".search_features" do
+    fab!(:follow_up_agent) do
+      Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
+    end
+    fab!(:query_rewrite_agent, :ai_agent)
+
+    it "keeps Discoveries separate from Ask AI" do
+      SiteSetting.ai_discover_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_query_rewriter_agent = query_rewrite_agent.id
+      SiteSetting.ai_ask_ai_follow_up_agent = follow_up_agent.id
+
+      discoveries, ask_ai = described_class.search_features
+
+      expect(discoveries.name).to eq("discoveries")
+      expect(discoveries.agent_ids).to eq([ai_agent.id])
+      expect(ask_ai.name).to eq("ask_ai")
+      expect(ask_ai.agent_ids).to contain_exactly(
+        ai_agent.id,
+        query_rewrite_agent.id,
+        SiteSetting.ai_ask_ai_report_agent.to_i,
+        follow_up_agent.id,
+      )
+
+      SiteSetting.ai_discover_enabled = false
+      SiteSetting.ai_ask_ai_enabled = true
+
+      expect(discoveries).not_to be_enabled
+      expect(ask_ai).to be_enabled
     end
   end
 
@@ -211,15 +328,58 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
   end
 
+  describe ".admin_dashboard_features" do
+    it "returns the first-party admin dashboard highlights feature" do
+      feature = described_class.admin_dashboard_features.first
+
+      expect(feature.name).to eq("highlights")
+      expect(feature.agent_setting).to eq("ai_admin_dashboard_highlights_agent")
+      expect(feature.module_id).to eq(DiscourseAi::Configuration::Module::ADMIN_DASHBOARD_ID)
+      expect(feature.module_name).to eq(DiscourseAi::Configuration::Module::ADMIN_DASHBOARD)
+    end
+
+    it "is enabled only when its selected agent is enabled" do
+      SiteSetting.ai_admin_dashboard_enabled = true
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
+      feature = described_class.admin_dashboard_features.first
+
+      expect(feature).to be_enabled
+
+      agent.update!(enabled: false)
+      expect(feature).not_to be_enabled
+    end
+
+    it "is disabled when the admin dashboard module is disabled" do
+      SiteSetting.ai_admin_dashboard_enabled = false
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
+
+      expect(described_class.admin_dashboard_features.first).not_to be_enabled
+    end
+  end
+
+  describe "admin dashboard module" do
+    it "is hidden from the AI features page" do
+      admin_dashboard_module =
+        DiscourseAi::Configuration::Module.all.find do |mod|
+          mod.name == DiscourseAi::Configuration::Module::ADMIN_DASHBOARD
+        end
+
+      expect(admin_dashboard_module).not_to be_visible
+    end
+  end
+
   describe ".find_features_using" do
     it "returns all features using a specific agent" do
       SiteSetting.ai_summarization_agent = ai_agent.id
       SiteSetting.ai_helper_proofreader_agent = ai_agent.id
+      SiteSetting.ai_image_caption_agent = ai_agent.id
       SiteSetting.ai_translation_locale_detector_agent = 999
 
       features = described_class.find_features_using(agent_id: ai_agent.id)
 
-      expect(features.map(&:name)).to include("topic_summaries", "proofread")
+      expect(features.map(&:name)).to include("topic_summaries", "proofread", "post_image_captions")
       expect(features.map(&:name)).not_to include("locale_detector")
     end
   end

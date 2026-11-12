@@ -8,7 +8,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | search-menu/results/assistant-item",
+  "Integration | Component | SearchMenu | Results | AssistantItem",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -20,9 +20,9 @@ module(
         <template>
           <ul>
             <AssistantItem
+              @closeSearchMenu={{noop}}
               @extraHint={{true}}
               @label="test search"
-              @closeSearchMenu={{noop}}
               @searchTermChanged={{noop}}
             />
           </ul>
@@ -40,9 +40,9 @@ module(
         <template>
           <ul>
             <AssistantItem
+              @closeSearchMenu={{noop}}
               @extraHint={{true}}
               @label="test search"
-              @closeSearchMenu={{noop}}
               @searchTermChanged={{noop}}
             />
           </ul>

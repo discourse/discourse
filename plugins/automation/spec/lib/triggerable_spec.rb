@@ -16,17 +16,68 @@ describe DiscourseAutomation::Triggerable do
 
   fab!(:automation) { Fabricate(:automation, trigger: "foo") }
 
-  describe "active automation thread safety" do
-    after { DiscourseAutomation.set_active_automation(nil) }
+  describe "deprecated active automation API" do
+    it "raises a deprecation error" do
+      expect { DiscourseAutomation.set_active_automation(10) }.to raise_error(
+        Discourse::Deprecation,
+        /suppress_triggers/,
+      )
 
-    it "ensurese thread safety when setting automation id" do
-      DiscourseAutomation.set_active_automation(10)
+      expect { DiscourseAutomation.get_active_automation }.to raise_error(
+        Discourse::Deprecation,
+        /suppress_triggers/,
+      )
+    end
+  end
 
-      thread = Thread.new { DiscourseAutomation.get_active_automation }
+  describe "trigger suppression thread safety" do
+    it "ensures suppressed triggers are thread-local" do
+      DiscourseAutomation.suppress_triggers do
+        thread = Thread.new { DiscourseAutomation.triggers_suppressed? }
+        thread.join
+        expect(thread.value).to eq(false)
+
+        expect(DiscourseAutomation.triggers_suppressed?).to eq(true)
+      end
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+
+    it "clears suppressed triggers after errors" do
+      expect { DiscourseAutomation.suppress_triggers { raise "boom" } }.to raise_error("boom")
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+
+    it "requires a block without changing existing suppression" do
+      DiscourseAutomation.suppress_triggers do
+        expect { DiscourseAutomation.suppress_triggers }.to raise_error(
+          StandardError,
+          "Expecting a block",
+        )
+
+        expect(DiscourseAutomation.triggers_suppressed?).to eq(true)
+      end
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+  end
+
+  describe "recursion depth thread safety" do
+    after do
+      while DiscourseAutomation.recursion_depth.positive?
+        DiscourseAutomation.decrement_recursion_depth
+      end
+    end
+
+    it "ensures thread safety when setting recursion depth" do
+      DiscourseAutomation.increment_recursion_depth
+
+      thread = Thread.new { DiscourseAutomation.recursion_depth }
       thread.join
-      expect(thread.value).to eq(nil)
+      expect(thread.value).to eq(0)
 
-      expect(DiscourseAutomation.get_active_automation).to eq(10)
+      expect(DiscourseAutomation.recursion_depth).to eq(1)
     end
   end
 

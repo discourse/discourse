@@ -7,6 +7,10 @@
 nb_NO:
   chat:
     deleted_chat_username: slettet
+    crawler:
+      thread_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
     errors:
       not_accepting_dms: "Beklager, %{username} ønsker ikke å motta personlige meldinger for øyeblikket."
     reviewables:
@@ -38,6 +42,13 @@ nb_NO:
     popup:
       chat_mention:
         direct: '%{username} nevnte deg i "%{channel}"'
+    actions:
+      chat_reply:
+        title: Svar
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Godkjenn"
+      default_deny_label: "Avslå"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

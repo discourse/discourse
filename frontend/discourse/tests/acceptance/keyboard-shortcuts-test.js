@@ -1,6 +1,15 @@
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  find,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -287,11 +296,30 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-create-topic .composer-action-title")
+        .dom(".composer-action-create-topic .composer-actions-trigger")
         .includesText(
-          i18n("composer.composer_actions.create_topic.desc"),
+          i18n("composer.composer_actions.create_topic.label"),
           "composer shows create topic title"
         );
+    });
+
+    test("C key opens composer with a fresh draft in new topic mode from a regular topic", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await triggerKeyEvent(document, "keypress", "C");
+
+      assert
+        .dom(".composer-action-create-topic")
+        .exists("opens the composer in new topic mode");
+      const composerModel = this.owner.lookup("service:composer").model;
+      assert.true(
+        /^new_topic_\d+$/.test(composerModel.draftKey),
+        "uses a unique draft key"
+      );
+      assert.strictEqual(
+        composerModel.draftSequence,
+        0,
+        "starts a fresh draft sequence"
+      );
     });
 
     test("C key opens composer in new PM mode from messages list", async function (assert) {
@@ -299,9 +327,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-private-message .composer-action-title")
+        .dom(".composer-action-private-message .composer-actions-trigger")
         .includesText(
-          i18n("topic.private_message"),
+          i18n("composer.composer_actions.create_personal_message.label"),
           "composer shows create message title"
         );
     });
@@ -311,11 +339,156 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       await triggerKeyEvent(document, "keypress", "C");
 
       assert
-        .dom(".composer-action-private-message .composer-action-title")
+        .dom(".composer-action-private-message .composer-actions-trigger")
         .includesText(
-          i18n("topic.private_message"),
+          i18n("composer.composer_actions.create_personal_message.label"),
           "composer shows create message title"
         );
     });
+  });
+});
+
+acceptance("Keyboard Shortcuts Help Modal - Search", function () {
+  async function openHelpModal() {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+  }
+
+  function description(key) {
+    return i18n(`keyboard_shortcuts_help.${key}`, { shortcut: "" }).trim();
+  }
+
+  test("matches sequential keys without whitespace (gh → G H)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "gh");
+
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .includesText(description("jump_to.home"));
+    assert
+      .dom(".shortcut-category-jump_to tbody")
+      .doesNotIncludeText(description("jump_to.latest"));
+  });
+
+  test("requires every search token to match (command /)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "command /");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.filter_sidebar"));
+    assert
+      .dom(".shortcut-category-application tbody")
+      .doesNotIncludeText(description("application.help"));
+  });
+
+  test("modifier aliases match regardless of glyph (ctrl)", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "ctrl");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.search"));
+  });
+
+  test("multi-word description match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "open keyboard help");
+
+    assert
+      .dom(".shortcut-category-application tbody")
+      .includesText(description("application.help"));
+    assert
+      .dom(".shortcut-category-jump_to")
+      .doesNotExist("unrelated categories are filtered out");
+  });
+
+  test("alternative key groups don't merge for compact match", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "kj");
+
+    // navigation.up_down is K or J, not K then J. "kj" must not
+    // match it just because both letters appear across the alternative groups.
+    assert
+      .dom(".shortcut-category-navigation")
+      .doesNotExist(
+        "alternative key groups don't false-match the merged compact form"
+      );
+  });
+
+  test("alternative key groups don't satisfy tokens across alternatives", async function (assert) {
+    await openHelpModal();
+    await fillIn(".filter-input", "alt /");
+
+    // application.search has alternatives "/" or Ctrl+Alt+F. "alt /" must not
+    // match because "alt" lives in one alternative and "/" in the other.
+    assert
+      .dom(".shortcut-category-application")
+      .doesNotExist("tokens don't match across alternative key groups");
+  });
+
+  test("plugin-registered shortcut with raw 'esc' key matches escape alias", async function (assert) {
+    withPluginApi((api) => {
+      api.addKeyboardShortcut("shift+esc", () => {}, {
+        help: {
+          category: "esc_test",
+          name: "esc_test.bail",
+          definition: { keys1: ["shift", "esc"] },
+        },
+      });
+    });
+
+    await openHelpModal();
+    await fillIn(".filter-input", "escape");
+
+    assert.dom(".shortcut-category-esc_test tbody tr").exists({ count: 1 });
+  });
+});
+
+acceptance("Keyboard Shortcuts - Topic pagination", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", (request) => {
+      const response = cloneJSON(DiscoveryFixtures["/latest.json"]);
+      const page = Number(request.queryParams.page || 0);
+      response.topic_list.topics = response.topic_list.topics.slice(
+        page * 3,
+        (page + 1) * 3
+      );
+      response.topic_list.more_topics_url = page ? null : "/latest?page=1";
+      return helper.response(response);
+    });
+  });
+
+  test("bulk select keeps keyboard selection when more topics load", async function (assert) {
+    await visit("/latest");
+    await click("button.bulk-select");
+    await triggerKeyEvent(document, "keypress", "J");
+    await triggerKeyEvent(document, "keypress", "J");
+
+    const selected = find(".topic-list-item.selected");
+    assert.dom(selected).isFocused("the keyboard-selected topic has focus");
+
+    await this.owner.lookup("service:session").topicList.loadMore();
+    await settled();
+
+    assert
+      .dom(".topic-list-item")
+      .exists({ count: 6 }, "the next page is appended");
+    assert.dom(selected).isFocused("focus stays on the same topic");
+    assert
+      .dom(selected)
+      .hasClass("selected", "the keyboard selection survives pagination");
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(selected.nextElementSibling)
+      .isFocused("J moves to the next topic");
+    assert
+      .dom(selected)
+      .doesNotHaveClass("selected", "the previous selection is cleared");
+
+    await triggerKeyEvent(document, "keypress", "K");
+    assert.dom(selected).isFocused("K returns to the original topic");
   });
 });

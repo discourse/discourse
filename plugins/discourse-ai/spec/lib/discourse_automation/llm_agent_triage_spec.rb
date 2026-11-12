@@ -53,7 +53,7 @@ describe DiscourseAi::Automation::LlmAgentTriage do
 
     response_text = "I analyzed your post and can help with that."
 
-    body = (<<~STRING).strip
+    body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
 
@@ -160,6 +160,31 @@ describe DiscourseAi::Automation::LlmAgentTriage do
     expect(last_post.user_id).to eq(bot_user.id)
     expect(last_post.raw).to eq(response_text)
     expect(last_post.post_type).to eq(Post.types[:whisper]) # This should be a whisper
+  end
+
+  it "does not post a credit limit error when silent mode is enabled" do
+    add_automation_field("silent_mode", true, type: "boolean")
+    post = Fabricate(:post, raw: "This is a test post that needs triage")
+
+    seeded_llm = Fabricate(:seeded_model)
+    allocation =
+      Fabricate(
+        :llm_credit_allocation,
+        llm_model: seeded_llm,
+        daily_credits: 1000,
+        daily_used: 1000,
+      )
+
+    exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+    allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+    expect {
+      automation.running_in_background!
+      automation.trigger!({ "post" => post })
+    }.not_to raise_error
+
+    expect(post.topic.reload.posts.count).to eq(1)
+    expect(post.topic.posts.where(user_id: bot_user.id)).to be_blank
   end
 
   it "does not respond to posts made by bots" do

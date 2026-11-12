@@ -33,3 +33,16 @@ sq:
     edit_assignments_modal:
       topic: "Topic"
       post: "Postim"
+    discourse_workflows:
+      assign_topic:
+        resources:
+          topic: "Topic"
+          post: "Postim"
+        topic_id: "ID e temës"
+        post_id: "ID e postimit"
+      check_assignment:
+        target_types:
+          topic: "Topic"
+          post: "Postim"
+        topic_id: "ID e temës"
+        post_id: "ID e postimit"

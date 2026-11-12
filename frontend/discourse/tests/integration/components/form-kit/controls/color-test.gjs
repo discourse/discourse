@@ -15,8 +15,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -35,7 +35,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -49,7 +49,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @allowNamedColors={{true}} />
             </form.Field>
           </Form>
@@ -66,8 +66,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @colors={{colors}} />
             </form.Field>
           </Form>
@@ -90,7 +90,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @colors={{colors}} @usedColors={{usedColors}} />
             </form.Field>
           </Form>
@@ -110,7 +110,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @colors={{colors}} @usedColors={{usedColors}} />
             </form.Field>
           </Form>
@@ -131,10 +131,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="color"
+              @disabled={{true}}
               @name="color"
               @title="Color"
-              @disabled={{true}}
+              @type="color"
               as |field|
             >
               <field.Control @colors={{colors}} />
@@ -155,8 +155,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -178,7 +178,7 @@ module(
       await render(
         <template>
           <Form @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @allowNamedColors={{true}} />
             </form.Field>
           </Form>
@@ -195,8 +195,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control @fallbackValue="AABBCC" />
             </form.Field>
           </Form>
@@ -210,6 +210,53 @@ module(
       assert.strictEqual(formKit().field("color").value(), "AABBCC");
     });
 
+    test("@prefixHex stores value with # prefix", async function (assert) {
+      let data = { color: "" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
+              <field.Control @prefixHex={{true}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.true(formKit().field("color").hasPrefix());
+
+      await fillIn(".form-kit__control-color-input-hex", "FF0000");
+      await formKit().submit();
+
+      assert.strictEqual(data.color, "#FF0000");
+    });
+
+    test("@prefixHex with native color picker", async function (assert) {
+      let data = { color: "#FF0000" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
+              <field.Control @prefixHex={{true}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__control-color-input-hex").hasValue("FF0000");
+
+      const picker = formKit().field("color").pickerElement;
+      picker.value = "#00FF00";
+      picker.dispatchEvent(new Event("input", { bubbles: true }));
+
+      await formKit().submit();
+
+      assert.strictEqual(data.color, "#00ff00");
+    });
+
     test("@collapseSwatches and @collapseSwatchesLabel", async function (assert) {
       const colors = ["FF0000", "00FF00", "0000FF"];
       let data = { color: null };
@@ -217,12 +264,12 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="color" @name="color" @title="Color" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
               <field.Control
-                @colors={{colors}}
                 @collapseSwatches={{true}}
                 @collapseSwatchesLabel="Pick a preset"
+                @colors={{colors}}
               />
             </form.Field>
           </Form>

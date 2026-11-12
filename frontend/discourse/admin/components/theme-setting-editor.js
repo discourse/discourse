@@ -1,9 +1,11 @@
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import SiteSettingComponent from "./site-setting";
+import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeSettingEditor extends SiteSettingComponent {
   @service toasts;
+
+  trackChanges = false;
 
   _save() {
     return this.setting

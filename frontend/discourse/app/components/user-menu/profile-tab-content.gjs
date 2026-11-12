@@ -2,17 +2,17 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 import UserStatusModal from "discourse/components/modal/user-status";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import { userPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _extraItems = [];
@@ -121,19 +121,19 @@ export default class UserMenuProfileTabContent extends Component {
       {{#if this.siteSettings.enable_user_status}}
         <li class="set-user-status">
           <DButton
-            @action={{this.setUserStatusClick}}
             class="btn-flat profile-tab-btn"
+            @action={{this.setUserStatusClick}}
           >
             {{#if this.currentUser.status}}
-              {{emoji this.currentUser.status.emoji}}
+              {{dEmoji this.currentUser.status.emoji}}
               <span class="item-label">
                 {{this.currentUser.status.description}}
                 {{#if this.currentUser.status.ends_at}}
-                  {{ageWithTooltip this.currentUser.status.ends_at}}
+                  {{dAgeWithTooltip this.currentUser.status.ends_at}}
                 {{/if}}
               </span>
             {{else}}
-              {{icon "circle-plus"}}
+              {{dIcon "circle-plus"}}
               <span class="item-label">
                 {{i18n "user_status.set_custom_status"}}
               </span>
@@ -143,17 +143,17 @@ export default class UserMenuProfileTabContent extends Component {
       {{/if}}
 
       <li
-        class={{concatClass
+        class={{dConcatClass
           "presence-toggle"
           (unless this.isPresenceHidden "enabled")
         }}
         title={{i18n "presence_toggle.title"}}
       >
         <DButton
-          @action={{this.togglePresence}}
           class="btn-flat profile-tab-btn"
+          @action={{this.togglePresence}}
         >
-          {{icon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
+          {{dIcon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
           <span class="item-label">
             {{#if this.isPresenceHidden}}
               {{i18n "presence_toggle.offline"}}
@@ -165,21 +165,21 @@ export default class UserMenuProfileTabContent extends Component {
       </li>
 
       <li
-        class={{concatClass
+        class={{dConcatClass
           "do-not-disturb"
           (if this.isInDoNotDisturb "enabled")
         }}
       >
         <DButton
-          @action={{this.doNotDisturbClick}}
           class="btn-flat profile-tab-btn"
+          @action={{this.doNotDisturbClick}}
         >
-          {{icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
+          {{dIcon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
           <span class="item-label">
             {{#if this.isInDoNotDisturb}}
               <span>{{i18n "pause_notifications.label"}}</span>
               {{#if this.showDoNotDisturbEndDate}}
-                {{ageWithTooltip this.doNotDisturbDateTime}}
+                {{dAgeWithTooltip this.doNotDisturbDateTime}}
               {{/if}}
             {{else}}
               {{i18n "pause_notifications.label"}}
@@ -191,8 +191,8 @@ export default class UserMenuProfileTabContent extends Component {
       <hr />
 
       <li class="summary">
-        <LinkTo @route="user.summary" @model={{this.currentUser}}>
-          {{icon "user"}}
+        <LinkTo @model={{this.currentUser}} @route="user.summary">
+          {{dIcon "user"}}
           <span class="item-label">
             {{i18n "user.summary.title"}}
           </span>
@@ -200,8 +200,8 @@ export default class UserMenuProfileTabContent extends Component {
       </li>
 
       <li class="activity">
-        <LinkTo @route="userActivity" @model={{this.currentUser}}>
-          {{icon "bars-staggered"}}
+        <LinkTo @model={{this.currentUser}} @route="userActivity">
+          {{dIcon "bars-staggered"}}
           <span class="item-label">
             {{i18n "user.activity_stream"}}
           </span>
@@ -210,8 +210,8 @@ export default class UserMenuProfileTabContent extends Component {
 
       {{#if this.currentUser.can_invite_to_forum}}
         <li class="invites">
-          <LinkTo @route="userInvited" @model={{this.currentUser}}>
-            {{icon "user-plus"}}
+          <LinkTo @model={{this.currentUser}} @route="userInvited">
+            {{dIcon "user-plus"}}
             <span class="item-label">
               {{i18n "user.invited.title"}}
             </span>
@@ -220,8 +220,8 @@ export default class UserMenuProfileTabContent extends Component {
       {{/if}}
 
       <li class="drafts">
-        <LinkTo @route="userActivity.drafts" @model={{this.currentUser}}>
-          {{icon "user_menu.drafts"}}
+        <LinkTo @model={{this.currentUser}} @route="userActivity.drafts">
+          {{dIcon "user_menu.drafts"}}
           <span class="item-label">
             {{#if this.currentUser.draft_count}}
               {{i18n
@@ -236,8 +236,8 @@ export default class UserMenuProfileTabContent extends Component {
       </li>
 
       <li class="preferences">
-        <LinkTo @route="preferences" @model={{this.currentUser}}>
-          {{icon "gear"}}
+        <LinkTo @model={{this.currentUser}} @route="preferences">
+          {{dIcon "gear"}}
           <span class="item-label">
             {{i18n "user.preferences.title"}}
           </span>
@@ -253,16 +253,16 @@ export default class UserMenuProfileTabContent extends Component {
           }}
         >
           <DButton
-            @action={{this.toggleAnonymous}}
             class="btn-flat profile-tab-btn"
+            @action={{this.toggleAnonymous}}
           >
             {{#if this.currentUser.is_anonymous}}
-              {{icon "ban"}}
+              {{dIcon "ban"}}
               <span class="item-label">
                 {{i18n "switch_from_anon"}}
               </span>
             {{else}}
-              {{icon "user-secret"}}
+              {{dIcon "user-secret"}}
               <span class="item-label">
                 {{i18n "switch_to_anon"}}
               </span>
@@ -275,7 +275,7 @@ export default class UserMenuProfileTabContent extends Component {
         <li class={{item.className}}>
           <a href={{item.href}}>
             {{#if item.icon}}
-              {{icon item.icon}}
+              {{dIcon item.icon}}
             {{/if}}
             <span class="item-label">
               {{item.content}}
@@ -286,10 +286,10 @@ export default class UserMenuProfileTabContent extends Component {
 
       <li class="logout">
         <DButton
-          @action={{routeAction "logout"}}
           class="btn-flat profile-tab-btn"
+          @action={{routeAction "logout"}}
         >
-          {{icon "right-from-bracket"}}
+          {{dIcon "right-from-bracket"}}
           <span class="item-label">
             {{i18n "user.log_out"}}
           </span>
