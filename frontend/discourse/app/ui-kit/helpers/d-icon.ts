@@ -9,10 +9,7 @@ import { renderIcon } from "discourse/lib/icon-library";
  * @param options - The named arguments, passed to the icon renderer.
  * @returns The trusted markup.
  */
-export default function icon(
-  id: string | null | undefined,
-  options: IconParams = {}
-) {
+export default function icon(id: string, options: IconParams = {}) {
   // The default icon renderer handles every icon.
   return trustHTML(renderIcon("string", id, options) as string);
 }

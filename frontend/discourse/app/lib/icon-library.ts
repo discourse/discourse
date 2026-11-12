@@ -34,7 +34,7 @@ export interface IconParams {
 /** The icon a renderer is asked to render. */
 export interface RenderedIcon {
   /** The requested icon id. */
-  id: string | null | undefined;
+  id: string;
 
   /** The id that `REPLACEMENTS` maps the requested id to, if any. */
   replacementId: string | undefined;
@@ -130,17 +130,17 @@ export function replaceIcon(source: string, destination: string) {
  */
 export function renderIcon(
   renderType: "string",
-  id: string | null | undefined,
+  id: string,
   params?: IconParams | null
 ): string | undefined;
 export function renderIcon(
   renderType: "element",
-  id: string | null | undefined,
+  id: string,
   params?: IconParams | null
 ): Element | undefined;
 export function renderIcon(
   renderType: "string" | "element",
-  id: string | null | undefined,
+  id: string,
   params?: IconParams | null
 ): string | Element | undefined {
   params ||= {};
@@ -151,8 +151,7 @@ export function renderIcon(
       continue;
     }
 
-    // A missing id looks up a key that `REPLACEMENTS` never has.
-    const icon = { id, replacementId: REPLACEMENTS[id as string] };
+    const icon = { id, replacementId: REPLACEMENTS[id] };
     const result = rendererForType(icon, params);
 
     if (result) {
@@ -170,10 +169,7 @@ export function renderIcon(
  *   missing-icon warning.
  * @returns The HTML.
  */
-export function iconHTML(
-  id: string | null | undefined,
-  params?: IconParams | null
-): string {
+export function iconHTML(id: string, params?: IconParams | null): string {
   // The default renderer below handles every icon.
   return renderIcon("string", id, params) as string;
 }
@@ -185,10 +181,7 @@ export function iconHTML(
  * @param params - Options passed to the icon renderer.
  * @returns The element.
  */
-export function iconElement(
-  id: string | null | undefined,
-  params?: IconParams | null
-): Element {
+export function iconElement(id: string, params?: IconParams | null): Element {
   // The default renderer below handles every icon.
   return renderIcon("element", id, params) as Element;
 }
@@ -221,9 +214,7 @@ function iconClasses(icon: RenderedIcon, params: IconParams) {
   // dots are invalid syntax for classes, use replacement instead
   // (`replacementId` is only set for an existing id)
   const dClass =
-    icon.replacementId && (icon.id as string).includes(".")
-      ? icon.replacementId
-      : icon.id;
+    icon.replacementId && icon.id.includes(".") ? icon.replacementId : icon.id;
 
   let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
