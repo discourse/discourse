@@ -33,19 +33,25 @@ export function onboardingStepKey(step) {
 }
 
 /**
- * Marks an onboarding step completed when the banner holding it isn't
- * rendered, so the step reads as done once the banner renders again.
+ * Marks an onboarding step completed and announces it, so a banner that stays
+ * mounted while hidden on other pages keeps its progress count in step.
  *
  * Only the first completion is audited. Await it before reloading the page so
  * the audit write isn't cancelled in flight.
  *
- * @param {import("discourse/services/key-value-store").default} keyValueStore
+ * @param {object} services
+ * @param {import("discourse/services/app-events").default} services.appEvents
+ * @param {import("discourse/services/key-value-store").default} services.keyValueStore
  * @param {string} step name of the step
  */
-export async function completeOnboardingStep(keyValueStore, step) {
+export async function completeOnboardingStep(
+  { appEvents, keyValueStore },
+  step
+) {
   const key = onboardingStepKey(step);
   const alreadyCompleted = !!keyValueStore.get(key);
   keyValueStore.set({ key, value: true });
+  appEvents.trigger("onboarding-step:completed", step);
 
   if (!alreadyCompleted) {
     await logOnboardingEvent("step_completed", step);

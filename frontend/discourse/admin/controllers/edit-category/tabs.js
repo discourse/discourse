@@ -90,6 +90,7 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
+  @service appEvents;
   @service currentUser;
   @service dialog;
   @service site;
@@ -413,7 +414,10 @@ export default class EditCategoryTabsController extends Controller {
 
       // awaited ahead of the reloads below, which would cancel the audit write
       if (isNew && this.currentUser?.show_site_owner_onboarding) {
-        await completeOnboardingStep(this.keyValueStore, CREATE_CATEGORY_STEP);
+        await completeOnboardingStep(
+          { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+          CREATE_CATEGORY_STEP
+        );
       }
 
       if (lostAccess) {
