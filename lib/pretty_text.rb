@@ -206,6 +206,7 @@ module PrettyText
       avatar_sizes: SiteSetting.avatar_sizes,
       hashtagTypesInPriorityOrder:
         HashtagAutocompleteService.ordered_types_for_context(opts[:hashtag_context]),
+      hashtagLookupLimit: HashtagAutocompleteService::HASHTAGS_PER_REQUEST,
       hashtagIcons: HashtagAutocompleteService.data_source_icon_map,
     }
 
