@@ -140,6 +140,14 @@ export default class TopicProgress extends Component {
   }
 
   _topicScrolled(event) {
+    if (this.docked && !this.mobileTabBar.enabled) {
+      this.setProperties({
+        progressPosition: this.get("postStream.filteredPostsCount"),
+        _streamPercentage: 100,
+      });
+      return;
+    }
+
     this.setProperties({
       progressPosition: event.postIndex,
       _streamPercentage: (event.percent * 100).toFixed(2),
