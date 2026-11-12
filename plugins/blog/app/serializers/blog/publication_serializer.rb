@@ -21,6 +21,8 @@ module ::Blog
                :url,
                :path,
                :excerpt,
+               :meta_description,
+               :canonical_url,
                :featured,
                :published_at,
                :last_published_at,
@@ -110,6 +112,14 @@ module ::Blog
 
     def excerpt
       metadata["excerpt"]
+    end
+
+    def meta_description
+      metadata["meta_description"].to_s
+    end
+
+    def canonical_url
+      metadata["canonical_url"].to_s
     end
 
     def featured

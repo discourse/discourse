@@ -25,6 +25,8 @@ acceptance("Blog publication panel", function (needs) {
       path: "/an-unfinished-story",
       url: "https://blog.example.com/an-unfinished-story",
       excerpt: "",
+      meta_description: "",
+      canonical_url: "",
       featured: false,
       changes: [],
       edits_since_publish: 0,
@@ -417,6 +419,16 @@ acceptance("Blog publication panel", function (needs) {
         "A revised introduction",
         "the excerpt is saved"
       );
+      assert.strictEqual(
+        data.get("publication[meta_description]"),
+        "A summary for search engines",
+        "the meta description is saved"
+      );
+      assert.strictEqual(
+        data.get("publication[canonical_url]"),
+        "https://example.com/original",
+        "the canonical URL is saved"
+      );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);
     });
@@ -425,9 +437,22 @@ acceptance("Blog publication panel", function (needs) {
       .dom(`${PANEL}__form`)
       .isNotVisible("settings are collapsed by default");
     await click(`${PANEL}__settings-toggle`);
+    assert
+      .dom(`${PANEL}__form [name="canonical_url"]`)
+      .hasAttribute(
+        "placeholder",
+        "https://blog.example.com/an-unfinished-story",
+        "a blank canonical URL shows the article's own address"
+      );
     await formKit(`${PANEL}__form`)
       .field("excerpt")
       .fillIn("A revised introduction");
+    await formKit(`${PANEL}__form`)
+      .field("meta_description")
+      .fillIn("A summary for search engines");
+    await formKit(`${PANEL}__form`)
+      .field("canonical_url")
+      .fillIn("https://example.com/original");
     await formKit(`${PANEL}__form`).submit();
     assert
       .dom(`${PANEL}__badge`)

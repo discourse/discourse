@@ -6,7 +6,7 @@ module ::Blog
     MIDDLEWARE_SEGMENTS = %w[auth message-bus mini-profiler-resources].freeze
     RESERVED_SEGMENTS =
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
-    METADATA = %w[path excerpt featured published_at].freeze
+    METADATA = %w[path excerpt featured published_at meta_description canonical_url].freeze
     MAX_PATH_LENGTH = 240
     # Encoded "+" and ",", and encoded UTF-8 bytes, so imported paths keep non-ASCII slugs.
     # Other encoded ASCII stays out: it could hide a separator, a dot segment or a control character.
@@ -29,6 +29,7 @@ module ::Blog
 
     # Rails upper-cases percent-encoding in request paths, so stored paths must match.
     normalizes :path, with: ->(path) { Publication.normalize_path(path) }
+    normalizes :canonical_url, with: ->(url) { url.strip }
 
     validates :topic_id, uniqueness: true
     validates :path,
@@ -40,6 +41,9 @@ module ::Blog
                 with: PATH_PATTERN,
               }
     validates :excerpt, length: { maximum: 1000 }, exclusion: { in: [nil] }
+    validates :meta_description, length: { maximum: 500 }, exclusion: { in: [nil] }
+    validates :canonical_url, length: { maximum: 1000 }, exclusion: { in: [nil] }
+    validate :absolute_canonical_url
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
     validate :decodable_path
@@ -167,6 +171,9 @@ module ::Blog
         "body" => source.first_post.raw != published_revision.raw,
         "path" => metadata["path"] != live["path"],
         "excerpt" => metadata["excerpt"] != live["excerpt"],
+        # Revisions from before these fields existed don't have them.
+        "meta_description" => metadata["meta_description"].to_s != live["meta_description"].to_s,
+        "canonical_url" => metadata["canonical_url"].to_s != live["canonical_url"].to_s,
         "featured" => metadata["featured"] != live["featured"],
         "tags" => source.tags.visible(Guardian.new).pluck(:name).sort != Array(live["tags"]).sort,
         "published_at" => draft_date_changed?(metadata["published_at"]),
@@ -212,6 +219,15 @@ module ::Blog
     def display_excerpt
       article.data["excerpt"].presence ||
         PrettyText.excerpt(article.cooked.to_s, 240, strip_links: true, strip_tags: true)
+    end
+
+    def display_description
+      article.data["meta_description"].presence || display_excerpt
+    end
+
+    # Syndicated articles point search engines at the original instead of the blog.
+    def canonical_article_url
+      published_revision&.data&.[]("canonical_url").presence || url
     end
 
     def article_updated_at
@@ -297,6 +313,8 @@ module ::Blog
       assign_attributes(
         path: data["path"],
         excerpt: data["excerpt"],
+        meta_description: data["meta_description"].to_s,
+        canonical_url: data["canonical_url"].to_s,
         featured: data["featured"],
         published_at: release_date(revision),
         last_published_at: Time.current,
@@ -340,8 +358,9 @@ module ::Blog
     # A re-submission of an unchanged draft is not a pending change.
     def submitted_revision_differs?
       return false if submitted_revision_id.blank? || submitted_revision_id == published_revision_id
-      compared = %w[title raw path excerpt featured]
-      submitted_revision.data.slice(*compared) != published_revision.data.slice(*compared)
+      compared = %w[title raw path excerpt featured meta_description canonical_url]
+      submitted_revision.data.values_at(*compared).map(&:to_s) !=
+        published_revision.data.values_at(*compared).map(&:to_s)
     end
 
     def initialize_topics
@@ -376,6 +395,18 @@ module ::Blog
       end
     end
 
+    def absolute_canonical_url
+      return if canonical_url.blank?
+      uri =
+        begin
+          URI.parse(canonical_url)
+        rescue URI::InvalidURIError
+          nil
+        end
+      return if uri.is_a?(URI::HTTP) && uri.host.present?
+      errors.add(:canonical_url, I18n.t("blog.errors.canonical_url_invalid"))
+    end
+
     def decodable_path
       return if !path.to_s.match?(PATH_PATTERN) || self.class.decodable_path?(path)
       errors.add(:path, :invalid)
@@ -405,12 +436,14 @@ end
 # Table name: blog_publications
 #
 #  id                    :bigint           not null, primary key
+#  canonical_url         :string           default(""), not null
 #  cooked                :text
 #  draft_metadata        :jsonb            not null
 #  excerpt               :string           default(""), not null
 #  featured              :boolean          default(FALSE), not null
 #  image_url             :text
 #  last_published_at     :datetime
+#  meta_description      :string           default(""), not null
 #  path                  :string           not null
 #  published             :boolean          default(FALSE), not null
 #  published_at          :datetime

@@ -211,6 +211,33 @@ RSpec.describe "Blog publication", type: :request do
       publish_blog_draft(publication, admin)
     end
 
+    it "uses an article's meta description and canonical URL, and keeps syndicated articles out of the sitemap" do
+      update_blog_metadata(
+        publication,
+        admin,
+        meta_description: "For search engines.",
+        canonical_url: "https://example.com/original",
+      )
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('meta[name="description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('meta[property="og:description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq("https://example.com/original")
+      expect(html.at_css('meta[property="og:url"]')["content"]).to eq(
+        "https://example.com/original",
+      )
+      schema = JSON.parse(html.at_css('script[type="application/ld+json"]').text)
+      expect(schema["description"]).to eq("For search engines.")
+      expect(TopicView.new(publication.discussion_topic_id).canonical_path).to eq(
+        "https://example.com/original",
+      )
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).not_to include(publication.url)
+    end
+
     it "preserves historical canonical paths through publishing and corrections" do
       paths = %w[
         /archive/2011/03/30/How+I+learned+to+write+my+own+ORM

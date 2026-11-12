@@ -79,6 +79,41 @@ RSpec.describe Blog::Publication::UpdateMetadata do
       end
     end
 
+    context "with search metadata on a published article" do
+      let(:metadata) do
+        { meta_description: "For search engines.", canonical_url: "https://example.com/original" }
+      end
+
+      before { publish_blog_draft(publication, acting_user) }
+
+      it "stages it as a pending change until the next publish" do
+        result
+        publication.reload
+
+        expect(publication).to have_attributes(meta_description: "", canonical_url: "")
+        expect(publication.pending_changes).to include("meta_description", "canonical_url")
+
+        publish_blog_draft(publication, acting_user)
+
+        expect(publication).to have_attributes(
+          meta_description: "For search engines.",
+          canonical_url: "https://example.com/original",
+          display_description: "For search engines.",
+          canonical_article_url: "https://example.com/original",
+        )
+      end
+
+      it "doesn't report changes for articles published before these fields existed" do
+        data = publication.published_revision.data.except("meta_description", "canonical_url")
+        Blog::Revision.where(id: publication.published_revision_id).update_all(data:)
+
+        expect(publication.reload.pending_changes).not_to include(
+          "meta_description",
+          "canonical_url",
+        )
+      end
+    end
+
     context "with a dated path format" do
       let(:metadata) { { path: "/2026/11/#{topic.slug}", published_at: "2025-03-14" } }
 

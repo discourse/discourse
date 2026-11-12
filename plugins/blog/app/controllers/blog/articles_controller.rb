@@ -53,8 +53,8 @@ module ::Blog
         on_success do |publication:|
           @topic = publication.discussion_topic
           @page_title = publication.article.title
-          @description = publication.display_excerpt
-          @canonical_url = publication.url
+          @description = publication.display_description
+          @canonical_url = publication.canonical_article_url
           @article_metadata = ArticleMetadata.new(publication, description: @description)
           @template_variables =
             template_variables(
@@ -89,6 +89,7 @@ module ::Blog
       @publications =
         Publication
           .publicly_visible
+          .where(canonical_url: "")
           .newest
           .limit(50_000)
           .includes(:published_revision, discussion_topic: :first_post)
