@@ -220,18 +220,22 @@ RSpec.describe ExportCsvController do
         expect(job_data["user_id"]).to eq(moderator.id)
       end
 
-      it "redacts IP addresses from staff action contexts without IP visibility" do
+      it "masks IP addresses in staff action deletion contexts without IP visibility" do
         Jobs.run_immediately!
         SiteSetting.moderators_view_ips = false
         logger = StaffActionLogger.new(Fabricate(:admin))
+        matched_ip = "42.42.42.42"
+        last_seen_ip = "198.51.100.7"
+        ipv6_address = "2001:db8:1234::"
+        unrelated_context = "Moved off 203.0.113.9"
 
         logger.log_user_deletion(
-          Fabricate(:user, ip_address: "198.51.100.7", registration_ip_address: "42.42.42.42"),
-          context: "Same IP address (42.42.42.42) as other users",
+          Fabricate(:user, ip_address: last_seen_ip, registration_ip_address: matched_ip),
+          context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: matched_ip),
         )
         logger.log_user_deletion(
           Fabricate(:user),
-          context: "Same IP address (2001:db8::1) as other users",
+          context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: ipv6_address),
         )
         logger.log_user_deletion(Fabricate(:user), context: "Same IP address as keeper")
         logger.log_user_deletion(
@@ -242,25 +246,34 @@ RSpec.describe ExportCsvController do
           Fabricate(:user),
           "old username",
           "new username",
-          context: "Moved off 203.0.113.9",
+          context: unrelated_context,
         )
 
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
 
         expect(response.status).to eq(200)
         rows = staff_action_export_rows(Upload.last)
-        deletion_contexts =
-          rows.select { |row| row["action"] == "delete_user" }.map { |row| row["context"] }
+        masked_context =
+          I18n.t(
+            "user.destroy_reasons.same_ip_address",
+            ip_address: I18n.t("staff_action_logs.redacted"),
+          )
 
-        expect(deletion_contexts).to include(
+        expect(
+          rows.select { |row| row["action"] == "delete_user" }.map { |row| row["context"] },
+        ).to contain_exactly(
+          masked_context,
+          masked_context,
           "Same IP address as keeper",
           "Deleted while reviewing Jobs::Base failures",
         )
-        expect(deletion_contexts.reject(&:blank?).length).to eq(2)
         expect(rows.find { |row| row["action"] == "change_username" }["context"]).to eq(
-          "Moved off 203.0.113.9",
+          unrelated_context,
         )
-        expect(rows.to_s).not_to include("42.42.42.42", "2001:db8::1")
+        exported = rows.to_s
+        expect(exported).not_to include(matched_ip)
+        expect(exported).not_to include(last_seen_ip)
+        expect(exported).not_to include(ipv6_address)
       ensure
         Upload.last&.destroy!
       end

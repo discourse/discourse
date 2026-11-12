@@ -45,7 +45,7 @@ class UserHistorySerializer < ApplicationSerializer
 
   def context
     return nil if redact_content?
-    return nil if redact_context_ip?
+    return object.context_with_ips_masked(redacted_content) if mask_context_ips?
 
     object.context
   end
@@ -104,11 +104,10 @@ class UserHistorySerializer < ApplicationSerializer
     @redact_content = !scope.can_see_staff_action_log_content?(object)
   end
 
-  # The same-IP deletion reason was the only writer that embedded an address in
-  # context, and it no longer does, so this guards historical rows only.
-  def redact_context_ip?
-    !scope.can_see_ip? && object.action == UserHistory.actions[:delete_user] &&
-      object.context_contains_ip?
+  # The same-IP deletion reason is the only writer that embeds an address in
+  # context.
+  def mask_context_ips?
+    !scope.can_see_ip? && object.action == UserHistory.actions[:delete_user]
   end
 
   def redacted_content
