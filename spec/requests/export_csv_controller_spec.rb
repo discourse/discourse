@@ -274,6 +274,51 @@ RSpec.describe ExportCsvController do
         expect(job_data["user_id"]).to eq(moderator.id)
       end
 
+      it "redacts IP addresses from staff action contexts without IP visibility" do
+        Jobs.run_immediately!
+        SiteSetting.moderators_view_ips = false
+        logger = StaffActionLogger.new(Fabricate(:admin))
+
+        logger.log_user_deletion(
+          Fabricate(:user, ip_address: "198.51.100.7", registration_ip_address: "42.42.42.42"),
+          context: "Same IP address (42.42.42.42) as other users",
+        )
+        logger.log_user_deletion(
+          Fabricate(:user),
+          context: "Same IP address (2001:db8::1) as other users",
+        )
+        logger.log_user_deletion(Fabricate(:user), context: "Same IP address as keeper")
+        logger.log_user_deletion(
+          Fabricate(:user),
+          context: "Deleted while reviewing Jobs::Base failures",
+        )
+        logger.log_username_change(
+          Fabricate(:user),
+          "old username",
+          "new username",
+          context: "Moved off 203.0.113.9",
+        )
+
+        post "/export_csv/export_entity.json", params: { entity: "staff_action" }
+
+        expect(response.status).to eq(200)
+        rows = staff_action_export_rows(Upload.last)
+        deletion_contexts =
+          rows.select { |row| row["action"] == "delete_user" }.map { |row| row["context"] }
+
+        expect(deletion_contexts).to include(
+          "Same IP address as keeper",
+          "Deleted while reviewing Jobs::Base failures",
+        )
+        expect(deletion_contexts.reject(&:blank?).length).to eq(2)
+        expect(rows.find { |row| row["action"] == "change_username" }["context"]).to eq(
+          "Moved off 203.0.113.9",
+        )
+        expect(rows.to_s).not_to include("42.42.42.42", "2001:db8::1")
+      ensure
+        Upload.last&.destroy!
+      end
+
       it "does not allow moderators to export admin-only reports" do
         post "/export_csv/export_entity.json",
              params: {
@@ -357,6 +402,19 @@ RSpec.describe ExportCsvController do
         expect(response.status).to eq(403)
       end
     end
+  end
+
+  def staff_action_export_rows(upload)
+    rows = []
+    Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
+      zip_file.each do |entry|
+        content = zip_file.read(entry).force_encoding(Encoding::UTF_8)
+        CSV
+          .parse(content.delete_prefix(Encodings::BOM), headers: true)
+          .each { |row| rows << row.to_h }
+      end
+    end
+    rows
   end
 
   def generate_exports(user)

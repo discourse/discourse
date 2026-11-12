@@ -94,6 +94,27 @@ RSpec.describe Admin::StaffActionLogsController do
 
       include_examples "staff action logs accessible"
 
+      it "shows IP addresses stored in historical same-IP deletion log contexts" do
+        leaked_ip = "42.42.42.42"
+        deleted_user =
+          Fabricate(:user, ip_address: "198.51.100.7", registration_ip_address: leaked_ip)
+        StaffActionLogger.new(admin).log_user_deletion(
+          deleted_user,
+          context: "Same IP address (#{leaked_ip}) as other users",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first).to include(
+          "ip_address" => "198.51.100.7",
+          "context" => "Same IP address (#{leaked_ip}) as other users",
+        )
+      end
+
       it "filters bot creation as a native staff action" do
         bot = Fabricate(:user, id: -1234)
         creation = StaffActionLogger.new(admin).log_bot_creation(bot)
@@ -224,6 +245,116 @@ RSpec.describe Admin::StaffActionLogsController do
       before { sign_in(moderator) }
 
       include_examples "staff action logs accessible"
+
+      it "hides IP addresses stored in historical same-IP deletion log contexts" do
+        SiteSetting.moderators_view_ips = false
+        leaked_ip = "42.42.42.42"
+        deleted_user =
+          Fabricate(:user, ip_address: "198.51.100.7", registration_ip_address: leaked_ip)
+        StaffActionLogger.new(admin).log_user_deletion(
+          deleted_user,
+          context: "Same IP address (#{leaked_ip}) as other users",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first).to include(
+          "ip_address" => nil,
+          "context" => nil,
+        )
+        expect(response.body).not_to include(leaked_ip)
+      end
+
+      it "hides IPv6 addresses stored in historical same-IP deletion log contexts" do
+        SiteSetting.moderators_view_ips = false
+        leaked_ip = "2001:db8::1"
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user, ip_address: leaked_ip),
+          context: "Same IP address (#{leaked_ip}) as other users",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first["context"]).to be_nil
+        expect(response.body).not_to include(leaked_ip)
+      end
+
+      it "keeps same-IP contexts that name the target user without an address" do
+        SiteSetting.moderators_view_ips = false
+        ip_address = "42.42.42.42"
+        target_user = Fabricate(:user, ip_address: ip_address)
+        Fabricate(:user, ip_address: ip_address)
+
+        delete "/admin/users/delete-others-with-same-ip.json", params: { user_id: target_user.id }
+        expect(response.status).to eq(200)
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first["context"]).to eq(
+          "Same IP address as #{target_user.username}",
+        )
+        expect(response.body).not_to include(ip_address)
+      end
+
+      it "keeps deletion contexts that only contain address-shaped text" do
+        SiteSetting.moderators_view_ips = false
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Same IP address as keeper",
+        )
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Deleted while reviewing Jobs::Base failures",
+        )
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Deleted while reviewing Service::Base failures",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].pluck("context")).to contain_exactly(
+          "Same IP address as keeper",
+          "Deleted while reviewing Jobs::Base failures",
+          "Deleted while reviewing Service::Base failures",
+        )
+      end
+
+      it "keeps IP-shaped contexts on actions that never embedded an address" do
+        SiteSetting.moderators_view_ips = false
+        StaffActionLogger.new(admin).log_username_change(
+          user,
+          "old username",
+          "new username",
+          context: "Moved off 203.0.113.9",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:change_username],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first["context"]).to eq(
+          "Moved off 203.0.113.9",
+        )
+      end
 
       it "hides stored full names when names are disabled" do
         SiteSetting.enable_names = false
