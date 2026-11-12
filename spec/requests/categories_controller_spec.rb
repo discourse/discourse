@@ -56,6 +56,12 @@ RSpec.describe CategoriesController do
       expect(response).to redirect_to("/c/uncategorized")
     end
 
+    it "encodes characters that are invalid in a URL when redirecting /category paths" do
+      get "/category/lounge%5B/quote%5D"
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/lounge%5B/quote%5D")
+    end
+
     it "respects permalinks before redirecting /category paths to /c paths" do
       _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
