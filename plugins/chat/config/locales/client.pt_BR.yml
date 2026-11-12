@@ -528,6 +528,9 @@ pt_BR:
         followed: "Entrou"
         mute: "Silenciar canal"
         unmute: "Reativar canal"
+        muted_until_hint: "até %{until}"
+        mute_options:
+          "off": "Desligado"
         threading_enabled: "Ativada"
         threading_disabled: "Desativada"
         muted_on: "Ligado"

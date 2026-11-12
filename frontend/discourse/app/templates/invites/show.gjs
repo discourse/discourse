@@ -88,12 +88,11 @@ export default <template>
             {{/if}}
 
             {{#if @controller.discourseConnectEnabled}}
-              <a
-                class="btn btn-primary discourse-connect raw-link"
-                href={{@controller.ssoPath}}
-              >
-                {{i18n "continue"}}
-              </a>
+              <DButton
+                class="btn-primary discourse-connect"
+                @action={{@controller.continueWithDiscourseConnect}}
+                @label="continue"
+              />
             {{/if}}
 
             {{#if @controller.shouldDisplayForm}}

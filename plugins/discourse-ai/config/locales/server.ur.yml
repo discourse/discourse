@@ -126,6 +126,10 @@ ur:
           header_background: "ہَیڈر"
       fonts:
         heading_font: "سرخی والا فونٹ"
+    mcp_theme_access:
+      none: "کوئی نہیں"
+    mcp_app_setup:
+      none: "کوئی نہیں"
     reviewables:
       ai_tool_action:
         approve:

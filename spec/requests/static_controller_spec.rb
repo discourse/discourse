@@ -15,6 +15,8 @@ RSpec.describe StaticController do
 
     context "with local store" do
       it "returns the default favicon if favicon has not been configured" do
+        Upload.find(SiteIconManager::SKETCH_LOGO_ID).optimized_images.delete_all
+
         get "/favicon/proxied"
 
         expect(response.status).to eq(200)
@@ -23,6 +25,7 @@ RSpec.describe StaticController do
       end
 
       it "does not include a username in the cacheable response" do
+        SiteSetting.favicon = upload
         sign_in(user)
 
         get "/favicon/proxied"

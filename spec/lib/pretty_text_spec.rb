@@ -1613,6 +1613,12 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("*️⃣")).to match(/\:asterisk\:/)
     end
 
+    it "renders adjacent multi-codepoint emoji" do
+      england_flag = [0x1F3F4, 0xE0067, 0xE0062, 0xE0065, 0xE006E, 0xE0067, 0xE007F].pack("U*")
+
+      expect(PrettyText.cook(england_flag * 2).scan('title=":england:"').size).to eq(2)
+    end
+
     it "doesn't replace unicode emoji if emoji is disabled" do
       SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
@@ -1993,6 +1999,20 @@ RSpec.describe PrettyText do
         "data-id": category.id,
       },
     )
+  end
+
+  it "bounds hashtag lookups per cook" do
+    stub_const(HashtagAutocompleteService, "HASHTAGS_PER_REQUEST", 2) do
+      %w[cat-a cat-b cat-c].each { |slug| Fabricate(:category, slug:) }
+      allow(HashtagAutocompleteService).to receive(:new).and_call_original
+
+      cooked = PrettyText.cook("#cat-a #cat-a #cat-a #cat-b #cat-c")
+
+      expect(cooked.scan(%(data-slug="cat-a")).length).to eq(3)
+      expect(cooked).to include(%(data-slug="cat-b"))
+      expect(cooked).not_to include(%(data-slug="cat-c"))
+      expect(HashtagAutocompleteService).to have_received(:new).twice
+    end
   end
 
   it "does not fight with the autolinker" do

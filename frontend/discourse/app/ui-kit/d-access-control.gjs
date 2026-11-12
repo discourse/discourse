@@ -20,7 +20,7 @@ import DAccessControlGranteeChooser, {
   ACCESS_CONTROL_GRANTEE_SEARCH_URL,
   granteeValue,
   groupGranteeResult,
-} from "./d-access-control-grantee-chooser.gjs";
+} from "./d-access-control/-internals/grantee-chooser.gjs";
 
 /** The add box's keyboard control, in either select implementation. */
 const CHOOSER_CONTROL =

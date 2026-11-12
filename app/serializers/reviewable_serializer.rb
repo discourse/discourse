@@ -25,6 +25,11 @@ class ReviewableSerializer < ApplicationSerializer
   )
 
   attribute :status_for_database, key: :status
+  attribute :approval_style
+
+  def approval_style
+    object.class.approval_style?
+  end
 
   attribute :dsa_classification
 

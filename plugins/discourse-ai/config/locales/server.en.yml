@@ -192,6 +192,7 @@ en:
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
+    ai_google_custom_search_url: "Endpoint for the Google Custom Search API. Change it only to use a service that serves the same API."
 
     ai_discord_search_enabled: "Enables the Discord search feature"
     ai_discord_app_id: "The ID of the Discord application you would like to connect Discord search to"
@@ -201,6 +202,7 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
+    ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
     ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
@@ -375,9 +377,13 @@ en:
         image_generation_custom:
           name: "Custom"
         image_generation_openai:
-          name: "OpenAI"
+          name: "GPT Image 2.6 Flare"
+        image_generation_openai_sunburst:
+          name: "GPT Image 2.6 Sunburst"
         image_generation_gemini:
-          name: "Nano Banana"
+          name: "Nano Banana 2.1"
+        image_generation_gemini_pro:
+          name: "Nano Banana Pro"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -501,6 +507,9 @@ en:
         other_content_in_pm: "Personal messages containing posts from other people cannot be shared publicly"
         failed_to_share: "Failed to share the conversation"
         conversation_deleted: "Conversation share deleted successfully"
+    dsa_classification:
+      suggestion_failed: "The AI could not suggest a classification. Choose one yourself or try again."
+      credit_limit_exceeded: "The AI has used all of today's credits for classification suggestions. Choose a classification yourself."
     spam_detection:
       flag_reason: "Flagged as spam by <a href='%{url}'>Discourse AI</a>"
       silence_reason: "User silenced automatically by <a href='%{url}'>Discourse AI</a>"

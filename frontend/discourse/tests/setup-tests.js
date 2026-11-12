@@ -54,6 +54,7 @@ import {
   currentSettings,
   resetSettings,
 } from "discourse/tests/helpers/site-settings";
+import setupNavigationGuard from "discourse/tests/navigation-guard";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -220,6 +221,16 @@ export default async function setupTests(config) {
 
   const headlessTestem =
     window.Testem && navigator.userAgent.includes("HeadlessChrome");
+
+  // In the browser UI, toolbar changes and manual reloads navigate on purpose
+  if (window.Testem) {
+    setupNavigationGuard({
+      qunit: QUnit,
+      navigation: window.navigation,
+      storage: window.sessionStorage,
+    });
+  }
+
   const preexistingObserved = new Set([
     ...ASYNC_OBSERVERS.keys(),
     ...SYNC_OBSERVERS.keys(),
@@ -374,6 +385,9 @@ export default async function setupTests(config) {
     removeCookie("forced_color_mode", { path: "/" });
     removeCookie("color_scheme_id", { path: "/" });
     removeCookie("dark_scheme_id", { path: "/" });
+    // Entering the login or signup route stores the test page URL here, and a
+    // later profile save would navigate to it
+    removeCookie("destination_url");
     enableLoadMoreObserver();
     enableVirtualization();
 

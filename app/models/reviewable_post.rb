@@ -3,6 +3,10 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.additional_args(params)
     ReviewableActionBuilder.penalty_args(params)
   end
@@ -38,20 +42,23 @@ class ReviewablePost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    if post.trashed? && guardian.can_recover_post?(post)
-      build_action(actions, :approve_and_restore, icon: "check")
-    elsif post.hidden?
-      build_action(actions, :approve_and_unhide, icon: "check")
-    else
-      build_action(actions, :approve, icon: "check")
-    end
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    reject_label, keep_deleted_label, delete_label =
+      (
+        if consistent_answers
+          %w[answer_yes.title answer_yes.keep_post_deleted_title answer_yes.delete_post_title]
+        else
+          %w[
+            reject_post_bundle.title
+            reject_and_keep_deleted_standalone.title
+            reject_and_delete_standalone.title
+          ]
+        end
+      ).map { |key| "reviewables.actions.#{key}" }
 
-    reject =
-      actions.add_bundle(
-        "#{id}-reject-post",
-        icon: "xmark",
-        label: "reviewables.actions.reject_post_bundle.title",
-      )
+    build_approve_action(actions, guardian, consistent_answers:) if !consistent_answers
+
+    reject = actions.add_bundle("#{id}-reject-post", icon: "xmark", label: reject_label)
 
     can_penalize = guardian.can_suspend?(target_created_by)
 
@@ -71,7 +78,7 @@ class ReviewablePost < Reviewable
           dsa_classification_required: true,
         ) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
+          a.label = keep_deleted_label
         end
       end
     elsif guardian.can_delete_post_or_topic?(post)
@@ -86,7 +93,7 @@ class ReviewablePost < Reviewable
       else
         actions.add(:reject_and_delete, bundle: reject, dsa_classification_required: true) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_delete_standalone.title"
+          a.label = delete_label
         end
       end
     end
@@ -98,6 +105,9 @@ class ReviewablePost < Reviewable
       suspend: :reject_and_suspend,
       dsa_classification_required: true,
     )
+
+    # "Yes, there's a problem" comes first, so approval follows as "No".
+    build_approve_action(actions, guardian, consistent_answers:) if consistent_answers
   end
 
   def perform_approve(performed_by, _args)
@@ -142,6 +152,18 @@ class ReviewablePost < Reviewable
   end
 
   private
+
+  def build_approve_action(actions, guardian, consistent_answers:)
+    label = "reviewables.actions.answer_no.title" if consistent_answers
+
+    if post.trashed? && guardian.can_recover_post?(post)
+      build_action(actions, :approve_and_restore, icon: "check", label:)
+    elsif post.hidden?
+      build_action(actions, :approve_and_unhide, icon: "check", label:)
+    else
+      build_action(actions, :approve, icon: "check", label:)
+    end
+  end
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
     case action_id

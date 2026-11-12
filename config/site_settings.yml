@@ -803,6 +803,12 @@ login:
     default: false
     validator: GoogleOauth2HdGroupsValidator
     area: "authenticators"
+  google_oauth2_hd_groups_allowed:
+    default: ""
+    type: list
+    list_type: simple
+    validator: GoogleOauth2HdGroupsAllowedValidator
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
@@ -2195,7 +2201,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
@@ -4307,7 +4313,7 @@ uncategorized:
     area: "posts_and_topics"
 
   concord_in_wizard:
-    default: false
+    default: true
     hidden: true
   enable_site_owner_onboarding:
     client: true
@@ -4855,6 +4861,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
   enable_composer_toolbar_customization:
     default: false
     client: true

@@ -447,9 +447,6 @@ fi:
       title: "Uudet ja lukemattomat ketjut"
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Takaisin"
     design_wizard:
       back: "Takaisin"
       next: "Seuraava"

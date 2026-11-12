@@ -32,6 +32,24 @@ describe UserCreator do
       expect(created_user).to be_email_confirmed
     end
 
+    it "assigns hidden fields during trusted provisioning" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+
+      created_user =
+        described_class.create(
+          admin.guardian,
+          username: "provisioned_fields",
+          email: "provisioned-fields@example.com",
+          password: "correct horse battery staple",
+          user_fields: {
+            hidden_field.id.to_s => "provisioned",
+          },
+        )
+
+      expect(created_user).to be_persisted
+      expect(created_user.reload.user_fields).to eq(hidden_field.id.to_s => "provisioned")
+    end
+
     it "preserves requested inactive and unapproved state" do
       created_user =
         described_class.create(
@@ -47,6 +65,29 @@ describe UserCreator do
       expect(created_user).to be_persisted
       expect(created_user).not_to be_active
       expect(created_user).not_to be_approved
+    end
+
+    it "does not activate a configured developer email without mailbox control" do
+      Rails.configuration.stubs(:developer_emails).returns(["dev-cat@example.com"])
+
+      created_user =
+        described_class.create(
+          admin.guardian,
+          username: "dev_cat",
+          email: "dev-cat@example.com",
+          name: "Dev Cat",
+          password: "correct horse battery staple",
+          active: true,
+          approved: true,
+        )
+
+      expect(created_user).to be_persisted
+      expect(created_user).not_to be_active
+      expect(created_user).not_to be_email_confirmed
+      expect(
+        created_user.email_tokens.where(scope: EmailToken.scopes[:signup], confirmed: false),
+      ).to be_present
+      expect(Jobs::CriticalUserEmail.jobs.last["args"].first["type"]).to eq("signup")
     end
 
     it "assigns an uploaded avatar through the existing avatar permission" do

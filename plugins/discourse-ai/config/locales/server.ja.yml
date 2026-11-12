@@ -210,10 +210,6 @@ ja:
           name: "画像の生成..."
         image_generation_custom:
           name: "カスタム"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -590,6 +586,12 @@ ja:
       fonts:
         base_font: "本文のフォント"
         heading_font: "見出しのフォント"
+    mcp_theme_access:
+      "on": "オン"
+      "off": "オフ"
+      none: "なし"
+    mcp_app_setup:
+      none: "なし"
     reviewables:
       ai_tool_action:
         title: "AI ツールアクション"

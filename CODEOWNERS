@@ -43,3 +43,8 @@ acl_* @martin-brennan
 
 # Boards
 /plugins/boards/ @martin-brennan
+
+# UI Kit
+**/ui-kit/ @megothss
+*ui-kit* @megothss
+/frontend/discourse/app/ui-kit/d-access-control* @martin-brennan @megothss

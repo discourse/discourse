@@ -2669,7 +2669,6 @@ zh_TW:
     nested_replies_hot_preload_depth_penalty: "在熱門檢視中選擇要預先展開的巢狀回覆時，每增加一層深度便扣除的優先順序。"
     nested_replies_default_sort: "巢狀回覆檢視的預設排序演算法。"
     nested_replies_max_depth: "串接回覆的最大視覺巢狀深度。超過此深度的貼文會顯示「繼續此討論串」連結。"
-    nested_replies_backfill_batch_size: "每批巢狀回覆統計資料回填要處理的主題數量。"
     nested_replies_stats_maintenance_enabled: "即使停用巢狀回覆，仍維護巢狀回覆統計資料。"
     nested_replies_cap_nesting_depth: "將回覆巢狀深度限制在最大視覺深度。啟用後，對最深層級的回覆會重新指定為同層項目，而非子項目。"
     enable_new_defaults_for_trust_level_3_requirements: "我們已更新信任等級 3 的預設要求，使其更適合大型活躍社群的成員。如果您先前已覆寫這些設定，此即將推出的變更不會產生影響。"

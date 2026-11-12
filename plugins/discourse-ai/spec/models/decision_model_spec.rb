@@ -153,6 +153,7 @@ RSpec.describe DecisionModel do
           cloudflare-clef
           cloudflare-clef-flash
           gpt-6-luna
+          gemini-decision-1
         ],
       )
       expect(described_class.presets).to be_frozen

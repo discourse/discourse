@@ -167,6 +167,7 @@ ro:
         notification_level: "Trimite notificări instante"
         follow: "Alătură-te"
         followed: "Înscris"
+        muted_until_hint: "până la %{until}"
         threading_enabled: "Activat"
         threading_disabled: "Dezactivat"
         notifications: "Notificări"

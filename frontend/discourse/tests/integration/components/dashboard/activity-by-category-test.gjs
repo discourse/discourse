@@ -9,8 +9,9 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const start = new Date("2026-04-01");
-    const end = new Date("2026-04-30");
+    // Local day boundaries, as the dashboard controller passes them.
+    const start = moment("2026-04-01").startOf("day").toDate();
+    const end = moment("2026-04-30").endOf("day").toDate();
 
     const activity = {
       total: 100,

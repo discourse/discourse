@@ -96,6 +96,29 @@ The above schema definition states that the `link` object has a `name` property 
 - `tags`: Value of property is an array of valid tag names.
 - `icon`: Value of property is the name of a single icon from the Discourse icon set. Selected icons are automatically added to the sprite sheet, so they can be rendered without being registered separately.
 
+When updating an objects theme setting through the API, `tags` arrays can contain source tag names, integer tag IDs, or both. IDs are resolved to source names before validation and storage. Themes still receive arrays of source names. Numeric strings are treated as names, not IDs, and defaults must use names.
+
+The default frontend tag renderer includes `data-tag-id` for tag objects with an ID, or for tag names rendered with the `tagId` option. The existing `data-tag-name` attribute is unchanged. The ID stays the same across locales even when the displayed name changes. Name-only rendering calls without an ID omit `data-tag-id`.
+
+Objects with direct `tags` properties automatically receive an accompanying `tag_objects` array in the frontend settings:
+
+```js
+{
+  tags: ["support"],
+  tag_objects: [
+    { id: 42, name: "support" }
+  ]
+}
+```
+
+The existing tag-name arrays are unchanged. Each companion object contains the tag ID and the exact original source-name string from the setting, including its casing. It does not substitute a translated display name. Components can use the IDs to reference the selected tags, for example when targeting `data-tag-id` in CSS. Core does not render the companion array as UI or add an admin setting for it.
+
+The companion combines the object's direct `tags` selections in their original order, preserving repeated selections. Nested objects get their own companions. Only tags visible to the visitor are included; missing, deleted or hidden selections are omitted. The companion is still present as `[]` when no tags resolve. Do not assume its indexes match the original string array.
+
+No opt-in or extra browser API request is needed. An author-defined schema property named `tag_objects` takes precedence: core preserves that field and does not generate a companion at that level. Declare any existing custom field with this name; undeclared `tag_objects` values are treated as generated metadata and stripped. Objects without direct `tags` properties and legacy top-level tag-list settings are unchanged.
+
+The companion is generated only for the frontend page data. Stored settings and admin editing values keep their existing shape; generated metadata submitted back through the settings API is discarded. Components supporting contexts or older Discourse versions without this data can check `Array.isArray(style.tag_objects)` and fall back to their existing name-based behavior when it is unavailable.
+
 With the schema defined, the default value of the setting can now be set by defining a array in yaml like so:
 
 ```yaml

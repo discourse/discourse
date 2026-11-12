@@ -518,6 +518,17 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  # This system agent discovers its tools at runtime rather than using the stored selection.
+  def automatic_image_tools
+    return unless system? && class_instance <= DiscourseAi::Agents::PostIllustrator
+
+    AiTool
+      .where(enabled: true, is_image_generation_tool: true)
+      .order(:name)
+      .pluck(:id, :name)
+      .map { |id, name| { id:, name: } }
+  end
+
   def has_image_generation_tool?
     agent_klass = class_instance.new
     agent_klass.tools.any? do |tool_klass|

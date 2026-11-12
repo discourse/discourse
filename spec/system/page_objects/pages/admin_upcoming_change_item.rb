@@ -73,15 +73,21 @@ module PageObjects
         toggle_switch.unchecked?
       end
 
+      def group_selector_selector
+        "#{change_item_selector(@setting_name)} .upcoming-change__group-selector"
+      end
+
       def group_selector
+        PageObjects::Components::UiKit::DSelect.at(
+          "#{change_item_selector(@setting_name)} .upcoming-change__group-controls .d-select",
+        )
+      end
+
+      def group_chip_selector(group_name)
         if new_select_controls?
-          PageObjects::Components::UiKit::DSelect.at(
-            "#{change_item_selector(@setting_name)} .upcoming-change__group-controls .d-select",
-          )
+          ".d-select__chip[data-value='#{group_name}']"
         else
-          PageObjects::Components::SelectKit.new(
-            "#{change_item_selector(@setting_name)} .email-group-user-chooser",
-          )
+          ".d-multi-select-trigger__selected-item[title='#{group_name}']"
         end
       end
 
@@ -93,7 +99,7 @@ module PageObjects
             )
           )
         end
-        find_item(@setting_name).has_css?(".email-group-user-chooser:not(.is-disabled)")
+        find_item(@setting_name).has_css?(".upcoming-change__group-selector:not(.--disabled)")
       end
 
       def has_locked_audience?(*group_names)
@@ -102,7 +108,7 @@ module PageObjects
           if new_select_controls?
             ".upcoming-change__group-controls .d-select__input[disabled]"
           else
-            ".email-group-user-chooser.is-disabled"
+            ".upcoming-change__group-selector.--disabled"
           end
         item.has_css?(disabled) && item.has_no_css?(".upcoming-change__save-groups") &&
           item.has_css?(
@@ -113,37 +119,38 @@ module PageObjects
 
       def open_group_selector
         return if new_select_controls?
-        if group_selector.is_collapsed?
-          group_selector.collapsed_component.find(".select-kit-header").send_keys(:enter)
-        end
+        return if page.has_css?(".d-multi-select__content", wait: 0)
+        # The trigger's centre may land on a chip, which would remove it.
+        find("#{group_selector_selector} .d-multi-select-trigger__expand-btn").click
+        page.find(".d-multi-select__search-input")
       end
 
       def has_groups?(*group_names)
-        open_group_selector
         group_names.all? do |group_name|
-          find_item(@setting_name).has_css?("#{chip_selector}[data-value='#{group_name}']")
+          find_item(@setting_name).has_css?(group_chip_selector(group_name))
         end
       end
 
       def has_no_groups?
-        find_item(@setting_name).has_no_css?(chip_selector)
+        chip = new_select_controls? ? ".d-select__chip" : ".d-multi-select-trigger__selected-item"
+        find_item(@setting_name).has_no_css?(chip)
       end
 
       def add_group(group_name)
-        open_group_selector
-        group_selector.search(group_name)
         if new_select_controls?
+          group_selector.search(group_name)
           group_selector.select_value(group_name)
           group_selector.close
         else
-          group_selector.select_row_by_value(group_name)
+          open_group_selector
+          page.find(".d-multi-select__search-input").fill_in(with: group_name)
+          page.find(".d-multi-select__result[title='#{group_name}']").click
         end
       end
 
       def remove_group(group_name)
         return group_selector.remove_trigger_chip(group_name) if new_select_controls?
-        open_group_selector
-        find_item(@setting_name).find(".selected-choice[data-value='#{group_name}']").click
+        find_item(@setting_name).find(group_chip_selector(group_name)).click
       end
 
       def save_groups
@@ -170,20 +177,13 @@ module PageObjects
 
       def has_locked_group?(group_name)
         return group_selector.has_locked_value?(group_name) if new_select_controls?
-        open_group_selector
-        find_item(@setting_name).has_css?(
-          ".selected-choice[data-value='#{group_name}'] .d-icon-lock",
-        )
+        find_item(@setting_name).has_css?("#{group_chip_selector(group_name)} .d-icon-lock")
       end
 
       private
 
       def new_select_controls?
         SiteSetting.enable_new_select_controls
-      end
-
-      def chip_selector
-        new_select_controls? ? ".d-select__chip" : ".selected-choice"
       end
     end
   end

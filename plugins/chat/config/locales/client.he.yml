@@ -502,6 +502,7 @@ he:
         follow: "הצטרפות"
         followed: "הצטרפו"
         mute: "השתקת ערוץ"
+        muted_until_hint: "עד %{until}"
         threading_enabled: "פעיל"
         threading_disabled: "כבוי"
         muted_on: "פעילה"

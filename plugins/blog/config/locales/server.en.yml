@@ -23,9 +23,18 @@ en:
       A short description for the homepage, feed, and search
       engines.
     blog_about: Markdown content for the blog About page.
+    blog_path_format:
+      The address template for new articles, such as /{year}/{month}/{slug}. Use
+      {year}, {month}, {day}, {slug} and {id}, including {slug} or {id}. Until an
+      article is first published, an address the editor has not typed follows its
+      title and its UTC publication date. Published articles keep their addresses.
     blog_posts_per_page:
       Number of articles shown on each homepage or archive
       page.
+  activerecord:
+    attributes:
+      blog/publication:
+        canonical_url: Canonical URL
   blog:
     home: Home
     continue_reading: Continue reading
@@ -103,6 +112,8 @@ en:
         Unpublish this topic from page publishing before publishing
         it on the blog.
       path_taken: is reserved or already belongs to another article
+      canonical_url_invalid: must be a full http or https address
+      path_format: "Start the format with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used, and the first segment cannot be a reserved blog address such as /tag."
       future_date:
         must be today or earlier. Use the schedule controls to release
         an article in the future.

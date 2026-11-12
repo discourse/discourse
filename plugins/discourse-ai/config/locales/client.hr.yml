@@ -65,16 +65,17 @@ hr:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(onemogućeno)"
-        groups: "Grupe:"
+        table:
+          status: "Statust"
+          enabled: "Omogućeno"
+          groups: "Grupe"
+        chatbot:
+          places:
+            personal_messages: "Osobne poruke"
+            none: "Nije dostupno"
         no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
-        expand_list:
-          one: "(%{count} još)"
-          few: "(%{count} još)"
-          other: "(%{count} još)"
-        collapse_list: "(prikaži manje)"
         nav:
           enabled: "Omogućeno"
         filters:
@@ -93,7 +94,20 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
-        category_scope: "Kategorije"
+        sections:
+          advanced: "Napredno"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            label: "Osobne poruke"
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Nitko"
+              all: "Svi"
         model_progress:
           detail:
             columns:
@@ -109,6 +123,8 @@ hr:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Omogućeno"
         stats:
           eta_minutes:
             one: "%{count} minuta"

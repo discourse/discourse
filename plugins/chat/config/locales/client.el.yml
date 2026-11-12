@@ -408,6 +408,9 @@ el:
         followed: "Έγινε μέλος"
         mute: "Σίγαση καναλιού"
         unmute: "Άρση σίγασης καναλιού"
+        muted_until_hint: "έως %{until}"
+        mute_options:
+          "off": "Ανενεργό"
         threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         muted_on: "Ενεργό"

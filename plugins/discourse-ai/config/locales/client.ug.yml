@@ -77,15 +77,25 @@ ug:
       llm_selector:
         none: "يوق"
       features:
-        disabled: "(چەكلەندى)"
-        groups: "گۇرۇپپا:"
+        table:
+          status: "ھالەت"
+          enabled: "قوزغىتىلدى"
+          feature: "ئىقتىدار"
+          llm: "LLM"
+          groups: "گۇرۇپپا"
+        who_can_use:
+          no_one: "ھېچكىم"
+        status:
+          "on": "ئوچۇق"
+          "off": "تاقاق"
+        chatbot:
+          places:
+            personal_messages: "شەخسىي ئۇچۇر"
+            chat_direct_messages: "سۆھبەت ئۇچۇرى"
+            none: "ئىشلەتكىلى بولمايدۇ"
         no_agent: "تەڭشەلمىدى"
         no_groups: "يوق"
         edit: "تەڭشەك"
-        expand_list:
-          one: "(%{count} تېخىمۇ كۆپ)"
-          other: "(%{count} تېخىمۇ كۆپ)"
-        collapse_list: "(ئازراق كۆرسەت)"
         nav:
           enabled: "قوزغىتىلدى"
         filters:
@@ -107,7 +117,20 @@ ug:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
-        category_scope: "سەھىپە"
+        sections:
+          advanced: "ئالىي"
+        settings:
+          ai_translation_category_scope:
+            label: "سەھىپە"
+          ai_translation_personal_messages:
+            label: "شەخسىي ئۇچۇر"
+            choices:
+              none: "يوق"
+              all: "ھەممىسى"
+          content_localization_language_switcher:
+            choices:
+              none: "ھېچكىم"
+              all: "ھەممەيلەن"
         model_progress:
           detail:
             retry: "قايتا سىنا"
@@ -124,6 +147,8 @@ ug:
               title: "سەھىپە"
             tag:
               title: "بەلگە"
+        admin_actions:
+          enabled: "قوزغىتىلدى"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"

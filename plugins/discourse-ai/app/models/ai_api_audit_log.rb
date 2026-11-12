@@ -44,6 +44,7 @@ class AiApiAuditLog < ActiveRecord::Base
     BedrockConverse = 11
     SystemOne = 12
     OpenAiDecisions = 13
+    GeminiDecisions = 14
   end
 
   def self.token_and_spending_stats(scope)

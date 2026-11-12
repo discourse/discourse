@@ -98,6 +98,7 @@ gl:
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        muted_until_hint: "ata %{until}"
         threading_enabled: "Activado"
         threading_disabled: "Desactivado"
         notifications: "Notificacións"

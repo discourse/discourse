@@ -74,10 +74,11 @@ zh_CN:
         css_description: 纯 CSS 文件，最大 65,536 字节。在基础样式表之后加载。
         js: 自定义 JavaScript
         js_description: 纯 JavaScript，最多 65,536 字节。脚本标签不会被解析——要加载另一个脚本，请添加一个脚本元素（document.createElement("script")）。
-        save: 保存身份
-        saved: 博客身份已保存。重新加载博客即可查看更改。
+        save: 保存
         identity_tab: 身份
-        identity_description: 所有博客主题共享的名称、简介和“关于”内容。
+        path_formats:
+          custom: 自定义
+        themes_index_description: 选择读者看到的界面设计。您可以自定义内置主题或编辑自己的主题；更改在您激活之前都将保持私密状态。
         thumbnail:
           journal: 日记
           headline: 保持好奇心。
@@ -96,10 +97,14 @@ zh_CN:
         preview: 预览
         theme_actions: 主题操作
         local_edits_badge: 本地编辑
+        preset_description: 博客内容包含在内
         customize: 自定义
         customized_theme_name: "%{name}（自定义）"
         new_theme_name: 新博客主题
         start_from: 从
+        start_from_included: 包含的主题
+        start_from_drafts: 已保存的草稿
+        start_from_confirm: "从 %{name}重新开始？您在此页面上所做的更改将会丢失。"
         import: 导入
         import_description: "从 Git 仓库或 ZIP 文件导入主题。导入操作会创建新的草稿，而不会更改当前主题。"
         import_source: 从
@@ -121,6 +126,7 @@ zh_CN:
         save_before_activate: 请在激活此草稿之前保存更改。
         activate_theme: 激活已保存的草稿
         activate_confirm: "启用 %{name}？这将替换读者看到的界面设计。您保存的其他主题仍然可用。"
+        activated: 主题已激活。读者现在看到的是此设计。
         pull_git: 从 Git 拉取最新版本
         pull_confirm: 拉取最新提交？这将替换已保存的草稿，包括本地编辑。当前设计不会改变。
         local_edits: 此草稿自上次从 Git 导入以来已进行本地修改。
@@ -284,7 +290,6 @@ zh_CN:
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
       path: 文章路径
-      path_hint: 路径以斜杠 (/) 开头，并使用小写字母、数字、连字符和可选的路径段。更改后，旧路径会自动重定向。
       excerpt: 摘录
       excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
       date: 发布日期

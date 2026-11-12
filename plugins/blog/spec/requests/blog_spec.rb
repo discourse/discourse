@@ -207,9 +207,35 @@ RSpec.describe "Blog publication", type: :request do
   describe "GET blog articles and feeds" do
     let!(:publication) do
       publication = Blog::Publication.for_topic(topic)
-      publication.path = "/private-to-public"
+      update_blog_metadata(publication, admin, path: "/private-to-public")
       publish_blog_draft(publication, admin)
-      publication
+    end
+
+    it "uses an article's meta description and canonical URL, and keeps syndicated articles out of the sitemap" do
+      update_blog_metadata(
+        publication,
+        admin,
+        meta_description: "For search engines.",
+        canonical_url: "https://example.com/original",
+      )
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('meta[name="description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('meta[property="og:description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq("https://example.com/original")
+      expect(html.at_css('meta[property="og:url"]')["content"]).to eq(
+        "https://example.com/original",
+      )
+      schema = JSON.parse(html.at_css('script[type="application/ld+json"]').text)
+      expect(schema["description"]).to eq("For search engines.")
+      expect(TopicView.new(publication.discussion_topic_id).canonical_path).to eq(
+        "https://example.com/original",
+      )
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).not_to include(publication.url)
     end
 
     it "preserves historical canonical paths through publishing and corrections" do
@@ -253,10 +279,56 @@ RSpec.describe "Blog publication", type: :request do
         "/posts" => "/",
         "/posts.rss" => "/feed.xml",
         "/posts.atom" => "/feed.xml",
+        "/rss" => "/feed.xml",
+        "/rss/" => "/feed.xml",
+        "/feed" => "/feed.xml",
+        "/feed/" => "/feed.xml",
+        "/page/1" => "/",
+        "/page/3/" => "/?page=3",
       }.each do |path, target|
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to("https://blog.example.com#{target}")
+      end
+    end
+
+    it "serves an article link with a trailing slash under the stored canonical path" do
+      get "https://blog.example.com#{publication.path}/"
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq(publication.url)
+    end
+
+    it "redirects other old links on the blog host through permalinks" do
+      Permalink.create!(url: "author/jo", external_url: "https://blog.example.com/")
+      Permalink.create!(url: "contact", topic_id: publication.discussion_topic_id)
+      Permalink.create!(url: "forum", external_url: "/")
+      Permalink.create!(url: "tag/old-slug", external_url: "https://blog.example.com/tag/news")
+      Permalink.create!(url: "private", topic_id: Fabricate(:topic, category: drafts).id)
+
+      %w[/author/jo /author/jo/].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("https://blog.example.com/")
+      end
+
+      get "https://blog.example.com/contact"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(
+        "#{Discourse.base_url}#{publication.discussion_topic.relative_url}",
+      )
+
+      get "https://blog.example.com/forum"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("#{Discourse.base_url}/")
+
+      get "https://blog.example.com/tag/old-slug"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("https://blog.example.com/tag/news")
+
+      %w[/private /author/someone-else /tag/unknown].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(404)
       end
     end
 
@@ -329,6 +401,13 @@ RSpec.describe "Blog publication", type: :request do
       get "https://blog.example.com/tag/field-notes"
       expect(response.status).to eq(200)
       expect(response.body).to include(publication.url)
+
+      Tag.find_by(name: "field-notes").update!(description: "Dispatches from **the field**.")
+      get "https://blog.example.com/tag/field-notes"
+      expect(response.body).to include("<strong>the field</strong>")
+      expect(response.body).to include(
+        '<meta name="description" content="Dispatches from the field.">',
+      )
 
       get "https://blog.example.com/tag/some-other-tag"
       expect(response.status).to eq(404)

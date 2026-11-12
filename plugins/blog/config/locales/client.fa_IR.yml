@@ -15,6 +15,9 @@ fa_IR:
         preview_archive: بایگانی
         desktop: کامپیوتر
         mobile: موبایل
+        save: ذخیره
+        path_formats:
+          custom: سفارشی
         new_theme_short: پوسته جدید
         themes: قالب‌ها
         theme_name: نام قالب

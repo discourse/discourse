@@ -537,6 +537,7 @@ class DiscourseVipsWorker
           read: request.fetch("read"),
           write: request.fetch("write"),
         )
+      sandbox_supported = Landlock.supported?
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),
@@ -546,8 +547,8 @@ class DiscourseVipsWorker
           env: child_environment(scratch),
           unsetenv_others: true,
           rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
-          seccomp_deny_network: LINUX_PLATFORM,
-          seccomp_deny_child_processes: LINUX_PLATFORM,
+          seccomp_deny_network: sandbox_supported,
+          seccomp_deny_child_processes: sandbox_supported,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)

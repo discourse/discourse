@@ -13,6 +13,10 @@ lv:
             topic_id:
               label: Tēmas ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Reģistrēties"
       preferences:
         reminders:
           preferences:

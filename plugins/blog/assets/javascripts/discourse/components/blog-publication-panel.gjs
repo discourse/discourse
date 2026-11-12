@@ -48,6 +48,7 @@ export default class BlogPublicationPanel extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
+  @service siteSettings;
   @service toasts;
 
   @tracked busy = false;
@@ -125,6 +126,12 @@ export default class BlogPublicationPanel extends Component {
     return url.host === window.location.host
       ? url.pathname
       : `${url.host}${url.pathname}`;
+  }
+
+  get pathHint() {
+    return /\{(year|month|day)\}/.test(this.siteSettings.blog_path_format)
+      ? i18n("blog.path_hint_dated")
+      : i18n("blog.path_hint");
   }
 
   // Always relative ("6 days ago"); the exact time is in the tooltip.
@@ -470,6 +477,8 @@ export default class BlogPublicationPanel extends Component {
     return {
       path: this.publication?.path,
       excerpt: this.publication?.excerpt || "",
+      meta_description: this.publication?.meta_description || "",
+      canonical_url: this.publication?.canonical_url || "",
       featured: this.publication?.featured,
       published_at: this.publication?.published_at?.slice(0, 10) || "",
     };
@@ -977,7 +986,7 @@ export default class BlogPublicationPanel extends Component {
                   as |form|
                 >
                   <form.Field
-                    @description={{i18n "blog.path_hint"}}
+                    @description={{this.pathHint}}
                     @format="full"
                     @name="path"
                     @title={{i18n "blog.path"}}
@@ -993,6 +1002,26 @@ export default class BlogPublicationPanel extends Component {
                     @type="textarea"
                     as |field|
                   ><field.Control maxlength="1000" @rows={{3}} /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.meta_description_hint"}}
+                    @format="full"
+                    @name="meta_description"
+                    @title={{i18n "blog.meta_description"}}
+                    @type="textarea"
+                    as |field|
+                  ><field.Control maxlength="500" @rows={{2}} /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.canonical_url_hint"}}
+                    @format="full"
+                    @name="canonical_url"
+                    @title={{i18n "blog.canonical_url"}}
+                    @type="input"
+                    as |field|
+                  ><field.Control
+                      maxlength="1000"
+                      placeholder={{this.publication.url}}
+                      @type="url"
+                    /></form.Field>
                   <form.Field
                     @description={{i18n "blog.date_hint"}}
                     @name="published_at"

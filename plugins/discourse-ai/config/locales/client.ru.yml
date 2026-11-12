@@ -233,6 +233,8 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Подсказки от AI"
       copied: "Скопировано"
       ai_decoded_transcript:
         tool: "Инструмент"
@@ -268,29 +270,29 @@ ru:
         short_title: "Функции"
         back: "Вернуться к функциям ИИ"
         settings_save_error: "Некоторые настройки не удалось сохранить."
-        disabled: "(отключено)"
-        agent:
-          one: "Агент:"
-          few: "Агентов:"
-          many: "Агентов:"
-          other: "Агенты:"
-        groups: "Группы:"
-        llm:
-          one: "Большая языковая модель:"
-          few: "Большие языковые модели:"
-          many: "Большие языковые модели:"
-          other: "Большие языковые модели:"
+        table:
+          status: "Статус"
+          enabled: "Включено"
+          feature: "Функция"
+          agent: "Агент"
+          llm: "Большая языковая модель"
+          groups: "Группы"
+        who_can_use:
+          no_one: "Никто"
+        status:
+          "on": "Включено"
+          "off": "Выключено"
+        chatbot:
+          column: "Чат-бот"
+          places:
+            personal_messages: "Личные сообщения"
+            chat_direct_messages: "Сообщения чата"
+            none: "Недоступно"
+        set_up: "Настроить"
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
-        classification_model: "Модель:"
         edit: "Настроек"
-        expand_list:
-          one: "(еще %{count})"
-          few: "(еще %{count})"
-          many: "(еще %{count})"
-          other: "(еще %{count})"
-        collapse_list: "(свернуть)"
         bot:
           bot: "Чат-бот"
           name: "Бот"
@@ -332,7 +334,7 @@ ru:
             access_control: "Контроль доступа"
         embeddings:
           name: "Встраивания"
-          description: "Обеспечивает работу функций, таких как «Связанные темы» и «AI-поиск», создавая семантические представления текста"
+          related_topics: "Связанные темы"
           setting_groups:
             model_settings: "Настройки модели"
             related_topics: "Связанные темы"
@@ -344,7 +346,6 @@ ru:
             settings: "Основные настройки"
         discord:
           name: "Интеграция с Discord"
-          description: "Добавляет возможность поиска по каналам Discord"
           search: "Поиск в Discord"
           setting_groups:
             settings: "Основные настройки"
@@ -390,9 +391,6 @@ ru:
           short_text_translator: "Переводчик коротких текстов"
           schedule_untranslated: "Расписание переводов"
           schedule_topic_error: "Не удалось запланировать перевод. Пожалуйста, попробуйте еще раз."
-          setting_groups:
-            settings: "Основные настройки"
-            agents: "Агенты"
         spam:
           name: "Спам"
           description: "С помощью выбранной LLM определяет потенциальный спам и отправляет его модераторам сайта в очередь проверки"
@@ -411,8 +409,20 @@ ru:
       translations:
         title: "Переводы"
         description: "Автоматически переводить весь контент вашего форума на предпочитаемый пользователем язык"
-        supported_locales: "Поддерживаемые языки"
-        category_scope: "Категории"
+        sections:
+          advanced: "Дополнительно"
+        settings:
+          ai_translation_category_scope:
+            label: "Категории"
+          ai_translation_personal_messages:
+            label: "Личные сообщения"
+            choices:
+              none: "Нет"
+              all: "Все"
+          content_localization_language_switcher:
+            choices:
+              none: "Никто"
+              all: "Все"
         cached_results_notice: "Отображение кэшированных результатов из %{relative_time}."
         model_progress:
           detail:
@@ -431,7 +441,7 @@ ru:
             tag:
               title: "Теги"
         admin_actions:
-          enable_translations: "Включить автоматический перевод"
+          enabled: "Включено"
         stats:
           title: "Статистика переводов"
           eta_minutes:
@@ -774,6 +784,8 @@ ru:
         edit: "Изменить"
         delete: "Удалить"
         test: "Выполнить тест"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -802,6 +814,7 @@ ru:
         type: "Тип"
         provider: "Поставщик"
         edit: "Изменить"
+        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         select_type: "Выбрать"
         types:
           embedding: "Встраивание"
@@ -1004,7 +1017,6 @@ ru:
         presets: "Выберите пресет..."
         configure_manually: "Настроить вручную"
         edit: "Изменить"
-        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         tests:
           title: "Выполнить тест"
           running: "Запуск теста..."

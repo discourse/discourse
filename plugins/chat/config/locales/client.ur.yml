@@ -415,6 +415,7 @@ ur:
         auto_join_users_info_no_category: "پچھلے 3 مہینوں میں کون سے اراکین متحرک رہے ہیں فی گھنٹہ چیک کریں۔ اگر انہیں منتخب زمرہ تک رسائی حاصل ہے تو انہیں اس چینل میں شامل کریں۔"
         follow: "شمولیت اختیار کریں"
         followed: "شمولیت اختیار کی"
+        muted_until_hint: "%{until} تک"
         threading_disabled: "غیر فعال"
         notifications: "اطلاعات"
         preview: "جھلک دیکھیں"

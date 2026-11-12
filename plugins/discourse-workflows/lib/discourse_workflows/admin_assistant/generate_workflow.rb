@@ -60,11 +60,14 @@ module DiscourseWorkflows
         end
 
         session = create_session(description)
-        Jobs::DiscourseWorkflows::AuthorWithAi.new.execute(
+        job = Jobs::DiscourseWorkflows::AuthorWithAi.new
+        job.execute(
           session_id: session.id,
           user_id: context.user.id,
           generation_id: SecureRandom.hex,
         )
+        # Let the conversation report the credit limit instead of a retryable failure.
+        raise job.credit_limit_error if job.credit_limit_error
         session.reload
         return clarification_response(session) if session.status == "needs_clarification"
         return generation_error unless session.status == "proposal_ready"

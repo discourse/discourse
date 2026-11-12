@@ -508,6 +508,9 @@ tr_TR:
         followed: "Katıldı"
         mute: "Kanalı sessize al"
         unmute: "Kanalın sesini aç"
+        muted_until_hint: "şu zamana kadar: %{until}"
+        mute_options:
+          "off": "Kapalı"
         threading_enabled: "Etkin"
         threading_disabled: "Devre Dışı"
         muted_on: "Açık"

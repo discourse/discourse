@@ -61,14 +61,15 @@ lv:
       llm_selector:
         none: "Nav"
       features:
-        disabled: "(atslēgt)"
-        groups: "Grupas:"
+        table:
+          status: "Statuss"
+          enabled: "Ieslēgts"
+          groups: "Grupas"
+        chatbot:
+          places:
+            none: "Nav pieejams"
         no_groups: "Nav"
         edit: "Iestatījumi"
-        expand_list:
-          zero: "(vēl %{count})"
-          one: "(vēl %{count})"
-          other: "(vēl %{count})"
         nav:
           enabled: "Ieslēgts"
         filters:
@@ -86,7 +87,17 @@ lv:
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
-        category_scope: "Sadaļas"
+        settings:
+          ai_translation_category_scope:
+            label: "Sadaļas"
+          ai_translation_personal_messages:
+            choices:
+              none: "Nav"
+              all: "Visi"
+          content_localization_language_switcher:
+            choices:
+              none: "Neviens"
+              all: "Ikviens"
         model_progress:
           detail:
             columns:
@@ -101,6 +112,8 @@ lv:
               title: "Sadaļas"
             tag:
               title: "Birkas"
+        admin_actions:
+          enabled: "Ieslēgts"
         stats:
           eta_hours:
             zero: "%{count} stundas"

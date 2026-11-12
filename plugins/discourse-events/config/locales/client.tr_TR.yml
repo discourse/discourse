@@ -33,6 +33,10 @@ tr_TR:
               label: Konu kimliği
     discourse_events:
       title: "Olaylar"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Kaydol"
       preferences:
         reminders:
           preferences:

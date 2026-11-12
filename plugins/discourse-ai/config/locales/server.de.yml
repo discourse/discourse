@@ -258,10 +258,6 @@ de:
           name: "Bilderzeugung …"
         image_generation_custom:
           name: "Benutzerdefiniert"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -961,6 +957,14 @@ de:
       fonts:
         base_font: "Textkörper-Schriftart"
         heading_font: "Überschrift-Schriftart"
+    mcp_theme_access:
+      "on": "An"
+      "off": "Aus"
+      none: "keine Erfassung"
+      changes:
+        server: "MCP-Server"
+    mcp_app_setup:
+      none: "keine Erfassung"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"

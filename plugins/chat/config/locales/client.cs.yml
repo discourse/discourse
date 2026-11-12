@@ -538,6 +538,9 @@ cs:
         followed: "Účet vytvořen"
         mute: "Ztlumit kanál"
         unmute: "Zrušit ztlumení kanálu"
+        muted_until_hint: "až %{until}"
+        mute_options:
+          "off": "Vypnuto"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         muted_on: "Zapnuto"

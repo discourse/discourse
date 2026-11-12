@@ -34,6 +34,7 @@ en:
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."
+      error_credit_limit_exceeded: "This site has used all of today's AI credits. Try again after %{reset_time}."
       error_invalid_mode: "Invalid AI workflow authoring mode."
       error_invalid_patch: "The AI proposal did not pass workflow validation: %{errors}"
       error_invalid_response: "AI returned an invalid response."

@@ -4,6 +4,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import LivestreamZoomPage from "discourse/plugins/discourse-events/discourse/components/livestream/zoom-page";
 
 const FALLBACK_SELECTOR = ".discourse-calendar-livestream-zoom-page__fallback";
@@ -19,7 +20,7 @@ function stubFrameUrl(context) {
   return context;
 }
 
-// What the frame reports back — the meeting failing, and the user leaving it —
+// What the frame reports back — the webinar failing, and the user leaving it —
 // arrives as a window message, which is the same channel the test runner uses
 // to talk to its own harness. Faking one here unsettles it, so those states are
 // left to a system test driving the real frame.
@@ -89,6 +90,16 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     stubFrameUrl(this);
     this.eventApi = stubEventApi(this);
 
+    // Joining pauses notifications for the webinar, which these tests leave aside.
+    pretender.post(
+      "/discourse-calendar/livestream/notification-pause.json",
+      () => response({ ends_at: moment().add(1, "hour").toISOString() })
+    );
+    pretender.delete(
+      "/discourse-calendar/livestream/notification-pause/:pause_key.json",
+      () => response(204, "")
+    );
+
     this.topic = {
       id: 1,
       slug: "test-topic",
@@ -126,7 +137,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
 
   // The states before and after the event's own timeframe render the event
   // card, which does not settle in a rendering test. What it is gating is the
-  // signature the meeting cannot start without, and `livestream_controller_spec`
+  // signature the webinar cannot start without, and `livestream_controller_spec`
   // covers the server refusing that outside the timeframe.
 
   test("embeds the chat below the meeting when the topic has a channel", async function (assert) {
@@ -167,8 +178,8 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
 
     assert.dom(CHAT_SELECTOR).doesNotExist();
   });
-  // Chat beside the meeting is read-only for anyone the event has no "going"
-  // answer from, so reaching the meeting is taken as that answer.
+  // Chat beside the webinar is read-only for anyone the event has no "going"
+  // answer from, so reaching the webinar is taken as that answer.
   test("marks a user who has not answered the RSVP as going", async function (assert) {
     this.topic.postStream.posts[0].event.can_update_attendance = true;
 

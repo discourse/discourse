@@ -27,6 +27,10 @@ fa_IR:
               label: شناسه موضوع
     discourse_events:
       title: "رویدادها"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "ثبت‌نام"
       preferences:
         reminders:
           preferences:

@@ -16,6 +16,9 @@ es:
         preview_archive: Archivo
         desktop: Escritorio
         mobile: Móvil
+        save: Guardar
+        path_formats:
+          custom: Personalizado
         back_to_themes: Volver a los temas
         new_theme_short: Nuevo tema
         themes: Tema

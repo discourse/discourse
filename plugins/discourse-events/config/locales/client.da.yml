@@ -20,6 +20,10 @@ da:
               label: Emne ID
     discourse_events:
       title: "Hændelser"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrer"
       preferences:
         reminders:
           preferences:

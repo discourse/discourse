@@ -557,17 +557,11 @@ he:
         completed: "שינוי האפשרויות"
         show_light_screenshot: "הצגת צילום מסך בהיר"
         show_dark_screenshot: "הצגת צילום מסך כהה"
+      create_category:
+        action: "יצירת קטגוריה"
       invite_collaborators:
         title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
-      start_posting:
-        action: "הצגת רעיונות"
-        completed: "הצגת רעיונות נוספים"
-        choose_option: "איך בא לך להתחיל?"
-        predefined_topics: "תבניות שוברות קרח"
-        predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
-        use_predefined: "עיון בתבניות"
-        back: "חזרה"
     design_wizard:
       title: "התאמת האתר שלך"
       step_label: "מעבר לשלב %{index}"

@@ -236,6 +236,7 @@ hr:
         auto_join_users_info_no_category: "Provjeri svaki sat koji su korisnici bili aktivni u posljednja 3 mjeseca. Dodaj ih na ovaj kanal ako imaju pristup odabranoj kategoriji."
         follow: "Pridružite se"
         followed: "Prijavljen"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Omogućeno"
         threading_disabled: "Onemogućeno"
         notifications: "Obavijest"

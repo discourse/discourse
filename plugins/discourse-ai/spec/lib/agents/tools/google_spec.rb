@@ -29,6 +29,20 @@ RSpec.describe DiscourseAi::Agents::Tools::Google do
       expect(info).to_not include("oops")
     end
 
+    it "uses the configured endpoint" do
+      SiteSetting.ai_google_custom_search_url = "https://search.example.com/customsearch/v1"
+      json_text = { searchInformation: { totalResults: "0" } }.to_json
+
+      stub_request(
+        :get,
+        "https://search.example.com/customsearch/v1?cx=cx&key=abc&num=10&q=some%20search%20term",
+      ).to_return(status: 200, body: json_text, headers: {})
+
+      search.invoke(&progress_blk)
+
+      expect(search.results_count).to eq(0)
+    end
+
     it "supports base_query" do
       base_query = "site:discourse.org"
 

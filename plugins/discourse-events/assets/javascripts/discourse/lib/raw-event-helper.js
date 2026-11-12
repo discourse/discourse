@@ -302,6 +302,9 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   if (event.livestream) {
     params.livestream = "true";
+    if (event.allowAnonymousLivestream) {
+      params.allowAnonymousLivestream = "true";
+    }
   }
 
   if (event.maxAttendees) {
@@ -454,6 +457,7 @@ export function defaultEventState() {
     showLocalTime: false,
     chatEnabled: false,
     livestream: false,
+    allowAnonymousLivestream: false,
     minimal: false,
     url: null,
     recording: null,
@@ -494,6 +498,8 @@ export function parseEventAttrs(
     showLocalTime: attrs.showLocalTime === "true",
     chatEnabled: attrs.chatEnabled === "true",
     livestream: attrs.livestream === "true",
+    allowAnonymousLivestream:
+      attrs.livestream === "true" && attrs.allowAnonymousLivestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
     recording: attrs.recording || null,
@@ -521,6 +527,7 @@ export function stateToEventInput(state) {
     minimal: state.minimal,
     chatEnabled: state.chatEnabled,
     livestream: state.livestream,
+    allowAnonymousLivestream: state.allowAnonymousLivestream,
     maxAttendees: state.maxAttendees,
     rawInvitees: state.allowedGroups ? state.allowedGroups.split(",") : [],
     reminders: state.reminders,

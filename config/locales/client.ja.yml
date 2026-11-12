@@ -436,9 +436,6 @@ ja:
       title: "新規と未読のトピック"
       pill: "提案"
       pm_title: "推奨メッセージ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "戻る"
     design_wizard:
       back: "戻る"
       next: "次へ"

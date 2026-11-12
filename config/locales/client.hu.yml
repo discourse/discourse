@@ -495,20 +495,11 @@ hu:
       pm_title: "Ajánlott üzenetek"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
+      create_category:
+        action: "Kategória létrehozása"
       invite_collaborators:
         title: "Együttműködők meghívása"
         action: "Meghívó létrehozása"
-      start_posting:
-        title: "Kezdj el posztolni!"
-        choose_option: "Hogyan szeretnél kezdeni?"
-        predefined_topics: "Jégtörő sablonok"
-        predefined_topics_description: "Válogass a beszélgetésindító ötletek közül, és indítsd be a társalgást!"
-        use_predefined: "Sablonok böngészése"
-        back: "Vissza"
-        icebreakers:
-          introduce_yourself:
-            title: "Mutasd be magad"
-            body: "Üdv a közösségben! Ismerjük meg egymást. Kérlek mutatkozz be, és mesélj egy kicsit az érdeklődési körödről. Először én kezdem: szenvedélyesen rajongok a technológiáért, és szeretek másokat tanítani!"
     design_wizard:
       back: "Vissza"
       next: "Következő"

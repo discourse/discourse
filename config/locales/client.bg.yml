@@ -304,9 +304,6 @@ bg:
       pill: "Свързани съобщения"
     suggested_topics:
       pm_title: "Предложени съобщения"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Напред"

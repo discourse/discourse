@@ -77,7 +77,7 @@ const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
 const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
 const SAVE_BTN = ".schema-setting-editor__footer .btn-primary";
 
-function renderEditor(setting) {
+function renderEditor(setting, { sendTagIds = false } = {}) {
   return render(
     <template>
       <DialogHolder />
@@ -85,6 +85,7 @@ function renderEditor(setting) {
         @id="1"
         @routeToRedirect="adminCustomizeThemes.show"
         @schema={{setting.objects_schema}}
+        @sendTagIds={{sendTagIds}}
         @setting={{setting}}
       />
     </template>
@@ -851,6 +852,141 @@ module(
       await click(TOP_LEVEL_ADD_BTN);
 
       assert.dom(tree.nodes[1].textElement).hasText("category 2");
+    });
+
+    test("submits tag IDs alongside existing names and retains localized labels between objects", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          identifier: "tags",
+          properties: {
+            name: { type: "string" },
+            tags: { type: "tags" },
+          },
+        },
+        value: [
+          { name: "first", tags: ["dog", "123"] },
+          { name: "second", tags: [] },
+        ],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting, { sendTagIds: true });
+
+      let tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      await tags.expand();
+      await tags.selectRowByValue(1);
+      await tags.collapse();
+
+      assert.strictEqual(tags.header().name(), "dog,123,猫");
+      assert.dom(tree.nodes[0].textElement).hasText("dog,123,猫");
+
+      setting.set("metadata", { property_descriptions: {} });
+      await click(tree.nodes[1].element);
+      await click(tree.nodes[0].element);
+
+      tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      assert.strictEqual(tags.header().name(), "dog,123,猫");
+
+      assert.deepEqual(await captureSavedValue(this.owner), [
+        { name: "first", tags: ["dog", "123", 1] },
+        { name: "second", tags: [] },
+      ]);
+    });
+
+    test("keeps tag name submissions when ID submissions are not enabled", async function (assert) {
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          properties: { tags: { type: "tags" } },
+        },
+        value: [{ tags: [] }],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting);
+
+      const tags = selectKit(`${inputFields.fields.tags.selector} .select-kit`);
+      await tags.expand();
+      await tags.selectRowByValue(1);
+      await tags.collapse();
+
+      assert.deepEqual(await captureSavedValue(this.owner), [{ tags: ["猫"] }]);
+    });
+
+    test("submits tag IDs alongside existing names with the new controls", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          identifier: "tags",
+          properties: {
+            name: { type: "string" },
+            tags: { type: "tags" },
+          },
+        },
+        value: [
+          { name: "first", tags: ["dog", "123"] },
+          { name: "second", tags: [] },
+        ],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting, { sendTagIds: true });
+
+      const tags = new DSelect(`${inputFields.fields.tags.selector} .d-select`);
+      await tags.open();
+      await tags.select(1);
+      await tags.close();
+
+      assert.dom(tree.nodes[0].textElement).hasText("dog,123,猫");
+
+      setting.set("metadata", { property_descriptions: {} });
+      await click(tree.nodes[1].element);
+      await click(tree.nodes[0].element);
+
+      assert.deepEqual(
+        [
+          ...document.querySelectorAll(
+            `${inputFields.fields.tags.selector} .d-select__chip-label`
+          ),
+        ].map((chip) => chip.textContent.trim()),
+        ["dog", "123", "猫"],
+        "the localized name is kept when coming back to the object"
+      );
+      assert.deepEqual(await captureSavedValue(this.owner), [
+        { name: "first", tags: ["dog", "123", 1] },
+        { name: "second", tags: [] },
+      ]);
+    });
+
+    test("keeps tag name submissions with the new controls when ID submissions are not enabled", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          properties: { tags: { type: "tags" } },
+        },
+        value: [{ tags: [] }],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting);
+
+      const tags = new DSelect(`${inputFields.fields.tags.selector} .d-select`);
+      await tags.open();
+      await tags.select(1);
+      await tags.close();
+
+      assert.deepEqual(await captureSavedValue(this.owner), [{ tags: ["猫"] }]);
     });
 
     test("input fields of type tags which is required", async function (assert) {

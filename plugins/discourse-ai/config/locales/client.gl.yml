@@ -63,13 +63,15 @@ gl:
       llm_selector:
         none: "Ningunha"
       features:
-        disabled: "(desactivado)"
-        groups: "Grupos:"
+        table:
+          status: "Estado"
+          enabled: "Activado"
+          groups: "Grupos"
+        chatbot:
+          places:
+            none: "Non dispoñíbel"
         no_groups: "Ningunha"
         edit: "Configuración"
-        expand_list:
-          one: "(%{count} máis)"
-          other: "(%{count} máis)"
         nav:
           enabled: "Activado"
         filters:
@@ -88,7 +90,17 @@ gl:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
-        category_scope: "Categorías"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorías"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ningunha"
+              all: "Todas"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguén"
+              all: "Todos"
         model_progress:
           detail:
             columns:
@@ -103,6 +115,8 @@ gl:
               title: "Categorías"
             tag:
               title: "Etiquetas"
+        admin_actions:
+          enabled: "Activado"
         stats:
           eta_minutes:
             one: "%{count} minuto"

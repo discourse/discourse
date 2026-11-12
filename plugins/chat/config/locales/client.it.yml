@@ -468,6 +468,9 @@ it:
         follow: "Partecipa"
         followed: "Partecipante"
         mute: "Silenzia canale"
+        muted_until_hint: "fino a %{until}"
+        mute_options:
+          "off": "Off"
         threading_enabled: "Abilitato"
         threading_disabled: "Disabilitato"
         muted_on: "On"

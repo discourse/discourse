@@ -99,20 +99,20 @@ pt:
         none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
-        disabled: "(desativado)"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          status: "Estado"
+          enabled: "Ativado"
+          feature: "Funcionalidade"
+          llm: "LLM"
+          groups: "Grupos"
+        chatbot:
+          column: "Robô de Conversação"
+          places:
+            none: "Indisponível"
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não definido"
         no_groups: "Nenhuma"
-        classification_model: "Modelo:"
         edit: "Configurações"
-        expand_list:
-          one: "(%{count} mais)"
-          other: "(%{count} mais)"
-        collapse_list: "(mostrar menos)"
         bot:
           bot: "Robô de Conversação"
           name: "Robô"
@@ -132,11 +132,8 @@ pt:
           topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
-        embeddings:
-          hyde: "HyDE"
         discord:
           name: "Integração do Discord"
-          description: "Adiciona a capacidade para procurar canais no Discord"
           search: "Procura no Discord"
         ai_helper:
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
@@ -165,7 +162,19 @@ pt:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
-        category_scope: "Categorias"
+        sections:
+          advanced: "Avançado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorias"
+          ai_translation_personal_messages:
+            choices:
+              none: "Nenhuma"
+              all: "Todos"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguém"
+              all: "Todos"
         model_progress:
           detail:
             retry: "Tentar novamente"
@@ -182,6 +191,8 @@ pt:
               title: "Categorias"
             tag:
               title: "Etiquetas"
+        admin_actions:
+          enabled: "Ativado"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:

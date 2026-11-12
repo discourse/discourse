@@ -178,6 +178,7 @@ export default class Group extends RestModel {
     term?: string;
     ignore_automatic?: boolean;
     include_everyone?: boolean;
+    include_pseudogroups?: boolean;
   }): Promise<Group[]> {
     return ajax("/groups/search.json", { data: opts }).then(
       (groups: RestModelAttrs<Group>[]) => groups.map((g) => Group.create(g))

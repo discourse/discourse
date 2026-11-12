@@ -59,7 +59,7 @@ Now, let's say the current color scheme is not set to "Light scheme" for the cur
 
 You can see how the `<body>` background follows the current `highlight` variable whatever it may be for the current color scheme.
 
-That covers the basic color variables. Discourse also uses derivative colors that can be used or overriden. You can see the full list of colors from the current color scheme in your browser inspector, here is a screenshot of the default theme:
+That covers the basic color variables. Discourse also uses derivative colors that can be used or overridden. You can see the full list of colors from the current color scheme in your browser inspector, here is a screenshot of the default theme:
 
 ![image|441x500](/assets/core-variables-4.png)
 

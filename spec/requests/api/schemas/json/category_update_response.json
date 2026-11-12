@@ -402,6 +402,12 @@
               "icon": {
                 "type": "string"
               },
+              "svg_icon": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
               "available": {
                 "type": "boolean"
               },
@@ -418,6 +424,7 @@
               "title",
               "description",
               "icon",
+              "svg_icon",
               "available",
               "visible",
               "configuration_schema"

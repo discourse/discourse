@@ -497,21 +497,11 @@ nl:
       pm_title: "Voorgestelde berichten"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
+      create_category:
+        action: "Categorie maken"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
         action: "Uitnodiging maken"
-      start_posting:
-        title: "Begin met plaatsen"
-        action: "Ideeën bekijken"
-        choose_option: "Hoe wil je starten?"
-        predefined_topics: "IJsbrekersjablonen"
-        predefined_topics_description: "Kies uit een verzameling conversatiestarters om discussies op gang te brengen"
-        use_predefined: "Sjablonen bekijken"
-        back: "Terug"
-        icebreakers:
-          introduce_yourself:
-            title: "Stel jezelf voor"
-            body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
     design_wizard:
       back: "Terug"
       next: "Volgende"

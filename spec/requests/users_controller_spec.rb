@@ -949,6 +949,67 @@ RSpec.describe UsersController do
       expect(response.parsed_body["success"]).to eq(true)
     end
 
+    it "accepts only signup fields from anonymous registration" do
+      visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+
+      post_user(
+        user_fields: {
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "hidden",
+        },
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(
+        visible_field.id.to_s => "visible",
+        hidden_field.id.to_s => nil,
+      )
+    end
+
+    it "skips hidden required fields during anonymous registration" do
+      Fabricate(:user_field, show_on_signup: false, requirement: "on_signup")
+
+      post_user
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
+    it "accepts only signup fields from a regular user API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: true)
+      api_key = Fabricate(:api_key, user: user1)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "hidden" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => nil)
+    end
+
+    it "accepts hidden fields from an administrator API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+      api_key = Fabricate(:api_key, user: admin)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "provisioned" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => "provisioned")
+    end
+
     context "when email params is missing" do
       it "returns the missing-email error" do
         post "/u.json",

@@ -14,7 +14,9 @@ en_GB:
               label: "Categories"
     discourse_ai:
       translations:
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
         model_progress:
           targets:
             category:

@@ -22,13 +22,20 @@ a deferred, interactive Discourse discussion below each article.
 - Private working topics, frozen approved revisions, and preserved public discussions.
 - Durable paths, including historical date-based paths; automatic 301 aliases when
   changing an article path. Topic title edits never change the published path.
-  Imported paths retain case, plus signs, underscores, dots, commas, and encoded
-  plus/comma characters. Dated `/blog/archive/YYYY/MM/DD/...` paths are supported;
+  Imported paths retain case, plus signs, underscores, dots, commas, encoded
+  plus/comma characters, and percent-encoded UTF-8 such as `/%E6%97%A5%E6%9C%AC`
+  (stored with upper-case hex, as requests arrive). Dated
+  `/blog/archive/YYYY/MM/DD/...` paths are supported;
   other editorial and asset paths remain reserved. Paths cannot contain queries,
   fragments, traversal segments, or encoded separators.
-- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
-  and `/posts.atom` redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
-  both the `#discussion` and `#comments` fragment targets.
+- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`,
+  `/posts.atom`, `/rss` and `/feed` (the Ghost and WordPress feed URLs) redirect permanently to the
+  RSS feed at `/feed.xml`, and Ghost's `/page/N` pagination redirects to `/?page=N`. The `author`
+  segment is reserved for future author archives. Article discussions retain both the
+  `#discussion` and `#comments` fragment targets.
+- A blog path that is not an article falls back to core permalinks, so a migration can
+  redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
+  community), and relative targets resolve against the community host.
 - Excerpts, featured articles, author bylines, reading time, publication/updated
   dates, and card/social images from the topic's first image upload.
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
@@ -145,9 +152,9 @@ embedding host then includes that port, for example `blog.dev.localhost:8443`.
 
 ### Backups and hostname changes
 
-Back up uploads as well as the database. Enable `include_thumbnails_in_backups`
-when preserving published revisions: their frozen HTML can reference optimized
-images that are not regenerated simply by rendering the article.
+Back up uploads as well as the database. Enable `include_thumbnails_in_backups`:
+published articles keep the HTML they were approved with, and a restore without
+thumbnails regenerates them by rebaking posts, which does not change articles.
 
 A backup carries blog settings, themes, publications, and revisions, but not plugin
 source, DNS, TLS, or reverse-proxy configuration. Restore onto a compatible
@@ -155,11 +162,14 @@ Discourse build with this plugin installed. Before exposing a restored site, set
 the correct blog origin and exact embedding host, and verify both reader and
 editorial permissions.
 
-For a hostname-changing restore, also remap absolute URLs inside
-`blog_revisions.data`. These snapshots use JSONB; core's text-column
-hostname remapping does not update them. Perform this as an explicit, backed-up
-restore operation, not by republishing or rebaking live articles. Verify canonicals,
-feeds, sitemap, article images, and embedded discussions before reopening traffic.
+Published articles store their HTML in text columns, so hostname remaps (`discourse
+remap` or a restore onto a new hostname) and upload migrations to S3 update them like
+posts. Rebakes do not: a refetched onebox or other re-rendered content stays out of an
+article until it is published again or an admin runs `bin/rake blog:refresh_articles`,
+which copies each discussion post's current HTML into its article. Run it after rebaking
+posts in bulk, such as after an import, once Sidekiq has finished post-processing them.
+Verify canonicals, feeds, sitemap, article images, and embedded discussions before
+reopening traffic.
 
 ### Local demo provisioning
 
@@ -284,8 +294,9 @@ to change.
 3. For an existing public article, the public discussion topic shows a banner
    with **Edit privately**, which creates a private working copy and links to it.
    The existing public discussion and its replies keep their IDs.
-4. **Article settings** (path, excerpt, date, featured) are edited inline in the
-   panel. **Save settings** stages metadata without changing the live article.
+4. **Article settings** (path, excerpt, meta description, canonical URL, date,
+   featured) are edited inline in the panel. **Save settings** stages metadata
+   without changing the live article.
 5. **Publish** (or **Publish correction** once live) requires confirmation and
    freezes the current draft and settings as a revision, approves it, and copies
    only that frozen article into a separate public discussion (or updates its

@@ -39,6 +39,7 @@ RSpec.describe "Admin AI features configuration" do
     ai_features_page.visit
 
     ai_features_page.toggle_enabled
+    ai_features_page.expand_module("summarization")
 
     expect(ai_features_page).to have_feature_agent("topic_summaries", summarization_agent.name)
   end
@@ -47,6 +48,7 @@ RSpec.describe "Admin AI features configuration" do
     ai_features_page.visit
 
     ai_features_page.toggle_enabled
+    ai_features_page.expand_module("summarization")
 
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
@@ -69,6 +71,7 @@ RSpec.describe "Admin AI features configuration" do
 
     ai_features_page.visit
     ai_features_page.toggle_enabled
+    ai_features_page.expand_module("search")
 
     expect(ai_features_page).to have_feature("discoveries", "Discover (deprecated)")
     expect(ai_features_page).to have_feature("ask_ai", "Ask AI")
@@ -84,6 +87,7 @@ RSpec.describe "Admin AI features configuration" do
 
     ai_features_page.visit
     ai_features_page.toggle_enabled
+    ai_features_page.expand_module("search")
 
     expect(ai_features_page).to have_no_feature("discoveries")
     expect(ai_features_page).to have_feature("ask_ai", "Ask AI")
@@ -105,6 +109,86 @@ RSpec.describe "Admin AI features configuration" do
     )
 
     expect(form).to have_no_enabled_field_with_name("ai_discover_enabled")
+  end
+
+  it "lets admins enable and disable modules and features from the list" do
+    ai_features_page.visit
+    ai_features_page.expand_module("summarization")
+
+    expect(ai_features_page).to have_module_enabled("summarization")
+    expect(ai_features_page).to have_no_feature_toggle("topic_summaries")
+    expect(ai_features_page).to have_feature_disabled("gists")
+
+    ai_features_page.toggle_feature("gists")
+
+    expect(ai_features_page).to have_feature_enabled("gists")
+    try_until_success { expect(SiteSetting.ai_summary_gists_enabled).to eq(true) }
+
+    ai_features_page.toggle_module("summarization")
+
+    expect(ai_features_page).to have_module_disabled("summarization")
+    try_until_success { expect(SiteSetting.ai_summarization_enabled).to eq(false) }
+    expect(
+      PageObjects::Components::DToggleSwitch.new(
+        ".ai-features-feature-row[data-feature-name='gists'] .ai-feature-setting-toggle",
+      ),
+    ).to be_disabled
+  end
+
+  it "links to setup when a module cannot be enabled yet" do
+    ai_features_page.visit
+    ai_features_page.click_set_up_module("spam")
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-spam")
+  end
+
+  it "sends admins to the translations page to set up translation" do
+    SiteSetting.content_localization_supported_locales = ""
+
+    ai_features_page.visit
+    ai_features_page.click_set_up_module("translation")
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-translations")
+  end
+
+  it "links the post illustrator setup to the image generation tool presets" do
+    ai_features_page.visit
+    ai_features_page.expand_module("ai_helper")
+
+    find(
+      ".ai-features-feature-row[data-feature-name='post_illustrator'] a.ai-features-feature-row__setup-note",
+    ).click
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-tools")
+    expect(page).to have_css(".ai-tool-list-editor__new-button[aria-expanded='true']")
+    expect(page).to have_content("GPT Image 2.6 Flare")
+  end
+
+  it "offers to add an embedding model when none exists" do
+    EmbeddingDefinition.delete_all
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::EMBEDDINGS_ID}/edit",
+    )
+    find(".ai-feature-editor__missing-choices[data-setting='ai_embeddings_selected_model'] a").click
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-models/new?type=embedding")
+  end
+
+  it "redirects the generic translation settings page to the translations page" do
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::TRANSLATION_ID}/edit",
+    )
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-translations")
+  end
+
+  it "shows a read-only status for modules without a single enabling setting" do
+    SiteSetting.ai_ask_ai_enabled = true
+
+    ai_features_page.visit
+
+    expect(ai_features_page).to have_module_status("search", enabled: true)
   end
 
   it "shows edit page with grouped settings" do
@@ -165,6 +249,7 @@ RSpec.describe "Admin AI features configuration" do
 
     ai_features_page.visit
     ai_features_page.toggle_enabled
+    ai_features_page.expand_module("sentiment")
 
     expect(ai_features_page).to have_feature_decision_model("sentiment", decision_model)
     expect(ai_features_page).to have_feature_agent("emotion", summarization_agent.name)
@@ -251,6 +336,10 @@ RSpec.describe "Admin AI features configuration" do
         feature: :test_feature,
         agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
         plugin: fake_plugin,
+        entry_point: {
+          path: "/admin/plugins/discourse-ai/ai-agents/new",
+          label: "discourse_ai.features.chatbot.new_agent",
+        },
       )
     end
 
@@ -262,8 +351,19 @@ RSpec.describe "Admin AI features configuration" do
 
     it "shows external modules from the registry" do
       ai_features_page.visit
+      ai_features_page.expand_module("test_external")
       expect(page).to have_content("test_external")
       expect(page).to have_content("test_feature")
+    end
+
+    it "links to where the feature can be tried" do
+      ai_features_page.visit
+      ai_features_page.expand_module("test_external")
+
+      expect(page).to have_link(
+        I18n.t("js.discourse_ai.features.chatbot.new_agent"),
+        href: "/admin/plugins/discourse-ai/ai-agents/new",
+      )
     end
   end
 end

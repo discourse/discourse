@@ -24,6 +24,10 @@ ko:
             topic_id:
               label: 글 ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "등록하기"
       preferences:
         reminders:
           preferences:

@@ -101,6 +101,10 @@ hr:
           header_background: "Uzglavlje"
       fonts:
         heading_font: "Font zaglavlja"
+    mcp_theme_access:
+      none: "ništa"
+    mcp_app_setup:
+      none: "ništa"
     reviewables:
       ai_tool_action:
         approve:

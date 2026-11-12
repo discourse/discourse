@@ -17,6 +17,10 @@ module DiscourseEvents
       MAX_RAW_INVITEES = 10
       MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
+      # An event with no end has nothing to pause notifications until, and leaving
+      # the webinar is what normally ends the pause, so this only bounds a tab
+      # left open.
+      OPEN_ENDED_NOTIFICATION_PAUSE = 3.hours
       DEFAULT_TIMEZONE = "UTC"
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
@@ -95,9 +99,8 @@ module DiscourseEvents
       end
 
       def reset_invalid_livestream
-        return unless livestream?
-
-        self.livestream = false unless allowed_livestream_url? && post&.is_first_post?
+        self.livestream = false if livestream? && !(allowed_livestream_url? && post&.is_first_post?)
+        self.allow_anonymous_livestream = false unless livestream?
       end
 
       def allowed_livestream_url?
@@ -261,6 +264,12 @@ module DiscourseEvents
 
       def starts_at
         current_event_date&.starts_at || original_starts_at
+      end
+
+      def notification_pause_ends_at
+        return (ends_at || starts_at).end_of_day if all_day
+
+        ends_at || OPEN_ENDED_NOTIFICATION_PAUSE.from_now
       end
 
       # Between occurrences of a recurring livestream there is nothing to chat
@@ -904,31 +913,32 @@ end
 #
 # Table name: discourse_post_event_events
 #
-#  id                 :bigint           not null, primary key
-#  all_day            :boolean          default(FALSE), not null
-#  chat_enabled       :boolean          default(FALSE), not null
-#  closed             :boolean          default(FALSE), not null
-#  custom_fields      :jsonb            not null
-#  deleted_at         :datetime
-#  description        :string(1000)
-#  livestream         :boolean          default(FALSE), not null
-#  location           :string(1000)
-#  max_attendees      :integer
-#  minimal            :boolean
-#  name               :string
-#  original_ends_at   :datetime
-#  original_starts_at :datetime         not null
-#  raw_invitees       :string           is an Array
-#  recording_url      :string(1000)
-#  recurrence         :string
-#  recurrence_until   :datetime
-#  reminders          :string
-#  show_local_time    :boolean          default(FALSE), not null
-#  status             :integer          default(0), not null
-#  timezone           :string
-#  url                :string(1000)
-#  chat_channel_id    :bigint
-#  image_upload_id    :bigint
+#  id                         :bigint           not null, primary key
+#  all_day                    :boolean          default(FALSE), not null
+#  allow_anonymous_livestream :boolean          default(FALSE), not null
+#  chat_enabled               :boolean          default(FALSE), not null
+#  closed                     :boolean          default(FALSE), not null
+#  custom_fields              :jsonb            not null
+#  deleted_at                 :datetime
+#  description                :string(1000)
+#  livestream                 :boolean          default(FALSE), not null
+#  location                   :string(1000)
+#  max_attendees              :integer
+#  minimal                    :boolean
+#  name                       :string
+#  original_ends_at           :datetime
+#  original_starts_at         :datetime         not null
+#  raw_invitees               :string           is an Array
+#  recording_url              :string(1000)
+#  recurrence                 :string
+#  recurrence_until           :datetime
+#  reminders                  :string
+#  show_local_time            :boolean          default(FALSE), not null
+#  status                     :integer          default(0), not null
+#  timezone                   :string
+#  url                        :string(1000)
+#  chat_channel_id            :bigint
+#  image_upload_id            :bigint
 #
 # Indexes
 #

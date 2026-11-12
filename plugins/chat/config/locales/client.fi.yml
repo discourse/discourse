@@ -415,6 +415,9 @@ fi:
         follow: "Liity"
         followed: "Liittyi"
         mute: "Vaimenna kanava"
+        muted_until_hint: "%{until} asti"
+        mute_options:
+          "off": "Pois käytöstä"
         threading_enabled: "Käytössä"
         threading_disabled: "Pois käytöstä"
         muted_on: "Käytössä"

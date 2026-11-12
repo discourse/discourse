@@ -19,6 +19,7 @@ en:
       admin:
         title: Blog
         go_to_editor: Go to editor
+        view_blog: View blog
         open_blog: Open blog
         safe_mode: Open without custom code
         identity: Blog identity
@@ -72,10 +73,22 @@ en:
         js_description:
           Plain JavaScript, up to 65,536 bytes. Script tags are not parsed — load
           another script by appending a script element (document.createElement("script")).
-        save: Save identity
-        saved: Blog identity saved. Reload the blog to see your changes.
+        save: Save
+        saved: Blog settings saved. Reload the blog to see your changes.
         identity_tab: Identity
-        identity_description: The name, introduction, and About content shared by all blog themes.
+        identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
+        article_urls: Article URLs
+        path_format: Address format
+        path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.
+        path_format_sample_slug: my-article
+        path_formats:
+          slug: Article name
+          year_month_slug: Month and name
+          year_month_day_slug: Date and name
+          custom: Custom
+        custom_path_format: Custom format
+        custom_path_format_description: "Use {year}, {month}, {day}, {slug} and {id}, and include {slug} or {id} so every address is unique."
+        custom_path_format_invalid: "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
         themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
@@ -190,6 +203,8 @@ en:
           body: body
           path: path
           excerpt: excerpt
+          meta_description: meta description
+          canonical_url: canonical URL
           featured: featured flag
           tags: tags
           published_at: publication date
@@ -197,7 +212,7 @@ en:
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, date, featured
+        settings_hint: Path, excerpt, search, date, featured
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -296,11 +311,26 @@ en:
       path: Article path
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional
-        path segments. Old paths redirect automatically after a change.
+        path segments. Until the article is first published, a path you haven't
+        edited follows its title. Old paths redirect automatically after a change.
+      path_hint_dated:
+        Start with / and use lowercase letters, numbers, hyphens, and optional
+        path segments. Until the article is first published, a path you haven't
+        edited follows its title and publication date. Old paths redirect
+        automatically after a change.
       excerpt: Excerpt
       excerpt_hint:
         A short introduction for article cards and search previews. Leave
         blank to generate an excerpt from the article.
+      meta_description: Meta description
+      meta_description_hint:
+        The summary search engines and link previews show. Leave blank to use
+        the excerpt.
+      canonical_url: Canonical URL
+      canonical_url_hint:
+        For an article first published elsewhere, the original's full URL, so
+        search engines credit that page instead. Leave blank for this article's
+        own URL.
       date: Publication date
       date_hint:
         Leave blank to use the first publication time. For imported articles,

@@ -93,6 +93,10 @@ gl:
       fonts:
         base_font: "Tipo de letra do corpo"
         heading_font: "Tipo de letra de título"
+    mcp_theme_access:
+      none: "ningunha"
+    mcp_app_setup:
+      none: "ningunha"
     reviewables:
       ai_tool_action:
         approve:

@@ -9,16 +9,34 @@ module Jobs
     def execute(args = {})
       return unless SiteSetting.nested_replies_enabled
 
-      args ||= {}
-      topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
-      return if topic_ids.empty?
+      batch_size = SiteSetting.nested_replies_backfill_batch_size
+      return if batch_size.zero?
 
-      topic_ids.each { |topic_id| self.class.backfill_topic(topic_id) }
+      args ||= {}
+      category_id = args[:category_id].to_i
+      cursor_key = "backfill_nested_reply_stats:before_topic_id:#{category_id}"
+      before_topic_id = Discourse.redis.get(cursor_key).to_i
+      topics = Topic.where(archetype: Archetype.default).order(id: :desc)
+      unless SiteSetting.nested_replies_default
+        topics = topics.where(id: NestedTopic.select(:topic_id))
+      end
+      topics = topics.where(category_id:) if category_id.positive?
+      topics = topics.where("id < ?", before_topic_id) if before_topic_id.positive?
+      topic_ids = topics.limit(batch_size).pluck(:id)
+
+      if topic_ids.present?
+        topic_ids_missing_stats(topic_ids:, category_id:).each do |topic_id|
+          self.class.backfill_topic(topic_id)
+        end
+      end
+
+      # Revisit the archive to repair stats lost after an earlier scan.
+      Discourse.redis.set(cursor_key, topic_ids.size < batch_size ? 0 : topic_ids.last)
     end
 
     private
 
-    def topic_ids_missing_stats(category_id: nil)
+    def topic_ids_missing_stats(topic_ids:, category_id: nil)
       category_id = category_id.to_i
       category_filter = category_id.positive? ? "AND t.category_id = :category_id" : ""
 
@@ -29,7 +47,8 @@ module Jobs
           LEFT JOIN nested_topics nt ON nt.topic_id = t.id
           INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
           LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
-          WHERE t.deleted_at IS NULL
+          WHERE t.id IN (:topic_ids)
+            AND t.deleted_at IS NULL
             AND t.archetype = :archetype
             AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
             #{category_filter}
@@ -50,10 +69,9 @@ module Jobs
               )
             )
           ORDER BY t.id DESC
-          LIMIT :batch_size
         SQL
         archetype: Archetype.default,
-        batch_size: SiteSetting.nested_replies_backfill_batch_size,
+        topic_ids: topic_ids,
         category_id: category_id,
         nested_replies_default: SiteSetting.nested_replies_default,
       )

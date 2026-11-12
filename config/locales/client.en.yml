@@ -659,39 +659,16 @@ en:
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
+      create_category:
+        title: "Create a category"
+        description: "Give conversations a place to live."
+        action: "Create category"
+        completed: "Create another"
       invite_collaborators:
         title: "Invite collaborators"
         description: "Early members bring it to life."
         action: "Create invite"
         completed: "Invite more"
-      start_posting:
-        title: "Start posting"
-        description: "Give people something to discuss."
-        action: "See ideas"
-        completed: "See more ideas"
-        choose_option: "How would you like to start?"
-        predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give members something to discuss"
-        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Browse templates"
-        back: "Back"
-        category_unavailable: "This category is unavailable for posting."
-        icebreakers:
-          plan_categories:
-            title: "What categories should we start with?"
-            description: "Ask your team which categories to launch with."
-            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
-          plan_invites:
-            title: "Who should we invite before we launch?"
-            description: "Agree with your team on who to invite first."
-            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
-          introduce_yourself:
-            title: "Introduce yourself"
-            description: "Get members sharing a little about themselves."
-            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          write_your_own:
-            title: "Write your own"
-            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
@@ -1235,6 +1212,10 @@ en:
       statuses:
         pending:
           title: "Pending"
+        problem_confirmed:
+          title: "Problem confirmed"
+        no_problem_found:
+          title: "No problem found"
         approved:
           title: "Approved"
         approved_flag:
@@ -1268,6 +1249,9 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
+        something_wrong_with_post: "Is there something wrong with this post?"
+        something_wrong_with_topic: "Is there something wrong with this topic?"
+        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1318,6 +1302,8 @@ en:
         reviewed: "Reviewed"
         approved_by: "Approved by %{username} · %{relativeDate}"
         rejected_by: "Rejected by %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem confirmed by %{username} · %{relativeDate}"
+        no_problem_found_by: "No problem found by %{username} · %{relativeDate}"
         ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
@@ -3004,6 +2990,7 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+      remove_item: "Remove %{name}"
     d_otp:
       screen_reader:
         one: Enter a number
@@ -5732,6 +5719,7 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
+        description: "Each type comes set up for a different kind of conversation."
         requires_plugin: "Requires %{plugin_name} plugin"
         unavailable: "Unavailable"
         ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"

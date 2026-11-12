@@ -508,6 +508,9 @@ es:
         followed: "Se unió"
         mute: "Silenciar canal"
         unmute: "No silenciar canal"
+        muted_until_hint: "hasta %{until}"
+        mute_options:
+          "off": "Desactivado"
         threading_enabled: "Activado"
         threading_disabled: "Desactivado"
         muted_on: "Activado"

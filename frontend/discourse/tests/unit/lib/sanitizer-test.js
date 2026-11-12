@@ -1,6 +1,11 @@
 import { setupTest } from "ember-qunit";
 import AllowLister from "pretty-text/allow-lister";
-import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
+import {
+  escape,
+  hrefAllowed,
+  isAllowListedAttr,
+  sanitize,
+} from "pretty-text/sanitizer";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseMarkdownIt from "discourse-markdown-it";
@@ -487,5 +492,42 @@ module("Unit | Utility | sanitizer", function (hooks) {
       sanitize("<div data-cat-dog=1></div>", allowLister),
       '<div data-cat-dog="1"></div>'
     );
+  });
+
+  test("isAllowListedAttr checks a tag's attribute rules", function (assert) {
+    const forTag = {
+      rel: ["nofollow"],
+      title: ["*"],
+      "data-gadget-*": ["on"],
+    };
+
+    assert.true(isAllowListedAttr(forTag, "rel", "nofollow"));
+    assert.false(isAllowListedAttr(forTag, "rel", "ugc"));
+    assert.true(isAllowListedAttr(forTag, "title", "anything"));
+    assert.true(isAllowListedAttr(forTag, "data-gadget-size", "on"));
+    assert.false(isAllowListedAttr(forTag, "data-gadget-size", "off"));
+    assert.false(isAllowListedAttr(forTag, "href", "/x"));
+    assert.true(
+      isAllowListedAttr({ "data-*": ["*"] }, "data-anything", "x"),
+      "allows any data attribute"
+    );
+    assert.false(
+      isAllowListedAttr({ "data-*": ["*"] }, "data-html-gadget", "x"),
+      "never allows data-html- attributes"
+    );
+  });
+
+  test("hrefAllowed accepts the extra matchers", function (assert) {
+    assert.strictEqual(hrefAllowed("tel:123", null), undefined);
+    assert.strictEqual(hrefAllowed("tel:123", [/^tel:/]), "tel:123");
+    assert.strictEqual(
+      hrefAllowed("/it's", null),
+      "/it%27s",
+      "escapes single quotes"
+    );
+  });
+
+  test("re-exports escape", function (assert) {
+    assert.strictEqual(escape("<b>"), "&lt;b&gt;");
   });
 });

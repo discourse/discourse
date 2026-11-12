@@ -249,6 +249,11 @@
           }
         }
 
+        if (config.anonymous) {
+          joinButton.addEventListener("click", start);
+          return;
+        }
+
         joinButton.addEventListener("click", async function () {
           await microphoneReady();
           start();

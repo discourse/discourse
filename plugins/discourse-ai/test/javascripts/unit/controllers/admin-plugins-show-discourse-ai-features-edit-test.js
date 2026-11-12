@@ -1,5 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -7,55 +9,27 @@ module(
   function (hooks) {
     setupTest(hooks);
 
-    test("valuesEqual compares using toString", function (assert) {
+    test("saving skips a dependent field hidden by a draft parent change", async function (assert) {
       const controller = this.owner.lookup(
         "controller:admin-plugins/show/discourse-ai-features/edit"
       );
-
-      assert.true(
-        controller.valuesEqual("123", 123),
-        "string '123' should equal number 123"
-      );
-      assert.true(
-        controller.valuesEqual(true, "true"),
-        "boolean true should equal string 'true'"
-      );
-      assert.true(
-        controller.valuesEqual(false, "false"),
-        "boolean false should equal string 'false'"
-      );
-      assert.true(
-        controller.valuesEqual("abc", "abc"),
-        "identical strings should be equal"
-      );
-      assert.false(
-        controller.valuesEqual("123", "456"),
-        "different values should not be equal"
-      );
-    });
-
-    test("valuesEqual handles null and undefined", function (assert) {
-      const controller = this.owner.lookup(
-        "controller:admin-plugins/show/discourse-ai-features/edit"
-      );
-
-      assert.false(
-        controller.valuesEqual(null, "null"),
-        "null should not equal string 'null'"
-      );
-      assert.false(
-        controller.valuesEqual(undefined, "undefined"),
-        "undefined should not equal string 'undefined'"
-      );
-      assert.true(controller.valuesEqual(null, null), "null should equal null");
-      assert.true(
-        controller.valuesEqual(undefined, undefined),
-        "undefined should equal undefined"
-      );
-      assert.false(
-        controller.valuesEqual(null, undefined),
-        "null should not equal undefined"
-      );
+      sinon.stub(this.owner.lookup("service:router"), "refresh");
+      const saved = [];
+      pretender.put("/admin/site_settings/:name", (request) => {
+        saved.push(request.params.name);
+        return response({});
+      });
+      controller.settings = [
+        { setting: "enabled", value: true },
+        {
+          setting: "dependent",
+          value: "old",
+          depends_on: ["enabled"],
+          depends_behavior: "hidden",
+        },
+      ];
+      await controller.save({ enabled: false, dependent: "stale draft" });
+      assert.deepEqual(saved, ["enabled"], "the hidden draft is not submitted");
     });
 
     test("findSetting returns correct setting by name", function (assert) {

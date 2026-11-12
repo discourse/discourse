@@ -19,6 +19,10 @@ ug:
               label: تېما كىملىكى
     discourse_events:
       title: "پائالىيەت"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "خەتلەت"
       preferences:
         reminders:
           preferences:

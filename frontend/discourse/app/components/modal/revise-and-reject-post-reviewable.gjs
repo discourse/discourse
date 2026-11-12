@@ -72,6 +72,7 @@ export default class ReviseAndRejectPostReviewable extends Component {
     <DsaModeration
       @onSubmit={{this.rejectAndSendPM}}
       @options={{@model.classificationOptions}}
+      @reviewableId={{@model.reviewable.id}}
       as |flow|
     >
       <DModal

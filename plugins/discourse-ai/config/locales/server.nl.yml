@@ -223,10 +223,6 @@ nl:
           name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -835,6 +831,14 @@ nl:
       fonts:
         base_font: "Lettertype inhoud"
         heading_font: "Lettertype kop"
+    mcp_theme_access:
+      "on": "Aan"
+      "off": "Uit"
+      none: "geen"
+      changes:
+        server: "MCP-server"
+    mcp_app_setup:
+      none: "geen"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"

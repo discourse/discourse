@@ -32,10 +32,19 @@ en:
           join: "Join Zoom"
           frame_title: "Zoom webinar"
           open_in_zoom: "Open in Zoom"
+          pause_notifications:
+            paused: "Notifications are paused until you leave the webinar."
+            resume: "Resume notifications"
           load_error: "You left the webinar or we are unable to load Zoom in this page."
           too_early: "You can join the webinar closer to the event start time"
           view_topic: "View topic for the event"
+          guest_prompt:
+            title: "Join the webinar"
+            message: "You’ll need to register for this site to participate in the livestream chat. Would you like to register or skip?"
+            register: "Register"
+            skip: "Skip"
         chat:
+          sign_up_to_chat: "Sign up to join the chat"
           rsvp_to_event: "RSVP to the event to start chatting"
           rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
           rsvp_body: "Connect with other attendees before, during, and after the event."
@@ -497,6 +506,7 @@ en:
             private:
               title: "Private"
               description: "A private event can only be joined by invited users."
+      allow_anonymous_livestream: "Enable anonymous visitors to watch this livestream"
       recording:
         watch: "Watch recording"
         add: "Add recording link"

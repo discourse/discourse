@@ -521,6 +521,9 @@ sk:
         follow: "Pridať sa"
         followed: "Vytvorený"
         mute: "Stlmiť kanál"
+        muted_until_hint: "do %{until}"
+        mute_options:
+          "off": "Vypnuté"
         threading_enabled: "Povolené"
         threading_disabled: "Vypnuté"
         muted_on: "Zapnuté"

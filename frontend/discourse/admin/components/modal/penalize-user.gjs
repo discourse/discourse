@@ -171,6 +171,7 @@ export default class PenalizeUser extends Component {
     <DsaModeration
       @onSubmit={{this.penalizeUser}}
       @options={{if this.canPenalize @model.dsaClassification}}
+      @reviewableId={{@model.reviewableId}}
       as |flow|
     >
       <DModal

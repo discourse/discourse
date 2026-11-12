@@ -9,7 +9,6 @@ RSpec.describe Admin::Config::DesignWizardController do
   fab!(:other_channel) { Fabricate(:category_channel, name: "General") }
 
   before do
-    SiteSetting.concord_in_wizard = true
     SiteSetting.chat_enabled = true
     SiteSetting.enable_public_channels = true
     SiteSetting.general_category_id = general_category.id

@@ -138,6 +138,8 @@ discourse_ai:
     secret: true
   ai_google_custom_search_cx:
     default: ""
+  ai_google_custom_search_url:
+    default: "https://www.googleapis.com/customsearch/v1"
   ai_cloudflare_workers_account_id:
     default: ""
     secret: true
@@ -684,6 +686,11 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_dsa_classification_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
   ai_rag_images_enabled:
     default: false
     hidden: true
@@ -775,7 +782,6 @@ discourse_ai:
   ai_translation_verbose_logs:
     default: false
     client: false
-    hidden: true
     area: "ai-features/translation"
 
   inferred_concepts_enabled:

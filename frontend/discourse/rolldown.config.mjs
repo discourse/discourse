@@ -113,7 +113,7 @@ export function buildConfig({ devMode } = {}) {
         skipPreflightCheck: true, // Skip per-file config verification
         babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
       }),
-      wrapTestModulesPlugin(),
+      wrapTestModulesPlugin({ root: import.meta.dirname }),
       discourseChunkNamesPlugin(),
       chunkImportMapPlugin({
         root: import.meta.dirname,

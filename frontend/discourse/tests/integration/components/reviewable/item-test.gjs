@@ -148,9 +148,9 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
   test("lists secondary actions below the answers to the context question", async function (assert) {
     const pending = userReviewable(this, {
       bundled_actions: [
-        actionBundle("approve_user", "Yes"),
+        actionBundle("delete_user", "Yes"),
         { ...actionBundle("remove_avatar", "Remove avatar"), secondary: true },
-        actionBundle("delete_user", "No"),
+        actionBundle("approve_user", "No"),
       ],
     });
 

@@ -4,9 +4,11 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import Group from "discourse/models/group";
 import DButton from "discourse/ui-kit/d-button";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
@@ -18,6 +20,14 @@ export default class UpcomingChangeGroupControl extends Component {
 
   get groups() {
     return this._draftGroups ?? this.args.groups;
+  }
+
+  get selection() {
+    const lockedGroups = this.args.lockedGroups || [];
+    return this.groups.map((name) => ({
+      name,
+      preventRemoval: lockedGroups.includes(name),
+    }));
   }
 
   get dirty() {
@@ -50,12 +60,33 @@ export default class UpcomingChangeGroupControl extends Component {
   }
 
   @action
-  groupsChanged(groups) {
-    if (!this.disabled) {
-      this._draftGroups = [
-        ...new Set([...(this.args.lockedGroups || []), ...groups]),
-      ];
-    }
+  compareGroups(a, b) {
+    return a.name === b.name;
+  }
+
+  @action
+  groupNamesChanged(names) {
+    this.#setDraft(names);
+  }
+
+  @action
+  groupsChanged(selection) {
+    this.#setDraft(selection.map((group) => group.name));
+  }
+
+  @action
+  async loadGroups(term) {
+    const groups = await Group.findAll({
+      term,
+      ignore_automatic: false,
+      include_pseudogroups: true,
+      include_everyone: this.args.includeEveryone,
+    });
+    return groups.filter(
+      (group) =>
+        (group.id !== 0 || this.args.includeEveryone) &&
+        !this.args.disallowedGroups?.includes(group.id)
+    );
   }
 
   @action
@@ -70,6 +101,14 @@ export default class UpcomingChangeGroupControl extends Component {
       }
     } finally {
       this._saving = false;
+    }
+  }
+
+  #setDraft(names) {
+    if (!this.disabled) {
+      this._draftGroups = [
+        ...new Set([...(this.args.lockedGroups || []), ...names]),
+      ];
     }
   }
 
@@ -90,7 +129,7 @@ export default class UpcomingChangeGroupControl extends Component {
             @exclude={{@disallowedGroups}}
             @lockedValues={{@lockedGroups}}
             @multiple={{true}}
-            @onChange={{this.groupsChanged}}
+            @onChange={{this.groupNamesChanged}}
             @texts={{hash
               ariaLabel=(i18n "admin.upcoming_changes.select_groups")
               placeholder=(i18n "admin.upcoming_changes.select_groups")
@@ -99,21 +138,25 @@ export default class UpcomingChangeGroupControl extends Component {
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}
-          <EmailGroupUserChooser
+          <DMultiSelect
+            class="upcoming-change__group-selector"
+            @compareFn={{this.compareGroups}}
+            @disabled={{this.disabled}}
+            @label={{i18n "admin.upcoming_changes.select_groups"}}
+            @loadFn={{this.loadGroups}}
+            @matchTriggerWidth={{true}}
             @onChange={{this.groupsChanged}}
-            @options={{hash
-              disabled=this.disabled
-              groupsOnly=true
-              useHeaderFilter=true
-              fullWidthWrap=true
-              lockedValues=@lockedGroups
-              excludedGroupIds=@disallowedGroups
-              includeEveryone=@includeEveryone
-              none="admin.upcoming_changes.select_groups"
-              headerAriaLabel=(i18n "admin.upcoming_changes.select_groups")
-            }}
-            @value={{this.groups}}
-          />
+            @placement="bottom-start"
+            @selection={{this.selection}}
+          >
+            <:selection as |group|>
+              {{group.name}}
+              {{#if group.preventRemoval}}
+                {{dIcon "lock"}}
+              {{/if}}
+            </:selection>
+            <:result as |group|>{{group.name}}</:result>
+          </DMultiSelect>
         {{/if}}
         {{#unless @locked}}
           <DButton

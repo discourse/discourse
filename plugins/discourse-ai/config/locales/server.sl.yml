@@ -59,6 +59,10 @@ sl:
       colors:
         light:
           header_background: "Glava"
+    mcp_theme_access:
+      none: "brez"
+    mcp_app_setup:
+      none: "brez"
     reviewables:
       ai_tool_action:
         approve:

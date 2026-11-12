@@ -178,7 +178,12 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         let(:private_key) { OpenSSL::PKey::RSA.generate(2048) }
 
         let(:group_response) do
-          { groups: [{ id: "12345", name: "group1" }, { id: "67890", name: "group2" }] }
+          {
+            groups: [
+              { id: "12345", name: "group1", email: "group1@domain.com" },
+              { id: "67890", name: "group2", email: "group2@domain.com" },
+            ],
+          }
         end
 
         before do
@@ -229,6 +234,99 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         it "handles a blank groups array" do
           group_response[:groups] = []
           result = described_class.new.after_authenticate(@auth_hash)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "allows authentication when the user belongs to an allowed group ID" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).not_to be_failed
+        end
+
+        it "allows authentication when the user belongs to an allowed group email" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "GROUP2@DOMAIN.COM"
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).not_to be_failed
+        end
+
+        it "retrieves groups when an allowlist is configured and group synchronization is disabled" do
+          SiteSetting.google_oauth2_hd_groups = false
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).not_to be_failed
+          expect(result.associated_groups).to be_nil
+        end
+
+        it "rejects authentication when the user does not belong to an allowed group" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "not-allowed"
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).to be_failed
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.not_in_allowed_group"))
+        end
+
+        it "rejects authentication when group retrieval fails" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+          SiteSetting.google_oauth2_hd_groups_service_account_json = {
+            "private_key" => OpenSSL::PKey::RSA.generate(2048).to_s,
+            :client_email => "discourse-group-sync@example.iam.gserviceaccount.com",
+          }.to_json
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).to be_failed
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
+        end
+
+        it "rejects authentication when the group lookup settings are no longer configured" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+          SiteSetting.google_oauth2_hd_groups = false
+          SiteSetting.google_oauth2_hd_groups_service_account_json = ""
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).to be_failed
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
+        end
+
+        it "rejects authentication when a later page of group retrieval fails" do
+          SiteSetting.google_oauth2_hd_groups_allowed = "12345"
+          groups_url =
+            "https://admin.googleapis.com/admin/directory/v1/groups?userKey=#{@auth_hash.uid}"
+          stub_request(:get, groups_url).to_return(
+            status: 200,
+            body: { groups: [{ id: "12345", name: "group1" }], nextPageToken: "next-page" }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+          stub_request(
+            :get,
+            "https://admin.googleapis.com/admin/directory/v1/groups?pageToken=next-page&userKey=#{@auth_hash.uid}",
+          ).to_return(status: 500)
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).to be_failed
+          expect(result.failed_reason).to eq(I18n.t("google_oauth2.group_lookup_failed"))
+        end
+
+        it "clears associated groups when group retrieval fails without an allowlist" do
+          stub_request(
+            :get,
+            "https://admin.googleapis.com/admin/directory/v1/groups?userKey=#{@auth_hash.uid}",
+          ).to_return(status: 500)
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result).not_to be_failed
           expect(result.associated_groups).to eq([])
         end
 

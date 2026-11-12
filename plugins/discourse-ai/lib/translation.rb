@@ -9,6 +9,21 @@ module DiscourseAi
         SiteSetting.content_localization_supported_locales.present?
     end
 
+    # @return [Hash, nil] the admin features list status, nil for the generic off status
+    def self.admin_status
+      locales = SiteSetting.content_localization_supported_locales.split("|")
+      return { state: "setup", note_key: "no_languages" } if locales.empty?
+      return if !SiteSetting.ai_translation_enabled
+      return { state: "setup", note_key: "no_llm" } if !has_llm_model?
+
+      {
+        state: "on",
+        label_key: "on_with_languages",
+        count: locales.size,
+        note_key: ("hidden_from_readers" if !SiteSetting.content_localization_enabled),
+      }.compact
+    end
+
     def self.locales
       SiteSetting.content_localization_locales
     end

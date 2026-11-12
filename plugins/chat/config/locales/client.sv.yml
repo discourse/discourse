@@ -447,6 +447,7 @@ sv:
         follow: "Gå med"
         followed: "Gick med"
         mute: "Tysta kanal"
+        muted_until_hint: "till %{until}"
         threading_enabled: "Aktiverad"
         threading_disabled: "Inaktiverad"
         muted_on: "På"

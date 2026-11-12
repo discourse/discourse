@@ -163,6 +163,8 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggerisci con l'IA"
       copied: "Copiato"
       ai_decoded_transcript:
         tool: "Strumento"
@@ -192,20 +194,26 @@ it:
         none: "Nessuna"
       features:
         short_title: "Funzionalità"
-        disabled: "(disabilitati)"
-        groups: "Gruppi:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Stato"
+          enabled: "Abilitato"
+          feature: "Funzionalità"
+          llm: "LLM"
+          groups: "Gruppi"
+        status:
+          "on": "On"
+          "off": "Off"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Messaggi personali"
+            chat_direct_messages: "Messaggi di chat"
+            none: "Non disponibile"
+        set_up: "Configura"
         no_llm: "Nessun LLM selezionato"
         no_agent: "Non impostato"
         no_groups: "Nessuna"
-        classification_model: "Modello:"
         edit: "Impostazioni"
-        expand_list:
-          one: "(%{count} altro)"
-          other: "(altri %{count})"
-        collapse_list: "(mostra meno)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -235,13 +243,11 @@ it:
           ask_ai: "Chiedi all'IA"
         embeddings:
           name: "Integrazioni"
-          description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
-          hyde: "HyDE"
+          related_topics: "Argomenti correlati"
           setting_groups:
             related_topics: "Argomenti correlati"
         discord:
           name: "Integrazione Discord"
-          description: "Aggiunge l'opzione di cercare tra i canali di Discord"
           search: "Ricerca Discord"
         inference:
           name: "Concetti dedotti"
@@ -290,7 +296,20 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
-        category_scope: "Categorie"
+        sections:
+          advanced: "Avanzato"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorie"
+          ai_translation_personal_messages:
+            label: "Messaggi personali"
+            choices:
+              none: "Nessuna"
+              all: "Tutte"
+          content_localization_language_switcher:
+            choices:
+              none: "Nessuno"
+              all: "Chiunque"
         model_progress:
           detail:
             retry: "Riprova"
@@ -307,6 +326,8 @@ it:
               title: "Categorie"
             tag:
               title: "Etichette"
+        admin_actions:
+          enabled: "Abilitato"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -597,6 +618,8 @@ it:
         edit: "Modifica"
         delete: "Elimina"
         test: "Esegui test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"
@@ -620,6 +643,7 @@ it:
         type: "Tipo"
         provider: "Fornitore"
         edit: "Modifica"
+        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         select_type: "Seleziona"
         types:
           embedding: "Integrazione"
@@ -796,7 +820,6 @@ it:
         presets: "Seleziona una preimpostazione..."
         configure_manually: "Configura manualmente"
         edit: "Modifica"
-        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."
