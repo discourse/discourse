@@ -16,9 +16,9 @@ import {
   resolveTagNames,
   searchTags,
   storedName,
-  tagOption,
   type TagSearchContext,
   type TagSearchResult,
+  tagSettings,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
@@ -48,6 +48,7 @@ import {
   type SelectConfig,
   type SelectLoadRequest,
   type SelectOption,
+  selectOption,
   type SelectOptionLike,
   type SelectRecord,
   type SelectTexts,
@@ -492,7 +493,7 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
     return (rows as readonly SelectRecord[])
       .filter((row) => !excluded.has(this.#storedRecordName(row).toLowerCase()))
       .map((row) =>
-        tagOption(row).with({
+        selectOption(row, tagSettings(row)).with({
           disabled: this.#zeroCap && !this.#isHeld(row) ? true : undefined,
         })
       );

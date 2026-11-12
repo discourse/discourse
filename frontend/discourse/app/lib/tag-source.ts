@@ -1,9 +1,6 @@
 import { trackedMap } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
-import {
-  type SelectOption,
-  selectOption,
-} from "discourse/ui-kit/select/select-engine";
+import type { SelectOptionSettings } from "discourse/ui-kit/select/select-engine";
 
 /** A server tag row with the optional reason that prevents selection. */
 export interface TagRow {
@@ -303,17 +300,22 @@ async function lookUpNames(names: string[]): Promise<void> {
 }
 
 /**
- * Lists a tag as an option: it shows the tag's description, and a tag the server refuses can't
- * be picked and shows the server's reason instead.
+ * The option settings a tag's server fields call for: it shows the tag's description, and a tag
+ * the server refuses can't be picked and shows the server's reason instead.
  *
  * @param tag - A search row, or any tag carrying the server's fields.
  */
-export function tagOption<T extends object>(tag: T): SelectOption<T> {
+export function tagSettings(
+  tag: object
+): Pick<SelectOptionSettings, "disabled" | "description"> {
   const row = tag as Partial<TagRow>;
+  const settings: Pick<SelectOptionSettings, "disabled" | "description"> = {};
+  if (row.disabled) {
+    settings.disabled = true;
+  }
   const description = row.disabled ? row.title : row.description;
-  return selectOption(tag, {
-    disabled: row.disabled ? true : undefined,
-    description:
-      typeof description === "string" && description ? description : undefined,
-  });
+  if (typeof description === "string" && description) {
+    settings.description = description;
+  }
+  return settings;
 }

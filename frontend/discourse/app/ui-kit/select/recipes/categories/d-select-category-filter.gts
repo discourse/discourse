@@ -15,7 +15,7 @@ import DSelect, {
 import type { SelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
-  categoryOption,
+  categoryDescription,
   categoryRecord,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
 import type {
@@ -28,6 +28,7 @@ import {
   type SelectCoreTextKey,
   type SelectLoadRequest,
   type SelectLoadResult,
+  selectOption,
   type SelectRecord,
   type SelectSnapshot,
   type SelectTexts,
@@ -191,7 +192,11 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
     });
     return continueWith(search, ({ categories, categoriesCount }) => ({
       options: categories.map((category) =>
-        categoryOption(categoryRecord(category), this.#descriptions)
+        selectOption(categoryRecord(category), {
+          description: this.#descriptions
+            ? categoryDescription(category)
+            : undefined,
+        })
       ),
       total: categoriesCount,
     }));

@@ -14,7 +14,7 @@ import DSelect, {
 import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
 import {
   CategoryBadge,
-  categoryOption,
+  categoryDescription,
   categoryRecord,
 } from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
 import type {
@@ -318,7 +318,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const readOnlyDescription =
       renderSelectText(config, "readOnlyDescription") || undefined;
     return [...new Set([...roots, ...disabled])].map((category) => {
-      const option = categoryOption(categoryRecord(category), descriptions);
+      const option = selectOption(categoryRecord(category), {
+        description: descriptions ? categoryDescription(category) : undefined,
+      });
       return disabled.includes(category)
         ? option.with({
             disabled: true,
@@ -372,7 +374,11 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
           if (groupFamilies && familyKeys?.[category.id!] === category.id) {
             record.familyKey = category.id;
           }
-          return categoryOption(record, descriptions);
+          return selectOption(record, {
+            description: descriptions
+              ? categoryDescription(category)
+              : undefined,
+          });
         }),
         total: categoriesCount,
       })

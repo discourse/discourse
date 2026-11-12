@@ -5,7 +5,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { CategoryRecord } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   type SelectOption,
-  selectOption,
   type SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -22,19 +21,6 @@ export function categoryDescription(category: Category): string | undefined {
 export function categoryRecord(category: Category): CategoryRecord {
   // Records come from the site or a search, so the category is saved and has both.
   return { id: category.id!, name: category.name!, category };
-}
-
-/** Lists a category record, described by the category's own description when asked. */
-export function categoryOption(
-  record: CategoryRecord,
-  descriptions: boolean
-): SelectOption<CategoryRecord> {
-  return selectOption(record, {
-    description:
-      descriptions && record.category
-        ? categoryDescription(record.category)
-        : undefined,
-  });
 }
 
 /**

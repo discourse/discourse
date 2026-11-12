@@ -8,7 +8,7 @@ import {
   searchTags,
   sortTagRows,
   storedName,
-  tagOption,
+  tagSettings,
   topTags,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
@@ -264,23 +264,21 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         context: { everyTag: true, categoryId: this.args.categoryId },
         siteSettings: this.siteSettings,
       });
-      return result.items.map((row) =>
-        this.#option(row, tagOption<object>(row).settings)
-      );
+      return result.items.map((row) => this.#option(row, tagSettings(row)));
     }
     // A tag shows its description; the caller's own settings come on top.
     const options =
       this.args.options?.map((entry) => {
         const option = selectOption(entry);
         return option.with({
-          description: tagOption(option.record).description,
+          description: tagSettings(option.record).description,
           ...option.settings,
         });
       }) ??
       topTags<FilterTag>({
         site: this.site,
         categoryId: this.args.categoryId,
-      }).map((tag) => tagOption(tag));
+      }).map((tag) => selectOption(tag, tagSettings(tag)));
     const term = filter.toLowerCase();
     const matches = term
       ? options.filter(({ record }) => record.name.toLowerCase().includes(term))

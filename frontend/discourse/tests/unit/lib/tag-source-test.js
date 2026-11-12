@@ -9,7 +9,7 @@ import {
   searchTagGroups,
   searchTags,
   sortTagRows,
-  tagOption,
+  tagSettings,
   topTags,
 } from "discourse/lib/tag-source";
 import cleanParity from "discourse/tests/fixtures/tag-clean-parity.json";
@@ -107,13 +107,10 @@ module("Unit | lib | tag-source", function (hooks) {
     const [row] = result.items;
     assert.true(row.disabled, "the row keeps the server's fields");
     assert.strictEqual(row.description, undefined, "the row is not rewritten");
-    const option = tagOption(row);
-    assert.strictEqual(option.record, row, "the option stands for the row");
-    assert.true(option.disabled, "a refused tag can't be picked");
-    assert.strictEqual(
-      option.description,
-      "Requires parent",
-      "the refusal reason describes the option"
+    assert.deepEqual(
+      tagSettings(row),
+      { disabled: true, description: "Requires parent" },
+      "a refused tag can't be picked, and its refusal reason describes it"
     );
     assert.strictEqual(result.forbidden, "nope");
     assert.deepEqual(result.requiredTagGroup, {
@@ -123,20 +120,20 @@ module("Unit | lib | tag-source", function (hooks) {
     });
   });
 
-  test("a tag's option shows the tag's own description", function (assert) {
-    const tag = { id: 1, name: "rock", description: "Loud music" };
-    const option = tagOption(tag);
-    assert.strictEqual(option.record, tag, "the option stands for the tag");
-    assert.strictEqual(option.description, "Loud music");
-    assert.false(option.disabled, "an allowed tag can be picked");
-    assert.strictEqual(
-      tagOption({ id: 2, name: "pop", description: "" }).description,
-      undefined,
+  test("a tag's settings describe it with its own description", function (assert) {
+    assert.deepEqual(
+      tagSettings({ id: 1, name: "rock", description: "Loud music" }),
+      { description: "Loud music" },
+      "an allowed tag is described and can be picked"
+    );
+    assert.deepEqual(
+      tagSettings({ id: 2, name: "pop", description: "" }),
+      {},
       "an empty description draws nothing"
     );
-    assert.strictEqual(
-      tagOption({ id: 3, name: "jazz", disabled: true }).description,
-      undefined,
+    assert.deepEqual(
+      tagSettings({ id: 3, name: "jazz", disabled: true }),
+      { disabled: true },
       "a refusal without a reason draws nothing"
     );
   });
