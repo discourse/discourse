@@ -94,8 +94,10 @@ export default class DiscoveryNavigation extends Component {
   }
 
   @action
-  reorderCategories() {
-    return this.modal.show(ReorderCategories);
+  reorderCategories({ enableFixedPositions = false } = {}) {
+    return this.modal.show(ReorderCategories, {
+      model: { enableFixedPositions },
+    });
   }
 
   <template>

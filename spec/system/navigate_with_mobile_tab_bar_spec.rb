@@ -161,7 +161,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".navigation-controls .bulk-select")
   end
 
-  it "fixes category positions while admins reorder from the category list, keeping them only once an order is saved" do
+  it "fixes category positions only after admins save an order from the category list" do
     SiteSetting.fixed_category_positions = false
 
     visit("/categories")
@@ -174,8 +174,15 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     find(".navigation-options__reorder-categories").click
 
     expect(page).to have_css(".reorder-categories")
-    try_until_success { expect(SiteSetting.fixed_category_positions).to eq(true) }
+    expect(SiteSetting.fixed_category_positions).to eq(false)
 
+    page.refresh
+
+    expect(page).to have_css(".mobile-tab-bar__views .navigation-options__trigger")
+    expect(SiteSetting.fixed_category_positions).to eq(false)
+
+    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    find(".navigation-options__reorder-categories").click
     find(".d-modal .modal-close").click
 
     expect(page).to have_no_css(".reorder-categories")

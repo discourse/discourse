@@ -1,10 +1,12 @@
-import { click, render } from "@ember/test-helpers";
+import { click, find, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import MobileTabBar from "discourse/components/mobile-tab-bar";
+import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
 import { i18n } from "discourse-i18n";
 
 function addTabPanel(panelKey, { primary = false, createActions } = {}) {
@@ -229,6 +231,49 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
         href: "https://cdn.example.com/uploads/handbook.pdf",
       }),
       "a file isn't a section's page"
+    );
+  });
+  test("keeps the RTL active view's highlight clear of the logical end fade", async function (assert) {
+    await render(
+      <template>
+        <MobileTabBar />
+        <MobileTabBarViews>
+          <ul
+            class="nav-pills"
+            dir="rtl"
+            style="width: 160px; flex: none; padding: 0;"
+            {{dScrollEdges}}
+          >
+            <li><a class="active" href="/latest">Latest topics</a></li>
+            <li><a href="/top">Top topics</a></li>
+            <li><a href="/categories">Categories</a></li>
+          </ul>
+        </MobileTabBarViews>
+      </template>
+    );
+
+    const views = find(".mobile-tab-bar__views");
+    await waitUntil(() =>
+      parseFloat(
+        views.style.getPropertyValue("--mobile-tab-bar-views-highlight-width")
+      )
+    );
+
+    assert
+      .dom(".nav-pills")
+      .hasAttribute(
+        "data-d-scroll-at-start",
+        "",
+        "the strip starts at its right edge"
+      );
+    assert.strictEqual(
+      Math.round(
+        parseFloat(
+          views.style.getPropertyValue("--mobile-tab-bar-views-highlight-width")
+        )
+      ),
+      Math.round(find(".nav-pills a.active").getBoundingClientRect().width),
+      "the unfaded active view keeps its full highlight"
     );
   });
 });

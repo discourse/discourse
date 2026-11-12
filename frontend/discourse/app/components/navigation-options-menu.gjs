@@ -3,8 +3,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import {
   canDismissNewAndStopTracking,
@@ -100,41 +98,12 @@ export default class NavigationOptionsMenu extends Component {
     }
   }
 
-  // A custom order only applies with fixed positions, so choosing to
-  // reorder turns them on, and back off if no order is saved
   @action
   async reorderCategories(menu) {
     await menu.close();
-
-    const fixesPositions = !this.siteSettings.fixed_category_positions;
-
-    if (fixesPositions) {
-      try {
-        await this.#setFixedPositions(true);
-      } catch (error) {
-        popupAjaxError(error);
-        return;
-      }
-    }
-
-    await this.args.reorderCategories();
-
-    // Saving an order reloads the page, so the modal closing means none was
-    if (fixesPositions) {
-      try {
-        await this.#setFixedPositions(false);
-      } catch (error) {
-        popupAjaxError(error);
-      }
-    }
-  }
-
-  async #setFixedPositions(value) {
-    await ajax("/admin/site_settings/fixed_category_positions", {
-      type: "PUT",
-      data: { fixed_category_positions: value },
+    this.args.reorderCategories({
+      enableFixedPositions: !this.siteSettings.fixed_category_positions,
     });
-    this.siteSettings.fixed_category_positions = value;
   }
 
   <template>

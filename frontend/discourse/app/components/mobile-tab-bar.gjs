@@ -231,15 +231,18 @@ export default class MobileTabBar extends Component {
 
     if (list?.hasAttribute("data-d-scroll-overflow")) {
       const rect = list.getBoundingClientRect();
-      const fade = parseFloat(getComputedStyle(list).scrollPaddingLeft) || 0;
+      const style = getComputedStyle(list);
+      const fade = parseFloat(style.scrollPaddingLeft) || 0;
+      const [leftEdge, rightEdge] =
+        style.direction === "rtl" ? ["end", "start"] : ["start", "end"];
       start = Math.max(start, rect.left);
       end = Math.min(end, rect.right);
 
-      if (!list.hasAttribute("data-d-scroll-at-start")) {
+      if (!list.hasAttribute(`data-d-scroll-at-${leftEdge}`)) {
         start += fade;
       }
 
-      if (!list.hasAttribute("data-d-scroll-at-end")) {
+      if (!list.hasAttribute(`data-d-scroll-at-${rightEdge}`)) {
         end -= fade;
       }
     }
