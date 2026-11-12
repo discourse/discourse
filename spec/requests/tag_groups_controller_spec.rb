@@ -416,4 +416,19 @@ RSpec.describe TagGroupsController do
       }.not_to change { UserHistory.where(action: UserHistory.actions[:tag_group_change]).count }
     end
   end
+
+  it "creates all requested member tags regardless of the per-topic tag limit" do
+    sign_in(Fabricate(:admin))
+    SiteSetting.max_tags_per_topic = 2
+    names = %w[first second third]
+    post "/tag_groups.json",
+         params: {
+           tag_group: {
+             name: "Many tags",
+             tags: names.map { |name| { name: } },
+           },
+         }
+    expect(response.status).to eq(200)
+    expect(TagGroup.find_by!(name: "Many tags").tags.pluck(:name)).to contain_exactly(*names)
+  end
 end
