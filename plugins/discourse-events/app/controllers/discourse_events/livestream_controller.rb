@@ -3,6 +3,7 @@
 module DiscourseEvents
   class LivestreamController < ::ApplicationController
     requires_plugin DiscourseEvents::PLUGIN_NAME
+    requires_login except: %i[zoom_frame prepare_zoom_signature]
     skip_before_action :check_xhr, only: [:zoom_frame]
 
     # The frame is the only thing that loads the SDK, so this is the one place
