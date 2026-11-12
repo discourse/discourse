@@ -149,6 +149,8 @@ module Patreon
           .includes(:user)
           .where(email: emails)
           .where(user_id: User.where(active: true))
+          .where.not(user_id: bound_user_ids)
+          .uniq(&:user_id)
           .map do |u|
             patreon_id = patrons.key(u.email)
             update_local_user(u.user, patreon_id)
@@ -179,10 +181,16 @@ module Patreon
         User
           .joins(:user_emails)
           .where(active: true)
+          .where.not(id: bound_user_ids)
           .find_by(user_emails: { email: all[patreon_id] })
       return if user.blank?
 
       update_local_user(user, patreon_id)
     end
+
+    def self.bound_user_ids
+      UserCustomField.where(name: "patreon_id").where.not(value: [nil, ""]).select(:user_id)
+    end
+    private_class_method :bound_user_ids
   end
 end

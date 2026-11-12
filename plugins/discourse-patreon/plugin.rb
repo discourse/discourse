@@ -58,25 +58,19 @@ after_initialize do
         }
   end
 
-  on(:user_confirmed_email) do |user|
-    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
-    patreon_id = Patreon::Patron.all.key(user.email)
+  %i[user_confirmed_email user_logged_in].each do |event|
+    on(event) do |user|
+      next if !user.active? || user.custom_fields["patreon_id"].present?
+      next if Patreon.get("filters").blank?
 
-    if filters.present? && patreon_id.present?
-      begin
-        reward_id =
-          Patreon::RewardUser.all.except("0").detect { |_k, v| v.include? patreon_id }&.first
+      patreon_id = Patreon::Patron.all.key(user.email)
+      next if patreon_id.blank?
 
-        group_ids = filters.select { |_k, v| v.include?(reward_id) || v.include?("0") }.keys
-
-        Group.where(id: group_ids).each { |group| group.add user }
-
-        Patreon::Patron.update_local_user(user, patreon_id)
-      rescue => e
-        Rails.logger.warn(
-          "Patreon group membership callback failed for new user #{id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
-        )
-      end
+      Patreon::Patron.sync_groups_by(patreon_id: patreon_id)
+    rescue => e
+      Rails.logger.warn(
+        "Patreon group membership callback failed for user #{user.id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
+      )
     end
   end
 
