@@ -109,4 +109,103 @@ RSpec.describe Blog::Publication do
       expect(described_class.for_topic(reserved_topic).path).to eq("/about-#{reserved_topic.id}")
     end
   end
+
+  describe ".default_path" do
+    before { freeze_time Time.utc(2026, 11, 6, 23, 30) }
+
+    it "uses the slug alone by default" do
+      expect(described_class.default_path(topic)).to eq("/#{topic.slug}")
+    end
+
+    it "prefixes the UTC year and month" do
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+
+      expect(described_class.default_path(topic)).to eq("/2026/11/#{topic.slug}")
+      expect(described_class.default_path(topic, date: Time.utc(2025, 2, 3))).to eq(
+        "/2025/02/#{topic.slug}",
+      )
+    end
+
+    it "prefixes the UTC year, month and day" do
+      SiteSetting.blog_path_format = "/{year}/{month}/{day}/{slug}"
+
+      expect(
+        described_class.default_path(topic, date: Time.zone.parse("2026-11-07 02:00 +04:00")),
+      ).to eq("/2026/11/06/#{topic.slug}")
+    end
+
+    it "suffixes a reserved slug wherever the format places it" do
+      SiteSetting.blog_path_format = "/{slug}/{id}"
+      topic.update_columns(slug: "about")
+
+      path = described_class.default_path(topic)
+
+      expect(path).to eq("/about-#{topic.id}/#{topic.id}")
+      expect(described_class.new(topic:, path:)).to be_valid
+    end
+
+    it "shortens a long slug to fit the format within the path limit" do
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      topic.update_columns(slug: "a" * 235)
+
+      path = described_class.default_path(topic)
+
+      expect(path).to eq("/2026/11/#{"a" * 231}")
+      expect(described_class.new(topic:, path:)).to be_valid
+    end
+
+    it "renders a custom format with a fixed prefix and the topic id" do
+      SiteSetting.blog_path_format = "/news/{id}-{slug}"
+
+      expect(described_class.default_path(topic)).to eq("/news/#{topic.id}-#{topic.slug}")
+    end
+  end
+
+  describe "#stage_metadata" do
+    fab!(:topic) { Fabricate(:topic, title: "A dated story for the blog") }
+
+    let(:publication) { described_class.for_topic(topic) }
+
+    before do
+      freeze_time Time.utc(2026, 11, 6)
+      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+    end
+
+    it "moves a generated dated path to the new publication date" do
+      publication.stage_metadata(path: publication.path, published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2025/03/#{topic.slug}")
+    end
+
+    it "keeps a path typed alongside the new date" do
+      publication.stage_metadata(path: "/2026/11/my-own-path", published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2026/11/my-own-path")
+    end
+
+    it "keeps a typed dated path that ends in the topic slug when the date changes later" do
+      publication.stage_metadata(path: "/2020/03/#{topic.slug}")
+
+      publication.stage_metadata(path: "/2020/03/#{topic.slug}", published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2020/03/#{topic.slug}")
+    end
+
+    it "renders a stored path the editor never typed, such as an imported undated draft" do
+      publication.update!(path: "/imported-draft")
+
+      publication.stage_metadata(path: "/imported-draft", published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2025/03/#{topic.slug}")
+    end
+
+    it "keeps the path when the redated one belongs to another article" do
+      other = described_class.create!(topic: Fabricate(:topic), path: "/elsewhere")
+      other.paths.create!(path: "/2025/03/#{topic.slug}")
+
+      publication.stage_metadata(path: publication.path, published_at: "2025-03-14")
+
+      expect(publication.path).to eq("/2026/11/#{topic.slug}")
+    end
+  end
 end
