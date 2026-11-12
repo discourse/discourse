@@ -10,8 +10,9 @@ module DiscourseEvents
         recording: Event::MAX_URL_LENGTH,
       }
 
-      def initialize(post)
+      def initialize(post, authorization_user: nil)
         @post = post
+        @authorization_user = authorization_user || post.acting_user
       end
 
       def validate_event
@@ -47,13 +48,13 @@ module DiscourseEvents
         return unless can_invite_groups?(group_names)
         return unless valid_hosts?(extracted_event)
 
-        if @post.acting_user && @post.event
-          if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
+        if @authorization_user && @post.event
+          if !@authorization_user.guardian.can_act_on_discourse_post_event?(@post.event)
             add_error("acting_user_not_allowed_to_act_on_this_event")
             return
           end
         else
-          if !@post.acting_user.guardian.can_create_discourse_post_event?
+          if !@authorization_user.guardian.can_create_discourse_post_event?
             add_error("acting_user_not_allowed_to_create_event")
             return
           end
@@ -189,12 +190,12 @@ module DiscourseEvents
               nil
             end
 
-          if !group || !@post.acting_user.guardian.can_see_group?(group)
+          if !group || !@authorization_user.guardian.can_see_group?(group)
             add_error("invalid_allowed_groups")
             return false
           end
 
-          if !@post.acting_user.guardian.can_see_group_members?(group)
+          if !@authorization_user.guardian.can_see_group_members?(group)
             add_error("acting_user_not_allowed_to_invite_these_groups")
             return false
           end

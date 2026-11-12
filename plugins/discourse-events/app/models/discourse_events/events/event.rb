@@ -22,6 +22,9 @@ module DiscourseEvents
       # left open.
       OPEN_ENDED_NOTIFICATION_PAUSE = 3.hours
       DEFAULT_TIMEZONE = "UTC"
+      RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD = "discourse_post_event_recurrence_anchor_starts_at"
+      RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD =
+        "discourse_post_event_recurrence_anchor_initializing"
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
       REMINDER_TYPES = [NOTIFICATION_REMINDER, BUMP_TOPIC_REMINDER]
@@ -47,6 +50,7 @@ module DiscourseEvents
       # prepend so it runs before `dependent: :delete_all` wipes the invitees
       before_destroy :reset_invitees_topic_tracking, prepend: true
       after_save :sync_hosts
+      after_save :sync_recurrence_anchor_after_edit
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
       after_commit :enqueue_warm_recording_onebox, on: %i[create update]
@@ -174,7 +178,12 @@ module DiscourseEvents
 
         TopicCustomField.where(
           topic_id: post.topic_id,
-          name: [TOPIC_POST_EVENT_STARTS_AT, TOPIC_POST_EVENT_ENDS_AT, TOPIC_POST_EVENT_ALL_DAY],
+          name: [
+            TOPIC_POST_EVENT_STARTS_AT,
+            TOPIC_POST_EVENT_ENDS_AT,
+            TOPIC_POST_EVENT_ALL_DAY,
+            RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD,
+          ],
         ).delete_all
       end
 
@@ -645,6 +654,11 @@ module DiscourseEvents
         end
       end
 
+      def recurrence_anchor_starts_at
+        anchor = post&.topic&.custom_fields&.[](RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD)
+        anchor.present? ? Time.iso8601(anchor) : original_starts_at
+      end
+
       def calculate_next_date
         if recurrence.blank? || original_starts_at > Time.current
           return original_starts_at, original_ends_at
@@ -725,6 +739,57 @@ module DiscourseEvents
       end
 
       private
+
+      # A successor's displayed start can differ from the original series
+      # anchor. Explicit edits may change the recurrence pattern.
+      def sync_recurrence_anchor_after_edit
+        return if recurrence.blank?
+
+        changed_start = saved_change_to_original_starts_at?
+        changed_rule =
+          saved_change_to_recurrence? || saved_change_to_timezone? || saved_change_to_all_day?
+
+        return if !changed_start && !changed_rule
+
+        source_topic = post&.topic
+        return if source_topic.blank?
+
+        field = RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+        stored_anchor = source_topic.custom_fields[field]
+        return if stored_anchor.blank?
+
+        # Only a successor created with a pre-seeded anchor should preserve
+        # that anchor during its first Event save. A new Event on an existing
+        # Topic must still discard any stale recurrence anchor.
+        if previously_new_record? &&
+             source_topic.custom_fields.delete(RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD)
+          source_topic.save_custom_fields
+          return
+        end
+
+        new_start = original_starts_at.in_time_zone(rrule_timezone)
+
+        previous_start = original_starts_at_before_last_save
+        changed_date =
+          changed_start &&
+            (
+              previous_start.nil? ||
+                previous_start.in_time_zone(rrule_timezone).to_date != new_start.to_date
+            )
+
+        new_anchor =
+          if changed_rule || changed_date
+            original_starts_at
+          else
+            Time
+              .iso8601(stored_anchor)
+              .in_time_zone(rrule_timezone)
+              .change(hour: new_start.hour, min: new_start.min, sec: new_start.sec)
+          end
+
+        source_topic.custom_fields[field] = new_anchor.iso8601
+        source_topic.save_custom_fields
+      end
 
       # Diff-replaces the host rows so `position` mirrors the order the ids
       # arrived in, leaving rows that already match untouched.
@@ -871,7 +936,7 @@ module DiscourseEvents
       end
 
       def calculate_next_recurring_date
-        timezone_starts_at = original_starts_at.in_time_zone(timezone)
+        timezone_starts_at = recurrence_anchor_starts_at.in_time_zone(timezone)
         timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
 
         DiscourseEvents::Events::RRuleGenerator.generate(
@@ -892,7 +957,7 @@ module DiscourseEvents
       end
 
       def recurrence_rule
-        timezone_starts_at = original_starts_at.in_time_zone(timezone)
+        timezone_starts_at = recurrence_anchor_starts_at.in_time_zone(timezone)
         timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
 
         RRule::Rule.new(
