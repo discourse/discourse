@@ -305,6 +305,11 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  onDirtyCheck(transition) {
+    return !["login", "signup"].includes(transition.to?.name);
+  }
+
+  @action
   validateEmail(name, value, { addError }) {
     if (value && !emailValid(value)) {
       addError("email", {
@@ -1150,6 +1155,7 @@ export default class CodeLoginForm extends Component {
           <Form
             class="code-login-form__email-step"
             @data={{this.emailFormData}}
+            @onDirtyCheck={{this.onDirtyCheck}}
             @onSubmit={{this.submitEmail}}
             as |form|
           >
