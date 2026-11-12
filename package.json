@@ -13,7 +13,7 @@
     "concurrently": "^10.0.6",
     "ember-content-mapper": "^0.3.1",
     "eslint": "10.6.0",
-    "execa": "^10.1.0",
+    "execa": "^10.2.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.2.1",
     "licensee": "^12.0.2",
