@@ -122,7 +122,10 @@ module PageObjects
       private
 
       def filter_by_status(status)
-        page.find("#{FEATURES_PAGE} .ai-features__status-option[data-status='#{status}']").click
+        page
+          .find("#{FEATURES_PAGE} .d-filter-controls__dropdown")
+          .find("option[value='#{status}']")
+          .select_option
       end
 
       def module_toggle(module_name)

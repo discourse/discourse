@@ -479,7 +479,7 @@ en:
           enabled: "Enabled"
           not_enabled: "Not enabled"
         filters:
-          all: "All"
+          all: "Any status"
           text: "Search features, agents, models, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
