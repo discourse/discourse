@@ -220,17 +220,6 @@ export default class FormKitSiteSettingWrapper extends Component {
     }
   }
 
-  @action
-  fieldFormat(settingType) {
-    switch (settingType) {
-      case "integer":
-      case "float":
-        return "medium";
-      default:
-        return "full";
-    }
-  }
-
   // Checkboxes render the description inline as the control's label
   @action
   fieldDescription(setting) {
@@ -301,7 +290,7 @@ export default class FormKitSiteSettingWrapper extends Component {
         <form.Field
           @description={{this.fieldDescription setting}}
           @emphasis={{this.isOverridden setting}}
-          @format={{this.fieldFormat setting.type}}
+          @format="full"
           @name={{setting.setting}}
           @title={{or setting.label setting.humanized_name setting.setting}}
           @type={{this.controlType setting.type}}
