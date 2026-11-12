@@ -1625,15 +1625,84 @@ RSpec.describe SessionController do
       let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
       let(:invite_email) { nil }
 
-      def login_with_sso_and_invite(invite_key = invite.invite_key)
-        server_session["invite-key"] = invite_key
+      def login_with_sso(email: "bob@bob.com")
         sso = get_sso("/")
         sso.external_id = "666"
-        sso.email = "bob@bob.com"
+        sso.email = email
         sso.name = "Sam Saffron"
         sso.username = "sam"
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers:
+      end
+
+      def login_with_sso_and_invite(invite_key = invite.invite_key)
+        server_session["invite-key"] = invite_key
+        login_with_sso
+      end
+
+      it "does not redeem an invite that was only loaded by the victim's browser" do
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
+
+        # A post containing `<img src="/invites/<key>">` makes every reader
+        # load the invite page without any interaction.
+        get "/invites/#{invite.invite_key}"
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(false)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.invited_user).to be_nil
+        expect(GroupUser.exists?(user:, group: invited_group.group)).to eq(false)
+      end
+
+      it "does not block SSO login with an invite that was only loaded by the victim's browser" do
+        invite.update!(email: "someotheremail@dave.com")
+
+        get "/invites/#{invite.invite_key}"
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(false)
+      end
+
+      it "redeems the invite when the invite page submits the invite key" do
+        post "/invites/#{invite.invite_key}/sso"
+        expect(server_session["invite-key"]).to eq(invite.invite_key)
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(true)
+        expect(server_session["invite-key"]).to be_nil
+      end
+
+      it "clears the invite key when validation fails so the next login succeeds" do
+        invite.update!(email: "someotheremail@dave.com")
+
+        post "/invites/#{invite.invite_key}/sso"
+
+        login_with_sso
+        expect(response.status).to eq(400)
+        expect(server_session["invite-key"]).to be_nil
+
+        login_with_sso
+        expect(response.status).to eq(302)
+      end
+
+      it "clears the invite key when redemption fails so the next login succeeds" do
+        invite.update!(domain: "example.com")
+
+        post "/invites/#{invite.invite_key}/sso"
+
+        login_with_sso
+        expect(response.status).to eq(412)
+        expect(server_session["invite-key"]).to be_nil
+
+        login_with_sso
+        expect(response.status).to eq(302)
       end
 
       it "errors if the invite key is invalid" do
