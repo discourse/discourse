@@ -66,7 +66,7 @@ class InvitesController < ApplicationController
 
     return redirect_to path("/invites/#{invite.invite_key}") if !invite.redeemable?
 
-    server_session["invite-key"] = invite.invite_key
+    server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
     redirect_to path("/session/sso")
   end
 

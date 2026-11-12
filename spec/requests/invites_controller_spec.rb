@@ -358,7 +358,7 @@ RSpec.describe InvitesController do
     it "does not store the invite key in the server session" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "returns error if invite has already been redeemed" do
@@ -405,7 +405,9 @@ RSpec.describe InvitesController do
       post "/invites/#{invite.invite_key}/sso"
 
       expect(response).to redirect_to("/session/sso")
-      expect(server_session["invite-key"]).to eq(invite.invite_key)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(
+        invite.invite_key,
+      )
     end
 
     it "does not store the invite key when the invite is not redeemable" do
@@ -414,14 +416,14 @@ RSpec.describe InvitesController do
       post "/invites/#{invite.invite_key}/sso"
 
       expect(response).to redirect_to("/invites/#{invite.invite_key}")
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "does not store the invite key when the invite does not exist" do
       post "/invites/missing/sso"
 
       expect(response.status).to eq(404)
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "is not available when DiscourseConnect is disabled" do
@@ -430,7 +432,7 @@ RSpec.describe InvitesController do
       post "/invites/#{invite.invite_key}/sso"
 
       expect(response.status).to eq(404)
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "does not store the invite key when new registrations are disabled" do
@@ -445,7 +447,7 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(200)
       expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "is rate limited" do
@@ -454,7 +456,7 @@ RSpec.describe InvitesController do
       post "/invites/#{invite.invite_key}/sso"
 
       expect(response.status).to eq(429)
-      expect(server_session["invite-key"]).to be_nil
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     context "with forgery protection enabled" do
@@ -465,7 +467,7 @@ RSpec.describe InvitesController do
         post "/invites/#{invite.invite_key}/sso"
 
         expect(response.status).to eq(403)
-        expect(server_session["invite-key"]).to be_nil
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
       end
     end
   end

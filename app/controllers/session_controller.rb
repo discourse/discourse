@@ -20,6 +20,9 @@ class SessionController < ApplicationController
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
+  # Only InvitesController#sso may write this key. Nothing else in the session
+  # is proof that the user chose to redeem an invite.
+  DISCOURSE_CONNECT_INVITE_KEY = "discourse-connect-invite-key"
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -1093,7 +1096,11 @@ class SessionController < ApplicationController
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
   def validate_invitation!(sso)
-    return unless invite_key = server_session["invite-key"]
+    # the invite key is only good for one attempt, otherwise a failure would
+    # block every later login instead of letting the user retry from the invite page
+    invite_key = server_session[DISCOURSE_CONNECT_INVITE_KEY]
+    return if invite_key.blank?
+    server_session.delete(DISCOURSE_CONNECT_INVITE_KEY)
 
     base_url = Discourse.base_url
     site_name = SiteSetting.title
@@ -1113,11 +1120,6 @@ class SessionController < ApplicationController
     end
 
     invite
-  rescue Invite::ValidationFailed
-    # the invite key is only good for one attempt, otherwise it would block
-    # every later login instead of letting the user retry from the invite page
-    server_session.delete("invite-key")
-    raise
   end
 
   def redeem_invitation(invite, sso, redeeming_user)
@@ -1135,8 +1137,6 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
-  ensure
-    server_session.delete("invite-key")
   end
 
   def domain_redirect_allowed?(hostname)
