@@ -25,8 +25,9 @@ module DiscourseEvents
           signature: signature,
           meeting_number: zoom_join_data[:meeting_number],
           password: zoom_join_data[:password],
-          user_name: user.display_name,
-          user_email: user.email,
+          user_name: user ? user.display_name : I18n.t("discourse_post_event.zoom_guest"),
+          # The Meeting SDK requires an email for webinars, including guest joins.
+          user_email: user ? user.email : "guest-#{SecureRandom.hex(8)}@example.com",
           leave_url: topic.relative_url,
         }
       end

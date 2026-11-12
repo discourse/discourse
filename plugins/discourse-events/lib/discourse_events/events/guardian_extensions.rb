@@ -19,6 +19,20 @@ module DiscourseEvents
         can_create_discourse_post_event? && can_edit_post?(event.post)
       end
 
+      def can_see_livestream_event?(event)
+        event&.livestream? && event.deleted_at.nil? && can_see?(event.post)
+      end
+
+      def can_preview_anonymous_public_chat_channel?(channel)
+        return false if !super
+        return true if authenticated?
+
+        livestream_topic_chat =
+          DiscourseEvents::Livestream::TopicChatChannel.find_by(chat_channel_id: channel.id)
+        !livestream_topic_chat ||
+          can_see_livestream_event?(livestream_topic_chat.topic&.first_post&.event)
+      end
+
       def can_display_invitee_details?(event)
         return true if !event.private? || can_act_on_discourse_post_event?(event)
 

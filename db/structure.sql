@@ -5238,7 +5238,8 @@ CREATE TABLE public.discourse_post_event_events (
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
     livestream boolean DEFAULT false NOT NULL,
-    recording_url character varying(1000)
+    recording_url character varying(1000),
+    allow_anonymous_livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -26643,6 +26644,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261109060019'),
 ('20261106020035'),
 ('20261105165644'),
 ('20261104164335'),

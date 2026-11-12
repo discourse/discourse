@@ -32,6 +32,79 @@ module DiscourseEvents
         expect(response.status).to eq(403)
       end
 
+      context "when the event allows anonymous attendance" do
+        before { event.update!(allow_anonymous_livestream: true) }
+
+        it "allows a guest to skip the join window in development" do
+          Rails.env.stubs(:development?).returns(true)
+          event.update!(original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+
+          get "/discourse-calendar/livestream/zoom/signature.json",
+              params: {
+                topic_id: topic.id,
+                ignore_timeframe: true,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["signature"]).to be_present
+        end
+
+        it "enforces the join window for guests outside development" do
+          event.update!(original_starts_at: 2.hours.from_now, original_ends_at: 3.hours.from_now)
+
+          get "/discourse-calendar/livestream/zoom/signature.json",
+              params: {
+                topic_id: topic.id,
+                ignore_timeframe: true,
+              }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns the Zoom join payload with a guest identity" do
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "meeting_number" => "123456789",
+            "user_name" => I18n.t("discourse_post_event.zoom_guest"),
+            "user_email" => a_string_matching(/\Aguest-[0-9a-f]+@example\.com\z/),
+          )
+        end
+
+        it "honors the site's login requirement" do
+          SiteSetting.login_required = true
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "honors topic visibility" do
+          topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "withholds Zoom credentials when the opening post is hidden" do
+          post.hide!(PostActionType.types[:spam])
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "withholds Zoom credentials when the event is soft-deleted" do
+          event.update_column(:deleted_at, Time.current)
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+      end
+
       context "when signed in" do
         before { sign_in(current_user) }
 
@@ -171,6 +244,24 @@ module DiscourseEvents
         expect(response.status).to eq(404)
       end
 
+      it "serves the meeting frame when the event allows anonymous attendance" do
+        event.update!(allow_anonymous_livestream: true)
+
+        get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('"anonymous":true')
+      end
+
+      it "withholds the meeting frame from guests when the opening post is hidden" do
+        event.update!(allow_anonymous_livestream: true)
+        post.hide!(PostActionType.types[:spam])
+
+        get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+        expect(response.status).to eq(404)
+      end
+
       context "when signed in" do
         before { sign_in(current_user) }
 
@@ -241,6 +332,42 @@ module DiscourseEvents
             expect(response.body).not_to include("/forum/forum")
           end
         end
+      end
+    end
+
+    describe "anonymous livestream chat" do
+      before do
+        SiteSetting.enable_public_channels = true
+        SiteSetting.chat_allowed_groups =
+          Group::AUTO_GROUPS.values_at(:anonymous_users, :trust_level_0).join("|")
+        event.update!(allow_anonymous_livestream: true)
+      end
+
+      it "withholds chat messages after the opening post is hidden" do
+        channel_id = topic.topic_chat_channel.chat_channel_id
+
+        get "/chat/api/channels/#{channel_id}/messages"
+        expect(response.status).to eq(200)
+
+        post.hide!(PostActionType.types[:spam])
+
+        get "/chat/api/channels/#{channel_id}/messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "allows thread reads until the opening post is hidden" do
+        channel = topic.topic_chat_channel.chat_channel
+        channel.update!(threading_enabled: true)
+        thread = Fabricate(:chat_thread, channel:)
+        path = "/chat/api/channels/#{channel.id}/threads/#{thread.id}/messages"
+
+        get path
+        expect(response.status).to eq(200)
+
+        post.hide!(PostActionType.types[:spam])
+
+        get path
+        expect(response.status).to eq(403)
       end
     end
 

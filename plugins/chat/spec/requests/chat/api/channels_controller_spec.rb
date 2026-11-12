@@ -260,6 +260,28 @@ RSpec.describe Chat::Api::ChannelsController do
 
         expect(response.status).to eq(403)
       end
+
+      it "returns public channel data when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("channel")).to include(
+          "id" => channel.id,
+          "meta" => a_hash_including("can_join_chat_channel" => false, "user_silenced" => true),
+        )
+      end
+
+      it "hides private category channels when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:private_category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(404)
+      end
     end
 
     context "when user cannot access channel" do

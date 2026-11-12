@@ -3,8 +3,7 @@
 module DiscourseEvents
   class LivestreamController < ::ApplicationController
     requires_plugin DiscourseEvents::PLUGIN_NAME
-    requires_login
-
+    requires_login except: %i[zoom_frame prepare_zoom_signature]
     skip_before_action :check_xhr, only: [:zoom_frame]
 
     # The frame is the only thing that loads the SDK, so this is the one place
@@ -25,18 +24,24 @@ module DiscourseEvents
       # more about a topic than the other does.
       raise Discourse::NotFound if topic.blank? || !guardian.can_see?(topic)
       raise Discourse::NotFound if !SiteSetting.livestream_zoom_enabled
+      event = topic.first_post&.event
+      raise Discourse::NotFound if !event
+      raise Discourse::NotFound if guardian.anonymous? && !guardian.can_see_livestream_event?(event)
+
+      ensure_logged_in if !event.allow_anonymous_livestream?
 
       # The page is served outside the app, so it has none of the site's colors
       # to hand. Only the one the button is built from is needed.
       @accent_color = "##{ColorScheme.hex_for_name("tertiary") || "0088cc"}"
 
       signature_params = { topic_id: topic.id }
-      # TODO (martin) showzoom is for testing only, remove before merge
-      signature_params[:ignore_timeframe] = true if params[:showzoom].present?
+      signature_params[:ignore_timeframe] = true if Rails.env.development? &&
+        params[:showzoom].present?
 
       @config = {
         cdn: ZOOM_SDK_CDN,
         sdkVersion: ZOOM_SDK_VERSION,
+        anonymous: guardian.anonymous?,
         signatureUrl: "#{frame_base_path}/signature.json?#{signature_params.to_query}",
         # Zoom navigates this window when the user leaves, which is the only
         # notice the page around it gets that the webinar is over.
@@ -56,6 +61,7 @@ module DiscourseEvents
 
         on_model_not_found(:topic) { raise Discourse::NotFound }
         on_failed_policy(:can_see_topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_join_event) { ensure_logged_in }
         on_failed_contract { raise Discourse::InvalidParameters }
         on_failure { raise Discourse::NotFound }
       end
