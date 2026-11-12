@@ -347,7 +347,6 @@ const workflows = [
     "discourse.qunit-helpers.query-all",
     "discourse.register-connector-class-legacy",
     "discourse.resolver-resolutions",
-    "discourse.select-kit-resolved-components",
     "discourse.static-viewport-initialization",
     "discourse.template-action", // removed in Ember 6.0, but we have a polyfill
     "discourse.user.userOptions",
