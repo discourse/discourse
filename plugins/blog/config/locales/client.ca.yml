@@ -14,6 +14,9 @@ ca:
         preview_archive: Arxiva
         desktop: Escriptori
         mobile: Mòbil
+        save: Desa
+        path_formats:
+          custom: Personalitzat
         themes: Aparences
         theme_name: Nom de l'aparença
         edit: Edita

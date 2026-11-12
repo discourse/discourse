@@ -4,6 +4,9 @@ import {
   avatarImg,
   avatarUrl,
   getRawAvatarSize,
+  getRawSize,
+  tinyAvatar,
+  translateSize,
 } from "discourse/lib/avatar-utils";
 import { setupURL } from "discourse/lib/get-url";
 
@@ -109,5 +112,72 @@ module("Unit | Utilities", function (hooks) {
     );
 
     setDevicePixelRatio(oldRatio);
+  });
+
+  test("translateSize maps size names to pixels", function (assert) {
+    assert.deepEqual(
+      ["micro", "tiny", "small", "medium", "large", "extra_large", "huge"].map(
+        translateSize
+      ),
+      [12, 24, 24, 48, 48, 96, 144]
+    );
+    assert.strictEqual(translateSize(30), 30, "passes numbers through");
+  });
+
+  test("getRawSize scales by the pixel ratio", function (assert) {
+    const oldRatio = window.devicePixelRatio;
+
+    try {
+      setDevicePixelRatio(1);
+      assert.strictEqual(getRawSize(20), 20);
+
+      setDevicePixelRatio(1.5);
+      assert.strictEqual(getRawSize(20), 40);
+
+      setDevicePixelRatio(3);
+      assert.strictEqual(getRawSize(20), 60);
+    } finally {
+      setDevicePixelRatio(oldRatio);
+    }
+  });
+
+  test("avatarUrl and avatarImg use a custom getURL", function (assert) {
+    const customGetURL = (path) => `https://gadget.example.com${path}`;
+    const template = "/fake/template/{size}.png";
+    const rawSize = getRawAvatarSize(48);
+
+    assert.strictEqual(
+      avatarUrl(template, "large", { customGetURL }),
+      `https://gadget.example.com/fake/template/${rawSize}.png`
+    );
+    assert.true(
+      avatarImg(
+        { avatarTemplate: template, size: "large" },
+        customGetURL
+      ).includes(
+        `src='https://gadget.example.com/fake/template/${rawSize}.png'`
+      )
+    );
+  });
+
+  test("avatarImg sets the loading attribute", function (assert) {
+    assert.true(
+      avatarImg({
+        avatarTemplate: "/path/{size}.png",
+        size: "tiny",
+        loading: "lazy",
+      }).endsWith(" loading='lazy'>")
+    );
+  });
+
+  test("tinyAvatar renders a tiny avatar with extra options", function (assert) {
+    const html = tinyAvatar("/path/{size}.png", { title: "gizmo" });
+
+    assert.true(html.includes("width='24' height='24'"));
+    assert.true(html.includes("title='gizmo'"));
+    assert.true(
+      tinyAvatar("/path/{size}.png", { size: "huge" }).includes("width='144'"),
+      "the options override the size"
+    );
   });
 });

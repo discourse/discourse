@@ -27,6 +27,10 @@ it:
               label: ID dell'argomento
     discourse_events:
       title: "Eventi"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registra"
       preferences:
         reminders:
           preferences:

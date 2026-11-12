@@ -127,16 +127,25 @@ el:
         none: "Κανένα"
       features:
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
-        disabled: "(απενεργοποιημένο)"
-        groups: "Ομάδες:"
+        table:
+          status: "Κατάσταση"
+          enabled: "Ενεργοποιημένη"
+          feature: "Λειτουργία"
+          groups: "Ομάδες"
+        who_can_use:
+          no_one: "Κανέναν"
+        status:
+          "on": "Ενεργό"
+          "off": "Ανενεργό"
+        chatbot:
+          places:
+            personal_messages: "Προσωπικά μηνύματα"
+            chat_direct_messages: "Μηνύματα συνομιλίας"
+            none: "Μη διαθέσιμο "
+        toggle: "Ενεργοποίηση %{name}"
         no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
-        classification_model: "Μοντέλο:"
         edit: "Ρυθμίσεις"
-        expand_list:
-          one: "(%{count} περισσότερο)"
-          other: "(%{count} περισσότερα)"
-        collapse_list: "(δείξε λιγότερα)"
         nav:
           enabled: "Ενεργοποιημένη"
           not_enabled: "Μη ενεργοποιημένη"
@@ -168,7 +177,20 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
-        category_scope: "Κατηγορίες"
+        sections:
+          advanced: "Προχωρημένα"
+        settings:
+          ai_translation_category_scope:
+            label: "Κατηγορίες"
+          ai_translation_personal_messages:
+            label: "Προσωπικά μηνύματα"
+            choices:
+              none: "Κανένα"
+              all: "Όλα"
+          content_localization_language_switcher:
+            choices:
+              none: "Κανένας"
+              all: "Όλοι"
         model_progress:
           detail:
             retry: "Επανάληψη"
@@ -184,6 +206,8 @@ el:
               title: "Κατηγορίες"
             tag:
               title: "Ετικέτες"
+        admin_actions:
+          enabled: "Ενεργοποιημένη"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"

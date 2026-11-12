@@ -30,7 +30,6 @@ module ::Blog
         on_success do |params:, tag:, listing:|
           @archive = params.archive
           @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
-          @description = SiteSetting.blog_description
           @canonical_url = "#{Configuration.base_url}#{blog_path}"
           @canonical_url += "?page=#{params.page}" if params.page > 1
           @template_variables =
@@ -42,9 +41,10 @@ module ::Blog
               archive: @archive,
               tag:,
             )
+          @description = @template_variables.description
           response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
         end
-        on_failure { raise Discourse::NotFound }
+        on_failure { redirect_to_permalink || raise(Discourse::NotFound) }
       end
     end
 
@@ -64,7 +64,7 @@ module ::Blog
         on_failed_policy(:requested_path_is_current) do |publication:|
           redirect_to(publication.url, status: :moved_permanently, allow_other_host: true)
         end
-        on_failure { raise Discourse::NotFound }
+        on_failure { redirect_to_permalink || raise(Discourse::NotFound) }
       end
     end
 
@@ -128,6 +128,19 @@ module ::Blog
     end
 
     private
+
+    # Lets a migration redirect old URLs that match no article or tag, like author pages.
+    # Relative targets are community paths, so they resolve against the community host.
+    def redirect_to_permalink
+      permalink = Permalink.find_by_url(request.fullpath)
+      return if !permalink || !guardian.can_see_permalink_target?(permalink)
+      target = permalink.target_url
+      return if target.blank?
+
+      # The URL helper leaves a bare "/" relative, which would point at the blog's own root.
+      target = target == "/" ? "#{Discourse.base_url}/" : UrlHelper.absolute_without_cdn(target)
+      redirect_to(target, status: :moved_permanently, allow_other_host: true)
+    end
 
     def blog_path
       @blog_path ||= Configuration.relative_path(request)

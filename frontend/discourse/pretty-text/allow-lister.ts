@@ -4,8 +4,55 @@
 // abcd[test=bob]
 const ALLOWLIST_REGEX = /([^\[]+)(\[([^=]+)(=(.*))?\])?/;
 
+/**
+ * A rule that allows an attribute the allow list doesn't cover. A truthy
+ * return allows the attribute.
+ */
+export type AllowListCustomRule = (
+  tag: string,
+  name: string,
+  value: string
+) => unknown;
+
+/**
+ * What a feature allows: one or more entries such as `a.mention` or
+ * `div[data-*]`, or a custom rule.
+ */
+export type AllowListInfo = string | string[] | { custom: AllowListCustomRule };
+
+/** The allowed tags and, for each tag, its allowed attribute values. */
+export interface AllowList {
+  /** Every allowed tag, each mapped to an empty list. */
+  tagList: Record<string, string[]>;
+  /** The allowed values of each attribute, by tag. `*` allows any value. */
+  attrList: Record<string, Record<string, string[]>>;
+}
+
+/** The options an `AllowLister` reads. Other fields are ignored. */
+export interface AllowListerOptions {
+  /** The extra url schemes links may use, such as `tel`. */
+  allowedHrefSchemes?: string[] | null;
+  /** The url patterns iframes may load. `*` matches one path segment. */
+  allowedIframes?: string[] | null;
+  /** The features to enable, by name. */
+  features?: Record<string, boolean>;
+}
+
+/**
+ * Collects the tags and attributes that sanitized HTML may keep, grouped by
+ * the feature that allows them.
+ */
 export default class AllowLister {
-  constructor(options) {
+  declare _enabled: Record<string, boolean>;
+  declare _allowedHrefSchemes: string[];
+  declare _allowedIframes: string[];
+  declare _rawFeatures: [string, AllowListInfo][];
+  declare _cache: {
+    custom: AllowListCustomRule[];
+    allowList: AllowList;
+  } | null;
+
+  constructor(options?: AllowListerOptions | null) {
     this._enabled = { default: true };
     this._allowedHrefSchemes = (options && options.allowedHrefSchemes) || [];
     this._allowedIframes = (options && options.allowedIframes) || [];
@@ -15,57 +62,58 @@ export default class AllowLister {
 
     if (options && options.features) {
       Object.keys(options.features).forEach((f) => {
-        if (options.features[f]) {
+        if (options.features![f]) {
           this._enabled[f] = true;
         }
       });
     }
   }
 
-  allowListFeature(feature, info) {
+  allowListFeature(feature: string, info: AllowListInfo) {
     this._rawFeatures.push([feature, info]);
   }
 
-  disable(feature) {
+  disable(feature: string) {
     this._enabled[feature] = false;
     this._cache = null;
   }
 
-  enable(feature) {
+  enable(feature: string) {
     this._enabled[feature] = true;
     this._cache = null;
   }
 
-  getAllowList() {
+  getAllowList(): AllowList {
     this._ensureCache();
-    return this._cache.allowList;
+    return this._cache!.allowList;
   }
 
-  getCustom() {
+  getCustom(): AllowListCustomRule[] {
     this._ensureCache();
-    return this._cache.custom;
+    return this._cache!.custom;
   }
 
-  getAllowedHrefSchemes() {
+  getAllowedHrefSchemes(): string[] {
     return this._allowedHrefSchemes;
   }
 
-  getAllowedIframes() {
+  getAllowedIframes(): string[] {
     return this._allowedIframes;
   }
 
   _buildCache() {
-    const tagList = {};
-    const attrList = {};
-    const custom = [];
+    const tagList: AllowList["tagList"] = {};
+    const attrList: AllowList["attrList"] = {};
+    const custom: AllowListCustomRule[] = [];
 
     this._rawFeatures.forEach(([name, info]) => {
       if (!this._enabled[name]) {
         return;
       }
 
-      if (info.custom) {
-        custom.push(info.custom);
+      // A string or a list has no `custom` field, so it reads as undefined.
+      if ((info as { custom?: AllowListCustomRule }).custom) {
+        custom.push((info as { custom: AllowListCustomRule }).custom);
         return;
       }
 
@@ -73,22 +121,22 @@ export default class AllowLister {
         info = [info];
       }
 
-      (info || []).forEach((tag) => {
+      ((info as string[]) || []).forEach((tag) => {
         const classes = tag.split(".");
-        const tagWithAttr = classes.shift();
+        const tagWithAttr = classes.shift()!;
 
         const m = ALLOWLIST_REGEX.exec(tagWithAttr);
         if (m) {
           const [, tagname, , attr, , val] = m;
           tagList[tagname] = [];
 
-          let attrs = (attrList[tagname] = attrList[tagname] || {});
+          const attrs = (attrList[tagname] = attrList[tagname] || {});
           if (classes.length > 0) {
             attrs["class"] = (attrs["class"] || []).concat(classes);
           }
 
           if (attr) {
-            let attrInfo = (attrs[attr] = attrs[attr] || []);
+            const attrInfo = (attrs[attr] = attrs[attr] || []);
 
             if (val) {
               attrInfo.push(val);

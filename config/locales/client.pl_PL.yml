@@ -677,39 +677,16 @@ pl_PL:
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
+      create_category:
+        title: "Utwórz kategorię"
+        description: "Daj rozmowom miejsce, w którym będą mogły zamieszkać."
+        action: "Utwórz kategorię"
+        completed: "Utwórz inny"
       invite_collaborators:
         title: "Zaproś współpracowników"
         description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
         completed: "Zaproś więcej"
-      start_posting:
-        title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do dyskusji."
-        action: "Zobacz pomysły"
-        completed: "Zobacz więcej pomysłów"
-        choose_option: "Jak chcesz zacząć?"
-        predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj członkom temat do dyskusji"
-        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
-        use_predefined: "Przeglądaj szablony"
-        back: "Wstecz"
-        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
-        icebreakers:
-          plan_categories:
-            title: "Od jakich kategorii powinniśmy zacząć?"
-            description: "Zapytaj swój zespół, od jakich kategorii zacząć."
-            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
-          plan_invites:
-            title: "Kogo powinniśmy zaprosić przed startem?"
-            description: "Uzgodnij ze swoim zespołem, kogo zaprosić jako pierwszego."
-            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
-          introduce_yourself:
-            title: "Przedstaw się"
-            description: "Poproś członków, aby podzielili się kilkoma informacjami o sobie."
-            body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          write_your_own:
-            title: "Napisz swój własny"
-            description: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
       step_label: "Przejdź do kroku %{index}"
@@ -5821,6 +5798,7 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
+        description: "Każdy typ jest przeznaczony do innego rodzaju konwersacji."
         requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
         unavailable: "Niedostępne"
         ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"

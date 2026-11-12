@@ -247,20 +247,28 @@ pt_BR:
       features:
         short_title: "Recursos"
         settings_save_error: "Algumas configurações não puderam ser salvas."
-        disabled: "(desativada)"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          status: "Status"
+          enabled: "Ativados"
+          feature: "Recurso"
+          llm: "LLM"
+          groups: "Grupos"
+        who_can_use:
+          no_one: "Ninguém"
+        status:
+          "on": "Ligado"
+          "off": "Desligado"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Mensagens pessoais"
+            chat_direct_messages: "Mensagens de chat"
+            none: "Não disponível"
+        set_up: "Configurar"
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não configurado"
         no_groups: "Nenhum"
-        classification_model: "Modelo:"
         edit: "Configurações"
-        expand_list:
-          one: "(mais %{count})"
-          other: "(mais %{count})"
-        collapse_list: "(exibir menos)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -302,8 +310,7 @@ pt_BR:
             access_control: "Controle de acesso"
         embeddings:
           name: "Incorporações"
-          description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
-          hyde: "HyDE"
+          related_topics: "Tópicos relacionados"
           setting_groups:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
@@ -313,7 +320,6 @@ pt_BR:
             settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
-          description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
           search: "Pesquisa no Discord"
           setting_groups:
             settings: "Configurações básicas"
@@ -360,9 +366,6 @@ pt_BR:
             one: "Tradução agendada para %{count} postagem não traduzida"
             other: "Tradução agendada para %{count} postagens não traduzidas"
           schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
-          setting_groups:
-            settings: "Configurações básicas"
-            backfill_and_limits: "Backfill e limites"
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -381,8 +384,20 @@ pt_BR:
       translations:
         title: "Traduções"
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
-        supported_locales: "Idiomas suportados"
-        category_scope: "Categorias"
+        sections:
+          advanced: "Avançado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorias"
+          ai_translation_personal_messages:
+            label: "Mensagens pessoais"
+            choices:
+              none: "Nenhum"
+              all: "Todas"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguém"
+              all: "Todos(as)"
         model_progress:
           detail:
             retry: "Tentar novamente"
@@ -400,7 +415,7 @@ pt_BR:
             tag:
               title: "Tags"
         admin_actions:
-          enable_translations: "Ativar traduções automáticas"
+          enabled: "Ativados"
         stats:
           title: "Estatísticas de tradução"
           backfill_disabled: "O backfilling está desativado; apenas novas postagens serão traduzidas."

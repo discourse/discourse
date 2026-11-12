@@ -524,25 +524,13 @@ zh_TW:
         completed: "變更選項"
         show_light_screenshot: "顯示淺色模式截圖"
         show_dark_screenshot: "顯示深色模式截圖"
+      create_category:
+        action: "建立分類"
       invite_collaborators:
         title: "邀請協作者"
         description: "早期成員能讓社群活起來。"
         action: "建立邀請"
         completed: "邀請更多人"
-      start_posting:
-        title: "開始發文"
-        description: "提供大家可討論的內容。"
-        action: "查看點子"
-        completed: "查看更多點子"
-        choose_option: "你想如何開始？"
-        predefined_topics: "破冰話題範本"
-        predefined_topics_description: "從對話開場白集合中挑選，讓討論持續進行。"
-        use_predefined: "瀏覽範本"
-        back: "上一步"
-        icebreakers:
-          introduce_yourself:
-            title: "介紹自己"
-            body: "歡迎來到社群！讓我們互相認識。請介紹一下自己並分享你的興趣。我先說：我熱愛科技，也喜歡教導他人！"
     design_wizard:
       title: "自訂你的網站"
       step_label: "前往第 %{index} 個步驟"

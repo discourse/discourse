@@ -36,6 +36,7 @@ module ::Blog
     validate :available_path
     validate :valid_publication_date
     before_validation :initialize_topics, on: :create
+    before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
     after_create :capture_initial_publication
 
     scope :newest, -> { order(published_at: :desc, id: :desc) }
@@ -147,8 +148,24 @@ module ::Blog
       PostRevision.where(post: source.first_post).where("created_at > ?", last_published_at).count
     end
 
+    # The published revision, read from text columns so hostname and upload remaps reach it.
     def article
-      published_revision || Revision.new(data: Revision.capture(self, editable_topic))
+      return Revision.new(data: Revision.capture(self, editable_topic)) if !published_revision
+      return published_revision if cooked.nil?
+      Revision.new(
+        data: published_revision.data.merge("cooked" => cooked, "image_url" => image_url),
+      )
+    end
+
+    # Rebakes leave published articles alone, so bulk imports that rebake after
+    # publishing copy the discussion post's new HTML across explicitly.
+    def refresh_article!
+      post = discussion_topic&.first_post
+      return false if !published_revision_id || post.blank? || post.cooked.blank?
+      update_columns(
+        cooked: post.cooked,
+        image_url: Revision.image_url_for(discussion_topic.image_upload),
+      )
     end
 
     def url
@@ -302,6 +319,11 @@ module ::Blog
       end
     end
 
+    def capture_live_article
+      self.cooked = published_revision&.cooked
+      self.image_url = published_revision&.data&.[]("image_url")
+    end
+
     def capture_initial_publication
       return unless published? && discussion_topic && !published_revision_id
       revision =
@@ -345,9 +367,11 @@ end
 # Table name: blog_publications
 #
 #  id                    :bigint           not null, primary key
+#  cooked                :text
 #  draft_metadata        :jsonb            not null
 #  excerpt               :string           default(""), not null
 #  featured              :boolean          default(FALSE), not null
+#  image_url             :text
 #  last_published_at     :datetime
 #  path                  :string           not null
 #  published             :boolean          default(FALSE), not null

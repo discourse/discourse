@@ -369,9 +369,13 @@ pl_PL:
         image_generation_custom:
           name: "Niestandardowe"
         image_generation_openai:
-          name: "OpenAI"
+          name: "GPT Image 2.6 Flare"
+        image_generation_openai_sunburst:
+          name: "GPT Image 2.6 Sunburst"
         image_generation_gemini:
-          name: "Nano Banan"
+          name: "Nano Banana 2.1"
+        image_generation_gemini_pro:
+          name: "Nano Banana Pro"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:

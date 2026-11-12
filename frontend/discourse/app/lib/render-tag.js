@@ -38,6 +38,10 @@ export function defaultRenderTag(tag, params) {
     }
   }
   const href = path ? ` href='${getURL(path)}' ` : "";
+  const tagId = typeof tag === "string" ? params.tagId : tag.id;
+  const tagIdAttribute = tagId
+    ? ` data-tag-id='${escapeExpression(tagId)}'`
+    : "";
 
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
@@ -53,6 +57,7 @@ export function defaultRenderTag(tag, params) {
     "<" +
     htmlTag +
     href +
+    tagIdAttribute +
     " data-tag-name=" +
     tagNameLower +
     " class='" +

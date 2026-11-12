@@ -329,9 +329,6 @@ nb_NO:
       title: "Nye og uleste emner"
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Forrige"
     design_wizard:
       back: "Forrige"
       next: "Neste"

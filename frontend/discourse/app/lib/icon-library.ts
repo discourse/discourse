@@ -2,12 +2,66 @@ import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
+/** Options passed to the icon renderers. Custom renderers may read other keys. */
+export interface IconParams {
+  /** Classes added to the icon. */
+  class?: string | null;
+
+  /** Screen-reader text rendered after the icon by the string renderer. */
+  label?: string | null;
+
+  /**
+   * The title. The string renderer treats it as a translation key; the element
+   * renderer uses it as given.
+   */
+  title?: string | null;
+
+  /** A title that is already translated, used by the string renderer. */
+  translatedTitle?: string | null;
+
+  /** Makes the icon visible to screen readers with this label. */
+  "aria-label"?: string | null;
+
+  /**
+   * Skips the development-mode missing-icon warning, where the icon is knowingly
+   * outside the sprite subset.
+   */
+  ignoreMissing?: boolean;
+
+  [key: string]: unknown;
+}
+
+/** The icon a renderer is asked to render. */
+export interface RenderedIcon {
+  /** The requested icon id. */
+  id: string | null | undefined;
+
+  /** The id that `REPLACEMENTS` maps the requested id to, if any. */
+  replacementId: string | undefined;
+}
+
+/**
+ * Renders icons. Each method returns a falsy value to leave the icon to the next
+ * renderer.
+ */
+export interface IconRenderer {
+  /** The renderer's name. */
+  name: string;
+
+  /** Renders the icon as an HTML string. */
+  string?(icon: RenderedIcon, params: IconParams): string | null | undefined;
+
+  /** Renders the icon as a DOM element. */
+  element?(icon: RenderedIcon, params: IconParams): Element | null | undefined;
+}
+
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-let _renderers = [];
+const _renderers: IconRenderer[] = [];
 
-let _iconList;
+let _iconList: Set<string> | undefined;
 
-export const REPLACEMENTS = {
+/** Icon ids that render as a different icon. */
+export const REPLACEMENTS: Record<string, string> = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
   "d-regular": "far-bell",
@@ -56,11 +110,39 @@ export const REPLACEMENTS = {
   "category.restricted": "lock",
 };
 
-export function replaceIcon(source, destination) {
+/**
+ * Renders an icon id as a different icon.
+ *
+ * @param source - The icon id to replace.
+ * @param destination - The icon id to render instead.
+ */
+export function replaceIcon(source: string, destination: string) {
   REPLACEMENTS[source] = destination;
 }
 
-export function renderIcon(renderType, id, params) {
+/**
+ * Renders an icon with the most recently registered renderer that handles it.
+ *
+ * @param renderType - Whether to render an HTML string or a DOM element.
+ * @param id - The icon id.
+ * @param params - Options passed to the renderer.
+ * @returns The rendered icon, or `undefined` when no renderer handles it.
+ */
+export function renderIcon(
+  renderType: "string",
+  id: string | null | undefined,
+  params?: IconParams | null
+): string | undefined;
+export function renderIcon(
+  renderType: "element",
+  id: string | null | undefined,
+  params?: IconParams | null
+): Element | undefined;
+export function renderIcon(
+  renderType: "string" | "element",
+  id: string | null | undefined,
+  params?: IconParams | null
+): string | Element | undefined {
   params ||= {};
 
   for (const renderer of _renderers) {
@@ -69,7 +151,8 @@ export function renderIcon(renderType, id, params) {
       continue;
     }
 
-    const icon = { id, replacementId: REPLACEMENTS[id] };
+    // A missing id looks up a key that `REPLACEMENTS` never has.
+    const icon = { id, replacementId: REPLACEMENTS[id as string] };
     const result = rendererForType(icon, params);
 
     if (result) {
@@ -79,20 +162,44 @@ export function renderIcon(renderType, id, params) {
 }
 
 /**
- * @param {string} id - The icon id.
- * @param {object} [params] - Options passed to the icon renderer. Set
- *   `ignoreMissing` where the icon is knowingly outside the sprite subset, to
- *   skip the development-mode missing-icon warning.
+ * Renders an icon as an HTML string.
+ *
+ * @param id - The icon id.
+ * @param params - Options passed to the icon renderer. Set `ignoreMissing` where
+ *   the icon is knowingly outside the sprite subset, to skip the development-mode
+ *   missing-icon warning.
+ * @returns The HTML.
  */
-export function iconHTML(id, params) {
-  return renderIcon("string", id, params);
+export function iconHTML(
+  id: string | null | undefined,
+  params?: IconParams | null
+): string {
+  // The default renderer below handles every icon.
+  return renderIcon("string", id, params) as string;
 }
 
-export function iconElement(id, params) {
-  return renderIcon("element", id, params);
+/**
+ * Renders an icon as a DOM element.
+ *
+ * @param id - The icon id.
+ * @param params - Options passed to the icon renderer.
+ * @returns The element.
+ */
+export function iconElement(
+  id: string | null | undefined,
+  params?: IconParams | null
+): Element {
+  // The default renderer below handles every icon.
+  return renderIcon("element", id, params) as Element;
 }
 
-export function convertIconClass(icon) {
+/**
+ * Converts an icon class name, such as `"far fa-heart"`, to an icon id.
+ *
+ * @param icon - The class name.
+ * @returns The icon id.
+ */
+export function convertIconClass(icon: string): string {
   return icon
     .replace("far fa-", "far-")
     .replace("fab fa-", "fab-")
@@ -101,14 +208,22 @@ export function convertIconClass(icon) {
     .trim();
 }
 
-export function registerIconRenderer(renderer) {
+/**
+ * Registers an icon renderer. It runs before every renderer registered earlier.
+ *
+ * @param renderer - The renderer.
+ */
+export function registerIconRenderer(renderer: IconRenderer) {
   _renderers.unshift(renderer);
 }
 
-function iconClasses(icon, params) {
+function iconClasses(icon: RenderedIcon, params: IconParams) {
   // dots are invalid syntax for classes, use replacement instead
+  // (`replacementId` is only set for an existing id)
   const dClass =
-    icon.replacementId && icon.id.includes(".") ? icon.replacementId : icon.id;
+    icon.replacementId && (icon.id as string).includes(".")
+      ? icon.replacementId
+      : icon.id;
 
   let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
@@ -119,21 +234,32 @@ function iconClasses(icon, params) {
   return classNames;
 }
 
-export function setIconList(iconList) {
+/**
+ * Sets the ids of the icons in the SVG sprite subset.
+ *
+ * @param iconList - The icon ids.
+ */
+export function setIconList(iconList: Iterable<string>) {
   _iconList = new Set(iconList);
 }
 
-export function isExistingIconId(id) {
+/**
+ * Whether an icon is in the SVG sprite subset.
+ *
+ * @param id - The icon id.
+ * @returns Whether the icon is in the list, or `undefined` before the list is set.
+ */
+export function isExistingIconId(id: string): boolean | undefined {
   return _iconList?.has(id);
 }
 
-function warnIfMissing(id) {
+function warnIfMissing(id: string) {
   if (isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
 
-function handleIconId(icon, params) {
+function handleIconId(icon: RenderedIcon, params: IconParams) {
   let id = icon.replacementId || icon.id || "";
 
   // TODO: clean up "thumbtack unpinned" at source instead of here
@@ -185,7 +311,7 @@ registerIconRenderer({
     svgElement.setAttribute("class", classes);
     svgElement.setAttribute("width", "1em");
     svgElement.setAttribute("height", "1em");
-    svgElement.setAttribute("aria-hidden", true);
+    svgElement.setAttribute("aria-hidden", "true");
 
     const useElement = document.createElementNS(SVG_NAMESPACE, "use");
     useElement.setAttribute("href", `#${id}`);

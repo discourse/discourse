@@ -63,15 +63,18 @@ sv:
       llm_selector:
         none: "Ingen"
       features:
-        disabled: "(inaktiverad)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktiverad"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personliga meddelanden"
+            chat_direct_messages: "Chattmeddelanden"
+            none: "Inte tillgängligt"
         no_agent: "Inte inställd"
         no_groups: "Ingen"
         edit: "Inställningar"
-        expand_list:
-          one: "(ytterligare %{count})"
-          other: "(ytterligare %{count})"
-        collapse_list: "(visa mindre)"
         nav:
           enabled: "Aktiverad"
         filters:
@@ -92,7 +95,20 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
-        category_scope: "Kategorier"
+        sections:
+          advanced: "Avancerat"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personliga meddelanden"
+            choices:
+              none: "Ingen"
+              all: "Alla"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alla"
         model_progress:
           detail:
             columns:
@@ -107,6 +123,8 @@ sv:
               title: "Kategorier"
             tag:
               title: "Taggar"
+        admin_actions:
+          enabled: "Aktiverad"
         stats:
           eta_minutes:
             one: "%{count} minut"

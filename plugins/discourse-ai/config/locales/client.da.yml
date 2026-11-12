@@ -71,16 +71,17 @@ da:
       llm_selector:
         none: "Ingen"
       features:
-        disabled: "(deaktiveret)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktiveret"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personlige beskeder"
+            none: "Ikke tilgængelig"
         no_agent: "Ikke indstillet"
         no_groups: "Ingen"
-        classification_model: "Model:"
         edit: "Indstillinger"
-        expand_list:
-          one: "(%{count} mere)"
-          other: "(%{count} mere)"
-        collapse_list: "(vis mindre)"
         nav:
           enabled: "Aktiveret"
         filters:
@@ -101,7 +102,20 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
-        category_scope: "Kategorier"
+        sections:
+          advanced: "Avanceret"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personlige beskeder"
+            choices:
+              none: "Ingen"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alle"
         model_progress:
           detail:
             columns:
@@ -116,6 +130,8 @@ da:
               title: "Kategorier"
             tag:
               title: "Mærker"
+        admin_actions:
+          enabled: "Aktiveret"
         stats:
           eta_minutes:
             one: "%{count} minut"

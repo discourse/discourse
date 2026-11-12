@@ -11,6 +11,7 @@ th:
         insert: แทรก
         preview_archive: คลัง
         mobile: โทรศัพท์
+        save: บันทึก
         themes: ธีม
         theme_name: ชื่อธีม
         edit: แก้ไข

@@ -74,10 +74,10 @@ pl_PL:
         css_description: Zwykły CSS, do 65 536 bajtów. Ładuje się po arkuszu stylów bazowych.
         js: Niestandardowy JavaScript
         js_description: Zwykły JavaScript, do 65 536 bajtów. Tagi skryptów nie są parsowane — załaduj inny skrypt, dodając element skryptu (document.createElement("script")).
-        save: Zapisz tożsamość
-        saved: Tożsamość bloga została zapisana. Odśwież bloga, aby zobaczyć zmiany.
+        save: Zapisz
         identity_tab: Tożsamość
-        identity_description: Nazwa, wstęp i treść „O mnie” wspólne dla wszystkich motywów blogów.
+        path_formats:
+          custom: Niestandardowy
         themes_index_description: Wybierz projekt, który zobaczą czytelnicy. Dostosuj dołączony motyw lub edytuj swój własny; zmiany pozostaną prywatne, dopóki ich nie aktywujesz.
         thumbnail:
           journal: Dziennik
@@ -299,7 +299,6 @@ pl_PL:
       load_more: Załaduj więcej
       unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
       path: Ścieżka artykułu
-      path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Stare ścieżki automatycznie przekierowują po zmianie.
       excerpt: Fragment
       excerpt_hint: Krótkie wprowadzenie do kart artykułów i podglądów wyszukiwania. Pozostaw puste, aby wygenerować fragment artykułu.
       date: Data publikacji

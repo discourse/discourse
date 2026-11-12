@@ -125,16 +125,16 @@ task "javascript:update_constants" => :environment do
 
   require "emoji/regex_generator"
 
-  write_template("discourse/pretty-text/emoji/data.js", task_name, <<~JS)
+  write_template("discourse/pretty-text/emoji/data.ts", task_name, <<~JS)
     export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
-    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
-    export const replacements = #{Emoji.unicode_replacements_json};
+    export const aliases: Record<string, string[]> = #{Emoji.aliases.inspect.gsub("=>", ":")};
+    export const translations: Record<string, string> = #{Emoji.translations.inspect.gsub("=>", ":")};
+    export const replacements: Record<string, string> = #{Emoji.unicode_replacements_json};
     export const emojiReplacementRegex = "#{Emoji::RegexGenerator.generate}";
   JS
 
-  write_template("discourse/pretty-text/emoji/version.js", task_name, <<~JS)
+  write_template("discourse/pretty-text/emoji/version.ts", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
 end

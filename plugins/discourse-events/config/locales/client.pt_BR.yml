@@ -27,6 +27,10 @@ pt_BR:
               label: ID do tópico
     discourse_events:
       title: "Eventos"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Cadastrar"
       preferences:
         reminders:
           preferences:

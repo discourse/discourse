@@ -1,4 +1,14 @@
-export function mentionRegex(unicodeUsernames) {
+/**
+ * Builds the regular expression that finds `@username` mentions.
+ *
+ * A match puts the username in the first capture group, or in the second one
+ * when the username is a single character.
+ *
+ * @param unicodeUsernames - Whether usernames may contain any Unicode letter,
+ *   mark or digit, rather than only ASCII word characters.
+ * @returns The mention regular expression.
+ */
+export function mentionRegex(unicodeUsernames?: boolean): RegExp {
   if (unicodeUsernames) {
     try {
       // Create the regex from a string, because Babel doesn't understand

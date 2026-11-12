@@ -299,23 +299,32 @@ de:
         short_title: "Funktionen"
         back: "Zurück zu KI-Funktionen"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
-        disabled: "(deaktiviert)"
-        agent:
-          one: "Agent:"
-          other: "Agenten:"
-        groups: "Gruppen:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Status"
+          enabled: "Aktiviert"
+          feature: "Funktion"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Gruppen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "An"
+          "off": "Aus"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Neuer Agent"
+          manage_agents: "Agenten verwalten"
+          places:
+            personal_messages: "Persönliche Nachrichten"
+            chat_direct_messages: "Chat-Nachrichten"
+            none: "Nicht verfügbar"
+        toggle: "%{name} aktivieren"
+        set_up: "Einrichten"
         no_llm: "Kein LLM ausgewählt"
         no_agent: "Nicht festgelegt"
         no_groups: "Keine"
-        classification_model: "Modell:"
         edit: "Einstellungen"
-        expand_list:
-          one: "(%{count} weitere)"
-          other: "(%{count} weitere)"
-        collapse_list: "(weniger anzeigen)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -360,8 +369,7 @@ de:
             access_control: "Zugriffskontrolle"
         embeddings:
           name: "Einbettungen"
-          description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
-          hyde: "HyDE"
+          related_topics: "Verwandte Themen"
           setting_groups:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
@@ -374,7 +382,6 @@ de:
             settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
-          description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
           setting_groups:
             settings: "Grundlegende Einstellungen"
@@ -428,10 +435,6 @@ de:
             one: "Geplante Übersetzung für %{count} unübersetzten Beitrag."
             other: "Geplante Übersetzung für %{count} unübersetzte Beiträge."
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            agents: "Agenten"
-            backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -450,9 +453,20 @@ de:
       translations:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
-        supported_locales: "Unterstützte Sprachen"
-        category_scope: "Kategorien"
-        category_scope_description: "Entscheide, ob automatische Übersetzungen für Inhalte in allen Kategorien, in öffentlichen Kategorien oder in ausgewählten Kategorien gelten sollen."
+        sections:
+          advanced: "Erweitert "
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorien"
+          ai_translation_personal_messages:
+            label: "Persönliche Nachrichten"
+            choices:
+              none: "Keine Erfassung"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Alle"
         cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
         model_progress:
           loading: "Übersetzungsfortschritt wird geladen"
@@ -530,9 +544,7 @@ de:
                 one: "Das Schlagwort wurde vollständig übersetzt."
                 other: "Alle %{count} Schlagwörter wurden vollständig übersetzt."
         admin_actions:
-          translation_settings: "KI-Einstellungen"
-          localization_settings: "App-Spracheinstellungen"
-          enable_translations: "Automatische Übersetzungen aktivieren"
+          enabled: "Aktiviert"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."

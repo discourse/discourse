@@ -27,6 +27,10 @@ hu:
               label: Témaazonosító
     discourse_events:
       title: "Események"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Regisztráció"
       preferences:
         reminders:
           preferences:

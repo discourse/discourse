@@ -131,15 +131,21 @@ vi:
       llm_selector:
         none: "Không"
       features:
-        disabled: "(vô hiệu hóa)"
-        groups: "Nhóm:"
+        table:
+          status: "Trạng thái"
+          enabled: "Đã bật"
+          feature: "Tính năng"
+          agent: "Trợ lý AI (Agent)"
+          groups: "Nhóm"
+        who_can_use:
+          no_one: "Không ai"
+        chatbot:
+          places:
+            personal_messages: "Tin nhắn cá nhân"
+            none: "Không sẵn có"
         no_agent: "Chưa đặt"
         no_groups: "Không có gì"
-        classification_model: "Mô hình (Model):"
         edit: "Cài đặt"
-        expand_list:
-          other: "(%{count} khác)"
-        collapse_list: "(thu gọn)"
         nav:
           enabled: "Đã bật"
         filters:
@@ -155,6 +161,7 @@ vi:
           name: "Tìm kiếm"
           ask_ai: "Hỏi AI"
         embeddings:
+          related_topics: "Các chủ đề liên quan"
           setting_groups:
             related_topics: "Các chủ đề liên quan"
         ai_helper:
@@ -174,8 +181,20 @@ vi:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
-        category_scope: "Danh mục"
-        category_scope_description: "Chọn phạm vi áp dụng dịch tự động cho nội dung trong tất cả chuyên mục, chuyên mục công khai hoặc các chuyên mục được chọn."
+        sections:
+          advanced: "Nâng cao"
+        settings:
+          ai_translation_category_scope:
+            label: "Danh mục"
+          ai_translation_personal_messages:
+            label: "Tin nhắn cá nhân"
+            choices:
+              none: "Không"
+              all: "Tất cả"
+          content_localization_language_switcher:
+            choices:
+              none: "Không ai cả"
+              all: "Mọi người"
         cached_results_notice: "Hiển thị kết quả lưu trong bộ nhớ đệm (Cache) từ %{relative_time}."
         model_progress:
           loading: "Đang tải tiến trình dịch"
@@ -229,8 +248,7 @@ vi:
               needs_language_detection:
                 other: "%{count} thẻ cần nhận diện ngôn ngữ."
         admin_actions:
-          translation_settings: "Cài đặt Trí tuệ nhân tạo (AI)"
-          localization_settings: "Cài đặt ngôn ngữ ứng dụng"
+          enabled: "Đã bật"
         stats:
           backfill_message: "<a href='%{settingsUrl}'>Cài đặt bổ sung dữ liệu (Backfill)</a> đã được thiết lập để dịch toàn bộ bình luận sau ngày %{date}."
           eta_minutes:

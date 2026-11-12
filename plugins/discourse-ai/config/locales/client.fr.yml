@@ -299,23 +299,32 @@ fr:
         short_title: "Fonctionnalités"
         back: "Revenir aux fonctionnalités d'IA"
         settings_save_error: "Certains paramètres n'ont pas pu être enregistrés."
-        disabled: "(désactivée)"
-        agent:
-          one: "Agent :"
-          other: "Agents :"
-        groups: "Groupes :"
-        llm:
-          one: "LLM :"
-          other: "LLM :"
+        table:
+          status: "Statut"
+          enabled: "Activées"
+          feature: "Fonctionnalité"
+          agent: "Agent"
+          llm: "LLM "
+          groups: "Groupes"
+        who_can_use:
+          no_one: "Personne"
+        status:
+          "on": "Activé"
+          "off": "Désactivé"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nouvel agent"
+          manage_agents: "Gérer les agents"
+          places:
+            personal_messages: "Messages directs"
+            chat_direct_messages: "Messages de discussion"
+            none: "Non disponible"
+        toggle: "Activer %{name}"
+        set_up: "Configurer"
         no_llm: "Aucun LLM sélectionné"
         no_agent: "Non défini"
         no_groups: "Aucun"
-        classification_model: "Modèle :"
         edit: "Paramètres"
-        expand_list:
-          one: "(%{count} autre)"
-          other: "(%{count} autres)"
-        collapse_list: "(afficher moins)"
         bot:
           bot: "Chatbot"
           name: "Robot"
@@ -360,8 +369,7 @@ fr:
             access_control: "Contrôle d'accès"
         embeddings:
           name: "Intégrations"
-          description: "Alimente des fonctionnalités telles que les sujets connexes et la recherche IA en générant des représentations sémantiques du texte"
-          hyde: "HyDE"
+          related_topics: "Sujets connexes"
           setting_groups:
             model_settings: "Paramètres du modèle"
             related_topics: "Sujets connexes"
@@ -374,7 +382,6 @@ fr:
             settings: "Paramètres de base"
         discord:
           name: "Intégration à Discord"
-          description: "Ajoute la possibilité de rechercher des chaînes Discord"
           search: "Recherche Discord"
           setting_groups:
             settings: "Paramètres de base"
@@ -428,10 +435,6 @@ fr:
             one: "Traduction programmée pour %{count} publication non traduite."
             other: "Traduction programmée pour %{count} publications non traduites."
           schedule_topic_error: "Impossible de planifier les traductions. Veuillez réessayer."
-          setting_groups:
-            settings: "Paramètres de base"
-            agents: "Agents"
-            backfill_and_limits: "Traitement rétroactif et limites"
         spam:
           name: "Contenu indésirable"
           description: "Identifie les contenus indésirables potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
@@ -450,9 +453,20 @@ fr:
       translations:
         title: "Traductions"
         description: "Traduisez automatiquement tout le contenu de votre forum dans la langue préférée de l'utilisateur."
-        supported_locales: "Langues prises en charge"
-        category_scope: "Catégories"
-        category_scope_description: "Choisissez si les traductions automatiques s'appliquent au contenu de toutes les catégories, des catégories publiques ou des catégories sélectionnées."
+        sections:
+          advanced: "Avancé"
+        settings:
+          ai_translation_category_scope:
+            label: "Catégories"
+          ai_translation_personal_messages:
+            label: "Messages directs"
+            choices:
+              none: "Jamais"
+              all: "Tout"
+          content_localization_language_switcher:
+            choices:
+              none: "Personne"
+              all: "Tout le monde"
         cached_results_notice: "Affichage des résultats mis en cache datant de %{relative_time}."
         model_progress:
           loading: "Chargement de la progression de la traduction"
@@ -530,9 +544,7 @@ fr:
                 one: "L'étiquette est entièrement traduite."
                 other: "Les %{count} étiquettes sont toutes entièrement traduites."
         admin_actions:
-          translation_settings: "Paramètres de l'IA"
-          localization_settings: "Paramètres linguistiques de l'application"
-          enable_translations: "Activer les traductions automatiques"
+          enabled: "Activées"
         stats:
           title: "Statistiques de traduction"
           backfill_disabled: "Le traitement rétroactif est désactivé. Seules les nouvelles publications seront traduites."

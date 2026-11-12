@@ -16,6 +16,9 @@ tr_TR:
         preview_archive: Arşiv
         desktop: Masaüstü
         mobile: Mobil
+        save: Kaydet
+        path_formats:
+          custom: Özel
         back_to_themes: Temalara geri dön
         new_theme_short: Yeni tema
         themes: Temalar

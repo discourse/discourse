@@ -33,6 +33,10 @@ el:
               label: ID Θέματος
     discourse_events:
       title: "Συμβάντα"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Εγγραφή"
       preferences:
         reminders:
           preferences:

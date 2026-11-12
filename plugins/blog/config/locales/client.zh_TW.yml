@@ -15,6 +15,9 @@ zh_TW:
         preview_archive: 封存
         desktop: 桌面設備
         mobile: 移動設備
+        save: 儲存
+        path_formats:
+          custom: 客製
         back_to_themes: 返回佈景主題
         new_theme_short: 新佈景主題
         themes: 佈景主題

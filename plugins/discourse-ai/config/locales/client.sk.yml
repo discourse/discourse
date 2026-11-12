@@ -192,24 +192,26 @@ sk:
         none: "Žiadny"
       features:
         short_title: "Funkcie"
-        disabled: "(vypnuté)"
-        groups: "Skupiny:"
-        llm:
-          one: "LLM:"
-          few: "LLMs:"
-          many: "LLMs:"
-          other: "LLMs:"
+        table:
+          status: "Stav"
+          enabled: "Povolené"
+          feature: "Funkcia"
+          llm: "LLM"
+          groups: "Skupiny"
+        status:
+          "on": "Zapnuté"
+          "off": "Vypnuté"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Osobné správy"
+            chat_direct_messages: "Chat správy"
+            none: "Nedostupné"
+        set_up: "Nastavenie"
         no_llm: "Nie je vybraný žiadny LLM"
         no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
-        classification_model: "Model:"
         edit: "Nastavení"
-        expand_list:
-          one: "(%{count} ďalší)"
-          few: "(%{count} ďalšie)"
-          many: "(%{count} ďalších)"
-          other: "(%{count} ďalší)"
-        collapse_list: "(zobraziť menej)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -238,11 +240,9 @@ sk:
           ask_ai: "Spýtajte sa AI"
         embeddings:
           name: "Vkladania"
-          description: "Vytvára sémantické reprezentácie textu a podporuje funkcie ako Súvisiace témy a Vyhľadávanie pomocou umelej inteligencie."
-          hyde: "HyDE"
+          related_topics: "Súvisiace témy"
         discord:
           name: "Integrácia služby Discord"
-          description: "Pridáva možnosť vyhľadávať kanály Discord"
           search: "Vyhľadávanie v službe Discord"
         inference:
           name: "Odvodené koncepty"
@@ -285,7 +285,20 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
-        category_scope: "Kategórie"
+        sections:
+          advanced: "Pokročilé"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategórie"
+          ai_translation_personal_messages:
+            label: "Osobné správy"
+            choices:
+              none: "Žiadny"
+              all: "Všetky"
+          content_localization_language_switcher:
+            choices:
+              none: "Nikto"
+              all: "Každý"
         model_progress:
           detail:
             retry: "Skúsiť znova"
@@ -302,6 +315,8 @@ sk:
               title: "Kategórie"
             tag:
               title: "Značky"
+        admin_actions:
+          enabled: "Povolené"
         stats:
           eta_minutes:
             one: "%{count} minútu"

@@ -180,6 +180,14 @@
   font: italic 22px / 1.45 var(--broadsheet-serif);
 }
 
+.broadsheet__tagline p {
+  margin: 0;
+}
+
+.broadsheet__tagline p + p {
+  margin-top: 0.6em;
+}
+
 .broadsheet__listing {
   max-width: 1280px;
   margin-inline: auto;

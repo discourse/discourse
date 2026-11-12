@@ -27,6 +27,7 @@ const packageNames = [
   "ember-modifier",
   "ember-qunit",
   "ember-source",
+  "moment",
   "pretender",
 ];
 

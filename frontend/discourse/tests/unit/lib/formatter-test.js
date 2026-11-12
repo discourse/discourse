@@ -6,9 +6,19 @@ import {
   autoUpdatingRelativeAge,
   duration,
   durationTiny,
+  ensureJSON,
   longDate,
+  longDateNoYear,
   number,
+  plainJSON,
+  prettyJSON,
   relativeAge,
+  relativeAgeMediumSpan,
+  shortDate as formatShortDate,
+  shortDateNoYear,
+  smartShortDate,
+  tinyDateYear,
+  toTitleCase,
   until,
   updateRelativeAge,
 } from "discourse/lib/formatter";
@@ -545,5 +555,87 @@ module("Unit | Utility | formatter | until", function (hooks) {
     const result = until(`2100-01-01 ${untilUTC}:00.000Z`, timezone, "en");
 
     assert.strictEqual(result, `Until: ${untilTbilisi}`);
+  });
+});
+
+module("Unit | Utility | formatter | dates", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.clock = fakeTime("2024-06-15 12:00");
+  });
+
+  hooks.afterEach(function () {
+    this.clock.restore();
+  });
+
+  test("shortDate, shortDateNoYear and tinyDateYear", function (assert) {
+    const date = new Date(2023, 0, 5, 15, 4);
+
+    assert.strictEqual(formatShortDate(date), "Jan 5, 2023");
+    assert.strictEqual(shortDateNoYear(date), "Jan 5");
+    assert.strictEqual(tinyDateYear(date), "Jan 2023");
+  });
+
+  test("smartShortDate drops the year only for this year", function (assert) {
+    assert.strictEqual(smartShortDate(new Date(2024, 2, 2)), "Mar 2");
+    assert.strictEqual(smartShortDate(new Date(2023, 2, 2)), "Mar 2023");
+    assert.strictEqual(
+      smartShortDate(
+        new Date(2023, 2, 2),
+        (date) => `custom ${date.getDate()}`
+      ),
+      "custom 2",
+      "formats other years with the given function"
+    );
+  });
+
+  test("longDate", function (assert) {
+    assert.strictEqual(longDate(null), undefined, "nothing for no date");
+    assert.strictEqual(
+      longDate(new Date(2023, 0, 5, 15, 4)),
+      "Jan 5, 2023 3:04 pm"
+    );
+  });
+
+  test("longDateNoYear drops the year only for this year", function (assert) {
+    assert.strictEqual(longDateNoYear(null), undefined, "nothing for no date");
+    assert.strictEqual(
+      longDateNoYear(new Date(2024, 2, 2, 15, 4)),
+      "Mar 2, 3:04 PM"
+    );
+    assert.strictEqual(
+      longDateNoYear(new Date(2023, 2, 2, 15, 4)),
+      "Mar 2, 2023 3:04 PM"
+    );
+  });
+
+  test("relativeAgeMediumSpan", function (assert) {
+    assert.strictEqual(relativeAgeMediumSpan(120), "2 mins");
+    assert.strictEqual(relativeAgeMediumSpan(120, true), "2 mins ago");
+  });
+});
+
+module("Unit | Utility | formatter | text", function (hooks) {
+  setupTest(hooks);
+
+  test("toTitleCase capitalizes each word", function (assert) {
+    assert.strictEqual(toTitleCase("hello wORLD of-js"), "Hello World Of-js");
+  });
+
+  test("ensureJSON parses strings and passes objects through", function (assert) {
+    const object = { a: 1 };
+
+    assert.deepEqual(ensureJSON('{"a":1}'), { a: 1 });
+    assert.strictEqual(ensureJSON(object), object);
+  });
+
+  test("plainJSON lists one key and value per line", function (assert) {
+    assert.strictEqual(plainJSON('{"a":1,"b":"x"}'), "a: 1\nb: x\n");
+    assert.strictEqual(plainJSON({ c: true }), "c: true\n");
+  });
+
+  test("prettyJSON indents by two spaces", function (assert) {
+    assert.strictEqual(prettyJSON('{"a":[1]}'), '{\n  "a": [\n    1\n  ]\n}');
   });
 });

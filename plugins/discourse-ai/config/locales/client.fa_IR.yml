@@ -88,16 +88,18 @@ fa_IR:
       llm_selector:
         none: "هیچ‌کدام"
       features:
-        disabled: "(غیرفعال)"
-        groups: "گروه‌ها:"
+        table:
+          status: "وضعیت"
+          enabled: "فعال شده"
+          groups: "گروه‌ها"
+        chatbot:
+          places:
+            personal_messages: "پیام‌های شخصی"
+            chat_direct_messages: "پیام‌های چت"
+            none: "در دسترس نیست"
         no_agent: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
-        classification_model: "مدل:"
         edit: "تنظیم"
-        expand_list:
-          one: "(%{count} مورد دیگر)"
-          other: "(%{count} مورد دیگر)"
-        collapse_list: "(نمایش کمتر)"
         nav:
           enabled: "فعال شده"
         filters:
@@ -119,7 +121,20 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
-        category_scope: "دسته‌بندی‌ها"
+        sections:
+          advanced: "پیشرفته"
+        settings:
+          ai_translation_category_scope:
+            label: "دسته‌بندی‌ها"
+          ai_translation_personal_messages:
+            label: "پیام‌های شخصی"
+            choices:
+              none: "هیچ‌کدام"
+              all: "همه"
+          content_localization_language_switcher:
+            choices:
+              none: "هیچ‌کس"
+              all: "همه"
         model_progress:
           detail:
             columns:
@@ -135,6 +150,8 @@ fa_IR:
               title: "دسته‌بندی‌ها"
             tag:
               title: "برچسب‌ها"
+        admin_actions:
+          enabled: "فعال شده"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"

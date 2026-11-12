@@ -67,12 +67,19 @@ ko:
       llm_selector:
         none: "없음"
       features:
-        disabled: "(비활성)"
-        groups: "그룹:"
+        table:
+          status: "상태"
+          enabled: "활성화"
+          groups: "그룹"
+        status:
+          "on": "켜기"
+          "off": "끄기"
+        chatbot:
+          places:
+            personal_messages: "개인 메시지"
+            none: "사용할 수 없음"
         no_groups: "없음"
         edit: "설정"
-        expand_list:
-          other: "(%{count}개 더보기)"
         bot:
           setting_groups:
             settings: "기본 설정"
@@ -102,16 +109,24 @@ ko:
         image_caption:
           setting_groups:
             settings: "설정"
-        translation:
-          setting_groups:
-            settings: "기본 설정"
         spam:
           name: "스팸"
       modals:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
-        category_scope: "카테고리"
+        settings:
+          ai_translation_category_scope:
+            label: "카테고리"
+          ai_translation_personal_messages:
+            label: "개인 메시지"
+            choices:
+              none: "없음"
+              all: "모두"
+          content_localization_language_switcher:
+            choices:
+              none: "0명"
+              all: "모두"
         model_progress:
           detail:
             retry: "재시도"
@@ -127,6 +142,8 @@ ko:
               title: "카테고리"
             tag:
               title: "태그"
+        admin_actions:
+          enabled: "활성화"
         stats:
           eta_minutes:
             other: "%{count}분"

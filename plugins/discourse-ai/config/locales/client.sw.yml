@@ -59,8 +59,12 @@ sw:
       llm_selector:
         none: "Hakuna"
       features:
-        disabled: "(imezuiwa)"
-        groups: "Makundi:"
+        table:
+          enabled: "Imeruhusiwa"
+          groups: "Makundi"
+        chatbot:
+          places:
+            none: "Haijapatikana"
         no_groups: "Hakuna"
         edit: "Mipangilio"
         nav:
@@ -80,7 +84,17 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
-        category_scope: "Kategoria"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategoria"
+          ai_translation_personal_messages:
+            choices:
+              none: "Hakuna"
+              all: "Yote"
+          content_localization_language_switcher:
+            choices:
+              none: "Hakuna Mtu"
+              all: "Kila Mtu"
         model_progress:
           detail:
             columns:
@@ -95,6 +109,8 @@ sw:
               title: "Kategoria"
             tag:
               title: "Lebo"
+        admin_actions:
+          enabled: "Imeruhusiwa"
         stats:
           eta_hours:
             one: "saa %{count}"

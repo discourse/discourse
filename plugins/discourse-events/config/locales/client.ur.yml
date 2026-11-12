@@ -19,6 +19,10 @@ ur:
               label: ٹاپک ID
     discourse_events:
       title: "ایوینٹس"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "رجسٹر"
       preferences:
         reminders:
           preferences:

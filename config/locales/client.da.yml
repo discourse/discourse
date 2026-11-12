@@ -439,9 +439,6 @@ da:
       title: "Nye og ulæste emner"
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tilbage"
     design_wizard:
       back: "Tilbage"
       next: "Næste"

@@ -10,6 +10,7 @@ id:
       admin:
         insert: Masukkan
         preview_archive: Arsip
+        save: Simpan
         edit: Ubah
         customize: Sesuaikan
         export: Ekspor

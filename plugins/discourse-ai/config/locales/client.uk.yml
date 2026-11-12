@@ -315,29 +315,32 @@ uk:
         short_title: "Особливості"
         back: "Повернутися до можливостей ШІ"
         settings_save_error: "Деякі налаштування не вдалося зберегти."
-        disabled: "(вимкнено)"
-        agent:
-          one: "Агент:"
-          few: "Агенти:"
-          many: "Агенти:"
-          other: "Агенти:"
-        groups: "Групи:"
-        llm:
-          one: "LLM:"
-          few: "LLMs:"
-          many: "LLMs:"
-          other: "LLMs:"
+        table:
+          status: "Статус"
+          enabled: "Включено"
+          feature: "Особливість"
+          agent: "Агент"
+          llm: "LLM"
+          groups: "Групи"
+        who_can_use:
+          no_one: "Ніхто"
+        status:
+          "on": "Увімк"
+          "off": "Вимк."
+        chatbot:
+          column: "Чат-бот"
+          new_agent: "Новий агент"
+          manage_agents: "Керування агентами"
+          places:
+            personal_messages: "Особисті повідомлення"
+            chat_direct_messages: "Повідомлення чату"
+            none: "Не доступно"
+        toggle: "Увімкнути %{name}"
+        set_up: "Налаштувати"
         no_llm: "Не вибрано LLM"
         no_agent: "Не встановлено"
         no_groups: "Немає"
-        classification_model: "Модель:"
         edit: "Налаштування"
-        expand_list:
-          one: "(ще %{count})"
-          few: "(ще %{count})"
-          many: "(ще %{count})"
-          other: "(ще %{count})"
-        collapse_list: "(показати менше)"
         bot:
           bot: "Чат-бот"
           name: "Бот"
@@ -383,8 +386,7 @@ uk:
             access_control: "Контроль доступу"
         embeddings:
           name: "Вбудовування"
-          description: "Посилює такі функції, як \"Пов'язані теми\" та пошук зі штучним інтелектом, створюючи семантичне представлення тексту"
-          hyde: "HyDE"
+          related_topics: "Пов'язані теми"
           setting_groups:
             model_settings: "Налаштування моделі"
             related_topics: "Пов’язані теми"
@@ -397,7 +399,6 @@ uk:
             settings: "Основні налаштування"
         discord:
           name: "Інтеграція з Discord"
-          description: "Додано можливість пошуку каналів Discord"
           search: "Пошук у Discord"
           setting_groups:
             settings: "Основні налаштування"
@@ -454,10 +455,6 @@ uk:
             many: "Заплановано переклад для неперекладених %{count} дописів."
             other: "Заплановано переклад для неперекладених %{count} дописів."
           schedule_topic_error: "Не вдалося запланувати переклади. Спробуйте ще раз."
-          setting_groups:
-            settings: "Основні налаштування"
-            agents: "Агенти"
-            backfill_and_limits: "Засипка та обмеження"
         spam:
           name: "Спам"
           description: "Визначає потенційний спам за допомогою вибраного LLM і відзначити його для модераторів для перегляду в черзі відгуків"
@@ -476,11 +473,23 @@ uk:
       translations:
         title: "Переклади"
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
-        supported_locales: "Підтримувані мови"
+        sections:
+          languages: "Мови"
+          advanced: "Розширений"
+        settings:
+          ai_translation_category_scope:
+            label: "Розділи"
+          ai_translation_personal_messages:
+            label: "Особисті повідомлення"
+            choices:
+              none: "Немає"
+              all: "Всі"
+          content_localization_language_switcher:
+            choices:
+              none: "Ніхто"
+              all: "Усі"
         max_locales_reached: "Ви можете вибрати не більше ніж %{max} мов."
         locale_count: "%{count}/%{max} вибрано"
-        category_scope: "Розділи"
-        category_scope_description: "Виберіть, чи застосовуватимуться автоматичні переклади до контенту у всіх категоріях, загальнодоступних категоріях чи вибраних категоріях."
         cached_results_notice: "Показ кешованих результатів з %{relative_time}."
         model_progress:
           loading: "Завантаження прогресу перекладу"
@@ -590,12 +599,8 @@ uk:
                 many: "%{count} тегів повністю перекладено."
                 other: "%{count} тегів повністю перекладено."
         admin_actions:
-          translation_settings: "Налаштування штучного інтелекту"
-          localization_settings: "Налаштування мови програми"
-          enable_translations: "Увімкнути автоматичний переклад"
+          enabled: "Включено"
           enable_translations_disabled: "Щоб увімкнути переклади, потрібно додати підтримувану мову"
-          show_language_switcher: "Показувати перемикач мов у заголовку"
-          show_language_switcher_description: "Дозволяє кожному вибрати мову та переглядати ваш сайт нею."
         stats:
           title: "Статистика перекладів"
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."

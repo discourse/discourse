@@ -40,6 +40,8 @@ de:
           load_error: "Du hast das Webinar verlassen oder wir können Zoom auf dieser Seite nicht laden."
           too_early: "Du kannst dem Webinar kurz vor Beginn des Ereignisses beitreten"
           view_topic: "Thema des Ereignisses anzeigen"
+          guest_prompt:
+            register: "Registrieren"
         chat:
           rsvp_to_event: "Melde dich für das Ereignis an, um mit dem Chatten zu beginnen"
           rsvp_to_event_with_link: "Melde dich bei <a href='%{url}'>dem Ereignis</a> an, um mit dem Chatten zu beginnen"

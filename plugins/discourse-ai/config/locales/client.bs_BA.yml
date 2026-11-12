@@ -61,14 +61,15 @@ bs_BA:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(neomogućen)"
-        groups: "Grupa:"
+        table:
+          status: "Status"
+          enabled: "Omogućen"
+          groups: "Grupa"
+        chatbot:
+          places:
+            none: "Nedostupno"
         no_groups: "Ništa"
         edit: "Postavke"
-        expand_list:
-          one: "(još %{count})"
-          few: "(još %{count})"
-          other: "(još %{count})"
         nav:
           enabled: "Omogućen"
         filters:
@@ -87,7 +88,17 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Niko"
+              all: "Svatko"
         model_progress:
           detail:
             columns:
@@ -102,6 +113,8 @@ bs_BA:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Omogućen"
         stats:
           eta_hours:
             one: "%{count} sat"

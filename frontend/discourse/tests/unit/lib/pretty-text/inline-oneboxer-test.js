@@ -1,6 +1,12 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
-import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
+import {
+  applyCachedInlineOnebox,
+  applyInlineOneboxes,
+  cachedInlineOnebox,
+  deleteCachedInlineOnebox,
+  resetInlineOneboxCache,
+} from "pretty-text/inline-oneboxer";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
 import pretender, {
@@ -127,5 +133,41 @@ module("Unit | Pretty Text | Inline Oneboxer", function (hooks) {
       "http://example.com/url-9",
       "http://example.com/url-10",
     ]);
+  });
+
+  test("caches oneboxes by url", function (assert) {
+    const onebox = { url: "http://example.com/a", title: "A" };
+
+    assert.strictEqual(
+      applyCachedInlineOnebox(onebox.url, onebox),
+      onebox,
+      "returns the cached onebox"
+    );
+    assert.strictEqual(cachedInlineOnebox(onebox.url), onebox);
+    assert.true(deleteCachedInlineOnebox(onebox.url));
+    assert.strictEqual(cachedInlineOnebox(onebox.url), undefined);
+  });
+
+  test("resetInlineOneboxCache empties the cache", function (assert) {
+    applyCachedInlineOnebox("http://example.com/a", { title: "A" });
+    applyCachedInlineOnebox("http://example.com/b", { title: "B" });
+
+    resetInlineOneboxCache();
+
+    assert.strictEqual(cachedInlineOnebox("http://example.com/a"), undefined);
+    assert.strictEqual(cachedInlineOnebox("http://example.com/b"), undefined);
+  });
+
+  test("skips urls it has already looked up", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/inline-onebox", () => {
+      requestCount++;
+      return response(200, { "inline-oneboxes": [] });
+    });
+    applyCachedInlineOnebox("http://example.com/url-0", { title: "Cached" });
+
+    await applyInlineOneboxes({ "http://example.com/url-0": [] }, ajax);
+
+    assert.strictEqual(requestCount, 0);
   });
 });

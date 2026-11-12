@@ -399,36 +399,79 @@ pl_PL:
         description: "Skonfiguruj funkcje AI dla swojej witryny, w tym ich agentów, modeli i uprawnień dostępu, jeśli są obsługiwane."
         back: "Powrót do funkcji AI"
         settings_save_error: "Niektórych ustawień nie udało się zapisać."
-        disabled: "(wyłączone)"
-        agent:
-          one: "Agent:"
-          few: "Agenty:"
-          many: "Agenty:"
-          other: "Agenty:"
-        groups: "Grupy:"
-        llm:
-          one: "LLM:"
-          few: "LLM-y:"
-          many: "LLM-y:"
-          other: "LLM-y:"
+        table:
+          module: "Moduł"
+          status: "Status"
+          enabled: "Włączone"
+          feature: "Funkcja"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Grupy"
+          who_can_use: "Kto może użyć"
+        who_can_use:
+          edit: "Edytuj, kto może używać %{name}"
+          no_one: "Nikt"
+          no_one_warning: "Bez grup nikt nie może korzystać z tej funkcji."
+          shared: "Zmienia się również, kto może używać: %{features}"
+        status:
+          "on": "Wł."
+          "off": "Wył."
+          needs_setup: "Wymaga konfiguracji"
+          on_with_features:
+            one: "Włącz · %{enabled} z %{count} funkcji"
+            few: "Włącz · %{enabled} z %{count} funkcji"
+            many: "Włącz · %{enabled} z %{count} funkcji"
+            other: "Włącz · %{enabled} z %{count} funkcji"
+          on_with_languages:
+            one: "Włącz · %{count} język"
+            few: "Włącz · %{count} języki"
+            many: "Włącz · %{count} języków"
+            other: "Włącz · %{count} języków"
+          on_with_chatbot_agents:
+            one: "Włącz · %{count} agent czatbota"
+            few: "Włącz · %{count} agenty czatbota"
+            many: "Włącz · %{count} agentów czatbota"
+            other: "Włącz · %{count} agentów czatbota"
+        chatbot:
+          available_in: "Dostępne w"
+          column: "Czatbot"
+          toggle: "Użyj %{name} jako czatbota"
+          any_llm: "Wybrane przez użytkownika"
+          new_agent: "Nowy agent"
+          manage_agents: "Zarządzaj agentami"
+          places:
+            personal_messages: "Prywatne wiadomości"
+            topic_mentions: "Tematu @wzmianki"
+            chat_direct_messages: "Wiadomości czatu"
+            chat_channel_mentions: "Czatu @wzmianki"
+            none: "Niedostępne"
+        status_notes:
+          no_languages: "Nie wybrano żadnego języka"
+          no_llm: "Brak dostępnego modelu językowego"
+          hidden_from_readers: "Ukryte przed czytelnikami"
+          no_image_generation_tool: "Dodaj narzędzie"
+          no_embedding_model: "Dodaj model"
+          no_embedding_model_selected: "Nie wybrano modelu"
+          missing: "Brakuje: %{items}"
+        setup_items:
+          app_id: "identyfikator aplikacji"
+          public_key: "klucz publiczny"
+          allowed_servers: "dozwolone serwery"
+          agent: "agent z użytkownikiem bota"
+        agentless_notes:
+          forum_search: "Przeszukiwanie forum, brak modelu AI"
+        toggle: "Włącz %{name}"
+        set_up: "Skonfiguruj"
         no_llm: "Nie wybrano LLM"
         no_agent: "Nie ustawiony"
         no_groups: "Brak"
-        backend: "Zaplecze:"
         backends:
           agent: "Agent LLM"
           decision_model: "Model decyzyjny"
           classification_model: "Dedykowany punkt końcowy klasyfikacji"
-        decision_model: "Model decyzyjny:"
-        classification_model: "Model:"
         not_configured: "Nie skonfigurowano"
+        decision_model: "Model decyzyjny"
         edit: "Ustawień"
-        expand_list:
-          one: "(%{count} więcej)"
-          few: "(%{count} więcej)"
-          many: "(%{count} więcej)"
-          other: "(%{count} więcej)"
-        collapse_list: "(pokaż mniej)"
         bot:
           bot: "Czatbot"
           name: "Bot"
@@ -490,8 +533,13 @@ pl_PL:
             ask_ai_reports: "Raporty Zapytaj AI"
         embeddings:
           name: "Osadzenia"
-          description: "Umożliwia korzystanie z funkcji takich jak Powiązane tematy i wyszukiwanie AI poprzez generowanie semantycznych reprezentacji tekstu"
-          hyde: "HyDE"
+          description: "Wyszukuje treści według znaczenia. Obsługuje powiązane tematy i wyszukiwanie AI."
+          related_topics: "Powiązane tematy"
+          semantic_search: "Wyniki wyszukiwania AI"
+          quick_search: "Wyniki AI w szybkim wyszukiwaniu"
+          hyde: "Lepsze zapytania wyszukiwania (HyDE)"
+          add_model: "Dodaj wbudowany model"
+          no_models: "Najpierw potrzebujesz wbudowanego modelu."
           setting_groups:
             model_settings: "Ustawienia modelu"
             related_topics: "Powiązane tematy"
@@ -504,7 +552,7 @@ pl_PL:
             settings: "Ustawienia podstawowe"
         discord:
           name: "Integracja z Discordem"
-          description: "Dodaje możliwość wyszukiwania kanałów Discord"
+          description: "Umożliwia użytkownikom przeszukiwanie tego forum za pomocą Discorda"
           search: "Wyszukiwanie Discord"
           setting_groups:
             settings: "Ustawienia podstawowe"
@@ -561,10 +609,6 @@ pl_PL:
             many: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
             other: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
           schedule_topic_error: "Nie udało się zaplanować tłumaczeń. Spróbuj ponownie."
-          setting_groups:
-            settings: "Ustawienia podstawowe"
-            agents: "Agenty"
-            backfill_and_limits: "Uzupełnienie i ograniczenia"
         spam:
           name: "Spam"
           description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -583,11 +627,85 @@ pl_PL:
       translations:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
-        supported_locales: "Obsługiwane języki"
+        sections:
+          languages: "Języki"
+          scope: "Co przetłumaczyć"
+          backfill: "Istniejąca treść"
+          readers: "Czytelnicy"
+          agents: "Agenty i modele"
+          advanced: "Zaawansowane"
+        hidden_from_readers: 'Tłumaczenia są generowane, ale są ukryte przed czytelnikami. Zaktualizuj <a href="#ai-translations-readers">ustawienia Czytelników</a> , aby je wyświetlić.'
+        more_language_settings: "Więcej ustawień językowych"
+        waiting_for_languages: "Tłumaczenie jest włączone, ale dopóki nie wybierzesz co najmniej jednego języka, nic nie zostanie przetłumaczone."
+        settings:
+          content_localization_supported_locales:
+            label: "Przetłumacz na"
+            description: "Treść jest tłumaczona na te języki. Domyślny język Twojej witryny jest zawsze uwzględniony."
+          ai_translation_category_scope:
+            label: "Kategorie"
+            description: "Które kategorie tłumaczyć. Wiadomości osobiste są ustawiane osobno."
+          ai_translation_categories:
+            label: "Wybrane kategorie"
+            description: "Kategorie uwzględnione lub wykluczone powyżej."
+          ai_translation_personal_messages:
+            label: "Prywatne wiadomości"
+            description: "Które prywatne wiadomości tłumaczyć."
+            choices:
+              none: "Brak"
+              group: "Tylko wiadomości grupowe"
+              all: "Wszystkie"
+          ai_translation_include_bot_content:
+            label: "Tłumaczenie treści pisanych przez boty"
+            description: "Tłumacz również posty z kont botów."
+          ai_translation_backfill_start_date:
+            label: "Przetłumacz istniejącą treść od"
+            description: "Wpisy i tematy utworzone w tym dniu (UTC) lub później są tłumaczone w tle. Pozostaw puste pole, aby tłumaczyć tylko nowe treści."
+          ai_translation_backfill_hourly_rate:
+            label: "Istniejąca treść na godzinę"
+            description: "Ile istniejących wpisów i tematów przetłumaczyć na godzinę. Ustaw na 0, aby wstrzymać."
+          content_localization_enabled:
+            label: "Pokaż tłumaczenia czytelnikom"
+            description: "Czytelnicy widzą treść w preferowanym przez siebie języku, jeśli istnieje tłumaczenie."
+          content_localization_language_switcher:
+            label: "Przełącznik języka"
+            description: "Kto może wybrać język z nagłówka."
+            choices:
+              none: "Nikt"
+              anonymous: "Anonimowi goście"
+              all: "Wszyscy"
+          allow_user_locale:
+            label: "Pozwól użytkownikom wybrać swój język"
+            description: "Zalogowani użytkownicy mogą ustawić swój preferowany język. Jest to wymagane do korzystania z przełącznika języka i linków językowych."
+          set_locale_from_param:
+            label: "Linki językowe"
+            description: "Każdy może otworzyć stronę w danym języku, dodając go do adresu, np. ?tl=es."
+          content_localization_crawler_param:
+            label: "Pozwól wyszukiwarkom indeksować tłumaczenia"
+            description: "Wyświetlaj przetłumaczone treści wyszukiwarkom, które korzystają z linków językowych."
+          content_localization_use_default_locale_when_unsupported:
+            label: "Powrót do języka domyślnego"
+            description: "Czytelnicy, których język nie został wybrany powyżej, zobaczą treść w domyślnym języku Twojej witryny."
+          ai_translation_locale_detector_agent:
+            label: "Agent wykrywania języka"
+            description: "Wykrywa, w jakim języku została napisana treść."
+          ai_translation_locale_detector_decision_model:
+            label: "Model decyzyjny wykrywania języka"
+            description: "Wykrywa języki, które można pewnie umieścić przed zapytaniem agenta wykrywania języka. Pozostaw puste, aby użyć tylko agenta."
+          ai_translation_post_raw_translator_agent:
+            label: "Narzędzie do tłumaczenia wpisów"
+            description: "Tłumaczy wpisy."
+          ai_translation_topic_title_translator_agent:
+            label: "Agent tłumaczący tytuł tematu"
+            description: "Tłumaczy tytuły tematów."
+          ai_translation_short_text_translator_agent:
+            label: "Agent tłumaczący krótkie teksty"
+            description: "Tłumaczy kategorie, tagi i inne krótkie teksty."
+          ai_translation_verbose_logs:
+            label: "Szczegółowe dzienniki"
+            description: "Zapisuje szczegółowe dzienniki zadań tłumaczeniowych w celu rozwiązywania problemów."
+        settings_save_error: "Niektórych ustawień nie udało się zapisać. Sprawdź poniższe błędy."
         max_locales_reached: "Można wybrać maksymalnie %{max} języków."
         locale_count: "Wybrano %{count}/%{max}"
-        category_scope: "Kategorie"
-        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają dotyczyć treści we wszystkich kategoriach, kategoriach publicznych czy wybranych kategoriach."
         cached_results_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
         model_progress:
           loading: "Ładowanie postępu tłumaczenia"
@@ -697,12 +815,8 @@ pl_PL:
                 many: "Wszystkie %{count} tagów zostało w pełni przetłumaczonych."
                 other: "Wszystkie %{count} tagów zostało w pełni przetłumaczonych."
         admin_actions:
-          translation_settings: "Ustawienia AI"
-          localization_settings: "Ustawienia języka aplikacji"
-          enable_translations: "Włącz automatyczne tłumaczenia"
+          enabled: "Włączone"
           enable_translations_disabled: "Aby włączyć tłumaczenia, musisz dodać obsługiwany język"
-          show_language_switcher: "Pokaż przełącznik języka w nagłówku"
-          show_language_switcher_description: "Umożliwia każdemu wybór języka i przeglądanie w nim Twojej witryny."
         stats:
           title: "Statystyki tłumaczeń"
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
@@ -949,6 +1063,8 @@ pl_PL:
             summary_forever: "Ładunki przechowywane %{detailed} dni, podsumowania przechowywane na zawsze"
             finite: "Ładunki były przechowywane przez %{detailed} dni, podsumowania trwały %{summary} dni, a następnie usuwane"
       ai_agent:
+        automatic_image_tools: "Automatycznie używa wszystkich włączonych narzędzi do generowania obrazów"
+        no_image_tools: "Brak włączonych narzędzi do generowania obrazów."
         new_bot_option:
           label: "Agent AI"
           description: "Tworzy bota wraz z jego modelem językowym, podpowiedziami, narzędziami i uprawnieniami."
