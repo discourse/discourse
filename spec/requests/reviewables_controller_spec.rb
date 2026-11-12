@@ -1105,6 +1105,22 @@ RSpec.describe ReviewablesController do
         expect(flagged.target_created_by.reload).not_to be_silenced
       end
 
+      it "does not lift an unrelated silence when a category moderator approves a queued post" do
+        SiteSetting.enable_category_group_moderation = true
+        group_user = Fabricate(:group_user)
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+        queued = Fabricate(:reviewable_queued_post, topic: Fabricate(:topic, category:), category:)
+        UserSilencer.silence(queued.target_created_by, Fabricate(:admin), reason: "unrelated")
+        sign_in(group_user.user)
+
+        put "/review/#{queued.id}/perform/approve_post.json", params: { version: queued.version }
+
+        expect(response.status).to eq(200)
+        expect(queued.reload).to be_approved
+        expect(queued.target_created_by.reload).to be_silenced
+      end
+
       it "returns 404 to category moderators for an inaccessible whisper" do
         SiteSetting.enable_category_group_moderation = true
         group_user = Fabricate(:group_user)

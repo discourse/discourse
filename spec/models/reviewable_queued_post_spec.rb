@@ -131,6 +131,67 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.success?).to eq(true)
         end
 
+        context "when the author is silenced" do
+          let(:author) { reviewable.target_created_by }
+
+          it "unsilences the author when a staff member approves" do
+            UserSilencer.silence(author, admin, reason: "unrelated")
+
+            reviewable.perform(moderator, :approve_post)
+
+            expect(author.reload).not_to be_silenced
+          end
+
+          context "with a category group moderator" do
+            fab!(:group_user)
+
+            let(:category_moderator) { group_user.user }
+
+            before do
+              SiteSetting.enable_category_group_moderation = true
+              Fabricate(:category_moderation_group, category:, group: group_user.group)
+              reviewable.update!(category:)
+            end
+
+            it "lifts the auto-silence triggered by the queued post" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).not_to be_silenced
+            end
+
+            it "keeps an unrelated silence" do
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              result = reviewable.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
+            it "keeps a silence imposed after the auto-silence" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+              author.update!(silenced_till: nil)
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).to be_silenced
+            end
+          end
+        end
+
         it "logs a staff action linked to the reviewable" do
           expect { reviewable.perform(moderator, :approve_post) }.to change {
             UserHistory.where(
