@@ -165,6 +165,102 @@ RSpec.describe CalendarSubscriptionsController do
     end
   end
 
+  describe "revocation after a feed request re-homes the key" do
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, name: "Private reminder") }
+
+    let(:feed_path) { "/u/#{user.username_lower}/bookmarks.ics" }
+
+    def fetch_feed(key, client_id: nil)
+      headers = client_id ? { "User-Api-Client-Id" => client_id } : {}
+      get feed_path, params: { user_api_key: key }, headers: headers
+    end
+
+    def clear_session
+      cookies.to_hash.each_key { |name| cookies.delete(name) }
+    end
+
+    def subscription
+      @subscription ||=
+        begin
+          sign_in(user)
+          post "/calendar-subscriptions.json"
+          expect(response.status).to eq(200)
+          body = response.parsed_body
+          clear_session
+          body
+        end
+    end
+
+    it "revokes the key even after the URL holder re-homed it with a client id header" do
+      fetch_feed(subscription["key"], client_id: "calendar-reader")
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Private reminder")
+      expect(user.user_api_keys.sole.client.client_id).to eq("calendar-reader")
+
+      sign_in(user)
+      delete "/calendar-subscriptions.json"
+      expect(response.status).to eq(204)
+
+      get "/calendar-subscriptions.json"
+      expect(response.parsed_body["has_subscription"]).to eq(false)
+
+      clear_session
+      fetch_feed(subscription["key"])
+      expect(response.status).to eq(403)
+      expect(response.body).not_to include("Private reminder")
+    end
+
+    it "revokes the old key on regenerate even after the URL holder re-homed it" do
+      fetch_feed(subscription["key"], client_id: "calendar-reader")
+      expect(response.status).to eq(200)
+
+      sign_in(user)
+      post "/calendar-subscriptions.json"
+      expect(response.status).to eq(200)
+      new_key = response.parsed_body["key"]
+      expect(new_key).not_to eq(subscription["key"])
+
+      clear_session
+      fetch_feed(subscription["key"])
+      expect(response.status).to eq(403)
+
+      fetch_feed(new_key)
+      expect(response.status).to eq(200)
+    end
+
+    it "revokes every calendar key, including one left behind by an earlier re-home" do
+      subscription_key = subscription["key"]
+      stale_client =
+        UserApiKeyClient.create!(client_id: "calendar-reader", application_name: "Reader")
+      stale_key = Fabricate(:bookmarks_calendar_user_api_key, user: user, client: stale_client)
+
+      sign_in(user)
+      delete "/calendar-subscriptions.json"
+      expect(response.status).to eq(204)
+      clear_session
+
+      fetch_feed(subscription_key)
+      expect(response.status).to eq(403)
+
+      fetch_feed(stale_key.key)
+      expect(response.status).to eq(403)
+    end
+
+    it "keeps reporting and serving the subscription while the key is not revoked" do
+      fetch_feed(subscription["key"], client_id: "calendar-reader")
+      expect(response.status).to eq(200)
+
+      sign_in(user)
+      get "/calendar-subscriptions.json"
+      expect(response.parsed_body["has_subscription"]).to eq(true)
+      clear_session
+
+      fetch_feed(subscription["key"])
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Private reminder")
+    end
+  end
+
   describe "#destroy" do
     it "requires login" do
       delete "/calendar-subscriptions.json"
