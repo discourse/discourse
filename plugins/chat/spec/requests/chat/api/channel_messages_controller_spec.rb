@@ -553,6 +553,29 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
 
+    it "keeps remaining pins readable for another DM participant after bulk deletion" do
+      SiteSetting.chat_pinned_messages = true
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+      dm = Fabricate(:direct_message_channel, users: [current_user, other_user])
+      removed = Fabricate(:chat_message, chat_channel: dm, user: current_user)
+      retained = Fabricate(:chat_message, chat_channel: dm, user: other_user)
+      [removed, retained].each do |message|
+        Fabricate(:chat_pinned_message, chat_channel: dm, chat_message: message)
+      end
+
+      delete "/chat/api/channels/#{dm.id}/messages", params: { message_ids: [removed.id] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      sign_in(other_user)
+      get "/chat/api/channels/#{dm.id}/pins"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_messages"].pluck("chat_message_id")).to eq([retained.id])
+      expect(dm.pinned_messages.count).to eq(1)
+    end
+
     context "when user is staff" do
       fab!(:current_user, :admin)
 
