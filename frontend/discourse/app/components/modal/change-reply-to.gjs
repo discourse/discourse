@@ -156,7 +156,6 @@ export default class ChangeReplyTo extends Component {
           @jumpEnd={{this.handleJumpBottom}}
           @jumpToIndex={{this.handleJumpToIndex}}
           @jumpTop={{this.handleJumpTop}}
-          @jumpToPostPrompt={{this.noop}}
           @model={{this.topic}}
           @recoverTopic={{this.noop}}
           @replyToPost={{this.noop}}
