@@ -509,6 +509,7 @@ en:
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
+        authentication_failed_error: "Happens when incoming email authentication requires review, but the action takes effect immediately and cannot be queued."
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
         suspended_user_error: "Happens when the sender has been suspended."
