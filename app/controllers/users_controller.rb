@@ -749,6 +749,7 @@ class UsersController < ApplicationController
 
     # Handle custom fields
     user_fields = UserField.all
+    user_fields = user_fields.where(show_on_signup: true) unless current_user&.admin? && is_api?
     if user_fields.present?
       fields = user.custom_fields
 
