@@ -2189,11 +2189,11 @@ HTML
 
       # Due to a bug in node 18.16 and lower this takes about 11s.
       # On node 18.19 and newer it takes about 250ms
-      expect do
-        Timeout.timeout(3) do
-          expect(PrettyText.cook("abc nope def")).to match_html("<p>abc yep def</p>")
-        end
-      end.not_to raise_error
+      cooked = nil
+      elapsed =
+        Timeout.timeout(15) { Benchmark.realtime { cooked = PrettyText.cook("abc nope def") } }
+      expect(cooked).to match_html("<p>abc yep def</p>")
+      expect(elapsed).to be < 3
     end
 
     it "replaces words with other words" do
