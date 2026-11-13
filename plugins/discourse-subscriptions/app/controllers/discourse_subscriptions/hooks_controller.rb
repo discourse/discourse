@@ -50,6 +50,28 @@ module DiscourseSubscriptions
           return render_json_error "user not found"
         end
 
+        subscription = checkout_session[:subscription]
+        return head :ok if subscription.present? && Subscription.exists?(external_id: subscription)
+
+        line_items =
+          ::Stripe::Checkout::Session.list_line_items(
+            checkout_session[:id],
+            { limit: 1 },
+            stripe_request_opts,
+          )
+        item = line_items[:data].first
+
+        group = plan_group(item[:price])
+
+        if SiteSetting.discourse_subscriptions_enable_verbose_logging
+          Rails.logger.warn("Line item with group name meta data: #{item[:price]}")
+          if group.nil?
+            Rails.logger.warn("Group not found or not listed in metadata!")
+          else
+            Rails.logger.warn("Group: #{group.name}")
+          end
+        end
+
         if checkout_session[:customer].nil?
           customer = ::Stripe::Customer.create({ email: user.email }, stripe_request_opts)
           customer_id = customer[:id]
@@ -61,43 +83,29 @@ module DiscourseSubscriptions
           Rails.logger.warn("Processing checkout session for user: #{user.email} (id: #{user.id})")
         end
 
-        discourse_customer = Customer.create(user_id: user.id, customer_id: customer_id)
-
-        subscription = checkout_session[:subscription]
-
-        if subscription.present?
-          Subscription.create(customer_id: discourse_customer.id, external_id: subscription)
-        end
-
-        line_items =
-          ::Stripe::Checkout::Session.list_line_items(
-            checkout_session[:id],
-            { limit: 1 },
-            stripe_request_opts,
-          )
-        item = line_items[:data].first
-
-        group = plan_group(item[:price])
-        group.add(user) unless group.nil?
-
-        if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("Line item with group name meta data: #{item[:price]}")
-          if group.nil?
-            Rails.logger.warn("Group not found or not listed in metadata!")
-          else
-            Rails.logger.warn("Group: #{group.name}")
-          end
-        end
-
-        discourse_customer.product_id = item[:price][:product]
-        discourse_customer.save!
-
         if !subscription.nil?
           ::Stripe::Subscription.update(
             subscription,
             { metadata: { user_id: user.id, username: user.username } },
             stripe_request_opts,
           )
+        end
+
+        user.with_lock do
+          next if subscription.present? && Subscription.exists?(external_id: subscription)
+
+          discourse_customer =
+            Customer.create!(
+              user_id: user.id,
+              customer_id: customer_id,
+              product_id: item[:price][:product],
+            )
+
+          if subscription.present?
+            Subscription.create!(customer_id: discourse_customer.id, external_id: subscription)
+          end
+
+          group.add(user) if group
         end
       when "customer.subscription.created"
       when "customer.subscription.updated"
