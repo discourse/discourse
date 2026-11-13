@@ -9,6 +9,12 @@ import ComboBoxField, { DynamicOptionsComboBox } from "./combo-box.gjs";
 import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export class DynamicOptionsGroupChooser extends GroupChooser {
+  /**
+   * TODO (select-kit-replacement-cleanup): Remove once this field moves to the new select
+   * controls; until then it is not a third-party render.
+   */
+  skipLegacyRenderDeprecation = true;
+
   search(filter) {
     if (this.loadOptions) {
       return Promise.resolve(this.loadOptions(filter)).then((options) => {

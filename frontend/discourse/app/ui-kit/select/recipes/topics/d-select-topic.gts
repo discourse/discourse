@@ -1,0 +1,197 @@
+import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import type Owner from "@ember/owner";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
+import {
+  TopicOption,
+  TopicSelection,
+} from "discourse/ui-kit/select/recipes/topics/-internals/topic-renderers";
+import {
+  findHeldTopics,
+  searchTopics,
+} from "discourse/ui-kit/select/recipes/topics/-internals/topic-search";
+import {
+  type SelectTopicTextKey,
+  TOPIC_TEXTS,
+  type TopicPickerArchetype,
+  topicPickerName,
+  topicSearchPlaceholder,
+} from "discourse/ui-kit/select/recipes/topics/-internals/topic-texts";
+import {
+  emitTopicChange,
+  type TopicChangeHandler,
+  unresolvedTopic,
+} from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
+import type {
+  SelectRecord,
+  SelectTexts,
+  SelectValue,
+} from "discourse/ui-kit/select/select-engine";
+
+/** The topic picker's arguments and the engine's forwarded presentation contract. */
+interface DSelectTopicSignature {
+  Args: Pick<
+    DSelectSignature["Args"],
+    | "ariaLabelledBy"
+    | "clearable"
+    | "describedBy"
+    | "disabled"
+    | "id"
+    | "invalid"
+    | "maximum"
+    | "maxVisibleChips"
+    | "onClose"
+    | "variant"
+    | MultiSelectRecipeArg
+  > & {
+    /** Held topic ids. */
+    value?: number | readonly number[] | null;
+    /** Holds several topics; defaults to one, as DSelect does. */
+    multiple?: boolean;
+    /**
+     * Search filters added to every query, such as `status:public`. With filters, topics are
+     * listed before anything is typed.
+     */
+    additionalFilters?: string;
+    /**
+     * The archetype a typed search is restricted to: regular topics by default, or messages.
+     * `null` searches every topic the term finds.
+     */
+    archetype?: TopicPickerArchetype | null;
+    /** Topic ids never offered, such as the topic being moved from. */
+    exclude?: readonly number[];
+    /** Held topics already in hand, shown without a lookup. */
+    topics?: readonly object[];
+    /** The picker's texts, over its defaults: the engine's and `unresolved`. */
+    texts?: SelectTexts<SelectTopicTextKey>;
+    /** Receives the held ids and their topics: arrays when multiple, otherwise one id or `null`. */
+    onChange?: TopicChangeHandler;
+  };
+  Element: HTMLElement;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
+}
+
+/**
+ * Picks topics from the site search, by title, pasted URL or id. Held topics are looked up
+ * together, whether or not the user muted them.
+ */
+export default class DSelectTopic extends Component<DSelectTopicSignature> {
+  /**
+   * The picker's texts, named after what it searches and whether it holds more than one. The
+   * field invites a search, since a topic is found only by searching.
+   */
+  kindTexts: SelectTexts = {
+    ...TOPIC_TEXTS,
+    ariaLabel: (_values, context) =>
+      topicPickerName({
+        plural: context.multiple && this.args.maximum !== 1,
+        archetype: this.archetype,
+      }),
+    placeholder: () => topicSearchPlaceholder(this.archetype),
+    searchPlaceholder: () => topicSearchPlaceholder(this.archetype),
+  };
+
+  constructor(owner: Owner, args: DSelectTopicSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectTopic", args);
+  }
+
+  /** Regular topics unless the call site names another archetype, or none. */
+  get archetype(): TopicPickerArchetype | null {
+    return this.args.archetype === undefined ? "regular" : this.args.archetype;
+  }
+
+  get legacyKind() {
+    return this.args.legacyKind ?? "topic-chooser";
+  }
+
+  get loadContext() {
+    return {
+      additionalFilters: this.args.additionalFilters,
+      archetype: this.archetype,
+      exclude: this.args.exclude ?? [],
+    };
+  }
+
+  get valueRecords() {
+    return this.args.topics as SelectRecord[] | undefined;
+  }
+
+  @action
+  async load(filter: string) {
+    const topics = await searchTopics(filter, {
+      additionalFilters: this.args.additionalFilters,
+      archetype: this.archetype,
+    });
+    const exclude = this.args.exclude ?? [];
+    return topics.filter((topic) => !exclude.includes(topic.id as number));
+  }
+
+  @action
+  onChange(value: SelectValue, records: SelectRecord | SelectRecord[] | null) {
+    emitTopicChange(this.args.onChange, !!this.args.multiple, value, records);
+  }
+
+  <template>
+    {{! TODO (select-kit-replacement-cleanup): Retain the legacy family classes during rollout. }}
+    <DSelect
+      ...attributes
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @clearable={{@clearable}}
+      @createUnresolvedRecord={{unresolvedTopic}}
+      @describedBy={{@describedBy}}
+      @disabled={{@disabled}}
+      @id={{@id}}
+      @identifier={{@identifier}}
+      @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
+      @kind="select-topic"
+      @kindContext={{hash
+        value=@value
+        additionalFilters=@additionalFilters
+        archetype=this.archetype
+        exclude=@exclude
+      }}
+      @kindTexts={{this.kindTexts}}
+      @labelField="title"
+      @legacyKind={{this.legacyKind}}
+      @load={{this.load}}
+      @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
+      @maximum={{@maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @onClose={{@onClose}}
+      @resolveValues={{findHeldTopics}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{@value}}
+      @valueRecords={{this.valueRecords}}
+      @variant={{@variant}}
+    >
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
+        {{else}}
+          <TopicOption @record={{record}} />
+        {{/if}}
+      </:option>
+      <:selection as |record config|>
+        {{#if (has-block "selection")}}
+          {{yield record config to="selection"}}
+        {{else}}
+          <TopicSelection @record={{record}} @withCategory={{not @multiple}} />
+        {{/if}}
+      </:selection>
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
+      </:footer>
+    </DSelect>
+  </template>
+}

@@ -8,6 +8,7 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import form from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
@@ -1499,5 +1500,21 @@ acceptance("Admin - MCP", function (needs) {
       "/admin/config/mcp/access",
       "restoring the saved value allows navigation without a dirty-form warning"
     );
+  });
+
+  test("adds group access for a picked group with the new controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/config/mcp/access/new");
+
+    const groups = dSelect(".admin-mcp__access-form .d-select.group-chooser");
+    await groups.open();
+    assert
+      .dom("[role='option'][data-value='1']")
+      .doesNotExist("a group that already has access isn't offered");
+    assert.dom("[role='option'][data-value='2']").exists();
+    await groups.selectByName("moderators");
+    await click(".admin-mcp__access-form .btn-primary");
+
+    assert.strictEqual(savedAccessRule.groupId, "2");
   });
 });

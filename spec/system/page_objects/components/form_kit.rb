@@ -40,7 +40,17 @@ module PageObjects
         when "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
+        when "d-select", "d-select-multi"
+          component.find(".d-select")["data-value"]
+        when "category-chooser"
+          if component.has_css?(".form-kit__control-category-chooser.d-select", wait: 0)
+            return UiKit::DSelect.at(category_chooser_selector).value
+          end
+
+          PageObjects::Components::SelectKit.new(category_chooser_selector).value
         when "tag-chooser"
+          return tag_chooser_d_select.value if tag_chooser_d_select?
+
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
@@ -113,7 +123,9 @@ module PageObjects
 
         return type if type != "custom"
 
-        if component.has_css?(".multi-select")
+        if component.has_css?(".d-select", wait: 0)
+          component.has_css?(".d-select.--multiple", wait: 0) ? "d-select-multi" : "d-select"
+        elsif component.has_css?(".multi-select")
           "multi-select"
         elsif component.has_css?("textarea")
           "textarea"
@@ -156,6 +168,9 @@ module PageObjects
           picker = PageObjects::Components::DIconGridPicker.new(component)
           picker.expand
           picker.select_icon(value)
+        when "d-select", "d-select-multi"
+          select_id = Capybara::Selector::CSS.escape(component.find(".d-select")["data-select-id"])
+          UiKit::DSelect.at(".d-select[data-select-id=\"#{select_id}\"]").select_value(value)
         when "multi-select"
           selector = component.find(".form-kit__control-custom > .multi-select")["id"]
           picker = PageObjects::Components::SelectKit.new("#" + selector)
@@ -163,7 +178,26 @@ module PageObjects
           picker.search(value)
           picker.select_row_by_name(value)
           picker.collapse
+        when "category-chooser"
+          if component.has_css?(".form-kit__control-category-chooser.d-select", wait: 0)
+            picker = UiKit::DSelect.at(category_chooser_selector)
+            picker.select_value(value)
+            picker.close
+          else
+            picker = PageObjects::Components::SelectKit.new(category_chooser_selector)
+            picker.expand
+            picker.select_row_by_value(value)
+            picker.collapse
+          end
         when "tag-chooser"
+          if tag_chooser_d_select?
+            picker = tag_chooser_d_select
+            picker.search(value)
+            picker.select_name(value)
+            picker.close
+            return
+          end
+
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.expand
           picker.search(value)
@@ -231,7 +265,11 @@ module PageObjects
 
       def has_selected_names?(*names)
         if control_type == "tag-chooser"
-          PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+          if tag_chooser_d_select?
+            tag_chooser_d_select.has_selected_names?(*names)
+          else
+            PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+          end
         else
           raise "'has_selected_names?' is only supported for control type: tag-chooser"
         end
@@ -246,6 +284,18 @@ module PageObjects
       end
 
       private
+
+      def category_chooser_selector
+        "[data-name='#{component["data-name"]}'] .form-kit__control-category-chooser"
+      end
+
+      def tag_chooser_d_select?
+        component.has_css?(".form-kit__control-tag-chooser.d-select", wait: 0)
+      end
+
+      def tag_chooser_d_select
+        UiKit::DSelect.at(tag_chooser_selector)
+      end
 
       def tag_chooser_selector
         "[data-name='#{component["data-name"]}'] .form-kit__control-tag-chooser"

@@ -125,7 +125,8 @@ module(
       assert
         .dom(this.subject.rowByIndex(3).el())
         .hasText(
-          "Parent Category+ SubcategoriesSub Category× 95+ Subcategories"
+          "Parent CategorySub Category× 95+ Subcategories",
+          "the note follows the category, not its ancestors"
         );
       assert
         .dom(this.subject.rowByIndex(4).el())

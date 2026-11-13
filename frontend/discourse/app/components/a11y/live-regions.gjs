@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 
 /**
  * What the regions hold when there is nothing to say.
@@ -28,28 +29,38 @@ export default class A11yLiveRegions extends Component {
     return this.a11y.assertiveMessage || IDLE_ANNOUNCEMENT;
   }
 
+  get atRoot() {
+    return !this.a11y.liveRegionOutlet;
+  }
+
   get politeMessage() {
     return this.a11y.politeMessage || IDLE_ANNOUNCEMENT;
   }
 
   <template>
-    <div
-      aria-atomic="true"
-      aria-live="polite"
-      class="sr-only"
-      id="a11y-announcements-polite"
-      role="status"
+    <DConditionalInElement
+      @append={{true}}
+      @element={{this.a11y.liveRegionOutlet}}
+      @inline={{this.atRoot}}
     >
-      {{this.politeMessage}}
-    </div>
-    <div
-      aria-atomic="true"
-      aria-live="assertive"
-      class="sr-only"
-      id="a11y-announcements-assertive"
-      role="alert"
-    >
-      {{this.assertiveMessage}}
-    </div>
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="sr-only"
+        id="a11y-announcements-polite"
+        role="status"
+      >
+        {{this.politeMessage}}
+      </div>
+      <div
+        aria-atomic="true"
+        aria-live="assertive"
+        class="sr-only"
+        id="a11y-announcements-assertive"
+        role="alert"
+      >
+        {{this.assertiveMessage}}
+      </div>
+    </DConditionalInElement>
   </template>
 }

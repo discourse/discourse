@@ -2,6 +2,7 @@
   "include": [
     "./app/**/*",
     "./tests/**/*",
+    "./tests/fixtures/*.json",
     "./admin/**/*",
     "./select-kit/**/*",
     "./float-kit/**/*",

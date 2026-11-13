@@ -83,11 +83,9 @@ module(
         '.d-access-control__row[data-row-id="42"] .d-access-control__permission'
       );
       assert
-        .dom('.d-access-control__permission-option[data-permission-id="edit"]')
+        .dom("[role='option'][data-value='edit']")
         .doesNotExist("filters banned permissions by key");
-      await click(
-        '.d-access-control__permission-option[data-permission-id="view"]'
-      );
+      await click("[role='option'][data-value='view']");
       await formKit().submit();
       assert.true(
         this.onSubmit.calledOnce,
@@ -203,9 +201,7 @@ module(
         await click(
           ".workflows-access-control__permission .d-access-control__permission"
         );
-        await click(
-          '.d-access-control__permission-option[data-permission-id="edit"]'
-        );
+        await click("[role='option'][data-value='edit']");
         const chooser = selectKit(".d-access-control__chooser");
         await chooser.expand();
         await chooser.selectRowByValue("group:42");
@@ -264,9 +260,7 @@ module(
         await click(
           ".workflows-access-control__permission .d-access-control__permission"
         );
-        await click(
-          '.d-access-control__permission-option[data-permission-id="view"]'
-        );
+        await click("[role='option'][data-value='view']");
         await formKit().submit();
         assert.strictEqual(
           this.onSubmit.firstCall.args[0].permissions.group_ids,

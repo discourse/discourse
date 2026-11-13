@@ -1,4 +1,6 @@
-import { find, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { trustHTML } from "@ember/template";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -221,3 +223,104 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | DVirtualList | sticky leading count changes",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(() => enableVirtualization());
+    hooks.afterEach(() => disableVirtualization());
+
+    test("changing the count repositions retained rows and updates measured scroll padding", async function (assert) {
+      const count = tracked(2);
+      const height = tracked(60);
+      const items = buildRows(100);
+      const rowStyle = (size) => trustHTML(`height: ${size}px`);
+      let api;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DVirtualList
+            @estimateSize={{estimate}}
+            @items={{items}}
+            @key="id"
+            @onRegisterApi={{register}}
+            @stickyCount={{count.value}}
+            as |item|
+          >
+            <div style={{rowStyle height.value}}>{{item.text}}</div>
+          </DVirtualList>
+        </template>
+      );
+
+      const row = () => find(".d-virtual-list__item[data-index='1']");
+      const padding = () =>
+        parseFloat(getComputedStyle(find(".d-virtual-list")).scrollPaddingTop);
+      assert.strictEqual(
+        padding(),
+        120,
+        "the zone uses measured heights rather than estimates"
+      );
+      count.value = 1;
+      await settled();
+      assert.strictEqual(
+        row().style.position,
+        "absolute",
+        "a retained row stops sticking"
+      );
+      assert.strictEqual(
+        row().style.zIndex,
+        "",
+        "the former sticky row clears its stacking order"
+      );
+      assert.strictEqual(
+        row().style.top,
+        "0px",
+        "absolute placement resets the sticky offset"
+      );
+      assert.strictEqual(padding(), 60, "padding shrinks with the zone");
+      height.value = 80;
+      await settled();
+      api.measure();
+      await settled();
+      assert.strictEqual(padding(), 80, "padding follows a sticky row resize");
+      count.value = 0;
+      await settled();
+      assert.strictEqual(
+        padding(),
+        0,
+        "removing stickiness clears scroll padding"
+      );
+      count.value = 2;
+      await settled();
+      assert.strictEqual(
+        row().style.position,
+        "sticky",
+        "a retained row starts sticking again"
+      );
+      assert.strictEqual(
+        padding(),
+        160,
+        "the rebuilt zone uses both measured rows"
+      );
+      api.scrollToIndex(50, { align: "start" });
+      await settled();
+      const target = find(
+        ".d-virtual-list__item[data-index='50']"
+      ).getBoundingClientRect();
+      assert.true(
+        target.top >= row().getBoundingClientRect().bottom - 1,
+        "imperative reveal uses the resized zone"
+      );
+    });
+  }
+);

@@ -244,7 +244,12 @@ module PageObjects
       end
 
       def category_chooser
-        Components::SelectKit.new(".category-chooser")
+        selector = ".category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          Components::UiKit::DSelect.at(selector)
+        else
+          Components::SelectKit.new(selector)
+        end
       end
 
       def locale
@@ -257,8 +262,13 @@ module PageObjects
       end
 
       def switch_category(category_name)
-        category_chooser.expand
-        category_chooser.select_row_by_name(category_name)
+        chooser = category_chooser
+        if chooser.is_a?(Components::UiKit::DSelect)
+          chooser.select_name(category_name)
+        else
+          chooser.expand
+          chooser.select_row_by_name(category_name)
+        end
       end
 
       def preview
@@ -461,6 +471,16 @@ module PageObjects
       end
 
       def select_pm_user(username)
+        # TODO (select-kit-replacement-cleanup): Keep only the new control once rollout completes.
+        if page.has_css?("#{@composer_id} .d-select.user-chooser", wait: 0)
+          recipients =
+            PageObjects::Components::UiKit::DSelect.at("#{@composer_id} .d-select.user-chooser")
+          recipients.search(username)
+          recipients.select_value(username)
+          recipients.close
+          return
+        end
+
         select_kit = PageObjects::Components::SelectKit.new("#private-message-users")
         select_kit.expand
         select_kit.search(username)

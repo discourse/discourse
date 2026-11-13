@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Edit Category Tags" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:category)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
@@ -41,5 +43,75 @@ describe "Edit Category Tags" do
     expect(tag_chooser).to have_option_name("tag1")
     expect(tag_chooser).to have_option_name("tag2") # from tag group
     expect(tag_chooser).to have_no_option_name("tag3")
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    let(:allowed_tags_chooser) do
+      PageObjects::Components::UiKit::DSelect.at("#control-allowed_tags .tag-chooser")
+    end
+    let(:allowed_tag_groups_chooser) do
+      PageObjects::Components::UiKit::DSelect.at("#category-allowed-tag-groups")
+    end
+    let(:required_tag_group_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(
+        "[data-name='required_tag_groups.0.name'] .tag-group-chooser",
+      )
+    end
+
+    it "restricts topic tags to those picked with the new select controls" do
+      category_page.visit_tags(category)
+
+      allowed_tags_chooser.open
+      allowed_tags_chooser.search("tag1")
+      allowed_tags_chooser.select_name("tag1")
+      allowed_tags_chooser.close
+
+      allowed_tag_groups_chooser.open
+      allowed_tag_groups_chooser.search("My Group")
+      allowed_tag_groups_chooser.select_name("My Group")
+      allowed_tag_groups_chooser.close
+
+      category_page.save_settings
+
+      try_until_success(reason: "saving the category tags") do
+        expect(category.reload.tags.pluck(:name)).to contain_exactly("tag1")
+        expect(category.tag_groups).to contain_exactly(tag_group)
+      end
+
+      visit "/new-topic?category_id=#{category.id}"
+      composer.fill_title("Test topic with restricted tags")
+
+      tag_chooser = PageObjects::Components::UiKit::DSelect.at(".tags-input .mini-tag-chooser")
+      tag_chooser.open
+      expect(tag_chooser).to have_option_name("tag1")
+      expect(tag_chooser).to have_option_name("tag2") # from tag group
+      expect(tag_chooser).to have_no_option_name("tag3")
+    end
+
+    it "sets a required tag group with the new select controls" do
+      category_page.visit_tags(category)
+
+      find(".add-required-tag-group").click
+      required_tag_group_chooser.open
+      required_tag_group_chooser.search("My Group")
+      required_tag_group_chooser.select_name("My Group")
+      required_tag_group_chooser.close
+
+      expect(required_tag_group_chooser).to have_selected_name("My Group")
+
+      category_page.save_settings
+
+      try_until_success(reason: "saving the required tag group") do
+        required = category.reload.category_required_tag_groups
+        expect(required.map(&:tag_group)).to contain_exactly(tag_group)
+        expect(required.first.min_count).to eq(1)
+      end
+
+      page.refresh
+
+      expect(required_tag_group_chooser).to have_selected_name("My Group")
+    end
   end
 end

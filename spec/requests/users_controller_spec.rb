@@ -3410,6 +3410,17 @@ RSpec.describe UsersController do
       expect(user1.reload.name).to_not eq("test.test")
     end
 
+    it "saves the featured topic with the profile" do
+      SiteSetting.allow_featured_topic_on_user_profiles = true
+      topic = Fabricate(:topic)
+      sign_in(user1)
+
+      put "/u/#{user1.username}.json", params: { featured_topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(user1.reload.user_profile.featured_topic_id).to eq(topic.id)
+    end
+
     context "when username contains a period" do
       before { sign_in(user) }
 
@@ -7042,6 +7053,17 @@ RSpec.describe UsersController do
 
         expect(json["users"].map { |u| u["username"] }).to contain_exactly(users.first.username)
         expect(json["groups"].map { |u| u["name"] }).to contain_exactly(group.name)
+      end
+
+      it "finds groups whose names have capitals" do
+        group = Fabricate(:group, name: "Support_Team")
+
+        sign_in(user)
+
+        get "/u/search/users.json", params: { usernames: "Support_Team", include_groups: true }
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["groups"].map { |g| g["name"] }).to contain_exactly(group.name)
       end
     end
 

@@ -8,7 +8,7 @@ export default <template>
   <StyleguideExample
     @code={{virtualListSource}}
     @description="Thousands of rows, of which only the visible window plus overscan is in the DOM. The list opens already scrolled to the selected row."
-    @title="<DVirtualList> — pinned rows and an initial selection"
+    @title="<DVirtualList> — rows kept mounted and an initial selection"
   >
     <:tryThis>
       Scroll far away from the selection and inspect the DOM: the selected row

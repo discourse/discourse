@@ -1,0 +1,456 @@
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import type Owner from "@ember/owner";
+import { service } from "@ember/service";
+import { continueWith } from "discourse/lib/continue-with";
+import { makeArray } from "discourse/lib/helpers";
+import Category from "discourse/models/category";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
+import {
+  CategoryBadge,
+  categoryDescription,
+  categoryRecord,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-renderers";
+import type {
+  CategoryRecord,
+  CategorySettings,
+  CategoryValue,
+} from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
+import {
+  renderSelectText,
+  type SelectConfig,
+  type SelectControl,
+  type SelectCoreTextKey,
+  type SelectLoadRequest,
+  type SelectOption,
+  selectOption,
+  type SelectSnapshot,
+  type SelectTexts,
+  type SelectValue,
+} from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
+
+/** Category picker arguments and the engine's forwarded presentation contract. */
+interface DSelectCategorySignature {
+  Args: Pick<
+    DSelectSignature["Args"],
+    | "maximum"
+    | "maxVisibleChips"
+    | "clearable"
+    | "disabled"
+    | "ariaLabelledBy"
+    | "id"
+    | "describedBy"
+    | "invalid"
+    | "icon"
+    | "variant"
+    | "onClose"
+    | "noneOption"
+    | MultiSelectRecipeArg
+  > & {
+    /** Held ids, numeric strings or category records. */
+    value?: CategoryValue | readonly CategoryValue[] | null;
+    /** Receives site records by default, or stored ids with `@emit="ids"`. */
+    onChange?: (
+      value:
+        | Category[]
+        | Category
+        | (number | string)[]
+        | number
+        | string
+        | null
+    ) => void;
+    /** Output representation; unresolved ids are kept only in ids mode. */
+    emit?: "objects" | "ids";
+    /** Select several categories. */
+    multiple?: boolean;
+    /** Requires visibility by default, or permission to create topics. */
+    permission?: "see" | "create";
+    /** Includes Uncategorized; defaults to true in multiple mode, otherwise the site setting. */
+    uncategorized?: boolean;
+    /** Includes categories with parents; defaults to true. */
+    subcategories?: boolean;
+    /** Browses this category's parent's family, or its own family at the top level. */
+    scope?: CategoryValue;
+    /** Lists the same one-level-up family's tree first while browsing. */
+    prioritize?: CategoryValue;
+    /** Category ids offered only as disabled rows, described as read-only. */
+    disabledCategories?: number | string | readonly (number | string)[];
+    /** Categories never offered; a held one stays selected. */
+    exclude?: readonly (number | string)[];
+    /** The picker's texts, over its defaults: the engine's, `readOnlyDescription` and `familyFooter`. */
+    texts?: SelectTexts<
+      SelectCoreTextKey | "readOnlyDescription" | "familyFooter"
+    >;
+    /** Shows transformed plain-text descriptions; defaults to single mode. */
+    descriptions?: boolean;
+    /** Includes ancestor badges on held selections. */
+    showAncestors?: boolean;
+    /**
+     * Follows each category with children, in a search of two or more characters, with a row
+     * that adds the category and every level below it; defaults to multiple mode.
+     */
+    selectDescendants?: boolean;
+  };
+  Element: HTMLElement;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
+}
+
+/**
+ * Picks categories to store through one search, `Category.searchCategories`, which answers
+ * synchronously when the site has every category and from the server otherwise.
+ */
+export default class DSelectCategory extends Component<DSelectCategorySignature> {
+  @service declare siteSettings: CategorySettings;
+
+  /**
+   * The recipe's texts. The name is the only one the control is announced by; the placeholder is
+   * only drawn, and multiple pickers keep the select's own.
+   */
+  kindTexts: SelectTexts = {
+    ariaLabel: (_values, context) =>
+      context.multiple && this.args.maximum !== 1
+        ? i18n("categories.categories")
+        : i18n("categories.category"),
+    placeholder: (_values, context) =>
+      context.multiple ? undefined : this.#singlePlaceholder,
+    readOnlyDescription: i18n("category_row.read_only_description"),
+    // The badge draws no count of zero, so neither does the label.
+    familyFooter: ({ category, count }) =>
+      count
+        ? i18n("category.select_with_subcategories_count", { category, count })
+        : i18n("category.select_with_subcategories", { category }),
+  };
+
+  constructor(owner: Owner, args: DSelectCategorySignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectCategory", args);
+  }
+
+  get legacyKind() {
+    if (this.args.legacyKind) {
+      return this.args.legacyKind;
+    }
+    return this.args.multiple ? "category-selector" : "category-chooser";
+  }
+
+  @cached
+  get selectedIds() {
+    const ids = makeArray(
+      this.args.value as CategoryValue | CategoryValue[] | null | undefined
+    ).map((entry) => (typeof entry === "object" ? entry.id : Number(entry)));
+    return this.args.multiple ? ids : (ids[0] ?? null);
+  }
+
+  get #disabledIds(): number[] {
+    return makeArray(
+      this.args.disabledCategories as number | string | (number | string)[]
+    ).map(Number);
+  }
+
+  get #uncategorized() {
+    return (
+      this.args.uncategorized ??
+      (this.args.multiple || this.siteSettings.allow_uncategorized_topics)
+    );
+  }
+
+  /** Ports the single chooser's empty header. */
+  get #singlePlaceholder() {
+    return (
+      (!this.#disabledIds.length && this.#uncategorized
+        ? Category.findUncategorized()?.name
+        : undefined) || i18n("category.choose")
+    );
+  }
+
+  /** Every input of the search; `categories` reloads an open list when the site gains one. */
+  get loadContext() {
+    return {
+      permission: this.args.permission,
+      scope: this.args.scope,
+      prioritize: this.args.prioritize,
+      exclude: this.args.exclude,
+      disabledCategories: this.args.disabledCategories,
+      uncategorized: this.#uncategorized,
+      subcategories: this.args.subcategories,
+      descriptions: this.args.descriptions,
+      multiple: this.args.multiple,
+      selectDescendants: this.args.selectDescendants,
+      treeOrder: this.#treeOrder,
+      categories: Category.localSearchCategories(),
+    };
+  }
+
+  get #treeOrder(): "topics" | "position" {
+    return this.siteSettings.fixed_category_positions_on_create
+      ? "position"
+      : "topics";
+  }
+
+  @action
+  load(query: string, opts: SelectLoadRequest) {
+    // The pinned rows and the family ids below read these records synchronously from the site.
+    const ids = [
+      ...[this.args.scope, this.args.prioritize].map((value) =>
+        this.#idOf(value)
+      ),
+      ...this.#disabledIds,
+    ].filter((id) => id != null);
+    return continueWith(Category.findByIdsOrLoad(ids), () =>
+      // The scope's family root may be a parent the first lookup did not cover.
+      continueWith(
+        Category.findByIdsOrLoad(
+          [this.#familyId(this.args.scope)].filter((id) => id != null)
+        ),
+        () => this.#search(query, opts)
+      )
+    );
+  }
+
+  @action
+  async resolveValues(values: unknown[]) {
+    const records = await Category.asyncFindByIds(
+      values as (number | string)[]
+    );
+    return records.map((category) => categoryRecord(category));
+  }
+
+  /**
+   * Options the search leaves out. A scope lists its family's children, so its root is pinned
+   * while browsing. Disabled categories are excluded from the search, so they are always
+   * offered as pinned options whenever they match, and are never grouped or given a footer.
+   */
+  @action
+  extraOptions(
+    snapshot: SelectSnapshot,
+    config: SelectConfig
+  ): SelectOption<CategoryRecord>[] {
+    const root = snapshot.filter ? undefined : this.#familyId(this.args.scope);
+    const roots = Category.findByIds(root == null ? [] : [root]).filter(
+      this.#categoryAllowed()
+    );
+    const disabled = Category.findByIds(this.#disabledIds).filter((category) =>
+      Category.matchesSearch(category, snapshot.filter)
+    );
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
+    const readOnlyDescription =
+      renderSelectText(config, "readOnlyDescription") || undefined;
+    return [...new Set([...roots, ...disabled])].map((category) => {
+      const option = selectOption(categoryRecord(category), {
+        description: descriptions ? categoryDescription(category) : undefined,
+      });
+      return disabled.includes(category)
+        ? option.with({
+            disabled: true,
+            description: readOnlyDescription ?? null,
+          })
+        : option;
+    });
+  }
+
+  /**
+   * A family's footer selects its key category and every level below it. It is offered only
+   * when the key category's option is shown, so it never acts on a family the search did not
+   * show, and never for a key category that can't be picked.
+   */
+  @action
+  groupFooter(
+    key: unknown,
+    options: readonly SelectOption[],
+    config: SelectConfig
+  ): SelectOption<CategoryRecord> | null {
+    const option =
+      key == null ? undefined : options.find(({ record }) => record.id === key);
+    const category = (option?.record as CategoryRecord | undefined)?.category;
+    if (!category || option!.disabled) {
+      return null;
+    }
+    return selectOption(
+      {
+        id: `category-descendants-${category.id}`,
+        // Names the category's own topic count, as the badge it draws shows it.
+        name: renderSelectText(config, "familyFooter", {
+          category: category.displayName,
+          count: category.topic_count,
+        }),
+        category,
+      },
+      { onSelect: (control) => this.#selectFamily(control, category) }
+    );
+  }
+
+  @action
+  onChange(value: SelectValue) {
+    const ids = makeArray(value) as (number | string)[];
+    const result = this.args.emit === "ids" ? ids : Category.findByIds(ids);
+    this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
+  }
+
+  #categoryAllowed() {
+    const excluded = new Set((this.args.exclude ?? []).map(Number));
+    const onlyPostable = this.args.permission === "create";
+    const uncategorized = this.#uncategorized;
+    const subcategories = this.args.subcategories !== false;
+    return (category: Category) =>
+      (!onlyPostable || category.canCreateTopic) &&
+      (uncategorized || !category.isUncategorizedCategory) &&
+      (subcategories || !category.parent_category_id) &&
+      !excluded.has(category.id!);
+  }
+
+  #idOf(value?: CategoryValue | null) {
+    return value && typeof value === "object" ? value.id : value;
+  }
+
+  /** The id of the family one level up from a category: its parent, or itself at the top. */
+  #familyId(value?: CategoryValue): number | undefined {
+    const category: Category | undefined = Category.findById(this.#idOf(value));
+    return category?.parent_category_id || category?.id;
+  }
+
+  #offersDescendants(query: string) {
+    return (
+      query.length >= 2 &&
+      this.args.multiple &&
+      this.args.selectDescendants !== false &&
+      this.args.subcategories !== false
+    );
+  }
+
+  /**
+   * Only a family's own category keeps its key, so it groups alone and its footer comes right
+   * after it, before the rest of the family. The key comes from the search that ordered the
+   * rows, so a later site update can never re-key a row that is already shown.
+   */
+  #search(query: string, opts: SelectLoadRequest) {
+    const groupFamilies = this.#offersDescendants(query);
+    const search = Category.searchCategories(query, {
+      groupFamilies: groupFamilies || undefined,
+      includeAncestors: true,
+      includeSubcategories: this.args.subcategories !== false,
+      includeUncategorized: this.#uncategorized,
+      onlyPostable: this.args.permission === "create",
+      page: opts.page,
+      parentCategoryId: query ? undefined : this.#familyId(this.args.scope),
+      prioritizedCategoryId: query
+        ? undefined
+        : this.#familyId(this.args.prioritize),
+      rejectCategoryIds: [
+        ...new Set([
+          ...(this.args.exclude ?? []).map(Number),
+          ...this.#disabledIds,
+        ]),
+      ],
+      treeOrder: query ? undefined : this.#treeOrder,
+    });
+    const descriptions = this.args.descriptions ?? !this.args.multiple;
+    return continueWith(
+      search,
+      ({ categories, categoriesCount, familyKeys }) => ({
+        options: categories.map((category) => {
+          const record = categoryRecord(category);
+          if (groupFamilies && familyKeys?.[category.id!] === category.id) {
+            record.familyKey = category.id;
+          }
+          return selectOption(record, {
+            description: descriptions
+              ? categoryDescription(category)
+              : undefined,
+          });
+        }),
+        total: categoriesCount,
+      })
+    );
+  }
+
+  #selectFamily(control: SelectControl, category: Category) {
+    void control.update(async (scope) => {
+      const descendants: Category[] =
+        await Category.asyncFindDescendants(category);
+      const allowed = this.#categoryAllowed();
+      const locked = new Set(this.#disabledIds);
+      scope.selectMany(
+        descendants
+          .filter((child) => !locked.has(child.id!) && allowed(child))
+          .map((child) => categoryRecord(child))
+      );
+    });
+  }
+
+  <template>
+    <DSelect
+      ...attributes
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @clearable={{@clearable}}
+      @describedBy={{@describedBy}}
+      @disabled={{@disabled}}
+      @extraOptions={{this.extraOptions}}
+      @groupBy="familyKey"
+      @groupDividers={{false}}
+      @groupFooter={{this.groupFooter}}
+      @icon={{@icon}}
+      @id={{@id}}
+      @identifier={{@identifier}}
+      @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
+      @kind="select-category"
+      @kindContext={{hash
+        value=@value
+        permission=(if @permission @permission "see")
+        scope=@scope
+        exclude=@exclude
+      }}
+      @kindTexts={{this.kindTexts}}
+      @legacyKind={{this.legacyKind}}
+      @load={{this.load}}
+      @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
+      @maximum={{@maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @multiple={{@multiple}}
+      @noneOption={{@noneOption}}
+      @onChange={{this.onChange}}
+      @onClose={{@onClose}}
+      @resolveValues={{this.resolveValues}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{this.selectedIds}}
+      @variant={{@variant}}
+    >
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
+        {{else}}
+          <CategoryBadge
+            @ancestors={{true}}
+            @counts={{true}}
+            @option={{option}}
+            @record={{record}}
+          />
+        {{/if}}
+      </:option>
+      <:groupFooter as |record|>
+        <CategoryBadge @counts={{true}} @family={{true}} @record={{record}} />
+      </:groupFooter>
+      <:selection as |record config|>
+        {{#if (has-block "selection")}}
+          {{yield record config to="selection"}}
+        {{else}}
+          <span class="d-category-selection">
+            <CategoryBadge @ancestors={{@showAncestors}} @record={{record}} />
+          </span>
+        {{/if}}
+      </:selection>
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
+      </:footer>
+    </DSelect>
+  </template>
+}

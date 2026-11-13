@@ -2,6 +2,7 @@ import { capitalize } from "@ember/string";
 import { isBlank } from "@ember/utils";
 import QUnit from "qunit";
 import { codeEditorValue } from "discourse/tests/helpers/code-editor-helper";
+import DSelectDOM from "discourse/tests/helpers/d-select-dom";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class FieldsetHelper {
@@ -50,6 +51,15 @@ class FieldHelper {
       return type;
     }
 
+    const select = this.element.querySelector(
+      ".form-kit__control-custom .d-select"
+    );
+    if (select) {
+      return select.classList.contains("--multiple")
+        ? "d-select-multiple"
+        : "d-select";
+    }
+
     if (this.element.querySelector(".form-kit__control-custom .multi-select")) {
       return "multi-select";
     }
@@ -69,6 +79,13 @@ class FieldHelper {
     this.context.dom(this.element).exists(`field '${this.name}' exists`);
 
     switch (this.resolvedControlType) {
+      case "d-select":
+      case "d-select-multiple": {
+        const select = new DSelectDOM(
+          this.element.querySelector(".form-kit__control-custom .d-select")
+        );
+        return select.root.dataset.value;
+      }
       case "image": {
         return this.element
           .querySelector(".form-kit__control-image a.lightbox")
@@ -136,8 +153,14 @@ class FieldHelper {
           `Calendar is a complex type, value can't be check from UI components`
         );
       }
+      case "category-chooser":
       case "tag-chooser": {
-        return this.element.querySelector(".select-kit-header")?.dataset?.value;
+        const select = this.element.querySelector(
+          ".form-kit__control-tag-chooser.d-select, .form-kit__control-category-chooser.d-select"
+        );
+        return select
+          ? select.dataset.value
+          : this.element.querySelector(".select-kit-header")?.dataset?.value;
       }
     }
   }

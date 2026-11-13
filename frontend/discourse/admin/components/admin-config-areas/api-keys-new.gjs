@@ -15,9 +15,11 @@ import {
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 /** @import { ApiKeyScopeDefinition, SelectedApiKeyScope } from "discourse/admin/lib/api-key-scopes" */
@@ -30,6 +32,7 @@ import { i18n } from "discourse-i18n";
  */
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service store;
+  @service siteSettings;
 
   @tracked username;
   @tracked loadingScopes = false;
@@ -183,14 +186,36 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <EmailGroupUserChooser
-                        @onChange={{fn this.updateUsername field}}
-                        @options={{hash
-                          maximum=1
-                          filterPlaceholder="admin.api.user_placeholder"
-                        }}
-                        @value={{this.username}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectUser
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @onChange={{legacyPickOne
+                            (fn this.updateUsername field)
+                          }}
+                          @texts={{hash
+                            ariaLabel=field.title
+                            placeholder=(i18n "admin.api.user_placeholder")
+                            searchPlaceholder=(i18n
+                              "admin.api.user_placeholder"
+                            )
+                          }}
+                          @value={{this.username}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <EmailGroupUserChooser
+                          @onChange={{fn this.updateUsername field}}
+                          @options={{hash
+                            maximum=1
+                            filterPlaceholder="admin.api.user_placeholder"
+                          }}
+                          @value={{this.username}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}

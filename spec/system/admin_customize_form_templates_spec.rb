@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Form Templates" do
+  with_select_controls(false)
+
   let(:form_template_page) { PageObjects::Pages::FormTemplate.new }
   let(:code_editor) { PageObjects::Components::CodeEditor.new }
 

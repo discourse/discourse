@@ -309,7 +309,11 @@ export default class DMenu<Data = unknown> extends Component<
     {{#if this.menuInstance.expanded}}
       {{#if this.menuInstance.renderInModal}}
         <DModal
-          aria-label={{this.options.ariaLabel}}
+          aria-label={{unless
+            this.options.ariaLabelledBy
+            this.options.ariaLabel
+          }}
+          aria-labelledby={{this.options.ariaLabelledBy}}
           class={{dConcatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")

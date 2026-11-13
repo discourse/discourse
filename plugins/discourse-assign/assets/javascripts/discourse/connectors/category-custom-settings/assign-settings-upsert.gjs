@@ -6,6 +6,7 @@ import {
   CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS,
 } from "discourse/lib/constants";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default class AssignSettingsUpsert extends Component {
@@ -88,12 +89,24 @@ export default class AssignSettingsUpsert extends Component {
             as |field|
           >
             <field.Control>
-              <GroupChooser
-                @content={{this.assignableGroups}}
-                @mandatoryValues={{this.assignAllowedMandatoryGroupIds}}
-                @onChange={{field.set}}
-                @value={{this.additionalAssignAllowedGroupIds}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectGroup
+                  @lockedValues={{this.globalAssignAllowedGroupIds}}
+                  @multiple={{true}}
+                  @onChange={{field.set}}
+                  @options={{this.assignableGroups}}
+                  @value={{this.additionalAssignAllowedGroupIds}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <GroupChooser
+                  @content={{this.assignableGroups}}
+                  @mandatoryValues={{this.assignAllowedMandatoryGroupIds}}
+                  @onChange={{field.set}}
+                  @value={{this.additionalAssignAllowedGroupIds}}
+                />
+              {{/if}}
             </field.Control>
           </customFields.Field>
 

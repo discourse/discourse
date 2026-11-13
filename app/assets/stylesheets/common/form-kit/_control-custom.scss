@@ -3,7 +3,8 @@
     width: 100%;
   }
 
-  .form-kit__control-custom > * {
+  // A menu or tooltip rendered in place sizes itself.
+  .form-kit__control-custom > :not(.fk-d-menu, .fk-d-tooltip__content) {
     width: 100% !important;
   }
 }

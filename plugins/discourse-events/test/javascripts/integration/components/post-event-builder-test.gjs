@@ -2,6 +2,8 @@ import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
@@ -357,6 +359,26 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
       moment(event.endsAt).toISOString(),
       "2022-07-01T11:00:00.000Z",
       "an end time at or before start is pushed an hour past start"
+    );
+  });
+
+  test("with the new select controls, picked hosts become the event's hosts", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [{ username: "bob", name: "Bob", avatar_template: "/a/{size}" }],
+      })
+    );
+    const event = eventWith();
+
+    await renderAdvanced(event);
+    const hosts = dSelect("[data-name='hosts'] .d-select");
+    await hosts.search("bo");
+    await hosts.selectByName("bob");
+
+    assert.deepEqual(
+      event.hosts.map((host) => host.username),
+      ["bob"]
     );
   });
 });

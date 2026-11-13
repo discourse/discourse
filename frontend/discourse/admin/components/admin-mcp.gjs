@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, fn } from "@ember/helper";
+import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -22,6 +22,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import { clipboardCopy } from "discourse/lib/utilities";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
@@ -34,6 +35,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 const CLIENT_PRESETS = {
@@ -91,6 +93,7 @@ export default class AdminMcp extends Component {
   @service router;
   @service site;
   @service toasts;
+  @service siteSettings;
 
   @tracked primitiveFilter = "";
   @tracked primitiveGroupBy = "scope";
@@ -1282,12 +1285,27 @@ export default class AdminMcp extends Component {
                 as |field|
               >
                 <field.Control>
-                  <GroupChooser
-                    @content={{this.availableAccessGroups}}
-                    @onChange={{field.set}}
-                    @options={{this.groupChooserOptions}}
-                    @value={{field.value}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectGroup
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
+                      @onChange={{legacyPickOne field.set}}
+                      @options={{this.availableAccessGroups}}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <GroupChooser
+                      @content={{this.availableAccessGroups}}
+                      @onChange={{field.set}}
+                      @options={{this.groupChooserOptions}}
+                      @value={{field.value}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
             {{/if}}

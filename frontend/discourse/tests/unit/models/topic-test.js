@@ -352,3 +352,105 @@ module("Unit | Model | topic", function (hooks) {
     assert.false(topic.bookmarked, "no bookmarks remain");
   });
 });
+
+module("Unit | Model | topic | updateTags", function (hooks) {
+  setupTest(hooks);
+
+  test("updateTags serializes tags before sending them", async function (assert) {
+    let body;
+    pretender.put("/t/1/tags", (request) => {
+      body = decodeURIComponent(request.requestBody);
+      return response({ success: "OK", tags: [] });
+    });
+    const topic = getOwner(this)
+      .lookup("service:store")
+      .createRecord("topic", { id: 1 });
+
+    await topic.updateTags([
+      { id: "foo", name: "foo", isNew: true },
+      { id: "5", name: "5", isNew: true },
+      { id: 7, name: "seven" },
+      "bar",
+    ]);
+
+    assert.true(body.includes("tags[0][name]=foo"), body);
+    assert.false(body.includes("tags[0][id]"), "a new tag carries no id");
+    assert.false(
+      body.includes("tags[1][id]"),
+      "a new tag named 5 is not tag id 5"
+    );
+    assert.true(body.includes("tags[2][id]=7"), "an existing tag keeps its id");
+    assert.true(body.includes("tags[3][name]=bar"), "a name becomes {name}");
+  });
+});
+
+module("Unit | Model | topic | findByIds", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.requests = [];
+    this.hiddenIds = new Set();
+
+    pretender.get("/topics/lookup.json", (request) => {
+      const ids = []
+        .concat(request.queryParams.topic_ids ?? [])
+        .map((id) => parseInt(id, 10));
+      this.requests.push(ids);
+
+      return response({
+        topics: ids
+          .filter((id) => !this.hiddenIds.has(id))
+          .map((id) => ({
+            id,
+            title: `Topic ${id}`,
+            fancy_title: `Topic ${id}`,
+          })),
+      });
+    });
+  });
+
+  test("looks up the topics in one request", async function (assert) {
+    const topics = await Topic.findByIds([3, 1]);
+
+    assert.deepEqual(this.requests, [[3, 1]]);
+    assert.deepEqual(
+      topics.map((topic) => topic.id),
+      [3, 1]
+    );
+    assert.true(topics[0] instanceof Topic, "answers topic models");
+    assert.strictEqual(topics[0].title, "Topic 3");
+  });
+
+  test("splits more ids than one request allows", async function (assert) {
+    const ids = Array.from({ length: 120 }, (_, index) => index + 1);
+
+    const topics = await Topic.findByIds(ids);
+
+    assert.deepEqual(
+      this.requests.map((request) => request.length),
+      [50, 50, 20]
+    );
+    assert.deepEqual(
+      topics.map((topic) => topic.id),
+      ids
+    );
+  });
+
+  test("leaves out the topics the server does not answer", async function (assert) {
+    this.hiddenIds.add(2);
+
+    const topics = await Topic.findByIds([1, 2, 3]);
+
+    assert.deepEqual(
+      topics.map((topic) => topic.id),
+      [1, 3]
+    );
+  });
+
+  test("asks nothing without ids", async function (assert) {
+    const topics = await Topic.findByIds([]);
+
+    assert.deepEqual(topics, []);
+    assert.deepEqual(this.requests, []);
+  });
+});

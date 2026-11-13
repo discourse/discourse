@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Post event" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:user, :admin)
   fab!(:group)

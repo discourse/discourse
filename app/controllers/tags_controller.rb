@@ -407,11 +407,16 @@ class TagsController < ::ApplicationController
     end
 
     Tags::Search.call(service_params) do
-      on_success do |tags:, forbidden:, forbidden_message:, required_tag_group:|
+      on_success do |tags:, forbidden:, forbidden_message:, forbidden_names:, required_tag_group:, remaining_required_tag_count:|
         json_response = { results: tags }
         json_response[:forbidden] = forbidden if forbidden
+        json_response[:forbidden_names] = forbidden_names if forbidden_names
         json_response[:forbidden_message] = forbidden_message if forbidden_message
-        json_response[:required_tag_group] = required_tag_group if required_tag_group
+        if required_tag_group
+          json_response[:required_tag_group] = required_tag_group.merge(
+            remaining_count: remaining_required_tag_count,
+          )
+        end
         render json: json_response
       end
       on_failed_contract do |contract|
@@ -636,6 +641,8 @@ class TagsController < ::ApplicationController
             target ? { id: target.id, name: target.name, slug: target.slug } : nil
           end,
       }
+
+      attrs[:original_name] = t.name if tag_name != t.name
 
       if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
         attrs[:pm_count] = t.pm_topic_count

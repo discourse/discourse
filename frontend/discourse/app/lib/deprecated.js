@@ -32,6 +32,8 @@ let emberDeprecationSilencer;
  * @param {String} [options.url] A URL which provides more detail about the deprecation
  * @param {boolean} [options.reportAtCallSite] Attribute test reports to the code calling deprecated(), rather than its caller. Defaults to `false`
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
+ * @param {{ type: string, name?: string, id?: number, path?: string }} [options.source] The theme or plugin
+ *   responsible, when the caller knows it; otherwise it is identified from the stack
  */
 export default function deprecated(msg, options = {}) {
   const { id, source } = options;

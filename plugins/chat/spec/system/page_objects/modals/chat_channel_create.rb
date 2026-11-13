@@ -10,8 +10,13 @@ module PageObjects
       end
 
       def select_category(category)
-        find(".category-chooser").click
-        find(".category-row[data-value=\"#{category.id}\"]").click
+        selector = ".category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector).select_value(category.id)
+        else
+          find(selector).click
+          find(".category-row[data-value=\"#{category.id}\"]").click
+        end
       end
 
       def select_emoji(emoji)

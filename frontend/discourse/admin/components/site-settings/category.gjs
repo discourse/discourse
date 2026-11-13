@@ -1,12 +1,31 @@
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import { i18n } from "discourse-i18n";
 
-const Category = <template>
-  <CategoryChooser
-    @onChange={{@changeValueCallback}}
-    @options={{hash allowUncategorized=true none=(eq @setting.default "")}}
-    @value={{@value}}
-  />
-</template>;
+export default class Category extends Component {
+  @service siteSettings;
 
-export default Category;
+  <template>
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <DSelectCategory
+        class="category-chooser"
+        @emit="ids"
+        @onChange={{@changeValueCallback}}
+        @permission="create"
+        @texts={{hash ariaLabel=@label placeholder=(i18n "category.none")}}
+        @uncategorized={{true}}
+        @value={{@value}}
+      />
+    {{else}}
+      <CategoryChooser
+        @onChange={{@changeValueCallback}}
+        @options={{hash allowUncategorized=true none=(eq @setting.default "")}}
+        @value={{@value}}
+      />
+    {{/if}}
+  </template>
+}

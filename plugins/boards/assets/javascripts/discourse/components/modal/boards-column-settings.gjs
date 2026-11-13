@@ -2,15 +2,20 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import {
   ASSIGNED_OPTIONS,
@@ -24,6 +29,8 @@ import {
 import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsColumnSettings extends Component {
+  @service siteSettings;
+
   @tracked showAdvanced = false;
 
   @cached
@@ -66,6 +73,11 @@ export default class BoardsColumnSettings extends Component {
   onTagChange(field, tags) {
     const tag = tags?.[0];
     field.set(typeof tag === "object" ? tag.name : tag || "");
+  }
+
+  @action
+  onSingleTagChange(field, name) {
+    field.set(name || "");
   }
 
   @action
@@ -187,15 +199,30 @@ export default class BoardsColumnSettings extends Component {
                 as |field|
               >
                 <field.Control>
-                  <MiniTagChooser
-                    @onChange={{fn this.onTagChange field}}
-                    @options={{hash
-                      maximum=1
-                      allowCreate=true
-                      categoryId=this.tagChooserCategoryId
-                    }}
-                    @value={{tagToArray data.tag_name}}
-                  />
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    <DSelectTag
+                      @allowCreate={{true}}
+                      @categoryId={{this.tagChooserCategoryId}}
+                      @emit="names"
+                      @legacyKind="mini-tag-chooser"
+                      @multiple={{false}}
+                      @onChange={{fn this.onSingleTagChange field}}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{data.tag_name}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    <MiniTagChooser
+                      @onChange={{fn this.onTagChange field}}
+                      @options={{hash
+                        maximum=1
+                        allowCreate=true
+                        categoryId=this.tagChooserCategoryId
+                      }}
+                      @value={{tagToArray data.tag_name}}
+                    />
+                  {{/if}}
                   <p class="discourse-boards-column-settings__help">
                     {{i18n "boards.manage.columns.tag_help"}}
                   </p>
@@ -232,11 +259,24 @@ export default class BoardsColumnSettings extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <CategoryChooser
-                        @onChange={{fn this.onCategoryChange field}}
-                        @options={{hash clearable=true}}
-                        @value={{readonly data.move_to_category_id}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectCategory
+                          class="category-chooser"
+                          @clearable={{true}}
+                          @emit="ids"
+                          @onChange={{fn this.onCategoryChange field}}
+                          @permission="create"
+                          @texts={{hash ariaLabel=field.title}}
+                          @value={{readonly data.move_to_category_id}}
+                        />
+                      {{else}}
+                        <CategoryChooser
+                          @onChange={{fn this.onCategoryChange field}}
+                          @options={{hash clearable=true}}
+                          @value={{readonly data.move_to_category_id}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}
@@ -259,11 +299,26 @@ export default class BoardsColumnSettings extends Component {
                       @value={{assignedMode data.move_to_assigned}}
                     />
                     {{#if (eq (assignedMode data.move_to_assigned) "_user")}}
-                      <EmailGroupUserChooser
-                        @onChange={{fn this.onAssignedUserChange field}}
-                        @options={{hash maximum=1}}
-                        @value={{assignedUserValue data.move_to_assigned}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectUser
+                          @clearable={{true}}
+                          @onChange={{legacyPickOne
+                            (fn this.onAssignedUserChange field)
+                          }}
+                          @texts={{hash
+                            ariaLabel=(i18n "boards.board.assigned_to")
+                          }}
+                          @value={{assignedUserValue data.move_to_assigned}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <EmailGroupUserChooser
+                          @onChange={{fn this.onAssignedUserChange field}}
+                          @options={{hash maximum=1}}
+                          @value={{assignedUserValue data.move_to_assigned}}
+                        />
+                      {{/if}}
                     {{/if}}
                   </field.Control>
                 </form.Field>

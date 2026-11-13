@@ -28,10 +28,17 @@ module PageObjects
         words_selector.select_row_by_name(word)
         words_selector.collapse
 
-        tag_chooser = PageObjects::Components::SelectKit.new(".tag-chooser")
-        tag_chooser.expand
-        tag_chooser.search(tag_name)
-        tag_chooser.select_row_by_name(tag_name)
+        if find(".tag-chooser").matches_css?(".d-select", wait: 0)
+          tag_chooser = PageObjects::Components::UiKit::DSelect.at(".tag-chooser")
+          tag_chooser.search(tag_name)
+          tag_chooser.select_name(tag_name)
+          tag_chooser.close
+        else
+          tag_chooser = PageObjects::Components::SelectKit.new(".tag-chooser")
+          tag_chooser.expand
+          tag_chooser.search(tag_name)
+          tag_chooser.select_row_by_name(tag_name)
+        end
 
         page.find(".watched-words-detail .btn-primary").click
       end

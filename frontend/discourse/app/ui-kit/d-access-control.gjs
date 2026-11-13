@@ -2,20 +2,29 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectPermission from "discourse/ui-kit/select/recipes/permissions/d-select-permission";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import DAccessControlGranteeChooser, {
+  ACCESS_CONTROL_GRANTEE_SEARCH_URL,
   granteeValue,
   groupGranteeResult,
 } from "./d-access-control/-internals/grantee-chooser.gjs";
+
+/** The add box's keyboard control, in either select implementation. */
+const CHOOSER_CONTROL =
+  ".d-access-control__chooser input.d-select__input, .d-access-control__chooser .select-kit-header";
 
 const EDIT_PERMISSION = "edit";
 const OWNER_PERMISSION = "owner";
@@ -28,13 +37,6 @@ const READ_ONLY_DEFAULT_AUTO_GROUPS = [
 const ROW_TYPE_SORT_ORDER = {
   group: 0,
   user: 1,
-};
-const REMOVE_ACTION = {
-  id: "remove",
-  name: i18n("access_control.manage.access_permission_remove"),
-  description: i18n(
-    "access_control.manage.access_permission_remove_description"
-  ),
 };
 
 function ownerOption(target) {
@@ -75,7 +77,16 @@ function rowTypeSortOrder(type) {
 }
 
 export default class DAccessControl extends Component {
+  @service a11y;
   @service site;
+  @service siteSettings;
+
+  registerRoot = modifier((element) => {
+    this.#root = element;
+    return () => (this.#root = null);
+  });
+
+  #root = null;
 
   constructor() {
     super(...arguments);
@@ -169,7 +180,7 @@ export default class DAccessControl extends Component {
       const hydratedEntry = this.#hydrateDisplayName({ ...entry });
 
       return {
-        key: `${granteeValue(hydratedEntry.type, hydratedEntry.id)}:${hydratedEntry.permission}`,
+        key: granteeValue(hydratedEntry.type, hydratedEntry.id),
         id: hydratedEntry.id,
         permission: hydratedEntry.permission,
         display_name: hydratedEntry.display_name,
@@ -267,13 +278,34 @@ export default class DAccessControl extends Component {
     return this.availableGroups
       .filter((group) => {
         const availablePermissions = this.excludeBannedPermissions(
-          this.permissionOptions.filter((opt) => opt.id !== REMOVE_ACTION.id),
+          this.permissionOptions,
           { type: "group", id: group.id }
         );
 
         return availablePermissions.length === 0;
       })
       .map((group) => granteeValue("group", group.id));
+  }
+
+  /** The group names and usernames already granted, which the add box leaves out. */
+  get grantedNames() {
+    return this.acl
+      .map((entry) =>
+        entry.type === "user"
+          ? entry.username
+          : (entry.name ??
+            (this.args.groups || []).find(({ id }) => id === entry.id)?.name)
+      )
+      .filter(Boolean);
+  }
+
+  /** What the add box's results depend on, besides the granted names. */
+  get granteeLoadContext() {
+    return {
+      aclTarget: this.args.aclTarget?.type,
+      available: this.availableGroups.map(({ id }) => id),
+      disabled: this.disabledGrantees,
+    };
   }
 
   /**
@@ -294,12 +326,33 @@ export default class DAccessControl extends Component {
       defaultPermissions()
     ).filter((permission) => permission.id !== OWNER_PERMISSION);
 
-    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
+    return permissions.sort((a, b) => a.level - b.level);
+  }
+
+  /**
+   * The add box's source: the groups that can still be added before anything is typed, then the
+   * access control search for the target.
+   */
+  @action
+  async loadGrantees(term) {
+    if (!term) {
+      return {
+        groups: this.availableGroups.map((group) => this.#granteeGroup(group)),
+      };
+    }
+
+    const results = await ajax(ACCESS_CONTROL_GRANTEE_SEARCH_URL, {
+      data: { term, acl_target: this.args.aclTarget?.type },
+    });
+    return {
+      users: results.users,
+      groups: results.groups?.map((group) => this.#granteeGroup(group)),
+    };
   }
 
   /**
    * Fired when a grantee is chosen from the DAccessControlGranteeChooser
-   * search results.
+   * search results, and by `onGranteePicked` for the new add box.
    */
   @action
   onGranteeChosen(_value, selectedGrantees) {
@@ -346,19 +399,41 @@ export default class DAccessControl extends Component {
     const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
+    this.#announceAdded(newPermission);
+  }
+
+  /** Adds a grantee picked in the add box, in the shape the legacy chooser emitted. */
+  @action
+  onGranteePicked(_value, record) {
+    if (!record?.sourceId) {
+      return;
+    }
+
+    this.onGranteeChosen(null, [
+      record.type === "group"
+        ? {
+            aclId: record.sourceId,
+            aclType: "group",
+            id: record.id,
+            full_name: record.fullName,
+            automatic: record.automatic,
+          }
+        : {
+            aclId: record.sourceId,
+            aclType: "user",
+            username: record.username,
+            name: record.fullName,
+            avatar_template: record.avatar_template,
+          },
+    ]);
   }
 
   @action
   onRowPermissionChange(granteeType, granteeId, permission) {
-    if (permission === REMOVE_ACTION.id) {
-      this.args.onChange(
-        this.acl.filter(
-          (entry) => !(entry.type === granteeType && entry.id === granteeId)
-        )
-      );
-      return;
-    }
-
+    const row = this.rows.find(
+      (candidate) =>
+        candidate.type === granteeType && candidate.id === granteeId
+    );
     const next = this.acl.map((entry) =>
       entry.type === granteeType && entry.id === granteeId
         ? { ...entry, permission }
@@ -366,6 +441,46 @@ export default class DAccessControl extends Component {
     );
 
     this.args.onChange(next);
+    if (row) {
+      this.a11y.announce(
+        i18n("access_control.manage.grantee_permission_changed", {
+          name: row.display_name,
+          permission: this.#permissionName(permission),
+        })
+      );
+      // A new permission can move the row, and moving a node drops its focus.
+      this.#focusAfterRender(this.#rowButtonSelector(row));
+    }
+  }
+
+  @action
+  onRowRemove(granteeType, granteeId) {
+    const rows = this.rows;
+    const index = rows.findIndex(
+      (row) => row.type === granteeType && row.id === granteeId
+    );
+    const row = rows[index];
+
+    this.args.onChange(
+      this.acl.filter(
+        (entry) => !(entry.type === granteeType && entry.id === granteeId)
+      )
+    );
+    if (row) {
+      this.a11y.announce(
+        i18n("access_control.manage.grantee_removed", {
+          name: row.display_name,
+        })
+      );
+    }
+    // The removed row's select had focus; the nearest row keeps the reader in the list.
+    const neighbour = [
+      ...rows.slice(index + 1),
+      ...rows.slice(0, Math.max(index, 0)).reverse(),
+    ].find((candidate) => !candidate.permission_menu_disabled);
+    this.#focusAfterRender(
+      neighbour ? this.#rowButtonSelector(neighbour) : CHOOSER_CONTROL
+    );
   }
 
   /**
@@ -393,9 +508,7 @@ export default class DAccessControl extends Component {
     const ownerOptionForTarget = ownerOption(this.args.aclTarget?.name);
 
     if (row.owner) {
-      return this.args.canManageOwners
-        ? [ownerOptionForTarget, REMOVE_ACTION]
-        : [ownerOptionForTarget];
+      return [ownerOptionForTarget];
     }
 
     const permissionOptions = this.excludeBannedPermissions(
@@ -404,16 +517,41 @@ export default class DAccessControl extends Component {
     );
 
     if (row.type === "user" && this.args.canManageOwners && !this.args.isNew) {
-      return [
-        ...permissionOptions.filter(
-          (permission) => permission.id !== REMOVE_ACTION.id
-        ),
-        ownerOptionForTarget,
-        REMOVE_ACTION,
-      ];
+      return [...permissionOptions, ownerOptionForTarget];
     }
 
     return permissionOptions;
+  }
+
+  /** Tells screen readers who was added, since the new row appears away from the add box. */
+  #announceAdded(grantee) {
+    this.a11y.announce(
+      i18n("access_control.manage.grantee_added", {
+        name: grantee.display_name,
+        permission: this.#permissionName(grantee.permission),
+      })
+    );
+  }
+
+  /** Focuses the first match inside this control once the change has rendered. */
+  #focusAfterRender(selector) {
+    schedule("afterRender", () => {
+      this.#root?.querySelector(selector)?.focus();
+    });
+  }
+
+  /** A group record for the add box, disabled when no permission can be granted to it. */
+  #granteeGroup(group) {
+    const disabled = this.disabledGrantees.includes(
+      granteeValue("group", group.id)
+    );
+    return {
+      ...group,
+      disabled,
+      disabledReason: disabled
+        ? i18n("access_control.manage.disallowed")
+        : undefined,
+    };
   }
 
   #hydrateDisplayName(entry) {
@@ -431,27 +569,53 @@ export default class DAccessControl extends Component {
     return entry;
   }
 
+  #permissionName(permission) {
+    return (
+      this.buildPermissionOptions().find(({ id }) => id === permission)?.name ??
+      permission
+    );
+  }
+
+  #rowButtonSelector(row) {
+    return `.d-access-control__row[data-row-type="${row.type}"][data-row-id="${row.id}"] .d-access-control__permission`;
+  }
+
   <template>
-    <div class="d-access-control">
-      <DAccessControlGranteeChooser
-        class="d-access-control__chooser"
-        @filterPlaceholder="access_control.manage.add_group"
-        @labelProperty="name"
-        @onChange={{this.onGranteeChosen}}
-        @options={{hash
-          aclTargetType=@aclTarget.type
-          customSearchOptions=(hash
-            defaultSearchResults=this.defaultAvailableGrantees
-          )
-          excludedGrantees=this.excludedGrantees
-          disabledGrantees=this.disabledGrantees
-          filterable=true
-          includeGroups=true
-          maximum=1
-          none="access_control.manage.add_group"
-        }}
-        @value={{null}}
-      />
+    <div class="d-access-control" {{this.registerRoot}}>
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectUser
+          class="d-access-control__chooser"
+          @exclude={{this.grantedNames}}
+          @includeGroups="visible"
+          @load={{this.loadGrantees}}
+          @loadContext={{this.granteeLoadContext}}
+          @onChange={{this.onGranteePicked}}
+          @texts={{hash placeholder=(i18n "access_control.manage.add_group")}}
+          @value={{null}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <DAccessControlGranteeChooser
+          class="d-access-control__chooser"
+          @filterPlaceholder="access_control.manage.add_group"
+          @labelProperty="name"
+          @onChange={{this.onGranteeChosen}}
+          @options={{hash
+            aclTargetType=@aclTarget.type
+            customSearchOptions=(hash
+              defaultSearchResults=this.defaultAvailableGrantees
+            )
+            excludedGrantees=this.excludedGrantees
+            disabledGrantees=this.disabledGrantees
+            filterable=true
+            includeGroups=true
+            maximum=1
+            none="access_control.manage.add_group"
+          }}
+          @value={{null}}
+        />
+      {{/if}}
       {{#if (or this.rows.length (has-block "additionalRows"))}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
@@ -475,7 +639,9 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
                 <span class="d-access-control__item-name">
-                  {{row.display_name}}
+                  {{! The permission select is named after the grantee; read beside it,
+                    the visible name made VoiceOver say it twice. }}
+                  <span aria-hidden="true">{{row.display_name}}</span>
                   {{#if row.mandatory}}
                     <DTooltip
                       @content={{i18n
@@ -492,10 +658,19 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
               </span>
-              <DAccessControlPermissionMenu
+              <DSelectPermission
+                class="d-access-control__permission"
+                data-permission={{row.permission}}
                 @disabled={{row.permission_menu_disabled}}
                 @onChange={{fn this.onRowPermissionChange row.type row.id}}
+                @onRemove={{fn this.onRowRemove row.type row.id}}
                 @options={{this.permissionOptionsFor row}}
+                @texts={{hash
+                  ariaLabel=(i18n
+                    "access_control.manage.grantee_permission"
+                    name=row.display_name
+                  )
+                }}
                 @value={{row.permission}}
               />
             </div>

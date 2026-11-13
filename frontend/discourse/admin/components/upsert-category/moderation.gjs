@@ -8,6 +8,7 @@ import { POSTING_REVIEW_GROUP_BASED_MODES } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryModeration extends Component {
@@ -149,11 +150,22 @@ export default class UpsertCategoryModeration extends Component {
   <template>
     {{#if this.siteSettings.enable_category_group_moderation}}
       <@form.Container @title={{i18n "category.reviewable_by_group"}}>
-        <GroupChooser
-          @content={{this.site.groups}}
-          @onChange={{this.onCategoryModeratingGroupsChange}}
-          @value={{this.moderatingGroupIds}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectGroup
+            @multiple={{true}}
+            @onChange={{this.onCategoryModeratingGroupsChange}}
+            @texts={{hash ariaLabel=(i18n "category.reviewable_by_group")}}
+            @value={{this.moderatingGroupIds}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <GroupChooser
+            @content={{this.site.groups}}
+            @onChange={{this.onCategoryModeratingGroupsChange}}
+            @value={{this.moderatingGroupIds}}
+          />
+        {{/if}}
       </@form.Container>
     {{/if}}
 
@@ -234,15 +246,36 @@ export default class UpsertCategoryModeration extends Component {
             as |field|
           >
             <field.Control>
-              <GroupChooser
-                class="posting-review-group-chooser"
-                @content={{this.site.groups}}
-                @onChange={{field.set}}
-                @options={{hash
-                  none="category.posting_review_groups_placeholder"
-                }}
-                @value={{field.value}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectGroup
+                  class="posting-review-group-chooser"
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
+                  @id={{field.id}}
+                  @invalid={{if field.error true false}}
+                  @multiple={{true}}
+                  @onChange={{field.set}}
+                  @texts={{hash
+                    ariaLabel=field.title
+                    placeholder=(i18n
+                      "category.posting_review_groups_placeholder"
+                    )
+                  }}
+                  @value={{field.value}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <GroupChooser
+                  class="posting-review-group-chooser"
+                  @content={{this.site.groups}}
+                  @onChange={{field.set}}
+                  @options={{hash
+                    none="category.posting_review_groups_placeholder"
+                  }}
+                  @value={{field.value}}
+                />
+              {{/if}}
             </field.Control>
           </@form.Field>
         {{/if}}
@@ -279,15 +312,36 @@ export default class UpsertCategoryModeration extends Component {
             as |field|
           >
             <field.Control>
-              <GroupChooser
-                class="posting-review-group-chooser"
-                @content={{this.site.groups}}
-                @onChange={{field.set}}
-                @options={{hash
-                  none="category.posting_review_groups_placeholder"
-                }}
-                @value={{field.value}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectGroup
+                  class="posting-review-group-chooser"
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
+                  @id={{field.id}}
+                  @invalid={{if field.error true false}}
+                  @multiple={{true}}
+                  @onChange={{field.set}}
+                  @texts={{hash
+                    ariaLabel=field.title
+                    placeholder=(i18n
+                      "category.posting_review_groups_placeholder"
+                    )
+                  }}
+                  @value={{field.value}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <GroupChooser
+                  class="posting-review-group-chooser"
+                  @content={{this.site.groups}}
+                  @onChange={{field.set}}
+                  @options={{hash
+                    none="category.posting_review_groups_placeholder"
+                  }}
+                  @value={{field.value}}
+                />
+              {{/if}}
             </field.Control>
           </@form.Field>
         {{/if}}

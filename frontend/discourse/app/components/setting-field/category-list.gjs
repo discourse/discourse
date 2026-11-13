@@ -1,12 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { splitString } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 
 export default class SettingFieldCategoryList extends Component {
+  @service siteSettings;
+
   @tracked selectedCategories = [];
 
   constructor() {
@@ -45,10 +50,21 @@ export default class SettingFieldCategoryList extends Component {
   <template>
     <@field.Control>
       <div {{didUpdate this.valueChanged @field.value}}>
-        <CategorySelector
-          @categories={{this.selectedCategories}}
-          @onChange={{this.onChangeCategories}}
-        />
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectCategory
+            class="category-selector"
+            @multiple={{true}}
+            @onChange={{this.onChangeCategories}}
+            @texts={{hash ariaLabel=@field.title}}
+            @value={{this.selectedCategories}}
+          />
+        {{else}}
+          <CategorySelector
+            @categories={{this.selectedCategories}}
+            @onChange={{this.onChangeCategories}}
+          />
+        {{/if}}
       </div>
     </@field.Control>
   </template>

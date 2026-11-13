@@ -1,0 +1,503 @@
+import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import type Owner from "@ember/owner";
+import { service } from "@ember/service";
+import { makeArray } from "discourse/lib/helpers";
+import { findUsersByUsernames, searchUsers } from "discourse/lib/user-search";
+import { emailValid } from "discourse/lib/utilities";
+import type User from "discourse/models/user";
+import { isSelectOption } from "discourse/ui-kit/select/-internals/engine/select-option";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArg } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
+import { groupFullName } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
+import {
+  UserOption,
+  type UserPickType,
+  UserSelection,
+} from "discourse/ui-kit/select/recipes/users/-internals/user-renderers";
+import {
+  type SelectUserTextKey,
+  USER_TEXTS,
+  userPickerName,
+} from "discourse/ui-kit/select/recipes/users/-internals/user-texts";
+import {
+  recordOf,
+  type SelectConfig,
+  type SelectId,
+  type SelectLoadRequest,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
+  type SelectOptionSettings,
+  type SelectRecord,
+  type SelectTexts,
+  type SelectValue,
+} from "discourse/ui-kit/select/select-engine";
+
+/** Which groups the picker offers, as the server's include flags. */
+type UserPickerGroups = "visible" | "mentionable" | "messageable";
+
+/** An entry a search source answers with, user or group, as the user search serializes it. */
+type UserSearchEntry = {
+  id?: number;
+  name?: string;
+  full_name?: string | null;
+  automatic?: boolean;
+  /** Listed but not pickable. */
+  disabled?: boolean;
+  /** Why it can't be picked, drawn in its row. */
+  disabledReason?: string;
+};
+
+/** A user entry, as the user search serializes it. */
+type UserSearchUser = UserSearchEntry & {
+  username: string;
+  avatar_template?: string;
+  status?: { emoji?: string; description?: string } | null;
+};
+
+/** A group entry, as the user search serializes it. */
+type UserSearchGroup = UserSearchEntry & { name: string };
+
+/**
+ * What a call-site loader answers with: the user search endpoint's shape. An entry may be an
+ * option, whose settings the picker keeps on top of its own.
+ */
+export type UserSearchResponse = {
+  users?: SelectOptionLike<UserSearchUser>[];
+  groups?: SelectOptionLike<UserSearchGroup>[];
+};
+
+/** A search or lookup row, as `lib/user-search` returns it. */
+type UserSearchRow = UserSearchEntry & {
+  type: UserPickType;
+  value: string;
+  username?: string;
+  avatar_template?: string;
+  status?: { emoji?: string; description?: string } | null;
+};
+
+/** A held or picked value's item: the value, its label and what it is. */
+export type UserPickRecord = SelectRecord & {
+  id: string;
+  name: string;
+  /** Absent for a name nothing resolved and for a call site's special rows. */
+  type?: UserPickType;
+  /** The user's or group's own id, when its source sends it. */
+  sourceId?: number;
+  /** Whether a group is one of the automatic groups. */
+  automatic?: boolean;
+  /** A user's name, or a group's full name when it says more than its name. */
+  fullName?: string;
+  /** Why the option can't be picked, when its source disabled it. */
+  disabledReason?: string;
+};
+
+/** The user picker's arguments and the engine's forwarded presentation contract. */
+interface DSelectUserSignature {
+  Args: Pick<
+    DSelectSignature["Args"],
+    | "ariaLabelledBy"
+    | "clearable"
+    | "describedBy"
+    | "disabled"
+    | "icon"
+    | "id"
+    | "invalid"
+    | "maximum"
+    | "maxVisibleChips"
+    | "onClose"
+    | "extraOptions"
+    | "variant"
+    | MultiSelectRecipeArg
+  > & {
+    /** Held usernames, group names or addresses. */
+    value?: string | readonly string[] | null;
+    /** Holds several values; defaults to one, as DSelect does. */
+    multiple?: boolean;
+    /** Offers groups too: the visible ones, those the user can mention, or those they can message. */
+    includeGroups?: UserPickerGroups;
+    /** Offers a valid typed address as a row. */
+    emails?: boolean;
+    /** Usernames and group names never offered, in any case. */
+    exclude?: readonly string[];
+    /** Leaves the current user out of the results. */
+    excludeCurrentUser?: boolean;
+    /** Includes staged users in searches and lookups. */
+    includeStaged?: boolean;
+    /** Scopes the search to a topic's users, listed before anything is typed. */
+    topicId?: number;
+    /** Scopes the search to a category's users, listed before anything is typed. */
+    categoryId?: number;
+    /**
+     * Answers searches in place of the user search, the empty query included, in its shape.
+     * The picker still applies `@exclude`, ranks the rows and draws them; the loader decides how
+     * many. A search row with `disabled` is listed but can't be picked, showing its
+     * `disabledReason`. An entry may be an option, whose settings apply on top of the
+     * picker's. Held names are still looked up through the user search. Keep it
+     * stable and pass its inputs through `@loadContext`.
+     */
+    load?: (term: string) => UserSearchResponse | Promise<UserSearchResponse>;
+    /** The reactive inputs of `@load`; a changed entry reloads the list. */
+    loadContext?: Record<string, unknown>;
+    /**
+     * Extra search params; camelCase keys are sent snake_cased and unset ones aren't sent.
+     * Customizations override it as the `searchParams` config key.
+     */
+    searchParams?: Record<string, unknown>;
+    /** Shows each user's status in the rows. */
+    showStatus?: boolean;
+    /** The picker's texts, over its defaults: the engine's, `groupType` and `emailType`. */
+    texts?: SelectTexts<SelectUserTextKey>;
+    /**
+     * Receives the held values and their records, whose `type` tells a user from a group
+     * or an address: arrays when multiple, otherwise one value or `null`.
+     */
+    onChange?: (
+      value: string[] | string | null,
+      records: UserPickRecord[] | UserPickRecord | null
+    ) => void;
+  };
+  Element: HTMLElement;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
+}
+
+/** Usernames, group names and addresses are one option in any case, as the server matches them. */
+function caseInsensitiveKey(key: string): string {
+  return key.toLowerCase();
+}
+
+/**
+ * Picks users, and groups or addresses when asked, from the server's user search. Held names
+ * are looked up together, and keep the spelling they were given.
+ */
+export default class DSelectUser extends Component<DSelectUserSignature> {
+  @service declare currentUser: User | null;
+
+  /** The picker's texts, named after what it offers and whether it holds more than one. */
+  kindTexts: SelectTexts = {
+    ...USER_TEXTS,
+    ariaLabel: (_values, context) =>
+      userPickerName({
+        plural: context.multiple && this.args.maximum !== 1,
+        groups: !!this.args.includeGroups,
+        emails: !!this.args.emails,
+      }),
+  };
+
+  constructor(owner: Owner, args: DSelectUserSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectUser", args);
+  }
+
+  /**
+   * Both select-kit names, because the email, group and user chooser extended the user chooser
+   * and answered to both.
+   */
+  get legacyKind() {
+    return this.args.legacyKind ?? ["user-chooser", "email-group-user-chooser"];
+  }
+
+  /** Every input of the search; nested search options compare by their content. */
+  get loadContext() {
+    return {
+      groups: this.args.includeGroups,
+      emails: this.args.emails,
+      exclude: this.#exclude,
+      includeStaged: this.args.includeStaged,
+      topicId: this.args.topicId,
+      categoryId: this.args.categoryId,
+      searchParams: JSON.stringify(this.args.searchParams ?? {}),
+      showStatus: this.args.showStatus,
+      ...Object.fromEntries(
+        Object.entries(this.args.loadContext ?? {}).map(([key, value]) => [
+          `load.${key}`,
+          value,
+        ])
+      ),
+    };
+  }
+
+  get selectedValue() {
+    const values = makeArray(this.args.value as string | string[] | null);
+    return this.args.multiple ? values : (values[0] ?? null);
+  }
+
+  get #exclude(): string[] {
+    const exclude = [...(this.args.exclude ?? [])];
+    if (this.args.excludeCurrentUser && this.currentUser) {
+      exclude.push(this.currentUser.username);
+    }
+    return exclude;
+  }
+
+  @action
+  createUnresolvedRecord(value: SelectId): UserPickRecord {
+    return { id: String(value), name: String(value), type: "unknown" };
+  }
+
+  @action
+  async load(
+    filter: string,
+    opts: SelectLoadRequest
+  ): Promise<SelectOption<UserPickRecord>[]> {
+    const callerSettings = new Map<string, SelectOptionSettings>();
+    const rows = (await searchUsers({
+      term: filter,
+      groups: this.args.includeGroups,
+      emails: this.args.emails,
+      exclude: this.#exclude,
+      includeStaged: this.args.includeStaged,
+      topicId: this.args.topicId,
+      categoryId: this.args.categoryId,
+      searchOptions: opts.config?.searchParams as
+        | Record<string, unknown>
+        | undefined,
+      load: this.args.load && this.#unwrappingLoad(callerSettings),
+    })) as UserSearchRow[];
+    return rows.map((row) => {
+      const option = this.#option(row);
+      const settings = callerSettings.get(`${row.type}:${row.value}`);
+      return settings ? option.with(settings) : option;
+    });
+  }
+
+  @action
+  onChange(value: SelectValue, records: SelectRecord | SelectRecord[] | null) {
+    if (this.args.multiple) {
+      this.args.onChange?.(
+        makeArray(value as string | string[]).map(String),
+        makeArray(records as UserPickRecord | UserPickRecord[] | null)
+      );
+      return;
+    }
+    this.args.onChange?.(
+      value == null ? null : String(value as string),
+      (records as UserPickRecord | null) ?? null
+    );
+  }
+
+  /**
+   * Splits a pasted list on commas, spaces and newlines, dropping a leading `@`. A single
+   * name, which has none of these, is typed as usual. The names are looked up together;
+   * one nothing resolves is kept as typed, as select-kit kept every pasted name.
+   */
+  @action
+  parsePaste(text: string) {
+    if (!/[,\n@]/.test(text)) {
+      return null;
+    }
+    const names = [
+      ...new Map(
+        text
+          .split(/[,\s]+/)
+          .map((name) => name.replace(/^@+/, "").trim())
+          .filter(Boolean)
+          .map((name) => [name.toLowerCase(), name])
+      ).values(),
+    ];
+    if (!names.length) {
+      return null;
+    }
+    return this.#resolve(names);
+  }
+
+  @action
+  async resolveValues(
+    values: SelectId[],
+    opts: SelectLoadRequest
+  ): Promise<SelectRecord[]> {
+    const names = values.map(String);
+    const extra = new Map<string, SelectRecord>(
+      (opts.config ? this.#extraRecords(opts.config) : []).map((record) => [
+        String(record.id),
+        record,
+      ])
+    );
+    const resolved = await this.#resolve(
+      names.filter((name) => !extra.has(name))
+    );
+    return [
+      ...names.flatMap((name): SelectRecord[] => {
+        const record = extra.get(name);
+        return record ? [record] : [];
+      }),
+      ...resolved
+        .map((option) => option.record)
+        .filter((record) => record.type !== "unknown"),
+    ];
+  }
+
+  /**
+   * The caller's loader, answering with records: the search builds rows from entries, so an
+   * option's settings are kept aside by what it stands for and given back to its row.
+   */
+  #unwrappingLoad(settings: Map<string, SelectOptionSettings>) {
+    const load = this.args.load!;
+    const unwrap = <T extends object>(
+      entries: SelectOptionLike<T>[] | undefined,
+      key: (record: T) => string
+    ): T[] | undefined =>
+      entries?.map((entry) => {
+        if (!isSelectOption(entry)) {
+          return entry as T;
+        }
+        const record = entry.record as T;
+        settings.set(key(record), entry.settings as SelectOptionSettings);
+        return record;
+      });
+    return async (term: string) => {
+      const response = await load(term);
+      return {
+        ...response,
+        users: unwrap(response?.users, (user) => `user:${user.username}`),
+        groups: unwrap(response?.groups, (group) => `group:${group.name}`),
+      };
+    };
+  }
+
+  /**
+   * A search row as an option. The row's `disabled` is this picker's documented contract, so it
+   * becomes the setting here; a group describes itself with its full name, a user with its status.
+   */
+  #option(row: UserSearchRow): SelectOption<UserPickRecord> {
+    const record = this.#record(row);
+    const status = this.args.showStatus ? row.status : undefined;
+    return selectOption(record, {
+      disabled: row.disabled ? true : undefined,
+      description: row.type === "group" ? record.fullName : status?.description,
+    });
+  }
+
+  #record(row: UserSearchRow): UserPickRecord {
+    const source = {
+      sourceId: row.id,
+      disabledReason: row.disabled ? row.disabledReason : undefined,
+    };
+    if (row.type === "group") {
+      const name = row.name ?? row.value;
+      return {
+        id: row.value,
+        type: "group",
+        automatic: row.automatic,
+        ...source,
+        name,
+        fullName: groupFullName({ name, full_name: row.full_name }),
+      };
+    }
+    if (row.type === "email") {
+      return { id: row.value, name: row.value, type: "email" };
+    }
+    const status = this.args.showStatus ? row.status : undefined;
+    return {
+      id: row.value,
+      name: row.username ?? row.value,
+      type: "user",
+      username: row.username,
+      avatar_template: row.avatar_template,
+      fullName: row.name,
+      statusEmoji: status?.emoji,
+      ...source,
+    };
+  }
+
+  /** Options for names: addresses locally and the rest in one lookup. */
+  async #resolve(names: string[]): Promise<SelectOption<UserPickRecord>[]> {
+    const lookup = names.filter((name) => !emailValid(name));
+    const rows = lookup.length
+      ? ((await findUsersByUsernames(lookup, {
+          groups: this.args.includeGroups,
+          includeStaged: this.args.includeStaged,
+        })) as UserSearchRow[])
+      : [];
+    const found = new Map(rows.map((row) => [row.value, this.#option(row)]));
+    return names.map(
+      (name) =>
+        found.get(name) ??
+        selectOption(
+          this.args.emails && emailValid(name)
+            ? this.#record({ type: "email", value: name })
+            : this.createUnresolvedRecord(name)
+        )
+    );
+  }
+
+  /** The caller's extra options' records, which held names resolve against first. */
+  #extraRecords(config: SelectConfig): SelectRecord[] {
+    return (
+      this.args
+        .extraOptions?.(
+          { filter: "", value: this.selectedValue, hasValue: true },
+          config
+        )
+        .map((entry) => recordOf(entry) as SelectRecord) ?? []
+    );
+  }
+
+  <template>
+    {{! TODO (select-kit-replacement-cleanup): Retain the legacy family classes during rollout. }}
+    <DSelect
+      ...attributes
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @clearable={{@clearable}}
+      @createUnresolvedRecord={{this.createUnresolvedRecord}}
+      @describedBy={{@describedBy}}
+      @disabled={{@disabled}}
+      @extraOptions={{@extraOptions}}
+      @icon={{@icon}}
+      @id={{@id}}
+      @identifier={{@identifier}}
+      @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
+      @kind="select-user"
+      @kindConfig={{hash searchParams=@searchParams}}
+      @kindContext={{hash
+        value=@value
+        includeGroups=@includeGroups
+        exclude=@exclude
+      }}
+      @kindTexts={{this.kindTexts}}
+      @legacyKind={{this.legacyKind}}
+      @load={{this.load}}
+      @loadContext={{this.loadContext}}
+      @lockedValues={{@lockedValues}}
+      @maximum={{@maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @multiple={{@multiple}}
+      @normalizeKey={{caseInsensitiveKey}}
+      @onChange={{this.onChange}}
+      @onClose={{@onClose}}
+      @parsePaste={{if @multiple this.parsePaste}}
+      @resolveValues={{this.resolveValues}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{this.selectedValue}}
+      @variant={{@variant}}
+    >
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
+        {{else}}
+          <UserOption @option={{option}} @record={{record}} />
+        {{/if}}
+      </:option>
+      <:selection as |record config|>
+        {{#if (has-block "selection")}}
+          {{yield record config to="selection"}}
+        {{else}}
+          <UserSelection @config={{config}} @record={{record}} />
+        {{/if}}
+      </:selection>
+      <:unresolved as |record|>
+        <UserSelection @record={{record}} />
+      </:unresolved>
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
+      </:footer>
+    </DSelect>
+  </template>
+}

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -14,6 +14,8 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import PeriodInput from "discourse/plugins/discourse-gamification/discourse/components/period-input";
 
@@ -37,6 +39,7 @@ const SCORABLE_KEYS = [
 
 export default class AdminEditLeaderboard extends Component {
   @service site;
+  @service siteSettings;
   @service toasts;
   @service router;
 
@@ -241,13 +244,30 @@ export default class AdminEditLeaderboard extends Component {
               as |field|
             >
               <field.Control>
-                <GroupChooser
-                  @content={{this.siteGroups}}
-                  @id="leaderboard-edit__included-groups"
-                  @labelProperty="name"
-                  @onChange={{field.set}}
-                  @value={{field.value}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectGroup
+                    id="leaderboard-edit__included-groups"
+                    @describedBy={{field.describedBy}}
+                    @disabled={{field.disabled}}
+                    @everyone={{false}}
+                    @id={{field.id}}
+                    @invalid={{if field.error true false}}
+                    @multiple={{true}}
+                    @onChange={{field.set}}
+                    @texts={{hash ariaLabel=field.title}}
+                    @value={{field.value}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <GroupChooser
+                    @content={{this.siteGroups}}
+                    @id="leaderboard-edit__included-groups"
+                    @labelProperty="name"
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
 
@@ -258,13 +278,30 @@ export default class AdminEditLeaderboard extends Component {
               as |field|
             >
               <field.Control>
-                <GroupChooser
-                  @content={{this.siteGroups}}
-                  @id="leaderboard-edit__excluded-groups"
-                  @labelProperty="name"
-                  @onChange={{field.set}}
-                  @value={{field.value}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectGroup
+                    id="leaderboard-edit__excluded-groups"
+                    @describedBy={{field.describedBy}}
+                    @disabled={{field.disabled}}
+                    @everyone={{false}}
+                    @id={{field.id}}
+                    @invalid={{if field.error true false}}
+                    @multiple={{true}}
+                    @onChange={{field.set}}
+                    @texts={{hash ariaLabel=field.title}}
+                    @value={{field.value}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <GroupChooser
+                    @content={{this.siteGroups}}
+                    @id="leaderboard-edit__excluded-groups"
+                    @labelProperty="name"
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
 
@@ -275,13 +312,30 @@ export default class AdminEditLeaderboard extends Component {
               as |field|
             >
               <field.Control>
-                <GroupChooser
-                  @content={{this.siteGroups}}
-                  @id="leaderboard-edit__visible-groups"
-                  @labelProperty="name"
-                  @onChange={{field.set}}
-                  @value={{field.value}}
-                />
+                {{! TODO (select-kit-replacement-cleanup) }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectGroup
+                    id="leaderboard-edit__visible-groups"
+                    @describedBy={{field.describedBy}}
+                    @disabled={{field.disabled}}
+                    @everyone={{false}}
+                    @id={{field.id}}
+                    @invalid={{if field.error true false}}
+                    @multiple={{true}}
+                    @onChange={{field.set}}
+                    @texts={{hash ariaLabel=field.title}}
+                    @value={{field.value}}
+                  />
+                {{else}}
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  <GroupChooser
+                    @content={{this.siteGroups}}
+                    @id="leaderboard-edit__visible-groups"
+                    @labelProperty="name"
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
           </form.Section>
@@ -316,10 +370,25 @@ export default class AdminEditLeaderboard extends Component {
                         field.value
                       }}
                     >
-                      <CategorySelector
-                        @categories={{this.selectedScorableCategories}}
-                        @onChange={{fn this.onCategoryChange field.set}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectCategory
+                          class="category-selector"
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @multiple={{true}}
+                          @onChange={{fn this.onCategoryChange field.set}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @value={{this.selectedScorableCategories}}
+                        />
+                      {{else}}
+                        <CategorySelector
+                          @categories={{this.selectedScorableCategories}}
+                          @onChange={{fn this.onCategoryChange field.set}}
+                        />
+                      {{/if}}
                     </div>
                   </field.Control>
                 </form.Field>

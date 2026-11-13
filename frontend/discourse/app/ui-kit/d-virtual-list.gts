@@ -44,8 +44,9 @@ interface RowContext<T> {
   start: number;
   size: number;
   /**
-   * Positions the row (absolute + `translateY`) when windowing; inert in the
-   * render-all fallback. Apply with the row's offset and index:
+   * Positions leading sticky rows with `sticky` and other windowed rows with
+   * absolute positioning + `translateY`. Inert in the render-all fallback.
+   * Apply with the row's offset and index:
    * `{{row.place row.start row.index}}`.
    *
    * Apply it BEFORE {@link measure}. It stamps the `data-index` that measurement
@@ -282,6 +283,14 @@ interface DVirtualListSignature<T> {
     /** Alignment for `@initialIndex` within the viewport. Default `"start"`. */
     initialAlign?: "start" | "center" | "end" | "auto";
     /**
+     * Number of leading rows kept mounted and sticky at the top while windowing.
+     * Rows must be contiguous from index zero; consumers supply their background.
+     * The render-all fallback keeps these rows in normal flow. Sticky rows are
+     * always kept mounted, so they need no `@keepMounted` entry. `@keepMounted`
+     * alone only keeps rows in the DOM; it never makes them visible.
+     */
+    stickyCount?: number;
+    /**
      * Extends the default window with extra absolute indices to keep mounted.
      *
      * REACTIVITY CONTRACT: pass a NEW function whenever any closed-over input
@@ -297,10 +306,10 @@ interface DVirtualListSignature<T> {
      *
      * This is also the mechanism for keeping a row mounted that must not be
      * destroyed while scrolled out of the window. A consumer managing focus or a
-     * roving tabindex has to pin the active index, or scrolling past it unmounts
+     * roving tabindex has to keep the active index mounted, or scrolling past it unmounts
      * the focused element and focus falls back to the document.
      */
-    pinnedIndices?: (
+    keepMounted?: (
       indices: readonly number[],
       range: VirtualRange
     ) => readonly number[];
@@ -386,6 +395,11 @@ interface DVirtualListSignature<T> {
  *
  * The consumer must give the outer viewport a nonzero height. Without one,
  * windowing has no visible area and renders no rows.
+ *
+ * `@stickyCount` keeps that many leading rows mounted and stacked at the top while
+ * scrolling. Put these rows first in `@items` and give them an opaque background.
+ * Their measured height reserves scroll padding so revealed rows remain below them.
+ * The render-all fallback leaves every row in normal flow.
  *
  * Simple consumers yield content and let the primitive wrap it in a measured,
  * `@itemRole`-stamped row. A consumer that needs native row elements passes
@@ -475,8 +489,19 @@ export default class DVirtualList<T> extends Component<
         element.style.removeProperty("top");
         element.style.removeProperty("inset-inline");
         element.style.removeProperty("transform");
+        element.style.removeProperty("z-index");
         return;
       }
+      if (index < (this.args.stickyCount ?? 0)) {
+        element.style.position = "sticky";
+        element.style.top = `${start}px`;
+        element.style.zIndex = "1";
+        element.style.removeProperty("transform");
+        element.style.removeProperty("inset-inline");
+        return;
+      }
+      element.style.removeProperty("top");
+      element.style.removeProperty("z-index");
       element.style.position = "absolute";
       // `top: 0` pins the translate base to the container origin; without it the
       // row translates from its browser-computed static position (nonzero for a
@@ -486,6 +511,14 @@ export default class DVirtualList<T> extends Component<
       element.style.transform = `translateY(${start}px)`;
     }
   );
+
+  /**
+   * The last published context of each mounted row. A row whose context is unchanged gets the
+   * same object back, so a publish caused by other rows never re-renders it: a block's markup
+   * stays the same nodes, and a click pressed on one still lands.
+   */
+  #rowContexts = new Map<VirtualKey, RowContext<T>>();
+
   @tracked _api: DVirtualListApi | null = null;
 
   @tracked _virtualItems: readonly VirtualItem[] = [];
@@ -500,31 +533,15 @@ export default class DVirtualList<T> extends Component<
   }
 
   get rows(): Array<RowContext<T>> {
-    if (!this.virtualizationActive) {
-      // Test / fallback path: render every item in normal flow, no windowing.
-      // `keyFor` is the SAME helper the modifier's `getItemKey` uses, so a row keys
-      // identically here and in the windowed path.
-      return this.args.items.map((item, index) => {
-        const key = keyFor(item, this.args.key);
-        return this.#rowContext(item, index, key, 0, 0);
-      });
+    const rows = this.#buildRows();
+    // Forget rows that left, so the cache stays the size of the mounted set.
+    const mounted = new Set(rows.map((row) => row.key));
+    for (const key of this.#rowContexts.keys()) {
+      if (!mounted.has(key)) {
+        this.#rowContexts.delete(key);
+      }
     }
-
-    // The window is published from the modifier's after-render flush, so during
-    // the render in which `@items` shrank it still describes the PREVIOUS list.
-    // Dropping the rows that no longer exist keeps `items[index]` from handing a
-    // consumer `undefined` for the one pass before the next flush lands.
-    return this._virtualItems
-      .filter((vi) => vi.index < this.args.items.length)
-      .map((vi) =>
-        this.#rowContext(
-          this.args.items[vi.index],
-          vi.index,
-          vi.key,
-          vi.start,
-          vi.size
-        )
-      );
+    return rows;
   }
 
   /** Whether `@itemRole` is one of the roles that defines position attributes. */
@@ -610,6 +627,35 @@ export default class DVirtualList<T> extends Component<
     this.args.onRegisterApi?.(api);
   }
 
+  #buildRows(): Array<RowContext<T>> {
+    if (!this.virtualizationActive) {
+      // Test / fallback path: render every item in normal flow, no windowing.
+      // `keyFor` is the SAME helper the modifier's `getItemKey` uses, so a row keys
+      // identically here and in the windowed path.
+      return this.args.items.map((item, index) => {
+        const key = keyFor(item, this.args.key);
+        return this.#rowContext(item, index, key, 0, 0);
+      });
+    }
+
+    // The window is published from the modifier's after-render flush, so during
+    // the render in which `@items` shrank it still describes the PREVIOUS list.
+    // Dropping the rows that no longer exist keeps `items[index]` from handing a
+    // consumer `undefined` for the one pass before the next flush lands.
+    return this._virtualItems
+      .filter((vi) => vi.index < this.args.items.length)
+      .map((vi) =>
+        this.#rowContext(
+          this.args.items[vi.index],
+          vi.index,
+          vi.key,
+          vi.start,
+          vi.size
+        )
+      );
+  }
+
+  /** Returns the row's previous context when nothing in it changed, so the row is not re-rendered. */
   #rowContext(
     item: T,
     index: number,
@@ -617,7 +663,7 @@ export default class DVirtualList<T> extends Component<
     start: number,
     size: number
   ): RowContext<T> {
-    return {
+    const context: RowContext<T> = {
       item,
       index,
       key,
@@ -629,6 +675,17 @@ export default class DVirtualList<T> extends Component<
       place: this.placeRow,
       measure: this.measureRow,
     };
+    const last = this.#rowContexts.get(key);
+    if (
+      last &&
+      (Object.keys(context) as Array<keyof RowContext<T>>).every((field) =>
+        Object.is(last[field], context[field])
+      )
+    ) {
+      return last;
+    }
+    this.#rowContexts.set(key, context);
+    return context;
   }
 
   <template>
@@ -649,7 +706,8 @@ export default class DVirtualList<T> extends Component<
         overscan=@overscan
         anchor=@anchor
         scrollEndThreshold=@scrollEndThreshold
-        pinnedIndices=@pinnedIndices
+        keepMounted=@keepMounted
+        stickyCount=@stickyCount
         onState=this.onState
         onRegisterApi=this.onRegisterApi
         onVisibleRangeChange=@onVisibleRangeChange

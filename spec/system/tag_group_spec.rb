@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tag Groups" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "cats") }
   fab!(:tag2) { Fabricate(:tag, name: "bats") }
@@ -212,6 +214,98 @@ describe "Tag Groups" do
 
       expect(tag_groups_page).to have_private_permission_checked
       expect(tag_groups_page).to have_private_group(staff_group.name)
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    it "shows the group's tags and parent tag in the new select controls" do
+      tag_group = Fabricate(:tag_group, name: "Ats", tags: [tag1, tag2], parent_tag: parent_tag)
+
+      tag_groups_page.visit_tag_group(tag_group)
+
+      expect(page).to have_css(".group-tags-list .tag-chooser.d-select .d-select__chip", count: 2)
+      expect(tag_groups_page.tags_chooser.chip_labels).to contain_exactly("cats", "bats")
+      expect(page).to have_css(".parent-tag-section .tag-chooser.d-select[data-name='parent-tag']")
+      expect(page).to have_no_css(".parent-tag-section .tag-chooser.d-select .d-select__chip")
+    end
+
+    it "creates a tag group with existing and brand-new tags with the new select controls" do
+      tag_groups_page.visit
+      tag_groups_page.click_new_tag_group
+      tag_groups_page.fill_name("New Test Group")
+
+      tags_chooser = tag_groups_page.tags_chooser
+      tags_chooser.open
+      tags_chooser.search("cats")
+      tags_chooser.select_name("cats")
+      tags_chooser.search("new-tag-one")
+      tags_chooser.select_value("tag-name:new-tag-one")
+      tags_chooser.search("new-tag-two")
+      tags_chooser.select_value("tag-name:new-tag-two")
+      tags_chooser.close
+
+      parent_tag_chooser = tag_groups_page.parent_tag_chooser
+      parent_tag_chooser.open
+      parent_tag_chooser.search("parent-tag")
+      parent_tag_chooser.select_name("parent-tag")
+      parent_tag_chooser.close
+
+      tag_groups_page.select_visible_permission
+      tag_groups_page.save
+
+      expect(tag_groups_page).to have_tag_group_in_sidebar("New Test Group")
+
+      page.refresh
+      tag_groups_page.click_tag_group("New Test Group")
+
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_tag_in_group("new-tag-one")
+      expect(tag_groups_page).to have_tag_in_group("new-tag-two")
+      expect(page).to have_css(".parent-tag-section .tag-chooser", text: "parent-tag")
+      expect(tag_groups_page).to have_visible_permission_checked
+
+      created = TagGroup.find_by(name: "New Test Group")
+      expect(created.tags.pluck(:name)).to contain_exactly("cats", "new-tag-one", "new-tag-two")
+      expect(created.parent_tag).to eq(parent_tag)
+    end
+
+    it "swaps existing tags and adds brand-new tags with the new select controls" do
+      Fabricate(:tag, name: "rats")
+      tag_group = Fabricate(:tag_group, name: "Animals", tags: [tag1, tag2])
+
+      tag_groups_page.visit
+      tag_groups_page.click_tag_group("Animals")
+
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_tag_in_group("bats")
+
+      tags_chooser = tag_groups_page.tags_chooser
+      tags_chooser.remove_name("bats")
+      expect(tag_groups_page).to have_no_tag_in_group("bats")
+      tags_chooser.open
+      tags_chooser.search("rats")
+      tags_chooser.select_name("rats")
+      tags_chooser.search("new-animal-one")
+      tags_chooser.select_value("tag-name:new-animal-one")
+      tags_chooser.close
+
+      tag_groups_page.select_visible_permission
+      tag_groups_page.save
+
+      page.refresh
+      tag_groups_page.click_tag_group("Animals")
+
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_tag_in_group("new-animal-one")
+      expect(tag_groups_page).to have_no_tag_in_group("bats")
+      expect(tag_group.reload.tags.pluck(:name)).to contain_exactly(
+        "cats",
+        "rats",
+        "new-animal-one",
+      )
     end
   end
 

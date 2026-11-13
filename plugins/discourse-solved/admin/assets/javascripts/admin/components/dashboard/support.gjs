@@ -12,11 +12,16 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import { i18n } from "discourse-i18n";
 import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
 import SupportResponseTime from "./support/response-time.gjs";
 import SupportTopicOutcomes from "./support/topic-outcomes.gjs";
 import SupportWhosAnswering from "./support/whos-answering.gjs";
+
+function categoryIds(categories) {
+  return (categories ?? []).map((category) => category.id);
+}
 
 const MAX_CATEGORIES = 10;
 
@@ -408,17 +413,33 @@ export default class SupportSection extends Component {
 
         {{#if this.showFilter}}
           <div class="db-support__filter">
-            <MultipleCategoriesSelector
-              @blockedCategories={{this.blockedCategories}}
-              @categories={{this.selectedCategories}}
-              @onChange={{this.onCategoriesChange}}
-              @onClose={{this.onClose}}
-              @options={{hash
-                maximum=MAX_CATEGORIES
-                none="category.all"
-                showAncestorsInSelectedChoice=true
-              }}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectCategory
+                class="multiple-categories-selector"
+                @exclude={{categoryIds this.blockedCategories}}
+                @legacyKind="multiple-categories-selector"
+                @maximum={{MAX_CATEGORIES}}
+                @multiple={{true}}
+                @onChange={{this.onCategoriesChange}}
+                @onClose={{this.onClose}}
+                @showAncestors={{true}}
+                @texts={{hash placeholder=(i18n "category.all")}}
+                @value={{this.selectedCategories}}
+              />
+            {{else}}
+              <MultipleCategoriesSelector
+                @blockedCategories={{this.blockedCategories}}
+                @categories={{this.selectedCategories}}
+                @onChange={{this.onCategoriesChange}}
+                @onClose={{this.onClose}}
+                @options={{hash
+                  maximum=MAX_CATEGORIES
+                  none="category.all"
+                  showAncestorsInSelectedChoice=true
+                }}
+              />
+            {{/if}}
           </div>
         {{/if}}
 

@@ -7,7 +7,9 @@
     font-size: var(--font-down-1);
   }
 
-  .list-controls .combo-box .combo-box-header {
+  .list-controls .combo-box .combo-box-header,
+  .list-controls .d-select.category-drop,
+  .list-controls .d-select.tag-drop {
     &:hover {
       background-color: var(--primary-100);
     }
@@ -28,6 +30,28 @@
   .select-kit.combo-box.tag-drop .caret-icon,
   .select-kit.combo-box.solved-status-filter .selected-name {
     color: var(--primary);
+  }
+
+  .d-tag-drop__selection,
+  .d-select.category-drop :is(.d-select__placeholder, .d-select__caret),
+  .d-select.tag-drop :is(.d-select__placeholder, .d-select__caret) {
+    color: var(--primary);
+  }
+
+  .d-select.category-drop .d-select__caret,
+  .d-select.tag-drop .d-select__caret {
+    font-size: var(--font-down-1);
+  }
+
+  .d-select.category-drop.d-select__trigger,
+  .d-select.tag-drop.d-select__trigger {
+    &[aria-expanded="true"],
+    &:focus,
+    &:active {
+      background-color: var(--primary-100);
+      outline: none;
+      border-color: var(--primary-300);
+    }
   }
 
   .select-kit .select-kit-header.btn-default {

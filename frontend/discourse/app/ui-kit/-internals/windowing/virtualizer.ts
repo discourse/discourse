@@ -61,6 +61,8 @@ export interface VirtualizerOptions {
   onChange: () => void;
   followOnAppend: boolean;
   scrollEndThreshold?: number;
+  /** Space reserved above a revealed row by leading sticky rows, in pixels. */
+  scrollPaddingStart?: number;
   rangeExtractor?: (range: VirtualRange) => number[];
 }
 
@@ -306,11 +308,38 @@ export function remeasureViewport(virtualizer: {
  * (`scrollToFn is not a function`) the moment anything asks it to move, which
  * includes prepend anchoring and every `scrollTo*` API call.
  */
+/**
+ * Engines currently measuring from inside a ResizeObserver delivery. The engine passes the
+ * observer entry only on that path; a measurement taken on mount passes none.
+ */
+const RESIZE_DELIVERIES = new WeakSet<object>();
+
+function measureElementTrackingDelivery(
+  element: HTMLElement,
+  entry: ResizeObserverEntry | undefined,
+  instance: ElementEngine
+) {
+  if (entry && !RESIZE_DELIVERIES.has(instance)) {
+    RESIZE_DELIVERIES.add(instance);
+    // One delivery measures every entry synchronously, so it ends with the current task.
+    queueMicrotask(() => RESIZE_DELIVERIES.delete(instance));
+  }
+  return measureElement(element, entry, instance);
+}
+
+/**
+ * Whether `virtualizer` is applying a size the browser just reported through a
+ * ResizeObserver. A change raised then must not mount new rows in the same delivery.
+ */
+export function isDeliveringResize(virtualizer: object | null): boolean {
+  return !!virtualizer && RESIZE_DELIVERIES.has(virtualizer);
+}
+
 const ELEMENT_ADAPTER = {
   scrollToFn: elementScroll,
   observeElementRect: observeElementRectWithHandle,
   observeElementOffset: observeElementOffsetWithHandle,
-  measureElement,
+  measureElement: measureElementTrackingDelivery,
 } satisfies Partial<
   ConstructorParameters<typeof Virtualizer<HTMLElement, HTMLElement>>[0]
 >;
@@ -342,13 +371,17 @@ const ELEMENT_ADAPTER = {
  * one of those changes — which, for a consumer following the documented
  * reactivity contract, happens on the next input change.
  *
- * @param pins - Returns extra indices to keep mounted.
+ * @param keepMounted - Returns extra indices to keep mounted.
+ * @param leading - Number of leading indices always kept mounted, even if `keepMounted` throws.
  */
-export function rangeExtractorWithPins(
-  pins: (
-    indices: readonly number[],
-    range: VirtualRange
-  ) => readonly number[] | null | undefined
+export function rangeExtractorKeepingMounted(
+  keepMounted:
+    | ((
+        indices: readonly number[],
+        range: VirtualRange
+      ) => readonly number[] | null | undefined)
+    | undefined,
+  leading = 0
 ): (range: VirtualRange) => number[] {
   return (range) => {
     const indices = defaultRangeExtractor(range);
@@ -356,11 +389,15 @@ export function rangeExtractorWithPins(
 
     let extra: readonly number[];
     try {
-      extra = pins(indices, range) ?? [];
+      extra = keepMounted?.(indices, range) ?? [];
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error("[d-virtual-list] pinnedIndices threw: ", e);
+      console.error("[d-virtual-list] keepMounted threw: ", e);
       extra = [];
+    }
+
+    for (let index = 0; index < Math.min(leading, range.count); index++) {
+      merged.add(index);
     }
 
     for (const index of extra) {

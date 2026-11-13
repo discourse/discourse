@@ -1,5 +1,6 @@
 import curryComponent from "ember-curry-component";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
+import FKControlCategoryChooser from "discourse/form-kit/components/fk/control/category-chooser";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlColor from "discourse/form-kit/components/fk/control/color";
@@ -20,6 +21,7 @@ import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
 
 const CONTROL_COMPONENTS = {
   calendar: FKControlCalendar,
+  "category-chooser": FKControlCategoryChooser,
   checkbox: FKControlCheckbox,
   code: FKControlCode,
   color: FKControlColor,

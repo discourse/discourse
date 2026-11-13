@@ -1,0 +1,583 @@
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import type Owner from "@ember/owner";
+import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
+import { modifier } from "ember-modifier";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { makeArray } from "discourse/lib/helpers";
+import {
+  cleanTagName,
+  findTagsByNames,
+  knownTagId,
+  resolveTagNames,
+  searchTags,
+  storedName,
+  type TagSearchContext,
+  type TagSearchResult,
+  tagSettings,
+} from "discourse/lib/tag-source";
+import type Site from "discourse/models/site";
+import type User from "discourse/models/user";
+import type SiteSettingsService from "discourse/services/site-settings";
+import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
+import DSelect, {
+  type DSelectSignature,
+} from "discourse/ui-kit/select/d-select";
+import type { MultiSelectRecipeArgs } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
+import {
+  TagOption,
+  TagSelection,
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
+import {
+  type SelectTagTextKey,
+  TAG_TEXTS,
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-texts";
+import {
+  createTagRecord,
+  emitTags,
+  type TagKey,
+  tagKey,
+  type TagObject,
+  tagRecord,
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
+import {
+  type SelectConfig,
+  type SelectLoadRequest,
+  type SelectOption,
+  selectOption,
+  type SelectOptionLike,
+  type SelectRecord,
+  type SelectTexts,
+  type SelectTextWrapper,
+  type SelectValue,
+} from "discourse/ui-kit/select/select-engine";
+import { i18n } from "discourse-i18n";
+
+/** The tag field's arguments; consumers keep their original held tag shapes. */
+interface DSelectTagSignature {
+  Args: Omit<MultiSelectRecipeArgs, "lockedValues"> & {
+    /** Controlled held tags, rendered without a resolver. */
+    value?: readonly (TagObject | string)[] | TagObject | string | null;
+    /** Held tags that can't be removed, by name or as held. */
+    lockedValues?: readonly (TagObject | string)[];
+    /** Tags excluded from search and included in server selection rules. */
+    exclude?: readonly (TagObject | string)[];
+    /** Category whose tag restrictions apply. */
+    categoryId?: number;
+    /** Bypass input restrictions when listing tags. */
+    ignoreRestrictions?: boolean;
+    /** Exclude synonym rows. */
+    excludeSynonyms?: boolean;
+    /** Exclude tags that have synonyms. */
+    excludeTagsWithSynonyms?: boolean;
+    /** Opt in to creation, also requiring the site's permission. Defaults to false. */
+    allowCreate?: boolean;
+    /** Emit stored names instead of tag objects. */
+    emit?: "names";
+    /** Holds several tags; defaults to one, as DSelect does. */
+    multiple?: boolean;
+    /** Prefer recently used tags when the site enables suggestions. */
+    suggestRecent?: boolean;
+    /** Omitted uses the site limit; false removes the cap. */
+    maximum?: number | false;
+    /** Trigger presentation. */
+    variant?: DSelectSignature["Args"]["variant"];
+    /** Advisory minimum, shown in the field's placeholder until it's met. */
+    minimum?: number;
+    /** Receives selected tags in the consumer's shape. */
+    onChange?: (
+      tags: TagObject[] | TagObject | string[] | string | null
+    ) => void;
+    /** Prevents opening the control or changing its selection. */
+    disabled?: boolean;
+    /** Icon displayed at the start of the trigger. */
+    icon?: string;
+    /** Visible chip limit; zero shows only the selection count. */
+    maxVisibleChips?: number;
+    /** Marks a selection invalid when validation belongs to the surrounding form. */
+    invalid?: boolean;
+    /** Id of the combobox element, for an external label. */
+    id?: string;
+    /** Ids of visible captions that name the control, replacing the default name. */
+    ariaLabelledBy?: string;
+    /**
+     * The field's texts, over the tag defaults. A `placeholder` replaces only the prompt: a
+     * required group or a minimum still leads it, each worded through its own key.
+     */
+    texts?: SelectTexts<SelectTagTextKey>;
+    /** Additional persistent help element ids. */
+    describedBy?: string;
+  };
+  Element: HTMLElement;
+  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection" | "footer">;
+}
+
+/** Picks tags to store, as tag objects or, with `@emit="names"`, stored names. */
+export default class DSelectTag extends Component<DSelectTagSignature> {
+  @service declare currentUser: User | null;
+
+  /** TODO(typescript-pending): Remove the extension when Site types serialized permissions. */
+  @service declare site: Site & { can_create_tag: boolean };
+
+  /** TODO(typescript-pending): Remove the extension when the settings factory exposes its runtime keys. */
+  @service
+  declare siteSettings: SiteSettingsService & {
+    max_tags_per_topic: number;
+    max_tag_search_results: number;
+    tags_sort_alphabetically: boolean;
+    max_tag_length: number;
+    force_lowercase_tags: boolean;
+    prioritize_recently_used_tags: boolean;
+  };
+
+  /** The tag texts, named "Tag" while the field holds at most one, otherwise "Tags". */
+  kindTexts: SelectTexts = {
+    ...TAG_TEXTS,
+    ariaLabel: (_values, context) =>
+      context.multiple && this.maximum !== 1
+        ? i18n("tagging.tags")
+        : i18n("tagging.tag"),
+  };
+
+  /**
+   * The requirement steps lead the placeholder: the required group, then the minimum, then the
+   * prompt every layer set. A step whose text is empty hands over to the next.
+   */
+  kindTextWrappers: Readonly<Record<string, SelectTextWrapper>> = {
+    placeholder: (final, _values, context) => {
+      if (this.#zeroCap) {
+        return final;
+      }
+      const group = this.#requiredGroup;
+      const minimum = this.args.minimum ?? 0;
+      return (
+        (group &&
+          context.text("requiredTagGroup", {
+            count: group.min_count,
+            name: group.name,
+          })) ||
+        (minimum > 0 &&
+          context.text("minimumPlaceholder", { count: minimum })) ||
+        final
+      );
+    },
+    addMorePlaceholder: (final, values, context) => {
+      if (this.#zeroCap) {
+        return "";
+      }
+      const group = this.#requiredGroup;
+      const remaining =
+        Number(values.minimum ?? 0) - Number(values.selected ?? 0);
+      return (
+        (group &&
+          context.text("requiredTagGroupRemaining", {
+            count: group.remaining_count,
+            name: group.name,
+          })) ||
+        (remaining > 0 &&
+          context.text("minimumRemaining", { count: remaining })) ||
+        final
+      );
+    },
+  };
+
+  resolveHeldNames = modifier(() => {
+    const { names, key } = this._selectionInputs;
+    if (this.#resolutionKey === key) {
+      return;
+    }
+    this.#resolutionKey = key;
+    // Signed out, held names are searched without their ids, as select-kit did.
+    if (names.length && this.currentUser) {
+      void waitForPromise(resolveTagNames(names)).catch(() => {
+        // A later value change can retry; unresolved names never enter the context.
+        if (this.#resolutionKey === key) {
+          this.#resolutionKey = undefined;
+        }
+      });
+    }
+  });
+
+  #resolutionKey: string | undefined;
+
+  @tracked private _validation = new Map<string, TagSearchResult>();
+
+  constructor(owner: Owner, args: DSelectTagSignature["Args"]) {
+    super(owner, args);
+    assertNoRemovedTextArgs("DSelectTag", args);
+  }
+
+  get #creationAllowed() {
+    return this.args.allowCreate && this.site.can_create_tag && !this.#zeroCap;
+  }
+
+  get #excludedNames() {
+    return new Set(
+      (this.args.exclude ?? []).map((tag) =>
+        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase()
+      )
+    );
+  }
+
+  get #tags(): readonly (TagObject | string)[] {
+    const value = this.args.value;
+    if (!value) {
+      return [];
+    }
+    return makeArray(value as TagObject | string | (TagObject | string)[]);
+  }
+
+  get #zeroCap() {
+    return (
+      this.args.maximum === undefined &&
+      this.siteSettings.max_tags_per_topic === 0
+    );
+  }
+
+  @cached
+  private get _selectionInputs() {
+    const ids = new Set<number>();
+    const names = new Set<string>();
+    for (const tag of [
+      ...(this.args.multiple ? this.#tags : []),
+      ...(this.args.exclude ?? []),
+    ]) {
+      const key = tagKey(tag);
+      if (typeof key === "number") {
+        ids.add(key);
+      } else if (typeof tag !== "object" || !tag.isNew) {
+        names.add(
+          storedName(
+            typeof tag === "string" ? { name: tag } : tag
+          ).toLowerCase()
+        );
+      }
+    }
+    const sortedNames = [...names].sort();
+    return {
+      ids: [...ids],
+      names: sortedNames,
+      key: JSON.stringify(sortedNames),
+    };
+  }
+
+  @cached
+  get loadContext() {
+    const { ids, names } = this._selectionInputs;
+    const resolved = names
+      .map((name) => knownTagId(name))
+      .filter((id) => id !== undefined);
+    return {
+      categoryId: this.args.categoryId,
+      everyTag: this.args.ignoreRestrictions,
+      excludeSynonyms: this.args.excludeSynonyms,
+      excludeHasSynonyms: this.args.excludeTagsWithSynonyms,
+      prioritizeRecentTags:
+        this.args.suggestRecent &&
+        this.siteSettings.prioritize_recently_used_tags
+          ? true
+          : undefined,
+      selectedTagIds: [...new Set([...ids, ...resolved])],
+    };
+  }
+
+  get maximum() {
+    return this.#zeroCap
+      ? false
+      : (this.args.maximum ?? this.siteSettings.max_tags_per_topic);
+  }
+
+  get selectedIds() {
+    assert(
+      'DSelectTag: @emit must be "names" or undefined',
+      this.args.emit === undefined || this.args.emit === "names"
+    );
+    const keys = this.#tags.map((tag) => this.#recordForTag(tag).id);
+    return this.args.multiple ? keys : (keys[0] ?? null);
+  }
+
+  get valueRecords() {
+    return this.#tags.map((tag) => this.#recordForTag(tag));
+  }
+
+  /** The locked tags' engine ids, matched to the held tags by name so a known id still matches. */
+  get lockedIds() {
+    const nameOf = (tag: TagObject | string) =>
+      storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase();
+    const held = new Map(this.#tags.map((tag) => [nameOf(tag), tag]));
+    return this.args.lockedValues?.map(
+      (tag) => this.#recordForTag(held.get(nameOf(tag)) ?? tag).id
+    );
+  }
+
+  /** The first unmet required group, as the blank search for the current context reported it. */
+  get #requiredGroup() {
+    return this._validation.get(this.#validationKey(this.loadContext, ""))
+      ?.requiredTagGroup;
+  }
+
+  @action
+  allowCreate(filter: string, records: SelectRecord[], config: SelectConfig) {
+    const name = cleanTagName(filter, this.siteSettings);
+    const validation = this._validation.get(
+      this.#validationKey(this.loadContext, name)
+    );
+    const maximum = this.#zeroCap ? 0 : config.maximum;
+    return !!(
+      this.#creationAllowed &&
+      name &&
+      validation &&
+      !validation?.forbidden &&
+      !this.#excludedNames.has(name.toLowerCase()) &&
+      (typeof maximum !== "number" || this.#tags.length < maximum) &&
+      !records.some(
+        (record) =>
+          this.#storedRecordName(record).toLowerCase() === name.toLowerCase()
+      ) &&
+      !this.#tags.some(
+        (tag) =>
+          storedName(
+            typeof tag === "string" ? { name: tag } : tag
+          ).toLowerCase() === name.toLowerCase()
+      )
+    );
+  }
+
+  @action
+  createOption(filter: string) {
+    return { ...createTagRecord(cleanTagName(filter, this.siteSettings)) };
+  }
+
+  /**
+   * Splits a pasted list on `|`. Held tags are passed through, so the engine reports them as
+   * already held, and every other name is resolved in one lookup that applies the field's rules.
+   * A name with no tag becomes a new one where creation is allowed.
+   */
+  @action
+  parsePaste(text: string) {
+    const names = text
+      .split("|")
+      .map((name) => name.trim())
+      .filter(Boolean);
+    if (names.length < 2) {
+      return null;
+    }
+    const held = new Map(
+      this.#tags.map((tag) => [
+        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase(),
+        this.#recordForTag(tag),
+      ])
+    );
+    const pasted = new Map<string, string>();
+    for (const name of names) {
+      const cleaned = cleanTagName(name, this.siteSettings);
+      const lower = cleaned.toLowerCase();
+      if (cleaned && !this.#excludedNames.has(lower) && !pasted.has(lower)) {
+        pasted.set(lower, cleaned);
+      }
+    }
+    const toOptions = (
+      rows: readonly object[],
+      forbiddenNames: readonly string[] = []
+    ) => {
+      const found = new Map(
+        this.#prepareOptions(rows).map((option) => [
+          this.#storedRecordName(option.record).toLowerCase(),
+          option,
+        ])
+      );
+      const forbidden = new Set(
+        forbiddenNames.map((name) => name.toLowerCase())
+      );
+      return [...pasted].flatMap(([lower, name]): SelectOptionLike[] => {
+        const record = held.get(lower);
+        if (record) {
+          return [record];
+        }
+        const option = found.get(lower);
+        if (option) {
+          return option.disabled ? [] : [option];
+        }
+        return this.#creationAllowed && !forbidden.has(lower)
+          ? [this.createOption(name)]
+          : [];
+      });
+    };
+    const lookup = [...pasted]
+      .filter(([lower]) => !held.has(lower))
+      .map(([, name]) => name);
+    if (!lookup.length) {
+      return toOptions([]);
+    }
+    return findTagsByNames(lookup, { context: this.loadContext }).then(
+      ({ items, forbiddenNames }) => toOptions(items, forbiddenNames),
+      (error: unknown) => {
+        popupAjaxError(error);
+        return null;
+      }
+    );
+  }
+
+  @action
+  onChange(ids: SelectValue, records: SelectRecord | SelectRecord[] | null) {
+    const keys = makeArray(ids) as TagKey[];
+    const rows = makeArray(records);
+    const heldKeys = new Set(this.valueRecords.map((record) => record.id));
+    if (this.#zeroCap && keys.some((id) => !heldKeys.has(id))) {
+      return;
+    }
+    const held = this.#tags.map((tag) => {
+      const record = this.#recordForTag(tag);
+      if (typeof tag === "string") {
+        return { ...record, name: tag };
+      }
+      // A held object keeps its identity unless its id came from a lookup.
+      return tagKey(tag) === record.id ? tag : { ...tag, id: record.id };
+    });
+    const tags = emitTags(keys, {
+      held,
+      records: rows as unknown as TagObject[],
+    });
+    const result = this.args.emit === "names" ? tags.map(storedName) : tags;
+    this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
+  }
+
+  /** Keys a held tag by its id, taking a held name's id from the session's lookups. */
+  @action
+  async load(filter: string, opts: SelectLoadRequest) {
+    const context: TagSearchContext = opts.context ?? {};
+    const result = await searchTags(filter, {
+      context: {
+        ...context,
+        prioritizeRecentTags: filter ? undefined : context.prioritizeRecentTags,
+      },
+      siteSettings: this.siteSettings,
+    });
+    if (!opts.signal?.aborted && !this.isDestroying) {
+      const validation = new Map(this._validation);
+      validation.set(
+        this.#validationKey(context, cleanTagName(filter, this.siteSettings)),
+        result
+      );
+      this._validation = validation;
+    }
+    return this.#prepareOptions(result.items);
+  }
+
+  #recordForTag(
+    tag: TagObject | string
+  ): SelectRecord & { id: TagKey; name: string } {
+    const record = {
+      ...(typeof tag === "object" ? tag : {}),
+      ...tagRecord(tag),
+    };
+    if (typeof record.id === "number" || record.isNew) {
+      return record;
+    }
+    const id = knownTagId(
+      storedName(typeof tag === "string" ? { name: tag } : tag)
+    );
+    return id === undefined ? record : { ...record, id };
+  }
+
+  /**
+   * Lists search rows as options. A tag shows its description, and one the server refuses or a
+   * zero cap rules out can't be picked, so a held tag stays removable.
+   */
+  #prepareOptions(rows: readonly object[]): SelectOption[] {
+    const excluded = this.#excludedNames;
+    return (rows as readonly SelectRecord[])
+      .filter((row) => !excluded.has(this.#storedRecordName(row).toLowerCase()))
+      .map((row) =>
+        selectOption(row, tagSettings(row)).with({
+          disabled: this.#zeroCap && !this.#isHeld(row) ? true : undefined,
+        })
+      );
+  }
+
+  #isHeld(record: SelectRecord) {
+    const name = this.#storedRecordName(record).toLowerCase();
+    return this.#tags.some(
+      (tag) =>
+        this.#recordForTag(tag).id === record.id ||
+        storedName(
+          typeof tag === "string" ? { name: tag } : tag
+        ).toLowerCase() === name
+    );
+  }
+
+  #storedRecordName(record: SelectRecord) {
+    return storedName({
+      name: String(record.name ?? ""),
+      original_name:
+        typeof record.original_name === "string"
+          ? record.original_name
+          : undefined,
+    });
+  }
+
+  #validationKey(context: TagSearchContext, term: string) {
+    return JSON.stringify([context, term]);
+  }
+
+  <template>
+    {{! TODO (select-kit-replacement-cleanup): Retain the legacy family class during rollout. }}
+    <DSelect
+      class="select-tag"
+      ...attributes
+      @allowCreate={{this.allowCreate}}
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @createOption={{this.createOption}}
+      @describedBy={{@describedBy}}
+      @disabled={{@disabled}}
+      @icon={{@icon}}
+      @id={{@id}}
+      @identifier={{@identifier}}
+      @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
+      @kind="select-tag"
+      @kindContext={{hash value=@value categoryId=@categoryId exclude=@exclude}}
+      @kindTexts={{this.kindTexts}}
+      @kindTextWrappers={{this.kindTextWrappers}}
+      @labelField="name"
+      @legacyKind={{if @legacyKind @legacyKind "tag-chooser"}}
+      @load={{this.load}}
+      @loadContext={{this.loadContext}}
+      @lockedValues={{this.lockedIds}}
+      @maximum={{this.maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @minimum={{@minimum}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @parsePaste={{this.parsePaste}}
+      @suppressFooter={{not (has-block "footer")}}
+      @texts={{@texts}}
+      @value={{this.selectedIds}}
+      @valueRecords={{this.valueRecords}}
+      @variant={{@variant}}
+      {{this.resolveHeldNames}}
+    >
+      <:option as |record config option|>
+        {{#if (has-block "option")}}
+          {{yield record config option to="option"}}
+        {{else}}
+          <TagOption @config={{config}} @option={{option}} @record={{record}} />
+        {{/if}}
+      </:option>
+      <:selection as |record config|>
+        {{#if (has-block "selection")}}
+          {{yield record config to="selection"}}
+        {{else}}
+          <TagSelection @record={{record}} />
+        {{/if}}
+      </:selection>
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
+      </:footer>
+    </DSelect>
+  </template>
+}

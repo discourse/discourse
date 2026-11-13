@@ -18,6 +18,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -917,6 +918,77 @@ module(
       assert.deepEqual(await captureSavedValue(this.owner), [{ tags: ["猫"] }]);
     });
 
+    test("submits tag IDs alongside existing names with the new controls", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          identifier: "tags",
+          properties: {
+            name: { type: "string" },
+            tags: { type: "tags" },
+          },
+        },
+        value: [
+          { name: "first", tags: ["dog", "123"] },
+          { name: "second", tags: [] },
+        ],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting, { sendTagIds: true });
+
+      const tags = new DSelect(`${inputFields.fields.tags.selector} .d-select`);
+      await tags.open();
+      await tags.select(1);
+      await tags.close();
+
+      assert.dom(tree.nodes[0].textElement).hasText("dog,123,猫");
+
+      setting.set("metadata", { property_descriptions: {} });
+      await click(tree.nodes[1].element);
+      await click(tree.nodes[0].element);
+
+      assert.deepEqual(
+        [
+          ...document.querySelectorAll(
+            `${inputFields.fields.tags.selector} .d-select__chip-label`
+          ),
+        ].map((chip) => chip.textContent.trim()),
+        ["dog", "123", "猫"],
+        "the localized name is kept when coming back to the object"
+      );
+      assert.deepEqual(await captureSavedValue(this.owner), [
+        { name: "first", tags: ["dog", "123", 1] },
+        { name: "second", tags: [] },
+      ]);
+    });
+
+    test("keeps tag name submissions with the new controls when ID submissions are not enabled", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "style",
+          properties: { tags: { type: "tags" } },
+        },
+        value: [{ tags: [] }],
+      });
+      pretender.get("/tags/filter/search", () =>
+        response({ results: [{ id: 1, name: "猫", slug: "cat" }] })
+      );
+
+      await renderEditor(setting);
+
+      const tags = new DSelect(`${inputFields.fields.tags.selector} .d-select`);
+      await tags.open();
+      await tags.select(1);
+      await tags.close();
+
+      assert.deepEqual(await captureSavedValue(this.owner), [{ tags: ["猫"] }]);
+    });
+
     test("input fields of type tags which is required", async function (assert) {
       const setting = objectsSetting({
         objects_schema: {
@@ -1121,6 +1193,49 @@ module(
         groupsSelector.rowByValue("2").exists(),
         "moderators is in the list"
       );
+    });
+
+    test("input fields of type groups filter disallowed groups with the new controls", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      this.site.groups = [
+        { id: 0, name: "everyone" },
+        { id: 1, name: "admins" },
+        { id: 2, name: "moderators" },
+        { id: 3, name: "staff" },
+      ];
+
+      const setting = objectsSetting({
+        objects_schema: {
+          name: "something",
+          properties: {
+            group_ids: {
+              type: "groups",
+              disallowed_groups: "0|1",
+              validations: { max: 1 },
+            },
+          },
+        },
+        value: [{ group_ids: [] }],
+      });
+
+      await renderEditor(setting);
+      const groups = new DSelect(
+        `${inputFields.fields.group_ids.selector} .d-select`
+      );
+      await groups.open();
+
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map(
+          (row) => row.dataset.value
+        ),
+        ["2", "3"],
+        "everyone and admins are not offered"
+      );
+
+      await click("[role='option'][data-value='2']");
+      assert
+        .dom("[role='option'][data-value='3']")
+        .hasAttribute("aria-disabled", "true", "the maximum is respected");
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {

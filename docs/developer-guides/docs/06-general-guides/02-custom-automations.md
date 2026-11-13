@@ -35,11 +35,11 @@ field :foo, component: :text # generates a text input
 field :foo, component: :list # generates a multi select text input where users can fill values
 field :foo, component: :choices, extra: { content: [ {id: 1, name: 'your.own.i18n.key.path' } ] } # generates a combo-box with a custom content
 field :foo, component: :boolean # generate a checkbox input
-field :foo, component: :category # generates a category-chooser
-field :foo, component: :group # generates a group-chooser
+field :foo, component: :category # generates a category picker
+field :foo, component: :group # generates a group picker
 field :foo, component: :date_time # generates a date time picker
-field :foo, component: :tags # generates a tag-chooser
-field :foo, component: :user  # generates a user-chooser
+field :foo, component: :tags # generates a tag picker
+field :foo, component: :user  # generates a user picker
 field :foo, component: :pms  # allows to create one or more PM templates
 field :foo, component: :categories  # allows to select zero or more categories
 field :foo, component: :key-value  # allows to create key-value pairs

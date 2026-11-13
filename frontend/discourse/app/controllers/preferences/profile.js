@@ -22,6 +22,9 @@ export default class ProfileController extends Controller {
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
 
+  /** The topic picked in the featured topic field, kept until Save changes stores it. */
+  #pickedFeaturedTopic = null;
+
   @computed("model.can_change_bio")
   get canChangeBio() {
     return this.model?.can_change_bio;
@@ -51,6 +54,10 @@ export default class ProfileController extends Controller {
     return applyValueTransformer(
       "preferences-save-attributes",
       [
+        // An untouched featured topic field leaves the featured topic alone.
+        ...(this.model?.featured_topic_id === undefined
+          ? []
+          : ["featured_topic_id"]),
         "bio_raw",
         "website",
         "location",
@@ -65,6 +72,15 @@ export default class ProfileController extends Controller {
       ],
       { page: "profile" }
     );
+  }
+
+  /** The featured topic field's value: a pick waiting for Save changes, otherwise the saved topic. */
+  @computed("model.featured_topic_id", "model.featured_topic.id")
+  get featuredTopicId() {
+    const picked = this.model?.featured_topic_id;
+    return picked === undefined
+      ? (this.model?.featured_topic?.id ?? null)
+      : picked;
   }
 
   @computed("model.user_fields.@each.value")
@@ -116,6 +132,12 @@ export default class ProfileController extends Controller {
   }
 
   @action
+  changeFeaturedTopic(topicId, topic) {
+    this.#pickedFeaturedTopic = topic;
+    this.model.set("featured_topic_id", topicId);
+  }
+
+  @action
   clearFeaturedTopicFromProfile() {
     this.dialog.yesNoConfirm({
       message: i18n("user.feature_topic_on_profile.clear.warning"),
@@ -157,6 +179,12 @@ export default class ProfileController extends Controller {
       .save(this.saveAttrNames)
       .then(({ user }) => {
         this.model.set("bio_cooked", user.bio_cooked);
+        if (this.model.featured_topic_id !== undefined) {
+          this.model.setProperties({
+            featured_topic: this.#pickedFeaturedTopic,
+            featured_topic_id: undefined,
+          });
+        }
         this.currentUser.set("needs_required_fields_check", false);
         this.set("saved", true);
 

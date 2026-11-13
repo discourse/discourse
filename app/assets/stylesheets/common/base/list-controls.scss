@@ -12,7 +12,8 @@
     }
   }
 
-  .combo-box .combo-box-header {
+  .combo-box .combo-box-header,
+  .d-select.tag-drop {
     background: var(--secondary);
     color: var(--primary);
     border: 1px solid var(--input-border-color);
@@ -95,7 +96,8 @@
 
   @include viewport.from(sm) {
     // only target the top-level li, not dropdowns
-    .select-kit {
+    .select-kit,
+    .d-select:not(.--list) {
       align-self: stretch;
       height: 100%;
     }

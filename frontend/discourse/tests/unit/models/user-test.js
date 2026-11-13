@@ -216,6 +216,30 @@ module("Unit | Model | user", function (hooks) {
     assert.deepEqual(user.unconfirmed_emails, ["new@example.com"]);
   });
 
+  test("save() sends the featured topic only when it is named", async function (assert) {
+    const bodies = [];
+    pretender.put("/u/eviltrout.json", (request) => {
+      bodies.push(new URLSearchParams(request.requestBody));
+      return response({ user: {} });
+    });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
+      id: 1,
+      username: "eviltrout",
+    });
+
+    user.set("featured_topic_id", 280);
+    await user.save();
+    await user.save(["bio_raw"]);
+    await user.save(["featured_topic_id"]);
+
+    assert.deepEqual(
+      bodies.map((body) => body.get("featured_topic_id")),
+      [null, null, "280"],
+      "a pick waiting on the user goes out only with a save that names it"
+    );
+  });
+
   test("pmPath", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", {

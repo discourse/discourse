@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Solved with tags" do
+  with_select_controls(false)
+
   fab!(:user)
   fab!(:replier, :user)
   fab!(:tag)
@@ -71,6 +73,30 @@ describe "Solved with tags" do
       topic_page.click_topic_title_submit_edit
 
       expect(page).to have_css(".solved-removal-confirmation-modal")
+    end
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      it "shows confirmation when removing the solved tag with the new select controls" do
+        sign_in(admin)
+        topic_page.visit_topic(topic_with_solved_tag)
+
+        topic_page.click_topic_edit_title
+
+        tag_chooser = PageObjects::Components::UiKit::DSelect.at("#topic-title .mini-tag-chooser")
+        expect(page).to have_css(
+          "#topic-title .mini-tag-chooser .d-select__chip[data-name='#{tag.name}']",
+        )
+        tag_chooser.remove(tag.id)
+        expect(page).to have_no_css(
+          "#topic-title .mini-tag-chooser .d-select__chip[data-name='#{tag.name}']",
+        )
+
+        topic_page.click_topic_title_submit_edit
+
+        expect(page).to have_css(".solved-removal-confirmation-modal")
+      end
     end
   end
 

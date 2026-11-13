@@ -82,6 +82,13 @@ export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
   ) {
     autofocus ??= true;
     this.#preventScroll = preventScroll ?? true;
+
+    // Focusing can consume tracked state through synchronous focus handlers.
+    // Later modifier updates must not repeat installation autofocus.
+    if (this.#originalElement) {
+      return;
+    }
+
     this.#originalElement = element;
     this.#element =
       element.querySelector<HTMLElement>(".d-modal__container") || element;

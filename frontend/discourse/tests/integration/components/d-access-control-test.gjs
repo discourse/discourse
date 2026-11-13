@@ -1,14 +1,21 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { click, findAll, render } from "@ember/test-helpers";
+import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import DAccessControlField from "discourse/ui-kit/d-access-control-field";
@@ -58,7 +65,7 @@ function controlledState(initialAcl = []) {
 }
 
 function permissionOptionSelector(permission) {
-  return `.d-access-control__permission-option[data-permission-id="${permission}"]`;
+  return `[role='option'][data-value="${permission}"]`;
 }
 
 async function expandPermissionMenu(rowSelector = ".d-access-control__row") {
@@ -70,23 +77,13 @@ async function selectPermission(permission, rowSelector) {
   await click(permissionOptionSelector(permission));
 }
 
-function permissionOptionLabel(permission) {
-  return `${permissionOptionSelector(permission)} .d-access-control__permission-label`;
-}
-
 function permissionOptionDescription(permission) {
-  return `${permissionOptionSelector(
-    permission
-  )} .d-access-control__permission-description`;
+  return `${permissionOptionSelector(permission)} .d-select__option-description`;
 }
 
 function rowNames() {
-  return findAll(".d-access-control__item-name").map((row) =>
-    [...row.childNodes]
-      .find(
-        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
-      )
-      .textContent.trim()
+  return findAll(".d-access-control__item-name > [aria-hidden='true']").map(
+    (name) => name.textContent.trim()
   );
 }
 
@@ -444,8 +441,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .dom(permissionOptionSelector("juggler"))
       .exists("renders the added permission option");
     assert
-      .dom(permissionOptionLabel("juggler"))
-      .hasText("Juggler", "the added option keeps its name");
+      .dom(permissionOptionSelector("juggler"))
+      .includesText("Juggler", "the added option keeps its name");
   });
 
   test("loads multiple existing acl groups with their permissions", async function (assert) {
@@ -539,6 +536,194 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .hasText("Some Group", "keeps the remaining row");
   });
 
+  // VoiceOver read the visible name between two copies of the select's name
+  // ("Permission for Some Group Some Group Permission for Some Group").
+  test("speaks each grantee's name once, through its permission select", async function (assert) {
+    const accessibleName = await loadAccessibleName();
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+        mandatory: true,
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__item-name > [aria-hidden='true']")
+      .hasText("Some Group", "the visible name is hidden from assistive tech");
+    assert.true(
+      accessibleName(find(".d-access-control__permission")).startsWith(
+        i18n("access_control.manage.grantee_permission", {
+          name: "Some Group",
+        })
+      ),
+      "the permission select still names the grantee"
+    );
+    assert.strictEqual(
+      find(".d-access-control__tooltip").closest("[aria-hidden]"),
+      null,
+      "the mandatory badge stays reachable"
+    );
+  });
+
+  test("names each row's permission select after its grantee, with Remove last", async function (assert) {
+    const accessibleName = await loadAccessibleName();
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    const permission = find(".d-access-control__permission");
+    assert.dom(permission).hasAttribute("role", "combobox");
+    assert.dom(permission).hasAttribute("data-permission", "view");
+    assert.true(
+      accessibleName(permission).startsWith(
+        i18n("access_control.manage.grantee_permission", {
+          name: "Some Group",
+        })
+      ),
+      "names the select after the row's grantee"
+    );
+
+    await expandPermissionMenu();
+
+    assert.deepEqual(
+      findAll(".d-select__option, .d-select__divider").map((row) =>
+        row.classList.contains("d-select__divider") ? "|" : row.dataset.value
+      ),
+      ["view", "edit", "|", "remove"],
+      "Remove follows the permissions, after a divider"
+    );
+  });
+
+  test("announces the grantee it removes", async function (assert) {
+    const a11y = this.owner.lookup("service:a11y");
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+      {
+        type: "group",
+        id: 1001,
+        permission: "edit",
+        display_name: "Another Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    await selectPermission("remove");
+
+    assert.true(
+      a11y.announcementHistory.some(
+        ({ text }) => text === "Removed Another Group"
+      ),
+      "the removed row is announced by the name it showed"
+    );
+  });
+
+  test("keeps focus on a row's permission button when its permission changes", async function (assert) {
+    const a11y = this.owner.lookup("service:a11y");
+    const state = controlledState([
+      { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      { type: "group", id: 1002, permission: "edit", display_name: "Beta" },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    const beta = ".d-access-control__row[data-row-id='1002']";
+    await selectPermission("view", beta);
+
+    assert
+      .dom(`${beta} .d-access-control__permission`)
+      .isFocused("focus stays on the row's button")
+      .hasText(i18n("access_control.manage.access_permission_viewer"));
+    assert.true(
+      a11y.announcementHistory.some(
+        ({ text }) => text === "Beta is now Viewer"
+      ),
+      "the change is announced"
+    );
+  });
+
+  test("moves focus to the next row after a removal, else the previous one", async function (assert) {
+    const state = controlledState([
+      { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      { type: "group", id: 1002, permission: "edit", display_name: "Beta" },
+      { type: "group", id: 1003, permission: "edit", display_name: "Gamma" },
+    ]);
+    const button = (id) =>
+      `.d-access-control__row[data-row-id='${id}'] .d-access-control__permission`;
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+    await selectPermission(
+      "remove",
+      ".d-access-control__row[data-row-id='1002']"
+    );
+
+    assert.dom(button(1003)).isFocused("the next row takes focus");
+
+    await selectPermission(
+      "remove",
+      ".d-access-control__row[data-row-id='1003']"
+    );
+
+    assert
+      .dom(button(1001))
+      .isFocused("the previous row takes focus at the end");
+  });
+
   test("calls the onChange arg when a permission changes", async function (assert) {
     const state = controlledState([
       {
@@ -596,14 +781,14 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await expandPermissionMenu();
 
     assert
-      .dom(permissionOptionLabel("view"))
-      .hasText(
+      .dom(permissionOptionSelector("view"))
+      .includesText(
         i18n("access_control.manage.access_permission_viewer"),
         "renders the default viewer option"
       );
     assert
-      .dom(permissionOptionLabel("edit"))
-      .hasText(
+      .dom(permissionOptionSelector("edit"))
+      .includesText(
         i18n("access_control.manage.access_permission_editor"),
         "renders the default editor option"
       );
@@ -697,7 +882,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert.dom(rows[0]).hasClass("--mandatory", "the mandatory row is first");
     assert
       .dom(".d-access-control__permission", rows[0])
-      .isDisabled("the mandatory row's permission select is disabled");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "the mandatory row's permission select is disabled"
+      );
   });
 
   test("renders an owner after mandatory rows without a mandatory badge when ownership cannot be managed", async function (assert) {
@@ -764,7 +953,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
         i18n("access_control.manage.access_permission_owner"),
         "labels the permission as Owner"
       )
-      .isDisabled("prevents changing or removing the owner");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "prevents changing or removing the owner"
+      );
   });
 
   test("offers only Owner and Remove for an owner manager", async function (assert) {
@@ -794,7 +987,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert
       .dom(`${ownerRow} .d-access-control__permission`)
-      .isEnabled("allows ownership management");
+      .doesNotHaveAttribute("aria-disabled", "allows ownership management");
 
     await expandPermissionMenu(ownerRow);
 
@@ -1124,7 +1317,275 @@ module("Integration | Component | DAccessControl", function (hooks) {
         "uses the mandatory permission"
       );
   });
+
+  test("with the new select controls, the grantee chooser reports no legacy render", async function (assert) {
+    disableRaiseOnDeprecation();
+    const counter = sinon.stub(DeprecationCounter.prototype, "incrementCount");
+    this.siteSettings.enable_new_select_controls = true;
+    const state = controlledState();
+
+    try {
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+    } finally {
+      enableRaiseOnDeprecation();
+    }
+
+    assert.dom(".d-access-control__chooser").exists();
+    assert.strictEqual(
+      counter
+        .getCalls()
+        .filter(
+          (call) =>
+            call.args[0] === "discourse.select-kit-rollout.legacy-render"
+        ).length,
+      0,
+      "the add box is a new select control"
+    );
+  });
 });
+
+module(
+  "Integration | Component | DAccessControl | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    /** The add box's listed values, in order. */
+    function listedValues() {
+      return findAll(".d-select__panel [role='option']").map(
+        (row) => row.dataset.value
+      );
+    }
+
+    test("lists the groups that can still be added on open", async function (assert) {
+      const state = controlledState([
+        { type: "group", id: 42, permission: "edit" },
+      ]);
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await dSelect(".d-access-control__chooser").open();
+
+      assert.deepEqual(
+        listedValues(),
+        ["logged_in_users", "trust_level_0"],
+        "a granted group is left out, automatic groups first"
+      );
+    });
+
+    test("adds a group with the default permission", async function (assert) {
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("team_a");
+
+      assert.strictEqual(state.onChangeCalls.length, 1);
+      const [added] = state.onChangeCalls[0];
+      assert.deepEqual(
+        [added.id, added.type, added.name, added.display_name],
+        [42, "group", "team_a", "Team A"]
+      );
+      assert.strictEqual(added.permission, "edit");
+      assert.false(added.metadata.auto_group);
+      assert
+        .dom(".d-access-control__row .d-access-control__item-name")
+        .hasText("Team A", "the new row is drawn");
+
+      await chooser.open();
+      assert.false(
+        listedValues().includes("team_a"),
+        "the added group is no longer offered"
+      );
+    });
+
+    test("moves focus to the add box when the last grant is removed", async function (assert) {
+      const state = controlledState([
+        { type: "group", id: 1001, permission: "edit", display_name: "Alpha" },
+      ]);
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await selectPermission("remove");
+
+      assert.dom(".d-access-control__row").doesNotExist();
+      assert
+        .dom(".d-access-control__chooser input.d-select__input")
+        .isFocused("the add box takes focus");
+    });
+
+    test("announces each grantee it adds, with its permission", async function (assert) {
+      const a11y = this.owner.lookup("service:a11y");
+      const announced = () => a11y.announcementHistory.map(({ text }) => text);
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("team_a");
+
+      assert.true(
+        announced().includes("Added Team A as Editor"),
+        "a group is announced by the name its row shows"
+      );
+
+      await chooser.open();
+      await chooser.select("trust_level_0");
+
+      assert.true(
+        announced().includes("Added Trust level 0 as Viewer"),
+        "with the permission it was given"
+      );
+    });
+
+    test("a read-only default group is added with the view permission", async function (assert) {
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.select("trust_level_0");
+
+      const [added] = state.onChangeCalls[0];
+      assert.strictEqual(added.permission, "view");
+      assert.true(added.metadata.auto_group);
+    });
+
+    test("searches the access control endpoint for the target and adds a user", async function (assert) {
+      const params = [];
+      pretender.get("/access-control/grantees/search", (request) => {
+        params.push(request.queryParams);
+        return response({
+          users: [
+            {
+              id: 7,
+              username: "ada",
+              name: "Ada Lovelace",
+              avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+            },
+          ],
+          groups: [],
+        });
+      });
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      const chooser = dSelect(".d-access-control__chooser");
+      await chooser.open();
+      await chooser.search("ada");
+      await chooser.select("ada");
+
+      assert.deepEqual(
+        params,
+        [{ term: "ada", acl_target: "TestTarget" }],
+        "the typed term is searched once, for the target"
+      );
+      const [added] = state.onChangeCalls[0];
+      assert.deepEqual(
+        [added.id, added.type, added.username, added.name],
+        [7, "user", "ada", "Ada Lovelace"]
+      );
+      assert.strictEqual(
+        added.avatar_template,
+        "/letter_avatar_proxy/v4/letter/a/{size}.png"
+      );
+      assert.strictEqual(added.display_name, "ada");
+      assert.strictEqual(added.permission, "edit");
+    });
+
+    test("a group no permission can be granted to is listed as disallowed", async function (assert) {
+      this.site.access_control = {
+        banned_acl: {
+          TestTarget: [
+            { type: "group", id: 42, permission: "view" },
+            { type: "group", id: 42, permission: "edit" },
+          ],
+        },
+      };
+      const state = controlledState();
+
+      await render(
+        <template>
+          <DAccessControl
+            @acl={{state.acl}}
+            @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+      await dSelect(".d-access-control__chooser").open();
+      const row = ".d-select__panel [role='option'][data-value='team_a']";
+
+      assert.dom(row).hasAttribute("aria-disabled", "true");
+      assert
+        .dom(`${row} .d-group-option__reason`)
+        .hasText(i18n("access_control.manage.disallowed"));
+
+      await click(row);
+      assert.strictEqual(state.onChangeCalls.length, 0, "it can't be added");
+    });
+  }
+);
 
 module("Integration | Component | DAccessControlField", function (hooks) {
   setupRenderingTest(hooks);

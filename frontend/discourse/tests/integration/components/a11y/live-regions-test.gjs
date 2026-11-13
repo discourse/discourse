@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next, run } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -7,6 +8,8 @@ import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DModal from "discourse/ui-kit/d-modal";
+import I18n from "discourse-i18n";
 
 const REGIONS = [
   { type: "polite", selector: "#a11y-announcements-polite" },
@@ -96,6 +99,130 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
     assert
       .dom("#a11y-announcements-polite")
       .hasText("Test polite message", "displays polite message");
+  });
+
+  test("composes same-type announcements made in one flush instead of clobbering", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two polite announcements in the same synchronous flush — e.g. an "item added"
+    // message immediately followed by a re-filtered result count. The one-message-per-type
+    // live region can only show one, so without composition the second deterministically
+    // clobbers the first and "Added Foo" is never announced.
+    a11y.announce("Added Foo", "polite", 500);
+    a11y.announce("12 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Added Foo. 12 results",
+        "both same-flush messages are composed into one atomic announcement"
+      );
+  });
+
+  test("dedupes identical same-type announcements made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two independent callers announcing the same phrase in one flush (e.g. two
+    // subscribers both reporting the same result count). Repeating the identical
+    // text in one atomic announcement is pure redundancy for a screen reader.
+    a11y.announce("3 results", "polite", 500);
+    a11y.announce("3 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "3 results",
+        "the repeated message is announced once, not composed with itself"
+      );
+  });
+
+  test("keeps polite and assertive announcements separate when made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    a11y.announce("Polite one", "polite", 500);
+    a11y.announce("Assertive one", "assertive", 500);
+    a11y.announce("Polite two", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Polite one. Polite two",
+        "polite messages compose among themselves"
+      );
+    assert
+      .dom("#a11y-announcements-assertive")
+      .hasText(
+        "Assertive one",
+        "the assertive message is not folded in with the polite ones"
+      );
+  });
+
+  test("joins composed announcements with the locale's sentence break", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const translations = I18n.translations[I18n.locale].js;
+    const original = translations.a11y_announcement_separator;
+    // Chinese and Japanese end a sentence with a full-width stop and no following space.
+    translations.a11y_announcement_separator = "。";
+
+    try {
+      const a11y = getOwner(this).lookup("service:a11y");
+      a11y.announce("Added Foo", "polite", 500);
+      a11y.announce("12 results", "polite", 500);
+
+      await render(<template><A11yLiveRegions /></template>);
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText("Added Foo。12 results", "the translated separator is used");
+    } finally {
+      translations.a11y_announcement_separator = original;
+    }
+  });
+
+  // A caller re-asserting what the region already says would otherwise be read out ahead of
+  // the news it arrived with. Alone, a repeat is still delivered (see the repeat tests below).
+  test("drops a restated message when the same flush carries something new", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    await render(<template><A11yLiveRegions /></template>);
+
+    a11y.announce("3 results", "polite", 500);
+    await settled();
+
+    a11y.announce("3 results", "polite", 500);
+    a11y.announce("Added Foo", "polite", 500);
+    await settled();
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText("Added Foo", "only the new message is announced");
+  });
+
+  test("an empty announcement discards the messages queued before it in the flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    await render(<template><A11yLiveRegions /></template>);
+
+    a11y.announce("Stale", "polite", 500);
+    a11y.announce("", "polite", 500);
+    a11y.announce("Fresh", "polite", 500);
+    await settled();
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText("Fresh", "what came after the clear is announced on its own");
   });
 
   test("announce called during render does not trigger a backtracking assertion", async function (assert) {
@@ -297,5 +424,265 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       undefined,
       "teardown cancels the pending restore instead of letting it write and re-arm a timer"
     );
+  });
+
+  // The record of what reached each live region, read by tooling that has to pair a delivery with
+  // the calls it contains. Text alone cannot do that once same-tick calls are combined.
+  module("announcementHistory", function () {
+    function snapshot(record) {
+      const { type, text, delivered, dropped, superseded } = record;
+      return { type, text, delivered, dropped, superseded };
+    }
+
+    test("announce returns increasing call ids, and a call that throws gets none", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const first = a11y.announce("One", "polite");
+      assert.throws(() => a11y.announce("Two", "nonsense"));
+      const second = a11y.announce("Three", "polite");
+      await settled();
+
+      assert.strictEqual(typeof first, "number", "a call id is returned");
+      assert.strictEqual(second, first + 1, "the call that threw used no id");
+    });
+
+    test("a lone message is recorded with its call", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const id = a11y.announce("Saved", "polite");
+      await settled();
+
+      const [record] = a11y.announcementHistory;
+      assert.strictEqual(typeof record.id, "number", "the record has an id");
+      assert.deepEqual(snapshot(record), {
+        type: "polite",
+        text: "Saved",
+        delivered: [id],
+        dropped: [],
+        superseded: false,
+      });
+    });
+
+    test("same-tick messages are one record holding every call", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const added = a11y.announce("Added Foo", "polite");
+      const count = a11y.announce("12 results", "polite");
+      await settled();
+
+      assert.deepEqual(a11y.announcementHistory.map(snapshot), [
+        {
+          type: "polite",
+          text: "Added Foo. 12 results",
+          delivered: [added, count],
+          dropped: [],
+          superseded: false,
+        },
+      ]);
+    });
+
+    test("identical same-tick messages each count as delivered", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const first = a11y.announce("3 results", "polite");
+      const second = a11y.announce("3 results", "polite");
+      await settled();
+
+      assert.deepEqual(
+        a11y.announcementHistory.map((record) => record.delivered),
+        [[first, second]],
+        "both calls are delivered by the one merged message"
+      );
+    });
+
+    test("a restated message is recorded as dropped", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      a11y.announce("3 results", "polite");
+      await settled();
+
+      const restated = a11y.announce("3 results", "polite");
+      const added = a11y.announce("Added Foo", "polite");
+      await settled();
+
+      assert.deepEqual(snapshot(a11y.announcementHistory.at(-1)), {
+        type: "polite",
+        text: "Added Foo",
+        delivered: [added],
+        dropped: [{ call: restated, reason: "restated" }],
+        superseded: false,
+      });
+    });
+
+    test("an empty announcement records the calls it discarded", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const stale = a11y.announce("Stale", "polite");
+      const clear = a11y.announce("", "polite");
+      await settled();
+
+      assert.deepEqual(a11y.announcementHistory.map(snapshot), [
+        {
+          type: "polite",
+          text: "",
+          delivered: [clear],
+          dropped: [{ call: stale, reason: "cleared" }],
+          superseded: false,
+        },
+      ]);
+    });
+
+    test("a repeat cancelled by a newer announcement is marked superseded", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      a11y.announce("1 result", "polite");
+      await settled();
+
+      // Same timing as the repeat test above: one tick in, the repeat has cleared the region
+      // and is waiting to write it back.
+      a11y.announce("1 result", "polite");
+      await new Promise((resolve) => next(resolve));
+      a11y.announce("2 results", "polite");
+      await settled();
+
+      assert.deepEqual(
+        a11y.announcementHistory.map((record) => [
+          record.text,
+          record.superseded,
+        ]),
+        [
+          ["1 result", false],
+          ["1 result", true],
+          ["2 results", false],
+        ]
+      );
+    });
+
+    test("the history keeps only the newest 50 records", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      for (let index = 1; index <= 51; index++) {
+        a11y.announce(`Message ${index}`, "polite");
+        await settled();
+      }
+
+      const texts = a11y.announcementHistory.map((record) => record.text);
+      assert.strictEqual(texts.length, 50, "capped at 50");
+      assert.strictEqual(texts[0], "Message 2", "the oldest record is dropped");
+      assert.strictEqual(texts.at(-1), "Message 51", "the newest is kept");
+    });
+
+    test("the records it returns cannot change the service", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+      const a11y = getOwner(this).lookup("service:a11y");
+
+      const id = a11y.announce("Saved", "polite");
+      await settled();
+
+      const [record] = a11y.announcementHistory;
+      assert.true(Object.isFrozen(record), "the record is frozen");
+      assert.true(Object.isFrozen(record.delivered), "its call list is frozen");
+      assert.throws(() => record.delivered.push(99), "it cannot be changed");
+      assert.deepEqual(
+        a11y.announcementHistory[0].delivered,
+        [id],
+        "the service's own record is untouched"
+      );
+    });
+  });
+
+  module("inside a modal dialog", function () {
+    // Browsers leave everything outside an open aria-modal dialog out of the accessibility
+    // tree, so regions left at the root are never read while a modal is open.
+    test("render inside the open modal and return when it closes", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const open = tracked(true);
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          {{#if open.value}}
+            <DModal class="outer" @inline={{true}} @title="Outer">Body</DModal>
+          {{/if}}
+        </template>
+      );
+
+      assert
+        .dom(".outer[aria-modal='true'] #a11y-announcements-polite")
+        .exists("the polite region is inside the modal");
+      assert
+        .dom(".outer[aria-modal='true'] #a11y-announcements-assertive")
+        .exists("the assertive region is inside the modal");
+
+      getOwner(this).lookup("service:a11y").announce("Removed Staff");
+      await settled();
+      assert
+        .dom(".outer #a11y-announcements-polite")
+        .hasText("Removed Staff", "announcements reach the modal's region");
+
+      open.value = false;
+      await settled();
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .exists({ count: 1 }, "there is still exactly one polite region");
+      assert.strictEqual(
+        find("#a11y-announcements-polite").closest("[aria-modal]"),
+        null,
+        "the regions return to the page once the modal closes"
+      );
+    });
+
+    test("move to a modal opened above another and back", async function (assert) {
+      const outer = tracked(true);
+      const inner = tracked(false);
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          {{#if outer.value}}
+            <DModal class="outer" @inline={{true}} @title="Outer">Body</DModal>
+          {{/if}}
+          {{#if inner.value}}
+            <DModal class="inner" @inline={{true}} @title="Inner">Body</DModal>
+          {{/if}}
+        </template>
+      );
+
+      inner.value = true;
+      await settled();
+      assert
+        .dom(".inner #a11y-announcements-polite")
+        .exists("the topmost modal holds the regions");
+
+      inner.value = false;
+      await settled();
+      assert
+        .dom(".outer #a11y-announcements-polite")
+        .exists("closing it hands the regions back to the modal below");
+
+      inner.value = true;
+      await settled();
+      outer.value = false;
+      await settled();
+      assert
+        .dom(".inner #a11y-announcements-polite")
+        .exists("closing a lower modal leaves them in the topmost one");
+    });
   });
 });

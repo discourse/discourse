@@ -6,9 +6,11 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import BoardsEditableTitle from "../boards-editable-title.gjs";
 
@@ -144,15 +146,32 @@ export default class BoardsCardDetail extends Component {
                 as |field|
               >
                 <field.Control>
-                  <EmailGroupUserChooser
-                    @onChange={{fn this.onAssignedChanged field}}
-                    @options={{hash
-                      disabled=(not @model.board.canWrite)
-                      maximum=1
-                      excludeCurrentUser=false
-                    }}
-                    @value={{data.assigned_to}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectUser
+                      @clearable={{true}}
+                      @describedBy={{field.describedBy}}
+                      @disabled={{field.disabled}}
+                      @id={{field.id}}
+                      @invalid={{if field.error true false}}
+                      @onChange={{legacyPickOne
+                        (fn this.onAssignedChanged field)
+                      }}
+                      @texts={{hash ariaLabel=field.title}}
+                      @value={{data.assigned_to}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <EmailGroupUserChooser
+                      @onChange={{fn this.onAssignedChanged field}}
+                      @options={{hash
+                        disabled=(not @model.board.canWrite)
+                        maximum=1
+                        excludeCurrentUser=false
+                      }}
+                      @value={{data.assigned_to}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
             {{/if}}

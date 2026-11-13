@@ -115,6 +115,89 @@ module("Unit | Model | site", function (hooks) {
     );
   });
 
+  test("category lookups reuse one id map until the categories change", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      categories: [
+        { id: 1, name: "One" },
+        { id: 2, name: "Two" },
+      ],
+    });
+
+    const first = site.categoriesById;
+    assert.strictEqual(
+      site.categoriesById,
+      first,
+      "repeated lookups read the same map"
+    );
+
+    site.updateCategory({ id: 3, name: "Three" });
+
+    assert.notStrictEqual(
+      site.categoriesById,
+      first,
+      "adding a category builds a new map"
+    );
+    assert.strictEqual(
+      site.categoriesById.get(3)?.name,
+      "Three",
+      "the new map includes the added category"
+    );
+  });
+
+  test("category lookups merge a page of categories with updateCategories", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      categories: [{ id: 1, name: "One" }],
+    });
+    const existing = site.categories[0];
+
+    const result = site.updateCategories([
+      { id: 1, name: "One renamed" },
+      { id: 2, name: "Two" },
+      { id: 3, name: "Three", parent_category_id: 2 },
+    ]);
+
+    assert.deepEqual(
+      result.map((category) => category.id),
+      [1, 2, 3],
+      "returns the merged categories in page order"
+    );
+    assert.strictEqual(
+      result[0],
+      existing,
+      "an existing record is updated in place"
+    );
+    assert.strictEqual(existing.name, "One renamed", "with the page's fields");
+    assert.deepEqual(
+      site.categories.map((category) => category.id),
+      [1, 2, 3],
+      "new categories are appended once"
+    );
+    assert.strictEqual(
+      site.categoriesById.get(3)?.name,
+      "Three",
+      "the lookup map covers the merged page"
+    );
+    assert.deepEqual(
+      [...(site.loadedCategoryIds ?? [])].sort(),
+      [1, 2, 3],
+      "every merged id is recorded as loaded"
+    );
+  });
+
+  test("category lookups reject model instances in updateCategories", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", { categories: [] });
+    const category = store.createRecord("category", { id: 5, name: "Five" });
+
+    assert.throws(
+      () => site.updateCategories([category]),
+      /pojo/,
+      "only plain objects are merged, as with updateCategory"
+    );
+  });
+
   test("sortedCategories returns categories sorted by topic counts and sorts child categories after parent", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {

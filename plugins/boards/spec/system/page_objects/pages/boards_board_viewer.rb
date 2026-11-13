@@ -206,6 +206,14 @@ module PageObjects
       end
 
       def select_card_detail_tag(tag_name)
+        if card_detail_d_select?
+          chooser = card_detail_d_select
+          chooser.search(tag_name)
+          chooser.select_name(tag_name)
+          chooser.close
+          return self
+        end
+
         tag_chooser =
           PageObjects::Components::SelectKit.new(".discourse-boards-card-detail-modal .tag-chooser")
         tag_chooser.expand
@@ -216,6 +224,14 @@ module PageObjects
       end
 
       def create_card_detail_tag(tag_name)
+        if card_detail_d_select?
+          chooser = card_detail_d_select
+          chooser.search(tag_name)
+          chooser.select_name(tag_name)
+          chooser.close
+          return self
+        end
+
         tag_chooser =
           PageObjects::Components::SelectKit.new(".discourse-boards-card-detail-modal .tag-chooser")
         tag_chooser.expand
@@ -226,6 +242,8 @@ module PageObjects
       end
 
       def has_card_detail_tag?(tag_name)
+        return card_detail_d_select.has_selected_name?(tag_name) if card_detail_d_select?
+
         tag_chooser =
           PageObjects::Components::SelectKit.new(".discourse-boards-card-detail-modal .tag-chooser")
         tag_chooser.has_selected_name?(tag_name)
@@ -377,6 +395,21 @@ module PageObjects
           body_selector: ".discourse-boards-constraint-fix-modal",
         ).click_primary_button
         self
+      end
+
+      private
+
+      def card_detail_d_select?
+        has_css?(
+          ".discourse-boards-card-detail-modal .form-kit__control-tag-chooser.d-select",
+          wait: 0,
+        )
+      end
+
+      def card_detail_d_select
+        PageObjects::Components::UiKit::DSelect.at(
+          ".discourse-boards-card-detail-modal .form-kit__control-tag-chooser.d-select",
+        )
       end
     end
   end

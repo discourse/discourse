@@ -790,6 +790,7 @@ export default class SiteSettingComponent extends Component {
               @changeValueCallback={{this.changeValueCallback}}
               @disabled={{this.isDisabled}}
               @isSecret={{this.isSecret}}
+              @label={{this.settingName}}
               @preview={{this.preview}}
               @setting={{this.setting}}
               @setValidationMessage={{this.setValidationMessage}}

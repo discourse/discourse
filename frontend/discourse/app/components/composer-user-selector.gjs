@@ -2,7 +2,10 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
+import { selectControl } from "discourse/lib/select-control";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
+import { i18n } from "discourse-i18n";
 
 export default class ComposerUserSelector extends Component {
   _groups = [];
@@ -19,14 +22,15 @@ export default class ComposerUserSelector extends Component {
     super.didInsertElement(...arguments);
 
     if (this.focusTarget === "usernames") {
-      this.element.querySelector(".select-kit .select-kit-header").focus();
+      selectControl(this.element)?.focus();
     }
   }
 
   @action
   updateRecipients(selected, content) {
+    // TODO (select-kit-replacement-cleanup): Only `type` remains once select-kit is removed.
     const newGroups = content
-      .filter((group) => group.isGroup)
+      .filter((group) => group.isGroup || group.type === "group")
       .map((item) => item.id);
     this._updateGroups(selected, newGroups);
     this.set("recipients", selected.join(","));
@@ -49,17 +53,32 @@ export default class ComposerUserSelector extends Component {
   }
 
   <template>
-    <EmailGroupUserChooser
-      @id="private-message-users"
-      @onChange={{this.updateRecipients}}
-      @options={{hash
-        topicId=this.topicId
-        none="composer.users_placeholder"
-        includeMessageableGroups=true
-        allowEmails=this.currentUser.can_send_private_email_messages
-        autoWrap=true
-      }}
-      @value={{this.splitRecipients}}
-    />
+    {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <DSelectUser
+        @emails={{this.currentUser.can_send_private_email_messages}}
+        @id="private-message-users"
+        @includeGroups="messageable"
+        @multiple={{true}}
+        @onChange={{this.updateRecipients}}
+        @texts={{hash placeholder=(i18n "composer.users_placeholder")}}
+        @topicId={{this.topicId}}
+        @value={{this.splitRecipients}}
+      />
+    {{else}}
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+      <EmailGroupUserChooser
+        @id="private-message-users"
+        @onChange={{this.updateRecipients}}
+        @options={{hash
+          topicId=this.topicId
+          none="composer.users_placeholder"
+          includeMessageableGroups=true
+          allowEmails=this.currentUser.can_send_private_email_messages
+          autoWrap=true
+        }}
+        @value={{this.splitRecipients}}
+      />
+    {{/if}}
   </template>
 }

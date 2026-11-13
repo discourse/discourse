@@ -1,5 +1,6 @@
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import { padding } from "discourse/ui-kit/-internals/scroll-strip/reveal";
 import type { DRovingFocusConfig } from "../config.ts";
 import { activeSeed } from "../entry-policy.ts";
 
@@ -19,11 +20,8 @@ export default class ActiveDescendantStrategy {
   /** Tracks minted item ids so teardown never removes an author-supplied id. */
   #mintedIds = new Set<string>();
 
-  /**
-   * A one-shot observer owed only when an entry seed found no items; it disconnects before
-   * reconciling so later row churn cannot repeatedly return the cursor to the start.
-   */
-  #pendingSeed: MutationObserver | null = null;
+  /** Virtualized rows may be replaced after the modifier has reconciled the previous window. */
+  #itemsObserver: MutationObserver | null = null;
 
   /** Pending restoration of the temporarily dropped `aria-activedescendant`. */
   #reannounceTimer?: ReturnType<typeof nextRunloop>;
@@ -79,6 +77,7 @@ export default class ActiveDescendantStrategy {
     }
     this.#controller?.setAttribute("aria-activedescendant", id);
     this.#scrollIntoView(target);
+    this.#observeItems();
     return id;
   }
 
@@ -88,6 +87,7 @@ export default class ActiveDescendantStrategy {
       return false;
     }
     this.#activeId = null;
+    this.stopObservingItems();
     this.#controller?.removeAttribute("aria-activedescendant");
     this.#clearClass(this.#config.activeClass, this.#scope);
     return true;
@@ -120,35 +120,10 @@ export default class ActiveDescendantStrategy {
     return true;
   }
 
-  /**
-   * Watches for the first navigable items only after seeding found none. A present set with no
-   * eligible seed is a policy decision, not an absence that later mutations should override.
-   */
-  armPendingSeed(): void {
-    if (this.#pendingSeed || this.#config.entryFocus === "none") {
-      return;
-    }
-    this.#pendingSeed = new MutationObserver(() => {
-      if (this.#destroyed || this.#config.entryFocus === "none") {
-        this.disarmPendingSeed();
-        return;
-      }
-      if (!this.#scope.items().length) {
-        return;
-      }
-      this.disarmPendingSeed();
-      this.onItemsArrived();
-    });
-    this.#pendingSeed.observe(this.#scope.container, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
-  /** Cancels the one-shot pending-seed observer. */
-  disarmPendingSeed(): void {
-    this.#pendingSeed?.disconnect();
-    this.#pendingSeed = null;
+  /** Cancels observation when the cursor is cleared or the group is torn down. */
+  stopObservingItems(): void {
+    this.#itemsObserver?.disconnect();
+    this.#itemsObserver = null;
   }
 
   /** Preserves, reseeds, or clears the cursor against the current item set. */
@@ -164,13 +139,17 @@ export default class ActiveDescendantStrategy {
       return { kind: "preserved" };
     }
 
-    const seed = activeSeed(items, this.#config);
+    const seed = activeSeed(items, this.#config, (item) =>
+      this.#scope.isActivatable(item)
+    );
     if (seed) {
-      this.disarmPendingSeed();
+      this.stopObservingItems();
       return { kind: "activate", target: seed };
     }
     if (!items.length) {
-      this.armPendingSeed();
+      if (this.#config.entryFocus !== "none") {
+        this.#observeItems();
+      }
     }
     this.#activeId = null;
     this.#controller?.removeAttribute("aria-activedescendant");
@@ -181,7 +160,7 @@ export default class ActiveDescendantStrategy {
   /** Removes active-descendant artifacts and cancels deferred work. */
   destroy(): void {
     this.#destroyed = true;
-    this.disarmPendingSeed();
+    this.stopObservingItems();
     this.#cancelReannounce();
     this.#controller?.removeAttribute("aria-activedescendant");
     this.#clearClass(this.#config.activeClass, this.#scope);
@@ -220,20 +199,62 @@ export default class ActiveDescendantStrategy {
   }
 
   /**
+   * Reconciles a removed cursor or a pending entry seed when windowed rows arrive.
+   * A surviving cursor is preserved, including when more rows are appended.
+   */
+  #observeItems(): void {
+    if (this.#itemsObserver) {
+      return;
+    }
+    this.#itemsObserver = new MutationObserver(() => {
+      if (this.#destroyed) {
+        this.stopObservingItems();
+        return;
+      }
+      const items = this.#scope.items();
+      if (this.current(items) || (!this.#activeId && !items.length)) {
+        return;
+      }
+      this.stopObservingItems();
+      this.onItemsArrived();
+    });
+    this.#itemsObserver.observe(this.#scope.container, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  /**
    * Scrolls only the nearest list scroller, never the page; scrolling every ancestor can move the
    * document while a detached container is still awaiting its anchored position.
    */
   #scrollIntoView(target: HTMLElement): void {
+    if (getComputedStyle(target).position === "sticky") {
+      return;
+    }
     const container = this.#scrollableAncestor(target);
     if (!container) {
       return;
     }
+    // Rects see the transforms windowed rows are placed with, but they also carry any ancestor
+    // scale, while scrollTop and scroll padding are layout pixels; convert at the boundary.
     const itemRect = target.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    if (itemRect.top < containerRect.top) {
-      container.scrollTop -= containerRect.top - itemRect.top;
-    } else if (itemRect.bottom > containerRect.bottom) {
-      container.scrollTop += itemRect.bottom - containerRect.bottom;
+    const scale =
+      containerRect.height > 0
+        ? container.offsetHeight / containerRect.height
+        : 1;
+    const style = getComputedStyle(container);
+    const top =
+      containerRect.top +
+      padding(style.scrollPaddingTop, container.clientHeight) / scale;
+    const bottom =
+      containerRect.bottom -
+      padding(style.scrollPaddingBottom, container.clientHeight) / scale;
+    if (itemRect.top < top) {
+      container.scrollTop -= (top - itemRect.top) * scale;
+    } else if (itemRect.bottom > bottom) {
+      container.scrollTop += (itemRect.bottom - bottom) * scale;
     }
   }
 

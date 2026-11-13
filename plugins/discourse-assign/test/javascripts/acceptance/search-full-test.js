@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -82,5 +83,49 @@ acceptance("Search - Full Page", function (needs) {
         "none assigned:admin",
         'has updated search term to "none assigned:admin"'
       );
+  });
+});
+
+acceptance("Search - Full Page - new select controls", function (needs) {
+  needs.settings({ assign_enabled: true, enable_new_select_controls: true });
+  needs.user({ can_assign: true, can_assign_globally: true });
+
+  let searchParams;
+  needs.pretender((server, helper) => {
+    server.get("/u/search/users", (request) => {
+      searchParams = request.queryParams;
+      return helper.response({
+        users: [
+          {
+            username: "admin",
+            name: "admin",
+            avatar_template: "/images/avatar.png",
+          },
+        ],
+        groups: [{ name: "support", full_name: "Support" }],
+      });
+    });
+  });
+
+  test("update assigned to through advanced search ui", async function (assert) {
+    await visit("/search");
+    await click(".advanced-filters__toggle");
+    await fillIn(".search-query", "none");
+
+    const assigned = dSelect(".assigned-advanced-search .d-select");
+    await assigned.search("adm");
+    assert.strictEqual(searchParams.include_groups, "true");
+    assert.strictEqual(searchParams.assignable_groups, "true");
+
+    await assigned.selectByName("admin");
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "none assigned:admin",
+        'has updated search term to "none assigned:admin"'
+      );
+
+    await assigned.clear();
+    assert.dom(".search-query").hasValue("none");
   });
 });

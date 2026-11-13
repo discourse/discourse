@@ -1,13 +1,17 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import BaseField from "./da-base-field.gjs";
 import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
 
 export default class CategoriesField extends BaseField {
+  @service siteSettings;
+
   get categories() {
     const ids = this.args.field?.metadata?.value || [];
     return ids.map((id) => Category.findById(id)).filter(Boolean);
@@ -19,11 +23,24 @@ export default class CategoriesField extends BaseField {
         <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
-          <CategorySelector
-            @categories={{this.categories}}
-            @onChange={{this.onChangeCategories}}
-            @options={{hash clearable=true disabled=@field.isDisabled}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectCategory
+              class="category-selector"
+              @clearable={{true}}
+              @disabled={{@field.isDisabled}}
+              @multiple={{true}}
+              @onChange={{this.onChangeCategories}}
+              @texts={{hash ariaLabel=@label}}
+              @value={{this.categories}}
+            />
+          {{else}}
+            <CategorySelector
+              @categories={{this.categories}}
+              @onChange={{this.onChangeCategories}}
+              @options={{hash clearable=true disabled=@field.isDisabled}}
+            />
+          {{/if}}
 
           <DAFieldDescription @description={{@description}} />
         </div>

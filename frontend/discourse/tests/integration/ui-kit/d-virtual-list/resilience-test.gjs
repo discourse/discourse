@@ -115,10 +115,10 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
     );
   });
 
-  test("a throwing pinnedIndices degrades to the unextended window", async function (assert) {
+  test("a throwing keepMounted degrades to the unextended window", async function (assert) {
     const items = buildRows(100);
     const explode = () => {
-      throw new Error("pins blew up");
+      throw new Error("keepMounted blew up");
     };
 
     await render(
@@ -133,9 +133,9 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
         <DVirtualList
           @estimateSize={{estimate}}
           @items={{items}}
+          @keepMounted={{explode}}
           @key="id"
           @overscan={{0}}
-          @pinnedIndices={{explode}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -152,14 +152,14 @@ module("Integration | ui-kit | DVirtualList | resilience", function (hooks) {
     );
     assert.false(
       indices.includes(0),
-      "no pin is applied, rather than the render crashing on a poisoned window"
+      "no extra row is kept mounted, rather than the render crashing on a poisoned window"
     );
 
     // The stub is not just noise suppression: this path exists to REPORT, and
     // without asserting it the reporting could be deleted with the suite still green.
     assert.true(
-      this.consoleError.calledWithMatch(/\[d-virtual-list\] pinnedIndices/),
-      "the swallowed pinnedIndices error is reported"
+      this.consoleError.calledWithMatch(/\[d-virtual-list\] keepMounted/),
+      "the swallowed keepMounted error is reported"
     );
   });
 

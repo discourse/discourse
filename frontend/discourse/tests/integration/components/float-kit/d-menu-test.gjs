@@ -115,6 +115,68 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
+  for (const mobile of [false, true]) {
+    const where = mobile ? "its mobile modal" : "its content";
+
+    test(`@ariaLabelledBy names ${where} by a caption on the page`, async function (assert) {
+      if (mobile) {
+        forceMobile();
+      }
+
+      await render(
+        <template>
+          <span id="menu-caption">Watched</span>
+          <DMenu
+            @ariaLabel="Options"
+            @ariaLabelledBy="menu-caption"
+            @content="content"
+            @identifier="foo"
+            @inline={{true}}
+            @modalForMobile={{true}}
+          />
+        </template>
+      );
+      await open();
+
+      const content = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
+      assert
+        .dom(`${content}[data-identifier='foo']`)
+        .hasAttribute("aria-labelledby", "menu-caption")
+        .doesNotHaveAttribute("aria-label");
+    });
+
+    test(`the ariaLabelledBy option names ${where} for a menu opened through the service`, async function (assert) {
+      if (mobile) {
+        forceMobile();
+      }
+
+      await render(
+        <template>
+          <span id="menu-caption">Watched</span>
+          <button class="service-trigger" type="button">Open</button>
+          <DMenus />
+          <ModalContainer />
+        </template>
+      );
+      await getOwner(this)
+        .lookup("service:menu")
+        .show(find(".service-trigger"), {
+          ariaLabel: "Options",
+          ariaLabelledBy: "menu-caption",
+          content: "content",
+          identifier: "foo",
+          modalForMobile: true,
+        });
+      await settled();
+
+      const content = mobile ? ".fk-d-menu-modal" : ".fk-d-menu";
+      assert
+        .dom(`${content}[data-identifier='foo']`)
+        .hasAttribute("aria-labelledby", "menu-caption")
+        .doesNotHaveAttribute("aria-label");
+    });
+  }
+
   test("closing a standalone mobile menu cleans up its modal", async function (assert) {
     forceMobile();
 
@@ -1515,5 +1577,77 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .doesNotExist(
         "scrolling the nearest scrollable ancestor closes the menu"
       );
+  });
+
+  module("inside a modal dialog", function () {
+    test("renders within the dialog, where assistive technology can reach it", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DModal @inline={{true}} @title="Manage">
+            <:body>
+              <DMenu
+                @content="content"
+                @identifier="in-modal"
+                @inline={{false}}
+                @label="Open"
+              />
+            </:body>
+          </DModal>
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert
+        .dom("[aria-modal='true'] .fk-d-menu[data-identifier='in-modal']")
+        .exists("the menu is inside the modal dialog");
+      assert
+        .dom("#d-menu-portals .fk-d-menu")
+        .doesNotExist("nothing renders in the page's menu portal");
+    });
+
+    test("takes pointer events there, though the dialog lets them through", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DModal @inline={{true}} @title="Manage">
+            <:body>
+              <DMenu
+                @content="content"
+                @identifier="in-modal"
+                @inline={{false}}
+                @label="Open"
+              />
+            </:body>
+          </DModal>
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert.strictEqual(
+        getComputedStyle(find(".fk-d-menu[data-identifier='in-modal']"))
+          .pointerEvents,
+        "auto"
+      );
+    });
+
+    test("a menu outside any modal still renders in the page's menu portal", async function (assert) {
+      await render(
+        <template>
+          <DMenus />
+          <DMenu
+            @content="content"
+            @identifier="outside"
+            @inline={{false}}
+            @label="Open"
+          />
+        </template>
+      );
+      await click(".fk-d-menu__trigger");
+
+      assert
+        .dom("#d-menu-portals .fk-d-menu[data-identifier='outside']")
+        .exists();
+    });
   });
 });

@@ -113,5 +113,31 @@ module(
         String(category.id)
       );
     });
+
+    test("with the new select controls, the picker takes the field's id, description, error and disabled state", async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const field = {
+        id: "workflow-field",
+        describedBy: "workflow-field-description",
+        error: { message: "Required" },
+        disabled: true,
+        title: "Field",
+        value: "",
+        set() {},
+      };
+
+      await render(
+        <template>
+          <CategoryControl @field={{field}} @supportsExpression={{false}} />
+        </template>
+      );
+
+      assert.dom("[role='combobox']").hasAttribute("id", "workflow-field");
+      assert
+        .dom("[role='combobox']")
+        .hasAttribute("aria-describedby", /workflow-field-description/);
+      assert.dom("[role='combobox']").hasAttribute("aria-invalid", "true");
+      assert.dom("[role='combobox']").isDisabled();
+    });
   }
 );

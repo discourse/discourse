@@ -5,6 +5,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -73,6 +74,37 @@ acceptance("Modal - move-to-topic", function (needs) {
     assert.deepEqual(data["tag_ids[]"], ["1"], "sends the chosen tag");
   });
 
+  test("sends the chosen tags when moving posts to a new topic", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-admin-menu-trigger");
+    await click(".topic-admin-menu-content .topic-admin-multi-select button");
+    await click(".select-posts .select-post");
+    await click(".selected-posts .move-to-topic");
+
+    await fillIn("#split-topic-name", "A new topic");
+
+    assert
+      .dom(".split-new-topic-form .d-select.select-tag")
+      .exists("renders DSelect");
+    assert
+      .dom(".choose-topic-modal .select-kit.tag-chooser")
+      .doesNotExist("replaces the legacy tag chooser");
+    await dSelect(".split-new-topic-form .d-select.select-tag").selectByName(
+      "monkey"
+    );
+
+    let data;
+    pretender.post("/t/280/move-posts", (request) => {
+      data = parsePostData(request.requestBody);
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.deepEqual(data["tag_ids[]"], ["1"], "sends the chosen tag");
+  });
+
   test("sends the chosen tags when moving posts to a new message", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-admin-menu-trigger");
@@ -86,6 +118,39 @@ acceptance("Modal - move-to-topic", function (needs) {
     const tags = selectKit(".choose-topic-modal form .tag-chooser");
     await tags.expand();
     await tags.selectRowByName("monkey");
+
+    let data;
+    pretender.post("/t/280/move-posts", (request) => {
+      data = parsePostData(request.requestBody);
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.strictEqual(
+      data.archetype,
+      "private_message",
+      "moves the posts to a message"
+    );
+    assert.deepEqual(data["tag_ids[]"], ["1"], "sends the chosen tag");
+  });
+
+  test("sends the chosen tags when moving posts to a new message", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-admin-menu-trigger");
+    await click(".topic-admin-menu-content .topic-admin-multi-select button");
+    await click(".select-posts .select-post");
+    await click(".selected-posts .move-to-topic");
+
+    await click("#move-to-new-message");
+    await fillIn("#split-topic-name", "A new message");
+
+    assert.dom(".choose-topic-modal form .d-select").exists("renders DSelect");
+    assert
+      .dom(".choose-topic-modal .select-kit.tag-chooser")
+      .doesNotExist("replaces the legacy tag chooser");
+    await dSelect(".choose-topic-modal form .d-select").selectByName("monkey");
 
     let data;
     pretender.post("/t/280/move-posts", (request) => {
@@ -130,5 +195,97 @@ acceptance("Modal - move-to-topic", function (needs) {
       "moves the posts to a message"
     );
     assert.deepEqual(data["tag_ids[]"], ["1"], "sends the chosen tag");
+  });
+
+  test("sends the chosen tags when moving posts from a message to a new message", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/t/pm-for-testing/12");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-multi-select .btn");
+    await click("#post_1 .select-post");
+    await click(".selected-posts .move-to-topic");
+
+    await fillIn("#split-topic-name", "A new message");
+
+    assert.dom(".choose-topic-modal form .d-select").exists("renders DSelect");
+    assert
+      .dom(".choose-topic-modal .select-kit.tag-chooser")
+      .doesNotExist("replaces the legacy tag chooser");
+    await dSelect(".choose-topic-modal form .d-select").selectByName("monkey");
+
+    let data;
+    pretender.post("/t/12/move-posts", (request) => {
+      data = parsePostData(request.requestBody);
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.strictEqual(
+      data.archetype,
+      "private_message",
+      "moves the posts to a message"
+    );
+    assert.deepEqual(data["tag_ids[]"], ["1"], "sends the chosen tag");
+  });
+
+  test("sends the chosen participants when moving posts to an existing message", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [{ username: "bob", name: "Bob", avatar_template: "/a/{size}" }],
+      })
+    );
+    await visit("/t/pm-for-testing/12");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-multi-select .btn");
+    await click("#post_1 .select-post");
+    await click(".selected-posts .move-to-topic");
+    await click(".choose-topic-modal .radios #move-to-existing-message");
+    await fillIn(".choose-topic-modal #choose-message-title", "Topic");
+    await click(".choose-topic-modal .choose-message [role='option']");
+
+    assert
+      .dom(".choose-topic-modal .select-kit.email-group-user-chooser")
+      .doesNotExist("replaces the legacy participant chooser");
+    const participants = dSelect(".choose-topic-modal .participant-selector");
+    await participants.open();
+    await participants.search("bo");
+    await participants.selectByName("bob");
+
+    let data;
+    pretender.post("/t/12/move-posts", (request) => {
+      data = parsePostData(request.requestBody);
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.strictEqual(data.participants, "bob", "sends the participant");
+  });
+
+  test("the message picker keeps the legacy results' space below it", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/t/pm-for-testing/12");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-multi-select .btn");
+    await click("#post_1 .select-post");
+    await click(".selected-posts .move-to-topic");
+    await click(".choose-topic-modal .radios #move-to-existing-message");
+
+    const picker = document.querySelector(
+      ".choose-topic-modal .choose-message"
+    );
+    const label = picker.nextElementSibling;
+    const scale = picker.getBoundingClientRect().width / picker.offsetWidth;
+    const gap =
+      (label.getBoundingClientRect().top -
+        picker.getBoundingClientRect().bottom) /
+      scale;
+
+    assert.strictEqual(
+      Math.round(gap),
+      Math.round(parseFloat(getComputedStyle(picker).fontSize))
+    );
   });
 });

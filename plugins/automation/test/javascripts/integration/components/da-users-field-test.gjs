@@ -3,6 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
@@ -98,5 +99,38 @@ module("Integration | Component | DaUsersField", function (hooks) {
     await selectKit().deselectItemByValue("sam");
 
     assert.strictEqual(this.field.metadata.value, undefined);
+  });
+
+  module("with the new select controls", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("sets values, addresses included", async function (assert) {
+      this.field = new AutomationFabricators(getOwner(this)).field({
+        component: "users",
+      });
+      this.field.metadata.value = undefined;
+
+      await render(
+        <template>
+          <AutomationField
+            @automation={{this.automation}}
+            @field={{this.field}}
+          />
+        </template>
+      );
+
+      const users = dSelect(".users-field .d-select");
+      await users.search("sam");
+      await users.selectByName("sam");
+      await users.search("someone@example.com");
+      await users.select("someone@example.com");
+
+      assert.deepEqual(this.field.metadata.value, [
+        "sam",
+        "someone@example.com",
+      ]);
+    });
   });
 });

@@ -8,12 +8,12 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
-  settleGestureFrame,
-  stubPointerCapture,
-} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+  acceptance,
+  settledAfterFrame,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
 function stubPluginDetails(server, helper) {
@@ -637,7 +637,7 @@ acceptance("Run Query", function (needs) {
     });
     // No sideways movement: a vertical resize must not need any.
     await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
-    await settleGestureFrame();
+    await settledAfterFrame();
 
     assert.strictEqual(
       panes.style.height,
@@ -727,7 +727,7 @@ acceptance("Run Query", function (needs) {
       pointerId: 1,
       clientY: 200 + ceiling * 3,
     });
-    await settleGestureFrame();
+    await settledAfterFrame();
     await triggerEvent(grippie, "pointerup", {
       pointerId: 1,
       clientY: 200 + ceiling * 3,
@@ -752,7 +752,7 @@ acceptance("Run Query", function (needs) {
       clientY: 200,
     });
     await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 260 });
-    await settleGestureFrame();
+    await settledAfterFrame();
     const heightWhenTornDown = panes.style.height;
 
     // Leaving the route with the gesture still held: the separator goes, and the

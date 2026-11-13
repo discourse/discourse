@@ -41,6 +41,8 @@ import { i18n } from "discourse-i18n";
  * @property {number} [topicCount] Topic count displayed after the badge.
  * @property {boolean} [hasSubcategories] Whether to display the subcategory indicator.
  * @property {boolean} [readOnly] Whether to display the read-only indicator.
+ * @property {boolean} [decorativeEmoji] Draws the emoji with an empty alt and no title, for a
+ *   badge whose name is read on its own, so its emoji's code is not read before the name.
  */
 
 let _renderer = defaultCategoryLinkRenderer;
@@ -96,7 +98,9 @@ export function categoryBadgeHTML(category, opts) {
       .map((c) => {
         return categoryBadgeHTML(c, {
           ...newOpts,
-          ...(c !== category ? { topicCount: undefined } : {}),
+          ...(c !== category
+            ? { topicCount: undefined, hasSubcategories: undefined }
+            : {}),
           ...(readOnly && c === category ? { readOnly } : {}),
         });
       })
@@ -142,6 +146,18 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.emoji) {
       categoryOptions.emoji = options.emoji;
+    }
+    if (options.topicCount) {
+      categoryOptions.topicCount = options.topicCount;
+    }
+    if (options.hasSubcategories) {
+      categoryOptions.hasSubcategories = true;
+    }
+    if (options.readOnly) {
+      categoryOptions.readOnly = options.readOnly;
+    }
+    if (options.decorativeEmoji) {
+      categoryOptions.decorativeEmoji = true;
     }
   }
   return trustHTML(categoryBadgeHTML(category, categoryOptions));
@@ -212,7 +228,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    html += dEmoji(opts.emoji) ?? "";
+    html +=
+      dEmoji(
+        opts.emoji,
+        opts.decorativeEmoji ? { alt: "", skipTitle: true } : undefined
+      ) ?? "";
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

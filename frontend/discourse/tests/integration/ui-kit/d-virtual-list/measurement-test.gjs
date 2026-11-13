@@ -1,6 +1,9 @@
-import { findAll, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { trustHTML } from "@ember/template";
+import { find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import {
   disableVirtualization,
   enableVirtualization,
@@ -210,3 +213,62 @@ module("Integration | ui-kit | DVirtualList | measurement", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | DVirtualList | measurement after a resize",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    // Every row changing height at once shifts the window, which mounts new rows. When that
+    // happens inside the browser's ResizeObserver delivery, the new rows' first notifications
+    // cannot be delivered in the same frame and the browser raises a window error.
+    test("resizing every measured row at once raises no ResizeObserver loop error", async function (assert) {
+      const height = tracked(60);
+      const rows = buildRows(COUNT);
+      const rowStyle = (size) => trustHTML(`height: ${size}px`);
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DVirtualList
+            @estimateSize={{estimate}}
+            @items={{rows}}
+            @key="id"
+            as |item|
+          >
+            <div style={{rowStyle height.value}}>{{item.text}}</div>
+          </DVirtualList>
+        </template>
+      );
+
+      height.value = 80;
+      // The browser reports the resize in the next frame; the deferred flush is then covered by
+      // `settled()` through its waiter.
+      await settledAfterFrame();
+
+      assert
+        .dom(".d-virtual-list__item[data-index='0']")
+        .exists("the list is still rendered after the resize");
+      // Compared through the placement rather than rects: the test container is scaled, so
+      // rect distances are not layout pixels.
+      assert.strictEqual(
+        find(".d-virtual-list__item[data-index='1']").style.transform,
+        "translateY(80px)",
+        "rows are re-laid out at their measured height"
+      );
+    });
+  }
+);

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
+  with_select_controls(false)
+
   let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
