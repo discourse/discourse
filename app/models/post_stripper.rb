@@ -17,36 +17,38 @@ class PostStripper
 
   # Descendant selectors such as `aside.quote .mention` rescan the subtree of
   # every quote, so deeply nested quotes cost quadratically. Walk once instead,
-  # tracking whether a node sits below a quote or a pre.
+  # tracking whether a node sits below a quote or a pre and whether its
+  # immediate parent is a quote, without re-reading ancestor classes.
   def self.run_core_strippers(fragment)
     removals = []
-    stack = fragment.element_children.map { |child| [child, false, false] }
+    stack = fragment.element_children.map { |child| [child, false, false, false] }
 
     until stack.empty?
-      node, in_quote, in_pre = stack.pop
+      node, in_quote, in_pre, immediate_parent_is_quote = stack.pop
       classes = node["class"].to_s.split
 
-      if strip_node?(node, classes, in_quote:, in_pre:)
+      if strip_node?(classes, in_quote:, in_pre:, immediate_parent_is_quote:)
         removals << node
         next
       end
 
-      below_quote = in_quote || quote?(node, classes)
+      is_quote = quote?(node, classes)
+      below_quote = in_quote || is_quote
       below_pre = in_pre || node.name == "pre"
-      node.element_children.each { |child| stack << [child, below_quote, below_pre] }
+      node.element_children.each { |child| stack << [child, below_quote, below_pre, is_quote] }
     end
 
     removals.each(&:remove)
   end
 
-  def self.strip_node?(node, classes, in_quote:, in_pre:)
+  def self.strip_node?(classes, in_quote:, in_pre:, immediate_parent_is_quote:)
     return true if classes.include?("onebox") || classes.include?("elided")
     return true if classes.include?("mention") && (in_quote || in_pre)
     return true if classes.include?("mention-group") && in_quote
-    classes.include?("title") && quote?(node.parent)
+    classes.include?("title") && immediate_parent_is_quote
   end
 
-  def self.quote?(node, classes = node["class"].to_s.split)
+  def self.quote?(node, classes)
     node.name == QUOTE_TAG && classes.include?(QUOTE_CLASS)
   end
 
