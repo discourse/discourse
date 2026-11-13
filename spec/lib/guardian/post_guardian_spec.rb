@@ -51,6 +51,26 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#can_embed_media?" do
+    before { SiteSetting.embedded_media_post_allowed_groups = group.id }
+
+    it "is true for users in embedded_media_post_allowed_groups" do
+      expect(user.guardian.can_embed_media?).to eq(true)
+    end
+
+    it "is false for users outside embedded_media_post_allowed_groups" do
+      expect(groupless_user.guardian.can_embed_media?).to eq(false)
+    end
+
+    it "is true for staff" do
+      expect(moderator.guardian.can_embed_media?).to eq(true)
+    end
+
+    it "is false for anonymous users" do
+      expect(Guardian.new.can_embed_media?).to eq(false)
+    end
+  end
+
   describe "can_post_link?" do
     let(:host) { "discourse.org" }
 
