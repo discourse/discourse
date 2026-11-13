@@ -15,13 +15,13 @@ Use for expensive requests, parsers, SQL, native workers, remote calls or queues
 - [ ] Check JSON types before RSA parsing. An integer can select key generation
   instead of public key parsing.
 - [ ] Check MIME depth and total parts before traversal or building the full tree.
-  See the [MIME limits](https://github.com/discourse/discourse/commit/8cd3007eb0a031e2b37b873f5c7efb2737d6e9d2).
 - [ ] Check term length and word count before SQL ranking, and operation count
   before hashtag bridge or Redis work.
 - [ ] Check repeated parsing, replacement and route recognition for input that
-  multiplies work. See the [secure upload routing fix](https://github.com/discourse/discourse/commit/e366aa5ec10064f74f2e7aaae550e6ad97e9b274).
+  multiplies work, including dotted paths handled by secure upload routes.
 - [ ] Check outbound connection and total delivery budgets. An idle read timeout
-  can reset on each byte. See the [push delivery budgets](https://github.com/discourse/discourse/commit/de5a6f749839277f9244e430595806ebabf369f3).
+  can reset on each byte. Verify the actual deadline and concurrent worker budget
+  for push delivery and other deferred network operations.
 - [ ] For queues, measure per delivery cost, retry behavior, concurrency and backlog.
   A bound on one operation does not establish a bound on aggregate work.
 

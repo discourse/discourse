@@ -20,8 +20,8 @@ severity, and back the conclusion with evidence. Read-only (see scope below).
 Start with the common checks in the [Discourse security flight manual](references/threat-model.md).
 Use its routing table to open only the problem manuals needed for this report.
 Work through their checks and decision gates before returning to the verdict
-rules below. The same manuals guide authorized fixes and reviews. Their observed
-defenses describe particular revisions, not guarantees about the target.
+rules below. The same manuals guide authorized fixes and reviews. Verify each
+defense against the target revision and deployment before relying on it.
 
 ## Treat Discourse as a black box
 

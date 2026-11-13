@@ -4,12 +4,13 @@ Use for SSRF, remote media, upload races, filesystem access, archives, native de
 
 ## 1. Establish where the operation runs
 
-- [ ] Distinguish a browser image request from a server fetch through FinalDestination.
-  Browser access to an address does not prove server access to that address.
+- [ ] Distinguish browser image requests from server fetches. Identify the network
+  client and effective SSRF controls on each server path, including any use of
+  FinalDestination. Browser access does not prove server access to that address.
 - [ ] Record the actual server destination and returned data or side effect.
 - [ ] For server requests, follow DNS resolution, allowed internal hosts, ports and
-  every redirect. **Observed defense:**
-  [An allowed host does not authorize every port](https://github.com/discourse/discourse/commit/99cca912ac6f9045c39f2729d4c7239c2282f965) in onebox fetches.
+  every redirect. Test whether host exceptions also permit unintended ports,
+  including through onebox redirects.
 - [ ] Check fresh, cached and warning card output when the claim concerns remote
   media policy. Use [Rendering and transformations](rendering.md) for those paths.
 
@@ -17,13 +18,13 @@ Use for SSRF, remote media, upload races, filesystem access, archives, native de
 
 - [ ] Compare bytes validated with bytes ultimately stored or consumed. Can the
   actor replace the remote object between those operations?
-  **Observed defense:** [Direct S3 uploads](https://github.com/discourse/discourse/commit/8b5e0b152a15b514c53845a9d3e30e3bf259c148) store validated local bytes.
+  Follow direct S3 completion through validation, hashing, storage and deduplication.
 - [ ] Check filesystem containment after normalization, archive entry types and
   store ownership. Reach an actual unauthorized file or operation before claiming impact.
 - [ ] Identify the current tenant and the site's own upload namespace.
   A site administrator can still cross a boundary into another tenant.
-- [ ] Check signed URLs and cache paths for tenant scope.
-  **Observed defenses:** [Site scoped signing](https://github.com/discourse/discourse/commit/69abc7563b765e21af2a6e2cab203d559cafe3af) and per site [disk caches](https://github.com/discourse/discourse/commit/608f43569277acc379ce516a8641e3f41fdd244c).
+- [ ] Check whether S3 signing and disk cache paths enforce the current site's
+  namespace. Test the same object key or cache digest across separate tenants.
 
 ## 3. Verify native process containment
 

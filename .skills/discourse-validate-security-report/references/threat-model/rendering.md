@@ -8,9 +8,9 @@ Use for XSS, HTML injection, tags, Markdown, oneboxes or content rewritten after
   remote response data. A crafted database value proves no external ingress.
 - [ ] Record the value at validation and at final use: normalization → Markdown
   → sanitized HTML → restored fragments → attributes → cache or email output.
-- [ ] Identify every rewrite after sanitization or validation.
-  **Observed defenses:** [cooking fixes](https://github.com/discourse/discourse/commit/844df56adea6c72f740c5dbaf79b076d7390b210) constrain restored raw HTML and the
-  [full quote removal guard](https://github.com/discourse/discourse/commit/6086e452c0dfd5857adecbbb9f2e0fd5232e30c7) rejects rewrites that change the remaining content.
+- [ ] Identify every rewrite after sanitization or validation. Test whether
+  restoring raw HTML or removing a full quote can turn previously inert content
+  into active markup or change content outside the intended rewrite.
 
 ## 2. Inspect the actual output
 
@@ -20,10 +20,10 @@ Use for XSS, HTML injection, tags, Markdown, oneboxes or content rewritten after
   where a tag slug becomes a link.
 - [ ] Follow the real consumer: browser, composer preview, published post or email.
   Protection in one output does not establish protection in another.
-- [ ] Compare fresh and cached results after policy changes.
-  **Observed defense:** [Onebox preview caches](https://github.com/discourse/discourse/commit/1f1e241c584ede2358e20d1e616b58a2c11cf785) include the hotlink policy.
-- [ ] Check output built after normal sanitization. Warning favicons need their
-  own policy check because the normal onebox sanitizer never sees them.
+- [ ] Compare fresh and cached results after policy changes. Verify whether
+  onebox preview cache selection or invalidation respects the current hotlink policy.
+- [ ] Identify output built after normal sanitization. Check whether warning
+  favicons or other separately rendered output bypass the intended policy.
 
 ## 3. Check downstream defenses and effect
 

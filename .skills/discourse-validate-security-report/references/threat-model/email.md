@@ -6,7 +6,7 @@ Use for incoming mail, DMARC claims, sender substitution or forwarded content.
 
 - [ ] Identify SMTP delivery, mailbox polling or direct API ingestion.
 - [ ] Separate control of message content from control of the trusted API caller.
-  The [receiver container](https://github.com/discourse/discourse_docker/blob/0ba1841d589e77df3bc923774abca2720a320ec2/samples/mail-receiver.yml) posts mail using an API credential.
+  Trace how the deployed receiver authenticates its submission to Discourse.
 - [ ] Record the actual receiver version, image, settings and route into Rails.
 
 ## 2. Verify upstream admission
@@ -14,17 +14,17 @@ Use for incoming mail, DMARC claims, sender substitution or forwarded content.
 - [ ] Identify where SPF, DKIM and DMARC are evaluated and where rejection or
   review is enforced. An enabled verifier does not establish rejection.
 - [ ] Inspect the effective failure policy, including unknown results and verifier
-  errors. **Observed defense:** the public [mail receiver configuration](https://github.com/discourse/mail-receiver/blob/b2001d262b84b5f59a41d22f28e21e0a4abbcc08/opendmarc.conf)
-  leaves `RejectFailures` disabled and its [Dockerfile](https://github.com/discourse/mail-receiver/blob/b2001d262b84b5f59a41d22f28e21e0a4abbcc08/Dockerfile) uses
-  `milter_default_action=accept`.
+  errors. For [mail-receiver](https://github.com/discourse/mail-receiver), inspect
+  the deployed image's configuration and startup overrides. Verify what
+  `RejectFailures` and `milter_default_action` actually enforce when applicable.
 - [ ] Verify authentication result provenance: generating service, trusted
   `authserv-id`, handling of forged or duplicate headers, authenticated identity.
   A test supplying a matching header does not prove those properties.
 - [ ] Exercise the real receiver when admission decides the claim. Record whether
   the message is rejected, deferred, delivered or queued for review.
-- [ ] Check Rails handling too. **Observed defense:** [`AuthenticationResults`](https://github.com/discourse/discourse/blob/8a4eb63d20745c1038ce4a13d97d48065eb54099/lib/email/authentication_results.rb)
-  queues explicit trusted DMARC failure. Missing trusted configuration or an
-  unknown verdict does not itself require review.
+- [ ] Trace Rails handling on the target revision. Verify how trusted DMARC
+  failure, missing trusted configuration and unknown verdicts affect acceptance,
+  rejection, review and immediate commands.
 
 ## 3. Follow identity after admission
 

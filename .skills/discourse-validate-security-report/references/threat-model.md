@@ -3,6 +3,7 @@
 ## Common checks, every report
 
 - [ ] **Pin the target:** revision, release, plugins, site settings and deployment.
+  Inspect the implementation at that revision before crediting a defense.
 - [ ] **Name the actor:** minimum privilege, credential and prerequisite access.
 - [ ] **List controlled inputs:** exact values, JSON types, record selectors,
   headers, metadata, remote responses, upload bytes and timing.
@@ -28,9 +29,10 @@
 ## Deployment check, before reproducing
 
 - [ ] Inspect the actual launcher configuration, published ports, network access,
-  proxy and TLS termination. The [`discourse_docker` standalone sample](https://github.com/discourse/discourse_docker/blob/0ba1841d589e77df3bc923774abca2720a320ec2/samples/standalone.yml)
-  publishes web ports 80 and 443, includes Nginx rate limiting, and leaves
-  database and Redis ports unpublished. Internal listening is not public exposure.
+  proxy, TLS termination and rate limits. Use the target's
+  [discourse_docker](https://github.com/discourse/discourse_docker) revision and
+  configuration. Check which web, database and Redis services are exposed.
+  Internal listening is not public exposure.
 - [ ] Reproduce through the relevant external interface. A dev server, container
   shell, database write or direct job invocation alone does not prove reachability.
 - [ ] Trace the complete path, including upstream and downstream controls:
@@ -51,7 +53,3 @@ actor and controlled input → ingress and admission → principal and scope
   does not erase independently demonstrated HTML injection or disclosure.
 - [ ] State default versus configured exposure, verified defenses and missing
   evidence. Return to the owning skill for verdict and severity rules.
-
-## Reading the manuals
-
-- **Observed defense** describes the linked revision, not every deployment.
