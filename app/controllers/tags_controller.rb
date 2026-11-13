@@ -525,7 +525,6 @@ class TagsController < ::ApplicationController
     if params[:tag_id].present?
       # Try finding by ID first
       @tag = Tag.find_by(id: params[:tag_id])
-      # Sequential IDs would let anyone enumerate tags confined to categories they can't see.
       @tag = nil if @tag && !@tag.visible_in_accessible_categories?(guardian)
 
       # For numeric tag names on legacy routes, fallback to finding by name
