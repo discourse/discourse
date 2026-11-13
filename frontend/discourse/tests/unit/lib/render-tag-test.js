@@ -35,7 +35,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   });
 
   test("renderTag keeps slug content inside the href attribute", function (assert) {
-    const slug = `foo' onclick='alert(1)' title='"<>&amp;`;
+    const slug = `../foo\\bar?x#%' onclick='alert(1)' title='"<>&amp;`;
     const div = document.createElement("div");
 
     div.innerHTML = renderTag({ id: 42, name: "foo", slug });
@@ -46,8 +46,8 @@ module("Unit | Utility | render-tag", function (hooks) {
       .dom("a", div)
       .hasAttribute(
         "href",
-        `/tag/${slug}/42`,
-        "preserves the complete slug as URL data"
+        `/tag/..%2Ffoo%5Cbar%3Fx%23%25'%20onclick%3D'alert(1)'%20title%3D'%22%3C%3E%26amp%3B/42`,
+        "encodes the complete slug as URL data"
       );
     assert
       .dom("a", div)
