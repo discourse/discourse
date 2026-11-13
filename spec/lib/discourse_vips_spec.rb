@@ -60,6 +60,39 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".gif_dimensions" do
+    it "uses the decoded canvas when the first frame exceeds the logical screen" do
+      input_path = file_from_fixtures("gif_frame_larger_than_logical_screen.gif").path
+
+      expect(FastImage.size(input_path)).to eq([1, 1])
+      expect(described_class.gif_dimensions(input_path:, timeout: 5)).to eq([3000, 3000])
+    end
+
+    it "returns the canvas dimensions when later frames extend outside it" do
+      input_path = file_from_fixtures("gif_later_frame_larger_than_logical_screen.gif").path
+
+      expect(described_class.gif_dimensions(input_path:, timeout: 5)).to eq([1, 1])
+    end
+
+    it "returns one frame's height for an animated GIF" do
+      input_path = file_from_fixtures("tiny_animated.gif").path
+
+      expect(described_class.gif_dimensions(input_path:, timeout: 5)).to eq([2, 1])
+    end
+
+    it "rejects a GIF header without frame data" do
+      Tempfile.create(%w[header_only .gif]) do |file|
+        file.binmode
+        file.write(File.binread(file_from_fixtures("tiny_animated.gif").path, 13))
+        file.flush
+
+        expect { described_class.gif_dimensions(input_path: file.path, timeout: 5) }.to raise_error(
+          DiscourseVips::InvalidImage,
+        )
+      end
+    end
+  end
+
   describe ".animated?" do
     it "detects animation in a GIF" do
       input_path = file_from_fixtures("tiny_animated.gif").path
