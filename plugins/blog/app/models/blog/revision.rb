@@ -14,13 +14,17 @@ module ::Blog
     def self.capture(publication, source)
       post = source.first_post
       metadata = publication.editorial_metadata
-      upload = source.image_upload
+      cover = Upload.find_by(id: metadata["cover_upload_id"]) if metadata["cover_upload_id"]
       metadata.merge(
         "title" => source.title,
         "raw" => post.raw,
         "cooked" => post.cooked,
         "author_name" => source.user&.name.presence || source.user&.username,
-        "image_url" => image_url_for(upload),
+        # An explicit cover is also the card and social image.
+        "image_url" => image_url_for(cover || source.image_upload),
+        "cover_upload_id" => cover&.id,
+        "cover_width" => cover&.width,
+        "cover_height" => cover&.height,
         "tags" => source.tags.visible(Guardian.new).pluck(:name),
       )
     end
@@ -54,10 +58,17 @@ module ::Blog
       UrlHelper.absolute(url) if url.present?
     end
 
+    def cover?
+      data["cover_upload_id"].present? && data["image_url"].present?
+    end
+
     private
 
     def retain_uploads
-      UploadReference.ensure_exist!(upload_ids: Upload.extract_upload_ids(raw), target: self)
+      UploadReference.ensure_exist!(
+        upload_ids: [*Upload.extract_upload_ids(raw), data["cover_upload_id"]],
+        target: self,
+      )
     end
   end
 end

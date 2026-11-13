@@ -348,13 +348,22 @@ export default class BlogPublicationPanel extends Component {
   }
 
   @action
+  setCover(upload, { set }) {
+    set("cover_upload_id", upload?.id ?? "");
+    set("cover_url", upload?.url ?? "");
+  }
+
+  @action
   async saveSettings(data) {
     const current = this.publication.published_at;
+    // The URL only previews the upload; the server stores its id.
+    const settings = { ...data };
+    delete settings.cover_url;
     const result = await this.#mutate(
       "",
       {
         publication: {
-          ...data,
+          ...settings,
           published_at:
             data.published_at === current?.slice(0, 10)
               ? current
@@ -479,6 +488,9 @@ export default class BlogPublicationPanel extends Component {
       excerpt: this.publication?.excerpt || "",
       meta_description: this.publication?.meta_description || "",
       canonical_url: this.publication?.canonical_url || "",
+      cover_upload_id: this.publication?.cover_upload_id || "",
+      cover_url: this.publication?.cover_url || "",
+      cover_alt: this.publication?.cover_alt || "",
       featured: this.publication?.featured,
       published_at: this.publication?.published_at?.slice(0, 10) || "",
     };
@@ -1002,6 +1014,23 @@ export default class BlogPublicationPanel extends Component {
                     @type="textarea"
                     as |field|
                   ><field.Control maxlength="1000" @rows={{3}} /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.cover_hint"}}
+                    @format="full"
+                    @name="cover_url"
+                    @onSet={{this.setCover}}
+                    @title={{i18n "blog.cover"}}
+                    @type="image"
+                    as |field|
+                  ><field.Control @type="blog_cover" /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.cover_alt_hint"}}
+                    @format="full"
+                    @name="cover_alt"
+                    @title={{i18n "blog.cover_alt"}}
+                    @type="input"
+                    as |field|
+                  ><field.Control maxlength="500" /></form.Field>
                   <form.Field
                     @description={{i18n "blog.meta_description_hint"}}
                     @format="full"

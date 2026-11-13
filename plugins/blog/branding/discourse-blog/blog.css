@@ -327,6 +327,17 @@
   margin-bottom: 48px;
 }
 
+.discourse-journal__article-cover {
+  margin: 0 0 48px;
+}
+
+.discourse-journal__article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
 .discourse-journal__breadcrumbs {
   display: flex;
   flex-wrap: wrap;

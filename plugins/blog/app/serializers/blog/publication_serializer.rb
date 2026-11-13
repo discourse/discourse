@@ -23,6 +23,9 @@ module ::Blog
                :excerpt,
                :meta_description,
                :canonical_url,
+               :cover_upload_id,
+               :cover_url,
+               :cover_alt,
                :featured,
                :published_at,
                :last_published_at,
@@ -120,6 +123,18 @@ module ::Blog
 
     def canonical_url
       metadata["canonical_url"].to_s
+    end
+
+    def cover_upload_id
+      metadata["cover_upload_id"]
+    end
+
+    def cover_url
+      Upload.find_by(id: cover_upload_id)&.url if cover_upload_id
+    end
+
+    def cover_alt
+      metadata["cover_alt"].to_s
     end
 
     def featured

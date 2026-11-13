@@ -12,6 +12,10 @@ module ::Blog
       @revision.absolute_image_url
     end
 
+    def image_alt
+      @revision.data["cover_alt"].presence if @revision.cover?
+    end
+
     def twitter_card
       image_url ? "summary_large_image" : "summary"
     end

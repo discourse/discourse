@@ -6,7 +6,16 @@ module ::Blog
     MIDDLEWARE_SEGMENTS = %w[auth message-bus mini-profiler-resources].freeze
     RESERVED_SEGMENTS =
       (Routes::RESERVED_SEGMENTS + Configuration::ASSET_PREFIXES + MIDDLEWARE_SEGMENTS).freeze
-    METADATA = %w[path excerpt featured published_at meta_description canonical_url].freeze
+    METADATA = %w[
+      path
+      excerpt
+      featured
+      published_at
+      meta_description
+      canonical_url
+      cover_upload_id
+      cover_alt
+    ].freeze
     MAX_PATH_LENGTH = 240
     # Encoded "+" and ",", and encoded UTF-8 bytes, so imported paths keep non-ASCII slugs.
     # Other encoded ASCII stays out: it could hide a separator, a dot segment or a control character.
@@ -26,6 +35,9 @@ module ::Blog
     belongs_to :scheduled_revision, class_name: "Blog::Revision", optional: true
     has_many :revisions, dependent: :destroy
     has_many :paths, dependent: :destroy
+    belongs_to :cover_upload, class_name: "Upload", optional: true
+    # Keeps both the live and the staged cover from being cleaned up as unused uploads.
+    has_many :upload_references, as: :target, dependent: :destroy
 
     # Rails upper-cases percent-encoding in request paths, so stored paths must match.
     normalizes :path, with: ->(path) { Publication.normalize_path(path) }
@@ -44,6 +56,8 @@ module ::Blog
     validates :meta_description, length: { maximum: 500 }, exclusion: { in: [nil] }
     validates :canonical_url, length: { maximum: 1000 }, exclusion: { in: [nil] }
     validate :absolute_canonical_url
+    validates :cover_alt, length: { maximum: 500 }, exclusion: { in: [nil] }
+    validate :image_cover_upload
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
     validate :decodable_path
@@ -51,6 +65,8 @@ module ::Blog
     before_validation :initialize_topics, on: :create
     before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
     after_create :capture_initial_publication
+    after_save :retain_cover_uploads,
+               if: -> { saved_change_to_cover_upload_id? || saved_change_to_draft_metadata? }
 
     scope :newest, -> { order(published_at: :desc, id: :desc) }
 
@@ -174,6 +190,9 @@ module ::Blog
         # Revisions from before these fields existed don't have them.
         "meta_description" => metadata["meta_description"].to_s != live["meta_description"].to_s,
         "canonical_url" => metadata["canonical_url"].to_s != live["canonical_url"].to_s,
+        "cover" =>
+          metadata["cover_upload_id"].to_s != live["cover_upload_id"].to_s ||
+            metadata["cover_alt"].to_s != live["cover_alt"].to_s,
         "featured" => metadata["featured"] != live["featured"],
         "tags" => source.tags.visible(Guardian.new).pluck(:name).sort != Array(live["tags"]).sort,
         "published_at" => draft_date_changed?(metadata["published_at"]),
@@ -204,7 +223,7 @@ module ::Blog
       return false if !published_revision_id || post.blank? || post.cooked.blank?
       update_columns(
         cooked: post.cooked,
-        image_url: Revision.image_url_for(discussion_topic.image_upload),
+        image_url: Revision.image_url_for(cover_upload || discussion_topic.image_upload),
       )
     end
 
@@ -315,6 +334,8 @@ module ::Blog
         excerpt: data["excerpt"],
         meta_description: data["meta_description"].to_s,
         canonical_url: data["canonical_url"].to_s,
+        cover_upload_id: data["cover_upload_id"].presence,
+        cover_alt: data["cover_alt"].to_s,
         featured: data["featured"],
         published_at: release_date(revision),
         last_published_at: Time.current,
@@ -358,7 +379,17 @@ module ::Blog
     # A re-submission of an unchanged draft is not a pending change.
     def submitted_revision_differs?
       return false if submitted_revision_id.blank? || submitted_revision_id == published_revision_id
-      compared = %w[title raw path excerpt featured meta_description canonical_url]
+      compared = %w[
+        title
+        raw
+        path
+        excerpt
+        featured
+        meta_description
+        canonical_url
+        cover_upload_id
+        cover_alt
+      ]
       submitted_revision.data.values_at(*compared).map(&:to_s) !=
         published_revision.data.values_at(*compared).map(&:to_s)
     end
@@ -407,6 +438,19 @@ module ::Blog
       errors.add(:canonical_url, I18n.t("blog.errors.canonical_url_invalid"))
     end
 
+    def image_cover_upload
+      return if cover_upload_id.blank?
+      return if cover_upload && FileHelper.is_supported_image?(cover_upload.original_filename)
+      errors.add(:cover_upload_id, :invalid)
+    end
+
+    def retain_cover_uploads
+      UploadReference.ensure_exist!(
+        upload_ids: [cover_upload_id, draft_metadata["cover_upload_id"]],
+        target: self,
+      )
+    end
+
     def decodable_path
       return if !path.to_s.match?(PATH_PATTERN) || self.class.decodable_path?(path)
       errors.add(:path, :invalid)
@@ -438,6 +482,7 @@ end
 #  id                    :bigint           not null, primary key
 #  canonical_url         :string           default(""), not null
 #  cooked                :text
+#  cover_alt             :string           default(""), not null
 #  draft_metadata        :jsonb            not null
 #  excerpt               :string           default(""), not null
 #  featured              :boolean          default(FALSE), not null
@@ -453,6 +498,7 @@ end
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  approved_revision_id  :bigint
+#  cover_upload_id       :integer
 #  discussion_topic_id   :bigint
 #  draft_topic_id        :bigint
 #  published_revision_id :bigint
