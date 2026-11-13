@@ -84,6 +84,18 @@ describe "Telegram Command Controller", type: :request do
       end
     end
 
+    it "revokes the webhook secret when the access token changes" do
+      SiteSetting.chat_integration_telegram_access_token = "NEW_TOKEN"
+
+      expect(SiteSetting.chat_integration_telegram_secret).to be_blank
+    end
+
+    it "revokes the webhook secret when chat integration is disabled" do
+      SiteSetting.chat_integration_enabled = false
+
+      expect(SiteSetting.chat_integration_telegram_secret).to be_blank
+    end
+
     describe "when token has not been set" do
       it "rejects commands when the access token is missing" do
         SiteSetting.chat_integration_telegram_access_token = ""
