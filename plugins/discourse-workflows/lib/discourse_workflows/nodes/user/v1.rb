@@ -58,7 +58,18 @@ module DiscourseWorkflows
               extensions:
                 Schema::USER_EXTENSION_SCHEMAS.map do |name, schema|
                   { schema:, display_options: { show: { include_extensions: [name] } } }
-                end,
+                end +
+                  [
+                    {
+                      schema:
+                        Schema.entity_extension("user", "custom_fields" => { "type" => "object" }),
+                      display_options: {
+                        show: {
+                          custom_field_names: [{ condition: { exists: true } }],
+                        },
+                      },
+                    },
+                  ],
             },
           ],
           properties: {
@@ -97,9 +108,36 @@ module DiscourseWorkflows
               options: EXTENSIONS.keys,
               default: [],
             },
+            custom_field_names: {
+              type: :multi_options,
+              required: false,
+              options: [],
+              default: [],
+              type_options: {
+                # Any dependency skips preloading so filtering runs server-side, past the options limit.
+                load_options_depends_on: %w[operation],
+                load_options_method: "user_custom_fields",
+              },
+              control_options: {
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.user.custom_field_names_placeholder",
+              },
+            },
             **actor_property,
           },
         )
+
+        def self.load_options_context(context)
+          case context.method_name
+          when "user_custom_fields"
+            CustomFieldNames.load_options(
+              ::UserCustomField.where.not("name LIKE 'user_field\\_%'"),
+              context.filter,
+            )
+          end
+        end
 
         def execute(exec_ctx)
           items =
@@ -119,17 +157,22 @@ module DiscourseWorkflows
 
         def process(exec_ctx, user, actor, operation, item_index)
           extensions = requested_extensions(exec_ctx, item_index)
+          custom_field_names = requested_custom_field_names(exec_ctx, item_index)
+          guardian = actor.guardian
 
           case operation
           when "get"
-            get_user(user, actor.guardian, extensions:)
+            guardian.ensure_can_see_profile!(user)
           when "edit"
-            edit_user(exec_ctx, user, actor, item_index, extensions:)
+            edit_user(exec_ctx, user, actor, item_index)
+            user.reload
           else
             raise_node_error!(
               I18n.t("discourse_workflows.errors.unknown_operation", operation: operation),
             )
           end
+
+          { user: serialize_user_details(user, guardian, extensions:, custom_field_names:) }
         end
 
         def requested_extensions(exec_ctx, item_index)
@@ -150,12 +193,12 @@ module DiscourseWorkflows
           requested
         end
 
-        def get_user(user, guardian, extensions:)
-          guardian.ensure_can_see_profile!(user)
-          { user: serialize_user_details(user, guardian, extensions:) }
+        def requested_custom_field_names(exec_ctx, item_index)
+          requested = exec_ctx.get_node_parameter("custom_field_names", item_index, default: [])
+          Array(requested).map(&:to_s).compact_blank.uniq
         end
 
-        def edit_user(exec_ctx, user, actor, item_index, extensions:)
+        def edit_user(exec_ctx, user, actor, item_index)
           guardian = actor.guardian
           updates = update_parameters(exec_ctx, item_index)
           attributes = editable_attributes(updates)
@@ -168,8 +211,6 @@ module DiscourseWorkflows
           unless trust_level_locked.equal?(MISSING)
             update_trust_level_lock(user, actor, guardian, trust_level_locked)
           end
-
-          { user: serialize_user_details(user.reload, guardian, extensions:) }
         end
 
         def update_parameters(exec_ctx, item_index)
@@ -263,7 +304,7 @@ module DiscourseWorkflows
           )
         end
 
-        def serialize_user_details(user, guardian, extensions:)
+        def serialize_user_details(user, guardian, extensions:, custom_field_names:)
           profile = user.user_profile if include_profile_details?(user, guardian)
 
           serialize_user(user, guardian: guardian).merge(
@@ -277,7 +318,25 @@ module DiscourseWorkflows
             trust_level_locked: !user.manual_locked_trust_level.nil?,
             user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
             groups: serialize_groups(user, guardian),
-          ).merge(extensions_data(user, guardian, extensions))
+            **extensions_data(user, guardian, extensions),
+            **custom_fields_data(user, guardian, custom_field_names),
+          )
+        end
+
+        def custom_fields_data(user, guardian, names)
+          return {} if names.empty?
+
+          names = readable_custom_field_names(guardian, names)
+          values = names.empty? ? {} : ::User.custom_fields_for_ids([user.id], names)[user.id] || {}
+          { custom_fields: names.index_with { |name| values[name] } }
+        end
+
+        # user_field_* rows are admin-defined profile fields, served by user_fields with their own checks.
+        def readable_custom_field_names(guardian, names)
+          names = names.reject { |name| name.start_with?("user_field_") }
+          return names if guardian.is_admin?
+
+          names & ::User.allowed_user_custom_fields(guardian)
         end
 
         def extensions_data(user, guardian, extensions)

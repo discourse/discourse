@@ -7,7 +7,6 @@ module DiscourseWorkflows
         OPERATIONS = %w[create get list close archive bump set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
-        CUSTOM_FIELD_OPTIONS_LIMIT = 100
 
         TOPIC_SCHEMA =
           Schema.merge(
@@ -161,6 +160,7 @@ module DiscourseWorkflows
               options: [],
               default: [],
               type_options: {
+                # Any dependency skips preloading so filtering runs server-side, past the options limit.
                 load_options_depends_on: %w[operation topic_id],
                 load_options_method: "topic_custom_fields",
               },
@@ -239,21 +239,7 @@ module DiscourseWorkflows
         def self.load_options_context(context)
           case context.method_name
           when "topic_custom_fields"
-            custom_field_scope = ::TopicCustomField.where.not(name: [nil, ""])
-            if context.filter.present?
-              custom_field_scope =
-                custom_field_scope.where(
-                  "name ILIKE ?",
-                  "%#{ActiveRecord::Base.sanitize_sql_like(context.filter)}%",
-                )
-            end
-
-            custom_field_scope
-              .distinct
-              .order(:name)
-              .limit(CUSTOM_FIELD_OPTIONS_LIMIT)
-              .pluck(:name)
-              .map { |name| { id: name, name: name } }
+            CustomFieldNames.load_options(::TopicCustomField, context.filter)
           end
         end
 
