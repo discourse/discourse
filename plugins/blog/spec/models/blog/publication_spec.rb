@@ -179,6 +179,27 @@ RSpec.describe Blog::Publication do
 
       expect(publication.article.cooked).to eq(publication.published_revision.cooked)
     end
+
+    it "counts the article's words when it's published, so listings don't parse the HTML" do
+      expect(publication.word_count).to eq(
+        Blog::Revision.word_count(publication.published_revision.cooked),
+      )
+
+      publication.update_columns(word_count: 1200)
+      expect(publication.reload.article.reading_minutes).to eq(4)
+    end
+
+    it "shows at least a minute for a short article" do
+      publication.update_columns(word_count: 100)
+
+      expect(publication.reload.article.reading_minutes).to eq(1)
+    end
+
+    it "counts the words from the HTML until a count is stored" do
+      publication.update_columns(word_count: nil)
+
+      expect(publication.reload.article.reading_minutes).to eq(1)
+    end
   end
 
   describe ".default_path" do

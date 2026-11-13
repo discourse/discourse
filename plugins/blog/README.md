@@ -42,7 +42,9 @@ a deferred, interactive Discourse discussion below each article.
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
-  `BlogPosting` structured data.
+  `BlogPosting` structured data. Item identifiers come from the article's topic, not
+  its path, so after a migration, feed readers subscribed to the old blog's feed see
+  each imported article as new once.
 - Blog-primary canonical for the discussion landing page; later discussion pages
   keep their page-specific canonical.
 - A configurable paper/ink/accent palette, graphic covers, and Liquid-based
@@ -167,7 +169,8 @@ Published articles store their HTML in text columns, so hostname remaps (`discou
 remap` or a restore onto a new hostname) and upload migrations to S3 update them like
 posts. Rebakes do not: a refetched onebox or other re-rendered content stays out of an
 article until it is published again or an admin runs `bin/rake blog:refresh_articles`,
-which copies each discussion post's current HTML into its article. Run it after rebaking
+which copies each discussion post's current HTML into its article and recounts its
+words for the reading time. Run it after rebaking
 posts in bulk, such as after an import, once Sidekiq has finished post-processing them.
 Verify canonicals, feeds, sitemap, article images, and embedded discussions before
 reopening traffic.

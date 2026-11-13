@@ -3,6 +3,9 @@
 module ::Blog
   class Revision < ActiveRecord::Base
     self.table_name = "blog_revisions"
+    # Based on Ghost's reading time (WordPress's default is lower).
+    WORDS_PER_MINUTE = 275
+
     belongs_to :publication
     belongs_to :source_topic, class_name: "Topic"
     belongs_to :creator, class_name: "User"
@@ -33,6 +36,10 @@ module ::Blog
       upload && !upload.secure? ? upload.url : ""
     end
 
+    def self.word_count(cooked)
+      PrettyText.excerpt(cooked.to_s, 100_000, strip_tags: true).split.size
+    end
+
     def title
       data["title"]
     end
@@ -42,7 +49,8 @@ module ::Blog
     end
 
     def reading_minutes
-      [(PrettyText.excerpt(cooked.to_s, 100_000, strip_tags: true).split.size / 220.0).ceil, 1].max
+      words = data["word_count"] || Revision.word_count(cooked)
+      [(words.to_f / WORDS_PER_MINUTE).round, 1].max
     end
 
     def raw

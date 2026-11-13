@@ -212,7 +212,12 @@ module ::Blog
       return Revision.new(data: Revision.capture(self, editable_topic)) if !published_revision
       return published_revision if cooked.nil?
       Revision.new(
-        data: published_revision.data.merge("cooked" => cooked, "image_url" => image_url),
+        data:
+          published_revision.data.merge(
+            "cooked" => cooked,
+            "image_url" => image_url,
+            "word_count" => word_count,
+          ),
       )
     end
 
@@ -224,6 +229,7 @@ module ::Blog
       update_columns(
         cooked: post.cooked,
         image_url: Revision.image_url_for(cover_upload || discussion_topic.image_upload),
+        word_count: Revision.word_count(post.cooked),
       )
     end
 
@@ -405,6 +411,7 @@ module ::Blog
     def capture_live_article
       self.cooked = published_revision&.cooked
       self.image_url = published_revision&.data&.[]("image_url")
+      self.word_count = cooked && Revision.word_count(cooked)
     end
 
     def capture_initial_publication
@@ -495,6 +502,7 @@ end
 #  schedule_error        :text             default(""), not null
 #  schedule_token        :string
 #  scheduled_at          :datetime
+#  word_count            :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  approved_revision_id  :bigint
