@@ -323,6 +323,85 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end
 
+    it "rejects title updates after category posting permission is revoked" do
+      public_channel.chatable.set_permissions(everyone: :readonly)
+      public_channel.chatable.save!
+      original_title = thread.title
+
+      messages =
+        MessageBus.track_publish(Chat::Publisher.root_message_bus_channel(public_channel.id)) do
+          put "/chat/api/channels/#{public_channel.id}/threads/#{thread.id}", params: params
+        end
+
+      aggregate_failures do
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(thread.reload.title).to eq(original_title)
+        expect(messages).to be_empty
+      end
+    end
+
+    it "rejects an author's title update in channels that are not open" do
+      original_title = thread.title
+
+      %w[read_only closed archived].each do |status|
+        public_channel.update!(status: status)
+
+        messages =
+          MessageBus.track_publish(Chat::Publisher.root_message_bus_channel(public_channel.id)) do
+            put "/chat/api/channels/#{public_channel.id}/threads/#{thread.id}", params: params
+          end
+
+        expect(response.status).to eq(403), "expected 403 in a #{status} channel"
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(thread.reload.title).to eq(original_title)
+        expect(messages).to be_empty
+      end
+    end
+
+    it "allows staff to rename another user's thread in a closed channel" do
+      current_user.update!(moderator: true)
+      thread.update!(original_message_user: Fabricate(:user))
+      public_channel.update!(status: :closed)
+
+      put "/chat/api/channels/#{public_channel.id}/threads/#{thread.id}", params: params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("success" => "OK")
+      expect(thread.reload.title).to eq(title)
+    end
+
+    it "rejects staff title updates in read-only and archived channels" do
+      current_user.update!(admin: true)
+      original_title = thread.title
+
+      %w[read_only archived].each do |status|
+        public_channel.update!(status: status)
+
+        put "/chat/api/channels/#{public_channel.id}/threads/#{thread.id}", params: params
+
+        expect(response.status).to eq(403), "expected 403 in a #{status} channel"
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(thread.reload.title).to eq(original_title)
+      end
+    end
+
+    it "allows an author to rename a direct-message thread" do
+      channel =
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, Fabricate(:user)],
+          threading_enabled: true,
+        )
+      thread.update!(channel: channel)
+
+      put "/chat/api/channels/#{channel.id}/threads/#{thread.id}", params: params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("success" => "OK")
+      expect(thread.reload.title).to eq(title)
+    end
+
     context "when thread does not exist" do
       it "returns 404" do
         thread.destroy!
@@ -335,6 +414,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       it "updates the title" do
         put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
         expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK")
         expect(thread.reload.title).to eq(title)
       end
 
