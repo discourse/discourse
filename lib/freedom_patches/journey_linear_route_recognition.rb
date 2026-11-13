@@ -6,41 +6,47 @@ end
 
 module FreedomPatches
   module JourneyTransitionTableLinearMove
-    def move(t, full_string, token, start_index, token_matches_default)
-      return [] if t.empty?
+    def move(current_states, _full_string, token, start_index, token_matches_default)
+      return [] if current_states.empty?
 
       next_states = []
-      seen = {}
-      pending = {}
+      seen_states = {}
+      pending_states = {}
 
-      i = 0
-      while i < t.size
-        s = t[i]
-        previous_start = t[i + 1]
+      index = 0
+      while index < current_states.size
+        state = current_states[index]
+        previous_start = current_states[index + 1]
 
         if previous_start.nil?
-          if token_matches_default && (std_state = @stdparam_states[s])
-            add_state(next_states, seen, std_state)
+          if token_matches_default && (next_state = @stdparam_states[state])
+            add_state(next_states: next_states, seen_states: seen_states, state: next_state)
           end
 
-          if (states = @string_states[s]) && (state = states[token])
-            add_state(next_states, seen, state)
-          end
-        end
-
-        if (states = @regexp_states[s])
-          states.each do |re, v|
-            next if v.nil?
-            add_state(next_states, seen, v) if previous_start || re.match?(token)
-          end
-
-          if !pending.key?(s)
-            pending[s] = true
-            next_states << s << (previous_start || start_index)
+          if (transitions = @string_states[state]) && (next_state = transitions[token])
+            add_state(next_states: next_states, seen_states: seen_states, state: next_state)
           end
         end
 
-        i += 2
+        if (transitions = @regexp_states[state])
+          transitions.each do |regexp, destination_state|
+            next if destination_state.nil?
+            if previous_start || regexp.match?(token)
+              add_state(
+                next_states: next_states,
+                seen_states: seen_states,
+                state: destination_state,
+              )
+            end
+          end
+
+          if !pending_states.key?(state)
+            pending_states[state] = true
+            next_states << state << (previous_start || start_index)
+          end
+        end
+
+        index += 2
       end
 
       next_states
@@ -48,10 +54,10 @@ module FreedomPatches
 
     private
 
-    def add_state(next_states, seen, state)
-      return if seen.key?(state)
+    def add_state(next_states:, seen_states:, state:)
+      return if seen_states.key?(state)
 
-      seen[state] = true
+      seen_states[state] = true
       next_states << state << nil
     end
   end
