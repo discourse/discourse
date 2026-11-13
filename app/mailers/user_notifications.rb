@@ -378,7 +378,7 @@ class UserNotifications < ActionMailer::Base
         @excerpts = {}
 
         @popular_topics.each do |t|
-          next if t.first_post.blank?
+          next if t.first_post.blank? || t.first_post.hidden?
           @excerpts[t.first_post.id] = email_excerpt(digest_post_cooked(t.first_post), t.first_post)
         end
 
