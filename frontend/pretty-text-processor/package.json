@@ -11,7 +11,7 @@
     "discourse": "workspace:0.0.0",
     "discourse-markdown-it": "workspace:*",
     "markdown-it": "^15.0.3",
-    "rolldown": "1.2.7",
+    "rolldown": "1.2.16",
     "xss": "1.0.15"
   },
   "engines": {
