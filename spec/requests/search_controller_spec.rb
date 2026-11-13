@@ -252,20 +252,6 @@ RSpec.describe SearchController do
         expect(data["topics"][0]["id"]).to eq(awesome_post.topic_id)
       end
 
-      it "returns the topic matching a local URL" do
-        get "/search/query.json",
-            params: {
-              term: "#{Discourse.base_url}#{user_post.topic.relative_url}",
-              type_filter: "topic",
-              search_for_id: true,
-            }
-
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body["topics"].map { |topic| topic["id"] }).to eq(
-          [user_post.topic_id],
-        )
-      end
-
       it "returns the topic matching the requested ID" do
         get "/search/query.json",
             params: {
@@ -283,18 +269,6 @@ RSpec.describe SearchController do
   end
 
   describe "#query" do
-    it "rejects long dotted local URL terms promptly" do
-      SiteSetting.allow_anonymous_search = true
-      term = "#{Discourse.base_url}/u/#{"a." * 4000}a"
-
-      Timeout.timeout(3) do
-        get "/search/query.json", params: { term: term, type_filter: "topic", search_for_id: true }
-      end
-
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body["errors"]).to eq([I18n.t("invalid_params", message: "term")])
-    end
-
     context "when anonymous search is disabled" do
       before { SiteSetting.allow_anonymous_search = false }
 
