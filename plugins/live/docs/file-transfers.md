@@ -2,7 +2,12 @@
 
 File transfers are optional and **disabled by default**. Configure sender groups in
 `live_file_transfer_allowed_groups` together with `live_enabled` to let permitted
-participants in mesh (peer-to-peer) rooms send files up to **100 MiB (104,857,600 bytes)**.
+participants in mesh (peer-to-peer) rooms send files. The per-file maximum is
+configured by `live_file_transfer_max_size_mb`: **100 MiB by default**, with an
+integer range of **1–102400 MiB (100 GiB)**. Despite the conventional `_mb` name,
+units are binary MiB (**1 MiB = 1,048,576 bytes**), not decimal MB. The picker,
+outgoing metadata, incoming offers, and acceptance use the current configured
+limit; lowering it can invalidate pending offers before storage is allocated.
 LiveKit rooms do not support this feature. The data channel is negotiated even
 when transfers are disabled, so reserving the channel does not require later
 renegotiation. The group setting uses the same permission-refresh behavior as
@@ -42,7 +47,8 @@ roster grants reflect membership at the latest server roster serialization.
    leaving the room delete their temporary disk files, except that a file exported
    by **Save file** is retained for a **30-second** grace period so an immediate Dismiss
    or Leave does not invalidate the browser download. Files awaiting deletion remain
-   charged against the 200 MiB receive-disk budget until deletion succeeds. Save starts the download;
+   charged against the receive-disk budget of **twice the current configured
+   per-file maximum** until deletion succeeds. Save starts the download;
    it does not confirm that the browser has finished it. Saving does not
    automatically dismiss the transfer, so a failed save can be retried while the
    transfer remains available.
@@ -72,8 +78,13 @@ roster grants reflect membership at the latest server roster serialization.
   storage.
 - Received bytes are written incrementally. A bounded **256 KiB** streaming
   window and receiver acknowledgements after disk writes limit outstanding data
-  rather than buffering a full file in memory. The **100 MiB** limit is per file;
-  temporary disk usage and queued offers are bounded too. Cancel or dismiss old
-  transfers before retrying when capacity is full.
+  rather than buffering a full file in memory. This window does not grow when the
+  configured per-file maximum is raised. Temporary receive disk reservations are
+  limited to **2× the current configured per-file maximum** (200 MiB by default),
+  including initializing, active, completed, and retiring files until deletion.
+  Browser storage quotas still apply, even when the configured limit is higher.
+  Limits remain **four active incoming offers**, **one active transfer per peer**,
+  and **100 retained history entries**. Cancel or dismiss old transfers before
+  retrying when capacity is full.
 - The UI consumes the live WebRTC service’s reactive `fileTransfers` array and
   consent/cancel/dismiss methods. It never handles data-channel protocol traffic.

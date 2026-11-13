@@ -570,6 +570,27 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     globalThis.MediaStream = this.originalMediaStream;
   });
 
+  test("file transfer size follows the current site setting in binary MiB", function (assert) {
+    this.subject.siteSettings.live_file_transfer_max_size_mb = 256;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      256 * 1024 * 1024,
+      "custom maximum is in bytes"
+    );
+    this.subject.siteSettings.live_file_transfer_max_size_mb = 1;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      1024 * 1024,
+      "getter is not a cached startup value"
+    );
+    this.subject.siteSettings.live_file_transfer_max_size_mb = NaN;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      100 * 1024 * 1024,
+      "invalid settings use the safe default"
+    );
+  });
+
   test("file transfer API requires enabled setting, active room and remote participant", async function (assert) {
     this.subject.site.live_file_transfers_available = false;
     assert.false(this.subject.canSendFile(1, 2));

@@ -16,7 +16,7 @@ Live is a Discourse plugin that adds Discord-style voice and video rooms powered
 - **Live subtitles** — optional viewer-side captions powered by NVIDIA Parakeet speech recognition running locally via WebGPU. See [Live Subtitles](#live-subtitles).
 - **Video and screen sharing** — optional, off by default. Each room gets a full page at `/live/r/<slug>` with a tile grid; camera and screen share toggle without renegotiation, and senders only encode toward peers who are actually watching the page. Rooms can opt out individually. See [Video](#video).
 - **Video settings with background blur** — a per-room video settings modal with a live preview, camera device picker, and MediaPipe-powered background blur with an adjustable strength slider. See [Background Blur](#background-blur).
-- **User-to-user file transfers** — optional mesh-room transfers up to 100 MiB, with explicit acceptance, progress/cancel controls, and attachment-only saving. Disabled by default; files are not uploaded to Discourse or scanned for viruses. See [File transfers](docs/file-transfers.md).
+- **User-to-user file transfers** — optional mesh-room transfers with a configurable per-file maximum (100 MiB by default), with explicit acceptance, progress/cancel controls, and attachment-only saving. Disabled by default; files are not uploaded to Discourse or scanned for viruses. See [File transfers](docs/file-transfers.md).
 - **Pure browser WebRTC** — signaling through Discourse + MessageBus; media stays peer-to-peer, no SFU/MCU required.
 - **Optional LiveKit SFU** — point the plugin at a self-hosted LiveKit server and route all rooms (or individually opted-in rooms) through it for enterprise-scale calls; everything else keeps working identically. See [LiveKit](#livekit-media-server-sfu).
 
@@ -30,7 +30,8 @@ The plugin seeds a default "Watercooler" room on first enable.
 
 | Setting                              | Description                                                                          |
 | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| `live_file_transfer_allowed_groups` | Groups allowed to send mesh-room files up to 100 MiB (empty by default; disables all transfers). See [File transfers](docs/file-transfers.md). |
+| `live_file_transfer_max_size_mb` | Per-file maximum in binary MiB (1 MiB = 1,048,576 bytes). Default 100; integer range 1–102400 (100 GiB). Receive disk budget is twice the current maximum, including files awaiting deletion; browser quotas still apply. Streaming window remains 256 KiB. |
+| `live_file_transfer_allowed_groups` | Groups allowed to send mesh-room files (empty by default; disables all transfers). See [File transfers](docs/file-transfers.md). |
 | `live_enabled`                    | Master switch.                                                                       |
 | `live_allowed_groups`             | Groups that can access live rooms (default: everyone).                              |
 | `live_create_room_allowed_groups` | Groups that can create new rooms (default: admins, moderators, TL2).                 |

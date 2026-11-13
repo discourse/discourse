@@ -16,6 +16,7 @@ import {
   collectPeers,
   probeIceServers,
 } from "../../lib/live/connection-diagnostics.js";
+import { fileTransferMaxSize } from "../../lib/live/file-transfer-limits.js";
 import FileTransferManager from "../../lib/live/file-transfer-manager.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
@@ -168,6 +169,7 @@ export default class LiveWebrtcService extends Service {
     });
 
     this.#fileTransfers = new FileTransferManager({
+      getMaxFileSize: () => this.maxFileTransferSize,
       isEligible: (roomId, userId) =>
         this.#fileTransferEligible(roomId, userId),
       isSendAllowed: (roomId, userId) =>
@@ -667,6 +669,12 @@ export default class LiveWebrtcService extends Service {
 
   get localRecordingBusy() {
     return this.#localRecording.busy;
+  }
+
+  get maxFileTransferSize() {
+    return fileTransferMaxSize(
+      this.siteSettings.live_file_transfer_max_size_mb
+    );
   }
 
   get fileTransfers() {

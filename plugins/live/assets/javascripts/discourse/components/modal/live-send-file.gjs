@@ -5,13 +5,17 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { MAX_FILE_SIZE } from "../../lib/live/file-transfer-manager.js";
+import { MEBIBYTE } from "../../lib/live/file-transfer-limits.js";
 
 export default class LiveSendFileModal extends Component {
   @service liveWebrtc;
 
   @tracked error = null;
   @tracked sending = false;
+
+  get maxSizeMiB() {
+    return this.liveWebrtc.maxFileTransferSize / MEBIBYTE;
+  }
 
   @action
   async chooseFile(event) {
@@ -21,8 +25,10 @@ export default class LiveSendFileModal extends Component {
       return;
     }
     this.error = null;
-    if (file.size > MAX_FILE_SIZE) {
-      this.error = i18n("live.file_transfer.too_large");
+    if (file.size > this.liveWebrtc.maxFileTransferSize) {
+      this.error = i18n("live.file_transfer.too_large", {
+        limit: this.maxSizeMiB,
+      });
       return;
     }
     const { room, participant } = this.args.model;
@@ -52,7 +58,7 @@ export default class LiveSendFileModal extends Component {
             "live.file_transfer.outgoing"
             username=@model.participant.username
           }}</p>
-        <p>{{i18n "live.file_transfer.size_limit"}}</p>
+        <p>{{i18n "live.file_transfer.size_limit" limit=this.maxSizeMiB}}</p>
         <label>
           {{i18n "live.file_transfer.choose"}}
           <input

@@ -475,6 +475,54 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
     end
   end
 
+  it "uses the configured file size limit in the picker and rejects oversized native channel offers" do
+    SiteSetting.live_file_transfer_max_size_mb = 1
+    join_both
+    existing_paths = using_session(:bob) { opfs_files.map { |file| file.fetch("path") } }
+
+    using_session(:alice) do
+      find(".live-video-tile[data-user-id='#{bob.id}']").right_click
+      within(menu) { find(send_button).click }
+      expect(page).to have_css(".live-send-file-modal", text: "1 MiB")
+      Dir.mktmpdir("live-file-size-limit") do |directory|
+        path = File.join(directory, "too-large.bin")
+        File.binwrite(path, "x" * (1024 * 1024 + 1))
+        find(".live-send-file-modal input[type='file']").attach_file(path)
+        expect(page).to have_css(".live-send-file-modal [role='alert']", text: "1 MiB")
+      end
+      expect(page.evaluate_script("#{transfers}.length")).to eq(0)
+      expect(page.evaluate_script("window.__fileChannelEvidence.binarySent")).to eq(0)
+      find(".live-send-file-modal .modal-close").click
+      # A modified sender must not be able to bypass the receiver's limit.
+      page.execute_script(<<~JS)
+        window.__fileChannels.find(c => c.readyState === "open").send(JSON.stringify({
+          type: "offer", id: crypto.randomUUID(), name: "too-large.bin", size: 1024 * 1024 + 1
+        }));
+      JS
+    end
+    using_session(:bob) do
+      wait_for_browser("window.__fileChannelEvidence.offersReceived === 1")
+      expect(page.evaluate_script("#{transfers}.length")).to eq(0)
+      expect_no_opfs_files(existing_paths)
+      expect(page.evaluate_script("window.__fileChannelEvidence.binaryReceived")).to eq(0)
+    end
+
+    boundary_id = using_session(:alice) { page.evaluate_script(<<~JS) }
+        (() => {
+          const id = crypto.randomUUID();
+          window.__fileChannels.find(c => c.readyState === "open").send(JSON.stringify({
+            type: "offer", id, name: "at-limit.bin", size: 1024 * 1024
+          }));
+          return id;
+        })()
+      JS
+    using_session(:bob) do
+      expect_status(boundary_id, "pending")
+      expect_no_opfs_files(existing_paths)
+      transfer_action("rejectFileTransfer", boundary_id)
+    end
+  end
+
   it "does not accept incoming offers when no groups are allowed to send" do
     SiteSetting.live_file_transfer_allowed_groups = ""
     join_both(sender_allowed: false)

@@ -1,8 +1,11 @@
 import { waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import {
+  DEFAULT_MAX_FILE_SIZE,
+  MEBIBYTE,
+} from "discourse/plugins/live/discourse/lib/live/file-transfer-limits";
 import FileTransferManager, {
   CHUNK_SIZE,
-  MAX_FILE_SIZE,
   RECEIVE_WINDOW,
 } from "discourse/plugins/live/discourse/lib/live/file-transfer-manager";
 
@@ -209,7 +212,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       { name: "x\u0000", size: 1 },
       { name: "x", size: -1 },
       { name: "x", size: 1.5 },
-      { name: "x", size: MAX_FILE_SIZE + 1 },
+      { name: "x", size: DEFAULT_MAX_FILE_SIZE + 1 },
     ]) {
       this.message(this.b, "offer", crypto.randomUUID(), metadata);
     }
@@ -232,7 +235,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       const id = crypto.randomUUID();
       this.message(channel, "offer", id, {
         name: "large.bin",
-        size: MAX_FILE_SIZE,
+        size: DEFAULT_MAX_FILE_SIZE,
       });
       await this.receiver.accept(id);
     }
@@ -309,7 +312,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       const pendingId = crypto.randomUUID();
       this.message(channel, "offer", pendingId, {
         name: "large",
-        size: MAX_FILE_SIZE,
+        size: DEFAULT_MAX_FILE_SIZE,
       });
       await this.receiver.accept(pendingId);
     }
@@ -688,7 +691,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       const id = crypto.randomUUID();
       this.message(channel, "offer", id, {
         name: "large",
-        size: MAX_FILE_SIZE,
+        size: DEFAULT_MAX_FILE_SIZE,
       });
       await this.receiver.accept(id);
       if (userId < 12) {
@@ -708,12 +711,204 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     const channel = new Channel();
     this.receiver.attach(1, 20, channel);
     const id = crypto.randomUUID();
-    this.message(channel, "offer", id, { name: "large", size: MAX_FILE_SIZE });
+    this.message(channel, "offer", id, {
+      name: "large",
+      size: DEFAULT_MAX_FILE_SIZE,
+    });
     await this.receiver.accept(id);
     assert.strictEqual(
       this.receiver.transfers.at(-1).status,
       "transferring",
       "confirmed deletion releases the reservation"
     );
+  });
+
+  module("configured limits", function (limitHooks) {
+    limitHooks.beforeEach(function () {
+      this.sender.destroy();
+      this.receiver.destroy();
+      this.maxSize = MEBIBYTE;
+      this.sender = new FileTransferManager({
+        isEligible: () => this.eligible,
+        getMaxFileSize: () => this.maxSize,
+      });
+      this.receiver = new FileTransferManager({
+        isEligible: () => this.eligible,
+        getMaxFileSize: () => this.maxSize,
+        openReceiveSink: this.openSink,
+      });
+      this.a = new Channel();
+      this.b = new Channel();
+      this.a.remote = this.b;
+      this.b.remote = this.a;
+      this.sender.attach(1, 2, this.a);
+      this.receiver.attach(1, 1, this.b);
+      this.sizedFile = (size) => {
+        const file = new File([], "metadata.bin");
+        Object.defineProperty(file, "size", { value: size });
+        return file;
+      };
+    });
+
+    test("sender allows the exact limit and rejects one byte more", function (assert) {
+      assert.throws(
+        () => this.sender.send(1, 2, this.sizedFile(this.maxSize + 1)),
+        "oversized outgoing metadata is rejected"
+      );
+      const id = this.sender.send(1, 2, this.sizedFile(this.maxSize));
+      assert.strictEqual(
+        this.sender.transfers[0].id,
+        id,
+        "exact limit is allowed"
+      );
+    });
+
+    test("incoming offers allow the exact limit and reject one byte more", function (assert) {
+      const oversizedId = crypto.randomUUID();
+      this.message(this.b, "offer", oversizedId, {
+        name: "large.bin",
+        size: this.maxSize + 1,
+      });
+      assert.deepEqual(
+        this.receiver.transfers,
+        [],
+        "oversized offer is not retained"
+      );
+      assert.strictEqual(
+        JSON.parse(this.b.sent.at(-1)).type,
+        "reject",
+        "peer is notified"
+      );
+      this.message(this.b, "offer", crypto.randomUUID(), {
+        name: "exact.bin",
+        size: this.maxSize,
+      });
+      assert.strictEqual(
+        this.receiver.transfers[0].status,
+        "pending",
+        "exact limit is allowed"
+      );
+    });
+
+    test("256 MiB metadata is allowed on both ends without allocating file contents", async function (assert) {
+      this.maxSize = 256 * MEBIBYTE;
+      const id = this.sender.send(1, 2, this.sizedFile(this.maxSize));
+      await Promise.resolve();
+      assert.strictEqual(
+        this.receiver.transfers[0].id,
+        id,
+        "offer above the old limit is received"
+      );
+      assert.strictEqual(
+        this.receiver.transfers[0].status,
+        "pending",
+        "no bytes are requested"
+      );
+      assert.strictEqual(
+        this.sinks.length,
+        0,
+        "no disk allocation before consent"
+      );
+    });
+
+    test("lowering the limit invalidates a pending offer before opening storage", async function (assert) {
+      const id = crypto.randomUUID();
+      this.message(this.b, "offer", id, {
+        name: "pending.bin",
+        size: this.maxSize,
+      });
+      this.maxSize /= 2;
+      await this.receiver.accept(id);
+      assert.strictEqual(
+        this.receiver.transfers[0].status,
+        "rejected",
+        "pending metadata is rechecked"
+      );
+      assert.strictEqual(this.sinks.length, 0, "rejection never opens a sink");
+    });
+
+    test("lowering the limit while storage opens cancels and discards the sink", async function (assert) {
+      const opening = deferred();
+      const sink = new TestSink();
+      this.receiver.destroy();
+      this.receiver = new FileTransferManager({
+        isEligible: () => this.eligible,
+        getMaxFileSize: () => this.maxSize,
+        openReceiveSink: () => opening.promise,
+      });
+      const channel = new Channel();
+      this.receiver.attach(1, 1, channel);
+      const id = crypto.randomUUID();
+      this.message(channel, "offer", id, {
+        name: "pending.bin",
+        size: this.maxSize,
+      });
+      const accepting = this.receiver.accept(id);
+      this.maxSize /= 2;
+      opening.resolve(sink);
+      await accepting;
+      await Promise.resolve();
+      assert.strictEqual(
+        this.receiver.transfers[0].status,
+        "cancelled",
+        "initializing transfer is cancelled"
+      );
+      assert.true(sink.discarded, "allocated sink is deleted");
+      assert.false(
+        channel.sent.some((data) => JSON.parse(data).type === "accept"),
+        "peer never gets acceptance"
+      );
+    });
+
+    test("raising the limit permits 512 MiB of reservations but blocks a third 256 MiB file", async function (assert) {
+      this.maxSize = 256 * MEBIBYTE;
+      for (let userId = 10; userId < 13; userId++) {
+        const channel = new Channel();
+        this.receiver.attach(1, userId, channel);
+        const id = crypto.randomUUID();
+        this.message(channel, "offer", id, {
+          name: "large.bin",
+          size: this.maxSize,
+        });
+        await this.receiver.accept(id);
+      }
+      assert.deepEqual(
+        this.receiver.transfers.map((entry) => entry.status),
+        ["transferring", "transferring", "rejected"],
+        "disk reservations scale with the current configured maximum"
+      );
+      assert.strictEqual(
+        this.sinks.length,
+        2,
+        "only permitted reservations allocate storage"
+      );
+    });
+
+    test("invalid byte callbacks fail closed, including empty files", function (assert) {
+      for (const invalid of [
+        NaN,
+        Infinity,
+        -1,
+        0,
+        1.5,
+        Number.MAX_SAFE_INTEGER,
+        102400 * MEBIBYTE + 1,
+      ]) {
+        this.maxSize = invalid;
+        assert.throws(
+          () => this.sender.send(1, 2, this.sizedFile(0)),
+          `rejects ${invalid}`
+        );
+        this.message(this.b, "offer", crypto.randomUUID(), {
+          name: "empty.bin",
+          size: 0,
+        });
+      }
+      assert.deepEqual(
+        this.receiver.transfers,
+        [],
+        "invalid limits never allow incoming files"
+      );
+    });
   });
 });

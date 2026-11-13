@@ -1,11 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import openReceiveSink from "./file-receive-sink.js";
+import {
+  DEFAULT_MAX_FILE_SIZE,
+  MAX_CONFIGURED_FILE_SIZE,
+} from "./file-transfer-limits.js";
 
-export const MAX_FILE_SIZE = 100 * 1024 * 1024;
 export const CHUNK_SIZE = 16 * 1024;
 export const RECEIVE_WINDOW = 256 * 1024;
-export const MAX_RECEIVE_BYTES = 200 * 1024 * 1024;
 const HIGH_WATER = 256 * 1024;
 const ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -24,6 +26,7 @@ export default class FileTransferManager {
   #sendAllowed;
   #receiveAllowed;
   #openSink;
+  #getMaxFileSize;
   #retained = new Map();
   #retiring = new Map();
   #sinkSizes = new WeakMap();
@@ -34,12 +37,14 @@ export default class FileTransferManager {
     isReceiveAllowed = isEligible,
     openReceiveSink: openSink = openReceiveSink,
     timeoutMs = 120_000,
+    getMaxFileSize = () => DEFAULT_MAX_FILE_SIZE,
   }) {
     this.#eligible = isEligible;
     this.#timeout = timeoutMs;
     this.#sendAllowed = isSendAllowed;
     this.#receiveAllowed = isReceiveAllowed;
     this.#openSink = openSink;
+    this.#getMaxFileSize = getMaxFileSize;
   }
 
   attach(roomId, userId, channel) {
@@ -115,6 +120,10 @@ export default class FileTransferManager {
     ) {
       return;
     }
+    if (!this.#validMetadata(t.entry.name, t.entry.size)) {
+      this.reject(id);
+      return;
+    }
     // Reservations include initialization and retained disk files, not RAM.
     const retainedBytes = this.transfers.reduce(
       (sum, entry) =>
@@ -129,7 +138,10 @@ export default class FileTransferManager {
       (sum, size) => sum + size,
       0
     );
-    if (retainedBytes + retiringBytes + t.entry.size > MAX_RECEIVE_BYTES) {
+    if (
+      retainedBytes + retiringBytes + t.entry.size >
+      2 * this.#maxFileSize()
+    ) {
       this.reject(id);
       return;
     }
@@ -144,7 +156,8 @@ export default class FileTransferManager {
       this.#sinkSizes.set(sink, t.entry.size);
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
-        !this.#receiveAllowed(t.peer.roomId, t.peer.userId)
+        !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
+        !this.#validMetadata(t.entry.name, t.entry.size)
       ) {
         this.cancel(id);
         return;
@@ -243,7 +256,17 @@ export default class FileTransferManager {
     return `${roomId}:${userId}`;
   }
 
+  #maxFileSize() {
+    const bytes = this.#getMaxFileSize();
+    return Number.isSafeInteger(bytes) &&
+      bytes > 0 &&
+      bytes <= MAX_CONFIGURED_FILE_SIZE
+      ? bytes
+      : 0;
+  }
+
   #validMetadata(name, size) {
+    const maxSize = this.#maxFileSize();
     return (
       typeof name === "string" &&
       name.length > 0 &&
@@ -253,7 +276,8 @@ export default class FileTransferManager {
       !/[\x00-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069/\\]/.test(name) &&
       Number.isSafeInteger(size) &&
       size >= 0 &&
-      size <= MAX_FILE_SIZE
+      maxSize > 0 &&
+      size <= maxSize
     );
   }
 

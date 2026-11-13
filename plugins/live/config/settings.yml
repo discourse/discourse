@@ -10,6 +10,14 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/411337"
       requires_plugin_enabled: false
       permanent_warning: false
+  live_file_transfer_max_size_mb:
+    type: integer
+    default: 100
+    min: 1
+    max: 102400
+    client: true
+    depends_on:
+      - live_enabled
   live_file_transfer_allowed_groups:
     type: group_list
     list_type: compact

@@ -8,6 +8,7 @@ import LiveSendFileModal from "discourse/plugins/live/discourse/components/modal
 class LiveWebrtcStub extends Service {
   available = true;
   calls = [];
+  maxFileTransferSize = 100 * 1024 * 1024;
 
   canSendFile() {
     return this.available;
@@ -52,6 +53,46 @@ module("Integration | Component | LiveSendFileModal", function (hooks) {
     assert
       .dom(".live-send-file-modal")
       .exists("invalid selection keeps the picker open");
+  });
+
+  test("displays the configured limit and rejects one byte over it", async function (assert) {
+    this.webrtc.maxFileTransferSize = 1024 * 1024;
+    this.owner.lookup("service:modal").close();
+    this.owner
+      .lookup("service:modal")
+      .show(LiveSendFileModal, { model: this.model });
+    await settled();
+    assert
+      .dom(".live-send-file-modal")
+      .includesText("Maximum file size: 1 MiB.", "help uses the service limit");
+    await triggerEvent("input[type=file]", "change", {
+      files: [{ name: "large.bin", size: 1024 * 1024 + 1 }],
+    });
+    assert
+      .dom("[role=alert]")
+      .includesText("1 MiB", "error uses the same limit");
+    assert.strictEqual(
+      this.webrtc.calls.length,
+      0,
+      "oversized selection never reaches transport"
+    );
+  });
+
+  test("allows a selection exactly at a custom limit", async function (assert) {
+    this.webrtc.maxFileTransferSize = 1024 * 1024;
+    const file = new File([], "exact.bin");
+    Object.defineProperty(file, "size", {
+      value: this.webrtc.maxFileTransferSize,
+    });
+    await triggerEvent("input[type=file]", "change", { files: [file] });
+    assert.deepEqual(
+      this.webrtc.calls,
+      [[1, 2, file]],
+      "exact limit reaches transport"
+    );
+    assert
+      .dom(".live-send-file-modal")
+      .doesNotExist("successful selection closes the picker");
   });
 
   test("rechecks peer eligibility after the picker opens", async function (assert) {
