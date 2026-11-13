@@ -107,38 +107,74 @@ RSpec.describe CategoriesController do
       )
     end
 
-    fixture
-      .fetch("cases")
-      .each do |search_case|
-        it "matches the shared search fixture: #{search_case.fetch("name")}" do
-          search_case
-            .fetch("settings", {})
+    it "matches every case in the shared search fixture" do
+      cases = fixture.fetch("cases")
+      # Each case starts from the same settings, as it would in an example of its own.
+      baseline =
+        cases
+          .flat_map { |search_case| search_case.fetch("settings", {}).keys }
+          .uniq
+          .to_h { |name| [name, SiteSetting.public_send(name)] }
+
+      results =
+        cases.to_h do |search_case|
+          baseline
+            .merge(search_case.fetch("settings", {}))
             .each { |name, value| SiteSetting.public_send("#{name}=", value) }
           post "/categories/search.json", params: search_params(search_case.fetch("params"))
-
-          expect(response.status).to eq(200)
           body = response.parsed_body
-          expected = search_case.fetch("expected")
-          aggregate_failures do
-            expect(body.fetch("categories").map { |category| category.fetch("id") }).to eq(
-              expected_ids(expected.fetch("categories")),
-            )
-            expect(body.fetch("categories_count")).to eq(expected.fetch("count"))
-            if expected.key?("family_keys")
-              expect(body["family_keys"]).to eq(expected_family_keys(expected.fetch("family_keys")))
-            else
-              expect(body).not_to have_key("family_keys")
-            end
-            if search_case.fetch("params")["include_ancestors"]
-              expect(
-                body.fetch("ancestors").map { |category| category.fetch("id") },
-              ).to contain_exactly(*expected_ids(expected.fetch("ancestors")))
-            else
-              expect(body).not_to have_key("ancestors")
-            end
-          end
+
+          [
+            search_case.fetch("name"),
+            {
+              "status" => response.status,
+              "categories" => body.fetch("categories").map { |category| category.fetch("id") },
+              "count" => body.fetch("categories_count"),
+              "family_keys" => body.fetch("family_keys", :absent),
+              "ancestors" =>
+                (
+                  if body.key?("ancestors")
+                    body["ancestors"].map { |ancestor| ancestor.fetch("id") }.sort
+                  else
+                    :absent
+                  end
+                ),
+            },
+          ]
         end
-      end
+
+      expected =
+        cases.to_h do |search_case|
+          expectation = search_case.fetch("expected")
+          [
+            search_case.fetch("name"),
+            {
+              "status" => 200,
+              "categories" => expected_ids(expectation.fetch("categories")),
+              "count" => expectation.fetch("count"),
+              "family_keys" =>
+                (
+                  if expectation.key?("family_keys")
+                    expected_family_keys(expectation.fetch("family_keys"))
+                  else
+                    :absent
+                  end
+                ),
+              "ancestors" =>
+                (
+                  if search_case.fetch("params")["include_ancestors"]
+                    expected_ids(expectation.fetch("ancestors")).sort
+                  else
+                    :absent
+                  end
+                ),
+            },
+          ]
+        end
+
+      # Keyed by case name, so a failure's diff names the case.
+      expect(results).to eq(expected)
+    end
 
     it "walks grouped pages with consecutive families" do
       expected =

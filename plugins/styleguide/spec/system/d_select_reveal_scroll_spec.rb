@@ -12,28 +12,34 @@ describe "UiKit | DSelect reveal scrolling" do
     visit "/styleguide/molecules/select?group=data"
   end
 
+  def expect_viewport_kept_while_revealing(identifier)
+    combobox = PageObjects::Components::UiKit::DSelect.by_identifier(identifier)
+    combobox.open
+    expect(page).to have_css(combobox.option_selector, wait: 20)
+
+    combobox.scroll_listbox_to_bottom
+    expect(combobox.list_scroll_top).to be > 0
+
+    # Sampled across the whole fetch rather than checked once at the end: the reset lands the
+    # moment the page is appended, and a single late read could miss it if anything scrolled
+    # back afterwards. The source takes ~900ms, so this spans it comfortably.
+    offsets = []
+    20.times do
+      sleep 0.15
+      offsets << combobox.list_scroll_top
+    end
+
+    expect(offsets).to all(be > 0),
+    "the viewport jumped to the top while revealing: #{offsets.inspect}"
+  end
+
   # Both paginated examples, because they differ in how the source describes what remains
   # (a total versus bare more-ness) and that drives separate engine paths.
-  %w[sg-paged sg-paged-cursor].each do |identifier|
-    it "keeps the viewport in place when #{identifier} reveals another page" do
-      combobox = PageObjects::Components::UiKit::DSelect.by_identifier(identifier)
-      combobox.open
-      expect(page).to have_css(combobox.option_selector, wait: 20)
+  it "keeps the viewport in place when a paged source reveals another page" do
+    expect_viewport_kept_while_revealing("sg-paged")
+  end
 
-      combobox.scroll_listbox_to_bottom
-      expect(combobox.list_scroll_top).to be > 0
-
-      # Sampled across the whole fetch rather than checked once at the end: the reset lands the
-      # moment the page is appended, and a single late read could miss it if anything scrolled
-      # back afterwards. The source takes ~900ms, so this spans it comfortably.
-      offsets = []
-      20.times do
-        sleep 0.15
-        offsets << combobox.list_scroll_top
-      end
-
-      expect(offsets).to all(be > 0),
-      "the viewport jumped to the top while revealing: #{offsets.inspect}"
-    end
+  it "keeps the viewport in place when a cursor-paged source reveals another page" do
+    expect_viewport_kept_while_revealing("sg-paged-cursor")
   end
 end

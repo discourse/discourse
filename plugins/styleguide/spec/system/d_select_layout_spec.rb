@@ -29,18 +29,24 @@ describe "UiKit | DSelect page layout" do
   # A couple of pixels of rounding is not a layout bug; a cut-off column is.
   TOLERANCE = 2
 
-  [1000, 1400].each do |width|
-    it "does not scroll sideways at #{width}px" do
-      resize_window(width: width) do
-        GROUPS.each do |group|
-          visit "/styleguide/molecules/select?group=#{group}"
-          expect(page).to have_css("[data-test-styleguide-group='#{group}']")
+  def expect_no_sideways_scroll(width)
+    resize_window(width: width) do
+      GROUPS.each do |group|
+        visit "/styleguide/molecules/select?group=#{group}"
+        expect(page).to have_css("[data-test-styleguide-group='#{group}']")
 
-          expect(horizontal_overflow).to be <= TOLERANCE,
-          "the #{group} group overflows by #{horizontal_overflow}px at #{width}px wide"
-        end
+        expect(horizontal_overflow).to be <= TOLERANCE,
+        "the #{group} group overflows by #{horizontal_overflow}px at #{width}px wide"
       end
     end
+  end
+
+  it "does not scroll sideways at 1000px" do
+    expect_no_sideways_scroll(1000)
+  end
+
+  it "does not scroll sideways at 1400px" do
+    expect_no_sideways_scroll(1400)
   end
 
   it "keeps the hero and its controls inside the viewport when space is tight" do
