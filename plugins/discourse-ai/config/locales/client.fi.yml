@@ -221,7 +221,6 @@ fi:
         nav:
           enabled: "Käytössä"
         filters:
-          all: "Kaikki"
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"

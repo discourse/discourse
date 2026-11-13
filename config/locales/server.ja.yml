@@ -4734,6 +4734,10 @@ ja:
       no_context:
         watched_word: "この投稿にはウォッチ語が含まれていました。%{link} をご覧ください。"
     actions:
+      answer_yes:
+        title: "はい"
+      answer_no:
+        title: "いいえ"
       agree:
         title: "はい"
       agree_and_keep:

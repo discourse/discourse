@@ -256,7 +256,6 @@ he:
         nav:
           enabled: "פעיל"
         filters:
-          all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"

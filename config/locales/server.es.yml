@@ -5003,6 +5003,10 @@ es:
       no_context:
         watched_word: "Esta publicación incluía una palabra vigilada. Consulta los %{link} para obtener más información."
     actions:
+      answer_yes:
+        title: "Sí"
+      answer_no:
+        title: "No"
       agree:
         title: "Sí"
       agree_and_keep:

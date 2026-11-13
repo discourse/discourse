@@ -75,7 +75,6 @@ sl:
         nav:
           enabled: "Vključeno"
         filters:
-          all: "Vsi"
           reset: "Ponastavi"
         sentiment:
           enabled: "Vključeno"

@@ -91,7 +91,6 @@ hu:
         nav:
           enabled: "Bekapcsolva"
         filters:
-          all: "Összes"
           reset: "Alaphelyzetbe állítás"
         sentiment:
           enabled: "Bekapcsolva"

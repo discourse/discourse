@@ -73,7 +73,6 @@ et:
         nav:
           enabled: "Sisse lülitatud"
         filters:
-          all: "Kõik"
           reset: "Nulli"
         sentiment:
           enabled: "Sisse lülitatud"

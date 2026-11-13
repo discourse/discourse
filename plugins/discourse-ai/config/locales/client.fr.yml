@@ -338,7 +338,6 @@ fr:
           enabled: "Activé"
           not_enabled: "Non activé"
         filters:
-          all: "Tout"
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."
           reset: "Réinitialiser"
         no_automations: "Il n'y a pas encore d'automatisations"

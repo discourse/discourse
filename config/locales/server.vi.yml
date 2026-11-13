@@ -2830,6 +2830,10 @@ vi:
       fast_typer_time:
         other: "%{count} giây"
     actions:
+      answer_yes:
+        title: "Đồng ý"
+      answer_no:
+        title: "Không"
       agree:
         title: "Đồng ý"
       agree_and_keep_deleted:

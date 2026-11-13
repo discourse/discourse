@@ -346,7 +346,6 @@ zh_TW:
           enabled: "已啟用"
           not_enabled: "未啟用"
         filters:
-          all: "所有"
           no_results: "找不到符合您的篩選條件的功能。"
           reset: "重置"
         no_automations: "尚無自動化"

@@ -2342,6 +2342,7 @@ vi:
       no_results: "Không có kết quả"
       search: "Tìm kiếm…"
       label: "Chọn tùy chọn"
+      remove_item: "Xóa %{name}"
     d_otp:
       screen_reader:
         other: Nhập %{count} số

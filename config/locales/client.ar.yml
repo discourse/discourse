@@ -1291,6 +1291,7 @@ ar:
         suspect_user: "هل ينشر هذا المستخدم رسائل عشوائية؟"
         approve_post: "هل توافق على هذا المنشور؟"
         approve_topic: "هل توافق على هذا الموضوع؟"
+        something_wrong_with_post: "هل هناك خطأ في هذا المنشور؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
@@ -3081,6 +3082,7 @@ ar:
       no_results: "لا توجد نتائج"
       search: "البحث…"
       label: "تحديد الخيارات"
+      remove_item: "إزالة %{name}"
     d_otp:
       screen_reader:
         zero: أدخل رقمًا

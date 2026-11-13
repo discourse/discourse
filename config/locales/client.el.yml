@@ -2509,6 +2509,7 @@ el:
       no_results: "Δεν υπάρχουν αποτελέσματα"
       search: "Αναζήτηση…"
       label: "Επιλέξτε επιλογές"
+      remove_item: "Αφαίρεση %{name}"
     d_otp:
       screen_reader:
         one: Εισάγετε έναν αριθμό

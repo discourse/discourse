@@ -1110,6 +1110,7 @@ ru:
         suspect_user: "Это спам от пользователя?"
         approve_post: "Одобрить этот пост?"
         approve_topic: "Одобрить эту тему?"
+        something_wrong_with_post: "Что-то не так с этим сообщением?"
       types:
         reviewable_flagged_post:
           title: "На это сообщение поступила жалоба"
@@ -2433,6 +2434,7 @@ ru:
         redeemed_tab_with_count: "Принятые (%{count})"
         invited_via: "Приглашение"
         invited_via_link: "ссылка %{key} (принято: %{count} из %{max})"
+        invited_via_link_without_key: "Ссылка (принято %{count} из %{max})"
         generating_link: "Создание ссылки..."
         groups: "Группы"
         topic: "Тема"
@@ -2752,6 +2754,7 @@ ru:
       no_results: "Нет результатов"
       search: "Поиск…"
       label: "Выберите варианты"
+      remove_item: "Убрать %{name}"
     d_otp:
       screen_reader:
         one: Введите число

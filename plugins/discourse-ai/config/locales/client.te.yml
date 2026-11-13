@@ -76,7 +76,6 @@ te:
         nav:
           enabled: "ప్రారంభించబడింది"
         filters:
-          all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
         sentiment:
           enabled: "ప్రారంభించబడింది"

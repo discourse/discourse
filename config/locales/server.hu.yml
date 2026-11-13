@@ -4848,6 +4848,10 @@ hu:
       no_context:
         watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. További információért ellenőrizze a(z) %{link} oldalt."
     actions:
+      answer_yes:
+        title: "Igen"
+      answer_no:
+        title: "Nem"
       agree:
         title: "Igen"
       agree_and_keep:

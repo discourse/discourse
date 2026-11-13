@@ -5097,6 +5097,10 @@ nl:
       no_context:
         watched_word: "Dit bericht bevatte een geobserveerd woord. Zie de %{link} voor meer informatie."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nee"
       agree:
         title: "Ja"
       agree_and_keep:

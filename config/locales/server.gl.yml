@@ -3518,6 +3518,10 @@ gl:
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
+      answer_yes:
+        title: "Si"
+      answer_no:
+        title: "Non"
       agree:
         title: "Si"
       agree_and_suspend:

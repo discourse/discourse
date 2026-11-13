@@ -311,7 +311,6 @@ tr_TR:
         nav:
           enabled: "Etkin mi"
         filters:
-          all: "Tümü"
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"

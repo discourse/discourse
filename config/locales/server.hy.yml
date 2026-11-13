@@ -2873,6 +2873,10 @@ hy:
         one: "%{count} վայրկյան"
         other: "%{count} վայրկյան"
     actions:
+      answer_yes:
+        title: "Այո"
+      answer_no:
+        title: "Ոչ"
       agree:
         title: "Այո"
       agree_and_suspend:

@@ -38,12 +38,19 @@ zh_CN:
           join: "加入 Zoom"
           frame_title: "Zoom网络研讨会"
           open_in_zoom: "在 Zoom 中打开"
+          pause_notifications:
+            paused: "通知将暂停，直到您离开研讨会。"
+            resume: "恢复通知"
           load_error: "您已离开网络研讨会，或者我们无法在此页面加载 Zoom。"
           too_early: "您可以在临近活动开始时间加入网络研讨会"
           view_topic: "查看活动的话题"
           guest_prompt:
+            title: "加入研讨会"
+            message: "您需要注册此站点才能参与直播聊天。您想注册还是跳过？"
             register: "注册"
+            skip: "跳过"
         chat:
+          sign_up_to_chat: "注册加入聊天"
           rsvp_to_event: "回复参加活动以开始聊天"
           rsvp_to_event_with_link: "回复参加<a href='%{url}'>活动</a>以开始聊天"
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
@@ -496,6 +503,7 @@ zh_CN:
             private:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
+      allow_anonymous_livestream: "允许匿名访客观看此直播"
       recording:
         watch: "观看录像"
         add: "添加录制链接"

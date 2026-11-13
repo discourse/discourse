@@ -75,7 +75,6 @@ nb_NO:
         nav:
           enabled: "Aktivert"
         filters:
-          all: "Alle"
           reset: "Tilbakestill"
         sentiment:
           enabled: "Aktivert"

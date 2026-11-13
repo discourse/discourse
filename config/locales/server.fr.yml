@@ -5520,6 +5520,10 @@ fr:
       no_context:
         watched_word: "Cet article contient un mot surveillé. Consultez le %{link} pour en savoir plus."
     actions:
+      answer_yes:
+        title: "Oui"
+      answer_no:
+        title: "Non"
       agree:
         title: "Oui"
       agree_and_keep:

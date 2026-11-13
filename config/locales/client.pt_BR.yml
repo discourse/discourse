@@ -987,6 +987,7 @@ pt_BR:
         suspect_user: "Este usuário é spam?"
         approve_post: "Aprovar esta postagem?"
         approve_topic: "Aprovar este tópico?"
+        something_wrong_with_post: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -2538,6 +2539,7 @@ pt_BR:
       no_results: "Nenhum resultado"
       search: "Pesquisar…"
       label: "Selecione as opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Digite um número

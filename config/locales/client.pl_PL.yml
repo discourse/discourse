@@ -1260,6 +1260,10 @@ pl_PL:
       statuses:
         pending:
           title: "Oczekujące"
+        problem_confirmed:
+          title: "Problem potwierdzony"
+        no_problem_found:
+          title: "Nie znaleziono problemu"
         approved:
           title: "Zaakceptowany"
         approved_flag:
@@ -1292,6 +1296,9 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
+        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
+        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
+        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -1341,6 +1348,8 @@ pl_PL:
         reviewed: "Przejrzany"
         approved_by: "Zatwierdzono przez %{username} · %{relativeDate}"
         rejected_by: "Odrzucono przez %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem potwierdzony przez %{username} · %{relativeDate}"
+        no_problem_found_by: "%{username} nie znalazł żadnego problemu · %{relativeDate}"
         ignored_by: "Zignorowano przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
@@ -2701,6 +2710,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        invited_via_link_without_key: "link (użyto %{count} / %{max})"
         generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"
@@ -3042,6 +3052,7 @@ pl_PL:
       no_results: "Brak wyników"
       search: "Szukaj…"
       label: "Wybierz opcje"
+      remove_item: "Usuń %{name}"
     d_otp:
       screen_reader:
         one: Wprowadź liczbę

@@ -310,7 +310,6 @@ es:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todo"
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"

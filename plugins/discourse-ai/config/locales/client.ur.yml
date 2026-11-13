@@ -113,7 +113,6 @@ ur:
         nav:
           enabled: "فعال شدہ"
         filters:
-          all: "تمام"
           reset: "رِی سَیٹ"
         sentiment:
           emotion: "جذبات"

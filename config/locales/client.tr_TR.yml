@@ -988,6 +988,7 @@ tr_TR:
         suspect_user: "Bu kullanıcı spam mı?"
         approve_post: "Bu gönderiyi onaylıyor musunuz?"
         approve_topic: "Bu konuyu onaylıyor musunuz?"
+        something_wrong_with_post: "Bu gönderiyle ilgili bir sorun mu var?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
@@ -2536,6 +2537,7 @@ tr_TR:
       no_results: "Sonuç yok"
       search: "Ara…"
       label: "Seçenekleri belirleyin"
+      remove_item: "%{name} öğesini kaldır"
     d_otp:
       screen_reader:
         one: Bir sayı girin

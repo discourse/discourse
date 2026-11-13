@@ -5319,6 +5319,10 @@ ru:
       no_context:
         watched_word: "В этой публикации найдено контролируемое слово. См. %{link} для получения подробной информации."
     actions:
+      answer_yes:
+        title: "Да"
+      answer_no:
+        title: "Нет"
       agree:
         title: "Да"
       agree_and_keep:

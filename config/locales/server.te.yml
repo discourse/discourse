@@ -2534,6 +2534,10 @@ te:
       links:
         category: వర్గం సెట్టింగులు
     actions:
+      answer_yes:
+        title: "అవును"
+      answer_no:
+        title: "లేదు"
       agree:
         title: "అవును"
       agree_and_keep:

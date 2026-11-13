@@ -817,6 +817,7 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
+        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -1860,6 +1861,7 @@ da:
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} indløst)"
+        invited_via_link_without_key: "link (%{count} / %{max} indløst)"
         groups: "Grupper"
         topic: "Emne"
         sent: "Oprettet/Senest Sendt"
