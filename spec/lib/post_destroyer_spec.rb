@@ -1463,6 +1463,33 @@ RSpec.describe PostDestroyer do
         delete_with_replies
         expect(reviewable_reply.reload).to be_approved
       end
+
+      it "keeps a separately flagged reply on its own notice sender" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = false
+        notifier =
+          Class.new do
+            def self.enqueue(**args)
+              SystemMessage.enqueue(
+                **args.deep_merge(message_options: { message_title: "Parent moderation decision" }),
+              )
+            end
+          end
+        Jobs::SendSystemMessage.clear
+
+        PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: false, notifier:)
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+        Jobs::SendSystemMessage.new.perform(parent_notice)
+        expect(Post.last.topic.title).to eq("Parent moderation decision")
+
+        reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+        Jobs::SendSystemMessage.new.perform(reply_notice)
+        expect(Post.last.topic.title).to eq(
+          I18n.t("system_messages.flags_agreed_and_post_deleted.subject_template"),
+        )
+      end
     end
   end
 
