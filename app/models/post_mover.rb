@@ -230,7 +230,7 @@ class PostMover
     # Inserting posts before existing destination posts renumbers them, which can
     # displace the first post and change the topic owner. Reply rights on the
     # destination do not cover that, so require move rights on it.
-    @guardian.ensure_can_move_posts!(destination_topic) if moved_posts.present?
+    Guardian.new(user).ensure_can_move_posts!(destination_topic) if moved_posts.present?
 
     # if no post in destination_topic was created after posts.first it's equal to sequential
     if moved_posts.empty?
