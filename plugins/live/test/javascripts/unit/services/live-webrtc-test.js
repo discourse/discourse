@@ -900,7 +900,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     }
   });
 
-  test("simultaneous join offers resolve glare by rolling back the lower user id side", async function (assert) {
+  test("simultaneous join offers resolve glare by rebuilding the peer on the lower user id side", async function (assert) {
     assert.timeout(2000);
 
     const rawTrack = createFakeTrack("raw-track");
@@ -931,14 +931,22 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       await this.subject.join(this.room);
       await waitUntil(() => signalRequests.length === 1);
 
+      const candidate = {
+        candidate: "candidate:1 1 UDP 2122252543 127.0.0.1 3478 typ host",
+        sdpMid: "0",
+        sdpMLineIndex: 0,
+      };
       this.rooms.emit(1, {
         type: "signal",
         sender_id: 50,
-        data: { type: "offer", sdp: "simultaneous-offer" },
+        events: [
+          { type: "candidate", candidate },
+          { type: "offer", sdp: "simultaneous-offer" },
+        ],
       });
       await waitUntil(() => signalRequests.length === 2);
 
-      const pc = FakeRTCPeerConnection.instances[0];
+      const [offeringPc, pc] = FakeRTCPeerConnection.instances;
       assert.deepEqual(
         signalRequests[0],
         { recipientId: 50, type: "offer", sdp: "fake-offer" },
@@ -947,12 +955,27 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       assert.deepEqual(
         signalRequests[1],
         { recipientId: 50, type: "answer", sdp: "fake-answer" },
-        "answers the competing offer after rollback"
+        "answers the competing offer"
+      );
+      assert.strictEqual(
+        offeringPc.connectionState,
+        "closed",
+        "closes the connection that carried the losing offer"
+      );
+      assert.strictEqual(
+        offeringPc.localDescription.type,
+        "offer",
+        "does not roll back the losing offer"
       );
       assert.strictEqual(
         pc.remoteDescription.sdp,
         "simultaneous-offer",
-        "accepts the competing offer after rolling back local offer"
+        "accepts the competing offer on a fresh connection"
+      );
+      assert.strictEqual(
+        pc.addedCandidates.length,
+        1,
+        "keeps a candidate that arrived ahead of the competing offer"
       );
       assert.strictEqual(
         pc.localDescription.type,
@@ -1604,7 +1627,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     }
   });
 
-  test("slow mic, lower-id local user: offer queued during the permission prompt connects via rollback", async function (assert) {
+  test("slow mic, lower-id local user: queued offer is answered on grant without a competing offer", async function (assert) {
     assert.timeout(2000);
 
     const rawTrack = createFakeTrack("raw-track");
@@ -1623,8 +1646,13 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
     // Local user is the designated (lower-id) offerer, but is slow to grant
     // mic access. The higher-id peer's fallback offer arrives while the
-    // permission prompt is still open. The immediate offer and the rollback
-    // answer to the same peer can land in one HTTP batch, so flatten them.
+    // permission prompt is still open, so it is answered instead of raced.
+    // Keep the fallback delay small so a broken cancelation would fire well
+    // inside the observation window below.
+    setPeerTimingForTesting({
+      ...SAFE_PEER_TIMING,
+      offerRetryBaseDelayMs: 200,
+    });
     this.currentUser.id = 2;
     this.room.room_type = "open";
     this.room.membership.role_name = "participant";
@@ -1662,21 +1690,26 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
       micGranted.resolve();
       await join;
-      await waitUntil(() => signalRequests.length === 2, 1000);
+      await waitUntil(() => signalRequests.length === 1, 1000);
+      // Wait 3x past the 200ms fallback delay to prove no late competing
+      // offer fires.
+      await wait(600);
 
       const pc = FakeRTCPeerConnection.instances[0];
       assert.deepEqual(
         signalRequests,
-        [
-          { recipientId: 50, type: "offer", sdp: "fake-offer" },
-          { recipientId: 50, type: "answer", sdp: "fake-answer" },
-        ],
-        "offers immediately on grant, then rolls back and answers the queued offer"
+        [{ recipientId: 50, type: "answer", sdp: "fake-answer" }],
+        "answers the queued offer and never sends a competing offer"
+      );
+      assert.strictEqual(
+        FakeRTCPeerConnection.created,
+        1,
+        "connects on a single peer connection"
       );
       assert.strictEqual(
         pc.signalingState,
         "stable",
-        "ends negotiation in a stable state, not stuck on a dangling offer"
+        "ends negotiation in a stable state"
       );
 
       const remoteTrack = createFakeTrack("peer-50-track");

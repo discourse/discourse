@@ -98,7 +98,15 @@ export default class RosterHandler {
     return this.#roleChangeInProgress.has(roomId);
   }
 
-  async handleParticipants(roomId, payload) {
+  /**
+   * @param {number} roomId
+   * @param {object} payload - Roster broadcast from the server.
+   * @param {object} [options]
+   * @param {Set<number>} [options.offeringPeerIds] - Peers whose offer is
+   *   already waiting to be handled, so a new peer answers it and does not
+   *   send a competing offer.
+   */
+  async handleParticipants(roomId, payload, { offeringPeerIds } = {}) {
     const participants = payload.participants || [];
     const participantIds = new Set(
       participants.map((participant) => Number(participant.id))
@@ -171,7 +179,9 @@ export default class RosterHandler {
 
           liveLog.info("[live] creating peer connection");
 
-          await this.#createAndOfferPeer(roomId, participantId);
+          await this.#createAndOfferPeer(roomId, participantId, {
+            awaitOffer: offeringPeerIds?.has(participantId),
+          });
         } else {
           this.#presencePending.clear(roomId, participantId);
         }
@@ -414,9 +424,9 @@ export default class RosterHandler {
     }
   }
 
-  async #createAndOfferPeer(roomId, remoteUserId) {
+  async #createAndOfferPeer(roomId, remoteUserId, { awaitOffer = false } = {}) {
     await this.#peerManager.create(roomId, remoteUserId);
-    if (this.#getCurrentUserId() <= remoteUserId) {
+    if (!awaitOffer && this.#getCurrentUserId() <= remoteUserId) {
       await this.#peerManager.initiateOffer(roomId, remoteUserId);
     } else {
       this.#peerManager.scheduleOfferRetry(roomId, remoteUserId);
