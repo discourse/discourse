@@ -4444,6 +4444,10 @@ cs:
       no_context:
         watched_word: "Tento příspěvek obsahoval sledované slovo. Více informací naleznete v %{link}."
     actions:
+      answer_yes:
+        title: "Ano"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ano"
       agree_and_keep:

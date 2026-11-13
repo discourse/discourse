@@ -275,7 +275,6 @@ ja:
         nav:
           enabled: "有効"
         filters:
-          all: "すべて"
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"

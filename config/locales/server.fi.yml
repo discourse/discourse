@@ -4618,6 +4618,10 @@ fi:
       no_context:
         watched_word: "Tässä viestissä oli tarkkailtu sana. Katso lisätietoja kohdasta %{link}."
     actions:
+      answer_yes:
+        title: "Kyllä"
+      answer_no:
+        title: "Ei"
       agree:
         title: "Kyllä"
       agree_and_keep:

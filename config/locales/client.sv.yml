@@ -721,6 +721,7 @@ sv:
         is_this_post: "Är detta %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "eller"
         something_else_wrong: "Är det något fel med denna %{reviewable_type}?"
+        something_wrong_with_post: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -1767,6 +1768,7 @@ sv:
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
         invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
+        invited_via_link_without_key: "länk (%{count} / %{max} inlöst)"
         groups: "Grupper"
         topic: "Ämne"
         sent: "Skapad/senast skickad"

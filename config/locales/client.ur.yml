@@ -2652,6 +2652,7 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+      remove_item: "%{name} ہٹائیں"
     d_otp:
       screen_reader:
         one: نمبر درج کریں

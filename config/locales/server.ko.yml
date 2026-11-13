@@ -3655,6 +3655,10 @@ ko:
       links:
         category: 카테고리 설정
     actions:
+      answer_yes:
+        title: "예"
+      answer_no:
+        title: "아니오"
       agree:
         title: "예"
       agree_and_keep_deleted:

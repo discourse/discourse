@@ -590,6 +590,7 @@ id:
         is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
         something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
+        something_wrong_with_post: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"

@@ -2547,6 +2547,7 @@ zh_TW:
       no_results: "沒有結果"
       search: "搜尋…"
       label: "選取選項"
+      remove_item: "移除 %{name}"
     d_otp:
       screen_reader:
         other: 輸入 %{count} 個數字

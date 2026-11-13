@@ -614,6 +614,7 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
+        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"

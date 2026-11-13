@@ -197,7 +197,6 @@ zh_CN:
         hide_diff: 隐藏差异
         diff_error: 更改幅度过大，无法以差异比较的形式显示。请改用预览功能。
         settings: 文章设置
-        settings_hint: 路径、摘录、日期、特色
         feedback:
           none: 目前还没有私人反馈
           show: 显示反馈

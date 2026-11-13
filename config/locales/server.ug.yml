@@ -4659,6 +4659,10 @@ ug:
       no_context:
         watched_word: "بۇ يازمىدا كۆزىتىلىدىغان سۆز بار. تەپسىلاتىنى %{link} دىن تەكشۈرۈڭ."
     actions:
+      answer_yes:
+        title: "ھەئە"
+      answer_no:
+        title: "ياق"
       agree:
         title: "ھەئە"
       agree_and_keep:

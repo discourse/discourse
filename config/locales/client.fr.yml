@@ -1033,6 +1033,7 @@ fr:
         suspect_user: "Cet utilisateur est-il un spammeur ?"
         approve_post: "Approuver cette publication ?"
         approve_topic: "Approuver ce sujet ?"
+        something_wrong_with_post: "Y a-t-il un problème avec ce message ?"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
@@ -2304,6 +2305,7 @@ fr:
         redeemed_tab_with_count: "Invitations acceptées (%{count})"
         invited_via: "Invitation"
         invited_via_link: "lien %{key} (%{count}/%{max} utilisés)"
+        invited_via_link_without_key: "lien (%{count} / %{max} utilisés)"
         generating_link: "Génération du lien..."
         groups: "Groupes"
         topic: "Sujet"
@@ -2615,6 +2617,7 @@ fr:
       no_results: "Aucun résultat"
       search: "Recherche…"
       label: "Sélectionnez les options"
+      remove_item: "Supprimer %{name}"
     d_otp:
       screen_reader:
         one: Saisissez un chiffre

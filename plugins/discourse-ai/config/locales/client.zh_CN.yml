@@ -394,24 +394,41 @@ zh_CN:
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
         table:
+          module: "模块"
           status: "状态"
           enabled: "已启用"
           feature: "功能"
           agent: "智能体"
           llm: "LLM"
           groups: "群组"
+          who_can_use: "谁可以使用"
         who_can_use:
+          edit: "编辑谁可以使用 %{name}"
           no_one: "没有人"
+          no_one_warning: "如果没有群组，任何人都无法使用此功能。"
+          shared: "还会更改谁可以使用： %{features}"
         status:
           "on": "开"
           "off": "关"
+          needs_setup: "需要设置"
+          on_with_features:
+            other: "已启用 · %{enabled} / %{count} 项功能"
+          on_with_languages:
+            other: "已启用 · %{count} 种语言"
+          on_with_chatbot_agents:
+            other: "已启用 · %{count} 个聊天智能体"
         chatbot:
+          available_in: "可用位置"
           column: "聊天机器人"
+          toggle: "使用 %{name} 作为聊天机器人"
+          any_llm: "由用户选择"
           new_agent: "新建智能体"
           manage_agents: "管理智能体"
           places:
             personal_messages: "个人信息"
+            topic_mentions: "话题 @mentions"
             chat_direct_messages: "聊天消息"
+            chat_channel_mentions: "聊天 @mentions"
             none: "不可用"
         toggle: "启用 %{name}"
         set_up: "设置"
@@ -438,7 +455,6 @@ zh_CN:
           enabled: "已启用"
           not_enabled: "未启用"
         filters:
-          all: "所有"
           text: "搜索功能、代理、模型或群组……"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"

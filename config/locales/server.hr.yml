@@ -2851,6 +2851,10 @@ hr:
         few: "%{count} sekundi"
         other: "%{count} sekundi"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       delete:

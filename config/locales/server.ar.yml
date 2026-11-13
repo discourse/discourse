@@ -6180,6 +6180,10 @@ ar:
       no_context:
         watched_word: "تضمن هذا المنشور كلمة مراقبة. تحقق من %{link} لمزيد من المعلومات."
     actions:
+      answer_yes:
+        title: "نعم"
+      answer_no:
+        title: "لا"
       agree:
         title: "نعم"
       agree_and_keep:

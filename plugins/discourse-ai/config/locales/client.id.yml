@@ -125,7 +125,6 @@ id:
         nav:
           enabled: "Diaktifkan"
         filters:
-          all: "Semua"
           reset: "Reset"
         sentiment:
           enabled: "Diaktifkan"

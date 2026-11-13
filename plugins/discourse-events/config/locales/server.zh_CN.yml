@@ -166,6 +166,7 @@ zh_CN:
     holiday_status:
       description: "休假"
   discourse_post_event:
+    zoom_guest: "访客"
     event_excerpt:
       summary: "📅 %{summary}"
       separator: " · "

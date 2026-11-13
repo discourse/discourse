@@ -194,7 +194,6 @@ lt:
         nav:
           enabled: "Galimas"
         filters:
-          all: "Visi"
           reset: "Atstatyti"
         sentiment:
           emotion: "Emocija"

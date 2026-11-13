@@ -221,7 +221,6 @@ it:
         nav:
           enabled: "Abilitato"
         filters:
-          all: "Tutte"
           no_results: "Nessuna funzionalità trovata per i filtri impostati."
           reset: "Annulla"
         no_automations: "Non ci sono ancora automazioni"

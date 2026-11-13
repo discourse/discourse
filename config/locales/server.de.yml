@@ -5685,6 +5685,10 @@ de:
       no_context:
         watched_word: "Dieser Beitrag enthält ein beobachtetes Wort. Für weitere Informationen prüfe die %{link}."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nein"
       agree:
         title: "Ja"
       agree_and_keep:

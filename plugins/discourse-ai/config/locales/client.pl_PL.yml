@@ -485,7 +485,7 @@ pl_PL:
           enabled: "Włączono"
           not_enabled: "Nie włączono"
         filters:
-          all: "Wszystkie"
+          all: "Dowolny status"
           text: "Szukaj funkcji, agentów, modeli lub grup..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
@@ -1391,6 +1391,7 @@ pl_PL:
           cloudflare-clef: "Otwarty model decyzyjny multimodalny Cloudflare oparty na sztucznej inteligencji pracowników"
           cloudflare-clef-flash: "Mniejsza, szybsza wersja Clef na platformie Workers AI"
           gpt-6-luna: "Model decyzyjny OpenAI w API Decisions z obsługą obrazów"
+          gemini-decision-1: "Model decyzyjny Google w ramach interfejsu API Gemini Decisions z obsługą obrazów"
         display_name: "Nazwa"
         model: "Model"
         provider: "Dostawca"
@@ -1414,6 +1415,7 @@ pl_PL:
           typesafe: "TypeSafe"
           open_ai: "Decyzje OpenAI"
           CDCK: "CDCK"
+          gemini: "Gemini Decisions"
       mcp_servers:
         short_title: "Serwery MCP"
         new: "Nowy serwer MCP"

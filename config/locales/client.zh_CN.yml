@@ -579,7 +579,10 @@ zh_CN:
         show_light_screenshot: "显示浅色截图"
         show_dark_screenshot: "显示深色截图"
       create_category:
+        title: "创建一个类别"
+        description: "为对话提供一个栖身之所。"
         action: "创建类别"
+        completed: "创建另一个"
       invite_collaborators:
         title: "邀请协作者"
         description: "早期成员赋予了它生命力。"
@@ -1060,6 +1063,10 @@ zh_CN:
       statuses:
         pending:
           title: "待处理"
+        problem_confirmed:
+          title: "问题已确认"
+        no_problem_found:
+          title: "未发现问题"
         approved:
           title: "已批准"
         approved_flag:
@@ -1092,6 +1099,9 @@ zh_CN:
         suspect_user: "此用户是垃圾用户吗？"
         approve_post: "是否批准此帖子？"
         approve_topic: "是否批准此话题？"
+        something_wrong_with_post: "此帖子有什么问题吗？"
+        something_wrong_with_topic: "此话题有什么问题吗？"
+        something_wrong_with_account: "此帐户有什么问题吗？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -1141,6 +1151,8 @@ zh_CN:
         reviewed: "已审核"
         approved_by: "由 %{username} 批准 · %{relativeDate}"
         rejected_by: "被 %{username} 拒绝 · %{relativeDate}"
+        problem_confirmed_by: "问题已由 %{username} · %{relativeDate} 确认。"
+        no_problem_found_by: "%{username} · %{relativeDate} 未发现任何问题"
         ignored_by: "被 %{username} 忽略 · %{relativeDate}"
         view_conversation: "查看私信"
         note_added: "版主注释"
@@ -2370,6 +2382,7 @@ zh_CN:
         redeemed_tab_with_count: "已确认 (%{count})"
         invited_via: "邀请"
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
+        invited_via_link_without_key: "链接 (%{count} / %{max} 已激活)"
         generating_link: "正在生成链接…"
         groups: "群组"
         topic: "话题"
@@ -2672,6 +2685,7 @@ zh_CN:
       no_results: "没有结果"
       search: "搜索…"
       label: "选择选项"
+      remove_item: "移除 %{name}"
     d_otp:
       screen_reader:
         other: 输入 %{count} 个数字

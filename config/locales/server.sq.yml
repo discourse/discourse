@@ -1509,6 +1509,10 @@ sq:
         one: "%{count} sekondë"
         other: "%{count} sekonda"
     actions:
+      answer_yes:
+        title: "Po"
+      answer_no:
+        title: "Jo"
       agree:
         title: "Po"
       delete:
