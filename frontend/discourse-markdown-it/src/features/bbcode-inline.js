@@ -8,6 +8,14 @@ function tokenizeBBCode(state, silent, ruler) {
     return false;
   }
 
+  // Reject unsupported tags before attribute parsing can scan the remaining buffer.
+  const tagMatch = /^\[\/?([-\w]+)/.exec(state.src.slice(pos, state.posMax));
+  const ruleInfo = tagMatch && ruler.getRuleForTag(tagMatch[1].toLowerCase());
+
+  if (!ruleInfo) {
+    return false;
+  }
+
   const tagInfo = parseBBCodeTag(state.src, pos, state.posMax);
 
   if (!tagInfo) {
@@ -16,10 +24,6 @@ function tokenizeBBCode(state, silent, ruler) {
 
   let rule, i;
 
-  let ruleInfo = ruler.getRuleForTag(tagInfo.tag);
-  if (!ruleInfo) {
-    return false;
-  }
   rule = ruleInfo.rule;
 
   if (rule.replace) {
