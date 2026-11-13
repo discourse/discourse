@@ -474,8 +474,8 @@ module Oneboxer
     if user = User.find_by(username_lower: username.downcase)
       return if SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
       # The onebox is baked into cooked HTML that every reader gets, so only show
-      # profiles that anonymous visitors can see.
-      return unless Guardian.new.can_see_profile?(user)
+      # profile details that anonymous visitors can see.
+      return if Guardian.new.restrict_user_fields?(user)
       name = user.name if SiteSetting.enable_names
 
       args = {
