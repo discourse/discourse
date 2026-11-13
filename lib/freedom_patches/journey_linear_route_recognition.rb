@@ -62,16 +62,71 @@ module FreedomPatches
     end
   end
 
+  module JourneyLinearSimulator
+    def bounded_simulator
+      @bounded_simulator ||= self.class.new(tt.dup.extend(JourneyTransitionTableLinearMove))
+    end
+
+    def memos(string)
+      transition_table = tt
+      static_tokens = ActionDispatch::Journey::GTG::Simulator::STATIC_TOKENS
+      state = ActionDispatch::Journey::GTG::Simulator::INITIAL_STATE
+
+      pos = 0
+      eos = string.bytesize
+
+      while pos < eos
+        start_index = pos
+        pos += 1
+
+        if (token = static_tokens[string.getbyte(start_index)])
+          state = transition_table.move(state, string, token, start_index, false)
+        else
+          pos += 1 while pos < eos && static_tokens[string.getbyte(pos)].nil?
+
+          token = string.byteslice(start_index, pos - start_index)
+          state = transition_table.move(state, string, token, start_index, true)
+        end
+      end
+
+      acceptance_states = []
+      states_count = state.size
+      i = 0
+      while i < states_count
+        if state[i + 1].nil?
+          s = state[i]
+          acceptance_states.concat(transition_table.memo(s)) if transition_table.accepting?(s)
+        end
+        i += 2
+      end
+
+      acceptance_states.empty? ? yield : acceptance_states
+    end
+  end
+
   module JourneyRouterVerifiedCandidates
+    BOUNDED_SIMULATION_MIN_BYTES = 129
+    BOUNDED_SIMULATION_MIN_SEPARATORS = 65
+    private_constant :BOUNDED_SIMULATION_MIN_BYTES, :BOUNDED_SIMULATION_MIN_SEPARATORS
+
     private
 
     def filter_routes(path)
-      super.uniq.select { |route| route.path.match?(path) }
+      if path.bytesize >= BOUNDED_SIMULATION_MIN_BYTES &&
+           (path.valid_encoding? ? path : path.b).count("./?") >= BOUNDED_SIMULATION_MIN_SEPARATORS
+        simulator
+          .bounded_simulator
+          .memos(path) { [] }
+          .uniq
+          .select { |route| route.path.match?(path) }
+      else
+        simulator.memos(path) { [] }
+      end
     end
   end
+
+  private_constant :JourneyTransitionTableLinearMove
 end
 
-ActionDispatch::Journey::GTG::TransitionTable.prepend(
-  FreedomPatches::JourneyTransitionTableLinearMove,
-)
+ActionDispatch::Journey::GTG::Simulator.prepend(FreedomPatches::JourneyLinearSimulator)
 ActionDispatch::Journey::Router.prepend(FreedomPatches::JourneyRouterVerifiedCandidates)
