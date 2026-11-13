@@ -106,12 +106,12 @@ RSpec.describe "Chat with mobile tab bar", mobile: true do
 
     visit("/chat")
 
-    expect(page).to have_css(".mobile-tab-bar__views .c-footer.--pills #c-footer-channels")
-    expect(page).to have_no_css(".c-footer.--pills #c-footer-direct-messages")
+    expect(chat_page).to have_channels_heading
+    expect(tab_bar).to have_no_views
 
-    find(".c-footer__options .chat-channel-list-options-button").click
+    menu = chat_page.open_channel_list_options
 
-    expect(page).to have_css("[data-menu-option-id='filterChannels']")
+    expect(menu).to have_option("[data-menu-option-id='filterChannels']")
   end
 
   it "leaves starting chats to the create button rather than the list options" do

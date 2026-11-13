@@ -4,6 +4,8 @@ RSpec.describe "Browse with mobile tab bar anonymously", mobile: true do
   fab!(:topic) { Fabricate(:post).topic }
 
   let(:tab_bar) { PageObjects::Components::MobileTabBar.new }
+  let(:login_page) { PageObjects::Pages::Login.new }
+  let(:signup_page) { PageObjects::Pages::Signup.new }
 
   before do
     SiteSetting.mobile_footer_navigation = true
@@ -23,12 +25,16 @@ RSpec.describe "Browse with mobile tab bar anonymously", mobile: true do
     expect(page).to have_css(".login-fullpage, .d-modal.login-modal, #login-form")
   end
 
-  it "offers signing up beside logging in when the topics are the only tab" do
+  it "lets visitors sign up through the login page" do
     visit("/latest")
 
-    find(".mobile-tab-bar__signup").click
+    expect(tab_bar).to have_named_log_in
+    expect(tab_bar).to have_no_sign_up
 
-    expect(page).to have_css(".signup-fullpage, .d-modal.create-account, #new-account-email")
+    tab_bar.click_log_in
+    login_page.open_signup
+
+    expect(signup_page).to be_open
   end
 
   it "leaves visitors to a private site with only the login page" do

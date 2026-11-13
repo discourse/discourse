@@ -29,6 +29,14 @@ module PageObjects
         has_css?("#{SELECTOR} .mobile-tab-bar__login .d-button-label", text: I18n.t("js.log_in"))
       end
 
+      def has_no_sign_up?
+        has_no_css?("#{SELECTOR} .mobile-tab-bar__signup")
+      end
+
+      def has_no_views?
+        has_no_css?("#{SELECTOR} .mobile-tab-bar__views")
+      end
+
       def click_create_action(label)
         find(".mobile-tab-bar__create-action", text: label).click
         self
