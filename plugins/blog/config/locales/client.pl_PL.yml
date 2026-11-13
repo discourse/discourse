@@ -25,6 +25,7 @@ pl_PL:
       admin:
         title: Blog
         go_to_editor: Przejdź do edytora
+        view_blog: Zobacz blog
         open_blog: Otwórz blog
         safe_mode: Otwórz bez kodu niestandardowego
         identity: Tożsamość bloga
@@ -75,9 +76,21 @@ pl_PL:
         js: Niestandardowy JavaScript
         js_description: Zwykły JavaScript, do 65 536 bajtów. Tagi skryptów nie są parsowane — załaduj inny skrypt, dodając element skryptu (document.createElement("script")).
         save: Zapisz
+        saved: Ustawienia bloga zostały zapisane. Odśwież bloga, aby zobaczyć zmiany.
         identity_tab: Tożsamość
+        identity_description: Nazwa, wprowadzenie, Informacje o treści i adresy artykułów udostępniane przez wszystkie tematy bloga.
+        article_urls: Adresy URL artykułów
+        path_format: Format adresu
+        path_format_description: Dotyczy nowych artykułów. Do momentu pierwszej publikacji artykułu, jego adres znajduje się po tytule i dniu publikacji. Opublikowane artykuły zachowują swoje adresy.
+        path_format_sample_slug: mój-artykuł
         path_formats:
+          slug: Nazwa artykułu
+          year_month_slug: Miesiąc i nazwa
+          year_month_day_slug: Data i nazwa
           custom: Niestandardowy
+        custom_path_format: Format niestandardowy
+        custom_path_format_description: "Użyj {year}, {month}, {day}, {slug} i {id}, a także uwzględnij {slug} lub {id} , aby każdy adres był unikalny."
+        custom_path_format_invalid: "Zacznij od / i uwzględnij {slug} lub {id}. Można używać tylko {year}, {month}, {day}, {slug} i {id}."
         themes_index_description: Wybierz projekt, który zobaczą czytelnicy. Dostosuj dołączony motyw lub edytuj swój własny; zmiany pozostaną prywatne, dopóki ich nie aktywujesz.
         thumbnail:
           journal: Dziennik
@@ -196,6 +209,8 @@ pl_PL:
           body: treść
           path: ścieżka
           excerpt: fragment
+          meta_description: metaopis
+          canonical_url: kanoniczny adres URL
           featured: wyróżniona flaga
           tags: tagi
           published_at: data publikacji
@@ -203,7 +218,7 @@ pl_PL:
         hide_diff: Ukryj różnice
         diff_error: Zmiana jest zbyt duża, aby wyświetlić ją jako różnicę. Zamiast tego użyj podglądu.
         settings: Ustawienia artykułu
-        settings_hint: Ścieżka, fragment, data, wyróżnione
+        settings_hint: Ścieżka, fragment, wyszukiwanie, data, wyróżnione
         feedback:
           none: Brak jeszcze prywatnych opinii
           show: Pokaż opinie
@@ -299,8 +314,14 @@ pl_PL:
       load_more: Załaduj więcej
       unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
       path: Ścieżka artykułu
+      path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem. Stare ścieżki automatycznie przekierowują po zmianie.
+      path_hint_dated: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem i datą publikacji. Stare ścieżki automatycznie przekierowują po zmianie.
       excerpt: Fragment
       excerpt_hint: Krótkie wprowadzenie do kart artykułów i podglądów wyszukiwania. Pozostaw puste, aby wygenerować fragment artykułu.
+      meta_description: Metaopis
+      meta_description_hint: Wyświetlane są podsumowania wyszukiwarek i podglądy linków. Pozostaw puste, aby użyć fragmentu.
+      canonical_url: Kanoniczny adres URL
+      canonical_url_hint: W przypadku artykułu opublikowanego po raz pierwszy gdzie indziej należy podać pełny adres URL oryginału, aby wyszukiwarki mogły podać tę stronę. Pozostaw puste pole, aby podać adres URL tego artykułu.
       date: Data publikacji
       date_hint: Pozostaw puste pole, aby użyć daty pierwszej publikacji. W przypadku importowanych artykułów wybierz datę z przeszłości. Daty są podawane w formacie UTC.
       featured: Funkcja na stronie głównej

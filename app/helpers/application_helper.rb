@@ -1032,6 +1032,9 @@ module ApplicationHelper
 
   def preloaded_json
     return "{}" if !@application_layout_preloader
+    if Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+      raise Discourse::ScopedApiKeyHtmlNotAllowed
+    end
 
     @application_layout_preloader
       .preloaded_data

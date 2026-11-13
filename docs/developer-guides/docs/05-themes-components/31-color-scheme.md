@@ -114,6 +114,52 @@ git push
 
 You can now easily share your color scheme with others!
 
+### Color palette previews
+
+Palette cards and the palette picker share the SVG in
+`frontend/discourse/app/components/svg/single-color-palette-placeholder.gjs`.
+The illustration samples the palette rather than reproducing a theme's layout.
+
+![Header and topic preview with numbered color sources](/assets/color-palette-preview.svg)
+
+| Element                 | Palette color       | Opacity |
+| ----------------------- | ------------------- | ------- |
+| Background              | `secondary`         | 100%    |
+| Top strip               | `header_background` | 100%    |
+| Topic title             | `primary`           | 75%     |
+| Excerpt                 | `primary`           | 45%     |
+| Accent pill             | `tertiary`          | 100%    |
+| Small buttons           | `primary`           | 35%     |
+| Header icons and avatar | `header_primary`    | 32.5%   |
+
+`ColorPalettePreview` exposes the selected palette's colors as `--<name>--preview`
+properties, replacing underscores with hyphens. The top strip uses
+`header_background`. The accent pill is right-aligned and three small buttons are left-aligned.
+The two excerpt lines and small buttons use SVG opacity over `secondary`; they do
+not use `primary_medium` or `primary_low`.
+The SVG's fallback colors represent Default Light independently of the viewer's
+active palette.
+
+All previews include five sidebar menu items, with the first highlighted. Plain
+sidebars use `secondary`, a `primary_low` divider and active item, and `primary`
+menu marks at 45% opacity. Content has a 24-unit inset from the sidebar and right
+edge; menu rows are spaced 18 units apart.
+
+When the default theme uses a tinted sidebar layout, the header and sidebar share a color derived from
+`tertiary`: `oklch(from tertiary 96% calc(c * 0.125) h)` for light palettes and
+`oklch(from tertiary 10% 0.025 h)` for dark palettes. The variant follows the
+site's default theme, independently of the administrator's selected theme. The
+tinted variant uses `selected` for its active menu item, falling back to
+`tertiary_low`, and rounds the content corner.
+
+The admin palette cards show light and dark palettes together:
+
+![Desktop color palette cards](/assets/color-palette-preview-desktop.png)
+
+On narrow screens, the cards stack vertically:
+
+![Mobile color palette cards](/assets/color-palette-preview-mobile.png)
+
 See also:
 
 https://meta.discourse.org/t/how-to-develop-custom-themes/60848

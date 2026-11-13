@@ -23,6 +23,31 @@ RSpec.describe Blog::ArticleMetadata do
         "author" => {
           "@type" => "Person",
           "name" => article.data["author_name"],
+          "url" =>
+            "https://blog.example.com/author/#{publication.discussion_topic.user.username_lower}",
+        },
+      )
+    end
+
+    it "leaves out the author when the system user owns the article" do
+      publication.discussion_topic.update!(user: Discourse.system_user)
+      metadata = described_class.new(publication, description: nil)
+
+      expect(JSON.parse(metadata.schema)).not_to have_key("author")
+    end
+
+    it "lists every author when the article has co-authors" do
+      co_author = Fabricate(:user, name: "Ada")
+      credits = Blog::Revision.co_author_credits([co_author.id])
+      revision = Blog::Revision.new(data: article.data.merge("co_authors" => credits))
+      metadata = described_class.new(publication, revision:, description: nil)
+
+      expect(JSON.parse(metadata.schema)["author"]).to contain_exactly(
+        include("name" => article.data["author_name"]),
+        {
+          "@type" => "Person",
+          "name" => "Ada",
+          "url" => "https://blog.example.com/author/#{co_author.username_lower}",
         },
       )
     end

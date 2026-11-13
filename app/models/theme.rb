@@ -68,6 +68,9 @@ class Theme < ActiveRecord::Base
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
 
+  has_many :translation_fields,
+           -> { where(target_id: Theme.targets[:translations]) },
+           class_name: "ThemeField"
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
            class_name: "ThemeField"
@@ -159,6 +162,21 @@ class Theme < ActiveRecord::Base
       changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
     any_extra_js_fields_changed = changed_fields.any?(&:extra_js_field?)
 
+    translation_fields_changed =
+      changed_fields.any? { |field| field.target_id == Theme.targets[:translations] }
+    settings_changed = changed_fields.any? { |field| field.target_id == Theme.targets[:settings] }
+    previous_defaults = nil
+    if settings_changed && !@defer_object_translations
+      begin
+        previous_theme = Theme.find(id)
+        # Persisting the old bake would let the pending field skip validation.
+        previous_theme.settings_field&.validate_yaml!
+        previous_defaults = previous_theme.object_translation_defaults
+      rescue Discourse::InvalidParameters
+        previous_defaults = nil
+      end
+    end
+
     changed_fields.each { |f| f.marked_for_destruction? ? f.destroy : f.save! }
     changed_fields.clear
 
@@ -176,10 +194,18 @@ class Theme < ActiveRecord::Base
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
+    if translation_fields_changed || settings_changed
+      refresh_object_translations!(
+        invalidate: settings_changed && previous_defaults != object_translation_defaults,
+      )
+    end
 
     stale_extra_js =
       theme_fields.any? { |f| f.extra_js_field? && f.compiler_version != Theme.compiler_version }
-    theme_fields.each(&:ensure_baked!)
+    theme_fields.each do |field|
+      next if @defer_object_translations && field.translation_field?
+      field.ensure_baked!
+    end
 
     update_javascript_cache! if any_extra_js_fields_changed || stale_extra_js
 
@@ -763,6 +789,121 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def reload(options = nil)
+    @object_translation_defaults = nil
+    @default_translation_data = nil
+    super
+  end
+
+  def default_translation_data(locale = "en")
+    @default_translation_data ||= {}
+    @default_translation_data[locale] ||= translation_fields
+      .find { |field| field.name == locale }
+      &.raw_translation_data(internal: :all)
+      &.fetch(locale.to_sym, {}) || {}
+  end
+
+  def with_deferred_object_translations
+    return yield if @defer_object_translations
+
+    previous_defaults =
+      begin
+        persisted? ? Theme.find(id).object_translation_defaults : {}
+      rescue Discourse::InvalidParameters
+        nil
+      end
+    begin
+      # saved objects can use the previous schema until migrations finish.
+      @defer_object_translations = true
+      yield
+      @defer_object_translations = false
+      current_defaults = object_translation_defaults(reload: true)
+      refresh_object_translations!(invalidate: previous_defaults != current_defaults)
+      theme_fields.where(target_id: Theme.targets[:translations]).each(&:ensure_baked!)
+    ensure
+      @defer_object_translations = false
+      @object_translation_defaults = nil
+    end
+  end
+
+  def object_translation_defaults(reload: false, strict: true)
+    return {} if @defer_object_translations
+    if reload
+      @object_translation_defaults = nil
+      association(:theme_settings).reset
+    end
+    @object_translation_defaults ||=
+      settings
+        .values
+        .grep(ThemeSettingsManager::Objects)
+        .each_with_object({}) { |setting, defaults| defaults.merge!(setting.translation_defaults) }
+  rescue Discourse::InvalidParameters
+    raise if strict
+    {}
+  end
+
+  def object_translation_data
+    data = {}
+    object_translation_defaults(strict: false).each do |key, entry|
+      [:en, entry[:locale].to_sym].uniq.each do |locale|
+        cursor = (data[locale] ||= {})
+        parts = key.split(".").map(&:to_sym)
+        parts[0...-1].each { |part| cursor = (cursor[part] ||= {}) }
+        cursor[parts.last] = entry[:text]
+      end
+    end
+    data
+  end
+
+  def refresh_object_translations!(invalidate: true)
+    return if @defer_object_translations
+    defaults = object_translation_defaults
+    locale_data = {}
+    theme_fields
+      .where(target_id: Theme.targets[:translations])
+      .each do |field|
+        locale_data[field.name] = field.raw_translation_data(internal: :all).fetch(
+          field.name.to_sym,
+          {},
+        )
+      rescue ThemeTranslationParser::InvalidYaml
+        next
+      end
+
+    settings
+      .values
+      .grep(ThemeSettingsManager::Objects)
+      .select(&:translations?)
+      .each do |setting|
+        if locale_data.values.any? { |data| data.key?(setting.name.to_sym) }
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "themes.settings_errors.object_translation_key_conflict",
+                    setting: setting.name,
+                    key: "js.theme_translations.#{id}.#{setting.name}",
+                  ),
+                )
+        end
+      end
+
+    if defaults.present? &&
+         !theme_fields.exists?(target_id: Theme.targets[:translations], name: "en")
+      field = set_field(target: :translations, name: "en", value: "en: {}\n")
+      field.save!
+      changed_fields.delete(field)
+      locale_data["en"] = {}
+    end
+    if invalidate
+      theme_fields.where(
+        target_id: Theme.targets[:translations],
+        name: locale_data.keys,
+      ).update_all(value_baked: nil)
+    end
+    theme_fields.reload
+    association(:locale_fields).reset
+    remove_from_cache!
+  end
+
   def internal_translations(preloaded_locale_fields: nil)
     @internal_translations ||=
       translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
@@ -921,10 +1062,22 @@ class Theme < ActiveRecord::Base
 
   def translation_override_hash
     hash = {}
-    theme_translation_overrides.each do |override|
+    object_data = object_translation_data[:en] || {}
+    # Retained keys can change between leaves and branches. Current declarations win conflicts.
+    overrides =
+      theme_translation_overrides.sort_by do |override|
+        [override.current_default.nil? ? 0 : 1, override.locale, override.translation_key]
+      end
+    overrides.each do |override|
+      parts = override.translation_key.split(".")
+      next if object_translation_shape_conflict?(object_data, parts)
+
       cursor = hash
-      path = [override.locale] + override.translation_key.split(".")
-      path[0..-2].each { |key| cursor = (cursor[key] ||= {}) }
+      path = [override.locale] + parts
+      path[0..-2].each do |key|
+        cursor[key] = {} unless cursor[key].is_a?(Hash)
+        cursor = cursor[key]
+      end
       cursor[path[-1]] = override.value
     end
     hash
@@ -1080,9 +1233,9 @@ class Theme < ActiveRecord::Base
     end
 
     if start_transaction
-      transaction(&block)
+      transaction { with_deferred_object_translations(&block) }
     else
-      block.call
+      with_deferred_object_translations(&block)
     end
   end
 
@@ -1157,6 +1310,15 @@ class Theme < ActiveRecord::Base
   private
 
   attr_accessor :theme_setting_requests_refresh
+
+  def object_translation_shape_conflict?(data, parts)
+    parts.each do |part|
+      return false if data.nil?
+      return true unless data.is_a?(Hash)
+      data = data[part.to_sym]
+    end
+    data.is_a?(Hash)
+  end
 
   def group_setting_alias_enabled?
     SiteSetting.granular_anonymous_and_logged_in_groups_permissions

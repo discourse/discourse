@@ -35,6 +35,7 @@ en:
     attributes:
       blog/publication:
         canonical_url: Canonical URL
+        co_author_ids: Co-authors
   blog:
     home: Home
     continue_reading: Continue reading
@@ -71,6 +72,9 @@ en:
     footer: Written in Discourse. Open for conversation.
     from_the_blog: Notes from the community
     tagged: Filed under %{tag}
+    author: Author
+    author_separator: ", "
+    last_author_separator: " and "
     search: Search
     search_placeholder: Search article titles and excerpts
     featured: Featured
@@ -112,6 +116,7 @@ en:
         Unpublish this topic from page publishing before publishing
         it on the blog.
       path_taken: is reserved or already belongs to another article
+      co_authors_invalid: "must be up to %{count} different active users, not including the article's author"
       canonical_url_invalid: must be a full http or https address
       path_format: "Start the format with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used, and the first segment cannot be a reserved blog address such as /tag."
       future_date:

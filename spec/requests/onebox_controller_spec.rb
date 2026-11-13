@@ -175,6 +175,30 @@ RSpec.describe OneboxController do
       end
     end
 
+    describe "blocked domains" do
+      before { SiteSetting.blocked_onebox_domains = "wikipedia.com" }
+
+      shared_examples "refuses to onebox" do |host|
+        let(:blocked_url) { "http://#{host}/amazing" }
+
+        it "does not fetch or render a preview for #{host}" do
+          stub_request(:head, blocked_url).to_return(status: 200)
+          stub_request(:get, blocked_url).to_return(status: 200, body: html)
+
+          get "/onebox.json", params: { url: blocked_url, refresh: "true" }
+
+          expect(response.status).to eq(404)
+          expect(a_request(:get, blocked_url)).not_to have_been_made
+        end
+      end
+
+      it_behaves_like "refuses to onebox", "wikipedia.com"
+      it_behaves_like "refuses to onebox", "WIKIPEDIA.com"
+      it_behaves_like "refuses to onebox", "wikipedia.com."
+      it_behaves_like "refuses to onebox", "sub.wikipedia.com."
+      it_behaves_like "refuses to onebox", "Sub.Wikipedia.COM."
+    end
+
     describe "local onebox" do
       it "does not cache local oneboxes" do
         post = create_post

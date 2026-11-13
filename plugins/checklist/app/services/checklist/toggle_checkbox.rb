@@ -99,7 +99,7 @@ module Checklist
     end
 
     def can_edit_post(guardian:, post:)
-      guardian.can_edit?(post)
+      guardian.can_see?(post) && guardian.can_edit?(post)
     end
 
     def post_unchanged(post:, params:)

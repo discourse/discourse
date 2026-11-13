@@ -6,6 +6,7 @@ en:
         max_prompt_tokens: "Context window"
   dashboard:
     problem:
+      ai_spam_scan_errors: "AI spam detection could not scan posts because its AI model failed to respond. Check for model configuration, provider availability, or credit issues. <a href='%{base_path}/admin/plugins/discourse-ai/ai-spam'>Review spam detection settings</a>."
       ai_llm_status:
         one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."

@@ -948,6 +948,43 @@ RSpec.describe Chat::GuardianExtensions do
     end
   end
 
+  describe "#can_edit_thread?" do
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message_user: user) }
+
+    it "allows the original message author to edit the thread" do
+      expect(guardian.can_edit_thread?(thread)).to eq(true)
+    end
+
+    it "doesn't allow other users to edit the thread" do
+      expect(Guardian.new(Fabricate(:user)).can_edit_thread?(thread)).to eq(false)
+    end
+
+    it "doesn't allow the author to edit the thread without posting permission" do
+      thread.channel.chatable.set_permissions(everyone: :readonly)
+      thread.channel.chatable.save!
+
+      expect(guardian.can_edit_thread?(thread)).to eq(false)
+    end
+
+    it "doesn't allow the author to edit the thread unless the channel is open" do
+      %i[read_only closed archived].each do |status|
+        thread.channel.update!(status:)
+        expect(guardian.can_edit_thread?(thread)).to eq(false), "expected false when #{status}"
+      end
+    end
+
+    it "allows staff to edit the thread in a closed channel only" do
+      thread.channel.update!(status: :closed)
+      expect(staff_guardian.can_edit_thread?(thread)).to eq(true)
+
+      %i[read_only archived].each do |status|
+        thread.channel.update!(status:)
+        expect(staff_guardian.can_edit_thread?(thread)).to eq(false),
+        "expected false when #{status}"
+      end
+    end
+  end
+
   describe "#can_send_direct_message?" do
     fab!(:other_user, :user)
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }

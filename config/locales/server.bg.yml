@@ -1463,6 +1463,10 @@ bg:
         one: "%{count} секунда"
         other: "%{count} секунди "
     actions:
+      answer_yes:
+        title: "Да"
+      answer_no:
+        title: "Не"
       agree:
         title: "Да"
       agree_and_keep:

@@ -4,11 +4,12 @@
     <h1>{{ article.title }}</h1>
     {% if article.standfirst %}<p class="discourse-journal__standfirst">{{ article.standfirst }}</p>{% endif %}
     <div class="discourse-journal__byline">
-      <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
-      <div><strong>{{ article.author }}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+      {% if article.author %}<span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>{% endif %}
+      <div>{% if article.author %}<strong>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</strong>{% endif %}<div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
     </div>
     {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
   </header>
+  {% if article.cover_url %}<figure class="discourse-journal__article-cover"><img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}"{% if article.cover_width %} width="{{ article.cover_width }}" height="{{ article.cover_height }}"{% endif %}></figure>{% endif %}
   <div class="blog-article__body cooked">{{ article.body_html }}</div>
   <footer class="blog-article__footer">
     <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>

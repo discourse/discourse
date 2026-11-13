@@ -58,8 +58,8 @@ class User::Suspend
     )
   end
 
-  def fetch_post(params:)
-    Post.find_by(id: params.post_id)
+  def fetch_post(users:, params:)
+    Post.find_by(id: params.post_id, user_id: users.map(&:id))
   end
 
   def perform_post_action(guardian:, post:, params:, options:)

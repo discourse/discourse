@@ -329,6 +329,36 @@ RSpec.describe TagGroupsController do
       )
     end
 
+    it "ignores a conflicting body id and preserves the tag group's associations" do
+      unused_id = Fabricate(:tag_group).tap(&:destroy!).id
+      category = Fabricate(:category)
+      category_tag_group = CategoryTagGroup.create!(category: category, tag_group: tag_group)
+      required_tag_group =
+        CategoryRequiredTagGroup.create!(category: category, tag_group: tag_group)
+      permission = tag_group.tag_group_permissions.sole
+      memberships = tag_group.tag_group_memberships.to_a
+
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              id: unused_id,
+              name: "updated_name",
+              tags: [{ id: tag1.id }, { id: tag2.id }],
+            },
+          },
+          as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_group"]["id"]).to eq(tag_group.id)
+      expect(tag_group.reload.name).to eq("updated_name")
+      expect(TagGroup.exists?(unused_id)).to eq(false)
+      expect(tag_group.tags).to contain_exactly(tag1, tag2)
+      expect(tag_group.tag_group_permissions.reload).to contain_exactly(permission)
+      expect(tag_group.tag_group_memberships.reload).to contain_exactly(*memberships)
+      expect(category_tag_group.reload.tag_group).to eq(tag_group)
+      expect(required_tag_group.reload.tag_group).to eq(tag_group)
+    end
+
     it "updates the tag group's parent tag" do
       put "/tag_groups/#{tag_group.id}.json",
           params: {
@@ -415,5 +445,20 @@ RSpec.describe TagGroupsController do
         put "/tag_groups/#{tag_group.id}.json", params: { tag_group: { name: "existing_name" } }
       }.not_to change { UserHistory.where(action: UserHistory.actions[:tag_group_change]).count }
     end
+  end
+
+  it "creates all requested member tags regardless of the per-topic tag limit" do
+    sign_in(Fabricate(:admin))
+    SiteSetting.max_tags_per_topic = 2
+    names = %w[first second third]
+    post "/tag_groups.json",
+         params: {
+           tag_group: {
+             name: "Many tags",
+             tags: names.map { |name| { name: } },
+           },
+         }
+    expect(response.status).to eq(200)
+    expect(TagGroup.find_by!(name: "Many tags").tags.pluck(:name)).to contain_exactly(*names)
   end
 end

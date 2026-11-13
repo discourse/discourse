@@ -1,93 +1,96 @@
 const SvgSingleColorPalettePlaceholder = <template>
-  <svg fill="none" viewBox="0 0 558 171" xmlns="http://www.w3.org/2000/svg">
-    <rect
-      fill="var(--primary-low--preview, #e9e9e9)"
-      height="25.616"
-      rx="4"
-      width="120"
-      x="436.298"
-      y="95.819"
+  <svg
+    aria-hidden="true"
+    fill="none"
+    viewBox="0 0 360 164"
+    xmlns="http://www.w3.org/2000/svg"
+    ...attributes
+  >
+    <rect fill="var(--secondary--preview, #fff)" height="164" width="360" />
+    <rect fill={{@backgroundColor}} height="32" width="360" />
+    <path
+      class="color-palette-preview__sidebar"
+      d={{if @tintedSidebar "M0 32H76Q60 32 60 48V164H0Z" "M0 32H60V164H0Z"}}
+      fill={{@sidebarColor}}
     />
+    {{#unless @tintedSidebar}}
+      <path
+        d="M0 32H360M60 32V164"
+        stroke="var(--primary-low--preview, #e9e9e9)"
+      />
+    {{/unless}}
     <rect
-      fill="var(--tertiary--preview, #08c)"
-      height="24.64"
-      rx="4"
-      width="120"
-      x="436.298"
-      y="144.442"
+      class="color-palette-preview__active-item"
+      fill={{@activeItemColor}}
+      height="18"
+      rx="3"
+      width="48"
+      x="6"
+      y="51"
     />
-    <rect
-      fill="var(--tertiary-low--preview, #d1f0ff)"
-      height="71.394"
-      rx="4"
-      width="555.265"
-      x=".22"
-      y=".341"
-    />
-    <rect
-      fill="var(--danger--preview, #c80001)"
-      height="24.64"
-      rx="4"
-      width="30"
-      x="23.451"
-      y="145.418"
-    />
-    <rect
-      fill="var(--success--preview, #090)"
-      height="24.64"
-      rx="4"
-      width="30"
-      x="88.578"
-      y="145.418"
-    />
-    <rect
-      fill="var(--love--preview, #fa6c8d)"
-      height="24.64"
-      rx="4"
-      width="30"
-      x="153.704"
-      y="145.418"
-    />
-    <rect
-      fill="var(--highlight--preview, #ffff4d)"
-      height="24.64"
-      rx="4"
-      width="30"
-      x="218.831"
-      y="145.418"
-    />
-    <rect
+    <g
+      class="color-palette-preview__menu"
       fill="var(--primary--preview, #222)"
-      height="4.526"
-      rx="2.263"
-      width="200.35"
-      x="23.451"
-      y="43.772"
-    />
-    <rect
-      fill="var(--primary--preview, #222)"
-      height="4.526"
-      rx="2.263"
-      width="333.847"
-      x="23.451"
-      y="66.295"
-    />
-    <rect
-      fill="var(--primary--preview, #222)"
-      height="4.526"
-      rx="2.263"
-      width="267.897"
-      x="23.451"
-      y="90.819"
-    />
-    <rect
-      fill="var(--primary--preview, #222)"
-      height="4.526"
-      rx="2.263"
-      width="299.961"
-      x="23.451"
-      y="116.342"
-    />
+      opacity="0.45"
+    >
+      <circle cx="14" cy="60" r="2" />
+      <rect height="4" rx="2" width="26" x="22" y="58" />
+      <circle cx="14" cy="78" r="2" />
+      <rect height="4" rx="2" width="20" x="22" y="76" />
+      <circle cx="14" cy="96" r="2" />
+      <rect height="4" rx="2" width="24" x="22" y="94" />
+      <circle cx="14" cy="114" r="2" />
+      <rect height="4" rx="2" width="18" x="22" y="112" />
+      <circle cx="14" cy="132" r="2" />
+      <rect height="4" rx="2" width="22" x="22" y="130" />
+    </g>
+    <g fill="var(--header-primary--preview, #333)" opacity="0.325">
+      <circle cx="30" cy="16" r="6" />
+      <circle cx="298" cy="16" r="6" />
+      <circle cx="328" cy="16" r="8" />
+    </g>
+    <g>
+      <rect
+        fill="var(--primary--preview, #222)"
+        height="16"
+        opacity="0.75"
+        rx="8"
+        width="228"
+        x="84"
+        y="52"
+      />
+      <rect
+        fill="var(--primary--preview, #222)"
+        height="10"
+        opacity="0.45"
+        rx="5"
+        width="160"
+        x="84"
+        y="82"
+      />
+      <rect
+        fill="var(--primary--preview, #222)"
+        height="10"
+        opacity="0.45"
+        rx="5"
+        width="194"
+        x="84"
+        y="100"
+      />
+      <rect
+        fill="var(--tertiary--preview, #08c)"
+        height="18"
+        rx="9"
+        width="58"
+        x="278"
+        y="126"
+      />
+      <g fill="var(--primary--preview, #222)" opacity="0.35">
+        <rect height="12" rx="3" width="18" x="84" y="129" />
+        <rect height="12" rx="3" width="18" x="112" y="129" />
+        <rect height="12" rx="3" width="18" x="140" y="129" />
+      </g>
+    </g>
   </svg>
 </template>;
 

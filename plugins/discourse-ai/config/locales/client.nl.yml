@@ -311,7 +311,6 @@ nl:
         nav:
           enabled: "Ingeschakeld"
         filters:
-          all: "Alles"
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"

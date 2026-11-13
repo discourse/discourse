@@ -1044,6 +1044,7 @@ cs:
         suspect_user: "Jedná se o uživatelský spam?"
         approve_post: "Schválit tento příspěvek?"
         approve_topic: "Schválit toto téma?"
+        something_wrong_with_post: "Je na tomto příspěvku něco špatně?"
       types:
         reviewable_flagged_post:
           title: "Nahlášený příspěvek"
@@ -2673,6 +2674,7 @@ cs:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
       label: "Vyberte možnosti"
+      remove_item: "Odstranit %{name}"
     d_otp:
       screen_reader:
         one: Zadejte číslo

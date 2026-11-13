@@ -134,6 +134,15 @@ html {
   text-wrap: balance;
 }
 
+.blog__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .blog__intro h1 {
   font-size: clamp(2.7rem, 7vw, 4.7rem);
   font-weight: 650;
@@ -271,6 +280,17 @@ html {
   padding: 64px 0 36px;
   border-bottom: 1px solid var(--blog-rule);
   margin-bottom: 36px;
+}
+
+.blog-article__cover {
+  margin: 0 0 36px;
+}
+
+.blog-article__cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .blog-article h1 {

@@ -44,6 +44,18 @@ export default <template>
       </div>
     {{/if}}
 
+    {{#if @controller.isUnknown}}
+      <div class="edit-site-text__unknown" role="status">
+        <h4>{{i18n "admin.site_text.unknown.title"}}</h4>
+        <p>{{i18n "admin.site_text.unknown.description"}}</p>
+        <DButton
+          class="btn-default"
+          @action={{@controller.dismissOutdated}}
+          @label="admin.site_text.unknown.acknowledge"
+        />
+      </div>
+    {{/if}}
+
     {{#if @controller.isOutdated}}
       <div class="outdated">
         <h4>{{i18n "admin.site_text.outdated.title"}}</h4>
@@ -63,7 +75,7 @@ export default <template>
     {{#unless @controller.isOutdated}}
       {{#if @controller.defaultText}}
         <div class="edit-site-text__default">
-          <h2>{{i18n "admin.site_text.default_text"}}</h2>
+          <h2>{{@controller.defaultTextLabel}}</h2>
           <p>{{@controller.defaultText}}</p>
         </div>
       {{/if}}

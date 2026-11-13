@@ -3,6 +3,18 @@
 module PageObjects
   module Pages
     class AdminObjectsSettingEditor < PageObjects::Pages::Base
+      def has_translation_key?(key)
+        has_css?(".schema-setting-editor__translation-keys code", text: key)
+      end
+
+      def has_validation_error?
+        has_css?(".schema-setting-editor__errors")
+      end
+
+      def manage_translations
+        page.click_link(I18n.t("admin_js.admin.site_text.manage_translations"))
+      end
+
       def visit_theme(theme, setting_name)
         page.visit "/admin/customize/themes/#{theme.id}/schema/#{setting_name}"
         self
@@ -50,6 +62,22 @@ module PageObjects
 
       def add_object_in_root
         find(".schema-setting-editor__tree-add-button.--root").click
+        self
+      end
+
+      def add_child_object
+        find(".schema-setting-editor__tree-add-button.--child").click
+        self
+      end
+
+      def select_categories(*categories)
+        selector =
+          PageObjects::Components::SelectKit.new(
+            '.schema-field[data-name="categories"] .select-kit',
+          )
+        selector.expand
+        categories.each { |category| selector.select_row_by_value(category.id) }
+        selector.collapse
         self
       end
 

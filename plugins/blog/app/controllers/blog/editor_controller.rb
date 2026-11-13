@@ -81,6 +81,7 @@ module ::Blog
           raise ActiveRecord::RecordInvalid.new(publication)
         end
         on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_use_cover_upload) { raise Discourse::InvalidAccess }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
@@ -314,7 +315,17 @@ module ::Blog
     def metadata_params
       params
         .require(:publication)
-        .permit(:path, :excerpt, :featured, :published_at, :meta_description, :canonical_url)
+        .permit(
+          :path,
+          :excerpt,
+          :featured,
+          :published_at,
+          :meta_description,
+          :canonical_url,
+          :cover_upload_id,
+          :cover_alt,
+          :co_authors,
+        )
         .to_h
     end
   end

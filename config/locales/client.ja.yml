@@ -852,6 +852,7 @@ ja:
         suspect_user: "これは迷惑ユーザーですか？"
         approve_post: "この投稿を承認しますか？"
         approve_topic: "このトピックを承認しますか？"
+        something_wrong_with_post: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -2328,6 +2329,7 @@ ja:
       no_results: "結果がありません"
       search: "検索…"
       label: "オプションを選択"
+      remove_item: "%{name} を削除"
     d_otp:
       screen_reader:
         other: '%{count} 桁の数字を入力してください'

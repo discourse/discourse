@@ -875,6 +875,7 @@ pt:
         is_this_post: "Isto é %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algum problema com este %{reviewable_type}?"
+        something_wrong_with_post: "Existe algo de errado com esta publicação?"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -2061,6 +2062,7 @@ pt:
         redeemed_tab_with_count: "Resgatados (%{count})"
         invited_via: "Convite"
         invited_via_link: "link %{key} (%{count} / %{max} resgatado)"
+        invited_via_link_without_key: "link (%{count} / %{max} resgatados)"
         groups: "Grupos"
         topic: "Tópico"
         sent: "Criado/Último Enviado"
@@ -2345,6 +2347,7 @@ pt:
       no_results: "Sem resultados"
       search: "Pesquisar…"
       label: "Selecionar opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Insira um número

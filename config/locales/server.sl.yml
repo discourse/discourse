@@ -2071,6 +2071,10 @@ sl:
         few: "%{count} sekunde"
         other: "%{count} sekund"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ja"
       agree_and_suspend:

@@ -103,7 +103,6 @@ fa_IR:
         nav:
           enabled: "فعال شده"
         filters:
-          all: "همه"
           reset: "بازنشانی"
         sentiment:
           enabled: "فعال شده"

@@ -224,6 +224,14 @@ RSpec.describe TopicConverter do
         expect(category.reload.topic_count).to eq(0)
       end
 
+      it "clears the category of reviewables belonging to the converted topic" do
+        reviewable = Fabricate(:reviewable_flagged_post, target: post, topic:, category:)
+
+        expect { topic.convert_to_private_message(admin) }.to change {
+          reviewable.reload.category_id
+        }.from(category.id).to(nil)
+      end
+
       it "moves the tags' topic counts to their personal message counts" do
         tag = Fabricate(:tag)
         topic.tags << tag

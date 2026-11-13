@@ -70,7 +70,6 @@ sr:
         nav:
           enabled: "Omogućeno"
         filters:
-          all: "Sve"
           reset: "Reset"
         sentiment:
           enabled: "Omogućeno"

@@ -5057,6 +5057,10 @@ tr_TR:
       no_context:
         watched_word: "Bu gönderide bir İzlenen Kelime yer alıyor. Daha fazlası için %{link} bölümüne bakın."
     actions:
+      answer_yes:
+        title: "Evet"
+      answer_no:
+        title: "Hayır"
       agree:
         title: "Evet"
       agree_and_keep:

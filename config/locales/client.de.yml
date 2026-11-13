@@ -1048,6 +1048,7 @@ de:
         suspect_user: "Ist dieser Benutzer ein Spammer?"
         approve_post: "Diesen Beitrag genehmigen?"
         approve_topic: "Dieses Thema genehmigen?"
+        something_wrong_with_post: "Stimmt etwas mit diesem Beitrag nicht?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -2320,6 +2321,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        invited_via_link_without_key: "Link (%{count} / %{max} eingelöst)"
         generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
@@ -2631,6 +2633,7 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+      remove_item: "%{name} entfernen"
     d_otp:
       screen_reader:
         one: Gib eine Zahl ein

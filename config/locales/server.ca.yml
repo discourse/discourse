@@ -2869,6 +2869,10 @@ ca:
         one: "%{count} segon"
         other: "%{count} segons"
     actions:
+      answer_yes:
+        title: "Sí"
+      answer_no:
+        title: "No"
       agree:
         title: "Sí"
       agree_and_suspend:

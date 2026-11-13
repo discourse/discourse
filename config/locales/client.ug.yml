@@ -2545,6 +2545,7 @@ ug:
       no_results: "نەتىجە يوق"
       search: "ئىزدە…"
       label: "تاللانما تاللىنىدۇ"
+      remove_item: "%{name} نى چىقىرىۋەت"
     d_otp:
       screen_reader:
         one: سان كىرگۈزۈلىدۇ

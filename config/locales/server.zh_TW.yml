@@ -5359,6 +5359,10 @@ zh_TW:
       no_context:
         watched_word: "此貼文包括一個關注詞。請查看%{link}了解更多資訊。"
     actions:
+      answer_yes:
+        title: "是"
+      answer_no:
+        title: "否"
       agree:
         title: "是"
       agree_and_keep:

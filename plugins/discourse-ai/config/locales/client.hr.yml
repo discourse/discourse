@@ -79,7 +79,6 @@ hr:
         nav:
           enabled: "Omogućeno"
         filters:
-          all: "Sve"
           reset: "Resetirati"
         sentiment:
           enabled: "Omogućeno"

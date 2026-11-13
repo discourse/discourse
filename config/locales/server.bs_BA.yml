@@ -1150,6 +1150,10 @@ bs_BA:
       medium: "Srednije"
       high: "Visoko"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       agree_and_suspend:

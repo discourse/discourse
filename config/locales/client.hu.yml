@@ -963,6 +963,7 @@ hu:
         suspect_user: "Ez felhasználói spam?"
         approve_post: "Jóváhagyod ezt a bejegyzést?"
         approve_topic: "Jóváhagyod ezt a témát?"
+        something_wrong_with_post: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -2498,6 +2499,7 @@ hu:
       no_results: "Nincs találat"
       search: "Keresés…"
       label: "Válasszon a lehetőségekből"
+      remove_item: "%{name} eltávolítás"
     d_otp:
       screen_reader:
         one: Adj meg egy számot

@@ -718,6 +718,7 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
+        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"

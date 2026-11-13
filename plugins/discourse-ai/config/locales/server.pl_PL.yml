@@ -190,6 +190,7 @@ pl_PL:
     ai_ask_ai_allowed_groups: "Grupy mogą korzystać z Zapytaj AI i funkcji przekazywania kolejnych wiadomości. Uprawnienia agenta Zapytaj AI, agenta przekazującego kolejne wiadomości oraz standardowe tematy, kategorie i widoczność wiadomości osobistych nadal obowiązują. Semantyczne wyszukiwanie wiadomości osobistych wymaga wartości {{setting:ai_embeddings_generate_for_pms}}. Treści widoczne dla uprawnionego użytkownika, w tym tematy zastrzeżone i wiadomości osobiste, mogą być wysyłane do skonfigurowanego dostawcy LLM."
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX dla Google Custom Search API"
+    ai_google_custom_search_url: "Punkt końcowy interfejsu API wyszukiwarki Google Custom Search. Zmień go tylko wtedy, gdy chcesz korzystać z usługi obsługującej to samo API."
     ai_discord_search_enabled: "Włącza funkcję wyszukiwania w serwisie Discord"
     ai_discord_app_id: "Identyfikator aplikacji Discord, z którą chcesz połączyć wyszukiwanie Discord"
     ai_discord_app_public_key: "Klucz publiczny aplikacji Discord, z którą chcesz połączyć wyszukiwarkę Discord"

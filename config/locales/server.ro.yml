@@ -2367,6 +2367,10 @@ ro:
       no_context:
         watched_word: "Această postare a inclus un cuvânt urmărit. Verifică %{link} pentru mai multe."
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Nu"
       agree:
         title: "Da"
       agree_and_keep:

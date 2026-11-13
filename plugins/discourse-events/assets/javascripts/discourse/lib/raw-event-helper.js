@@ -552,7 +552,9 @@ export function parseReminders(reminders) {
       return {
         type: type || "notification",
         value: Math.abs(numericValue),
-        unit,
+        unit: ["minute", "hour", "day", "week"].includes(unit)
+          ? `${unit}s`
+          : unit,
         period: numericValue < 0 ? "after" : "before",
       };
     })

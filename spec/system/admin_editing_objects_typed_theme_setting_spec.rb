@@ -1,10 +1,163 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin editing objects type" do
+describe "Admin editing objects type" do
   let(:admin_objects_setting_editor_page) { PageObjects::Pages::AdminObjectsSettingEditor.new }
 
   fab!(:admin)
   before { sign_in(admin) }
+
+  context "with translated fields" do
+    fab!(:theme)
+    let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }
+    let(:key) { "resource_sections.getting_started.links.guidelines.label" }
+
+    before do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme.save!
+    end
+
+    it "translates newly added nested resources independently for each category" do
+      japanese_category = Fabricate(:category, name: "Japan")
+      english_category = Fabricate(:category, name: "Developers")
+      parent_theme = Fabricate(:theme)
+      theme.update!(component: true)
+      parent_theme.add_relative_theme!(:child, theme)
+      SiteSetting.default_theme_id = parent_theme.id
+      SiteSetting.allow_user_locale = true
+
+      settings = YAML.safe_load(theme.settings_field.value)
+      sections = settings.fetch("resource_sections")
+      sections["schema"]["properties"]["categories"] = { "type" => "categories" }
+      sections["default"].first["categories"] = [english_category.id]
+      sections["default"].first["links"].first["translation_key"] = "academy"
+      theme.set_field(target: :settings, name: "yaml", value: settings.to_yaml)
+      theme.set_field(
+        target: :extra_js,
+        type: :js,
+        name: "discourse/api-initializers/category-resources.gjs",
+        value: File.read(file_from_fixtures("category_resources.gjs", "theme_settings")),
+      )
+      theme.save!
+
+      admin_objects_setting_editor_page
+        .visit_theme(theme, "resource_sections")
+        .add_object_in_root
+        .fill_in_field("translation_key", "japan")
+        .fill_in_field("title", "Japan resources")
+        .select_categories(japanese_category)
+        .add_child_object
+        .fill_in_field("translation_key", "academy")
+        .fill_in_field("label", "Regional academy")
+        .fill_in_field("description", "Learn with your local community")
+        .fill_in_field("destination", "/guidelines")
+        .save
+      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+
+      resource_key = "resource_sections.japan.links.academy"
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.manage_translations
+      site_texts_page.select_locale("ja")
+      site_texts_page.edit_translation(
+        "js.theme_translations.#{theme.id}.#{resource_key}.label",
+        locale: "ja",
+        theme_id: theme.id,
+      )
+      site_texts_page.override_translation("地域のアカデミー")
+      expect(page).to have_css(".saved")
+      site_texts_page.back_to_results
+      site_texts_page.edit_translation(
+        "js.theme_translations.#{theme.id}.#{resource_key}.description",
+        locale: "ja",
+        theme_id: theme.id,
+      )
+      site_texts_page.override_translation("地域のコミュニティで学ぶ")
+      expect(page).to have_css(".saved")
+      page.refresh
+      expect(page).to have_field("site-text-value", with: "地域のコミュニティで学ぶ")
+
+      admin.update!(locale: "ja")
+      visit(japanese_category.url)
+      expect(page).to have_css(".category-resources a[href='/guidelines']", text: "地域のアカデミー")
+      expect(page).to have_css(".category-resources p", text: "地域のコミュニティで学ぶ")
+      page.refresh
+      expect(page).to have_css(".category-resources a", text: "地域のアカデミー")
+
+      visit(english_category.url)
+      expect(page).to have_css(".category-resources a", text: "Community guidelines")
+      expect(page).to have_no_css(".category-resources a", text: "地域のアカデミー")
+
+      admin.update!(locale: "en")
+      visit(japanese_category.url)
+      expect(page).to have_css(".category-resources a", text: "Regional academy")
+      expect(page).to have_css(".category-resources p", text: "Learn with your local community")
+    end
+
+    it "previews nested keys and opens the component's translations in Site texts" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      expect(admin_objects_setting_editor_page).to have_translation_key(key)
+      admin_objects_setting_editor_page.manage_translations
+      expect(page).to have_current_path("/admin/customize/site_texts?theme_id=#{theme.id}")
+      site_texts_page.select_locale("ja")
+      site_texts_page.edit_translation(
+        "js.theme_translations.#{theme.id}.#{key}",
+        locale: "ja",
+        theme_id: theme.id,
+      )
+      expect(page).to have_content("Default text · English")
+      site_texts_page.override_translation("ガイドライン")
+      expect(page).to have_css(".saved")
+      page.refresh
+      expect(page).to have_field("site-text-value", with: "ガイドライン")
+    end
+
+    it "warns before managing translations with unsaved object text" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.fill_in_field("title", "Unsaved title")
+      admin_objects_setting_editor_page.manage_translations
+      expect(page).to have_css(
+        "#dialog-holder",
+        text: I18n.t("admin_js.admin.customize.theme.unsaved_changes_alert"),
+      )
+      click_button(I18n.t("admin_js.admin.customize.theme.stay"))
+      expect(admin_objects_setting_editor_page).to have_setting_field("title", "Unsaved title")
+      admin_objects_setting_editor_page.manage_translations
+      click_button(I18n.t("admin_js.admin.customize.theme.discard"))
+      expect(page).to have_current_path("/admin/customize/site_texts?theme_id=#{theme.id}")
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      expect(admin_objects_setting_editor_page).to have_setting_field("title", "Resources")
+    end
+
+    it "refreshes theme translations after saving object text" do
+      themes_page = PageObjects::Pages::AdminCustomizeThemes.new
+      themes_page.visit(theme)
+      expect(themes_page).to have_translation(key, "Community guidelines")
+      themes_page.click_edit_objects_setting_button("resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("label", "Updated guidelines").save
+
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+      page.refresh
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+    end
+
+    it "keeps the editor open and preserves saved values when identifiers are invalid" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("translation_key", "Invalid key").save
+      expect(admin_objects_setting_editor_page).to have_validation_error
+      page.refresh
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      expect(admin_objects_setting_editor_page).to have_setting_field(
+        "translation_key",
+        "guidelines",
+      )
+    end
+  end
 
   describe "when editing a theme setting of objects type" do
     fab!(:theme)

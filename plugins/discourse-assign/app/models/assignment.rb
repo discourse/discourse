@@ -79,6 +79,8 @@ class Assignment < ActiveRecord::Base
   def create_missing_notifications!(user_id: nil)
     assigned_users(user_id:).each do |user|
       next if user.notifications.for_assignment(self).exists?
+      # Group members don't necessarily have access to every target assigned to the group.
+      next if !user.guardian.can_see?(target)
       DiscourseAssign::CreateNotification.call(
         assignment: self,
         user: user,

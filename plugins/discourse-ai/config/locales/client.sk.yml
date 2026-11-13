@@ -219,7 +219,6 @@ sk:
         nav:
           enabled: "Povolené"
         filters:
-          all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
         sentiment:

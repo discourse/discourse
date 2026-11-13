@@ -1439,6 +1439,7 @@ gl:
         redeemed_tab_with_count: "Utilizados (%{count})"
         invited_via: "Convite"
         invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
+        invited_via_link_without_key: "ligazón (%{count} / %{max} ofrecementos)"
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último envío"

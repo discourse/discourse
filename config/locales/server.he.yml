@@ -4976,6 +4976,10 @@ he:
       no_context:
         watched_word: "הפוסט הזה כלל מילים במעקב. נא לפנות אל %{link} לפרטים נוספים."
     actions:
+      answer_yes:
+        title: "כן"
+      answer_no:
+        title: "לא"
       agree:
         title: "כן"
       agree_and_keep:

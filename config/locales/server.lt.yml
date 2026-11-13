@@ -1546,7 +1546,7 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
-      uncategorized_category_missing: "Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja."
+      uncategorized_category_missing: 'Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja.'
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2778,6 +2778,10 @@ lt:
       links:
         category: kategorijos nustatymai
     actions:
+      answer_yes:
+        title: "Taip"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Taip"
       agree_and_keep_deleted:

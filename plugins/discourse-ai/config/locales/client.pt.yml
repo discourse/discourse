@@ -120,7 +120,6 @@ pt:
         nav:
           enabled: "Ativado"
         filters:
-          all: "Todos"
           reset: "Repor"
         sentiment:
           emotion: "Emoção"

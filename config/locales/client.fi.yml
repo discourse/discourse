@@ -875,6 +875,7 @@ fi:
         is_this_post: "Onko tämä %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "tai"
         something_else_wrong: "Onko tämä %{reviewable_type} jollakin tavalla viallinen?"
+        something_wrong_with_post: "Onko tässä viestissä jotain vikaa?"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"

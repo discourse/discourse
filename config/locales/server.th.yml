@@ -629,6 +629,10 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
+      answer_yes:
+        title: "ใช่"
+      answer_no:
+        title: "ไม่ใช่"
       agree:
         title: "ใช่"
       delete:

@@ -3123,6 +3123,10 @@ el:
         watched_word: ρυθμίσεις παρακολουθούμενης λέξης
         category: ρυθμίσεις κατηγορίας
     actions:
+      answer_yes:
+        title: "Ναι "
+      answer_no:
+        title: "Όχι"
       agree:
         title: "Ναι"
       agree_and_keep:

@@ -2062,6 +2062,10 @@ sw:
     sensitivity:
       disabled: "Imezuiwa"
     actions:
+      answer_yes:
+        title: "Ndio"
+      answer_no:
+        title: "Hapana"
       agree:
         title: "Ndio"
       agree_and_suspend:

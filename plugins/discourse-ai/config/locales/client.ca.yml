@@ -73,7 +73,6 @@ ca:
         nav:
           enabled: "Activat"
         filters:
-          all: "Tots"
           reset: "Restableix"
         sentiment:
           enabled: "Activat"

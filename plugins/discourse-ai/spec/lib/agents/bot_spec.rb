@@ -238,6 +238,30 @@ RSpec.describe DiscourseAi::Agents::Bot do
           end
         end
       end
+
+      it "reports tool progress to the context callback when thinking is hidden" do
+        progress = []
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            messages: [{ type: :user, content: "Find posts about tags" }],
+            skip_show_thinking: true,
+          )
+        context.tool_progress_callback = ->(tool, message) { progress << [tool.name, message] }
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "search",
+            id: "search",
+            parameters: {
+              search_query: "tags",
+            },
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([tool_call, "Found them"]) do
+          bot.reply(context) { |_partial| }
+        end
+
+        expect(progress).to eq([["search", I18n.t("discourse_ai.ai_bot.searching", query: "tags")]])
+      end
     end
 
     context "with tool invocation limits" do

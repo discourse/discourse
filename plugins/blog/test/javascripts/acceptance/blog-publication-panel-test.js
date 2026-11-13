@@ -412,6 +412,12 @@ acceptance("Blog publication panel", function (needs) {
   });
 
   test("saves article settings without publishing", async function (assert) {
+    publication = {
+      ...publication,
+      cover_upload_id: 12,
+      cover_url: "/images/discourse-logo-sketch.png",
+      co_authors: ["ada", "bob"],
+    };
     pretender.put("/blog-editor/publications/280.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
       assert.strictEqual(
@@ -428,6 +434,25 @@ acceptance("Blog publication panel", function (needs) {
         data.get("publication[canonical_url]"),
         "https://example.com/original",
         "the canonical URL is saved"
+      );
+      assert.strictEqual(
+        data.get("publication[cover_upload_id]"),
+        "12",
+        "the cover is saved by its upload id"
+      );
+      assert.strictEqual(
+        data.get("publication[cover_alt]"),
+        "A lighthouse at dusk",
+        "the cover alt text is saved"
+      );
+      assert.false(
+        data.has("publication[cover_url]"),
+        "the cover preview URL is not sent"
+      );
+      assert.strictEqual(
+        data.get("publication[co_authors]"),
+        "ada,bob",
+        "co-authors are sent as one list of usernames"
       );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);
@@ -447,6 +472,9 @@ acceptance("Blog publication panel", function (needs) {
     await formKit(`${PANEL}__form`)
       .field("excerpt")
       .fillIn("A revised introduction");
+    await formKit(`${PANEL}__form`)
+      .field("cover_alt")
+      .fillIn("A lighthouse at dusk");
     await formKit(`${PANEL}__form`)
       .field("meta_description")
       .fillIn("A summary for search engines");

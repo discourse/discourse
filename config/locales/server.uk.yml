@@ -6023,6 +6023,10 @@ uk:
       no_context:
         watched_word: "Ця публікація містила слово, яке відстежується. Щоб дізнатися більше, перейдіть %{link} ."
     actions:
+      answer_yes:
+        title: "Так"
+      answer_no:
+        title: "Ні"
       agree:
         title: "Так"
       agree_and_keep:

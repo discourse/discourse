@@ -102,6 +102,15 @@
   text-align: center;
 }
 
+.discourse-journal__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .discourse-journal__intro h1 {
   margin: 0 0 18px;
   font-size: clamp(40px, 5vw, 58px);
@@ -325,6 +334,17 @@
 
 .discourse-journal__article-header {
   margin-bottom: 48px;
+}
+
+.discourse-journal__article-cover {
+  margin: 0 0 48px;
+}
+
+.discourse-journal__article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
 }
 
 .discourse-journal__breadcrumbs {

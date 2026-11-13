@@ -818,6 +818,18 @@ RSpec.describe PrettyText do
       ).to eq(true)
     end
 
+    it "does not inject nofollow for an allowlisted host requested in a different case" do
+      expect(PrettyText.cook("<a href='http://FOO.COM/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(
+        true,
+      )
+    end
+
+    it "injects nofollow for a host that only shares a suffix with an allowlisted host" do
+      expect(PrettyText.cook("<a href='http://notfoo.com/test.html'>cnn</a>")).to match(
+        /nofollow ugc/,
+      )
+    end
+
     it "does not inject nofollow when omit_nofollow is enabled" do
       expect(
         PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/,
@@ -2189,11 +2201,11 @@ HTML
 
       # Due to a bug in node 18.16 and lower this takes about 11s.
       # On node 18.19 and newer it takes about 250ms
-      expect do
-        Timeout.timeout(3) do
-          expect(PrettyText.cook("abc nope def")).to match_html("<p>abc yep def</p>")
-        end
-      end.not_to raise_error
+      cooked = nil
+      elapsed =
+        Timeout.timeout(15) { Benchmark.realtime { cooked = PrettyText.cook("abc nope def") } }
+      expect(cooked).to match_html("<p>abc yep def</p>")
+      expect(elapsed).to be < 3
     end
 
     it "replaces words with other words" do
@@ -3257,6 +3269,14 @@ HTML
     it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
       raw = "[code]" * 6000
       expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks whitespace-heavy unclosed quote and details tags quickly" do
+      %w[quote details].each do |tag|
+        raw = "[#{tag}=#{" " * 31_000} no closing bracket"
+
+        expect(cook_duration(raw)).to be < 2
+      end
     end
   end
 end

@@ -12,6 +12,10 @@ module ::Blog
       @revision.absolute_image_url
     end
 
+    def image_alt
+      @revision.data["cover_alt"].presence if @revision.cover?
+    end
+
     def twitter_card
       image_url ? "summary_large_image" : "summary"
     end
@@ -24,6 +28,20 @@ module ::Blog
       @publication.article_updated_at&.iso8601
     end
 
+    def author
+      people =
+        @revision
+          .authors(@publication.discussion_topic&.user)
+          .map do |user, name|
+            {
+              "@type" => "Person",
+              "name" => name,
+              "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
+            }
+          end
+      people.many? ? people : people.first
+    end
+
     def schema
       {
         "@context" => "https://schema.org",
@@ -34,10 +52,7 @@ module ::Blog
         "mainEntityOfPage" => @publication.url,
         "datePublished" => published_time,
         "dateModified" => modified_time,
-        "author" => {
-          "@type" => "Person",
-          "name" => @revision.data["author_name"],
-        },
+        "author" => author,
         "image" => image_url,
       }.compact.to_json
     end

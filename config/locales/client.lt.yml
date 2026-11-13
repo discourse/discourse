@@ -2968,6 +2968,7 @@ lt:
       no_results: "Nėra rezultatų"
       search: "Paieška…"
       label: "Pasirinkite variantus"
+      remove_item: "Pašalinti %{name}"
     d_otp:
       screen_reader:
         one: Įveskite skaičių
@@ -7931,24 +7932,94 @@ lt:
             few: "Filtravimas pagal %{count} įrašo URL"
             many: "Filtravimas pagal %{count} įrašo URL"
             other: "Filtravimas pagal %{count} įrašo URL"
+          referrer:
+            one: "Filtravimas pagal %{count} nukreipimo nuorodą"
+            few: "Filtravimas pagal %{count} nukreipimo nuorodas"
+            many: "Filtravimas pagal %{count} nukreipimo nuorodų"
+            other: "Filtravimas pagal %{count} nukreipimo nuorodų"
+          country:
+            one: "Filtravimas pagal %{count} šalį"
+            few: "Filtravimas pagal %{count} šalis"
+            many: "Filtravimas pagal %{count} šalių"
+            other: "Filtravimas pagal %{count} šalių"
+          network:
+            one: "Filtravimas pagal %{count} tinklą"
+            few: "Filtravimas pagal %{count} tinklus"
+            many: "Filtravimas pagal %{count} tinklų"
+            other: "Filtravimas pagal %{count} tinklų"
+          browser:
+            one: "Filtravimas pagal %{count} naršyklę"
+            few: "Filtravimas pagal %{count} naršykles"
+            many: "Filtravimas pagal %{count} naršyklių"
+            other: "Filtravimas pagal %{count} naršyklių"
           language:
             one: "Filtruojama %{count} kalba"
             few: "Filtruojamos %{count} kalbos"
             many: "Filtruojama %{count} kalbų"
             other: "Filtruojama %{count} kalbų"
+          ip:
+            one: "Filtravimas pagal %{count} IP adresą"
+            few: "Filtravimas pagal %{count} IP adresus"
+            many: "Filtravimas pagal %{count} IP adresų"
+            other: "Filtravimas pagal %{count} IP adresų"
+        remove_filter_value: "Pašalinti %{value}"
+        clear_all: "Išvalyti viską"
         apply: "Kandidatuoti"
         apply_filters: "Taikyti filtrus"
+        filter_by:
+          one: "Filtruoti pagal %{label}, %{count} puslapio peržiūrą"
+          few: "Filtruoti pagal %{label}, %{count} puslapio peržiūras"
+          many: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+          other: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+        remove_filter: "Pašalinti filtrą %{filter}"
         view_more: "Žiūrėti daugiau"
+        no_dimension_data: "Šiam suskirstymui duomenų nėra."
+        direct_or_unknown: "Tiesioginis / nežinomas"
         cards:
+          acquisition: "Įsigijimas"
+          pages: "Puslapiai"
           visitors: "Lankytojai"
         dimensions:
+          referrers: "Srauto šaltiniai"
+          countries: "Šalys"
+          networks: "Tinklai"
+          top_urls: "Populiariausi URL adresai"
+          entry_urls: "Pradinis URL"
+          browsers: "Naršyklės"
           languages: "Kalbos"
+          ip_addresses: "IP adresai"
         filters:
+          traffic_type: "Srauto tipas"
+          top_url: "Populiariausias URL"
+          entry_url: "Pradinis URL"
+          referrer: "Srauto šaltinis"
+          country: "Šalis"
+          network: "Tinklas"
           browser: "Naršyklė"
           language: "Kalba"
           ip: "IP adresas"
+        headline:
+          one: "%{formatted_count} puslapio peržiūra"
+          few: "%{formatted_count} puslapio peržiūros"
+          many: "%{formatted_count} puslapio peržiūrų"
+          other: "%{formatted_count} puslapio peržiūrų"
+        metrics:
+          distinct_sessions:
+            label: "Atskiros sesijos"
+          logged_in_share:
+            label: "Prisijungusių dalis"
+          bounce_rate:
+            label: "Atšokimo rodiklis"
+          average_session_duration:
+            label: "Vidutinė sesijos trukmė"
         series:
+          logged_in_human: "Prisijungę"
           anonymous_human: "Anonimas"
+          likely_crawler: "Tikėtini paieškos robotai"
+        partial:
+          retention: "Puslapio peržiūrų duomenys iki %{date} nebepasiekiami, todėl šie rezultatai apima tik dalį pasirinkto datos intervalo."
+          pageview_limit: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{date} nuo %{time}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtraukiamos."
+          combined: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{pageviewLimitDate} nuo %{pageviewLimitTime}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtrauktos; puslapio peržiūrų duomenys iki %{date} nebepasiekiami."
       dashboard:
         title: "Suvestinė"
         version: "Versija"
@@ -7961,14 +8032,34 @@ lt:
         updates_available: "Yra atnaujinimų."
         version_check_pending: "Panašu, kad neseniai atnaujinai. Puiku!"
         commit_on_github: "Peržiūrėti commit %{sha} GitHub"
+        commits_ahead:
+          one: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomas pakeitimas"
+          few: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomi pakeitimai"
+          many: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
+          other: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
         dismiss_notice: "Ignoruoti"
+        site_advice:
+          title:
+            one: "%{count} užklausa reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            few: "%{count} užklausos reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            many: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            other: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
         new_features:
+          title: "Kas naujo?"
+          subtitle: "Nuolat išleidžiame naujų funkcijų ir patobulinimų. Šiame puslapyje aptariami svarbiausi aspektai, tačiau galite spustelėti „Sužinokite daugiau“, kad pamatytumėte išsamias leidimo pastabas."
+          no_new_features_found: "Sraute nėra elementų arba pasirinktas filtras nerado jokių rezultatų. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
+          no_new_features_error: "Įkeliant kanalą įvyko klaida. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
           learn_more: "Sužinoti daugiau..."
         refresh_problems: "Atnaujinti"
         space_used: "%{usedSize} panaudota"
         space_used_and_free: "%{usedSize} (%{freeSize} nemokama)"
         uploads: "Įkėlimai"
         backups: "Atsarginės kopijos"
+        backup_count:
+          one: "%{count} atsarginė kopija %{location}"
+          few: "%{count} atsarginės kopijos %{location}"
+          many: "%{count} atsarginių kopijų %{location}"
+          other: "%{count} atsarginių kopijų %{location}"
         lastest_backup: "Naujausi: %{date}"
         whats_new_in_discourse: Kas naujo Discourse?
         report_filter_any: "bet kuris"
@@ -7977,9 +8068,18 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
+        custom_date_range: Pasirinktas datų intervalas
+        loading: "Įkeliamas prietaisų skydelis…"
+        fetch_error: "Nepavyko įkelti prietaisų skydelio. Pabandykite atnaujinti puslapį."
+        stable: "stabilus"
         sections:
+          highlights:
+            title: "Svarbiausi dalykai"
           reports:
             title: "Pranešimai"
+            fetch_error: "Nepavyko įkelti ataskaitų. Pabandykite atnaujinti puslapį."
+          traffic:
+            title: "Svetainės srautas"
           engagement:
             title: "Įsitraukimas"
             fetch_error: "Nepavyko įkelti įsitraukimo. Pabandykite atnaujinti puslapį."

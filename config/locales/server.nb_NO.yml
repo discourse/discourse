@@ -1441,6 +1441,10 @@ nb_NO:
         one: "%{count} sekund"
         other: "%{count} sekunder"
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nei"
       agree:
         title: "Ja"
       agree_and_suspend:

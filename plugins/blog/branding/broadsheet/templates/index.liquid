@@ -1,4 +1,5 @@
 <header class="broadsheet__masthead">
+  {% if page.author %}<img class="broadsheet__author-avatar" src="{{ page.author.avatar_url }}" alt="" width="96" height="96">{% endif %}
   <p class="broadsheet__kicker">{{ page.eyebrow }}</p>
   <h1>{{ page.heading }}</h1>
   {% if page.description_html != blank %}<div class="broadsheet__tagline">{{ page.description_html }}</div>{% endif %}
@@ -25,7 +26,7 @@
         <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
         <p class="broadsheet__excerpt">{{ article.excerpt }}</p>
         <div class="broadsheet__byline">
-          <span><strong>{{ article.author }}</strong></span>
+          {% if article.author %}<span><strong>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</strong></span>{% endif %}
           <time datetime="{{ article.published_at }}">{{ article.date }}</time>
           <a href="{{ article.url }}#discussion">{{ article.replies_label }}</a>
         </div>
