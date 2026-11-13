@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".site_logo_dimensions" do
+    it "exposes upload dimensions by URL and refreshes them when a logo changes" do
+      logo = Fabricate(:upload, width: 600, height: 200)
+      dark_logo = Fabricate(:upload, width: 500, height: 150)
+      SiteSetting.logo = logo
+      SiteSetting.logo_dark = dark_logo
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 600, "height" => 200)
+      expect(dimensions[SiteSetting.site_logo_dark_url]).to eq("width" => 500, "height" => 150)
+
+      SiteSetting.logo = Fabricate(:upload, width: 400, height: 100)
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 400, "height" => 100)
+      expect(dimensions).not_to have_key(SiteSetting.full_cdn_url(logo.url))
+    end
+  end
+
   describe ".dsa_reporting_enabled=" do
     it "requires a community rule before enabling reporting" do
       expect { SiteSetting.dsa_reporting_enabled = true }.to raise_error(
