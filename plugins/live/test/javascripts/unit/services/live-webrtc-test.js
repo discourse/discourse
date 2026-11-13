@@ -900,7 +900,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     }
   });
 
-  test("simultaneous join offers resolve glare by rolling back the lower user id side", async function (assert) {
+  test("simultaneous join offers resolve glare by rebuilding the peer on the lower user id side", async function (assert) {
     assert.timeout(2000);
 
     const rawTrack = createFakeTrack("raw-track");
@@ -931,14 +931,22 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       await this.subject.join(this.room);
       await waitUntil(() => signalRequests.length === 1);
 
+      const candidate = {
+        candidate: "candidate:1 1 UDP 2122252543 127.0.0.1 3478 typ host",
+        sdpMid: "0",
+        sdpMLineIndex: 0,
+      };
       this.rooms.emit(1, {
         type: "signal",
         sender_id: 50,
-        data: { type: "offer", sdp: "simultaneous-offer" },
+        events: [
+          { type: "candidate", candidate },
+          { type: "offer", sdp: "simultaneous-offer" },
+        ],
       });
       await waitUntil(() => signalRequests.length === 2);
 
-      const pc = FakeRTCPeerConnection.instances[0];
+      const [offeringPc, pc] = FakeRTCPeerConnection.instances;
       assert.deepEqual(
         signalRequests[0],
         { recipientId: 50, type: "offer", sdp: "fake-offer" },
@@ -947,12 +955,27 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       assert.deepEqual(
         signalRequests[1],
         { recipientId: 50, type: "answer", sdp: "fake-answer" },
-        "answers the competing offer after rollback"
+        "answers the competing offer"
+      );
+      assert.strictEqual(
+        offeringPc.connectionState,
+        "closed",
+        "closes the connection that carried the losing offer"
+      );
+      assert.strictEqual(
+        offeringPc.localDescription.type,
+        "offer",
+        "does not roll back the losing offer"
       );
       assert.strictEqual(
         pc.remoteDescription.sdp,
         "simultaneous-offer",
-        "accepts the competing offer after rolling back local offer"
+        "accepts the competing offer on a fresh connection"
+      );
+      assert.strictEqual(
+        pc.addedCandidates.length,
+        1,
+        "keeps a candidate that arrived ahead of the competing offer"
       );
       assert.strictEqual(
         pc.localDescription.type,
