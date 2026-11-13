@@ -20,15 +20,36 @@ module JsonApiKit
         @resource = resource
       end
 
-      delegate :invalid?, to: :contract
-      delegate :parameters, :locations_for, to: :attributes
+      def invalid? = refusals.any?
+
+      def parameters
+        raise Invalid.new(refusals) if invalid?
+        @parameters ||= attributes.parameters.merge(relationships.parameters)
+      end
+
+      def locations_for(parameter)
+        ParameterPath
+          .for(parameter)
+          .then { |path| relationships.locations_for(path) + attributes.locations_for(path.name) }
+      end
 
       def to_h = document
 
-      def refusals = contract.errors.map { Error.new(it, document:) }
+      def refusals
+        @refusals ||=
+          if contract.invalid?
+            contract.errors.map { Error.new(it, document:) }
+          else
+            relationships.refusals + relationships.attribute_refusals(attributes)
+          end
+      rescue ConversionError => error
+        [error]
+      end
 
       def validation_errors(errors)
-        errors.map { ValidationError.new(it, location: attributes.location_for(it.attribute)) }
+        errors.map do |error|
+          ValidationError.new(error, location: location_for(ParameterPath.for(error.attribute)))
+        end
       end
 
       private
@@ -42,6 +63,15 @@ module JsonApiKit
 
       def attributes =
         @attributes ||= Attributes.new(document, glossary:, existing: existing_values)
+
+      def relationships = @relationships ||= Relationships.new(document, resource:)
+
+      def location_for(parameter)
+        return attributes.location_for(parameter) if parameter.base?
+        relationships.locations_for(parameter).sole
+      rescue Enumerable::SoleItemExpectedError
+        attributes.location_for(parameter)
+      end
 
       def existing_values = ExistingValues::None
     end
