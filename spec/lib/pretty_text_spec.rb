@@ -3258,5 +3258,13 @@ HTML
       raw = "[code]" * 6000
       expect(cook_duration(raw)).to be < 2
     end
+
+    it "cooks whitespace-heavy unclosed quote and details tags quickly" do
+      %w[quote details].each do |tag|
+        raw = "[#{tag}=#{" " * 31_000} no closing bracket"
+
+        expect(cook_duration(raw)).to be < 2
+      end
+    end
   end
 end
