@@ -23,6 +23,8 @@ module PageObjects
       end
 
       def open_rule_menu
+        return rule_select.open if SiteSetting.enable_new_select_controls
+
         within(full_modal_selector) do
           find("[data-name='community_rule'] .form-kit__control-menu-trigger").click
         end
@@ -33,20 +35,43 @@ module PageObjects
       end
 
       def select_rule(ground)
+        return rule_select.select_name(ground) if SiteSetting.enable_new_select_controls
+
         open_rule_menu
         find(".form-kit__control-menu-content .btn", text: ground).click
       end
 
       def has_no_rule_menu?
+        return rule_select.has_no_listbox? if SiteSetting.enable_new_select_controls
+
         has_no_css?(".dsa-classification-options")
       end
 
       def has_rule_option?(ground, explanation:)
+        if SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              rule_select.in_panel("[role='option'][data-name='#{ground}']"),
+              text: "#{ground} #{explanation}",
+              exact_text: true,
+              normalize_ws: true,
+            )
+          )
+        end
+
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
       def has_readable_rule?(ground)
-        has_css?(".dsa-classification-option", text: ground) do |option|
+        selector =
+          (
+            if SiteSetting.enable_new_select_controls
+              rule_select.in_panel("[role='option']")
+            else
+              ".dsa-classification-option"
+            end
+          )
+        has_css?(selector, text: ground) do |option|
           option.evaluate_script("this.scrollHeight <= this.clientHeight")
         end
       end
@@ -80,9 +105,15 @@ module PageObjects
       end
 
       def has_disabled_classification_fields?
-        within(full_modal_selector) do
-          has_css?(".dsa-classification-select:disabled") && has_select?("Category", disabled: true)
-        end
+        rule =
+          (
+            if SiteSetting.enable_new_select_controls
+              "[data-name='community_rule'] [role='combobox']:disabled"
+            else
+              ".dsa-classification-select:disabled"
+            end
+          )
+        within(full_modal_selector) { has_css?(rule) && has_select?("Category", disabled: true) }
       end
 
       def has_disabled_button?(label)
@@ -116,6 +147,8 @@ module PageObjects
       end
 
       def has_selected_rule?(ground)
+        return rule_select.has_selected_name?(ground) if SiteSetting.enable_new_select_controls
+
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .d-button-label",
           text: ground,
@@ -123,7 +156,28 @@ module PageObjects
         )
       end
 
+      def has_no_selected_rule?
+        if SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              "#{full_modal_selector} [data-name='community_rule'] [role='combobox']",
+            ) { |input| input.value.empty? }
+          )
+        end
+
+        has_selected_rule?(I18n.t("js.dsa_statements.rule_prompt"))
+      end
+
+      # The new combobox exposes the held rule as its value, so it needs no description.
       def has_accessible_rule_description?(ground)
+        if SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              "#{full_modal_selector} [data-name='community_rule'] [role='combobox']",
+            ) { |input| input.value == ground }
+          )
+        end
+
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
         ) { |trigger| trigger["aria-description"] == ground }
@@ -139,6 +193,14 @@ module PageObjects
 
       def has_required_errors?
         has_css?("#{full_modal_selector} .form-kit__errors", text: "Required")
+      end
+
+      private
+
+      def rule_select
+        PageObjects::Components::UiKit::DSelect.at(
+          "#{full_modal_selector} [data-name='community_rule'] .d-select",
+        )
       end
     end
   end

@@ -260,10 +260,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `@everyone`, `@exclude` and `@lockedValues` for the groups that can't be removed. Its
     system spec runs in both modes. #45929 moved the legacy branch to `DMultiSelect`; the
     merge in `1d0e7629f72` kept the flag branch and dropped `EmailGroupUserChooser`.
-  - ☐ The DSA statement's community rule field (`dsa-moderation-details.gjs`, merged in
+  - ☑ The DSA statement's community rule field (`dsa-moderation-details.gjs`, merged in
     `ebd1d84f27e`): a FormKit custom field that picks one rule, shown with its explanation,
     from a `DMenu` with a `DDropdownMenu`. #45679 moved it into a shared
-    `dsa-classification-select.gjs` (merged in `1d0e7629f72`).
+    `dsa-classification-select.gjs` (merged in `1d0e7629f72`). It branches on the flag to a
+    typeahead `DSelect` (2026-11-12): admins can configure any number of rules, so it searches
+    by rule name, and each explanation is its option's description.
   - ☑ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
     `1d0e7629f72`) branch on the flag to `DSelectGroup` (2026-11-12), offering the groups the
     editor looks up, named after the feature.

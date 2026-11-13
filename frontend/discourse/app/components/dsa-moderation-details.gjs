@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DsaClassificationSelect from "discourse/components/dsa-classification-select";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const CategoryHelp = <template>
@@ -26,7 +30,15 @@ export function defaultClassification(options) {
 }
 
 export default class DsaModerationDetails extends Component {
+  @service siteSettings;
+
   formData = defaultClassification(this.args.options);
+
+  get ruleOptions() {
+    return this.args.options.community_rules.map((rule) =>
+      selectOption(rule, { description: rule.explanation })
+    );
+  }
 
   get rules() {
     return this.args.options.community_rules.map((rule) => ({
@@ -58,11 +70,30 @@ export default class DsaModerationDetails extends Component {
         as |field|
       >
         <field.Control>
-          <DsaClassificationSelect
-            @field={{field}}
-            @options={{this.rules}}
-            @placeholder={{i18n "dsa_statements.rule_prompt"}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelect
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @labelField="ground"
+              @onChange={{field.set}}
+              @options={{this.ruleOptions}}
+              @texts={{hash
+                ariaLabel=field.title
+                placeholder=(i18n "dsa_statements.rule_prompt")
+              }}
+              @value={{field.value}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <DsaClassificationSelect
+              @field={{field}}
+              @options={{this.rules}}
+              @placeholder={{i18n "dsa_statements.rule_prompt"}}
+            />
+          {{/if}}
         </field.Control>
       </form.Field>
       <form.Field

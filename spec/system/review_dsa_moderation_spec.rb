@@ -124,82 +124,92 @@ describe "Classifying reviewable moderation" do
     expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
   end
 
-  it "classifies before editing, handling the review only after the edit is saved" do
-    SiteSetting.dsa_community_rules = [
-      rule,
-      { ground: "No advertising", explanation: "Unsolicited advertising is not allowed." },
-    ].to_json
-    post = topic.first_post
-    reviewable =
-      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic:)
+  shared_examples "classifying before editing" do
+    it "classifies before editing, handling the review only after the edit is saved" do
+      SiteSetting.dsa_community_rules = [
+        rule,
+        { ground: "No advertising", explanation: "Unsolicited advertising is not allowed." },
+      ].to_json
+      post = topic.first_post
+      reviewable =
+        Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic:)
 
-    review_page.visit_reviewable(reviewable)
-    review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
 
-    expect(modal).to have_action_title("Edit post")
-    expect(modal).to have_steps("DSA classification", "Edit post")
-    expect(modal).to have_selected_rule("Choose a community rule")
+      expect(modal).to have_action_title("Edit post")
+      expect(modal).to have_steps("DSA classification", "Edit post")
+      expect(modal).to have_no_selected_rule
 
-    modal.open_dsa_help
+      modal.open_dsa_help
 
-    expect(modal).to have_classification_help(
-      "The EU Digital Services Act asks platforms to record why content was moderated.",
-    )
+      expect(modal).to have_classification_help(
+        "The EU Digital Services Act asks platforms to record why content was moderated.",
+      )
 
-    modal.open_rule_menu
+      modal.open_rule_menu
 
-    expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
-    expect(modal).to have_rule_option(
-      "No advertising",
-      explanation: "Unsolicited advertising is not allowed.",
-    )
+      expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
+      expect(modal).to have_rule_option(
+        "No advertising",
+        explanation: "Unsolicited advertising is not allowed.",
+      )
 
-    modal.close_rule_menu
+      modal.close_rule_menu
 
-    expect(modal).to have_no_rule_menu
+      expect(modal).to have_no_rule_menu
 
-    modal.confirm("Continue to editor")
+      modal.confirm("Continue to editor")
 
-    expect(modal).to have_required_errors
+      expect(modal).to have_required_errors
 
-    modal.select_rule(rule[:ground])
+      modal.select_rule(rule[:ground])
 
-    expect(modal).to have_selected_rule(rule[:ground])
-    expect(modal).to have_accessible_rule_description(rule[:ground])
-    expect(page).to have_no_text(rule[:explanation])
-    expect(modal).to have_selected_category(category)
+      expect(modal).to have_selected_rule(rule[:ground])
+      expect(modal).to have_accessible_rule_description(rule[:ground])
+      expect(page).to have_no_text(rule[:explanation])
+      expect(modal).to have_selected_category(category)
 
-    modal.confirm("Continue to editor")
+      modal.confirm("Continue to editor")
 
-    expect(modal).to be_closed
-    expect(composer).to be_opened
+      expect(modal).to be_closed
+      expect(composer).to be_opened
 
-    composer.fill_content("A correction that should be discarded.")
-    composer.discard
-    discard_modal = PageObjects::Modals::DiscardDraft.new
+      composer.fill_content("A correction that should be discarded.")
+      composer.discard
+      discard_modal = PageObjects::Modals::DiscardDraft.new
 
-    expect(discard_modal).to be_open
+      expect(discard_modal).to be_open
 
-    discard_modal.click_discard
+      discard_modal.click_discard
 
-    expect(composer).to be_closed
-    expect(review_page).to have_reviewable_with_pending_status(reviewable)
-    expect(review_page).to have_no_note(note)
+      expect(composer).to be_closed
+      expect(review_page).to have_reviewable_with_pending_status(reviewable)
+      expect(review_page).to have_no_note(note)
 
-    review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
-    modal.select_rule(rule[:ground])
-    modal.confirm("Continue to editor")
+      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+      modal.select_rule(rule[:ground])
+      modal.confirm("Continue to editor")
 
-    expect(composer).to be_opened
+      expect(composer).to be_opened
 
-    composer.fill_content("A corrected contribution to the discussion.")
-    composer.submit
+      composer.fill_content("A corrected contribution to the discussion.")
+      composer.submit
 
-    expect(composer).to be_closed
-    expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+      expect(composer).to be_closed
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
-    page.refresh
+      page.refresh
 
-    expect(review_page).to have_note(note)
+      expect(review_page).to have_note(note)
+    end
+  end
+
+  include_examples "classifying before editing"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "classifying before editing"
   end
 end

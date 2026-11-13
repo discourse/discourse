@@ -29,56 +29,66 @@ RSpec.describe "DSA classification suggestion" do
     sign_in(moderator)
   end
 
-  it "lets the moderator suggest and adjust classification before silencing the user" do
-    reviewable =
-      PostActionCreator.create(
-        Fabricate(:user, trust_level: TrustLevel[3]),
-        post,
-        :inappropriate,
-      ).reviewable
-    penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
+  shared_examples "suggesting a classification" do
+    it "lets the moderator suggest and adjust classification before silencing the user" do
+      reviewable =
+        PostActionCreator.create(
+          Fabricate(:user, trust_level: TrustLevel[3]),
+          post,
+          :inappropriate,
+        ).reviewable
+      penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
 
-    DiscourseAi::Decisions.with_canned_answers(
-      community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
-      category:,
-    ) do
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
-      penalty_modal.set_future_date("two_weeks")
-      penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
-      modal.continue
+      DiscourseAi::Decisions.with_canned_answers(
+        community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
+        category:,
+      ) do
+        review_page.visit_reviewable(reviewable)
+        review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
+        penalty_modal.set_future_date("two_weeks")
+        penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
+        modal.continue
 
-      expect(modal).to have_classification
+        expect(modal).to have_classification
 
-      modal.open_rule_menu
+        modal.open_rule_menu
 
-      expect(modal).to have_readable_rule(advertising_rule[:ground])
+        expect(modal).to have_readable_rule(advertising_rule[:ground])
 
-      modal.close_rule_menu
-      PageObjects::CDP
-        .new
-        .with_paused_request("**/dsa-classifications/*/suggest") do |request|
-          page.driver.with_playwright_page do |browser|
-            browser.get_by_role("button", name: "Suggest with AI", exact: true).click
+        modal.close_rule_menu
+        PageObjects::CDP
+          .new
+          .with_paused_request("**/dsa-classifications/*/suggest") do |request|
+            page.driver.with_playwright_page do |browser|
+              browser.get_by_role("button", name: "Suggest with AI", exact: true).click
+            end
+            request.wait
+
+            expect(modal).to have_disabled_classification_fields
+            expect(modal).to have_disabled_button("Silence")
+
+            request.resume
           end
-          request.wait
 
-          expect(modal).to have_disabled_classification_fields
-          expect(modal).to have_disabled_button("Silence")
+        expect(modal).to have_selected_rule(advertising_rule[:ground])
+        expect(modal).to have_selected_category(category)
+        expect(review_page).to have_reviewable_with_pending_status(reviewable)
 
-          request.resume
-        end
+        modal.select_category("Other violation of terms and conditions")
 
-      expect(modal).to have_selected_rule(advertising_rule[:ground])
-      expect(modal).to have_selected_category(category)
-      expect(review_page).to have_reviewable_with_pending_status(reviewable)
+        modal.confirm("Silence")
 
-      modal.select_category("Other violation of terms and conditions")
-
-      modal.confirm("Silence")
-
-      expect(modal).to be_closed
-      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+        expect(modal).to be_closed
+        expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+      end
     end
+  end
+
+  include_examples "suggesting a classification"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "suggesting a classification"
   end
 end
