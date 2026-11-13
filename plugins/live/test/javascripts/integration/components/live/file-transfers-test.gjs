@@ -168,7 +168,11 @@ module("Integration | Component | LiveFileTransfers", function (hooks) {
 
   test("storage failures show only known localized explanations", async function (assert) {
     await render(<template><LiveFileTransfers /></template>);
-    for (const code of ["storage_unavailable", "storage_failed"]) {
+    for (const code of [
+      "storage_unavailable",
+      "storage_failed",
+      "storage_insufficient",
+    ]) {
       this.webrtc.fileTransfers = [
         { ...this.transfer, status: "failed", error: code },
       ];

@@ -76,6 +76,15 @@ roster grants reflect membership at the latest server roster serialization.
   message. Sending does not require these receiving capabilities. Browser storage
   quotas and eviction can limit or remove temporary content; it is not durable
   storage.
+- Before acknowledging acceptance or allocating an OPFS file, the receiver checks
+  `navigator.storage.estimate()` when available. If the reported remaining quota
+  cannot fit the file plus the unwritten portions of other accepted receives,
+  the offer is declined with a clear not-enough-browser-storage message. Already
+  persisted files are not counted twice. Missing, invalid, or rejected estimates
+  do not block otherwise supported receives. This is an advisory check, not a
+  physical disk-space guarantee or quota reservation; other tabs and browser
+  activity can change availability, so write/close failures still cancel safely
+  and clean up partial files.
 - Received bytes are written incrementally. A bounded **256 KiB** streaming
   window and receiver acknowledgements after disk writes limit outstanding data
   rather than buffering a full file in memory. This window does not grow when the

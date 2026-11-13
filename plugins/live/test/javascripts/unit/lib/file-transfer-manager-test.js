@@ -49,6 +49,14 @@ class TestSink {
   }
 }
 
+// Fake sinks should not depend on the test browser's real origin quota.
+function createManager(options) {
+  return new FileTransferManager({
+    estimateStorage: async () => undefined,
+    ...options,
+  });
+}
+
 function deferred() {
   let resolve;
   let reject;
@@ -68,8 +76,8 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       this.sinks.push(sink);
       return sink;
     };
-    this.sender = new FileTransferManager({ isEligible: () => this.eligible });
-    this.receiver = new FileTransferManager({
+    this.sender = createManager({ isEligible: () => this.eligible });
+    this.receiver = createManager({
       isEligible: () => this.eligible,
       openReceiveSink: this.openSink,
     });
@@ -453,7 +461,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("timeout fails pending requests and disconnect fails active transfers", async function (assert) {
     this.receiver.destroy();
-    this.receiver = new FileTransferManager({
+    this.receiver = createManager({
       isEligible: () => true,
       timeoutMs: 10,
     });
@@ -473,16 +481,21 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
   });
   test("accept waits for disk initialization and cancellation discards late sink", async function (assert) {
     const opened = deferred();
+    let openingStarted = false;
     this.receiver.destroy();
-    this.receiver = new FileTransferManager({
+    this.receiver = createManager({
       isEligible: () => true,
-      openReceiveSink: () => opened.promise,
+      openReceiveSink: () => {
+        openingStarted = true;
+        return opened.promise;
+      },
     });
     this.receiver.attach(1, 1, this.b);
     const id = await this.offer();
     const acceptance = this.receiver.accept(id);
     assert.strictEqual(this.receiver.transfers[0].status, "initializing");
     assert.false(this.b.sent.some((d) => JSON.parse(d).type === "accept"));
+    await waitUntil(() => openingStarted);
     this.receiver.cancel(id);
     const sink = new TestSink();
     opened.resolve(sink);
@@ -493,7 +506,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("unavailable storage fails closed before accept", async function (assert) {
     this.receiver.destroy();
-    this.receiver = new FileTransferManager({
+    this.receiver = createManager({
       isEligible: () => true,
       openReceiveSink: async () => {
         throw new Error("OPFS missing");
@@ -613,7 +626,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("send and receive permissions are independent", async function (assert) {
     this.receiver.destroy();
-    this.receiver = new FileTransferManager({
+    this.receiver = createManager({
       isEligible: () => true,
       isSendAllowed: () => false,
       isReceiveAllowed: () => true,
@@ -637,7 +650,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
   test("receive denial rejects offers without allocating a sink", async function (assert) {
     this.receiver.destroy();
     let allocations = 0;
-    this.receiver = new FileTransferManager({
+    this.receiver = createManager({
       isEligible: () => true,
       isSendAllowed: () => true,
       isReceiveAllowed: () => false,
@@ -660,7 +673,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
   test("leave and destroy clean completed disk sinks without explicit Save", async function (assert) {
     for (const action of ["leave", "destroy"]) {
       const sink = new TestSink();
-      const manager = new FileTransferManager({
+      const manager = createManager({
         isEligible: () => true,
         openReceiveSink: async () => sink,
       });
@@ -723,16 +736,172 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     );
   });
 
+  module("storage quota preflight", function (quotaHooks) {
+    quotaHooks.beforeEach(function () {
+      this.estimate = { quota: 100, usage: 0 };
+      this.estimator = async () => this.estimate;
+      this.receiver.destroy();
+      this.receiver = createManager({
+        isEligible: () => this.eligible,
+        estimateStorage: () => this.estimator(),
+        openReceiveSink: this.openSink,
+      });
+      this.b = new Channel();
+      this.a.remote = this.b;
+      this.b.remote = this.a;
+      this.receiver.attach(1, 1, this.b);
+    });
+
+    test("insufficient quota rejects before allocating disk or sending acceptance", async function (assert) {
+      this.estimate = { quota: 100, usage: 96 };
+      const id = await this.offer("hello");
+      await this.receiver.accept(id);
+      await Promise.resolve();
+      assert.strictEqual(this.receiver.transfers[0].status, "failed");
+      assert.strictEqual(
+        this.receiver.transfers[0].error,
+        "storage_insufficient"
+      );
+      assert.strictEqual(this.sender.transfers[0].status, "rejected");
+      assert.strictEqual(this.sinks.length, 0);
+      assert.false(
+        this.b.sent.some((data) => JSON.parse(data).type === "accept")
+      );
+      assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
+    });
+
+    test("exact remaining quota permits a receive", async function (assert) {
+      this.estimate = { quota: 100, usage: 95 };
+      const id = await this.offer("hello");
+      await this.receiver.accept(id);
+      await waitUntil(() => this.receiver.transfers[0].status === "completed");
+      assert.strictEqual(this.sinks.length, 1);
+      assert.strictEqual(
+        await (await this.receiver.getReceivedFile(id)).text(),
+        "hello"
+      );
+    });
+
+    test("zero-byte receives remain possible with no remaining quota", async function (assert) {
+      this.estimate = { quota: 0, usage: 0 };
+      const id = await this.offer("");
+      await this.receiver.accept(id);
+      await waitUntil(() => this.receiver.transfers[0].status === "completed");
+      assert.true(this.receiver.transfers[0].hasFile);
+    });
+
+    test("missing, invalid and failing estimates retain write-time safety", async function (assert) {
+      for (const estimate of [
+        undefined,
+        {},
+        { quota: 100 },
+        { quota: "100", usage: 0 },
+        { quota: NaN, usage: 0 },
+        { quota: Infinity, usage: 0 },
+        { quota: -1, usage: 0 },
+        { quota: 100, usage: -1 },
+      ]) {
+        this.estimate = estimate;
+        const id = await this.offer("hello");
+        await this.receiver.accept(id);
+        await waitUntil(
+          () => this.sender.transfers.at(-1).status === "completed"
+        );
+        assert.true(this.receiver.transfers.at(-1).hasFile);
+        this.sender.dismiss(id);
+        this.receiver.dismiss(id);
+      }
+      this.estimator = async () => {
+        throw new Error("Estimate blocked");
+      };
+      const id = await this.offer("hello");
+      await this.receiver.accept(id);
+      await waitUntil(
+        () => this.receiver.transfers.at(-1).status === "completed"
+      );
+      assert.true(this.receiver.transfers.at(-1).hasFile);
+    });
+
+    test("usage above quota is treated as no remaining capacity", async function (assert) {
+      this.estimate = { quota: 10, usage: 20 };
+      const id = await this.offer("x");
+      await this.receiver.accept(id);
+      assert.strictEqual(
+        this.receiver.transfers[0].error,
+        "storage_insufficient"
+      );
+      assert.strictEqual(this.sinks.length, 0);
+    });
+
+    test("cancellation while estimating never opens a late sink", async function (assert) {
+      const estimate = deferred();
+      this.estimator = () => estimate.promise;
+      const id = await this.offer("hello");
+      const accepting = this.receiver.accept(id);
+      assert.strictEqual(this.receiver.transfers[0].status, "initializing");
+      this.receiver.cancel(id);
+      estimate.resolve({ quota: 100, usage: 0 });
+      await accepting;
+      assert.strictEqual(this.receiver.transfers[0].status, "cancelled");
+      assert.strictEqual(this.sinks.length, 0);
+    });
+
+    test("concurrent receives reserve unwritten bytes before quota checks settle", async function (assert) {
+      const estimates = [deferred(), deferred()];
+      let calls = 0;
+      this.estimator = () => estimates[calls++].promise;
+      const first = await this.offer("hello");
+      const channel = new Channel();
+      this.receiver.attach(1, 3, channel);
+      const second = crypto.randomUUID();
+      this.message(channel, "offer", second, { name: "second", size: 5 });
+      const acceptingFirst = this.receiver.accept(first);
+      const acceptingSecond = this.receiver.accept(second);
+      estimates[0].resolve({ quota: 5, usage: 0 });
+      await acceptingFirst;
+      assert.strictEqual(
+        this.receiver.transfers[0].error,
+        "storage_insufficient"
+      );
+      estimates[1].resolve({ quota: 5, usage: 0 });
+      await acceptingSecond;
+      assert.strictEqual(this.receiver.transfers[1].status, "transferring");
+      assert.strictEqual(this.sinks.length, 1);
+    });
+
+    test("already persisted bytes are not reserved a second time", async function (assert) {
+      // Fill one write window, then pause the sender before the last byte.
+      this.estimate = { quota: RECEIVE_WINDOW + 10, usage: 0 };
+      const id = await this.offer("x".repeat(RECEIVE_WINDOW + 1));
+      const send = this.b.send.bind(this.b);
+      this.b.send = (data) => {
+        if (JSON.parse(data).type !== "ack") {
+          send(data);
+        }
+      };
+      await this.receiver.accept(id);
+      await waitUntil(() => this.receiver.transfers[0].progress > 0.99);
+      this.estimate = { quota: RECEIVE_WINDOW + 6, usage: RECEIVE_WINDOW };
+      const channel = new Channel();
+      this.receiver.attach(1, 3, channel);
+      const second = crypto.randomUUID();
+      this.message(channel, "offer", second, { name: "second", size: 5 });
+      await this.receiver.accept(second);
+      assert.strictEqual(this.receiver.transfers[1].status, "transferring");
+      assert.strictEqual(this.sinks.length, 2);
+    });
+  });
+
   module("configured limits", function (limitHooks) {
     limitHooks.beforeEach(function () {
       this.sender.destroy();
       this.receiver.destroy();
       this.maxSize = MEBIBYTE;
-      this.sender = new FileTransferManager({
+      this.sender = createManager({
         isEligible: () => this.eligible,
         getMaxFileSize: () => this.maxSize,
       });
-      this.receiver = new FileTransferManager({
+      this.receiver = createManager({
         isEligible: () => this.eligible,
         getMaxFileSize: () => this.maxSize,
         openReceiveSink: this.openSink,
@@ -829,12 +998,16 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
     test("lowering the limit while storage opens cancels and discards the sink", async function (assert) {
       const opening = deferred();
+      let openingStarted = false;
       const sink = new TestSink();
       this.receiver.destroy();
-      this.receiver = new FileTransferManager({
+      this.receiver = createManager({
         isEligible: () => this.eligible,
         getMaxFileSize: () => this.maxSize,
-        openReceiveSink: () => opening.promise,
+        openReceiveSink: () => {
+          openingStarted = true;
+          return opening.promise;
+        },
       });
       const channel = new Channel();
       this.receiver.attach(1, 1, channel);
@@ -844,6 +1017,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
         size: this.maxSize,
       });
       const accepting = this.receiver.accept(id);
+      await waitUntil(() => openingStarted);
       this.maxSize /= 2;
       opening.resolve(sink);
       await accepting;

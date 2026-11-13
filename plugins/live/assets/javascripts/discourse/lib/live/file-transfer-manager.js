@@ -27,6 +27,7 @@ export default class FileTransferManager {
   #receiveAllowed;
   #openSink;
   #getMaxFileSize;
+  #estimateStorage;
   #retained = new Map();
   #retiring = new Map();
   #sinkSizes = new WeakMap();
@@ -38,6 +39,7 @@ export default class FileTransferManager {
     openReceiveSink: openSink = openReceiveSink,
     timeoutMs = 120_000,
     getMaxFileSize = () => DEFAULT_MAX_FILE_SIZE,
+    estimateStorage = () => globalThis.navigator?.storage?.estimate?.(),
   }) {
     this.#eligible = isEligible;
     this.#timeout = timeoutMs;
@@ -45,6 +47,7 @@ export default class FileTransferManager {
     this.#receiveAllowed = isReceiveAllowed;
     this.#openSink = openSink;
     this.#getMaxFileSize = getMaxFileSize;
+    this.#estimateStorage = estimateStorage;
   }
 
   attach(roomId, userId, channel) {
@@ -147,6 +150,23 @@ export default class FileTransferManager {
     }
     this.#update(t, { status: "initializing" });
     try {
+      const enoughSpace = await this.#hasEstimatedReceiveSpace();
+      if (!this.#isActive(t)) {
+        return;
+      }
+      if (
+        !this.#eligible(t.peer.roomId, t.peer.userId) ||
+        !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
+        !this.#validMetadata(t.entry.name, t.entry.size)
+      ) {
+        this.cancel(id);
+        return;
+      }
+      if (!enoughSpace) {
+        this.#control(t.peer, "reject", id);
+        this.#finish(t, "failed", "storage_insufficient");
+        return;
+      }
       const sink = await this.#openSink(t.entry.name);
       if (!this.#isActive(t)) {
         await sink.discard();
@@ -250,6 +270,39 @@ export default class FileTransferManager {
     }
     this.#retained.clear();
     this.transfers = [];
+  }
+
+  async #hasEstimatedReceiveSpace() {
+    let estimate;
+    try {
+      estimate = await this.#estimateStorage();
+    } catch {
+      // Estimates are advisory. Missing/blocked APIs must not prevent OPFS
+      // receives; write/close failures still fail safely and remove partials.
+      return true;
+    }
+    const { quota, usage } = estimate || {};
+    if (
+      !Number.isFinite(quota) ||
+      !Number.isFinite(usage) ||
+      quota < 0 ||
+      usage < 0
+    ) {
+      return true;
+    }
+    // Usage already includes persisted files and retiring downloads. Reserve
+    // only unwritten bytes of accepted/initializing receives, including this
+    // one, to avoid concurrently accepting more than the estimate can fit.
+    let unwrittenBytes = 0;
+    for (const t of this.#active.values()) {
+      if (
+        t.entry.direction === "incoming" &&
+        ["initializing", "transferring"].includes(t.entry.status)
+      ) {
+        unwrittenBytes += t.entry.size - t.offset;
+      }
+    }
+    return unwrittenBytes <= Math.max(0, quota - usage);
   }
 
   #key(roomId, userId) {

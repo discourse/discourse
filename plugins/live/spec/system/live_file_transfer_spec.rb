@@ -339,6 +339,37 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
     end
   end
 
+  it "explains insufficient browser quota before accepting or allocating a disk file" do
+    join_both
+    existing_paths = using_session(:bob) { opfs_files.map { |file| file.fetch("path") } }
+    id = using_session(:alice) { send_file("needs-space.bin", [1, 2, 3, 4, 5]) }
+    using_session(:bob) do
+      expect_status(id, "pending")
+      # Simulate the advisory browser estimate only; RTC and OPFS remain native.
+      page.execute_script(<<~JS)
+        window.__quotaEstimateCalls = 0;
+        navigator.storage.estimate = async () => {
+          window.__quotaEstimateCalls++;
+          return { quota: 100, usage: 99 };
+        };
+      JS
+      transfer_action("acceptFileTransfer", id)
+      expect_status(id, "failed")
+      expect(page).to have_css(
+        "[data-transfer-id='#{id}'] [role='alert']",
+        text: I18n.t("js.live.file_transfer.storage_insufficient"),
+      )
+      expect(page.evaluate_script("window.__quotaEstimateCalls")).to eq(1)
+      expect_no_opfs_files(existing_paths)
+      expect(page.evaluate_script("window.__fileChannelEvidence.binaryReceived")).to eq(0)
+      page.execute_script("delete navigator.storage.estimate")
+    end
+    using_session(:alice) do
+      expect_status(id, "rejected")
+      expect(page.evaluate_script("window.__fileChannelEvidence.binarySent")).to eq(0)
+    end
+  end
+
   it "requires acceptance before binary bytes and completes binary and empty files with matching bytes" do
     join_both
     bytes = [0, 255, 128, 13, 10, 0, 42] * 5000

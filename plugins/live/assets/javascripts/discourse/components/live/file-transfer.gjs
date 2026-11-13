@@ -50,7 +50,13 @@ export default class LiveFileTransfer extends Component {
 
   get transferError() {
     const code = this.args.transfer.error;
-    if (["storage_unavailable", "storage_failed"].includes(code)) {
+    if (
+      [
+        "storage_unavailable",
+        "storage_failed",
+        "storage_insufficient",
+      ].includes(code)
+    ) {
       return i18n(`live.file_transfer.${code}`);
     }
     return null;
