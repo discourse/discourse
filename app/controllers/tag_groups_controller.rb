@@ -91,7 +91,6 @@ class TagGroupsController < ApplicationController
     params.merge!(tag_group.permit!) if tag_group
 
     params.permit(
-      :id,
       :name,
       :one_per_topic,
       tags: %i[id name slug],
