@@ -1,4 +1,0 @@
-interface:
-  display_name: "Validate Security Report"
-  short_description: "Black-box validate a Discourse security report"
-  default_prompt: "Use $discourse-validate-security-report to validate this Discourse security report."
