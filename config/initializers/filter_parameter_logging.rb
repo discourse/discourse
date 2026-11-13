@@ -14,6 +14,7 @@ Rails.application.config.filter_parameters += %i[
   facebook_app_secret
   github_client_secret
   second_factor_token
+  secret
   top_url
   entry_url
   referrer
