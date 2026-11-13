@@ -34,7 +34,7 @@ export function defaultRenderTag(tag, params) {
       path = `/u/${username}/messages/tags/${tagPathName}`;
     } else if (typeof tag === "object" && tag.id) {
       const slugForUrl = tag.slug || `${tag.id}-tag`;
-      path = `/tag/${slugForUrl}/${tag.id}`;
+      path = `/tag/${encodeURIComponent(slugForUrl)}/${tag.id}`;
     } else {
       path = `/tag/${tagPathName}`;
     }
