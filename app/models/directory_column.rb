@@ -44,7 +44,7 @@ class DirectoryColumn < ActiveRecord::Base
         icon: attrs[:icon],
         type: DirectoryColumn.types[:plugin],
       ) do |column|
-        column.position = DirectoryColumn.maximum("position") + 1
+        column.position = (DirectoryColumn.maximum("position") || 0) + 1
         column.enabled = false
       end
 
