@@ -152,6 +152,14 @@ site's default theme, independently of the administrator's selected theme. The
 tinted variant uses `selected` for its active menu item, falling back to
 `tertiary_low`, and rounds the content corner.
 
+The admin palette cards show light and dark palettes together:
+
+![Desktop color palette cards](/assets/color-palette-preview-desktop.png)
+
+On narrow screens, the cards stack vertically:
+
+![Mobile color palette cards](/assets/color-palette-preview-mobile.png)
+
 See also:
 
 https://meta.discourse.org/t/how-to-develop-custom-themes/60848
