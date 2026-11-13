@@ -2879,6 +2879,7 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+      <iframe src='https://bob.com/abc/def\\..\\ghi'></iframe>
     HTML
 
     html = <<~HTML
@@ -2898,6 +2899,23 @@ HTML
 
     html = <<~HTML
       <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "skips allowlist iframes with a src the browser decodes or strips" do
+    SiteSetting.allowed_iframes = "https://*.example.com/|https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def?a=1&amp;b=2'></iframe>
+      <iframe src='https://evil.com&sol;x.example.com/'></iframe>
+      <iframe src='https://bob.com/abc/def/&#46;&#46;&#47;ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/.&#46#;'></iframe>
+      <iframe src='https://bob.com/abc/def/.\t./ghi'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def?a=1&amp;b=2"></iframe>
     HTML
 
     expect(PrettyText.cook(raw).strip).to eq(html.strip)
