@@ -359,8 +359,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  handleReminderFieldChange(field, index, value, { set }) {
-    set(field, value);
+  handleReminderFieldChange(field, index, value, { set, name }) {
+    set(name, value);
     if (!this.event.reminders?.[index]) {
       return;
     }

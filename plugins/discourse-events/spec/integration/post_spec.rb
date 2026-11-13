@@ -273,6 +273,23 @@ describe Post do
             expect(post.event.reminders).to eq("notification.1.hours,bumpTopic.-3.days")
           end
 
+          it "saves reminders with singular units entered directly in BBCode" do
+            post =
+              create_post_with_event(
+                user,
+                'reminders="notification.1.minute,bumpTopic.-1.day,1.week,notification.1.hour"',
+              ).reload
+
+            expect(post.event.parsed_reminders).to eq(
+              [
+                { type: "notification", value: 1, unit: "minutes" },
+                { type: "bumpTopic", value: -1, unit: "days" },
+                { type: "notification", value: 1, unit: "weeks" },
+                { type: "notification", value: 1, unit: "hours" },
+              ],
+            )
+          end
+
           context "with custom fields" do
             before { SiteSetting.discourse_post_event_allowed_custom_fields = "foo-bar|bar" }
 
