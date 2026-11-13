@@ -277,5 +277,14 @@ RSpec.describe "HTML requests with API keys" do
 
       expect(response.status).to eq(200)
     end
+
+    it "keeps the forbidden status when a feed key requests another user's feed" do
+      other_user = Fabricate(:user)
+      api_key = Fabricate(:bookmarks_calendar_user_api_key, user: user)
+
+      get "/u/#{other_user.username}/bookmarks.ics", params: { user_api_key: api_key.key }
+
+      expect_error_page_without_boot_payload(403)
+    end
   end
 end

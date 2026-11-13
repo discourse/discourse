@@ -394,7 +394,10 @@ class ApplicationController < ActionController::Base
       end
 
       with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] && @_preloaded ? set_layout : "no_ember"
+        use_application_layout =
+          opts[:include_ember] && @_preloaded &&
+            !Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+        error_page_opts[:layout] = use_application_layout ? set_layout : "no_ember"
         render html: build_not_found_page(error_page_opts)
       end
     end
