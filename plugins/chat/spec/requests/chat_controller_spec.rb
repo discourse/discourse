@@ -696,6 +696,40 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(404)
     end
 
+    it "404s thread pages whose original message is deleted" do
+      chat_channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_0)
+      Fabricate(:chat_message, chat_channel: chat_channel, thread:)
+      thread.update!(replies_count: 1)
+
+      get thread.relative_url, headers: crawler_headers
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_0.message)
+
+      message_0.trash!
+
+      get thread.relative_url, headers: crawler_headers
+      expect(response.body).not_to include(message_0.message)
+      expect(response.status).to eq(404)
+    end
+
+    it "404s thread pages whose deleted original message was purged by retention" do
+      chat_channel.update!(threading_enabled: true)
+      SiteSetting.chat_channel_retention_days = 30
+      message_0.update_columns(created_at: 40.days.ago)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_0)
+      reply = Fabricate(:chat_message, chat_channel: chat_channel, thread:)
+      thread.update!(replies_count: 1)
+      message_0.trash!
+
+      Jobs::Chat::DeleteOldMessages.new.execute({})
+      expect(Chat::Message.with_deleted.exists?(message_0.id)).to eq(false)
+
+      get thread.relative_url, headers: crawler_headers
+      expect(response.body).not_to include(reply.message)
+      expect(response.status).to eq(404)
+    end
+
     it "handles malformed pagination params without erroring" do
       get "#{chat_channel.relative_url}?date=#{"1" * 200}", headers: crawler_headers
       expect(response.status).to eq(404)
