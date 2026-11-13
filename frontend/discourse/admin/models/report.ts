@@ -859,7 +859,8 @@ export default class Report extends EmberObject {
         }) => EmberObject & { name: string }
       )({
         username,
-        name: formatUsername(username),
+        // The username column holds usernames.
+        name: formatUsername(username as string | null | undefined),
         avatar_template: row[properties.avatar],
       });
 

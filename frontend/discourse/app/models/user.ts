@@ -1744,7 +1744,9 @@ export default class User extends RestModel.extend(Evented) {
       return;
     }
 
-    ua.title = emojiUnescape(escapeExpression(ua.title));
+    // With emoji enabled, an empty title unescapes to `undefined`, which
+    // readers treat like `null`.
+    ua.title = emojiUnescape(escapeExpression(ua.title)) as string | null;
     const action = UserAction.collapseStream([UserAction.create(ua)]);
     this.stream.itemsLoaded += 1;
     this.stream.content.unshift(action[0]);

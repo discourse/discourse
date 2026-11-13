@@ -1,4 +1,6 @@
+/* eslint-disable prefer-const -- Preserve the original JavaScript emit for this types-only port. */
 import { cancel } from "@ember/runloop";
+import type { MomentInput } from "moment";
 import { caretCoordinates } from "discourse/lib/caret-position";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
@@ -11,9 +13,76 @@ import Site from "discourse/models/site";
 import { capabilities } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
 
-let _defaultHomepage;
+/** A start and an end offset in a text. */
+export interface TextSpan {
+  start: number;
+  end: number;
+}
 
-export function splitString(str, separator = ",") {
+/** A paste event, or a jQuery or delegated event that wraps one. */
+export interface ClipboardEventLike {
+  clipboardData?: DataTransfer | null;
+  originalEvent?: { clipboardData?: DataTransfer | null };
+  delegatedEvent?: { originalEvent: { clipboardData?: DataTransfer | null } };
+}
+
+/** Options for `clipboardHelpers`. */
+export interface ClipboardHelperOptions {
+  /** Whether the user can upload files here. */
+  canUpload?: boolean;
+
+  /** The site settings, for `enable_rich_text_paste`. */
+  siteSettings: { enable_rich_text_paste: boolean };
+}
+
+/** The site settings `siteDefaultHomepage` reads. */
+export interface HomepageSettings {
+  default_homepage?: string | null;
+  top_menu: string;
+}
+
+/** A chart data point. Its `x` is a `YYYY-MM-DD` date. */
+export interface DatedValue {
+  x: unknown;
+  y: unknown;
+}
+
+/** An element whose caret `setCaretPosition` can move. */
+interface CaretControl {
+  focus(): void;
+  setSelectionRange?(start: number, end: number): void;
+  createTextRange?(): {
+    collapse(toStart: boolean): void;
+    moveEnd(unit: string, count: number): void;
+    moveStart(unit: string, count: number): void;
+    select(): void;
+  };
+}
+
+/** The part of a markdown token that `findToken` reads. */
+interface MarkdownToken {
+  type: string;
+  content?: string | null;
+  children?: MarkdownToken[] | null;
+}
+
+declare global {
+  interface Window {
+    /** The bridge the mobile app's webview adds. */
+    ReactNativeWebView?: { postMessage(message: string): void };
+  }
+}
+
+let _defaultHomepage: string | undefined;
+
+/**
+ * Splits a string, dropping empty parts.
+ *
+ * @param str - The string. Anything else gives an empty list.
+ * @param separator - The separator. Defaults to `","`.
+ * @returns The parts.
+ */
+export function splitString(str: unknown, separator: string = ","): string[] {
   if (typeof str === "string") {
     return str.split(separator).filter(Boolean);
   } else {
@@ -21,11 +90,23 @@ export function splitString(str, separator = ",") {
   }
 }
 
-export function stripDiscoursePrefix(text) {
+/**
+ * Removes a leading "Discourse" word from a name.
+ *
+ * @param text - The name.
+ * @returns The name without the prefix.
+ */
+export function stripDiscoursePrefix(text: string | null | undefined): string {
   return (text || "").replace(/^discourse[\s-]+/i, "");
 }
 
-export function escapeExpression(string) {
+/**
+ * Escapes text for use in HTML.
+ *
+ * @param string - The text. A falsy value gives `""`.
+ * @returns The escaped text.
+ */
+export function escapeExpression(string: unknown): string {
   if (!string) {
     return "";
   }
@@ -33,17 +114,40 @@ export function escapeExpression(string) {
   return escape(string);
 }
 
-let _usernameFormatDelegate = (username) => username;
+let _usernameFormatDelegate = (username: string): string => username;
 
-export function formatUsername(username) {
+/**
+ * Formats a username for display, with the formatter `replaceFormatter` set.
+ *
+ * @param username - The username.
+ * @returns The formatted username.
+ */
+export function formatUsername(username: string | null | undefined): string {
   return _usernameFormatDelegate(username || "");
 }
 
-export function replaceFormatter(fn) {
+/**
+ * Replaces the function `formatUsername` formats usernames with.
+ *
+ * @param fn - The formatter.
+ */
+export function replaceFormatter(fn: (username: string) => string) {
   _usernameFormatDelegate = fn;
 }
 
-export function postUrl(slug, topicId, postNumber) {
+/**
+ * Builds the URL of a topic, or of a post in it after the first.
+ *
+ * @param slug - The topic slug.
+ * @param topicId - The topic id.
+ * @param postNumber - The post number.
+ * @returns The URL.
+ */
+export function postUrl(
+  slug: string | null | undefined,
+  topicId: number | string,
+  postNumber?: number | null
+): string {
   let url = getURL("/t/");
   if (slug) {
     url += slug + "/";
@@ -51,19 +155,27 @@ export function postUrl(slug, topicId, postNumber) {
     url += "topic/";
   }
   url += topicId;
-  if (postNumber > 1) {
+  // A missing post number compares as not greater than one.
+  if ((postNumber as number) > 1) {
     url += "/" + postNumber;
   }
   return url;
 }
 
-export function highlightPost(postNumber) {
+/**
+ * Moves screen-reader focus to a post's body, for posts after the first.
+ *
+ * @param postNumber - The post number.
+ */
+export function highlightPost(postNumber: number) {
   const container = document.querySelector(`#post_${postNumber}`);
   if (!container) {
     return;
   }
 
-  const element = container.querySelector(".topic-body, .small-action-desc");
+  const element = container.querySelector<HTMLElement>(
+    ".topic-body, .small-action-desc"
+  );
   if (!element) {
     return;
   }
@@ -75,21 +187,40 @@ export function highlightPost(postNumber) {
   }
 }
 
-export function emailValid(email) {
+/**
+ * Whether a value looks like an email address.
+ *
+ * @param email - The value. Anything but a string is invalid.
+ * @returns True for a valid address.
+ */
+export function emailValid(email: unknown): boolean {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re =
     /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
-  return re.test(email);
+  // `test` converts any value to a string first.
+  return re.test(email as string);
 }
 
-export function hostnameValid(hostname) {
+/**
+ * Whether a string is a valid hostname.
+ *
+ * @param hostname - The string.
+ * @returns True for a valid hostname. A falsy hostname is returned as is.
+ */
+export function hostnameValid(hostname: string | null | undefined) {
   // see:  https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
   const re =
     /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
   return hostname && re.test(hostname);
 }
 
-export function extractDomainFromUrl(url) {
+/**
+ * Extracts the host, without a port, from a URL.
+ *
+ * @param url - The URL, with or without a scheme.
+ * @returns The host.
+ */
+export function extractDomainFromUrl(url: string): string {
   if (url.includes("://")) {
     url = url.split("/")[2];
   } else {
@@ -101,9 +232,10 @@ export function extractDomainFromUrl(url) {
 // Whether everything before `node` in its parent is insignificant whitespace,
 // i.e. `node` is effectively the first thing in its parent. (Cooked HTML has
 // whitespace text nodes between blocks, so a strict firstChild check fails.)
-function isFirstMeaningfulChild(node) {
+function isFirstMeaningfulChild(node: Node): boolean {
   for (let sibling = node.previousSibling; sibling; ) {
-    if (sibling.nodeType !== Node.TEXT_NODE || sibling.textContent.trim()) {
+    // A text node always has text content.
+    if (sibling.nodeType !== Node.TEXT_NODE || sibling.textContent!.trim()) {
       return false;
     }
     sibling = sibling.previousSibling;
@@ -117,19 +249,20 @@ function isFirstMeaningfulChild(node) {
 // serializes to stray markdown like a lone "> ". Pull the end back past the
 // husk — to the topmost ancestor it starts — so it is never cloned.
 // Returns the original range when there's nothing to trim.
-function rangeWithoutTrailingHusk(range) {
+function rangeWithoutTrailingHusk(range: Range): Range {
   if (range.endOffset !== 0) {
     return range;
   }
 
   const common = range.commonAncestorContainer;
-  let boundary = range.endContainer;
+  let boundary: Node = range.endContainer;
   while (
     boundary !== common &&
     boundary.parentNode !== common &&
     isFirstMeaningfulChild(boundary)
   ) {
-    boundary = boundary.parentNode;
+    // The walk stays below `common`, so a parent exists.
+    boundary = boundary.parentNode!;
   }
 
   if (boundary === common || !boundary.parentNode) {
@@ -141,8 +274,14 @@ function rangeWithoutTrailingHusk(range) {
   return trimmed;
 }
 
-export function selectedHTML() {
-  const selection = window.getSelection();
+/**
+ * Serializes the selection as HTML, quoting code blocks and whole oneboxes.
+ *
+ * @returns The HTML, or `""` without a selection.
+ */
+export function selectedHTML(): string {
+  // `getSelection` only returns null outside a browsing context.
+  const selection = window.getSelection()!;
   if (selection.isCollapsed) {
     return "";
   }
@@ -150,12 +289,16 @@ export function selectedHTML() {
   const div = document.createElement("div");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
-    const ancestor =
+    // A selection in the page always has an element around it.
+    const ancestor = (
       range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
         ? range.commonAncestorContainer
-        : range.commonAncestorContainer.parentElement;
+        : range.commonAncestorContainer.parentElement
+    ) as Element;
 
-    const oneboxTest = ancestor.closest("aside.onebox[data-onebox-src]");
+    const oneboxTest = ancestor.closest<HTMLElement>(
+      "aside.onebox[data-onebox-src]"
+    );
     const codeBlockTest = ancestor.closest("pre");
     if (codeBlockTest) {
       const code = document.createElement("code");
@@ -172,7 +315,8 @@ export function selectedHTML() {
     } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      div.append(oneboxTest.dataset.oneboxSrc);
+      // The selector requires `data-onebox-src`.
+      div.append(oneboxTest.dataset.oneboxSrc!);
     } else {
       const effectiveRange = rangeWithoutTrailingHusk(range);
       const fragmentContainer = document.createElement("div");
@@ -182,14 +326,21 @@ export function selectedHTML() {
     }
   }
 
-  div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
-    element.replaceWith(element.dataset.oneboxSrc);
-  });
+  div
+    .querySelectorAll<HTMLElement>("aside.onebox[data-onebox-src]")
+    .forEach((element) => {
+      element.replaceWith(element.dataset.oneboxSrc!);
+    });
 
   return div.outerHTML;
 }
 
-export async function selectedText() {
+/**
+ * Converts the selection to markdown.
+ *
+ * @returns The markdown, or `""` without a selection.
+ */
+export async function selectedText(): Promise<string> {
   const html = selectedHTML();
   if (!html) {
     return "";
@@ -198,41 +349,71 @@ export async function selectedText() {
   return await toMarkdown(html);
 }
 
-export function selectedNode() {
+/**
+ * The node that contains the whole of the first selection range.
+ *
+ * @returns The node, or `undefined` without a selection.
+ */
+export function selectedNode(): Node | undefined {
   return selectedRange()?.commonAncestorContainer;
 }
 
-export function selectedRange() {
-  const selection = window.getSelection();
+/**
+ * The first selection range.
+ *
+ * @returns The range, or `undefined` without a selection.
+ */
+export function selectedRange(): Range | undefined {
+  // `getSelection` only returns null outside a browsing context.
+  const selection = window.getSelection()!;
   if (selection.rangeCount > 0) {
     return selection.getRangeAt(0);
   }
 }
 
-// Determine the row and col of the caret in an element
-export function caretRowCol(el) {
+/**
+ * Determines the row and column of the caret in a text field.
+ *
+ * @param el - The text field.
+ * @returns The 1-based row and the 0-based column.
+ */
+export function caretRowCol(el: HTMLTextAreaElement | HTMLInputElement) {
   let cp = caretPosition(el);
   let rows = el.value.slice(0, cp).split("\n");
   let rowNum = rows.length;
 
   let colNum =
     cp -
-    rows.splice(0, rowNum - 1).reduce(function (sum, row) {
+    rows.splice(0, rowNum - 1).reduce(function (sum: number, row: string) {
       return sum + row.length + 1;
     }, 0);
 
   return { rowNum, colNum };
 }
 
-// Determine the position of the caret in an element
-export function caretPosition(el) {
+/**
+ * Determines the position of the caret in a text field.
+ *
+ * @param el - The text field.
+ * @returns The caret offset, or 0 without a field.
+ */
+export function caretPosition(
+  el: { selectionStart?: number | null } | null | undefined
+): number {
   return el?.selectionStart || 0;
 }
 
-// Set the caret's position
-export function setCaretPosition(ctrl, pos) {
+/**
+ * Moves the caret of a text field.
+ *
+ * @param ctrl - The field, or a selector for it.
+ * @param pos - The caret offset.
+ * @returns Nothing, or the result of the legacy text range's `select`.
+ */
+export function setCaretPosition(ctrl: string | CaretControl, pos: number) {
   if (typeof ctrl === "string") {
-    ctrl = document.querySelector(ctrl);
+    // A missing element throws below.
+    ctrl = document.querySelector<HTMLInputElement>(ctrl) as CaretControl;
   }
 
   let range;
@@ -250,7 +431,14 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
-export function siteDefaultHomepage(siteSettings) {
+/**
+ * The homepage the site settings configure.
+ *
+ * @param siteSettings - The site settings.
+ * @returns The `default_homepage` when it is still a choice, or else the first
+ *   item of the top menu.
+ */
+export function siteDefaultHomepage(siteSettings: HomepageSettings): string {
   const configured = siteSettings.default_homepage;
 
   const choices = Site.current()?.homepage_choices;
@@ -261,26 +449,56 @@ export function siteDefaultHomepage(siteSettings) {
   return siteSettings.top_menu.split("|")[0].split(",")[0];
 }
 
-export function initializeDefaultHomepage(siteSettings) {
+/**
+ * Sets the default homepage from the page's meta tag, or else the site settings.
+ *
+ * @param siteSettings - The site settings.
+ */
+export function initializeDefaultHomepage(siteSettings: HomepageSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
     sel?.getAttribute("content") || siteDefaultHomepage(siteSettings);
   setDefaultHomepage(homepage);
 }
 
-export function defaultHomepage() {
+/**
+ * The default homepage.
+ *
+ * @returns The homepage, such as `"latest"`, or `undefined` before it is set.
+ */
+export function defaultHomepage(): string | undefined {
   return _defaultHomepage;
 }
 
-export function setDefaultHomepage(homepage) {
+/**
+ * Sets the default homepage.
+ *
+ * @param homepage - The homepage, such as `"latest"`.
+ */
+export function setDefaultHomepage(homepage: string) {
   _defaultHomepage = homepage;
 }
 
+/**
+ * Works out where a selection ends up after text in it is replaced.
+ *
+ * @param options - The spans.
+ * @returns The new selection.
+ */
 export function determinePostReplaceSelection({
   selection,
   needle,
   replacement,
-}) {
+}: {
+  /** The selection before the replacement. */
+  selection: TextSpan;
+
+  /** The replaced text. */
+  needle: TextSpan;
+
+  /** The replacing text. */
+  replacement: TextSpan;
+}): TextSpan {
   const diff =
     replacement.end - replacement.start - (needle.end - needle.start);
 
@@ -311,17 +529,19 @@ export function determinePostReplaceSelection({
   }
 }
 
-const toArray = (items) => {
+const toArray = <T>(
+  items: ArrayLike<T> | Iterable<T> | null | undefined
+): T[] => {
   items = items || [];
 
   if (!Array.isArray(items)) {
-    return Array.from(items);
+    return Array.from(items as ArrayLike<T>);
   }
 
-  return items;
+  return items as T[];
 };
 
-const gifInDisguise = (clipboard) => {
+const gifInDisguise = (clipboard: DataTransfer) => {
   return (
     clipboard.files.length === 1 &&
     clipboard.files[0].type === "image/png" &&
@@ -330,14 +550,25 @@ const gifInDisguise = (clipboard) => {
   );
 };
 
-export function clipboardHelpers(e, opts) {
-  const clipboard =
-    e.clipboardData ||
-    e.originalEvent.clipboardData ||
-    e.delegatedEvent.originalEvent.clipboardData;
+/**
+ * Reads what a paste event carries and what can be done with it.
+ *
+ * @param e - The paste event.
+ * @param opts - The options.
+ * @returns The clipboard data, its types, and whether files can be uploaded and
+ *   HTML pasted.
+ */
+export function clipboardHelpers(
+  e: ClipboardEventLike,
+  opts: ClipboardHelperOptions
+) {
+  // One of the wrapped events carries the clipboard data.
+  const clipboard = (e.clipboardData ||
+    e.originalEvent!.clipboardData ||
+    e.delegatedEvent!.originalEvent.clipboardData) as DataTransfer;
 
   const types = toArray(clipboard.types);
-  let files = toArray(clipboard.files);
+  let files: (File | DataTransferItem)[] = toArray(clipboard.files);
 
   if (types.includes("Files") && files.length === 0) {
     // for IE
@@ -357,22 +588,45 @@ export function clipboardHelpers(e, opts) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
-export function removeAccents(string) {
+/**
+ * Removes accents from letters.
+ *
+ * @param string - The text.
+ * @returns The text without accents.
+ */
+export function removeAccents(string: string): string {
   return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Replace any accented characters with their ASCII equivalent
-// Return the string if it only contains ASCII printable characters,
-// otherwise use the fallback
-export function toAsciiPrintable(string, fallback) {
+/**
+ * Replaces any accented characters with their ASCII equivalent.
+ *
+ * @param string - The text.
+ * @param fallback - The value to return when the text is not ASCII printable.
+ * @returns The text if it only contains ASCII printable characters, or else
+ *   the fallback.
+ */
+export function toAsciiPrintable(string: string): string | undefined;
+export function toAsciiPrintable<T>(string: string, fallback: T): string | T;
+export function toAsciiPrintable<T>(
+  string: string,
+  fallback?: T
+): string | T | undefined {
   if (typeof string.normalize === "function") {
     string = removeAccents(string);
   }
 
-  return /^[\040-\176]*$/.test(string) ? string : fallback;
+  // TypeScript rejects octal escapes, so the printable range is in hex.
+  return /^[\x20-\x7e]*$/.test(string) ? string : fallback;
 }
 
-export function slugify(string) {
+/**
+ * Converts text to an ASCII slug.
+ *
+ * @param string - The text.
+ * @returns The slug.
+ */
+export function slugify(string: string): string {
   return string
     .trim()
     .toLowerCase()
@@ -383,7 +637,13 @@ export function slugify(string) {
     .replace(/-+$/, ""); // Remove trailing dashes
 }
 
-export function unicodeSlugify(string) {
+/**
+ * Converts text to a slug that keeps letters from any script.
+ *
+ * @param string - The text.
+ * @returns The slug.
+ */
+export function unicodeSlugify(string: string): string {
   try {
     return string
       .trim()
@@ -401,22 +661,48 @@ export function unicodeSlugify(string) {
   }
 }
 
-export function toNumber(input) {
-  return typeof input === "number" ? input : parseFloat(input);
+/**
+ * Converts a value to a number, parsing anything that isn't one.
+ *
+ * @param input - The value.
+ * @returns The number, or `NaN`.
+ */
+export function toNumber(input: unknown): number {
+  // `parseFloat` converts any value to a string first.
+  return typeof input === "number" ? input : parseFloat(input as string);
 }
 
-export function isNumeric(input) {
-  return !isNaN(toNumber(input)) && isFinite(input);
+/**
+ * Whether a value is a finite number or parses as one.
+ *
+ * @param input - The value.
+ * @returns True for a numeric value.
+ */
+export function isNumeric(input: unknown): boolean {
+  // `isFinite` converts any value to a number first.
+  return !isNaN(toNumber(input)) && isFinite(input as number);
 }
 
-export function fillMissingDates(data, startDate, endDate) {
+/**
+ * Adds a zero point for each day between two dates that has none.
+ *
+ * @param data - The points, sorted by date. They are changed in place.
+ * @param startDate - The first day, as `YYYY-MM-DD`.
+ * @param endDate - The last day, as `YYYY-MM-DD`.
+ * @returns The points.
+ */
+export function fillMissingDates(
+  data: DatedValue[],
+  startDate: string,
+  endDate: string
+): DatedValue[] {
   const startMoment = moment(startDate, "YYYY-MM-DD");
   const endMoment = moment(endDate, "YYYY-MM-DD");
   const countDays = endMoment.diff(startMoment, "days");
-  let currentMoment = startMoment;
+  let currentMoment: MomentInput = startMoment;
 
   for (let i = 0; i <= countDays; i++) {
-    let date = data[i] ? moment(data[i].x, "YYYY-MM-DD") : null;
+    let date = data[i] ? moment(data[i].x as MomentInput, "YYYY-MM-DD") : null;
     if (i === 0 && (!date || date.isAfter(startMoment))) {
       data.splice(i, 0, { x: startMoment.format("YYYY-MM-DD"), y: 0 });
     } else {
@@ -429,7 +715,12 @@ export function fillMissingDates(data, startDate, endDate) {
   return data;
 }
 
-export function areCookiesEnabled() {
+/**
+ * Whether the browser accepts cookies.
+ *
+ * @returns True when a test cookie can be set.
+ */
+export function areCookiesEnabled(): boolean {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
@@ -441,17 +732,28 @@ export function areCookiesEnabled() {
   }
 }
 
-export function prefersReducedMotion() {
+/**
+ * Whether the user asked the system to reduce motion.
+ *
+ * @returns True when they did.
+ */
+export function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export function postRNWebviewMessage(prop, value) {
+/**
+ * Posts a message to the mobile app, when the page runs in its webview.
+ *
+ * @param prop - The message key.
+ * @param value - The message value.
+ */
+export function postRNWebviewMessage(prop: string, value: unknown) {
   if (window.ReactNativeWebView !== undefined) {
     window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
   }
 }
 
-function pickMarker(text) {
+function pickMarker(text: string): string | null {
   // Uses the private use area (U+E000 to U+F8FF) to find a character that
   // is not present in the text. This character will be used as a marker in
   // place of the caret.
@@ -464,7 +766,11 @@ function pickMarker(text) {
   return null;
 }
 
-function findToken(tokens, marker, level = 0) {
+function findToken(
+  tokens: MarkdownToken[],
+  marker: string,
+  level = 0
+): MarkdownToken | null | undefined {
   if (level > 50) {
     return null;
   }
@@ -475,7 +781,14 @@ function findToken(tokens, marker, level = 0) {
 const CODE_MARKERS_REGEX = /    |```|~~~|[^`]`[^`]|\[code\]/;
 const CODE_TOKEN_TYPES = ["code_inline", "code_block", "fence"];
 
-export async function inCodeBlock(text, pos) {
+/**
+ * Whether a position in markdown falls inside code.
+ *
+ * @param text - The markdown.
+ * @param pos - The position.
+ * @returns True inside inline code, a code block or a fence.
+ */
+export async function inCodeBlock(text: string, pos: number): Promise<boolean> {
   if (!CODE_MARKERS_REGEX.test(text)) {
     return false;
   }
@@ -489,7 +802,7 @@ export async function inCodeBlock(text, pos) {
   const tokens = await parseAsync(markedText);
   const type = findToken(tokens, marker)?.type;
 
-  return CODE_TOKEN_TYPES.includes(type);
+  return CODE_TOKEN_TYPES.includes(type as string);
 }
 
 /**
@@ -499,7 +812,7 @@ export async function inCodeBlock(text, pos) {
  * which carries the accessible markup too. For the string alone use
  * `formatShortcut` from `discourse/lib/shortcut-format`.
  */
-export function translateModKey(string, separator = " ") {
+export function translateModKey(string: string, separator = " "): string {
   deprecated(
     "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
     {
@@ -529,10 +842,17 @@ export function translateModKey(string, separator = " ") {
   return string;
 }
 
-// Use this version of clipboardCopy if you already have the text to
-// be copied in memory, and you do not need to make an AJAX call to
-// the API to generate any text. See clipboardCopyAsync for the latter.
-export function clipboardCopy(text) {
+/**
+ * Copies text to the clipboard.
+ *
+ * Use this version if you already have the text to be copied in memory, and
+ * you do not need to make an AJAX call to the API to generate any text. See
+ * `clipboardCopyAsync` for the latter.
+ *
+ * @param text - The text.
+ * @returns A promise that rejects when the copy fails.
+ */
+export function clipboardCopy(text: string): Promise<void> {
   // Use the Async Clipboard API when available.
   // Requires a secure browsing context (i.e. HTTPS)
   if (window.navigator.clipboard) {
@@ -551,15 +871,21 @@ export function clipboardCopy(text) {
   }
 }
 
-// Use this version of clipboardCopy if you must use an AJAX call
-// to retrieve/generate server-side text to copy to the clipboard,
-// otherwise this write function will error in certain browsers, because
-// the time taken from the user event to the clipboard text being copied
-// will be too long.
-//
-// Note that the promise passed in should return a Blob with type of
-// text/plain.
-export function clipboardCopyAsync(functionReturningPromise) {
+/**
+ * Copies text that is still being fetched to the clipboard.
+ *
+ * Use this version if you must use an AJAX call to retrieve or generate
+ * server-side text to copy to the clipboard. Otherwise this write function will
+ * error in certain browsers, because the time taken from the user event to the
+ * clipboard text being copied will be too long.
+ *
+ * @param functionReturningPromise - Returns a promise of a `text/plain` blob.
+ * @returns A promise that rejects when the copy fails. Without the Async
+ *   Clipboard API, it resolves before the copy and never reports a failure.
+ */
+export function clipboardCopyAsync(
+  functionReturningPromise: () => Promise<Blob>
+): Promise<void> {
   // Use the Async Clipboard API when available.
   // Requires a secure browsing context (i.e. HTTPS)
   if (window.navigator.clipboard) {
@@ -597,7 +923,7 @@ export function clipboardCopyAsync(functionReturningPromise) {
   });
 }
 
-function clipboardCopyFallback(text) {
+function clipboardCopyFallback(text: string): boolean {
   // Put the text to copy into a <span>
   const span = document.createElement("span");
   span.textContent = text;
@@ -609,7 +935,8 @@ function clipboardCopyFallback(text) {
   document.body.appendChild(span);
 
   // Make a selection object representing the range of text selected by the user
-  const selection = window.getSelection();
+  // `getSelection` only returns null outside a browsing context.
+  const selection = window.getSelection()!;
   const range = window.document.createRange();
   selection.removeAllRanges();
   range.selectNode(span);
@@ -630,17 +957,24 @@ function clipboardCopyFallback(text) {
   return success;
 }
 
-// this function takes 2 sorted lists and returns another sorted list that
-// contains both of the original lists.
-// you need to provide a callback as the 3rd argument that will be called with
-// an item from the first list (1st callback argument) and another item from
-// the second list (2nd callback argument). The callback should return true if
-// its 2nd argument should go before its 1st argument and return false
-// otherwise.
-export function mergeSortedLists(list1, list2, comparator) {
+/**
+ * Merges two sorted lists into one sorted list.
+ *
+ * @param list1 - The first list.
+ * @param list2 - The second list.
+ * @param comparator - Called with an item from the first list and an item from
+ *   the second list. It returns true if the second item should go before the
+ *   first one.
+ * @returns The merged list.
+ */
+export function mergeSortedLists<A, B>(
+  list1: A[],
+  list2: B[],
+  comparator: (item1: A, item2: B) => boolean
+): (A | B)[] {
   let index1 = 0;
   let index2 = 0;
-  const merged = [];
+  const merged: (A | B)[] = [];
   while (index1 < list1.length || index2 < list2.length) {
     if (
       index1 === list1.length ||
@@ -656,7 +990,17 @@ export function mergeSortedLists(list1, list2, comparator) {
   return merged;
 }
 
-export function getCaretPosition(element, options) {
+/**
+ * The caret's position in the viewport.
+ *
+ * @param element - The text field.
+ * @param options - Options for `caretCoordinates`.
+ * @returns The caret's viewport coordinates.
+ */
+export function getCaretPosition(
+  element: HTMLTextAreaElement | HTMLInputElement,
+  options?: Parameters<typeof caretCoordinates>[1]
+): { x: number; y: number } {
   const position = caretCoordinates(element, options);
 
   // Get the position of the textarea on the page
@@ -672,14 +1016,25 @@ export function getCaretPosition(element, options) {
 }
 
 /**
+ * Builds a regular expression that finds markdown tables.
  *
- * @returns a regular expression finding all markdown tables
+ * @returns A regular expression finding all markdown tables.
  */
-export function findTableRegex() {
+export function findTableRegex(): RegExp {
   return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
 }
 
-export function allowOnlyNumericInput(event, allowNegative = false) {
+/**
+ * Blocks every key press except digits, Enter, Tab, the arrow keys and the
+ * deletion keys.
+ *
+ * @param event - The keydown event.
+ * @param allowNegative - Whether to allow a minus sign.
+ */
+export function allowOnlyNumericInput(
+  event: KeyboardEvent,
+  allowNegative = false
+) {
   const ALLOWED_KEYS = [
     "Enter",
     "Backspace",
@@ -710,34 +1065,54 @@ export function allowOnlyNumericInput(event, allowNegative = false) {
   }
 }
 
-export function cleanNullQueryParams(params) {
+/**
+ * Turns `"null"` and `"undefined"` query parameter values back into `null`.
+ *
+ * @param params - The parameters. They are changed in place.
+ * @returns The parameters.
+ */
+export function cleanNullQueryParams<T extends object>(params: T): T {
   for (const [key, val] of Object.entries(params)) {
     if (val === "undefined" || val === "null") {
-      params[key] = null;
+      (params as Record<string, unknown>)[key] = null;
     }
   }
   return params;
 }
 
-export function getElement(node) {
-  return node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+/**
+ * The element a node is, or the parent element of a text node.
+ *
+ * @param node - The node.
+ * @returns The element.
+ */
+export function getElement(node: Node): Element | null {
+  // Callers pass the text nodes and elements that selection ranges end in.
+  return node.nodeType === Node.TEXT_NODE
+    ? node.parentElement
+    : (node as Element);
 }
 
-export function isPrimaryTab() {
+/**
+ * Asks the service worker whether this tab is the primary one.
+ *
+ * @returns Whether it is, and true without a service worker or an answer.
+ */
+export function isPrimaryTab(): Promise<boolean> {
   if (!capabilities.supportsServiceWorker) {
     return Promise.resolve(true);
   }
 
   return new Promise((resolve) => {
-    let timer;
+    let timer: ReturnType<typeof discourseLater> | undefined;
 
-    const finish = (isPrimary) => {
+    const finish = (isPrimary: boolean) => {
       cancel(timer);
       navigator.serviceWorker.removeEventListener("message", onMessage);
       resolve(isPrimary);
     };
 
-    const onMessage = (event) => {
+    const onMessage = (event: MessageEvent) => {
       // the service worker also posts unrelated messages on this channel
       if (typeof event.data?.primaryTab === "boolean") {
         finish(event.data.primaryTab);
@@ -756,7 +1131,14 @@ export function isPrimaryTab() {
   });
 }
 
-export function optionalRequire(path, name = "default") {
+/**
+ * Reads an export of a module, when the module exists.
+ *
+ * @param path - The module name.
+ * @param name - The export name. Defaults to `"default"`.
+ * @returns The export, or false when there is no such module.
+ */
+export function optionalRequire(path: string, name = "default") {
   return require.has(path) && require(path)[name];
 }
 
@@ -769,7 +1151,14 @@ const NO_DESTINATION_COOKIE = [
   "/uploads/",
 ];
 
-export function isValidDestinationUrl(url) {
+/**
+ * Whether a URL can be sent to after logging in.
+ *
+ * @param url - The URL.
+ * @returns True unless the URL is the homepage or an auth or upload path. A
+ *   falsy URL is returned as is.
+ */
+export function isValidDestinationUrl(url: string | null | undefined) {
   return (
     url &&
     url !== getURL("/") &&
@@ -777,13 +1166,25 @@ export function isValidDestinationUrl(url) {
   );
 }
 
+/**
+ * Runs an async action one at a time, queueing at most one more run while it
+ * runs.
+ */
 export class ActionSerializer {
-  constructor(perform) {
+  declare perform: () => unknown;
+  declare processing: boolean;
+  declare queued: boolean;
+
+  /**
+   * @param perform - The action.
+   */
+  constructor(perform: () => unknown) {
     this.perform = perform;
     this.processing = false;
     this.queued = false;
   }
 
+  /** Runs the action, or queues one more run if it is running. */
   async trigger() {
     this.queued = true;
 
@@ -800,13 +1201,24 @@ export class ActionSerializer {
   }
 }
 
-// Given an async method that takes no parameters, produce a method that
-// triggers the original method only if it is not currently executing it,
-// otherwise it will queue up to one execution of the method
-export function serializedAction(target, key, descriptor) {
+/**
+ * Given an async method that takes no parameters, produces a method that
+ * triggers the original method only if it is not currently executing it.
+ * Otherwise it queues up to one execution of the method.
+ *
+ * @param target - The class prototype.
+ * @param key - The method name.
+ * @param descriptor - The method descriptor.
+ * @returns The descriptor.
+ */
+export function serializedAction(
+  target: object,
+  key: string,
+  descriptor: PropertyDescriptor
+): PropertyDescriptor {
   const originalMethod = descriptor.value;
 
-  descriptor.value = function () {
+  descriptor.value = function (this: Record<string, ActionSerializer>) {
     this[`_${key}_serializer`] ||= new ActionSerializer(() =>
       originalMethod.apply(this)
     );
@@ -816,10 +1228,19 @@ export function serializedAction(target, key, descriptor) {
   return descriptor;
 }
 
-// Given a list, break into chunks starting a new chunk whenever the predicate
-// is true for an element.
-export function splitWhere(elements, f) {
-  return elements.reduce((acc, el, i) => {
+/**
+ * Breaks a list into chunks, starting a new chunk at each element the predicate
+ * is true for.
+ *
+ * @param elements - The list.
+ * @param f - The predicate.
+ * @returns The chunks.
+ */
+export function splitWhere<T>(
+  elements: T[],
+  f: (element: T) => unknown
+): T[][] {
+  return elements.reduce((acc: T[][], el, i) => {
     if (i === 0 || f(el)) {
       acc.push([]);
     }
@@ -827,3 +1248,12 @@ export function splitWhere(elements, f) {
     return acc;
   }, []);
 }
+
+/** The application provides moment globally. */
+declare const moment: typeof import("moment");
+
+/** The module loader's `require`, which the application provides globally. */
+declare const require: {
+  (path: string): Record<string, unknown>;
+  has(path: string): boolean;
+};
