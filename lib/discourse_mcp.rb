@@ -14,6 +14,7 @@ module DiscourseMcp
     PRIVATE_MESSAGES_WRITE = "mcp:private-messages:write"
     MODERATION_READ = "mcp:moderation:read"
     MODERATION_WRITE = "mcp:moderation:write"
+    REPORTS_READ = "mcp:reports:read"
     SITE_SETTINGS_READ = "mcp:site-settings:read"
     SITE_SETTINGS_WRITE = "mcp:site-settings:write"
     THEMES_READ = "mcp:themes:read"

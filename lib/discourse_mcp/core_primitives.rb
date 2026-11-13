@@ -66,6 +66,7 @@ module DiscourseMcp
       register_read_tools(registry)
       register_write_tools(registry)
       register_moderation_tools(registry)
+      register_report_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
       register_theme_management_tools(registry)
@@ -75,6 +76,84 @@ module DiscourseMcp
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_report_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_reports",
+        title: "List reports",
+        description:
+          "Lists the caller's available Discourse reports, including enabled plugin reports. Requires staff access. Use the returned report types with discourse_get_report.",
+        implementation: Tools::ListReports,
+        input_schema: object_schema,
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      scalar_filter = {
+        anyOf: [{ type: "string", maxLength: 250 }, { type: "number" }, { type: "boolean" }],
+      }
+      date = { type: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", maxLength: 10 }
+      register_tool(
+        registry,
+        "discourse_get_report",
+        title: "Get report",
+        description:
+          "Retrieves one report from the caller's current report catalog. Requires staff access; admin-only reports and related items retain their normal restrictions. Dates use YYYY-MM-DD and default to the last 30 days ending on end_date or today. Date ranges cannot exceed 366 days. Filters accept scalar values or arrays, as supported by each report. limit bounds rows only where the report supports it; omitting it preserves that report's default. cache opts into the existing report cache and requires administrator access; include_related_items defaults to false. This runs registered reports, not arbitrary SQL.",
+        implementation: Tools::GetReport,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              report_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+                pattern: "^[a-z0-9_-]+$",
+                not: {
+                  pattern: "[^a-z0-9_-]",
+                },
+              },
+              start_date: date,
+              end_date: date,
+              facets: {
+                type: "array",
+                maxItems: 20,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 50,
+                },
+              },
+              filters: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  minLength: 1,
+                  maxLength: 100,
+                },
+                additionalProperties: {
+                  anyOf: [scalar_filter, { type: "array", maxItems: 100, items: scalar_filter }],
+                },
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: Tools::GetReport::MAX_LIMIT,
+              },
+              cache: {
+                type: "boolean",
+              },
+              include_related_items: {
+                type: "boolean",
+              },
+            },
+            required: %w[report_type],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
     end
 
     def register_tag_group_tools(registry)
