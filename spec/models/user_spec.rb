@@ -3294,6 +3294,30 @@ RSpec.describe User do
     it "filters by username" do
       filter_by(:filter_by_username)
     end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "ignores blank terms" do
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(["", "filter_term_a", nil])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect { User.filter_by_username(Array.new(51) { |i| "filter_term_#{i}" }) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
   end
 
   describe "#filter_by_username_or_email" do
@@ -3308,6 +3332,31 @@ RSpec.describe User do
 
     it "filters by username" do
       filter_by(:filter_by_username_or_email)
+    end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username_or_email(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username_or_email(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username_or_email(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "matches email terms exactly" do
+      user.update!(email: "filter@example.com")
+      Fabricate(:user, email: "not_filter@example.com")
+
+      expect(User.filter_by_username_or_email(%w[filter@example.com])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect {
+        User.filter_by_username_or_email(Array.new(51) { |i| "filter_term_#{i}" })
+      }.to raise_error(Discourse::InvalidParameters)
     end
   end
 

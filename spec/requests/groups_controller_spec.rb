@@ -2247,10 +2247,90 @@ RSpec.describe GroupsController do
           members = response.parsed_body["members"]
           expect(members).to eq([])
         end
+
+        it "treats comma separated filter terms literally instead of as a regular expression" do
+          user1.update!(username: "filter_term_a")
+          user2.update!(username: "filter_term_b")
+
+          get "/groups/#{group.name}/members.json", params: { filter: "filter_term_.,zzz" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"]).to eq([])
+        end
+
+        it "does not fail for filter terms with invalid regular expression syntax" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: "filter_term_a,(filter_term_b",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |m| m["id"] }).to eq([user1.id])
+        end
+
+        it "rejects filters with more than 50 terms" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects filters with more than 50 terms passed as an array" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" },
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "allows filtering with 50 terms" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: (["filter_term_a"] + Array.new(49) { |i| "filter_term_#{i}" }).join(","),
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |m| m["id"] }).to eq([user1.id])
+        end
       end
 
       describe "as an admin" do
         before { sign_in(admin) }
+
+        it "treats comma separated filter terms literally instead of as a regular expression" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json", params: { filter: "filter_term_.,zzz" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"]).to eq([])
+        end
+
+        it "rejects filters with more than 50 terms" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects filters with more than 50 terms when listing requesters" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                requesters: true,
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
 
         it "allows filtering members by username" do
           email = "uniquetest@discourse.org"
