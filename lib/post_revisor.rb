@@ -147,6 +147,7 @@ class PostRevisor
     if new_category.nil? && tc.topic.private_message?
       tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
+      tc.topic.reviewables.update_all(category_id: nil)
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags =
         if fields[:tags].present?
