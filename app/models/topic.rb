@@ -306,6 +306,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  after_update :clear_caches_for_access_change, if: :access_became_restricted?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -454,6 +455,22 @@ class Topic < ActiveRecord::Base
       CategoryTagStat.topic_moved(self, *saved_changes[:category_id])
     elsif saved_changes[:category_id] && category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
+    end
+  end
+
+  def self.clear_page_not_found_topics_cache!
+    keys =
+      I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+      end
+    Discourse.cache.redis.del(*keys)
+  end
+
+  def clear_caches_for_access_change
+    self.class.clear_page_not_found_topics_cache!
+    DB.after_commit do
+      self.class.clear_page_not_found_topics_cache!
+      Site.clear_anon_cache!
     end
   end
 
@@ -2268,6 +2285,11 @@ class Topic < ActiveRecord::Base
   end
 
   private
+
+  def access_became_restricted?
+    (saved_change_to_category_id? && category&.read_restricted?) ||
+      (saved_change_to_archetype? && private_message?)
+  end
 
   def invite_to_private_message(invited_by, target_user, guardian)
     if !guardian.can_send_private_message?(target_user)
