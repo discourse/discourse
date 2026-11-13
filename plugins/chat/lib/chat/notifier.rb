@@ -258,11 +258,13 @@ module Chat
       inaccessible[:welcome_to_join] = inaccessible[:welcome_to_join].concat(
         reject_hidden_group_members(grouped[:welcome_to_join]),
       )
-      inaccessible[:unreachable] = inaccessible[:unreachable].concat(grouped[:unreachable])
+      inaccessible[:unreachable] = inaccessible[:unreachable].concat(
+        reject_hidden_group_members(grouped[:unreachable]),
+      )
     end
 
-    # The invitation notice is sent back to the message creator, so it must not
-    # surface users whose membership in the mentioned groups is hidden from them.
+    # Both notices are sent back to the message creator, so neither may surface
+    # users whose membership in the mentioned groups is hidden from them.
     def reject_hidden_group_members(users)
       return users if users.empty? || hidden_member_groups.empty?
 
@@ -286,12 +288,7 @@ module Chat
       end
 
       # Notify when mentioned users are not able to access the channel
-      # When user does not have permission to see group members, use the group name instead
-      if show_group_warning(inaccessible[:unreachable])
-        publish_unreachable_group_warning(hidden_member_groups.first.name)
-      elsif inaccessible[:unreachable].any?
-        publish_unreachable_mentions(inaccessible[:unreachable])
-      end
+      publish_unreachable_mentions(inaccessible[:unreachable]) if inaccessible[:unreachable].any?
 
       # Notify when `@all` or `@here` is used when channel has global mentions disabled
       publish_global_mentions_disabled if global_mentions_disabled
@@ -309,10 +306,6 @@ module Chat
       @hidden_member_groups ||=
         @parsed_mentions.groups_to_mention -
           Group.where(id: @parsed_mentions.groups_to_mention.ids).members_visible_groups(@user)
-    end
-
-    def show_group_warning(users)
-      users.any? { |user| GroupUser.exists?(group: hidden_member_groups, user: user) }
     end
 
     def publish_inaccessible_mentions(users)
@@ -367,19 +360,6 @@ module Chat
             multiple: "chat.mention_warning.cannot_see_multiple",
             first_identifier: users.first.username,
             count: users.count,
-          ),
-      )
-    end
-
-    def publish_unreachable_group_warning(group_name)
-      Chat::Publisher.publish_notice(
-        user_id: @user.id,
-        channel_id: @chat_channel.id,
-        text_content:
-          I18n.t(
-            "chat.mention_warning.cannot_see_group",
-            group_name: group_name,
-            locale: @user.effective_locale,
           ),
       )
     end
