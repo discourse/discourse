@@ -116,9 +116,10 @@ module ::Blog
       @tag&.description_cooked || author_bio
     end
 
-    # Bylines are public, but a bio follows the profile's visibility.
+    # Bylines are public, but a bio follows the profile's visibility. Public
+    # profiles of inactive users show no bio either.
     def author_bio
-      return if !@author || !Guardian.new.can_see_profile?(@author)
+      return if !@author&.active? || !Guardian.new.can_see_profile?(@author)
       @author.user_profile&.bio_cooked.presence
     end
 

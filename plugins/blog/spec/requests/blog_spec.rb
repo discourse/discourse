@@ -469,6 +469,16 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(404)
     end
 
+    it "hides a deactivated author's bio, as their public profile does" do
+      admin.user_profile.update!(bio_raw: "Writes about **the field**.")
+      admin.deactivate(Discourse.system_user)
+
+      get "https://blog.example.com/author/#{admin.username}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Writes about")
+    end
+
     it "shows no byline for an article the system user owns" do
       publication.discussion_topic.update!(user: Discourse.system_user)
 
