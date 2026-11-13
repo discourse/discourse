@@ -227,6 +227,52 @@ module UserGuardian
     !profile_hidden
   end
 
+  # SQL counterpart of #can_see_profile? for filtering many users in one query.
+  # Must be kept in sync with #can_see_profile?. The returned condition is a
+  # self-contained parenthesized expression over the `users` table, so callers
+  # have to join that table and can embed the condition in a larger query.
+  def can_see_profile_sql
+    return "(1 = 1)" if is_staff?
+    return "(1 = 0)" unless public_can_see_profiles?
+
+    conditions = []
+
+    if SiteSetting.allow_users_to_hide_profile
+      not_hidden_sql = <<~SQL.squish
+        NOT EXISTS (
+          SELECT 1 FROM user_options
+          WHERE user_options.user_id = users.id AND user_options.hide_profile
+        )
+      SQL
+      conditions << not_hidden_sql
+    end
+
+    if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
+         !SiteSetting.must_approve_users
+      staff_exempt = "users.admin OR users.moderator OR users.staged"
+
+      unless @user.has_trust_level?(TrustLevel[2])
+        enough_activity_sql = <<~SQL.squish
+          (#{staff_exempt} OR users.trust_level >= 2 OR EXISTS (
+            SELECT 1 FROM user_stats
+            WHERE user_stats.user_id = users.id AND user_stats.post_count > 0
+          ))
+        SQL
+        conditions << enough_activity_sql
+      end
+
+      unless @user.has_trust_level?(TrustLevel[1])
+        conditions << "(#{staff_exempt} OR users.trust_level >= 1)"
+      end
+    end
+
+    sql = conditions.map { |condition| "(#{condition})" }.join(" AND ")
+    sql = "1 = 1" if sql.blank?
+    sql = "(#{sql}) OR users.id = #{@user.id}" if authenticated?
+
+    "(#{sql})"
+  end
+
   def can_see_user_actions?(user, action_types = [])
     return true if !@user.anonymous? && (is_me?(user) || is_admin?)
     return false if SiteSetting.hide_user_activity_tab?

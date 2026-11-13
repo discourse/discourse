@@ -150,6 +150,8 @@ expectTypeOf(
 UserBadge.findByBadgeId(1);
 // The badge page filters by a username query param that defaults to null.
 UserBadge.findByBadgeId(1, { offset: 30, username: null });
+// The badge page sizes each grants page so a short page ends the feed.
+UserBadge.findByBadgeId(1, { limit: 96, offset: 0 });
 UserBadge.findByBadgeIds([1], { username: null });
 expectTypeOf(
   UserBadge.findByBadgeIds([1, 2], { badgeTypeId: 1, limit: 5 })

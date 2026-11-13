@@ -30,11 +30,13 @@ class UserBadgesController < ApplicationController
 
       user_badges = user_badges.where(user_id: user.id)
       grant_count = user_badges.count
+    else
+      user_badges = user_badges.with_visible_profiles(guardian)
     end
 
     user_badges =
       user_badges
-        .order("granted_at DESC, id DESC")
+        .order("user_badges.granted_at DESC, user_badges.id DESC")
         .limit(index_limit)
         .includes(
           :user,

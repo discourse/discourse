@@ -1,7 +1,7 @@
 import { hash } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
+import UserBadge, { USER_BADGES_PAGE_SIZE } from "discourse/models/user-badge";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class BadgesShow extends DiscourseRoute {
@@ -31,6 +31,7 @@ export default class BadgesShow extends DiscourseRoute {
 
     const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {
       username: usernameFromParams,
+      limit: USER_BADGES_PAGE_SIZE,
     }).then((userBadges) => {
       this.userBadgesGrant = userBadges;
     });
@@ -63,6 +64,10 @@ export default class BadgesShow extends DiscourseRoute {
     controller.set("userBadges", this.userBadgesGrant);
     controller.set("userBadgesGrantCount", this.userBadgesGrant.grant_count);
     controller.set("userBadgesAll", this.userBadgesAll);
+    controller.set(
+      "noMoreBadges",
+      this.userBadgesGrant.length < USER_BADGES_PAGE_SIZE
+    );
   }
 
   resetController(controller) {

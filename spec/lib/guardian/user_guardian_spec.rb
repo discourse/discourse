@@ -438,6 +438,27 @@ RSpec.describe UserGuardian do
     end
   end
 
+  describe "#can_see_profile_sql" do
+    fab!(:hidden_user) { Fabricate(:user, trust_level: 2) }
+    fab!(:viewer) { Fabricate(:user, trust_level: 1) }
+
+    before do
+      SiteSetting.hide_new_user_profiles = true
+      SiteSetting.allow_users_to_hide_profile = true
+      hidden_user.user_option.update!(hide_profile: true)
+      viewer.user_option.update!(hide_profile: true)
+    end
+
+    it "returns a self-contained condition that callers can embed in a larger query" do
+      condition = Guardian.new(viewer).can_see_profile_sql
+
+      expect(condition).to start_with("(")
+      expect(condition).to end_with(")")
+
+      expect(User.where("users.id = ? AND #{condition}", hidden_user.id).pluck(:id)).to be_empty
+    end
+  end
+
   describe "#can_see_user_actions?" do
     it "defaults to no action types" do
       expect(Guardian.new.can_see_user_actions?(nil)).to eq(true)
