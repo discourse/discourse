@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="600" viewBox="0 0 1160 600">
+<rect width="1160" height="600" fill="#f7f8fa"/>
+<g font-family="Arial, sans-serif" fill="#222">
+<text x="40" y="48" font-size="26" font-weight="bold">Header and topic — SVG color sources</text>
+<svg
+    
+    fill="none"
+    x="40" y="100" width="540" height="246" viewBox="0 0 360 164"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect fill="#fff" height="164" width="360" />
+    <rect fill="#ffffff" height="32" width="360" />
+    <path
+      class="color-palette-preview__sidebar"
+      d="M0 32H60V164H0Z"
+      fill="#ffffff"
+    />
+    
+      <path d="M0 32H360M60 32V164" stroke="#e9e9e9" />
+    
+    <rect
+      class="color-palette-preview__active-item"
+      fill="#e9e9e9"
+      height="18"
+      rx="3"
+      width="48"
+      x="6"
+      y="51"
+    />
+    <g class="color-palette-preview__menu" fill="#222" opacity="0.45">
+      <circle cx="14" cy="60" r="2" />
+      <rect height="4" rx="2" width="26" x="22" y="58" />
+      <circle cx="14" cy="78" r="2" />
+      <rect height="4" rx="2" width="20" x="22" y="76" />
+      <circle cx="14" cy="96" r="2" />
+      <rect height="4" rx="2" width="24" x="22" y="94" />
+      <circle cx="14" cy="114" r="2" />
+      <rect height="4" rx="2" width="18" x="22" y="112" />
+      <circle cx="14" cy="132" r="2" />
+      <rect height="4" rx="2" width="22" x="22" y="130" />
+    </g>
+    <g fill="#333" opacity="0.325">
+      <circle cx="30" cy="16" r="6" />
+      <circle cx="298" cy="16" r="6" />
+      <circle cx="328" cy="16" r="8" />
+    </g>
+    <g>
+      <rect
+        fill="#222"
+        height="16"
+        opacity="0.75"
+        rx="8"
+        width="228"
+        x="84"
+        y="52"
+      />
+      <rect
+        fill="#222"
+        height="10"
+        opacity="0.45"
+        rx="5"
+        width="160"
+        x="84"
+        y="82"
+      />
+      <rect
+        fill="#222"
+        height="10"
+        opacity="0.45"
+        rx="5"
+        width="194"
+        x="84"
+        y="100"
+      />
+      <rect
+        fill="#08c"
+        height="18"
+        rx="9"
+        width="58"
+        x="278"
+        y="126"
+      />
+      <g fill="#222" opacity="0.35">
+        <rect height="12" rx="3" width="18" x="84" y="129" />
+        <rect height="12" rx="3" width="18" x="112" y="129" />
+        <rect height="12" rx="3" width="18" x="140" y="129" />
+      </g>
+    </g>
+  </svg>
+<rect x="40" y="100" width="540" height="246" fill="none" stroke="#ccc"/>
+<rect x="630" y="84" width="22" height="22" rx="3" fill="#ffffff" stroke="#bbb"/>
+<text x="668" y="100" font-size="17">1. Background: secondary · 100%</text>
+<rect x="630" y="127" width="22" height="22" rx="3" fill="#ffffff" stroke="#bbb"/>
+<text x="668" y="143" font-size="17">2. Top strip: header_background · 100%</text>
+<rect x="630" y="170" width="22" height="22" rx="3" fill="#222222" stroke="#bbb"/>
+<text x="668" y="186" font-size="17">3. Topic title: primary · 75%</text>
+<rect x="630" y="213" width="22" height="22" rx="3" fill="#222222" stroke="#bbb"/>
+<text x="668" y="229" font-size="17">4. Excerpt: primary · 45%</text>
+<rect x="630" y="256" width="22" height="22" rx="3" fill="#0088cc" stroke="#bbb"/>
+<text x="668" y="272" font-size="17">5. Accent pill: tertiary · 100%</text>
+<rect x="630" y="299" width="22" height="22" rx="3" fill="#222222" stroke="#bbb"/>
+<text x="668" y="315" font-size="17">6. Small buttons: primary · 35%</text>
+<rect x="630" y="342" width="22" height="22" rx="3" fill="#333333" stroke="#bbb"/>
+<text x="668" y="358" font-size="17">7. Header icons / avatar: header_primary · 32.5%</text>
+<rect x="630" y="385" width="22" height="22" rx="3" fill="#ffffff" stroke="#bbb"/>
+<text x="668" y="401" font-size="17">8. Sidebar: secondary · 100%</text>
+<rect x="630" y="428" width="22" height="22" rx="3" fill="#e9e9e9" stroke="#bbb"/>
+<text x="668" y="444" font-size="17">9. Active item / divider: primary_low · 100%</text>
+<rect x="630" y="471" width="22" height="22" rx="3" fill="#222222" stroke="#bbb"/>
+<text x="668" y="487" font-size="17">10. Menu items: primary · 45%</text>
+<path d="M 537 81 L 532 108 M 168 280 L 174 300" fill="none" stroke="#555"/>
+<circle cx="548" cy="327" r="12" fill="#fff" stroke="#555"/>
+<text x="548" y="331" text-anchor="middle" font-size="13">1</text>
+<circle cx="405" cy="122" r="12" fill="#fff" stroke="#555"/>
+<text x="405" y="126" text-anchor="middle" font-size="13">2</text>
+<circle cx="495" cy="190" r="12" fill="#fff" stroke="#555"/>
+<text x="495" y="194" text-anchor="middle" font-size="13">3</text>
+<circle cx="480" cy="258" r="12" fill="#fff" stroke="#555"/>
+<text x="480" y="262" text-anchor="middle" font-size="13">4</text>
+<circle cx="494" cy="303" r="12" fill="#fff" stroke="#555"/>
+<text x="494" y="307" text-anchor="middle" font-size="13">5</text>
+<circle cx="165" cy="270" r="12" fill="#fff" stroke="#555"/>
+<text x="165" y="274" text-anchor="middle" font-size="13">6</text>
+<circle cx="540" cy="70" r="12" fill="#fff" stroke="#555"/>
+<text x="540" y="74" text-anchor="middle" font-size="13">7</text>
+<circle cx="115" cy="327" r="12" fill="#fff" stroke="#555"/>
+<text x="115" y="331" text-anchor="middle" font-size="13">8</text>
+<circle cx="118" cy="170" r="12" fill="#fff" stroke="#555"/>
+<text x="118" y="174" text-anchor="middle" font-size="13">9</text>
+<circle cx="118" cy="220" r="12" fill="#fff" stroke="#555"/>
+<text x="118" y="224" text-anchor="middle" font-size="13">10</text>
+<text x="40" y="545" font-size="16">Default Light shown. Muted bars blend primary over secondary using SVG opacity.</text>
+<text x="40" y="571" font-size="16">All themes include a sidebar; tinted variants derive its background from tertiary.</text>
+</g></svg>

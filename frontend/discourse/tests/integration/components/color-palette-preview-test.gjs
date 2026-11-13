@@ -1,6 +1,11 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
+import {
+  FOUNDATION_THEME_ID,
+  HORIZON_THEME_ID,
+} from "discourse/lib/theme-selector";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const example_scheme = {
@@ -261,10 +266,90 @@ const example_scheme = {
 module("Integration | Component | ColorPalettePreview", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("sidebar styling follows the default theme identity", async function (assert) {
+    const defaultTheme = tracked({
+      id: HORIZON_THEME_ID,
+      name: "Renamed theme",
+    });
+
+    await render(
+      <template>
+        <ColorPalettePreview @defaultTheme={{defaultTheme.value}} />
+      </template>
+    );
+
+    assert
+      .dom(".color-palette-preview__sidebar")
+      .hasAttribute(
+        "fill",
+        "oklch(from var(--tertiary--preview, #08c) 96% calc(c * 0.125) h)",
+        "the default theme enables the tint even when renamed"
+      );
+
+    defaultTheme.value = { id: FOUNDATION_THEME_ID, name: "Horizon" };
+    await settled();
+
+    assert
+      .dom(".color-palette-preview__sidebar")
+      .hasAttribute(
+        "fill",
+        "var(--secondary--preview, #fff)",
+        "other themes retain a plain sidebar regardless of name"
+      );
+  });
+
+  test("sidebar tint follows the preview palette's color mode", async function (assert) {
+    const defaultTheme = { id: HORIZON_THEME_ID };
+    const scheme = tracked({ ...example_scheme, is_dark: false });
+
+    await render(
+      <template>
+        <ColorPalettePreview
+          @defaultTheme={{defaultTheme}}
+          @scheme={{scheme.value}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".color-palette-preview__sidebar")
+      .hasAttribute(
+        "fill",
+        "oklch(from var(--tertiary--preview, #08c) 96% calc(c * 0.125) h)",
+        "light palettes use the light accent tint"
+      );
+
+    scheme.value = { ...example_scheme, is_dark: true };
+    await settled();
+
+    assert
+      .dom(".color-palette-preview__sidebar")
+      .hasAttribute(
+        "fill",
+        "oklch(from var(--tertiary--preview, #08c) 10% 0.025 h)",
+        "dark palettes use the dark accent tint"
+      );
+  });
+
   test("renders default color palette", async function (assert) {
     await render(
       <template><ColorPalettePreview class="color-palette-preview" /></template>
     );
+
+    assert
+      .dom(".color-palette-preview__sidebar")
+      .exists("previews without a default theme still show a sidebar");
+
+    assert
+      .dom(".color-palette-preview__menu rect")
+      .exists({ count: 5 }, "five menu items are shown");
+    assert
+      .dom(".color-palette-preview__active-item")
+      .hasAttribute(
+        "fill",
+        "var(--primary-low--preview, #e9e9e9)",
+        "the active menu item has a neutral highlight"
+      );
 
     assert.dom(".color-palette-preview").hasStyle(
       {
