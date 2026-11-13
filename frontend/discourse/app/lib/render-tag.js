@@ -18,7 +18,9 @@ export function defaultRenderTag(tag, params) {
   const tagName = typeof tag === "string" ? tag : tag.name;
   const visibleName = escapeExpression(tagName);
   const tagNameLower = visibleName.toLowerCase();
-  const tagPathName = tagName.toLowerCase().replaceAll(".", "%2E");
+  const tagPathName = String(tagName || "")
+    .toLowerCase()
+    .replaceAll(".", "%2E");
 
   const classes = ["discourse-tag"];
   const htmlTag = params.tagName || "a";

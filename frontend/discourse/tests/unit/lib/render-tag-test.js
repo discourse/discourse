@@ -130,7 +130,7 @@ module("Unit | Utility | render-tag", function (hooks) {
       .hasAttribute("href", "/tag/custom-slug/42", "uses the custom slug");
     assert.dom("a", div).hasText("Foo", "preserves the visible name");
 
-    div.innerHTML = renderTag({ id: 42, name: "Foo", slug: "" });
+    div.innerHTML = renderTag({ id: 42, slug: "" });
 
     assert
       .dom("a", div)
