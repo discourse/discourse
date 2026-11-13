@@ -534,6 +534,17 @@ RSpec.describe TagsController do
       )
     end
 
+    it "doesn't use the description of a tag restricted to a category the user can't see" do
+      restricted = Fabricate(:tag, name: "restricted", description: "secret description")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted])
+      Fabricate(:tag, name: "other")
+
+      get "/tags/intersection/restricted/other"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("secret description")
+    end
+
     it "returns tag info for an encoded period tag name" do
       Fabricate(:tag, name: "node.js")
 

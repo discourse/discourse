@@ -213,7 +213,8 @@ class TagsController < ::ApplicationController
       @rss_link = "#{@tag.full_url}.rss" if @tag
 
       @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @description_meta = Tag.where(name: @tag_name).pick(:description) || @title
+      description = @tag.description if @tag&.visible_in_accessible_categories?(guardian)
+      @description_meta = description || @title
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
