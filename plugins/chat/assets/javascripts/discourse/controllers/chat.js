@@ -37,20 +37,11 @@ export default class ChatController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
-  get enabledRouteCount() {
-    return [
-      this.siteSettings.chat_threads_enabled,
-      this.chat.userCanAccessDirectMessages,
-      this.siteSettings.enable_public_channels,
-    ].filter(Boolean).length;
-  }
-
-  // With the site's tab bar, the footer also holds the list's options, which
-  // the list's own navbar gives up to it, so it's needed for a single view too
+  // The footer also supplies chat search to the site header.
   get shouldUseChatFooter() {
     return (
       FOOTER_NAV_ROUTES.includes(this.router.currentRouteName) &&
-      (this.enabledRouteCount > 1 || this.mobileTabBar.enabled)
+      (this.chat.enabledViewCount > 1 || this.mobileTabBar.enabled)
     );
   }
 

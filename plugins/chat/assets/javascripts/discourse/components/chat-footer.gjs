@@ -67,23 +67,11 @@ export default class ChatFooter extends Component {
     return routeName === "chat" ? "chat.channels" : routeName;
   }
 
-  get enabledRouteCount() {
-    return [
-      this.includeStarred,
-      this.includeThreads,
-      this.directMessagesEnabled,
-      this.siteSettings.enable_public_channels,
-    ].filter(Boolean).length;
-  }
-
-  // With the site's tab bar, the list's navbar gives its options to the
-  // footer, which then shows for them even with a single view
   get shouldRenderFooter() {
     return (
       (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&
       this.chatStateManager.hasPreloadedChannels &&
-      (this.enabledRouteCount > 1 ||
-        (this.mobileTabBar.enabled && !!this.listOptionsSection))
+      this.chat.enabledViewCount > 1
     );
   }
 

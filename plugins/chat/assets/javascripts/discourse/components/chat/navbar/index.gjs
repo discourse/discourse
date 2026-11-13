@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import noop from "discourse/helpers/noop";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
@@ -11,6 +12,12 @@ import ChannelTitle from "./channel-title.gjs";
 import Title from "./title.gjs";
 
 export default class ChatNavbar extends Component {
+  @service chat;
+
+  get hasSingleView() {
+    return this.chat.enabledViewCount <= 1;
+  }
+
   @action
   handleResize(entries) {
     for (let entry of entries) {
@@ -28,7 +35,11 @@ export default class ChatNavbar extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
-      class={{dConcatClass "c-navbar-container" (if @onClick "-clickable")}}
+      class={{dConcatClass
+        "c-navbar-container"
+        (if @onClick "-clickable")
+        (if this.hasSingleView "--single-view")
+      }}
       {{on "click" (if @onClick @onClick (noop))}}
       {{dOnResize this.handleResize}}
     >

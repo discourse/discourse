@@ -28,7 +28,7 @@ export default class MobileTabBarTab extends Component {
           <span class="mobile-tab-bar__badge"><@tab.badgeComponent /></span>
         {{/if}}
       </span>
-      <span class="mobile-tab-bar__label">{{@tab.label}}</span>
+      <span class="mobile-tab-bar__label sr-only">{{@tab.label}}</span>
     </DButton>
   </template>
 }

@@ -44,7 +44,7 @@ export default class MobileTabBarMoreTab extends Component {
             {{/each}}
           </span>
         </span>
-        <span class="mobile-tab-bar__label">{{i18n
+        <span class="mobile-tab-bar__label sr-only">{{i18n
             "mobile_tab_bar.more"
           }}</span>
       </:trigger>

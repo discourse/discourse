@@ -18,7 +18,7 @@ export default class MobileTabBarMenuButton extends Component {
   <template>
     <DButton
       aria-expanded={{if this.mobileTabBar.isMenuOpen "true" "false"}}
-      class="btn-transparent mobile-tab-bar__menu"
+      class="btn-default mobile-tab-bar__menu"
       @action={{this.mobileTabBar.toggleMenu}}
       @icon="bars"
       @title="mobile_tab_bar.menu"

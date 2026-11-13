@@ -101,14 +101,9 @@ html.mobile-tab-bar-visible {
 
 // The tabs name the list, so the lists' own title bars only repeat them
 html.mobile-tab-bar-visible
-  .c-routes:is(
-    .--channels,
-    .--direct-messages,
-    .--starred-channels,
-    .--threads,
-    .--search
-  )
-  > .c-navbar-container {
+  .c-routes:is(.--channels, .--direct-messages, .--starred-channels, .--threads)
+  > .c-navbar-container:not(.--single-view),
+html.mobile-tab-bar-visible .c-routes.--search > .c-navbar-container {
   display: none;
 }
 

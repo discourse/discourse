@@ -34,19 +34,13 @@ export default class MobileTabBarCreateButton extends Component {
 
   <template>
     {{#if this.isVisitor}}
-      {{#if @canSignUp}}
-        <DButton
-          class="btn-default mobile-tab-bar__signup"
-          @action={{routeAction "showCreateAccount"}}
-          @icon="user-plus"
-          @label="sign_up"
-        />
-      {{/if}}
       <DButton
         class="btn-primary mobile-tab-bar__create mobile-tab-bar__login"
         @action={{routeAction "showLogin"}}
+        @ariaLabel="log_in"
         @icon="user"
         @label="log_in"
+        @title="log_in"
       />
     {{else if this.onlyAction}}
       <DButton

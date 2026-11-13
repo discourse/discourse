@@ -4,6 +4,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import CreateButton from "discourse/components/mobile-tab-bar/create-button";
 import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
 import MoreTab from "discourse/components/mobile-tab-bar/more-tab";
@@ -23,6 +24,13 @@ export default class MobileTabBar extends Component {
 
   get isVisible() {
     return this.mobileTabBar.enabled && !this.composer.isOpen;
+  }
+
+  get tabsStyle() {
+    const count =
+      this.mobileTabBar.barTabs.length +
+      (this.mobileTabBar.moreTabs.length ? 1 : 0);
+    return trustHTML(`--mobile-tab-bar-tab-count: ${count};`);
   }
 
   // Out of the way while reading down a page, back on the way up. A page
@@ -102,7 +110,7 @@ export default class MobileTabBar extends Component {
         ></div>
         <div class="mobile-tab-bar__controls">
           <MenuButton />
-          <div class="mobile-tab-bar__tabs">
+          <div class="mobile-tab-bar__tabs" style={{this.tabsStyle}}>
             <div
               class="mobile-tab-bar__track"
               {{didInsert this.followActiveTab}}
@@ -121,7 +129,7 @@ export default class MobileTabBar extends Component {
               {{/if}}
             </div>
           </div>
-          <CreateButton @canSignUp={{@canSignUp}} />
+          <CreateButton />
         </div>
       </nav>
     {{/if}}

@@ -1,37 +1,34 @@
 html.mobile-tab-bar-visible {
-  --mobile-tab-bar-control-size: 3.25rem;
-  --mobile-tab-bar-controls-height: 4.125rem;
-  --mobile-tab-bar-item-size: 2.25rem;
-  --mobile-tab-bar-views-height: calc(
-    var(--mobile-tab-bar-item-size) + var(--space-1) * 2
+  --mobile-tab-bar-control-size: 2.5rem;
+  --mobile-tab-bar-controls-height: calc(
+    var(--mobile-tab-bar-control-size) + var(--space-2)
   );
-  --mobile-tab-bar-bottom-inset: env(safe-area-inset-bottom);
+  --mobile-tab-bar-item-size: 2.25rem;
+  --mobile-tab-bar-views-gap: var(--space-1);
+  --mobile-tab-bar-views-height: calc(
+    var(--mobile-tab-bar-item-size) + var(--space-1) * 2 +
+      var(--mobile-tab-bar-views-gap)
+  );
+  --mobile-tab-bar-bottom-inset: max(
+    var(--space-2),
+    env(safe-area-inset-bottom)
+  );
   --mobile-tab-bar-side-inset: var(--space-3);
   --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
-  --mobile-tab-bar-corner-nudge: 0px;
 
-  // Installed on an iPhone, the app reaches the screen's rounded corners, so
-  // the controls sit partly in the home indicator's area, with room enough
-  // from the sides and bottom to clear the corners' curve and stay easy to
-  // tap. Elsewhere the safe area can hold the system's own buttons, as with
-  // Android's three-button navigation, so the controls stay clear of it.
   @media (display-mode: standalone) {
+    --mobile-tab-bar-side-inset: var(--space-5);
+
+    // Other platforms may reserve this inset for system navigation controls.
+    --mobile-tab-bar-bottom-inset: max(
+      var(--space-5),
+      env(safe-area-inset-bottom)
+    );
+
     &.ios-device {
-      --mobile-tab-bar-side-inset: max(
-        var(--space-3),
-        min(env(safe-area-inset-bottom) * 100, var(--space-5))
-      );
-      --mobile-tab-bar-bottom-inset: min(
-        env(safe-area-inset-bottom),
-        calc(
-          var(--space-6) -
-            (
-              var(--mobile-tab-bar-controls-height) - var(
-                  --mobile-tab-bar-control-size
-                )
-            ) /
-            2
-        )
+      --mobile-tab-bar-bottom-inset: max(
+        var(--space-5),
+        min(env(safe-area-inset-bottom), var(--space-6))
       );
       --mobile-tab-bar-corner-radius: max(
         var(--d-button-border-radius),
@@ -39,10 +36,6 @@ html.mobile-tab-bar-visible {
           env(safe-area-inset-bottom) * 100,
           calc(3.5rem - var(--mobile-tab-bar-side-inset))
         )
-      );
-      --mobile-tab-bar-corner-nudge: min(
-        env(safe-area-inset-bottom) * 100,
-        var(--space-half)
       );
     }
   }
@@ -120,6 +113,7 @@ html.mobile-tab-bar-visible {
     display: flex;
     flex: none;
     align-items: center;
+    margin-block-end: var(--mobile-tab-bar-views-gap);
     padding: var(--space-1);
     box-sizing: border-box;
     pointer-events: auto;
@@ -241,24 +235,30 @@ html.mobile-tab-bar-visible {
   }
 
   &__controls {
+    container: mobile-tab-bar-controls / inline-size;
     position: relative;
     z-index: 1;
     display: flex;
     flex: none;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-1);
     height: var(--mobile-tab-bar-controls-height);
+    padding-inline-start: var(--space-1);
+    box-sizing: border-box;
+    pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
+    border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
+    border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
   }
 
   &__menu,
   &__tabs,
-  &__signup,
   &__create {
     flex: none;
     height: var(--mobile-tab-bar-control-size);
     pointer-events: auto;
-
-    @include mobile-tab-bar-floating($fill: false);
+    border-radius: var(--mobile-tab-bar-inner-radius);
   }
 
   &__menu,
@@ -271,43 +271,42 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  &__menu,
-  &__tabs {
-    background: var(--header_background);
-  }
-
   &__menu {
+    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
+    --d-button-default-bg-color: var(--header_background);
+    --d-button-default-bg-color--hover: var(--d-hover);
+    --d-button-default-icon-color: var(--header_primary);
+    --d-button-default-icon-color--hover: var(--header_primary);
+    --d-button-default-border: 0;
+    --d-button-default-border--hover: 0;
     position: relative;
-    border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
+    flex: 1 1 0;
+    min-width: var(--mobile-tab-bar-control-size);
+    padding: 0;
 
     .mobile-tab-bar__badge {
       top: var(--space-2);
       left: 55%;
     }
 
-    .d-icon {
-      color: var(--header_primary-medium);
-      transform: translate(
-        var(--mobile-tab-bar-corner-nudge),
-        calc(var(--mobile-tab-bar-corner-nudge) * -1)
+    .mobile-tab-bar__count {
+      outline: 2px solid var(--mobile-tab-bar-badge-background);
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
       );
     }
 
-    // Outweighs the transparent button style it's built on, which clears the
-    // background on hover and focus
-    &.btn-transparent {
-      background: var(--header_background);
-
-      &:focus-visible {
-        background: var(--d-hover);
-      }
-
-      @include hover {
-        background: var(--d-hover);
-      }
+    @include hover {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
+      );
     }
 
-    &[aria-expanded="true"].btn-transparent {
+    &[aria-expanded="true"].btn-default {
+      --mobile-tab-bar-badge-background: var(--d-selected);
       background: var(--d-selected);
 
       @include hover {
@@ -320,63 +319,88 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  &__login,
-  &__signup {
-    flex-direction: column;
-    gap: var(--space-half);
+  &__login.btn-primary {
+    gap: var(--space-2);
     width: auto;
-    min-width: var(--mobile-tab-bar-control-size);
+    min-width: var(--mobile-tab-bar-controls-height);
     padding-inline: var(--space-3);
 
-    .d-icon {
-      margin: 0;
-      font-size: var(--font-0);
-      color: inherit;
-    }
-
     .d-button-label {
-      font-size: var(--font-down-3);
+      max-width: 8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
 
-  &__signup {
-    display: none;
-
-    &.btn-default {
-      border: 0;
-      background: var(--header_background);
-      color: var(--d-nav-color--active);
+  @container mobile-tab-bar-controls (width < 22rem) {
+    &__tabs:has(
+        .mobile-tab-bar__tab ~ .mobile-tab-bar__tab ~ .mobile-tab-bar__tab
+      )
+      ~ .mobile-tab-bar__login
+      .d-button-label {
+      display: none;
     }
   }
 
-  &__controls:not(:has(.mobile-tab-bar__tab ~ .mobile-tab-bar__tab)) {
-    .mobile-tab-bar__signup {
-      display: inline-flex;
-    }
-
-    .mobile-tab-bar__signup,
-    .mobile-tab-bar__login {
-      min-width: clamp(var(--mobile-tab-bar-control-size), 20vw, 6rem);
+  @container mobile-tab-bar-controls (width < 16rem) {
+    &__login .d-button-label {
+      display: none;
     }
   }
 
   &__create {
-    border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
+    --mobile-tab-bar-create-background: var(--d-button-primary-bg-color);
+    position: relative;
+    isolation: isolate;
+    width: var(--mobile-tab-bar-controls-height);
+    height: var(--mobile-tab-bar-controls-height);
 
-    .d-icon {
-      transform: translate(
-        calc(var(--mobile-tab-bar-corner-nudge) * -1),
-        calc(var(--mobile-tab-bar-corner-nudge) * -1)
+    &.btn-primary {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+
+      &:focus-visible {
+        background: transparent;
+      }
+
+      @include hover {
+        border: 0;
+        background: transparent;
+      }
+    }
+
+    // Round only the painted surface so the entire square remains tappable.
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      border-start-end-radius: var(--mobile-tab-bar-radius);
+      border-end-end-radius: var(--mobile-tab-bar-corner-radius);
+      background: var(--mobile-tab-bar-create-background);
+      box-shadow: 0 3px 3px -1px rgb(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
+      );
+    }
+
+    @include hover {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
       );
     }
   }
 
   &__tabs {
     display: flex;
-    flex: 1 1 auto;
+    flex: var(--mobile-tab-bar-tab-count, 1) 1 0;
     min-width: 0;
-    padding: var(--space-1);
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -419,8 +443,6 @@ html.mobile-tab-bar-visible {
   &__tab {
     position: relative;
     flex: 1 1 0;
-    flex-direction: column;
-    gap: var(--space-half);
     min-width: 0;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--mobile-tab-bar-inner-radius);
@@ -450,18 +472,6 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  &__label {
-    max-width: 100%;
-    overflow: hidden;
-    font-size: var(--font-down-3);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    .--active & {
-      font-weight: bold;
-    }
-  }
-
   &__badge {
     position: absolute;
     top: -0.2rem;
@@ -481,6 +491,25 @@ html.mobile-tab-bar-visible {
     font-weight: bold;
     line-height: 1rem;
     text-align: center;
+  }
+
+  @media (display-mode: standalone) {
+    padding-inline: max(
+        var(--mobile-tab-bar-side-inset),
+        env(safe-area-inset-left)
+      )
+      max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
+
+    &__create .d-icon-pencil {
+      transform: translate(-1px, -1px);
+    }
+
+    &__menu.btn-default {
+      border-end-start-radius: max(
+        var(--mobile-tab-bar-inner-radius),
+        calc(var(--mobile-tab-bar-corner-radius) - var(--space-1))
+      );
+    }
   }
 }
 

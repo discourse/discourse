@@ -66,7 +66,14 @@ html.mobile-tab-bar-visible {
   .user-menu.menu-panel.slide-in {
     top: 0;
     bottom: auto;
-    height: calc(var(--composer-vh, 1dvh) * 75);
+    height: min(
+      calc(var(--composer-vh, 1dvh) * 95),
+      calc(
+        100dvh - var(--footer-nav-height) - env(safe-area-inset-bottom) - var(
+            --space-2
+          )
+      )
+    );
     padding-top: env(safe-area-inset-top);
     padding-bottom: var(--space-3);
     border-radius: 0 0 var(--d-border-radius-large) var(--d-border-radius-large);
@@ -77,6 +84,12 @@ html.mobile-tab-bar-visible {
 
     .menu-tabs-container {
       flex: none;
+    }
+
+    @media (height > 400px) {
+      .tabs-list .btn {
+        padding-block: var(--space-2);
+      }
     }
 
     .quick-access-panel {

@@ -77,7 +77,7 @@ html.mobile-tab-bar-visible
   margin: 0;
   bottom: calc(
     var(--footer-nav-height) + env(safe-area-inset-bottom) +
-      var(--composer-height, 0px)
+      var(--composer-height, 0px) + var(--mobile-tab-bar-views-gap)
   );
 
   #topic-progress-wrapper {
@@ -121,6 +121,12 @@ html.mobile-tab-bar-visible
     .d-icon {
       color: var(--header_primary-medium);
     }
+  }
+
+  .topic-admin-menu-trigger {
+    border-inline-end: 1px solid var(--primary-low);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   // Outweighs the progress's own look, set by both ids
