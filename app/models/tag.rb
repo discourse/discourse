@@ -305,6 +305,10 @@ class Tag < ActiveRecord::Base
     categories
   end
 
+  def visible_in_accessible_categories?(guardian)
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.where(id: id), guardian).exists?
+  end
+
   %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
