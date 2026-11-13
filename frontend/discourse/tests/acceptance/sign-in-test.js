@@ -40,7 +40,8 @@ acceptance("Signing In - clearing password errors", function (needs) {
       .dom(".login-fullpage .alert-error")
       .doesNotExist("clears the password error when opening password reset");
 
-    await click(".d-modal__close");
+    await click(".forgot-password-modal .modal-close");
+    assert.dom(".forgot-password-modal").doesNotExist("closes password reset");
     assert
       .dom(".login-fullpage .alert-error")
       .doesNotExist(
