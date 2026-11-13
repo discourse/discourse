@@ -208,6 +208,29 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
       expect(markdown).to include("> **Code details**", "> `````", "> inside ```` details")
     end
 
+    it "avoids redundant conversion of deeply nested details" do
+      depth = 8
+      html = "<p>Innermost <em>formatted</em> content</p>"
+
+      depth.times do |index|
+        html = "<details><summary>Level #{index + 1}</summary>#{html}</details>"
+      end
+
+      conversion_calls = 0
+      allow_any_instance_of(described_class).to receive(
+        :convert_html,
+      ).and_wrap_original do |original, *args|
+        conversion_calls += 1
+        original.call(*args)
+      end
+
+      markdown = described_class.to_markdown(html)
+
+      expect(conversion_calls).to eq(depth)
+      expect(markdown).to include("Innermost", "formatted", "content")
+      (1..depth).each { |level| expect(markdown).to include("**Level #{level}**") }
+    end
+
     it "handles malformed and empty HTML without raising" do
       expect(described_class.to_markdown("<p>unfinished <strong>tag")).to include("unfinished")
       expect(described_class.to_markdown(nil)).to eq("")
