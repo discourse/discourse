@@ -43,7 +43,7 @@ describe "Reviewable queued post tags" do
 
     review_page.select_action(reviewable, "approve_post")
 
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
 
     topic = Topic.find_by(title: reviewable.payload["title"])
     expect(topic.tags.map(&:name)).to contain_exactly("cool", "fresh")

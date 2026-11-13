@@ -153,7 +153,7 @@ acceptance("Category assign settings - new select controls", function (needs) {
     await groups.open();
     await groups.select("50");
     await groups.close();
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const request = pretender.handledRequests.findLast(
       ({ method, requestBody }) => method === "PUT" && requestBody

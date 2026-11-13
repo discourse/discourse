@@ -294,7 +294,7 @@ acceptance("Category Edit", function (needs) {
     const postingReview = dSelect(".d-select.posting-review-group-chooser");
     await postingReview.selectByName("staff");
     await postingReview.close();
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const payload = latestCategorySavePayload();
     assert.deepEqual(payload.moderating_group_ids, [11]);
@@ -313,7 +313,7 @@ acceptance("Category Edit", function (needs) {
       .doesNotExist("everyone isn't offered");
     await access.selectByName("staff");
     await access.close();
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.deepEqual(
       latestCategorySavePayload().permissions,
