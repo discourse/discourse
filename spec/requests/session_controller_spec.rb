@@ -1815,6 +1815,54 @@ RSpec.describe SessionController do
         user = User.find_by_email("bob@bob.com")
         expect(GroupUser.exists?(user: user, group: invited_group.group)).to eq(true)
       end
+
+      it "does not activate or log in the account when the provider requires activation" do
+        server_session["invite-key"] = invite.invite_key
+        sso = get_sso("/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
+        sso.require_activation = true
+
+        get "/session/sso_login",
+            params: Rack::Utils.parse_query(sso.payload),
+            headers: {
+              host: Discourse.current_hostname,
+            }
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.active).to eq(false)
+        expect(session[:current_user_id]).to eq(nil)
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      end
+
+      it "redeems the invite and logs in an already-active user when the provider requires activation" do
+        active_user = Fabricate(:user, email: "bob@bob.com", active: true)
+        Fabricate(:single_sign_on_record, user: active_user, external_id: "666")
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
+
+        server_session["invite-key"] = invite.invite_key
+        sso = get_sso("/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
+        sso.require_activation = true
+
+        get "/session/sso_login",
+            params: Rack::Utils.parse_query(sso.payload),
+            headers: {
+              host: Discourse.current_hostname,
+            }
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(true)
+        expect(session[:current_user_id]).to eq(active_user.id)
+        expect(GroupUser.exists?(user: active_user, group: invited_group.group)).to eq(true)
+        expect(server_session["invite-key"]).to eq(nil)
+      end
     end
 
     context "when sso emails are not trusted" do

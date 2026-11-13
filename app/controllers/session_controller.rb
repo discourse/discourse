@@ -238,8 +238,12 @@ class SessionController < ApplicationController
 
           # we only want to redeem the invite if
           # the user has not already redeemed an invite
-          # (covers the same SSO user visiting an invite link)
-        elsif invite.present? && user.invited_user.blank?
+          # (covers the same SSO user visiting an invite link) and email
+          # activation is no longer pending (either the account is already
+          # active or the provider is not requiring activation), otherwise
+          # an unverified email could redeem the invite and be signed in
+        elsif invite.present? && user.invited_user.blank? &&
+              (user.active? || !sso.require_activation)
           redeem_invitation(invite, sso, user)
 
           # we directly call user.activate here instead of going
