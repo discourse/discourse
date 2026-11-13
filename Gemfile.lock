@@ -30,6 +30,7 @@ PATH
       i18n
       json
       lru_redux
+      pg
       samovar
       unicode-display_width
       zeitwerk

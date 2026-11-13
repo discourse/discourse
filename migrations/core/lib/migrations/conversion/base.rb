@@ -79,7 +79,7 @@ module Migrations
             canonical_path: db_path,
             migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH,
           )
-        @writer = Database::Connection.new(path: db_path)
+        @writer = Database::Connection.new(path: db_path, reopenable: true)
         Database::IntermediateDB.setup(@writer)
       end
 

@@ -29,21 +29,56 @@ Public converters live in `converters/lib/migrations/converters/`. To run a priv
 (closed-source) converter, put its code in a subdirectory of `private/converters/`
 (or point `MIGRATIONS_PRIVATE_CONVERTERS_PATH` at it).
 
-### Source DB adapters and fork safety
+### Database connections and fork safety
 
-Worker processes inherit the source DB connection's socket from the main process. Whether
-that's dangerous depends on the client library: a destructor that only closes the file
-descriptor is harmless (the parent still holds it, so the kernel sends nothing over the
-wire), but a destructor that writes a protocol goodbye kills the parent's session as soon
-as a worker exits — libpq sends a Terminate message, MySQL clients send `COM_QUIT`.
+Open every database handle through `Database::ManagedConnection.open(driver)`. The
+converter's source adapter and the importer use `Database::Drivers::Postgres`; SQLite goes
+through `Database::Connection`, which wraps `Database::Drivers::Sqlite`. A spec makes sure
+native connection constructors only appear in the drivers and raw forks only in
+`ForkManager`.
 
-`Adapter::Postgres` handles this by registering a `ForkManager.after_fork_child` hook that
-calls `discard!` in each worker: the inherited socket is redirected to `/dev/null`, and any
-later use of the adapter in the worker raises `DiscardedError`. New adapters should follow
-the same pattern. The discard mechanism itself is library-specific — mysql2 has
-`automatic_close = false`, trilogy has a native `discard!`. To check whether a library
-needs one at all: connect, fork an empty child that exits normally, wait for it, and query
-again from the parent (see the fork-safety specs in `postgres_spec.rb`).
+Workers are forked through `ForkManager`. Before forking, `Database::Lifecycle` waits for
+connections that are being opened or closed and then handles each open connection
+according to its driver's fork policy:
+
+| Policy | On fork | Used by |
+| --- | --- | --- |
+| `:forbid_fork` (default) | Forking raises while the connection is open. | SQLite in the importer, worker shards and tooling |
+| `:detach` | The child redirects the inherited socket to `/dev/null`, so libpq's Terminate message can't end the parent's session. | PostgreSQL |
+| `:reopen` | The connection is closed before the fork and reopened afterwards. Forking raises if it has an open transaction, an attached database or temporary tables. | The converter's run database (`reopenable: true`) |
+
+Opening a connection cannot overlap with a fork. A native constructor can open its socket
+before Ruby gets the handle, and a child forked in between can't discard it. Keep the
+constructor-overlap spec when changing this code.
+
+PostgreSQL queries keep running while workers fork. `Database::PostgresStream` keeps the
+connection until all rows are read or the stream is closed. Another query or `close` on
+the same connection raises `BusyError` in the meantime. A stream can only be consumed
+once. When you consume it with `next` and stop early, call `close`.
+
+A new driver implements `open`, `configure` and `close`, plus `detach` or
+`validate_fork!` depending on its fork policy, and must pass the shared
+`a managed database driver` examples. Fork specs have to reap the child and check its exit
+status, because a failing expectation in a child doesn't fail the parent's run.
+
+The PostgreSQL specs only create temporary objects. CI runs them against the `postgres`
+database; locally:
+
+```bash
+cd migrations/core
+PGHOST=/var/run/postgresql MIGRATIONS_POSTGRES_DB=discourse_development ../bin/rspec --tag postgres
+```
+
+When changing drivers, streams or fork handling, compare both revisions with
+`tooling/benchmarks/database_pipeline.rb` (modes: `sqlite`, `stream_hash`, `stream_wide`,
+`stream_array`, `convert`, `convert_inline`, `import`) and, for the importer's COPY path,
+`tooling/benchmarks/copy_rows.rb`. Run the same script against each revision's
+`BUNDLE_GEMFILE`:
+
+```bash
+BUNDLE_WITH=migrations PGHOST=/var/run/postgresql PGDATABASE=discourse_development \
+  ROWS=250000 ROUNDS=7 bundle exec ruby migrations/tooling/benchmarks/database_pipeline.rb convert
+```
 
 ### Partitioning large steps
 
@@ -76,11 +111,11 @@ def items
 end
 ```
 
-The framework does the rest. Before forking, it asks the adapter for the chunk
-boundaries — evenly sized chunks over a numeric key, or a sorted-key scan for a
-text/UUID/composite key. It then forks one worker per chunk; each worker reads
-its `[lower, upper)` slice (that's what `partition_slice` expands to), writes its
-own SQLite shard, and the shards are merged back into the run database.
+The framework does the rest. Before forking, it asks the adapter for chunk boundaries
+over the ordered partition key. The coordinator starts no more than the configured number
+of workers. Workers repeatedly claim chunks from a shared queue. For each chunk, a worker
+reads its `[lower, upper)` slice (that's what `partition_slice` expands to) and writes to
+its own SQLite shard. The completed shards are merged back into the run database.
 
 Two things to get right:
 
