@@ -35,7 +35,7 @@ module ::Blog
         "@type" => "Person",
         "name" => @revision.data["author_name"],
         "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
-      }.compact
+      }
     end
 
     def schema

@@ -458,10 +458,12 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).to include(publication.url)
       expect(html.at_css('meta[name="description"]')["content"]).to eq("Writes about the field.")
 
+      SiteSetting.blog_description = "Notes from the team."
       SiteSetting.hide_user_profiles_from_public = true
       get author_url
       expect(response.status).to eq(200)
       expect(response.body).not_to include("Writes about")
+      expect(Nokogiri.HTML5(response.body).at_css(".blog__description").text).to be_blank
 
       get "https://blog.example.com/author/#{user.username}"
       expect(response.status).to eq(404)

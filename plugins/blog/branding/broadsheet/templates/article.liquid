@@ -4,7 +4,7 @@
     <h1>{{ article.title }}</h1>
     {% if article.standfirst %}<p class="broadsheet__standfirst">{{ article.standfirst }}</p>{% endif %}
     <div class="broadsheet__byline --article">
-      {% if article.author %}<span><strong>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</strong></span>{% endif %}
+      {% if article.author %}<span><strong><a href="{{ article.author_url }}">{{ article.author }}</a></strong></span>{% endif %}
       <time datetime="{{ article.published_at }}">{{ article.date }}</time>
       <span>{{ article.reading_time }}</span>
     </div>

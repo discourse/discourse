@@ -159,6 +159,15 @@
   text-align: center;
 }
 
+.broadsheet__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .broadsheet__masthead .broadsheet__kicker {
   justify-content: center;
 }

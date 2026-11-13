@@ -3,7 +3,7 @@
     <a class="blog__eyebrow" href="{{ site.url }}">← {{ labels.all_articles }}</a>
     <h1>{{ article.title }}</h1>
     {% if article.standfirst %}<p class="blog-article__standfirst">{{ article.standfirst }}</p>{% endif %}
-    <div class="blog__meta">{% if article.author %}<span>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</span><span>·</span>{% endif %}
+    <div class="blog__meta">{% if article.author %}<span><a href="{{ article.author_url }}">{{ article.author }}</a></span><span>·</span>{% endif %}
       {% if article.published_at %}<time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span>{% endif %}
       <span>{{ article.reading_time }}</span>
     </div>

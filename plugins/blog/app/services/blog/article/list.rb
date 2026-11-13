@@ -56,15 +56,13 @@ class Blog::Article::List
       publications = publications.where(SEARCH_SQL, pattern: params.search_pattern)
     end
     publications = publications.where(discussion_topic_id: tag.topic_tags.select(:topic_id)) if tag
-    if params.author_username.present?
-      publications = publications.where(discussion_topic: { user_id: author&.id })
-    end
+    publications = publications.where(discussion_topic: { user_id: author.id }) if author
     publications = publications.order(featured: :desc) if params.featured_first?
     publications.newest
   end
 
-  def requested_author_has_articles(params:, publications:)
-    params.author_username.blank? || publications.exists?
+  def requested_author_has_articles(params:, author:, publications:)
+    params.author_username.blank? || (author.present? && publications.exists?)
   end
 
   def paginate_publications(params:, publications:)

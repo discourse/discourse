@@ -107,7 +107,7 @@ module ::Blog
     def description_html
       if description_cooked.present?
         TemplateRenderer::Html.new(ArticleHtml.render(description_cooked))
-      elsif SiteSetting.blog_description.present?
+      elsif !@author && SiteSetting.blog_description.present?
         TemplateRenderer::Html.new("<p>#{ERB::Util.html_escape(SiteSetting.blog_description)}</p>")
       end
     end

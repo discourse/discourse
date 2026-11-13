@@ -46,6 +46,8 @@ a deferred, interactive Discourse discussion below each article.
   can't be used to check which usernames exist. Imported author URLs with a different
   slug can be redirected with permalinks. Articles owned by the system user or a bot,
   as imports with no known author are, show no byline and have no author page.
+  Templates get `article.author_url` for bylines and, on author pages, `page.author`
+  (`name`, `username`, `url`, `avatar_url`, `bio_html`).
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
   `BlogPosting` structured data. Item identifiers come from the article's topic, not
   its path, so after a migration, feed readers subscribed to the old blog's feed see
