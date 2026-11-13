@@ -93,6 +93,17 @@ html.rtl {
     }
   }
 
+  .chat-drawer-loading {
+    .c-navbar {
+      height: var(--chat-header-offset);
+    }
+
+    &__rows {
+      --d-skeleton-gap: 0.5rem;
+      padding: 0.5rem;
+    }
+  }
+
   &.is-collapsed {
     min-height: 0 !important;
     height: auto !important;
