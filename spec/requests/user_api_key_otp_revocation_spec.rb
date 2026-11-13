@@ -108,6 +108,25 @@ RSpec.describe "User API key OTP revocation" do
     expect(response.parsed_body.fetch("current_user").fetch("id")).to eq(admin.id)
   end
 
+  it "redeems an OTP after the user changes their username" do
+    user = Fabricate(:user, refresh_auto_groups: true)
+    key =
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+      )
+    token = issue_otp(headers: { "User-Api-Key" => key.key })
+
+    user.update!(username: "renamed_user")
+
+    post "/session/otp/#{token}"
+    expect(response.status).to eq(302)
+
+    get "/session/current.json"
+    expect(response.parsed_body.fetch("current_user").fetch("id")).to eq(user.id)
+  end
+
   it "rejects an OTP after its issuing user API key expires" do
     user = Fabricate(:user, refresh_auto_groups: true)
     key =
