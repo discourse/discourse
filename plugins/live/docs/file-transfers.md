@@ -19,6 +19,9 @@ both users must be joined to the same mesh room. Receivers validate the sender�
 server-attested `can_send_files` roster permission rather than trusting channel
 metadata. Group configuration uses a page refresh, like direct-call permissions;
 roster grants reflect membership at the latest server roster serialization.
+Rosters are re-broadcast at least once a minute, so removing someone from a
+sender group stops their new transfers within about a minute, on both their own
+client and their recipients', without a reload.
 
 ## Sending and receiving
 
@@ -43,10 +46,12 @@ roster grants reflect membership at the latest server roster serialization.
    Save lazily obtains a disk-backed File; it does not rebuild the file in RAM.
    Temporary download object URLs are revoked by Discourse’s download helper.
    Sender completion waits for the receiver’s completion acknowledgement.
-6. **Dismiss** removes finished transfers. Normal cancellation, dismissal, and
+6. **Dismiss** removes a finished transfer; **Dismiss finished** in the panel
+   header removes all of them at once. Normal cancellation, dismissal, and
    leaving the room delete their temporary disk files, except that a file exported
-   by **Save file** is retained for a **30-second** grace period so an immediate Dismiss
-   or Leave does not invalidate the browser download. Files awaiting deletion remain
+   by **Save file** is retained for a grace period of **30 seconds plus one second per
+   16 MiB** (about 107 minutes for 100 GiB), so an immediate Dismiss or Leave does
+   not truncate the browser download. Files awaiting deletion remain
    charged against the receive-disk budget of **twice the current configured
    per-file maximum** until deletion succeeds. Save starts the download;
    it does not confirm that the browser has finished it. Saving does not
@@ -93,7 +98,23 @@ roster grants reflect membership at the latest server roster serialization.
   including initializing, active, completed, and retiring files until deletion.
   Browser storage quotas still apply, even when the configured limit is higher.
   Limits remain **four active incoming offers**, **one active transfer per peer**,
-  and **100 retained history entries**. Cancel or dismiss old transfers before
-  retrying when capacity is full.
+  and **100 history entries**. Finished entries without a saveable file are
+  dropped, oldest first, to make room, so only pending, active and unsaved
+  received files count toward that cap.
+- Offers are rate limited by the receiver to **5 per sender** and **20 in
+  total** per rolling minute. Excess offers are rejected without being listed.
+  Senders apply the same per-recipient limit locally and explain the refusal.
+  Receiver acknowledgements are coalesced to one per 64 KiB (or whenever the
+  write queue drains), and progress re-renders only on whole-percent changes.
+- A temporarily ineligible peer (for example while the roster is catching up)
+  or a congested control channel fails only the affected transfer; the data
+  channel stays open for later transfers. Protocol violations, such as bytes
+  before acceptance or malformed frames, still close the channel for the rest
+  of the connection.
+- If deleting a temporary file fails, it is retried after 5 seconds, 30 seconds
+  and 2 minutes while still counting toward the receive budget. After that, the
+  24-hour stale-file sweep owns the cleanup and the reservation is released.
+- The mobile app's downloader cannot stream from disk and cannot save files
+  larger than 25 MiB. Larger offers show a note to use a browser instead.
 - The UI consumes the live WebRTC service’s reactive `fileTransfers` array and
   consent/cancel/dismiss methods. It never handles data-channel protocol traffic.

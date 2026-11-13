@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { MEBIBYTE } from "../../lib/live/file-transfer-limits.js";
+import { FileTransferRateLimitError } from "../../lib/live/file-transfer-manager.js";
 
 export default class LiveSendFileModal extends Component {
   @service liveWebrtc;
@@ -40,8 +41,11 @@ export default class LiveSendFileModal extends Component {
     try {
       await this.liveWebrtc.sendFile(room.id, participant.id, file);
       this.args.closeModal();
-    } catch {
-      this.error = i18n("live.file_transfer.send_failed");
+    } catch (error) {
+      this.error =
+        error instanceof FileTransferRateLimitError
+          ? i18n("live.file_transfer.rate_limited")
+          : i18n("live.file_transfer.send_failed");
     } finally {
       this.sending = false;
     }

@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import openReceiveSink, {
+  SAVE_GRACE_BYTES_PER_MS,
   STALE_AFTER_MS,
   STORAGE_DIRECTORY,
 } from "discourse/plugins/live/discourse/lib/live/file-receive-sink";
@@ -266,6 +267,51 @@ module("Live | Unit | Lib | file-receive-sink", function (hooks) {
       this.locks.held.size,
       0,
       "orphan sweep can retry after lease release"
+    );
+  });
+
+  test("a failed deletion can be retried, and already-removed files count as deleted", async function (assert) {
+    const sink = await openReceiveSink("x", this.options);
+    const removeEntry = this.directory.removeEntry.bind(this.directory);
+    this.directory.removeEntry = async () => {
+      throw new Error("disk unavailable");
+    };
+    await assert.rejects(sink.discard());
+    this.directory.removeEntry = removeEntry;
+    await sink.discard();
+    assert.deepEqual(this.directory.removed, [this.namespace]);
+
+    const gone = await openReceiveSink("x", {
+      ...this.options,
+      randomUUID: () => "87654321-4321-4321-4321-cba987654321",
+    });
+    this.directory.removeEntry = async () => {
+      throw new DOMException("missing", "NotFoundError");
+    };
+    await gone.discard();
+    assert.strictEqual(this.locks.held.size, 0);
+  });
+
+  test("Save grace grows with the file size", async function (assert) {
+    let delay;
+    const sink = await openReceiveSink("x", {
+      ...this.options,
+      exportGraceMs: 30_000,
+      clock: () => this.now,
+      setTimer: (fn, ms) => {
+        delay = ms;
+        fn();
+      },
+      clearTimer: () => {},
+    });
+    const size = 64 * 1024;
+    await sink.write(new Uint8Array(size).buffer);
+    await sink.finish();
+    await sink.getFile();
+    await sink.discard();
+    assert.strictEqual(
+      delay,
+      30_000 + Math.ceil(size / SAVE_GRACE_BYTES_PER_MS)
     );
   });
 });

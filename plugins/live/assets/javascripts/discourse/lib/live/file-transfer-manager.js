@@ -12,6 +12,16 @@ const HIGH_WATER = 256 * 1024;
 const ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const TERMINAL = new Set(["completed", "rejected", "cancelled", "failed"]);
+const MAX_ENTRIES = 100;
+const ACK_INTERVAL = 64 * 1024;
+const DISCARD_RETRY_DELAYS = [5_000, 30_000, 120_000];
+export const OFFER_RATE_LIMIT = Object.freeze({
+  perPeer: 5,
+  total: 20,
+  windowMs: 60_000,
+});
+
+export class FileTransferRateLimitError extends Error {}
 
 // No signaling, URLs, downloads or execution: only explicitly accepted disk files.
 // Binary frames carry the transfer UUID, so delayed bytes from a cancelled
@@ -31,6 +41,10 @@ export default class FileTransferManager {
   #retained = new Map();
   #retiring = new Map();
   #sinkSizes = new WeakMap();
+  #offerLimit;
+  #now;
+  #incomingOffers = [];
+  #outgoingOffers = [];
 
   constructor({
     isEligible,
@@ -40,6 +54,8 @@ export default class FileTransferManager {
     timeoutMs = 120_000,
     getMaxFileSize = () => DEFAULT_MAX_FILE_SIZE,
     estimateStorage = () => globalThis.navigator?.storage?.estimate?.(),
+    offerLimit = OFFER_RATE_LIMIT,
+    now = () => Date.now(),
   }) {
     this.#eligible = isEligible;
     this.#timeout = timeoutMs;
@@ -48,6 +64,8 @@ export default class FileTransferManager {
     this.#openSink = openSink;
     this.#getMaxFileSize = getMaxFileSize;
     this.#estimateStorage = estimateStorage;
+    this.#offerLimit = offerLimit;
+    this.#now = now;
   }
 
   attach(roomId, userId, channel) {
@@ -60,15 +78,18 @@ export default class FileTransferManager {
     channel.binaryType = "arraybuffer";
     channel.onmessage = ({ data }) => {
       try {
+        // Roster updates can lag the data channel, so ineligibility ends the
+        // transfer but keeps the channel: it can't be recreated without a new
+        // peer connection.
         if (!this.#eligible(roomId, userId)) {
-          this.disconnect(roomId, userId);
+          this.#refuseIneligible(peer, data);
           return;
         }
         this.#receive(peer, data);
       } catch {
         const transfer = this.#active.get(key);
         if (transfer) {
-          this.#finish(transfer, "failed", "Invalid file transfer data");
+          this.#finish(transfer, "failed", "invalid_data");
           this.#control(peer, "cancel", transfer.entry.id);
         }
         this.disconnect(roomId, userId);
@@ -86,7 +107,7 @@ export default class FileTransferManager {
       this.#sendAllowed(roomId, userId) &&
       this.#peers.get(key)?.channel.readyState === "open" &&
       !this.#active.has(key) &&
-      this.transfers.length < 100
+      this.#hasRoom()
     );
   }
 
@@ -98,6 +119,11 @@ export default class FileTransferManager {
     ) {
       throw new Error("File transfer is unavailable or file is invalid");
     }
+    // Receivers enforce the same limit; checking here explains the refusal.
+    if (!this.#withinOfferLimit(this.#outgoingOffers, userId)) {
+      throw new FileTransferRateLimitError();
+    }
+    this.#outgoingOffers.push({ userId, at: this.#now() });
     const peer = this.#peers.get(this.#key(roomId, userId));
     const transfer = this.#create(
       peer,
@@ -145,7 +171,8 @@ export default class FileTransferManager {
       retainedBytes + retiringBytes + t.entry.size >
       2 * this.#maxFileSize()
     ) {
-      this.reject(id);
+      this.#control(t.peer, "reject", id);
+      this.#finish(t, "failed", "storage_budget_exceeded");
       return;
     }
     this.#update(t, { status: "initializing" });
@@ -168,12 +195,12 @@ export default class FileTransferManager {
         return;
       }
       const sink = await this.#openSink(t.entry.name);
+      this.#sinkSizes.set(sink, t.entry.size);
       if (!this.#isActive(t)) {
-        await sink.discard();
+        this.#discard(sink);
         return;
       }
       t.sink = sink;
-      this.#sinkSizes.set(sink, t.entry.size);
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
         !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
@@ -216,6 +243,14 @@ export default class FileTransferManager {
     this.transfers = this.transfers.filter((entry) => entry.id !== id);
   }
 
+  dismissFinished() {
+    for (const entry of this.transfers) {
+      if (TERMINAL.has(entry.status)) {
+        this.dismiss(entry.id);
+      }
+    }
+  }
+
   async getReceivedFile(id) {
     const entry = this.transfers.find((e) => e.id === id);
     const sink = this.#retained.get(id);
@@ -235,7 +270,7 @@ export default class FileTransferManager {
     this.#peers.delete(key);
     const t = this.#active.get(key);
     if (t) {
-      this.#finish(t, "failed", "Peer disconnected");
+      this.#finish(t, "failed", "peer_disconnected");
     }
     if (peer) {
       this.channelsRevision++;
@@ -305,6 +340,50 @@ export default class FileTransferManager {
     return unwrittenBytes <= Math.max(0, quota - usage);
   }
 
+  #refuseIneligible(peer, data) {
+    const t = this.#active.get(peer.key);
+    if (t) {
+      this.#control(peer, "cancel", t.entry.id);
+      this.#finish(t, "cancelled");
+      return;
+    }
+    if (typeof data !== "string" || data.length > 2048) {
+      return;
+    }
+    try {
+      const { type, id } = JSON.parse(data) || {};
+      if (type === "offer" && typeof id === "string" && ID_PATTERN.test(id)) {
+        this.#control(peer, "reject", id);
+      }
+    } catch {
+      // Nothing to answer.
+    }
+  }
+
+  // Sliding window; refused offers aren't recorded so a flood can't grow it.
+  #withinOfferLimit(log, userId) {
+    const { perPeer, total, windowMs } = this.#offerLimit;
+    const since = this.#now() - windowMs;
+    while (log.length && log[0].at <= since) {
+      log.shift();
+    }
+    const fromPeer = log.filter((offer) => offer.userId === userId).length;
+    return fromPeer < perPeer && log.length < total;
+  }
+
+  // Finished entries without a retained file can be dropped to make room;
+  // only pending, active and saveable entries count toward the cap.
+  #evictable(entry) {
+    return TERMINAL.has(entry.status) && !entry.hasFile;
+  }
+
+  #hasRoom() {
+    return (
+      this.transfers.filter((entry) => !this.#evictable(entry)).length <
+      MAX_ENTRIES
+    );
+  }
+
   #key(roomId, userId) {
     return `${roomId}:${userId}`;
   }
@@ -352,6 +431,7 @@ export default class FileTransferManager {
       entry,
       offset: 0,
       acknowledged: 0,
+      lastAck: 0,
       received: 0,
       pendingBytes: 0,
       queue: [],
@@ -359,7 +439,15 @@ export default class FileTransferManager {
       timer: null,
     };
     this.#active.set(peer.key, t);
-    this.transfers = [...this.transfers, entry];
+    let transfers = this.transfers;
+    while (transfers.length >= MAX_ENTRIES) {
+      const oldest = transfers.find((e) => this.#evictable(e));
+      if (!oldest) {
+        break;
+      }
+      transfers = transfers.filter((e) => e !== oldest);
+    }
+    this.transfers = [...transfers, entry];
     this.#arm(t);
     return t;
   }
@@ -375,11 +463,22 @@ export default class FileTransferManager {
     );
   }
 
+  // Re-rendering on every chunk is costly for large files; whole percents
+  // are all the UI shows.
+  #progress(t, progress) {
+    if (
+      progress === 1 ||
+      Math.floor(progress * 100) !== Math.floor(t.entry.progress * 100)
+    ) {
+      this.#update(t, { progress });
+    }
+  }
+
   #arm(t) {
     clearTimeout(t.timer);
     t.timer = setTimeout(() => {
       this.#control(t.peer, "cancel", t.entry.id);
-      this.#finish(t, "failed", "File transfer timed out");
+      this.#finish(t, "failed", "timed_out");
     }, this.#timeout);
   }
 
@@ -387,18 +486,28 @@ export default class FileTransferManager {
     return this.#active.get(t.peer.key) === t;
   }
 
-  #discard(sink) {
+  #discard(sink, attempt = 0) {
     // A cleanup failure must not resurrect an entry or cause an unhandled rejection.
-    if (sink && !this.#retiring.has(sink)) {
-      this.#retiring.set(sink, this.#sinkSizes.get(sink) || 0);
-      Promise.resolve()
-        .then(() => sink.discard())
-        .then(() => this.#retiring.delete(sink))
-        .catch(() => {
-          // Failed deletion is not reclaimed disk space. Keep its reservation
-          // until this manager is gone; stale orphan cleanup can retry later.
-        });
+    if (!sink || (attempt === 0 && this.#retiring.has(sink))) {
+      return;
     }
+    this.#retiring.set(sink, this.#sinkSizes.get(sink) || 0);
+    Promise.resolve()
+      .then(() => sink.discard())
+      .then(() => this.#retiring.delete(sink))
+      .catch(() => {
+        // Failed deletion is not reclaimed disk space, so keep the reservation
+        // while retrying. After that, the stale-file sweep owns the cleanup and
+        // the reservation is dropped so it can't block receives indefinitely.
+        if (attempt < DISCARD_RETRY_DELAYS.length) {
+          setTimeout(
+            () => this.#discard(sink, attempt + 1),
+            DISCARD_RETRY_DELAYS[attempt]
+          );
+        } else {
+          this.#retiring.delete(sink);
+        }
+      });
   }
 
   #finish(t, status, error = null) {
@@ -423,19 +532,26 @@ export default class FileTransferManager {
   }
 
   #control(peer, type, id, metadata = {}) {
+    let congested = false;
     try {
       // Bound responses too: a remote offer flood must not grow our SCTP queue.
       if (peer.channel.bufferedAmount > HIGH_WATER * 2) {
+        congested = true;
         throw new Error("Control channel is congested");
       }
       peer.channel.send(JSON.stringify({ type, id, ...metadata }));
       return true;
     } catch {
+      // Only the transfer the message belongs to fails, so a peer can't use
+      // congestion to end an unrelated transfer.
       const t = this.#active.get(peer.key);
-      if (t) {
-        this.#finish(t, "failed", "Data channel unavailable");
+      if (t?.entry.id === id) {
+        this.#finish(t, "failed", "channel_unavailable");
       }
-      this.disconnect(peer.roomId, peer.userId);
+      // Congestion clears on its own; a channel that can't send is gone.
+      if (!congested) {
+        this.disconnect(peer.roomId, peer.userId);
+      }
       return false;
     }
   }
@@ -489,6 +605,11 @@ export default class FileTransferManager {
     }
     const { type, id, name, size } = message;
     if (type === "offer") {
+      if (!this.#withinOfferLimit(this.#incomingOffers, peer.userId)) {
+        this.#control(peer, "reject", id);
+        return;
+      }
+      this.#incomingOffers.push({ userId: peer.userId, at: this.#now() });
       const incomingCount = [...this.#active.values()].filter(
         (transfer) => transfer.entry.direction === "incoming"
       ).length;
@@ -496,7 +617,7 @@ export default class FileTransferManager {
         !this.#receiveAllowed(peer.roomId, peer.userId) ||
         t ||
         incomingCount >= 4 ||
-        this.transfers.length >= 100 ||
+        !this.#hasRoom() ||
         this.transfers.some((entry) => entry.id === id) ||
         !this.#validMetadata(name, size)
       ) {
@@ -537,7 +658,7 @@ export default class FileTransferManager {
         throw new Error("Invalid receive acknowledgement");
       }
       t.acknowledged = message.offset;
-      this.#update(t, { progress: t.acknowledged / t.entry.size });
+      this.#progress(t, t.acknowledged / t.entry.size);
       this.#arm(t);
       this.#pump(t);
     } else if (type === "complete" && t.entry.status === "transferring") {
@@ -585,10 +706,15 @@ export default class FileTransferManager {
         }
         t.offset += chunk.byteLength;
         t.pendingBytes -= chunk.byteLength;
-        this.#update(t, { progress: t.offset / t.entry.size });
+        this.#progress(t, t.offset / t.entry.size);
         this.#arm(t);
-        if (!this.#control(t.peer, "ack", t.entry.id, { offset: t.offset })) {
-          return;
+        // Ack whenever the queue drains so the sender never stalls on a
+        // coalesced ack.
+        if (t.queue.length === 0 || t.offset - t.lastAck >= ACK_INTERVAL) {
+          if (!this.#control(t.peer, "ack", t.entry.id, { offset: t.offset })) {
+            return;
+          }
+          t.lastAck = t.offset;
         }
       }
     } catch {
@@ -686,7 +812,7 @@ export default class FileTransferManager {
     } catch {
       if (!TERMINAL.has(t.entry.status)) {
         this.#control(t.peer, "cancel", t.entry.id);
-        this.#finish(t, "failed", "Could not send file");
+        this.#finish(t, "failed", "send_failed");
       }
     } finally {
       t.pumping = false;

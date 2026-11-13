@@ -6,6 +6,7 @@ import {
 } from "discourse/plugins/live/discourse/lib/live/file-transfer-limits";
 import FileTransferManager, {
   CHUNK_SIZE,
+  FileTransferRateLimitError,
   RECEIVE_WINDOW,
 } from "discourse/plugins/live/discourse/lib/live/file-transfer-manager";
 
@@ -185,30 +186,61 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     assert.strictEqual(this.sender.transfers[0].status, "cancelled");
   });
 
-  test("control-channel congestion fails closed instead of queuing cancellation", async function (assert) {
+  test("control-channel congestion fails the transfer instead of queuing cancellation", async function (assert) {
     const id = await this.offer();
     this.a.bufferedAmount = 1024 * 1024;
     await this.receiver.accept(id);
     this.sender.cancel(id);
     assert.strictEqual(this.sender.transfers[0].status, "failed");
+    assert.strictEqual(this.sender.transfers[0].error, "channel_unavailable");
     assert.strictEqual(
-      this.sender.transfers[0].error,
-      "Data channel unavailable"
+      this.a.readyState,
+      "open",
+      "congestion is transient, so the channel survives"
     );
-    assert.strictEqual(this.a.readyState, "closed");
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
+  });
+
+  test("congestion while refusing an offer leaves an unrelated transfer running", async function (assert) {
+    const id = await this.offer();
+    // Hold the sender's bytes back so the receive stays in progress.
+    this.a.bufferedAmount = 1024 * 1024;
+    await this.receiver.accept(id);
+    this.b.bufferedAmount = 1024 * 1024;
+    this.message(this.b, "offer", crypto.randomUUID(), { name: "x", size: 1 });
+    assert.strictEqual(this.receiver.transfers[0].status, "transferring");
+    assert.strictEqual(this.b.readyState, "open");
   });
 
   test("disabled or non-participant eligibility blocks send and incoming offers", async function (assert) {
     this.eligible = false;
     assert.false(this.sender.canSend(1, 2));
     assert.throws(() => this.sender.send(1, 2, new File(["x"], "x.txt")));
-    this.message(this.b, "offer", crypto.randomUUID(), {
-      name: "x.txt",
-      size: 1,
-    });
+    const id = crypto.randomUUID();
+    this.message(this.b, "offer", id, { name: "x.txt", size: 1 });
     assert.deepEqual(this.receiver.transfers, []);
-    assert.strictEqual(this.b.readyState, "closed");
+    assert.deepEqual(JSON.parse(this.b.sent.at(-1)), { type: "reject", id });
+    assert.strictEqual(
+      this.b.readyState,
+      "open",
+      "roster lag must not permanently close the channel"
+    );
+    this.eligible = true;
+    await this.offer();
+    assert.strictEqual(this.receiver.transfers[0].status, "pending");
+  });
+
+  test("losing eligibility mid-transfer cancels it but keeps the channel", async function (assert) {
+    const id = crypto.randomUUID();
+    this.message(this.b, "offer", id, { name: "x", size: CHUNK_SIZE * 2 });
+    await this.receiver.accept(id);
+    this.eligible = false;
+    const frame = new Uint8Array(36 + CHUNK_SIZE);
+    frame.set(new TextEncoder().encode(id));
+    this.b.onmessage({ data: frame.buffer });
+    assert.strictEqual(this.receiver.transfers[0].status, "cancelled");
+    assert.strictEqual(this.b.readyState, "open");
+    await waitUntil(() => this.sinks[0].discarded);
   });
 
   test("validates metadata and bounds pending incoming offers globally", async function (assert) {
@@ -249,7 +281,11 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     }
     assert.deepEqual(
       this.receiver.transfers.map((t) => t.status),
-      ["transferring", "transferring", "rejected"]
+      ["transferring", "transferring", "failed"]
+    );
+    assert.strictEqual(
+      this.receiver.transfers[2].error,
+      "storage_budget_exceeded"
     );
   });
 
@@ -326,7 +362,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     }
     assert.deepEqual(
       this.receiver.transfers.map((entry) => entry.status),
-      ["completed", "transferring", "rejected"]
+      ["completed", "transferring", "failed"]
     );
     this.receiver.dismiss(id);
     assert.false(this.receiver.transfers.some((entry) => entry.hasFile));
@@ -429,18 +465,92 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     );
   });
 
-  test("retained history is bounded even when a peer floods offers", async function (assert) {
-    for (let i = 0; i < 110; i++) {
+  test("offers are rate limited per peer and in total", async function (assert) {
+    let now = 0;
+    this.receiver.destroy();
+    this.receiver = createManager({
+      isEligible: () => true,
+      offerLimit: { perPeer: 2, total: 3, windowMs: 1000 },
+      now: () => now,
+    });
+    this.receiver.attach(1, 1, this.b);
+    const offer = (channel) => {
       const id = crypto.randomUUID();
-      this.message(this.b, "offer", id, { name: "x", size: 0 });
+      this.message(channel, "offer", id, { name: "x", size: 0 });
+      this.receiver.reject(id);
+      return id;
+    };
+    offer(this.b);
+    offer(this.b);
+    const limited = offer(this.b);
+    assert.strictEqual(this.receiver.transfers.length, 2);
+    assert.deepEqual(JSON.parse(this.b.sent.at(-1)), {
+      type: "reject",
+      id: limited,
+    });
+    const other = new Channel();
+    this.receiver.attach(1, 3, other);
+    offer(other);
+    offer(other);
+    assert.strictEqual(this.receiver.transfers.length, 3, "total limit");
+    now = 1001;
+    offer(this.b);
+    assert.strictEqual(this.receiver.transfers.length, 4, "window slides");
+    assert.strictEqual(this.b.readyState, "open");
+  });
+
+  test("senders are refused locally past the offer limit", async function (assert) {
+    let now = 0;
+    this.sender.destroy();
+    this.sender = createManager({
+      isEligible: () => true,
+      offerLimit: { perPeer: 1, total: 5, windowMs: 1000 },
+      now: () => now,
+    });
+    this.sender.attach(1, 2, this.a);
+    const id = this.sender.send(1, 2, new File(["a"], "a.txt"));
+    this.sender.cancel(id);
+    assert.throws(
+      () => this.sender.send(1, 2, new File(["b"], "b.txt")),
+      FileTransferRateLimitError
+    );
+    now = 1001;
+    assert.strictEqual(
+      typeof this.sender.send(1, 2, new File(["c"], "c.txt")),
+      "string"
+    );
+  });
+
+  test("finished entries without a file make room instead of blocking new offers", async function (assert) {
+    let now = 0;
+    this.receiver.destroy();
+    this.receiver = createManager({
+      isEligible: () => true,
+      openReceiveSink: this.openSink,
+      now: () => now,
+    });
+    for (let userId = 10; userId < 115; userId++) {
+      now += 60_001;
+      const channel = new Channel();
+      this.receiver.attach(1, userId, channel);
+      const id = crypto.randomUUID();
+      this.message(channel, "offer", id, { name: "x", size: 0 });
       this.receiver.reject(id);
     }
     assert.strictEqual(this.receiver.transfers.length, 100);
-    this.receiver.dismiss(this.receiver.transfers[0].id);
+    assert.true(this.receiver.canSend(1, 114));
     const id = crypto.randomUUID();
-    this.message(this.b, "offer", id, { name: "x", size: 0 });
+    const channel = new Channel();
+    this.receiver.attach(1, 200, channel);
+    this.message(channel, "offer", id, { name: "x", size: 0 });
     assert.strictEqual(this.receiver.transfers.length, 100);
     assert.strictEqual(this.receiver.transfers.at(-1).status, "pending");
+    this.receiver.dismissFinished();
+    assert.deepEqual(
+      this.receiver.transfers.map((entry) => entry.id),
+      [id],
+      "dismissing finished entries keeps active ones"
+    );
   });
 
   test("channel readiness changes invalidate reactive availability and close cleans active state", async function (assert) {
@@ -469,10 +579,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     this.receiver.attach(1, 1, this.b);
     this.message(this.b, "offer", crypto.randomUUID(), { name: "x", size: 1 });
     await waitUntil(() => this.receiver.transfers[0].status === "failed");
-    assert.strictEqual(
-      this.receiver.transfers[0].error,
-      "File transfer timed out"
-    );
+    assert.strictEqual(this.receiver.transfers[0].error, "timed_out");
     await this.offer();
     this.sender.disconnect(1, 2);
     assert.strictEqual(this.sender.transfers[0].status, "failed");
@@ -714,7 +821,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     }
     assert.strictEqual(
       this.receiver.transfers.at(-1).status,
-      "rejected",
+      "failed",
       "two retiring files still reserve 200 MiB"
     );
     deletion.resolve();
@@ -1048,7 +1155,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       }
       assert.deepEqual(
         this.receiver.transfers.map((entry) => entry.status),
-        ["transferring", "transferring", "rejected"],
+        ["transferring", "transferring", "failed"],
         "disk reservations scale with the current configured maximum"
       );
       assert.strictEqual(

@@ -3,7 +3,9 @@ import { render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ModalContainer from "discourse/components/modal-container";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 import LiveSendFileModal from "discourse/plugins/live/discourse/components/modal/live-send-file";
+import { FileTransferRateLimitError } from "discourse/plugins/live/discourse/lib/live/file-transfer-manager";
 
 class LiveWebrtcStub extends Service {
   available = true;
@@ -15,6 +17,9 @@ class LiveWebrtcStub extends Service {
   }
 
   sendFile(...args) {
+    if (this.sendError) {
+      throw this.sendError;
+    }
     this.calls.push(args);
   }
 }
@@ -102,5 +107,14 @@ module("Integration | Component | LiveSendFileModal", function (hooks) {
     });
     assert.dom("[role=alert]").exists();
     assert.strictEqual(this.webrtc.calls.length, 0);
+  });
+
+  test("explains when the sender is rate limited", async function (assert) {
+    this.webrtc.sendError = new FileTransferRateLimitError();
+    await triggerEvent("input[type=file]", "change", {
+      files: [new File(["hi"], "hi.txt")],
+    });
+    assert.dom("[role=alert]").hasText(i18n("live.file_transfer.rate_limited"));
+    assert.dom(".live-send-file-modal").exists();
   });
 });

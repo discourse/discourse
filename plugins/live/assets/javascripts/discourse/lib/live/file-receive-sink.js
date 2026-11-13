@@ -1,5 +1,8 @@
 // Origin-private temporary files only. Never fall back to whole-file RAM.
 export const SAVE_GRACE_MS = 30_000;
+// Extra grace per byte, assuming a conservative 16 MiB/s browser copy, so a
+// large Save isn't truncated by deletion (about 107 minutes for 100 GiB).
+export const SAVE_GRACE_BYTES_PER_MS = (16 * 1024 * 1024) / 1000;
 export const STORAGE_DIRECTORY = "live-file-transfers";
 export const STALE_AFTER_MS = 24 * 60 * 60 * 1000;
 const NAMESPACE = /^(\d{13})-[0-9a-f-]{36}$/;
@@ -109,14 +112,20 @@ export class ReceiveDiskSink {
       throw new Error("Received disk file was discarded");
     }
     this.#exportedUntil =
-      this.#retention.clock() + this.#retention.exportGraceMs;
+      this.#retention.clock() +
+      this.#retention.exportGraceMs +
+      Math.ceil(file.size / SAVE_GRACE_BYTES_PER_MS);
     return file;
   }
 
   discard() {
     this.#discarded = true;
     if (!this.#cleanup) {
-      this.#cleanup = this.#remove();
+      // A failed removal can be retried by calling discard again.
+      this.#cleanup = this.#remove().catch((error) => {
+        this.#cleanup = null;
+        throw error;
+      });
     }
     return this.#cleanup;
   }
@@ -169,6 +178,11 @@ export class ReceiveDiskSink {
     }
     try {
       await this.#directory.removeEntry(this.#namespace, { recursive: true });
+    } catch (error) {
+      // A retry may find the files already gone (another tab's stale sweep).
+      if (error?.name !== "NotFoundError") {
+        throw error;
+      }
     } finally {
       // Removal failures propagate: the manager must not claim reclaimed space.
       if (this.#deleteTimer !== null) {

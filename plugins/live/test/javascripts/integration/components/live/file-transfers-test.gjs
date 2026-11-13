@@ -33,6 +33,10 @@ class LiveWebrtcStub extends Service {
       (transfer) => transfer.id !== id
     );
   }
+
+  dismissFinishedFileTransfers() {
+    this.calls.push(["dismissFinished"]);
+  }
 }
 
 class LiveRoomsStub extends Service {
@@ -172,6 +176,12 @@ module("Integration | Component | LiveFileTransfers", function (hooks) {
       "storage_unavailable",
       "storage_failed",
       "storage_insufficient",
+      "storage_budget_exceeded",
+      "peer_disconnected",
+      "timed_out",
+      "invalid_data",
+      "channel_unavailable",
+      "send_failed",
     ]) {
       this.webrtc.fileTransfers = [
         { ...this.transfer, status: "failed", error: code },
@@ -242,5 +252,25 @@ module("Integration | Component | LiveFileTransfers", function (hooks) {
     );
     cleanup();
     assert.true(revoke.calledOnceWithExactly("blob:test-file-transfer"));
+  });
+
+  test("finished transfers can be dismissed together", async function (assert) {
+    await render(<template><LiveFileTransfers /></template>);
+    assert.dom(".live-file-transfers__dismiss-finished").doesNotExist();
+    this.webrtc.fileTransfers = [
+      this.transfer,
+      { ...this.transfer, id: "transfer-2", status: "rejected" },
+    ];
+    await settled();
+    await click(".live-file-transfers__dismiss-finished");
+    assert.deepEqual(this.webrtc.calls, [["dismissFinished"]]);
+  });
+
+  test("names the peer when the transfer carries a string user id", async function (assert) {
+    this.webrtc.fileTransfers = [{ ...this.transfer, userId: "2" }];
+    await render(<template><LiveFileTransfers /></template>);
+    assert
+      .dom(".live-file-transfer__peer")
+      .includesText(i18n("live.file_transfer.incoming", { username: "bob" }));
   });
 });

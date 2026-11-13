@@ -612,6 +612,15 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       this.subject.canSendFile(1, 2),
       "recipient need not have sender permission"
     );
+    const self = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === this.currentUser.id);
+    self.can_send_files = false;
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "a later roster revokes a stale page-load permission"
+    );
+    self.can_send_files = true;
     const id = this.subject.sendFile(1, 2, new File(["x"], "x.txt"));
     assert.strictEqual(
       this.subject.fileTransfers[0].status,

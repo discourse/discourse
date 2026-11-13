@@ -2,10 +2,26 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { deliverBlobDownload } from "discourse/lib/download-blob";
+import {
+  deliverBlobDownload,
+  MAX_BRIDGED_DOWNLOAD_BYTES,
+} from "discourse/lib/download-blob";
+import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
 import { safeTransferFilename } from "../../lib/live/file-transfer-ui.js";
+
+const KNOWN_ERRORS = new Set([
+  "storage_unavailable",
+  "storage_failed",
+  "storage_insufficient",
+  "storage_budget_exceeded",
+  "peer_disconnected",
+  "timed_out",
+  "invalid_data",
+  "channel_unavailable",
+  "send_failed",
+]);
 
 export default class LiveFileTransfer extends Component {
   @service liveWebrtc;
@@ -36,7 +52,7 @@ export default class LiveFileTransfer extends Component {
   get peer() {
     const transfer = this.args.transfer;
     const participant = this.room?.active_participants?.find(
-      (user) => user.id === transfer.userId
+      (user) => Number(user.id) === Number(transfer.userId)
     );
     const username =
       participant?.username ||
@@ -50,16 +66,16 @@ export default class LiveFileTransfer extends Component {
 
   get transferError() {
     const code = this.args.transfer.error;
-    if (
-      [
-        "storage_unavailable",
-        "storage_failed",
-        "storage_insufficient",
-      ].includes(code)
-    ) {
-      return i18n(`live.file_transfer.${code}`);
-    }
-    return null;
+    return KNOWN_ERRORS.has(code) ? i18n(`live.file_transfer.${code}`) : null;
+  }
+
+  // The mobile app's downloader can't stream from disk, so it has a size cap.
+  get tooLargeForApp() {
+    return (
+      this.args.transfer.direction === "incoming" &&
+      this.args.transfer.size > MAX_BRIDGED_DOWNLOAD_BYTES &&
+      attachmentDownloadStrategy() === "bridge"
+    );
   }
 
   get incomingPending() {
@@ -150,6 +166,11 @@ export default class LiveFileTransfer extends Component {
       {{#if this.incomingPending}}
         <p class="live-file-transfer__safety">{{i18n
             "live.file_transfer.safety"
+          }}</p>
+      {{/if}}
+      {{#if this.tooLargeForApp}}
+        <p class="live-file-transfer__app-limit">{{i18n
+            "live.file_transfer.too_large_for_app"
           }}</p>
       {{/if}}
       <div class="live-file-transfer__actions">

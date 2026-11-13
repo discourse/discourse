@@ -820,6 +820,10 @@ export default class LiveWebrtcService extends Service {
     this.#fileTransfers.dismiss(id);
   }
 
+  dismissFinishedFileTransfers() {
+    this.#fileTransfers.dismissFinished();
+  }
+
   // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
   // server connection is owned by the SFU client library.
   canDiagnoseConnection(roomId) {
@@ -1621,9 +1625,17 @@ export default class LiveWebrtcService extends Service {
     );
   }
 
+  // The serialized flag is fixed at page load, but rosters are re-broadcast at
+  // least every minute, so a revocation reaches the sender without a reload.
   #canInitiateFileTransfer(roomId, userId) {
+    const self = this.liveRooms
+      ?.roomById(roomId)
+      ?.active_participants?.find(
+        (participant) => Number(participant.id) === Number(this.currentUser?.id)
+      );
     return !!(
       this.currentUser?.live_can_send_files &&
+      self?.can_send_files !== false &&
       this.#fileTransferEligible(roomId, userId)
     );
   }

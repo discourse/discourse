@@ -20,6 +20,15 @@ export default class LiveFileTransfers extends Component {
     );
   }
 
+  get hasFinished() {
+    return this.liveWebrtc.fileTransfers.some(
+      (transfer) =>
+        !["pending", "waiting", "initializing", "transferring"].includes(
+          transfer.status
+        )
+    );
+  }
+
   get expanded() {
     // New offers need attention, but progress updates should not undo the
     // user's choice to collapse offers they have already seen.
@@ -38,6 +47,11 @@ export default class LiveFileTransfers extends Component {
     this.collapsed = collapse;
   }
 
+  @action
+  dismissFinished() {
+    this.liveWebrtc.dismissFinishedFileTransfers();
+  }
+
   <template>
     {{#if this.liveWebrtc.fileTransfers.length}}
       <section
@@ -52,6 +66,13 @@ export default class LiveFileTransfers extends Component {
                 count=this.pendingOffers.length
               }}</span>
           </div>
+          {{#if this.hasFinished}}
+            <DButton
+              class="live-file-transfers__dismiss-finished"
+              @action={{this.dismissFinished}}
+              @label="live.file_transfer.dismiss_finished"
+            />
+          {{/if}}
           <DButton
             aria-controls="live-file-transfers-list"
             aria-expanded={{if this.expanded "true" "false"}}
