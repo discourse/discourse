@@ -77,6 +77,7 @@ import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/a
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { clearAdditionalUserNavSidebarLinks } from "discourse/lib/sidebar/user-nav-sidebar";
+import { resetTagSourceCache } from "discourse/lib/tag-source";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -239,6 +240,7 @@ export function testCleanup(app) {
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetCategoryTagSearchCache();
+  resetTagSourceCache();
   Category.clearAsyncSearchCache();
   destroyUserStatuses();
   resetHighestReadCache();

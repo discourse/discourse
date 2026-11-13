@@ -286,6 +286,7 @@ async function openDraft(owner, draft) {
       ...draft,
     }),
   });
+  await settled();
 }
 
 const SAVED = {
