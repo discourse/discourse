@@ -72,6 +72,18 @@ import { applyVoiceQuality } from "../../lib/live/video-quality.js";
 // Pre-rename key, kept so saved preferences survive.
 const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
 
+function offerSenderIds(signalPayloads) {
+  return new Set(
+    signalPayloads
+      .filter((payload) =>
+        (payload.events ?? [payload.data]).some(
+          (event) => event?.type === "offer"
+        )
+      )
+      .map((payload) => Number(payload.sender_id))
+  );
+}
+
 export default class LiveWebrtcService extends Service {
   @service currentUser;
   @service keyValueStore;
@@ -956,14 +968,16 @@ export default class LiveWebrtcService extends Service {
       response?.room?.active_participants;
     this.#connectingParticipantSnapshots.delete(room.id);
 
-    if (latestParticipants) {
-      await this.#roster.handleParticipants(room.id, {
-        participants: latestParticipants,
-      });
-    }
-
     const queuedSignals = this.#connectingSignalQueue.get(room.id) || [];
     this.#connectingSignalQueue.delete(room.id);
+
+    if (latestParticipants) {
+      await this.#roster.handleParticipants(
+        room.id,
+        { participants: latestParticipants },
+        { offeringPeerIds: offerSenderIds(queuedSignals) }
+      );
+    }
 
     if (this.#isMeshRoom(room.id)) {
       for (const payload of queuedSignals) {
