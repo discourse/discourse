@@ -140,6 +140,14 @@ RSpec.describe Blog::Article::List do
         expect(result.author).to eq(author)
         expect(result.listing[:publications]).to eq([newer_publication, featured_publication])
       end
+
+      it "includes articles they co-wrote" do
+        older_publication.update_columns(co_author_ids: [author.id])
+
+        expect(result.listing[:publications]).to eq(
+          [newer_publication, featured_publication, older_publication],
+        )
+      end
     end
 
     context "when searching" do

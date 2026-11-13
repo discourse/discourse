@@ -36,6 +36,22 @@ RSpec.describe Blog::ArticleMetadata do
       expect(JSON.parse(metadata.schema)).not_to have_key("author")
     end
 
+    it "lists every author when the article has co-authors" do
+      co_author = Fabricate(:user, name: "Ada")
+      credits = Blog::Revision.co_author_credits([co_author.id])
+      revision = Blog::Revision.new(data: article.data.merge("co_authors" => credits))
+      metadata = described_class.new(publication, revision:, description: nil)
+
+      expect(JSON.parse(metadata.schema)["author"]).to contain_exactly(
+        include("name" => article.data["author_name"]),
+        {
+          "@type" => "Person",
+          "name" => "Ada",
+          "url" => "https://blog.example.com/author/#{co_author.username_lower}",
+        },
+      )
+    end
+
     it "includes the article image" do
       revision = Blog::Revision.new(data: article.data.merge("image_url" => "/uploads/cover.png"))
       metadata = described_class.new(publication, revision:, description: nil)

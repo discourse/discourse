@@ -15,8 +15,10 @@ module ::Blog
       canonical_url
       cover_upload_id
       cover_alt
+      co_author_ids
     ].freeze
     MAX_PATH_LENGTH = 240
+    MAX_CO_AUTHORS = 10
     # Encoded "+" and ",", and encoded UTF-8 bytes, so imported paths keep non-ASCII slugs.
     # Other encoded ASCII stays out: it could hide a separator, a dot segment or a control character.
     PATH_SEGMENT = /(?:[a-zA-Z0-9_+.,-]|%2[bBcC]|%[89a-fA-F]\h)+/
@@ -58,6 +60,7 @@ module ::Blog
     validate :absolute_canonical_url
     validates :cover_alt, length: { maximum: 500 }, exclusion: { in: [nil] }
     validate :image_cover_upload
+    validate :credited_co_authors, if: :co_author_ids_changed?
     validates :featured, inclusion: { in: [true, false] }
     validate :available_path
     validate :decodable_path
@@ -193,6 +196,7 @@ module ::Blog
         "cover" =>
           metadata["cover_upload_id"].to_s != live["cover_upload_id"].to_s ||
             metadata["cover_alt"].to_s != live["cover_alt"].to_s,
+        "co_authors" => Array(metadata["co_author_ids"]) != Array(live["co_author_ids"]),
         "featured" => metadata["featured"] != live["featured"],
         "tags" => source.tags.visible(Guardian.new).pluck(:name).sort != Array(live["tags"]).sort,
         "published_at" => draft_date_changed?(metadata["published_at"]),
@@ -342,6 +346,7 @@ module ::Blog
         canonical_url: data["canonical_url"].to_s,
         cover_upload_id: data["cover_upload_id"].presence,
         cover_alt: data["cover_alt"].to_s,
+        co_author_ids: Array(data["co_author_ids"]),
         featured: data["featured"],
         published_at: release_date(revision),
         last_published_at: Time.current,
@@ -396,8 +401,10 @@ module ::Blog
         cover_upload_id
         cover_alt
       ]
-      submitted_revision.data.values_at(*compared).map(&:to_s) !=
-        published_revision.data.values_at(*compared).map(&:to_s)
+      submitted = submitted_revision.data
+      live = published_revision.data
+      submitted.values_at(*compared).map(&:to_s) != live.values_at(*compared).map(&:to_s) ||
+        Array(submitted["co_author_ids"]) != Array(live["co_author_ids"])
     end
 
     def initialize_topics
@@ -451,6 +458,19 @@ module ::Blog
       errors.add(:cover_upload_id, :invalid)
     end
 
+    # The topic's owner is already credited, and only real users have author pages.
+    def credited_co_authors
+      return if valid_co_authors?
+      errors.add(:co_author_ids, I18n.t("blog.errors.co_authors_invalid", count: MAX_CO_AUTHORS))
+    end
+
+    def valid_co_authors?
+      ids = co_author_ids
+      return false if ids.size > MAX_CO_AUTHORS || ids.uniq != ids
+      return false if ids.include?(editable_topic&.user_id)
+      User.human_users.where(id: ids).count == ids.size
+    end
+
     def retain_cover_uploads
       UploadReference.ensure_exist!(
         upload_ids: [cover_upload_id, draft_metadata["cover_upload_id"]],
@@ -488,6 +508,7 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  canonical_url         :string           default(""), not null
+#  co_author_ids         :integer          default([]), not null, is an Array
 #  cooked                :text
 #  cover_alt             :string           default(""), not null
 #  draft_metadata        :jsonb            not null

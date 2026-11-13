@@ -479,6 +479,26 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).not_to include("Writes about")
     end
 
+    it "credits co-authors in the byline and lists the article on their author pages" do
+      co_author = Fabricate(:user, name: "Bea Coauthor")
+      update_blog_metadata(publication, admin, co_authors: co_author.username)
+      publish_blog_draft(publication, admin)
+      co_author_url = "https://blog.example.com/author/#{co_author.username_lower}"
+
+      [publication.url, "https://blog.example.com/"].each do |url|
+        get url
+        link = Nokogiri.HTML5(response.body).at_css(%(a[href="#{co_author_url}"]))
+        expect(link.text).to eq("Bea Coauthor")
+        expect(link.parent.text).to include(
+          "#{publication.article.data["author_name"]} and Bea Coauthor",
+        )
+      end
+
+      get co_author_url
+      expect(response.status).to eq(200)
+      expect(response.body).to include(publication.url)
+    end
+
     it "shows no byline for an article the system user owns" do
       publication.discussion_topic.update!(user: Discourse.system_user)
 

@@ -416,6 +416,7 @@ acceptance("Blog publication panel", function (needs) {
       ...publication,
       cover_upload_id: 12,
       cover_url: "/images/discourse-logo-sketch.png",
+      co_authors: ["ada", "bob"],
     };
     pretender.put("/blog-editor/publications/280.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
@@ -447,6 +448,11 @@ acceptance("Blog publication panel", function (needs) {
       assert.false(
         data.has("publication[cover_url]"),
         "the cover preview URL is not sent"
+      );
+      assert.strictEqual(
+        data.get("publication[co_authors]"),
+        "ada,bob",
+        "co-authors are sent as one list of usernames"
       );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);

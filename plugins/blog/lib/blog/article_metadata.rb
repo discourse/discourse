@@ -29,13 +29,17 @@ module ::Blog
     end
 
     def author
-      user = @publication.discussion_topic&.user
-      return if !user&.human?
-      {
-        "@type" => "Person",
-        "name" => @revision.data["author_name"],
-        "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
-      }
+      people =
+        @revision
+          .authors(@publication.discussion_topic&.user)
+          .map do |user, name|
+            {
+              "@type" => "Person",
+              "name" => name,
+              "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
+            }
+          end
+      people.many? ? people : people.first
     end
 
     def schema

@@ -28,6 +28,13 @@ RSpec.describe Blog::ArticleVariables do
         "standfirst" => "A standfirst",
         "author" => topic.user.name,
         "author_url" => "https://blog.example.com/author/#{topic.user.username_lower}",
+        "authors" => [
+          {
+            "name" => topic.user.name,
+            "url" => "https://blog.example.com/author/#{topic.user.username_lower}",
+            "separator" => "",
+          },
+        ],
         "published_at" => publication.published_at.iso8601,
         "date" => I18n.l(publication.published_at, format: :date_only),
         "relative_date" => I18n.t("blog.time_ago", time: "3d"),
@@ -49,6 +56,27 @@ RSpec.describe Blog::ArticleVariables do
       expect(described_class.new(publication).summary).to include(
         "author" => nil,
         "author_url" => nil,
+        "authors" => [],
+      )
+    end
+
+    it "credits co-authors after the owner with the names they had when published" do
+      ada = Fabricate(:user, name: "Ada")
+      bob = Fabricate(:user, name: "Bob")
+      gone = Fabricate(:user, name: "Gone")
+      credits = Blog::Revision.co_author_credits([ada.id, gone.id, bob.id])
+      revision = Blog::Revision.new(data: publication.article.data.merge("co_authors" => credits))
+      ada.update!(name: "Ada Renamed")
+      gone.destroy!
+
+      summary = described_class.new(publication, revision:).summary
+
+      expect(summary["author"]).to eq("#{topic.user.name}, Ada and Bob")
+      expect(summary["authors"].map { _1.values_at("name", "separator") }).to eq(
+        [[topic.user.name, ", "], ["Ada", " and "], ["Bob", ""]],
+      )
+      expect(summary["authors"].second["url"]).to eq(
+        "https://blog.example.com/author/#{ada.username_lower}",
       )
     end
 

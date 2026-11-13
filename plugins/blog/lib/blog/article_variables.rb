@@ -13,6 +13,7 @@ module ::Blog
           "standfirst" => "",
           "author" => nil,
           "author_url" => nil,
+          "authors" => [],
           "published_at" => nil,
           "date" => "",
           "relative_date" => "",
@@ -43,12 +44,14 @@ module ::Blog
       publication,
       revision: publication.article,
       topic: publication.discussion_topic,
-      preview_token: nil
+      preview_token: nil,
+      co_author_users: nil
     )
       @publication = publication
       @revision = revision
       @topic = topic
       @preview_token = preview_token
+      @co_author_users = co_author_users
     end
 
     def summary(index: 0)
@@ -57,8 +60,9 @@ module ::Blog
         "url" => url(@publication.path),
         "excerpt" => @publication.display_excerpt,
         "standfirst" => @revision.data["excerpt"].presence,
-        "author" => (@revision.data["author_name"] if author),
-        "author_url" => (url(Revision.author_path(author)) if author),
+        "author" => authors.map { _1.values_at("name", "separator").join }.join.presence,
+        "author_url" => authors.first&.dig("url"),
+        "authors" => authors,
         "published_at" => published_at&.iso8601,
         "date" => published_at && format_date(published_at),
         "relative_date" =>
@@ -92,9 +96,25 @@ module ::Blog
 
     private
 
-    # Articles imported without a known author belong to the system user and get no byline.
-    def author
-      @topic.user if @topic&.user&.human?
+    def authors
+      @authors ||=
+        begin
+          credited = @revision.authors(@topic&.user, users: @co_author_users)
+          credited.each_with_index.map do |(user, name), index|
+            {
+              "name" => name,
+              "url" => url(Revision.author_path(user)),
+              "separator" => author_separator(index, credited.size),
+            }
+          end
+        end
+    end
+
+    # Joins names as "A, B and C".
+    def author_separator(index, count)
+      return "" if index == count - 1
+      return I18n.t("blog.last_author_separator") if index == count - 2
+      I18n.t("blog.author_separator")
     end
 
     # Only an explicit cover has alt text; a fallback image comes from the article body.
