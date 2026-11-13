@@ -30,9 +30,8 @@ a deferred, interactive Discourse discussion below each article.
   fragments, traversal segments, or encoded separators.
 - On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`,
   `/posts.atom`, `/rss` and `/feed` (the Ghost and WordPress feed URLs) redirect permanently to the
-  RSS feed at `/feed.xml`, and Ghost's `/page/N` pagination redirects to `/?page=N`. The `author`
-  segment is reserved for future author archives. Article discussions retain both the
-  `#discussion` and `#comments` fragment targets.
+  RSS feed at `/feed.xml`, and Ghost's `/page/N` pagination redirects to `/?page=N`. Article
+  discussions retain both the `#discussion` and `#comments` fragment targets.
 - A blog path that is not an article falls back to core permalinks, so a migration can
   redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
   community), and relative targets resolve against the community host.
@@ -41,6 +40,14 @@ a deferred, interactive Discourse discussion below each article.
   used for cards and social previews (otherwise the topic's first image upload).
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
+- Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
+  articles under their name, avatar and bio. Bylines link to them. The bio follows the
+  user's profile visibility, and a user with no public article gets a 404, so the URLs
+  can't be used to check which usernames exist. Imported author URLs with a different
+  slug can be redirected with permalinks. Articles owned by the system user or a bot,
+  as imports with no known author are, show no byline and have no author page.
+  Templates get `article.author_url` for bylines and, on author pages, `page.author`
+  (`name`, `username`, `url`, `avatar_url`, `bio_html`).
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
   `BlogPosting` structured data. Item identifiers come from the article's topic, not
   its path, so after a migration, feed readers subscribed to the old blog's feed see

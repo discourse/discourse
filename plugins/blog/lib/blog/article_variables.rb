@@ -11,7 +11,8 @@ module ::Blog
           "url" => Configuration.url("/example"),
           "excerpt" => I18n.t("blog.themes.sample_body"),
           "standfirst" => "",
-          "author" => "",
+          "author" => nil,
+          "author_url" => nil,
           "published_at" => nil,
           "date" => "",
           "relative_date" => "",
@@ -56,7 +57,8 @@ module ::Blog
         "url" => url(@publication.path),
         "excerpt" => @publication.display_excerpt,
         "standfirst" => @revision.data["excerpt"].presence,
-        "author" => @revision.data["author_name"],
+        "author" => (@revision.data["author_name"] if author),
+        "author_url" => (url(Revision.author_path(author)) if author),
         "published_at" => published_at&.iso8601,
         "date" => published_at && format_date(published_at),
         "relative_date" =>
@@ -89,6 +91,11 @@ module ::Blog
     end
 
     private
+
+    # Articles imported without a known author belong to the system user and get no byline.
+    def author
+      @topic.user if @topic&.user&.human?
+    end
 
     # Only an explicit cover has alt text; a fallback image comes from the article body.
     def cover_alt

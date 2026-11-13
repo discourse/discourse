@@ -23,8 +23,17 @@ RSpec.describe Blog::ArticleMetadata do
         "author" => {
           "@type" => "Person",
           "name" => article.data["author_name"],
+          "url" =>
+            "https://blog.example.com/author/#{publication.discussion_topic.user.username_lower}",
         },
       )
+    end
+
+    it "leaves out the author when the system user owns the article" do
+      publication.discussion_topic.update!(user: Discourse.system_user)
+      metadata = described_class.new(publication, description: nil)
+
+      expect(JSON.parse(metadata.schema)).not_to have_key("author")
     end
 
     it "includes the article image" do

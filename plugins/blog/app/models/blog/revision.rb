@@ -22,7 +22,7 @@ module ::Blog
         "title" => source.title,
         "raw" => post.raw,
         "cooked" => post.cooked,
-        "author_name" => source.user&.name.presence || source.user&.username,
+        "author_name" => author_name(source.user),
         # An explicit cover is also the card and social image.
         "image_url" => image_url_for(cover || source.image_upload),
         "cover_upload_id" => cover&.id,
@@ -30,6 +30,14 @@ module ::Blog
         "cover_height" => cover&.height,
         "tags" => source.tags.visible(Guardian.new).pluck(:name),
       )
+    end
+
+    def self.author_name(user)
+      user&.name.presence || user&.username
+    end
+
+    def self.author_path(user)
+      "/author/#{user.encoded_username(lower: true)}"
     end
 
     def self.image_url_for(upload)

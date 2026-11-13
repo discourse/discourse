@@ -27,6 +27,7 @@ RSpec.describe Blog::ArticleVariables do
         "excerpt" => "A standfirst",
         "standfirst" => "A standfirst",
         "author" => topic.user.name,
+        "author_url" => "https://blog.example.com/author/#{topic.user.username_lower}",
         "published_at" => publication.published_at.iso8601,
         "date" => I18n.l(publication.published_at, format: :date_only),
         "relative_date" => I18n.t("blog.time_ago", time: "3d"),
@@ -39,6 +40,15 @@ RSpec.describe Blog::ArticleVariables do
         "replies_label" => I18n.t("blog.replies", count: 2),
         "index" => "03",
         "updated_label" => I18n.t("blog.updated", date: I18n.l(Time.current, format: :date_only)),
+      )
+    end
+
+    it "leaves out the byline when the system user owns the article" do
+      topic.update!(user: Discourse.system_user)
+
+      expect(described_class.new(publication).summary).to include(
+        "author" => nil,
+        "author_url" => nil,
       )
     end
 

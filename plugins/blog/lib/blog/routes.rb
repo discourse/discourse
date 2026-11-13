@@ -17,7 +17,6 @@ module Blog
 
     # Article paths share their first segment with the routes below in both hosting modes
     # (sites can switch modes), so articles may never claim them. A spec checks this covers every route.
-    # "author" has no route yet; it is held for author archives so imported paths can't take it.
     RESERVED_SEGMENTS = %w[
       about
       author
@@ -46,6 +45,11 @@ module Blog
         get "/" => "articles#index"
         get "/archive" => "articles#index", :defaults => { archive: true }
         get "/tag/:tag" => "articles#index"
+        get "/author/:username" => "articles#index",
+            :constraints => {
+              username: %r{[^/]+},
+            },
+            :format => false
         get "/about" => "articles#about"
         get "/blog-theme.css" => "articles#theme_css", :format => false
         get "/blog-highlight/:version.js" => "articles#highlight_js", :format => false

@@ -134,6 +134,15 @@ html {
   text-wrap: balance;
 }
 
+.blog__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .blog__intro h1 {
   font-size: clamp(2.7rem, 7vw, 4.7rem);
   font-weight: 650;

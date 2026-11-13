@@ -435,6 +435,64 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(404)
     end
 
+    it "lists an author's articles on their author page, linked from the byline" do
+      admin.update!(name: "Ada Writer", username: "ada.writer")
+      admin.user_profile.update!(bio_raw: "Writes about **the field**.")
+      author_url = "https://blog.example.com/author/ada.writer"
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css(%(a[href="#{author_url}"])).text).to eq(
+        publication.article.data["author_name"],
+      )
+      schema = JSON.parse(html.at_css('script[type="application/ld+json"]').text)
+      expect(schema["author"]["url"]).to eq(author_url)
+
+      get "https://blog.example.com/author/Ada.Writer/"
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css("h1").text).to eq("Ada Writer")
+      expect(html.at_css("img.blog__author-avatar")["src"]).to end_with("/240.png")
+      expect(html.at_css(".blog__description strong").text).to eq("the field")
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq(author_url)
+      expect(response.body).to include(publication.url)
+      expect(html.at_css('meta[name="description"]')["content"]).to eq("Writes about the field.")
+
+      SiteSetting.blog_description = "Notes from the team."
+      SiteSetting.hide_user_profiles_from_public = true
+      get author_url
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Writes about")
+      expect(Nokogiri.HTML5(response.body).at_css(".blog__description").text).to be_blank
+
+      get "https://blog.example.com/author/#{user.username}"
+      expect(response.status).to eq(404)
+    end
+
+    it "hides a deactivated author's bio, as their public profile does" do
+      admin.user_profile.update!(bio_raw: "Writes about **the field**.")
+      admin.deactivate(Discourse.system_user)
+
+      get "https://blog.example.com/author/#{admin.username}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Writes about")
+    end
+
+    it "shows no byline for an article the system user owns" do
+      publication.discussion_topic.update!(user: Discourse.system_user)
+
+      [publication.url, "https://blog.example.com/"].each do |url|
+        get url
+        html = Nokogiri.HTML5(response.body)
+        expect(html.at_css('a[href*="/author/"]')).to be_nil
+        expect(html.text).not_to include(publication.article.data["author_name"])
+      end
+
+      get "https://blog.example.com/author/#{Discourse.system_user.username}"
+      expect(response.status).to eq(404)
+    end
+
     it "leads the homepage with featured articles" do
       featured_topic = Fabricate(:topic, category: drafts, user: admin)
       Fabricate(

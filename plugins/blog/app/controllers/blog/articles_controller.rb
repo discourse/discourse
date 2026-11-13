@@ -25,12 +25,21 @@ module ::Blog
 
     def index
       Article::List.call(
-        service_params.deep_merge(params: { query: params[:q], tag_slug: params[:tag] }),
+        service_params.deep_merge(
+          params: {
+            query: params[:q],
+            tag_slug: params[:tag],
+            author_username: params[:username],
+          },
+        ),
       ) do
-        on_success do |params:, tag:, listing:|
+        on_success do |params:, tag:, author:, listing:|
           @archive = params.archive
-          @page_title = tag&.name || (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
-          @canonical_url = "#{Configuration.base_url}#{blog_path}"
+          @page_title =
+            tag&.name || (author && Revision.author_name(author)) ||
+              (@archive ? I18n.t("blog.archive") : SiteSetting.blog_title)
+          @canonical_url =
+            "#{Configuration.base_url}#{author ? Revision.author_path(author) : blog_path}"
           @canonical_url += "?page=#{params.page}" if params.page > 1
           @template_variables =
             template_variables(
@@ -40,6 +49,7 @@ module ::Blog
               query: params.query,
               archive: @archive,
               tag:,
+              author:,
             )
           @description = @template_variables.description
           response.headers["X-Robots-Tag"] = "noindex" if params.query.present?
