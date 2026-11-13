@@ -71,6 +71,41 @@ acceptance("Lightbox", function (needs) {
   });
 });
 
+acceptance("Lightbox - forged caption details", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+    topicResponse.post_stream.posts[0].cooked = `<div class="lightbox-wrapper">
+      <a class="lightbox" href="/images/d-logo-sketch.png" data-target-width="690" data-target-height="387">
+        <img src="/images/d-logo-sketch-small.png" alt="image" width="690" height="387">
+        <div class="meta">
+          <span class="informations">&lt;b&gt;not bold&lt;/b&gt; 1500×842</span>
+        </div>
+      </a>
+    </div>`;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicResponse)
+    );
+  });
+
+  test("Escapes caption details instead of rendering them as HTML", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".lightbox");
+
+    await waitFor(".pswp--open");
+
+    assert
+      .dom(".pswp__caption .pswp__caption-details")
+      .hasHtml(/^&lt;b&gt;not bold&lt;\/b&gt; 1500×842$/);
+    assert.dom(".pswp__caption .pswp__caption-details b").doesNotExist();
+
+    await click(".pswp__button--close");
+  });
+});
+
 acceptance("Lightbox - grid order", function (needs) {
   needs.user();
 
