@@ -50,10 +50,12 @@ class TestSink {
   }
 }
 
-// Fake sinks should not depend on the test browser's real origin quota.
+// Fake sinks should not depend on the test browser's real origin quota, and
+// only the rate-limit tests should be bound by offer limits.
 function createManager(options) {
   return new FileTransferManager({
     estimateStorage: async () => undefined,
+    offerLimit: { perPeer: 1000, total: 1000, windowMs: 60_000 },
     ...options,
   });
 }
@@ -473,6 +475,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       offerLimit: { perPeer: 2, total: 3, windowMs: 1000 },
       now: () => now,
     });
+    this.b = new Channel();
     this.receiver.attach(1, 1, this.b);
     const offer = (channel) => {
       const id = crypto.randomUUID();
@@ -507,6 +510,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       offerLimit: { perPeer: 1, total: 5, windowMs: 1000 },
       now: () => now,
     });
+    this.a = new Channel();
     this.sender.attach(1, 2, this.a);
     const id = this.sender.send(1, 2, new File(["a"], "a.txt"));
     this.sender.cancel(id);
