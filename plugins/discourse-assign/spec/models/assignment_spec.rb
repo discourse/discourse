@@ -247,7 +247,7 @@ RSpec.describe Assignment do
         late_member = Fabricate(:user)
         assigned_to.add(late_member)
 
-        assignment.create_missing_notifications!(user_id: late_member.id)
+        assignment.create_missing_notifications!
 
         expect(late_member.notifications.for_assignment(assignment)).to be_empty
       end
