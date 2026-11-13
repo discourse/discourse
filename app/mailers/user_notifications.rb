@@ -965,12 +965,20 @@ class UserNotifications < ActionMailer::Base
   def self.participants(post, recipient_user, reveal_staged_email: false)
     list = []
 
-    allowed_groups = post.topic.allowed_groups.order("user_count DESC")
+    allowed_groups = post.topic.allowed_groups
+    members_visible_group_ids =
+      allowed_groups.members_visible_groups(recipient_user).unscope(:order).pluck(:id)
+    allowed_groups =
+      if members_visible_group_ids.size == allowed_groups.count
+        allowed_groups.order("user_count DESC")
+      else
+        allowed_groups.order(:name)
+      end
 
     allowed_groups.each do |g|
-      list.push(
-        "[#{Email::MessageBuilder.escape_markdown(g.name_full_preferred)} (#{g.user_count})](#{g.full_url})",
-      )
+      group_name = Email::MessageBuilder.escape_markdown(g.name_full_preferred)
+      group_name += " (#{g.user_count})" if members_visible_group_ids.include?(g.id)
+      list.push("[#{group_name}](#{g.full_url})")
       break if list.size >= SiteSetting.max_participant_names
     end
 
