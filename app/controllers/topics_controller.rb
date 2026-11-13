@@ -151,7 +151,7 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
       # If the user can't see the topic, clean up notifications for it.
-      Notification.remove_for(current_user.id, params[:topic_id]) if current_user
+      Notification.remove_for(current_user.id, ex.obj.id) if current_user && ex.obj
 
       deleted = deleted_for_permalink?(ex.obj)
 
