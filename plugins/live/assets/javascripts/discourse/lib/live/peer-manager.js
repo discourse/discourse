@@ -181,6 +181,7 @@ export default class PeerManager {
   #onPeerDestroyed;
   #onPeerConnected;
   #shouldRestartPeer;
+  #onFileChannel;
 
   constructor({
     getIceServers,
@@ -196,6 +197,7 @@ export default class PeerManager {
     onPeerDestroyed,
     onPeerConnected = () => {},
     shouldRestartPeer = () => true,
+    onFileChannel = null,
   }) {
     this.#getIceServers = getIceServers;
     this.#getIceTransportPolicy = getIceTransportPolicy;
@@ -210,6 +212,7 @@ export default class PeerManager {
     this.#onPeerDestroyed = onPeerDestroyed;
     this.#onPeerConnected = onPeerConnected;
     this.#shouldRestartPeer = shouldRestartPeer;
+    this.#onFileChannel = onFileChannel;
   }
 
   has(roomId, userId) {
@@ -310,6 +313,17 @@ export default class PeerManager {
       iceTransportPolicy: this.#getIceTransportPolicy(),
     });
     roomPeers.set(remoteUserId, pc);
+
+    // Reserve SCTP in the initial SDP: signaling cannot renegotiate later.
+    // Both ends use the same explicitly negotiated reliable, ordered stream.
+    if (this.#onFileChannel) {
+      const channel = pc.createDataChannel("live-file-transfer", {
+        negotiated: true,
+        id: 0,
+        ordered: true,
+      });
+      this.#onFileChannel(roomId, remoteUserId, channel);
+    }
 
     const localStream = this.#getLocalStream();
     if (localStream) {

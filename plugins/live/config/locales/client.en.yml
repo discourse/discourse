@@ -1,6 +1,37 @@
 en:
   js:
     live:
+      file_transfer:
+        send: "Send file…"
+        choose: "Choose file"
+        title: "File transfers"
+        collapse: "Collapse"
+        expand: "Expand"
+        pending_count:
+          one: "%{count} pending offer"
+          other: "%{count} pending offers"
+        incoming: "From %{username}"
+        outgoing: "To %{username}"
+        user: "User #%{id}"
+        room: "Room #%{id}"
+        accept: "Accept"
+        reject: "Reject"
+        cancel: "Cancel"
+        save: "Save file"
+        dismiss: "Dismiss"
+        size_limit: "Maximum file size: 100 MiB."
+        too_large: "Files must be 100 MiB or smaller."
+        send_failed: "The file could not be sent. Try again."
+        save_failed: "The file could not be saved. Try again."
+        safety: "Only accept files from people you trust. Files are not scanned for viruses."
+        status:
+          pending: "Awaiting your acceptance"
+          waiting: "Waiting for acceptance"
+          transferring: "Transferring"
+          completed: "Completed"
+          rejected: "Rejected"
+          cancelled: "Cancelled"
+          failed: "Failed"
       about:
         participants:
           one: "%{formatted_number} person joined voice chats"

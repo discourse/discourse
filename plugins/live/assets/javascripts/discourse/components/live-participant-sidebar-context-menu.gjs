@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 import { humanKeyName } from "../lib/live/ptt-utils.js";
 import LiveFlag from "../lib/live-flag.js";
 import LivePttKeyCapture from "./live-ptt-key-capture.gjs";
+import LiveSendFileModal from "./modal/live-send-file.gjs";
 import LiveVoiceSettingsModal from "./modal/live-voice-settings.gjs";
 
 export default class LiveParticipantSidebarContextMenu extends Component {
@@ -61,6 +62,14 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     return this.isSpotlighted
       ? i18n("live.participant.remove_spotlight")
       : i18n("live.participant.spotlight");
+  }
+
+  get canSendFile() {
+    return (
+      this.siteSettings.live_file_transfer_enabled &&
+      !this.isCurrentUser &&
+      this.liveWebrtc.canSendFile(this.room.id, this.participant.id)
+    );
   }
 
   get canKick() {
@@ -185,6 +194,14 @@ export default class LiveParticipantSidebarContextMenu extends Component {
     return this.liveWebrtc.autoStatusEnabled
       ? i18n("live.status.auto_update_on")
       : i18n("live.status.auto_update_off");
+  }
+
+  @action
+  sendFile() {
+    this.args.close();
+    this.modal.show(LiveSendFileModal, {
+      model: { room: this.room, participant: this.participant },
+    });
   }
 
   @action
@@ -456,6 +473,16 @@ export default class LiveParticipantSidebarContextMenu extends Component {
           </dropdown.item>
         {{/if}}
       {{else}}
+        {{#if this.canSendFile}}
+          <dropdown.item>
+            <DButton
+              class="live-participant-sidebar-context-menu__send-file-btn"
+              @action={{this.sendFile}}
+              @icon="paper-plane"
+              @label="live.file_transfer.send"
+            />
+          </dropdown.item>
+        {{/if}}
         {{#if this.participantIsSpeakerOrMod}}
           <dropdown.item class="live-participant-sidebar-context-menu__volume">
             <label class="live-participant-sidebar-context-menu__volume-label">

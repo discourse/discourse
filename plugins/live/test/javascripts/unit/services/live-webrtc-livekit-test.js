@@ -123,6 +123,10 @@ class FakeRTCPeerConnection {
     FakeRTCPeerConnection.created++;
   }
 
+  createDataChannel() {
+    return { readyState: "open", close() {} };
+  }
+
   addTrack() {
     return { track: null, async replaceTrack() {} };
   }

@@ -7,6 +7,10 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import LiveParticipantSidebarContextMenu from "discourse/plugins/live/discourse/components/live-participant-sidebar-context-menu";
 
 class LiveWebrtcStub extends Service {
+  canSendFile() {
+    return true;
+  }
+
   getParticipantVolume() {
     return 1;
   }
@@ -39,6 +43,78 @@ module(
       this.closeMenu = () => {
         this.closed = true;
       };
+    });
+
+    test("offers file transfer through the shared participant menu", async function (assert) {
+      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
+        true;
+      const modal = this.owner.lookup("service:modal");
+      let model;
+      modal.show = (_component, options) => {
+        model = options.model;
+      };
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+      await click(".live-participant-sidebar-context-menu__send-file-btn");
+      assert.true(this.closed);
+      assert.strictEqual(model.room.id, 1);
+      assert.strictEqual(model.participant.id, 2);
+    });
+
+    test("hides file action when disabled or unavailable", async function (assert) {
+      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
+        false;
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+      assert
+        .dom(".live-participant-sidebar-context-menu__send-file-btn")
+        .doesNotExist();
+    });
+
+    test("hides file action when the service says the peer is unavailable", async function (assert) {
+      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
+        true;
+      this.owner.lookup("service:live-webrtc").canSendFile = () => false;
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+      assert
+        .dom(".live-participant-sidebar-context-menu__send-file-btn")
+        .doesNotExist();
+    });
+
+    test("hides file action for self", async function (assert) {
+      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
+        true;
+      this.menuData.isCurrentUser = true;
+      await render(
+        <template>
+          <LiveParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+      assert
+        .dom(".live-participant-sidebar-context-menu__send-file-btn")
+        .doesNotExist();
     });
 
     test("kicks a bot without an expulsion dialog", async function (assert) {

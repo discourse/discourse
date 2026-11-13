@@ -129,6 +129,10 @@ class FakeRTCPeerConnection {
     FakeRTCPeerConnection.instances.push(this);
   }
 
+  createDataChannel() {
+    return { readyState: "open", close() {} };
+  }
+
   addTrack(track) {
     const sender = {
       track,
@@ -562,6 +566,31 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     globalThis.RTCIceCandidate = this.originalRTCIceCandidate;
     globalThis.RTCSessionDescription = this.originalRTCSessionDescription;
     globalThis.MediaStream = this.originalMediaStream;
+  });
+
+  test("file transfer API requires enabled setting, active room and remote participant", async function (assert) {
+    this.siteSettings.live_file_transfer_enabled = false;
+    assert.false(this.subject.canSendFile(1, 2));
+    assert.throws(() => this.subject.sendFile(1, 2, new File(["x"], "x.txt")));
+    this.siteSettings.live_file_transfer_enabled = true;
+    assert.false(this.subject.canSendFile(1, 2), "not joined");
+    await this.subject.join(this.room);
+    assert.false(this.subject.canSendFile(1, this.currentUser.id), "not self");
+    assert.false(
+      this.subject.canSendFile(1, 9999),
+      "not an active participant"
+    );
+    assert.true(this.subject.canSendFile(1, 2));
+    const id = this.subject.sendFile(1, 2, new File(["x"], "x.txt"));
+    assert.strictEqual(
+      this.subject.fileTransfers[0].status,
+      "failed",
+      "fake channel cannot send"
+    );
+    this.subject.dismissFileTransfer(id);
+    assert.deepEqual(this.subject.fileTransfers, []);
+    this.subject.leave(this.room, { keepLocalStream: true });
+    assert.false(this.subject.canSendFile(1, 2));
   });
 
   test("ICE configuration defaults to no servers and policy 'all' before any join", function (assert) {
