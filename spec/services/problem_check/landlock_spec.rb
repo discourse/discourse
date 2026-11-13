@@ -5,12 +5,12 @@ RSpec.describe ProblemCheck::Landlock do
 
   describe ".call" do
     before do
-      Rails.stubs(env: ActiveSupport::StringInquirer.new(environment))
+      Rails.env.stubs(production?: production)
       Discourse::SafeExec.stubs(landlock_supported?: supported)
     end
 
     context "when running in production" do
-      let(:environment) { "production" }
+      let(:production) { true }
 
       context "when Landlock is supported" do
         let(:supported) { true }
@@ -30,7 +30,7 @@ RSpec.describe ProblemCheck::Landlock do
     end
 
     context "when not running in production" do
-      let(:environment) { "development" }
+      let(:production) { false }
       let(:supported) { false }
 
       it { expect(check).to be_chill_about_it }
