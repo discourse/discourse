@@ -46,14 +46,29 @@ RSpec.describe PostStripper do
 
   it "strips quote titles but keeps other titles" do
     cooked = <<~HTML
-      <aside class="quote"><div class="title">quoted user</div><blockquote><div class="title">kept</div></blockquote></aside>
+      <div class="title">outside</div>
+      <aside class="quote">
+        <div class="title">quoted user</div>
+        <blockquote>
+          <div class="title">kept</div>
+          <aside class="quote"><div class="title">nested quoted user</div><p>nested body</p></aside>
+        </blockquote>
+      </aside>
+      <div class="quote"><div class="title">not an aside</div></div>
+      <aside><div class="title">not a quote</div></aside>
     HTML
     fragment = Nokogiri::HTML5.fragment(cooked)
 
     PostStripper.strip(fragment)
 
     expect(fragment.at_css("aside.quote > .title")).to be_nil
-    expect(fragment.at_css("blockquote .title").text).to eq("kept")
+    expect(fragment.css(".title").map(&:text)).to contain_exactly(
+      "outside",
+      "kept",
+      "not an aside",
+      "not a quote",
+    )
+    expect(fragment.at_css("blockquote p").text).to eq("nested body")
   end
 
   it "keeps mentions outside of quotes and pre" do
