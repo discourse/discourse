@@ -1246,6 +1246,26 @@ RSpec.describe TagsController do
       expect(response.status).to eq(404)
     end
 
+    it "returns 404 if the tag is restricted to a category the user can't see" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [tag])
+      sign_in(regular_user)
+
+      put "/tag/#{tag.id}/settings.json",
+          params: {
+            tag_settings: {
+              name: "new-name",
+              description: "new description",
+            },
+          }
+
+      expect(response.status).to eq(404)
+      expect(tag.reload).to have_attributes(
+        name: "original-name",
+        description: "original description",
+      )
+    end
+
     context "when signed in as admin" do
       before { sign_in(admin) }
 
@@ -1433,6 +1453,17 @@ RSpec.describe TagsController do
       expect(response.parsed_body["errors"]).to include(
         "Updating a tag name by `id` attribute is unsupported. Use the `name` attribute instead.",
       )
+    end
+
+    it "returns 403 if the tag is restricted to a category the user can't see" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [tag])
+      sign_in(regular_user)
+
+      expect { put "/tag/#{tag.name}.json", params: { tag: { name: "new-name" } } }.not_to change {
+        tag.reload.name
+      }
+      expect(response.status).to eq(403)
     end
 
     it "triggers a extensibility event" do
@@ -2370,6 +2401,41 @@ RSpec.describe TagsController do
         end
       end
     end
+
+    context "when the tag is restricted to a private category" do
+      fab!(:category_group, :group)
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+
+      before { Fabricate(:private_category, group: category_group).update!(tags: [restricted_tag]) }
+
+      it "doesn't let a moderator who can't see the category delete the tag" do
+        sign_in(moderator)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(403)
+        expect(Tag.exists?(restricted_tag.id)).to eq(true)
+      end
+
+      it "lets a moderator who can see the category delete the tag" do
+        category_group.add(moderator)
+        sign_in(moderator)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.exists?(restricted_tag.id)).to eq(false)
+      end
+
+      it "lets an admin delete the tag" do
+        sign_in(admin)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.exists?(restricted_tag.id)).to eq(false)
+      end
+    end
   end
 
   describe "#unused" do
@@ -2440,6 +2506,41 @@ RSpec.describe TagsController do
             "used_everywhere",
           )
         end
+      end
+    end
+
+    context "when an unused tag is restricted to a private category" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+      fab!(:unrestricted_tag) { Fabricate(:tag, name: "unrestricted") }
+
+      before do
+        Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted_tag])
+      end
+
+      it "only lists and deletes the tags a moderator who can't see the category can change" do
+        sign_in(moderator)
+
+        get "/tags/unused.json"
+
+        expect(response.parsed_body["tags"]).to contain_exactly("unrestricted")
+
+        delete "/tags/unused.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly("restricted")
+      end
+
+      it "lists and deletes every unused tag for an admin" do
+        sign_in(admin)
+
+        get "/tags/unused.json"
+
+        expect(response.parsed_body["tags"]).to contain_exactly("restricted", "unrestricted")
+
+        delete "/tags/unused.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.count).to eq(0)
       end
     end
   end
@@ -2580,6 +2681,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(404)
     end
 
+    it "returns 403 when the tag is restricted to a category the user can't see" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [tag])
+      sign_in(regular_user)
+
+      post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "synonym1" }] }
+
+      expect(response.status).to eq(403)
+      expect(tag.reload.synonyms).to be_empty
+    end
+
     it "succeeds when tag is hidden and user is admin" do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
       sign_in(admin)
@@ -2611,6 +2723,25 @@ RSpec.describe TagsController do
       expect(hidden_tag_by_id.reload.target_tag_id).to be_nil
       expect(hidden_tag_by_name.reload.target_tag_id).to be_nil
       expect_same_tag_names(topic.reload.tags, [hidden_tag_by_id, hidden_tag_by_name])
+    end
+
+    it "does not merge tags restricted to a category the user can't see" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      restricted_by_id = Fabricate(:tag, name: "restricted-tag-by-id")
+      restricted_by_name = Fabricate(:tag, name: "restricted-tag-by-name")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(
+        tags: [restricted_by_id, restricted_by_name],
+      )
+
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json",
+           params: {
+             tags: [{ id: restricted_by_id.id }, { name: restricted_by_name.name }],
+           }
+
+      expect(response.status).to eq(200)
+      expect(restricted_by_id.reload.target_tag_id).to be_nil
+      expect(restricted_by_name.reload.target_tag_id).to be_nil
     end
 
     context "when signed in as admin" do

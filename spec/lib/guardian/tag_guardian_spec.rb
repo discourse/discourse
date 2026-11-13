@@ -99,6 +99,39 @@ RSpec.describe TagGuardian do
       expect(Guardian.new(admin).can_edit_tag?(tag)).to be_truthy
     end
 
+    context "when the tag is restricted to a private category" do
+      fab!(:category_group, :group)
+      fab!(:private_category) { Fabricate(:private_category, group: category_group) }
+      fab!(:member) { Fabricate(:user, trust_level: TrustLevel[3]) }
+
+      before do
+        SiteSetting.edit_tags_allowed_groups = "1|2|13"
+        category_group.add(member)
+      end
+
+      it "only allows users who can see the category" do
+        private_category.update!(tags: [tag])
+
+        expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to eq(false)
+        expect(Guardian.new(member).can_edit_tag?(tag)).to eq(true)
+        expect(Guardian.new(admin).can_edit_tag?(tag)).to eq(true)
+      end
+
+      it "only allows users who can see the category through a tag group" do
+        private_category.update!(tag_groups: [Fabricate(:tag_group, tag_names: [tag.name])])
+
+        expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to eq(false)
+        expect(Guardian.new(member).can_edit_tag?(tag)).to eq(true)
+      end
+
+      it "allows tag editors when the tag is also allowed on a public category" do
+        private_category.update!(tags: [tag])
+        Fabricate(:category).update!(tags: [tag])
+
+        expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to eq(true)
+      end
+    end
+
     it "requires a tag" do
       expect { Guardian.new(trust_level_3).can_edit_tag? }.to raise_error(ArgumentError)
     end
@@ -170,6 +203,34 @@ RSpec.describe TagGuardian do
 
     it "returns true for a staff user" do
       expect(Guardian.new(admin).can_admin_tags?).to be_truthy
+    end
+  end
+
+  describe "#can_delete_tag?" do
+    fab!(:moderator)
+
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_delete_tag?(tag)).to eq(false)
+    end
+
+    it "returns true for staff" do
+      expect(Guardian.new(moderator).can_delete_tag?(tag)).to eq(true)
+      expect(Guardian.new(admin).can_delete_tag?(tag)).to eq(true)
+    end
+
+    context "when the tag is restricted to a private category" do
+      fab!(:category_group, :group)
+
+      before { Fabricate(:private_category, group: category_group).update!(tags: [tag]) }
+
+      it "only allows staff who can see the category" do
+        expect(Guardian.new(moderator).can_delete_tag?(tag)).to eq(false)
+        expect(Guardian.new(admin).can_delete_tag?(tag)).to eq(true)
+
+        category_group.add(moderator)
+
+        expect(Guardian.new(moderator.reload).can_delete_tag?(tag)).to eq(true)
+      end
     end
   end
 
