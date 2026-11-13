@@ -155,6 +155,12 @@ after_initialize do
     include_condition: -> { scope.can_start_live_call? },
   ) { scope.can_call_live_user?(object) }
 
+  add_to_serializer(:current_user, :live_can_send_files) { scope.can_send_live_file? }
+
+  add_to_serializer(:site, :live_file_transfers_available) do
+    SiteSetting.live_enabled? && SiteSetting.live_file_transfer_allowed_groups_map.present?
+  end
+
   add_to_serializer(:current_user, :live_can_record_locally) { scope.can_record_live_locally? }
 
   # Lets the client decide whether to render the rooms sidebar for anonymous

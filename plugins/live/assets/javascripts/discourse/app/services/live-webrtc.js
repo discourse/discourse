@@ -16,6 +16,8 @@ import {
   collectPeers,
   probeIceServers,
 } from "../../lib/live/connection-diagnostics.js";
+import { fileTransferMaxSize } from "../../lib/live/file-transfer-limits.js";
+import FileTransferManager from "../../lib/live/file-transfer-manager.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
 import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
@@ -78,6 +80,7 @@ export default class LiveWebrtcService extends Service {
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service site;
   @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
@@ -129,6 +132,7 @@ export default class LiveWebrtcService extends Service {
 
   #signaling;
   #peerManager;
+  #fileTransfers;
   #meshSignals;
   #audioMonitor;
   #idleTracker;
@@ -164,7 +168,18 @@ export default class LiveWebrtcService extends Service {
       getParticipantSessionId: (roomId) => this.#roomSessions.get(roomId),
     });
 
+    this.#fileTransfers = new FileTransferManager({
+      getMaxFileSize: () => this.maxFileTransferSize,
+      isEligible: (roomId, userId) =>
+        this.#fileTransferEligible(roomId, userId),
+      isSendAllowed: (roomId, userId) =>
+        this.#canInitiateFileTransfer(roomId, userId),
+      isReceiveAllowed: (roomId, userId) => this.canReceiveFile(roomId, userId),
+    });
+
     this.#peerManager = new PeerManager({
+      onFileChannel: (roomId, userId, channel) =>
+        this.#fileTransfers.attach(roomId, userId, channel),
       getIceServers: () => this.iceServers,
       getIceTransportPolicy: () => this.iceTransportPolicy,
       getLocalStream: () => this.localStream,
@@ -181,7 +196,10 @@ export default class LiveWebrtcService extends Service {
         this.#registerRemoteTrack(roomId, uid, track, streams),
       clearSignalQueue: (roomId, uid) =>
         this.#signaling.clearForPeer(roomId, uid),
-      onPeerDestroyed: (roomId, uid) => this.#removeRemoteStream(roomId, uid),
+      onPeerDestroyed: (roomId, uid) => {
+        this.#fileTransfers.disconnect(roomId, uid);
+        this.#removeRemoteStream(roomId, uid);
+      },
       onPeerConnected: (roomId, uid, pc) => {
         const tier = this.effectiveVoiceQuality(roomId);
         if (tier !== QUALITY_STANDARD) {
@@ -466,6 +484,7 @@ export default class LiveWebrtcService extends Service {
     this.#pttManager.destroy();
     this.#idleTracker.stop();
     this.#audioMonitor.destroyAll();
+    this.#fileTransfers.destroy();
     this.#peerManager.destroyAll();
     this.#livekit.destroy();
     this.#signaling.destroy();
@@ -652,6 +671,16 @@ export default class LiveWebrtcService extends Service {
     return this.#localRecording.busy;
   }
 
+  get maxFileTransferSize() {
+    return fileTransferMaxSize(
+      this.siteSettings.live_file_transfer_max_size_mb
+    );
+  }
+
+  get fileTransfers() {
+    return this.#fileTransfers.transfers;
+  }
+
   setNoiseSuppressionMode(mode) {
     return this.#localAudio.setNoiseSuppressionMode(mode);
   }
@@ -742,6 +771,57 @@ export default class LiveWebrtcService extends Service {
 
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
+  }
+
+  canSendFile(roomId, userId) {
+    return (
+      this.#canInitiateFileTransfer(roomId, userId) &&
+      this.#fileTransfers.canSend(roomId, userId)
+    );
+  }
+
+  canReceiveFile(roomId, userId) {
+    return !!(
+      this.#fileTransferEligible(roomId, userId) &&
+      this.liveRooms
+        ?.roomById(roomId)
+        ?.active_participants?.some(
+          (participant) =>
+            Number(participant.id) === Number(userId) &&
+            participant.can_send_files === true
+        )
+    );
+  }
+
+  sendFile(roomId, userId, file) {
+    if (!this.#canInitiateFileTransfer(roomId, userId)) {
+      throw new Error("File transfer unavailable");
+    }
+    return this.#fileTransfers.send(roomId, userId, file);
+  }
+
+  getReceivedFile(id) {
+    return this.#fileTransfers.getReceivedFile(id);
+  }
+
+  acceptFileTransfer(id) {
+    this.#fileTransfers.accept(id);
+  }
+
+  rejectFileTransfer(id) {
+    this.#fileTransfers.reject(id);
+  }
+
+  cancelFileTransfer(id) {
+    this.#fileTransfers.cancel(id);
+  }
+
+  dismissFileTransfer(id) {
+    this.#fileTransfers.dismiss(id);
+  }
+
+  dismissFinishedFileTransfers() {
+    this.#fileTransfers.dismissFinished();
   }
 
   // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
@@ -1006,6 +1086,7 @@ export default class LiveWebrtcService extends Service {
       return;
     }
 
+    this.#fileTransfers.leave(room.id);
     const keepLocalStream = options.keepLocalStream === true;
     // Local-only teardown: everything below runs except DELETE /leave. Used
     // when the server must not close the presence/session that now belongs
@@ -1544,6 +1625,36 @@ export default class LiveWebrtcService extends Service {
     );
   }
 
+  // The serialized flag is fixed at page load, but rosters are re-broadcast at
+  // least every minute, so a revocation reaches the sender without a reload.
+  #canInitiateFileTransfer(roomId, userId) {
+    const self = this.liveRooms
+      ?.roomById(roomId)
+      ?.active_participants?.find(
+        (participant) => Number(participant.id) === Number(this.currentUser?.id)
+      );
+    return !!(
+      this.currentUser?.live_can_send_files &&
+      self?.can_send_files !== false &&
+      this.#fileTransferEligible(roomId, userId)
+    );
+  }
+
+  #fileTransferEligible(roomId, userId) {
+    return !!(
+      this.site.live_file_transfers_available &&
+      this.currentUser?.id &&
+      this.#activeRoomIds.has(roomId) &&
+      this.#isMeshRoom(roomId) &&
+      Number(userId) !== Number(this.currentUser?.id) &&
+      this.liveRooms
+        ?.roomById(roomId)
+        ?.active_participants?.some(
+          (participant) => Number(participant.id) === Number(userId)
+        )
+    );
+  }
+
   #isMeshRoom(roomId) {
     return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
   }
@@ -1747,6 +1858,7 @@ export default class LiveWebrtcService extends Service {
   }
 
   #teardownRoom(roomId) {
+    this.#fileTransfers.leave(roomId);
     this.#connectingParticipantSnapshots.delete(roomId);
     this.#connectingSignalQueue.delete(roomId);
     this.#roomTransports.delete(roomId);

@@ -42,6 +42,7 @@ module Live
     # a client can seed from goes through here so none of them lacks them.
     def self.participant_entries(room, users, guardian:, metadata:)
       entitlements = Live::MediaEntitlements.for_users(room, users)
+      file_sender_ids = Live::FileTransferEntitlements.for_users(users)
 
       users.map do |user|
         BasicUserSerializer
@@ -49,6 +50,7 @@ module Live
           .as_json
           .merge(metadata[user.id] || {})
           .merge(entitlements[user.id] || Live::MediaEntitlements::NONE)
+          .merge(can_send_files: file_sender_ids.include?(user.id))
       end
     end
 

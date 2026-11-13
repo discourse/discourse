@@ -47,8 +47,6 @@ module Live
         }
       end
 
-      private
-
       # Only `everyone` and `logged_in_users` carry no group_users rows, so
       # core's own predicate decides those two (it also owns how `everyone` is
       # read); everything else, auto groups included, is one query.
