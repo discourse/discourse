@@ -2,6 +2,9 @@
 
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
+  TOPIC_NOT_SUPPLIED = Object.new.freeze
+  private_constant :TOPIC_NOT_SUPPLIED
+
   def unrestricted_link_posting?
     authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
@@ -49,6 +52,7 @@ module PostGuardian
 
     result =
       if authenticated? && post
+        topic = post_topic_including_deleted(post)
         # Allow anonymous users to like if feature is enabled and short-circuit otherwise
         if @user.anonymous?
           return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
@@ -96,13 +100,13 @@ module PostGuardian
           is_flag && not(already_did_flagging) &&
             (
               @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
-                post.topic.private_message?
+                topic&.private_message?
             )
         ) || (action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content) ||
           # not a flagging action, and haven't done it already
           not(is_flag || already_taken_this_action) &&
             # nothing except flagging on archived topics
-            not(post.topic&.archived?) &&
+            not(topic&.archived?) &&
             # nothing except flagging on deleted posts
             not(post.trashed?) &&
             # don't like your own stuff
@@ -233,12 +237,13 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    return true if is_category_group_moderator?(post.topic&.category)
+    topic = post_topic_including_deleted(post)
+    return true if is_category_group_moderator?(topic&.category)
 
     return true if can_delete_all_posts_and_topics?
 
     # Can't delete posts in archived topics unless you are staff
-    return false if post.topic&.archived?
+    return false if topic&.archived?
 
     # You can delete your own posts
     if is_my_own?(post)
@@ -304,10 +309,11 @@ module PostGuardian
     return false if !authenticated?
 
     if is_admin? && SiteSetting.suppress_secured_categories_from_admin
-      topic = post.topic
+      topic = post_topic_including_deleted(post)
+      return false if !topic
       if topic.private_message?
         return can_see_post_topic?(post)
-      elsif topic.category.read_restricted
+      elsif topic.category&.read_restricted
         return secure_category_ids.include?(topic.category_id)
       end
     end
@@ -317,14 +323,53 @@ module PostGuardian
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?
+    topic = post_topic_including_deleted(post)
     return false unless can_see_post_topic?(post)
     return false if visible_post_types.exclude?(post.post_type)
-    return true if is_moderator? || is_category_group_moderator?(post.topic.category)
+    return true if is_moderator? || is_category_group_moderator?(topic&.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
       return true
     end
     false
+  end
+
+  # Adds visibility predicates without joining or removing the caller's conditions.
+  # A supplied persisted, unchanged topic is authorized once and constrains topic_id.
+  def filter_visible_posts(scope, topic: TOPIC_NOT_SUPPLIED)
+    if !topic.equal?(TOPIC_NOT_SUPPLIED)
+      return scope.none if !topic || !topic.persisted? || topic.has_changes_to_save?
+
+      scope = scope.where("posts.topic_id = ?", topic.id)
+      return scope if is_admin?
+      return scope.none if !can_see_post_topic_record?(topic)
+
+      scope = scope.where("posts.post_type IN (?)", visible_post_types)
+      return scope if is_moderator? || is_category_group_moderator?(topic.category)
+
+      return scope.where(visible_post_state_sql)
+    end
+
+    return scope if is_admin?
+
+    scope = scope.where("posts.post_type IN (?)", visible_post_types)
+    topics = visible_topic_scope(Topic.unscoped.where("topics.id = posts.topic_id"))
+
+    if !is_moderator?
+      post_rules = visible_post_state_sql
+      if moderated_category_ids.present?
+        moderated_topics =
+          Topic
+            .unscoped
+            .where(category_id: moderated_category_ids)
+            .where("topics.id = posts.topic_id")
+        scope = scope.where("(#{post_rules}) OR EXISTS (#{moderated_topics.select(1).to_sql})")
+      else
+        scope = scope.where(post_rules)
+      end
+    end
+
+    scope.where("EXISTS (#{topics.select(1).to_sql})")
   end
 
   def reviewable_post_scope
@@ -334,7 +379,7 @@ module PostGuardian
     topics = visible_topic_scope(Topic.with_deleted.where("topics.id = posts.topic_id"))
     topics = topics.where(category_id: category_group_moderator_scope.select(:id)) if !is_staff?
 
-    Post.with_deleted.secured(self).where("EXISTS (#{topics.select(1).to_sql})")
+    Post.with_deleted.with_visible_post_types(self).where("EXISTS (#{topics.select(1).to_sql})")
   end
 
   def can_review_post?(post)
@@ -393,7 +438,8 @@ module PostGuardian
     return false if !authenticated?
     return false if !can_see_post?(post)
 
-    is_staff? || is_my_own?(post) || is_category_group_moderator?(post.topic.category)
+    is_staff? || is_my_own?(post) ||
+      is_category_group_moderator?(post_topic_including_deleted(post)&.category)
   end
 
   def can_change_post_owner?
@@ -479,9 +525,42 @@ module PostGuardian
     "#{topic.id}-#{(topic.updated_at.to_f * 1000).to_i}"
   end
 
+  def visible_post_state_sql
+    # String predicates survive Trashable#with_deleted's attribute-based unscope.
+    deleted = "posts.deleted_at IS NULL"
+    if authenticated? && !user.anonymous? && user.has_trust_level?(TrustLevel[4])
+      deleted = Post.sanitize_sql_array(["(#{deleted} OR posts.deleted_by_id = ?)", user.id])
+    end
+
+    return deleted if can_see_all_hidden_posts?
+
+    hidden = "posts.hidden = FALSE"
+    if authenticated?
+      hidden = Post.sanitize_sql_array(["(#{hidden} OR posts.user_id = ?)", user.id])
+    end
+
+    "#{deleted} AND #{hidden}"
+  end
+
+  def post_topic_including_deleted(post)
+    association = post.association(:topic)
+    return association.target if association.target && !association.stale_target?
+
+    @post_topics_including_deleted ||= {}
+    @post_topics_including_deleted.fetch(post.topic_id) do
+      @post_topics_including_deleted[post.topic_id] = Topic.with_deleted.find_by(id: post.topic_id)
+    end
+  end
+
   def can_see_post_topic?(post)
-    topic = post.topic
+    topic = post_topic_including_deleted(post)
     return false if !topic
+
+    can_see_post_topic_record?(topic)
+  end
+
+  def can_see_post_topic_record?(topic)
+    return can_see_topic?(topic) if !topic.persisted? || topic.has_changes_to_save?
 
     key = topic_memoize_key(topic)
     @can_see_post_topic ||= {}

@@ -58,7 +58,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_RESPONDER
       post
         .replies
         .where(user_id: answering_user.id, deleted_at: nil)
-        .secured(Guardian.new(post.user))
+        .with_visible_post_types(post.user&.guardian)
 
     next if replies.present?
 

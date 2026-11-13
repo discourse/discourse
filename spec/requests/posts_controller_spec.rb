@@ -390,6 +390,26 @@ RSpec.describe PostsController do
       expect(json[0]["user_custom_fields"]["hidden"]).to be_blank
     end
 
+    it "fills the reply page after filtering hidden replies, retaining author and moderator access" do
+      parent = Fabricate(:post)
+      hidden_replies = Fabricate.times(21, :post, topic: parent.topic, user: user, hidden: true)
+      visible_replies = Fabricate.times(20, :post, topic: parent.topic)
+      (hidden_replies + visible_replies).each do |reply|
+        PostReply.create!(post: parent, reply: reply)
+      end
+
+      get "/posts/#{parent.id}/replies.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.pluck("id")).to eq(visible_replies.map(&:id))
+
+      [user, Fabricate(:moderator)].each do |viewer|
+        sign_in(viewer)
+        get "/posts/#{parent.id}/replies.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to eq(hidden_replies.first(20).map(&:id))
+      end
+    end
+
     it "supports pagination" do
       parent = Fabricate(:post)
 
@@ -4613,6 +4633,19 @@ RSpec.describe PostsController do
         sign_in(admin)
         get "/posts/#{admin.username}/deleted.json"
         expect(response.status).to eq(200)
+      end
+
+      it "excludes shared drafts from the deleted-post feed for moderators without draft access" do
+        shared_draft = Fabricate(:shared_draft)
+        denied_post = Fabricate(:post, user: user, topic: shared_draft.topic)
+        visible_post = Fabricate(:post, user: user)
+        denied_post.trash!(admin)
+        visible_post.trash!(admin)
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to contain_exactly(visible_post.id)
       end
 
       it "doesn't return secured categories for moderators if they don't have access" do

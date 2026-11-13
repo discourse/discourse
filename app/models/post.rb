@@ -117,8 +117,17 @@ class Post < ActiveRecord::Base
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
   scope :visible, -> { joins(:topic).where("topics.visible = true").where(hidden: false) }
-  scope :secured,
-        ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
+  # Adds the rules of Guardian#can_see_post? without removing existing conditions.
+  # Admins are unchanged, including whispers. Nil means anonymous.
+  # Use with_deleted to include permitted deleted posts.
+  # Assumes an unaliased posts table; predicate overrides in plugins are not reflected.
+  scope :secured, ->(guardian = nil) { (guardian || Guardian.new).filter_visible_posts(all) }
+
+  # Post types only: does not authorize topic access or hidden/deleted state.
+  scope :with_visible_post_types,
+        ->(guardian = nil) do
+          where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user))
+        end
 
   scope :for_mailing_list,
         ->(user, since) do

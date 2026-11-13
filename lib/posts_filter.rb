@@ -298,7 +298,7 @@ class PostsFilter
     # default scope in the ON clause, which would hide status:deleted matches.
     relation =
       base_scope
-        .secured(@guardian)
+        .with_visible_post_types(@guardian)
         .joins("INNER JOIN topics ON topics.id = posts.topic_id")
         .merge(topic_scope)
         .where("topics.archetype = ?", Archetype.default)

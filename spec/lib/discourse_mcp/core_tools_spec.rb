@@ -619,6 +619,28 @@ describe DiscourseMcp::Tools::GetPostReplies do
     end
   end
 
+  it "fills the direct reply limit using only visible replies" do
+    root = Fabricate(:post, user: author)
+    hidden_replies = Fabricate.times(21, :post, topic: root.topic, user: author, hidden: true)
+    visible_replies = Fabricate.times(20, :post, topic: root.topic, user: viewer)
+    (hidden_replies + visible_replies).each { |reply| PostReply.create!(post: root, reply: reply) }
+
+    [viewer, author, moderator].each do |user|
+      result =
+        described_class.call(
+          arguments: {
+            "post_id" => root.id,
+            "mode" => "direct_replies",
+          },
+          request_context:
+            instance_double(DiscourseMcp::RequestContext, user: user, guardian: user.guardian),
+        ).fetch(:structuredContent)
+      expected = user == viewer ? visible_replies : hidden_replies.first(20)
+      expect(result[:posts].pluck(:id)).to eq(expected.map(&:id))
+      expect(result[:meta][:page_was_full]).to eq(true)
+    end
+  end
+
   it "returns bounded direct replies and reply history without exposing hidden posts" do
     SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
     root = Fabricate(:post, user: author)

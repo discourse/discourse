@@ -19,6 +19,16 @@ RSpec.describe PostGuardian do
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
   fab!(:staff_post) { Fabricate(:post, topic: topic, user: moderator) }
 
+  before do
+    Guardian.enable_topic_can_see_consistency_check
+    Guardian.enable_post_can_see_consistency_check
+  end
+
+  after do
+    Guardian.disable_topic_can_see_consistency_check
+    Guardian.disable_post_can_see_consistency_check
+  end
+
   ###### LINK POSTING ######
 
   describe "#link_posting_access" do
@@ -122,6 +132,19 @@ RSpec.describe PostGuardian do
 
     it "returns false when the user is nil" do
       expect(Guardian.new(nil).post_can_act?(post, :like)).to be_falsey
+    end
+
+    it "uses deleted topic state when checking flags and archived actions" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      group.add(user)
+      post.topic.update!(category: category, archived: true)
+      post.topic.trash!(admin)
+      candidate = Post.find(post.id)
+      SiteSetting.flag_post_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      expect(user.guardian.post_can_act?(candidate, :spam)).to be_falsey
+      expect(user.guardian.post_can_act?(candidate, :like)).to be_falsey
+      expect(candidate.association(:topic).loaded?).to eq(false)
     end
 
     it "returns false when the post is nil" do
@@ -1192,6 +1215,344 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#filter_visible_posts" do
+    def expect_post_scope_parity(posts, viewers)
+      viewers.each do |viewer|
+        guardian = viewer&.guardian || Guardian.new
+        expected_ids = posts.select { |candidate| guardian.can_see_post?(candidate) }.map(&:id)
+        expect(
+          Post.with_deleted.where(id: posts.map(&:id)).secured(guardian).pluck(:id),
+        ).to match_array(expected_ids),
+        "viewer #{viewer&.id || "anonymous"}"
+        posts
+          .map(&:topic_id)
+          .uniq
+          .each do |topic_id|
+            topic = Topic.with_deleted.find_by(id: topic_id)
+            next if !topic
+            candidates = Post.with_deleted.where(id: posts.map(&:id))
+            expected_for_topic =
+              posts
+                .select do |candidate|
+                  candidate.topic_id == topic_id && expected_ids.include?(candidate.id)
+                end
+                .map(&:id)
+            expect(
+              guardian.filter_visible_posts(candidates, topic: topic).pluck(:id),
+            ).to match_array(expected_for_topic)
+          end
+      end
+    end
+
+    it "matches post types, hidden state, and deletion for every kind of viewer" do
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.hidden_post_visible_groups = group.id.to_s
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+      category_moderator = Fabricate(:user, groups: [Fabricate(:group)])
+      Fabricate(
+        :category_moderation_group,
+        category: category,
+        group: category_moderator.groups.first,
+      )
+      staged = Fabricate(:user, staged: true)
+      viewers = [
+        nil,
+        trust_level_0,
+        trust_level_4,
+        user,
+        groupless_user,
+        staged,
+        moderator,
+        admin,
+        category_moderator,
+      ]
+      posts = []
+      Post.types.each_value do |post_type|
+        [false, true].product([false, true])
+          .each do |hidden, deleted|
+            [user, trust_level_4, staged].each do |author|
+              posts << Fabricate(
+                :post,
+                topic: topic,
+                user: author,
+                post_type: post_type,
+                hidden: hidden,
+                deleted_at: deleted ? Time.current : nil,
+                deleted_by_id: deleted ? author.id : nil,
+              )
+            end
+          end
+      end
+      expect_post_scope_parity(posts, viewers)
+
+      SiteSetting.whispers_allowed_groups = ""
+      SiteSetting.enable_category_group_moderation = false
+      expect_post_scope_parity(posts, viewers)
+    end
+
+    it "requires topic access before category moderator and post-state exceptions" do
+      SiteSetting.enable_category_group_moderation = true
+      private_category = Fabricate(:private_category, group: group)
+      Fabricate(:category_moderation_group, category: private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      unlisted_topic = Fabricate(:topic, visible: false)
+      shared_draft = Fabricate(:shared_draft)
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      posts =
+        [private_topic, unlisted_topic, shared_draft.topic].flat_map do |candidate_topic|
+          [false, true].map { |hidden| Fabricate(:post, topic: candidate_topic, hidden: hidden) }
+        end
+      expect_post_scope_parity(posts, [nil, groupless_user, user, moderator, admin])
+      expect(Post.secured(nil).where(topic_id: unlisted_topic.id).count).to eq(1)
+      expect(Post.secured(user.guardian).where(topic_id: private_topic.id).count).to eq(2)
+      expect(Post.secured(moderator.guardian).where(topic_id: shared_draft.topic_id)).to be_empty
+    end
+
+    it "resolves deleted topics consistently for lazy, preloaded, and assigned associations" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      topic.trash!(admin)
+      hidden_post.trash!(admin)
+      lazy = Post.with_deleted.find(hidden_post.id)
+      preloaded = Post.with_deleted.includes(:topic).find(hidden_post.id)
+      assigned = Post.with_deleted.find(hidden_post.id)
+      assigned.topic = Topic.with_deleted.find(topic.id)
+      expect(lazy.topic).to be_nil
+      expect(preloaded.topic).to be_nil
+      [lazy, preloaded, assigned].each do |candidate|
+        expect(user.guardian.can_see_post?(candidate)).to eq(true)
+        expect(moderator.guardian.can_see_post?(candidate)).to eq(true)
+      end
+      expect_post_scope_parity(
+        [lazy, Post.find(post.id)],
+        [nil, user, groupless_user, moderator, admin],
+      )
+
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = group.id.to_s
+      SiteSetting.enable_category_group_moderation = false
+      expect(user.guardian.can_see_post?(Post.find(post.id))).to eq(true)
+      expect(user.guardian.can_see_post?(lazy)).to eq(false)
+      expect_post_scope_parity([lazy, Post.find(post.id)], [nil, user, moderator, admin])
+    end
+
+    it "excludes deleted posts for authenticated anonymous-mode TL4 deleters" do
+      SiteSetting.allow_anonymous_mode = true
+      anon.update!(trust_level: TrustLevel[4])
+      post.trash!(anon)
+      expect(anon.anonymous?).to eq(true)
+      expect(anon.guardian.can_see_deleted_post?(post)).to eq(false)
+      expect_post_scope_parity([post], [anon])
+      expect(Post.with_deleted.secured(anon.guardian).where(id: post.id)).to be_empty
+    end
+
+    it "memoizes deleted and missing topic lookups without loading or mutating associations" do
+      Guardian.disable_post_can_see_consistency_check
+      Guardian.disable_topic_can_see_consistency_check
+      topic.trash!(admin)
+      candidates = [Post.find(post.id), Post.find(second_post.id)]
+      guardian = moderator.guardian
+      queries =
+        track_sql_queries do
+          candidates.each do |candidate|
+            2.times { expect(guardian.can_see_post?(candidate)).to eq(true) }
+          end
+        end
+      expect(queries.grep(/SELECT "topics"\.\* FROM "topics"/).size).to eq(1)
+      expect(candidates.map { |candidate| candidate.association(:topic).loaded? }).to eq(
+        [false, false],
+      )
+
+      orphan = Fabricate(:post)
+      orphan.update_columns(topic_id: -1000)
+      orphan = Post.find(orphan.id)
+      queries =
+        track_sql_queries { 2.times { expect(guardian.can_see_post?(orphan)).to eq(false) } }
+      expect(queries.grep(/SELECT "topics"\.\* FROM "topics"/).size).to eq(1)
+      expect(orphan.association(:topic).loaded?).to eq(false)
+    end
+
+    it "honors an assigned unsaved topic and skips consistency checks for dirty posts" do
+      post.hidden = true
+      expect(user.guardian.can_see_post?(post)).to eq(false)
+      Guardian.disable_topic_can_see_consistency_check
+      assigned = Post.find(second_post.id)
+      assigned.topic = Fabricate.build(:topic, category: category)
+      guardian = user.guardian
+      expect(guardian.can_see_post?(assigned)).to eq(true)
+      expect(assigned.topic).to be_new_record
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      assigned.topic = Fabricate.build(:topic, category: private_category)
+      expect(guardian.can_see_post?(assigned)).to eq(false)
+    end
+
+    it "skips post consistency checks for dirty or new loaded topics without loading associations" do
+      Guardian.disable_topic_can_see_consistency_check
+      guardian = user.guardian
+      unloaded = Post.find(post.id)
+      expect(guardian.can_see_post?(unloaded)).to eq(true)
+      expect(unloaded.association(:topic)).not_to be_loaded
+
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      dirty = Post.find(post.id)
+      dirty.topic.category = private_category
+      expect(dirty).not_to have_changes_to_save
+      expect(guardian.can_see_post?(dirty)).to eq(false)
+
+      assigned = Post.find(post.id)
+      assigned.association(:topic).target = Fabricate.build(:topic, category: private_category)
+      expect(assigned).not_to have_changes_to_save
+      expect(guardian.can_see_post?(assigned)).to eq(false)
+    end
+
+    it "supports an extension authorizing a post with no topic" do
+      Guardian.disable_post_can_see_consistency_check
+      orphan = Fabricate(:post)
+      orphan.update_columns(topic_id: -1000)
+      guardian = user.guardian
+      guardian.define_singleton_method(:can_see_post_topic?) { |candidate| candidate.persisted? }
+
+      expect(guardian.can_see_post?(Post.find(orphan.id))).to eq(true)
+    end
+
+    it "ignores stale association targets without mutating them" do
+      old_topic = post.topic
+      restricted =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      post.update_columns(topic_id: restricted.id)
+      expect(user.guardian.can_see_post?(post)).to eq(false)
+      expect(post.association(:topic).target).to eq(old_topic)
+      expect(post.association(:topic)).to be_stale_target
+    end
+
+    it "retains compatibility with single-argument topic predicate prepends" do
+      guardian = user.guardian
+      extension =
+        Module.new do
+          def can_see_post_topic?(post)
+            post.persisted? && super
+          end
+        end
+      guardian.singleton_class.prepend(extension)
+      expect(guardian.can_see_post?(post)).to eq(true)
+    end
+
+    it "uses the deleter's trust level rather than authorship or the delete-all group" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = group.id.to_s
+      post.trash!(trust_level_4)
+      expect(
+        Post.with_deleted.secured(trust_level_4.guardian).where(id: post.id),
+      ).to contain_exactly(post)
+      expect(Post.with_deleted.secured(user.guardian).where(id: post.id)).to be_empty
+      post.update!(deleted_by_id: user.id)
+      expect(Post.with_deleted.secured(user.guardian).where(id: post.id)).to be_empty
+      user.update!(trust_level: TrustLevel[3])
+      expect_post_scope_parity([post], [user, trust_level_4, moderator, admin])
+    end
+
+    it "matches direct and group PMs, moderator warnings, and pending flags without recursion" do
+      direct = Fabricate(:private_message_topic, recipient: user)
+      grouped = Fabricate(:group_private_message_topic, recipient_group: group)
+      warning = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      flagged = Fabricate(:private_message_topic)
+      resolved = Fabricate(:private_message_topic)
+      ignored = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: flagged, category: nil)
+      Fabricate(:reviewable_flagged_post, topic: resolved, category: nil, status: :rejected)
+      Fabricate(:reviewable_flagged_post, topic: ignored, category: nil, score: -1)
+      Fabricate(:shared_draft, topic: direct)
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      posts =
+        [direct, grouped, warning, flagged, resolved, ignored].map do |pm|
+          Fabricate(:post, topic: pm)
+        end
+      expect_post_scope_parity(posts, [nil, user, groupless_user, moderator, admin])
+      expect(
+        Post.secured(moderator.guardian).where(id: posts.map(&:id)).pluck(:topic_id),
+      ).to contain_exactly(warning.id, flagged.id)
+      expect(
+        Post.secured(user.guardian).where(id: posts.map(&:id)).pluck(:topic_id),
+      ).to contain_exactly(direct.id, grouped.id)
+    end
+
+    it "matches staged users in their own email-in restricted topics, including blank addresses" do
+      SiteSetting.email_in = true
+      staged = Fabricate(:user, staged: true)
+      restricted =
+        Fabricate(
+          :private_category,
+          group: group,
+          email_in: "inbound@example.com",
+          email_in_allow_strangers: true,
+        )
+      own_topic = Fabricate(:topic, category: restricted, user: staged)
+      own_post = Fabricate(:post, topic: own_topic, user: staged)
+      other_post = Fabricate(:post, topic: Fabricate(:topic, category: restricted))
+      expect(
+        Post.secured(staged.guardian).where(id: [own_post.id, other_post.id]),
+      ).to contain_exactly(own_post)
+      [nil, "", "   ", "\t\r\n\f\v"].each do |email_in|
+        restricted.update_columns(email_in: email_in)
+        expect(Post.secured(staged.guardian).where(id: own_post.id)).to be_empty
+        expect_post_scope_parity([Post.find(own_post.id)], [staged])
+      end
+      ["\u00a0", "\u3000"].each do |email_in|
+        restricted.update_columns(email_in: email_in)
+        expect_post_scope_parity([Post.find(own_post.id)], [staged])
+      end
+    end
+
+    it "matches anonymous hidden-group permissions with and without granular groups" do
+      [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:anonymous_users]].each do |group_id|
+        SiteSetting.stubs(:hidden_post_visible_groups_map).returns([group_id])
+        [false, true].each do |enabled|
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          expect_post_scope_parity([post, hidden_post], [nil, user])
+          expected = enabled && group_id == Group::AUTO_GROUPS[:anonymous_users]
+          expect(Post.secured(nil).where(id: hidden_post.id).exists?).to eq(expected)
+        end
+      end
+    end
+
+    it "preserves the unconditional admin bypass for suppressed categories, whispers, and orphans" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      SiteSetting.whispers_allowed_groups = ""
+      restricted = Fabricate(:private_category, group: group)
+      private_post =
+        Fabricate(
+          :post,
+          topic: Fabricate(:topic, category: restricted),
+          post_type: Post.types[:whisper],
+          hidden: true,
+          deleted_at: Time.current,
+        )
+      pm_post = Fabricate(:post, topic: Fabricate(:private_message_topic))
+      orphan = Fabricate(:post)
+      DB.exec("DELETE FROM topics WHERE id = ?", orphan.topic_id)
+      orphan.reload
+      expect_post_scope_parity(
+        [private_post, pm_post, orphan],
+        [nil, groupless_user, moderator, admin],
+      )
+      expect(
+        Post
+          .with_deleted
+          .secured(admin.guardian)
+          .where(id: [private_post.id, pm_post.id, orphan.id]),
+      ).to contain_exactly(private_post, pm_post, orphan)
+    end
+
+    it "keeps reviewable scopes type-only with a single topic visibility predicate" do
+      guardian = moderator.guardian
+      topics = guardian.visible_topic_scope(Topic.with_deleted.where("topics.id = posts.topic_id"))
+      baseline =
+        Post
+          .with_deleted
+          .where("posts.post_type IN (?)", Topic.visible_post_types(moderator))
+          .where("EXISTS (#{topics.select(1).to_sql})")
+      expect(guardian.reviewable_post_scope.to_sql).to eq(baseline.to_sql)
+    end
+  end
+
   describe "#filter_hidden_posts" do
     before { SiteSetting.hidden_post_visible_groups = "" }
 
@@ -1393,6 +1754,16 @@ RSpec.describe PostGuardian do
   end
 
   describe "#can_view_edit_history?" do
+    it "resolves deleted topics for category moderators without mutating the association" do
+      SiteSetting.edit_history_visible_to_public = false
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      topic.trash!(admin)
+      candidate = Post.find(post.id)
+      expect(user.guardian.can_view_edit_history?(candidate)).to eq(true)
+      expect(candidate.association(:topic).loaded?).to eq(false)
+    end
+
     it "returns true for wiki posts" do
       post.update!(wiki: true)
 
@@ -1514,6 +1885,13 @@ RSpec.describe PostGuardian do
     it "allows public categories" do
       expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_truthy
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+
+    it "allows admin notifications for an in-memory topic without a category" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      post.topic.category = nil
+
+      expect(admin.guardian.can_receive_post_notifications?(post)).to eq(true)
     end
 
     it "disallows secure categories with no access" do

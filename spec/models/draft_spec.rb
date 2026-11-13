@@ -10,6 +10,18 @@ RSpec.describe Draft do
 
   it { is_expected.to have_many(:upload_references).dependent(:delete_all) }
 
+  describe ".allowed_draft_posts_for_user" do
+    it "preloads the user's hidden posts but not another author's" do
+      own_hidden = Fabricate(:post, topic: post.topic, user: user, hidden: true)
+      other_hidden = Fabricate(:post, topic: post.topic, hidden: true)
+      ids = [post.id, own_hidden.id, other_hidden.id]
+      expect(Draft.allowed_draft_posts_for_user(user).where(id: ids)).to contain_exactly(
+        post,
+        own_hidden,
+      )
+    end
+  end
+
   describe "system user" do
     it "can not set drafts" do
       # fake a sequence
