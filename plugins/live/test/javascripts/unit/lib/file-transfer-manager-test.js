@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import FileTransferManager, {
   CHUNK_SIZE,
   MAX_FILE_SIZE,
+  RECEIVE_WINDOW,
 } from "discourse/plugins/live/discourse/lib/live/file-transfer-manager";
 
 class Channel {
@@ -20,12 +21,54 @@ class Channel {
   }
 }
 
+// Unit tests explicitly inject memory storage; production never falls back to it.
+class TestSink {
+  chunks = [];
+  discarded = false;
+
+  async write(chunk) {
+    this.chunks.push(chunk);
+  }
+
+  async finish() {
+    return { size: (await this.getFile()).size };
+  }
+
+  async getFile() {
+    return new File(this.chunks, "received", {
+      type: "application/octet-stream",
+    });
+  }
+
+  async discard() {
+    this.discarded = true;
+    this.chunks = [];
+  }
+}
+
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((yes, no) => {
+    resolve = yes;
+    reject = no;
+  });
+  return { promise, resolve, reject };
+}
+
 module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
   hooks.beforeEach(function () {
     this.eligible = true;
+    this.sinks = [];
+    this.openSink = async () => {
+      const sink = new TestSink();
+      this.sinks.push(sink);
+      return sink;
+    };
     this.sender = new FileTransferManager({ isEligible: () => this.eligible });
     this.receiver = new FileTransferManager({
       isEligible: () => this.eligible,
+      openReceiveSink: this.openSink,
     });
     this.a = new Channel();
     this.b = new Channel();
@@ -56,18 +99,28 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       1,
       "offer only; no bytes before acceptance"
     );
-    this.b.remote = null; // withhold receiver acknowledgement
-    this.receiver.accept(id);
-    this.message(this.a, "accept", id);
+    const send = this.b.send.bind(this.b);
+    this.b.send = (data) => {
+      if (typeof data === "string" && JSON.parse(data).type === "complete") {
+        return;
+      }
+      send(data);
+    };
+    await this.receiver.accept(id);
     await waitUntil(() => this.receiver.transfers[0].status === "completed");
     assert.strictEqual(
       this.sender.transfers[0].status,
       "transferring",
       "still awaits ack"
     );
-    assert.strictEqual(await this.receiver.transfers[0].blob.text(), contents);
     assert.strictEqual(
-      this.receiver.transfers[0].blob.type,
+      await (
+        await this.receiver.getReceivedFile(this.receiver.transfers[0].id)
+      ).text(),
+      contents
+    );
+    assert.strictEqual(
+      (await this.receiver.getReceivedFile(id)).type,
       "application/octet-stream"
     );
     const frames = this.a.sent.filter((data) => data instanceof ArrayBuffer);
@@ -78,14 +131,14 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     this.message(this.a, "complete", id);
     assert.strictEqual(this.sender.transfers[0].status, "completed");
     assert.strictEqual(this.sender.transfers[0].progress, 1);
-    assert.strictEqual(this.sender.transfers[0].blob, null);
+    assert.false(this.sender.transfers[0].hasFile);
   });
 
-  test("zero byte files still require acceptance and complete with an empty Blob", async function (assert) {
+  test("zero byte files still require acceptance and expose an empty disk File", async function (assert) {
     const id = await this.offer("");
-    this.receiver.accept(id);
+    await this.receiver.accept(id);
     await waitUntil(() => this.sender.transfers[0].status === "completed");
-    assert.strictEqual(this.receiver.transfers[0].blob.size, 0);
+    assert.strictEqual((await this.receiver.getReceivedFile(id)).size, 0);
     assert.strictEqual(this.receiver.transfers[0].progress, 1);
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
   });
@@ -110,8 +163,8 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("backpressure stops reads and cancellation stops the pump", async function (assert) {
     const id = await this.offer();
-    this.a.bufferedAmount = 1024 * 1024;
-    this.receiver.accept(id);
+    this.a.bufferedAmount = RECEIVE_WINDOW + 1;
+    await this.receiver.accept(id);
     await Promise.resolve();
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     this.sender.cancel(id);
@@ -119,6 +172,20 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     await new Promise((resolve) => setTimeout(resolve, 40));
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     assert.strictEqual(this.sender.transfers[0].status, "cancelled");
+  });
+
+  test("control-channel congestion fails closed instead of queuing cancellation", async function (assert) {
+    const id = await this.offer();
+    this.a.bufferedAmount = 1024 * 1024;
+    await this.receiver.accept(id);
+    this.sender.cancel(id);
+    assert.strictEqual(this.sender.transfers[0].status, "failed");
+    assert.strictEqual(
+      this.sender.transfers[0].error,
+      "Data channel unavailable"
+    );
+    assert.strictEqual(this.a.readyState, "closed");
+    assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
   });
 
   test("disabled or non-participant eligibility blocks send and incoming offers", async function (assert) {
@@ -133,7 +200,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     assert.strictEqual(this.b.readyState, "closed");
   });
 
-  test("validates metadata and bounds pending incoming offers globally", function (assert) {
+  test("validates metadata and bounds pending incoming offers globally", async function (assert) {
     for (const metadata of [
       { name: "../bad", size: 1 },
       { name: "a\\b", size: 1 },
@@ -158,7 +225,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     assert.strictEqual(this.receiver.transfers.length, 4);
   });
 
-  test("aggregate accepted receive reservations cannot exceed 200 MiB", function (assert) {
+  test("aggregate accepted receive reservations cannot exceed 200 MiB", async function (assert) {
     for (let userId = 10; userId < 13; userId++) {
       const channel = new Channel();
       this.receiver.attach(1, userId, channel);
@@ -167,7 +234,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
         name: "large.bin",
         size: MAX_FILE_SIZE,
       });
-      this.receiver.accept(id);
+      await this.receiver.accept(id);
     }
     assert.deepEqual(
       this.receiver.transfers.map((t) => t.status),
@@ -184,15 +251,15 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     this.b.onmessage({ data: frame.buffer });
     assert.strictEqual(this.receiver.transfers[0].status, "failed");
     assert.strictEqual(this.b.readyState, "closed");
-    assert.strictEqual(this.receiver.transfers[0].blob, null);
+    assert.false(this.receiver.transfers[0].hasFile);
   });
 
-  test("malformed controls and early completion cannot create a Blob", async function (assert) {
+  test("malformed controls and early completion cannot expose a File", async function (assert) {
     const id = await this.offer();
-    this.receiver.accept(id);
+    await this.receiver.accept(id);
     this.message(this.b, "complete", id);
     assert.strictEqual(this.receiver.transfers[0].status, "failed");
-    assert.strictEqual(this.receiver.transfers[0].blob, null);
+    assert.false(this.receiver.transfers[0].hasFile);
     assert.strictEqual(this.b.readyState, "closed");
   });
 
@@ -208,23 +275,34 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("backpressure resumes once the channel buffer drains", async function (assert) {
     const id = await this.offer("resumed");
-    this.a.bufferedAmount = 1024 * 1024;
-    this.receiver.accept(id);
+    this.a.bufferedAmount = RECEIVE_WINDOW + 1;
+    await this.receiver.accept(id);
     await Promise.resolve();
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     this.a.bufferedAmount = 0;
     await waitUntil(() => this.sender.transfers[0].status === "completed");
-    assert.strictEqual(await this.receiver.transfers[0].blob.text(), "resumed");
+    assert.strictEqual(
+      await (
+        await this.receiver.getReceivedFile(this.receiver.transfers[0].id)
+      ).text(),
+      "resumed"
+    );
   });
 
-  test("completed receive Blobs count toward the global reservation budget", function (assert) {
+  test("completed receive files count toward the global disk reservation budget", async function (assert) {
     const id = crypto.randomUUID();
     this.message(this.b, "offer", id, { name: "retained", size: 1 });
-    this.receiver.accept(id);
+    await this.receiver.accept(id);
     const frame = new Uint8Array(37);
     frame.set(new TextEncoder().encode(id));
     this.b.onmessage({ data: frame.buffer });
+    await waitUntil(() =>
+      this.b.sent.some(
+        (data) => typeof data === "string" && JSON.parse(data).type === "ack"
+      )
+    );
     this.message(this.b, "complete", id);
+    await waitUntil(() => this.receiver.transfers[0].status === "completed");
     for (let userId = 10; userId < 12; userId++) {
       const channel = new Channel();
       this.receiver.attach(1, userId, channel);
@@ -233,28 +311,30 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
         name: "large",
         size: MAX_FILE_SIZE,
       });
-      this.receiver.accept(pendingId);
+      await this.receiver.accept(pendingId);
     }
     assert.deepEqual(
       this.receiver.transfers.map((entry) => entry.status),
       ["completed", "transferring", "rejected"]
     );
     this.receiver.dismiss(id);
-    assert.false(this.receiver.transfers.some((entry) => entry.blob));
+    assert.false(this.receiver.transfers.some((entry) => entry.hasFile));
   });
 
-  test("a failed completion acknowledgement cannot become completed or retain a Blob", async function (assert) {
+  test("a failed completion acknowledgement cannot become completed or retain a File", async function (assert) {
     const id = await this.offer("");
-    this.receiver.accept(id);
+    this.b.remote = null;
+    await this.receiver.accept(id);
     this.b.send = () => {
       throw new Error("closed");
     };
+    this.message(this.a, "accept", id);
     await waitUntil(() => this.receiver.transfers[0].status === "failed");
-    assert.strictEqual(this.receiver.transfers[0].blob, null);
+    assert.false(this.receiver.transfers[0].hasFile);
     assert.notStrictEqual(this.sender.transfers[0].status, "completed");
   });
 
-  test("oversized and malformed controls close the channel without retaining entries", function (assert) {
+  test("oversized and malformed controls close the channel without retaining entries", async function (assert) {
     for (const data of [
       "{",
       "x".repeat(2049),
@@ -274,44 +354,45 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     }
   });
 
-  test("receive overflow and oversized binary frames fail without retaining bytes", function (assert) {
+  test("receive overflow and oversized binary frames fail without retaining bytes", async function (assert) {
     for (const length of [38, CHUNK_SIZE + 37]) {
       const channel = new Channel();
       const id = crypto.randomUUID();
       this.receiver.attach(1, 9, channel);
       this.message(channel, "offer", id, { name: "x", size: 1 });
-      this.receiver.accept(id);
+      await this.receiver.accept(id);
       const frame = new Uint8Array(length);
       frame.set(new TextEncoder().encode(id));
       channel.onmessage({ data: frame.buffer });
       assert.strictEqual(this.receiver.transfers.at(-1).status, "failed");
-      assert.strictEqual(this.receiver.transfers.at(-1).blob, null);
+      assert.false(this.receiver.transfers.at(-1).hasFile);
       assert.strictEqual(channel.readyState, "closed");
     }
   });
 
-  test("stale transfer frames cannot contaminate a later accepted transfer", function (assert) {
+  test("stale transfer frames cannot contaminate a later accepted transfer", async function (assert) {
     const oldId = crypto.randomUUID();
     this.message(this.b, "offer", oldId, { name: "old", size: 1 });
-    this.receiver.accept(oldId);
+    await this.receiver.accept(oldId);
     this.receiver.cancel(oldId);
     const id = crypto.randomUUID();
     this.message(this.b, "offer", id, { name: "new", size: 0 });
-    this.receiver.accept(id);
+    await this.receiver.accept(id);
     const frame = new Uint8Array(37);
     frame.set(new TextEncoder().encode(oldId));
     this.b.onmessage({ data: frame.buffer });
     this.message(this.b, "complete", id);
+    await waitUntil(() => this.receiver.transfers[1].status === "completed");
     assert.strictEqual(this.receiver.transfers[1].status, "completed");
-    assert.strictEqual(this.receiver.transfers[1].blob.size, 0);
+    assert.strictEqual((await this.receiver.getReceivedFile(id)).size, 0);
     this.receiver.dismiss(id);
-    assert.false(this.receiver.transfers.some((entry) => entry.blob));
+    assert.false(this.receiver.transfers.some((entry) => entry.hasFile));
   });
 
-  test("stale cancelled frames leave a new pending offer intact, but matching preaccept bytes close it", function (assert) {
+  test("stale cancelled frames leave a new pending offer intact, but matching preaccept bytes close it", async function (assert) {
     const oldId = crypto.randomUUID();
     this.message(this.b, "offer", oldId, { name: "old", size: 1 });
-    this.receiver.accept(oldId);
+    await this.receiver.accept(oldId);
     this.receiver.cancel(oldId);
     const id = crypto.randomUUID();
     this.message(this.b, "offer", id, { name: "new", size: 1 });
@@ -320,7 +401,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     this.b.onmessage({ data: frame.buffer });
     assert.strictEqual(this.receiver.transfers[1].status, "pending");
     assert.strictEqual(this.receiver.transfers[1].progress, 0);
-    assert.strictEqual(this.receiver.transfers[1].blob, null);
+    assert.false(this.receiver.transfers[1].hasFile);
     assert.strictEqual(
       this.b.readyState,
       "open",
@@ -329,7 +410,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     frame.set(new TextEncoder().encode(id));
     this.b.onmessage({ data: frame.buffer });
     assert.strictEqual(this.receiver.transfers[1].status, "failed");
-    assert.strictEqual(this.receiver.transfers[1].blob, null);
+    assert.false(this.receiver.transfers[1].hasFile);
     assert.strictEqual(
       this.b.readyState,
       "closed",
@@ -337,7 +418,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     );
   });
 
-  test("retained history is bounded even when a peer floods offers", function (assert) {
+  test("retained history is bounded even when a peer floods offers", async function (assert) {
     for (let i = 0; i < 110; i++) {
       const id = crypto.randomUUID();
       this.message(this.b, "offer", id, { name: "x", size: 0 });
@@ -386,5 +467,253 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     assert.strictEqual(this.sender.transfers[0].status, "failed");
     this.receiver.destroy();
     assert.deepEqual(this.receiver.transfers, []);
+  });
+  test("accept waits for disk initialization and cancellation discards late sink", async function (assert) {
+    const opened = deferred();
+    this.receiver.destroy();
+    this.receiver = new FileTransferManager({
+      isEligible: () => true,
+      openReceiveSink: () => opened.promise,
+    });
+    this.receiver.attach(1, 1, this.b);
+    const id = await this.offer();
+    const acceptance = this.receiver.accept(id);
+    assert.strictEqual(this.receiver.transfers[0].status, "initializing");
+    assert.false(this.b.sent.some((d) => JSON.parse(d).type === "accept"));
+    this.receiver.cancel(id);
+    const sink = new TestSink();
+    opened.resolve(sink);
+    await acceptance;
+    assert.true(sink.discarded);
+    assert.strictEqual(this.receiver.transfers[0].status, "cancelled");
+  });
+
+  test("unavailable storage fails closed before accept", async function (assert) {
+    this.receiver.destroy();
+    this.receiver = new FileTransferManager({
+      isEligible: () => true,
+      openReceiveSink: async () => {
+        throw new Error("OPFS missing");
+      },
+    });
+    this.receiver.attach(1, 1, this.b);
+    const id = await this.offer();
+    await this.receiver.accept(id);
+    assert.strictEqual(this.receiver.transfers[0].error, "storage_unavailable");
+    assert.false(this.b.sent.some((d) => JSON.parse(d).type === "accept"));
+    assert.false(this.receiver.transfers[0].hasFile);
+  });
+
+  test("slow disk bounds sender window and flush gates completion", async function (assert) {
+    const write = deferred();
+    const finish = deferred();
+    const id = await this.offer("x".repeat(RECEIVE_WINDOW + 1));
+    await this.receiver.accept(id);
+    this.sinks[0].write = (chunk) => {
+      this.sinks[0].chunks.push(chunk);
+      return write.promise;
+    };
+    this.sinks[0].finish = () => finish.promise;
+    await waitUntil(() => this.a.sent.some((d) => d instanceof ArrayBuffer));
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    assert.strictEqual(
+      this.a.sent.filter((d) => d instanceof ArrayBuffer).length,
+      RECEIVE_WINDOW / CHUNK_SIZE
+    );
+    assert.false(
+      this.b.sent.some(
+        (data) => typeof data === "string" && JSON.parse(data).type === "ack"
+      ),
+      "no ACK until disk persistence"
+    );
+    write.resolve();
+    await waitUntil(
+      () =>
+        this.a.sent.filter((d) => d instanceof ArrayBuffer).length ===
+        RECEIVE_WINDOW / CHUNK_SIZE + 1
+    );
+    await waitUntil(() =>
+      this.a.sent.some(
+        (d) => typeof d === "string" && JSON.parse(d).type === "complete"
+      )
+    );
+    assert.strictEqual(this.sender.transfers[0].status, "transferring");
+    finish.resolve(new File(["x".repeat(RECEIVE_WINDOW + 1)], "received"));
+    await waitUntil(() => this.sender.transfers[0].status === "completed");
+    assert.true((await this.receiver.getReceivedFile(id)) instanceof File);
+  });
+
+  test("abusive peer exceeds bounded disk window and gets disconnected", async function (assert) {
+    const id = crypto.randomUUID();
+    this.message(this.b, "offer", id, {
+      name: "x",
+      size: RECEIVE_WINDOW + CHUNK_SIZE,
+    });
+    await this.receiver.accept(id);
+    const write = deferred();
+    this.sinks[0].write = () => write.promise;
+    const frame = new Uint8Array(36 + CHUNK_SIZE);
+    frame.set(new TextEncoder().encode(id));
+    for (let i = 0; i <= RECEIVE_WINDOW / CHUNK_SIZE; i++) {
+      this.b.onmessage({ data: frame.buffer });
+    }
+    assert.strictEqual(this.receiver.transfers[0].status, "failed");
+    assert.strictEqual(this.b.readyState, "closed");
+    write.resolve();
+    await Promise.resolve();
+    assert.false(this.receiver.transfers[0].hasFile);
+  });
+
+  test("write failures clean storage and late finalize cannot restore dismissed entry", async function (assert) {
+    let id = await this.offer();
+    await this.receiver.accept(id);
+    const sink = this.sinks[0];
+    sink.write = async () => {
+      throw new Error("quota");
+    };
+    await waitUntil(() => this.receiver.transfers[0].status === "failed");
+    assert.strictEqual(this.receiver.transfers[0].error, "storage_failed");
+    await waitUntil(() => sink.discarded);
+    this.sender.dismiss(id);
+    this.receiver.dismiss(id);
+    const flush = deferred();
+    id = await this.offer("");
+    await this.receiver.accept(id);
+    this.sinks[1].finish = () => flush.promise;
+    await waitUntil(() =>
+      this.a.sent.some(
+        (d) =>
+          typeof d === "string" &&
+          JSON.parse(d).id === id &&
+          JSON.parse(d).type === "complete"
+      )
+    );
+    this.receiver.dismiss(id);
+    flush.resolve(new File([], "received"));
+    await Promise.resolve();
+    await Promise.resolve();
+    assert.deepEqual(this.receiver.transfers, []);
+    assert.true(this.sinks[1].discarded);
+  });
+
+  test("completed disk files survive disconnect but dismiss, leave and destroy discard them", async function (assert) {
+    const id = await this.offer();
+    await this.receiver.accept(id);
+    await waitUntil(() => this.receiver.transfers[0].status === "completed");
+    const sink = this.sinks[0];
+    this.receiver.disconnect(1, 1);
+    assert.false(sink.discarded);
+    assert.true((await this.receiver.getReceivedFile(id)) instanceof File);
+    this.receiver.dismiss(id);
+    await waitUntil(() => sink.discarded);
+  });
+
+  test("send and receive permissions are independent", async function (assert) {
+    this.receiver.destroy();
+    this.receiver = new FileTransferManager({
+      isEligible: () => true,
+      isSendAllowed: () => false,
+      isReceiveAllowed: () => true,
+      openReceiveSink: this.openSink,
+    });
+    this.b = new Channel();
+    this.a.remote = this.b;
+    this.b.remote = this.a;
+    this.receiver.attach(1, 1, this.b);
+    assert.false(this.receiver.canSend(1, 1));
+    const id = await this.offer();
+    await this.receiver.accept(id);
+    await waitUntil(() => this.receiver.transfers[0].status === "completed");
+    assert.strictEqual(
+      await (
+        await this.receiver.getReceivedFile(this.receiver.transfers[0].id)
+      ).text(),
+      "hello"
+    );
+  });
+  test("receive denial rejects offers without allocating a sink", async function (assert) {
+    this.receiver.destroy();
+    let allocations = 0;
+    this.receiver = new FileTransferManager({
+      isEligible: () => true,
+      isSendAllowed: () => true,
+      isReceiveAllowed: () => false,
+      openReceiveSink: async () => {
+        allocations++;
+        return new TestSink();
+      },
+    });
+    this.b = new Channel();
+    this.a.remote = this.b;
+    this.b.remote = this.a;
+    this.receiver.attach(1, 1, this.b);
+    assert.true(this.receiver.canSend(1, 1));
+    const id = await this.offer();
+    await this.receiver.accept(id);
+    assert.strictEqual(allocations, 0);
+    assert.deepEqual(this.receiver.transfers, []);
+    await waitUntil(() => this.sender.transfers[0].status === "rejected");
+  });
+  test("leave and destroy clean completed disk sinks without explicit Save", async function (assert) {
+    for (const action of ["leave", "destroy"]) {
+      const sink = new TestSink();
+      const manager = new FileTransferManager({
+        isEligible: () => true,
+        openReceiveSink: async () => sink,
+      });
+      const channel = new Channel();
+      manager.attach(1, 2, channel);
+      const id = crypto.randomUUID();
+      this.message(channel, "offer", id, { name: "empty", size: 0 });
+      await manager.accept(id);
+      this.message(channel, "complete", id);
+      await waitUntil(() => manager.transfers[0].status === "completed");
+      assert.true(manager.transfers[0].hasFile);
+      assert.false(
+        "blob" in manager.transfers[0],
+        "no File retained on public entry"
+      );
+      manager[action](1);
+      await waitUntil(() => sink.discarded);
+      assert.deepEqual(manager.transfers, []);
+      await assert.rejects(manager.getReceivedFile(id));
+      manager.destroy();
+    }
+  });
+  test("retiring disk files retain budget until delayed deletion resolves", async function (assert) {
+    const deletion = deferred();
+    for (let userId = 10; userId < 13; userId++) {
+      const channel = new Channel();
+      this.receiver.attach(1, userId, channel);
+      const id = crypto.randomUUID();
+      this.message(channel, "offer", id, {
+        name: "large",
+        size: MAX_FILE_SIZE,
+      });
+      await this.receiver.accept(id);
+      if (userId < 12) {
+        this.sinks.at(-1).discard = () => deletion.promise;
+        this.receiver.dismiss(id);
+      }
+    }
+    assert.strictEqual(
+      this.receiver.transfers.at(-1).status,
+      "rejected",
+      "two retiring files still reserve 200 MiB"
+    );
+    deletion.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    const channel = new Channel();
+    this.receiver.attach(1, 20, channel);
+    const id = crypto.randomUUID();
+    this.message(channel, "offer", id, { name: "large", size: MAX_FILE_SIZE });
+    await this.receiver.accept(id);
+    assert.strictEqual(
+      this.receiver.transfers.at(-1).status,
+      "transferring",
+      "confirmed deletion releases the reservation"
+    );
   });
 });

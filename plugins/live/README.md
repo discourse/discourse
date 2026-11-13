@@ -30,7 +30,7 @@ The plugin seeds a default "Watercooler" room on first enable.
 
 | Setting                              | Description                                                                          |
 | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| `live_file_transfer_enabled` | Allow mesh-room file transfers up to 100 MiB (default off). See [File transfers](docs/file-transfers.md). |
+| `live_file_transfer_allowed_groups` | Groups allowed to send mesh-room files up to 100 MiB (empty by default; disables all transfers). See [File transfers](docs/file-transfers.md). |
 | `live_enabled`                    | Master switch.                                                                       |
 | `live_allowed_groups`             | Groups that can access live rooms (default: everyone).                              |
 | `live_create_room_allowed_groups` | Groups that can create new rooms (default: admins, moderators, TL2).                 |

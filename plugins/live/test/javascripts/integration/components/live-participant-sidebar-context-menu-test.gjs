@@ -46,8 +46,7 @@ module(
     });
 
     test("offers file transfer through the shared participant menu", async function (assert) {
-      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
-        true;
+      this.owner.lookup("service:current-user").live_can_send_files = true;
       const modal = this.owner.lookup("service:modal");
       let model;
       modal.show = (_component, options) => {
@@ -68,8 +67,7 @@ module(
     });
 
     test("hides file action when disabled or unavailable", async function (assert) {
-      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
-        false;
+      this.owner.lookup("service:current-user").live_can_send_files = false;
       await render(
         <template>
           <LiveParticipantSidebarContextMenu
@@ -84,8 +82,7 @@ module(
     });
 
     test("hides file action when the service says the peer is unavailable", async function (assert) {
-      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
-        true;
+      this.owner.lookup("service:current-user").live_can_send_files = true;
       this.owner.lookup("service:live-webrtc").canSendFile = () => false;
       await render(
         <template>
@@ -101,8 +98,7 @@ module(
     });
 
     test("hides file action for self", async function (assert) {
-      this.owner.lookup("service:site-settings").live_file_transfer_enabled =
-        true;
+      this.owner.lookup("service:current-user").live_can_send_files = true;
       this.menuData.isCurrentUser = true;
       await render(
         <template>

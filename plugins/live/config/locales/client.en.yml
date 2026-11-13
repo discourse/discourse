@@ -23,10 +23,13 @@ en:
         too_large: "Files must be 100 MiB or smaller."
         send_failed: "The file could not be sent. Try again."
         save_failed: "The file could not be saved. Try again."
+        storage_unavailable: "This browser cannot receive files because private temporary file storage is unavailable. Try another supported browser."
+        storage_failed: "The file could not be written to temporary storage. Check available disk space and try again."
         safety: "Only accept files from people you trust. Files are not scanned for viruses."
         status:
           pending: "Awaiting your acceptance"
           waiting: "Waiting for acceptance"
+          initializing: "Preparing temporary storage"
           transferring: "Transferring"
           completed: "Completed"
           rejected: "Rejected"

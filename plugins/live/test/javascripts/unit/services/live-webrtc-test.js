@@ -130,7 +130,8 @@ class FakeRTCPeerConnection {
   }
 
   createDataChannel() {
-    return { readyState: "open", close() {} };
+    this.fileChannel = { readyState: "open", close() {} };
+    return this.fileChannel;
   }
 
   addTrack(track) {
@@ -559,6 +560,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
   hooks.afterEach(function () {
     this.subject?.leave({ id: 1 }, { keepLocalStream: true });
+    this.subject.site.live_file_transfers_available = false;
     this.keyValueStore.remove(this.cameraPreferenceKey);
 
     setPeerTimingForTesting(null);
@@ -569,10 +571,10 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
   });
 
   test("file transfer API requires enabled setting, active room and remote participant", async function (assert) {
-    this.siteSettings.live_file_transfer_enabled = false;
+    this.subject.site.live_file_transfers_available = false;
     assert.false(this.subject.canSendFile(1, 2));
     assert.throws(() => this.subject.sendFile(1, 2, new File(["x"], "x.txt")));
-    this.siteSettings.live_file_transfer_enabled = true;
+    this.subject.site.live_file_transfers_available = true;
     assert.false(this.subject.canSendFile(1, 2), "not joined");
     await this.subject.join(this.room);
     assert.false(this.subject.canSendFile(1, this.currentUser.id), "not self");
@@ -580,7 +582,15 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       this.subject.canSendFile(1, 9999),
       "not an active participant"
     );
-    assert.true(this.subject.canSendFile(1, 2));
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "recipient cannot initiate without permission"
+    );
+    this.currentUser.live_can_send_files = true;
+    assert.true(
+      this.subject.canSendFile(1, 2),
+      "recipient need not have sender permission"
+    );
     const id = this.subject.sendFile(1, 2, new File(["x"], "x.txt"));
     assert.strictEqual(
       this.subject.fileTransfers[0].status,
@@ -591,6 +601,117 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     assert.deepEqual(this.subject.fileTransfers, []);
     this.subject.leave(this.room, { keepLocalStream: true });
     assert.false(this.subject.canSendFile(1, 2));
+  });
+
+  test("incoming files require attested sender permission, not recipient group membership", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = false;
+    await this.subject.join(this.room);
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "missing attestation fails closed"
+    );
+    const peer = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === 2);
+    peer.can_send_files = true;
+    assert.true(
+      this.subject.canReceiveFile(1, 2),
+      "non-sender recipient may receive"
+    );
+    assert.false(this.subject.canSendFile(1, 2));
+    peer.can_send_files = false;
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "unprivileged sender rejected"
+    );
+    peer.can_send_files = true;
+    this.subject.site.live_file_transfers_available = false;
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "empty setting disables incoming too"
+    );
+    this.currentUser.live_can_send_files = true;
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "empty setting disables outgoing too"
+    );
+    this.subject.site.live_file_transfers_available = true;
+    this.subject.leave(this.room, { keepLocalStream: true });
+    assert.false(this.subject.canReceiveFile(1, 2), "must remain joined");
+  });
+
+  test("the real transfer manager rechecks sender permission before sending accepted bytes", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = true;
+    await this.subject.join(this.room);
+    const channel = FakeRTCPeerConnection.instances.find(
+      (pc) => pc.fileChannel
+    )?.fileChannel;
+    const sent = [];
+    channel.send = (data) => sent.push(data);
+    const id = this.subject.sendFile(1, 2, new File(["secret"], "test.txt"));
+    this.currentUser.live_can_send_files = false;
+    channel.onmessage({ data: JSON.stringify({ type: "accept", id }) });
+    await waitUntil(() => this.subject.fileTransfers[0].status === "cancelled");
+    assert.true(
+      sent.every((data) => typeof data === "string"),
+      "revoked sender never transmits file bytes"
+    );
+  });
+
+  test("the real transfer manager rejects unprivileged incoming offers but allows non-sender recipients", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = false;
+    await this.subject.join(this.room);
+    const channel = FakeRTCPeerConnection.instances.find(
+      (pc) => pc.fileChannel
+    )?.fileChannel;
+    assert.true(!!channel?.onmessage, "real manager owns the RTC channel");
+    // Permit protocol rejects without changing the existing fake-channel send failure tests.
+    channel.send = () => {};
+    const offer = (id) =>
+      channel.onmessage({
+        data: JSON.stringify({
+          type: "offer",
+          id,
+          name: "test.txt",
+          size: 1,
+        }),
+      });
+    offer("11111111-1111-4111-8111-111111111111");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "missing sender attestation rejects offer"
+    );
+    const peer = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === 2);
+    peer.can_send_files = true;
+    offer("22222222-2222-4222-8222-222222222222");
+    assert.strictEqual(
+      this.subject.fileTransfers[0]?.status,
+      "pending",
+      "recipient outside sender groups may receive"
+    );
+    this.subject.rejectFileTransfer(this.subject.fileTransfers[0].id);
+    this.subject.dismissFileTransfer(this.subject.fileTransfers[0].id);
+    peer.can_send_files = false;
+    offer("33333333-3333-4333-8333-333333333333");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "explicitly unauthorized sender rejected"
+    );
+    peer.can_send_files = true;
+    this.subject.site.live_file_transfers_available = false;
+    offer("44444444-4444-4444-8444-444444444444");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "empty groups disables incoming at manager boundary"
+    );
   });
 
   test("ICE configuration defaults to no servers and policy 'all' before any join", function (assert) {

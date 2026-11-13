@@ -1,6 +1,6 @@
 en:
   site_settings:
-    live_file_transfer_enabled: "Allow participants in peer-to-peer live rooms to send files up to 100 MiB directly to each other. Recipients must accept each transfer and explicitly save received files. Files are encrypted in transit (TURN may relay traffic), are not uploaded to Discourse, and are not scanned for viruses. Not available in LiveKit rooms."
+    live_file_transfer_allowed_groups: "Groups that can send files up to 100 MiB in peer-to-peer live rooms. Empty disables all file transfers. Senders also need access through {{setting:live_allowed_groups}}; anyone in the same mesh room can receive files. Recipients must accept and explicitly save files. Files are encrypted in transit (TURN may relay traffic), are not uploaded to Discourse, and are not scanned for viruses. Not available in LiveKit rooms."
     live_verbose_logging: "Log Live diagnostic information and warnings in server logs and browser consoles. Disabled by default. Logs exclude credentials, transcripts, signaling payloads, and raw error details."
     live_enabled: "Live brings integrated voice and video rooms to Discourse, with screen sharing, background blur, noise suppression, live subtitles, direct calls, room chat, and group-based permissions. Members can keep browsing while they talk, with no external app required."
     live_allowed_groups: "Groups that can access live rooms."

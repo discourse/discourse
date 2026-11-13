@@ -48,6 +48,14 @@ export default class LiveFileTransfer extends Component {
     return i18n(`live.file_transfer.status.${this.args.transfer.status}`);
   }
 
+  get transferError() {
+    const code = this.args.transfer.error;
+    if (["storage_unavailable", "storage_failed"].includes(code)) {
+      return i18n(`live.file_transfer.${code}`);
+    }
+    return null;
+  }
+
   get incomingPending() {
     return (
       this.args.transfer.direction === "incoming" &&
@@ -56,7 +64,7 @@ export default class LiveFileTransfer extends Component {
   }
 
   get active() {
-    return ["pending", "waiting", "transferring"].includes(
+    return ["pending", "waiting", "initializing", "transferring"].includes(
       this.args.transfer.status
     );
   }
@@ -65,7 +73,7 @@ export default class LiveFileTransfer extends Component {
     return (
       this.args.transfer.direction === "incoming" &&
       this.args.transfer.status === "completed" &&
-      !!this.args.transfer.blob
+      this.args.transfer.hasFile === true
     );
   }
 
@@ -102,13 +110,11 @@ export default class LiveFileTransfer extends Component {
     try {
       // Force an attachment download, never embed or navigate to remote content.
       // Discourse owns the temporary object URL and revokes it after download.
+      const file = await this.liveWebrtc.getReceivedFile(this.args.transfer.id);
+      // File.slice is a lazy disk-backed view; do not read bytes into RAM.
       await deliverBlobDownload(
-        new Blob([this.args.transfer.blob], {
-          type: "application/octet-stream",
-        }),
-        {
-          fallbackFilename: this.filename,
-        }
+        file.slice(0, file.size, "application/octet-stream"),
+        { fallbackFilename: this.filename }
       );
     } catch {
       this.saveError = true;
@@ -176,6 +182,12 @@ export default class LiveFileTransfer extends Component {
           />
         {{/unless}}
       </div>
+      {{#if this.transferError}}
+        <p
+          class="live-file-transfer__error"
+          role="alert"
+        >{{this.transferError}}</p>
+      {{/if}}
       {{#if this.saveError}}
         <p role="alert">{{i18n "live.file_transfer.save_failed"}}</p>
       {{/if}}

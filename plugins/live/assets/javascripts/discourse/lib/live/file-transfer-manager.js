@@ -1,15 +1,17 @@
 import { tracked } from "@glimmer/tracking";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
+import openReceiveSink from "./file-receive-sink.js";
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024;
 export const CHUNK_SIZE = 16 * 1024;
+export const RECEIVE_WINDOW = 256 * 1024;
 export const MAX_RECEIVE_BYTES = 200 * 1024 * 1024;
 const HIGH_WATER = 256 * 1024;
 const ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const TERMINAL = new Set(["completed", "rejected", "cancelled", "failed"]);
 
-// No signaling, URLs, downloads or execution: only explicitly accepted Blobs.
+// No signaling, URLs, downloads or execution: only explicitly accepted disk files.
 // Binary frames carry the transfer UUID, so delayed bytes from a cancelled
 // transfer can never be appended to a subsequent file on the same channel.
 export default class FileTransferManager {
@@ -19,10 +21,25 @@ export default class FileTransferManager {
   #active = new Map();
   #eligible;
   #timeout;
+  #sendAllowed;
+  #receiveAllowed;
+  #openSink;
+  #retained = new Map();
+  #retiring = new Map();
+  #sinkSizes = new WeakMap();
 
-  constructor({ isEligible, timeoutMs = 120_000 }) {
+  constructor({
+    isEligible,
+    isSendAllowed = isEligible,
+    isReceiveAllowed = isEligible,
+    openReceiveSink: openSink = openReceiveSink,
+    timeoutMs = 120_000,
+  }) {
     this.#eligible = isEligible;
     this.#timeout = timeoutMs;
+    this.#sendAllowed = isSendAllowed;
+    this.#receiveAllowed = isReceiveAllowed;
+    this.#openSink = openSink;
   }
 
   attach(roomId, userId, channel) {
@@ -58,6 +75,7 @@ export default class FileTransferManager {
     const key = this.#key(roomId, userId);
     return !!(
       this.#eligible(roomId, userId) &&
+      this.#sendAllowed(roomId, userId) &&
       this.#peers.get(key)?.channel.readyState === "open" &&
       !this.#active.has(key) &&
       this.transfers.length < 100
@@ -88,30 +106,58 @@ export default class FileTransferManager {
     return transfer.entry.id;
   }
 
-  accept(id) {
+  async accept(id) {
     const t = this.#find(id);
     if (
       t?.entry.status !== "pending" ||
-      !this.#eligible(t.peer.roomId, t.peer.userId)
+      !this.#eligible(t.peer.roomId, t.peer.userId) ||
+      !this.#receiveAllowed(t.peer.roomId, t.peer.userId)
     ) {
       return;
     }
+    // Reservations include initialization and retained disk files, not RAM.
     const retainedBytes = this.transfers.reduce(
       (sum, entry) =>
         sum +
         (entry.direction === "incoming" &&
-        (entry.status === "transferring" || entry.status === "completed")
+        ["initializing", "transferring", "completed"].includes(entry.status)
           ? entry.size
           : 0),
       0
     );
-    if (retainedBytes + t.entry.size > MAX_RECEIVE_BYTES) {
+    const retiringBytes = [...this.#retiring.values()].reduce(
+      (sum, size) => sum + size,
+      0
+    );
+    if (retainedBytes + retiringBytes + t.entry.size > MAX_RECEIVE_BYTES) {
       this.reject(id);
       return;
     }
-    this.#update(t, { status: "transferring" });
-    this.#arm(t);
-    this.#control(t.peer, "accept", id);
+    this.#update(t, { status: "initializing" });
+    try {
+      const sink = await this.#openSink(t.entry.name);
+      if (!this.#isActive(t)) {
+        await sink.discard();
+        return;
+      }
+      t.sink = sink;
+      this.#sinkSizes.set(sink, t.entry.size);
+      if (
+        !this.#eligible(t.peer.roomId, t.peer.userId) ||
+        !this.#receiveAllowed(t.peer.roomId, t.peer.userId)
+      ) {
+        this.cancel(id);
+        return;
+      }
+      this.#update(t, { status: "transferring" });
+      this.#arm(t);
+      this.#control(t.peer, "accept", id);
+    } catch {
+      if (this.#isActive(t)) {
+        this.#control(t.peer, "cancel", id);
+        this.#finish(t, "failed", "storage_unavailable");
+      }
+    }
   }
 
   reject(id) {
@@ -132,7 +178,22 @@ export default class FileTransferManager {
 
   dismiss(id) {
     this.cancel(id);
+    this.#discard(this.#retained.get(id));
+    this.#retained.delete(id);
     this.transfers = this.transfers.filter((entry) => entry.id !== id);
+  }
+
+  async getReceivedFile(id) {
+    const entry = this.transfers.find((e) => e.id === id);
+    const sink = this.#retained.get(id);
+    if (!entry?.hasFile || entry.status !== "completed" || !sink) {
+      throw new Error("Received file is unavailable");
+    }
+    const file = await sink.getFile();
+    if (this.#retained.get(id) !== sink || !(file instanceof File)) {
+      throw new Error("Received file is unavailable");
+    }
+    return file;
   }
 
   disconnect(roomId, userId) {
@@ -160,6 +221,10 @@ export default class FileTransferManager {
         this.disconnect(peer.roomId, peer.userId);
       }
     }
+    for (const entry of this.transfers.filter((e) => e.roomId === roomId)) {
+      this.#discard(this.#retained.get(entry.id));
+      this.#retained.delete(entry.id);
+    }
     this.transfers = this.transfers.filter((entry) => entry.roomId !== roomId);
   }
 
@@ -167,6 +232,10 @@ export default class FileTransferManager {
     for (const peer of this.#peers.values()) {
       this.disconnect(peer.roomId, peer.userId);
     }
+    for (const sink of this.#retained.values()) {
+      this.#discard(sink);
+    }
+    this.#retained.clear();
     this.transfers = [];
   }
 
@@ -198,10 +267,20 @@ export default class FileTransferManager {
       direction,
       status: direction === "incoming" ? "pending" : "waiting",
       progress: 0,
-      blob: null,
+      hasFile: false,
       error: null,
     };
-    const t = { peer, entry, offset: 0, chunks: [], timer: null };
+    const t = {
+      peer,
+      entry,
+      offset: 0,
+      acknowledged: 0,
+      received: 0,
+      pendingBytes: 0,
+      queue: [],
+      busy: false,
+      timer: null,
+    };
     this.#active.set(peer.key, t);
     this.transfers = [...this.transfers, entry];
     this.#arm(t);
@@ -227,15 +306,42 @@ export default class FileTransferManager {
     }, this.#timeout);
   }
 
+  #isActive(t) {
+    return this.#active.get(t.peer.key) === t;
+  }
+
+  #discard(sink) {
+    // A cleanup failure must not resurrect an entry or cause an unhandled rejection.
+    if (sink && !this.#retiring.has(sink)) {
+      this.#retiring.set(sink, this.#sinkSizes.get(sink) || 0);
+      Promise.resolve()
+        .then(() => sink.discard())
+        .then(() => this.#retiring.delete(sink))
+        .catch(() => {
+          // Failed deletion is not reclaimed disk space. Keep its reservation
+          // until this manager is gone; stale orphan cleanup can retry later.
+        });
+    }
+  }
+
   #finish(t, status, error = null) {
+    if (!this.#isActive(t)) {
+      return;
+    }
     clearTimeout(t.timer);
     this.#active.delete(t.peer.key);
     t.file = null;
-    t.chunks = [];
+    t.queue = [];
+    if (status === "completed" && t.sink) {
+      this.#retained.set(t.entry.id, t.sink);
+    } else {
+      this.#discard(t.sink);
+    }
+    t.sink = null;
     this.#update(t, {
       status,
       error,
-      ...(status === "completed" ? {} : { blob: null }),
+      ...(status === "completed" ? {} : { hasFile: false }),
     });
   }
 
@@ -274,18 +380,22 @@ export default class FileTransferManager {
       if (t.entry.status !== "transferring") {
         throw new Error("Bytes before acceptance");
       }
-      const chunk = data.slice(36);
       if (
         t.entry.direction !== "incoming" ||
-        t.entry.status !== "transferring" ||
-        chunk.byteLength !== Math.min(CHUNK_SIZE, t.entry.size - t.offset)
+        !this.#receiveAllowed(peer.roomId, peer.userId) ||
+        t.busy ||
+        t.pendingBytes + data.byteLength - 36 > RECEIVE_WINDOW ||
+        data.byteLength - 36 !== Math.min(CHUNK_SIZE, t.entry.size - t.received)
       ) {
-        throw new Error("Unexpected bytes");
+        throw new Error("Unexpected bytes or receive window exceeded");
       }
-      t.chunks.push(chunk);
-      t.offset += chunk.byteLength;
-      this.#update(t, { progress: t.offset / t.entry.size });
-      this.#arm(t);
+      // Explicit bounded queue, including the currently writing frame. Never
+      // append peer-controlled chunks to an unbounded promise chain.
+      const chunk = data.slice(36);
+      t.received += chunk.byteLength;
+      t.pendingBytes += chunk.byteLength;
+      t.queue.push(chunk);
+      this.#write(t);
       return;
     }
     if (data.length > 2048) {
@@ -306,6 +416,7 @@ export default class FileTransferManager {
         (transfer) => transfer.entry.direction === "incoming"
       ).length;
       if (
+        !this.#receiveAllowed(peer.roomId, peer.userId) ||
         t ||
         incomingCount >= 4 ||
         this.transfers.length >= 100 ||
@@ -333,34 +444,140 @@ export default class FileTransferManager {
       this.#update(t, { status: "transferring" });
       this.#arm(t);
       this.#pump(t);
+    } else if (
+      type === "ack" &&
+      t.entry.direction === "outgoing" &&
+      t.entry.status === "transferring"
+    ) {
+      if (
+        !Number.isSafeInteger(message.offset) ||
+        message.offset > t.offset ||
+        message.offset <= t.acknowledged ||
+        (message.offset !== t.entry.size &&
+          message.offset % CHUNK_SIZE !== 0) ||
+        t.sentComplete
+      ) {
+        throw new Error("Invalid receive acknowledgement");
+      }
+      t.acknowledged = message.offset;
+      this.#update(t, { progress: t.acknowledged / t.entry.size });
+      this.#arm(t);
+      this.#pump(t);
     } else if (type === "complete" && t.entry.status === "transferring") {
       if (
         t.offset !== t.entry.size ||
+        t.busy ||
+        t.pendingBytes !== 0 ||
         (t.entry.direction === "outgoing" && !t.sentComplete)
       ) {
         throw new Error("Incomplete file");
       }
       if (t.entry.direction === "incoming") {
-        this.#update(t, {
-          blob: new Blob(t.chunks, { type: "application/octet-stream" }),
-          progress: 1,
-        });
-        if (!this.#control(peer, "complete", id)) {
-          return;
+        if (!this.#receiveAllowed(peer.roomId, peer.userId)) {
+          throw new Error("Receive permission revoked");
         }
+        t.busy = true;
+        this.#completeReceive(t);
+      } else {
+        this.#update(t, { progress: 1 });
+        this.#finish(t, "completed");
       }
-      this.#update(t, { progress: 1 });
-      this.#finish(t, "completed");
     } else {
       throw new Error("Unexpected control");
     }
   }
 
-  async #pump(t) {
+  async #write(t) {
+    if (t.writing) {
+      return;
+    }
+    t.writing = true;
     try {
-      while (this.#active.get(t.peer.key) === t && t.offset < t.entry.size) {
-        if (!this.#eligible(t.peer.roomId, t.peer.userId)) {
+      while (this.#isActive(t) && t.queue.length) {
+        const chunk = t.queue.shift();
+        await t.sink.write(chunk);
+        if (!this.#isActive(t)) {
+          return;
+        }
+        if (
+          !this.#eligible(t.peer.roomId, t.peer.userId) ||
+          !this.#receiveAllowed(t.peer.roomId, t.peer.userId)
+        ) {
           this.cancel(t.entry.id);
+          return;
+        }
+        t.offset += chunk.byteLength;
+        t.pendingBytes -= chunk.byteLength;
+        this.#update(t, { progress: t.offset / t.entry.size });
+        this.#arm(t);
+        if (!this.#control(t.peer, "ack", t.entry.id, { offset: t.offset })) {
+          return;
+        }
+      }
+    } catch {
+      this.#diskFailure(t);
+    } finally {
+      t.writing = false;
+    }
+  }
+
+  async #completeReceive(t) {
+    try {
+      const metadata = await t.sink.finish();
+      if (!this.#isActive(t)) {
+        return;
+      }
+      if (
+        !this.#eligible(t.peer.roomId, t.peer.userId) ||
+        !this.#receiveAllowed(t.peer.roomId, t.peer.userId)
+      ) {
+        this.cancel(t.entry.id);
+        return;
+      }
+      if (metadata?.size !== t.entry.size) {
+        throw new Error("Disk file size mismatch");
+      }
+      if (!this.#control(t.peer, "complete", t.entry.id)) {
+        return;
+      }
+      this.#update(t, { hasFile: true, progress: 1 });
+      this.#finish(t, "completed");
+    } catch {
+      this.#diskFailure(t);
+    }
+  }
+
+  #diskFailure(t) {
+    if (this.#isActive(t)) {
+      this.#control(t.peer, "cancel", t.entry.id);
+      this.#finish(t, "failed", "storage_failed");
+    }
+  }
+
+  async #pump(t) {
+    if (t.pumping || t.sentComplete) {
+      return;
+    }
+    t.pumping = true;
+    try {
+      while (this.#isActive(t)) {
+        if (
+          !this.#eligible(t.peer.roomId, t.peer.userId) ||
+          !this.#sendAllowed(t.peer.roomId, t.peer.userId)
+        ) {
+          this.cancel(t.entry.id);
+          return;
+        }
+        if (t.offset === t.entry.size && t.acknowledged === t.entry.size) {
+          t.sentComplete = true;
+          t.file = null;
+          this.#control(t.peer, "complete", t.entry.id);
+          return;
+        }
+        if (
+          t.offset === t.entry.size ||
+          t.offset - t.acknowledged >= RECEIVE_WINDOW
+        ) {
           return;
         }
         if (t.peer.channel.bufferedAmount > HIGH_WATER) {
@@ -370,31 +587,32 @@ export default class FileTransferManager {
         const bytes = await t.file
           .slice(t.offset, t.offset + CHUNK_SIZE)
           .arrayBuffer();
-        if (this.#active.get(t.peer.key) !== t) {
+        if (!this.#isActive(t)) {
           return;
         }
-        if (!this.#eligible(t.peer.roomId, t.peer.userId)) {
+        if (
+          !this.#eligible(t.peer.roomId, t.peer.userId) ||
+          !this.#sendAllowed(t.peer.roomId, t.peer.userId)
+        ) {
           this.cancel(t.entry.id);
           return;
         }
         const frame = new Uint8Array(36 + bytes.byteLength);
         frame.set(new TextEncoder().encode(t.entry.id));
         frame.set(new Uint8Array(bytes), 36);
-        t.peer.channel.send(frame.buffer);
+        // Set the offset before sending: test transports may deliver immediately.
         t.offset += bytes.byteLength;
-        this.#update(t, { progress: t.offset / t.entry.size });
+        t.peer.channel.send(frame.buffer);
         this.#arm(t);
-      }
-      if (this.#active.get(t.peer.key) === t) {
-        t.sentComplete = true;
-        t.file = null;
-        this.#control(t.peer, "complete", t.entry.id);
+        // Continue only while the bounded receive window has space.
       }
     } catch {
       if (!TERMINAL.has(t.entry.status)) {
         this.#control(t.peer, "cancel", t.entry.id);
         this.#finish(t, "failed", "Could not send file");
       }
+    } finally {
+      t.pumping = false;
     }
   }
 }

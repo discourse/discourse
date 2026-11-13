@@ -91,6 +91,41 @@ RSpec.describe Live::GuardianExtension do
     end
   end
 
+  describe "#can_send_live_file?" do
+    before { SiteSetting.live_file_transfer_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
+
+    it "requires sender membership, without an administrator bypass" do
+      expect(member.guardian.can_send_live_file?).to eq(true)
+      expect(low_trust_user.guardian.can_send_live_file?).to eq(false)
+      SiteSetting.live_file_transfer_allowed_groups = Fabricate(:group).id
+      expect(staff.guardian.can_send_live_file?).to eq(false)
+    end
+
+    it "requires authentication and live access" do
+      expect(anonymous_guardian.can_send_live_file?).to eq(false)
+      SiteSetting.live_allowed_groups = Group::AUTO_GROUPS[:staff]
+      expect(member.guardian.can_send_live_file?).to eq(false)
+      SiteSetting.live_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      SiteSetting.live_enabled = false
+      expect(member.guardian.can_send_live_file?).to eq(false)
+    end
+
+    it "disables sending when no groups are configured" do
+      SiteSetting.live_file_transfer_allowed_groups = ""
+      expect(member.guardian.can_send_live_file?).to eq(false)
+      expect(staff.guardian.can_send_live_file?).to eq(false)
+    end
+
+    it "follows custom group membership" do
+      group = Fabricate(:group)
+      SiteSetting.live_file_transfer_allowed_groups = group.id
+      group.add(member)
+      expect(User.find(member.id).guardian.can_send_live_file?).to eq(true)
+      group.remove(member)
+      expect(User.find(member.id).guardian.can_send_live_file?).to eq(false)
+    end
+  end
+
   describe "#can_record_live_locally?" do
     before do
       SiteSetting.live_local_recording_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"

@@ -11,6 +11,10 @@ class LiveWebrtcStub extends Service {
   @tracked fileTransfers = [];
   calls = [];
 
+  async getReceivedFile() {
+    return this.receivedFile;
+  }
+
   acceptFileTransfer(id) {
     this.calls.push(["accept", id]);
   }
@@ -149,14 +153,49 @@ module("Integration | Component | LiveFileTransfers", function (hooks) {
     assert.dom(".live-file-transfers").doesNotExist();
   });
 
+  test("preparing disk storage remains cancellable, not dismissible", async function (assert) {
+    this.webrtc.fileTransfers = [{ ...this.transfer, status: "initializing" }];
+    await render(<template><LiveFileTransfers /></template>);
+    assert
+      .dom(".live-file-transfer__status")
+      .hasText(i18n("live.file_transfer.status.initializing"));
+    assert.dom("progress").hasAttribute("value", "0");
+    assert.dom(".live-file-transfer__dismiss").doesNotExist();
+    assert.dom(".live-file-transfer__accept").doesNotExist();
+    await click(".live-file-transfer__cancel");
+    assert.deepEqual(this.webrtc.calls, [["cancel", "transfer-1"]]);
+  });
+
+  test("storage failures show only known localized explanations", async function (assert) {
+    await render(<template><LiveFileTransfers /></template>);
+    for (const code of ["storage_unavailable", "storage_failed"]) {
+      this.webrtc.fileTransfers = [
+        { ...this.transfer, status: "failed", error: code },
+      ];
+      await settled();
+      assert
+        .dom(".live-file-transfer__error")
+        .hasText(i18n(`live.file_transfer.${code}`));
+    }
+    this.webrtc.fileTransfers = [
+      { ...this.transfer, status: "failed", error: "untrusted remote error" },
+    ];
+    await settled();
+    assert.dom(".live-file-transfer__error").doesNotExist();
+    assert
+      .dom(".live-file-transfers")
+      .doesNotIncludeText("untrusted remote error");
+  });
+
   test("completed content is only downloaded on Save, with safe attachment metadata", async function (assert) {
     const blob = new Blob(["<html>untrusted</html>"], { type: "text/html" });
+    this.webrtc.receivedFile = blob;
     this.webrtc.fileTransfers = [
       {
         ...this.transfer,
         status: "completed",
         name: "../evil\u202e.html",
-        blob,
+        hasFile: true,
       },
     ];
     const create = sinon
@@ -189,7 +228,7 @@ module("Integration | Component | LiveFileTransfers", function (hooks) {
     assert.strictEqual(link.download, "_evil_.html");
     assert.strictEqual(link.rel, "noopener");
     assert.strictEqual(
-      this.webrtc.fileTransfers[0].blob,
+      this.webrtc.receivedFile,
       blob,
       "keeps content until explicit dismissal"
     );

@@ -10,9 +10,13 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/411337"
       requires_plugin_enabled: false
       permanent_warning: false
-  live_file_transfer_enabled:
-    default: false
-    client: true
+  live_file_transfer_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
     depends_on:
       - live_enabled
   live_verbose_logging:

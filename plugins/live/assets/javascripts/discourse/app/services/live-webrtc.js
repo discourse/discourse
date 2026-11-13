@@ -79,6 +79,7 @@ export default class LiveWebrtcService extends Service {
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service site;
   @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
@@ -169,6 +170,9 @@ export default class LiveWebrtcService extends Service {
     this.#fileTransfers = new FileTransferManager({
       isEligible: (roomId, userId) =>
         this.#fileTransferEligible(roomId, userId),
+      isSendAllowed: (roomId, userId) =>
+        this.#canInitiateFileTransfer(roomId, userId),
+      isReceiveAllowed: (roomId, userId) => this.canReceiveFile(roomId, userId),
     });
 
     this.#peerManager = new PeerManager({
@@ -762,11 +766,34 @@ export default class LiveWebrtcService extends Service {
   }
 
   canSendFile(roomId, userId) {
-    return this.#fileTransfers.canSend(roomId, userId);
+    return (
+      this.#canInitiateFileTransfer(roomId, userId) &&
+      this.#fileTransfers.canSend(roomId, userId)
+    );
+  }
+
+  canReceiveFile(roomId, userId) {
+    return !!(
+      this.#fileTransferEligible(roomId, userId) &&
+      this.liveRooms
+        ?.roomById(roomId)
+        ?.active_participants?.some(
+          (participant) =>
+            Number(participant.id) === Number(userId) &&
+            participant.can_send_files === true
+        )
+    );
   }
 
   sendFile(roomId, userId, file) {
+    if (!this.#canInitiateFileTransfer(roomId, userId)) {
+      throw new Error("File transfer unavailable");
+    }
     return this.#fileTransfers.send(roomId, userId, file);
+  }
+
+  getReceivedFile(id) {
+    return this.#fileTransfers.getReceivedFile(id);
   }
 
   acceptFileTransfer(id) {
@@ -1586,9 +1613,17 @@ export default class LiveWebrtcService extends Service {
     );
   }
 
+  #canInitiateFileTransfer(roomId, userId) {
+    return !!(
+      this.currentUser?.live_can_send_files &&
+      this.#fileTransferEligible(roomId, userId)
+    );
+  }
+
   #fileTransferEligible(roomId, userId) {
     return !!(
-      this.siteSettings.live_file_transfer_enabled &&
+      this.site.live_file_transfers_available &&
+      this.currentUser?.id &&
       this.#activeRoomIds.has(roomId) &&
       this.#isMeshRoom(roomId) &&
       Number(userId) !== Number(this.currentUser?.id) &&

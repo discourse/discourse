@@ -66,7 +66,7 @@ export default class LiveParticipantSidebarContextMenu extends Component {
 
   get canSendFile() {
     return (
-      this.siteSettings.live_file_transfer_enabled &&
+      this.currentUser?.live_can_send_files &&
       !this.isCurrentUser &&
       this.liveWebrtc.canSendFile(this.room.id, this.participant.id)
     );

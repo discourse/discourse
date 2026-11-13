@@ -94,6 +94,37 @@ RSpec.describe Live::RoomBroadcaster do
     end
   end
 
+  describe ".participant_entries file permissions" do
+    it "overrides spoofed metadata with server-attested membership even without room video" do
+      group = Fabricate(:group)
+      SiteSetting.live_file_transfer_allowed_groups = group.id
+      room.update!(video_enabled: false)
+      metadata = { participant.id => { can_send_files: true } }
+      entries = -> do
+        described_class.participant_entries(
+          room,
+          [User.find(participant.id)],
+          guardian: Guardian.new(nil),
+          metadata: metadata,
+        )
+      end
+      expect(entries.call.first[:can_send_files]).to eq(false)
+      group.add(participant)
+      expect(entries.call.first[:can_send_files]).to eq(true)
+      metadata[participant.id][:can_send_files] = false
+      expect(entries.call.first[:can_send_files]).to eq(true)
+      group.remove(participant)
+      expect(entries.call.first[:can_send_files]).to eq(false)
+      SiteSetting.live_file_transfer_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      expect(entries.call.first[:can_send_files]).to eq(true)
+      SiteSetting.live_allowed_groups = Fabricate(:group).id
+      expect(entries.call.first[:can_send_files]).to eq(false)
+      SiteSetting.live_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      SiteSetting.live_file_transfer_allowed_groups = ""
+      expect(entries.call.first[:can_send_files]).to eq(false)
+    end
+  end
+
   describe ".publish_hand_raise" do
     fab!(:second_participant, :user)
 
