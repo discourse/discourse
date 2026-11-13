@@ -334,7 +334,9 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    agree(performed_by, args) do |action|
+      post.hide!(action.post_action_type_id, notifier: moderation_notifier(args))
+    end
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -390,26 +392,26 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    destroyer(performed_by, post).destroy
+    destroyer(performed_by:, post:, args:).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(performed_by, post, id, notifier: moderation_notifier(args))
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
-    destroyer(performed_by, post).destroy
+    destroyer(performed_by:, post:, args:).destroy
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(performed_by, post, id, notifier: moderation_notifier(args))
     result
   end
 
@@ -524,8 +526,12 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  def destroyer(performed_by, post)
-    PostDestroyer.new(performed_by, post, reviewable_id: id)
+  def destroyer(performed_by:, post:, args:)
+    PostDestroyer.new(performed_by, post, reviewable_id: id, notifier: moderation_notifier(args))
+  end
+
+  def moderation_notifier(args)
+    Dsa::ModerationNotice.new(community_rule: args.dig(:dsa_classification, :community_rule))
   end
 
   def notify_poster(performed_by)

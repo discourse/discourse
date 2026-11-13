@@ -48,14 +48,21 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+  def self.delete_with_replies(
+    performed_by,
+    post,
+    reviewable_id = nil,
+    defer_reply_flags: true,
+    notifier: SystemMessage
+  )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id, notifier:).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
       options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
+      options[:notifier] = notifier if reviewable_id
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -476,8 +483,7 @@ class PostDestroyer
 
     notify_responders = options[:notify_responders]
 
-    Jobs.enqueue(
-      :send_system_message,
+    (@opts[:notifier] || SystemMessage).enqueue(
       user_id: @post.user_id,
       message_type:
         (

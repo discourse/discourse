@@ -3,6 +3,10 @@
 # Handle sending a message to a user from the system.
 
 class SystemMessage
+  def self.enqueue(user_id:, message_type:, message_options:, delay: 0)
+    Jobs.enqueue_in(delay, :send_system_message, user_id:, message_type:, message_options:)
+  end
+
   def self.create(recipient, type, params = {})
     new(recipient).create(type, params)
   end
