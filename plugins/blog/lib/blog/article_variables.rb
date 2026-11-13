@@ -12,6 +12,7 @@ module ::Blog
           "excerpt" => I18n.t("blog.themes.sample_body"),
           "standfirst" => "",
           "author" => "",
+          "author_url" => nil,
           "published_at" => nil,
           "date" => "",
           "relative_date" => "",
@@ -57,6 +58,7 @@ module ::Blog
         "excerpt" => @publication.display_excerpt,
         "standfirst" => @revision.data["excerpt"].presence,
         "author" => @revision.data["author_name"],
+        "author_url" => (url(Revision.author_path(@topic.user)) if @topic&.user),
         "published_at" => published_at&.iso8601,
         "date" => published_at && format_date(published_at),
         "relative_date" =>

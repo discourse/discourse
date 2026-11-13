@@ -5,7 +5,7 @@
     {% if article.standfirst %}<p class="discourse-journal__standfirst">{{ article.standfirst }}</p>{% endif %}
     <div class="discourse-journal__byline">
       <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
-      <div><strong>{{ article.author }}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+      <div><strong>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
     </div>
     {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
   </header>

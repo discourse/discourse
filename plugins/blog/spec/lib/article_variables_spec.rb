@@ -27,6 +27,7 @@ RSpec.describe Blog::ArticleVariables do
         "excerpt" => "A standfirst",
         "standfirst" => "A standfirst",
         "author" => topic.user.name,
+        "author_url" => "https://blog.example.com/author/#{topic.user.username_lower}",
         "published_at" => publication.published_at.iso8601,
         "date" => I18n.l(publication.published_at, format: :date_only),
         "relative_date" => I18n.t("blog.time_ago", time: "3d"),

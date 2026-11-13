@@ -71,6 +71,7 @@ en:
     footer: Written in Discourse. Open for conversation.
     from_the_blog: Notes from the community
     tagged: Filed under %{tag}
+    author: Author
     search: Search
     search_placeholder: Search article titles and excerpts
     featured: Featured

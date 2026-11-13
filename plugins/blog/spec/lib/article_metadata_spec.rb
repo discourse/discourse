@@ -23,6 +23,8 @@ RSpec.describe Blog::ArticleMetadata do
         "author" => {
           "@type" => "Person",
           "name" => article.data["author_name"],
+          "url" =>
+            "https://blog.example.com/author/#{publication.discussion_topic.user.username_lower}",
         },
       )
     end
