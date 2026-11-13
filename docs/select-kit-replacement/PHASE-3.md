@@ -264,8 +264,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `ebd1d84f27e`): a FormKit custom field that picks one rule, shown with its explanation,
     from a `DMenu` with a `DDropdownMenu`. #45679 moved it into a shared
     `dsa-classification-select.gjs` (merged in `1d0e7629f72`).
-  - ☐ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
-    `1d0e7629f72`): a select-kit `GroupChooser`, for `DSelectGroup` behind the flag.
+  - ☑ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
+    `1d0e7629f72`) branch on the flag to `DSelectGroup` (2026-11-12), offering the groups the
+    editor looks up, named after the feature.
   - Checked in `ebd1d84f27e` and not ad-hoc: the blog plugin's `DMenu`s are action menus, and
     the new `ComboBox` in discourse-ai's spam settings is the generic select-kit control,
     covered by the long tail.

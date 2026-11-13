@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupLink from "discourse/components/group-link";
@@ -10,6 +11,7 @@ import { groupPath } from "discourse/lib/url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -23,6 +25,7 @@ import { i18n } from "discourse-i18n";
  */
 export default class AiFeatureAgentGroups extends Component {
   @service site;
+  @service siteSettings;
 
   @tracked allGroups = [];
   @tracked editing = false;
@@ -102,11 +105,23 @@ export default class AiFeatureAgentGroups extends Component {
   <template>
     <div class="ai-feature-agent-groups">
       {{#if this.editing}}
-        <GroupChooser
-          @content={{this.allGroups}}
-          @onChange={{this.updateGroups}}
-          @value={{this.groupIds}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectGroup
+            @multiple={{true}}
+            @onChange={{this.updateGroups}}
+            @options={{this.allGroups}}
+            @texts={{hash ariaLabel=this.editLabel}}
+            @value={{this.groupIds}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <GroupChooser
+            @content={{this.allGroups}}
+            @onChange={{this.updateGroups}}
+            @value={{this.groupIds}}
+          />
+        {{/if}}
         {{#if this.sharedWithNames}}
           <p class="ai-feature-agent-groups__shared">
             {{i18n
