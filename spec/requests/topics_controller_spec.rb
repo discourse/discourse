@@ -37,6 +37,29 @@ RSpec.describe TopicsController do
 
   before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
+  describe "anonymous topic cache" do
+    it "does not serve a cached public topic after it is moved to a restricted category" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
+      get topic.relative_url
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.body).to include(topic.title)
+
+      topic.change_category_to_id(staff_category.id)
+
+      get topic.relative_url
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(topic.title)
+    ensure
+      Middleware::AnonymousCache.clear_all_cache!
+    end
+  end
+
   describe "topic_header plugin outlet" do
     fab!(:another_topic) { Fabricate(:topic, title: "Another topic by me") }
 
@@ -7163,6 +7186,40 @@ RSpec.describe TopicsController do
   end
 
   describe "#convert_topic" do
+    it "revokes anonymous cached content when a public topic becomes a private message" do
+      post = Fabricate(:post, topic: topic, raw: "Previously public topic body")
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
+      get topic.relative_url
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.body).to include(post.raw)
+
+      get topic.relative_url
+
+      expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      expect(response.body).to include(post.raw)
+
+      sign_in(moderator)
+      put "/t/#{topic.id}/convert-topic/private.json"
+
+      expect(response.status).to eq(200)
+      expect(topic.reload.archetype).to eq(Archetype.private_message)
+
+      delete "/session/#{moderator.username}.json"
+      expect(response.status).to eq(302)
+
+      get topic.relative_url
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(post.raw)
+    ensure
+      Middleware::AnonymousCache.clear_all_cache!
+    end
+
     it "needs you to be logged in" do
       put "/t/111/convert-topic/private.json"
       expect(response.status).to eq(403)

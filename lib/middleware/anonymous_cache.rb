@@ -172,6 +172,7 @@ module Middleware
           +"ANON_CACHE_#{is_xhr}_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
 
         @cache_key << key_embed_referer if @request.path.start_with?("/embed/")
+        @cache_key << "|s=#{MessageBus.last_id(Site::SITE_JSON_CHANNEL)}"
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
       end

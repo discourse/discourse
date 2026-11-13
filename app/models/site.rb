@@ -308,9 +308,8 @@ class Site
   SITE_JSON_CHANNEL = "/site_json"
 
   def self.clear_anon_cache!
-    # publishing forces the sequence up
-    # the cache is validated based on the sequence
-    MessageBus.publish(SITE_JSON_CHANNEL, "")
+    # Advancing before commit could cache public responses under the new generation.
+    DB.after_commit { MessageBus.publish(SITE_JSON_CHANNEL, "") }
   end
 
   def self.full_name_required_for_signup
