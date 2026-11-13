@@ -4,6 +4,7 @@ class RebakeUserOneboxes < ActiveRecord::Migration[8.1]
     execute <<~SQL
       UPDATE posts SET baked_version = NULL
       WHERE cooked LIKE '%user-onebox%'
+         OR id IN (SELECT post_id FROM post_localizations WHERE cooked LIKE '%user-onebox%')
     SQL
   end
 

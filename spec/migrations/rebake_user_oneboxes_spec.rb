@@ -19,16 +19,20 @@ RSpec.describe RebakeUserOneboxes do
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
+  def baked_user_onebox(user)
+    <<~HTML
+      <aside class="onebox">
+        <article class="onebox-body user-onebox">
+          <h3><a href="#{Discourse.base_url}/u/#{user.username}">@#{user.username}</a></h3>
+          <p>Bio of #{user.username}</p>
+        </article>
+      </aside>
+    HTML
+  end
+
   def post_with_baked_user_onebox(user)
     post = Fabricate(:post, raw: "#{Discourse.base_url}/u/#{user.username}")
-    post.update_columns(cooked: <<~HTML, baked_version: Post::BAKED_VERSION)
-        <aside class="onebox">
-          <article class="onebox-body user-onebox">
-            <h3><a href="#{Discourse.base_url}/u/#{user.username}">@#{user.username}</a></h3>
-            <p>Bio of #{user.username}</p>
-          </article>
-        </aside>
-      HTML
+    post.update_columns(cooked: baked_user_onebox(user), baked_version: Post::BAKED_VERSION)
     post
   end
 
@@ -60,5 +64,40 @@ RSpec.describe RebakeUserOneboxes do
     expect(new_user_post.cooked).not_to include("Bio of #{new_user.username}")
     expect(member_post.reload.cooked).to include("user-onebox")
     expect(member_post.cooked).to include("Bio of #{member.username}")
+  end
+
+  context "when a user onebox is only in a post's localization" do
+    fab!(:post_with_localized_card) { Fabricate(:post, raw: "Hello") }
+    fab!(:post_with_plain_localization) { Fabricate(:post, raw: "Hello") }
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      [post_with_localized_card, post_with_plain_localization].each do |post|
+        post.update_columns(baked_version: Post::BAKED_VERSION)
+      end
+      Fabricate(:post_localization, post: post_with_plain_localization)
+    end
+
+    it "marks the post for rebaking and re-renders the localization" do
+      Jobs.run_immediately!
+      stub_request(:get, /letter_avatar_proxy/).to_return(status: 404)
+      localization =
+        Fabricate(
+          :post_localization,
+          post: post_with_localized_card,
+          raw: "#{Discourse.base_url}/u/#{new_user.username}",
+          cooked: baked_user_onebox(new_user),
+        )
+
+      described_class.new.up
+
+      expect(post_with_localized_card.reload.baked_version).to be_nil
+      expect(post_with_plain_localization.reload.baked_version).to eq(Post::BAKED_VERSION)
+
+      Post.rebake_old(10)
+
+      expect(localization.reload.cooked).not_to include("user-onebox")
+      expect(localization.cooked).not_to include("Bio of #{new_user.username}")
+    end
   end
 end
