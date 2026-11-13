@@ -28,9 +28,14 @@ module ::Blog
       @publication.article_updated_at&.iso8601
     end
 
-    def author_url
+    def author
       user = @publication.discussion_topic&.user
-      "#{Configuration.base_url}#{Revision.author_path(user)}" if user
+      return if !user&.human?
+      {
+        "@type" => "Person",
+        "name" => @revision.data["author_name"],
+        "url" => "#{Configuration.base_url}#{Revision.author_path(user)}",
+      }.compact
     end
 
     def schema
@@ -43,11 +48,7 @@ module ::Blog
         "mainEntityOfPage" => @publication.url,
         "datePublished" => published_time,
         "dateModified" => modified_time,
-        "author" => {
-          "@type" => "Person",
-          "name" => @revision.data["author_name"],
-          "url" => author_url,
-        }.compact,
+        "author" => author,
         "image" => image_url,
       }.compact.to_json
     end

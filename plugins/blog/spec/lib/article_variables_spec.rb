@@ -43,6 +43,15 @@ RSpec.describe Blog::ArticleVariables do
       )
     end
 
+    it "leaves out the byline when the system user owns the article" do
+      topic.update!(user: Discourse.system_user)
+
+      expect(described_class.new(publication).summary).to include(
+        "author" => nil,
+        "author_url" => nil,
+      )
+    end
+
     it "omits the update label when the article was not revised on a later day" do
       publication.update_columns(last_published_at: publication.published_at)
       topic.update_columns(posts_count: 0)

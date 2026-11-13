@@ -467,6 +467,20 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(404)
     end
 
+    it "shows no byline for an article the system user owns" do
+      publication.discussion_topic.update!(user: Discourse.system_user)
+
+      [publication.url, "https://blog.example.com/"].each do |url|
+        get url
+        html = Nokogiri.HTML5(response.body)
+        expect(html.at_css('a[href*="/author/"]')).to be_nil
+        expect(html.text).not_to include(publication.article.data["author_name"])
+      end
+
+      get "https://blog.example.com/author/#{Discourse.system_user.username}"
+      expect(response.status).to eq(404)
+    end
+
     it "leads the homepage with featured articles" do
       featured_topic = Fabricate(:topic, category: drafts, user: admin)
       Fabricate(

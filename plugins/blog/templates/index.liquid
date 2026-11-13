@@ -25,7 +25,7 @@
       <div class="blog__meta"><time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span><span>{{ article.reading_time }}</span>{% if article.featured %}<span class="blog__badge">{{ labels.featured }}</span>{% endif %}</div>
       <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
       <p class="blog-card__excerpt">{{ article.excerpt }}</p>
-      <div class="blog-card__footer"><span>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</span><a href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a></div>
+      <div class="blog-card__footer"><span>{% if article.author %}{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}{% endif %}</span><a href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a></div>
     </div>
   </article>
   {% else %}<div class="blog__empty"><h2>{{ labels.empty_title }}</h2><p>{{ labels.empty_body }}</p></div>{% endfor %}

@@ -24,8 +24,8 @@
         <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
         <p class="discourse-journal__excerpt">{{ article.excerpt }}</p>
         <div class="discourse-journal__byline">
-          <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
-          <div><strong>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+          {% if article.author %}<span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>{% endif %}
+          <div>{% if article.author %}<strong>{% if article.author_url %}<a href="{{ article.author_url }}">{{ article.author }}</a>{% else %}{{ article.author }}{% endif %}</strong>{% endif %}<div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
         </div>
         <a class="discourse-journal__replies" href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a>
       </div>

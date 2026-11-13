@@ -99,6 +99,14 @@ RSpec.describe Blog::Article::List do
       it { is_expected.to fail_a_policy(:requested_author_has_articles) }
     end
 
+    context "when the requested author is the system user" do
+      let(:params) { { author_username: Discourse.system_user.username } }
+
+      before { newer_publication.discussion_topic.update!(user: Discourse.system_user) }
+
+      it { is_expected.to fail_a_policy(:requested_author_has_articles) }
+    end
+
     context "when the requested author doesn't exist" do
       let(:params) { { author_username: "nobody-here" } }
 

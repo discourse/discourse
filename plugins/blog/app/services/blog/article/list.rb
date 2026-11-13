@@ -46,7 +46,8 @@ class Blog::Article::List
   end
 
   def fetch_author(params:)
-    User.find_by_username(params.author_username) if params.author_username.present?
+    return if params.author_username.blank?
+    User.human_users.find_by(username_lower: User.normalize_username(params.author_username))
   end
 
   def fetch_publications(params:, tag:, author:)
