@@ -275,6 +275,73 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when checking GIF dimensions with libvips" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      it "stores decoded dimensions for a GIF within the megapixel limit" do
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        SiteSetting.max_image_megapixels = 10
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload).to have_attributes(width: 3000, height: 3000)
+      end
+
+      it "rejects a GIF at the megapixel limit" do
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        SiteSetting.max_image_megapixels = 9
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 9,
+            original_filename: filename,
+          ),
+        )
+      end
+
+      it "accepts later frames clipped to the decoded canvas" do
+        filename = "gif_later_frame_larger_than_logical_screen.gif"
+        SiteSetting.max_image_megapixels = 5
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload).to have_attributes(width: 1, height: 1, animated: true)
+      end
+
+      it "rejects a GIF when the dimension probe times out" do
+        DiscourseVips.stubs(:gif_dimensions).raises(DiscourseVips::OperationTimeout)
+        filename = "tiny_animated.gif"
+
+        upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t("upload.images.size_not_found"),
+        )
+      end
+
+      it "rejects a GIF header without frame data" do
+        file = Tempfile.new(%w[header_only .gif])
+        file.binmode
+        file.write(File.binread(file_from_fixtures("tiny_animated.gif").path, 13))
+        file.flush
+        file.rewind
+
+        upload = described_class.new(file, "header_only.gif").create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(
+          I18n.t("upload.images.size_not_found"),
+        )
+      end
+    end
+
     context "when image is too big" do
       let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }
