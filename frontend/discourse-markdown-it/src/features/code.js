@@ -82,7 +82,9 @@ export function setup(helper) {
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "code" && name === "class") {
-        return /^lang\-.+$/.test(value);
+        // The value is still encoded here, so `&` has to be rejected: a
+        // reference like `&#32;` is decoded into a class separator later.
+        return /^lang-[^\s&]+$/.test(value);
       }
     },
   });
