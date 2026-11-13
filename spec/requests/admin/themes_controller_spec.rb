@@ -507,6 +507,25 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "identifies the locale of the embedded translation rows" do
+        SiteSetting.allow_user_locale = true
+        theme = Fabricate(:theme)
+        theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: Hello\n")
+        theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
+        theme.save!
+
+        get "/admin/themes.json"
+        row = response.parsed_body["themes"].find { |entry| entry["id"] == theme.id }
+        expect(row["translations_locale"]).to eq("en")
+        expect(row["translations"]).to include(include("key" => "greeting", "value" => "Hello"))
+
+        admin.update!(locale: "fr")
+        get "/admin/themes.json"
+        row = response.parsed_body["themes"].find { |entry| entry["id"] == theme.id }
+        expect(row["translations_locale"]).to eq("fr")
+        expect(row["translations"]).to include(include("key" => "greeting", "value" => "Bonjour"))
+      end
+
       it "correctly returns themes" do
         ColorScheme.destroy_all
         Theme.not_system.destroy_all
@@ -802,6 +821,82 @@ RSpec.describe Admin::ThemesController do
         put "/admin/themes/99999.json"
 
         expect(response.status).to eq(400)
+      end
+
+      context "after a settings migration leaves the settings field unbaked" do
+        before do
+          Dir.mktmpdir("theme-settings-migration") do |directory|
+            File.write("#{directory}/about.json", { name: "Migrated settings" }.to_json)
+            File.write("#{directory}/settings.yml", "enabled: true\n")
+            FileUtils.mkdir_p("#{directory}/migrations/settings")
+            File.write(
+              "#{directory}/migrations/settings/0001-disable.js",
+              "export default function migrate(settings) { settings.set('enabled', false); return settings; }",
+            )
+            @migrated_theme = RemoteTheme.import_theme_from_directory(directory)
+          end
+          expect(@migrated_theme.settings_field.reload.value_baked).to be_nil
+        end
+
+        it "reports invalid YAML without failing the request" do
+          put "/admin/themes/#{@migrated_theme.id}.json",
+              params: {
+                theme: {
+                  theme_fields: [{ target: "settings", name: "yaml", value: "enabled: [" }],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(@migrated_theme.reload.settings_field.error).to be_present
+        end
+
+        it "does not expose defaults that violate their constraints" do
+          put "/admin/themes/#{@migrated_theme.id}.json",
+              params: {
+                theme: {
+                  theme_fields: [
+                    {
+                      target: "settings",
+                      name: "yaml",
+                      value:
+                        "enabled: true\nnew_limit:\n  type: integer\n  default: 20\n  max: 10\n",
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(@migrated_theme.reload.settings_field.error).to be_present
+          expect(@migrated_theme.settings).not_to have_key(:new_limit)
+        end
+      end
+
+      it "updates object settings alongside theme attributes" do
+        theme.set_field(
+          target: :settings,
+          name: "yaml",
+          value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+        )
+        theme.save!
+        objects = theme.settings[:resource_sections].value
+        objects[0]["title"] = "Updated resources"
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                name: "Renamed",
+                settings: {
+                  resource_sections: objects.to_json,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload.name).to eq("Renamed")
+        expect(theme.settings[:resource_sections].value[0]["title"]).to eq("Updated resources")
+        expect(
+          theme.object_translation_defaults.dig("resource_sections.getting_started.title", :text),
+        ).to eq("Updated resources")
       end
 
       it "can change default theme" do
@@ -1514,14 +1609,14 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.status).to eq(200)
 
-        expect(theme.settings[:objects_setting].value).to eq(
-          [
-            {
-              "name" => "new_section",
-              "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
-            },
-          ],
-        )
+        expected_value = [
+          {
+            "name" => "new_section",
+            "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
+          },
+        ]
+        expect(response.parsed_body).to eq("objects_setting" => expected_value)
+        expect(theme.reload.settings[:objects_setting].value).to eq(expected_value)
       end
 
       it "clears a theme setting" do

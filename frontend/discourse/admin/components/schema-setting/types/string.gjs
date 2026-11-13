@@ -12,7 +12,9 @@ export default class SchemaSettingTypeString extends Component {
   @tracked touched = false;
   @tracked value = this.args.value || "";
   minLength = this.args.spec.validations?.min_length;
-  maxLength = this.args.spec.validations?.max_length;
+  maxLength = this.args.isTranslationIdentifier
+    ? Math.min(this.args.spec.validations?.max_length ?? 80, 80)
+    : this.args.spec.validations?.max_length;
   required = this.args.spec.required;
 
   get validationErrorMessage() {
@@ -28,6 +30,15 @@ export default class SchemaSettingTypeString extends Component {
       } else {
         return;
       }
+    }
+
+    if (
+      this.args.isTranslationIdentifier &&
+      (valueLength > 80 || !/^[a-z][a-z0-9_]*$/.test(this.value))
+    ) {
+      return i18n(
+        "admin.customize.schema.fields.string.invalid_translation_identifier"
+      );
     }
 
     if (this.minLength && valueLength < this.minLength) {

@@ -30,6 +30,8 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   editRouteName = "adminCustomizeThemes.edit";
   parentThemesSaved = false;
 
+  #translationRequests = new WeakMap();
+
   @computed("model.id")
   get downloadUrl() {
     return getURL(`/admin/customize/themes/${this.model?.id}/export`);
@@ -458,13 +460,32 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  updateLocale(value) {
-    this.set("model.loadingTranslations", true);
-    this.set("model.locale", value);
-    ajax(this.getTranslationsUrl).then(({ translations }) => {
-      this.set("model.translations", translations);
-      this.set("model.loadingTranslations", false);
-    });
+  async updateLocale(value) {
+    const model = this.model;
+    model.setProperties({ loadingTranslations: true, locale: value });
+    const request = ajax(this.getTranslationsUrl);
+    this.#translationRequests.set(model, request);
+
+    try {
+      const { translations } = await request;
+      if (this.#translationRequests.get(model) === request) {
+        model.setProperties({ translations, translations_locale: value });
+      }
+    } catch (error) {
+      if (this.#translationRequests.get(model) === request) {
+        if (model.translations_locale) {
+          model.set("locale", model.translations_locale);
+        }
+        if (this.model === model) {
+          popupAjaxError(error);
+        }
+      }
+    } finally {
+      if (this.#translationRequests.get(model) === request) {
+        this.#translationRequests.delete(model);
+        model.set("loadingTranslations", false);
+      }
+    }
   }
 
   @action

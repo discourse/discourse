@@ -471,10 +471,16 @@ class RemoteTheme < ActiveRecord::Base
 
     transaction_block = ->(*) do
       field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
+      preserved_locale_fields = []
       theme
         .theme_fields
         .where(id: field_ids_to_destroy)
         .each do |field|
+          if field.target_id == Theme.targets[:translations] && field.name == "en" &&
+               field.value == "en: {}\n"
+            preserved_locale_fields << field
+            next
+          end
           field.mark_for_destruction
           theme.changed_fields << field
         end
@@ -485,19 +491,25 @@ class RemoteTheme < ActiveRecord::Base
 
       before_save&.call(theme)
 
-      if raise_if_theme_save_fails
-        theme.save!
-      else
-        raise ActiveRecord::Rollback if !theme.save
+      theme.with_deferred_object_translations do
+        if raise_if_theme_save_fails
+          theme.save!
+        else
+          raise ActiveRecord::Rollback if !theme.save
+        end
+
+        create_theme_site_settings(theme, theme_info["theme_site_settings"])
+
+        if run_migrations
+          theme.migrate_settings(
+            start_transaction: false,
+            allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+          )
+        end
       end
-
-      create_theme_site_settings(theme, theme_info["theme_site_settings"])
-
-      if run_migrations
-        theme.migrate_settings(
-          start_transaction: false,
-          allow_out_of_sequence_migration: allow_out_of_sequence_migration,
-        )
+      if preserved_locale_fields.present? && theme.object_translation_defaults.empty?
+        preserved_locale_fields.each(&:destroy!)
+        theme.reload.remove_from_cache!
       end
     end
 
