@@ -36,6 +36,10 @@ module TagGuardian
     is_staff? && SiteSetting.tagging_enabled
   end
 
+  def can_delete_tag?(tag)
+    can_admin_tags? && tag_in_accessible_category?(tag)
+  end
+
   def can_admin_tag_groups?
     is_staff? && SiteSetting.tagging_enabled
   end

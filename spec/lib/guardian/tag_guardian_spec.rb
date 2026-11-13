@@ -206,6 +206,34 @@ RSpec.describe TagGuardian do
     end
   end
 
+  describe "#can_delete_tag?" do
+    fab!(:moderator)
+
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_delete_tag?(tag)).to eq(false)
+    end
+
+    it "returns true for staff" do
+      expect(Guardian.new(moderator).can_delete_tag?(tag)).to eq(true)
+      expect(Guardian.new(admin).can_delete_tag?(tag)).to eq(true)
+    end
+
+    context "when the tag is restricted to a private category" do
+      fab!(:category_group, :group)
+
+      before { Fabricate(:private_category, group: category_group).update!(tags: [tag]) }
+
+      it "only allows staff who can see the category" do
+        expect(Guardian.new(moderator).can_delete_tag?(tag)).to eq(false)
+        expect(Guardian.new(admin).can_delete_tag?(tag)).to eq(true)
+
+        category_group.add(moderator)
+
+        expect(Guardian.new(moderator.reload).can_delete_tag?(tag)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_admin_tag_groups?" do
     it "returns false when tagging is disabled" do
       SiteSetting.tagging_enabled = false

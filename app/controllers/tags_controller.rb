@@ -360,19 +360,19 @@ class TagsController < ::ApplicationController
 
   def list_unused
     guardian.ensure_can_admin_tags!
-    render json: { tags: Tag.unused.pluck(:name) }
+    render json: { tags: deletable_unused_tags.pluck(:name) }
   end
 
   def destroy_unused
     guardian.ensure_can_admin_tags!
-    tags = Tag.unused
+    tags = deletable_unused_tags
     StaffActionLogger.new(current_user).log_custom("deleted_unused_tags", tags: tags.pluck(:name))
     tags.destroy_all
     render json: success_json
   end
 
   def destroy
-    guardian.ensure_can_admin_tags!
+    guardian.ensure_can_delete_tag!(@tag)
 
     tag_name = @tag.name
     TopicCustomField.transaction do
@@ -502,6 +502,10 @@ class TagsController < ::ApplicationController
   end
 
   private
+
+  def deletable_unused_tags
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.unused, guardian)
+  end
 
   def show_all_tags?
     guardian.can_admin_tags? && guardian.is_admin?

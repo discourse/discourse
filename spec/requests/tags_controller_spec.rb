@@ -2401,6 +2401,41 @@ RSpec.describe TagsController do
         end
       end
     end
+
+    context "when the tag is restricted to a private category" do
+      fab!(:category_group, :group)
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+
+      before { Fabricate(:private_category, group: category_group).update!(tags: [restricted_tag]) }
+
+      it "doesn't let a moderator who can't see the category delete the tag" do
+        sign_in(moderator)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(403)
+        expect(Tag.exists?(restricted_tag.id)).to eq(true)
+      end
+
+      it "lets a moderator who can see the category delete the tag" do
+        category_group.add(moderator)
+        sign_in(moderator)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.exists?(restricted_tag.id)).to eq(false)
+      end
+
+      it "lets an admin delete the tag" do
+        sign_in(admin)
+
+        delete "/tag/#{restricted_tag.name}.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.exists?(restricted_tag.id)).to eq(false)
+      end
+    end
   end
 
   describe "#unused" do
@@ -2471,6 +2506,41 @@ RSpec.describe TagsController do
             "used_everywhere",
           )
         end
+      end
+    end
+
+    context "when an unused tag is restricted to a private category" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+      fab!(:unrestricted_tag) { Fabricate(:tag, name: "unrestricted") }
+
+      before do
+        Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted_tag])
+      end
+
+      it "only lists and deletes the tags a moderator who can't see the category can change" do
+        sign_in(moderator)
+
+        get "/tags/unused.json"
+
+        expect(response.parsed_body["tags"]).to contain_exactly("unrestricted")
+
+        delete "/tags/unused.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly("restricted")
+      end
+
+      it "lists and deletes every unused tag for an admin" do
+        sign_in(admin)
+
+        get "/tags/unused.json"
+
+        expect(response.parsed_body["tags"]).to contain_exactly("restricted", "unrestricted")
+
+        delete "/tags/unused.json"
+
+        expect(response.status).to eq(200)
+        expect(Tag.count).to eq(0)
       end
     end
   end
