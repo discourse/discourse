@@ -81,6 +81,11 @@ class UserApiKeysController < ApplicationController
 
     scopes = params[:scopes].split(",").uniq
     expires_at = requested_expires_at(parse_expires_in_seconds!)
+    issuing_credential = request.env[Auth::DefaultCurrentUserProvider::AUTHENTICATED_CREDENTIAL_ENV]
+    if scopes.include?("one_time_password") && issuing_credential.is_a?(UserApiKey) && @client &&
+         issuing_credential.user_api_key_client_id == @client.id
+      raise Discourse::InvalidAccess
+    end
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
     @client.application_name = params[:application_name] if @client.new_record?
@@ -119,7 +124,7 @@ class UserApiKeysController < ApplicationController
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
-      otp_payload = one_time_password(parsed_public_key, current_user.username)
+      otp_payload = one_time_password(parsed_public_key)
     end
 
     response_json =
@@ -424,7 +429,7 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless meets_tl?
 
-    otp_payload = one_time_password(parsed_public_key, current_user.username)
+    otp_payload = one_time_password(parsed_public_key)
     uri = URI.parse(params[:auth_redirect])
     uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
     redirect_path = uri.to_s
@@ -697,13 +702,17 @@ class UserApiKeysController < ApplicationController
   # as well as HTML, so this is relied on by non-browser (API key/User API
   # key) consumers, not just browser sessions. Don't restrict this to
   # session auth without accounting for those consumers first.
-  def one_time_password(public_key, username)
+  def one_time_password(public_key)
     unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
       raise Discourse::InvalidAccess
     end
 
     otp = SecureRandom.hex
-    Discourse.redis.setex "otp_#{otp}", 10.minutes, username
+    UserApiKey::OneTimePassword.issue(
+      token: otp,
+      credential: request.env[Auth::DefaultCurrentUserProvider::AUTHENTICATED_CREDENTIAL_ENV],
+      user: current_user,
+    )
 
     Base64.encode64(
       UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, otp, padding: params[:padding]),

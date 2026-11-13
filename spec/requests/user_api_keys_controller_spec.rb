@@ -1138,7 +1138,7 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(403)
     end
 
-    it "returns encrypted OTP and stores it in Redis" do
+    it "returns an encrypted OTP that can be redeemed" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
       user = Fabricate(:user, refresh_auto_groups: true)
       sign_in(user)
@@ -1148,7 +1148,8 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted)
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      get "/session/otp/#{otp}"
+      expect(response.status).to eq(302)
     end
 
     it "preserves callback query parameters when returning an OTP" do
@@ -1165,7 +1166,8 @@ RSpec.describe UserApiKeysController do
       expect(query).to include("state" => "return-to-client", "oneTimePassword" => be_present)
 
       otp = decrypt_payload(Base64.decode64(query["oneTimePassword"]))
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      get "/session/otp/#{otp}"
+      expect(response.status).to eq(302)
     end
 
     it "encrypts OTP with OAEP padding when requested" do
@@ -1178,7 +1180,8 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted, padding: "oaep")
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      get "/session/otp/#{otp}"
+      expect(response.status).to eq(302)
     end
 
     it "rejects invalid padding parameter" do
