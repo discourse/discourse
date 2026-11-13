@@ -4,6 +4,8 @@ RSpec.describe InviteSerializer do
   describe "#as_json" do
     fab!(:user)
     fab!(:viewer) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:moderator)
+    fab!(:admin)
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
     fab!(:private_topic) { Fabricate(:topic, category: private_category) }
@@ -38,6 +40,20 @@ RSpec.describe InviteSerializer do
         :topics,
         :groups,
       )
+    end
+
+    it "only shows the invite key and link to admins and the inviter" do
+      invite = Fabricate(:invite, invited_by: user)
+
+      moderator_json =
+        InviteSerializer.new(invite, scope: Guardian.new(moderator), root: false).as_json
+      expect(moderator_json).not_to include(:invite_key, :link)
+
+      inviter_json = InviteSerializer.new(invite, scope: Guardian.new(user), root: false).as_json
+      expect(inviter_json).to include(:invite_key, :link)
+
+      admin_json = InviteSerializer.new(invite, scope: Guardian.new(admin), root: false).as_json
+      expect(admin_json).to include(:invite_key, :link)
     end
 
     it "filters topics by guardian visibility" do

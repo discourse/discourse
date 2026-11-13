@@ -29,6 +29,24 @@ RSpec.describe InviteGuardian do
     end
   end
 
+  describe "#can_see_invite_key?" do
+    it "is false without a logged in user" do
+      expect(Guardian.new(nil).can_see_invite_key?(user)).to be_falsey
+    end
+
+    it "is true when looking at your own invites" do
+      expect(Guardian.new(user).can_see_invite_key?(user)).to be_truthy
+    end
+
+    it "is false for moderators looking at another user's invites" do
+      expect(Guardian.new(moderator).can_see_invite_key?(user)).to be_falsey
+    end
+
+    it "is true for admins looking at another user's invites" do
+      expect(Guardian.new(admin).can_see_invite_key?(user)).to be_truthy
+    end
+  end
+
   describe "#can_see_invite_emails?" do
     it "is false without a logged in user" do
       expect(Guardian.new(nil).can_see_invite_emails?(user)).to be_falsey
