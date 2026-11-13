@@ -88,7 +88,6 @@ use `bin/lint --fix --recent` only when appropriate.
   - Clients expect confirmation data beyond success/failure
 
 ## Security
-- Use `.skills/discourse-validate-security-report` to validate a security report. For security fixes and reviews, use its [flight manual](.skills/discourse-validate-security-report/references/threat-model.md) to select the relevant problem checklist.
 - XSS: use `{{}}` (escaped) not `{{{ }}}`, sanitize with `sanitize`/`cook`, no `innerHTML`, careful with `@html`
 - Auth: Guardian classes (`lib/guardian.rb`), POST/PUT/DELETE for state changes, CSRF tokens, `protect_from_forgery`
 - Input: validate client+server, strong parameters, length limits, don't trust client-only validation
