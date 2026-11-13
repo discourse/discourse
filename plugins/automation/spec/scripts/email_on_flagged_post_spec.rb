@@ -48,6 +48,24 @@ describe "EmailOnFlaggedPost" do
     end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(1)
   end
 
+  it "enqueues emails for more than 50 username recipients and email-address recipients" do
+    users =
+      Array.new(51) do |index|
+        Fabricate(:user, username: "flag_recipient_#{index.to_s.rjust(2, "0")}")
+      end
+    automation.upsert_field!(
+      "recipients",
+      "users",
+      { value: users.map(&:username) + [recipient.email, users.first.email] },
+    )
+
+    result = PostActionCreator.spam(flagger, post)
+
+    expect(result.success).to eq(true)
+    emails = Jobs::DiscourseAutomation::SendFlagEmail.jobs.map { |job| job["args"].first["email"] }
+    expect(emails).to contain_exactly(recipient.email, *users.map(&:email))
+  end
+
   it "enqueues a job per recipient with placeholders applied" do
     automation.upsert_field!("recipients", "users", { value: [recipient.email, user_2.username] })
 
