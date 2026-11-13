@@ -16,13 +16,20 @@ import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
-import loadCodemirror from "discourse/lib/load-codemirror";
+import {
+  loadCodeEditorLanguage,
+  registerCodeEditorLanguage,
+} from "discourse/lib/code-editor-languages";
+import loadCodemirror, {
+  overrideCodemirrorImportForTesting,
+} from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
 import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
@@ -352,6 +359,97 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
   });
 
+  test("shows an error when the editor fails to load", async function (assert) {
+    const failure = new Error("chunk failed");
+    overrideCodemirrorImportForTesting(() => Promise.reject(failure));
+    const consoleError = sinon.stub(console, "error");
+
+    try {
+      await render(<template><CodeEditor @value="" /></template>);
+
+      assert
+        .dom(".code-editor__error")
+        .hasText(i18n("code_editor.load_failed"));
+      assert.dom(".code-editor .spinner").doesNotExist();
+      assert.true(consoleError.calledWith(failure), "the cause is logged");
+    } finally {
+      overrideCodemirrorImportForTesting(null);
+    }
+  });
+
+  [
+    ["fails to load", () => Promise.reject(new Error("chunk failed"))],
+    [
+      "fails to build",
+      async () => ({
+        default: () => {
+          throw new Error("bad options");
+        },
+      }),
+    ],
+    [
+      "builds an invalid extension",
+      async () => ({ default: () => "not an extension" }),
+    ],
+  ].forEach(([description, loader]) => {
+    test(`stays a plain text editor when its language ${description}`, async function (assert) {
+      registerCodeEditorLanguage("broken", loader);
+      const state = new (class {
+        @tracked language = "sql";
+      })();
+      const consoleError = sinon.stub(console, "error");
+
+      await render(
+        <template>
+          <CodeEditor @language={{state.language}} @value="select 1" />
+        </template>
+      );
+      await waitFor(".cm-content span[class]");
+
+      state.language = "broken";
+      await waitUntil(() => consoleError.called);
+      await settled();
+
+      assert.dom(".cm-content").hasText("select 1");
+      assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
+    });
+  });
+
+  test("ignores a superseded language load that fails", async function (assert) {
+    let calls = 0;
+    registerCodeEditorLanguage("flaky", () => {
+      calls++;
+      if (calls === 1) {
+        return new Promise((resolve, reject) =>
+          setTimeout(() => reject(new Error("stale")), 100)
+        );
+      }
+      return loadCodeEditorLanguage("sql").then((builder) => ({
+        default: builder,
+      }));
+    });
+    const state = new (class {
+      @tracked options = {};
+    })();
+    const consoleError = sinon.stub(console, "error");
+
+    const rendered = render(
+      <template>
+        <CodeEditor
+          @language="flaky"
+          @languageOptions={{state.options}}
+          @value="select 1"
+        />
+      </template>
+    );
+    await waitFor(".cm-content");
+    state.options = { schema: {} };
+    await rendered;
+
+    assert.true(consoleError.called, "the stale load failed");
+    assert.true(highlightedTokens().includes("select"));
+  });
+
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
     const state = new (class {
       @tracked disabled = true;
@@ -473,6 +571,21 @@ module("Integration | Component | code-editor", function (hooks) {
     await openCompletions(codeEditorView());
 
     assert.true(completionLabels().includes("allow_title"));
+  });
+
+  test("accepts null language options", async function (assert) {
+    await render(
+      <template>
+        <CodeEditor
+          @language="sql"
+          @languageOptions={{null}}
+          @value="select 1"
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    assert.true(highlightedTokens().includes("select"));
   });
 
   test("offers the completions a caller lists, beside the language's own", async function (assert) {
