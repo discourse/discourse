@@ -98,6 +98,7 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
     fab!(:admin)
 
     before do
+      SiteSetting.chat_integration_enabled = true
       SiteSetting.chat_integration_telegram_enabled = false
       SiteSetting.chat_integration_telegram_access_token = ""
       SiteSetting.chat_integration_telegram_secret = ""
