@@ -2281,7 +2281,8 @@ CREATE TABLE public.blog_publications (
     meta_description character varying DEFAULT ''::character varying NOT NULL,
     canonical_url character varying DEFAULT ''::character varying NOT NULL,
     cover_upload_id integer,
-    cover_alt character varying DEFAULT ''::character varying NOT NULL
+    cover_alt character varying DEFAULT ''::character varying NOT NULL,
+    word_count integer
 );
 
 
@@ -26650,6 +26651,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261113090951'),
 ('20261112162839'),
 ('20261112150235'),
 ('20261110093228'),
