@@ -22,7 +22,9 @@ RSpec.describe "Creating a post with deeply nested quotes", type: :request do
   end
 
   it "reads a quote's classes once when stripping many direct-child titles during validation" do
-    quote_classes = "quote group-#{(["x"] * 2_000).join(" ")}"
+    # One long `group-` token: a multi-class value is dropped by the cooked class
+    # allowlist, and the read count only matters for a quote that survives cooking.
+    quote_classes = "quote group-#{"x" * 13_800}"
     title_count = 500
     raw =
       %(<aside class="#{quote_classes}">#{'<div class="title">quoted user</div>' * title_count}<p>quoted body</p></aside>)
@@ -60,32 +62,41 @@ RSpec.describe "Creating a post with deeply nested quotes", type: :request do
     expect(class_reads).to all(eq(1))
   end
 
-  it "costs the same whether or not the quotes are nested" do
-    flat_raw = flat_quotes_raw
-    nested_raw = nested_quotes_raw
+  it "strips nested quotes in a single pass" do
+    raw = nested_quotes_raw(depth: 150)
+
+    # Warm up the lazy paths, including parsing the 150-deep document, so the
+    # timed run measures only the walk.
+    warmup = Nokogiri::HTML5.fragment(raw)
+    expect(warmup.css(".mention").size).to eq(1)
+    PostStripper.strip(warmup)
+    expect(warmup.css(".mention")).to be_empty
+
+    elapsed = measure { PostStripper.strip(Nokogiri::HTML5.fragment(raw)) }
+
+    # The linear walk takes ~5ms here, up to ~50ms with GC pressure. A quote
+    # that rescans its subtree takes over a second at this depth and grows
+    # quadratically, so this leaves a wide margin without ever passing a
+    # regression that matters.
+    expect(elapsed).to be < 0.5
+  end
+
+  it "creates a deeply nested quote post through the full request path" do
+    raw = nested_quotes_raw
 
     # same characters and elements, only the quote nesting differs
-    expect(flat_raw.length).to eq(nested_raw.length)
-    expect(nested_raw.length).to be < SiteSetting.max_post_length
+    expect(raw.length).to eq(flat_quotes_raw.length)
+    expect(raw.length).to be < SiteSetting.max_post_length
 
     sign_in(user)
+    post "/posts.json", params: { raw: raw, topic_id: topic.id }
 
-    # the cooking pipeline is initialized on first use, keep that out of the timing
-    post "/posts.json", params: { raw: "warm up the cooking pipeline", topic_id: topic.id }
     expect(response.status).to eq(200)
-
-    flat_elapsed =
-      measure do
-        post "/posts.json", params: { raw: flat_raw, topic_id: topic.id }
-        expect(response.status).to eq(200)
-      end
-
-    nested_elapsed =
-      measure do
-        post "/posts.json", params: { raw: nested_raw, topic_id: topic.id }
-        expect(response.status).to eq(200)
-      end
-
-    expect(nested_elapsed).to be < flat_elapsed * 2
+    created_post = Post.find(response.parsed_body["id"])
+    cooked = Nokogiri::HTML5.fragment(created_post.cooked)
+    expect(cooked.css("aside.quote").size).to eq(250)
+    # stripping happens on the analyzer's copy, so the persisted mention stays;
+    # what matters is that it was stripped before mention extraction
+    expect(created_post.raw_mentions).to be_empty
   end
 end
