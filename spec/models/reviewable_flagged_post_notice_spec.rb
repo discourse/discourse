@@ -26,12 +26,12 @@ RSpec.describe ReviewableFlaggedPost do
 
     it "includes the selected rule in the existing notice for agree_and_hide" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
 
-      message_args = Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys
-      Jobs::SendSystemMessage.new.execute(message_args)
+      message_args = Jobs::SendDsaModerationNotice.jobs.sole["args"].first
+      Jobs::SendDsaModerationNotice.new.perform(message_args)
 
       notice = Post.last
       expect(notice.topic.allowed_users).to include(post.user)
@@ -41,12 +41,12 @@ RSpec.describe ReviewableFlaggedPost do
 
     it "includes the selected rule in the existing notice for delete_and_agree" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
 
-      message_args = Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys
-      Jobs::SendSystemMessage.new.execute(message_args)
+      message_args = Jobs::SendDsaModerationNotice.jobs.sole["args"].first
+      Jobs::SendDsaModerationNotice.new.perform(message_args)
 
       notice = Post.last
       expect(notice.topic.allowed_users).to include(post.user)
@@ -56,12 +56,12 @@ RSpec.describe ReviewableFlaggedPost do
 
     it "includes the selected rule in the existing notice for delete_and_ignore" do
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :delete_and_ignore, dsa_classification: classification)
 
-      message_args = Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys
-      Jobs::SendSystemMessage.new.execute(message_args)
+      message_args = Jobs::SendDsaModerationNotice.jobs.sole["args"].first
+      Jobs::SendDsaModerationNotice.new.perform(message_args)
 
       notice = Post.last
       expect(notice.topic.allowed_users).to include(post.user)
@@ -72,13 +72,13 @@ RSpec.describe ReviewableFlaggedPost do
     it "includes the selected rule when hiding an edited post again" do
       post.update!(hidden_at: 1.day.ago)
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
 
-      message_args = Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys
-      expect(message_args[:message_type]).to eq("post_hidden_again")
-      Jobs::SendSystemMessage.new.execute(message_args)
+      message_args = Jobs::SendDsaModerationNotice.jobs.sole["args"].first
+      expect(message_args["message_type"]).to eq("post_hidden_again")
+      Jobs::SendDsaModerationNotice.new.perform(message_args)
       expect(Post.last.raw).to include(reason)
     end
 
@@ -93,18 +93,18 @@ RSpec.describe ReviewableFlaggedPost do
       post.reload
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :delete_and_agree_replies, dsa_classification: classification)
 
-      notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first.deep_symbolize_keys }
+      notices = Jobs::SendDsaModerationNotice.jobs.map { |job| job["args"].first }
       expect(notices.size).to eq(2)
-      parent_notice = notices.find { |notice| notice[:user_id] == post.user_id }
-      Jobs::SendSystemMessage.new.execute(parent_notice)
+      parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+      Jobs::SendDsaModerationNotice.new.perform(parent_notice)
       expect(Post.last.raw).to include(reason)
 
-      reply_notice = notices.find { |notice| notice[:user_id] == reply.user_id }
-      Jobs::SendSystemMessage.new.execute(reply_notice)
+      reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+      Jobs::SendDsaModerationNotice.new.perform(reply_notice)
       expect(Post.last.raw).to include(
         "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
       )
@@ -122,18 +122,18 @@ RSpec.describe ReviewableFlaggedPost do
       post.reload
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :delete_and_ignore_replies, dsa_classification: classification)
 
-      notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first.deep_symbolize_keys }
+      notices = Jobs::SendDsaModerationNotice.jobs.map { |job| job["args"].first }
       expect(notices.size).to eq(2)
-      parent_notice = notices.find { |notice| notice[:user_id] == post.user_id }
-      Jobs::SendSystemMessage.new.execute(parent_notice)
+      parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+      Jobs::SendDsaModerationNotice.new.perform(parent_notice)
       expect(Post.last.raw).to include(reason)
 
-      reply_notice = notices.find { |notice| notice[:user_id] == reply.user_id }
-      Jobs::SendSystemMessage.new.execute(reply_notice)
+      reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+      Jobs::SendDsaModerationNotice.new.perform(reply_notice)
       expect(Post.last.raw).to include(
         "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
       )
@@ -143,14 +143,14 @@ RSpec.describe ReviewableFlaggedPost do
     it "preserves the custom flag reason and the selected rule snapshot" do
       flag = Fabricate(:flag, name: "Unmarked spoilers", notify_type: true)
       reviewable = PostActionCreator.create(flagger, post, flag.name_key.to_sym).reviewable
-      Jobs::SendSystemMessage.clear
+      Jobs::SendDsaModerationNotice.clear
 
       reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
       SiteSetting.dsa_community_rules = [
         { ground: "Changed rule", explanation: "Changed." },
       ].to_json
-      message_args = Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys
-      Jobs::SendSystemMessage.new.execute(message_args)
+      message_args = Jobs::SendDsaModerationNotice.jobs.sole["args"].first
+      Jobs::SendDsaModerationNotice.new.perform(message_args)
 
       expect(Post.last.raw).to include("#{flag.name}\n\n#{reason}")
     end

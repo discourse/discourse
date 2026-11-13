@@ -12,7 +12,13 @@ module Jobs
       return if user.blank?
 
       system_message = SystemMessage.new(user)
-      system_message.create(args[:message_type], args[:message_options]&.symbolize_keys || {})
+      system_message.create(args[:message_type], message_options(args:, user:))
+    end
+
+    private
+
+    def message_options(args:, user:)
+      args[:message_options]&.symbolize_keys || {}
     end
   end
 end

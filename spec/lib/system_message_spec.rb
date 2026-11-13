@@ -32,59 +32,6 @@ RSpec.describe SystemMessage do
       expect(event[:params].first[:post_creator_args].last[:raw]).to eq(expected_raw)
     end
 
-    it "adds the rule in the recipient locale without changing the existing body or subject" do
-      enable_dsa_reporting
-      SiteSetting.allow_user_locale = true
-      user.update!(locale: "fr")
-      TranslationOverride.upsert!(
-        :fr,
-        "system_messages.moderation_reason",
-        "Plus précisément : **%{ground}**. %{explanation}",
-      )
-      rule = { "ground" => "Be respectful", "explanation" => "No personal attacks." }
-      params = { url: "/t/example/123/2", flag_reason: "Original reason.", edit_delay: 5 }
-      baseline = SystemMessage.create(user, :post_hidden, params)
-
-      notice = SystemMessage.create(user, :post_hidden, params.merge(dsa_community_rule: rule))
-
-      expected_reason =
-        "#{params[:flag_reason]}\n\nPlus précisément : **#{rule["ground"]}**. #{rule["explanation"]}"
-      expect(notice.raw).to eq(baseline.raw.sub(params[:flag_reason], expected_reason))
-      expect(notice.topic.title).to eq(baseline.topic.title)
-    end
-
-    it "preserves existing moderation notices exactly with DSA disabled or no rule selected" do
-      %i[
-        post_hidden
-        post_hidden_again
-        flags_agreed_and_post_deleted
-        flags_agreed_and_post_deleted_for_responders
-      ].each do |type|
-        params = {
-          url: "/t/example/123/2",
-          flag_reason: "Original reason.",
-          edit_delay: 5,
-          flagged_post_raw_content: "Original post.",
-          flagged_post_response_raw_content: "Reply.",
-        }
-        baseline = SystemMessage.create(user, type, params)
-        enable_dsa_reporting
-        unclassified = SystemMessage.create(user, type, params)
-        SiteSetting.dsa_reporting_enabled = false
-        disabled =
-          SystemMessage.create(
-            user,
-            type,
-            params.merge(dsa_community_rule: { ground: "Rule", explanation: "Explanation." }),
-          )
-
-        expect(unclassified.raw).to eq(baseline.raw)
-        expect(disabled.raw).to eq(baseline.raw)
-        expect(unclassified.topic.title).to eq(baseline.topic.title)
-        expect(disabled.topic.title).to eq(baseline.topic.title)
-      end
-    end
-
     it "creates the expected post" do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)

@@ -12,7 +12,7 @@ RSpec.describe "Reading a DSA moderation notice" do
     enable_dsa_reporting(community_rules: [rule])
     SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
     reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-    Jobs::SendSystemMessage.clear
+    Jobs::SendDsaModerationNotice.clear
     reviewable.perform(
       moderator,
       :delete_and_agree,
@@ -21,9 +21,7 @@ RSpec.describe "Reading a DSA moderation notice" do
         category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
       },
     )
-    Jobs::SendSystemMessage.new.execute(
-      Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys,
-    )
+    Jobs::SendDsaModerationNotice.new.perform(Jobs::SendDsaModerationNotice.jobs.sole["args"].first)
     notice = Post.last
     sign_in(post.user)
 

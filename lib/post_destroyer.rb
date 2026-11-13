@@ -53,17 +53,15 @@ class PostDestroyer
     post,
     reviewable_id = nil,
     defer_reply_flags: true,
-    dsa_community_rule: nil
+    notifier: SystemMessage
   )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id:, dsa_community_rule:).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id, notifier:).destroy
 
-    options = { defer_flags: defer_reply_flags }
+    options = { defer_flags: defer_reply_flags, notifier: }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!(
-        { reviewable_id:, notify_responders: true, parent_post: post, dsa_community_rule: },
-      )
+      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -484,8 +482,7 @@ class PostDestroyer
 
     notify_responders = options[:notify_responders]
 
-    Jobs.enqueue(
-      :send_system_message,
+    (@opts[:notifier] || SystemMessage).enqueue(
       user_id: @post.user_id,
       message_type:
         (
@@ -497,7 +494,6 @@ class PostDestroyer
         ),
       message_options: {
         **Dsa::AppealInstructions.message_options,
-        dsa_community_rule: @opts[:dsa_community_rule],
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,
