@@ -245,6 +245,15 @@ describe Chat::Message do
         %(<p><em class="chat-message-action">#{message.user.username} waves</em></p>),
       )
     end
+
+    it "does not resolve a hashtag the author cannot see when the last editor can" do
+      category = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Plans")
+      message.message = "##{category.slug}"
+      message.last_editor = Fabricate(:admin)
+      message.cook
+
+      expect(message.cooked).not_to include(category.name)
+    end
   end
 
   describe ".cook" do

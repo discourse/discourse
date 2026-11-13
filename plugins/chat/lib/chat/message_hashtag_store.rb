@@ -7,7 +7,13 @@ module Chat
     def self.raw_column = :message
     def self.cooked(message) = message.cooked
     def self.hashtag_context = "chat-composer"
-    def self.cook_options(message) = Chat::Message.markdown_options(user_id: message.last_editor_id)
+
+    def self.cook_options(message)
+      Chat::Message.markdown_options(
+        user_id: message.last_editor_id,
+        hashtag_user_ids: message.hashtag_user_ids,
+      )
+    end
 
     def self.write!(message, raw)
       message.message = raw

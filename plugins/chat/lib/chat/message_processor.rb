@@ -17,6 +17,7 @@ module Chat
 
       cook_opts = {
         user_id: chat_message.last_editor_id,
+        hashtag_user_ids: chat_message.hashtag_user_ids,
         author_username: chat_message.user&.username,
       }
       cook_opts[:invalidate_oneboxes] = true if opts[:invalidate_oneboxes] == true

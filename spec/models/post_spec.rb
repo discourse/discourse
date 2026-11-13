@@ -1172,6 +1172,7 @@ RSpec.describe Post do
           {
             cook_method: Post.cook_methods[:regular],
             user_id: post.last_editor_id,
+            hashtag_user_ids: [post.user_id, post.last_editor_id],
             post_id: post.id,
           },
         )
@@ -1183,9 +1184,25 @@ RSpec.describe Post do
         .expects(:cook)
         .with(
           post.raw,
-          { cook_method: Post.cook_methods[:regular], user_id: user_editor.id, post_id: post.id },
+          {
+            cook_method: Post.cook_methods[:regular],
+            user_id: user_editor.id,
+            hashtag_user_ids: [post.user_id, user_editor.id],
+            post_id: post.id,
+          },
         )
       post.cook(post.raw)
+    end
+
+    it "does not resolve a hashtag that one of the post's writers cannot see" do
+      category = Fabricate(:private_category, group: Fabricate(:group), slug: "secret-plans")
+      admin = Fabricate(:admin)
+      authored_post = Fabricate(:post, user:, last_editor_id: admin.id)
+      revised_post = Fabricate(:post, user: admin, last_editor_id: admin.id)
+      Fabricate(:post_revision, post: revised_post, user:)
+
+      expect(authored_post.cook("#secret-plans")).not_to include(category.name)
+      expect(revised_post.cook("#secret-plans")).not_to include(category.name)
     end
 
     describe "mentions" do

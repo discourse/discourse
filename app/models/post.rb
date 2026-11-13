@@ -362,11 +362,9 @@ class Post < ActiveRecord::Base
 
     # A rule in our Markdown pipeline may have Guardian checks that require a
     # user to be present. The last editing user of the post will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the category it
-    # is referencing.
+    # generally up to date than the creating user.
     options[:user_id] = last_editor_id
+    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
