@@ -273,6 +273,17 @@ html {
   margin-bottom: 36px;
 }
 
+.blog-article__cover {
+  margin: 0 0 36px;
+}
+
+.blog-article__cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 .blog-article h1 {
   font-size: clamp(2.25rem, 6vw, 3.7rem);
   letter-spacing: -0.045em;

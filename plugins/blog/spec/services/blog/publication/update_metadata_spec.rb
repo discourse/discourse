@@ -114,6 +114,79 @@ RSpec.describe Blog::Publication::UpdateMetadata do
       end
     end
 
+    context "with a cover image" do
+      fab!(:cover) { Fabricate(:upload, user: acting_user, width: 1200, height: 630) }
+
+      let(:metadata) { { cover_upload_id: cover.id, cover_alt: "A lighthouse at dusk" } }
+
+      it { is_expected.to run_successfully }
+
+      it "stages the cover and keeps its upload from being cleaned up" do
+        result
+
+        expect(publication.reload).to have_attributes(
+          cover_upload_id: cover.id,
+          cover_alt: "A lighthouse at dusk",
+        )
+        expect(UploadReference.exists?(upload: cover, target: publication)).to eq(true)
+      end
+
+      it "makes the cover the article's image when published, and keeps it through rebakes" do
+        result
+        publish_blog_draft(publication, acting_user)
+
+        revision = publication.published_revision
+        expect(revision.data).to include(
+          "cover_upload_id" => cover.id,
+          "cover_alt" => "A lighthouse at dusk",
+          "image_url" => cover.url,
+          "cover_width" => 1200,
+          "cover_height" => 630,
+        )
+        expect(UploadReference.exists?(upload: cover, target: revision)).to eq(true)
+
+        publication.refresh_article!
+        expect(publication.reload.article.data["image_url"]).to eq(cover.url)
+      end
+
+      context "when a contributor picks someone else's upload" do
+        fab!(:acting_user) { writer }
+        fab!(:cover, :upload)
+
+        before { topic.update!(user: writer) }
+
+        it { is_expected.to fail_a_policy(:can_use_cover_upload) }
+
+        it "lets them use it once they've uploaded the same file" do
+          UserUpload.create!(upload: cover, user: writer)
+
+          expect(result).to run_successfully
+        end
+
+        it "lets them keep a cover someone else chose" do
+          publication.update!(cover_upload_id: cover.id)
+
+          expect(result).to run_successfully
+        end
+      end
+
+      context "when an admin picks someone else's upload" do
+        fab!(:cover, :upload)
+
+        it { is_expected.to run_successfully }
+      end
+
+      context "when the upload isn't an image" do
+        fab!(:cover) do
+          Fabricate(:upload, user: acting_user).tap do |upload|
+            upload.update_columns(original_filename: "notes.pdf", extension: "pdf")
+          end
+        end
+
+        it { is_expected.to fail_with_an_invalid_model(:publication) }
+      end
+    end
+
     context "with a dated path format" do
       let(:metadata) { { path: "/2026/11/#{topic.slug}", published_at: "2025-03-14" } }
 

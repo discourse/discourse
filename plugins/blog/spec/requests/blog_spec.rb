@@ -238,6 +238,28 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).not_to include(publication.url)
     end
 
+    it "shows an article's cover above the body and uses it for link previews" do
+      cover = Fabricate(:upload, user: admin, width: 1200, height: 630)
+      update_blog_metadata(
+        publication,
+        admin,
+        cover_upload_id: cover.id,
+        cover_alt: "A lighthouse at dusk",
+      )
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      image = html.at_css('figure[class$="cover"] img')
+      expect(image["src"]).to eq(UrlHelper.absolute(cover.url))
+      expect(image["alt"]).to eq("A lighthouse at dusk")
+      expect(image["width"]).to eq("1200")
+      expect(html.at_css('meta[property="og:image"]')["content"]).to eq(
+        UrlHelper.absolute(cover.url),
+      )
+      expect(html.at_css('meta[property="og:image:alt"]')["content"]).to eq("A lighthouse at dusk")
+    end
+
     it "preserves historical canonical paths through publishing and corrections" do
       paths = %w[
         /archive/2011/03/30/How+I+learned+to+write+my+own+ORM

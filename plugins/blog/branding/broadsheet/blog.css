@@ -466,6 +466,16 @@
   text-align: center;
 }
 
+.broadsheet__article-cover {
+  margin: 0 0 48px;
+}
+
+.broadsheet__article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .broadsheet__article-header .broadsheet__kicker {
   justify-content: center;
 }

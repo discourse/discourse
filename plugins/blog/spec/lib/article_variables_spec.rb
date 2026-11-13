@@ -33,6 +33,7 @@ RSpec.describe Blog::ArticleVariables do
         "reading_time" => I18n.t("blog.reading_time", count: 1),
         "featured" => false,
         "image_url" => nil,
+        "image_alt" => "",
         "discussion_url" => topic.url,
         "replies" => 2,
         "replies_label" => I18n.t("blog.replies", count: 2),
@@ -77,6 +78,44 @@ RSpec.describe Blog::ArticleVariables do
       expect(values["body_html"]).to include(topic.first_post.cooked)
       expect(values["tags"]).to eq(
         [{ "name" => tag.name, "url" => "https://blog.example.com/tag/#{tag.slug}" }],
+      )
+    end
+  end
+
+  describe "cover image" do
+    fab!(:cover) { Fabricate(:upload, width: 1200, height: 630) }
+
+    it "offers an explicit cover with its alt text and size" do
+      data =
+        publication.article.data.merge(
+          "image_url" => cover.url,
+          "cover_upload_id" => cover.id,
+          "cover_alt" => "A lighthouse at dusk",
+          "cover_width" => 1200,
+          "cover_height" => 630,
+        )
+
+      values = described_class.new(publication, revision: Blog::Revision.new(data:)).to_h
+
+      expect(values).to include(
+        "image_url" => UrlHelper.absolute(cover.url),
+        "image_alt" => "A lighthouse at dusk",
+        "cover_url" => UrlHelper.absolute(cover.url),
+        "cover_alt" => "A lighthouse at dusk",
+        "cover_width" => 1200,
+        "cover_height" => 630,
+      )
+    end
+
+    it "doesn't treat an image from the article body as a cover" do
+      data = publication.article.data.merge("image_url" => cover.url)
+
+      values = described_class.new(publication, revision: Blog::Revision.new(data:)).to_h
+
+      expect(values).to include(
+        "image_url" => UrlHelper.absolute(cover.url),
+        "image_alt" => "",
+        "cover_url" => nil,
       )
     end
   end

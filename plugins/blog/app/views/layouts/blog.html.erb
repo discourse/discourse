@@ -18,6 +18,7 @@
     <meta name="twitter:card" content="<%= @article_metadata&.twitter_card || 'summary' %>">
     <% if @article_metadata && !@preview %>
       <% if @article_metadata.image_url %><meta property="og:image" content="<%= @article_metadata.image_url %>"><% end %>
+      <% if @article_metadata.image_alt %><meta property="og:image:alt" content="<%= @article_metadata.image_alt %>"><% end %>
       <meta property="article:published_time" content="<%= @article_metadata.published_time %>">
       <meta property="article:modified_time" content="<%= @article_metadata.modified_time %>">
       <script type="application/ld+json" nonce="<%= csp_nonce_placeholder %>"><%= raw ERB::Util.json_escape(@article_metadata.schema) %></script>

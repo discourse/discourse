@@ -37,7 +37,8 @@ a deferred, interactive Discourse discussion below each article.
   redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
   community), and relative targets resolve against the community host.
 - Excerpts, featured articles, author bylines, reading time, publication/updated
-  dates, and card/social images from the topic's first image upload.
+  dates, and an optional cover image with alt text, shown above the article and
+  used for cards and social previews (otherwise the topic's first image upload).
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
@@ -294,8 +295,8 @@ to change.
 3. For an existing public article, the public discussion topic shows a banner
    with **Edit privately**, which creates a private working copy and links to it.
    The existing public discussion and its replies keep their IDs.
-4. **Article settings** (path, excerpt, meta description, canonical URL, date,
-   featured) are edited inline in the panel. **Save settings** stages metadata
+4. **Article settings** (path, excerpt, cover image, meta description, canonical
+   URL, date, featured) are edited inline in the panel. **Save settings** stages metadata
    without changing the live article.
 5. **Publish** (or **Publish correction** once live) requires confirmation and
    freezes the current draft and settings as a revision, approves it, and copies
@@ -364,6 +365,10 @@ at narrow and desktop widths in both color modes. Article images outside oneboxe
 must retain their normal sizing. Code oneboxes normalize whitespace around their
 line lists, preserving it only inside each line. Check line numbering, indentation,
 empty lines, and horizontal scrolling without applying article-list spacing.
+
+Images inside `.blog-article__body` open in a lightbox, except emoji, avatars, site icons,
+onebox images, video thumbnails, and images that link elsewhere. The article cover
+and other images outside the body do not.
 
 Syntax highlighting is progressive enhancement in the shared reader. Only articles
 with eligible code blocks load the minified core module and the site's existing

@@ -9,6 +9,7 @@
     </div>
     {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
   </header>
+  {% if article.cover_url %}<figure class="blog-article__cover"><img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}"{% if article.cover_width %} width="{{ article.cover_width }}" height="{{ article.cover_height }}"{% endif %}></figure>{% endif %}
   <div class="blog-article__body cooked">{{ article.body_html }}</div>
   <footer class="blog-article__footer">
     <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>

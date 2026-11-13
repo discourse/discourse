@@ -18,6 +18,7 @@ module ::Blog
           "reading_time" => "",
           "featured" => false,
           "image_url" => nil,
+          "image_alt" => "",
           "discussion_url" => Discourse.base_url,
           "replies" => 0,
           "replies_label" => "",
@@ -25,6 +26,10 @@ module ::Blog
           "updated_label" => nil,
           "body_html" => "<p>#{ERB::Util.html_escape(I18n.t("blog.themes.sample_body"))}</p>",
           "tags" => [],
+          "cover_url" => nil,
+          "cover_alt" => "",
+          "cover_width" => nil,
+          "cover_height" => nil,
         }
       end
     end
@@ -60,6 +65,7 @@ module ::Blog
         "reading_time" => I18n.t("blog.reading_time", count: @revision.reading_minutes),
         "featured" => @publication.featured?,
         "image_url" => @revision.absolute_image_url,
+        "image_alt" => cover_alt,
         "discussion_url" => @topic.url,
         "replies" => replies,
         "replies_label" => I18n.t("blog.replies", count: replies),
@@ -75,10 +81,19 @@ module ::Blog
           @revision.public_tags.map do |tag|
             { "name" => tag.name, "url" => url("/tag/#{tag.slug}") }
           end,
+        "cover_url" => (@revision.absolute_image_url if @revision.cover?),
+        "cover_alt" => cover_alt,
+        "cover_width" => (@revision.data["cover_width"] if @revision.cover?),
+        "cover_height" => (@revision.data["cover_height"] if @revision.cover?),
       )
     end
 
     private
+
+    # Only an explicit cover has alt text; a fallback image comes from the article body.
+    def cover_alt
+      @revision.cover? ? @revision.data["cover_alt"].to_s : ""
+    end
 
     def published_at
       @publication.published_at
