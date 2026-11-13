@@ -145,6 +145,7 @@ export default class LocalLoginForm extends Component {
   @action
   handleForgotPassword(event) {
     event?.preventDefault();
+    this.args.flashChanged(null);
 
     let filledLoginName = this.args.loginName;
 

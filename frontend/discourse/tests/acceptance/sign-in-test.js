@@ -18,6 +18,57 @@ function sessionRequests() {
   );
 }
 
+acceptance("Signing In - clearing password errors", function (needs) {
+  needs.settings({
+    enable_local_logins_via_code: true,
+    enable_local_logins_via_email: true,
+  });
+
+  test("clears the password error when starting password reset", async function (assert) {
+    await visit("/login");
+    await fillIn("#login-account-name", "eviltrout@example.com");
+    await fillIn("#login-account-password", "incorrect");
+    await click("#login-button");
+    assert
+      .dom(".login-fullpage .alert-error")
+      .exists("shows the password error");
+
+    await click("#forgot-password-link");
+
+    assert.dom(".forgot-password-modal").exists("opens password reset");
+    assert
+      .dom(".login-fullpage .alert-error")
+      .doesNotExist("clears the password error when opening password reset");
+
+    await click(".forgot-password-modal .modal-close");
+    assert.dom(".forgot-password-modal").doesNotExist("closes password reset");
+    assert
+      .dom(".login-fullpage .alert-error")
+      .doesNotExist(
+        "keeps the password error cleared after closing password reset"
+      );
+  });
+
+  test("clears the password error when switching to email code login", async function (assert) {
+    await visit("/login");
+    await fillIn("#login-account-name", "eviltrout@example.com");
+    await fillIn("#login-account-password", "incorrect");
+    await click("#login-button");
+    assert
+      .dom(".login-fullpage .alert-error")
+      .exists("shows the password error");
+
+    await click("#one-time-code-link");
+
+    assert.dom(".code-login-form").exists("shows email code login");
+    assert
+      .dom(".login-fullpage .alert-error")
+      .doesNotExist(
+        "clears the password error when switching to email code login"
+      );
+  });
+});
+
 acceptance("Signing In", function (needs) {
   needs.settings({ enable_local_logins_via_code: false });
 
