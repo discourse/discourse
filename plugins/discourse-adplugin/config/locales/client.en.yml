@@ -2,6 +2,12 @@ en:
   js:
     adplugin:
       advertisement_label: "ADVERTISEMENT"
+      gam_adunit: "GAM ad unit"
+      gam_adunit_placeholder: "e.g. /6355419/Travel/Europe/France/Paris"
+      gam_keywords: "GAM keywords"
+      gam_keywords_placeholder: "Comma separated, e.g. travel,europe"
+      gtm_taxonomy: "GTM taxonomy"
+      gtm_taxonomy_placeholder: "e.g. travel/europe/france/paris"
   admin_js:
     admin:
       site_settings:
@@ -54,6 +60,30 @@ en:
           tabs:
             ads: "Ads"
             settings: "Settings"
+
+        dfp_settings:
+          title: "DFP / GAM"
+          nav_title: "DFP / GAM"
+          description: "Set GAM ad units, targeting keywords, and GTM taxonomies for individual categories. Categories without an entry use the global DFP settings."
+          nav_description: "Per-category GAM ad units, keywords and GTM taxonomies."
+          category: "Category"
+          category_description: "Select the category that will use this configuration. Child categories need their own configuration."
+          gam_adunit_description: "The full Google Ad Manager ad unit path. Leave blank to use the global ad unit."
+          gam_keywords_description: "Comma-separated targeting values sent with ad requests for this category."
+          gtm_taxonomy_description: "Optional taxonomy metadata for integrations such as Google Tag Manager."
+          add: "Add category configuration"
+          back: "Category configurations"
+          new_title: "Add category configuration"
+          edit_title: "Edit category configuration"
+          edit: "Edit category configuration"
+          delete: "Delete category configuration"
+          confirm_delete: "Are you sure you want to delete this category configuration?"
+          empty: "No category-specific GAM configurations have been added yet."
+          not_set: "Not set"
+          unknown_category: "Unknown category"
+          save: "Save"
+          save_success: "Category configuration saved."
+          delete_success: "Category configuration deleted."
 
           above_site_header:
             title: "Above site header"

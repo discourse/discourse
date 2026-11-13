@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteController do
+  fab!(:category)
   fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:user)
@@ -107,6 +108,31 @@ RSpec.describe SiteController do
     end
 
     context "when anonymous" do
+      it "only includes DFP settings for visible categories" do
+        get "/site.json"
+        expect(response.parsed_body["dfp_category_settings"]).to be_empty
+
+        visible_setting =
+          AdPlugin::DfpCategorySetting.create!(
+            category: category,
+            gam_adunit: "/6355419/Travel/Europe",
+          )
+        AdPlugin::DfpCategorySetting.create!(
+          category: private_category,
+          gam_adunit: "/6355419/private",
+        )
+
+        get "/site.json"
+
+        expect(response.parsed_body["dfp_category_settings"]).to eq(
+          category.id.to_s => {
+            "gam_adunit" => visible_setting.gam_adunit,
+            "gam_keywords" => nil,
+            "gtm_taxonomy" => nil,
+          },
+        )
+      end
+
       it "only includes ads that are visible to anonymous users" do
         get "/site.json"
         # excludes everyone_group_ad
