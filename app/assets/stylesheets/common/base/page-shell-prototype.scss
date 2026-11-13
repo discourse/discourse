@@ -33,44 +33,52 @@ body.page-shell-prototype-active {
     --shell-prototype-baseline: var(--d-max-width);
     --shell-prototype-padding: 24px;
     --shell-prototype-rail: 56px;
-    --shell-prototype-left: min(
-      var(--shell-prototype-left-width),
+    --shell-prototype-navigation: min(
+      var(--shell-prototype-navigation-width),
       max(200px, 100vw - 448px)
     );
-    --shell-prototype-right: var(--shell-prototype-right-width);
+    --shell-prototype-context: var(--shell-prototype-context-width);
     --shell-prototype-composer: 0px;
-    --shell-prototype-columns: var(--shell-prototype-left) minmax(0, 1fr)
-      var(--shell-prototype-composer) var(--shell-prototype-right);
+    --shell-prototype-columns: var(--shell-prototype-navigation) minmax(0, 1fr)
+      var(--shell-prototype-composer) var(--shell-prototype-context);
+    --shell-prototype-max-inline-size: calc(
+      var(--shell-prototype-baseline) + 2 * var(--shell-prototype-padding) +
+        var(--shell-prototype-navigation) + var(--shell-prototype-context) +
+        var(--shell-prototype-composer)
+    );
     display: grid;
     grid-template-columns: var(--shell-prototype-columns);
     inline-size: 100%;
-    max-inline-size: calc(
-      var(--shell-prototype-baseline) + 2 * var(--shell-prototype-padding) +
-        var(--shell-prototype-left) + var(--shell-prototype-right) +
-        var(--shell-prototype-composer)
-    );
+    max-inline-size: var(--shell-prototype-max-inline-size);
     margin-inline: auto;
-    min-block-size: 100dvh;
+    min-block-size: max(
+      0px,
+      100dvh - var(--shell-prototype-document-offset, 0px)
+    );
     align-content: start;
 
     &[data-width="full"] {
+      --shell-prototype-max-inline-size: var(
+        --shell-prototype-viewport-width,
+        100vw
+      );
       max-inline-size: none;
     }
 
-    &[data-left="rail"] {
-      --shell-prototype-left: var(--shell-prototype-rail);
+    &[data-navigation="rail"] {
+      --shell-prototype-navigation: var(--shell-prototype-rail);
     }
 
-    &[data-left="hidden"] {
-      --shell-prototype-left: 0px;
+    &[data-navigation="hidden"] {
+      --shell-prototype-navigation: 0px;
     }
 
-    &[data-right="rail"] {
-      --shell-prototype-right: var(--shell-prototype-rail);
+    &[data-context="rail"] {
+      --shell-prototype-context: var(--shell-prototype-rail);
     }
 
-    &[data-right="hidden"] {
-      --shell-prototype-right: 0px;
+    &[data-context="hidden"] {
+      --shell-prototype-context: 0px;
     }
 
     // Above-header outlets and pre-body notices stay in their original order.
@@ -81,7 +89,15 @@ body.page-shell-prototype-active {
 
     > .d-header-wrap {
       display: grid;
-      grid-template-columns: subgrid;
+
+      // The bar spans the viewport; only its content follows the shell cap.
+      grid-template-columns:
+        minmax(0, 1fr) minmax(0, var(--shell-prototype-max-inline-size))
+        minmax(0, 1fr);
+      inline-size: var(--shell-prototype-viewport-width, 100vw);
+      margin-inline: calc(
+        (100% - var(--shell-prototype-viewport-width, 100vw)) / 2
+      );
       align-self: start;
       gap: 0;
     }
@@ -97,8 +113,15 @@ body.page-shell-prototype-active {
 
       > .wrap {
         display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1 / -1;
+        grid-template-columns:
+          minmax(0, var(--shell-prototype-header-chrome-width)) minmax(0, 1fr)
+          minmax(0, var(--shell-prototype-header-chrome-width));
+
+        --shell-prototype-header-chrome-width: max(
+          var(--shell-prototype-header-start-width, 184px),
+          var(--shell-prototype-header-end-width, 240px)
+        );
+        grid-column: 2;
         gap: 0;
         max-width: none;
         padding: 0;
@@ -123,7 +146,7 @@ body.page-shell-prototype-active {
       display: flex;
       align-items: center;
       min-inline-size: 0;
-      inline-size: max(var(--shell-prototype-left), 96px);
+      inline-size: max-content;
       padding-inline: var(--space-1);
       box-sizing: border-box;
 
@@ -137,6 +160,7 @@ body.page-shell-prototype-active {
       }
 
       .home-logo-wrapper-outlet {
+        flex-shrink: 0;
         min-inline-size: 0;
         margin-inline: 0;
         overflow: hidden;
@@ -158,18 +182,7 @@ body.page-shell-prototype-active {
       display: flex;
       align-items: center;
       min-inline-size: 0;
-
-      // Reserve the larger chrome overhang on both sides, keeping search
-      // centered on the content even when either side is a rail or hidden.
-      padding-inline: max(
-        var(--shell-prototype-padding),
-        var(--shell-prototype-header-start-width, 96px) - var(
-            --shell-prototype-left
-          ),
-        var(--shell-prototype-header-end-width, 240px) - var(
-            --shell-prototype-right
-          )
-      );
+      padding-inline: var(--shell-prototype-padding);
 
       .floating-search-input-wrapper,
       .extra-info-wrapper {
@@ -181,7 +194,7 @@ body.page-shell-prototype-active {
 
     .d-header .contents > .panel {
       grid-area: auto;
-      grid-column: 4;
+      grid-column: 3;
       grid-row: 1;
       justify-self: end;
       margin: 0;
@@ -191,15 +204,19 @@ body.page-shell-prototype-active {
     }
 
     // The existing body grid remains the composer's direct host. Column 3 is
-    // reserved for peek mode; shell right content uses column 4.
+    // reserved for peek mode; shell context content uses column 4.
     #main-outlet-wrapper {
       display: grid;
       grid-template-columns: subgrid;
       grid-template-areas:
-        "sidebar content composer shell-right"
-        "sidebar below-content composer shell-right"
-        "sidebar shell-footer composer shell-right";
+        "sidebar content composer shell-context"
+        "sidebar below-content composer shell-context"
+        "sidebar shell-footer composer shell-context";
       grid-template-rows: 1fr auto auto;
+      min-block-size: max(
+        0px,
+        100dvh - var(--shell-prototype-body-offset, var(--header-offset))
+      );
       gap: 0;
       inline-size: 100%;
       max-width: none;
@@ -221,43 +238,65 @@ body.page-shell-prototype-active {
 
       .powered-by-discourse {
         grid-area: below-content;
+        transition-property: color, background;
+        margin-inline-start: max(
+          var(--shell-prototype-padding),
+          (100% - var(--shell-prototype-baseline)) / 2
+        );
       }
     }
 
-    .page-shell-prototype__left-slot {
+    .page-shell-prototype__navigation-slot {
       grid-area: sidebar;
       min-inline-size: 0;
 
       .sidebar-wrapper {
         position: sticky;
         top: var(--header-offset);
-        block-size: calc(100dvh - var(--header-offset));
+        block-size: max(
+          0px,
+          100dvh - var(
+              --shell-prototype-body-offset,
+              var(--header-offset)
+            ) - var(--shell-prototype-footer-row-height, 0px)
+        );
         inline-size: 100%;
         overflow: hidden;
       }
     }
 
-    &[data-left="hidden"] .page-shell-prototype__left-slot {
+    &[data-navigation="hidden"] .page-shell-prototype__navigation-slot {
       display: none;
     }
 
-    .page-shell-prototype__right-slot {
-      grid-area: shell-right;
+    &[data-navigation="rail"] .sidebar-wrapper {
+      box-sizing: border-box;
+      border-inline-end: 1px solid var(--d-sidebar-border-color);
+    }
+
+    .page-shell-prototype__context-slot {
+      grid-area: shell-context;
       min-inline-size: 0;
     }
 
-    &[data-constrained-right] {
-      --shell-prototype-right: 0px;
+    &[data-constrained-context] {
+      --shell-prototype-context: 0px;
 
-      .page-shell-prototype__right-slot {
+      .page-shell-prototype__context-slot {
         display: none;
       }
     }
 
-    .page-shell-prototype__right {
+    .page-shell-prototype__context {
       position: sticky;
       top: var(--header-offset);
-      block-size: calc(100dvh - var(--header-offset));
+      block-size: max(
+        0px,
+        100dvh - var(--shell-prototype-body-offset, var(--header-offset)) - var(
+            --shell-prototype-footer-row-height,
+            0px
+          )
+      );
       padding: var(--space-4);
       border-inline-start: 1px solid var(--primary-low);
       background: var(--secondary);
@@ -265,7 +304,7 @@ body.page-shell-prototype-active {
       box-sizing: border-box;
     }
 
-    &[data-right="rail"] .page-shell-prototype__right {
+    &[data-context="rail"] .page-shell-prototype__context {
       padding: var(--space-1);
       overflow-wrap: anywhere;
     }
@@ -273,18 +312,28 @@ body.page-shell-prototype-active {
     .page-shell-prototype__footer {
       grid-area: shell-footer;
       min-inline-size: 0;
+      border-block-start: 1px solid var(--primary-low);
+      background: var(--secondary);
+    }
+
+    .page-shell-prototype__footer-content {
+      inline-size: 100%;
+      max-inline-size: calc(
+        var(--shell-prototype-baseline) + 2 * var(--shell-prototype-padding)
+      );
+      padding-inline: var(--shell-prototype-padding);
+      margin-inline: auto;
+      box-sizing: border-box;
+      min-inline-size: 0;
     }
 
     .page-shell-prototype__footer-sample {
-      padding: var(--space-6) var(--shell-prototype-padding);
-      max-inline-size: var(--shell-prototype-baseline);
-      margin-inline: auto;
-      border-block-start: 1px solid var(--primary-low);
+      padding-block: var(--space-6);
     }
 
     &[data-footer="row"] {
-      .page-shell-prototype__left-slot,
-      .page-shell-prototype__right-slot {
+      .page-shell-prototype__navigation-slot,
+      .page-shell-prototype__context-slot {
         grid-row: 1 / 3;
       }
 
@@ -356,21 +405,21 @@ body.page-shell-prototype-active {
   }
 
   @media (width < 1100px) {
-    .page-shell-prototype[data-right] {
-      --shell-prototype-right: 0px;
+    .page-shell-prototype[data-context] {
+      --shell-prototype-context: 0px;
 
-      .page-shell-prototype__right-slot {
+      .page-shell-prototype__context-slot {
         display: none;
       }
     }
   }
 
   @media (width < 768px) {
-    .page-shell-prototype[data-left] {
-      --shell-prototype-left: 0px;
+    .page-shell-prototype[data-navigation] {
+      --shell-prototype-navigation: 0px;
       --shell-prototype-padding: 12px;
 
-      .page-shell-prototype__left-slot {
+      .page-shell-prototype__navigation-slot {
         display: none;
       }
     }
@@ -393,8 +442,8 @@ body.page-shell-prototype-active {
     #main-outlet-wrapper #reply-control:not(.fullscreen).hide-preview {
       grid-column: 3;
       grid-row: 1;
-      left: auto;
-      right: auto;
+      inset-inline-start: auto;
+      inset-inline-end: auto;
       width: auto;
       max-width: none;
     }

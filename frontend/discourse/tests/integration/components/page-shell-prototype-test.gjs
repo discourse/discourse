@@ -72,26 +72,26 @@ module("Integration | Component | page shell prototype", function (hooks) {
 
     await click(".shell-prototype-controls summary");
     await choose("width", "full");
-    await choose("left", "rail");
-    await choose("right", "rail");
+    await choose("navigation", "rail");
+    await choose("context", "rail");
     await choose("footer", "row");
 
     assert.dom(".page-shell-prototype").hasAttribute("data-width", "full");
-    assert.dom(".page-shell-prototype").hasAttribute("data-left", "rail");
-    assert.dom(".page-shell-prototype").hasAttribute("data-right", "rail");
+    assert.dom(".page-shell-prototype").hasAttribute("data-navigation", "rail");
+    assert.dom(".page-shell-prototype").hasAttribute("data-context", "rail");
     assert.dom(".page-shell-prototype").hasAttribute("data-footer", "row");
     assert.dom("#main-outlet-wrapper > #reply-control").exists({ count: 1 });
     assert.dom("#main-outlet-wrapper").doesNotHaveAttribute("role");
     assert.dom("[data-test-header]").exists({ count: 1 });
     assert.dom("#main-outlet-wrapper [data-test-footer]").exists({ count: 1 });
 
-    await click(".page-shell-prototype__right button");
-    assert.dom(".page-shell-prototype").hasAttribute("data-right", "open");
-    assert.dom('select[name="right"]').hasValue("open");
+    await click(".page-shell-prototype__context button");
+    assert.dom(".page-shell-prototype").hasAttribute("data-context", "open");
+    assert.dom('select[name="context"]').hasValue("open");
   });
 
-  test("temporary right panel availability does not overwrite preferences", async function (assert) {
-    this.shell.right = "rail";
+  test("temporary context panel availability does not overwrite preferences", async function (assert) {
+    this.shell.context = "rail";
     const router = this.owner.lookup("service:router");
     router.currentRouteName = "user.preferences.account";
 
@@ -103,14 +103,14 @@ module("Integration | Component | page shell prototype", function (hooks) {
       </template>
     );
 
-    assert.dom(".page-shell-prototype").hasAttribute("data-right", "hidden");
-    assert.dom(".page-shell-prototype__right-slot").doesNotExist();
-    assert.dom('select[name="right"]').isDisabled();
-    assert.strictEqual(this.shell.right, "rail");
+    assert.dom(".page-shell-prototype").hasAttribute("data-context", "hidden");
+    assert.dom(".page-shell-prototype__context-slot").doesNotExist();
+    assert.dom('select[name="context"]').isDisabled();
+    assert.strictEqual(this.shell.context, "rail");
 
     router.currentRouteName = "discovery.latest";
-    await waitUntil(() => find(".page-shell-prototype__right-slot"));
-    assert.dom(".page-shell-prototype").hasAttribute("data-right", "rail");
+    await waitUntil(() => find(".page-shell-prototype__context-slot"));
+    assert.dom(".page-shell-prototype").hasAttribute("data-context", "rail");
   });
 
   test("composer alignment follows content geometry after a panel width change", async function (assert) {
@@ -127,8 +127,8 @@ module("Integration | Component | page shell prototype", function (hooks) {
       shell.style.getPropertyValue("--shell-prototype-content-width")
     );
     await click(".shell-prototype-controls summary");
-    find('input[name="leftWidth"]').value = "400";
-    await triggerEvent('input[name="leftWidth"]', "input");
+    find('input[name="navigationWidth"]').value = "400";
+    await triggerEvent('input[name="navigationWidth"]', "input");
     await waitUntil(() => {
       const actual = find("#main-outlet").getBoundingClientRect();
       return (
@@ -146,12 +146,12 @@ module("Integration | Component | page shell prototype", function (hooks) {
         ) < 0.5
       );
     });
-    assert.strictEqual(this.shell.leftWidth, 400);
+    assert.strictEqual(this.shell.navigationWidth, 400);
   });
 
   test("header search stays centered with a rail and overflowing header actions", async function (assert) {
-    this.shell.left = "rail";
-    this.shell.right = "hidden";
+    this.shell.navigation = "rail";
+    this.shell.context = "hidden";
 
     await render(
       <template>
@@ -185,13 +185,47 @@ module("Integration | Component | page shell prototype", function (hooks) {
     await waitUntil(() =>
       element.style.getPropertyValue("--shell-prototype-header-end-width")
     );
-    const mainBox = find("#main-outlet").getBoundingClientRect();
+    const headerBox = find(".d-header > .wrap").getBoundingClientRect();
     const searchBox = find(".floating-search-input").getBoundingClientRect();
     assert.true(
       Math.abs(
-        mainBox.left + mainBox.width / 2 - searchBox.left - searchBox.width / 2
+        headerBox.left +
+          headerBox.width / 2 -
+          searchBox.left -
+          searchBox.width / 2
       ) < 1,
       "header chrome reserves equal space around the centered search"
+    );
+
+    const measuredWidths = [];
+    const observer = new MutationObserver(() => {
+      measuredWidths.push(
+        element.style.getPropertyValue("--shell-prototype-header-start-width")
+      );
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ["style"] });
+    await choose("context", "open");
+    const contextWidth = find('input[name="contextWidth"]');
+    contextWidth.value = "480";
+    await triggerEvent(contextWidth, "input");
+    observer.disconnect();
+    assert.true(measuredWidths.length > 0);
+    assert.true(
+      measuredWidths.every(Boolean),
+      "panel resizing preserves measured header widths between frames"
+    );
+    const resizedHeaderBox = find(".d-header > .wrap").getBoundingClientRect();
+    const resizedSearchBox = find(
+      ".floating-search-input"
+    ).getBoundingClientRect();
+    assert.true(
+      Math.abs(
+        resizedHeaderBox.left +
+          resizedHeaderBox.width / 2 -
+          resizedSearchBox.left -
+          resizedSearchBox.width / 2
+      ) < 1,
+      "the search stays centered as the page edges change"
     );
   });
 
