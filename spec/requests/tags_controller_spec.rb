@@ -193,6 +193,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
+
       include_examples "retrieves the right tags"
 
       it "hides tags only used in personal messages from grouped lists for regular users" do
@@ -282,6 +283,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
+
       include_examples "retrieves the right tags"
 
       it "hides tags only used in personal messages from category tag lists for regular users" do
@@ -492,7 +494,7 @@ RSpec.describe TagsController do
     fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
-    it "should return the right response" do
+    it "returns the right response" do
       get "/tag/test.json"
 
       expect(response.status).to eq(200)
@@ -534,6 +536,17 @@ RSpec.describe TagsController do
       )
     end
 
+    it "doesn't use the description of a tag restricted to a category the user can't see" do
+      restricted = Fabricate(:tag, name: "restricted", description: "secret description")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted])
+      Fabricate(:tag, name: "other")
+
+      get "/tags/intersection/restricted/other"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("secret description")
+    end
+
     it "returns tag info for an encoded period tag name" do
       Fabricate(:tag, name: "node.js")
 
@@ -543,12 +556,12 @@ RSpec.describe TagsController do
       expect(response.parsed_body["tag_info"]["name"]).to eq("node.js")
     end
 
-    it "should handle invalid tags" do
+    it "handles invalid tags" do
       get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)
     end
 
-    it "should handle synonyms" do
+    it "handles synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
       get "/tag/#{synonym.name}/l/top.json?period=daily"
       expect(response.status).to eq(301)
@@ -700,7 +713,7 @@ RSpec.describe TagsController do
 
       fab!(:topic_out_of_category) { Fabricate(:topic, tags: [tag]) }
 
-      it "should produce the topic inside the category and not the topic outside of it" do
+      it "produces the topic inside the category and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{tag.name}.json"
 
         topic_ids = response.parsed_body["topic_list"]["topics"].map { |x| x["id"] }
@@ -709,7 +722,7 @@ RSpec.describe TagsController do
         expect(topic_ids).to_not include(topic_in_category_without_tag.id)
       end
 
-      it "should produce the right next topic URL" do
+      it "produces the right next topic URL" do
         get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json?per_page=1"
 
         expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with(
@@ -717,13 +730,13 @@ RSpec.describe TagsController do
         )
       end
 
-      it "should 404 for invalid category path" do
+      it "returns 404 for invalid category path" do
         get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/somerandomstring/#{tag.name}.json?per_page=1"
 
         expect(response.status).to eq(404)
       end
 
-      it "should 404 for secure categories" do
+      it "returns 404 for secure categories" do
         c = Fabricate(:private_category, group: Fabricate(:group))
         get "/tags/c/#{c.slug_path.join("/")}/#{c.id}/#{tag.name}.json"
 
@@ -738,7 +751,7 @@ RSpec.describe TagsController do
 
       fab!(:topic_out_of_subcategory) { Fabricate(:topic, tags: [tag]) }
 
-      it "should produce the topic inside the subcategory and not the topic outside of it" do
+      it "produces the topic inside the subcategory and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}.json"
 
         topic_ids = response.parsed_body["topic_list"]["topics"].map { |x| x["id"] }
@@ -748,7 +761,7 @@ RSpec.describe TagsController do
       end
     end
 
-    it "should ignore invalid tag parameter" do
+    it "ignores invalid tag parameter" do
       get "/tag/test.json?tags[0]=nada"
       expect(response.status).to eq(200)
     end
@@ -850,6 +863,65 @@ RSpec.describe TagsController do
       )
       expect(response.parsed_body["categories"]).to be_present
       expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+    end
+
+    context "when the tag is restricted to a category the user can't see" do
+      fab!(:group)
+      fab!(:member) { Fabricate(:user, groups: [group]) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        tag.update!(description: "secret description")
+        private_category.update!(tags: [tag])
+      end
+
+      it "returns 404 when looked up by ID" do
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+
+        sign_in(user)
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when looked up by ID and restricted through a tag group" do
+        private_category.update!(tags: [], tag_groups: [Fabricate(:tag_group, tags: [tag])])
+
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "omits the description when looked up by name" do
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tag_info"]).to include(
+          "name" => tag.name,
+          "category_restricted" => true,
+        )
+        expect(response.parsed_body["tag_info"]).not_to include("description", "description_cooked")
+      end
+
+      it "doesn't translate the name or description" do
+        SiteSetting.content_localization_enabled = true
+        tag.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag, locale: "ja", name: "秘密", description: "秘密の説明")
+        sign_in(Fabricate(:user, locale: "ja"))
+
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "name")).to eq(tag.name)
+        expect(response.body).not_to include("秘密")
+      end
+
+      it "returns the full tag to users who can see the category" do
+        sign_in(member)
+        get "/tag/#{tag.id}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "description")).to eq("secret description")
+      end
     end
 
     context "when tag belongs to a tag group" do
@@ -2352,6 +2424,7 @@ RSpec.describe TagsController do
 
       describe "with `SiteSetting.force_lowercase_tags = false" do
         before { SiteSetting.force_lowercase_tags = false }
+
         it "does not fail if tags already exist" do
           Fabricate(:tag, name: "tag1")
           Fabricate(:tag, name: "CAPITALTAG2")
@@ -2629,13 +2702,13 @@ RSpec.describe TagsController do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_only_tag.name])
     end
 
-    it "should return 403 for an anonymous user" do
+    it "returns 403 for an anonymous user" do
       get "/tags/list.json"
 
       expect(response.status).to eq(403)
     end
 
-    it "should return 404 when tagging is disabled" do
+    it "returns 404 when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
       sign_in(user)
@@ -2645,7 +2718,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(404)
     end
 
-    it "should only return tags that are visible to the user for non admin users" do
+    it "returns only tags that are visible to the user for non admin users" do
       stub_const(TagsController, "LIST_LIMIT", 2) do
         sign_in(user)
 
@@ -2674,7 +2747,7 @@ RSpec.describe TagsController do
       end
     end
 
-    it "should return all tags for admin users" do
+    it "returns all tags for admin users" do
       stub_const(TagsController, "LIST_LIMIT", 2) do
         sign_in(admin)
 

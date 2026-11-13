@@ -305,6 +305,10 @@ class Tag < ActiveRecord::Base
     categories
   end
 
+  def visible_in_accessible_categories?(guardian)
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.where(id: id), guardian).exists?
+  end
+
   %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
@@ -318,11 +322,11 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if self.slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
+    if slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
       errors.add(:slug, :invalid)
-    elsif self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
+    elsif slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
       self.slug = Slug.for(name, "")
-      self.slug = "" if self.slug.blank? || duplicate_slug?
+      self.slug = "" if slug.blank? || duplicate_slug?
     end
   end
 
