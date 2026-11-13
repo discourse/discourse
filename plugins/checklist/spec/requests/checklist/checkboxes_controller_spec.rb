@@ -20,6 +20,65 @@ RSpec.describe Checklist::CheckboxesController do
       }
     end
 
+    it "protects private system messages from non-participant moderators" do
+      moderator = Fabricate(:moderator)
+      private_topic = Fabricate(:system_message_topic, user: Discourse.system_user, recipient: user)
+      private_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Discourse.system_user,
+          raw: "Your private export is available at /uploads/private-export.zip",
+        )
+      sign_in(moderator)
+
+      put "/checklist/toggle.json",
+          params: params.merge(post_id: private_post.id, expected_raw: "unknown")
+
+      expect(response.body).not_to include(private_post.raw)
+      expect(response.status).to eq(403)
+    end
+
+    it "protects whispers from non-staff editors" do
+      group = Fabricate(:group)
+      editor = Fabricate(:user, groups: [group])
+      SiteSetting.edit_all_post_groups = group.id.to_s
+      post.update!(post_type: Post.types[:whisper])
+      sign_in(editor)
+
+      put "/checklist/toggle.json", params: params.merge(expected_raw: "unknown")
+
+      expect(response.body).not_to include(post.raw)
+      expect(response.status).to eq(403)
+
+      put "/checklist/toggle.json", params: params
+
+      expect(response.body).not_to include(post.raw)
+      expect(response.status).to eq(403)
+      expect(post.reload.raw).to eq("- [ ] first\n- [x] second")
+    end
+
+    it "allows a participant moderator to toggle a private system message" do
+      moderator = Fabricate(:moderator)
+      private_topic =
+        Fabricate(:system_message_topic, user: Discourse.system_user, recipient: moderator)
+      private_post =
+        Fabricate(:post, topic: private_topic, user: Discourse.system_user, raw: "- [ ] first")
+      sign_in(moderator)
+
+      put "/checklist/toggle.json",
+          params:
+            params.merge(
+              post_id: private_post.id,
+              expected_raw: private_post.raw,
+              expected_updated_at: private_post.updated_at.iso8601(3),
+            )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["raw"]).to eq("- [x] first")
+      expect(private_post.reload.raw).to eq("- [x] first")
+    end
+
     context "when not logged in" do
       it "returns a 403" do
         put "/checklist/toggle.json", params: params
