@@ -4,7 +4,7 @@ plugins:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       group_setting: live_allowed_groups
       learn_more_url: "https://meta.discourse.org/t/-/411337"
