@@ -473,7 +473,7 @@ module Email
           end
 
           if img["title"] && img["src"][%r{/_?emoji/}]
-            img.add_previous_sibling(img["title"] || "emoji")
+            img.add_previous_sibling(img.document.create_text_node(img["title"]))
             img.remove
           end
         end
