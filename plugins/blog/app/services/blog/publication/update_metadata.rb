@@ -28,7 +28,17 @@ class Blog::Publication::UpdateMetadata
   end
 
   def stage_metadata(params:, topic:)
-    Blog::Publication.lock_for_topic(topic).stage_metadata(params.metadata)
+    Blog::Publication.lock_for_topic(topic).stage_metadata(with_co_author_ids(params.metadata))
+  end
+
+  # The editor names co-authors by username. An unknown or inactive one becomes nil,
+  # which the publication rejects.
+  def with_co_author_ids(metadata)
+    metadata = metadata.to_h.stringify_keys
+    return metadata if !metadata.key?("co_authors")
+    usernames = metadata.delete("co_authors").to_s.split(",").map { User.normalize_username(_1) }
+    ids = User.where(active: true, username_lower: usernames).pluck(:username_lower, :id).to_h
+    metadata.merge("co_author_ids" => ids.values_at(*usernames))
   end
 
   # Upload ids are guessable, so a new cover must be one the editor uploaded.

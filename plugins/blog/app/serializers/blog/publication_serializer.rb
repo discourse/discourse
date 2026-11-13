@@ -26,6 +26,7 @@ module ::Blog
                :cover_upload_id,
                :cover_url,
                :cover_alt,
+               :co_authors,
                :featured,
                :published_at,
                :last_published_at,
@@ -135,6 +136,13 @@ module ::Blog
 
     def cover_alt
       metadata["cover_alt"].to_s
+    end
+
+    def co_authors
+      ids = Array(metadata["co_author_ids"])
+      return [] if ids.empty?
+      usernames = User.where(id: ids).pluck(:id, :username).to_h
+      usernames.values_at(*ids).compact
     end
 
     def featured

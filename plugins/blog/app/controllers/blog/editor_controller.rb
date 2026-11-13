@@ -324,6 +324,7 @@ module ::Blog
           :canonical_url,
           :cover_upload_id,
           :cover_alt,
+          :co_authors,
         )
         .to_h
     end

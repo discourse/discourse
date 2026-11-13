@@ -35,7 +35,11 @@ module ::Blog
         "labels" => I18n.t("blog").select { |_, value| value.is_a?(String) }.stringify_keys,
         "articles" =>
           @publications.each_with_index.map do |publication, index|
-            ArticleVariables.new(publication, preview_token: @preview_token).summary(index:)
+            ArticleVariables.new(
+              publication,
+              preview_token: @preview_token,
+              co_author_users:,
+            ).summary(index:)
           end,
         "article" => @article&.to_h,
       }
@@ -121,6 +125,12 @@ module ::Blog
     def author_bio
       return if !@author&.active? || !Guardian.new.can_see_profile?(@author)
       @author.user_profile&.bio_cooked.presence
+    end
+
+    # One query for every card's co-authors.
+    def co_author_users
+      @co_author_users ||=
+        User.where(id: @publications.flat_map { _1.article.co_author_ids }).index_by(&:id)
     end
 
     def page_url(number)

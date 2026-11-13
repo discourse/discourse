@@ -46,8 +46,13 @@ a deferred, interactive Discourse discussion below each article.
   can't be used to check which usernames exist. Imported author URLs with a different
   slug can be redirected with permalinks. Articles owned by the system user or a bot,
   as imports with no known author are, show no byline and have no author page.
-  Templates get `article.author_url` for bylines and, on author pages, `page.author`
-  (`name`, `username`, `url`, `avatar_url`, `bio_html`).
+  Templates get `article.authors` (`name`, `url`, `separator`) for bylines, plus
+  `article.author` (the names joined) and `article.author_url` (the first author's page),
+  and, on author pages, `page.author` (`name`, `username`, `url`, `avatar_url`, `bio_html`).
+- Co-authors, set in the article settings: up to 10 active users credited after the
+  topic's owner in the byline and the structured data, staged until the next publish like
+  other settings. Their author pages list the article too. Credit only: co-authors get no
+  extra editing rights. Names are kept as they were when the article was published.
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
   `BlogPosting` structured data. Item identifiers come from the article's topic, not
   its path, so after a migration, feed readers subscribed to the old blog's feed see

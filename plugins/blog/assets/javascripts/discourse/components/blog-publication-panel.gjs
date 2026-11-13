@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, uniqueId } from "@ember/helper";
+import { fn, hash, uniqueId } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -11,6 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import EmbedMode from "discourse/lib/embed-mode";
 import { longDate } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -94,6 +95,12 @@ export default class BlogPublicationPanel extends Component {
 
   get isDiscussion() {
     return this.publication.role === "discussion";
+  }
+
+  // The topic's owner is already credited as the author.
+  get coAuthorExclusions() {
+    const owner = this.args.outletArgs.model.details?.created_by?.username;
+    return owner ? [owner] : [];
   }
 
   get status() {
@@ -364,6 +371,8 @@ export default class BlogPublicationPanel extends Component {
       {
         publication: {
           ...settings,
+          // Form encoding drops empty arrays, so clearing the list needs a string.
+          co_authors: (data.co_authors || []).join(","),
           published_at:
             data.published_at === current?.slice(0, 10)
               ? current
@@ -491,6 +500,7 @@ export default class BlogPublicationPanel extends Component {
       cover_upload_id: this.publication?.cover_upload_id || "",
       cover_url: this.publication?.cover_url || "",
       cover_alt: this.publication?.cover_alt || "",
+      co_authors: this.publication?.co_authors || [],
       featured: this.publication?.featured,
       published_at: this.publication?.published_at?.slice(0, 10) || "",
     };
@@ -1051,6 +1061,25 @@ export default class BlogPublicationPanel extends Component {
                       placeholder={{this.publication.url}}
                       @type="url"
                     /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.co_authors_hint"}}
+                    @format="full"
+                    @name="co_authors"
+                    @title={{i18n "blog.co_authors"}}
+                    @type="custom"
+                    as |field|
+                  >
+                    <field.Control>
+                      <UserChooser
+                        @onChange={{field.set}}
+                        @options={{hash
+                          maximum=10
+                          excludedUsernames=this.coAuthorExclusions
+                        }}
+                        @value={{field.value}}
+                      />
+                    </field.Control>
+                  </form.Field>
                   <form.Field
                     @description={{i18n "blog.date_hint"}}
                     @name="published_at"

@@ -56,7 +56,13 @@ class Blog::Article::List
       publications = publications.where(SEARCH_SQL, pattern: params.search_pattern)
     end
     publications = publications.where(discussion_topic_id: tag.topic_tags.select(:topic_id)) if tag
-    publications = publications.where(discussion_topic: { user_id: author.id }) if author
+    if author
+      publications =
+        publications.where(
+          "topics.user_id = :id OR :id = ANY(blog_publications.co_author_ids)",
+          id: author.id,
+        )
+    end
     publications = publications.order(featured: :desc) if params.featured_first?
     publications.newest
   end

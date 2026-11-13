@@ -23,6 +23,7 @@ module ::Blog
         "raw" => post.raw,
         "cooked" => post.cooked,
         "author_name" => author_name(source.user),
+        "co_authors" => co_author_credits(metadata["co_author_ids"]),
         # An explicit cover is also the card and social image.
         "image_url" => image_url_for(cover || source.image_upload),
         "cover_upload_id" => cover&.id,
@@ -34,6 +35,15 @@ module ::Blog
 
     def self.author_name(user)
       user&.name.presence || user&.username
+    end
+
+    # Names are kept as they were at publishing, like the main author's.
+    def self.co_author_credits(ids)
+      users = User.where(id: ids).index_by(&:id)
+      Array(ids).filter_map do |id|
+        user = users[id]
+        { "user_id" => id, "name" => author_name(user) } if user
+      end
     end
 
     def self.author_path(user)
@@ -50,6 +60,19 @@ module ::Blog
 
     def title
       data["title"]
+    end
+
+    def co_author_ids
+      Array(data["co_authors"]).pluck("user_id")
+    end
+
+    # The owner first, then co-authors, as [user, name] pairs. Articles imported without
+    # a known author belong to the system user, which isn't credited.
+    def authors(owner, users: nil)
+      users ||= User.where(id: co_author_ids).index_by(&:id)
+      co_authors =
+        Array(data["co_authors"]).map { |credit| [users[credit["user_id"]], credit["name"]] }
+      [[owner, data["author_name"]], *co_authors].select { |user, _| user&.human? }
     end
 
     def cooked

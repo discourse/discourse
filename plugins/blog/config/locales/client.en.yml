@@ -206,6 +206,7 @@ en:
           meta_description: meta description
           canonical_url: canonical URL
           cover: cover image
+          co_authors: co-authors
           featured: featured flag
           tags: tags
           published_at: publication date
@@ -213,7 +214,7 @@ en:
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, cover, search, date, featured
+        settings_hint: Path, excerpt, cover, search, co-authors, date, featured
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -330,6 +331,10 @@ en:
       cover_alt: Cover image alt text
       cover_alt_hint:
         Describes the cover image for people who can't see it.
+      co_authors: Co-authors
+      co_authors_hint:
+        Credited beside the author in the byline, and listed on their own
+        author pages.
       meta_description: Meta description
       meta_description_hint:
         The summary search engines and link previews show. Leave blank to use

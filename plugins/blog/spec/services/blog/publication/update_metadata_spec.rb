@@ -187,6 +187,64 @@ RSpec.describe Blog::Publication::UpdateMetadata do
       end
     end
 
+    context "with co-authors" do
+      fab!(:ada) { Fabricate(:user, username: "ada", name: "Ada Lovelace") }
+      fab!(:bob) { Fabricate(:user, username: "bob", name: "") }
+
+      let(:metadata) { { co_authors: "Bob,ada" } }
+
+      it { is_expected.to run_successfully }
+
+      it "stages them in order and credits them when published" do
+        result
+        expect(publication.reload.co_author_ids).to eq([bob.id, ada.id])
+
+        publish_blog_draft(publication, acting_user)
+
+        expect(publication.co_author_ids).to eq([bob.id, ada.id])
+        expect(publication.published_revision.data["co_authors"]).to eq(
+          [
+            { "user_id" => bob.id, "name" => "bob" },
+            { "user_id" => ada.id, "name" => "Ada Lovelace" },
+          ],
+        )
+      end
+
+      it "keeps a published article's co-authors until the next publish" do
+        publish_blog_draft(publication, acting_user)
+
+        result
+        expect(publication.reload.co_author_ids).to eq([])
+        expect(publication.pending_changes).to include("co_authors")
+      end
+
+      it "removes them all with an empty list" do
+        publication.update!(co_author_ids: [ada.id])
+
+        described_class.call(params: params.merge(metadata: { co_authors: "" }), **dependencies)
+
+        expect(publication.reload.co_author_ids).to eq([])
+      end
+
+      context "when one of them can't be credited" do
+        let(:metadata) { { co_authors: "ada,nobody-here" } }
+
+        it { is_expected.to fail_with_an_invalid_model(:publication) }
+      end
+
+      context "when the article's author is one of them" do
+        let(:metadata) { { co_authors: "ada,#{acting_user.username}" } }
+
+        it { is_expected.to fail_with_an_invalid_model(:publication) }
+      end
+
+      context "when one of them is deactivated" do
+        before { ada.deactivate(Discourse.system_user) }
+
+        it { is_expected.to fail_with_an_invalid_model(:publication) }
+      end
+    end
+
     context "with a dated path format" do
       let(:metadata) { { path: "/2026/11/#{topic.slug}", published_at: "2025-03-14" } }
 

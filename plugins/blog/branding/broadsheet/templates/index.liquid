@@ -26,7 +26,7 @@
         <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
         <p class="broadsheet__excerpt">{{ article.excerpt }}</p>
         <div class="broadsheet__byline">
-          {% if article.author %}<span><strong><a href="{{ article.author_url }}">{{ article.author }}</a></strong></span>{% endif %}
+          {% if article.author %}<span><strong>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</strong></span>{% endif %}
           <time datetime="{{ article.published_at }}">{{ article.date }}</time>
           <a href="{{ article.url }}#discussion">{{ article.replies_label }}</a>
         </div>
