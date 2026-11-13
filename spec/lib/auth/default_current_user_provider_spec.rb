@@ -791,6 +791,82 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
+  describe "html application layout access" do
+    let(:env_key) { Auth::DefaultCurrentUserProvider::HTML_LAYOUT_DISALLOWED_ENV }
+
+    def api_key_with_scopes(*scopes)
+      ApiKey
+        .create!(user_id: user.id, created_by_id: -1)
+        .tap do |api_key|
+          scopes.each do |resource, action|
+            ApiKeyScope.create!(api_key_id: api_key.id, resource:, action:)
+          end
+        end
+    end
+
+    def user_api_key(*scope_names)
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: scope_names.map { |name| UserApiKeyScope.new(name:) },
+      )
+    end
+
+    def api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_API_KEY" => api_key.key }
+    end
+
+    def user_api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+    end
+
+    it "disallows the application layout for an API key with granular scopes" do
+      test_provider = provider("/t/1/posts.json", api_key_env(api_key_with_scopes(%w[topics read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for an API key without scopes" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for a read-only API key" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes(%w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for an API key that includes global read access" do
+      test_provider =
+        provider("/", api_key_env(api_key_with_scopes(%w[topics read], %w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "disallows the application layout for a user API key without the read or write scopes" do
+      test_provider =
+        provider("/notifications.json", user_api_key_env(user_api_key("notifications")))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for a user API key with the read or write scope" do
+      %w[read write].each do |scope_name|
+        test_provider = provider("/", user_api_key_env(user_api_key(scope_name)))
+
+        expect(test_provider.current_user.id).to eq(user.id)
+        expect(test_provider.env[env_key]).to be_nil
+      end
+    end
+  end
+
   it "ignores a valid auth cookie that has been tampered with" do
     @provider = provider("/")
     @provider.log_on_user(user, {}, @provider.cookie_jar)
