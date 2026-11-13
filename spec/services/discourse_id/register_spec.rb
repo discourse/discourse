@@ -137,6 +137,33 @@ RSpec.describe DiscourseId::Register do
           )
         end
 
+        context "when redis is a read-only replica" do
+          before do
+            # DiscourseRedis#setex namespaces the key before delegating to the
+            # raw client, so the raise must be stubbed on the namespaced key.
+            allow(Discourse.redis.without_namespace).to receive(:setex).with(
+              Discourse.redis.namespace_key("discourse_id_challenge_token"),
+              600,
+              challenge_token,
+            ).and_raise(Redis::ReadOnlyError)
+          end
+
+          it { is_expected.to fail_a_step(:store_challenge_token) }
+
+          it "does not send the unconfirmable token to the provider" do
+            result
+            expect(WebMock).not_to have_requested(:post, "#{discourse_id_url}/register")
+          end
+
+          it "logs a read-only diagnostic" do
+            allow(Rails.logger).to receive(:error)
+            result
+            expect(Rails.logger).to have_received(:error).with(
+              /Discourse ID register failed.*store_challenge_token.*read-only replica/m,
+            )
+          end
+        end
+
         context "when registration request fails" do
           before do
             stub_request(:post, "#{discourse_id_url}/register").to_raise(
