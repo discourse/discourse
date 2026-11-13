@@ -58,9 +58,7 @@ export function defaultRenderTag(tag, params) {
     htmlTag +
     href +
     tagIdAttribute +
-    " data-tag-name=" +
-    tagNameLower +
-    " class='" +
+    ` data-tag-name="${tagNameLower}" class='` +
     classes.join(" ") +
     "'>" +
     (params.displayName ? escape(params.displayName) : visibleName) +

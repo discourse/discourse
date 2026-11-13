@@ -10,7 +10,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag", function (assert) {
     assert.strictEqual(
       renderTag("foo", { description: "foo description" }),
-      "<a href='/tag/foo'  data-tag-name=foo class='discourse-tag simple'>foo</a>",
+      `<a href='/tag/foo'  data-tag-name="foo" class='discourse-tag simple'>foo</a>`,
       "does not expose the description as a tooltip"
     );
   });
@@ -18,7 +18,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag encodes legacy tag links with periods", function (assert) {
     assert.strictEqual(
       renderTag("node.js"),
-      "<a href='/tag/node%2Ejs'  data-tag-name=node.js class='discourse-tag simple'>node.js</a>"
+      `<a href='/tag/node%2Ejs'  data-tag-name="node.js" class='discourse-tag simple'>node.js</a>`
     );
   });
 
@@ -83,6 +83,56 @@ module("Unit | Utility | render-tag", function (hooks) {
       .dom(".discourse-tag", div)
       .hasAttribute("data-tag-id", id)
       .doesNotHaveAttribute("onclick");
+  });
+
+  test("renderTag keeps whitespace in tag names inside data-tag-name", function (assert) {
+    for (const name of [
+      "bug onmouseover=alert(1)",
+      "bug\tonmouseover=alert(1)",
+      "bug\nonmouseover=alert(1)",
+    ]) {
+      for (const tag of [name, { id: 42, name, slug: "bug" }]) {
+        const div = document.createElement("div");
+
+        div.innerHTML = renderTag(tag);
+
+        assert
+          .dom("a", div)
+          .hasAttribute(
+            "data-tag-name",
+            name,
+            "preserves the complete tag name"
+          )
+          .doesNotHaveAttribute(
+            "onmouseover",
+            "keeps whitespace inside the data attribute"
+          );
+      }
+    }
+  });
+
+  test("renderTag keeps quotes and markup in tag names inside data-tag-name", function (assert) {
+    const name = `bug" onmouseover="alert(1) <img src=x onerror=alert(1)>`;
+
+    for (const tag of [name, { id: 42, name, slug: "bug" }]) {
+      const div = document.createElement("div");
+
+      div.innerHTML = renderTag(tag);
+
+      assert
+        .dom("a", div)
+        .hasAttribute(
+          "data-tag-name",
+          name,
+          "preserves quotes and markup as data"
+        )
+        .doesNotHaveAttribute("onmouseover", "adds no event handler")
+        .doesNotHaveAttribute(
+          "onerror",
+          "adds no event handler from the markup"
+        );
+      assert.dom("img", div).doesNotExist("adds no element from the tag name");
+    }
   });
 
   test("renderTag keeps slug content inside the href attribute", function (assert) {
