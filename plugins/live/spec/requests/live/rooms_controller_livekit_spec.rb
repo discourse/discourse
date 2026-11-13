@@ -327,6 +327,66 @@ RSpec.describe Live::RoomsController do
     end
   end
 
+  describe "#update" do
+    fab!(:admin)
+
+    it "evicts a non-member only LiveKit still lists when the room is made private" do
+      configure_livekit!
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      stub_request(
+        :post,
+        "https://livekit.example.com/twirp/livekit.RoomService/ListParticipants",
+      ).to_return(status: 200, body: { participants: [{ identity: other_user.id.to_s }] }.to_json)
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: other_user.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+      sign_in(admin)
+
+      put "/live/rooms/#{room.id}.json", params: { room: { public: false } }
+
+      expect(response.status).to eq(200)
+      expect(remove_stub).to have_been_requested.once
+    end
+
+    it "removes a dispatched agent when the room is made private" do
+      configure_livekit!
+      SiteSetting.live_livekit_url = "wss://test.livekit.cloud"
+      SiteSetting.live_livekit_agent_enabled = true
+      Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Live::ParticipantTracker.add(room.id, admin.id)
+      dispatch = nil
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/CreateDispatch",
+      ).to_return do |request|
+        dispatch = JSON.parse(request.body).merge("id" => "AD_test")
+        { status: 200, body: dispatch.to_json }
+      end
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/ListDispatch",
+      ).to_return { { status: 200, body: { agentDispatches: [dispatch] }.to_json } }
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.RoomService/ListParticipants",
+      ).to_return(status: 200, body: { participants: [] }.to_json)
+      delete_stub =
+        stub_request(
+          :post,
+          "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/DeleteDispatch",
+        ).to_return(status: 200, body: "{}")
+      Live::AgentDispatcher.dispatch!(room:, agent_name: "assistant")
+      sign_in(admin)
+
+      put "/live/rooms/#{room.id}.json", params: { room: { public: false } }
+
+      expect(response.status).to eq(200)
+      expect(delete_stub).to have_been_requested.once
+    end
+  end
+
   describe "#destroy" do
     fab!(:admin)
 

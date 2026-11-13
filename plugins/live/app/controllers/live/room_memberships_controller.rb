@@ -60,6 +60,8 @@ module Live
       user_id = membership.user_id
       membership.destroy!
 
+      return head :no_content if Live::ParticipantEvictor.evict_unless_authorized!(@room, user_id)
+
       if Live::ParticipantTracker.user_ids(@room.id).include?(user_id)
         metadata = Live::ParticipantTracker.get_metadata(@room.id, user_id)
         metadata[:role] = "participant"

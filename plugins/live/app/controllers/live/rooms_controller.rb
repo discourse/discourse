@@ -115,6 +115,7 @@ module Live
       if @room.update(room_params)
         Live::DirectoryBroadcaster.broadcast(action: :updated, room: @room)
         refresh_participant_statuses(@room) if name_changed
+        Live::ParticipantEvictor.evict_unauthorized!(@room)
         render_serialized @room, Live::RoomSerializer, root: :room
       else
         render_json_error @room
@@ -377,7 +378,7 @@ module Live
         return head :no_content
       end
 
-      session = close_session_for(@room.id, current_user.id)
+      session = Live::ParticipantEvictor.close_session(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
       Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
@@ -541,28 +542,7 @@ module Live
         raise Discourse::InvalidParameters.new(I18n.t("live.errors.cannot_kick_creator"))
       end
 
-      Live::AgentManager.evict!(room: @room, user_id: user_id) if user_id.negative?
-
-      session = close_session_for(@room.id, user_id)
-      Live::ParticipantTracker.mark_left(@room.id, user_id)
-      Live::ParticipantTracker.remove(@room.id, user_id)
-
-      kicked_user = User.find_by(id: user_id)
-      Live::UserStatusManager.clear_live_status(kicked_user) if kicked_user
-
-      Live::BadgeGranterHooks.on_leave(kicked_user, session) if kicked_user
-      Live::RoomBroadcaster.publish_kick(@room, user_id)
-      Live::RoomBroadcaster.publish_participants(@room)
-
-      # The client-side kicked handler already forces a clean leave; this
-      # additionally evicts the media session from the SFU.
-      Live::Livekit::RoomServiceClient.remove_participant(@room, user_id) unless user_id.negative?
-
-      if Live::ParticipantTracker.human_user_ids(@room.id).empty? &&
-           Live::AgentManager.provider_room?(@room.id)
-        Live::AgentManager.evict_agents_in_room!(@room)
-        Live::RoomBroadcaster.publish_participants(@room)
-      end
+      Live::ParticipantEvictor.evict!(@room, user_id)
 
       head :no_content
     end
@@ -826,15 +806,6 @@ module Live
           next unless Live::UserStatusManager.live_status_active?(user)
           Live::UserStatusManager.set_live_status(user, room)
         end
-    end
-
-    def close_session_for(room_id, user_id)
-      metadata = Live::ParticipantTracker.get_metadata(room_id, user_id)
-      return unless metadata[:session_id]
-
-      session = Live::Session.find_by(id: metadata[:session_id])
-      session&.close!
-      session
     end
 
     def video_publisher_count(room, exclude_user_id: nil)

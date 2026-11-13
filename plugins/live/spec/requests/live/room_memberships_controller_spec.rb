@@ -298,7 +298,24 @@ RSpec.describe Live::RoomMembershipsController do
       ).to have_been_made.once
     end
 
-    it "revokes publishing on the SFU when a present speaker's membership is removed" do
+    it "evicts a member from the SFU when their private room membership is removed" do
+      Live::ParticipantTracker.remove(room.id, member.id)
+      update_stub = update_participant_stub
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: member.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+
+      delete "/live/rooms/#{room.id}/memberships/#{participant_membership.id}.json"
+
+      expect(response.status).to eq(204)
+      expect(remove_stub).to have_been_requested.once
+      expect(update_stub).not_to have_been_requested
+    end
+
+    it "revokes publishing on the SFU when a present speaker's public room membership is removed" do
+      room.update!(public: true)
       participant_membership.update!(role: Live::RoomMembership::ROLE_SPEAKER)
       update_participant_stub
 
