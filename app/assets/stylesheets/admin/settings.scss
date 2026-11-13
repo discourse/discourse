@@ -32,7 +32,7 @@
         color: var(--primary-medium);
       }
 
-      // Keep the icons on the line of the setting name's last word.
+      // Word joiner: wraps the icons with the name's last word.
       .staff-action-log-link,
       .setting-link {
         white-space: nowrap;
@@ -43,7 +43,7 @@
       }
 
       .setting-link {
-        font-size: var(--font-0); // match the h3, so both icons are one size
+        font-size: var(--font-0);
       }
 
       &:hover,
@@ -71,14 +71,13 @@
       }
 
       .setting-label__heading {
-        margin-bottom: 0.5rem; // an inline h3 drops its own vertical margins
+        margin-bottom: 0.5rem;
 
         h3 {
           display: inline;
         }
       }
 
-      // With the space before it, the gap before the pair is wider than the gap inside it.
       .staff-action-log-link {
         margin-left: var(--space-1);
       }

@@ -36,9 +36,8 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       userLocale: parentController.get("model.extras.locale"),
     });
 
-    // Only a fresh page load (the app's first transition) jumps to a setting
-    // named in the URL's hash. Hash links followed inside the app are scrolled
-    // by DiscourseURL, and later transitions must not reuse an earlier hash.
+    // Fresh page loads only: in-app hash links are scrolled by DiscourseURL,
+    // and later transitions would see a stale hash.
     this.#arrivalSetting = transition?.from
       ? null
       : settingNameFromFragment(window.location.hash);
@@ -53,9 +52,7 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       return;
     }
 
-    // Wait a runloop: the route-scroll-manager service scrolls to the top
-    // (or the remembered position) in this transition's afterRender queue,
-    // after ours, and would undo the scroll to the setting.
+    // After route-scroll-manager, which resets the scroll position in afterRender.
     next(() => this.#arriveAtSetting(name));
   }
 
