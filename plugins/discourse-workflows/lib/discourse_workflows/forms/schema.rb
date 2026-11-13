@@ -87,6 +87,9 @@ module DiscourseWorkflows
         case field["field_type"]
         when "checkbox"
           ActiveModel::Type::Boolean.new.cast(default_value)
+        when *Schemas::FormFields::CHOICE_FIELD_TYPES
+          value = default_value.to_s
+          Schemas::FormFields.choice_values(field).include?(value) ? value : ""
         when "password"
           ""
         else
@@ -109,8 +112,10 @@ module DiscourseWorkflows
         }.compact
 
         case type
-        when "dropdown", "radio"
-          schema[:options] = options_for(field)
+        when *Schemas::FormFields::CHOICE_FIELD_TYPES
+          schema[:options] = Schemas::FormFields
+            .choice_values(field)
+            .map { |value| { value:, label: value } }
         when "html"
           schema[:html] = sanitize_html(field["html"])
         end
@@ -147,20 +152,6 @@ module DiscourseWorkflows
         return if %w[checkbox hiddenField html].include?(field["field_type"])
 
         "required" if field["required"]
-      end
-
-      def options_for(field)
-        options = field["options"]
-        values = options.is_a?(Hash) ? options["values"] : options
-
-        Array
-          .wrap(values)
-          .filter_map do |option|
-            value = option.is_a?(Hash) ? option["value"] || option[:value] : option
-            next if value.blank?
-
-            { value: value, label: value }
-          end
       end
 
       def sanitize_html(html)

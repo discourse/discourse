@@ -124,7 +124,14 @@ module DiscourseWorkflows
                   exec_ctx.get_node_parameter("set_primary_group", item_index, default: false),
               }
 
-              if config["operation"] == "check_membership"
+              operation = config["operation"]
+              if !OPERATIONS.include?(operation)
+                raise_node_error!(
+                  I18n.t("discourse_workflows.errors.unknown_operation", operation:),
+                )
+              end
+
+              if operation == "check_membership"
                 next check_membership(exec_ctx, item, config, item_index)
               end
 
@@ -154,7 +161,7 @@ module DiscourseWorkflows
           when "remove"
             changed = group.remove(user)
             logger.log_remove_user_from_group(user)
-          else
+          when "add"
             changed = GroupManager.new(group).add([user.id]).present?
             logger.log_add_user_to_group(user)
             changed = set_primary_group(user, group, guardian) || changed if config[
