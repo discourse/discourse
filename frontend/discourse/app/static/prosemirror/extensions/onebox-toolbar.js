@@ -86,7 +86,7 @@ class OneboxToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.#getContext().replaceToolbar(null, this.#toolbar);
+      this.#getContext().replaceToolbar?.(null, this.#toolbar);
       this.#toolbarReplaced = false;
     }
   }
@@ -127,7 +127,7 @@ class OneboxToolbarPluginView {
     if (this.#getContext().capabilities.viewport.sm) {
       this.#showFloatingToolbar();
     } else {
-      this.#getContext().replaceToolbar(this.#toolbar);
+      this.#getContext().replaceToolbar?.(this.#toolbar);
       this.#toolbarReplaced = true;
     }
   }

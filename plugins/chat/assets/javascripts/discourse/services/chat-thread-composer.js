@@ -1,34 +1,10 @@
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
+import { service } from "@ember/service";
+import ChatComposerService from "discourse/plugins/chat/discourse/lib/chat-composer-service";
 
-export default class ChatThreadComposer extends Service {
+export default class ChatThreadComposer extends ChatComposerService {
   @service chat;
-  @service appEvents;
   @service site;
-
-  @tracked textarea;
-  @tracked scroller;
-
-  init() {
-    super.init(...arguments);
-    this.appEvents.on("discourse:focus-changed", this, this.blur);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off("discourse:focus-changed", this, this.blur);
-  }
-
-  @action
-  focus(options = {}) {
-    this.textarea?.focus(options);
-  }
-
-  @action
-  blur() {
-    this.textarea?.blur();
-  }
 
   @action
   edit(message) {
