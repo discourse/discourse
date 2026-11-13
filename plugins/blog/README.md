@@ -283,7 +283,8 @@ design's decorative graphic covers.
 
 Reader pages use Liquid templates with optional per-theme overrides. Switch themes
 through the normal preview/activation interface; no articles or editorial data need
-to change.
+to change. Article previews in the editor use the active theme's templates and CSS,
+so they match the published page apart from its custom JavaScript.
 
 ## Editorial workflow
 

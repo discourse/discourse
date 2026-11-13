@@ -32,7 +32,7 @@ module ::Blog
         page,
         variables,
         theme: blog_theme,
-        custom: !@preview && !blog_customizations_disabled?,
+        custom: !blog_customizations_disabled?,
         diagnostics: @theme_preview_token.present?,
       ).html_safe
     end
