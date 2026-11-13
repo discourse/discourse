@@ -30,6 +30,7 @@ module Live
       room = Live::Room.find(params[:id])
 
       if room.update(room_params)
+        Live::ParticipantEvictor.evict_unauthorized!(room)
         render_serialized room, AdminRoomSerializer, root: :room
       else
         render_json_error room

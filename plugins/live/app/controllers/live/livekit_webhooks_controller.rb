@@ -53,10 +53,12 @@ module Live
     end
 
     def record_participant_join(event)
+      identity = event.dig("participant", "identity").to_s
+      return if ParticipantEvictor.expel_unless_authorized!(event.dig("room", "name"), identity)
+
       room = event_room(event)
       return if room.nil?
 
-      identity = event.dig("participant", "identity").to_s
       if AgentDispatcher.pending?(room.id) && !/\A[1-9]\d*\z/.match?(identity)
         return AgentManager.reconcile(room)
       end
