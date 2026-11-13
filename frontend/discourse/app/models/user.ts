@@ -609,38 +609,6 @@ export function addSaveableUserOptionField(fieldName: string) {
   userOptionFields.push(fieldName);
 }
 
-function userOption(userOptionKey: keyof UserOption) {
-  return computed(`user_option.${userOptionKey}`, {
-    get(this: User, key: string) {
-      deprecated(
-        `Getting ${key} property of user object is deprecated. Use user_option object instead`,
-        {
-          id: "discourse.user.userOptions",
-          since: "2.9.0.beta12",
-        }
-      );
-
-      return this.get(`user_option.${key}`);
-    },
-
-    set(this: User, key: string, value: unknown) {
-      deprecated(
-        `Setting ${key} property of user object is deprecated. Use user_option object instead`,
-        {
-          id: "discourse.user.userOptions",
-          since: "2.9.0.beta12",
-        }
-      );
-
-      if (!this.user_option) {
-        this.set("user_option", {});
-      }
-
-      return this.set(`user_option.${key}`, value);
-    },
-  });
-}
-
 @singleton
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class User extends RestModel.extend(Evented) {
@@ -749,41 +717,6 @@ export default class User extends RestModel.extend(Evented) {
   @autoTrackedArray secondary_emails: string[] | undefined;
   @autoTrackedArray sidebar_sections: SiteSidebarSection[] | undefined;
   @autoTrackedArray unconfirmed_emails: string[] | undefined;
-  @userOption("mailing_list_mode")
-  mailing_list_mode: UserOption["mailing_list_mode"];
-  @userOption("external_links_in_new_tab")
-  external_links_in_new_tab: UserOption["external_links_in_new_tab"];
-  @userOption("enable_quoting") enable_quoting: UserOption["enable_quoting"];
-  @userOption("enable_smart_lists")
-  enable_smart_lists: UserOption["enable_smart_lists"];
-
-  @userOption("enable_markdown_monospace_font")
-  enable_markdown_monospace_font: UserOption["enable_markdown_monospace_font"];
-  @userOption("dynamic_favicon") dynamic_favicon: UserOption["dynamic_favicon"];
-  @userOption("automatically_unpin_topics")
-  automatically_unpin_topics: UserOption["automatically_unpin_topics"];
-  @userOption("likes_notifications_disabled")
-  likes_notifications_disabled: UserOption["likes_notifications_disabled"];
-  @userOption("hide_profile") hide_profile: UserOption["hide_profile"];
-  @userOption("hide_presence") hide_presence: UserOption["hide_presence"];
-  @userOption("title_count_mode")
-  title_count_mode: UserOption["title_count_mode"];
-  @userOption("timezone") timezone: UserOption["timezone"];
-  @userOption("skip_new_user_tips")
-  skip_new_user_tips: UserOption["skip_new_user_tips"];
-  @userOption("default_calendar")
-  default_calendar: UserOption["default_calendar"];
-  @userOption("bookmark_auto_delete_preference")
-  bookmark_auto_delete_preference: UserOption["bookmark_auto_delete_preference"];
-  @userOption("seen_popups") seen_popups: UserOption["seen_popups"];
-  @userOption("should_be_redirected_to_top")
-  should_be_redirected_to_top: UserOption["should_be_redirected_to_top"];
-  @userOption("redirected_to_top")
-  redirected_to_top: UserOption["redirected_to_top"];
-  @userOption("treat_as_new_topic_start_date")
-  treat_as_new_topic_start_date: UserOption["treat_as_new_topic_start_date"];
-  @userOption("composition_mode")
-  composition_mode: UserOption["composition_mode"];
   numGroupsToDisplay = 2;
   statusManager = new UserStatusManager(this);
   declare static _current: User | null | undefined;
