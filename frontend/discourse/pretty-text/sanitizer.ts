@@ -14,6 +14,8 @@ type XssWithHelpers = typeof xss & {
 const IFRAME_REGEXP =
   /<iframe(?![^>]*\s+src\s*=)[^>]*>[\s\S]*?(<\/iframe\s*>|$)/gi;
 
+const UNSAFE_IFRAME_SRC_REGEXP = /[\t\n\r]|&(?:#|(?!amp;)\w+;)/;
+
 function attr(name: string, value?: string | null) {
   if (value) {
     return `${name}="${(xss as XssWithHelpers).escapeAttrValue(value)}"`;
@@ -204,7 +206,8 @@ export function sanitize(
               const iframeUrls = [decoded];
               iframeUrls.push(value);
               return (
-                !decoded.match(/\/\.+(?:[\/\\?#]|$)/) &&
+                !UNSAFE_IFRAME_SRC_REGEXP.test(value) &&
+                !decoded.match(/[\/\\]\.+(?:[\/\\?#]|$)/) &&
                 allowedIframes.some((i) => {
                   const regex = i
                     // escape regex, keeping *
