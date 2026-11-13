@@ -738,4 +738,28 @@ RSpec.describe SiteSetting do
       expect(SiteSetting.allow_uncategorized_topics).to eq(false)
     end
   end
+
+  describe ".should_download_images?" do
+    before { SiteSetting.disabled_image_download_domains = "evil.com" }
+
+    it "skips downloads for an exactly disabled host" do
+      expect(SiteSetting.should_download_images?("http://evil.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested with different casing" do
+      expect(SiteSetting.should_download_images?("http://EVIL.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested as a trailing-dot FQDN" do
+      expect(SiteSetting.should_download_images?("http://evil.com./a.png")).to eq(false)
+    end
+
+    it "downloads images from a subdomain of a disabled host" do
+      expect(SiteSetting.should_download_images?("http://cdn.evil.com/a.png")).to eq(true)
+    end
+
+    it "downloads images from a host that only shares a suffix" do
+      expect(SiteSetting.should_download_images?("http://notevil.com/a.png")).to eq(true)
+    end
+  end
 end
