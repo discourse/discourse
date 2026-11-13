@@ -572,8 +572,10 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           )}}
           {{on "keydown" @onInputKeydown capture=true}}
         />
-        {{#if (and (eq @roleMode "search") @searchIcon)}}
-          {{dIcon @searchIcon class="d-select__search-icon"}}
+        {{#if @searchIcon}}
+          {{#if (eq @roleMode "search")}}
+            {{dIcon @searchIcon class="d-select__search-icon"}}
+          {{/if}}
         {{/if}}
         {{#if this.chipHint}}
           <span class="sr-only" id={{this.chipHintId}}>

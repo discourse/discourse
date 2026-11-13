@@ -77,7 +77,11 @@ export const TagOption: TemplateOnlyComponent<{
   };
 }> = <template>
   {{#if @option.action}}
-    {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+    {{#let (actionIcon @record) as |icon|~}}
+      {{#if icon~}}
+        {{dIcon icon}}
+      {{~/if}}
+    {{~/let}}
     {{tagRecordName @record}}
   {{else if @option.create}}
     {{rowText @config "createOption" (createValues @record)}}

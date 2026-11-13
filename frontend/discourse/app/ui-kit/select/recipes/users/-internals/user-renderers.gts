@@ -77,7 +77,11 @@ export const UserOption: TOC<{
   };
 }> = <template>
   {{#if @option.action}}
-    {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+    {{#let (actionIcon @record) as |icon|~}}
+      {{#if icon~}}
+        {{dIcon icon}}
+      {{~/if}}
+    {{~/let}}
     {{recordName @record}}
   {{else if (isType @record "user")}}
     <span class="d-user-option">

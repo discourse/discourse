@@ -93,7 +93,11 @@ export const CategoryBadge: TemplateOnlyComponent<{
         topicCount=(topicCount category @counts @countSubcategories)
       }}
     {{else}}
-      {{#if (actionIcon @record)}}{{dIcon (actionIcon @record)}}{{/if}}
+      {{#let (actionIcon @record) as |icon|~}}
+        {{#if icon~}}
+          {{dIcon icon}}
+        {{~/if}}
+      {{~/let}}
       {{name @record}}
     {{/if}}
   {{/let}}
