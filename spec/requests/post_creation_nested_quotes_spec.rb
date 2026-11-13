@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Creating a post with deeply nested quotes" do
+RSpec.describe "Creating a post with deeply nested quotes", type: :request do
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:topic) { Fabricate(:topic, user: user) }
 

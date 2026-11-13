@@ -100,7 +100,7 @@ RSpec.describe PostStripper do
   end
 
   context "with plugins" do
-    after { DiscoursePluginRegistry.reset_register!(:post_strippers) }
+    before { DiscoursePluginRegistry.stubs(:_raw_post_strippers).returns([]) }
 
     it "runs strippers registered by plugins" do
       plugin_element = '<div class="plugin_class"></div>'
