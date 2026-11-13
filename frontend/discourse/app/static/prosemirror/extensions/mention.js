@@ -5,8 +5,17 @@ import getURL from "discourse/lib/get-url";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
 
-const VALID_MENTIONS = new Set();
-const INVALID_MENTIONS = new Set();
+const MENTION_CACHES = new Map();
+
+function mentionsCache(topicId) {
+  const key = String(topicId ?? "");
+  let cache = MENTION_CACHES.get(key);
+  if (!cache) {
+    cache = { valid: new Set(), invalid: new Set() };
+    MENTION_CACHES.set(key, cache);
+  }
+  return cache;
+}
 
 function unicodeEnabled({ getContext }) {
   return getContext().siteSettings.unicodeUsernames;
@@ -138,16 +147,15 @@ const extension = {
             mentionNodes.sort((a, b) => b.pos - a.pos);
 
             const invalidateMentions = async () => {
-              await fetchMentions(mentionNames, getContext());
+              const context = getContext();
+              await fetchMentions(mentionNames, context);
 
+              const cache = mentionsCache(context.topicId);
               for (const mentionNode of mentionNodes) {
                 const { name, node, pos } = mentionNode;
 
                 const lowerName = name.toLowerCase();
-                if (
-                  VALID_MENTIONS.has(lowerName) ||
-                  hereMention === lowerName
-                ) {
+                if (cache.valid.has(lowerName) || hereMention === lowerName) {
                   continue;
                 }
 
@@ -172,10 +180,12 @@ const extension = {
 };
 
 async function fetchMentions(names, context) {
+  const cache = mentionsCache(context.topicId);
+
   // only fetch new mentions that are not already validated
   names = uniqueItemsFromArray(names).filter((name) => {
     const lower = name.toLowerCase();
-    return !VALID_MENTIONS.has(lower) && !INVALID_MENTIONS.has(lower);
+    return !cache.valid.has(lower) && !cache.invalid.has(lower);
   });
 
   if (!names.length) {
@@ -190,9 +200,9 @@ async function fetchMentions(names, context) {
     const lowerName = name.toLowerCase();
 
     if (response.users.includes(lowerName) || response.groups[lowerName]) {
-      VALID_MENTIONS.add(lowerName);
+      cache.valid.add(lowerName);
     } else {
-      INVALID_MENTIONS.add(lowerName);
+      cache.invalid.add(lowerName);
     }
 
     checkMentionWarning(name, response, context);
