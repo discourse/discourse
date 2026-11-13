@@ -5,8 +5,8 @@ Use for expensive requests, parsers, SQL, native workers, remote calls or queues
 ## 1. Find reachable work
 
 - [ ] Identify the first expensive operation and the actor's minimum access.
-- [ ] Follow indirect ingress, such as search routing a URL term, not just requests
-  sent directly to the affected route.
+- [ ] Trace every reachable path into expensive work, including indirect entry
+  points. A limit on one route does not protect paths that bypass it.
 - [ ] Measure work even when the final response is an error. A 404 or 400 does not
   recover CPU time, memory or worker capacity already spent.
 
