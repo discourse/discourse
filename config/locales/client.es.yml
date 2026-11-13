@@ -2233,6 +2233,7 @@ es:
         redeemed_tab_with_count: "Canjeados (%{count})"
         invited_via: "Invitación"
         invited_via_link: "enlace %{key} (%{count} / %{max} canjeados)"
+        invited_via_link_without_key: "enlace (%{count} / %{max} canjeado)"
         generating_link: "Generando enlace..."
         groups: "Grupos"
         topic: "Tema"

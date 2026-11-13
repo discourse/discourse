@@ -2692,6 +2692,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        invited_via_link_without_key: "link (użyto %{count} / %{max})"
         generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"

@@ -2364,6 +2364,7 @@ zh_CN:
         redeemed_tab_with_count: "已确认 (%{count})"
         invited_via: "邀请"
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
+        invited_via_link_without_key: "链接 (%{count} / %{max} 已激活)"
         generating_link: "正在生成链接…"
         groups: "群组"
         topic: "话题"

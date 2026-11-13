@@ -2056,6 +2056,7 @@ it:
         redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
         invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
+        invited_via_link_without_key: "Link (%{count} / %{max} riscattati)"
         groups: "Gruppi"
         topic: "Argomento"
         sent: "Creato/Ultimo Invio"
