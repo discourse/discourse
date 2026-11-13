@@ -25,7 +25,9 @@ module JsonApiKit
       end
 
       class_methods do
-        delegate :schema, :identifier_type, to: :adapter_definition
+        delegate :schema, to: :adapter_definition
+
+        def identifier_type = IdentifierType.new(adapter_definition.identifier_type)
 
         def model(declaration = nil)
           return resolved_model unless declaration
@@ -67,8 +69,8 @@ module JsonApiKit
         end
       end
 
-      delegate :model, :type, :namespace, to: :class
-      delegate :schema, :identifier_type, to: :adapter
+      delegate :model, :type, :namespace, :identifier_type, to: :class
+      delegate :schema, to: :adapter
     end
   end
 end

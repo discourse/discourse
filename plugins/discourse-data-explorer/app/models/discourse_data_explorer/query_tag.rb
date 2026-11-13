@@ -32,20 +32,20 @@ module DiscourseDataExplorer
     def self.validate_names(names, errors)
       if names.size > MAX_TAGS_PER_QUERY
         errors.add(
-          :base,
-          I18n.t("discourse_data_explorer.errors.too_many_tags", max: MAX_TAGS_PER_QUERY),
+          :tags,
+          I18n.t("discourse_data_explorer.errors.tags_exceed_count", max: MAX_TAGS_PER_QUERY),
         )
       end
 
       if names.any? { |name| name.length > MAX_NAME_LENGTH }
         errors.add(
-          :base,
-          I18n.t("discourse_data_explorer.errors.tag_too_long", max: MAX_NAME_LENGTH),
+          :tags,
+          I18n.t("discourse_data_explorer.errors.tags_exceed_length", max: MAX_NAME_LENGTH),
         )
       end
 
       if names.any? { |name| name.include?(",") }
-        errors.add(:base, I18n.t("discourse_data_explorer.errors.tag_contains_comma"))
+        errors.add(:tags, I18n.t("discourse_data_explorer.errors.tags_contain_comma"))
       end
     end
 
@@ -93,7 +93,7 @@ module DiscourseDataExplorer
       automatic_names = Query.automatic_tag_names(query.id)
       validate_names(names - automatic_names, errors)
       (names & (Query::RESERVED_TAGS - automatic_names)).each do |name|
-        errors.add(:base, I18n.t("discourse_data_explorer.errors.#{name}_tag_reserved"))
+        errors.add(:tags, I18n.t("discourse_data_explorer.errors.tags_include_#{name}_tag"))
       end
       return if errors.empty?
 

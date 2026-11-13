@@ -28,6 +28,11 @@ module JsonApiKit
         render_document(Document::Errors.new(*request_body.validation_errors(errors)))
       end
 
+      def render_service_failure(result)
+        Rails.logger.warn("JSON:API request failed\n#{result.inspect_steps}")
+        render_document(Document::Errors.new(InternalServerError.new))
+      end
+
       def request_inputs
         @request_inputs ||= Request::Inputs.new(request, resource: request_resource)
       end

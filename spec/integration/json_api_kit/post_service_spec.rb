@@ -52,11 +52,12 @@ module JsonApiKitPostSpec
     resource GroupResource
 
     def create
-      CreateGroup.call(service_params) do
+      CreateGroup.call(service_params) do |result|
         on_success { |group:| render_document(group, status: :created) }
         on_failed_contract { |contract| render_validation_errors(contract.errors) }
         on_failed_policy(:can_create_group) { raise Discourse::InvalidAccess }
         on_model_errors(:group) { |group| render_validation_errors(group.errors) }
+        on_failure { render_service_failure(result) }
       end
     end
   end
@@ -329,6 +330,30 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
       it "preserves the service policy", :aggregate_failures do
         expect { create_group }.not_to change(Group, :count)
         expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the service fails for an unknown reason" do
+      let(:fake_logger) { FakeLogger.new }
+
+      before do
+        allow(Group).to receive(:create).and_return(nil)
+        Rails.logger.broadcast_to(fake_logger)
+      end
+
+      after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+      it "returns a server error", :aggregate_failures do
+        create_group
+
+        expect(response).to have_http_status(:internal_server_error)
+        expect(parsed_body.fetch("errors")).to contain_exactly(a_hash_including("status" => "500"))
+      end
+
+      it "logs the service steps" do
+        create_group
+
+        expect(fake_logger.warnings).to include(a_string_including("[model] group"))
       end
     end
   end

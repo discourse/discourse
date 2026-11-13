@@ -497,6 +497,18 @@ RSpec.describe Service do
           end
         end
 
+        context "when identifiers have trailing characters" do
+          let(:params) { super().merge(user_id: "3abc", group_ids: %w[4 5abc]) }
+
+          it "rejects each malformed identifier", :aggregate_failures do
+            expect(result).to fail_a_contract
+            expect(result.params.errors.attribute_names).to contain_exactly(
+              :user_id,
+              :"group_ids[1]",
+            )
+          end
+        end
+
         context "when an ID collection receives a hash" do
           let(:params) { super().merge(group_ids: {}) }
 
@@ -592,6 +604,19 @@ RSpec.describe Service do
           expect(result.params).to be_user_provided
           expect(result.params).to be_groups_provided
           expect(result.params).not_to respond_to(:reviewer_provided?)
+        end
+      end
+
+      context "when the contract is declared" do
+        before do
+          allow(users_resource).to receive(:identifier_type).and_call_original
+          allow(groups_resource).to receive(:identifier_type).and_call_original
+          service_class.params(**options)
+        end
+
+        it "does not read the identifier types", :aggregate_failures do
+          expect(users_resource).not_to have_received(:identifier_type)
+          expect(groups_resource).not_to have_received(:identifier_type)
         end
       end
 
