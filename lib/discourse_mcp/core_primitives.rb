@@ -70,10 +70,161 @@ module DiscourseMcp
       register_theme_tools(registry)
       register_theme_management_tools(registry)
       register_group_tools(registry)
+      register_tag_group_tools(registry)
       register_category_tools(registry)
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_tag_group_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 100 }
+      selector = {
+        oneOf: [
+          object_schema({ id: }, required: %w[id]),
+          object_schema({ name: }, required: %w[name]),
+        ],
+      }
+      attributes = {
+        name:,
+        tags: {
+          type: "array",
+          maxItems: 1000,
+          items: selector,
+        },
+        parent_tag: {
+          anyOf: [selector, { type: "null" }],
+        },
+        one_per_topic: {
+          type: "boolean",
+        },
+        permissions: {
+          type: "object",
+          minProperties: 1,
+          maxProperties: 1000,
+          propertyNames: {
+            pattern: "^(0|[1-9][0-9]*)$",
+            # $ can match before a trailing newline
+            not: {
+              pattern: "[^0-9]",
+            },
+          },
+          additionalProperties: {
+            type: "string",
+            enum: %w[full readonly],
+          },
+        },
+        allow_tag_creation: {
+          type: "boolean",
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_search_tag_groups",
+        title: "Search tag groups",
+        description:
+          "Searches visible tag groups and visible member tags. Omits staff configuration. q and names combine; q supports SQL LIKE wildcards. truncated signals possible additional results.",
+        implementation: Tools::SearchTagGroups,
+        input_schema:
+          object_schema(
+            {
+              q: {
+                type: "string",
+                maxLength: 250,
+              },
+              names: {
+                type: "array",
+                minItems: 1,
+                maxItems: 100,
+                items: name,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 1000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_list_tag_groups",
+        title: "List tag groups",
+        description:
+          "Lists staff tag-group inventory with permissions and parent tags, ordered by name and ID. Requires staff authority. Paginate with limit and offset; reads remain available when tagging is disabled.",
+        implementation: Tools::ListTagGroups,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                maximum: 1_000_000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_tag_group",
+        title: "Get tag group",
+        description:
+          "Reads tag-group configuration, including tags, parent, one-per-topic policy and permissions. Requires staff authority.",
+        implementation: Tools::GetTagGroup,
+        input_schema: object_schema({ tag_group_id: id }, required: %w[tag_group_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_tag_group",
+        title: "Create tag group",
+        description:
+          "Creates a tag group. Requires staff authority and tagging enabled. Tags use ID or name selectors; synonyms resolve to original tags. Name selectors require allow_tag_creation=true and may create tags. permissions maps group IDs to full or readonly; group 0 means everyone. Omitted permissions default to everyone/full.",
+        implementation: Tools::CreateTagGroup,
+        input_schema: object_schema(attributes, required: %w[name]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_update_tag_group",
+        title: "Update tag group",
+        description:
+          "Updates supplied fields, preserving omitted fields. tags replaces all member tags; [] clears them. parent_tag=null clears the parent. permissions replaces the full permission map. Synonyms resolve to original tags. Name selectors require allow_tag_creation=true. Requires staff authority and tagging enabled.",
+        implementation: Tools::UpdateTagGroup,
+        input_schema: object_schema(attributes.merge(tag_group_id: id), required: %w[tag_group_id]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_delete_tag_group",
+        title: "Delete tag group",
+        description:
+          "Deletes a tag group and its membership, permission and category relationships, including required-tag rules. Tags and topic tags remain. Requires staff authority, tagging enabled, confirm=true and the exact current expected_name.",
+        implementation: Tools::DeleteTagGroup,
+        input_schema:
+          object_schema(
+            { tag_group_id: id, expected_name: name, confirm: { type: "boolean" } },
+            required: %w[tag_group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
     end
 
     def register_category_tools(registry)

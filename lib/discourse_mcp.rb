@@ -18,6 +18,8 @@ module DiscourseMcp
     SITE_SETTINGS_WRITE = "mcp:site-settings:write"
     THEMES_READ = "mcp:themes:read"
     THEMES_WRITE = "mcp:themes:write"
+    TAG_GROUPS_READ = "mcp:tag-groups:read"
+    TAG_GROUPS_WRITE = "mcp:tag-groups:write"
     GROUPS_READ = "mcp:groups:read"
     GROUPS_WRITE = "mcp:groups:write"
     USERS_READ = "mcp:users:read"

@@ -942,8 +942,8 @@ module DiscourseTagging
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
-  def self.find_or_create_tags!(tag_names, guardian)
-    tag_names = tags_for_saving(tag_names, guardian) || []
+  def self.find_or_create_tags!(tag_names, guardian, **options)
+    tag_names = tags_for_saving(tag_names, guardian, options) || []
     return [] if tag_names.empty?
 
     existing_tag_names = Tag.where_name(tag_names).pluck(:name)

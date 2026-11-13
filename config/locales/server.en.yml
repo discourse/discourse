@@ -149,6 +149,13 @@ en:
       theme_not_remote: "The theme does not have a Git repository"
       theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
       theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      tag_group_not_found: "Tag group not found"
+      tag_group_tags_unresolved: "One or more selected tags could not be applied. Use valid tag names or original tag IDs."
+      tag_group_unknown_tags: "One or more selected tags do not exist"
+      tag_group_unknown_permission_groups: "One or more permission groups do not exist"
+      tag_group_tag_creation_confirmation: "Name selectors require allow_tag_creation=true; use tag IDs to select existing tags"
+      tag_group_update_required: "Provide at least one tag group field to update"
+      tag_group_delete_confirmation: "Confirm deletion and provide the exact current tag group name"
       theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
       theme_setting_not_found: "The theme does not declare this setting"
       theme_translation_not_found: "The theme does not declare one or more translation keys"
@@ -3385,7 +3392,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
+      uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
