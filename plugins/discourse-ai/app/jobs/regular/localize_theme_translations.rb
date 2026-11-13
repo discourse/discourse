@@ -8,50 +8,75 @@ module Jobs
       theme_id = args[:theme_id]
       raise Discourse::InvalidParameters.new(:theme_id) if theme_id.blank?
 
-      theme = Theme.includes(:theme_fields).find_by(id: theme_id)
+      theme = Theme.includes(:theme_fields, :theme_translation_overrides).find_by(id: theme_id)
       return if theme.blank?
 
       source_locale = args[:source_locale].presence || "en"
       target_locales = SiteSetting.content_localization_supported_locales.to_s.split("|")
       target_locales &= Array(args[:target_locales]) if args.key?(:target_locales)
-      target_locales -= [source_locale]
       return if target_locales.empty?
 
       override_existing = args[:override_existing] == true
-      target_keys =
-        target_locales.to_h do |locale|
-          [locale, (load_yaml(theme, locale).keys + load_overrides(theme, locale).keys).to_set]
-        end
-      non_en_source = source_locale != "en"
+      object_defaults = theme.object_translation_defaults(strict: false)
+      defaults =
+        load_yaml(theme, "en").merge(object_defaults.transform_values { |entry| entry[:text] })
+      source_yaml = load_yaml(theme, source_locale)
+      target_keys = target_locales.to_h { |locale| [locale, load_yaml(theme, locale).keys.to_set] }
+      overrides =
+        theme.theme_translation_overrides.index_by { |entry| [entry.locale, entry.translation_key] }
 
-      source_overrides = non_en_source ? load_overrides(theme, source_locale) : {}
-      source_yaml = non_en_source ? load_yaml(theme, source_locale) : {}
-      en_overrides = load_overrides(theme, "en")
-      en_yaml = load_yaml(theme, "en")
+      defaults.each do |key, default_text|
+        default_locale = object_defaults.dig(key, :locale) || "en"
+        source =
+          translation_source(
+            key,
+            source_locale,
+            default_locale,
+            default_text,
+            yaml: source_yaml,
+            overrides: overrides,
+          )
+        next if source.nil?
 
-      en_yaml.each_key do |key|
-        if (text = source_overrides[key].presence || source_yaml[key].presence)
-          effective_locale = source_locale
-        elsif (text = en_overrides[key].presence || en_yaml[key].presence)
-          effective_locale = "en"
-        else
-          next
-        end
-
-        (target_locales - [effective_locale]).each do |locale|
-          next if !override_existing && target_keys[locale].include?(key)
-          translate_and_upsert(theme, key, text, locale, override_existing:)
+        locales = target_locales - [source[:locale]]
+        locales -= [source_locale] unless object_defaults.key?(key)
+        # Generate the selected locale last so our output cannot become a preferred source mid-run.
+        locales = locales.sort_by { |locale| locale == source_locale ? 1 : 0 }
+        locales.each do |locale|
+          if !override_existing &&
+               (
+                 overrides.key?([locale, key]) || target_keys[locale].include?(key) ||
+                   object_defaults.dig(key, :locale) == locale
+               )
+            next
+          end
+          translate_and_upsert(
+            theme,
+            key,
+            source,
+            locale,
+            source_locale: source_locale,
+            original_default: default_text,
+            override_existing:,
+          )
         end
       end
     end
 
     private
 
-    def load_overrides(theme, locale)
-      ThemeTranslationOverride
-        .where(theme_id: theme.id, locale: locale)
-        .pluck(:translation_key, :value)
-        .to_h
+    def translation_source(key, source_locale, default_locale, default_text, yaml:, overrides:)
+      [
+        [source_locale, :override, overrides[[source_locale, key]]&.value],
+        [source_locale, :yaml, yaml[key]],
+        [default_locale, :override, overrides[[default_locale, key]]&.value],
+        [default_locale, :default, default_text],
+      ].each do |locale, type, text|
+        if text.present?
+          return { text: text, locale: locale, type: type, default_locale: default_locale }
+        end
+      end
+      nil
     end
 
     def load_yaml(theme, locale)
@@ -66,10 +91,18 @@ module Jobs
         .each_with_object({}) { |tm, h| h[tm.key] = tm.default }
     end
 
-    def translate_and_upsert(theme, key, text, locale, override_existing:)
+    def translate_and_upsert(
+      theme,
+      key,
+      source,
+      locale,
+      source_locale:,
+      original_default:,
+      override_existing:
+    )
       value =
         DiscourseAi::Translation::ShortTextTranslator.new(
-          text: text,
+          text: source[:text],
           target_locale: locale,
         ).translate
       return if value.blank?
@@ -81,9 +114,30 @@ module Jobs
             locale: locale,
             translation_key: key,
           )
-        next if !override_existing && (record.persisted? || load_yaml(theme, locale).key?(key))
-        next unless load_yaml(theme, "en").key?(key)
-
+        object_defaults = theme.object_translation_defaults(strict: false)
+        if !override_existing &&
+             (
+               record.persisted? || load_yaml(theme, locale).key?(key) ||
+                 object_defaults.dig(key, :locale) == locale
+             )
+          next
+        end
+        next if record.current_default != original_default
+        next unless object_defaults.key?(key) || load_yaml(theme, "en").key?(key)
+        current_source =
+          translation_source(
+            key,
+            source_locale,
+            object_defaults.dig(key, :locale) || "en",
+            original_default,
+            yaml: load_yaml(theme, source_locale),
+            overrides:
+              theme
+                .theme_translation_overrides
+                .where(translation_key: key)
+                .index_by { |entry| [entry.locale, entry.translation_key] },
+          )
+        next if current_source != source
         record.value = value
         record.save!
       end

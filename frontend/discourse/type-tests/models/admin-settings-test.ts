@@ -177,6 +177,8 @@ theme.color_scheme_id = 5;
 theme.dark_color_scheme_id = null;
 // The translations panel stores what it loads.
 theme.translations = [{ key: "greeting", value: "Hello", default: "Hello" }];
+expectTypeOf(theme.translations_locale).toEqualTypeOf<string | undefined>();
+theme.translations_locale = "en";
 
 /* Subclassing, schema-route values and partial payloads. */
 

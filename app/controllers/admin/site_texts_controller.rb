@@ -179,7 +179,15 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def dismiss_outdated
     locale = fetch_locale(params[:locale])
-    override = TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+    override =
+      if theme_site_text?
+        text = ThemeTranslationManager.find_site_text(params[:id], locale:)
+        raise Discourse::NotFound unless text
+        guardian.ensure_can_edit_theme!(text.theme)
+        text.db_record
+      else
+        TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+      end
 
     raise Discourse::NotFound if override.blank?
 
@@ -237,6 +245,8 @@ class Admin::SiteTextsController < Admin::AdminController
     record = text.site_text
     StaffActionLogger.new(current_user).log_site_text_change(record[:id], record[:value], old_value)
     render_json_dump({ site_text: record }, rest_serializer: true)
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error e, type: :record_invalid, status: :unprocessable_entity
   end
 
   def is_badge_title?(id = "")

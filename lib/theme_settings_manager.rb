@@ -101,7 +101,7 @@ class ThemeSettingsManager
   def ensure_is_valid_value!(new_value)
     return if new_value.nil?
 
-    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts)
+    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts.merge(name:))
     raise Discourse::InvalidParameters.new error_messages.join(" ") if error_messages.present?
   end
 

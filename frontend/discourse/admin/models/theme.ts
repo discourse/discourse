@@ -138,6 +138,8 @@ export interface ThemeFields extends BasicTheme {
   disabled_at?: string | null;
   errors?: string[];
   translations?: (ThemeTranslation | ThemeSettings)[];
+  /** Locale of the loaded rows, independent of the current selection. */
+  translations_locale?: string;
   loadingTranslations?: boolean;
   locale?: string;
   markedToDelete?: boolean;

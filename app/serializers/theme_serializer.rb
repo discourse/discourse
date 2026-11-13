@@ -9,6 +9,7 @@ class ThemeSerializer < BasicThemeSerializer
              :auto_update,
              :remote_theme_id,
              :settings,
+             :translations_locale,
              :themeable_site_settings,
              :errors,
              :supported?,
@@ -58,6 +59,10 @@ class ThemeSerializer < BasicThemeSerializer
 
   def parent_themes
     object.parent_themes
+  end
+
+  def translations_locale
+    I18n.locale.to_s
   end
 
   def settings

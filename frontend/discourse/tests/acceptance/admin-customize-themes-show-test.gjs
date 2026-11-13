@@ -1,6 +1,13 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -298,6 +305,255 @@ acceptance(
         [{ dark_color_scheme_id: 4 }],
         "saves the chosen palette as the dark palette"
       );
+    });
+  }
+);
+
+acceptance(
+  "Admin - Customize - Themes - Translation refresh",
+  function (needs) {
+    needs.user();
+    needs.settings({
+      available_locales: [
+        { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+      ],
+    });
+
+    let greeting,
+      holdTranslations,
+      translationRequest,
+      collectionLocale,
+      themeCollectionRequests;
+    needs.hooks.beforeEach(() => {
+      greeting = "Original greeting";
+      holdTranslations = false;
+      translationRequest = null;
+      collectionLocale = "en";
+      themeCollectionRequests = 0;
+    });
+    needs.pretender((server, helper) => {
+      server.get("/admin/themes", () => {
+        themeCollectionRequests++;
+        return helper.response({
+          themes: [
+            {
+              id: 7,
+              translations_locale: collectionLocale,
+              name: "Translated objects",
+              component: false,
+              theme_fields: [],
+              child_themes: [],
+              parent_themes: [],
+              settings: [
+                {
+                  setting: "cards",
+                  type: "objects",
+                  default: [],
+                  value: [],
+                  objects_schema: {
+                    name: "card",
+                    properties: {
+                      title: { type: "string", translatable: true },
+                    },
+                  },
+                },
+              ],
+              translations: [
+                { key: "greeting", value: greeting, default: greeting },
+              ],
+            },
+            {
+              id: 8,
+              translations_locale: collectionLocale,
+              name: "Other theme",
+              component: false,
+              theme_fields: [],
+              child_themes: [],
+              parent_themes: [],
+              settings: [],
+              translations: [
+                {
+                  key: "greeting",
+                  value:
+                    collectionLocale === "fr"
+                      ? "Bonjour"
+                      : "Other theme greeting",
+                  default:
+                    collectionLocale === "fr"
+                      ? "Bonjour"
+                      : "Other theme greeting",
+                },
+              ],
+            },
+          ],
+          extras: { locale: collectionLocale },
+        });
+      });
+      server.get(
+        "/admin/themes/7/translations/en",
+        (request) => {
+          translationRequest = request;
+          return helper.response({
+            translations: [
+              { key: "greeting", value: greeting, default: greeting },
+            ],
+          });
+        },
+        () => holdTranslations
+      );
+      server.get(
+        "/admin/themes/8/translations/fr",
+        (request) => {
+          translationRequest = request;
+          return helper.response({
+            translations: [
+              { key: "greeting", value: "Bonjour", default: "Bonjour" },
+            ],
+          });
+        },
+        () => holdTranslations
+      );
+      server.get("/admin/config/customize/themes", () =>
+        helper.response({
+          themes: [
+            { id: 7, name: "Translated objects", component: false },
+            { id: 8, name: "Other theme", component: false },
+          ],
+        })
+      );
+      server.get("/admin/themes/8/translations/en", () =>
+        helper.response({
+          translations: [
+            {
+              key: "greeting",
+              value: "Other theme greeting",
+              default: "Other theme greeting",
+            },
+          ],
+        })
+      );
+      server.get("/admin/themes/7/translations/fr", () =>
+        helper.response({
+          translations: [
+            {
+              key: "greeting",
+              value: "Bonjour objets",
+              default: "Bonjour objets",
+            },
+          ],
+        })
+      );
+      server.get("/admin/themes/7/objects_setting_metadata/cards.json", () =>
+        helper.response({})
+      );
+    });
+
+    test("keeps an unsaved translation when returning from the object editor", async function (assert) {
+      await visit("/admin/customize/themes/7");
+      await fillIn(".theme-translation textarea", "Unsaved greeting");
+      await click('[data-setting="cards"] .setting-value-edit-button');
+      await click(".customize-show-schema__back");
+
+      assert.dom(".theme-translation textarea").hasValue("Unsaved greeting");
+      assert.dom(".theme-translation .setting-controls .ok").exists();
+    });
+
+    test("a delayed response cannot populate another theme after navigation", async function (assert) {
+      holdTranslations = true;
+      const firstVisit = visit("/admin/customize/themes/7");
+      await waitUntil(() => translationRequest);
+      const secondVisit = visit("/admin/customize/themes/8");
+      await waitUntil(() => currentURL() === "/admin/customize/themes/8");
+      pretender.resolve(translationRequest);
+      await Promise.all([firstVisit, secondVisit]);
+
+      assert
+        .dom(".theme-translation textarea")
+        .hasValue("Other theme greeting");
+    });
+
+    test("returning to a theme keeps its selected locale and translation text in sync", async function (assert) {
+      await visit("/admin/customize/themes/8");
+      const selector = selectKit(".translation-selector");
+      await selector.expand();
+      holdTranslations = true;
+      const localeChange = selector.selectRowByValue("fr");
+      await waitUntil(() => translationRequest);
+      const pendingRequest = translationRequest;
+      holdTranslations = false;
+      const otherVisit = visit("/admin/customize/themes/7");
+      await waitUntil(() => currentURL() === "/admin/customize/themes/7");
+      pretender.resolve(pendingRequest);
+      await Promise.all([localeChange, otherVisit]);
+
+      assert.dom(".theme-translation textarea").hasValue("Original greeting");
+      await visit("/admin/customize/themes/8");
+      assert.strictEqual(
+        selectKit(".translation-selector").header().value(),
+        "fr"
+      );
+      assert.dom(".theme-translation textarea").hasValue("Bonjour");
+    });
+
+    test("theme-card navigation preserves French text with the selected French locale", async function (assert) {
+      await visit("/admin/customize/themes/8");
+      const selector = selectKit(".translation-selector");
+      await selector.expand();
+      await selector.selectRowByValue("fr");
+      assert.dom(".theme-translation textarea").hasValue("Bonjour");
+
+      await click(".back-to-themes-and-components a");
+      await click('.theme-card__title[href="/admin/customize/themes/7"]');
+      await click(".back-to-themes-and-components a");
+      await click('.theme-card__title[href="/admin/customize/themes/8"]');
+
+      assert.true(
+        themeCollectionRequests > 1,
+        "the theme collection was fetched again"
+      );
+      assert.strictEqual(
+        selectKit(".translation-selector").header().value(),
+        "fr"
+      );
+      assert.dom(".theme-translation textarea").hasValue("Bonjour");
+    });
+
+    test("theme-card navigation preserves English text when the collection locale is French", async function (assert) {
+      collectionLocale = "fr";
+      await visit("/admin/customize/themes/8");
+      const selector = selectKit(".translation-selector");
+      await selector.expand();
+      await selector.selectRowByValue("en");
+      assert
+        .dom(".theme-translation textarea")
+        .hasValue("Other theme greeting");
+
+      await click(".back-to-themes-and-components a");
+      await click('.theme-card__title[href="/admin/customize/themes/7"]');
+      await click(".back-to-themes-and-components a");
+      await click('.theme-card__title[href="/admin/customize/themes/8"]');
+
+      assert.true(
+        themeCollectionRequests > 1,
+        "the theme collection was fetched again"
+      );
+      assert.strictEqual(
+        selectKit(".translation-selector").header().value(),
+        "en"
+      );
+      assert
+        .dom(".theme-translation textarea")
+        .hasValue("Other theme greeting");
+    });
+
+    test("refreshes translations when returning without a draft", async function (assert) {
+      await visit("/admin/customize/themes/7");
+      await click('[data-setting="cards"] .setting-value-edit-button');
+      greeting = "Updated object greeting";
+      await click(".customize-show-schema__back");
+
+      assert.dom(".theme-translation textarea").hasValue(greeting);
     });
   }
 );
