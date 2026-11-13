@@ -63,6 +63,8 @@ export interface CodeEditorSignature {
     lineWarnings?: readonly LineWarning[];
     /** Id for the editable area, so a field's errors can refer to it. */
     inputId?: string;
+    /** Ids of the elements that name the field, such as its label. */
+    labelledBy?: string;
     /** Ids of the elements that describe the field, such as help and errors. */
     describedBy?: string;
     /** Marks the editable area invalid. */
@@ -133,6 +135,7 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
             @extensions={{@extensions}}
             @inputId={{@inputId}}
             @invalid={{@invalid}}
+            @labelledBy={{@labelledBy}}
             @language={{@language}}
             @languageOptions={{@languageOptions}}
             @lineNumbers={{this.lineNumbers}}

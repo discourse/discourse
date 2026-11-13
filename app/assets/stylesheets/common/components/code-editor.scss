@@ -39,10 +39,31 @@
     /*! rtl:ignore */
     direction: ltr;
 
+    // Inset, so gutters, scrollbars and a clipping host don't cover it.
     &.cm-focused {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -1px;
+      outline: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 400;
+        border: 2px solid var(--tertiary);
+        border-radius: inherit;
+        pointer-events: none;
+      }
     }
+  }
+
+  > .loading-container,
+  .codemirror-editor,
+  .cm-editor {
+    border-radius: inherit;
+  }
+
+  &:has(> .grippie) .cm-editor.cm-focused::after {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .cm-scroller {

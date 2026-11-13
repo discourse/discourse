@@ -1,4 +1,4 @@
-import { render, waitFor } from "@ember/test-helpers";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
@@ -30,6 +30,74 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
 
     assert.deepEqual(data, { foo: "bar" });
     assert.form().field("foo").hasValue("bar");
+  });
+
+  test("follows values set from outside", async function (assert) {
+    let formApi;
+    const data = { foo: "original" };
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{data}} @onRegisterApi={{registerApi}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="code" as |field|>
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+    await waitFor(".cm-content");
+
+    await formApi.set("foo", "replaced");
+    await settled();
+    assert.dom(".cm-content").hasText("replaced");
+
+    codeEditorView().dispatch({ changes: { from: 0, insert: "re" } });
+    assert.strictEqual(formApi.get("foo"), "rereplaced");
+
+    await formApi.reset();
+    await settled();
+    assert.dom(".cm-content").hasText("original");
+  });
+
+  test("is named and focused by its label", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @type="code" as |field|>
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+    await waitFor(".cm-content");
+
+    const label = document.querySelector(".form-kit__container-title");
+    assert.dom(".cm-content").hasAttribute("aria-labelledby", label.id);
+
+    await click(label);
+    assert.true(codeEditorView().hasFocus);
+  });
+
+  test("isn't named by a hidden title", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @showTitle={{false}}
+            @title="Foo"
+            @type="code"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+    await waitFor(".cm-content");
+
+    assert.dom(".cm-content").doesNotHaveAttribute("aria-labelledby");
   });
 
   test("@height", async function (assert) {

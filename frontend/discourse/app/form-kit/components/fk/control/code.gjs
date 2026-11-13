@@ -7,8 +7,6 @@ import { escapeExpression } from "discourse/lib/utilities";
 export default class FKControlCode extends FKBaseControl {
   static controlType = "code";
 
-  initialValue = this.args.field.value || "";
-
   get style() {
     if (!this.args.height) {
       return;
@@ -32,10 +30,11 @@ export default class FKControlCode extends FKBaseControl {
       @disabled={{@field.disabled}}
       @inputId={{@field.id}}
       @invalid={{if @field.error true}}
+      @labelledBy={{if @field.showTitle @field.labelId}}
       @language={{@lang}}
       @onChange={{this.handleInput}}
       @resizable={{true}}
-      @value={{this.initialValue}}
+      @value={{@field.value}}
     />
   </template>
 }
