@@ -62,6 +62,20 @@ RSpec.describe DiscourseAi::AiBot::ArtifactKeyValuesController do
     end
 
     context "when not logged in" do
+      before do
+        llm_model = Fabricate(:llm_model)
+        bot_user = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
+        toggle_enabled_bots(bots: [llm_model])
+        SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
+        Group.user_trust_level_change!(user.id, user.trust_level)
+        private_message_topic.topic_allowed_users.where.not(user_id: user.id).delete_all
+        private_message_topic.topic_allowed_users.create!(user: bot_user)
+        private_message_post.update_columns(
+          cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
+        )
+        SharedAiConversation.share_conversation(user, private_message_topic)
+      end
+
       it "returns only public key values" do
         get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
             params: {
@@ -86,6 +100,9 @@ RSpec.describe DiscourseAi::AiBot::ArtifactKeyValuesController do
       end
 
       it "returns 404 when artifact availability is revoked" do
+        get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json"
+        expect(response.status).to eq(200)
+
         SiteSetting.ai_artifact_security = "disabled"
 
         get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
