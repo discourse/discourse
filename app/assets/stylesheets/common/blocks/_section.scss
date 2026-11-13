@@ -84,8 +84,22 @@
 .d-block-section__content {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-width: 0;
+}
+
+.d-block-section.--gap-small .d-block-section__content {
+  gap: var(--space-2);
+}
+
+.d-block-section.--gap-medium .d-block-section__content {
+  gap: var(--space-4);
+}
+
+.d-block-section.--gap-large .d-block-section__content {
+  gap: var(--space-8);
 }
 
 .d-block-section.--width-wide .d-block-section__content {

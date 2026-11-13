@@ -148,6 +148,60 @@ module("Integration | Blocks | section and card", function (hooks) {
     );
   });
 
+  test("section spaces its blocks with the chosen gap", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          children: [
+            { block: Heading, args: { text: "One", level: 2 } },
+            { block: Heading, args: { text: "Two", level: 2 } },
+          ],
+        },
+        {
+          block: Section,
+          args: { gap: "none" },
+          children: [{ block: Heading, args: { text: "Three", level: 2 } }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-section.--gap-medium .d-block-section__content")
+      .hasStyle({ rowGap: "16px" }, "medium is the default gap");
+    assert
+      .dom(".d-block-section.--gap-none .d-block-section__content")
+      .hasStyle({ rowGap: "normal" });
+  });
+
+  test("section paints a custom background color only for the custom surface", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          args: { surface: "custom", backgroundColor: "#123456" },
+          children: [{ block: Heading, args: { text: "Custom", level: 2 } }],
+        },
+        {
+          block: Section,
+          args: { surface: "subtle", backgroundColor: "#123456" },
+          children: [{ block: Heading, args: { text: "Preset", level: 2 } }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-section.--surface-custom")
+      .hasStyle({ backgroundColor: "rgb(18, 52, 86)" });
+    assert
+      .dom(".d-block-section.--surface-subtle")
+      .doesNotHaveAttribute("style", "a preset surface ignores the color");
+  });
+
   test("section renders a semantic surface with a persistent background marker", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
