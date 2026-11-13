@@ -2435,6 +2435,7 @@ ru:
         redeemed_tab_with_count: "Принятые (%{count})"
         invited_via: "Приглашение"
         invited_via_link: "ссылка %{key} (принято: %{count} из %{max})"
+        invited_via_link_without_key: "Ссылка (принято %{count} из %{max})"
         generating_link: "Создание ссылки..."
         groups: "Группы"
         topic: "Тема"

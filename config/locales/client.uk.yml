@@ -2697,6 +2697,7 @@ uk:
         redeemed_tab_with_count: "Прийняті (%{count})"
         invited_via: "Запрошення"
         invited_via_link: "посилання %{key} (прийнято %{count} з %{max})"
+        invited_via_link_without_key: "Посилання (%{count} з %{max})"
         generating_link: "Створюємо посилання..."
         groups: "Групи"
         topic: "Тема"

@@ -1765,6 +1765,7 @@ sv:
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
         invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
+        invited_via_link_without_key: "länk (%{count} / %{max} inlöst)"
         groups: "Grupper"
         topic: "Ämne"
         sent: "Skapad/senast skickad"
