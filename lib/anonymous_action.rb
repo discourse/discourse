@@ -52,6 +52,8 @@ class AnonymousAction
 
       cookies.delete(COOKIE, **cookie_options)
 
+      return if user.suspended?
+
       type = data["type"]
       handler = handler_for(type)
       return if !handler
