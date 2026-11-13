@@ -71,6 +71,8 @@ class Assignment < ActiveRecord::Base
   def create_missing_notifications!
     assigned_users.each do |user|
       next if user.notifications.for_assignment(self).exists?
+      # Group members don't necessarily have access to every target assigned to the group.
+      next if !user.guardian.can_see?(target)
       DiscourseAssign::CreateNotification.call(
         assignment: self,
         user: user,
@@ -128,7 +130,7 @@ class Assignment < ActiveRecord::Base
   end
 
   def validate_status
-    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(self.status)
+    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(status)
       errors.add(:status, :invalid)
     end
   end
