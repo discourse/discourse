@@ -228,7 +228,7 @@ class UploadCreator
             # use default 0, 0
           end
         else
-          w, h = @image_info.size
+          w, h = @image_dimensions
         end
 
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
@@ -309,10 +309,20 @@ class UploadCreator
   end
 
   def extract_image_info!
+    @image_dimensions = nil
     @image_info =
       begin
         image = FastImage.new(@file)
         image.type # eager load to rescue errors early
+        @image_dimensions =
+          if image.type == :gif && GlobalSetting.enable_vips_image_processing
+            DiscourseVips.gif_dimensions(
+              input_path: @file.path,
+              timeout: Upload::MAX_IDENTIFY_SECONDS,
+            )
+          else
+            image.size
+          end
         image
       rescue StandardError
         nil
@@ -320,7 +330,7 @@ class UploadCreator
     @file.rewind
 
     if @image_info.nil?
-      @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
+      @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0 && @image_info.type.to_s != "svg"
@@ -537,8 +547,8 @@ class UploadCreator
       max_width = 850 * max_pixel_ratio
       width, height =
         ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
+          @image_dimensions[0],
+          @image_dimensions[1],
           max_width: max_width,
           max_height: max_width,
         )
@@ -553,8 +563,8 @@ class UploadCreator
       max_width = 590 * max_pixel_ratio
       width, height =
         ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
+          @image_dimensions[0],
+          @image_dimensions[1],
           max_width: max_width,
           max_height: max_width,
         )
@@ -607,7 +617,7 @@ class UploadCreator
   end
 
   def pixels
-    @image_info.size&.reduce(:*).to_i
+    @image_dimensions&.reduce(:*).to_i
   end
 
   def svg_allowlist_xpath
