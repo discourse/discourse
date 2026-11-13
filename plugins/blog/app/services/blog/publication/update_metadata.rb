@@ -31,12 +31,16 @@ class Blog::Publication::UpdateMetadata
     Blog::Publication.lock_for_topic(topic).stage_metadata(params.metadata)
   end
 
-  # Upload ids are guessable, so a new cover must be the editor's own upload.
+  # Upload ids are guessable, so a new cover must be one the editor uploaded.
+  # Identical files share one upload, so a re-upload only adds a UserUpload row.
   def can_use_cover_upload(params:, topic:, guardian:)
     upload_id = params.metadata.to_h.stringify_keys["cover_upload_id"].presence
-    return true if upload_id.nil?
+    return true if upload_id.nil? || guardian.is_admin?
     current = Blog::Publication.for_topic(topic).editorial_metadata["cover_upload_id"]
-    upload_id.to_s == current.to_s || Upload.exists?(id: upload_id, user_id: guardian.user.id)
+    return true if upload_id.to_s == current.to_s
+
+    user_id = guardian.user.id
+    Upload.exists?(id: upload_id, user_id:) || UserUpload.exists?(upload_id:, user_id:)
   end
 
   def can_edit_article(guardian:, publication:)

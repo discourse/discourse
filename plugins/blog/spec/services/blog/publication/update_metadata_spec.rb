@@ -149,16 +149,31 @@ RSpec.describe Blog::Publication::UpdateMetadata do
         expect(publication.reload.article.data["image_url"]).to eq(cover.url)
       end
 
-      context "when the upload belongs to someone else" do
+      context "when a contributor picks someone else's upload" do
+        fab!(:acting_user) { writer }
         fab!(:cover, :upload)
+
+        before { topic.update!(user: writer) }
 
         it { is_expected.to fail_a_policy(:can_use_cover_upload) }
 
-        it "still lets an editor keep a cover someone else chose" do
+        it "lets them use it once they've uploaded the same file" do
+          UserUpload.create!(upload: cover, user: writer)
+
+          expect(result).to run_successfully
+        end
+
+        it "lets them keep a cover someone else chose" do
           publication.update!(cover_upload_id: cover.id)
 
           expect(result).to run_successfully
         end
+      end
+
+      context "when an admin picks someone else's upload" do
+        fab!(:cover, :upload)
+
+        it { is_expected.to run_successfully }
       end
 
       context "when the upload isn't an image" do
