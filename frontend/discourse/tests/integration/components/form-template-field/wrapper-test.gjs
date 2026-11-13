@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import noop from "discourse/helpers/noop";
@@ -9,6 +9,81 @@ module(
   "Integration | Component | FormTemplateField | Wrapper",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("loads the selected template when it changes during the initial request", async function (assert) {
+      const requests = { firstRequested: false };
+      for (const id of [1, 2]) {
+        pretender.get(
+          `/form-templates/${id}.json`,
+          () => {
+            requests.firstRequested ||= id === 1;
+            return response({
+              form_template: {
+                id,
+                template: `- type: input\n  id: field-${id}\n  attributes:\n    label: Template ${id}`,
+              },
+            });
+          },
+          id === 1 ? 100 : 0
+        );
+      }
+      const selections = [];
+      const onSelect = (fields, id) => selections.push(id);
+      this.set("templateId", 1);
+      const renderPromise = render(
+        <template>
+          <Wrapper @id={{this.templateId}} @onSelectFormTemplate={{onSelect}} />
+        </template>
+      );
+
+      await waitUntil(() => requests.firstRequested);
+      this.set("templateId", 2);
+      await renderPromise;
+
+      assert.dom("[name='field-2']").exists();
+      assert.deepEqual(selections, [2]);
+    });
+
+    test("ignores an older template response after switching templates", async function (assert) {
+      const requests = { secondRequested: false };
+      for (const id of [1, 2, 3]) {
+        pretender.get(
+          `/form-templates/${id}.json`,
+          () => {
+            if (id === 2) {
+              requests.secondRequested = true;
+            }
+            return response({
+              form_template: {
+                id,
+                template: `- type: input\n  id: field-${id}\n  attributes:\n    label: Template ${id}`,
+              },
+            });
+          },
+          id === 2 ? 100 : 0
+        );
+      }
+      const selections = [];
+      const onSelect = (fields, id) => selections.push(id);
+      this.set("templateId", 1);
+      await render(
+        <template>
+          <Wrapper @id={{this.templateId}} @onSelectFormTemplate={{onSelect}} />
+        </template>
+      );
+
+      this.set("templateId", 2);
+      await waitUntil(() => requests.secondRequested);
+      this.set("templateId", 3);
+      await settled();
+
+      assert.dom("[name='field-3']").exists("the current template is rendered");
+      assert.deepEqual(
+        selections,
+        [1, 3],
+        "the stale schema is never selected"
+      );
+    });
 
     test("does not render a component when template content has invalid YAML", async function (assert) {
       this.set("content", `- type: checkbox\n  attributes;invalid`);
