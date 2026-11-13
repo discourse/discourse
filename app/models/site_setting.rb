@@ -222,7 +222,7 @@ class SiteSetting < ActiveRecord::Base
     return true if setting.blank?
 
     host = URI.parse(src).host
-    !setting.split("|").include?(host)
+    !HostnameNormalizer.any_equivalent?(host, setting.split("|"))
   rescue URI::Error
     true
   end

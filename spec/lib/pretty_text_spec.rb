@@ -818,6 +818,18 @@ RSpec.describe PrettyText do
       ).to eq(true)
     end
 
+    it "does not inject nofollow for an allowlisted host requested in a different case" do
+      expect(PrettyText.cook("<a href='http://FOO.COM/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(
+        true,
+      )
+    end
+
+    it "injects nofollow for a host that only shares a suffix with an allowlisted host" do
+      expect(PrettyText.cook("<a href='http://notfoo.com/test.html'>cnn</a>")).to match(
+        /nofollow ugc/,
+      )
+    end
+
     it "does not inject nofollow when omit_nofollow is enabled" do
       expect(
         PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/,
