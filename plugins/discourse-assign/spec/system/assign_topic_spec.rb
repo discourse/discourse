@@ -19,6 +19,26 @@ describe "Assign | Assigning topics" do
   end
 
   describe "with open topic" do
+    it "can clear an assignment note without reassigning the topic" do
+      Assigner.new(topic, admin1).assign(admin2, note: "Please investigate")
+      assignment = topic.reload.assignment
+
+      visit "/t/#{topic.id}"
+      topic_page.click_edit_topic_assignment
+      expect(find("#assign-modal-note").value).to eq("Please investigate")
+      assign_modal.note = ""
+      assign_modal.confirm
+      expect(assign_modal).to be_closed
+
+      try_until_success { expect(assignment.reload.note).to be_nil }
+      visit "/t/#{topic.id}"
+      topic_page.click_edit_topic_assignment
+      expect(find("#assign-modal-note").value).to eq("")
+      expect(topic.reload.assignment.id).to eq(assignment.id)
+      expect(assignment.reload.note).to be_nil
+      expect(topic.posts.last.action_code).to eq("note_change")
+    end
+
     it "can assign and unassign" do
       visit "/t/#{topic.id}"
 

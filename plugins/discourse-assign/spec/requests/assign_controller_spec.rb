@@ -424,6 +424,30 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(post.topic.posts.pluck(:raw)).not_to include(oversized_note)
     end
 
+    it "clears an assignment note when the edit form submits an empty string" do
+      Assigner.new(post.topic, admin).assign(
+        allowed_user,
+        note: "Please investigate",
+        status: "New",
+      )
+      assignment = post.topic.reload.assignment
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: allowed_user.username,
+            note: "",
+            status: "New",
+          }
+
+      expect(response.status).to eq(200)
+      expect(post.topic.reload.assignment.id).to eq(assignment.id)
+      expect(assignment.reload.note).to be_nil
+      expect(assignment.status).to eq("New")
+      expect(post.topic.posts.last.action_code).to eq("note_change")
+    end
+
     it "assigns topic with a note and a status to a user" do
       put "/assign/assign.json",
           params: {
