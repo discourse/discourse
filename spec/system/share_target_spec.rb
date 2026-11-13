@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Share target" do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:composer) { PageObjects::Components::Composer.new }
   let(:share_target_modal) { PageObjects::Modals::ShareTarget.new }
