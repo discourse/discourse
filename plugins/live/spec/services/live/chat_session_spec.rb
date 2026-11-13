@@ -125,6 +125,87 @@ RSpec.describe Live::ChatSession do
   end
 
   describe ".post_message!" do
+    it "returns the accepted message ID for the original message and racing replies" do
+      first = described_class.post_message!(room, user, "first")
+      second = described_class.post_message!(room, other, "second")
+
+      expect(first[:message_id]).to eq(live_thread(first).original_message_id)
+      expect(second[:message_id]).to eq(live_thread(second).replies.last.id)
+    end
+
+    it "preserves attachments on original messages and racing replies" do
+      SiteSetting.chat_allow_uploads = true
+      upload = Fabricate(:upload, user: user)
+      other_upload = Fabricate(:upload, user: other)
+
+      first = described_class.post_message!(room, user, "a photo", upload_ids: [upload.id])
+      second = described_class.post_message!(room, other, "another", upload_ids: [other_upload.id])
+
+      expect(live_thread(first).original_message.uploads).to contain_exactly(upload)
+      expect(second[:thread_id]).to eq(first[:thread_id])
+      expect(live_thread(second).replies.last.uploads).to contain_exactly(other_upload)
+    end
+
+    it "opens an attachment-only session without an empty separator" do
+      SiteSetting.chat_allow_uploads = true
+      upload = Fabricate(:upload, user: user)
+
+      state = described_class.post_message!(room, user, "", upload_ids: [upload.id])
+
+      expect(live_thread(state).original_message.message).to eq("In ##{room.slug}::room")
+      expect(live_thread(state).original_message.uploads).to contain_exactly(upload)
+    end
+
+    it "rejects empty and short content before adding the room prefix" do
+      SiteSetting.chat_minimum_message_length = 5
+
+      ["", "   ", "hi", "\u200b" * 5].each do |message|
+        expect { described_class.post_message!(room, user, message) }.to raise_error(
+          described_class::Error,
+          I18n.t("chat.errors.minimum_length_not_met", count: 5),
+        )
+      end
+      expect(channel.chat_messages).to be_empty
+      expect(channel.threads).to be_empty
+    end
+
+    it "rejects attachment-only messages without usable uploads" do
+      SiteSetting.chat_allow_uploads = true
+      upload = Fabricate(:upload, user: other)
+
+      expect do
+        described_class.post_message!(room, user, "", upload_ids: [upload.id])
+      end.to raise_error(described_class::Error)
+
+      SiteSetting.chat_allow_uploads = false
+      own_upload = Fabricate(:upload, user: user)
+      expect do
+        described_class.post_message!(room, user, "", upload_ids: [own_upload.id])
+      end.to raise_error(described_class::Error)
+      expect(channel.chat_messages).to be_empty
+    end
+
+    it "validates the length of the opener including its room prefix" do
+      SiteSetting.chat_maximum_message_length = 100
+
+      expect do described_class.post_message!(room, user, "a" * 100) end.to raise_error(
+        described_class::Error,
+      )
+      expect(channel.chat_messages).to be_empty
+    end
+
+    it "retracts the opener and repairs channel tracking when thread creation fails" do
+      Chat::Thread.any_instance.stubs(:save).raises(ActiveRecord::RecordNotSaved)
+
+      expect { described_class.post_message!(room, user, "hello") }.to raise_error(
+        described_class::Error,
+      )
+
+      expect(channel.chat_messages).to be_empty
+      expect(channel.reload.last_message_id).to be_nil
+      expect(described_class.state(room)[:thread_id]).to be_nil
+    end
+
     it "opens a thread rooted on the first message, prefixed with a room hashtag linking back" do
       state = described_class.post_message!(room, user, "hello everyone")
 

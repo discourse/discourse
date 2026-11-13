@@ -135,23 +135,41 @@ module Live
       # thread exists yet, so if one appeared in the meantime the message is
       # delivered there rather than spawning a competing thread.
       # Returns the session state.
-      def post_message!(room, user, message)
+      def post_message!(room, user, message, upload_ids: [])
         channel = ensure_channel!(room)
-        with_session_lock(room) do
-          roll_over_if_stale!(room)
-
-          if (thread_id = live_thread_id(room))
-            create_message!(
-              guardian: user.guardian,
-              channel_id: channel.id,
-              message: message,
-              thread_id: thread_id,
-            )
+        message =
+          TextCleaner.clean(message.to_s, strip_whitespaces: true, strip_zero_width_spaces: true)
+        uploads =
+          if SiteSetting.chat_allow_uploads
+            Upload.where(id: upload_ids).joins(:user_uploads).where(user_uploads: { user: user })
           else
-            open_session_thread!(room, channel, user, message)
+            Upload.none
           end
+        if uploads.empty? && message.length < [SiteSetting.chat_minimum_message_length, 1].max
+          raise Error,
+                I18n.t(
+                  "chat.errors.minimum_length_not_met",
+                  count: SiteSetting.chat_minimum_message_length,
+                )
         end
-        state(room)
+
+        sent_message =
+          with_session_lock(room) do
+            roll_over_if_stale!(room)
+
+            if (thread_id = live_thread_id(room))
+              create_message!(
+                guardian: user.guardian,
+                channel_id: channel.id,
+                message: message,
+                thread_id: thread_id,
+                upload_ids: upload_ids,
+              )
+            else
+              open_session_thread!(room, channel, user, message, upload_ids: upload_ids)
+            end
+          end
+        state(room).merge(message_id: sent_message.id)
       end
 
       def clear(room_id)
@@ -186,7 +204,7 @@ module Live
       # roots the thread, prefixed with the room's hashtag so the opener links
       # back to the room. The change is published so every open panel picks
       # the new thread up.
-      def open_session_thread!(room, channel, user, message)
+      def open_session_thread!(room, channel, user, message, upload_ids:)
         # Bail before posting: if the channel can't hold a thread, thread
         # creation would be rejected and leave the message orphaned as a loose
         # channel message (re-posted on every retry).
@@ -197,8 +215,24 @@ module Live
             guardian: user.guardian,
             channel_id: channel.id,
             message: opener_for(room, message),
+            upload_ids: upload_ids,
           )
-        thread = open_thread!(channel, root, title: title_for(room))
+        begin
+          thread = open_thread!(channel, root, title: title_for(room))
+        rescue StandardError
+          # The opener has already been published. Use Chat's deletion flow to
+          # retract it and repair channel tracking if thread creation fails.
+          cleanup =
+            ::Chat::TrashMessage.call(
+              guardian: Discourse.system_user.guardian,
+              params: {
+                channel_id: channel.id,
+                message_id: root.id,
+              },
+            )
+          raise_unless_chat_success(cleanup)
+          raise
+        end
         # Mark the thread as this room's before anything is published: a panel
         # reacting to the publish looks the thread up by this field right away,
         # and a miss would be cached as "not a session thread". Unlike the
@@ -208,7 +242,7 @@ module Live
         store_thread(room, thread.id)
         publish_state(room)
 
-        thread
+        root
       end
 
       # --- chat plumbing -------------------------------------------------------
@@ -225,11 +259,16 @@ module Live
         result.thread
       end
 
-      def create_message!(guardian:, channel_id:, message:, thread_id: nil)
+      def create_message!(guardian:, channel_id:, message:, thread_id: nil, upload_ids: [])
         result =
           ::Chat::CreateMessage.call(
             guardian: guardian,
-            params: { chat_channel_id: channel_id, thread_id: thread_id, message: message }.compact,
+            params: {
+              chat_channel_id: channel_id,
+              thread_id: thread_id,
+              message: message,
+              upload_ids: upload_ids,
+            }.compact,
             options: {
               enforce_membership: true,
             },
@@ -339,6 +378,14 @@ module Live
       # I18n interpolation inserts the message verbatim (no re-interpolation),
       # so user text containing tokens like %{room} or gsub escapes is safe.
       def opener_for(room, message)
+        if message.blank?
+          return(
+            I18n.t(
+              "live.chat.default_attachment_opener",
+              room: "##{room.slug}::#{Live::RoomHashtagDataSource.type}",
+            )
+          )
+        end
         I18n.t(
           "live.chat.default_thread_opener",
           room: "##{room.slug}::#{Live::RoomHashtagDataSource.type}",
