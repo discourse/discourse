@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
 import EmbedMode from "discourse/lib/embed-mode";
 
 // Temporary layout controls. This is deliberately not the route/panel API.
@@ -10,11 +9,11 @@ export default class PageShellPrototype extends Service {
   @service router;
 
   @tracked width = "centered";
-  @tracked left = "open";
-  @tracked right = "open";
+  @tracked navigation = "open";
+  @tracked context = "open";
   @tracked footer = "content";
-  @tracked leftWidth = 260;
-  @tracked rightWidth = 300;
+  @tracked navigationWidth = 260;
+  @tracked contextWidth = 300;
 
   get enabled() {
     return (
@@ -24,15 +23,8 @@ export default class PageShellPrototype extends Service {
     );
   }
 
-  get hasRightPanel() {
+  get hasContextPanel() {
     return !this.router.currentRouteName?.includes("preferences");
-  }
-
-  get style() {
-    // Only numbers controlled by the bounded inputs below enter the style.
-    return trustHTML(
-      `--shell-prototype-left-width: ${this.leftWidth}px; --shell-prototype-right-width: ${this.rightWidth}px;`
-    );
   }
 
   @action
@@ -40,14 +32,14 @@ export default class PageShellPrototype extends Service {
     const { name, value } = event.target;
     const choices = {
       width: ["centered", "full"],
-      left: ["open", "rail", "hidden"],
-      right: ["open", "rail", "hidden"],
+      navigation: ["open", "rail", "hidden"],
+      context: ["open", "rail", "hidden"],
       footer: ["content", "row", "off"],
     };
 
     if (choices[name]?.includes(value)) {
       this[name] = value;
-    } else if (name === "leftWidth" || name === "rightWidth") {
+    } else if (name === "navigationWidth" || name === "contextWidth") {
       const size = Number(value);
       if (Number.isFinite(size)) {
         this[name] = Math.max(200, Math.min(size, 480));
@@ -56,17 +48,17 @@ export default class PageShellPrototype extends Service {
   }
 
   @action
-  toggleLeft() {
-    this.left = this.left === "open" ? "hidden" : "open";
+  toggleNavigation() {
+    this.navigation = this.navigation === "open" ? "hidden" : "open";
   }
 
   @action
-  openLeft() {
-    this.left = "open";
+  openNavigation() {
+    this.navigation = "open";
   }
 
   @action
-  openRight() {
-    this.right = "open";
+  openContext() {
+    this.context = "open";
   }
 }

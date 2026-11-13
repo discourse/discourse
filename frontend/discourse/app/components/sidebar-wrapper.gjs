@@ -10,7 +10,7 @@ export default class SidebarWrapper extends Component {
 
   <template>
     <PageShellPrototypeRegion
-      class="page-shell-prototype__left-slot"
+      class="page-shell-prototype__navigation-slot"
       @enabled={{this.pageShellPrototype.enabled}}
     >
       <div class="sidebar-wrapper">
@@ -19,14 +19,14 @@ export default class SidebarWrapper extends Component {
         {{else if
           (and
             this.pageShellPrototype.enabled
-            (eq this.pageShellPrototype.left "rail")
+            (eq this.pageShellPrototype.navigation "rail")
           )
         }}
           <button
             class="btn btn-flat"
-            title={{i18n "page_shell_prototype.expand_left"}}
+            title={{i18n "page_shell_prototype.expand_navigation"}}
             type="button"
-            {{on "click" this.pageShellPrototype.openLeft}}
+            {{on "click" this.pageShellPrototype.openNavigation}}
           >
             {{i18n "page_shell_prototype.expand"}}
           </button>

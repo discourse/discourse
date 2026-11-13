@@ -35,10 +35,7 @@ export default class Contents extends Component {
     return applyValueTransformer(
       "home-logo-minimized",
       this.args.topicInfoVisible ||
-        (this.mobileTabBar.isNestedPage && !this.args.topicInfo) ||
-        (this.pageShellPrototype.enabled &&
-          (!this.args.sidebarEnabled ||
-            this.pageShellPrototype.left !== "open")),
+        (this.mobileTabBar.isNestedPage && !this.args.topicInfo),
       {
         topicInfo: this.args.topicInfo,
         sidebarEnabled: this.args.sidebarEnabled,
