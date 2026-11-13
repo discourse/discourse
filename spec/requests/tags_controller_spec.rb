@@ -1577,6 +1577,35 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
       end
     end
+
+    context "with a hidden tag" do
+      fab!(:group)
+      fab!(:hidden_tag) { Fabricate(:tag, topics: [personal_message], name: "hidden") }
+
+      before do
+        group.add(regular_user)
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:admins]}|#{group.id}"
+        create_hidden_tags([hidden_tag.name])
+      end
+
+      it "excludes it for users who can't see it" do
+        sign_in(regular_user)
+
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags"].map { it["name"] }).to contain_exactly("test")
+      end
+
+      it "includes it for admins viewing another user's pm tags" do
+        sign_in(admin)
+
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags"].map { it["name"] }).to contain_exactly("test", "hidden")
+      end
+    end
   end
 
   describe "#show_latest" do

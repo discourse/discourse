@@ -125,9 +125,10 @@ class TopicQuery
       list = user_personal_and_groups_private_messages(user)
 
       list =
-        list.joins(
-          "JOIN topic_tags tt ON tt.topic_id = topics.id JOIN tags t ON t.id = tt.tag_id",
-        ).where("t.name = ?", @options[:tags][0])
+        list
+          .joins("JOIN topic_tags tt ON tt.topic_id = topics.id JOIN tags t ON t.id = tt.tag_id")
+          .where("t.name = ?", @options[:tags][0])
+          .where(tt: { tag_id: DiscourseTagging.visible_tags(@guardian).select(:id) })
 
       create_list(:private_messages, {}, list)
     end
