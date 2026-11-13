@@ -1863,7 +1863,30 @@ RSpec.describe SessionController do
         expect(invite.reload.redeemed?).to eq(true)
         expect(session[:current_user_id]).to eq(active_user.id)
         expect(GroupUser.exists?(user: active_user, group: invited_group.group)).to eq(true)
-        expect(server_session["invite-key"]).to eq(nil)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(nil)
+      end
+
+      it "does not redeem the invite for an unapproved account when the provider requires activation" do
+        SiteSetting.must_approve_users = true
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
+
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+        sso = get_sso("/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
+        sso.require_activation = true
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response.status).to eq(403)
+        expect(invite.reload.redeemed?).to eq(false)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.active).to eq(false)
+        expect(user.invited_user).to be_nil
+        expect(GroupUser.exists?(user: user, group: invited_group.group)).to eq(false)
       end
     end
 
