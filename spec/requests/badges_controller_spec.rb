@@ -145,6 +145,23 @@ RSpec.describe BadgesController do
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
     end
+
+    it "does not include hidden profiles in the rss feed" do
+      hidden_user = Fabricate(:user)
+      hidden_user.user_stat.update!(post_count: 1)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user)
+      visible_user.user_stat.update!(post_count: 1)
+      [visible_user, hidden_user].each do |grantee|
+        Fabricate(:user_badge, badge: badge, user: grantee, granted_by: Discourse.system_user)
+      end
+
+      get "/badges/#{badge.id}.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(visible_user.username)
+      expect(response.body).not_to include(hidden_user.username)
+    end
   end
 
   describe "user profiles" do

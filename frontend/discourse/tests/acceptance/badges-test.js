@@ -144,6 +144,40 @@ acceptance("Badges - filtered by username", function (needs) {
   });
 });
 
+acceptance("Badges - recent grants feed", function (needs) {
+  needs.user();
+
+  let grantQueries = [];
+
+  needs.pretender((server, helper) => {
+    server.get("/user_badges.json", (request) => {
+      grantQueries.push(request.queryParams);
+      const payload = cloneJSON(badgesFixtures["/user_badges.json"]);
+      payload.user_badge_info = {
+        grant_count: null,
+        username: null,
+        user_badges: payload.user_badges.slice(0, 2),
+      };
+      return helper.response(payload);
+    });
+  });
+
+  test("stops loading more grants when the page is shorter than the page size", async function (assert) {
+    await visit("/badges/9/autobiographer");
+
+    assert.strictEqual(
+      grantQueries.length,
+      1,
+      "requests a single page of grants"
+    );
+    assert.strictEqual(grantQueries[0].limit, "96", "asks for a full page");
+
+    assert
+      .dom(".show-badge .loading-container .spinner")
+      .doesNotExist("does not offer to load grants the viewer cannot see");
+  });
+});
+
 acceptance("Badges - favorites", function (needs) {
   needs.user();
   needs.settings({ max_favorite_badges: 1 });
