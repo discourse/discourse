@@ -21,6 +21,10 @@ module PageObjects
         find(".wireframe-rail-resizer--left").send_keys(:end)
       end
 
+      def has_section_title?(text)
+        has_css?(".wireframe-panel-switcher__title", exact_text: text)
+      end
+
       def has_layers_panel?
         has_css?("#{SECTIONS} input[value='outline']:checked") &&
           has_css?(".wireframe-panel-switcher .panel-body .wireframe-outline")

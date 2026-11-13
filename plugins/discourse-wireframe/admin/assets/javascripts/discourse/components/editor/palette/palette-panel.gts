@@ -53,9 +53,24 @@ type PaletteCategorySection = {
   rows: BlockPaletteEntry[];
 };
 
-/** Section order: the known groups as declared, then the catch-all. */
+const LEADING_SECTIONS: readonly BlockDisplayCategory[] = [
+  "community",
+  "actions",
+  "text",
+  "media",
+  "layout",
+];
+
+/**
+ * Community blocks lead because they are what sets a site apart from a
+ * generic page. A group core adds later is listed after these rather than
+ * dropped, and the catch-all always comes last.
+ */
 const SECTION_ORDER: readonly BlockDisplayCategory[] = [
-  ...BLOCK_CATEGORIES,
+  ...LEADING_SECTIONS,
+  ...BLOCK_CATEGORIES.filter(
+    (category) => !LEADING_SECTIONS.includes(category)
+  ),
   "uncategorized",
 ];
 

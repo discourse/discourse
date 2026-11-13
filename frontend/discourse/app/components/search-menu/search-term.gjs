@@ -28,7 +28,9 @@ export default class SearchTerm extends Component {
   enterHandledOnKeydown = false;
 
   get placeholderText() {
-    return this.args.placeholder || i18n("search.title");
+    return (
+      this.args.translatedInputPlaceholder || i18n(this.args.inputPlaceholder)
+    );
   }
 
   @action
@@ -135,12 +137,12 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
-      aria-label={{i18n @inputPlaceholder}}
+      aria-label={{this.placeholderText}}
       autocomplete="off"
       class="search-term__input"
       enterkeyhint="search"
       id={{@inputId}}
-      placeholder={{i18n @inputPlaceholder}}
+      placeholder={{this.placeholderText}}
       type="search"
       value={{this.search.activeGlobalSearchTerm}}
       {{on "keyup" this.onKeyup}}

@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
 import DSegmentedControlUntyped from "discourse/components/d-segmented-control";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import WireframeRailService, {
   type WireframeRailPanel,
@@ -52,23 +53,46 @@ interface EditorPanelSwitcherSignature {
 }
 
 /**
- * The editor's left panel: a segmented control naming its sections (Add,
- * Layers, Issues) above the active section's content. The selection lives on
- * the rail service, so detached UI can switch sections too.
+ * The editor's left panel: a segmented control naming its sections (Blocks,
+ * Layers, Issues) above the active section's content. With a single visible
+ * section the header names it instead. The selection lives on the rail
+ * service, so detached UI can switch sections too.
  */
 export default class EditorPanelSwitcher extends Component<EditorPanelSwitcherSignature> {
   /** The sections, in display order. */
   static SECTIONS: Section[] = [
-    { tab: "palette", label: "wireframe.chrome.panel_add" },
+    { tab: "palette", label: "wireframe.chrome.panel_blocks" },
     { tab: "outline", label: "wireframe.chrome.panel_layers" },
     { tab: "issues", label: "wireframe.chrome.panel_issues" },
   ];
+
+  /** Sections kept out of the panel for now; only the blocks are offered. */
+  static HIDDEN_SECTIONS: WireframeRailPanel[] = ["outline", "issues"];
 
   /** Owns the active section. */
   @service declare wireframeRail: WireframeRailService;
 
   /** Supplies the live issue count. */
   @service declare wireframeValidation: WireframeValidationService;
+
+  /** The sections the panel offers, in display order. */
+  get sections(): Section[] {
+    return EditorPanelSwitcher.SECTIONS.filter(
+      ({ tab }) => !EditorPanelSwitcher.HIDDEN_SECTIONS.includes(tab)
+    );
+  }
+
+  /**
+   * The section to show. A stored choice of a hidden section falls back to the
+   * first visible one.
+   */
+  get activeSection(): Section {
+    return (
+      this.sections.find(
+        ({ tab }) => tab === this.wireframeRail.leftPanelTab
+      ) ?? this.sections[0]
+    );
+  }
 
   /**
    * How many validation issues the page currently has. Equal to the number of
@@ -83,7 +107,7 @@ export default class EditorPanelSwitcher extends Component<EditorPanelSwitcherSi
    * text and a count-aware accessible name.
    */
   get segments(): Segment[] {
-    return EditorPanelSwitcher.SECTIONS.map(({ tab, label }) => {
+    return this.sections.map(({ tab, label }) => {
       if (tab === "issues" && this.issueCount > 0) {
         return {
           value: tab,
@@ -101,9 +125,7 @@ export default class EditorPanelSwitcher extends Component<EditorPanelSwitcherSi
 
   @action
   selectSection(value: string): void {
-    const section = EditorPanelSwitcher.SECTIONS.find(
-      (candidate) => candidate.tab === value
-    );
+    const section = this.sections.find((candidate) => candidate.tab === value);
     if (section) {
       this.wireframeRail.setLeftPanelTab(section.tab);
     }
@@ -112,16 +134,22 @@ export default class EditorPanelSwitcher extends Component<EditorPanelSwitcherSi
   <template>
     <div class="wireframe-panel-switcher wireframe-panel --left" ...attributes>
       <div class="panel-header">
-        <DSegmentedControl
-          class="wireframe-panel-switcher__sections --full-width"
-          @items={{this.segments}}
-          @name="wireframe-panel-switcher"
-          @onSelect={{this.selectSection}}
-          @translatedLabel={{i18n "wireframe.chrome.panel_switcher_label"}}
-          @value={{this.wireframeRail.leftPanelTab}}
-        />
+        {{#if (gt this.sections.length 1)}}
+          <DSegmentedControl
+            class="wireframe-panel-switcher__sections --full-width"
+            @items={{this.segments}}
+            @name="wireframe-panel-switcher"
+            @onSelect={{this.selectSection}}
+            @translatedLabel={{i18n "wireframe.chrome.panel_switcher_label"}}
+            @value={{this.activeSection.tab}}
+          />
+        {{else}}
+          <span class="wireframe-panel-switcher__title">
+            {{i18n this.activeSection.label}}
+          </span>
+        {{/if}}
       </div>
-      <div class="panel-body">{{yield this.wireframeRail.leftPanelTab}}</div>
+      <div class="panel-body">{{yield this.activeSection.tab}}</div>
     </div>
   </template>
 }

@@ -72,8 +72,7 @@ export default class WireframeEmptyHomepage extends Component<WireframeEmptyHome
               <DButton
                 class="btn-primary wireframe-empty-homepage__add"
                 @action={{this.openEditor}}
-                @icon="plus"
-                @label="wireframe.empty_homepage.add_first_block"
+                @label="wireframe.empty_homepage.start_building"
               />
             </div>
           </div>

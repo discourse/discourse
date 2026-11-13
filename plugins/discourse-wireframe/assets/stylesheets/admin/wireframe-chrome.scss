@@ -55,22 +55,7 @@
   right: 1rem;
   bottom: 1rem;
   z-index: z("modal", "content") - 100;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  border-radius: 999px;
-  background: var(--primary);
-  color: var(--secondary);
-  border: 0;
-  font-size: var(--font-down-1);
-  font-weight: 500;
-  cursor: pointer;
   box-shadow: var(--shadow-card);
-
-  &:hover {
-    background: var(--primary-medium);
-  }
 }
 
 body.wireframe-active {

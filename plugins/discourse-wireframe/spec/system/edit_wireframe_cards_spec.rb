@@ -29,8 +29,7 @@ describe "Edit wireframe cards" do
   it "shows all reference Cards without structural issues" do
     visit("/custom")
     editor.enter
-    cards.show_issues
-    expect(cards).to have_no_issues, cards.issue_messages
+    expect(cards).to have_no_issues, -> { cards.issue_messages.join("\n") }
   end
 
   it "lets readers tab to and follow each independent Card link" do

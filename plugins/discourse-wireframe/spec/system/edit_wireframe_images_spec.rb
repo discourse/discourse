@@ -276,8 +276,6 @@ describe "Edit wireframe images" do
   it "keeps longer translated image controls inside the minimum inspector" do
     SiteSetting.default_locale = "de"
     {
-      "tab_args" => "Blockeinstellungen",
-      "tab_conditions" => "Anzeigebedingungen",
       "image.fit" => "Einpassen",
       "image.fill" => "Ausfüllen",
       "image.zoom_short" => "Vergrößerung",
@@ -290,7 +288,7 @@ describe "Edit wireframe images" do
     editor.enter
     image_editor.select_grid_image
     image_editor.use_inspector_width(240)
-    expect(image_editor).to have_inspector_translation("Blockeinstellungen")
+    expect(image_editor).to have_inspector_translation("Einpassen")
     expect(image_editor).to have_contained_inspector_content
     screenshot_marker(label: "wireframe-inspector-closeout-long-labels", only: :desktop)
   end
@@ -385,7 +383,8 @@ describe "Edit wireframe images" do
     expect(image_editor).to have_grouped_image_actions
   end
 
-  it "takes an author to image settings when the inspector is already open on another tab" do
+  it "takes an author to image settings when the inspector is already open on another tab",
+     skip: "The inspector shows only settings while its other tabs are hidden" do
     visit("/custom")
     editor.enter
     image_editor.select_image

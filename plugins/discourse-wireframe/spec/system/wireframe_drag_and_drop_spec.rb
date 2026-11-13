@@ -73,12 +73,6 @@ describe "Wireframe editor drag and drop" do
     expect(editor).to have_layout_variant_name("Grid")
 
     screenshot_marker(label: "wireframe-layout-variant-name", only: :desktop)
-
-    editor.open_outline
-
-    expect(editor).to have_layout_variant_in_outline("Grid")
-
-    screenshot_marker(label: "wireframe-layout-variant-outline", only: :desktop)
   end
 
   it "drops a palette block onto an occupied cell, inserting it into the adjacent gap" do

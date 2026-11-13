@@ -524,6 +524,7 @@ export default class SearchMenu extends Component {
             @location={{@location}}
             @openSearchMenu={{this.open}}
             @searchTermChanged={{this.searchTermChanged}}
+            @translatedInputPlaceholder={{@translatedSearchInputPlaceholder}}
             @triggerSearch={{this.triggerSearch}}
             @typeFilter={{this.typeFilter}}
             @updateTypeFilter={{this.updateTypeFilter}}

@@ -776,6 +776,42 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
     });
 
+    test("an outlet root with no blocks yet isn't reported as an issue", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const query = queryOf(this.editor);
+      const key = this.editor.wireframeSelection.selectedBlockKey;
+      const { entry } = query.findEntryAndOutletSync(key);
+      entry.__failureType = "structural-invalid";
+      entry.__failureReason = "must have children";
+      entry.__failureDetails = [
+        {
+          code: ERROR_CODES.INVALID_CHILDREN,
+          expected: { acceptsChildren: true, requiresChildren: true },
+        },
+      ];
+
+      query.recordOutletRoot("homepage-blocks");
+      assert.true(query.isOutletRoot(key), "the entry is the outlet root");
+      assert.deepEqual(validation.validationIssues, [], "no issue is listed");
+      assert.deepEqual(
+        validation.validationWarnings,
+        [],
+        "publishing isn't warned about"
+      );
+      assert.false(
+        this.editor.wireframeSelection.selectedBlockHasErrors,
+        "the inspector shows no error"
+      );
+
+      query.clearOutletRoots();
+      assert.deepEqual(
+        validation.validationIssues.map((issue) => issue.messages[0].text),
+        ["Add at least one block inside."],
+        "an empty container that isn't the root is still reported"
+      );
+      assert.true(this.editor.wireframeSelection.selectedBlockHasErrors);
+    });
+
     test("validationIssues collapses fields that share a message into one line", async function (assert) {
       const validation = getOwner(this).lookup("service:wireframe-validation");
       const located = queryOf(this.editor).findEntryAndOutletSync(

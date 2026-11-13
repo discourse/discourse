@@ -198,8 +198,8 @@ module(
       ].map((el) => el.textContent.trim());
       assert.deepEqual(
         headers,
-        ["Layout", "Text", "Media", "Cards & actions", "Community"],
-        "structure first, the rest in the declared order, no invented group"
+        ["Community", "Cards & actions", "Text", "Media", "Layout"],
+        "community first, layout last, no invented group"
       );
     });
 

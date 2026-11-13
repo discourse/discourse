@@ -23,11 +23,10 @@ describe "Edit wireframe tabs" do
 
   after { Theme.clear_cache! }
 
-  it "switches and resizes the section panel beside the canvas" do
+  it "shows the blocks panel beside the canvas and resizes it" do
     visit "/custom"
     tabs_editor.enter
-    panel_switcher.open_layers
-    expect(panel_switcher).to have_layers_panel
+    expect(panel_switcher).to have_section_title("Blocks")
     expect(panel_switcher).to have_aligned_panel
     screenshot_marker(label: "wireframe-section-switcher", only: :desktop)
 

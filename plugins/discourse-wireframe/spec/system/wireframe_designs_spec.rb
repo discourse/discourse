@@ -24,7 +24,7 @@ describe "Wireframe designs" do
   it "names the design from the header and keeps renaming the same design" do
     visit("/")
     find(".wireframe-empty-homepage__add").click
-    expect(editor).to have_design_name("Untitled layout")
+    expect(editor).to have_design_name("Untitled template")
 
     editor.rename_design("Spring launch")
     editor.add_block_to_empty_outlet("divider")
@@ -55,8 +55,6 @@ describe "Wireframe designs" do
     find(".wireframe-block-chrome[data-wf-block-name='divider']").click
     find("body").send_keys(:delete)
     editor.publish
-    # An empty layout asks before publishing.
-    find(".dialog-footer .btn-primary").click
     expect(editor).to have_reader
 
     expect(designs.map { _1[:name] }).to eq(["Spring Launch"])
@@ -74,7 +72,7 @@ describe "Wireframe designs" do
       )
     end
 
-    visit("/admin/plugins/discourse-wireframe/layouts")
+    visit("/admin/plugins/discourse-wireframe/wireframe-templates")
     expect(page).to have_css(".wireframe-designs__row", count: 2)
     expect(page).to have_css(".wireframe-designs__row", text: "Autumn")
     expect(page).to have_css(".wireframe-designs__status.--active", count: 1)
@@ -117,7 +115,7 @@ describe "Wireframe designs" do
     find(".wireframe-design-title__menu").click
     find(".wireframe-design-switcher__manage").click
 
-    expect(page).to have_current_path("/admin/plugins/discourse-wireframe/layouts")
+    expect(page).to have_current_path("/admin/plugins/discourse-wireframe/wireframe-templates")
     expect(page).to have_css(".wireframe-designs")
     expect(page).to have_no_css(".wireframe-shell")
   end
@@ -150,7 +148,7 @@ describe "Wireframe designs" do
 
     def edit_autumn
       autumn = Theme.find_by(name: "Autumn")
-      visit("/admin/plugins/discourse-wireframe/layouts")
+      visit("/admin/plugins/discourse-wireframe/wireframe-templates")
       within(".wireframe-designs__row[data-design-id='#{autumn.id}']") do
         find(".wireframe-designs__menu").click
       end
@@ -161,8 +159,6 @@ describe "Wireframe designs" do
       find(".wireframe-block-chrome[data-wf-block-name='divider']").click
       find("body").send_keys(:delete)
       editor.publish
-      # An empty layout asks before publishing.
-      find(".dialog-footer .btn-primary").click
     end
 
     def active_design

@@ -11,6 +11,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import WireframeDraftsService, {
   Design,
@@ -25,6 +26,11 @@ import type WireframeWorkspaceService from "discourse/plugins/discourse-wirefram
  * to clear it the way floats elsewhere on the page do.
  */
 const MENU_PADDING = { top: 8, right: 10, bottom: 10, left: 10 };
+
+const NAME_COLLATOR = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base",
+});
 
 /** Sizes an input to its text, so the title reads as text until it's edited. */
 const autosize = modifier((element: HTMLInputElement) => {
@@ -140,7 +146,10 @@ export default class DesignTitle extends Component {
     if (parentId == null) {
       return;
     }
-    this.designs = (await this.wireframeDrafts.fetchDesigns(parentId)).designs;
+    const { designs } = await this.wireframeDrafts.fetchDesigns(parentId);
+    this.designs = [...designs].sort((a, b) =>
+      NAME_COLLATOR.compare(a.name, b.name)
+    );
   }
 
   @action
@@ -265,9 +274,12 @@ export default class DesignTitle extends Component {
                 {{#each this.designs as |design|}}
                   <dropdown.item>
                     <DButton
-                      class="btn-transparent wireframe-design-switcher__design"
+                      aria-current={{if design.active "true"}}
+                      class={{dConcatClass
+                        "btn-transparent wireframe-design-switcher__design"
+                        (if design.active "-selected")
+                      }}
                       @action={{fn this.pickDesign design.id}}
-                      @icon={{if design.active "check"}}
                       @translatedLabel={{design.name}}
                     />
                   </dropdown.item>

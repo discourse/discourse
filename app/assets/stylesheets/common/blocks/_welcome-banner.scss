@@ -1,0 +1,31 @@
+/* The text and search reuse the site welcome banner's `welcome-banner__*`
+   styles; this adds the block's own image backdrop. */
+
+.d-block-welcome-banner {
+  position: relative;
+  width: 100%;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+
+    /* The root can't clip: the search results drop below the banner. */
+    overflow: hidden;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__content {
+    position: relative;
+  }
+
+  .search-menu-panel {
+    --d-welcome-banner-height: calc(
+      var(--font-up-6) + var(--d-welcome-banner-padding-top) +
+        var(--d-welcome-banner-padding-bottom) +
+        var(--d-welcome-banner-title-margin-bottom) + 4em
+    );
+    max-height: calc(
+      100vh - var(--header-offset) - var(--d-welcome-banner-height)
+    );
+  }
+}

@@ -10,7 +10,9 @@ import {
   type FriendlyEntryMessage,
   friendlyEntryMessages,
   type FriendlyValidatedEntry,
+  isEmptyContainerFailure,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
+import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeLayoutSignalService from "./wireframe-layout-signal";
 
 /** Flat validation warning shown by the publish drawer. */
@@ -45,6 +47,9 @@ export interface ValidationIssue {
 export default class WireframeValidationService extends Service {
   /** Resolves registered blocks and their metadata. */
   @service declare blocks: BlocksService;
+
+  /** Identifies outlet roots, whose empty state isn't an issue. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 
   /** Invalidates warning projections after structural layout changes. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
@@ -159,7 +164,7 @@ export default class WireframeValidationService extends Service {
     warnings: ValidationWarning[]
   ): void {
     for (const entry of entries) {
-      if (entry?.__failureReason) {
+      if (this.#hasIssue(entry)) {
         warnings.push({ outletName, message: entry.__failureReason });
       }
       if (entry?.children?.length) {
@@ -188,7 +193,7 @@ export default class WireframeValidationService extends Service {
     componentByName: Map<string, BlockRegistryEntry>
   ): void {
     for (const entry of entries) {
-      if (entry?.__failureReason) {
+      if (this.#hasIssue(entry)) {
         const component =
           typeof entry.block === "string"
             ? componentByName.get(entry.block)
@@ -215,5 +220,23 @@ export default class WireframeValidationService extends Service {
         );
       }
     }
+  }
+
+  /**
+   * Whether an entry carries a failure worth reporting. An outlet root whose
+   * only failure is having no blocks yet is an empty page, not a mistake.
+   *
+   * @param entry - Layout entry to check.
+   */
+  #hasIssue(entry: FriendlyValidatedEntry | undefined): boolean {
+    if (!entry?.__failureReason) {
+      return false;
+    }
+    const details = entry.__failureDetails ?? [];
+    return !(
+      details.length > 0 &&
+      details.every(isEmptyContainerFailure) &&
+      this.wireframeLayoutQuery.isOutletRoot(entryKey(entry))
+    );
   }
 }

@@ -155,11 +155,16 @@ module PageObjects
       end
 
       def has_no_issues?
-        has_css?(".wireframe-issues .panel-empty") && has_no_css?(".wireframe-issues__item")
+        has_css?(".wireframe-palette") && issue_messages.empty?
       end
 
+      # Read from the validation service: the Issues section isn't shown in the editor.
       def issue_messages
-        find(".wireframe-issues").text
+        page.evaluate_script(<<~JS)
+          Discourse.__container__
+            .lookup("service:wireframe-validation")
+            .validationIssues.map((issue) => `${issue.blockName}: ${issue.messages.join(", ")}`)
+        JS
       end
 
       def allocate_stress_width(width)

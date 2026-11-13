@@ -227,7 +227,7 @@ module(
       await render(<template><EditorShell /></template>);
       assert
         .dom(".wireframe-design-title__text")
-        .hasText("Untitled layout", "a placeholder names the unsaved design");
+        .hasText("Untitled template", "a placeholder names the unsaved design");
 
       await click(".wireframe-design-title__text");
       await fillIn(".wireframe-design-title__input", "Spring launch");
@@ -271,6 +271,19 @@ module(
       assert
         .dom(".wireframe-design-switcher__design")
         .exists({ count: 2 }, "lists the available designs");
+      assert.deepEqual(
+        [
+          ...document.querySelectorAll(".wireframe-design-switcher__design"),
+        ].map((el) => el.textContent.trim()),
+        ["Autumn sale", "Test design"],
+        "lists designs alphabetically"
+      );
+      assert
+        .dom(".wireframe-design-switcher__design.-selected")
+        .hasText("Test design", "marks the active design as selected");
+      assert
+        .dom(".wireframe-design-switcher__design.-selected .d-icon")
+        .doesNotExist("the selected design has no check icon");
       assert
         .dom(".wireframe-design-switcher__new")
         .exists("offers a New design button");

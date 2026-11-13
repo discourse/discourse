@@ -119,7 +119,7 @@ module PageObjects
       end
 
       def has_inspector_translation?(text)
-        has_css?(".wireframe-inspector__tab", text: text)
+        has_css?(".wireframe-panel.--right .wireframe-image-composition", text: text)
       end
 
       def choose_top_left_position
@@ -553,7 +553,6 @@ module PageObjects
       end
 
       def hide_image_settings
-        within(".wireframe-panel.--right") { click_button("JSON") }
         find(".wireframe-panel.--right").click_button("Collapse panel")
       end
 
@@ -726,25 +725,13 @@ module PageObjects
       def has_contained_inspector_actions?
         has_css?(".wireframe-panel.--right") { |panel| panel.evaluate_script(<<~JS) }
             (() => {
-              const tabs = this.querySelector('.wireframe-inspector__sections .d-tabs__tablist');
               const composition = this.querySelector('.wireframe-image-composition');
-              const contained = (parent, children) => {
-                const bounds = parent.getBoundingClientRect();
-                return [...children].every(child => {
-                  const rect = child.getBoundingClientRect();
-                  return rect.left >= bounds.left && rect.right <= bounds.right &&
-                    child.scrollWidth <= child.clientWidth;
-                });
-              };
-              const firstTab = tabs.firstElementChild.getBoundingClientRect();
-              const inspectorFontSize = parseFloat(getComputedStyle(this.querySelector('.wireframe-inspector-form')).fontSize);
-              return [...tabs.children].every(tab =>
-                Math.abs(tab.getBoundingClientRect().top - firstTab.top) < 1 &&
-                parseFloat(getComputedStyle(tab).fontSize) >= inspectorFontSize &&
-                parseFloat(getComputedStyle(tab).paddingInlineStart) >= 4 &&
-                parseFloat(getComputedStyle(tab).paddingInlineEnd) >= 4
-              ) && contained(tabs, tabs.children) &&
-                contained(composition, composition.querySelectorAll('.wireframe-image-composition__actions button'));
+              const bounds = composition.getBoundingClientRect();
+              return [...composition.querySelectorAll('.wireframe-image-composition__actions button')].every(child => {
+                const rect = child.getBoundingClientRect();
+                return rect.left >= bounds.left && rect.right <= bounds.right &&
+                  child.scrollWidth <= child.clientWidth;
+              });
             })()
           JS
       end

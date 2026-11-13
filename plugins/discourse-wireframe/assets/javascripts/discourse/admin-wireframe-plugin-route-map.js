@@ -3,6 +3,6 @@ export default {
   path: "/plugins",
 
   map() {
-    this.route("wireframe-designs", { path: "layouts" });
+    this.route("wireframe-designs", { path: "wireframe-templates" });
   },
 };

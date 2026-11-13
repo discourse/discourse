@@ -52,49 +52,75 @@ module(
       this.editor.exit();
     });
 
-    test("DTabs adoption preserves inspector selection and conditional-tab fallback", async function (assert) {
+    test("blocks show their settings without Conditions or JSON tabs", async function (assert) {
+      getOwner(this).lookup("service:wireframe-rail").inspectorTab =
+        "conditions";
       this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
       await render(
         <template>
           <div class="wireframe-shell"><InspectorPanel /></div>
         </template>
       );
-      const args = '.wireframe-inspector__tab[data-d-tab="args"]';
-      const conditions = '.wireframe-inspector__tab[data-d-tab="conditions"]';
-      await focus(args);
-      await triggerKeyEvent(args, "keydown", "ArrowRight");
-      assert.dom(conditions).isFocused("arrow focus reaches Conditions");
+
       assert
-        .dom(args)
-        .hasAttribute(
-          "aria-selected",
-          "true",
-          "focus alone leaves Settings active"
+        .dom(".wireframe-inspector__sections")
+        .doesNotExist("there is no tab strip");
+      assert
+        .dom(".wireframe-inspector__body")
+        .exists("a lingering Conditions selection falls back to the settings");
+    });
+
+    test("DTabs adoption preserves inspector selection and conditional-tab fallback", async function (assert) {
+      const { SHOW_CONDITIONS, SHOW_RAW_JSON } = InspectorPanel;
+      InspectorPanel.SHOW_CONDITIONS = true;
+      InspectorPanel.SHOW_RAW_JSON = true;
+      try {
+        this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+        await render(
+          <template>
+            <div class="wireframe-shell"><InspectorPanel /></div>
+          </template>
         );
-      await triggerKeyEvent(conditions, "keydown", "Enter");
-      assert
-        .dom(conditions)
-        .hasAttribute("aria-selected", "true", "Enter activates Conditions");
-      assert
-        .dom('.wireframe-inspector__sections > [role="tabpanel"]')
-        .hasAttribute(
-          "aria-labelledby",
-          find(conditions).id,
-          "the panel is labelled by its active tab"
-        );
-      const root = queryOf(this.editor).readResolvedLayout(OUTLET)[0];
-      this.editor.wireframeSelection.selectBlock({ key: entryKey(root) });
-      await settled();
-      assert
-        .dom(conditions)
-        .doesNotExist("outlet roots do not expose Conditions");
-      assert
-        .dom(args)
-        .hasAttribute(
-          "aria-selected",
-          "true",
-          "the consumer falls back to Settings"
-        );
+        const args = '.wireframe-inspector__tab[data-d-tab="args"]';
+        const conditions = '.wireframe-inspector__tab[data-d-tab="conditions"]';
+        await focus(args);
+        await triggerKeyEvent(args, "keydown", "ArrowRight");
+        assert.dom(conditions).isFocused("arrow focus reaches Conditions");
+        assert
+          .dom(args)
+          .hasAttribute(
+            "aria-selected",
+            "true",
+            "focus alone leaves Settings active"
+          );
+        await triggerKeyEvent(conditions, "keydown", "Enter");
+        assert
+          .dom(conditions)
+          .hasAttribute("aria-selected", "true", "Enter activates Conditions");
+        assert
+          .dom('.wireframe-inspector__sections > [role="tabpanel"]')
+          .hasAttribute(
+            "aria-labelledby",
+            find(conditions).id,
+            "the panel is labelled by its active tab"
+          );
+        const root = queryOf(this.editor).readResolvedLayout(OUTLET)[0];
+        this.editor.wireframeSelection.selectBlock({ key: entryKey(root) });
+        await settled();
+        assert
+          .dom(conditions)
+          .doesNotExist("outlet roots do not expose Conditions");
+        assert
+          .dom(args)
+          .hasAttribute(
+            "aria-selected",
+            "true",
+            "the consumer falls back to Settings"
+          );
+      } finally {
+        InspectorPanel.SHOW_CONDITIONS = SHOW_CONDITIONS;
+        InspectorPanel.SHOW_RAW_JSON = SHOW_RAW_JSON;
+      }
     });
 
     test("shows the per-block form for a single selection", async function (assert) {

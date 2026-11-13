@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import type { TOC } from "@ember/component/template-only";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
@@ -52,7 +53,41 @@ const FKAlert = FKAlertUntyped as unknown as ComponentLike<{
  * button next to the block name with a tooltip — it's reference info,
  * not edit info, and doesn't deserve its own pane.
  */
+interface SettingsBodySignature {
+  Args: {
+    /** Whether the block declares an args schema to edit. */
+    hasArgsSchema: boolean;
+    /** Whether the parent container contributes per-child args. */
+    hasContainerArgsForm: boolean;
+    /** Whether the block has a dedicated layout form. */
+    hasCustomLayoutForm: boolean;
+  };
+}
+
+const SettingsBody: TOC<SettingsBodySignature> = <template>
+  <div class="wireframe-inspector__body">
+    {{#if @hasCustomLayoutForm}}
+      <InspectorLayoutForm />
+    {{else if @hasArgsSchema}}
+      <InspectorForm />
+    {{else}}
+      <div class="panel-empty">
+        {{i18n "wireframe.inspector.label_no_args"}}
+      </div>
+    {{/if}}
+    {{#if @hasContainerArgsForm}}
+      <InspectorContainerArgsForm />
+    {{/if}}
+  </div>
+</template>;
+
 export default class InspectorPanel extends Component {
+  /** Whether blocks offer the Conditions tab; kept out of the editor for now. */
+  static SHOW_CONDITIONS = false;
+
+  /** Whether blocks offer the JSON tab; kept out of the editor for now. */
+  static SHOW_RAW_JSON = false;
+
   @service declare blocks: BlocksService;
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -61,20 +96,40 @@ export default class InspectorPanel extends Component {
   @service declare wireframeSelection: WireframeSelectionService;
 
   /**
-   * The effective active tab. The outlet root has no Conditions tab (a page
-   * region doesn't carry visibility conditions), so a lingering "conditions"
-   * selection from a previous block falls back to "args". A synthesized
-   * composite part shows only the Args tab (no conditions, no raw entry), so
-   * any other lingering selection falls back to "args" too.
+   * The effective active tab. A lingering selection of a tab the current
+   * block doesn't show falls back to "args".
    */
   get currentTab() {
-    if (this.isPart) {
+    const tab = this.wireframeRail.inspectorTab;
+    if (tab === "conditions" && !this.showsConditions) {
       return "args";
     }
-    if (this.isOutletRoot && this.wireframeRail.inspectorTab === "conditions") {
+    if (tab === "raw" && !this.showsRawJson) {
       return "args";
     }
-    return this.wireframeRail.inspectorTab;
+    return tab;
+  }
+
+  /** Whether there's more than the Args tab, so the tab strip is needed. */
+  get hasTabs() {
+    return this.showsConditions || this.showsRawJson;
+  }
+
+  /**
+   * Whether the selection gets a Conditions tab. The outlet root has none (a
+   * page region doesn't carry visibility conditions), nor does a composite
+   * part.
+   */
+  get showsConditions() {
+    return InspectorPanel.SHOW_CONDITIONS && !this.isOutletRoot && !this.isPart;
+  }
+
+  /**
+   * Whether the selection gets a JSON tab. A composite part has no persisted
+   * entry to show.
+   */
+  get showsRawJson() {
+    return InspectorPanel.SHOW_RAW_JSON && !this.isPart;
   }
 
   /**
@@ -384,60 +439,61 @@ export default class InspectorPanel extends Component {
         <InspectorMetadataSection />
       {{/if}}
 
-      <DTabs
-        class="wireframe-inspector__sections"
-        @active={{this.currentTab}}
-        @label={{i18n "wireframe.chrome.panel_inspector"}}
-        @onActivate={{this.setTab}}
-        as |tabs|
-      >
-        <tabs.Tab
-          class={{dConcatClass
-            "wireframe-inspector__tab"
-            (if this.argsTabHasErrors "--has-errors")
-          }}
-          @key="args"
+      {{#if this.hasTabs}}
+        <DTabs
+          class="wireframe-inspector__sections"
+          @active={{this.currentTab}}
+          @label={{i18n "wireframe.chrome.panel_inspector"}}
+          @onActivate={{this.setTab}}
+          as |tabs|
         >
-          <:label>
-            {{#if this.argsTabHasErrors}}{{dIcon "triangle-exclamation"}}{{/if}}
-            {{i18n "wireframe.inspector.tab_args"}}
-          </:label>
-          <:default>
-            <div class="wireframe-inspector__body">
-              {{#if this.hasCustomLayoutForm}}
-                <InspectorLayoutForm />
-              {{else if this.hasArgsSchema}}
-                <InspectorForm />
-              {{else}}
-                <div class="panel-empty">
-                  {{i18n "wireframe.inspector.label_no_args"}}
-                </div>
-              {{/if}}
-              {{#if this.hasContainerArgsForm}}
-                <InspectorContainerArgsForm />
-              {{/if}}
-            </div>
-          </:default>
-        </tabs.Tab>
-        {{#unless (or this.isOutletRoot this.isPart)}}
           <tabs.Tab
-            class="wireframe-inspector__tab"
-            @key="conditions"
-            @label={{i18n "wireframe.inspector.tab_conditions"}}
+            class={{dConcatClass
+              "wireframe-inspector__tab"
+              (if this.argsTabHasErrors "--has-errors")
+            }}
+            @key="args"
           >
-            <ConditionsTree />
+            <:label>
+              {{#if this.argsTabHasErrors}}{{dIcon
+                  "triangle-exclamation"
+                }}{{/if}}
+              {{i18n "wireframe.inspector.tab_args"}}
+            </:label>
+            <:default>
+              <SettingsBody
+                @hasArgsSchema={{this.hasArgsSchema}}
+                @hasContainerArgsForm={{this.hasContainerArgsForm}}
+                @hasCustomLayoutForm={{this.hasCustomLayoutForm}}
+              />
+            </:default>
           </tabs.Tab>
-        {{/unless}}
-        {{#unless this.isPart}}
-          <tabs.Tab
-            class="wireframe-inspector__tab"
-            @key="raw"
-            @label={{i18n "wireframe.inspector.tab_raw"}}
-          >
-            <InspectorRawJson />
-          </tabs.Tab>
-        {{/unless}}
-      </DTabs>
+          {{#if this.showsConditions}}
+            <tabs.Tab
+              class="wireframe-inspector__tab"
+              @key="conditions"
+              @label={{i18n "wireframe.inspector.tab_conditions"}}
+            >
+              <ConditionsTree />
+            </tabs.Tab>
+          {{/if}}
+          {{#if this.showsRawJson}}
+            <tabs.Tab
+              class="wireframe-inspector__tab"
+              @key="raw"
+              @label={{i18n "wireframe.inspector.tab_raw"}}
+            >
+              <InspectorRawJson />
+            </tabs.Tab>
+          {{/if}}
+        </DTabs>
+      {{else}}
+        <SettingsBody
+          @hasArgsSchema={{this.hasArgsSchema}}
+          @hasContainerArgsForm={{this.hasContainerArgsForm}}
+          @hasCustomLayoutForm={{this.hasCustomLayoutForm}}
+        />
+      {{/if}}
     {{else}}
       <div class="panel-empty">{{i18n "wireframe.inspector.empty"}}</div>
     {{/if}}
