@@ -11,6 +11,7 @@ module Jobs
           post,
           new_record,
           added_mentions: args[:added_mentions],
+          editor_id: args[:editor_id],
         )
       end
     end

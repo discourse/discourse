@@ -895,7 +895,12 @@ class PostRevisor
         @post.raw_mentions - PostAnalyzer.new(old_raw, @post.topic_id).raw_mentions
       end
 
-    Jobs.enqueue(:post_alert, post_id: @post.id, added_mentions: added_mentions)
+    Jobs.enqueue(
+      :post_alert,
+      post_id: @post.id,
+      added_mentions: added_mentions,
+      editor_id: @editor.id,
+    )
   end
 
   def publish_changes

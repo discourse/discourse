@@ -157,19 +157,22 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false, added_mentions: nil)
+  def after_save_post(post, new_record = false, added_mentions: nil, editor_id: nil)
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
 
+    # Mentions added in an edit are authorized as the user who made that edit, which can differ
+    # from the post's current last editor by the time this runs. A deleted editor authorizes none.
+    editor = editor_id ? User.find_by(id: editor_id) : post.last_editor
+
     # mentions (users/groups)
-    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post, editor)
 
-    if mentioned_groups || mentioned_users || mentioned_here
+    if editor && (mentioned_groups || mentioned_users || mentioned_here)
       mentioned_opts = {}
-      editor = post.last_editor
 
-      if post.last_editor_id != post.user_id
+      if editor.id != post.user_id
         # Mention comes from an edit by someone else, so notification should say who added the mention.
         mentioned_opts = {
           user_id: editor.id,
@@ -188,7 +191,7 @@ class PostAlerter
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
-      expand_group_mentions(mentioned_groups, post) do |group, users|
+      expand_group_mentions(mentioned_groups, post, editor) do |group, users|
         next if added_mentions && !added_mentions.include?(group.name.downcase)
 
         users = only_allowed_users(users, post)
@@ -769,9 +772,7 @@ class PostAlerter
     self.class.push_notification(user, payload, keep_excerpt:)
   end
 
-  def expand_group_mentions(groups, post)
-    # Mentions added in an edit are authorized as the editor, not the author.
-    editor = post.last_editor
+  def expand_group_mentions(groups, post, editor = post.last_editor)
     return unless editor && groups
 
     Group
@@ -794,7 +795,7 @@ class PostAlerter
   end
 
   # TODO: Move to post-analyzer?
-  def extract_mentions(post)
+  def extract_mentions(post, editor = post.last_editor)
     mentions = post.raw_mentions
     return if mentions.blank?
 
@@ -812,9 +813,7 @@ class PostAlerter
     end
 
     # @here can be a user mention and then this feature is disabled
-    here =
-      mentions.include?(SiteSetting.here_mention) &&
-        Guardian.new(post.last_editor).can_mention_here?
+    here = mentions.include?(SiteSetting.here_mention) && Guardian.new(editor).can_mention_here?
 
     [groups, users, here]
   end

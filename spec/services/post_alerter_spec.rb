@@ -59,6 +59,12 @@ RSpec.describe PostAlerter do
     PostAlerter.post_created(post)
   end
 
+  def run_queued_post_alerts
+    jobs = Jobs::PostAlert.jobs.dup
+    Jobs::PostAlert.jobs.clear
+    jobs.each { |job| Jobs::PostAlert.new.execute(job["args"].first.deep_symbolize_keys) }
+  end
+
   def setup_push_notification_subscription_for(user:)
     2.times do |i|
       client = Fabricate(:user_api_key_client, client_id: "xxx#{i}", application_name: "iPhone#{i}")
@@ -821,6 +827,26 @@ RSpec.describe PostAlerter do
         :count,
       ).by(1)
     end
+
+    context "when the post changes before the edit's alert job runs" do
+      fab!(:tl2_post) { Fabricate(:post, raw: "Hello", user: tl2_user, topic: topic) }
+
+      before { Jobs.run_later! }
+
+      it "checks the user who added @here, not a later editor" do
+        tl2_post.revise(user, raw: "Hello @here how are you?")
+        tl2_post.reload.revise(tl2_user, raw: "Hello @here how are you doing?")
+
+        expect { run_queued_post_alerts }.not_to change(other_post.user.notifications, :count)
+      end
+
+      it "does not notify for @here when the user who added it no longer exists" do
+        tl2_post.revise(user, raw: "Hello @here how are you?")
+        UserDestroyer.new(Discourse.system_user).destroy(user)
+
+        expect { run_queued_post_alerts }.not_to change(other_post.user.notifications, :count)
+      end
+    end
   end
 
   context "with @group mentions" do
@@ -924,6 +950,18 @@ RSpec.describe PostAlerter do
         evil_trout.notifications,
         :count,
       ).by(1)
+    end
+
+    it "checks the user who added a group mention, not a later editor" do
+      group.update!(mentionable_level: Group::ALIAS_LEVELS[:owners_mods_and_admins])
+      group.add_owner(tl2_user)
+      owner_post = Fabricate(:post, raw: "Hello", user: tl2_user)
+      Jobs.run_later!
+
+      owner_post.revise(user, raw: "Hello @group")
+      owner_post.reload.revise(tl2_user, raw: "Hello @group, how are you?")
+
+      expect { run_queued_post_alerts }.not_to change(evil_trout.notifications, :count)
     end
   end
 
