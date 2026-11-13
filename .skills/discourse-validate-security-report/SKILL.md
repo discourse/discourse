@@ -1,14 +1,9 @@
 ---
 name: discourse-validate-security-report
-description: |
-  Read-only, black-box validation of a Discourse security report: reproduce the claim only through
-  interfaces an attacker can actually reach, prove whether it causes real damage, and return a verdict,
-  a severity opinion, and an ephemeral proof-of-concept. Use whenever someone shares a Discourse security
-  report, vulnerability disclosure, or HackerOne triage — even one already bundled with a patch, CVSS
-  score, or failing test — to validate, triage, or assess whether the vulnerability is real. This comes
-  before any fix: sharing a report (even with a candidate patch, or asking "what do you think before I
-  ship") routes here, not to code-review, test-writing, or implementation. Triggers even without the word
-  "validate".
+description: >
+  Use when someone shares a Discourse security report, vulnerability disclosure,
+  or HackerOne submission, or asks whether a suspected vulnerability is real,
+  including reports with a patch or failing test.
 allowed-tools: read grep find ls bash
 ---
 
