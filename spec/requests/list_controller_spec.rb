@@ -926,6 +926,33 @@ RSpec.describe ListController do
   end
 
   describe "RSS feeds" do
+    it "does not expose hidden first-post content from relisted topics" do
+      hidden_first_post =
+        Fabricate(:post, topic: topic, user: user, raw: "hidden first post latest RSS secret")
+      hidden_first_post.hide!(PostActionType.types[:off_topic])
+      topic.update_status(
+        "visible",
+        true,
+        Discourse.system_user,
+        visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+      )
+      visible_first_post =
+        Fabricate(
+          :post,
+          topic: Fabricate(:topic, user: user),
+          user: user,
+          raw: "visible first post latest RSS text",
+        )
+
+      get "/latest.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+      expect(response.body).to include(topic.title)
+      expect(response.body).not_to include(hidden_first_post.raw)
+      expect(response.body).to include(visible_first_post.raw)
+    end
+
     it "renders latest RSS" do
       get "/latest.rss"
       expect(response.status).to eq(200)
