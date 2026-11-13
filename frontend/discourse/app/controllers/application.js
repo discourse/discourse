@@ -45,7 +45,8 @@ export default class ApplicationController extends Controller {
   get showSidebar() {
     if (this.pageShellPrototype.enabled) {
       return (
-        this.pageShellPrototype.left === "open" && !this.site.narrowDesktopView
+        this.pageShellPrototype.navigation === "open" &&
+        !this.site.narrowDesktopView
       );
     }
 
@@ -168,7 +169,7 @@ export default class ApplicationController extends Controller {
   @action
   toggleSidebar() {
     if (this.pageShellPrototype.enabled) {
-      this.pageShellPrototype.toggleLeft();
+      this.pageShellPrototype.toggleNavigation();
       return;
     }
 

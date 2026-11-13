@@ -14,7 +14,10 @@ export default class PageShellPrototype extends Component {
         "page-shell-prototype-active"
         (if (eq this.pageShellPrototype.width "full") "full-width-enabled")
         (if
-          (and @sidebarEnabled (not (eq this.pageShellPrototype.left "hidden")))
+          (and
+            @sidebarEnabled
+            (not (eq this.pageShellPrototype.navigation "hidden"))
+          )
           "has-sidebar-page"
         )
       }}
@@ -40,71 +43,71 @@ export default class PageShellPrototype extends Component {
             </select>
           </label>
           <label>
-            {{i18n "page_shell_prototype.left"}}
+            {{i18n "page_shell_prototype.navigation"}}
             <select
-              name="left"
-              value={{this.pageShellPrototype.left}}
+              name="navigation"
+              value={{this.pageShellPrototype.navigation}}
               {{on "change" this.pageShellPrototype.change}}
             >
               <option
-                selected={{eq this.pageShellPrototype.left "open"}}
+                selected={{eq this.pageShellPrototype.navigation "open"}}
                 value="open"
               >{{i18n "page_shell_prototype.open"}}</option>
               <option
-                selected={{eq this.pageShellPrototype.left "rail"}}
+                selected={{eq this.pageShellPrototype.navigation "rail"}}
                 value="rail"
               >{{i18n "page_shell_prototype.rail"}}</option>
               <option
-                selected={{eq this.pageShellPrototype.left "hidden"}}
+                selected={{eq this.pageShellPrototype.navigation "hidden"}}
                 value="hidden"
               >{{i18n "page_shell_prototype.hidden"}}</option>
             </select>
           </label>
           <label>
-            {{i18n "page_shell_prototype.left_width"}}
+            {{i18n "page_shell_prototype.navigation_width"}}
             <input
               max="480"
               min="200"
-              name="leftWidth"
+              name="navigationWidth"
               type="range"
-              value={{this.pageShellPrototype.leftWidth}}
+              value={{this.pageShellPrototype.navigationWidth}}
               {{on "input" this.pageShellPrototype.change}}
             />
-            <output>{{this.pageShellPrototype.leftWidth}}</output>
+            <output>{{this.pageShellPrototype.navigationWidth}}</output>
           </label>
           <label>
-            {{i18n "page_shell_prototype.right"}}
+            {{i18n "page_shell_prototype.context"}}
             <select
-              disabled={{not this.pageShellPrototype.hasRightPanel}}
-              name="right"
-              value={{this.pageShellPrototype.right}}
+              disabled={{not this.pageShellPrototype.hasContextPanel}}
+              name="context"
+              value={{this.pageShellPrototype.context}}
               {{on "change" this.pageShellPrototype.change}}
             >
               <option
-                selected={{eq this.pageShellPrototype.right "open"}}
+                selected={{eq this.pageShellPrototype.context "open"}}
                 value="open"
               >{{i18n "page_shell_prototype.open"}}</option>
               <option
-                selected={{eq this.pageShellPrototype.right "rail"}}
+                selected={{eq this.pageShellPrototype.context "rail"}}
                 value="rail"
               >{{i18n "page_shell_prototype.rail"}}</option>
               <option
-                selected={{eq this.pageShellPrototype.right "hidden"}}
+                selected={{eq this.pageShellPrototype.context "hidden"}}
                 value="hidden"
               >{{i18n "page_shell_prototype.hidden"}}</option>
             </select>
           </label>
           <label>
-            {{i18n "page_shell_prototype.right_width"}}
+            {{i18n "page_shell_prototype.context_width"}}
             <input
               max="480"
               min="200"
-              name="rightWidth"
+              name="contextWidth"
               type="range"
-              value={{this.pageShellPrototype.rightWidth}}
+              value={{this.pageShellPrototype.contextWidth}}
               {{on "input" this.pageShellPrototype.change}}
             />
-            <output>{{this.pageShellPrototype.rightWidth}}</output>
+            <output>{{this.pageShellPrototype.contextWidth}}</output>
           </label>
           <label>
             {{i18n "page_shell_prototype.footer"}}
@@ -132,21 +135,24 @@ export default class PageShellPrototype extends Component {
 
       <div
         class="page-shell-prototype"
+        data-context={{if
+          this.pageShellPrototype.hasContextPanel
+          this.pageShellPrototype.context
+          "hidden"
+        }}
         data-footer={{this.pageShellPrototype.footer}}
-        data-left={{if @sidebarEnabled this.pageShellPrototype.left "hidden"}}
-        data-right={{if
-          this.pageShellPrototype.hasRightPanel
-          this.pageShellPrototype.right
+        data-navigation={{if
+          @sidebarEnabled
+          this.pageShellPrototype.navigation
           "hidden"
         }}
         data-width={{this.pageShellPrototype.width}}
-        style={{this.pageShellPrototype.style}}
         {{measurePageShellPrototype
           this.pageShellPrototype.width
-          this.pageShellPrototype.left
-          this.pageShellPrototype.right
-          this.pageShellPrototype.leftWidth
-          this.pageShellPrototype.rightWidth
+          this.pageShellPrototype.navigation
+          this.pageShellPrototype.context
+          this.pageShellPrototype.navigationWidth
+          this.pageShellPrototype.contextWidth
         }}
       >
         {{yield to="beforeHeader"}}
@@ -158,38 +164,40 @@ export default class PageShellPrototype extends Component {
           {{yield to="body"}}
           {{#if
             (and
-              this.pageShellPrototype.hasRightPanel
-              (not (eq this.pageShellPrototype.right "hidden"))
+              this.pageShellPrototype.hasContextPanel
+              (not (eq this.pageShellPrototype.context "hidden"))
             )
           }}
-            <div class="page-shell-prototype__right-slot">
+            <div class="page-shell-prototype__context-slot">
               <aside
-                aria-label={{i18n "page_shell_prototype.right"}}
-                class="page-shell-prototype__right"
+                aria-label={{i18n "page_shell_prototype.context"}}
+                class="page-shell-prototype__context"
               >
-                {{#if (eq this.pageShellPrototype.right "rail")}}
+                {{#if (eq this.pageShellPrototype.context "rail")}}
                   <button
                     class="btn btn-flat"
-                    title={{i18n "page_shell_prototype.expand_right"}}
+                    title={{i18n "page_shell_prototype.expand_context"}}
                     type="button"
-                    {{on "click" this.pageShellPrototype.openRight}}
+                    {{on "click" this.pageShellPrototype.openContext}}
                   >
                     {{i18n "page_shell_prototype.expand"}}
                   </button>
                 {{else}}
-                  <h2>{{i18n "page_shell_prototype.right"}}</h2>
-                  <p>{{i18n "page_shell_prototype.right_description"}}</p>
+                  <h2>{{i18n "page_shell_prototype.context"}}</h2>
+                  <p>{{i18n "page_shell_prototype.context_description"}}</p>
                 {{/if}}
               </aside>
             </div>
           {{/if}}
           <div class="page-shell-prototype__footer">
-            {{yield to="footer"}}
-            {{#if @showFooter}}
-              <div class="page-shell-prototype__footer-sample">
-                {{i18n "page_shell_prototype.footer_description"}}
-              </div>
-            {{/if}}
+            <div class="page-shell-prototype__footer-content">
+              {{yield to="footer"}}
+              {{#if @showFooter}}
+                <div class="page-shell-prototype__footer-sample">
+                  {{i18n "page_shell_prototype.footer_description"}}
+                </div>
+              {{/if}}
+            </div>
           </div>
         </div>
       </div>
