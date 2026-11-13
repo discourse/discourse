@@ -272,6 +272,13 @@ after_initialize do
     end,
   )
 
+  on(:post_moved) do |post, original_topic_id|
+    ReviewablePostVotingComment.where(
+      target_id: PostVotingComment.with_deleted.where(post_id: post.id).select(:id),
+      target_type: "PostVotingComment",
+    ).update_all(topic_id: post.topic_id, category_id: post.topic&.category_id)
+  end
+
   register_anonymous_action("vote_post") do |user, params|
     direction = params["direction"].to_s
     next if direction != "up" && direction != "down"

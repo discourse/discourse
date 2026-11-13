@@ -23,6 +23,42 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     end
   end
 
+  describe "when the commented post is moved to another topic" do
+    fab!(:source_category, :category)
+    fab!(:source_topic) do
+      Fabricate(:topic, category: source_category, subtype: Topic::POST_VOTING_SUBTYPE)
+    end
+    fab!(:destination_category, :category)
+    fab!(:destination_topic) { Fabricate(:topic, category: destination_category) }
+    fab!(:original_post) { Fabricate(:post, topic: source_topic) }
+    fab!(:answer) { Fabricate(:post, topic: source_topic) }
+    fab!(:answer_comment) { Fabricate(:post_voting_comment, post: answer) }
+
+    fab!(:moved_reviewable) do
+      PostVoting::CommentReviewQueue.new.flag_comment(
+        answer_comment,
+        flagger.guardian,
+        ReviewableScore.types[:spam],
+      )[
+        :reviewable
+      ]
+    end
+
+    it "updates the reviewable's topic and category to the post's new location" do
+      expect(moved_reviewable).to have_attributes(
+        topic_id: source_topic.id,
+        category_id: source_category.id,
+      )
+
+      PostMover.new(source_topic, admin, [answer.id]).to_topic(destination_topic.id)
+
+      expect(moved_reviewable.reload).to have_attributes(
+        topic_id: destination_topic.id,
+        category_id: destination_category.id,
+      )
+    end
+  end
+
   describe "#perform" do
     it "suspends the author and deletes the flagged comment" do
       reviewable.update!(target_created_by: comment_poster)
