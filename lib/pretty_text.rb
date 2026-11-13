@@ -219,6 +219,7 @@ module PrettyText
     opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
     opt_input[:oneboxLimit] = opts[:onebox_limit] if opts[:onebox_limit]
     opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
+    opt_input[:hashtagUserIds] = opts[:hashtag_user_ids] if opts[:hashtag_user_ids].present?
     # keeps any HTML from the input, so only for input that is already safe
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false
 
