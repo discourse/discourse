@@ -138,7 +138,89 @@ RSpec.describe TagUser do
     end
   end
 
+  describe "lookup" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:visible_tag, :tag)
+    fab!(:hidden_tag, :tag)
+
+    before do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
+      TagUser.create!(
+        user: user,
+        tag: visible_tag,
+        notification_level: TagUser.notification_levels[:muted],
+      )
+      TagUser.create!(
+        user: user,
+        tag: hidden_tag,
+        notification_level: TagUser.notification_levels[:muted],
+      )
+    end
+
+    it "only returns notification levels for tags the user can see" do
+      expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to contain_exactly(visible_tag.id)
+    end
+
+    it "returns notification levels for tags the user can see through a tag group" do
+      group = Fabricate(:group)
+      Fabricate(:group_user, group: group, user: user)
+      Fabricate(:tag_group, permissions: { group.name => 1 }, tag_names: [hidden_tag.name])
+
+      expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to contain_exactly(
+        visible_tag.id,
+        hidden_tag.id,
+      )
+    end
+  end
+
   describe "batch_set" do
+    it "does not set notification levels for tags the user cannot see" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      hidden_tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
+      TagUser.batch_set(user, :muted, [hidden_tag.name])
+
+      expect(TagUser.where(user: user, tag: hidden_tag)).to be_empty
+    end
+
+    it "sets notification levels for tags the user can see through a tag group" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      group = Fabricate(:group)
+      Fabricate(:group_user, group: group, user: user)
+      tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { group.name => 1 }, tag_names: [tag.name])
+
+      TagUser.batch_set(user, :muted, [tag.name])
+
+      expect(TagUser.where(user: user, tag: tag).pluck(:notification_level)).to contain_exactly(
+        TagUser.notification_levels[:muted],
+      )
+    end
+
+    it "does not set notification levels through a synonym of a tag the user cannot see" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      hidden_tag = Fabricate(:tag)
+      synonym = Fabricate(:tag, target_tag: hidden_tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
+      TagUser.batch_set(user, :muted, [synonym.name])
+
+      expect(TagUser.where(user: user).pluck(:tag_id)).to be_empty
+    end
+
+    it "removes a notification level set for a tag the user can no longer see" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      tag = Fabricate(:tag)
+      TagUser.batch_set(user, :muted, [tag.name])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+
+      TagUser.batch_set(user, :muted, [tag.name])
+
+      expect(TagUser.where(user: user, tag: tag)).to be_empty
+    end
+
     it "watches and unwatches tags correctly" do
       user = Fabricate(:user)
       tag = Fabricate(:tag)

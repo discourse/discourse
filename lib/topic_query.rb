@@ -496,15 +496,19 @@ class TopicQuery
       )
     SQL
 
-    sql << <<~SQL if SiteSetting.tagging_enabled
-        OR topics.id IN (
-          SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
-            SELECT tu.tag_id
-            FROM tag_users tu
-            WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
-          )
+    if SiteSetting.tagging_enabled
+      tracked_tag_ids_sql =
+        TagUser.visible_tag_ids_sql(
+          user_id,
+          NotificationLevels.all.values_at(:tracking, :watching, :watching_first_post),
         )
-      SQL
+
+      sql << <<~SQL
+          OR topics.id IN (
+            SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (#{tracked_tag_ids_sql})
+          )
+        SQL
+    end
 
     list.where(sql, user_id: user_id, tracking: NotificationLevels.all[:tracking])
   end
@@ -525,19 +529,16 @@ class TopicQuery
 
     return category_scope if !SiteSetting.tagging_enabled
 
+    watching_first_post_tag_ids_sql =
+      TagUser.visible_tag_ids_sql(user.id, [TagUser.notification_levels[:watching_first_post]])
+
     tag_scope =
       list.where(
         "topics.id IN (
           SELECT topic_id
           FROM topic_tags
-          WHERE tag_id IN (
-            SELECT tag_id
-            FROM tag_users
-            WHERE user_id = ? AND notification_level = ?
-          )
+          WHERE tag_id IN (#{watching_first_post_tag_ids_sql})
         )",
-        user.id,
-        TagUser.notification_levels[:watching_first_post],
       )
 
     category_scope.or(tag_scope)

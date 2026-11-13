@@ -292,6 +292,23 @@ RSpec.describe TopicQuery do
   end
 
   describe "tracked" do
+    it "does not treat topics with tags the user cannot see as tracked" do
+      SiteSetting.tagging_enabled = true
+
+      hidden_tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      hidden_topic = Fabricate(:topic, tags: [hidden_tag])
+
+      TagUser.create!(
+        tag_id: hidden_tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:watching],
+      )
+
+      expect(topic_query.list_latest.topics.map(&:id)).to include(hidden_topic.id)
+      expect(TopicQuery.new(user, filter: "tracked").list_latest.topics).to be_empty
+    end
+
     it "filters tracked topics correctly" do
       SiteSetting.tagging_enabled = true
 
@@ -837,6 +854,23 @@ RSpec.describe TopicQuery do
   end
 
   describe "muted tags" do
+    it "does not remove topics tagged with tags the user cannot see" do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.remove_muted_tags_from_latest = "always"
+
+      hidden_tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      hidden_topic = Fabricate(:topic, tags: [hidden_tag])
+
+      TagUser.create!(
+        user_id: user.id,
+        tag_id: hidden_tag.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+
+      expect(topic_query.list_latest.topics.map(&:id)).to include(hidden_topic.id)
+    end
+
     it "is removed from latest, new, top, and hot lists" do
       SiteSetting.tagging_enabled = true
       SiteSetting.remove_muted_tags_from_latest = "always"
@@ -2485,6 +2519,21 @@ RSpec.describe TopicQuery do
         expect(
           TopicQuery.new(nil, state: "watching_first_post").list_latest.topics.map(&:id),
         ).to eq([])
+      end
+
+      it "does not include topics tagged with tags the user cannot see" do
+        hidden_tag = Fabricate(:tag)
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+        hidden_topic = Fabricate(:topic, tags: [hidden_tag])
+        TagUser.create!(
+          user: test_user,
+          tag: hidden_tag,
+          notification_level: TagUser.notification_levels[:watching_first_post],
+        )
+
+        ids = TopicQuery.new(test_user, state: "watching_first_post").list_latest.topics.map(&:id)
+
+        expect(ids).not_to include(hidden_topic.id)
       end
 
       it "returns the union of watched-category and watched-tag topics" do
