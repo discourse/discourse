@@ -36,8 +36,6 @@ class TagUser < ActiveRecord::Base
     )
   end
 
-  # SQL subquery returning the ids of the tags the user has a notification level for, limited to
-  # tags the user is allowed to see.
   def self.visible_tag_ids_sql(user_id, levels)
     notification_level_visible(levels).where(user_id: user_id).reselect(:tag_id).to_sql
   end
@@ -65,8 +63,6 @@ class TagUser < ActiveRecord::Base
 
     tag_ids.uniq!
 
-    # Notification settings for tags the user is not allowed to see would leak which topics
-    # carry those tags, so they are dropped.
     tag_ids = DiscourseTagging.filter_visible(Tag.where(id: tag_ids), Guardian.new(user)).pluck(:id)
 
     if tag_ids.present? &&
