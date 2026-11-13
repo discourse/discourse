@@ -1756,6 +1756,7 @@ en:
       view_all: "view all"
       category: "Category"
       category_list: "Display category list"
+      page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
@@ -4365,6 +4366,7 @@ en:
 
     topics:
       new_messages_marker: "last visit"
+      list_options: "List options"
       bulk:
         select: "Bulk select"
         confirm: "Confirm"
@@ -6478,6 +6480,24 @@ en:
       forward: "Forward"
       share: "Share"
       dismiss: "Dismiss"
+
+    mobile_tab_bar:
+      label: "Site sections"
+      new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
+      menu: "Menu"
+      more: "More"
+      edit_topic: "Edit title, category and tags"
+      menu_with_reviewables:
+        one: "Menu, %{count} item to review"
+        other: "Menu, %{count} items to review"
+      back: "Back"
+      topics: "Topics"
+      drafts:
+        one: "Drafts (%{count})"
+        other: "Drafts (%{count})"
+      hub: "Hub"
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"

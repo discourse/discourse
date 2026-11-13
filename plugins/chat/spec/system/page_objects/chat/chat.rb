@@ -170,6 +170,20 @@ module PageObjects
         has_no_css?(public_channel_selector(channel))
       end
 
+      def has_channels_heading?
+        has_css?(
+          ".c-routes.--channels > .c-navbar-container .c-navbar__title",
+          text: I18n.t("js.chat.chat_channels"),
+        )
+      end
+
+      def open_channel_list_options
+        trigger =
+          find(".c-routes.--channels > .c-navbar-container .chat-channel-list-options-button")
+        trigger.click
+        PageObjects::Components::DMenu.new(trigger, "chat-channel-list-options-menu")
+      end
+
       def has_no_channel_list_options_button?
         has_no_css?(".chat-channel-list-options-button")
       end

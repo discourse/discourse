@@ -56,6 +56,18 @@ export default class Search extends Service {
     return this.searchContext?.type || null;
   }
 
+  /**
+   * @returns {string} The full-page search URL, scoped to what the user is
+   * looking at when there is a search context.
+   */
+  get fullPageSearchURL() {
+    const context = this.searchContext;
+
+    return context
+      ? `/search?context=${context.type}&context_id=${context.id}&skip_context=true`
+      : "/search";
+  }
+
   focusSearchInput() {
     document.getElementById(this.currentSearchInputId)?.focus();
   }

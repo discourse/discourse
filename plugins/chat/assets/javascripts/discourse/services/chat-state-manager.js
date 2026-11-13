@@ -35,6 +35,12 @@ export default class ChatStateManager extends Service {
   @tracked isDrawerActive = false;
   @tracked hasPreloadedChannels = false;
 
+  /**
+   * Where a chat page renders its navbar when the header stands in for it,
+   * as it does alongside the mobile tab bar.
+   */
+  @tracked headerNavbarSlot = null;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 

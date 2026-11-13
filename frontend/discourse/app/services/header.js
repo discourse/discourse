@@ -10,6 +10,7 @@ const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
+  @service mobileTabBar;
   @service scrollDirection;
   @service site;
 
@@ -61,6 +62,11 @@ export default class Header extends Service {
   get topicInfoVisible() {
     if (!this.topicInfo) {
       return false;
+    }
+
+    // With the tab bar, a titled page keeps its title in the header
+    if (this.mobileTabBar.isTitledPage) {
+      return true;
     }
 
     // The latch is only honored while actively scrolling down — this

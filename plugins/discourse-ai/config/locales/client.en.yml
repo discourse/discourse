@@ -1986,6 +1986,8 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
+          new_conversation: "New AI conversation"
           homepage_option: "AI bot conversations"
           preview:
             title: "Log in to ask a question"

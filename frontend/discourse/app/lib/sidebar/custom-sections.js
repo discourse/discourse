@@ -1,7 +1,11 @@
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar.js";
 import UserNavSidebarPanel from "./user-nav-sidebar.js";
@@ -25,6 +29,72 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
   get switchButtonDefaultUrl() {
     return this?.lastKnownURL || "/";
   }
+
+  get mobileTab() {
+    const owner = getOwnerWithFallback(this);
+    const currentUser = owner.lookup("service:current-user");
+    const composer = () => owner.lookup("service:composer");
+    const discovery = owner.lookup("service:discovery");
+    const router = owner.lookup("service:router");
+    const topicController = owner.lookup("controller:topic");
+    const topic = router.currentRouteName?.startsWith("topic.")
+      ? topicController.model
+      : null;
+
+    // A homepage another section registers, like chat's, leads straight back
+    // there from "/", so the forum's tab goes to a topic list instead
+    const listRoute = discoveryHomepageRoute();
+    const url =
+      listRoute === `discovery.${defaultHomepage()}`
+        ? "/"
+        : router.urlFor(listRoute);
+
+    return {
+      label: i18n("mobile_tab_bar.topics"),
+      icon: "layer-group",
+      url,
+      // The topic lists, by category or tag, and their topics; pages of their
+      // own, like search or profiles, belong to no section
+      ownsRoute: (routeInfo) =>
+        routeWithin(routeInfo, "discovery", "topic", "tag", "tags") &&
+        !routeWithin(routeInfo, "discovery.filter"),
+      isNestedRoute: (routeInfo) => routeWithin(routeInfo, "topic"),
+      createActions: [
+        // Runs the topic page's own reply, so drafts and quotes carry over
+        topic?.details?.can_create_post && {
+          label: topic.isPrivateMessage
+            ? i18n("composer.composer_actions.reply_to_message.label")
+            : i18n("composer.composer_actions.reply_to_topic.label"),
+          icon: "reply",
+          action: () => topicController.replyToPost(),
+        },
+        (discovery.topicCreator?.canCreate() ??
+          currentUser?.can_create_topic) && {
+          label: i18n("mobile_tab_bar.new_topic"),
+          icon: "far-pen-to-square",
+          action: () => {
+            if (discovery.topicCreator) {
+              discovery.topicCreator.create();
+              return;
+            }
+
+            // Elsewhere, a topic's category and tag seed the new topic
+            const attributes = router.currentRoute?.attributes;
+
+            composer().openNewTopic({
+              category: attributes?.category,
+              tags: attributes?.tag?.name,
+            });
+          },
+        },
+        currentUser?.can_send_private_messages && {
+          label: i18n("mobile_tab_bar.new_personal_message"),
+          icon: "envelope",
+          action: () => composer().openNewMessage({}),
+        },
+      ].filter(Boolean),
+    };
+  }
 }
 
 export let customPanels;
@@ -44,9 +114,31 @@ export function addSidebarSection(func, panelKey) {
       `Error adding section to ${panelKey} because panel doesn't exist. Check addSidebarPanel API.`
     );
   }
-  panel.sections.push(
-    func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink)
+  const section = func.call(
+    this,
+    BaseCustomSidebarSection,
+    BaseCustomSidebarSectionLink
   );
+
+  // Reassigned so pages showing the panel pick up sections added later; a
+  // panel that builds its own sections in a getter takes it in place
+  if (canAssign(panel, "sections")) {
+    panel.sections = [...panel.sections, section];
+  } else {
+    panel.sections.push(section);
+  }
+}
+
+function canAssign(object, key) {
+  for (let proto = object; proto; proto = Object.getPrototypeOf(proto)) {
+    const descriptor = Object.getOwnPropertyDescriptor(proto, key);
+
+    if (descriptor) {
+      return !!descriptor.set || !!descriptor.writable;
+    }
+  }
+
+  return true;
 }
 
 export function resetPanelSections(

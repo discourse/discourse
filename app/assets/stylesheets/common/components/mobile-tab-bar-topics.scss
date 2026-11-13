@@ -1,0 +1,187 @@
+html.mobile-tab-bar-visible {
+  .navigation-controls {
+    margin-left: auto;
+
+    &:not(:has(> :not(:empty))) {
+      display: none;
+    }
+
+    &:has(> #create-category) {
+      flex: 1 1 auto;
+      margin-left: 0;
+
+      #create-category {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  .navigation-container .category-breadcrumb {
+    flex: 1 1 auto;
+    gap: var(--nav-space) 0.5em;
+    min-width: 0;
+
+    > li {
+      flex: 1 1 0;
+      min-width: 0;
+      margin-right: 0;
+
+      > .select-kit {
+        width: 100%;
+        min-width: 0;
+      }
+
+      &:has(> .tag-drop, > .tags-intersection-chooser) {
+        flex: 0 1 auto;
+      }
+    }
+  }
+
+  .navigation-container:has(.category-breadcrumb.--has-subcategory) {
+    // The break below would double the row gap, so the categories space the
+    // rows instead
+    row-gap: 0;
+
+    .category-breadcrumb {
+      display: contents;
+
+      > li:has(> .category-drop) {
+        margin-bottom: var(--nav-space);
+      }
+
+      > li:has(> .tag-drop, > .tags-intersection-chooser) {
+        flex: 1 1 auto;
+        order: 2;
+      }
+    }
+
+    &::after {
+      content: "";
+      flex-basis: 100%;
+      order: 1;
+    }
+
+    .navigation-controls {
+      order: 2;
+    }
+  }
+}
+
+html.mobile-tab-bar-visible
+  .container.posts
+  .topic-navigation.with-topic-progress {
+  position: fixed;
+  right: 0;
+  left: 0;
+  justify-content: center;
+  margin: 0;
+  bottom: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom) +
+      var(--composer-height, 0px) + var(--mobile-tab-bar-views-gap)
+  );
+
+  #topic-progress-wrapper {
+    position: relative;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    overflow: visible;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      visibility 200ms;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @include mobile-tab-bar-floating;
+
+    &:not(:has(#topic-progress:not(.hidden))) {
+      display: none;
+    }
+
+    &.docked {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(100%);
+    }
+  }
+
+  .topic-admin-menu-trigger,
+  .topic-content-language-preferences {
+    width: var(--mobile-tab-bar-item-size);
+    height: var(--mobile-tab-bar-item-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+
+    .d-icon {
+      color: var(--header_primary-medium);
+    }
+  }
+
+  .topic-admin-menu-trigger {
+    border-inline-end: 1px solid var(--primary-low);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  // Outweighs the progress's own look, set by both ids
+  #topic-progress-wrapper #topic-progress {
+    min-width: 7rem;
+    height: var(--mobile-tab-bar-item-size);
+    padding: 0 var(--space-3);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: transparent;
+    color: var(--d-nav-color--active);
+
+    .nums {
+      font-size: var(--font-down-1);
+    }
+
+    .bg {
+      background: var(--d-selected);
+    }
+  }
+
+  // Apart after the bubble, and out of its flow, so the bubble neither moves
+  // nor resizes as it comes and goes
+  .progress-back-container {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: calc(100% + var(--space-2));
+    margin: 0;
+  }
+
+  // Just the arrow, shaped like the bubble beside it; outweighs its own look,
+  // set by id
+  #topic-progress-wrapper .btn.progress-back {
+    aspect-ratio: 1;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+
+    @include mobile-tab-bar-floating;
+
+    .d-icon {
+      margin: 0;
+      color: var(--d-nav-color--active);
+    }
+
+    .d-button-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: rect(0 0 0 0);
+    }
+  }
+}

@@ -44,6 +44,46 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
+   * @typedef {Object} MobileTab
+   * @property {string} label Translated tab label.
+   * @property {string} icon
+   * @property {string} url The section's top level.
+   * @property {boolean} [primary] Places the tab right after the forum's,
+   * ahead of the others, which keeps it on the bar rather than under More
+   * when the sections don't all fit.
+   * @property {Object} [badgeComponent] Renders over the icon, for unread
+   * counts and the like; it should render nothing when there is nothing new.
+   * @property {(routeInfo: Object) => boolean} [ownsRoute] Whether a route
+   * belongs to this tab's section, which highlights the tab. Other tabs are
+   * asked before the forum's, so a section can claim pages the forum would,
+   * like topics that are its own conversations; a route no tab owns leaves
+   * none highlighted. `routeWithin` and `findRoute` from
+   * `discourse/lib/mobile-tab-bar` help write it.
+   * @property {(routeInfo: Object) => boolean} [isNestedRoute] Whether a
+   * route sits below the section's top level. Tapping the active tab there
+   * returns to the list the page was opened from, as does the back button the
+   * header shows there.
+   * @property {(routeInfo: Object) => boolean} [showsTitleInHeader] Whether a
+   * nested route keeps its title in the header, beside the back button in
+   * place of the logo, so a topic's title stays there however the page
+   * scrolls. Defaults to true.
+   * @property {Array<{label: string, icon: string, action: Function}>}
+   * [createActions] Ways to start something new in the section, offered by
+   * the bar's create button; they lead its menu while the section is current.
+   */
+
+  /**
+   * Opts the panel into the mobile tab bar as a section of the site. Tapping
+   * the tab goes to the section, whose top-level page should hold its
+   * navigation: the bar's menu tab always opens the forum's menu.
+   *
+   * @returns {MobileTab|null} The tab, or null to stay out of the tab bar.
+   */
+  get mobileTab() {
+    return null;
+  }
+
+  /**
    * @returns {boolean} Controls whether the panel will display a header
    */
   get displayHeader() {

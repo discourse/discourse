@@ -30,6 +30,13 @@ export default class NavigationItem extends Component {
     );
   }
 
+  // Latest's count repeats New's, which sits beside it
+  get badgeCount() {
+    return this.args.content?.name === "latest"
+      ? 0
+      : this.args.content?.displayCount;
+  }
+
   get hrefLink() {
     const content = this.args.content;
 
@@ -94,7 +101,16 @@ export default class NavigationItem extends Component {
         {{#if this.hasIcon}}
           <span class={{@content.name}}></span>
         {{/if}}
-        {{@content.displayName}}
+        {{#if @countAsBadge}}
+          <span
+            data-label={{@content.displayNameWithoutCount}}
+          >{{@content.displayNameWithoutCount}}</span>
+          {{#if this.badgeCount}}
+            <span class="navigation-item__count">{{this.badgeCount}}</span>
+          {{/if}}
+        {{else}}
+          {{@content.displayName}}
+        {{/if}}
       </a>
     </li>
   </template>

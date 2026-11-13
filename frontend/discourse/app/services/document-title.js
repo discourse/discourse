@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -9,6 +10,14 @@ export default class DocumentElement extends Service {
   @service currentUser;
   @service session;
   @service siteSettings;
+
+  /**
+   * The current page's own name: the most specific part of the title, without
+   * the site's name. Null on pages that only carry the site's name.
+   *
+   * @type {string | null}
+   */
+  @tracked pageTitle = null;
 
   contextCount = 0;
   notificationCount = 0;

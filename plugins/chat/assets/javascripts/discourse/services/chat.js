@@ -121,7 +121,7 @@ export default class Chat extends Service {
     return this.userCanChat || this.anonymousUserCanViewPublicChat;
   }
 
-  @computed("currentUser.staff")
+  @computed("currentUser.staff", "currentUser.can_direct_message")
   get userCanDirectMessage() {
     if (!this.currentUser) {
       return false;
@@ -133,6 +133,16 @@ export default class Chat extends Service {
   @computed("chatChannelsManager.directMessageChannels")
   get userHasDirectMessages() {
     return this.chatChannelsManager.directMessageChannels?.length > 0;
+  }
+
+  get enabledViewCount() {
+    return [
+      this.currentUser && this.chatChannelsManager.hasStarredChannels,
+      this.siteSettings.chat_threads_enabled &&
+        this.chatChannelsManager.shouldShowMyThreads,
+      this.userCanAccessDirectMessages,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
   }
 
   get userCanAccessDirectMessages() {

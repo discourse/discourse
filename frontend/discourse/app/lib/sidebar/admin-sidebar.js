@@ -380,6 +380,24 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   expandActiveSection = true;
   scrollActiveLinkIntoView = true;
 
+  get mobileTab() {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+
+    if (!currentUser?.staff) {
+      return null;
+    }
+
+    return {
+      label: i18n("admin_title"),
+      icon: "wrench",
+      url: "/admin/menu",
+      ownsRoute: (routeInfo) => routeInfo.name.startsWith("admin"),
+      isNestedRoute: (routeInfo) => routeInfo.name !== "adminMenu",
+    };
+  }
+
   @cached
   get sections() {
     const currentUser = getOwnerWithFallback(this).lookup(

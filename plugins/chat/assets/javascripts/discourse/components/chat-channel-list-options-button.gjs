@@ -13,6 +13,7 @@ import ChatChannelListSidebarMenu from "./chat-channel-list-sidebar-menu.gjs";
  */
 export default class ChatChannelListOptionsButton extends Component {
   @service menu;
+  @service mobileTabBar;
 
   get section() {
     return this.args.section ?? "channels";
@@ -29,6 +30,8 @@ export default class ChatChannelListOptionsButton extends Component {
       data: {
         section: this.section,
         ...CHANNEL_LIST_SECTION_OPTIONS[this.section],
+        // The tab bar's create button already starts new chats
+        ...(this.mobileTabBar.enabled && { showNewMessage: false }),
       },
     });
   }

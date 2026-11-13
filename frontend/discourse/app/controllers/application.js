@@ -12,6 +12,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   @service footer;
+  @service mobileTabBar;
   @service router;
   @service scrollState;
   @service sidebarState;
@@ -107,8 +108,13 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
-  @computed
+  // The tab bar stands in for the footer nav: it has its own back button, and
+  // inside the app a tab back to the app's list of sites
   get showFooterNav() {
+    if (this.mobileTabBar.enabled) {
+      return false;
+    }
+
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   }
 

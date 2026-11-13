@@ -3,21 +3,66 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
+import HeaderDropdown from "discourse/components/header/dropdown";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
+import NavbarActions from "discourse/plugins/chat/discourse/components/chat/navbar/actions";
+import NavbarChannelTitle from "discourse/plugins/chat/discourse/components/chat/navbar/channel-title";
 import ChatSidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
 import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-chat";
+
+const ChannelActions = <template>
+  <NavbarActions as |a|>
+    {{#if @canSearchChat}}
+      {{#if @inSiteHeader}}
+        {{! The site header's own search icon, searching this channel }}
+        <ul class="icons d-header-icons c-header__search">
+          <HeaderDropdown
+            class="search-dropdown"
+            @active={{@isFiltering}}
+            @icon="magnifying-glass"
+            @onClick={{@onToggleFilter}}
+            @title="chat.search.channel_aria_label"
+          />
+        </ul>
+      {{else}}
+        <a.Filter
+          @channel={{@channel}}
+          @isFiltering={{@isFiltering}}
+          @onToggleFilter={{@onToggleFilter}}
+        />
+      {{/if}}
+    {{/if}}
+
+    <a.OpenDrawerButton />
+    <a.PinnedMessagesButton @channel={{@channel}} />
+    <a.ThreadsListButton @channel={{@channel}} />
+    <PluginOutlet
+      @name="chat-channel-navbar-actions"
+      @outletArgs={{lazyHash channel=@channel}}
+    />
+  </NavbarActions>
+</template>;
 
 export default class ChatRoutesChannel extends Component {
   @service site;
   @service siteSettings;
   @service chat;
   @service chatHistory;
+  @service chatStateManager;
   @service chatTrackingStateManager;
   @service currentUser;
+  @service mobileTabBar;
 
   @tracked isFiltering = false;
+
+  get headerNavbarSlot() {
+    return this.mobileTabBar.enabled
+      ? this.chatStateManager.headerNavbarSlot
+      : null;
+  }
 
   get canSearchChat() {
     return this.currentUser && this.siteSettings.chat_search_enabled;
@@ -68,36 +113,45 @@ export default class ChatRoutesChannel extends Component {
   }
 
   <template>
-    <div class="c-routes --channel">
-      <Navbar as |navbar|>
-        {{#if this.site.mobileView}}
-          <navbar.BackButton
-            @hasUnreadThreads={{this.otherChannelsHasUnreadThreads}}
-            @mentionCount={{this.otherChannelsMentionCount}}
-            @route={{this.getChannelsRoute}}
-            @unreadCount={{this.otherChannelsUnreadCount}}
-            @urgentCount={{this.otherChannelsUrgentCount}}
-          />
-        {{/if}}
-        <navbar.ChannelTitle @channel={{@channel}} />
-        <navbar.Actions as |a|>
-          {{#if this.canSearchChat}}
-            <a.Filter
+    <div
+      class={{dConcatClass
+        "c-routes --channel"
+        (if this.headerNavbarSlot "--navbar-in-header")
+      }}
+    >
+      {{#if this.headerNavbarSlot}}
+        {{#in-element this.headerNavbarSlot insertBefore=null}}
+          <nav class="c-navbar">
+            <NavbarChannelTitle @channel={{@channel}} />
+            <ChannelActions
+              @canSearchChat={{this.canSearchChat}}
               @channel={{@channel}}
+              @inSiteHeader={{true}}
               @isFiltering={{this.isFiltering}}
               @onToggleFilter={{this.toggleIsFiltering}}
             />
+          </nav>
+        {{/in-element}}
+      {{else}}
+        <Navbar as |navbar|>
+          {{#if this.site.mobileView}}
+            <navbar.BackButton
+              @hasUnreadThreads={{this.otherChannelsHasUnreadThreads}}
+              @mentionCount={{this.otherChannelsMentionCount}}
+              @route={{this.getChannelsRoute}}
+              @unreadCount={{this.otherChannelsUnreadCount}}
+              @urgentCount={{this.otherChannelsUrgentCount}}
+            />
           {{/if}}
-
-          <a.OpenDrawerButton />
-          <a.PinnedMessagesButton @channel={{@channel}} />
-          <a.ThreadsListButton @channel={{@channel}} />
-          <PluginOutlet
-            @name="chat-channel-navbar-actions"
-            @outletArgs={{lazyHash channel=@channel}}
+          <navbar.ChannelTitle @channel={{@channel}} />
+          <ChannelActions
+            @canSearchChat={{this.canSearchChat}}
+            @channel={{@channel}}
+            @isFiltering={{this.isFiltering}}
+            @onToggleFilter={{this.toggleIsFiltering}}
           />
-        </navbar.Actions>
-      </Navbar>
+        </Navbar>
+      {{/if}}
 
       <FullPageChat
         @channel={{@channel}}
