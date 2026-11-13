@@ -1356,6 +1356,76 @@ RSpec.describe CookedPostProcessor do
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
     end
 
+    describe "with media that only shows once the onebox resolves" do
+      let(:url) { "https://image.com/picture" }
+      let(:restricted_group) { Group::AUTO_GROUPS[:trust_level_4].to_s }
+
+      let(:onebox) { Onebox::Engine::ImageOnebox.new(url).to_html }
+
+      before { Oneboxer.stubs(:onebox).with(url, anything).returns(onebox) }
+
+      def oneboxed_images
+        post = Fabricate(:post, user: user_with_auto_groups, raw: url)
+        yield post if block_given?
+        cpp = CookedPostProcessor.new(post)
+        stub_image_size(width: 100, height: 200)
+        cpp.post_process_oneboxes
+        cpp.doc.css("img")
+      end
+
+      it "keeps the link for a user who can't embed media" do
+        SiteSetting.embedded_media_post_allowed_groups = restricted_group
+
+        expect(oneboxed_images).to be_empty
+      end
+
+      it "keeps the link for a user whose media needs review" do
+        SiteSetting.skip_review_media_groups = restricted_group
+
+        expect(oneboxed_images).to be_empty
+      end
+
+      it "keeps the link for a new user who reached the media limit" do
+        SiteSetting.newuser_max_embedded_media = 0
+        user_with_auto_groups.update!(trust_level: TrustLevel[0])
+
+        expect(oneboxed_images).to be_empty
+      end
+
+      it "keeps the link once the onebox is cached" do
+        SiteSetting.embedded_media_post_allowed_groups = restricted_group
+        images = oneboxed_images { Oneboxer.stubs(:cached_onebox).with(url).returns(onebox) }
+
+        expect(images).to be_empty
+      end
+
+      it "keeps the link after someone who can embed media edits the post" do
+        SiteSetting.embedded_media_post_allowed_groups = restricted_group
+        images = oneboxed_images { |post| post.revise(Discourse.system_user, raw: "#{url}\n\nhi") }
+
+        expect(images).to be_empty
+      end
+
+      it "keeps the link after someone who can't embed media edits the post" do
+        editor = Fabricate(:user, refresh_auto_groups: true)
+        edit = { raw: "#{url}\n\nhi" }
+        allowed_group = Fabricate(:group, users: [user_with_auto_groups])
+        SiteSetting.embedded_media_post_allowed_groups = allowed_group.id.to_s
+        expect(oneboxed_images).to be_present
+
+        expect(
+          oneboxed_images { |post| post.revise(editor, edit, skip_revision: true) },
+        ).to be_empty
+
+        images =
+          oneboxed_images do |post|
+            post.revise(editor, edit)
+            post.revise(Discourse.system_user, raw: "#{url}\n\nhello")
+          end
+        expect(images).to be_empty
+      end
+    end
+
     describe "replacing downloaded onebox image" do
       let(:url) { "https://image.com/my-avatar" }
       let(:image_url) { "https://image.com/avatar.png" }
