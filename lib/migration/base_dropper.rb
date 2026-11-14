@@ -4,10 +4,14 @@ module Migration
   class BaseDropper
     FUNCTION_SCHEMA_NAME = "discourse_functions"
 
+    def self.ensure_function_schema!
+      return if function_schema_exists?
+
+      DB.exec("CREATE SCHEMA #{FUNCTION_SCHEMA_NAME}")
+    end
+
     def self.create_readonly_function(table_name, column_name = nil)
-      DB.exec <<~SQL
-        CREATE SCHEMA IF NOT EXISTS #{FUNCTION_SCHEMA_NAME};
-      SQL
+      ensure_function_schema!
 
       message =
         (
