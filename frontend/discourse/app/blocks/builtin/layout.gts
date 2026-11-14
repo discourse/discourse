@@ -20,6 +20,15 @@ import alignCardRows from "../-internals/align-card-rows";
 const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
 const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
+// A row item's share of the row's width, gaps excluded.
+const ROW_WIDTH_FRACTIONS: Record<string, number> = {
+  "1/4": 1 / 4,
+  "1/3": 1 / 3,
+  "1/2": 1 / 2,
+  "2/3": 2 / 3,
+  "3/4": 3 / 4,
+};
+const VALID_ROW_WIDTHS = ["auto", ...Object.keys(ROW_WIDTH_FRACTIONS)];
 const VALID_JUSTIFY_CONTENT = [
   "start",
   "center",
@@ -417,6 +426,18 @@ interface LayoutSignature {
             },
           },
         },
+        width: {
+          type: "string",
+          default: "auto",
+          enum: VALID_ROW_WIDTHS,
+          ui: {
+            control: "segmented",
+            label: i18n("blocks.builtin.layout.placement.width"),
+            optionLabels: {
+              auto: i18n("blocks.builtin.layout.placement.automatic"),
+            },
+          },
+        },
         flexGrow: {
           type: "number",
           min: 0,
@@ -424,6 +445,8 @@ interface LayoutSignature {
             control: "stepper",
             label: i18n("blocks.builtin.layout.placement.flex_grow"),
             placeholder: i18n("blocks.builtin.layout.placement.automatic"),
+            // Items placed before widths existed have no `width` at all.
+            conditional: { arg: "width", oneOf: ["auto", undefined] },
           },
         },
       },
@@ -707,7 +730,18 @@ export default class Layout extends Component<LayoutSignature> {
     }
 
     const declarations: string[] = [];
-    if (
+    const fraction =
+      this.resolvedMode === "row" && "width" in placement
+        ? ROW_WIDTH_FRACTIONS[placement.width as string]
+        : undefined;
+    if (fraction) {
+      // The stylesheet turns this into the flex basis, so collapsing the row
+      // to one column can still override it.
+      declarations.push(
+        `--d-block-row-basis: calc((100% - var(--d-block-layout-gap, 1rem)) * ${fraction})`,
+        "flex-grow: 0"
+      );
+    } else if (
       "flexGrow" in placement &&
       typeof placement.flexGrow === "number" &&
       Number.isFinite(placement.flexGrow) &&

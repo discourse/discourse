@@ -5,7 +5,7 @@
  * and helpers for human-readable console output during block validation.
  */
 import { DEBUG } from "@glimmer/env";
-import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/block-metadata";
 import type { ValidationContext } from "discourse/lib/blocks/-internals/utils";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 

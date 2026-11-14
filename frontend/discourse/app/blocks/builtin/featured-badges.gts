@@ -1,14 +1,17 @@
 import Component from "@glimmer/component";
 import { block, defineBlockDataSource } from "discourse/blocks";
+import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   type BadgeGrant,
   fetchBadgeGrants,
 } from "discourse/lib/blocks/-internals/fetch-badge-grants";
+import { and } from "discourse/truth-helpers";
 import DBadgeButton from "discourse/ui-kit/d-badge-button";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const featuredBadgesDataSource = defineBlockDataSource({
@@ -25,6 +28,10 @@ interface FeaturedBadgesSignature {
     Named: {
       title?: string;
       badges?: string;
+      frameStyle?: string;
+      icon?: string;
+      linkLabel?: string;
+      linkHref?: string;
       maxDays?: number;
       count?: number;
       // Injected by the framework: the data-region boundary, already curried
@@ -85,6 +92,7 @@ interface FeaturedBadgesSignature {
         label: i18n("blocks.builtin.featured_badges.count"),
       },
     },
+    ...frameArgs({ defaultIcon: "certificate", withLink: true }),
   },
   data: {
     source: featuredBadgesDataSource,
@@ -102,38 +110,52 @@ interface FeaturedBadgesSignature {
 })
 export default class FeaturedBadges extends Component<FeaturedBadgesSignature> {
   <template>
-    <div class="d-block-featured-badges">
-      {{#if @title}}
-        <h3 class="d-block-featured-badges__title">{{@title}}</h3>
-      {{/if}}
+    <BlockFrame
+      @frameStyle={{@frameStyle}}
+      @icon={{@icon}}
+      @linkHref={{@linkHref}}
+      @linkLabel={{@linkLabel}}
+      @title={{@title}}
+      as |frame|
+    >
+      <div
+        class={{dConcatClass
+          "d-block-featured-badges"
+          (unless frame.isPlain "d-block-frame__content")
+        }}
+      >
+        {{#if (and frame.isPlain @title)}}
+          <h3 class="d-block-featured-badges__title">{{@title}}</h3>
+        {{/if}}
 
-      <@Data>
-        <:content as |grants|>
-          <ul class="d-block-featured-badges__list">
-            {{#each grants key="id" as |grant|}}
-              <li class="d-block-featured-badges__item">
-                <DUserAvatar @size="medium" @user={{grant.user}} />
-                <div class="d-block-featured-badges__details">
-                  <DUserLink
-                    @user={{grant.user}}
-                  >{{grant.user.username}}</DUserLink>
-                  <span class="d-block-featured-badges__badge">
-                    <DBadgeButton @badge={{grant.badge}} />
+        <@Data>
+          <:content as |grants|>
+            <ul class="d-block-featured-badges__list d-block-frame__rows">
+              {{#each grants key="id" as |grant|}}
+                <li class="d-block-featured-badges__item d-block-frame__row">
+                  <DUserAvatar @size="medium" @user={{grant.user}} />
+                  <div class="d-block-featured-badges__details">
+                    <DUserLink
+                      @user={{grant.user}}
+                    >{{grant.user.username}}</DUserLink>
+                    <span class="d-block-featured-badges__badge">
+                      <DBadgeButton @badge={{grant.badge}} />
+                    </span>
+                  </div>
+                  <span class="d-block-featured-badges__age">
+                    {{dAgeWithTooltip grant.grantedAt}}
                   </span>
-                </div>
-                <span class="d-block-featured-badges__age">
-                  {{dAgeWithTooltip grant.grantedAt}}
-                </span>
-              </li>
-            {{/each}}
-          </ul>
-        </:content>
-        <:empty>
-          <div class="d-block-featured-badges__empty">
-            {{i18n "blocks.builtin.featured_badges.empty"}}
-          </div>
-        </:empty>
-      </@Data>
-    </div>
+                </li>
+              {{/each}}
+            </ul>
+          </:content>
+          <:empty>
+            <div class="d-block-featured-badges__empty">
+              {{i18n "blocks.builtin.featured_badges.empty"}}
+            </div>
+          </:empty>
+        </@Data>
+      </div>
+    </BlockFrame>
   </template>
 }

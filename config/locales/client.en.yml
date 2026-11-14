@@ -36,6 +36,17 @@ en:
         denied: "Authorization denied"
         return_to_cli: "You can now return to your terminal or application."
     blocks:
+      frame:
+        group: "Style"
+        style: "Style"
+        styles:
+          plain: "Plain"
+          panel: "Panel"
+          heading: "Heading"
+        icon: "Icon"
+        link_label: "Link text"
+        link_href: "Link"
+        show_all: "Show all"
       categories:
         layout: "Layout"
         text: "Text"
@@ -173,6 +184,11 @@ en:
           solved: "Solved only"
           link_label: "Link label"
           link_href: "Link href"
+          columns: "Columns"
+          show_posters: "Users"
+          show_replies: "Replies"
+          show_views: "Views"
+          show_activity: "Activity"
         featured_topics:
           title: "Title"
           count: "Topics to show"
@@ -234,6 +250,7 @@ en:
             row_section: "Row item"
             align_self: "Align self"
             flex_grow: "Grow"
+            width: "Width"
             automatic: "Auto"
         section:
           name: "Section"
@@ -451,6 +468,22 @@ en:
           period: "Period"
           order: "Rank by"
           empty: "No contributors yet."
+          scores:
+            likes_received:
+              one: "%{count} like received"
+              other: "%{count} likes received"
+            likes_given:
+              one: "%{count} like given"
+              other: "%{count} likes given"
+            post_count:
+              one: "%{count} reply"
+              other: "%{count} replies"
+            topic_count:
+              one: "%{count} topic"
+              other: "%{count} topics"
+            days_visited:
+              one: "%{count} day visited"
+              other: "%{count} days visited"
     access_control:
       manage:
         access_permission_editor: "Editor"

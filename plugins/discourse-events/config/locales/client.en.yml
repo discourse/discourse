@@ -449,6 +449,8 @@ en:
         try_again: "Try again"
         view_all: "View all"
         block:
+          title: "Title"
+          title_help: "Leave blank to use the default title."
           count: "Events to show"
           upcoming_days: "Days ahead"
           upcoming_days_help: "How far into the future to look for events."

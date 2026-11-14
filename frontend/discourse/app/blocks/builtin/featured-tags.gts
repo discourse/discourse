@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { block, defineBlockDataSource } from "discourse/blocks";
+import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   fetchTags,
   VALID_TAG_SORTS,
 } from "discourse/lib/blocks/-internals/fetch-tags";
 import type Store from "discourse/services/store";
+import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 
@@ -32,6 +35,10 @@ interface FeaturedTagsSignature {
     title?: string;
     count?: number;
     sort?: string;
+    frameStyle?: string;
+    icon?: string;
+    linkLabel?: string;
+    linkHref?: string;
     /**
      * Injected by the framework: the data-region boundary, already curried
      * with this block's resolved tags.
@@ -77,6 +84,7 @@ interface FeaturedTagsSignature {
         label: i18n("blocks.builtin.featured_tags.sort"),
       },
     },
+    ...frameArgs({ defaultIcon: "tag", withLink: true }),
   },
   data: {
     source: featuredTagsDataSource,
@@ -93,25 +101,39 @@ interface FeaturedTagsSignature {
 })
 export default class FeaturedTags extends Component<FeaturedTagsSignature> {
   <template>
-    <div class="d-block-featured-tags">
-      {{#if @title}}
-        <h3 class="d-block-featured-tags__title">{{@title}}</h3>
-      {{/if}}
+    <BlockFrame
+      @frameStyle={{@frameStyle}}
+      @icon={{@icon}}
+      @linkHref={{@linkHref}}
+      @linkLabel={{@linkLabel}}
+      @title={{@title}}
+      as |frame|
+    >
+      <div
+        class={{dConcatClass
+          "d-block-featured-tags"
+          (unless frame.isPlain "d-block-frame__content")
+        }}
+      >
+        {{#if (and frame.isPlain @title)}}
+          <h3 class="d-block-featured-tags__title">{{@title}}</h3>
+        {{/if}}
 
-      <@Data>
-        <:content as |tags|>
-          <div class="d-block-featured-tags__list">
-            {{#each tags as |tag|}}
-              {{dDiscourseTag tag.name}}
-            {{/each}}
-          </div>
-        </:content>
-        <:empty>
-          <div class="d-block-featured-tags__empty">
-            {{i18n "blocks.builtin.featured_tags.empty"}}
-          </div>
-        </:empty>
-      </@Data>
-    </div>
+        <@Data>
+          <:content as |tags|>
+            <div class="d-block-featured-tags__list">
+              {{#each tags as |tag|}}
+                {{dDiscourseTag tag.name}}
+              {{/each}}
+            </div>
+          </:content>
+          <:empty>
+            <div class="d-block-featured-tags__empty">
+              {{i18n "blocks.builtin.featured_tags.empty"}}
+            </div>
+          </:empty>
+        </@Data>
+      </div>
+    </BlockFrame>
   </template>
 }

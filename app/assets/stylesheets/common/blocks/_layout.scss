@@ -44,8 +44,13 @@
   justify-content: var(--d-block-layout-justify-content, start);
 }
 
+/* An item given a share of the row's width carries `--d-block-row-basis`. */
+.d-block-layout--row > .d-block-layout__flex > * {
+  flex-basis: var(--d-block-row-basis, auto);
+}
+
 .d-block-layout--row > .d-block-layout__flex > [data-block-layout-item="card"] {
-  flex-basis: var(--card-row-basis, 16rem);
+  flex-basis: var(--d-block-row-basis, var(--card-row-basis, 16rem));
   flex-grow: 1;
   min-inline-size: 0;
   max-inline-size: 100%;

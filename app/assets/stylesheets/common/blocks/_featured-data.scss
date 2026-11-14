@@ -20,6 +20,23 @@
   align-items: center;
 }
 
+.d-block-featured-users__username {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.d-block-featured-users__score {
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  font-variant-numeric: tabular-nums;
+}
+
 .d-block-tag-banner {
   padding: 1rem;
 }
