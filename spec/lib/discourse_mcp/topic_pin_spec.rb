@@ -1,0 +1,54 @@
+# frozen_string_literal: true
+
+describe DiscourseMcp::Tools::SetTopicPin do
+  fab!(:admin)
+  fab!(:user)
+  fab!(:topic)
+
+  def invoke(mode, actor: admin, target: topic)
+    described_class.call(
+      arguments: {
+        "topic_id" => target.id,
+        "mode" => mode,
+      },
+      request_context:
+        instance_double(DiscourseMcp::RequestContext, user: actor, guardian: actor.guardian),
+    )
+  end
+
+  describe ".call" do
+    it "pins within a category, switches to global and unpins with persisted receipts" do
+      expect(invoke("category")[:structuredContent]).to include(
+        pinned: true,
+        pinned_globally: false,
+      )
+      expect(topic.reload.pinned_at).to be_present
+      expect(invoke("global")[:structuredContent]).to include(pinned: true, pinned_globally: true)
+      expect(topic.reload.pinned_globally).to eq(true)
+      expect(invoke("unpin")[:structuredContent]).to include(
+        pinned: false,
+        pinned_globally: false,
+        pinned_until: nil,
+      )
+      expect(topic.reload.pinned_at).to be_nil
+    end
+
+    it "denies users without pin permissions" do
+      expect { invoke("category", actor: user) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload.pinned_at).to be_nil
+    end
+
+    it "rejects invalid modes without mutating the topic" do
+      expect { invoke("bogus") }.to raise_error(Discourse::InvalidParameters)
+      expect(topic.reload.pinned_at).to be_nil
+    end
+
+    it "hides inaccessible topics" do
+      private_topic = Fabricate(:private_message_topic)
+      expect { invoke("category", actor: user, target: private_topic) }.to raise_error(
+        DiscourseMcp::ToolError,
+      )
+      expect(private_topic.reload.pinned_at).to be_nil
+    end
+  end
+end

@@ -2,6 +2,42 @@
 
 module DiscourseMcp
   module Tools
+    class SetTopicPin
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          topic_id: OutputSchema::INTEGER,
+          pinned: OutputSchema::BOOLEAN,
+          pinned_globally: OutputSchema::BOOLEAN,
+          pinned_until: OutputSchema::STRING_OR_NULL,
+        )
+
+      def self.call(arguments:, request_context:)
+        topic = Topic.find_by(id: arguments.fetch("topic_id"))
+        guardian = request_context.guardian
+        unless topic && guardian.can_see?(topic)
+          raise ToolError, I18n.t("mcp.errors.topic_not_found")
+        end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        guardian.ensure_can_pin_unpin_topic!(topic)
+        mode = arguments.fetch("mode")
+        raise Discourse::InvalidParameters.new(:mode) if %w[category global unpin].exclude?(mode)
+
+        topic.update_status(
+          mode == "global" ? "pinned_globally" : "pinned",
+          mode != "unpin",
+          request_context.user,
+        )
+        topic.reload
+        ToolHelpers.text_and_structured(
+          topic_id: topic.id,
+          pinned: topic.pinned_at.present?,
+          pinned_globally: topic.pinned_globally,
+          pinned_until: topic.pinned_until&.iso8601,
+        )
+      end
+    end
+
     class CreateTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
