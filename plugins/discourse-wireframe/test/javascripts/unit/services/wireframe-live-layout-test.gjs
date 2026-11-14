@@ -104,38 +104,22 @@ module(
       assert.verifySteps(["posted"]);
     });
 
-    test("publish targets each outlet's resolved owner, not the fallback", async function (assert) {
+    test("publish targets the design, not the theme that currently owns the outlet", async function (assert) {
       await enterEdited(this);
       stubDraftsDelete();
-      // The outlet resolves to theme 7 as its owner; the fallback (5) must not win.
-      this.theme.outletOwner = () => ({ themeId: 7, isGit: false });
+      // The outlet currently resolves to theme 7 (e.g. the theme in use); the
+      // design passed as the target (5) must receive the write.
+      this.theme.outletOwner = () => ({ themeId: 7, isGit: true });
 
       pretender.post("/admin/customize/block-layouts.json", (request) => {
-        assert.strictEqual(parsePostData(request.requestBody).theme_id, "7");
-        assert.step("posted-7");
-        return response({ success: true, theme_id: 7, version_token: "v1" });
+        assert.strictEqual(parsePostData(request.requestBody).theme_id, "5");
+        assert.step("posted-5");
+        return response({ success: true, theme_id: 5, version_token: "v1" });
       });
 
       const result = await this.persistence.publish(5);
-      assert.strictEqual(result.saved[0].themeId, 7);
-      assert.verifySteps(["posted-7"]);
-    });
-
-    test("publish skips a Git-owned outlet and preserves its edit", async function (assert) {
-      await enterEdited(this);
-      this.theme.outletOwner = () => ({ themeId: 9, isGit: true });
-
-      pretender.post("/admin/customize/block-layouts.json", () => {
-        assert.step("posted");
-        return response({ success: true, theme_id: 9, version_token: "v1" });
-      });
-
-      const result = await this.persistence.publish(5);
-      assert.strictEqual(result.saved.length, 0);
-      assert.strictEqual(result.skipped.length, 1);
-      assert.strictEqual(result.skipped[0].reason, "git");
-      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
-      assert.verifySteps([]);
+      assert.strictEqual(result.saved[0].themeId, 5);
+      assert.verifySteps(["posted-5"]);
     });
 
     test("publish collapses the draft into the theme layer keyed by the requested theme and clears the edited-outlets bookkeeping", async function (assert) {
@@ -205,7 +189,6 @@ module(
       const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 0);
-      assert.strictEqual(result.skipped.length, 0);
     });
 
     test("publish refuses to POST and keeps the draft when the resolved read fails", async function (assert) {
@@ -274,65 +257,7 @@ module(
       assert.true(themeLayerCleared, "the theme layer is cleared locally");
     });
 
-    test("exportOutlet posts the draft and downloads the server content verbatim", async function (assert) {
-      await enterEdited(this);
-      let downloaded;
-      this.persistence._triggerDownload = (filename, content) => {
-        downloaded = { filename, content };
-      };
-
-      pretender.post(
-        "/admin/customize/block-layouts/export.json",
-        (request) => {
-          const body = parsePostData(request.requestBody);
-          assert.strictEqual(body.outlet_name, "homepage-blocks");
-          // useDraft sends the serialized current layout.
-          assert.strictEqual(
-            JSON.parse(body.layout_json).layout[0].args.title,
-            "Edited"
-          );
-          assert.step("exported");
-          return response({
-            filename: "block_layouts/homepage-blocks.json",
-            content: '{\n  "pretty": true\n}',
-          });
-        }
-      );
-
-      await this.persistence.exportOutlet(5, "homepage-blocks", {
-        useDraft: true,
-      });
-      assert.verifySteps(["exported"]);
-      assert.strictEqual(
-        downloaded.filename,
-        "block_layouts/homepage-blocks.json"
-      );
-      // Content is passed through untouched — not re-stringified.
-      assert.strictEqual(downloaded.content, '{\n  "pretty": true\n}');
-    });
-
-    test("duplicateTheme posts every edited outlet's draft and returns the new theme id", async function (assert) {
-      await enterEdited(this);
-
-      pretender.post(
-        "/admin/customize/block-layouts/duplicate.json",
-        (request) => {
-          const body = parsePostData(request.requestBody);
-          assert.strictEqual(body.theme_id, "5");
-          // The edited outlet's draft rides along (the server-side round-trip is
-          // covered by the request spec; here just confirm it's in the payload).
-          assert.true(request.requestBody.includes("homepage-blocks"));
-          assert.step("duplicated");
-          return response({ theme_id: 42 });
-        }
-      );
-
-      const result = await this.persistence.duplicateTheme(5);
-      assert.strictEqual(result.theme_id, 42);
-      assert.verifySteps(["duplicated"]);
-    });
-
-    test("createCustomizationComponent posts the drafts and returns the component id", async function (assert) {
+    test("createDesign posts the name, and the edited drafts when asked", async function (assert) {
       await enterEdited(this);
 
       pretender.post(
@@ -340,15 +265,45 @@ module(
         (request) => {
           const body = parsePostData(request.requestBody);
           assert.strictEqual(body.theme_id, "5");
+          assert.strictEqual(body.name, "Spring launch");
           assert.true(request.requestBody.includes("homepage-blocks"));
-          assert.step("componentized");
+          assert.step("created");
           return response({ theme_id: 99 });
         }
       );
 
-      const result = await this.persistence.createCustomizationComponent(5);
+      const result = await this.persistence.createDesign(5, "Spring launch", {
+        withEdits: true,
+      });
       assert.strictEqual(result.theme_id, 99);
-      assert.verifySteps(["componentized"]);
+      assert.verifySteps(["created"]);
+    });
+
+    test("createDesign sends no drafts by default", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post(
+        "/admin/plugins/wireframe/customization-component.json",
+        (request) => {
+          assert.false(request.requestBody.includes("homepage-blocks"));
+          return response({ theme_id: 99 });
+        }
+      );
+
+      await this.persistence.createDesign(5, "Spring launch");
+    });
+
+    test("installDesign puts the chosen design on the theme", async function (assert) {
+      pretender.put("/admin/plugins/wireframe/companion.json", (request) => {
+        const body = parsePostData(request.requestBody);
+        assert.strictEqual(body.theme_id, "5");
+        assert.strictEqual(body.design_id, "99");
+        assert.step("installed");
+        return response({ success: "OK" });
+      });
+
+      await this.persistence.installDesign(5, 99);
+      assert.verifySteps(["installed"]);
     });
   }
 );

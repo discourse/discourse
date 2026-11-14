@@ -5,7 +5,7 @@ const THUMBNAIL_SELECTOR =
  * Builds the image the browser carries while a palette block is dragged: a
  * tile-shaped card with the block's sketch and its name, whichever shape the
  * source has. A row's description and a tile's screen-reader text are left
- * out, so rows and Recent tiles drag the same thing and the ghost never
+ * out, so rows and tiles drag the same thing and the ghost never
  * stretches to a row's width.
  *
  * @param source - The row or tile being dragged.

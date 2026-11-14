@@ -119,7 +119,7 @@ module PageObjects
       end
 
       def has_inspector_translation?(text)
-        has_css?(".wireframe-inspector__tab", text: text)
+        has_css?(".wireframe-panel.--right .wireframe-image-composition", text: text)
       end
 
       def choose_top_left_position
@@ -351,8 +351,16 @@ module PageObjects
         has_no_css?(".d-block-image-frame:has(img[alt='Grid image']) source", visible: false)
       end
 
+      # Clicks the canvas gutter just outside the outlet root: the homepage has
+      # no non-block content of its own to aim at.
       def click_outside_blocks
-        find(".welcome-banner__title").click
+        box =
+          find(".wireframe-block-chrome.--outlet-root").evaluate_script(
+            "this.getBoundingClientRect().toJSON()",
+          )
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.mouse.click(box["x"] - 8, box["y"] + box["height"] / 2)
+        end
       end
 
       def has_no_selected_block?
@@ -368,9 +376,8 @@ module PageObjects
       end
 
       def open_image_menu
-        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar").click_button(
-          "Edit image",
-        )
+        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar__more").click
+        find(".wireframe-toolbar-more-content").click_button("Edit image")
       end
 
       def has_no_image_menu?
@@ -504,7 +511,7 @@ module PageObjects
       def has_toolbar_anchored_menu?
         has_css?(".wireframe-image-editor-menu") { |menu| menu.evaluate_script(<<~JS) }
             (() => {
-              const trigger = document.querySelector('.wireframe-block-chrome.--selected button[title="Edit image"]').getBoundingClientRect();
+              const trigger = document.querySelector('.wireframe-block-chrome.--selected .wireframe-block-toolbar__actions').getBoundingClientRect();
               const menu = this.getBoundingClientRect();
               return Math.abs(menu.top - trigger.bottom) < trigger.height && menu.left <= trigger.right && menu.right >= trigger.left;
             })()
@@ -546,7 +553,6 @@ module PageObjects
       end
 
       def hide_image_settings
-        within(".wireframe-panel.--right") { click_button("JSON") }
         find(".wireframe-panel.--right").click_button("Collapse panel")
       end
 
@@ -719,25 +725,13 @@ module PageObjects
       def has_contained_inspector_actions?
         has_css?(".wireframe-panel.--right") { |panel| panel.evaluate_script(<<~JS) }
             (() => {
-              const tabs = this.querySelector('.wireframe-inspector__sections .d-tabs__tablist');
               const composition = this.querySelector('.wireframe-image-composition');
-              const contained = (parent, children) => {
-                const bounds = parent.getBoundingClientRect();
-                return [...children].every(child => {
-                  const rect = child.getBoundingClientRect();
-                  return rect.left >= bounds.left && rect.right <= bounds.right &&
-                    child.scrollWidth <= child.clientWidth;
-                });
-              };
-              const firstTab = tabs.firstElementChild.getBoundingClientRect();
-              const inspectorFontSize = parseFloat(getComputedStyle(this.querySelector('.wireframe-inspector-form')).fontSize);
-              return [...tabs.children].every(tab =>
-                Math.abs(tab.getBoundingClientRect().top - firstTab.top) < 1 &&
-                parseFloat(getComputedStyle(tab).fontSize) >= inspectorFontSize &&
-                parseFloat(getComputedStyle(tab).paddingInlineStart) >= 4 &&
-                parseFloat(getComputedStyle(tab).paddingInlineEnd) >= 4
-              ) && contained(tabs, tabs.children) &&
-                contained(composition, composition.querySelectorAll('.wireframe-image-composition__actions button'));
+              const bounds = composition.getBoundingClientRect();
+              return [...composition.querySelectorAll('.wireframe-image-composition__actions button')].every(child => {
+                const rect = child.getBoundingClientRect();
+                return rect.left >= bounds.left && rect.right <= bounds.right &&
+                  child.scrollWidth <= child.clientWidth;
+              });
             })()
           JS
       end

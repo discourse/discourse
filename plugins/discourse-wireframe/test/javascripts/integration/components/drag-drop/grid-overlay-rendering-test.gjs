@@ -28,7 +28,7 @@ import { queryOf } from "../../../helpers/wireframe-peers";
 // test failing. This suite mounts the overlay so that class of regression fails
 // here instead of shipping.
 
-const OUTLET = "main-outlet-blocks";
+const OUTLET = "homepage-blocks";
 
 module(
   "Integration | discourse-wireframe | Card layout editing",

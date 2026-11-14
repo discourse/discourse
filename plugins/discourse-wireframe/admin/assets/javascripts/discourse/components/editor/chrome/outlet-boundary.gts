@@ -1,4 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import { isEditorOutlet } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-outlets";
 
 interface OutletBoundarySignature {
   /** Outlet identity supplied by the debug wrapper. */
@@ -32,12 +33,19 @@ interface OutletBoundarySignature {
  * outlet's badge + outline and handles selection / drops / the empty state.
  * Keeping the visual on the chrome avoids drawing a second frame and badge
  * around it, and leaves one rendering + selection path.
+ *
+ * An outlet the editor doesn't expose (see `EDITOR_OUTLETS`) gets no marker at
+ * all, so the dim-non-editable treatment covers it like the rest of the page.
  */
 const OutletBoundary: TemplateOnlyComponent<OutletBoundarySignature> =
   <template>
-    <div class="wireframe-outlet-boundary" data-outlet-name={{@outletName}}>
+    {{#if (isEditorOutlet @outletName)}}
+      <div class="wireframe-outlet-boundary" data-outlet-name={{@outletName}}>
+        {{yield}}
+      </div>
+    {{else}}
       {{yield}}
-    </div>
+    {{/if}}
   </template>;
 
 export default OutletBoundary;

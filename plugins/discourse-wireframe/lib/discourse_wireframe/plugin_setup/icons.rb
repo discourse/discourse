@@ -46,6 +46,7 @@ module DiscourseWireframe
         mobile-screen-button
         object-group
         paragraph
+        pen-to-square
         photo-film
         shield-halved
         table-cells-large

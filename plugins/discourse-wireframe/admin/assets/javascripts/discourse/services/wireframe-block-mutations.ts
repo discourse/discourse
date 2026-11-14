@@ -26,7 +26,6 @@ import type WireframeBlockRevealService from "./wireframe-block-reveal";
 import type WireframeDropAuthorityService from "./wireframe-drop-authority";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
-import type WireframeRecentBlocksService from "./wireframe-recent-blocks";
 import type WireframeSelectionService from "./wireframe-selection";
 
 /** The relative position of an enter-style drop against its target. */
@@ -66,8 +65,6 @@ export type InsertBlockArgs = {
   blockName: string;
   /** Initial arguments copied into the new entry. */
   defaultArgs?: Record<string, unknown>;
-  /** Stable palette choice to remember after insertion. */
-  paletteId?: string;
   /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
   /** Position relative to the destination entry. */
@@ -118,9 +115,6 @@ export default class WireframeBlockMutationsService extends Service {
 
   /** Records, publishes, and reverses structural mutations. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
-
-  /** Remembers what was inserted, for the palette's Recent group. */
-  @service declare wireframeRecentBlocks: WireframeRecentBlocksService;
 
   /** Resolves live entries, layouts, and parent relationships. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -429,7 +423,6 @@ export default class WireframeBlockMutationsService extends Service {
   insertBlock({
     blockName,
     defaultArgs = {},
-    paletteId,
     targetKey,
     position,
     targetOutletName,
@@ -502,9 +495,6 @@ export default class WireframeBlockMutationsService extends Service {
         return true;
       }
     );
-    if (inserted) {
-      this.wireframeRecentBlocks.record(paletteId ?? blockName);
-    }
     return inserted;
   }
 

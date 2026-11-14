@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import { VALID_TOPIC_LIST_FILTERS } from "discourse/lib/blocks/-internals/fetch-topic-list";
 import { topicListDataSource } from "discourse/lib/blocks/-internals/sources/topic-list";
+import { and } from "discourse/truth-helpers";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -29,6 +32,8 @@ interface FeaturedTopicsSignature {
     tag?: string;
     linkLabel?: string;
     linkHref?: string;
+    frameStyle?: string;
+    icon?: string;
     /**
      * Injected by the framework: the data-region boundary, already curried
      * with this block's resolved topic list.
@@ -107,6 +112,7 @@ interface FeaturedTopicsSignature {
         label: i18n("blocks.builtin.featured_topics.link_href"),
       },
     },
+    ...frameArgs({ defaultIcon: "fire" }),
   },
   constraints: {
     allOrNone: ["linkLabel", "linkHref"],
@@ -133,48 +139,62 @@ interface FeaturedTopicsSignature {
 })
 export default class FeaturedTopics extends Component<FeaturedTopicsSignature> {
   <template>
-    <div class="d-block-featured-topics">
-      {{! Chrome: the title renders from args, so it stays visible while the
-          list loads. Only the data region below is wrapped in the boundary. }}
-      {{#if @title}}
-        <h3 class="d-block-featured-topics__title">{{@title}}</h3>
-      {{/if}}
+    <BlockFrame
+      @frameStyle={{@frameStyle}}
+      @icon={{@icon}}
+      @linkHref={{@linkHref}}
+      @linkLabel={{@linkLabel}}
+      @title={{@title}}
+      as |frame|
+    >
+      <div
+        class={{dConcatClass
+          "d-block-featured-topics"
+          (unless frame.isPlain "d-block-frame__content")
+        }}
+      >
+        {{! Chrome: the title renders from args, so it stays visible while the
+            list loads. Only the data region below is wrapped in the boundary. }}
+        {{#if (and frame.isPlain @title)}}
+          <h3 class="d-block-featured-topics__title">{{@title}}</h3>
+        {{/if}}
 
-      <@Data>
-        <:content as |topics|>
-          <ul class="d-block-featured-topics__list">
-            {{#each topics as |topic|}}
-              <li class="d-block-featured-topics__item">
-                <a
-                  class="d-block-featured-topics__topic-link"
-                  href={{topic.lastUnreadUrl}}
-                >{{trustHTML topic.fancyTitle}}</a>
-                <div class="d-block-featured-topics__meta">
-                  {{#if topic.category}}
-                    {{dCategoryLink topic.category}}
-                  {{/if}}
-                  <span class="d-block-featured-topics__age">{{dAgeWithTooltip
-                      topic.bumpedAt
-                    }}</span>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
+        <@Data>
+          <:content as |topics|>
+            <ul class="d-block-featured-topics__list d-block-frame__rows">
+              {{#each topics as |topic|}}
+                <li class="d-block-featured-topics__item d-block-frame__row">
+                  <a
+                    class="d-block-featured-topics__topic-link"
+                    href={{topic.lastUnreadUrl}}
+                  >{{trustHTML topic.fancyTitle}}</a>
+                  <div class="d-block-featured-topics__meta">
+                    {{#if topic.category}}
+                      {{dCategoryLink topic.category}}
+                    {{/if}}
+                    <span class="d-block-featured-topics__age">{{dAgeWithTooltip
+                        topic.bumpedAt
+                      }}</span>
+                  </div>
+                </li>
+              {{/each}}
+            </ul>
 
-          {{#if @linkHref}}
-            <div class="d-block-featured-topics__footer">
-              <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
-                {{@linkLabel}}
-              </a>
+            {{#if (and frame.isPlain @linkHref)}}
+              <div class="d-block-featured-topics__footer">
+                <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
+                  {{@linkLabel}}
+                </a>
+              </div>
+            {{/if}}
+          </:content>
+          <:empty>
+            <div class="d-block-featured-topics__empty">
+              {{i18n "topics.none.latest"}}
             </div>
-          {{/if}}
-        </:content>
-        <:empty>
-          <div class="d-block-featured-topics__empty">
-            {{i18n "topics.none.latest"}}
-          </div>
-        </:empty>
-      </@Data>
-    </div>
+          </:empty>
+        </@Data>
+      </div>
+    </BlockFrame>
   </template>
 }

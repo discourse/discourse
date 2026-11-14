@@ -36,6 +36,17 @@ en:
         denied: "Authorization denied"
         return_to_cli: "You can now return to your terminal or application."
     blocks:
+      frame:
+        group: "Style"
+        style: "Style"
+        styles:
+          plain: "Plain"
+          panel: "Panel"
+          heading: "Heading"
+        icon: "Icon"
+        link_label: "Link text"
+        link_href: "Link"
+        show_all: "Show all"
       categories:
         layout: "Layout"
         text: "Text"
@@ -127,6 +138,38 @@ en:
           cookie_key: "Dismiss key"
           cookie_key_help: "Identifier for this banner's dismiss cookie. Required so each dismissable banner has independent dismissal state."
           cookie_key_required: "Set a dismiss key when 'Allow dismiss' is on, so this banner's dismissal state stays independent from other banners."
+        welcome_banner:
+          name: "Welcome banner"
+          description: "A greeting with an optional search input and background image. Replaces the site's welcome banner."
+          show_search: "Show search"
+          alignment: "Alignment"
+          text_color: "Text color"
+          heading_size: "Header size"
+          subheading_size: "Subheader size"
+          sizes:
+            default: "Theme default"
+            small: "Small"
+            medium: "Medium"
+            large: "Large"
+            x_large: "Extra large"
+          alignments:
+            left: "Left"
+            center: "Center"
+            right: "Right"
+          background_image: "Background image"
+          groups:
+            text: "Text"
+          variables: "Available variables: %{variables}"
+          variable: "Available variable: %{variable}"
+          header_new_members: "Header for new members"
+          header_logged_in_members: "Header for logged-in members"
+          header_anonymous_members: "Header for anonymous visitors"
+          subheader_logged_in_members: "Subheader for logged-in members"
+          subheader_logged_in_members_help: "Secondary text shown below the header for logged-in users."
+          subheader_anonymous_members: "Subheader for anonymous visitors"
+          subheader_anonymous_members_help: "Secondary text shown below the header for anonymous visitors."
+          search_placeholder: "Search placeholder"
+          search_placeholder_help: "Placeholder text for the search box in the welcome banner."
         featured_categories:
           categories: "Categories"
           categories_help: "Category IDs separated by `|` (e.g. `1|3|7`)."
@@ -155,6 +198,11 @@ en:
           solved: "Solved only"
           link_label: "Link label"
           link_href: "Link href"
+          columns: "Columns"
+          show_posters: "Users"
+          show_replies: "Replies"
+          show_views: "Views"
+          show_activity: "Activity"
         featured_topics:
           title: "Title"
           count: "Topics to show"
@@ -216,20 +264,23 @@ en:
             row_section: "Row item"
             align_self: "Align self"
             flex_grow: "Grow"
+            width: "Width"
             automatic: "Auto"
         section:
           name: "Section"
           description: "A semantic page region with its own surface, spacing, and content boundary."
           groups:
-            appearance: "Appearance"
             background: "Background"
             layout: "Layout"
             accessibility: "Accessibility"
-          surface: "Surface"
+          surface: "Background color"
+          background_color: "Custom color"
           background_image: "Background image"
           background_position: "Image position"
           scrim: "Image scrim"
           padding: "Padding"
+          gap: "Gap"
+          gap_help: "Space between the blocks inside the section."
           content_width: "Content width"
           min_height: "Minimum height"
           vertical_align: "Vertical alignment"
@@ -240,6 +291,7 @@ en:
             default: "Default"
             subtle: "Subtle"
             accent: "Accent"
+            custom: "Custom"
             none: "None"
             medium: "Medium"
             strong: "Strong"
@@ -430,6 +482,22 @@ en:
           period: "Period"
           order: "Rank by"
           empty: "No contributors yet."
+          scores:
+            likes_received:
+              one: "%{count} like received"
+              other: "%{count} likes received"
+            likes_given:
+              one: "%{count} like given"
+              other: "%{count} likes given"
+            post_count:
+              one: "%{count} reply"
+              other: "%{count} replies"
+            topic_count:
+              one: "%{count} topic"
+              other: "%{count} topics"
+            days_visited:
+              one: "%{count} day visited"
+              other: "%{count} days visited"
     access_control:
       manage:
         access_permission_editor: "Editor"
@@ -6379,9 +6447,6 @@ en:
         this_week: "Week"
         today: "Today"
         custom: "Custom"
-
-    custom_homepage:
-      admin_message: "This site's homepage is set to display custom content, but nothing is configured to render here yet. (This message is only shown to site administrators.)"
 
     browser_update: 'Unfortunately, <a href="https://discourse.org/about#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 

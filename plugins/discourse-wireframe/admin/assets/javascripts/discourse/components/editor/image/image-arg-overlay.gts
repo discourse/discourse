@@ -521,6 +521,21 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
       width: targetRect.width / scaleX,
       height: targetRect.height / scaleY,
     };
+    // A block-filling overlay starts below the header strip, which sits in
+    // flow at the top of the chrome and has to stay clickable.
+    if (fillsBlock) {
+      const strip = chrome.querySelector<HTMLElement>(
+        ":scope > .wireframe-block-toolbar"
+      );
+      if (strip) {
+        const stripBottom =
+          (strip.getBoundingClientRect().bottom - chromeRect.top) / scaleY -
+          chrome.clientTop;
+        const delta = Math.max(0, stripBottom - next.top);
+        next.top += delta;
+        next.height = Math.max(0, next.height - delta);
+      }
+    }
     const prev = this.markerRect;
     if (
       prev &&

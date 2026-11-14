@@ -1,23 +1,19 @@
 import Component from "@glimmer/component";
 import { registerDestructor } from "@ember/destroyable";
-import { next, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
-import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SearchMenu from "discourse/components/search-menu";
+import WelcomeBannerSearch from "discourse/components/welcome-banner-search";
 import bodyClass from "discourse/helpers/body-class";
-import getURL from "discourse/lib/get-url";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import { prioritizeNameFallback } from "discourse/lib/settings";
-import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { not } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
+import {
+  welcomeBannerHeader,
+  welcomeBannerSubheader,
+} from "discourse/lib/welcome-banner-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import I18n, { i18n } from "discourse-i18n";
 
 const claimedLocations = new Map();
 const reportedLocations = new Set();
@@ -34,105 +30,15 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
   "signup",
 ];
 
+/** Name of the block that replaces this banner when a layout places it. */
+export const WELCOME_BANNER_BLOCK = "welcome-banner";
+
 export default class WelcomeBanner extends Component {
+  @service blocks;
   @service router;
   @service site;
   @service siteSettings;
   @service currentUser;
-  @service appEvents;
-  @service search;
-
-  checkViewport = modifier((element) => {
-    if (!this.site.can_search) {
-      this.search.welcomeBannerSearchInViewport = false;
-      return;
-    }
-
-    const searchMenu =
-      element.querySelector(".welcome-banner__search-menu") ?? element;
-
-    const checkVisibility = () => {
-      // Use getBoundingClientRect for reliable visibility detection.
-      // IntersectionObserver's isIntersecting can return stale values during
-      // SPA navigation, but getBoundingClientRect is always accurate.
-      // The banner search stays the only visible search bar while any part of
-      // it peeks below the header; the header search replaces it exactly when
-      // it is fully tucked away, so the two are never both usable.
-      const isUsable =
-        searchMenu.getBoundingClientRect().bottom > headerOffset();
-
-      const previousInputId = this.search.currentSearchInputId;
-      this.search.welcomeBannerSearchInViewport = isUsable;
-
-      if (
-        this.search.currentSearchInputId !== previousInputId &&
-        document.activeElement?.id === previousInputId
-      ) {
-        next(() => {
-          if (this.isDestroying) {
-            return;
-          }
-          this.search.focusSearchInput();
-          if (document.activeElement?.tagName !== "INPUT") {
-            document.getElementById(previousInputId)?.focus();
-          }
-        });
-      }
-    };
-
-    // Use IntersectionObserver only as a trigger for when to check visibility,
-    // not to determine actual visibility state. The handoff happens partway
-    // through the banner's crossing, so trigger throughout the crossing rather
-    // than only at full visibility.
-    const threshold = Array.from({ length: 101 }, (_, i) => i / 100);
-    const observer = new IntersectionObserver(checkVisibility, { threshold });
-    observer.observe(element);
-
-    // Set to true immediately when the modifier sets up, since the welcome banner
-    // is always rendered at the top of the page.
-    this.search.welcomeBannerSearchInViewport = true;
-
-    return () => {
-      observer.disconnect();
-      this.search.welcomeBannerSearchInViewport = false;
-    };
-  });
-
-  handoffFocus = modifier((element) => {
-    const onFocusin = (event) => {
-      if (event.target.id !== "welcome-banner-search-input") {
-        return;
-      }
-
-      const activeInput = document.getElementById(
-        this.search.currentSearchInputId
-      );
-      if (activeInput && activeInput !== event.target) {
-        activeInput.focus();
-      }
-    };
-
-    element.addEventListener("focusin", onFocusin);
-    return () => element.removeEventListener("focusin", onFocusin);
-  });
-
-  handleKeyboardShortcut = modifier(() => {
-    if (!this.site.can_search) {
-      return;
-    }
-
-    const cb = (appEvent) => {
-      if (
-        appEvent.type === "search" &&
-        this.search.welcomeBannerSearchInViewport
-      ) {
-        this.search.focusSearchInput();
-        appEvent.event.preventDefault();
-      }
-    };
-    this.appEvents.on("header:keyboard-trigger", cb);
-    return () => this.appEvents.off("header:keyboard-trigger", cb);
-  });
 
   constructor() {
     super(...arguments);
@@ -195,62 +101,34 @@ export default class WelcomeBanner extends Component {
     );
   }
 
-  // The icon is a shortcut to advanced search; a consumer that has made the
-  // input mean more than searching can drop it.
-  get showAdvancedSearchIcon() {
-    return applyValueTransformer("search-advanced-icon-enabled", true, {
-      location: "welcome-banner",
+  get headerText() {
+    return welcomeBannerHeader({
+      currentUser: this.currentUser,
+      siteTitle: this.siteSettings.title,
     });
   }
 
-  get headerText() {
-    const site_name = this.siteSettings.title || "";
-
-    let key, args;
-
-    if (!this.currentUser) {
-      key = "welcome_banner.header.anonymous_members";
-      args = { site_name };
-    } else {
-      const isNewUser = !this.currentUser.previous_visit_at;
-      key = isNewUser
-        ? "welcome_banner.header.new_members"
-        : "welcome_banner.header.logged_in_members";
-      args = {
-        site_name,
-        preferred_display_name: sanitize(
-          prioritizeNameFallback(
-            this.currentUser.name,
-            this.currentUser.username
-          )
-        ),
-      };
-    }
-
-    return i18n(key, args);
+  get subheaderText() {
+    return welcomeBannerSubheader({ currentUser: this.currentUser });
   }
 
-  get subheaderText() {
-    const memberKey = this.currentUser
-      ? "logged_in_members"
-      : "anonymous_members";
-    return I18n.lookup(`welcome_banner.subheader.${memberKey}`);
+  // A layout that places the welcome banner block takes over from the
+  // setting-driven banner on every page, whatever the settings say.
+  get replacedByBlock() {
+    return this.blocks.isBlockPlaced(WELCOME_BANNER_BLOCK);
   }
 
   get shouldDisplay() {
     return (
       this.siteSettings.enable_welcome_banner &&
+      !this.replacedByBlock &&
       this.matchesLocation &&
       this.displayForRoute
     );
   }
 
   get bodyClasses() {
-    return this.shouldDisplay && this.search.welcomeBannerSearchInViewport
-      ? "welcome-banner--enabled welcome-banner--visible"
-      : this.shouldDisplay
-        ? "welcome-banner--enabled"
-        : "";
+    return this.shouldDisplay ? "welcome-banner--enabled" : "";
   }
 
   get locationClass() {
@@ -292,6 +170,7 @@ export default class WelcomeBanner extends Component {
     const { location } = this;
     if (
       !this.siteSettings.enable_welcome_banner ||
+      this.replacedByBlock ||
       !this.displayForRoute ||
       claimedLocations.has(location) ||
       reportedLocations.has(location)
@@ -344,9 +223,6 @@ export default class WelcomeBanner extends Component {
           this.locationClass
           this.bgImgClass
         }}
-        {{this.checkViewport}}
-        {{this.handoffFocus}}
-        {{this.handleKeyboardShortcut}}
       >
         <div
           class="custom-search-banner-wrap welcome-banner__wrap"
@@ -365,22 +241,9 @@ export default class WelcomeBanner extends Component {
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
           {{#if this.site.can_search}}
-            <div class="search-menu welcome-banner__search-menu">
-              {{#if this.showAdvancedSearchIcon}}
-                <DButton
-                  class="search-icon"
-                  @href={{getURL "/search?expanded=true"}}
-                  @icon="magnifying-glass"
-                  @title="search.open_advanced"
-                />
-              {{/if}}
-              <SearchMenu
-                @hideResults={{not this.search.welcomeBannerSearchInViewport}}
-                @location="welcome-banner"
-                @searchInputId="welcome-banner-search-input"
-                @searchInputPlaceholder="welcome_banner.search_placeholder"
-              />
-            </div>
+            <WelcomeBannerSearch
+              @placeholder="welcome_banner.search_placeholder"
+            />
           {{/if}}
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>

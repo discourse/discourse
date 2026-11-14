@@ -56,10 +56,6 @@ class StubWireframeService extends Service {
     );
   }
 
-  get conditionsDetached() {
-    return false;
-  }
-
   isOutletRoot() {
     return false;
   }
@@ -67,8 +63,6 @@ class StubWireframeService extends Service {
   partLockForSelection() {
     return null;
   }
-
-  toggleConditionsDetached() {}
 
   updateSelectedArg(name, value) {
     this.updateSelectedArgCalls.push({ name, value });

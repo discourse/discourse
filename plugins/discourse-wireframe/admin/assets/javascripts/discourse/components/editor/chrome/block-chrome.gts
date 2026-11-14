@@ -23,7 +23,6 @@ import type BlocksService from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 import BlockToolbar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-toolbar";
@@ -35,6 +34,7 @@ import ImageEditMenu from "discourse/plugins/discourse-wireframe/discourse/compo
 import ImageReposition from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-reposition";
 import ImageResizeOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-resize-overlay";
 import InplaceLinkPopover from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-link-popover";
+import { type BlockStatus } from "discourse/plugins/discourse-wireframe/discourse/lib/block-status";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import {
@@ -80,6 +80,7 @@ import proxyDragSources from "discourse/plugins/discourse-wireframe/discourse/mo
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import type WireframeBlockRevealService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-reveal";
 import type WireframeDragOverlayService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-overlay";
+import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeDropAuthorityService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
 import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
@@ -128,6 +129,9 @@ interface BlockChromeSignature {
 
     /** Whether the ghost is a genuine authoring error (danger tone). */
     isError?: boolean;
+
+    /** Category of render failure for a ghost. */
+    failureType?: string;
 
     /** The parent layout's placement style, applied to the chrome wrapper. */
     style?: TrustedHTML | string;
@@ -263,6 +267,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
   @service declare wireframeBlockReveal: WireframeBlockRevealService;
   @service declare wireframeDragOverlay: WireframeDragOverlayService;
+  @service declare wireframeDragSession: WireframeDragSessionService;
   @service declare wireframeDropAuthority: WireframeDropAuthorityService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
   @service declare wireframeForceExpand: WireframeForceExpandService;
@@ -1123,6 +1128,22 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
+   * Whether the block sits inside another block rather than directly in the
+   * outlet. A nested block takes the compact header strip and, when selected,
+   * shows its ancestry in place of its bare name.
+   */
+  get isNested(): boolean {
+    const ctx = this.#parentContext;
+    if (!ctx) {
+      return false;
+    }
+    const parentKey = entryKey(ctx.parent);
+    return (
+      parentKey == null || !this.wireframeLayoutQuery.isOutletRoot(parentKey)
+    );
+  }
+
+  /**
    * For a child of an ordinal-naming container (a carousel slide, a tabs
    * panel), its 1-based position ("Slide 2" / "Tab 2"); `null` otherwise. Shown
    * as a chip beside the block name in the toolbar badge.
@@ -1185,6 +1206,59 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       return "horizontal";
     }
     return "vertical";
+  }
+
+  /**
+   * The number of direct children the block's live entry holds, for the strip's
+   * child count. Read from the layout rather than the render payload, which
+   * only carries children for ghosts.
+   */
+  get childCount(): number {
+    void this.wireframeLayoutSignal.version;
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    return entry?.children?.length ?? 0;
+  }
+
+  /** Whether this block is the source of the drag in flight. */
+  get isDragSource(): boolean {
+    return this.wireframeDragSession.sourceKey === this.args.blockKey;
+  }
+
+  /**
+   * Layout warnings the header strip summarises: a grid cell that overlaps a
+   * sibling or runs past the grid, or an image whose size couldn't be read.
+   */
+  get stripWarnings(): BlockStatus[] {
+    const warnings: BlockStatus[] = [];
+    if (this.isOutOfBounds) {
+      warnings.push({
+        id: "out-of-bounds",
+        icon: "triangle-exclamation",
+        label: i18n("wireframe.canvas.out_of_bounds_label"),
+        title: i18n("wireframe.canvas.out_of_bounds_warning"),
+        tone: "warning",
+      });
+    } else if (this.hasGridOverlap) {
+      warnings.push({
+        id: "overlap",
+        icon: "triangle-exclamation",
+        label: i18n("wireframe.canvas.overlap_label"),
+        title: i18n("wireframe.canvas.overlap_warning"),
+        tone: "warning",
+      });
+    }
+    if (this.hasUnresolvedImageArg) {
+      warnings.push({
+        id: "unresolved-image",
+        icon: "triangle-exclamation",
+        label: i18n("wireframe.canvas.unresolved_image_label"),
+        title: i18n("wireframe.canvas.unresolved_image_warning"),
+        tone: "muted",
+      });
+    }
+    return warnings;
   }
 
   /**
@@ -1254,23 +1328,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   /**
-   * Whether the outlet badge should render its status chip. An empty,
-   * default outlet (nothing built yet, nothing owns it) shows just its
-   * name — a "Default" chip on an empty region is noise. Every other case
-   * (an edit in progress, a published or locked outlet, or a default
-   * outlet that actually has content) shows the chip.
-   *
-   */
-  get showOutletStatus() {
-    if (this.isOutletEditing) {
-      return true;
-    }
-    return !(
-      this.outletState === OUTLET_STATE.DEFAULT && this.isEmptyOutletRoot
-    );
-  }
-
-  /**
    * Merged-cell entries are empty grid cells. The chrome wraps them
    * like any other block (selection, drag, resize via the existing
    * grid handle), but the inner render area becomes a "Pick a block"
@@ -1329,15 +1386,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       if (this.isDestroying || !this.isSelected) {
         return;
       }
-      const button = this.chromeEl?.querySelector<HTMLElement>(
-        '[data-toolbar-action="image-edit"]'
+      // The quick actions anchor under the strip's action cluster: the menu
+      // item that opened them lives in a closed portal, and the "…" trigger
+      // already hosts its own menu instance.
+      const trigger = this.chromeEl?.querySelector<HTMLElement>(
+        ":scope > .wireframe-block-toolbar .wireframe-block-toolbar__actions"
       );
-      const trigger =
-        button && getComputedStyle(button).visibility !== "hidden"
-          ? button
-          : this.chromeEl?.querySelector<HTMLElement>(
-              ".wireframe-block-toolbar__more"
-            );
       if (trigger) {
         this.#openImageEditMenu(trigger, entry.name);
       }
@@ -1420,7 +1474,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       cellKey: this.args.blockKey,
       blockName: blockEntry.blockName,
       defaultArgs: { ...blockEntry.defaultArgs },
-      paletteId: blockEntry.id,
     });
   }
 
@@ -1436,7 +1489,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     this.wireframeBlockMutations.insertBlock({
       blockName: blockEntry.blockName,
       defaultArgs: { ...blockEntry.defaultArgs },
-      paletteId: blockEntry.id,
       targetKey: this.args.blockKey,
       position: "inside",
       targetOutletName: this.args.outletName,
@@ -2114,6 +2166,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
             (if this.isOutletRoot "--outlet-root")
+            (if this.isNested "--nested")
+            (if this.isDragSource "--drag-source")
             (if this.isReadOnlyOutlet "--read-only")
             (if this.isEmptyContainer "--empty-container")
             (if this.hasBackgroundImage "--media-background")
@@ -2161,20 +2215,26 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           }}
           {{on "click" this.onClick}}
         >
-          {{! A read-only (LOCKED) outlet shows no toolbar — no drag handle, no
-            actions — so its programmatic layout can't be edited. For the outlet
-            root the bar is the always-on identity badge above the region (the
-            handle carries the cube icon, name, and status chip); for other
-            blocks it reveals on hover / selection. The outlet status args drive
-            the handle's chip. }}
+          {{! A read-only (LOCKED) outlet shows no header strip — no drag
+            handle, no actions — so its programmatic layout can't be edited.
+            The strip is the chrome's first child, in flow: it names the block
+            (or the outlet, with its publish state) and carries its status and
+            actions. }}
           {{#unless this.isReadOnlyOutlet}}
             <BlockToolbar
               @blockKey={{@blockKey}}
               @canResetImage={{this.imageIsResized}}
+              @childCount={{this.childCount}}
               @chromeEl={{this.optionalChromeEl}}
+              @conditions={{@conditions}}
               @displayChip={{this.childOrdinal}}
               @displayName={{this.displayName}}
               @displayTitle={{this.childTooltip}}
+              @failureType={{@failureType}}
+              @isContainer={{this.isContainer}}
+              @isError={{@isError}}
+              @isGhost={{@isGhost}}
+              @isNested={{this.isNested}}
               @isOutletEditing={{this.isOutletEditing}}
               @isOutletRoot={{this.isOutletRoot}}
               @isSelected={{this.isSelected}}
@@ -2183,39 +2243,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               @onResetImage={{this.resetImageToNaturalSize}}
               @outletName={{@outletName}}
               @outletState={{this.outletState}}
-              @showOutletStatus={{this.showOutletStatus}}
+              @warnings={{this.stripWarnings}}
             />
           {{/unless}}
-
-          {{! Overlap / out-of-bounds warning badge — only visible when
-            this cell's rectangle intersects a sibling or runs past the
-            grid's edge. Loud on purpose: a tinted background alone is
-            too easy to miss. }}
-          {{#if this.isOutOfBounds}}
-            <span
-              class="wireframe-block-chrome__overlap-badge"
-              title={{i18n "wireframe.canvas.out_of_bounds_warning"}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n "wireframe.canvas.out_of_bounds_label"}}</span>
-            </span>
-          {{else if this.hasGridOverlap}}
-            <span
-              class="wireframe-block-chrome__overlap-badge"
-              title={{i18n "wireframe.canvas.overlap_warning"}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n "wireframe.canvas.overlap_label"}}</span>
-            </span>
-          {{else if this.hasUnresolvedImageArg}}
-            <span
-              class="wireframe-block-chrome__overlap-badge wireframe-block-chrome__overlap-badge--info"
-              title={{i18n "wireframe.canvas.unresolved_image_warning"}}
-            >
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n "wireframe.canvas.unresolved_image_label"}}</span>
-            </span>
-          {{/if}}
 
           {{#if this.isEmptyCell}}
             <div

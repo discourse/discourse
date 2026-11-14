@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   _renderBlocks,
@@ -43,6 +49,10 @@ module(
       // so the editor can't derive a default target and the toolbar's Save
       // button (which requires `activeThemeId` via `isDirty`) would stay disabled.
       this.editor.enter({ themeId: 5 });
+      // The session publishes to a design; there's no boot preload to list one.
+      getOwner(this)
+        .lookup("service:wireframe-publish-target")
+        .registerDesign(5, "Test design");
     });
 
     hooks.afterEach(function () {
@@ -160,10 +170,9 @@ module(
       assert.true(published, "Publish writes the live field");
     });
 
-    test("for a core system theme, Save draft works but Publish is disabled and the companion path is offered", async function (assert) {
-      // Re-enter bound to a system theme (negative id). Save draft stays
-      // available; direct Publish is disabled in favour of the companion-
-      // component escape hatch.
+    test("with no design yet, Save draft works and Publish stays available to name one", async function (assert) {
+      // Re-enter bound to a theme with no design (a system theme here). Nothing
+      // is blocked: publishing asks for a design name first.
       this.editor.exit();
       this.editor.enter({ themeId: -1 });
       await makeDirty(this.editor);
@@ -173,41 +182,114 @@ module(
 
       assert
         .dom(".wireframe-review__save-draft")
-        .isNotDisabled("Save draft works for a system theme");
+        .isNotDisabled("Save draft works before a design exists");
       assert
         .dom(".wireframe-review__publish")
-        .isDisabled("direct Publish is disabled for a system theme");
+        .isNotDisabled("Publish is available — it asks for the design name");
       assert
         .dom(".wireframe-review__create-component")
-        .exists("the companion-component escape hatch is offered instead");
+        .doesNotExist("no companion escape hatch is offered");
     });
 
-    test("re-entering a non-publishable theme that already has a companion targets the companion", async function (assert) {
-      // The companion lookup (on entry) returns an existing companion id, so the
-      // editor re-points to it instead of re-prompting to set one up.
+    test("re-entering a theme that already has a design targets that design", async function (assert) {
+      // The design lookup (on entry) returns the installed design, so the editor
+      // re-points to it instead of treating the edits as an unsaved design.
       this.editor.exit();
       pretender.get("/admin/plugins/wireframe/companion.json", () =>
-        response({ companion_id: 7 })
+        response({
+          companion_id: 7,
+          designs: [{ id: 7, name: "Spring launch", active: true }],
+        })
       );
+      const theme = getOwner(this.editor).lookup(
+        "service:wireframe-publish-target"
+      );
+      theme.registerDesign(7, "Spring launch");
       this.editor.enter({ themeId: -1 });
 
       await render(<template><EditorShell /></template>);
 
-      const theme = getOwner(this.editor).lookup(
-        "service:wireframe-publish-target"
-      );
       assert.strictEqual(
         theme.activeThemeId,
         7,
-        "activeThemeId re-points to the existing companion"
+        "activeThemeId re-points to the installed design"
       );
-      assert.true(
-        theme.activeThemeTarget.publishable,
-        "the companion is a publishable target"
+      assert.true(theme.hasDesign, "the design is a publishable target");
+      assert
+        .dom(".wireframe-design-title__text")
+        .hasText("Spring launch", "the toolbar names the design");
+    });
+
+    test("the design name is renamed in place, and named before a design exists", async function (assert) {
+      this.editor.exit();
+      this.editor.enter({ themeId: -1 });
+
+      await render(<template><EditorShell /></template>);
+      assert
+        .dom(".wireframe-design-title__text")
+        .hasText("Untitled template", "a placeholder names the unsaved design");
+
+      await click(".wireframe-design-title__text");
+      await fillIn(".wireframe-design-title__input", "Spring launch");
+      await triggerKeyEvent(
+        ".wireframe-design-title__input",
+        "keydown",
+        "Enter"
+      );
+
+      assert
+        .dom(".wireframe-design-title__text")
+        .hasText(
+          "Spring launch",
+          "the typed name is kept for the first publish"
+        );
+    });
+
+    test("the design indicator opens a menu of designs with a New design button", async function (assert) {
+      pretender.get("/admin/plugins/wireframe/companion.json", () =>
+        response({
+          companion_id: 5,
+          designs: [
+            { id: 5, name: "Test design", active: true },
+            { id: 6, name: "Autumn sale", active: false },
+          ],
+        })
+      );
+      getOwner(this.editor)
+        .lookup("service:wireframe-publish-target")
+        .setActiveTheme(5);
+      // No boot preload in a rendering test, so name the theme in use.
+      Object.defineProperty(
+        getOwner(this.editor).lookup("service:wireframe-publish-target"),
+        "parentThemeId",
+        { value: 1 }
+      );
+
+      await render(<template><EditorShell /></template>);
+      await click(".wireframe-design-title__menu");
+
+      assert
+        .dom(".wireframe-design-switcher__design")
+        .exists({ count: 2 }, "lists the available designs");
+      assert.deepEqual(
+        [
+          ...document.querySelectorAll(".wireframe-design-switcher__design"),
+        ].map((el) => el.textContent.trim()),
+        ["Autumn sale", "Test design"],
+        "lists designs alphabetically"
       );
       assert
-        .dom(".wireframe-blocked-callout")
-        .doesNotExist("no set-up callout when a companion already exists");
+        .dom(".wireframe-design-switcher__design.-selected")
+        .hasText("Test design", "marks the active design as selected");
+      assert
+        .dom(".wireframe-design-switcher__design.-selected .d-icon")
+        .doesNotExist("the selected design has no check icon");
+      assert
+        .dom(".wireframe-design-switcher__new")
+        .exists("offers a New design button");
+      assert
+        .dom(".wireframe-design-switcher__manage")
+        .exists("links to the designs list");
     });
 
     test("the drawer's Save draft disables after a successful save and re-enables on the next edit", async function (assert) {

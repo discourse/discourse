@@ -776,6 +776,42 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
     });
 
+    test("an outlet root with no blocks yet isn't reported as an issue", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const query = queryOf(this.editor);
+      const key = this.editor.wireframeSelection.selectedBlockKey;
+      const { entry } = query.findEntryAndOutletSync(key);
+      entry.__failureType = "structural-invalid";
+      entry.__failureReason = "must have children";
+      entry.__failureDetails = [
+        {
+          code: ERROR_CODES.INVALID_CHILDREN,
+          expected: { acceptsChildren: true, requiresChildren: true },
+        },
+      ];
+
+      query.recordOutletRoot("homepage-blocks");
+      assert.true(query.isOutletRoot(key), "the entry is the outlet root");
+      assert.deepEqual(validation.validationIssues, [], "no issue is listed");
+      assert.deepEqual(
+        validation.validationWarnings,
+        [],
+        "publishing isn't warned about"
+      );
+      assert.false(
+        this.editor.wireframeSelection.selectedBlockHasErrors,
+        "the inspector shows no error"
+      );
+
+      query.clearOutletRoots();
+      assert.deepEqual(
+        validation.validationIssues.map((issue) => issue.messages[0].text),
+        ["Add at least one block inside."],
+        "an empty container that isn't the root is still reported"
+      );
+      assert.true(this.editor.wireframeSelection.selectedBlockHasErrors);
+    });
+
     test("validationIssues collapses fields that share a message into one line", async function (assert) {
       const validation = getOwner(this).lookup("service:wireframe-validation");
       const located = queryOf(this.editor).findEntryAndOutletSync(
@@ -1029,31 +1065,22 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(after[1].args.title, "Inserted");
     });
 
-    test("a successful insert is remembered for the palette's Recent group, a refused one is not", function (assert) {
-      const owner = getOwner(this);
-      // The session enters with no publish target here; Recent is per theme.
-      owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
-      const recent = owner.lookup("service:wireframe-recent-blocks");
-
-      // A target that is not in the layout leaves it unchanged: a refusal.
+    test("a target that is not in the layout refuses the insert", function (assert) {
       const refused = mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: "wf:svc-test-tile:not-in-this-layout",
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      assert.false(refused);
-      assert.deepEqual(recent.ids, [], "nothing recorded for a refused insert");
+      assert.false(refused, "the layout is left unchanged");
 
       const ok = mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
-        paletteId: "wf:svc-test-tile:alternate",
         targetKey: null,
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      assert.true(ok);
-      assert.deepEqual(recent.ids, ["wf:svc-test-tile:alternate"]);
+      assert.true(ok, "an outlet-level insert still lands");
     });
 
     test("inserts inside the outlet root layout when targetKey is null", function (assert) {
@@ -2393,7 +2420,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
             kind: "new",
             blockName: "wf:svc-test-tile",
             defaultArgs: { title: "New" },
-            paletteId: "wf:svc-test-tile:alternate",
           },
         });
         assert.true(ok);
@@ -2401,11 +2427,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           countContent(this.editor),
           before + 1,
           "exactly one new block was added"
-        );
-        assert.deepEqual(
-          owner.lookup("service:wireframe-recent-blocks").ids,
-          ["wf:svc-test-tile:alternate"],
-          "the palette choice is remembered"
         );
       });
     }

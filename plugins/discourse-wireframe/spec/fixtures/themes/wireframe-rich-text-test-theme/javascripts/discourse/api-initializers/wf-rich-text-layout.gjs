@@ -9,7 +9,7 @@ import { apiInitializer } from "discourse/lib/api";
 // heading text starts as a plain string ("Hello world") to prove the lazy
 // upgrade to doc-JSON happens only once a mark is applied.
 export default apiInitializer((api) => {
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     {
       block: Layout,
       args: { mode: "grid", columns: 2, rows: 1 },

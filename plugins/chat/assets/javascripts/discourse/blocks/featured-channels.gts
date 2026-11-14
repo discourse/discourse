@@ -78,6 +78,7 @@ interface FeaturedChatChannelsSignature {
  * rendered in the configured order, with an optional "browse all" footer.
  */
 @block("chat:featured-channels", {
+  paletteHidden: true,
   thumbnail: FeaturedChannelsThumbnail,
   displayName: "Featured chat channels",
   icon: "d-chat",

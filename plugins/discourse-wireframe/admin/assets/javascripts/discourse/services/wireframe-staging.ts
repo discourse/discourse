@@ -38,12 +38,11 @@ type PersistedDraft = Awaited<
 >[number];
 
 /**
- * The outcome of a Git-escape-hatch action (create companion component /
- * duplicate theme): the new theme id to reload onto, or an error message for
+ * The outcome of creating a design: the new design's id, or an error message for
  * the banner. Exactly one field is populated.
  */
-type GitActionResult = {
-  /** Newly created destination theme, when the action succeeds. */
+type DesignActionResult = {
+  /** Newly created design, when the action succeeds. */
   themeId?: number;
   /** Message shown when the action fails. */
   error?: string;
@@ -232,9 +231,8 @@ export default class WireframeStagingService extends Service {
     // New session generation: invalidates any draft hydration still in flight
     // from a previous session so it can't write into this one.
     const generation = ++this.#generation;
-    // A theme that can't be published to directly may have a companion to
-    // retarget to; suppress the blocked callout until the after-render lookup
-    // settles.
+    // The theme in use may have an installed design to retarget to; hold the
+    // "unsaved design" state until the after-render lookup settles.
     this.publishTargetResolving =
       this.wireframePublishTarget.activeThemeTarget?.publishable === false;
     this.#materializeAllDrafts();
@@ -351,8 +349,8 @@ export default class WireframeStagingService extends Service {
    * Resets a published outlet to its default: deletes the live `block_layout`
    * field (via the live-layout service), drops the caller's draft, clears the
    * local theme + session-draft layers so the underlying code default resolves,
-   * then re-seeds a fresh editable draft from it. Only valid for a PUBLISHED
-   * outlet whose owner is not Git-managed.
+   * then re-seeds a fresh editable draft from it. Only valid for an outlet
+   * published on the session's own design.
    *
    * @param outletName - Published outlet to reset to its underlying default.
    * @returns false when the outlet isn't eligible.
@@ -363,8 +361,8 @@ export default class WireframeStagingService extends Service {
     if (
       this.wireframeLayoutQuery.outletState(outletName) !==
         OUTLET_STATE.PUBLISHED ||
-      owner.isGit ||
-      owner.themeId == null
+      !this.wireframePublishTarget.hasDesign ||
+      owner.themeId !== this.wireframePublishTarget.activeThemeId
     ) {
       return false;
     }
@@ -493,80 +491,88 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * Exports one outlet's layout as a downloadable repo file (the Git escape
-   * hatch for committing upstream). Exports the current draft when the outlet
-   * has edits, otherwise the live field.
+   * Creates a named design on the theme in use and binds the session to it, so
+   * the next publish writes there. By default it starts empty and the edits are
+   * published afterwards; with `withEdits` it is seeded with the edited outlets,
+   * for a design created to hold a copy of the current work.
    *
-   * @param outletName - Outlet whose layout should be downloaded.
-   * @returns an error message for the banner, or null on success.
+   * @param name - Name the author gave the design.
+   * @param options - Creation options.
+   *   - `withEdits` - Seed the design with the edited outlets' drafts.
+   * @returns The new design's id, or an error message for the banner.
    */
   @action
-  async exportOutlet(outletName: string): Promise<string | null> {
-    const themeId =
-      this.wireframePublishTarget.outletOwner(outletName).themeId ??
-      this.wireframePublishTarget.defaultThemeId;
-    if (themeId == null) {
-      return this.#gitActionError(
-        new Error("No theme owns this outlet"),
-        "wireframe.outlet.export_failed"
-      );
+  async createDesign(
+    name: string,
+    {
+      withEdits = false,
+    }: {
+      /** Whether to seed the design with the edited outlets' drafts. */
+      withEdits?: boolean;
+    } = {}
+  ): Promise<DesignActionResult> {
+    const parentId = this.wireframePublishTarget.parentThemeId;
+    if (parentId == null) {
+      return { error: i18n("wireframe.design.create_failed") };
     }
     try {
-      await this.wireframeLiveLayout.exportOutlet(themeId, outletName, {
-        useDraft: this.wireframeMutationEngine.isOutletEdited(outletName),
-      });
+      const { theme_id } = await this.wireframeLiveLayout.createDesign(
+        parentId,
+        name,
+        { withEdits }
+      );
+      this.wireframePublishTarget.registerDesign(theme_id, name);
+      if (!withEdits) {
+        this.wireframePublishTarget.setActiveTheme(theme_id);
+      }
+      return { themeId: theme_id };
+    } catch (error) {
+      return {
+        error: this.#designActionError(error, "wireframe.design.create_failed"),
+      };
+    }
+  }
+
+  /**
+   * Renames the session's design. Before the design exists the name is only
+   * remembered, and used when it is created on the first publish.
+   *
+   * @param name - The new name.
+   * @returns An error message for the banner, or null on success.
+   */
+  @action
+  async renameDesign(name: string): Promise<string | null> {
+    const target = this.wireframePublishTarget.activeThemeTarget;
+    if (!target?.publishable) {
+      this.wireframePublishTarget.setPendingDesignName(name);
+      return null;
+    }
+    try {
+      await this.wireframeLiveLayout.renameDesign(target.themeId, name);
+      this.wireframePublishTarget.registerDesign(target.themeId, name);
       return null;
     } catch (error) {
-      return this.#gitActionError(error, "wireframe.outlet.export_failed");
+      return this.#designActionError(error, "wireframe.design.rename_failed");
     }
   }
 
   /**
-   * Creates (or reuses) a local customization component for the active Git theme
-   * carrying all edited outlets' drafts. Returns the component's theme id (the
-   * caller reloads so its override takes effect) or an error message.
+   * Installs one of the theme's designs. Returns an error message, or null on
+   * success; the caller reloads so the design's layouts take effect.
+   *
+   * @param designId - ID of the design to install.
    */
   @action
-  async createCustomizationComponent(): Promise<GitActionResult> {
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    if (themeId == null) {
-      return {
-        error: i18n("wireframe.outlet.create_component_failed"),
-      };
+  async switchDesign(designId: number): Promise<string | null> {
+    const parentId = this.wireframePublishTarget.parentThemeId;
+    if (parentId == null) {
+      return i18n("wireframe.design.switch_failed");
     }
     try {
-      const { theme_id } =
-        await this.wireframeLiveLayout.createCustomizationComponent(themeId);
-      return { themeId: theme_id };
+      await this.wireframeLiveLayout.installDesign(parentId, designId);
+      return null;
     } catch (error) {
-      return {
-        error: this.#gitActionError(
-          error,
-          "wireframe.outlet.create_component_failed"
-        ),
-      };
-    }
-  }
-
-  /**
-   * Duplicates the active theme into a new editable copy carrying all edited
-   * outlets' drafts. Returns the new theme id (the caller navigates to it) or an
-   * error message — never navigates itself, so it stays testable.
-   */
-  @action
-  async duplicateForEditing(): Promise<GitActionResult> {
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    if (themeId == null) {
-      return { error: i18n("wireframe.outlet.duplicate_failed") };
-    }
-    try {
-      const { theme_id } =
-        await this.wireframeLiveLayout.duplicateTheme(themeId);
-      return { themeId: theme_id };
-    } catch (error) {
-      return {
-        error: this.#gitActionError(error, "wireframe.outlet.duplicate_failed"),
-      };
+      return this.#designActionError(error, "wireframe.design.switch_failed");
     }
   }
 
@@ -700,7 +706,7 @@ export default class WireframeStagingService extends Service {
    * @param fallbackKey - Translation key used when the response has no errors.
    * @returns The message suitable for the editor error banner.
    */
-  #gitActionError(error: AjaxError, fallbackKey: string): string {
+  #designActionError(error: AjaxError, fallbackKey: string): string {
     const messages = error?.jqXHR?.responseJSON?.errors;
     return messages?.length ? messages.join(", ") : i18n(fallbackKey);
   }
@@ -788,11 +794,11 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * When the bound theme can't be published to directly, look up its companion
-   * component and re-point `wireframePublishTarget.activeThemeId` to it — so the editor
-   * targets the publishable companion the user already set up instead of the
-   * unpublishable parent. A no-op (and clears the resolving flag) when the theme
-   * is already publishable or has no companion. Generation-guarded so a late
+   * When the session is bound to the theme in use rather than a design, look up
+   * the theme's installed design and re-point
+   * `wireframePublishTarget.activeThemeId` to it — so the editor targets the
+   * design the user already set up. A no-op (and clears the resolving flag) when
+   * the session is already on a design or none is installed. Generation-guarded so a late
    * lookup never writes into a new session.
    *
    * @param generation - Session generation captured before the async lookup.

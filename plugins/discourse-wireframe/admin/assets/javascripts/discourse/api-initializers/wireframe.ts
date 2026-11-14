@@ -32,8 +32,12 @@ import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/compone
 import EntryPill from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/entry-pill";
 import OutletBoundary from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/outlet-boundary";
 import EditorShell from "../components/editor/shell";
+import { isInRenderedStack, previewDesign } from "../lib/design-preview";
+import { isEditorOutlet } from "../lib/editor-outlets";
 import { attachEditorShortcuts } from "../lib/editor-shortcuts";
+import type WireframeDraftsService from "../services/wireframe-drafts";
 import type WireframeLayoutQueryService from "../services/wireframe-layout-query";
+import type WireframeLiveLayoutService from "../services/wireframe-live-layout";
 import type WireframeSimulationService from "../services/wireframe-simulation";
 import type WireframeWorkspaceService from "../services/wireframe-workspace";
 
@@ -237,7 +241,10 @@ function installVeThemeAutoEnter(
   api: PluginApi,
   editor: WireframeWorkspaceService
 ): void {
-  const tryEnter = (url: string) => {
+  // Entry runs both on boot and on the first page change, so both calls share
+  // one preview load rather than the second entering before it lands.
+  const previews = new Map<number, Promise<boolean>>();
+  const tryEnter = async (url: string) => {
     const themeId = readVeThemeParam(url);
     if (themeId == null) {
       return;
@@ -247,6 +254,33 @@ function installVeThemeAutoEnter(
       editor.wireframePublishTarget.activeThemeId === themeId
     ) {
       return;
+    }
+    // A design opened from the designs list may not be one the theme uses, so
+    // its layouts aren't on the page yet.
+    if (!isInRenderedStack(themeId)) {
+      if (!previews.has(themeId)) {
+        // TODO(devxp-typescript-pending): remove these casts once core's
+        // PluginApi exposes a registry-aware generic type for `container.lookup`.
+        previews.set(
+          themeId,
+          previewDesign(api, themeId, {
+            drafts: api.container.lookup(
+              "service:wireframe-drafts"
+            ) as WireframeDraftsService,
+            liveLayout: api.container.lookup(
+              "service:wireframe-live-layout"
+            ) as WireframeLiveLayoutService,
+            publishTarget: editor.wireframePublishTarget,
+          })
+        );
+      }
+      await previews.get(themeId);
+      if (
+        editor.wireframeEditMode.active &&
+        editor.wireframePublishTarget.activeThemeId === themeId
+      ) {
+        return;
+      }
     }
     editor.enter({ themeId });
   };
@@ -456,6 +490,18 @@ function installGhostChildrenCreator(): void {
 }
 
 /**
+ * The registry-level outlet owning a debugged block. A payload without
+ * `rootOutletName` carries only the display hierarchy, whose first segment is
+ * the outlet name.
+ *
+ * @param context - Hierarchy context supplied with the BLOCK_DEBUG payload.
+ * @returns The outlet name, or `undefined` when the context carries neither.
+ */
+function rootOutletOf(context?: WireframeDebugContext): string | undefined {
+  return context?.rootOutletName ?? context?.outletName?.split("/")[0];
+}
+
+/**
  * Narrows a generic debug-hook result to a mergeable context record.
  *
  * @param value - Result returned by an existing debug callback.
@@ -568,6 +614,11 @@ function installBlockChrome(editor: ChromeEditor): void {
       const upstream = (previous ? previous(blockData, context) : blockData) as
         | BlockChromeData
         | undefined;
+      // Blocks outside the outlets the editor exposes render exactly as they
+      // do live: no chrome, and a ghost (null `Component`) stays hidden.
+      if (!isEditorOutlet(rootOutletOf(context))) {
+        return upstream;
+      }
       // A ghost call is signalled by EITHER an upstream `isGhost: true`
       // (set by dev-tools when both plugins coexist) OR a `failureType`
       // on the raw `blockData` (set by core's `createDebugGhost` /

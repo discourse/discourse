@@ -24,11 +24,11 @@ module PageObjects
       end
 
       def has_active_slide?
-        has_css?("#{carousel_selector} .d-image-carousel__slide.is-active")
+        has_css?("#{carousel_selector} .d-image-carousel__slide.--active")
       end
 
       def has_active_slide_index?(index)
-        has_css?("#{carousel_selector} .d-image-carousel__slide[data-index='#{index}'].is-active")
+        has_css?("#{carousel_selector} .d-image-carousel__slide[data-index='#{index}'].--active")
       end
 
       def click_next

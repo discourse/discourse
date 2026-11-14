@@ -1,39 +1,41 @@
 # frozen_string_literal: true
 
 module DiscourseWireframe
-  # Creates (or reuses) a local, editable theme component that owns block-layout
-  # customizations for a parent theme that can't be published to directly — a
-  # Git-managed theme, or a core system theme (Foundation, Horizon) — overlays the
-  # supplied drafts onto it, and records the parent↔component mapping so the editor
-  # recognizes the companion on re-entry.
+  # Creates a named, local theme component (a "design" in the editor's wording)
+  # that owns block-layout customizations for the theme currently in use, overlays
+  # the supplied drafts onto it, records the parent↔component mapping, and installs
+  # it on the parent. Only one design is installed on a parent at a time, so any
+  # previously installed design is unlinked (it stays available to switch back to).
   #
   # Because the component sits above its parent in the active stack
   # (`Theme.transform_ids` orders the parent first), the block-layout resolver
   # (most-derived wins) lets the component override the parent's outlets. The
   # component is local (no `remote_theme`), so it is not Git-managed and is
-  # publishable.
+  # publishable — which is why this path works for core and Git parents alike.
   #
   # Lives in the plugin (not core `Themes::*`) because it establishes a persistent
-  # editor-specific relationship — the companion — whose mapping is editor metadata.
+  # editor-specific relationship whose mapping is editor metadata.
   #
   # @example
   #   DiscourseWireframe::EnsureBlockLayoutCompanion.call(
   #     guardian: guardian,
-  #     params: { theme_id: parent.id, drafts: [{ outlet_name:, layout_json: }] },
+  #     params: { theme_id: parent.id, name: "Spring launch", drafts: [{ outlet_name:, layout_json: }] },
   #   )
   class EnsureBlockLayoutCompanion
     include Service::Base
 
-    BLOCK_LAYOUTS_SUFFIX = "-block-layouts"
+    NAME_MAX_LENGTH = 100
 
     params do
       attribute :theme_id, :integer
+      attribute :name, :string
       attribute :drafts, :array, default: []
 
       # Allow negative ids: core system themes (Foundation, Horizon) have negative
       # ids and are a primary use case. `0` is never a real theme; existence is
       # enforced by the `model :theme` step.
       validates :theme_id, presence: true, numericality: { only_integer: true, other_than: 0 }
+      validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
     end
 
     model :theme
@@ -70,36 +72,23 @@ module DiscourseWireframe
       end
     end
 
-    # Reuse the recorded companion when one exists (so a rename never spawns a
-    # duplicate); otherwise adopt a same-named local component child (legacy /
-    # un-mapped), else create a fresh one — suffixing the name if the canonical
-    # one is taken globally by something we can't reuse. Always link it as a child.
-    def ensure_component(theme:, guardian:)
-      component = find_existing_companion(theme) || create_companion(theme, guardian)
-      theme.add_relative_theme!(:child, component) if theme.child_theme_ids.exclude?(component.id)
+    # Always creates a fresh component named by the admin (suffixed when the name
+    # is taken), installs it on the parent, and unlinks the other designs so only
+    # one is installed at a time.
+    def ensure_component(theme:, guardian:, params:)
+      name = params.name.strip
+      name = Theme.uniquify_name(name) if Theme.exists?(name: name)
+      component = Theme.create!(name: name, component: true, user_id: guardian.user.id)
+      DiscourseWireframe::BlockLayoutCompanion.uninstall_all(theme)
+      theme.add_relative_theme!(:child, component)
       context[:component] = component
     end
 
-    def find_existing_companion(theme)
-      mapped_id = DiscourseWireframe::BlockLayoutCompanion.companion_id_for(theme.id)
-      return Theme.find(mapped_id) if mapped_id
-
-      # No mapping yet (e.g. a companion created before mappings existed): adopt a
-      # same-named local component child; `record_mapping` then stamps it.
-      existing = Theme.find_by(name: "#{theme.name}#{BLOCK_LAYOUTS_SUFFIX}")
-      existing if existing&.component? && existing.remote_theme&.is_git? != true
-    end
-
-    def create_companion(theme, guardian)
-      base_name = "#{theme.name}#{BLOCK_LAYOUTS_SUFFIX}"
-      name = Theme.find_by(name: base_name) ? Theme.uniquify_name(base_name) : base_name
-      Theme.create!(name: name, component: true, user_id: guardian.user.id)
-    end
-
     def record_mapping(theme:, component:)
-      mapping =
-        DiscourseWireframe::BlockLayoutCompanion.find_or_initialize_by(parent_theme_id: theme.id)
-      mapping.update!(component_theme_id: component.id)
+      DiscourseWireframe::BlockLayoutCompanion.create!(
+        parent_theme_id: theme.id,
+        component_theme_id: component.id,
+      )
     end
 
     def overlay_drafts(params:, component:)

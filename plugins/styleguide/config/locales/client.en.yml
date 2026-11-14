@@ -497,5 +497,7 @@ en:
           title: "Virtual list"
         tabs:
           title: "Tabs"
+        carousel:
+          title: "Carousel"
         overflow_controls:
           title: "Overflow controls"

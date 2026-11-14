@@ -1,0 +1,136 @@
+/* The shared chrome list blocks render inside when they aren't plain. The
+   block's own card styling is dropped on `__content`, and its rows are spaced
+   and divided by the frame instead of the block. */
+
+.d-block-frame {
+  --d-block-frame-border: 1px solid var(--primary-low);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  color: var(--primary);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__icon {
+    display: inline-flex;
+    color: var(--primary-medium);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1em;
+    line-height: var(--line-height-medium);
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--tertiary);
+    font-weight: 600;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  /* The row classes are also on plain lists, so these only apply in a frame. */
+  & &__content {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  & &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  & &__row {
+    margin: 0;
+    border: 0;
+  }
+
+  & &__row + &__row {
+    border-top: var(--d-block-frame-border);
+  }
+
+  /* Panel: one card with an icon header, divided rows and a link footer. */
+  &.--panel {
+    overflow: hidden;
+    border: var(--d-block-frame-border);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+  }
+
+  &.--panel &__header {
+    padding: var(--space-4);
+    border-bottom: var(--d-block-frame-border);
+  }
+
+  &.--panel &__title {
+    font-weight: 600;
+  }
+
+  &.--panel &__body {
+    padding: var(--space-4);
+
+    &.--flush,
+    &:has(.d-block-frame__rows) {
+      padding: 0;
+    }
+  }
+
+  &.--panel &__row {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  &.--panel &__footer {
+    padding: var(--space-3) var(--space-4);
+    border-top: var(--d-block-frame-border);
+    text-align: center;
+  }
+
+  /* Heading: a large title and link on the page, the rows in a card below. */
+  &.--heading {
+    gap: var(--space-3);
+  }
+
+  &.--heading &__header {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  &.--heading &__title {
+    font-weight: 700;
+  }
+
+  &.--heading &__body {
+    padding: var(--space-4);
+    border: var(--d-block-frame-border);
+    border-radius: var(--d-border-radius-large);
+    background: var(--secondary);
+    box-shadow: var(--shadow-card);
+
+    &:has(.d-block-frame__rows) {
+      padding-block: var(--space-1);
+    }
+  }
+
+  &.--heading &__row {
+    padding-block: var(--space-3);
+  }
+}

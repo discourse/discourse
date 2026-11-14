@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import ImagePositionPicker from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-position-picker";
 import InspectorDimensionField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-dimension-field";
+import InspectorField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
 import InspectorStepperField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-stepper-field";
 import InspectorContainerArgsForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-container-args-form";
 
@@ -462,6 +463,41 @@ module(
       await triggerEvent(".wireframe-stepper-field__number", "change");
 
       assert.strictEqual(captured.at(-1), 12, "clamps 100 down to the max");
+    });
+  }
+);
+
+module(
+  "Integration | discourse-wireframe | inspector color field",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("stores a typed color with its leading #", async function (assert) {
+      const field = {
+        name: "backgroundColor",
+        title: "Color",
+        control: "color",
+      };
+      const values = [];
+      const onFieldSet = (value, { set, name }) => {
+        values.push(value);
+        set(name, value);
+      };
+
+      await render(
+        <template>
+          <Form as |form|>
+            <InspectorField
+              @field={{field}}
+              @form={{form}}
+              @onFieldSet={{onFieldSet}}
+            />
+          </Form>
+        </template>
+      );
+      await fillIn(".form-kit__control-color-input-hex", "d65151");
+
+      assert.strictEqual(values.at(-1), "#d65151");
     });
   }
 );

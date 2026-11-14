@@ -4,6 +4,7 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
     it { is_expected.not_to allow_value(0).for(:theme_id) }
+    it { is_expected.to validate_presence_of(:name) }
     # Core system themes (Foundation, Horizon) have negative ids and are valid.
     it { is_expected.to allow_value(-1).for(:theme_id) }
   end
@@ -20,7 +21,7 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
       { schema_version: 1, layout: [{ block: "hero-banner", args: { title: "Hi" } }] }.to_json
     end
     let(:drafts) { [{ outlet_name: "homepage-blocks", layout_json: layout_json }] }
-    let(:params) { { theme_id: parent.id, drafts: drafts } }
+    let(:params) { { theme_id: parent.id, name: "Spring launch", drafts: drafts } }
 
     def component
       Theme.find(result.theme_id)
@@ -36,7 +37,7 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
       expect(result).to run_successfully
       expect(component.component).to eq(true)
       expect(component.remote_theme&.is_git?).to be_falsey
-      expect(component.name).to eq("Acme-block-layouts")
+      expect(component.name).to eq("Spring launch")
       expect(parent.reload.child_theme_ids).to include(component.id)
 
       field =
@@ -52,39 +53,37 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
       )
     end
 
-    it "reuses the same component on a second call (idempotent), via the mapping" do
+    it "installs only the newest design, keeping the earlier one available" do
       first = described_class.call(params:, **dependencies)
       second =
         described_class.call(
           params: {
             theme_id: parent.id,
-            drafts: [{ outlet_name: "sidebar-blocks", layout_json: layout_json }],
+            name: "Autumn sale",
+            drafts: drafts,
           },
           **dependencies,
         )
 
-      expect(second.theme_id).to eq(first.theme_id)
-      reused = Theme.find(second.theme_id)
-      expect(reused.theme_fields.where(type_id: ThemeField.types[:block_layout]).count).to eq(2)
+      expect(second.theme_id).not_to eq(first.theme_id)
+      expect(parent.reload.child_theme_ids).to contain_exactly(second.theme_id)
+      expect(DiscourseWireframe::BlockLayoutCompanion.companion_id_for(parent.id)).to eq(
+        second.theme_id,
+      )
+      expect(
+        DiscourseWireframe::BlockLayoutCompanion.designs_for(parent.id).map { _1[:name] },
+      ).to eq(["Autumn sale", "Spring launch"])
     end
 
-    it "reuses the same component after it is renamed (no duplicate)" do
-      first = described_class.call(params:, **dependencies)
-      Theme.find(first.theme_id).update!(name: "Renamed by the user")
-
-      expect {
-        second = described_class.call(params:, **dependencies)
-        expect(second.theme_id).to eq(first.theme_id)
-      }.not_to change { Theme.count }
-    end
-
-    it "suffixes the component name when the canonical name is taken by a non-reusable theme" do
-      Fabricate(:theme, name: "Acme-block-layouts", component: false)
-      expect(component.name).to eq("Acme-block-layouts 2")
+    it "suffixes the component name when the name is already taken" do
+      Fabricate(:theme, name: "Spring launch", component: false)
+      expect(component.name).to eq("Spring launch 2")
     end
 
     context "with a core system theme as the parent (negative id)" do
-      let(:params) { { theme_id: Theme.foundation_theme.id, drafts: drafts } }
+      let(:params) do
+        { theme_id: Theme.foundation_theme.id, name: "Spring launch", drafts: drafts }
+      end
 
       it "creates the companion component installed on the system theme" do
         foundation = Theme.foundation_theme
@@ -92,7 +91,7 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
 
         expect(result).to run_successfully
         expect(component.component).to eq(true)
-        expect(component.name).to eq("Foundation-block-layouts")
+        expect(component.name).to eq("Spring launch")
         expect(foundation.reload.child_theme_ids).to include(component.id)
         expect(DiscourseWireframe::BlockLayoutCompanion.companion_id_for(foundation.id)).to eq(
           component.id,
@@ -107,7 +106,7 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
     end
 
     context "when the theme does not exist" do
-      let(:params) { { theme_id: 999_999, drafts: [] } }
+      let(:params) { { theme_id: 999_999, name: "x", drafts: [] } }
 
       it { is_expected.to fail_to_find_a_model(:theme) }
     end

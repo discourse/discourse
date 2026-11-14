@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { array, concat, fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { type ComponentLike, type ModifierLike } from "@glint/template";
+import { type ComponentLike } from "@glint/template";
 import DMenuUntyped from "discourse/float-kit/components/d-menu";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
+import type BlocksService from "discourse/services/blocks";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -16,13 +17,16 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource, {
   type DragSource,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dFitUntyped from "discourse/ui-kit/modifiers/d-fit";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import {
-  computeTier,
-  FIT_TIERS,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/toolbar-fit-tier";
+  blockRenderStatuses,
+  type BlockStatus,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/block-status";
+import {
+  entryKey,
+  findEntrySiblings,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import WireframeDragSessionService, {
   type BlockDragPayload,
@@ -32,20 +36,18 @@ import type WireframeForceExpandService from "discourse/plugins/discourse-wirefr
 import WireframeInplaceTextService, {
   type InplaceTextController,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
-import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
+import WireframeLayoutQueryService, {
+  OUTLET_STATE,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
-import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
+import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
+import WireframeSelectionService, {
+  type BlockAncestrySegment,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 /**
- * One fit tier the toolbar can settle into (widest to narrowest). Mirrors the
- * closed set the shared fit coordinator writes as `data-wf-toolbar-fit`.
- */
-type FitTier = "full" | "narrow" | "narrower";
-
-/**
- * One entry in the bar's collapsible (structural) action list. The inline
- * action row and the overflow menu both render from these descriptors, so the
- * two can never drift.
+ * One entry in the strip's actions menu. Rendered as a menu item; `group`
+ * transitions insert the dividers.
  */
 type ToolbarActionItem = {
   /** Stable action identifier. */
@@ -64,14 +66,12 @@ type ToolbarActionItem = {
   active?: boolean;
   /** Whether the action uses destructive styling. */
   danger?: boolean;
-  // Set from `group` transitions so the inline row and the menu reproduce the
-  // same visual grouping.
-  /** Whether a visual separator precedes the action. */
+  /** Whether a divider precedes the action; set from `group` transitions. */
   separatorBefore?: boolean;
 };
 
 interface BlockToolbarSignature {
-  /** Arguments controlling toolbar identity, state, and optional actions. */
+  /** Arguments controlling strip identity, state, and optional actions. */
   Args: {
     /** Composite key of the represented block. */
     blockKey: string;
@@ -87,16 +87,30 @@ interface BlockToolbarSignature {
     moveAxis?: "horizontal" | "vertical";
     /** Whether the represented block is an outlet root. */
     isOutletRoot?: boolean;
+    /** Whether the block sits inside another block, not directly in the outlet. */
+    isNested?: boolean;
+    /** Whether the represented block is a container. */
+    isContainer?: boolean;
+    /** Number of direct children the block renders. */
+    childCount?: number;
     /** Current outlet publication state. */
     outletState?: string;
     /** Whether the represented outlet has staged edits. */
     isOutletEditing?: boolean;
-    /** Whether outlet publication status should render. */
-    showOutletStatus?: boolean;
-    /** Chrome element measured by the fit coordinator. */
+    /** Chrome element the drag preview is copied from. */
     chromeEl?: HTMLElement;
     /** Whether the represented block is selected. */
     isSelected?: boolean;
+    /** Whether the wrapped block is a ghost (failed / unknown entry). */
+    isGhost?: boolean;
+    /** Whether the ghost is a genuine authoring error. */
+    isError?: boolean;
+    /** Category of render failure for a ghost. */
+    failureType?: string;
+    /** The block's render conditions tree. */
+    conditions?: object | object[] | null;
+    /** Layout warnings the chrome detected for the strip's status. */
+    warnings?: BlockStatus[];
     /** Whether the represented image can be reset. */
     canResetImage?: boolean;
     /** Resets the represented image. */
@@ -104,9 +118,22 @@ interface BlockToolbarSignature {
     /** Opens quick actions for the block's image. */
     onEditImage?: () => void;
   };
-  /** Root toolbar element. */
+  /** Root strip element. */
   Element: HTMLDivElement;
 }
+
+interface StripCrumbsSignature {
+  /** The ancestry to render and the segment pick handler. */
+  Args: {
+    /** Ancestor segments, outlet first. */
+    segments: BlockAncestrySegment[];
+    /** Selects the picked ancestor. */
+    onPick: (segment: BlockAncestrySegment) => void;
+  };
+}
+
+/** How many ancestors the strip shows inline before folding the middle. */
+const MAX_INLINE_ANCESTORS = 2;
 
 // TODO(devxp-typescript-pending): drop once d-menu is authored in .gts with a
 // real Signature, then import it directly. Untyped .gjs today gives no
@@ -140,75 +167,128 @@ const DMenu = DMenuUntyped as unknown as ComponentLike<{
   };
 }>;
 
-// TODO(devxp-typescript-pending): drop once d-fit is authored in .ts with a
-// real Signature, then import it directly.
-const dFit = dFitUntyped as unknown as ModifierLike<{
-  /** Element receiving the computed fit attribute. */
-  Element: HTMLElement;
-  /** Fit-modifier arguments. */
-  Args: {
-    /** Callback that maps available width to a fit tier. */
-    Positional: [(available: number, element: HTMLElement) => FitTier];
-    /** Named fit-coordinator options. */
-    Named: {
-      /** Element whose available width is measured. */
-      observedEl?: HTMLElement;
-      /** Attribute receiving the fit tier. */
-      attribute?: string;
-      /** Whether fit measurement is active. */
-      active?: boolean;
-      /** Values whose changes request a remeasurement. */
-      remeasureOn?: unknown[];
-    };
-  };
-}>;
+/**
+ * The ancestors of a selected nested block, each a button that re-selects that
+ * ancestor, separated by chevrons. Rendered inside the strip's handle in place
+ * of the bare name. Deep nesting folds everything between the outlet and the
+ * immediate parent into a "…" segment that opens a menu of those ancestors, so
+ * the strip never crams more than two ancestors inline.
+ */
+class StripCrumbs extends Component<StripCrumbsSignature> {
+  /** The ancestors shown inline: all of them, or the outlet and the parent. */
+  get inline(): BlockAncestrySegment[] {
+    const segments = this.args.segments;
+    if (segments.length <= MAX_INLINE_ANCESTORS) {
+      return segments;
+    }
+    return [segments[0]!, segments[segments.length - 1]!];
+  }
+
+  /** The ancestors folded into the "…" segment. */
+  get folded(): BlockAncestrySegment[] {
+    const segments = this.args.segments;
+    return segments.length > MAX_INLINE_ANCESTORS ? segments.slice(1, -1) : [];
+  }
+
+  /** The outlet segment, rendered first. */
+  get first(): BlockAncestrySegment | undefined {
+    return this.inline[0];
+  }
+
+  /** The remaining inline segments after the outlet. */
+  get rest(): BlockAncestrySegment[] {
+    return this.inline.slice(1);
+  }
+
+  /**
+   * Selects a folded ancestor, closing the menu first so the selection change
+   * (which re-renders this strip) never fires against a torn-down portal.
+   *
+   * @param segment - The picked ancestry segment.
+   * @param close - The menu's close callback.
+   */
+  @action
+  pickFolded(segment: BlockAncestrySegment, close?: () => void): void {
+    close?.();
+    this.args.onPick(segment);
+  }
+
+  <template>
+    {{#if this.first}}
+      <DButton
+        class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__crumb"
+        @action={{fn @onPick this.first}}
+        @translatedLabel={{this.first.displayName}}
+      />
+      {{dIcon "chevron-right" class="wireframe-block-toolbar__crumb-sep"}}
+    {{/if}}
+    {{#if this.folded.length}}
+      <DMenu
+        class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__crumb wireframe-block-toolbar__crumb--folded"
+        @ariaLabel="wireframe.canvas.toolbar.folded_ancestors"
+        @icon="ellipsis"
+        @identifier="wireframe-strip-crumbs"
+        @placement="bottom-start"
+        @title="wireframe.canvas.toolbar.folded_ancestors"
+      >
+        <:content as |args|>
+          <DDropdownMenu as |dropdown|>
+            {{#each this.folded as |segment|}}
+              <dropdown.item>
+                <DButton
+                  class="btn-flat wireframe-block-toolbar__menu-item"
+                  @action={{fn this.pickFolded segment args.close}}
+                  @translatedLabel={{segment.displayName}}
+                />
+              </dropdown.item>
+            {{/each}}
+          </DDropdownMenu>
+        </:content>
+      </DMenu>
+      {{dIcon "chevron-right" class="wireframe-block-toolbar__crumb-sep"}}
+    {{/if}}
+    {{#each this.rest as |segment|}}
+      <DButton
+        class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__crumb"
+        @action={{fn @onPick segment}}
+        @translatedLabel={{segment.displayName}}
+      />
+      {{dIcon "chevron-right" class="wireframe-block-toolbar__crumb-sep"}}
+    {{/each}}
+  </template>
+}
 
 /**
- * Floating contextual bar shown above each block chrome. Two regions
- * sit inside one rounded "tab" anchored to the chrome's top-left edge:
+ * The header strip attached to the top edge of every outlet and block chrome.
+ * Rendered in flow as the chrome's first child, it carries:
  *
- *   1. Handle region — grip icon + display name + drag-source
- *      modifier. Replaces the standalone block-handle badge so the
- *      block's identity stays visible whenever the bar is. Rendered
- *      for movable blocks and composite parts; the outlet root has no
- *      handle (its identity lives in the always-on outlet badge), so
- *      its toolbar carries only its selection actions.
- *   2. Action region (rendered when `@isSelected`) — select parent,
- *      move up / down, duplicate, optional force-expand toggle,
- *      inline-format buttons, delete.
+ *   1. Handle region — the grip (drag source) and the block's name, or, for
+ *      a selected nested block, a breadcrumb of its ancestors ending in the
+ *      name. The outlet root shows the outlet icon and name instead and
+ *      carries no drag source; a composite part reads as a part.
+ *   2. Trailing region — the outlet's publish state, or the block's render
+ *      status (hidden by conditions, failed to render, a viewport or
+ *      persona condition, a layout warning), or a container's child count;
+ *      the in-place text format buttons and the link URL editor while an
+ *      inline edit is open; then the actions: a gear that opens the inspector
+ *      and a "…" menu holding the structural actions (select parent,
+ *      duplicate, move, detach, expand, image actions, remove).
  *
- * The bar is mounted whenever the chrome is rendered; CSS reveals it
- * on hover (innermost only) or on selection. Positioning is via CSS
- * (`bottom: 100%; left: ~-border-width` against the chrome) — same
- * anchor as the outlet badge.
+ * The strip is always visible so the block stays labelled; CSS reveals the
+ * actions on hover (innermost chrome only) or selection, and keeps the
+ * outlet's menu visible at all times.
  *
- * On a narrow block the bar would overflow, so its collapsible (structural)
- * actions fold into an overflow menu as space runs out. The shared `d-fit`
- * modifier registers this bar's chrome with the fit coordinator, which measures
- * the chrome's width and writes a `data-wf-toolbar-fit` tier on it; the
- * stylesheet keys off that to swap the inline action row for the overflow menu
- * and, when even that doesn't fit, drop the handle's name to its tooltip. The
- * inline buttons and the overflow menu render from one `actionItems` descriptor
- * list, so the two can't drift.
- *
- * Inline-format buttons (bold / italic / link) appear when the user
- * has entered an in-place text session on this block AND has a non-empty
- * text selection inside it. The controller (`InplaceTextController`)
- * registers itself with the service as `wireframeInplaceText.controller`; we
- * read its `markState` (a tracked-on-PM-transactions getter) and call
- * its commands.
- *
- * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so
- * the mousedown's default focus shift is suppressed — ProseMirror
- * keeps focus and the selection highlight stays visible while the
- * mark applies. They are deliberately NOT collapsed into the hamburger:
- * a menu item click can't preserve the ProseMirror selection the way
- * `@preventFocus` does, so they stay inline whenever they show. The
- * block-action buttons (move/duplicate/delete) don't need this because
- * they have no PM selection to preserve.
+ * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so the
+ * mousedown's default focus shift is suppressed — ProseMirror keeps focus and
+ * the selection highlight stays visible while the mark applies. They never
+ * fold into the menu: a menu item click can't preserve the ProseMirror
+ * selection the way `@preventFocus` does.
  */
 export default class BlockToolbar extends Component<BlockToolbarSignature> {
-  /** Applies structural mutations for toolbar actions. */
+  /** Resolves outlet display names for the breadcrumb. */
+  @service declare blocks: BlocksService;
+
+  /** Applies structural mutations for menu actions. */
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
 
   /** Owns the active block drag payload. */
@@ -229,7 +309,10 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   /** Exposes the shared layout invalidation signal. */
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
 
-  /** Owns selection state and sibling-movement availability. */
+  /** Opens the inspector for the gear action. */
+  @service declare wireframeRail: WireframeRailService;
+
+  /** Owns selection state and the selected block's ancestry. */
   @service declare wireframeSelection: WireframeSelectionService;
 
   /**
@@ -241,28 +324,21 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    */
   @tracked editorValue = "";
 
-  /**
-   * The last fit tier `computeFit` decided, mirrored into tracked state. `d-fit`
-   * applies the tier as a DOM attribute, which Glimmer's tracking can't see; the
-   * roving-focus cursor reads this (through `rovingKey`) so it re-seeds when a
-   * fold hides the button currently holding the single tab stop. Never read from
-   * the template directly, so it takes the `_` fallback.
-   */
-  @tracked _fitTier: FitTier = FIT_TIERS.full;
-
-  /** Whether the selected block can move to its earlier sibling position. */
+  /** Whether the block has an earlier sibling to move before. */
   get canMoveUp(): boolean {
-    return this.wireframeSelection.canMoveSelectedUp;
+    const position = this.#siblingPosition;
+    return !!position && position.index > 0;
   }
 
-  /** Whether the selected block can move to its later sibling position. */
+  /** Whether the block has a later sibling to move after. */
   get canMoveDown(): boolean {
-    return this.wireframeSelection.canMoveSelectedDown;
+    const position = this.#siblingPosition;
+    return !!position && position.index < position.count - 1;
   }
 
   /**
    * Whether the block's siblings run horizontally (a tabs / carousel parent, or
-   * a `layout` in row mode), so the reorder arrows point left/right rather than
+   * a `layout` in row mode), so the reorder actions read left/right rather than
    * up/down. The underlying move is the same "earlier / later sibling" in both
    * orientations — only the icons and labels change.
    */
@@ -295,7 +371,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   }
 
   /**
-   * `true` when this toolbar should expose the "expand for editing"
+   * `true` when the menu should expose the "expand for editing"
    * toggle. Shown for `wf:layout` blocks whose `autoCollapse` isn't
    * `"never"` — i.e. the layout could actually collapse at narrow
    * widths, so an override has something to override.
@@ -346,7 +422,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   }
 
   /**
-   * `true` when the toolbar should render its URL-edit surface for
+   * `true` when the strip should render its URL-edit surface for
    * the rich text link mark — i.e. PM has entered link-mark
    * mode (`enterLinkMode` in `inplace-text-controller.gts`), which
    * populates `wireframeInplaceText.fieldEditor` with `kind === "url"`.
@@ -354,16 +430,16 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * Block-arg URL edits (e.g. a button's `href`) are no longer routed
    * through here — those open an anchored `InplaceLinkPopover` next to
    * the link element instead. The rich-text link mark has no DOM
-   * anchor of its own, so it stays on the toolbar.
+   * anchor of its own, so it stays on the strip.
    */
   get isUrlFieldEditing(): boolean {
     return this.wireframeInplaceText.fieldEditor?.kind === "url";
   }
 
   /**
-   * `true` when this toolbar belongs to a synthesized composite part (which
+   * `true` when this strip belongs to a synthesized composite part (which
    * has no persisted entry). Structural actions — move, duplicate, delete,
-   * drag-to-reorder — are meaningless for a part, so the toolbar hides them.
+   * drag-to-reorder — are meaningless for a part, so the strip hides them.
    */
   get isPart(): boolean {
     return isPartKey(this.args.blockKey);
@@ -372,37 +448,141 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   /**
    * `true` for an ordinary movable block — neither the outlet root (a page
    * region) nor a composite part. Only movable blocks carry the structural
-   * actions that fold into the hamburger, so only they collapse.
+   * actions.
    */
-  get isCollapsible(): boolean {
+  get isMovable(): boolean {
     return !this.args.isOutletRoot && !this.isPart;
   }
 
   /**
-   * `true` when this bar should be width-tracked for collapse: it's the
-   * selected block, it's a movable block (the only kind with a foldable action
-   * set), and it isn't in the URL-edit sub-mode (which renders its own inline
-   * surface that doesn't collapse).
+   * Whether the menu offers "Select parent". Hidden when the parent is the
+   * outlet itself — stepping up to a page region isn't a meaningful move — but
+   * kept for a composite part, whose parent is the composite it belongs to.
    */
-  get fitActive(): boolean {
+  get showSelectParent(): boolean {
+    if (this.args.isOutletRoot) {
+      return false;
+    }
+    if (this.isPart) {
+      return true;
+    }
+    return !this.parentIsOutletRoot;
+  }
+
+  /** Whether the block sits directly in the outlet's implicit root layout. */
+  get parentIsOutletRoot(): boolean {
+    void this.wireframeLayoutSignal.version;
+    const parent = this.wireframeLayoutQuery.findEntryParent(
+      this.args.blockKey
+    );
+    if (!parent) {
+      return true;
+    }
+    const parentKey = entryKey(parent);
     return (
-      this.args.isSelected === true &&
-      this.isCollapsible &&
-      !this.isUrlFieldEditing
+      parentKey == null || this.wireframeLayoutQuery.isOutletRoot(parentKey)
     );
   }
 
   /**
+   * The ancestors shown as a breadcrumb in place of the bare name: only for the
+   * selected nested block, from the outlet down to (not including) the block.
+   * The outlet's implicit root layout IS the outlet, so it collapses into the
+   * outlet segment, which reads by the outlet's display name.
+   */
+  get ancestors(): BlockAncestrySegment[] {
+    if (!this.args.isSelected || !this.args.isNested) {
+      return [];
+    }
+    if (this.wireframeSelection.selectedBlockKey !== this.args.blockKey) {
+      return [];
+    }
+    return this.wireframeSelection.selectedBlockAncestry
+      .slice(0, -1)
+      .filter(
+        (segment) =>
+          segment.key == null ||
+          !this.wireframeLayoutQuery.isOutletRoot(segment.key)
+      )
+      .map((segment) =>
+        segment.isOutlet
+          ? {
+              ...segment,
+              displayName:
+                this.blocks.getOutletMetadata(segment.outletName)
+                  ?.displayName ?? segment.displayName,
+            }
+          : segment
+      );
+  }
+
+  /** Whether the handle shows the ancestry breadcrumb. */
+  get showBreadcrumb(): boolean {
+    return this.ancestors.length > 0;
+  }
+
+  /** The block's render statuses, most important first. */
+  @cached
+  get statuses(): BlockStatus[] {
+    return blockRenderStatuses({
+      isGhost: this.args.isGhost,
+      isError: this.args.isError,
+      failureType: this.args.failureType,
+      conditions: this.args.conditions,
+      warnings: this.args.warnings,
+    });
+  }
+
+  /** The status the strip shows; the rest go into its title. */
+  get primaryStatus(): BlockStatus | null {
+    return this.statuses[0] ?? null;
+  }
+
+  /** Every status, for the strip's tooltip. */
+  get statusTitle(): string | undefined {
+    const parts = this.statuses.map((status) => status.title ?? status.label);
+    return parts.length > 0 ? parts.join(" · ") : undefined;
+  }
+
+  /** A container's child count, shown when it has no status to report. */
+  get childCountLabel(): string | null {
+    const count = this.args.childCount ?? 0;
+    if (!this.args.isContainer || count === 0) {
+      return null;
+    }
+    return i18n("wireframe.canvas.strip.block_count", { count });
+  }
+
+  /**
+   * The outlet's publish state as the strip names it: unsaved edits supersede
+   * the persisted state; an outlet nothing has published yet is a draft.
+   */
+  get publishState(): string {
+    if (this.args.isOutletEditing) {
+      return "unpublished_changes";
+    }
+    switch (this.args.outletState) {
+      case OUTLET_STATE.PUBLISHED:
+        return "published";
+      case OUTLET_STATE.LOCKED:
+        return "locked";
+      default:
+        return "draft";
+    }
+  }
+
+  /** Translated publish state label. */
+  get publishStateLabel(): string {
+    return i18n(`wireframe.outlet.state.${this.publishState}`);
+  }
+
+  /**
    * The key that re-seeds the roving-focus cursor. It must change whenever the
-   * set of usable toolbar buttons changes, so the single tab stop never strands
-   * on a button that was removed or hidden:
-   *   - `isSelected` toggles the whole action set on and off,
-   *   - `isUrlFieldEditing` and `showInlineFormat` swap in entirely different
-   *     button groups,
-   *   - the fit tier folds the action row into the hamburger (the off-tier group
-   *     is `visibility:hidden`, which `dRovingFocus` now treats as unusable),
-   *   - the action descriptors themselves change which buttons render and which
-   *     are disabled (skipped as tab targets).
+   * set of usable strip buttons changes, so the single tab stop never strands
+   * on a button that was removed or hidden: selection toggles the actions,
+   * the URL editor and inline format swap in different button groups, the
+   * breadcrumb adds buttons, and the action descriptors change which menu
+   * trigger renders.
    */
   get rovingKey(): string {
     const actions = this.actionItems
@@ -410,9 +590,9 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       .join(",");
     return [
       this.args.isSelected ? "s" : "",
-      this._fitTier,
       this.isUrlFieldEditing ? "u" : "",
       this.showInlineFormat ? "f" : "",
+      this.showBreadcrumb ? "b" : "",
       actions,
     ].join("|");
   }
@@ -428,26 +608,18 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   }
 
   /**
-   * The single, ordered source of truth for the bar's collapsible (structural)
-   * actions. Both the inline action row and the hamburger menu render from this
-   * list, so they can never drift. Each descriptor is one of:
-   *
-   *   - a plain icon button:
-   *     `{ id, group, icon, title, action, disabled?, active?, danger? }`.
-   *
-   * `separatorBefore` is computed from `group` transitions so the inline row
-   * reproduces the visual grouping. Outlet roots and parts omit the structural
+   * The single, ordered source of truth for the strip's menu. Each descriptor
+   * is `{ id, group, icon, title, action, disabled?, active?, danger? }`;
+   * `separatorBefore` is computed from `group` transitions so the menu shows
+   * a divider between groups. Outlet roots and parts omit the structural
    * actions (move/duplicate/detach/delete), leaving only whatever applies (e.g.
-   * the force-expand toggle on a layout), and never collapse.
-   *
+   * the force-expand toggle on a layout).
    */
   @cached
   get actionItems(): ToolbarActionItem[] {
     const items: ToolbarActionItem[] = [];
 
-    // Every block except the outlet root can step up to its parent (the
-    // enclosing container, or the outlet when it sits at the top).
-    if (!this.args.isOutletRoot) {
+    if (this.showSelectParent) {
       items.push({
         id: "select-parent",
         group: "nav",
@@ -457,7 +629,14 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       });
     }
 
-    if (this.isCollapsible) {
+    if (this.isMovable) {
+      items.push({
+        id: "duplicate",
+        group: "primary",
+        icon: "copy",
+        title: "wireframe.canvas.toolbar.duplicate",
+        action: this.duplicate,
+      });
       items.push({
         id: "move-back",
         group: "primary",
@@ -474,13 +653,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
         disabled: !this.canMoveDown,
         action: this.moveDown,
       });
-      items.push({
-        id: "duplicate",
-        group: "primary",
-        icon: "copy",
-        title: "wireframe.canvas.toolbar.duplicate",
-        action: this.duplicate,
-      });
       if (this.canDetach) {
         items.push({
           id: "detach",
@@ -495,7 +667,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     if (this.canForceExpand) {
       items.push({
         id: "force-expand",
-        group: "primary",
+        group: "layout",
         icon: this.isForceExpanded
           ? "down-left-and-up-right-to-center"
           : "up-right-and-down-left-from-center",
@@ -527,7 +699,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       });
     }
 
-    if (this.isCollapsible) {
+    if (this.isMovable) {
       items.push({
         id: "delete",
         group: "danger",
@@ -538,7 +710,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
       });
     }
 
-    // A separator marks each group boundary, reproducing the inline grouping.
+    // A divider marks each group boundary.
     let prevGroup = null;
     for (const item of items) {
       item.separatorBefore = prevGroup !== null && item.group !== prevGroup;
@@ -548,39 +720,28 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     return items;
   }
 
-  /**
-   * The bar's fit decision, run in the fit coordinator's shared read phase
-   * (reads only — nothing is written). Reads the natural widths of the bar's
-   * parts from the toolbar element: the leading group (handle + any
-   * always-inline format buttons) and BOTH the collapsible action row and the
-   * hamburger are always in the DOM — the off-tier one sits absolutely
-   * positioned at `max-content`, so every `offsetWidth` reports its true
-   * intrinsic width regardless of the current tier. No styles are toggled to
-   * measure. The width-to-tier mapping itself lives in the pure `computeTier`.
-   *
-   * @param avail - The chrome's available content width.
-   * @param toolbarEl - The bar root (the element `d-fit` is on).
-   */
-  @action
-  computeFit(avail: number, toolbarEl: HTMLElement): FitTier {
-    const widthOf = (selector: string) =>
-      toolbarEl.querySelector<HTMLElement>(selector)?.offsetWidth ?? 0;
-
-    const leading =
-      widthOf(".wireframe-block-toolbar__handle") +
-      widthOf(".wireframe-block-toolbar__format");
-
-    const tier = computeTier(
-      avail,
-      leading + widthOf(".wireframe-block-toolbar__actions"),
-      leading + widthOf(".wireframe-block-toolbar__more")
+  /** The block's index among its siblings, read from the live layout. */
+  get #siblingPosition(): {
+    /** Zero-based index among the siblings. */
+    index: number;
+    /** Number of siblings, the block included. */
+    count: number;
+  } | null {
+    void this.wireframeLayoutSignal.version;
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
     );
-    // Mirror the decided tier into tracked state for `rovingKey`. This runs in
-    // the fit coordinator's post-render read phase, so the assignment schedules
-    // a normal re-render rather than tripping a backtracking assertion, and it
-    // can't loop: the tier isn't one of `d-fit`'s remeasure inputs.
-    this._fitTier = tier;
-    return tier;
+    if (!located) {
+      return null;
+    }
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(
+      located.outletName
+    );
+    if (!layout) {
+      return null;
+    }
+    const found = findEntrySiblings(layout, this.args.blockKey);
+    return found ? { index: found.index, count: found.siblings.length } : null;
   }
 
   /** Toggles edit-presentation expansion for the represented block. */
@@ -626,16 +787,54 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   }
 
   /**
-   * Runs a hamburger-menu action, closing the menu first so the action (which
-   * may unmount this toolbar, e.g. delete) doesn't fire against a torn-down
-   * menu portal.
+   * Opens the inspector on its settings. The click also bubbles to the chrome,
+   * which selects the block if it wasn't already.
+   */
+  @action
+  openSettings(): void {
+    this.wireframeRail.showInspector();
+  }
+
+  /**
+   * Selects an ancestor picked in the breadcrumb. The outlet segment selects
+   * the outlet's implicit root layout, the same target as "Select parent"
+   * reaches from a top-level block.
+   *
+   * @param segment - The picked ancestry segment.
+   */
+  @action
+  pickAncestor(segment: BlockAncestrySegment): void {
+    if (segment.isOutlet) {
+      const rootKey = this.wireframeLayoutQuery.outletRootKey(
+        segment.outletName
+      );
+      if (rootKey) {
+        this.wireframeSelection.selectBlock({ key: rootKey, name: "layout" });
+      }
+      return;
+    }
+    if (segment.key && segment.blockName) {
+      this.wireframeSelection.selectBlock({
+        key: segment.key,
+        name: segment.blockName,
+      });
+    }
+  }
+
+  /**
+   * Runs a menu action once the menu has closed, so the action never fires
+   * against a torn-down portal (remove unmounts this strip) and an action that
+   * opens its own popover (the image quick actions) doesn't race the close.
    *
    * @param actionFn - The descriptor's action.
    * @param close - The menu's close callback.
    */
   @action
-  invokeFromMenu(actionFn?: () => void, close?: () => void): void {
-    close?.();
+  async invokeFromMenu(
+    actionFn?: () => void,
+    close?: () => void | Promise<void>
+  ): Promise<void> {
+    await close?.();
     actionFn?.();
   }
 
@@ -735,273 +934,304 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     );
   }
 
+  /**
+   * Renders the native drag image: a copy of the whole chrome in its selected
+   * dress (see `.--drag-preview`), sized like the original so the preview
+   * reads as the block being lifted off the page.
+   *
+   * @param target - The offscreen container the browser photographs.
+   * @returns A cleanup that removes the copy once the drag image is captured.
+   */
+  @action
+  renderDragPreview({
+    container,
+  }: {
+    /** The offscreen container to render into. */
+    container: HTMLElement;
+  }): () => void {
+    const source = this.args.chromeEl;
+    if (!source) {
+      return () => {};
+    }
+    const copy = source.cloneNode(true) as HTMLElement;
+    copy.classList.remove("--drag-source");
+    copy.classList.add("--drag-preview", "--selected");
+    copy.style.width = `${source.offsetWidth}px`;
+    container.appendChild(copy);
+    return () => copy.remove();
+  }
+
   <template>
     <div
-      {{! An idle toolbar sits at opacity:0 but stays in the a11y tree, so every
-        unselected block would otherwise leak a phantom named toolbar to
-        assistive tech. Hide those. The outlet root stays exposed: its always-on
-        status chip is information its region should announce. }}
+      {{! An idle strip stays in the a11y tree, so every unselected block would
+        otherwise leak a phantom named toolbar to assistive tech. Hide those.
+        The outlet root stays exposed: its always-on publish state is
+        information its region should announce. }}
       aria-hidden={{unless (or @isSelected @isOutletRoot) "true"}}
       aria-label={{i18n "wireframe.canvas.toolbar_label" name=@displayName}}
-      class="wireframe-block-toolbar"
-      role={{unless this.isUrlFieldEditing "toolbar"}}
-      {{dFit
-        this.computeFit
-        observedEl=@chromeEl
-        attribute="data-wf-toolbar-fit"
-        active=this.fitActive
-        remeasureOn=(array
-          this.actionItems
-          @displayName
-          @displayChip
-          this.isUrlFieldEditing
-          this.showInlineFormat
-        )
+      class={{dConcatClass
+        "wireframe-block-toolbar"
+        (if @isOutletRoot "--outlet")
+        (if @isNested "--nested")
+        (if this.primaryStatus (concat "--status-" this.primaryStatus.tone))
       }}
+      role={{unless this.isUrlFieldEditing "toolbar"}}
       {{dRovingFocus
         orientation="horizontal"
         itemSelector=".wireframe-block-toolbar__btn"
         itemsKey=this.rovingKey
       }}
     >
-      {{! Handle region — always present so block identity stays
-        visible whenever the bar is shown, and so the drag-source
-        modifier's registration is stable across hover transitions.
-        The drag-preview arg is the chrome's outer div (passed in by
-        BlockChrome via the chromeEl arg) so the browser shows a
-        translucent copy of the actual block during the drag instead
-        of the small handle tab.
-
-        The outlet root is a page region, not a movable block — its handle
-        carries no drag source and reads as the outlet identity: the cube
-        icon, the outlet name, and an inner status chip (Editing / Published /
-        Default). This handle is the always-on badge above the region (kept
-        visible by CSS), so the outlet stays labelled without hovering. }}
-      {{#if @isOutletRoot}}
-        <span
-          class="wireframe-block-toolbar__handle wireframe-block-toolbar__handle--outlet"
-          title={{@displayName}}
-        >
-          {{dIcon "cubes"}}
-          <span>{{@displayName}}</span>
-          {{#if @showOutletStatus}}
-            <span
-              class={{dConcatClass
-                "wireframe-block-toolbar__status"
-                (concat "--" (if @isOutletEditing "editing" @outletState))
-              }}
-            >{{if
-                @isOutletEditing
-                (i18n "wireframe.outlet.editing")
-                (i18n (concat "wireframe.outlet.state." @outletState))
-              }}</span>
-          {{/if}}
-        </span>
-      {{else if this.isPart}}
-        {{! A composite part isn't a movable block — its handle reads as a
-          part (dashed icon + name) and carries no drag source. }}
-        <span class="wireframe-block-toolbar__handle" title={{@displayName}}>
-          {{dIcon "circle-dashed"}}
-          <span>{{@displayName}}</span>
-        </span>
-      {{else}}
-        {{! The handle title carries the block name (not a drag hint) so the
-            identity stays discoverable at the Narrower tier, where the name
-            text is dropped and only the grip + hamburger remain. The grip icon
-            and grab cursor still signal that it drags. }}
-        <span
-          class="wireframe-block-toolbar__handle"
-          title={{@displayName}}
-          {{dDragAndDropSource
-            type="wf-block"
-            data=(hash blockKey=@blockKey outletName=@outletName)
-            dragPreview=@chromeEl
-            onDragStart=this.startDrag
-            onDragEnd=this.wireframeDragSession.endDrag
-          }}
-        >
-          {{dIcon "grip-vertical"}}
-          {{! The displayTitle arg carries a fuller name (e.g. a tab's own
+      <div class="wireframe-block-toolbar__bar">
+        {{! Handle region — always present so block identity stays visible,
+          and so the drag-source modifier's registration is stable across
+          hover transitions. The outlet root is a page region, not a movable
+          block: its handle carries no drag source. }}
+        {{#if @isOutletRoot}}
+          <span
+            class="wireframe-block-toolbar__handle wireframe-block-toolbar__handle--outlet"
+            title={{@displayName}}
+          >
+            {{dIcon "cubes" class="wireframe-block-toolbar__grip"}}
+            <span class="wireframe-block-toolbar__name">{{@displayName}}</span>
+          </span>
+        {{else if this.isPart}}
+          {{! A composite part isn't a movable block — its handle reads as a
+            part (dashed icon + name) and carries no drag source. }}
+          <span
+            class="wireframe-block-toolbar__handle wireframe-block-toolbar__handle--part"
+            title={{@displayName}}
+          >
+            {{dIcon "circle-dashed" class="wireframe-block-toolbar__grip"}}
+            {{#if this.showBreadcrumb}}
+              <StripCrumbs
+                @onPick={{this.pickAncestor}}
+                @segments={{this.ancestors}}
+              />
+            {{/if}}
+            <span class="wireframe-block-toolbar__name">{{@displayName}}</span>
+          </span>
+        {{else}}
+          {{! The handle title carries the block name so the identity stays
+            discoverable when a narrow strip truncates the name. }}
+          <span
+            class="wireframe-block-toolbar__handle"
+            title={{@displayName}}
+            {{dDragAndDropSource
+              type="wf-block"
+              data=(hash blockKey=@blockKey outletName=@outletName)
+              dragPreview=this.renderDragPreview
+              dragPreviewOffset=(hash x="16px" y="12px")
+              onDragStart=this.startDrag
+              onDragEnd=this.wireframeDragSession.endDrag
+            }}
+          >
+            {{dIcon "grip-vertical" class="wireframe-block-toolbar__grip"}}
+            {{#if this.showBreadcrumb}}
+              <StripCrumbs
+                @onPick={{this.pickAncestor}}
+                @segments={{this.ancestors}}
+              />
+            {{/if}}
+            {{! The displayTitle arg carries a fuller name (e.g. a tab's own
               label) for a block shown by ordinal; absent for ordinary blocks.
               The displayChip arg, when present, is the block's position within
               an ordinal-naming container (a tabs panel, a carousel slide),
               shown as a chip beside the name. }}
-          <span title={{@displayTitle}}>{{@displayName}}</span>
-          {{#if @displayChip}}
             <span
-              class="wireframe-block-toolbar__ordinal"
-            >{{@displayChip}}</span>
-          {{/if}}
-        </span>
-      {{/if}}
+              class="wireframe-block-toolbar__name"
+              title={{@displayTitle}}
+            >{{@displayName}}</span>
+            {{#if @displayChip}}
+              <span
+                class="wireframe-block-toolbar__ordinal"
+              >{{@displayChip}}</span>
+            {{/if}}
+          </span>
+        {{/if}}
 
-      {{#if @isSelected}}
-        {{#if this.isUrlFieldEditing}}
-          <input
-            class="wireframe-block-toolbar__url-input"
-            placeholder="https://..."
-            type="url"
-            value={{this.editorValue}}
-            {{didInsert this.seedFieldEditorValue}}
-            {{on "input" this.onUrlInput}}
-            {{on "keydown" this.onUrlKeydown}}
-          />
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn"
-            @action={{this.applyFieldEditor}}
-            @ariaLabel="wireframe.canvas.toolbar.link_apply"
-            @icon="check"
-            @preventFocus={{true}}
-            @title="wireframe.canvas.toolbar.link_apply"
-          />
-          {{#if this.wireframeInplaceText.fieldEditor.remove}}
-            <DButton
-              class="btn-flat wireframe-block-toolbar__btn"
-              @action={{this.removeFieldEditor}}
-              @ariaLabel="wireframe.canvas.toolbar.link_remove"
-              @icon="link-slash"
-              @preventFocus={{true}}
-              @title="wireframe.canvas.toolbar.link_remove"
-            />
-          {{/if}}
-          <DButton
-            class="btn-flat wireframe-block-toolbar__btn"
-            @action={{this.cancelFieldEditor}}
-            @ariaLabel="wireframe.canvas.toolbar.link_cancel"
-            @icon="xmark"
-            @preventFocus={{true}}
-            @title="wireframe.canvas.toolbar.link_cancel"
-          />
-        {{else}}
-          {{! Collapsible structural actions. The inline row and the hamburger
-              below render from the same actions list. CSS swaps which is in
-              flow via the chrome's fit data attribute; whichever is off-tier
-              sits absolutely positioned and hidden but still measurable. }}
-          <div class="wireframe-block-toolbar__actions">
-            {{#each this.actionItems as |item|}}
-              {{#if item.separatorBefore}}
-                <span
-                  aria-hidden="true"
-                  class="wireframe-block-toolbar__separator"
-                ></span>
-              {{/if}}
-              <DButton
-                class={{dConcatClass
-                  "btn-flat"
-                  "wireframe-block-toolbar__btn"
-                  (if item.active "--active")
-                  (if item.danger "wireframe-block-toolbar__btn--danger")
-                }}
-                data-toolbar-action={{item.id}}
-                @action={{item.action}}
-                @ariaLabel={{item.title}}
-                @ariaPressed={{item.active}}
-                @disabled={{item.disabled}}
-                @icon={{item.icon}}
-                @title={{item.title}}
-              />
-            {{/each}}
-          </div>
-
-          {{! Overflow menu — the collapsed home for the actions above. Only
-              movable blocks collapse, so outlet roots and parts render no
-              overflow menu (their few actions stay inline). The menu renders the
-              same actions list as text items. }}
-          {{#if this.isCollapsible}}
-            <DMenu
-              class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__more"
-              @ariaLabel="wireframe.canvas.toolbar.more"
-              @icon="ellipsis-vertical"
-              @identifier="wireframe-toolbar-more"
-              @placement="bottom-start"
-              @title="wireframe.canvas.toolbar.more"
+        <span class="wireframe-block-toolbar__trail">
+          {{#if @isOutletRoot}}
+            <span
+              class={{dConcatClass
+                "wireframe-block-toolbar__status"
+                "wireframe-block-toolbar__status--publish"
+                (concat "--" this.publishState)
+              }}
+              title={{this.publishStateLabel}}
             >
-              <:content as |args|>
-                <DDropdownMenu as |dropdown|>
-                  {{#each this.actionItems as |item|}}
-                    {{! A divider reproduces the inline grouping (primary /
-                        image / danger) as menu separators. }}
-                    {{#if item.separatorBefore}}
-                      <dropdown.divider />
-                    {{/if}}
-                    <dropdown.item>
-                      <DButton
-                        class={{dConcatClass
-                          "btn-flat"
-                          (if item.active "--active")
-                          (if
-                            item.danger "wireframe-block-toolbar__btn--danger"
-                          )
-                        }}
-                        @action={{fn
-                          this.invokeFromMenu
-                          item.action
-                          args.close
-                        }}
-                        @disabled={{item.disabled}}
-                        @icon={{item.icon}}
-                        @translatedLabel={{i18n item.title}}
-                      />
-                    </dropdown.item>
-                  {{/each}}
-                </DDropdownMenu>
-              </:content>
-            </DMenu>
-          {{/if}}
-
-          {{! Inline-format buttons stay inline whenever they show (never
-              collapse) so the FloatKit menu can't steal the ProseMirror
-              selection. The preventFocus arg keeps PM focused while a mark
-              applies. }}
-          {{#if this.showInlineFormat}}
-            <div class="wireframe-block-toolbar__format">
               <span
                 aria-hidden="true"
-                class="wireframe-block-toolbar__separator"
+                class="wireframe-block-toolbar__dot"
               ></span>
-              <DButton
-                class={{if
-                  this.markState.strong
-                  "btn-flat wireframe-block-toolbar__btn --active"
-                  "btn-flat wireframe-block-toolbar__btn"
-                }}
-                @action={{this.toggleBold}}
-                @ariaLabel="wireframe.canvas.toolbar.bold"
-                @ariaPressed={{this.markState.strong}}
-                @icon="bold"
-                @preventFocus={{true}}
-                @title="wireframe.canvas.toolbar.bold"
-              />
-              <DButton
-                class={{if
-                  this.markState.em
-                  "btn-flat wireframe-block-toolbar__btn --active"
-                  "btn-flat wireframe-block-toolbar__btn"
-                }}
-                @action={{this.toggleItalic}}
-                @ariaLabel="wireframe.canvas.toolbar.italic"
-                @ariaPressed={{this.markState.em}}
-                @icon="italic"
-                @preventFocus={{true}}
-                @title="wireframe.canvas.toolbar.italic"
-              />
-              <DButton
-                class={{if
-                  this.markState.link
-                  "btn-flat wireframe-block-toolbar__btn --active"
-                  "btn-flat wireframe-block-toolbar__btn"
-                }}
-                @action={{this.startLinkEdit}}
-                @ariaLabel="wireframe.canvas.toolbar.link"
-                @ariaPressed={{this.markState.link}}
-                @icon="link"
-                @preventFocus={{true}}
-                @title="wireframe.canvas.toolbar.link"
-              />
-            </div>
+              <span
+                class="wireframe-block-toolbar__status-text"
+              >{{this.publishStateLabel}}</span>
+            </span>
+          {{else if this.primaryStatus}}
+            <span
+              class={{dConcatClass
+                "wireframe-block-toolbar__status"
+                (concat "--" this.primaryStatus.tone)
+              }}
+              data-wf-status={{this.primaryStatus.id}}
+              title={{this.statusTitle}}
+            >
+              {{dIcon this.primaryStatus.icon}}
+              <span
+                class="wireframe-block-toolbar__status-text"
+              >{{this.primaryStatus.label}}</span>
+            </span>
+          {{else if this.childCountLabel}}
+            <span
+              class="wireframe-block-toolbar__count"
+            >{{this.childCountLabel}}</span>
           {{/if}}
-        {{/if}}
-      {{/if}}
+
+          {{#if @isSelected}}
+            {{#if this.isUrlFieldEditing}}
+              <input
+                class="wireframe-block-toolbar__url-input"
+                placeholder="https://..."
+                type="url"
+                value={{this.editorValue}}
+                {{didInsert this.seedFieldEditorValue}}
+                {{on "input" this.onUrlInput}}
+                {{on "keydown" this.onUrlKeydown}}
+              />
+              <DButton
+                class="btn-flat wireframe-block-toolbar__btn"
+                @action={{this.applyFieldEditor}}
+                @ariaLabel="wireframe.canvas.toolbar.link_apply"
+                @icon="check"
+                @preventFocus={{true}}
+                @title="wireframe.canvas.toolbar.link_apply"
+              />
+              {{#if this.wireframeInplaceText.fieldEditor.remove}}
+                <DButton
+                  class="btn-flat wireframe-block-toolbar__btn"
+                  @action={{this.removeFieldEditor}}
+                  @ariaLabel="wireframe.canvas.toolbar.link_remove"
+                  @icon="link-slash"
+                  @preventFocus={{true}}
+                  @title="wireframe.canvas.toolbar.link_remove"
+                />
+              {{/if}}
+              <DButton
+                class="btn-flat wireframe-block-toolbar__btn"
+                @action={{this.cancelFieldEditor}}
+                @ariaLabel="wireframe.canvas.toolbar.link_cancel"
+                @icon="xmark"
+                @preventFocus={{true}}
+                @title="wireframe.canvas.toolbar.link_cancel"
+              />
+            {{else if this.showInlineFormat}}
+              {{! The preventFocus arg keeps PM focused while a mark applies. }}
+              <span class="wireframe-block-toolbar__format">
+                <DButton
+                  class={{if
+                    this.markState.strong
+                    "btn-flat wireframe-block-toolbar__btn --active"
+                    "btn-flat wireframe-block-toolbar__btn"
+                  }}
+                  @action={{this.toggleBold}}
+                  @ariaLabel="wireframe.canvas.toolbar.bold"
+                  @ariaPressed={{this.markState.strong}}
+                  @icon="bold"
+                  @preventFocus={{true}}
+                  @title="wireframe.canvas.toolbar.bold"
+                />
+                <DButton
+                  class={{if
+                    this.markState.em
+                    "btn-flat wireframe-block-toolbar__btn --active"
+                    "btn-flat wireframe-block-toolbar__btn"
+                  }}
+                  @action={{this.toggleItalic}}
+                  @ariaLabel="wireframe.canvas.toolbar.italic"
+                  @ariaPressed={{this.markState.em}}
+                  @icon="italic"
+                  @preventFocus={{true}}
+                  @title="wireframe.canvas.toolbar.italic"
+                />
+                <DButton
+                  class={{if
+                    this.markState.link
+                    "btn-flat wireframe-block-toolbar__btn --active"
+                    "btn-flat wireframe-block-toolbar__btn"
+                  }}
+                  @action={{this.startLinkEdit}}
+                  @ariaLabel="wireframe.canvas.toolbar.link"
+                  @ariaPressed={{this.markState.link}}
+                  @icon="link"
+                  @preventFocus={{true}}
+                  @title="wireframe.canvas.toolbar.link"
+                />
+              </span>
+            {{/if}}
+          {{/if}}
+
+          {{#unless this.isUrlFieldEditing}}
+            {{! The gear + "…" pair. CSS reveals them on hover / selection; the
+              outlet keeps its menu visible. }}
+            <span class="wireframe-block-toolbar__actions">
+              {{#unless @isOutletRoot}}
+                <DButton
+                  class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__settings"
+                  data-toolbar-action="settings"
+                  @action={{this.openSettings}}
+                  @ariaLabel="wireframe.canvas.toolbar.settings"
+                  @icon="gear"
+                  @title="wireframe.canvas.toolbar.settings"
+                />
+              {{/unless}}
+              {{#if this.actionItems.length}}
+                <DMenu
+                  class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__more"
+                  @ariaLabel="wireframe.canvas.toolbar.more"
+                  @icon="ellipsis"
+                  @identifier="wireframe-toolbar-more"
+                  @placement="bottom-end"
+                  @title="wireframe.canvas.toolbar.more"
+                >
+                  <:content as |args|>
+                    <DDropdownMenu as |dropdown|>
+                      {{#each this.actionItems as |item|}}
+                        {{#if item.separatorBefore}}
+                          <dropdown.divider />
+                        {{/if}}
+                        <dropdown.item>
+                          <DButton
+                            class={{dConcatClass
+                              "btn-flat"
+                              "wireframe-block-toolbar__menu-item"
+                              (if item.active "--active")
+                              (if
+                                item.danger
+                                "wireframe-block-toolbar__menu-item--danger"
+                              )
+                            }}
+                            data-toolbar-action={{item.id}}
+                            @action={{fn
+                              this.invokeFromMenu
+                              item.action
+                              args.close
+                            }}
+                            @disabled={{item.disabled}}
+                            @icon={{item.icon}}
+                            @title={{item.title}}
+                            @translatedLabel={{i18n item.title}}
+                          />
+                        </dropdown.item>
+                      {{/each}}
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              {{/if}}
+            </span>
+          {{/unless}}
+        </span>
+      </div>
     </div>
   </template>
 }

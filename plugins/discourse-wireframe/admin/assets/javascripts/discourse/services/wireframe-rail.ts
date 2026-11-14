@@ -26,24 +26,22 @@ interface ProxiedKeyValueStoreService extends KeyValueStoreService {
 
 // Persisted under core's global key-value store; the `wireframe_` prefix
 // namespaces our keys within its shared `discourse_` bucket to avoid collisions.
-const COLLAPSED_KEY = "wireframe_leftCollapsed";
 const PANEL_KEY = "wireframe_leftPanelTab";
 const RIGHT_COLLAPSED_KEY = "wireframe_rightCollapsed";
 const LEFT_WIDTH_KEY = "wireframe_leftPanelWidth";
 const RIGHT_WIDTH_KEY = "wireframe_rightRailWidth";
 
-// The panels the left rail can show. A stale localStorage value (from a removed
-// panel) is validated against this set and falls back to the first entry.
+// The sections the left panel can show. A stale localStorage value (from a
+// removed section) is validated against this set and falls back to the first.
 const PANELS = ["palette", "outline", "issues"] as const;
-/** A panel selectable from the editor's left activity rail. */
+/** A section selectable in the editor's left panel. */
 export type WireframeRailPanel = (typeof PANELS)[number];
 const DEFAULT_PANEL: WireframeRailPanel = "palette";
 
-// Rail width bounds, in pixels. The LEFT value is the wide panel only — the 48px
-// activity bar is fixed and sits beside it, so the left rail's total width is
-// this plus the bar. Bounds keep a panel usable (min) without swallowing the
-// canvas (max).
-const LEFT_MIN = 220;
+// Rail width bounds, in pixels. The left minimum is set by its header, which
+// has to fit the three labelled section segments; the maxima keep a rail from
+// swallowing the canvas.
+const LEFT_MIN = 240;
 const LEFT_MAX = 520;
 const LEFT_DEFAULT = 320;
 const RIGHT_MIN = 240;
@@ -57,24 +55,22 @@ const LEFT_VAR = "--wf-left-panel";
 const RIGHT_VAR = "--wf-right-rail";
 
 /**
- * Owns the editor's rail UI state — which left panel is active, whether each rail
- * is collapsed, and each rail's width — so any part of the editor can read or
- * drive it without a line to the shell component. The activity bar and shell bind
- * their chrome to this service; detached UI (the quick-inserter's "Browse all",
- * which lives in a portal) calls `showPalette()` directly.
+ * Owns the editor's rail UI state — which left section is active, whether the
+ * right rail is collapsed, and each rail's width — so any part of the editor
+ * can read or drive it without a line to the shell component. The panel
+ * switcher and shell bind their chrome to this service; detached UI (the
+ * quick-inserter's "Browse all", which lives in a portal) calls `showPalette()`
+ * directly.
  *
- * State invariant: `leftPanelTab` is ALWAYS a real panel (never null) — it names
- * the active panel; `leftCollapsed`/`rightCollapsed` are separate flags for
- * whether each rail's wide body is visible. The left panel/collapse pair is kept
- * in sync by funnelling every mutation through
- * `activatePanel`/`setLeftPanelTab`/`showPalette`, so they can't drift. All of
- * these preferences — active panel, both collapse flags, both widths — are
+ * State invariant: `leftPanelTab` is ALWAYS a real section (never null). The
+ * left panel is always open; only the right rail collapses. All of these
+ * preferences — active section, the right collapse flag, both widths — are
  * persisted across editor sessions.
  *
  * Widths are applied as inline CSS custom properties on `document.body` (where
  * `body.wireframe-active` scopes them). A collapsed rail must NOT carry an inline
- * width: the stylesheet's collapse rule sets the var to the slim/zero width, and
- * an inline value would override it. So the width and collapse setters funnel
+ * width: the stylesheet's collapse rule sets the var to the slim width, and an
+ * inline value would override it. So the right width and collapse setters funnel
  * through one place that clears the inline var while collapsed and re-applies the
  * persisted width on expand.
  */
@@ -82,11 +78,8 @@ export default class WireframeRail extends Service {
   /** Persists rail preferences in core's global namespaced store. */
   @service declare keyValueStore: ProxiedKeyValueStoreService;
 
-  /** The active left-rail panel: "palette" | "outline" | "issues". */
+  /** The active left section: "palette" | "outline" | "issues". */
   @tracked declare leftPanelTab: WireframeRailPanel;
-
-  /** Whether the left panel body is collapsed. */
-  @tracked declare leftCollapsed: boolean;
 
   /** Whether the right inspector rail is collapsed. */
   @tracked declare rightCollapsed: boolean;
@@ -103,25 +96,6 @@ export default class WireframeRail extends Service {
     /** Source controls to reveal for image arguments; defaults to light. */
     imageVariant?: "light" | "dark";
   } | null = null;
-
-  /**
-   * Whether `tab` is the active panel, regardless of collapse — drives the body
-   * switch (which panel component to render once the wide panel is open).
-   *
-   * @param tab - Left-rail panel to compare with the active panel.
-   */
-  isLeftPanelTabActive = (tab: WireframeRailPanel): boolean =>
-    this.leftPanelTab === tab;
-
-  /**
-   * Whether `tab`'s panel is currently OPEN — active and not collapsed. Drives
-   * the activity bar's pressed/selected state: a collapsed rail has no open
-   * panel, so every entry reads as not-pressed.
-   *
-   * @param tab - Left-rail panel whose visible state should be checked.
-   */
-  isPanelOpen = (tab: WireframeRailPanel): boolean =>
-    this.leftPanelTab === tab && !this.leftCollapsed;
 
   /** Internal left panel width in pixels, exposed through `leftPanelWidth`. */
   @tracked declare _leftPanelWidth: number;
@@ -140,8 +114,6 @@ export default class WireframeRail extends Service {
     // so the injected `keyValueStore` is resolvable. Widths are clamped on read
     // so a value left behind by an old min/max self-corrects.
     this.leftPanelTab = this.#readPanel();
-    this.leftCollapsed =
-      this.keyValueStore.getObject<boolean>(COLLAPSED_KEY) ?? false;
     this.rightCollapsed =
       this.keyValueStore.getObject<boolean>(RIGHT_COLLAPSED_KEY) ?? false;
     this._leftPanelWidth = this.#clamp(
@@ -187,41 +159,14 @@ export default class WireframeRail extends Service {
   }
 
   /**
-   * Activity-bar toggle. Clicking the already-open panel's entry collapses the
-   * wide panel (the icon rail persists); clicking any other entry switches to it
-   * and expands. This is the VS Code activity-bar interaction.
+   * Sets the active left section and persists it.
    *
-   * @param tab - Panel selected from the activity bar.
-   */
-  @action
-  activatePanel(tab: WireframeRailPanel): void {
-    if (this.isPanelOpen(tab)) {
-      this.#setLeftCollapsed(true);
-    } else {
-      this.leftPanelTab = tab;
-      this.keyValueStore.setObject({ key: PANEL_KEY, value: tab });
-      this.#setLeftCollapsed(false);
-    }
-  }
-
-  /**
-   * Sets the active panel and ensures the wide panel is expanded. Kept as a
-   * distinct entry point (vs the `activatePanel` toggle) for callers that want
-   * "show this panel" semantics without the click-to-collapse behavior.
-   *
-   * @param tab - Panel that should be shown and expanded.
+   * @param tab - Section that should be shown.
    */
   @action
   setLeftPanelTab(tab: WireframeRailPanel): void {
     this.leftPanelTab = tab;
     this.keyValueStore.setObject({ key: PANEL_KEY, value: tab });
-    this.#setLeftCollapsed(false);
-  }
-
-  /** Toggles whether the left panel body is collapsed. */
-  @action
-  toggleLeftCollapsed(): void {
-    this.#setLeftCollapsed(!this.leftCollapsed);
   }
 
   /** Toggles whether the right inspector rail is collapsed. */
@@ -237,9 +182,7 @@ export default class WireframeRail extends Service {
     this.#setRightCollapsed(false);
   }
 
-  /**
-   * Reveals the palette: switches to its tab and expands the rail if collapsed.
-   */
+  /** Reveals the palette section. */
   @action
   showPalette(): void {
     this.setLeftPanelTab("palette");
@@ -264,9 +207,7 @@ export default class WireframeRail extends Service {
     } = {}
   ): void {
     this._leftPanelWidth = this.#clamp(px, LEFT_MIN, LEFT_MAX);
-    if (!this.leftCollapsed) {
-      this.#applyVar(LEFT_VAR, this._leftPanelWidth);
-    }
+    this.#applyVar(LEFT_VAR, this._leftPanelWidth);
     if (commit) {
       this.keyValueStore.setObject({
         key: LEFT_WIDTH_KEY,
@@ -330,11 +271,7 @@ export default class WireframeRail extends Service {
    */
   @action
   applyRailWidths(): void {
-    if (this.leftCollapsed) {
-      this.#clearVar(LEFT_VAR);
-    } else {
-      this.#applyVar(LEFT_VAR, this._leftPanelWidth);
-    }
+    this.#applyVar(LEFT_VAR, this._leftPanelWidth);
     if (this.rightCollapsed) {
       this.#clearVar(RIGHT_VAR);
     } else {
@@ -353,24 +290,9 @@ export default class WireframeRail extends Service {
   }
 
   /**
-   * Persists and applies the left collapse flag in one place. A collapsed rail
+   * Persists and applies the right collapse flag in one place. A collapsed rail
    * drops its inline width var so the stylesheet's collapse rule wins; expanding
    * re-applies the persisted width.
-   *
-   * @param collapsed - Whether the left panel should be collapsed.
-   */
-  #setLeftCollapsed(collapsed: boolean): void {
-    this.leftCollapsed = collapsed;
-    this.keyValueStore.setObject({ key: COLLAPSED_KEY, value: collapsed });
-    if (collapsed) {
-      this.#clearVar(LEFT_VAR);
-    } else {
-      this.#applyVar(LEFT_VAR, this._leftPanelWidth);
-    }
-  }
-
-  /**
-   * Persists and applies the right collapse flag; see `#setLeftCollapsed`.
    *
    * @param collapsed - Whether the right rail should be collapsed.
    */
@@ -419,11 +341,11 @@ export default class WireframeRail extends Service {
   }
 
   /**
-   * Reads the persisted active panel, validating against the known set so a
-   * value left behind by a removed panel can't select a panel that no longer
+   * Reads the persisted active section, validating against the known set so a
+   * value left behind by a removed section can't select one that no longer
    * exists.
    *
-   * @returns Persisted panel when valid, otherwise the default panel.
+   * @returns Persisted section when valid, otherwise the default.
    */
   #readPanel(): WireframeRailPanel {
     const stored = this.keyValueStore.getObject(PANEL_KEY);
@@ -431,7 +353,7 @@ export default class WireframeRail extends Service {
   }
 
   /**
-   * Narrows a persisted value to one of the supported panel identifiers.
+   * Narrows a persisted value to one of the supported section identifiers.
    *
    * @param value - Parsed value read from the key-value store.
    */

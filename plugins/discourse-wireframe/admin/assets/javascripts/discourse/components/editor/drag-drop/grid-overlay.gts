@@ -923,7 +923,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
         kind: "new",
         blockName: blockEntry.blockName,
         defaultArgs: { ...blockEntry.defaultArgs },
-        paletteId: blockEntry.id,
       },
     });
   }
@@ -1316,7 +1315,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
             kind: "new",
             blockName: source.data?.blockName,
             defaultArgs: source.data?.defaultArgs,
-            paletteId: source.data?.paletteId,
           }
         : { kind: "existing", key: source.data?.blockKey };
 

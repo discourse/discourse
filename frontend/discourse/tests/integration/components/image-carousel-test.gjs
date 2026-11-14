@@ -32,19 +32,13 @@ module("Integration | Component | ImageCarousel", function (hooks) {
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
 
     await click(".d-image-carousel__nav--next");
-    assert
-      .dom(".d-image-carousel__slide[data-index='1']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='1']").hasClass("--active");
 
     await click(".d-image-carousel__nav--prev");
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
   });
 
   test("it wraps around in carousel mode", async function (assert) {
@@ -52,19 +46,13 @@ module("Integration | Component | ImageCarousel", function (hooks) {
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
 
     await click(".d-image-carousel__nav--prev");
-    assert
-      .dom(".d-image-carousel__slide[data-index='2']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='2']").hasClass("--active");
 
     await click(".d-image-carousel__nav--next");
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
   });
 
   test("it handles keyboard navigation", async function (assert) {
@@ -72,18 +60,12 @@ module("Integration | Component | ImageCarousel", function (hooks) {
 
     await render(hbs`<ImageCarousel @data={{this.data}} />`);
 
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
 
     await triggerKeyEvent(".d-image-carousel__track", "keydown", "ArrowRight");
-    assert
-      .dom(".d-image-carousel__slide[data-index='1']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='1']").hasClass("--active");
 
     await triggerKeyEvent(".d-image-carousel__track", "keydown", "ArrowLeft");
-    assert
-      .dom(".d-image-carousel__slide[data-index='0']")
-      .hasClass("is-active");
+    assert.dom(".d-image-carousel__slide[data-index='0']").hasClass("--active");
   });
 });

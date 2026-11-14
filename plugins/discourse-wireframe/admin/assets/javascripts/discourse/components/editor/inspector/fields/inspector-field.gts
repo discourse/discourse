@@ -56,6 +56,8 @@ type FormFieldContext = {
     Args: {
       /** Optional native input placeholder. */
       placeholder?: string | null;
+      /** Color controls only: store the value with its leading "#". */
+      prefixHex?: boolean;
     };
     /** Native input element rendered by the default control. */
     Element: HTMLInputElement;
@@ -398,6 +400,9 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
               canvas</span>
           </div>
         {{/if}}
+      {{else if (eq @field.control "color")}}
+        {{! Block color args are validated as "#rrggbb", so keep the "#". }}
+        <formField.Control @prefixHex={{true}} />
       {{else}}
         <formField.Control placeholder={{@field.placeholder}} />
       {{/if}}

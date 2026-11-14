@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { block, defineBlockDataSource } from "discourse/blocks";
+import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   fetchUsers,
@@ -8,8 +9,11 @@ import {
   VALID_USER_PERIODS,
 } from "discourse/lib/blocks/-internals/fetch-users";
 import type Store from "discourse/services/store";
+import { and } from "discourse/truth-helpers";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 const featuredUsersDataSource = defineBlockDataSource({
@@ -32,6 +36,8 @@ const featuredUsersDataSource = defineBlockDataSource({
  */
 interface FeaturedUser {
   user: { username: string; [key: string]: unknown };
+  /** Directory metrics, keyed by the order they rank by. */
+  [metric: string]: unknown;
 }
 
 interface FeaturedUsersSignature {
@@ -39,6 +45,10 @@ interface FeaturedUsersSignature {
     title?: string;
     count?: number;
     period?: string;
+    frameStyle?: string;
+    icon?: string;
+    linkLabel?: string;
+    linkHref?: string;
     order?: string;
     /**
      * Injected by the framework: the data-region boundary, already curried
@@ -95,6 +105,7 @@ interface FeaturedUsersSignature {
         label: i18n("blocks.builtin.featured_users.order"),
       },
     },
+    ...frameArgs({ defaultIcon: "users", withLink: true }),
   },
   data: {
     source: featuredUsersDataSource,
@@ -111,31 +122,71 @@ interface FeaturedUsersSignature {
   },
 })
 export default class FeaturedUsers extends Component<FeaturedUsersSignature> {
-  <template>
-    <div class="d-block-featured-users">
-      {{#if @title}}
-        <h3 class="d-block-featured-users__title">{{@title}}</h3>
-      {{/if}}
+  /** The directory value the list is ranked by, for one item. */
+  score = (item: FeaturedUser): number => Number(item[this.order] ?? 0);
 
-      <@Data>
-        <:content as |items|>
-          <ul class="d-block-featured-users__list">
-            {{#each items as |item|}}
-              <li class="d-block-featured-users__item">
-                <DUserAvatar @size="medium" @user={{item.user}} />
-                <DUserLink
-                  @user={{item.user}}
-                >{{item.user.username}}</DUserLink>
-              </li>
-            {{/each}}
-          </ul>
-        </:content>
-        <:empty>
-          <div class="d-block-featured-users__empty">
-            {{i18n "blocks.builtin.featured_users.empty"}}
-          </div>
-        </:empty>
-      </@Data>
-    </div>
+  scoreLabel = (item: FeaturedUser): string =>
+    i18n(`blocks.builtin.featured_users.scores.${this.order}`, {
+      count: this.score(item),
+    });
+
+  get order(): string {
+    const order = this.args.order;
+    return order && VALID_USER_ORDERS.includes(order)
+      ? order
+      : "likes_received";
+  }
+
+  <template>
+    <BlockFrame
+      @frameStyle={{@frameStyle}}
+      @icon={{@icon}}
+      @linkHref={{@linkHref}}
+      @linkLabel={{@linkLabel}}
+      @title={{@title}}
+      as |frame|
+    >
+      <div
+        class={{dConcatClass
+          "d-block-featured-users"
+          (unless frame.isPlain "d-block-frame__content")
+        }}
+      >
+        {{#if (and frame.isPlain @title)}}
+          <h3 class="d-block-featured-users__title">{{@title}}</h3>
+        {{/if}}
+
+        <@Data>
+          <:content as |items|>
+            <ul class="d-block-featured-users__list d-block-frame__rows">
+              {{#each items as |item|}}
+                <li class="d-block-featured-users__item d-block-frame__row">
+                  <DUserAvatar @size="small" @user={{item.user}} />
+                  <span class="d-block-featured-users__username">
+                    <DUserLink
+                      @user={{item.user}}
+                    >{{item.user.username}}</DUserLink>
+                  </span>
+                  <span
+                    class="d-block-featured-users__score"
+                    title={{this.scoreLabel item}}
+                  >
+                    <span aria-hidden="true">{{dNumber
+                        (this.score item)
+                      }}</span>
+                    <span class="sr-only">{{this.scoreLabel item}}</span>
+                  </span>
+                </li>
+              {{/each}}
+            </ul>
+          </:content>
+          <:empty>
+            <div class="d-block-featured-users__empty">
+              {{i18n "blocks.builtin.featured_users.empty"}}
+            </div>
+          </:empty>
+        </@Data>
+      </div>
+    </BlockFrame>
   </template>
 }

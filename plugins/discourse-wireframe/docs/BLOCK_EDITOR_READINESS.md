@@ -12,9 +12,15 @@ configuration are outside this inventory.
 
 Palette policy: all non-live-data blocks assessed as Partial are temporarily
 hidden: Conditional, List, Link list, Stats, Quote, Icon, Video and Embed.
-Live-data blocks remain available regardless of readiness. The previously
+Live-data blocks remained available regardless of readiness. The previously
 deferred CTA banner/actions, Table and Accordion family remain hidden too.
 All hidden implementations stay registered; this is not a removal.
+
+Update 2026-10-29: five live-data blocks are also hidden until their authoring
+gap is closed. Recently awarded badges, Chat channel and Featured chat channels
+ask for raw IDs where a picker is needed; Category banner and Tag banner only
+render inside a category or tag page, which the editor cannot yet supply as
+preview context.
 
 - **Decent:** a coherent authoring workflow exists for the block's stated purpose.
   This does not mean finished or visually certified in every container.
@@ -76,11 +82,11 @@ to preserve their data contracts rather than replace them with copied text.
 | Featured categories (`featured-categories`) | Decent basic configuration; partial layout | Category picker and description/footer controls. Owns an internal category grid; collection spacing/columns and interaction with outer Section/Layout need review. |
 | Featured tags (`featured-tags`) | Decent basic configuration | Title, count and popular/alphabetical sorting. This is a query result, not a hand-picked tag collection. |
 | Top contributors (`featured-users`) | Decent basic configuration; partial presentation | Title, count, period and metric controls. Directory-based metrics are different from Gamification scores; similar appearance alone is not a reason to merge data models. |
-| Recently awarded badges (`featured-badges`) | Partial | Count/window controls, but badge selection is a pipe-separated ID string rather than a badge picker. It is an award-recipient feed, not a general badge showcase. |
-| Category banner (`category-banner`) | Partial / context-dependent | Logo/icon/description toggles; content comes from the current category route. Needs explicit editor guidance when inserted outside that context. |
-| Tag banner (`tag-banner`) | Partial / context-dependent | Description toggle; content comes from the current tag route. Same preview-context problem. |
-| Chat channel (`chat:channel-card`) | Partial; plugin-dependent | Numeric channel ID rather than a channel picker, optional membership control. Audit permissions, empty states and editor-safe actions in the dedicated Chat pass. |
-| Featured chat channels (`chat:featured-channels`) | Partial; plugin-dependent | Pipe-separated channel IDs, browse footer and membership controls; internal grid. Needs a real multi-picker and an outer-layout contract. |
+| Recently awarded badges (`featured-badges`) | Partial — hidden until a badge picker exists | Count/window controls, but badge selection is a pipe-separated ID string rather than a badge picker. It is an award-recipient feed, not a general badge showcase. |
+| Category banner (`category-banner`) | Partial / context-dependent — hidden until the editor supplies category page context | Logo/icon/description toggles; content comes from the current category route. Needs explicit editor guidance when inserted outside that context. |
+| Tag banner (`tag-banner`) | Partial / context-dependent — hidden until the editor supplies tag page context | Description toggle; content comes from the current tag route. Same preview-context problem. |
+| Chat channel (`chat:channel-card`) | Partial; plugin-dependent — hidden until a channel picker exists | Numeric channel ID rather than a channel picker, optional membership control. Audit permissions, empty states and editor-safe actions in the dedicated Chat pass. |
+| Featured chat channels (`chat:featured-channels`) | Partial; plugin-dependent — hidden until a channel multi-picker exists | Pipe-separated channel IDs, browse footer and membership controls; internal grid. Needs a real multi-picker and an outer-layout contract. |
 | Upcoming events (`events:upcoming-events`) | Partial; plugin-dependent | Count/window/category controls exist. Time formatting is a raw format string, title derives from external settings/context, and presentation is a compact list rather than an event-card collection. |
 | Gamification leaderboard (`gamification:leaderboard`) | Partial; plugin-dependent | Period/count/display controls exist, but choosing a leaderboard uses a numeric ID. Missing dedicated palette thumbnail and needs editor/presentation validation with the plugin enabled. |
 
@@ -149,3 +155,12 @@ Scoped code lint passed. The repository type build still reports 46 errors in
 the existing CTA banner, Chat, Events, Gamification and Wireframe areas; it is
 not a green type gate. Type cleanup and the separate Escape investigation remain
 deferred, and neither was changed as part of this palette request.
+
+## Verification for the live-data deferral (2026-10-29)
+
+The palette regression now lists Recently awarded badges, Category banner and
+Tag banner among the deferred blocks and asserts Topic card, Featured
+categories, Featured tags and Top contributors remain available. The two Chat
+blocks are not registered inside the wireframe plugin's test app, so their
+`paletteHidden` flags are asserted in the Chat plugin's own block tests. The
+wireframe plugin run passed 911/911 and the Chat run passed 608/608.

@@ -8,7 +8,7 @@ import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer((api) => {
   const image = { url: "/images/discourse-logo-sketch.png", source: "url", width: 1858, height: 512 };
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     { block: Section, args: { accessibleLabel: "Featured community", backgroundImage: image, minHeight: "medium" }, children: [
       { block: Layout, args: { mode: "grid", columns: 1, rows: 1 }, children: [
       { block: Layout, args: { mode: "grid", columns: 2, rows: 1 }, containerArgs: { grid: { column: "1", row: "1" } }, children: [

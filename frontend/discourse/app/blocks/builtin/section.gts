@@ -1,14 +1,17 @@
 import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import BlockImage from "discourse/blocks/block-image";
 import type { BlockImageValue } from "discourse/blocks/image-value";
+import { HEX_COLOR_PATTERN } from "discourse/lib/blocks";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import { i18n } from "discourse-i18n";
 
-const SURFACES = ["transparent", "default", "subtle", "accent"];
+const SURFACES = ["transparent", "default", "subtle", "accent", "custom"];
 const SCRIMS = ["none", "subtle", "medium", "strong"];
 const PADDINGS = ["none", "small", "medium", "large"];
+const GAPS = ["none", "small", "medium", "large"];
 const CONTENT_WIDTHS = ["full", "wide", "narrow"];
 const MIN_HEIGHTS = ["content", "small", "medium", "large", "viewport"];
 const VERTICAL_ALIGNS = ["start", "center", "end"];
@@ -17,9 +20,11 @@ interface SectionSignature {
   Args: {
     children?: ChildBlockResult[];
     surface?: string;
+    backgroundColor?: string;
     backgroundImage?: BlockImageValue;
     scrim?: string;
     padding?: string;
+    gap?: string;
     contentWidth?: string;
     minHeight?: string;
     verticalAlign?: string;
@@ -41,14 +46,25 @@ interface SectionSignature {
       enum: SURFACES,
       ui: {
         control: "segmented",
-        group: i18n("blocks.builtin.section.groups.appearance"),
+        group: i18n("blocks.builtin.section.groups.background"),
         label: i18n("blocks.builtin.section.surface"),
         optionLabels: {
           transparent: i18n("blocks.builtin.section.options.transparent"),
           default: i18n("blocks.builtin.section.options.default"),
           subtle: i18n("blocks.builtin.section.options.subtle"),
           accent: i18n("blocks.builtin.section.options.accent"),
+          custom: i18n("blocks.builtin.section.options.custom"),
         },
+      },
+    },
+    backgroundColor: {
+      type: "string",
+      pattern: HEX_COLOR_PATTERN,
+      ui: {
+        control: "color",
+        group: i18n("blocks.builtin.section.groups.background"),
+        label: i18n("blocks.builtin.section.background_color"),
+        conditional: { arg: "surface", equals: "custom" },
       },
     },
     backgroundImage: {
@@ -87,6 +103,23 @@ interface SectionSignature {
         control: "segmented",
         group: i18n("blocks.builtin.section.groups.layout"),
         label: i18n("blocks.builtin.section.padding"),
+        optionLabels: {
+          none: i18n("blocks.builtin.section.options.none"),
+          small: i18n("blocks.builtin.section.options.small"),
+          medium: i18n("blocks.builtin.section.options.medium"),
+          large: i18n("blocks.builtin.section.options.large"),
+        },
+      },
+    },
+    gap: {
+      type: "string",
+      default: "medium",
+      enum: GAPS,
+      ui: {
+        control: "segmented",
+        group: i18n("blocks.builtin.section.groups.layout"),
+        label: i18n("blocks.builtin.section.gap"),
+        helpText: i18n("blocks.builtin.section.gap_help"),
         optionLabels: {
           none: i18n("blocks.builtin.section.options.none"),
           small: i18n("blocks.builtin.section.options.small"),
@@ -170,9 +203,20 @@ export default class Section extends Component<SectionSignature> {
     return validChoice(this.args.scrim, SCRIMS, "medium");
   }
 
+  get backgroundStyle(): ReturnType<typeof trustHTML> | undefined {
+    const color = this.args.backgroundColor;
+    if (this.surface === "custom" && color && HEX_COLOR_PATTERN.test(color)) {
+      return trustHTML(`background-color: ${color};`);
+    }
+  }
+
+  get surface(): string {
+    return validChoice(this.args.surface, SURFACES, "transparent");
+  }
+
   get className(): string {
-    const surface = validChoice(this.args.surface, SURFACES, "transparent");
     const padding = validChoice(this.args.padding, PADDINGS, "medium");
+    const gap = validChoice(this.args.gap, GAPS, "medium");
     const width = validChoice(this.args.contentWidth, CONTENT_WIDTHS, "full");
     const height = validChoice(this.args.minHeight, MIN_HEIGHTS, "content");
     const align = validChoice(
@@ -183,9 +227,10 @@ export default class Section extends Component<SectionSignature> {
 
     return [
       "d-block-section",
-      `--surface-${surface}`,
+      `--surface-${this.surface}`,
       `--scrim-${this.scrim}`,
       `--padding-${padding}`,
+      `--gap-${gap}`,
       `--width-${width}`,
       `--height-${height}`,
       `--align-${align}`,
@@ -193,7 +238,11 @@ export default class Section extends Component<SectionSignature> {
   }
 
   <template>
-    <section aria-label={{this.accessibleLabel}} class={{this.className}}>
+    <section
+      aria-label={{this.accessibleLabel}}
+      class={{this.className}}
+      style={{this.backgroundStyle}}
+    >
       <div
         class="d-block-section__backdrop"
         data-block-arg="backgroundImage"

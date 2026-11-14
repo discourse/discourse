@@ -23,13 +23,12 @@ describe "Edit wireframe tabs" do
 
   after { Theme.clear_cache! }
 
-  it "switches, resizes and collapses activity panels beside the canvas" do
-    visit "/latest"
+  it "shows the blocks panel beside the canvas and resizes it" do
+    visit "/custom"
     tabs_editor.enter
-    panel_switcher.open_layers
-    expect(panel_switcher).to have_layers_panel
+    expect(panel_switcher).to have_section_title("Blocks")
     expect(panel_switcher).to have_aligned_panel
-    screenshot_marker(label: "wireframe-activity-tabs", only: :desktop)
+    screenshot_marker(label: "wireframe-section-switcher", only: :desktop)
 
     panel_switcher.resize_to_minimum
     expect(panel_switcher).to have_minimum_width
@@ -37,17 +36,10 @@ describe "Edit wireframe tabs" do
     panel_switcher.resize_to_maximum
     expect(panel_switcher).to have_maximum_width
     expect(panel_switcher).to have_aligned_panel
-
-    panel_switcher.open_layers
-    expect(panel_switcher).to have_collapsed_panel
-    screenshot_marker(label: "wireframe-activity-tabs-collapsed", only: :desktop)
-    panel_switcher.toggle_collapsed
-    expect(panel_switcher).to have_layers_panel
-    expect(panel_switcher).to have_aligned_panel
   end
 
   it "scrolls overflowing tabs without changing the selected panel" do
-    visit "/latest"
+    visit "/custom"
     tabs_editor.enter
     expect(tabs_editor).to have_selected_panel
     expect(tabs_editor).to have_interactive_overflow
@@ -58,7 +50,7 @@ describe "Edit wireframe tabs" do
   end
 
   it "edits a tab label in place and reviews the change" do
-    visit "/latest"
+    visit "/custom"
     tabs_editor.enter
     tabs_editor.rename_first_panel
     expect(tabs_editor).to have_renamed_panel

@@ -1,6 +1,8 @@
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
+import WelcomeBannerBlock from "discourse/blocks/builtin/welcome-banner";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -10,6 +12,10 @@ module(
   "Integration | Component | WelcomeBanner | Logged in user",
   function (hooks) {
     setupRenderingTest(hooks, { stubRouter: true });
+
+    hooks.afterEach(function () {
+      _resetOutletLayoutsForTesting();
+    });
 
     test("hides when enable_welcome_banner is false", async function (assert) {
       this.siteSettings.enable_welcome_banner = false;
@@ -151,6 +157,24 @@ module(
         }),
         "banner contains the correct message for new users"
       );
+    });
+
+    test("stands down while a layout places the welcome banner block", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [
+          { block: "layout", children: [{ block: WelcomeBannerBlock }] },
+        ])
+      );
+      await render(<template><WelcomeBanner /></template>);
+      assert
+        .dom(".welcome-banner")
+        .doesNotExist("the setting-driven banner is replaced");
+
+      _resetOutletLayoutsForTesting();
+      await settled();
+      assert
+        .dom(".welcome-banner")
+        .exists("it comes back once no layout places the block");
     });
 
     test("uses the welcome_banner.search_placeholder translation for placeholder", async function (assert) {
