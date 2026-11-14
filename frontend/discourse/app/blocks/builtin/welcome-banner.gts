@@ -7,6 +7,7 @@ import BlockImage from "discourse/blocks/block-image";
 import type { BlockImageValue } from "discourse/blocks/image-value";
 import { WELCOME_BANNER_BLOCK } from "discourse/components/welcome-banner";
 import WelcomeBannerSearchUntyped from "discourse/components/welcome-banner-search";
+import { HEX_COLOR_PATTERN } from "discourse/lib/blocks";
 import {
   welcomeBannerAudience,
   welcomeBannerHeader,
@@ -24,10 +25,34 @@ const WelcomeBannerSearch =
   }>;
 
 const HEADER_VARIABLES = "%{site_name}, %{preferred_display_name}";
+const ALIGNMENTS = ["left", "center", "right"];
+// "default" leaves the size to the theme.
+const TEXT_SIZES = ["default", "small", "medium", "large", "x-large"];
+
+function sizeLabels(): Record<string, string> {
+  return Object.fromEntries(
+    TEXT_SIZES.map((size) => [
+      size,
+      i18n(`blocks.builtin.welcome_banner.sizes.${size.replace("-", "_")}`),
+    ])
+  );
+}
+
+function sizeClass(prefix: string, size: string | undefined): string {
+  return `--${prefix}-${size && TEXT_SIZES.includes(size) ? size : "default"}`;
+}
 
 interface WelcomeBannerSignature {
   Args: {
     /** Whether the banner carries the site search input. */
+    /** Which side the text and search input line up with. */
+    alignment?: string;
+    /** Color of the header and subheader. */
+    textColor?: string;
+    /** Size step of the header, or the theme's own. */
+    headingSize?: string;
+    /** Size step of the subheader, or the theme's own. */
+    subheadingSize?: string;
     showSearch?: boolean;
     /** Image filling the banner behind its text. */
     backgroundImage?: BlockImageValue;
@@ -59,12 +84,54 @@ interface WelcomeBannerSignature {
   category: "community",
   description: i18n("blocks.builtin.welcome_banner.description"),
   args: {
+    alignment: {
+      type: "string",
+      default: "center",
+      enum: ALIGNMENTS,
+      ui: {
+        control: "segmented",
+        label: i18n("blocks.builtin.welcome_banner.alignment"),
+        optionLabels: {
+          left: i18n("blocks.builtin.welcome_banner.alignments.left"),
+          center: i18n("blocks.builtin.welcome_banner.alignments.center"),
+          right: i18n("blocks.builtin.welcome_banner.alignments.right"),
+        },
+      },
+    },
     showSearch: {
       type: "boolean",
       default: true,
       ui: {
         control: "toggle",
         label: i18n("blocks.builtin.welcome_banner.show_search"),
+      },
+    },
+    headingSize: {
+      type: "string",
+      default: "default",
+      enum: TEXT_SIZES,
+      ui: {
+        control: "select",
+        label: i18n("blocks.builtin.welcome_banner.heading_size"),
+        optionLabels: sizeLabels(),
+      },
+    },
+    subheadingSize: {
+      type: "string",
+      default: "default",
+      enum: TEXT_SIZES,
+      ui: {
+        control: "select",
+        label: i18n("blocks.builtin.welcome_banner.subheading_size"),
+        optionLabels: sizeLabels(),
+      },
+    },
+    textColor: {
+      type: "string",
+      pattern: HEX_COLOR_PATTERN,
+      ui: {
+        control: "color",
+        label: i18n("blocks.builtin.welcome_banner.text_color"),
       },
     },
     backgroundImage: {
@@ -180,6 +247,18 @@ export default class WelcomeBanner extends Component<WelcomeBannerSignature> {
     });
   }
 
+  get textColorStyle() {
+    const color = this.args.textColor;
+    if (color && HEX_COLOR_PATTERN.test(color)) {
+      return trustHTML(`color: ${color};`);
+    }
+  }
+
+  get alignmentClass() {
+    const alignment = this.args.alignment;
+    return `--align-${alignment && ALIGNMENTS.includes(alignment) ? alignment : "center"}`;
+  }
+
   get showSearch() {
     return this.args.showSearch !== false && this.site.can_search;
   }
@@ -195,6 +274,9 @@ export default class WelcomeBanner extends Component<WelcomeBannerSignature> {
     <div
       class={{dConcatClass
         "d-block-welcome-banner"
+        this.alignmentClass
+        (sizeClass "heading" @headingSize)
+        (sizeClass "subheading" @subheadingSize)
         (if @backgroundImage.url "--with-bg-img")
       }}
     >
@@ -208,7 +290,7 @@ export default class WelcomeBanner extends Component<WelcomeBannerSignature> {
         {{/if}}
       </div>
       <div class="welcome-banner__wrap d-block-welcome-banner__content">
-        <div class="welcome-banner__title">
+        <div class="welcome-banner__title" style={{this.textColorStyle}}>
           {{trustHTML this.headerText}}
           {{#if this.subheaderText}}
             <p class="welcome-banner__subheader">

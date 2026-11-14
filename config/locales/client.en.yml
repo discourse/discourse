@@ -142,6 +142,20 @@ en:
           name: "Welcome banner"
           description: "A greeting with an optional search input and background image. Replaces the site's welcome banner."
           show_search: "Show search"
+          alignment: "Alignment"
+          text_color: "Text color"
+          heading_size: "Header size"
+          subheading_size: "Subheader size"
+          sizes:
+            default: "Theme default"
+            small: "Small"
+            medium: "Medium"
+            large: "Large"
+            x_large: "Extra large"
+          alignments:
+            left: "Left"
+            center: "Center"
+            right: "Right"
           background_image: "Background image"
           groups:
             text: "Text"
