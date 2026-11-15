@@ -432,6 +432,18 @@ RSpec.describe PushNotificationPusher do
         expect(user.push_subscriptions.count).to eq(1)
       end
 
+      it "rate limits confirmations for an endpoint the user already has" do
+        RateLimiter.enable
+        Jobs::DeliverUntrustedPushNotifications.stubs(:add)
+        subscribe("https://push.attacker.test/1")
+
+        expect do
+          (PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR + 1).times do
+            subscribe("https://push.attacker.test/1", send_confirmation: "true")
+          end
+        end.to raise_error(RateLimiter::LimitExceeded)
+      end
+
       it "keeps the current owner when a takeover is rate limited" do
         RateLimiter.enable
         endpoint = "https://fcm.googleapis.com/fcm/send/shared"

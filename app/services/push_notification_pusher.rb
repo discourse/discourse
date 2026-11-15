@@ -127,6 +127,7 @@ class PushNotificationPusher
     data = push_params.to_json
     raise Discourse::InvalidParameters.new(:subscription) if data.include?("\\u0000")
     by_endpoint = PushSubscription.with_endpoint(endpoint)
+    rate_limiter = RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour)
 
     # overlapping registrations from an account switch must not both keep a row
     subscription =
@@ -137,16 +138,12 @@ class PushNotificationPusher
 
           existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
           if existing
+            rate_limiter.performed! if send_confirmation == "true"
             by_endpoint.where(user_id: user.id).where.not(id: existing.id).delete_all
             existing.update!(data: data) if existing.data != data
             existing
           else
-            RateLimiter.new(
-              user,
-              "push-subscribe",
-              SUBSCRIBE_RATE_LIMIT_PER_HOUR,
-              1.hour,
-            ).performed!
+            rate_limiter.performed!
             created = PushSubscription.create!(user: user, data: data)
             prune_subscriptions(user)
             created
