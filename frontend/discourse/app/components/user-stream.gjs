@@ -23,6 +23,7 @@ export default class UserStreamComponent extends Component {
   @service dialog;
   @service composer;
   @service router;
+  @service siteSettings;
 
   bulkSelectHelper = new PostBulkSelectHelper(this);
 
@@ -81,6 +82,11 @@ export default class UserStreamComponent extends Component {
     }
 
     return "username";
+  }
+
+  get restorableHint() {
+    const count = this.siteSettings.discarded_drafts_retention_days;
+    return count ? i18n("drafts.discarded.restore_hint", { count }) : null;
   }
 
   @action
@@ -144,6 +150,7 @@ export default class UserStreamComponent extends Component {
           ? "drafts.delete_permanently_confirmation"
           : "drafts.remove_confirmation"
       ),
+      message: draft.discarded ? null : this.restorableHint,
       didConfirm: async () => {
         try {
           if (draft.discarded) {
@@ -162,9 +169,12 @@ export default class UserStreamComponent extends Component {
   @action
   async bulkDeleteDrafts(selectedDrafts) {
     const count = selectedDrafts.length;
+    const hint = this.restorableHint;
     this.dialog.deleteConfirm({
-      title: i18n("drafts.bulk_delete_confirmation"),
-      message: i18n("drafts.bulk_delete_message", { count }),
+      title: hint
+        ? i18n("drafts.bulk_delete_message", { count })
+        : i18n("drafts.bulk_delete_confirmation"),
+      message: hint ?? i18n("drafts.bulk_delete_message", { count }),
       didConfirm: async () => {
         try {
           await Draft.bulkClear(selectedDrafts);

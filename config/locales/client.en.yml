@@ -908,6 +908,9 @@ en:
         description:
           one: "Discarded drafts are kept for %{count} day before they are deleted permanently."
           other: "Discarded drafts are kept for %{count} days before they are deleted permanently."
+        restore_hint:
+          one: "You can restore deleted drafts from Recently discarded for %{count} day."
+          other: "You can restore deleted drafts from Recently discarded for %{count} days."
       bulk_delete: "Delete selected"
       bulk_delete_confirmation: "Delete drafts"
       bulk_delete_message:
