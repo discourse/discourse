@@ -22,7 +22,7 @@ module Onebox
         <<-HTML
           <img
             src="#{oembed_data.thumbnail_url}"
-            title="#{oembed_data.title}"
+            #{oembed_data.title_attr}
             style="
               max-width: #{oembed_data.thumbnail_width / 2}px;
               max-height: #{oembed_data.thumbnail_height / 2}px;"

@@ -40,13 +40,37 @@ export default <template>
                         as |setting|
                       }}
                         {{#if (@controller.isSettingVisible setting data)}}
-                          <SettingDefinitionField
-                            @definition={{@controller.settingDefinition
-                              setting
-                            }}
-                            @disabled={{setting.disabled}}
-                            @form={{form}}
-                          />
+                          {{#let
+                            (@controller.missingChoicesLink setting)
+                            as |createLink|
+                          }}
+                            {{#if createLink}}
+                              <div
+                                class="ai-feature-editor__missing-choices"
+                                data-setting={{setting.setting}}
+                              >
+                                <span
+                                  class="ai-feature-editor__missing-choices-label"
+                                >
+                                  {{setting.humanized_name}}
+                                </span>
+                                <p>{{i18n createLink.descriptionKey}}</p>
+                                <LinkTo
+                                  class="btn btn-primary btn-small"
+                                  @query={{createLink.query}}
+                                  @route={{createLink.route}}
+                                >{{i18n createLink.labelKey}}</LinkTo>
+                              </div>
+                            {{else}}
+                              <SettingDefinitionField
+                                @definition={{@controller.settingDefinition
+                                  setting
+                                }}
+                                @disabled={{setting.disabled}}
+                                @form={{form}}
+                              />
+                            {{/if}}
+                          {{/let}}
                         {{/if}}
                       {{/let}}
                     {{/each}}

@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiFeaturesList from "discourse/plugins/discourse-ai/discourse/components/ai-features-list";
 import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
+import AiFeaturesList from "./ai-features-list.gjs";
 
 const ALL = "all";
 const ENABLED = "enabled";
@@ -21,22 +21,8 @@ export default class AiFeatures extends Component {
   @service store;
 
   @tracked filterValue = "";
-  @tracked selectedFeatureGroup = ENABLED;
+  @tracked selectedFeatureGroup = ALL;
   @tracked refreshedFeatures = null;
-
-  constructor() {
-    super(...arguments);
-
-    // if there are features but none are configured, show unconfigured
-    if (this.features?.length > 0) {
-      const configuredCount = this.features.filter(
-        (f) => f.module_enabled === true
-      ).length;
-      if (configuredCount === 0) {
-        this.selectedFeatureGroup = NOT_ENABLED;
-      }
-    }
-  }
 
   get features() {
     return this.refreshedFeatures ?? this.args.features;
@@ -44,7 +30,10 @@ export default class AiFeatures extends Component {
 
   get featureGroupOptions() {
     return [
-      { value: ALL, label: i18n("discourse_ai.features.filters.all") },
+      {
+        value: ALL,
+        label: i18n("discourse_ai.features.filters.all"),
+      },
       {
         value: ENABLED,
         label: i18n("discourse_ai.features.nav.enabled"),
@@ -54,6 +43,10 @@ export default class AiFeatures extends Component {
         label: i18n("discourse_ai.features.nav.not_enabled"),
       },
     ];
+  }
+
+  get isSearching() {
+    return this.filterValue.trim() !== "";
   }
 
   get filteredFeatures() {
@@ -81,7 +74,11 @@ export default class AiFeatures extends Component {
             return true;
           }
 
-          const agentMatches = feature.agents?.some((agent) =>
+          const agents = [
+            ...(feature.agents || []),
+            ...(feature.chatbot_agents || []),
+          ];
+          const agentMatches = agents.some((agent) =>
             agent.name?.toLowerCase().includes(term)
           );
 
@@ -89,7 +86,7 @@ export default class AiFeatures extends Component {
             llm.name?.toLowerCase().includes(term)
           );
 
-          const groupMatches = feature.agents?.some((agent) =>
+          const groupMatches = agents.some((agent) =>
             agent.allowed_groups?.some((group) =>
               group.name?.toLowerCase().includes(term)
             )
@@ -183,8 +180,8 @@ export default class AiFeatures extends Component {
   @action
   resetAndFocus() {
     this.filterValue = "";
-    this.selectedFeatureGroup = ENABLED;
-    document.querySelector(".admin-filter__input").focus();
+    this.selectedFeatureGroup = ALL;
+    document.querySelector(".admin-filter__input")?.focus();
   }
 
   @action
@@ -201,24 +198,12 @@ export default class AiFeatures extends Component {
     <section class="ai-features admin-detail">
       <DPageSubheader
         @descriptionLabel={{i18n "discourse_ai.features.description"}}
-        @learnMoreUrl="todo"
         @titleLabel={{i18n "discourse_ai.features.short_title"}}
       />
 
-      <div class="ai-features__controls">
-        <DNativeSelect
-          @includeNone={{false}}
-          @onChange={{this.onFeatureGroupChange}}
-          @value={{this.selectedFeatureGroup}}
-          as |select|
-        >
-          {{#each this.featureGroupOptions as |option|}}
-            <select.Option @value={{option.value}}>
-              {{option.label}}
-            </select.Option>
-          {{/each}}
-        </DNativeSelect>
+      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
 
+      <div class="ai-features__controls">
         <DFilterInput
           class="admin-filter__input"
           placeholder={{i18n "discourse_ai.features.filters.text"}}
@@ -226,12 +211,23 @@ export default class AiFeatures extends Component {
           @icons={{hash left="magnifying-glass"}}
           @value={{this.filterValue}}
         />
+
+        <DFilterControls
+          @dropdownOptions={{this.featureGroupOptions}}
+          @dropdownValue={{this.selectedFeatureGroup}}
+          @onDropdownFilterChange={{this.onFeatureGroupChange}}
+          @showNoResults={{false}}
+          @showResetButton={{false}}
+          @showTextFilter={{false}}
+        />
       </div>
 
-      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
-
       {{#if this.filteredFeatures.length}}
-        <AiFeaturesList @modules={{this.filteredFeatures}} />
+        <AiFeaturesList
+          @expandAll={{this.isSearching}}
+          @modules={{this.filteredFeatures}}
+          @onChange={{this.refreshFeatures}}
+        />
       {{else}}
         <div class="ai-features__no-results">
           <h3>{{i18n "discourse_ai.features.filters.no_results"}}</h3>

@@ -20,3 +20,5 @@ cs:
       few: "%{count} odpovědí"
       many: "%{count} odpovědí"
       other: "%{count} odpovědí"
+    themes:
+      default: Výchozí

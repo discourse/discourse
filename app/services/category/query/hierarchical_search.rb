@@ -68,7 +68,9 @@ class Category::Query::HierarchicalSearch
         OR COALESCE(
           (
             SELECT BOOL_AND(position(pattern IN #{Category.normalize_sql("allowed_categories.name")}) <> 0)
-            FROM unnest(regexp_split_to_array(#{quoted_term}, '\\s+')) AS pattern
+            FROM unnest(
+              (array_remove(regexp_split_to_array(#{quoted_term}, '\\s+'), ''))[1:#{CategoriesController::MAX_CATEGORY_SEARCH_WORDS}]
+            ) AS pattern
           ),
           true
         )

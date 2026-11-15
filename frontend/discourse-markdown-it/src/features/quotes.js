@@ -193,8 +193,10 @@ export function setup(helper) {
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {
+        // The value is still encoded here, so `&` has to be rejected: a
+        // reference like `&#32;` is decoded into a class separator later.
         return (
-          value === "quote no-group" || !!/^quote group\-(.+)$/.exec(value)
+          value === "quote no-group" || /^quote group-[^\s&]+$/.test(value)
         );
       }
     },

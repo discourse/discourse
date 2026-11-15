@@ -64,6 +64,10 @@ te:
       fonts:
         base_font: "బాడీ ఫాంట్"
         heading_font: "శీర్షిక ఫాంట్"
+    mcp_theme_access:
+      none: "ఏదీకాదు"
+    mcp_app_setup:
+      none: "ఏదీకాదు"
     reviewables:
       ai_tool_action:
         approve:

@@ -67,7 +67,7 @@ acceptance("Category New", function (needs) {
 
     await formKit().field("required_tag_groups.0.name").select("TagGroup1");
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     assert.strictEqual(
       currentURL(),

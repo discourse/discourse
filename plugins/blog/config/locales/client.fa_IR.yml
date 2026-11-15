@@ -15,12 +15,16 @@ fa_IR:
         preview_archive: بایگانی
         desktop: کامپیوتر
         mobile: موبایل
+        save: ذخیره
+        path_formats:
+          custom: سفارشی
         new_theme_short: پوسته جدید
         themes: قالب‌ها
         theme_name: نام قالب
         edit: ویرایش
         activate: فعال کردن
         preview: پیش‌نمایش
+        customize: سفارشی‌سازی
         import: ورود داده‌ها
         export: خروجی گرفتن
         active: فعال
@@ -33,6 +37,7 @@ fa_IR:
         change:
           title: عنوان
           body: body
+          tags: برچسب‌ها
       review:
         create: ایجاد پیوند
         copy: کپی

@@ -38,11 +38,17 @@ module PageObjects
       end
 
       def has_no_rule_menu?
-        has_no_css?(".dsa-community-rules")
+        has_no_css?(".dsa-classification-options")
       end
 
       def has_rule_option?(ground, explanation:)
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
+      end
+
+      def has_readable_rule?(ground)
+        has_css?(".dsa-classification-option", text: ground) do |option|
+          option.evaluate_script("this.scrollHeight <= this.clientHeight")
+        end
       end
 
       def select_category(category)
@@ -71,6 +77,16 @@ module PageObjects
 
       def has_no_cancel_button?
         within(full_modal_selector) { has_no_button?("Cancel", exact: true) }
+      end
+
+      def has_disabled_classification_fields?
+        within(full_modal_selector) do
+          has_css?(".dsa-classification-select:disabled") && has_select?("Category", disabled: true)
+        end
+      end
+
+      def has_disabled_button?(label)
+        within(full_modal_selector) { has_button?(label, exact: true, disabled: true) }
       end
 
       def confirm(label)
@@ -108,9 +124,9 @@ module PageObjects
       end
 
       def has_accessible_rule_description?(ground)
-        has_css?("#{full_modal_selector} .dsa-community-rule-trigger") do |trigger|
-          trigger["aria-description"] == ground
-        end
+        has_css?(
+          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
+        ) { |trigger| trigger["aria-description"] == ground }
       end
 
       def has_selected_category?(category)

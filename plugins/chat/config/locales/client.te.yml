@@ -26,8 +26,6 @@ te:
         title: "పిన్ చేయబడింది"
       pinned: "పిన్ చేయబడింది"
       channel_settings:
-        edit: "సవరణ"
-        add: "కలుపు"
         notification_settings_context: "నోటిఫికేషన్‌లు"
         join: "చేరండి"
         leave: "వదిలేయండి"
@@ -68,13 +66,13 @@ te:
       search_view:
         filter_placeholder: సందేశాలను శోధించండి
       about_view:
-        title: శీర్షిక
         name: పేరు
         description: వివరణ
       channel_info:
         back_to_channel: "వెనుకకు"
         tabs:
           members: సభ్యులు
+          preferences: ప్రాధాన్యతలు
           settings: అమరికలు
           search: వెతుకు
         remove_member: "తొలగించు"
@@ -109,8 +107,6 @@ te:
         save: "భద్రపరుచు"
         saved: "సేవ్ చేయబడింది"
         unfollow: "వదిలేయండి"
-        admin_title: "అధికారి"
-        settings_title: "అమరికలు"
         category_label: "వర్గం"
         history_label: "చరిత్ర"
         members_label: "సభ్యులు"

@@ -18,3 +18,5 @@ fa_IR:
     replies:
       one: "%{count} پاسخ"
       other: "%{count} پاسخ"
+    themes:
+      default: پیش‌فرض

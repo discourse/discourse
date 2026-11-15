@@ -113,10 +113,39 @@ RSpec.describe "Channel - Info - Settings page" do
       membership = channel_1.membership_for(current_user)
 
       expect {
-        channel_settings_page.notification_form.field("muted").toggle
+        channel_settings_page.notification_form.field("mute").select("until_unmuted")
 
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { membership.reload.muted }.from(false).to(true)
+
+      expect(membership.muted_until).to be_nil
+    end
+
+    it "can mute channel for a duration" do
+      chat_page.visit_channel_preferences(channel_1)
+      membership = channel_1.membership_for(current_user)
+      mute_field = channel_settings_page.notification_form.field("mute")
+
+      mute_field.select("8_hours")
+
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(mute_field).to have_value("current")
+
+      membership.reload
+      expect(membership.muted).to eq(true)
+      expect(membership.muted_until).to be_within(1.minute).of(8.hours.from_now)
+    end
+
+    it "can unmute a channel muted for a duration" do
+      membership = channel_1.membership_for(current_user)
+      membership.update!(muted: true, muted_until: 1.hour.from_now)
+
+      chat_page.visit_channel_preferences(channel_1)
+
+      channel_settings_page.notification_form.field("mute").select("off")
+
+      expect(toasts).to have_success(I18n.t("js.saved"))
+      expect(membership.reload).to have_attributes(muted: false, muted_until: nil)
     end
 
     it "can change notification level" do

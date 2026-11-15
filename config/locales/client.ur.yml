@@ -16,6 +16,15 @@ ur:
       disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:
       resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+    code_editor:
+      resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+      search:
+        replace: "بدلیں"
+        next: "اگلا"
+        previous: "پچھلی"
+        close: "بند کریں"
+      fold:
+        to: "کیلئے"
     user_api_key:
       title: '"%{application_name} " کو مجاز بنائیں'
       authorize: "مجاز بنائیں"
@@ -553,34 +562,13 @@ ur:
         completed: "اختیارات تبدیل کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
+      create_category:
+        action: "زمرہ بنائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
         description: "ابتدائی صارفین اسے زندگی بخشیں گے۔"
         action: "دعوت نامہ بنائیں"
         completed: "مزید مدعو کریں"
-      start_posting:
-        title: "دھاگے بنائیں"
-        description: "لوگوں کو بحث کرنے کے لیے موضوع دیں۔"
-        action: "خیالات دیکھیں"
-        completed: "مزید خیالات دیکھیں"
-        choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
-        predefined_topics: "بحث کے موضوع کے سانچے"
-        predefined_topics_description: "بحث کو آگے بڑھانے کے لیے گفتگو شروع کرنے والے موضوعات میں سے انتخاب کریں"
-        use_predefined: "سانچے پرکھیں"
-        back: "واپس"
-        category_unavailable: "اس زمرے میں پوسٹ کرنا ممکن نہیں ہے۔"
-        icebreakers:
-          plan_categories:
-            title: "ہمیں کون سی زمروں سے آغاز کرنا چاہیے؟"
-            body: "آئیے لانچ کرنے سے پہلے چیزوں کو منظم کرنے کا طریقہ طے کریں! لوگ سب سے زیادہ کس موضوع پر بات کرنا چاہیں گے؟ ہم صرف چند زمروں سے آغاز کر سکتے ہیں اور بعد میں مزید شامل کر سکتے ہیں۔"
-          plan_invites:
-            body: "ایک ایسی کمیونٹی میں شامل ہونا ہمیشہ بہتر ہوتا ہے جس میں پہلے ہی کچھ لوگ موجود ہوں۔ ہمیں سب سے پہلے کسے مدعو کرنا چاہیے؟ ایسے لوگوں کے بارے میں سوچیں جو بات چیت کرنا پسند کرتے ہیں، دوسروں کی مدد کرتے ہیں، اور جلد شامل ہونے کے لیے پرجوش ہوں۔"
-          introduce_yourself:
-            title: "اپنا تعارف کروائیں"
-            body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          write_your_own:
-            title: "اپنی طرف سے لکھیں"
-            description: "اپنی کمیونٹی کے مطابق بنائے گئے موضوع کے ساتھ بات چیت شروع کریں۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
       step_label: "%{index} مرحلے پر جائیں"
@@ -2664,6 +2652,7 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+      remove_item: "%{name} ہٹائیں"
     d_otp:
       screen_reader:
         one: نمبر درج کریں
@@ -2749,7 +2738,6 @@ ur:
         }.
     learn_more: "مزید جانیں۔۔۔"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مزید جانیں۔۔۔</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>آراءٔ…</a>"
     mute: خاموش کریں
     unmute: آواز چالو کریں
     last_post: پوسٹ کیا
@@ -6067,23 +6055,22 @@ ur:
         name: "نام"
         plugin: "اضافی سہولتیں"
         metadata: "میٹا ڈیٹا"
-        enabled: "فعال شدہ"
-        enabled_for: "کے لئے فعال..."
+        enabled: "فعال؟"
         show_image: "تصویر دکھائیں"
-        edit_groups: "حصہ دار گروپس کو ترمیم کریں"
+        feedback: "آراء"
+        toggle: "%{name} فعال ہے"
         groups_updated: "گروپس اپ ڈیٹ ہو گئے!"
         save_groups: "گروپ محفوظ کریں"
         add_groups_to_enable: "اس فیچر کو فعال کرنے کے لیے گروپس شامل کریں"
         no_changes_to_save: "محفوظ کرنے کے لیے کوئی تبدیلیاں نہیں"
         select_groups: "گروپس کا انتخاب"
         opt_in_groups: "شامل ہونے والے گروپس"
-        show_related_settings: "متعلقہ ترتیبات دیکھیں..."
+        settings: "سیٹِنگ"
         opt_in_groups_instructions: "آپٹ ان گروپس مخصوص صارفین کے ایک گروپ کو تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دینے کے لیے استعمال کیے جا سکتے ہیں۔ نوٹ کریں کہ جب تبدیلی مستحکم حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         depends_on_notice: "اس تبدیلی کے لیے %{dependencyLinks} کا فعال ہونا ضروری ہے۔"
         preview: "جھلک دیکھیں"
         enabled_for_options:
           no_one: "کوئی نہیں"
-          everyone: "ہر کوئی"
           specific_groups: "مخصوص گروپ(گروپس)"
         statuses:
           experimental: "تجرباتی"

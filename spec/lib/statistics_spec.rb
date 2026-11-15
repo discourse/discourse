@@ -443,13 +443,13 @@ RSpec.describe Statistics do
       it "measures each step from the first admin signing up, across several days" do
         complete_step("select_theme", at: first_admin.created_at + 30.minutes)
         complete_step("invite_collaborators", at: first_admin.created_at + 2.days)
-        complete_step("start_posting", at: first_admin.created_at + 4.days)
+        complete_step("create_category", at: first_admin.created_at + 4.days)
         log_event(:admin_onboarding_completed, at: first_admin.created_at + 4.days + 1.minute)
 
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: 30,
           invite_collaborators: 2880,
-          start_posting: 5760,
+          create_category: 5760,
           completed: 5761,
         )
       end
@@ -467,7 +467,7 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: 30,
           invite_collaborators: nil,
-          start_posting: nil,
+          create_category: nil,
           completed: nil,
         )
       end
@@ -493,7 +493,7 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: nil,
           invite_collaborators: nil,
-          start_posting: nil,
+          create_category: nil,
           completed: nil,
         )
       end

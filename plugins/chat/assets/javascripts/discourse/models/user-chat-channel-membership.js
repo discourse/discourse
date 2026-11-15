@@ -8,6 +8,7 @@ export default class UserChatChannelMembership {
 
   @tracked following;
   @tracked muted;
+  @tracked mutedUntil;
   @tracked notificationLevel;
   @tracked lastReadMessageId;
   @tracked lastViewedAt;
@@ -19,6 +20,7 @@ export default class UserChatChannelMembership {
   constructor(args = {}) {
     this.following = args.following;
     this.muted = args.muted;
+    this.mutedUntil = args.muted_until ? new Date(args.muted_until) : null;
     this.notificationLevel = args.notification_level;
     this.lastReadMessageId = args.last_read_message_id;
     this.lastViewedAt = new Date(args.last_viewed_at);

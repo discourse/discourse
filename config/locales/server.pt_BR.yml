@@ -4916,6 +4916,10 @@ pt_BR:
       no_context:
         watched_word: "Esta postagem incluiu uma palavra acompanhada. Veja %{link} para mais informações."
     actions:
+      answer_yes:
+        title: "Sim"
+      answer_no:
+        title: "Não"
       agree:
         title: "Sim"
       agree_and_keep:

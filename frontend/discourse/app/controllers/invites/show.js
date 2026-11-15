@@ -13,7 +13,9 @@ import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import { findAll as findLoginMethods } from "discourse/models/login-method";
+import LoginMethod, {
+  findAll as findLoginMethods,
+} from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
 
 export default class InvitesShowController extends Controller {
@@ -371,11 +373,6 @@ export default class InvitesShowController extends Controller {
   }
 
   @computed
-  get ssoPath() {
-    return getUrl("/session/sso");
-  }
-
-  @computed
   get disclaimerHtml() {
     if (this.site.tos_url && this.site.privacy_policy_url) {
       return i18n("create_account.disclaimer", {
@@ -510,5 +507,15 @@ export default class InvitesShowController extends Controller {
         origin: window.location.href,
       },
     });
+  }
+
+  @action
+  continueWithDiscourseConnect() {
+    // The invite key must be sent with a CSRF-protected POST so that an image
+    // in a post (or any other GET of the invite URL) cannot attach the invite
+    // to this browser's session.
+    LoginMethod.buildPostForm(getUrl(`/invites/${this.model.token}/sso`)).then(
+      (form) => form.submit()
+    );
   }
 }

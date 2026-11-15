@@ -18,7 +18,7 @@ module Onebox
       def placeholder_html
         oembed = get_oembed
         return if oembed.thumbnail_url.blank?
-        "<img src='#{oembed.thumbnail_url}' title='#{oembed.title}' alt='#{oembed.title}' height='#{oembed.thumbnail_height}' width='#{oembed.thumbnail_width}'>"
+        "<img src='#{oembed.thumbnail_url}' #{oembed.title_attr} alt='#{ERB::Util.html_escape(oembed.title)}' height='#{oembed.thumbnail_height}' width='#{oembed.thumbnail_width}'>"
       end
 
       protected

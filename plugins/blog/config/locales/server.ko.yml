@@ -17,3 +17,5 @@ ko:
     search: 검색
     replies:
       other: "%{count} 댓글"
+    themes:
+      default: 기본

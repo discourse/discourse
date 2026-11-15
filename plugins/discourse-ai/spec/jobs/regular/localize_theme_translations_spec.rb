@@ -16,6 +16,16 @@ describe Jobs::LocalizeThemeTranslations do
     theme.save!
   end
 
+  it "falls back to English when the selected source text is blank" do
+    theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: ''\n")
+    theme.save!
+    translator = mock
+    translator.stubs(:translate).returns("Hola")
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+    job.execute(theme_id: theme.id, source_locale: "fr", target_locales: ["es"])
+    expect(theme.theme_translation_overrides.where(locale: "es").pluck(:value)).to eq(["Hola"])
+  end
+
   it "raises when theme_id is missing" do
     expect { job.execute({}) }.to raise_error(Discourse::InvalidParameters)
   end
@@ -96,6 +106,29 @@ describe Jobs::LocalizeThemeTranslations do
     job.execute(theme_id: theme.id)
   end
 
+  it "translates object-editor text alongside locale-file text" do
+    theme.set_field(
+      target: :settings,
+      name: "yaml",
+      value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+    )
+    theme.save!
+    translator = mock
+    translator.stubs(:translate).returns("translated")
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id)
+
+    expect(
+      theme.theme_translation_overrides.where(locale: "fr").pluck(:translation_key),
+    ).to contain_exactly(
+      "greeting",
+      "resource_sections.getting_started.title",
+      "resource_sections.getting_started.links.guidelines.label",
+      "resource_sections.getting_started.links.guidelines.description",
+    )
+  end
+
   it "preserves overrides and translations shipped in locale files by default" do
     theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
     theme.save!
@@ -155,6 +188,233 @@ describe Jobs::LocalizeThemeTranslations do
     expect(theme.theme_translation_overrides.reload.find_by!(locale: "fr").value).to eq(
       "Manual translation",
     )
+  end
+
+  it "discards AI output when the source default changes during translation" do
+    SiteSetting.content_localization_supported_locales = "fr"
+    I18n.with_locale(:en) { theme.update_translation("greeting", "Custom source") }
+    target_theme = theme
+    translator = Object.new
+    translator.define_singleton_method(:translate) do
+      target_theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: Updated\n")
+      target_theme.save!
+      "Old translation"
+    end
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id)
+
+    expect(theme.theme_translation_overrides.where(locale: "fr")).to be_empty
+  end
+
+  it "does not persist output from a stale French locale file" do
+    SiteSetting.content_localization_supported_locales = "en|fr|es"
+    theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: Hello\n")
+    theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
+    theme.save!
+    target_theme = theme
+    translator = Object.new
+    translator.define_singleton_method(:translate) do
+      target_theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Salut\n")
+      target_theme.save!
+      "Old translation"
+    end
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+    described_class.new.execute(theme_id: theme.id, source_locale: "fr", target_locales: ["es"])
+    expect(theme.theme_translation_overrides.where(locale: "es")).to be_empty
+  end
+
+  it "uses the declared object default language when selected source text is missing" do
+    theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+      cards:
+        type: objects
+        default:
+          - translation_key: welcome
+            title: Bonjour
+        schema:
+          name: card
+          translations:
+            default_locale: fr
+          properties:
+            translation_key:
+              type: string
+              required: true
+            title:
+              type: string
+              translatable: true
+    YAML
+    theme.save!
+    SiteSetting.content_localization_supported_locales = "en|fr|es"
+    translator = mock
+    translator.stubs(:translate).returns("translated")
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id)
+
+    expect(
+      theme
+        .theme_translation_overrides
+        .where(translation_key: "cards.welcome.title")
+        .pluck(:locale),
+    ).to contain_exactly("en", "es")
+  end
+
+  describe "with object source text" do
+    def set_object_source_locale(locale)
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        cards:
+          type: objects
+          default:
+            - translation_key: welcome
+              title: Menu
+          schema:
+            name: card
+            translations:
+              default_locale: #{locale}
+            properties:
+              translation_key:
+                type: string
+                required: true
+              title:
+                type: string
+                translatable: true
+      YAML
+      theme.save!
+    end
+
+    before do
+      theme.set_field(target: :translations, name: "en", value: "en: {}\n")
+      set_object_source_locale("en")
+    end
+
+    shared_examples "preserving authored object text" do |authored_locale|
+      it "preserves authored #{authored_locale} text after switching the selected source" do
+        set_object_source_locale(authored_locale)
+        translator = mock
+        translator.stubs(:translate).returns("Machine output")
+        DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+        selected_locale = authored_locale == "en" ? "fr" : "en"
+
+        [authored_locale, selected_locale].each do |source_locale|
+          job.execute(
+            theme_id: theme.id,
+            source_locale: source_locale,
+            target_locales: %w[en fr es] - [source_locale],
+            override_existing: false,
+          )
+        end
+
+        expect(
+          theme
+            .theme_translation_overrides
+            .where(translation_key: "cards.welcome.title")
+            .pluck(:locale, :value),
+        ).to contain_exactly([selected_locale, "Machine output"], ["es", "Machine output"])
+      end
+    end
+
+    include_examples "preserving authored object text", "en"
+    include_examples "preserving authored object text", "fr"
+
+    it "discards output when the authored locale changes with unchanged source text" do
+      translator = Object.new
+      update_source = -> { set_object_source_locale("fr") }
+      translator.define_singleton_method(:translate) do
+        update_source.call
+        "Old-source output"
+      end
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(theme_id: theme.id, target_locales: ["fr"], override_existing: true)
+
+      expect(theme.theme_translation_overrides.reload).to be_empty
+    end
+
+    it "discards fallback output when the preferred object source appears" do
+      translator = Object.new
+      target_theme = theme
+      translator.define_singleton_method(:translate) do
+        I18n.with_locale(:fr) do
+          target_theme.update_translation("cards.welcome.title", "Source française")
+        end
+        "Fallback output"
+      end
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr", target_locales: ["es"])
+
+      expect(
+        theme
+          .theme_translation_overrides
+          .where(translation_key: "cards.welcome.title")
+          .pluck(:locale, :value),
+      ).to contain_exactly(["fr", "Source française"])
+    end
+
+    it "replaces authored object text when explicitly requested" do
+      I18n.with_locale(:fr) { theme.update_translation("cards.welcome.title", "Source française") }
+      translator = mock
+      translator.stubs(:translate).returns("Machine output")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(
+        theme_id: theme.id,
+        source_locale: "fr",
+        target_locales: ["en"],
+        override_existing: true,
+      )
+
+      expect(
+        theme
+          .theme_translation_overrides
+          .find_by!(locale: "en", translation_key: "cards.welcome.title")
+          .value,
+      ).to eq("Machine output")
+    end
+
+    it "preserves manual authored-locale overrides unless replacement is explicitly requested" do
+      I18n.with_locale(:en) { theme.update_translation("cards.welcome.title", "Manual source") }
+      I18n.with_locale(:fr) { theme.update_translation("cards.welcome.title", "Source française") }
+      translator = mock
+      translator.stubs(:translate).returns("Machine output")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr", target_locales: ["en"])
+      expect(
+        theme
+          .theme_translation_overrides
+          .find_by!(locale: "en", translation_key: "cards.welcome.title")
+          .value,
+      ).to eq("Manual source")
+
+      job.execute(
+        theme_id: theme.id,
+        source_locale: "fr",
+        target_locales: ["en"],
+        override_existing: true,
+      )
+      expect(
+        theme
+          .theme_translation_overrides
+          .find_by!(locale: "en", translation_key: "cards.welcome.title")
+          .value,
+      ).to eq("Machine output")
+    end
+  end
+
+  it "discards fallback output when the preferred locale file appears" do
+    translator = Object.new
+    target_theme = theme
+    translator.define_singleton_method(:translate) do
+      target_theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Hello\n")
+      target_theme.save!
+      "Fallback output"
+    end
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id, source_locale: "fr", target_locales: ["es"])
+
+    expect(theme.theme_translation_overrides.reload).to be_empty
   end
 
   describe "with a non-en source locale" do

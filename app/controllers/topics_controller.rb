@@ -248,7 +248,9 @@ class TopicsController < ApplicationController
     category = Category.find(params[:destination_category_id])
 
     raise Discourse::InvalidParameters if category.id == SiteSetting.shared_drafts_category.to_i
+    raise Discourse::InvalidAccess if topic.shared_draft.blank?
 
+    guardian.ensure_can_edit!(topic)
     guardian.ensure_can_publish_topic!(topic, category)
     topic = TopicPublisher.new(topic, current_user, category.id).publish!
 
@@ -416,8 +418,14 @@ class TopicsController < ApplicationController
     category = Category.find_by(id: params[:category_id].to_i)
     guardian.ensure_can_publish_topic!(topic, category)
 
-    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
-    SharedDraft.create(topic_id: topic.id, category_id: category.id) if row_count == 0
+    # Creating the record turns the topic into a shared draft, which hides it and lets
+    # `publish` act on it, so only staff may do it, and only inside the drafts category.
+    if topic.shared_draft.blank? &&
+         (!guardian.is_staff? || topic.category_id != SiteSetting.shared_drafts_category.to_i)
+      raise Discourse::InvalidAccess
+    end
+
+    (topic.shared_draft || topic.build_shared_draft).update!(category: category)
 
     render json: success_json
   end
@@ -659,6 +667,7 @@ class TopicsController < ApplicationController
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+      raise Discourse::InvalidAccess if !guardian.can_edit?(topic)
       if topic.private_message? && !guardian.can_convert_topic?(topic)
         raise Discourse::InvalidAccess
       end
@@ -1587,7 +1596,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
+        @description_meta = @topic_view.first_post_excerpt || @topic_view.summary
         if set_layout == "application"
           store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         end

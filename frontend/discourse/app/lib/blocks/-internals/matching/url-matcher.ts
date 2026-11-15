@@ -41,7 +41,7 @@ export function normalizePath(url: string | null | undefined): string {
   }
 
   // Strip subfolder prefix first (e.g., /forum -> "")
-  let path: string = withoutPrefix(url) as string;
+  let path = withoutPrefix(url);
 
   // Strip query string and hash fragment
   path = path.split("?")[0].split("#")[0];

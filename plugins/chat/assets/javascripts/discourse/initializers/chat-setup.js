@@ -14,7 +14,6 @@ import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-cha
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension.js";
 import ChatHeaderIcon from "../components/chat/header/icon.gjs";
-import StartChattingStep from "../components/chat/onboarding/start-chatting-step.gjs";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -52,16 +51,6 @@ class ChatSetupInit {
         "admin-onboarding-banner-location",
         ({ value, context }) =>
           context.homepage === "chat" ? "chat_channel" : value
-      );
-
-      api.registerValueTransformer(
-        "admin-onboarding-steps",
-        ({ value, context }) =>
-          context.homepage === "chat"
-            ? value.map((Step) =>
-                Step.name === "start_posting" ? StartChattingStep : Step
-              )
-            : value
       );
 
       api.addAboutPageActivity("chat_messages", (periods) => {

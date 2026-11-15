@@ -125,6 +125,10 @@ vi:
       fonts:
         base_font: "Phông chữ"
         heading_font: "Phông chữ tiêu đề"
+    mcp_theme_access:
+      none: "không có gì"
+    mcp_app_setup:
+      none: "không có gì"
     reviewables:
       ai_tool_action:
         approve:

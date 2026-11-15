@@ -16,6 +16,55 @@ describe TopicLocalizationsController do
     sign_in(user)
   end
 
+  shared_examples "a route that hides inaccessible topics" do
+    before { SiteSetting.detailed_404 = false }
+
+    it "returns the same not found response for inaccessible and nonexistent topics" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      private_message = Fabricate(:private_message_topic)
+      nonexistent_topic_id = Topic.maximum(:id) + 10_000
+
+      Fabricate(:topic_localization, topic: private_topic, locale:)
+      Fabricate(:topic_localization, topic: private_message, locale:)
+
+      make_request.call(nonexistent_topic_id)
+
+      expect(response.status).to eq(404)
+      nonexistent_topic_response = response.parsed_body
+
+      [private_topic, private_message].each do |inaccessible_topic|
+        expect { make_request.call(inaccessible_topic.id) }.not_to change {
+          [TopicLocalization.count, inaccessible_topic.reload.locale]
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body).to eq(nonexistent_topic_response)
+      end
+    end
+
+    it "hides inaccessible topics even when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      make_request.call(private_topic.id)
+
+      expect(response.status).to eq(404)
+    end
+
+    it "keeps the forbidden response for inaccessible topics when detailed_404 is enabled" do
+      SiteSetting.detailed_404 = true
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      Fabricate(:topic_localization, topic: private_topic, locale:)
+
+      make_request.call(private_topic.id)
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "#show" do
     fab!(:topic_localization) { Fabricate(:topic_localization, topic:, locale: "ja") }
 
@@ -34,6 +83,10 @@ describe TopicLocalizationsController do
     it "returns 404 for non-existent topic" do
       get "/topic_localizations/-1/ja.json"
       expect(response.status).to eq(404)
+    end
+
+    it_behaves_like "a route that hides inaccessible topics" do
+      let(:make_request) { ->(topic_id) { get "/topic_localizations/#{topic_id}/#{locale}.json" } }
     end
   end
 
@@ -96,6 +149,14 @@ describe TopicLocalizationsController do
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(403)
     end
+
+    it_behaves_like "a route that hides inaccessible topics" do
+      let(:make_request) do
+        ->(topic_id) do
+          post "/topic_localizations/create_or_update.json", params: { topic_id:, locale:, title: }
+        end
+      end
+    end
   end
 
   describe "#update_locale" do
@@ -131,6 +192,14 @@ describe TopicLocalizationsController do
         expect(response.status).to eq(400)
       end
     end
+
+    it_behaves_like "a route that hides inaccessible topics" do
+      let(:make_request) do
+        ->(topic_id) do
+          put "/topic_localizations/#{topic_id}/locale.json", params: { locale: "de" }
+        end
+      end
+    end
   end
 
   describe "#destroy" do
@@ -156,6 +225,12 @@ describe TopicLocalizationsController do
         delete "/topic_localizations/destroy.json", params: { topic_id: -1, locale: "ja" }
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(404)
+    end
+
+    it_behaves_like "a route that hides inaccessible topics" do
+      let(:make_request) do
+        ->(topic_id) { delete "/topic_localizations/destroy.json", params: { topic_id:, locale: } }
+      end
     end
   end
 

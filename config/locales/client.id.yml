@@ -6,6 +6,11 @@
 
 id:
   js:
+    code_editor:
+      search:
+        close: "Tutup"
+      fold:
+        to: "kepada"
     user_api_key:
       authorize: "Izinkan"
       deny: "Batal"
@@ -274,9 +279,6 @@ id:
       title: "Topik Baru & Belum Dibaca"
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Kembali"
     design_wizard:
       back: "Kembali"
       theme:
@@ -588,6 +590,7 @@ id:
         is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
         something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
+        something_wrong_with_post: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -2443,9 +2446,9 @@ id:
           title: "Surel"
       upcoming_changes:
         name: "Nama"
-        enabled: "Diaktifkan"
-        enabled_for_options:
-          everyone: "Semua orang"
+        enabled: "Diaktifkan?"
+        feedback: "Umpan balik"
+        settings: "Pengaturan"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"

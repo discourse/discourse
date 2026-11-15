@@ -17,3 +17,5 @@ zh_TW:
     search: 搜索
     replies:
       other: "%{count} 則回覆"
+    themes:
+      default: 默認

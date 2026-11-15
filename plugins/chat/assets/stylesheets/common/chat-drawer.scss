@@ -33,7 +33,9 @@ html.rtl {
   // higher than timeline, lower than composer, dropdown, and user card
   z-index: z("chat-drawer");
   position: fixed;
-  right: var(--composer-right, 20px);
+  right: calc(
+    var(--d-page-inset-inline-end, 0px) + var(--composer-right, 15px)
+  );
   left: 0;
   max-height: calc(100% - var(--header-offset) - 15px);
   margin: 0;

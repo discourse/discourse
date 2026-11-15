@@ -22,3 +22,5 @@ ar:
       few: "%{count} من الردود"
       many: "%{count} من الردود"
       other: "%{count} من الردود"
+    themes:
+      default: افتراضي

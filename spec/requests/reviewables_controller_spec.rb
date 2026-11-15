@@ -343,6 +343,20 @@ RSpec.describe ReviewablesController do
         expect(response.code).to eq("400")
       end
 
+      it "supports filtering by outcome and says which reviewables are approval-style" do
+        rejected_post =
+          Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected], score: 10)
+        agreed_flag =
+          Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:approved], score: 10)
+
+        get "/review.json?status=problem_confirmed"
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["reviewables"].map { |json| [json["id"], json["approval_style"]] },
+        ).to contain_exactly([rejected_post.id, true], [agreed_flag.id, false])
+      end
+
       it "supports filtering by category_id" do
         other_category = Fabricate(:category)
         r = Fabricate(:reviewable)
@@ -1091,6 +1105,22 @@ RSpec.describe ReviewablesController do
         expect(flagged.target_created_by.reload).not_to be_silenced
       end
 
+      it "does not lift an unrelated silence when a category moderator approves a queued post" do
+        SiteSetting.enable_category_group_moderation = true
+        group_user = Fabricate(:group_user)
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+        queued = Fabricate(:reviewable_queued_post, topic: Fabricate(:topic, category:), category:)
+        UserSilencer.silence(queued.target_created_by, Fabricate(:admin), reason: "unrelated")
+        sign_in(group_user.user)
+
+        put "/review/#{queued.id}/perform/approve_post.json", params: { version: queued.version }
+
+        expect(response.status).to eq(200)
+        expect(queued.reload).to be_approved
+        expect(queued.target_created_by.reload).to be_silenced
+      end
+
       it "returns 404 to category moderators for an inaccessible whisper" do
         SiteSetting.enable_category_group_moderation = true
         group_user = Fabricate(:group_user)
@@ -1785,8 +1815,8 @@ RSpec.describe ReviewablesController do
         SiteSetting.must_approve_users = true
       end
 
-      def reject_user
-        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
+      def reject_user(reviewable = self.reviewable)
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=#{reviewable.version}"
         expect(response.status).to eq(200)
       end
 
@@ -1800,6 +1830,95 @@ RSpec.describe ReviewablesController do
         sign_in(admin)
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(200)
+      end
+
+      it "only scrubs the deletion audit record for the requested reviewable" do
+        wildcard_user = Fabricate(:user, username: "scrub_user").tap(&:activate)
+        matching_user = Fabricate(:user, username: "scrubXuser").tap(&:activate)
+        wildcard_reviewable = ReviewableUser.find_by(target: wildcard_user)
+        matching_reviewable = ReviewableUser.find_by(target: matching_user)
+
+        sign_in(admin)
+        reject_user(wildcard_reviewable)
+        reject_user(matching_reviewable)
+
+        wildcard_history =
+          UserHistory.find_by!(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: wildcard_reviewable.id,
+          )
+        matching_history =
+          UserHistory.find_by!(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: matching_reviewable.id,
+          )
+
+        put "/review/#{wildcard_reviewable.id}/scrub.json", params: { reason: "privacy request" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK")
+        expect(wildcard_history.reload.details).not_to include(wildcard_user.username)
+        expect(wildcard_history.ip_address).to be_blank
+        expect(matching_history.reload.details).to include(matching_user.username)
+        expect(matching_history.ip_address).not_to be_blank
+      end
+
+      it "scrubs only the matching user's deletion record when records have no reviewable" do
+        wildcard_user = Fabricate(:user, username: "scrub_user").tap(&:activate)
+        matching_user = Fabricate(:user, username: "scrubXuser").tap(&:activate)
+        wildcard_reviewable = ReviewableUser.find_by(target: wildcard_user)
+        matching_reviewable = ReviewableUser.find_by(target: matching_user)
+
+        sign_in(admin)
+        reject_user(wildcard_reviewable)
+        reject_user(matching_reviewable)
+
+        # Deletion records logged before user histories tracked reviewables have no reviewable_id.
+        histories = UserHistory.where(action: UserHistory.actions[:delete_user])
+        histories.update_all(reviewable_id: nil)
+        wildcard_history = histories.find_by!("details LIKE ?", "id: #{wildcard_user.id}\n%")
+        matching_history = histories.find_by!("details LIKE ?", "id: #{matching_user.id}\n%")
+
+        put "/review/#{wildcard_reviewable.id}/scrub.json", params: { reason: "privacy request" }
+
+        expect(response.status).to eq(200)
+        expect(wildcard_history.reload.details).not_to include(wildcard_user.username)
+        expect(wildcard_history.ip_address).to be_blank
+        expect(matching_history.reload.details).to include(matching_user.username)
+        expect(matching_history.ip_address).not_to be_blank
+      end
+
+      it "scrubs the deletion record when the user was deleted from another reviewable" do
+        suspect = Fabricate(:user, refresh_auto_groups: true)
+        account_reviewable =
+          ReviewableUser.needs_review!(
+            target: suspect,
+            created_by: Discourse.system_user,
+            reviewable_by_moderator: true,
+            payload: ReviewableUser.payload_for(suspect),
+          )
+        flag_reviewable =
+          PostActionCreator.spam(
+            Fabricate(:user, refresh_auto_groups: true),
+            Fabricate(:post, user: suspect),
+          ).reviewable
+
+        sign_in(admin)
+        put "/review/#{flag_reviewable.id}/perform/delete_user.json?version=#{flag_reviewable.version}"
+        expect(response.status).to eq(200)
+        expect(account_reviewable.reload).to be_rejected
+
+        history =
+          UserHistory.find_by!(
+            action: UserHistory.actions[:delete_user],
+            reviewable_id: flag_reviewable.id,
+          )
+
+        put "/review/#{account_reviewable.id}/scrub.json", params: { reason: "privacy request" }
+
+        expect(response.status).to eq(200)
+        expect(history.reload.details).not_to include(suspect.username)
+        expect(history.ip_address).to be_blank
       end
 
       it "doesn't allow scrubbing of reviewables that haven't been rejected" do

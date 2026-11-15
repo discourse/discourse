@@ -99,6 +99,10 @@ sv:
       fonts:
         base_font: "Typsnitt för brödtext"
         heading_font: "Typsnitt för rubrik"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
     reviewables:
       ai_tool_action:
         approve:

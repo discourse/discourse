@@ -1,9 +1,8 @@
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 function buildChange(overrides = {}) {
@@ -25,6 +24,21 @@ function buildChange(overrides = {}) {
     },
     ...overrides,
   };
+}
+
+function chip(name) {
+  return `.d-multi-select-trigger__selected-item[title="${name}"]`;
+}
+
+async function openGroupSelector() {
+  if (!document.querySelector(".d-multi-select__content")) {
+    await click(".upcoming-change__group-selector");
+  }
+}
+
+async function selectGroup(name) {
+  await openGroupSelector();
+  await click(`.d-multi-select__result[title="${name}"]`);
 }
 
 module("Integration | Component | UpcomingChangeItem", function (hooks) {
@@ -284,7 +298,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         .dom(".upcoming-change__enabled")
         .hasAttribute("aria-checked", "false");
       assert.dom(".upcoming-change__edit-groups").doesNotExist();
-      assert.dom(".email-group-user-chooser").exists();
+      assert.dom(".upcoming-change__group-selector").exists();
       assert
         .dom(".upcoming-change__save-groups")
         .exists({ count: locked ? 0 : 1 });
@@ -323,15 +337,15 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         </template>
       );
       assert.deepEqual(
-        [...document.querySelectorAll(".selected-choice")].map(
-          (el) => el.dataset.name
-        ),
+        [
+          ...document.querySelectorAll(
+            ".d-multi-select-trigger__selected-item"
+          ),
+        ].map((el) => el.title),
         groups
       );
       groups.forEach((group) =>
-        assert
-          .dom(`.selected-choice[data-name="${group}"] .d-icon-lock`)
-          .exists()
+        assert.dom(`${chip(group)} .d-icon-lock`).exists()
       );
       assert.dom(".upcoming-change__save-groups").doesNotExist();
       assert
@@ -364,23 +378,20 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    assert.dom('.selected-choice[data-name="admins"]').exists();
-    assert.dom('.selected-choice[data-name="logged_in_users"]').doesNotExist();
+    assert.dom(chip("admins")).exists();
+    assert.dom(chip("logged_in_users")).doesNotExist();
     assert.dom(".upcoming-change__save-groups").isDisabled();
 
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    await chooser.selectRowByValue("admin_team");
-    await click('.selected-choice[data-name="admins"]');
+    await selectGroup("admin_team");
+    await click(chip("admins"));
     await click(".upcoming-change__save-groups");
     assert.deepEqual(requests.at(-1).group_names, ["admin_team"]);
 
-    await chooser.expand();
-    await chooser.selectRowByValue("admins");
-    await click('.selected-choice[data-name="admin_team"]');
+    await selectGroup("admins");
+    await click(chip("admin_team"));
     await click(".upcoming-change__save-groups");
     assert.deepEqual(requests.at(-1).group_names, []);
-    assert.dom('.selected-choice[data-name="admins"]').exists();
+    assert.dom(chip("admins")).exists();
   });
 
   test("the audience stays visible while the change is disabled", async function (assert) {
@@ -396,8 +407,8 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     assert
       .dom(".upcoming-change__enabled")
       .hasAttribute("aria-checked", "false");
-    assert.dom('.selected-choice[data-name="logged_in_users"]').isVisible();
-    assert.dom('.selected-choice[data-name="anonymous_users"]').isVisible();
+    assert.dom(chip("logged_in_users")).isVisible();
+    assert.dom(chip("anonymous_users")).isVisible();
   });
 
   test("the default audience shows both groups without saving", async function (assert) {
@@ -412,8 +423,8 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    assert.dom('.selected-choice[data-name="logged_in_users"]').exists();
-    assert.dom('.selected-choice[data-name="anonymous_users"]').exists();
+    assert.dom(chip("logged_in_users")).exists();
+    assert.dom(chip("anonymous_users")).exists();
     assert.strictEqual(saves, 0);
     assert.strictEqual(change.groups, "");
     assert.dom(".upcoming-change__save-groups").isDisabled();
@@ -434,7 +445,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    await click('.selected-choice[data-name="anonymous_users"]');
+    await click(chip("anonymous_users"));
     assert.strictEqual(
       requests.length,
       0,
@@ -444,7 +455,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     await click(".upcoming-change__save-groups");
     assert.deepEqual(requests[0].group_names, ["logged_in_users"]);
     assert.dom(".upcoming-change__save-groups").isDisabled();
-    await click('.selected-choice[data-name="logged_in_users"]');
+    await click(chip("logged_in_users"));
     assert.strictEqual(requests.length, 1);
     await click(".upcoming-change__save-groups");
     assert.deepEqual(requests[1], {
@@ -507,9 +518,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       .dom(".upcoming-change__enabled")
       .hasAttribute("aria-checked", "false");
     assert.strictEqual(requests.length, 0);
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    await chooser.selectRowByValue("team");
+    await selectGroup("team");
     assert.strictEqual(
       requests.length,
       0,
@@ -521,7 +530,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     ]);
   });
 
-  test("staff cannot be removed by clicking or keyboard", async function (assert) {
+  test("staff cannot be removed", async function (assert) {
     let saves = 0;
     pretender.put("/admin/config/upcoming-changes/toggle", () => {
       saves++;
@@ -544,22 +553,12 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     assert
       .dom(".upcoming-change__groups-description")
       .hasText(i18n("admin.upcoming_changes.staff_always_included"));
-    assert.dom('.selected-choice[data-name="staff"]').isDisabled();
-    assert.dom('.selected-choice[data-name="staff"] .d-icon-lock').exists();
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    await triggerKeyEvent(
-      ".email-group-user-chooser input",
-      "keydown",
-      "Backspace"
-    );
-    await triggerKeyEvent(
-      ".email-group-user-chooser input",
-      "keydown",
-      "Backspace"
-    );
+    assert.dom(`${chip("staff")} .d-icon-lock`).exists();
+    assert.dom(chip("staff")).hasAria("disabled", "true");
+    await click(chip("staff"));
     assert.strictEqual(saves, 0);
-    assert.dom('.selected-choice[data-name="staff"]').exists();
+    assert.dom(".upcoming-change__save-groups").isDisabled();
+    assert.dom(chip("staff")).exists();
   });
   test("saved groups take precedence over the unrestricted default audience", async function (assert) {
     const change = buildChange({
@@ -571,9 +570,9 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    assert.dom('.selected-choice[data-name="staff"]').exists();
-    assert.dom('.selected-choice[data-name="logged_in_users"]').doesNotExist();
-    assert.dom('.selected-choice[data-name="anonymous_users"]').doesNotExist();
+    assert.dom(chip("staff")).exists();
+    assert.dom(chip("logged_in_users")).doesNotExist();
+    assert.dom(chip("anonymous_users")).doesNotExist();
   });
 
   test("restoring both default groups clears stored restrictions", async function (assert) {
@@ -594,9 +593,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    await chooser.selectRowByValue("anonymous_users");
+    await selectGroup("anonymous_users");
     assert.strictEqual(requests.length, 0);
     await click(".upcoming-change__save-groups");
     assert.deepEqual(requests.at(-1), {
@@ -625,11 +622,9 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       .dom(".upcoming-change__enabled")
       .hasAttribute("aria-checked", "true");
     assert.strictEqual(change.groups, "staff");
-    await click('.selected-choice[data-name="staff"]');
+    await click(chip("staff"));
     await click(".upcoming-change__save-groups");
-    assert
-      .dom('.selected-choice[data-name="staff"]')
-      .doesNotExist("retains the draft for retry");
+    assert.dom(chip("staff")).doesNotExist("retains the draft for retry");
     assert.dom(".upcoming-change__save-groups").isNotDisabled();
     assert.strictEqual(change.groups, "staff", "saved audience is unchanged");
     assert
@@ -653,12 +648,12 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    await click('.selected-choice[data-name="staff"]');
+    await click(chip("staff"));
     await click(".upcoming-change__enabled");
     assert.deepEqual(requests, [
       { enabled: true, setting_name: "test_setting", group_names: ["staff"] },
     ]);
-    assert.dom('.selected-choice[data-name="staff"]').doesNotExist();
+    assert.dom(chip("staff")).doesNotExist();
     assert.dom(".upcoming-change__save-groups").isNotDisabled();
   });
   test("linked audience edits save only the group setting and never toggle the change", async function (assert) {
@@ -700,9 +695,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    await chooser.selectRowByValue("team");
+    await selectGroup("team");
     assert.strictEqual(groupSaves.length, 0);
     await click(".upcoming-change__save-groups");
     assert.deepEqual(groupSaves, [
@@ -739,7 +732,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    await click('.selected-choice[data-value="staff"]');
+    await click(chip("staff"));
     assert.dom(".upcoming-change__save-groups").isDisabled();
     assert
       .dom(".upcoming-change__groups-description")
@@ -771,7 +764,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    assert.dom(".selected-choice").doesNotExist();
+    assert.dom(".d-multi-select-trigger__selected-item").doesNotExist();
     assert.dom(".upcoming-change__save-groups").isDisabled();
     await click(".upcoming-change__enabled");
     await click(".upcoming-change__enabled");
@@ -808,10 +801,11 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
         <table><tbody><UpcomingChangeItem @change={{change}} /></tbody></table>
       </template>
     );
-    assert.dom('.selected-choice[data-value="staff"]').isDisabled();
-    const chooser = selectKit(".email-group-user-chooser");
-    await chooser.expand();
-    assert.dom('.select-kit-row[data-value="anonymous_users"]').doesNotExist();
-    assert.dom('.select-kit-row[data-value="team"]').exists();
+    assert.dom(`${chip("staff")} .d-icon-lock`).exists();
+    await openGroupSelector();
+    assert
+      .dom('.d-multi-select__result[title="anonymous_users"]')
+      .doesNotExist();
+    assert.dom('.d-multi-select__result[title="team"]').exists();
   });
 });

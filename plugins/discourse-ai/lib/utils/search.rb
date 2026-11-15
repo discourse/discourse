@@ -43,6 +43,8 @@ module DiscourseAi
 
         begin
           results = ::Search.execute(search_string, search_type: :full_page, guardian: guardian)
+        rescue Discourse::InvalidParameters
+          results = nil
         rescue Discourse::InvalidAccess => e
           return(
             {

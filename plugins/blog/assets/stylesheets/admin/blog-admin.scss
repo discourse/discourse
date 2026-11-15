@@ -8,8 +8,34 @@
     margin-bottom: 1.5em;
   }
 
-  .admin-config-area-card {
-    margin-bottom: 1.5em;
+  &__form > .admin-config-area-card {
+    align-self: stretch;
+  }
+
+  // Core's radio cards are tuned for two short centred labels; these hold
+  // several options with examples of different lengths.
+  &__path-formats {
+    .form-kit__control-radio-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+      gap: var(--space-2);
+      width: 100%;
+    }
+
+    .form-kit__control-radio-label {
+      justify-content: flex-start;
+      padding: var(--space-3) var(--space-4);
+    }
+  }
+
+  &__path-example {
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+  }
+
+  &__path-base {
+    color: var(--primary-medium);
   }
 }
 
