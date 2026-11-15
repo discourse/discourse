@@ -481,7 +481,7 @@ module("Integration | Component | code-editor", function (hooks) {
     // Tooltip triggers are spans with a button role.
     const trigger = document.createElement("span");
     trigger.setAttribute("role", "button");
-    document.querySelector("label").append(trigger);
+    find("label").append(trigger);
 
     await click("label button");
     assert.dom(".cm-content").isNotFocused();
