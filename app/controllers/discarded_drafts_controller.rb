@@ -6,7 +6,7 @@ class DiscardedDraftsController < ApplicationController
   def index
     drafts =
       Draft
-        .discarded
+        .restorable
         .where(user_id: current_user.id)
         .order(deleted_at: :desc, id: :desc)
         .offset([params[:offset].to_i, 0].max)
@@ -68,6 +68,7 @@ class DiscardedDraftsController < ApplicationController
   private
 
   def find_discarded_draft
-    Draft.discarded.find_by(id: params[:id], user_id: current_user.id) || raise(Discourse::NotFound)
+    Draft.restorable.find_by(id: params[:id], user_id: current_user.id) ||
+      raise(Discourse::NotFound)
   end
 end

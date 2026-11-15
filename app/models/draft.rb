@@ -15,6 +15,11 @@ class Draft < ActiveRecord::Base
 
   scope :live, -> { where(deleted_at: nil) }
   scope :discarded, -> { where.not(deleted_at: nil) }
+  # The purge job runs daily, so expired rows can linger until it does.
+  scope :restorable,
+        -> do
+          discarded.where("deleted_at > ?", SiteSetting.discarded_drafts_retention_days.days.ago)
+        end
 
   class OutOfSequence < StandardError
   end
@@ -83,8 +88,8 @@ class Draft < ActiveRecord::Base
     else
       opts = { user_id: user.id, draft_key: key, data: data, sequence: sequence, owner: owner }
 
-      # The pre-partial-index unique index can still make a discarded row the conflict target;
-      # reviving it is harmless once that index is gone.
+      # Until the post-deploy migration drops the full unique index, a discarded row with the
+      # same key is the conflict target and gets overwritten, losing that discarded copy.
       draft_id = DB.query_single(<<~SQL, opts).first
         INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
         VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)

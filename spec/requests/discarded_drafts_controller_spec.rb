@@ -32,6 +32,18 @@ RSpec.describe DiscardedDraftsController do
       )
     end
 
+    it "leaves out drafts past the retention window before they are purged" do
+      own = discarded_draft(user)
+      discarded_draft(user, "new_topic_2").update_columns(deleted_at: 8.days.ago)
+      sign_in(user)
+
+      get "/discarded_drafts.json"
+
+      expect(response.parsed_body["discarded_drafts"].map { |d| d["id"] }).to contain_exactly(
+        own.id,
+      )
+    end
+
     it "treats a negative offset as the first page" do
       own = discarded_draft(user)
       sign_in(user)
@@ -102,6 +114,18 @@ RSpec.describe DiscardedDraftsController do
       put "/discarded_drafts/#{draft.id}/restore.json"
 
       expect(response.status).to eq(403)
+      expect(draft.reload.deleted_at).to be_present
+    end
+
+    it "does not restore a draft past the retention window" do
+      draft = discarded_draft(user)
+      SiteSetting.discarded_drafts_retention_days = 1
+      draft.update_columns(deleted_at: 2.days.ago)
+      sign_in(user)
+
+      put "/discarded_drafts/#{draft.id}/restore.json"
+
+      expect(response.status).to eq(404)
       expect(draft.reload.deleted_at).to be_present
     end
 
