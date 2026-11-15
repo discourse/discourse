@@ -74,6 +74,21 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_rich_editor
   end
 
+  it "switches every open composer when the preference changes in one" do
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
+    channel_1.update!(threading_enabled: true)
+    thread = chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, other_user])
+    thread_page = PageObjects::Pages::ChatThread.new
+
+    chat_page.visit_thread(thread)
+    expect(thread_page.composer).to have_markdown_editor
+
+    channel_page.composer.toggle_editor
+
+    expect(channel_page.composer).to have_rich_editor
+    expect(thread_page.composer).to have_rich_editor
+  end
+
   it "keeps Enter structural inside a list and sends from a plain paragraph" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.input.send_keys("- first")

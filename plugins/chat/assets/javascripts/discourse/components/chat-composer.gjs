@@ -84,6 +84,7 @@ export default class ChatComposer extends Component {
   @tracked richEditorComponent;
 
   #textareaInteractor;
+  #richEditorLoading;
 
   constructor() {
     super(...arguments);
@@ -248,8 +249,8 @@ export default class ChatComposer extends Component {
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
-        ...options,
         triggerRule: async () => !(await textManipulation.inCodeBlock()),
+        ...options,
       })
     );
 
@@ -288,6 +289,14 @@ export default class ChatComposer extends Component {
     discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  // the mode is a user preference shared with other open composers
+  @action
+  didUpdateEditorMode() {
+    if (this.useRichEditor) {
+      this.#loadRichEditor();
+    }
   }
 
   @action
@@ -637,7 +646,8 @@ export default class ChatComposer extends Component {
   }
 
   async #loadRichEditor() {
-    this.richEditorComponent ??= await loadRichEditor();
+    this.#richEditorLoading ??= loadRichEditor();
+    this.richEditorComponent ??= await this.#richEditorLoading;
   }
 
   #saveEditorPreference(preference) {
@@ -969,6 +979,7 @@ export default class ChatComposer extends Component {
             <div
               class="chat-composer__input-container"
               {{on "click" this.focusOrPromptLogin}}
+              {{didUpdate this.didUpdateEditorMode this.useRichEditor}}
             >
               {{#if this.useRichEditor}}
                 {{#if this.richEditorComponent}}
