@@ -441,30 +441,23 @@ function relativeAgeTiny(date: Date, ageOpts: RelativeAgeOptions): string {
   const siteSettings = helperContext().siteSettings as SiteSettingsService &
     RelativeDateSettings;
 
-  switch (true) {
-    case distanceInMinutes >= 0 && distanceInMinutes <= 44:
-      formatted = t("x_minutes", { count: distanceInMinutes });
+  const bucket = tinyAgeBucket(
+    distanceInMinutes,
+    siteSettings.relative_date_duration
+  );
+
+  switch (bucket.unit) {
+    case "minutes":
+      formatted = t("x_minutes", { count: bucket.count });
       break;
-    case distanceInMinutes >= 45 && distanceInMinutes <= 89:
-      formatted = t("about_x_hours", { count: 1 });
+    case "hours":
+      formatted = t("about_x_hours", { count: bucket.count });
       break;
-    case distanceInMinutes >= 90 && distanceInMinutes <= 1409:
-      formatted = t("about_x_hours", {
-        count: Math.round(distanceInMinutes / 60.0),
-      });
+    case "days":
+      formatted = t("x_days", { count: bucket.count });
       break;
-    case siteSettings.relative_date_duration === 0 &&
-      distanceInMinutes <= 525599:
+    case "date-no-year":
       formatted = shortDateNoYear(date);
-      break;
-    case distanceInMinutes >= 1410 && distanceInMinutes <= 2519:
-      formatted = t("x_days", { count: 1 });
-      break;
-    case distanceInMinutes >= 2520 &&
-      distanceInMinutes <= (siteSettings.relative_date_duration || 14) * 1440:
-      formatted = t("x_days", {
-        count: Math.round(distanceInMinutes / 1440.0),
-      });
       break;
     default:
       formatted = (ageOpts.defaultFormat || smartShortDate)(date);
@@ -472,6 +465,70 @@ function relativeAgeTiny(date: Date, ageOpts: RelativeAgeOptions): string {
   }
 
   return formatted;
+}
+
+type TinyAgeBucket =
+  | { unit: "minutes" | "hours" | "days"; count: number }
+  | { unit: "date-no-year" | "date" };
+
+/** How the tiny format shows an age. Shared with `relativeAgeSpoken`. */
+function tinyAgeBucket(
+  distanceInMinutes: number,
+  relativeDateDuration: number | undefined
+): TinyAgeBucket {
+  switch (true) {
+    case distanceInMinutes >= 0 && distanceInMinutes <= 44:
+      return { unit: "minutes", count: distanceInMinutes };
+    case distanceInMinutes >= 45 && distanceInMinutes <= 89:
+      return { unit: "hours", count: 1 };
+    case distanceInMinutes >= 90 && distanceInMinutes <= 1409:
+      return { unit: "hours", count: Math.round(distanceInMinutes / 60.0) };
+    case relativeDateDuration === 0 && distanceInMinutes <= 525599:
+      return { unit: "date-no-year" };
+    case distanceInMinutes >= 1410 && distanceInMinutes <= 2519:
+      return { unit: "days", count: 1 };
+    case distanceInMinutes >= 2520 &&
+      distanceInMinutes <= (relativeDateDuration || 14) * 1440:
+      return { unit: "days", count: Math.round(distanceInMinutes / 1440.0) };
+    default:
+      return { unit: "date" };
+  }
+}
+
+/** Says an age the way the tiny format shows it, in words: "3 days ago", "February 28". */
+export function relativeAgeSpoken(date: Date): string {
+  let distance = Math.round((+new Date() - +date) / 1000);
+  if (distance < 0) {
+    distance = Math.round((+date - +new Date()) / 1000);
+  }
+  const dividedDistance = Math.round(distance / 60.0);
+  const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
+
+  const siteSettings = helperContext().siteSettings as SiteSettingsService &
+    RelativeDateSettings;
+  const bucket = tinyAgeBucket(
+    distanceInMinutes,
+    siteSettings.relative_date_duration
+  );
+
+  // The page's own date pattern, with the month written out in full.
+  const spokenDate = (key: string) =>
+    moment(date).format(i18n(key).replace(/M{3}(?!M)/, "MMMM"));
+
+  switch (bucket.unit) {
+    case "minutes":
+      return i18n("dates.medium_with_ago.x_minutes", { count: bucket.count });
+    case "hours":
+      return i18n("dates.medium_with_ago.x_hours", { count: bucket.count });
+    case "days":
+      return i18n("dates.medium_with_ago.x_days", { count: bucket.count });
+    case "date-no-year":
+      return spokenDate("dates.tiny.date_month");
+    default:
+      return date.getFullYear() === new Date().getFullYear()
+        ? spokenDate("dates.tiny.date_month")
+        : spokenDate("dates.tiny.date_year");
+  }
 }
 
 /*
