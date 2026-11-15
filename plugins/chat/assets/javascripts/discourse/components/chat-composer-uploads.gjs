@@ -75,6 +75,7 @@ export default class ChatComposerUploads extends Component {
 
   #previews = new WeakMap();
   _pasteTarget = null;
+  _receivedUploads = null;
 
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
@@ -86,12 +87,20 @@ export default class ChatComposerUploads extends Component {
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
+    this._listenForPaste(this.composerInputEl);
+
+    // switching editors swaps the input element; only a new draft resets uploads
+    const existingUploads = this.existingUploads ?? null;
+    if (this.uploads && this._receivedUploads === existingUploads) {
+      return;
+    }
+    this._receivedUploads = existingUploads;
+
     if (this.inProgressUploads?.length > 0) {
       this.uppyUpload.cancelAllUploads();
     }
 
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
-    this._listenForPaste(this.composerInputEl);
   }
 
   willDestroyElement() {
