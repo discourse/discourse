@@ -2,6 +2,12 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { updatePosition } from "discourse/float-kit/lib/update-position";
 
 const IDENTIFIER = "chat-selection-toolbar";
+const MENU_OPTIONS = {
+  placement: "top",
+  fallbackPlacements: ["bottom"],
+  padding: 0,
+  offset: 6,
+};
 
 class SelectionToolbarView {
   #view;
@@ -40,9 +46,11 @@ class SelectionToolbarView {
     const { state } = this.#view;
     const { selection, schema } = state;
 
+    // selected nodes, like images, float their own toolbars
     if (
       !this.#getToolbar() ||
       selection.empty ||
+      selection.node ||
       !this.#view.hasFocus() ||
       !selection.$from.parent.inlineContent ||
       selection.$from.parent.type.spec.code
@@ -61,7 +69,7 @@ class SelectionToolbarView {
 
     if (this.#menuInstance?.expanded) {
       this.#menuInstance.trigger = trigger;
-      updatePosition(trigger, this.#menuInstance.content, {});
+      updatePosition(trigger, this.#menuInstance.content, MENU_OPTIONS);
       return;
     }
 
@@ -75,10 +83,7 @@ class SelectionToolbarView {
         identifier: IDENTIFIER,
         component: ToolbarButtons,
         data: this.#getToolbar(),
-        placement: "top",
-        fallbackPlacements: ["bottom"],
-        padding: 0,
-        offset: 6,
+        ...MENU_OPTIONS,
         closeOnClickOutside: false,
         closeOnEscape: false,
       })
