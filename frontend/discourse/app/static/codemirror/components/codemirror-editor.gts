@@ -96,8 +96,6 @@ export interface CodemirrorEditorSignature {
 // Specs reach the document through the element.
 type HandleElement = HTMLDivElement & { codemirrorView?: EditorView };
 
-const MODIFIER_KEYS = ["Alt", "CapsLock", "Control", "Meta", "Shift"];
-
 // A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
 function focusFromLabel(event: MouseEvent) {
   const target = event.target as Element | null;
@@ -313,13 +311,8 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
     // Settled ahead of any surrounding dialog. Propagation stops here, so the
     // editor's own Escape bindings never run.
-    let tabFocusArmed = false;
     const handleKeydown = (view: EditorView, event: KeyboardEvent) => {
       if (event.key !== "Escape") {
-        // Other keys end the editor's temporary Tab focus mode on their own.
-        if (event.key !== "Tab" && !MODIFIER_KEYS.includes(event.key)) {
-          tabFocusArmed = false;
-        }
         return;
       }
 
@@ -330,22 +323,22 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
         event.preventDefault();
         return;
       } else if (!closeSearchPanel(view) && !simplifySelection(view)) {
-        if (tabFocusArmed) {
-          return;
-        }
-        // No expiry, so a slow second Escape still reaches the page.
-        view.setTabFocusMode(Infinity);
-        tabFocusArmed = true;
+        // Leaves the text but not the editor's box, so a surrounding dialog
+        // keeps focus. The content steps out of the tab order meanwhile, so
+        // Tab moves past the editor instead of back into it.
+        view.dom.tabIndex = -1;
+        view.contentDOM.tabIndex = -1;
+        view.dom.focus({ preventScroll: true });
       }
       event.preventDefault();
       event.stopPropagation();
     };
 
-    const disarmTabFocus = (view: EditorView) => {
-      if (tabFocusArmed) {
-        tabFocusArmed = false;
-        // Unlike `false`, keeps a Tab focus mode the user turned on.
-        view.setTabFocusMode(-1);
+    const restoreTabOrder = (view: EditorView, event: FocusEvent) => {
+      // Switching windows blurs without moving focus anywhere.
+      if (event.target === view.dom && document.activeElement !== view.dom) {
+        view.dom.removeAttribute("tabindex");
+        view.contentDOM.removeAttribute("tabindex");
       }
     };
 
@@ -353,31 +346,28 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       ViewPlugin.fromClass(
         class {
           handler: (event: KeyboardEvent) => void;
-          disarmHandler: () => void;
+          restoreHandler: (event: FocusEvent) => void;
           view: EditorView;
 
           constructor(view: EditorView) {
             this.view = view;
+            // With the box focused, the next Escape belongs to the page.
             this.handler = (event) => {
-              if (view.dom.contains(document.activeElement)) {
+              const active = document.activeElement;
+              if (active !== view.dom && view.dom.contains(active)) {
                 handleKeydown(view, event);
               }
             };
-            this.disarmHandler = () => disarmTabFocus(view);
+            this.restoreHandler = (event) => restoreTabOrder(view, event);
             window.addEventListener("keydown", this.handler, { capture: true });
-            view.dom.addEventListener("pointerdown", this.disarmHandler);
-            view.dom.addEventListener("focusout", this.disarmHandler);
+            view.dom.addEventListener("focusout", this.restoreHandler);
           }
 
           destroy() {
             window.removeEventListener("keydown", this.handler, {
               capture: true,
             });
-            this.view.dom.removeEventListener(
-              "pointerdown",
-              this.disarmHandler
-            );
-            this.view.dom.removeEventListener("focusout", this.disarmHandler);
+            this.view.dom.removeEventListener("focusout", this.restoreHandler);
           }
         }
       )

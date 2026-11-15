@@ -40,7 +40,8 @@
     direction: ltr;
 
     // Inset, so gutters, scrollbars and a clipping host don't cover it.
-    &.cm-focused {
+    &.cm-focused,
+    &:focus {
       outline: none;
 
       &::after {
@@ -61,7 +62,7 @@
     border-radius: inherit;
   }
 
-  &:has(> .grippie) .cm-editor.cm-focused::after {
+  &:has(> .grippie) .cm-editor:is(.cm-focused, :focus)::after {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
