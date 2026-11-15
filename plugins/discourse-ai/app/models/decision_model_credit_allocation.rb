@@ -13,12 +13,18 @@ class DecisionModelCreditAllocation < ActiveRecord::Base
               less_than_or_equal_to: 100,
             }
 
-  def self.check_credits!(decision_model, feature_name)
-    return if !decision_model&.credit_system_enabled?
-    return if DecisionModelFeatureCreditCost.credit_cost_for(decision_model, feature_name).zero?
+  def self.credits_available?(decision_model, feature_name)
+    return true if !decision_model&.credit_system_enabled?
+    if DecisionModelFeatureCreditCost.credit_cost_for(decision_model, feature_name).zero?
+      return true
+    end
 
-    allocation = decision_model.decision_model_credit_allocation
-    if allocation.hard_limit_reached?
+    !decision_model.decision_model_credit_allocation.hard_limit_reached?
+  end
+
+  def self.check_credits!(decision_model, feature_name)
+    if !credits_available?(decision_model, feature_name)
+      allocation = decision_model.decision_model_credit_allocation
       raise DiscourseAi::Decisions::CreditLimitExceeded.new(
               I18n.t(
                 "discourse_ai.decision_models.credit_limit_exceeded",

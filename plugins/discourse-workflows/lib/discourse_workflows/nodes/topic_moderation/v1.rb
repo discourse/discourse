@@ -69,7 +69,7 @@ module DiscourseWorkflows
           )
 
           topic.reload
-          { topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian) }
+          { topic: serialize_topic(topic, guardian: actor.guardian) }
         end
       end
     end

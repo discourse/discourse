@@ -3,7 +3,8 @@
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
   def can_remove_allowed_users?(topic, target_user = nil)
-    is_staff? || (is_my_own?(topic) && @user.has_trust_level?(TrustLevel[2])) ||
+    is_staff? ||
+      (is_my_own?(topic) && @user.has_trust_level?(TrustLevel[2]) && can_see_topic?(topic)) ||
       (topic.allowed_users.count > 1 && topic.user != target_user && !!is_me?(target_user))
   end
 
@@ -77,6 +78,9 @@ module TopicGuardian
           Category.find(category || SiteSetting.uncategorized_category_id)
         end
       )
+
+    return true if is_admin?
+    return false if !can_see_category?(category)
 
     is_staff? ||
       (can_create_topic_on_category?(category) && !topic_posting_review_required?(category))
@@ -305,6 +309,7 @@ module TopicGuardian
 
   def can_change_archetype?(topic, new_archetype)
     return true if new_archetype == topic.archetype
+    return false if !Archetype.exists?(new_archetype)
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
     end
@@ -346,7 +351,9 @@ module TopicGuardian
     return false if is_silenced?
     return false unless can_perform_action_available_to_group_moderators?(topic)
     return false if topic.archetype == "private_message" && !is_staff?
-    true
+    return true if is_staff? || is_category_group_moderator?(topic.category)
+
+    can_create_post?(topic)
   end
 
   def affected_by_slow_mode?(topic)

@@ -7,6 +7,13 @@
 pl_PL:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            gamification:
+              read_score_events: "Przeczytaj wyniki wydarzeń związanych z grywalizacją."
+              create_score_events: "Twórz wydarzenia z zakresu grywalizacji, aby przyznawać lub odejmować punkty."
+              update_score_events: "Zaktualizuj istniejące wydarzenia dotyczące wyników grywalizacji."
       site_settings:
         categories:
           discourse_gamification: "Grywalizacja Discourse"

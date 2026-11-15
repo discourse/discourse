@@ -26,7 +26,6 @@ export default class ChatPinnedMessagesList extends Component {
   @service chatApi;
   @service currentUser;
   @service router;
-  @service siteSettings;
 
   @tracked pinnedMessages = this.args.pinnedMessages || [];
 
@@ -103,9 +102,7 @@ export default class ChatPinnedMessagesList extends Component {
   }
 
   get canManagePins() {
-    return (
-      this.siteSettings.chat_pinned_messages && this.args.channel?.canManagePins
-    );
+    return this.args.channel?.canManagePins;
   }
 
   // mirror the visited pin in the bar (the jump's scroll wouldn't update it)

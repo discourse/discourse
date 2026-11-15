@@ -85,6 +85,58 @@ module("Integration | Helper | reviewable-status", function (hooks) {
     }
   );
 
+  test("labels a post needing approval as a post rather than a flag", async function (assert) {
+    await render(
+      <template>
+        <div class="legacy">{{newReviewableStatus
+            APPROVED
+            "ReviewablePost"
+          }}</div>
+        <div class="explicit">{{newReviewableStatus
+            APPROVED
+            "ReviewablePost"
+            true
+          }}</div>
+      </template>
+    );
+
+    assert.dom(".legacy .review-item__status").hasText("Post approved");
+    assert.dom(".explicit .review-item__status").hasText("Post approved");
+  });
+
+  test("labels outcomes by problem with consistent answers", async function (assert) {
+    this.siteSettings.review_queue_consistent_answers = true;
+
+    await render(
+      <template>
+        <div class="agreed-flag">{{newReviewableStatus
+            APPROVED
+            "ReviewableFlaggedPost"
+            false
+          }}</div>
+        <div class="rejected-post">{{newReviewableStatus
+            REJECTED
+            "ReviewableQueuedPost"
+            true
+          }}</div>
+        <div class="approved-user">{{newReviewableStatus
+            APPROVED
+            "ReviewableUser"
+          }}</div>
+      </template>
+    );
+
+    assert
+      .dom(".agreed-flag .review-item__status.--problem-confirmed")
+      .hasText("Problem confirmed");
+    assert
+      .dom(".rejected-post .review-item__status.--problem-confirmed")
+      .hasText("Problem confirmed");
+    assert
+      .dom(".approved-user .review-item__status.--no-problem-found")
+      .hasText("No problem found", "infers approval style from the type");
+  });
+
   const edgeCaseTestCases = [
     {
       status: 999,

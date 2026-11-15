@@ -8,7 +8,9 @@ const FullPageChat = <template>
       @isFiltering={{@isFiltering}}
       @onToggleFilter={{@onToggleFilter}}
       @targetMessageId={{@targetMessageId}}
-    />
+    >
+      <:aboveMessages>{{yield to="aboveMessages"}}</:aboveMessages>
+    </ChatChannel>
   {{/each}}
 </template>;
 

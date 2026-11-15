@@ -19,9 +19,12 @@ import {
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
+import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
+import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
 import LiveTranscriptBadge from "./transcript-badge.gjs";
@@ -310,6 +313,10 @@ export default class LiveCallWidget extends Component {
     return parts.length ? trustHTML(parts.join(" ")) : null;
   }
 
+  get canDiagnoseConnection() {
+    return this.liveWebrtc.canDiagnoseConnection(this.room?.id);
+  }
+
   @action
   openRoom() {
     if (this.room?.slug) {
@@ -528,6 +535,14 @@ export default class LiveCallWidget extends Component {
   openChatFromMenu(closeMenu) {
     closeMenu?.();
     this.openChat();
+  }
+
+  @action
+  openConnectionDiagnostics(closeMenu) {
+    closeMenu?.();
+    this.modal.show(LiveConnectionDiagnosticsModal, {
+      model: { room: this.room },
+    });
   }
 
   @action
@@ -757,6 +772,8 @@ export default class LiveCallWidget extends Component {
               </button>
             {{/if}}
           </div>
+
+          <LiveReactionOverlay @room={{this.room}} />
         {{/unless}}
 
         <footer class="live-call-widget__controls">
@@ -764,7 +781,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="live-call-widget__expand"
               @action={{this.expandWidget}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.expandWidgetTitle}}
             />
           {{else}}
@@ -772,7 +789,7 @@ export default class LiveCallWidget extends Component {
             <DButton
               class="btn-default"
               @action={{this.openRoom}}
-              @icon="expand"
+              @icon="discourse-expand"
               @translatedTitle={{this.openRoomTitle}}
             />
             <DMenu
@@ -787,6 +804,11 @@ export default class LiveCallWidget extends Component {
               <:content as |roomMenu|>
                 <DDropdownMenu as |dropdown|>
                   <LiveInviteAgentButton
+                    @closeMenu={{roomMenu.close}}
+                    @item={{dropdown.item}}
+                    @room={{this.room}}
+                  />
+                  <LiveLocalRecordingMenuItem
                     @closeMenu={{roomMenu.close}}
                     @item={{dropdown.item}}
                     @room={{this.room}}
@@ -808,6 +830,19 @@ export default class LiveCallWidget extends Component {
                         @action={{fn this.openInviteModal roomMenu.close}}
                         @icon="user-plus"
                         @label="live.invite.menu"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if this.canDiagnoseConnection}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent live-connection-diagnostics-trigger"
+                        @action={{fn
+                          this.openConnectionDiagnostics
+                          roomMenu.close
+                        }}
+                        @icon="stethoscope"
+                        @label="live.connection_diagnostics.menu"
                       />
                     </dropdown.item>
                   {{/if}}

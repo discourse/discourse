@@ -7,6 +7,10 @@ class ReviewableQueuedPost < Reviewable
     { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
 
+  def self.approval_style?
+    true
+  end
+
   after_create do
     # Backwards compatibility, new code should listen for `reviewable_created`
     DiscourseEvent.trigger(:queued_post_created, self)
@@ -33,24 +37,33 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    unless approved?
-      if topic&.closed?
-        build_action(actions, :approve_post_closed, icon: "check", confirm: true)
-      else
-        build_action(actions, :approve_post, icon: "check") if target_created_by.present?
-      end
-    end
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    build_approve_action(actions, consistent_answers:) if !consistent_answers
 
     if pending?
-      reject_bundle =
-        actions.add_bundle(
-          "#{id}-reject-post",
-          label: "reviewables.actions.reject_post_bundle.title",
-        )
+      reject_label =
+        if consistent_answers
+          "reviewables.actions.answer_yes.title"
+        else
+          "reviewables.actions.reject_post_bundle.title"
+        end
+      reject_bundle = actions.add_bundle("#{id}-reject-post", label: reject_label)
 
-      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(
+        actions,
+        :reject_post,
+        bundle: reject_bundle,
+        icon: "xmark",
+        dsa_classification_required: true,
+      )
       if target_created_by.present?
-        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+        build_action(
+          actions,
+          :revise_and_reject_post,
+          bundle: reject_bundle,
+          icon: "envelope",
+          dsa_classification_required: true,
+        )
       end
 
       build_penalty_actions(
@@ -58,10 +71,16 @@ class ReviewableQueuedPost < Reviewable
         bundle: reject_bundle,
         silence: :reject_and_silence,
         suspend: :reject_and_suspend,
+        dsa_classification_required: true,
       )
 
-      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
+      if guardian.can_delete_user?(target_created_by)
+        delete_user_actions(actions, reject_bundle, dsa_classification_required: true)
+      end
     end
+
+    # "Yes, there's a problem" comes first, so approval follows as "No".
+    build_approve_action(actions, consistent_answers:) if consistent_answers
 
     build_action(actions, :delete) if guardian.can_delete?(self)
   end
@@ -120,7 +139,11 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    if target_created_by.silenced?
+    if target_created_by.silenced? &&
+         (
+           performed_by.guardian.can_unsilence_user?(target_created_by) ||
+             auto_silenced_for_this_reviewable?
+         )
       UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
     end
 
@@ -224,7 +247,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|
@@ -238,7 +261,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_delete_and_block_user(performed_by, args)
     user = target_created_by
-    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
 
     result =
       super do |result|
@@ -251,6 +274,26 @@ class ReviewableQueuedPost < Reviewable
   end
 
   private
+
+  def build_approve_action(actions, consistent_answers:)
+    return if approved?
+
+    label =
+      if !consistent_answers
+        nil
+      elsif pending?
+        "reviewables.actions.answer_no.title"
+      else
+        # Resolved items have no question to answer, so approval is named outright.
+        "reviewables.actions.approve_post.action_title"
+      end
+
+    if topic&.closed?
+      build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)
+    elsif target_created_by.present?
+      build_action(actions, :approve_post, icon: "check", label:)
+    end
+  end
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
     case action_id
@@ -323,6 +366,14 @@ class ReviewableQueuedPost < Reviewable
 
   def status_changed_from_or_to_pending?
     saved_change_to_id?(from: nil) && pending? || saved_change_to_status?(from: "pending")
+  end
+
+  # Approving content may lift the auto-silence it triggered, but not a staff-imposed silence
+  def auto_silenced_for_this_reviewable?
+    UserHistory
+      .where(action: UserHistory.actions[:silence_user], target_user_id: target_created_by_id)
+      .order(id: :desc)
+      .pick(:reviewable_id, :acting_user_id) == [id, Discourse::SYSTEM_USER_ID]
   end
 end
 

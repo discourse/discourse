@@ -9,6 +9,7 @@ en:
       create_zendesk_issue: "Create Zendesk Ticket"
       view_zendesk_issue: "View on Zendesk"
     zendesk:
+      ticket_created: "Zendesk ticket created"
       credentials_not_setup: You haven't setup your Zendesk credentials.
       url_not_set: Your Zendesk URL is not currently set.
       general_error: Something went wrong.

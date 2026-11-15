@@ -63,13 +63,14 @@ module Patreon
 
         if uris.blank?
           Patreon::Pledge.save!([], false, adapter: self)
-          return
+          return true
         end
 
         is_first_page = true
 
         uris.each do |uri|
           pledge_data = Patreon::Api.get(uri)
+          return false unless pledge_data&.dig("data").is_a?(Array)
 
           if pledge_data["links"] && pledge_data["links"]["next"]
             next_page_uri = pledge_data["links"]["next"]
@@ -81,6 +82,12 @@ module Patreon
             is_first_page = false
           end
         end
+
+        true
+      end
+
+      def self.replace_pledge_on_create?
+        false
       end
 
       def self.extract(pledge_data)

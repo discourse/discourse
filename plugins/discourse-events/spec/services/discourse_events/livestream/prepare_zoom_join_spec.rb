@@ -125,8 +125,6 @@ RSpec.describe DiscourseEvents::Livestream::PrepareZoomJoin do
       it { is_expected.to fail_a_policy(:event_within_timeframe) }
     end
 
-    # TODO (martin) ignore_timeframe backs the showzoom testing workaround,
-    # remove these examples along with it before merge
     context "when a staff user asks to ignore the timeframe" do
       fab!(:admin)
 
@@ -140,13 +138,20 @@ RSpec.describe DiscourseEvents::Livestream::PrepareZoomJoin do
         )
       end
 
-      it { is_expected.to run_successfully }
+      it { is_expected.to fail_a_policy(:event_within_timeframe) }
+
+      context "in development" do
+        before { Rails.env.stubs(:development?).returns(true) }
+
+        it { is_expected.to run_successfully }
+      end
     end
 
     context "when a regular user asks to ignore the timeframe" do
       let(:params) { { topic_id: topic.id, ignore_timeframe: true } }
 
       before do
+        Rails.env.stubs(:development?).returns(true)
         event.update!(
           original_starts_at: 2.hours.from_now.iso8601,
           original_ends_at: 3.hours.from_now.iso8601,

@@ -21,7 +21,8 @@ class GroupsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
   skip_before_action :check_xhr, only: [:show]
-  after_action :add_noindex_header
+  # Run before check_xhr can return the HTML shell.
+  prepend_before_action :add_noindex_header
 
   TYPE_FILTERS = GroupDirectoryQuery::TYPE_FILTERS
 
@@ -67,7 +68,7 @@ class GroupsController < ApplicationController
       group = find_group_for_show
 
       format.html do
-        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @title = group.full_name.presence || group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
         @description_meta = group.bio_summary || @title
         render :show
@@ -253,8 +254,11 @@ class GroupsController < ApplicationController
       allowed_fields += UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
     end
 
-    if params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
-      order = "#{params[:order]} #{dir} NULLS LAST"
+    order_by_activity = params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
+
+    if order_by_activity
+      order =
+        "(CASE WHEN #{member_profile_visible_sql} THEN users.#{params[:order]} END) #{dir} NULLS LAST"
     elsif params[:order] == "added_at"
       order = "group_users.created_at #{dir}"
     elsif include_custom_fields && params[:order] == "custom_field" &&
@@ -264,6 +268,7 @@ class GroupsController < ApplicationController
     end
 
     users = group.listed_users
+    users = users.left_joins(:user_option, :user_stat) if order_by_activity
     total = users.count
 
     if (filter = params[:filter]).present?
@@ -438,7 +443,12 @@ class GroupsController < ApplicationController
     notification_level = params.require(:notification_level)
 
     user_id = current_user.id
-    user_id = params[:user_id] || user_id if guardian.is_staff?
+    if guardian.is_staff?
+      if params[:user_id] && params[:user_id].to_i != user_id
+        guardian.ensure_can_see_group_members!(group)
+      end
+      user_id = params[:user_id] || user_id
+    end
 
     group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
     raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?
@@ -456,10 +466,19 @@ class GroupsController < ApplicationController
     offset = (params[:offset] && params[:offset].to_i) || 0
 
     group_histories =
-      GroupHistory.with_filters(group, params[:filters]).limit(page_size).offset(offset * page_size)
+      GroupHistory
+        .with_filters(group, params[:filters])
+        .preload(:group)
+        .limit(page_size)
+        .offset(offset * page_size)
 
     render_json_dump(
-      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      logs:
+        serialize_data(
+          group_histories,
+          BasicGroupHistorySerializer,
+          is_group_owner: group.group_users.exists?(user: current_user, owner: true),
+        ),
       all_loaded: group_histories.count < page_size,
     )
   end
@@ -562,6 +581,40 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  # SQL mirror of UserGuardian#can_see_profile? so that member ordering never
+  # depends on activity timestamps the serializer withholds from the requester.
+  def member_profile_visible_sql
+    return "TRUE" if guardian.is_staff?
+    return "FALSE" if !guardian.public_can_see_profiles?
+
+    conditions = []
+
+    if SiteSetting.allow_users_to_hide_profile
+      conditions << "NOT COALESCE(user_options.hide_profile, FALSE)"
+    end
+
+    if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
+         !SiteSetting.must_approve_users
+      has_trust_level_sql =
+        lambda do |level|
+          "(users.admin OR users.moderator OR users.staged OR users.trust_level >= #{level})"
+        end
+
+      if !current_user&.has_trust_level?(TrustLevel[2])
+        conditions << "(COALESCE(user_stats.post_count, 0) > 0 OR #{has_trust_level_sql.call(2)})"
+      end
+
+      conditions << has_trust_level_sql.call(1) if !current_user&.has_trust_level?(TrustLevel[1])
+    end
+
+    return "TRUE" if conditions.empty?
+
+    visible_sql = conditions.join(" AND ")
+    # can_see_profile? short-circuits true for the viewer's own row.
+    visible_sql = "users.id = #{current_user.id.to_i} OR #{visible_sql}" if current_user
+    "(#{visible_sql})"
+  end
 
   def user_selectors
     {

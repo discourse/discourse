@@ -380,6 +380,7 @@ RSpec.describe Admin::GroupsController do
       before { sign_in(admin) }
 
       it "sets with multiple users" do
+        [user, user2, user3].each { |member| group.add(member) }
         user2.update!(primary_group_id: group.id)
 
         put "/admin/groups/#{group.id}/primary.json",
@@ -392,6 +393,21 @@ RSpec.describe Admin::GroupsController do
 
         expect(response.status).to eq(200)
         expect(User.where(primary_group_id: group.id).size).to eq(3)
+      end
+
+      it "only sets the primary group of users who are members of the group" do
+        group.add(user)
+
+        put "/admin/groups/#{group.id}/primary.json",
+            params: {
+              group: {
+                usernames: "#{user.username},#{user2.username}",
+              },
+              primary: "true",
+            }
+
+        expect(response.status).to eq(200)
+        expect(User.where(primary_group_id: group.id)).to contain_exactly(user)
       end
 
       it "unsets with multiple users" do
@@ -409,6 +425,22 @@ RSpec.describe Admin::GroupsController do
         expect(response.status).to eq(200)
         expect(User.where(primary_group_id: group.id).size).to eq(0)
       end
+
+      it "keeps primary groups that belong to other groups" do
+        other_group = Fabricate(:group)
+        user.update!(primary_group_id: other_group.id)
+
+        put "/admin/groups/#{group.id}/primary.json",
+            params: {
+              group: {
+                usernames: user.username,
+              },
+              primary: "false",
+            }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.primary_group_id).to eq(other_group.id)
+      end
     end
 
     context "when logged in as a moderator" do
@@ -418,6 +450,7 @@ RSpec.describe Admin::GroupsController do
         before { SiteSetting.moderators_manage_groups = true }
 
         it "sets multiple primary users" do
+          [user, user2, user3].each { |member| group.add(member) }
           user2.update!(primary_group_id: group.id)
 
           put "/admin/groups/#{group.id}/primary.json",

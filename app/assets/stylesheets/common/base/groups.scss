@@ -1,5 +1,3 @@
-@use "sass:math";
-
 .groups-header {
   display: flex;
   flex-wrap: wrap;
@@ -113,32 +111,14 @@
       }
     }
 
-    $size: 40px;
-    $icon-size: math.div($size, 1.8);
-
     .group-avatar-flair {
       display: inline-block;
       color: var(--primary);
 
       .avatar-flair {
-        background-size: $size;
-        height: $size;
-        width: $size;
+        --avatar-flair-size: 40px;
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-repeat: no-repeat;
-
-        .d-icon {
-          height: $icon-size;
-          width: $icon-size;
-        }
       }
-    }
-
-    .avatar-flair-image {
-      width: $size;
     }
   }
 }

@@ -111,6 +111,25 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     end
   end
 
+  describe "#download" do
+    let(:store) { FileStore::BaseStore.new }
+
+    before { FileUtils.rm_rf(FileStore::BaseStore::CACHE_DIR) }
+    after { FileUtils.rm_rf(FileStore::BaseStore::CACHE_DIR) }
+
+    it "caches downloads per site" do
+      %w[default second].each do |db|
+        test_multisite_connection(db) do
+          setup_s3
+          upload = Fabricate.build(:upload_s3, sha1: upload_sha1)
+          stub_request(:get, upload.url).to_return(status: 200, body: db)
+
+          expect(File.read(store.download(upload))).to eq(db)
+        end
+      end
+    end
+  end
+
   describe "removal from s3" do
     before { setup_s3 }
 
@@ -265,6 +284,37 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
             Discourse.store.signed_url_for_path(upload.url, include_content_disposition: true)
           expect(signed_url).to match(/Amz-Expires/)
           expect(signed_url).to match("#{upload_path}")
+        end
+      end
+
+      it "signs temporary and bucket folder paths of the current site" do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket/folder"
+
+        test_multisite_connection("default") do
+          %W[
+            folder/#{upload_path}/original/1X/a.png
+            temp/folder/#{upload_path}/b/a.png
+          ].each do |path|
+            expect(
+              Discourse.store.signed_url_for_path(path, include_content_disposition: false),
+            ).to match(/Amz-Expires/)
+          end
+        end
+      end
+
+      it "only signs paths of the current site" do
+        test_multisite_connection("default") do
+          path = "uploads/second/original/1X/#{upload_sha1}.png"
+
+          expect {
+            Discourse.store.signed_url_for_path(path, include_content_disposition: true)
+          }.to raise_error(Discourse::NotFound)
+          expect(
+            CookedPostProcessor.new(Fabricate(:post)).get_size("/secure-uploads/#{path}"),
+          ).to eq(nil)
+          expect {
+            HotlinkedMediaDownloader.download("/secure-uploads/#{path}", -1, tmp_file_name: "x")
+          }.to raise_error(HotlinkedMediaDownloader::ImageBrokenError)
         end
       end
     end

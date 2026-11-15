@@ -83,7 +83,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         post
       end
 
-      [false, true].each do |with_checkpoint|
+      shared_examples "preserving conversation rounds after failed resume" do |with_checkpoint:|
         it "preserves both caller rounds and current model turns after failed resume #{with_checkpoint ? "with" : "without"} a checkpoint" do
           topic = history.topic
           calls =
@@ -156,6 +156,15 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           expect(Discourse.redis.get(key)).to be_nil
         end
       end
+
+      context "when resuming without a checkpoint" do
+        include_examples "preserving conversation rounds after failed resume",
+                         with_checkpoint: false
+      end
+
+      context "when resuming from a checkpoint" do
+        include_examples "preserving conversation rounds after failed resume", with_checkpoint: true
+      end
     end
 
     it "preserves completed caller results when a permission change invalidates the resumed history" do
@@ -197,7 +206,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(Discourse.redis.get(described_class.redis_key(token))).to be_nil
     end
 
-    %i[missing extra].each do |invalid_ids|
+    shared_examples "restoring consumed resume state after history changes" do |invalid_ids:|
       it "restores consumed resume state when #{invalid_ids} caller IDs compound a history change" do
         call =
           DiscourseAi::Completions::ToolCall.new(
@@ -257,6 +266,15 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         end
         expect(described_class.resume_state_exists?(token)).to eq(false)
       end
+    end
+
+    context "when consumed history entries are missing" do
+      include_examples "restoring consumed resume state after history changes",
+                       invalid_ids: :missing
+    end
+
+    context "when history has additional entries" do
+      include_examples "restoring consumed resume state after history changes", invalid_ids: :extra
     end
 
     it "retains caller results privately if topic access is revoked during suspension" do
@@ -613,7 +631,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 96
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 4
       Discourse.redis.set(key, state.to_json)
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["First summary", "Complete summary", call],
@@ -625,7 +643,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           ),
         )
       end
-      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(99)
+      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(
+        DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1,
+      )
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["Final answer at the execution limit", "Test title"],
@@ -664,7 +684,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
       expect(state["prompt"]["messages"].map { |message| message["type"] }).to eq(%w[system user])
-      state["completion_count"] = 98
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
       Discourse.redis.set(key, state.to_json)
       summary = "The completed caller action returned useful evidence."
       final = "Final answer using the completed action"
@@ -717,7 +737,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 98
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
       Discourse.redis.set(key, state.to_json)
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["Completed caller evidence summarized."],
@@ -736,7 +756,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(described_class.resume_state_exists?(token)).to eq(false)
     end
 
-    %w[maintenance final_reply].each do |failure_stage|
+    shared_examples "persisting consumed completions after access revocation" do |failure_stage:|
       it "persists consumed completions when #{failure_stage} fails after access is revoked" do
         llm.update!(max_prompt_tokens: 16_000)
         ai_agent.update!(max_turn_tokens: 200_000)
@@ -760,7 +780,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         end
         key = described_class.redis_key(token)
         state = JSON.parse(Discourse.redis.get(key))
-        state["completion_count"] = 98
+        state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
         Discourse.redis.set(key, state.to_json)
         topic = Topic.find(state["topic_id"])
         result = "Completed evidence " * 2000
@@ -786,7 +806,8 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
         end
         failed_state = JSON.parse(Discourse.redis.get(key))
-        completion_count = failure_stage == "maintenance" ? 99 : 100
+        completion_count = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
+        completion_count -= 1 if failure_stage == "maintenance"
         expect(failed_state["completion_count"]).to eq(completion_count)
         expect(failed_state["failed_tool_results"]).to eq(
           [{ "tool_call_id" => call.id, "content" => result }],
@@ -803,6 +824,16 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
+    context "when access is revoked during maintenance" do
+      include_examples "persisting consumed completions after access revocation",
+                       failure_stage: "maintenance"
+    end
+
+    context "when access is revoked during the final reply" do
+      include_examples "persisting consumed completions after access revocation",
+                       failure_stage: "final_reply"
+    end
+
     it "preserves completed results when the execution completion limit blocks required compaction" do
       llm.update!(max_prompt_tokens: 16_000)
       call =
@@ -816,7 +847,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 99
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1
       Discourse.redis.set(key, state.to_json)
       result = "Completed evidence " * 6000
       DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
@@ -847,7 +878,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      state["completion_count"] = 100
+      state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
       Discourse.redis.set(key, state.to_json)
       result = "Already completed"
       DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|

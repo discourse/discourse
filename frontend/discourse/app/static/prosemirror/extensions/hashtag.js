@@ -2,6 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import { getHashtagAutocompleteCache } from "discourse/lib/hashtag-autocomplete";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_HASHTAGS = new Map();
@@ -190,7 +191,7 @@ const extension = {
                 const displayText = validHashtag?.text || name;
                 const tagText =
                   typeof displayText === "string"
-                    ? emojiUnescape(displayText)
+                    ? emojiUnescape(escapeExpression(displayText))
                     : displayText;
                 const hashtagTypeClass =
                   getHashtagTypeClasses()[validHashtag.type];

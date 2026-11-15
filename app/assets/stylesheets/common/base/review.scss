@@ -418,11 +418,13 @@
     color: var(--primary-low);
   }
 
+  &.--problem-confirmed,
   &.--rejected {
     background-color: var(--danger);
     color: var(--secondary);
   }
 
+  &.--no-problem-found,
   &.--approved,
   &.--resolved {
     background-color: var(--success);

@@ -6,6 +6,44 @@ module DiscourseWorkflows
       class V1 < NodeType
         POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
 
+        EDITOR_SCHEMA =
+          Schema.document(
+            "editor" => Schema.nullable_user("User who performed the edit, when available"),
+          )
+
+        BASE_OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema::POST_SCHEMA,
+            Schema::TOPIC_LIST_ITEM_SCHEMA,
+            Schema::USER_SCHEMA,
+            Schema.document(
+              "revision" => {
+                "type" => %w[object null],
+                "description" =>
+                  "Revision created by the edit, null for edits within the grace period",
+                "properties" => {
+                  "number" => {
+                    "type" => "integer",
+                  },
+                  "edit_reason" => {
+                    "type" => %w[string null],
+                  },
+                  "changes" => {
+                    "type" => "array",
+                    "description" => "Names of the modified fields",
+                    "items" => {
+                      "type" => "string",
+                    },
+                  },
+                  "previous_raw" => {
+                    "type" => %w[string null],
+                    "description" => "Raw before the edit, null when the raw did not change",
+                  },
+                },
+              },
+            ),
+          )
+
         description(
           name: "trigger:post_edited",
           version: "1.0",
@@ -15,23 +53,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           event: :post_edited,
-          output_contracts: [
-            {
-              schema:
-                Schema.merge(
-                  Schema::POST_SCHEMA,
-                  Schema::TOPIC_LIST_ITEM_SCHEMA,
-                  Schema::USER_SCHEMA,
-                  Schema.document(
-                    "editor" => {
-                      "type" => %w[object null],
-                      "description" => "User who performed the edit, when available",
-                      "properties" => Schema::USER_PROPERTIES,
-                    },
-                  ),
-                ),
-            },
-          ],
+          output_contracts: [{ schema: Schema.merge(BASE_OUTPUT_SCHEMA, EDITOR_SCHEMA) }],
           properties: {
             post_scope: {
               type: :options,
@@ -48,10 +70,11 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
+        deprecated(superseded_by: "2.0", changes: { "editor" => "actor" })
+
+        def initialize(post, _topic_changed = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
           @revisor = revisor
         end
 
@@ -62,10 +85,11 @@ module DiscourseWorkflows
 
         def output
           {
-            post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
-            topic: topic_data(@post.topic),
+            post: serialize_post(@post, include_cooked: true),
+            topic: serialize_topic_list_item(@post.topic),
             user: serialize_user(@post.user),
-            editor: serialize_user(@revisor&.editor),
+            **serialize_editor,
+            revision: serialize_revision,
           }
         end
 
@@ -77,6 +101,22 @@ module DiscourseWorkflows
         end
 
         private
+
+        def serialize_editor
+          { editor: serialize_user(@revisor&.editor) }
+        end
+
+        def serialize_revision
+          revision = @revisor&.post_revision
+          return if revision.blank?
+
+          {
+            number: revision.number,
+            edit_reason: @post.edit_reason,
+            changes: revision.modifications.keys,
+            previous_raw: revision.modifications.dig("raw", 0),
+          }
+        end
 
         def matches_post_scope?(post_scope)
           case post_scope

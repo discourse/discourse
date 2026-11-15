@@ -51,6 +51,23 @@ describe "AddUserToGroupThroughCustomField" do
     end
   end
 
+  context "when the field value is the full name of an automatic group" do
+    before do
+      Group.refresh_automatic_groups!
+      UserCustomField.create!(
+        user_id: user_1.id,
+        name: "user_field_#{user_field.id}",
+        value: Group[:admins].full_name,
+      )
+    end
+
+    it "does not add the user to the automatic group" do
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
+
+      expect(user_1.reload.groups).not_to include(Group[:admins])
+    end
+  end
+
   context "with empty field value" do
     before do
       UserCustomField.create!(user_id: user_1.id, name: "user_field_#{user_field.id}", value: "")
@@ -111,6 +128,26 @@ describe "AddUserToGroupThroughCustomField" do
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
+      end
+    end
+
+    context "when the field value is the full name of an automatic group" do
+      before do
+        Group.refresh_automatic_groups!
+        UserCustomField.create!(
+          user_id: user_1.id,
+          name: "user_field_#{user_field.id}",
+          value: Group[:admins].full_name,
+        )
+      end
+
+      it "does not add the user to the automatic group" do
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN,
+          "user" => user_1,
+        )
+
+        expect(user_1.reload.groups).not_to include(Group[:admins])
       end
     end
 

@@ -5,3 +5,22 @@
 # https://translate.discourse.org/
 
 ru:
+  discourse_workflows:
+    errors:
+      create_board:
+        forbidden: "Не удалось создать доску: %{policy_reason}"
+  site_settings:
+    boards_enabled: "Организуйте темы и легковесные автономные «плавающие» карточки в настраиваемые доски и столбцы в стиле канбан, используя функцию перетаскивания. Для этого предусмотрен специально разработанный пользовательский интерфейс управления и контроль доступа к каждой доске. Для начала посетите <a href='%{base_path}/boards'>/boards</a> ."
+  access_control_list:
+    errors:
+      "Boards::Board_user_will_lose_permission": "В случае внесения этих изменений вы потеряете права на управление этой доской. Продолжить?"
+      "Boards::Board_user_will_lose_permission_on_create": "Если вы создадите эту доску с такими правами доступа, вы не сможете ею управлять. Продолжить?"
+  boards:
+    errors:
+      board_create_forbidden: "У вас нет разрешения на создание досок."
+      topic_covered_by_filter: "Это единственная карточка по данной теме на форуме, и она соответствует фильтрам форума, поэтому её нельзя удалить."
+      cannot_use_same_tag_multiple_times: "Нельзя использовать один и тот же тег (%{tag_name}) несколько раз для столбцов на одной доске."
+    onebox:
+      inline_to_board: "Доска '%{board_name}'"
+      board: "Доска"
+      updated_by: "Обновлено %{username}"

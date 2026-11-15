@@ -116,6 +116,53 @@ acceptance("Admin - Site Texts - baseline", function (needs) {
     });
   });
 
+  test("theme locale-file runtime arguments do not show invalid placeholder warnings", async function (assert) {
+    const id = "js.theme_translations.7.greeting";
+    pretender.get(`/admin/customize/site_texts/${id}`, () =>
+      response({
+        site_text: {
+          id,
+          value: "Welcome %{name}",
+          status: "up_to_date",
+          overridden: true,
+          default_text: "Welcome",
+          interpolation_keys: null,
+        },
+      })
+    );
+
+    await visit(`/admin/customize/site_texts/${id}?locale=en`);
+    await fillIn(".site-text-value", "Hello %{name}");
+
+    assert.dom(".interpolation-keys").doesNotExist();
+    assert.dom(".save-changes").isEnabled();
+  });
+
+  test("acknowledging an unknown baseline preserves the customized text", async function (assert) {
+    pretender.get("/admin/customize/site_texts/sample.legacy", () =>
+      response({
+        site_text: {
+          id: "sample.legacy",
+          value: "Custom text",
+          status: "unknown",
+          overridden: true,
+          default_text: "Original text",
+          interpolation_keys: [],
+        },
+      })
+    );
+    pretender.put(
+      "/admin/customize/site_texts/sample.legacy/dismiss_outdated",
+      () => response({})
+    );
+    await visit("/admin/customize/site_texts/sample.legacy?locale=en");
+    assert.dom(".edit-site-text__unknown").exists();
+    assert.dom(".edit-site-text__default p").hasText("Original text");
+    await click(".edit-site-text__unknown button");
+    assert.dom(".edit-site-text__unknown").doesNotExist();
+    assert.dom(".site-text-value").hasValue("Custom text");
+  });
+
   test("reverting invalid text clears its warning and restores the default preview", async function (assert) {
     const siteText = {
       id: "sample.invalid",

@@ -5,9 +5,11 @@ import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import pretender, {
   fixturesByUrl,
+  parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
@@ -331,6 +333,43 @@ acceptance("User Preferences - Account", function (needs) {
     assert
       .dom(".avatar-choice--associated-account")
       .doesNotExist("provider choices require the same permission as uploads");
+  });
+
+  test("saves the selected primary group", async function (assert) {
+    this.siteSettings.user_selected_primary_groups = true;
+    customUserProps = {
+      primary_group_id: null,
+      groups: [
+        { id: 44, name: "ubuntu", automatic: false },
+        { id: 47, name: "discourse", automatic: false },
+      ],
+    };
+
+    let savedUserData;
+    pretender.put("/u/eviltrout.json", (request) => {
+      savedUserData = parsePostData(request.requestBody);
+      return response({ user: {} });
+    });
+
+    await visit("/u/eviltrout/preferences/account");
+
+    const primaryGroup = selectKit(".pref-primary-group .combo-box");
+    await primaryGroup.expand();
+    await primaryGroup.selectRowByValue(47);
+
+    assert.strictEqual(
+      primaryGroup.header().value(),
+      "47",
+      "shows the selected group"
+    );
+
+    await click(".save-changes");
+
+    assert.strictEqual(
+      savedUserData.primary_group_id,
+      "47",
+      "saves the selected group as the primary group"
+    );
   });
 });
 

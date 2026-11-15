@@ -55,8 +55,6 @@ bg:
           other: "Вие премествате <strong>%{count}</strong> съобщения. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че тези съобщения са били преместени. Обърнете внимание, че веригите за отговори няма да бъдат запазени в новия канал и съобщенията в стария канал вече няма да се показват като отговарящи на преместени съобщения."
         confirm_move: "Преместване на съобщения"
       channel_settings:
-        edit: "Редактирай"
-        add: "Добави "
         notification_settings_context: "Известия"
         join: "Влизане"
         leave: "Напусни"
@@ -108,13 +106,13 @@ bg:
       search_view:
         filter_placeholder: Търси съобщения
       about_view:
-        title: Заглавие
         name: Име
         description: Описание
       channel_info:
         back_to_channel: "Назад"
         tabs:
           members: Членове
+          preferences: Настройки
           settings: Настройки
           search: Търсене
         remove_member: "Премахване"
@@ -147,8 +145,6 @@ bg:
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
-        admin_title: "Администратор"
-        settings_title: "Настройки"
         category_label: "Категория"
         history_label: "История"
         members_label: "Членове"

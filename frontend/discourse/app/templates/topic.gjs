@@ -464,6 +464,22 @@ export default <template>
               />
             </TopicNavigation>
 
+            {{#if
+              (and
+                @controller.loadedAllPosts
+                @controller.currentUser
+                (not @controller.session.showSignupCta)
+              )
+            }}
+              <div class="topic-footer-presence">
+                <PluginOutlet
+                  @connectorTagName="div"
+                  @name="topic-footer-presence"
+                  @outletArgs={{lazyHash model=@controller.model}}
+                />
+              </div>
+            {{/if}}
+
             <div class="row">
               <section
                 class="topic-area"

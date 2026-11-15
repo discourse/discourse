@@ -9,10 +9,12 @@ class FakeUppy {
     this.files = {
       "uppy-test/file/vv2/xvejg5w/blah/jpg-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764":
         {
+          id: "uppy-test/file/vv2/xvejg5w/blah/jpg-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764",
           data: "old file state",
         },
       "uppy-test/file/blah1/ads37x2/blah1/jpg-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764":
         {
+          id: "uppy-test/file/blah1/ads37x2/blah1/jpg-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764",
           data: "old file state 1",
         },
     };
@@ -20,6 +22,19 @@ class FakeUppy {
 
   addPreProcessor(fn) {
     this.preprocessors.push(fn);
+  }
+
+  on(event, fn) {
+    this.handlers ??= {};
+    (this.handlers[event] ??= []).push(fn);
+  }
+
+  off() {}
+
+  removeFile(id) {
+    const file = this.files[id];
+    delete this.files[id];
+    this.handlers["file-removed"]?.forEach((fn) => fn(file));
   }
 
   getFile(id) {
@@ -171,5 +186,55 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function (hooks) {
       );
       done();
     });
+  });
+
+  test("a file removed mid-optimization settles the batch without completing it", async function (assert) {
+    const fakeUppy = new FakeUppy();
+    const cancelled = [];
+    const plugin = new UppyMediaOptimization(fakeUppy, {
+      runParallel: true,
+      optimizeFn: () => new Promise(() => {}),
+      cancelFn: (fileId) => cancelled.push(fileId),
+    });
+    plugin.install();
+    const fileId =
+      "uppy-test/file/vv2/xvejg5w/blah/jpg-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764";
+
+    const batch = plugin.uppy.preprocessors[0]([fileId]);
+    fakeUppy.removeFile(fileId);
+    await batch;
+
+    assert.deepEqual(
+      plugin.uppy.emitted.map((e) => e.event),
+      ["preprocess-progress"],
+      "no completion is emitted for the removed file"
+    );
+    assert.deepEqual(cancelled, [fileId], "the optimizer is told to cancel");
+  });
+
+  test("serial optimization skips files removed before their turn", async function (assert) {
+    const fakeUppy = new FakeUppy();
+    const resolvers = {};
+    const plugin = new UppyMediaOptimization(fakeUppy, {
+      runParallel: false,
+      optimizeFn: (file) =>
+        new Promise((resolve) => (resolvers[file.id] = resolve)),
+    });
+    plugin.install();
+    const [first, second] = Object.keys(fakeUppy.files);
+
+    const batch = plugin.uppy.preprocessors[0]([first, second]);
+    fakeUppy.removeFile(second);
+    resolvers[first]("new file state");
+    await batch;
+
+    assert.deepEqual(
+      plugin.uppy.emitted.map((e) => [e.event, e.file.id]),
+      [
+        ["preprocess-progress", first],
+        ["preprocess-complete", first],
+      ],
+      "only the remaining file is processed"
+    );
   });
 });

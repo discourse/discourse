@@ -67,6 +67,26 @@ RSpec.describe DiscourseWorkflows::Nodes::EventParticipationChanged::V1 do
         previous_status: nil,
         removed: false,
       )
+      expect(output[:actor]).to be_nil
+      expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "reports the user who changed the RSVP as actor", :aggregate_failures do
+      organizer = Fabricate(:admin)
+      tracked =
+        DiscourseEvent.track(:discourse_calendar_post_event_invitee_status_changed) do
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            user.id,
+            event.id,
+            :going,
+            acting_user: organizer,
+          )
+        end
+
+      output = described_class.from_event(:any, *tracked[:params]).output
+
+      expect(output[:user][:username]).to eq(user.username)
+      expect(output[:actor][:username]).to eq(organizer.username)
       expect(output).to match_node_output_schema(described_class)
     end
 

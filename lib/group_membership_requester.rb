@@ -21,6 +21,7 @@ class GroupMembershipRequester
 
   def request
     user = guardian.user or raise Discourse::NotLoggedIn
+    raise Discourse::InvalidAccess if guardian.is_silenced?
     raise Discourse::InvalidAccess if !group.allow_membership_requests?
     raise Discourse::InvalidAccess if group.users.exists?(id: user.id)
 

@@ -15,6 +15,7 @@ zh_CN:
       create_zendesk_issue: "创建 Zendesk 工单"
       view_zendesk_issue: "在 Zendesk 上查看"
     zendesk:
+      ticket_created: "Zendesk 工单已创建"
       credentials_not_setup: 您尚未设置 Zendesk 凭据。
       url_not_set: 您的 Zendesk URL 当前未设置。
       general_error: 出了点问题。

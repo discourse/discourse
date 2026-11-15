@@ -4,9 +4,13 @@ module DiscourseAi
   module Translation
     class EntryPoint
       def inject_into(plugin)
-        plugin.on(:post_created) do |post|
+        plugin.on(:post_created) do |post, opts|
           if DiscourseAi::Translation.enabled?
-            Jobs.enqueue(:detect_translate_post, post_id: post.id)
+            Jobs.enqueue(
+              :detect_translate_post,
+              post_id: post.id,
+              skip_workflows: opts&.dig(:skip_workflows),
+            )
           end
         end
 
@@ -28,7 +32,14 @@ module DiscourseAi
               Jobs.enqueue_in(grace, :detect_translate_topic, topic_id: post.topic_id)
             end
 
-            Jobs.enqueue_in(grace, :detect_translate_post, post_id: post.id) if raw_changed
+            if raw_changed
+              Jobs.enqueue_in(
+                grace,
+                :detect_translate_post,
+                post_id: post.id,
+                skip_workflows: revisor.opts[:skip_workflows],
+              )
+            end
           end
         end
 

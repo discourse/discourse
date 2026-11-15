@@ -71,6 +71,7 @@ register_svg_icon "xmark"
 register_svg_icon "up-right-from-square"
 register_svg_icon "person-chalkboard"
 register_svg_icon "table-cells"
+register_svg_icon "wand-magic-sparkles"
 register_svg_icon "circle-check"
 register_svg_icon "circle-xmark"
 register_svg_icon "triangle-exclamation"
@@ -88,9 +89,14 @@ register_svg_icon "copy"
 register_svg_icon "closed-captioning"
 register_svg_icon "stop"
 register_svg_icon "far-file-lines"
+register_svg_icon "stethoscope"
+register_svg_icon "network-wired"
+register_svg_icon "arrow-right-arrow-left"
+register_svg_icon "server"
 register_asset "stylesheets/common/live.scss"
 register_asset "stylesheets/common/live-room-page.scss"
 register_asset "stylesheets/common/live-chat.scss"
+register_asset "stylesheets/common/live-onebox.scss"
 register_asset "stylesheets/common/live-admin.scss", :admin
 
 add_admin_route "live.admin.title", "live", use_new_show_route: true
@@ -131,6 +137,14 @@ after_initialize do
   register_hashtag_type_priority_for_context("room", "topic-composer", 5)
   refresh_chat_hashtag_configurations
 
+  Oneboxer.register_local_handler("live/page") do |url, route|
+    Live::OneboxHandler.handle(url, route)
+  end
+
+  InlineOneboxer.register_local_handler("live/page") do |url, route|
+    Live::InlineOneboxHandler.handle(url, route)
+  end
+
   # Gates the user-card call button: the viewer needs the direct-call
   # permission and the target must be callable by them — live-room access,
   # not the viewer themselves or a bot, and not screened out by the target's
@@ -140,6 +154,8 @@ after_initialize do
     :live_can_call,
     include_condition: -> { scope.can_start_live_call? },
   ) { scope.can_call_live_user?(object) }
+
+  add_to_serializer(:current_user, :live_can_record_locally) { scope.can_record_live_locally? }
 
   # Lets the client decide whether to render the rooms sidebar for anonymous
   # visitors without exposing the configured group ids.
@@ -165,6 +181,9 @@ after_initialize do
     SiteSetting.live_video_allowed_groups.present? ||
       SiteSetting.live_screen_share_allowed_groups.present?
   end
+
+  add_to_serializer(:site, :live_reaction_emojis) { Live::Reactions.emojis }
+  add_to_serializer(:site, :live_reactions_allow_any_emoji) { Live::Reactions.allow_any_emoji? }
 
   Live::DefaultRoomSeeder.ensure! if SiteSetting.live_enabled?
   Live::AgentBot.ensure! if SiteSetting.live_enabled?

@@ -129,7 +129,11 @@ module ApplicationHelper
   end
 
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    asset_cdn_path("#{script}.js", brotli: true)
+  end
+
+  def asset_cdn_path(logical_path, brotli: false)
+    path = ActionController::Base.helpers.asset_path(logical_path)
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -151,7 +155,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
+      path = path.sub("/assets/js/", "/assets/br/") if brotli && is_brotli_req?
     end
 
     path
@@ -438,32 +442,35 @@ module ApplicationHelper
     Emoji.gsub_emoji_to_unicode(str)
   end
 
-  def application_logo_url
-    @application_logo_url ||=
+  def application_logo
+    @application_logo ||=
       if mobile_device?
-        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-          SiteSetting.site_mobile_logo_dark_url
-        elsif SiteSetting.site_mobile_logo_url.present?
-          SiteSetting.site_mobile_logo_url
-        end
-      else
-        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-          SiteSetting.site_logo_dark_url
+        if dark_color_scheme? && SiteIconManager.mobile_logo_dark
+          SiteIconManager.mobile_logo_dark
         else
-          SiteSetting.site_logo_url
+          SiteIconManager.mobile_logo
         end
+      elsif dark_color_scheme? && SiteSetting.logo_dark
+        SiteSetting.logo_dark
+      else
+        SiteSetting.logo
+      end
+  end
+
+  def application_logo_url
+    @application_logo_url ||= application_logo && full_cdn_url(application_logo.url)
+  end
+
+  def application_logo_dark
+    @application_logo_dark ||=
+      if dark_scheme_id != -1
+        logo = mobile_device? ? SiteIconManager.mobile_logo_dark : SiteSetting.logo_dark
+        logo if logo && full_cdn_url(logo.url) != application_logo_url
       end
   end
 
   def application_logo_dark_url
-    @application_logo_dark_url ||=
-      if dark_scheme_id != -1
-        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-          SiteSetting.site_mobile_logo_dark_url
-        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
-          SiteSetting.site_logo_dark_url
-        end
-      end
+    @application_logo_dark_url ||= application_logo_dark && full_cdn_url(application_logo_dark.url)
   end
 
   def waving_hand_url
@@ -691,6 +698,7 @@ module ApplicationHelper
 
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
+    return preview_scheme_id if preview_scheme_id
 
     if user_scheme_id
       return user_scheme_id unless theme_limits_color_schemes?
@@ -718,6 +726,8 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
+    return preview_dark_scheme_id if preview_dark_scheme_id
+
     if user_dark_scheme_id
       return user_dark_scheme_id unless theme_limits_color_schemes?
       return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
@@ -728,6 +738,42 @@ module ApplicationHelper
     return dark_id if dark_id.present?
     return theme&.color_scheme_id if theme_limits_color_schemes?
     -1
+  end
+
+  # Staff can try out palettes, including ones no theme uses yet, by passing
+  # them in the URL, the same way `preview_theme_id` previews a theme.
+  def preview_scheme_id
+    return @preview_scheme_id if defined?(@preview_scheme_id)
+    @preview_scheme_id = previewed_color_scheme_id(:preview_color_scheme_id)
+  end
+
+  def preview_dark_scheme_id
+    return @preview_dark_scheme_id if defined?(@preview_dark_scheme_id)
+    @preview_dark_scheme_id = previewed_color_scheme_id(:preview_dark_color_scheme_id)
+  end
+
+  def previewed_color_scheme_id(param_name)
+    return if params[param_name].blank? || !guardian.is_staff?
+    ColorScheme.valid_id(params[param_name])
+  end
+
+  # Staff can try out fonts the same way, while the site keeps its own. Only
+  # known font keys are used, so the styles only hold trusted font data.
+  def preview_font_style_tag
+    return if !guardian.is_staff?
+
+    base_font = params[:preview_base_font].presence
+    heading_font = params[:preview_heading_font].presence
+    return if base_font.nil? && heading_font.nil?
+
+    css =
+      Stylesheet::Importer.font_definitions(
+        base_font: base_font.to_s,
+        heading_font: heading_font.to_s,
+      )
+    return if css.blank?
+
+    "<style class=\"preview-fonts\">#{css}</style>".html_safe
   end
 
   def theme_limits_color_schemes?
@@ -989,6 +1035,9 @@ module ApplicationHelper
 
   def preloaded_json
     return "{}" if !@application_layout_preloader
+    if Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+      raise Discourse::ScopedApiKeyHtmlNotAllowed
+    end
 
     @application_layout_preloader
       .preloaded_data
@@ -1009,7 +1058,6 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
-      enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
       user_dark_scheme_id: user_dark_scheme_id || -1,

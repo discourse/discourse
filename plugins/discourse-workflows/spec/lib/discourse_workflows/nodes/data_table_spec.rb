@@ -649,4 +649,56 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       expect(count_data_table_rows(data_table)).to eq(1)
     end
   end
+
+  describe ".output_schemas" do
+    let(:input_schema) { DiscourseWorkflows::Schema.document("marker" => { "type" => "string" }) }
+
+    it "declares the system and configured table columns" do
+      schema =
+        described_class.output_schemas(
+          { "operation" => "get", "data_table_id" => data_table.id.to_s },
+        ).first
+
+      expect(schema["properties"].keys).to eq(%w[id created_at updated_at email score])
+    end
+
+    it "declares only the system columns without a known table" do
+      schema = described_class.output_schemas({ "operation" => "insert" }).first
+
+      expect(schema["properties"].keys).to eq(%w[id created_at updated_at])
+    end
+
+    it "passes the input through for existence checks" do
+      expect(
+        described_class.output_schemas(
+          { "operation" => "row_exists", "data_table_id" => data_table.id.to_s },
+          input_schemas: [input_schema],
+        ),
+      ).to eq([input_schema])
+    end
+
+    it "matches every row returning operation" do
+      insert_data_table_row(data_table, "email" => "match@test.com", "score" => 1)
+      filter = [filter_condition("email", "equals", value: "match@test.com")]
+
+      [
+        { "operation" => "insert", "columns" => { "email" => "new@test.com", "score" => "2" } },
+        { "operation" => "get", "filter" => filter },
+        { "operation" => "update", "filter" => filter, "columns" => { "score" => "3" } },
+        { "operation" => "upsert", "filter" => filter, "columns" => { "score" => "4" } },
+        { "operation" => "delete", "filter" => filter },
+      ].each do |config|
+        configuration = config.merge("data_table_id" => data_table.id.to_s)
+        items = execute_data_table(configuration)
+
+        expect(items).to be_present
+        items.each do |item|
+          expect(item["json"]).to match_node_output_schema(
+            described_class,
+            configuration: configuration,
+          )
+        end
+      end
+    end
+  end
 end

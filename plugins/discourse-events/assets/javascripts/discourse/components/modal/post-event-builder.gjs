@@ -34,6 +34,7 @@ import {
   isLivestreamUrl,
   livestreamSource,
   reconcileDefaultReminder,
+  showRecordingField,
 } from "../../lib/raw-event-helper.js";
 import CompactEventEditor from "../compact-event-editor.gjs";
 
@@ -138,6 +139,17 @@ export default class PostEventBuilder extends Component {
     );
   }
 
+  get showRecording() {
+    return showRecordingField({
+      recording: this.event.recordingUrl,
+      livestream: this.event.livestream,
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      recurrence: this.event.recurrence,
+      recurrenceUntil: this.event.recurrenceUntil,
+    });
+  }
+
   get availableRecurrences() {
     const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
@@ -232,8 +244,10 @@ export default class PostEventBuilder extends Component {
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
       livestream: !!this.event.livestream,
+      allowAnonymousLivestream: !!this.event.allowAnonymousLivestream,
       minimal: !!this.event.minimal,
       url: this.event.url ?? null,
+      recording: this.event.recordingUrl ?? null,
       image:
         this.event.imageUpload?.short_url ??
         this.event.imageUpload?.url ??
@@ -260,6 +274,14 @@ export default class PostEventBuilder extends Component {
   syncFieldToEvent(field, value, { set }) {
     set(field, value);
     this.event[field] = value;
+  }
+
+  @action
+  syncLivestream(value, { set }) {
+    this.syncFieldToEvent("livestream", value, { set });
+    if (!value) {
+      this.syncFieldToEvent("allowAnonymousLivestream", false, { set });
+    }
   }
 
   @action
@@ -337,8 +359,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  handleReminderFieldChange(field, index, value, { set }) {
-    set(field, value);
+  handleReminderFieldChange(field, index, value, { set, name }) {
+    set(name, value);
     if (!this.event.reminders?.[index]) {
       return;
     }
@@ -386,8 +408,10 @@ export default class PostEventBuilder extends Component {
     this.event.showLocalTime = state.showLocalTime;
     this.event.chatEnabled = state.chatEnabled;
     this.event.livestream = state.livestream;
+    this.event.allowAnonymousLivestream = state.allowAnonymousLivestream;
     this.event.minimal = state.minimal;
     this.event.url = state.url;
+    this.event.recordingUrl = state.recording;
     this.event.recurrence = state.recurrence;
     this.event.recurrenceUntil = state.recurrenceUntil;
     this.event.reminders = state.reminders;
@@ -664,6 +688,8 @@ export default class PostEventBuilder extends Component {
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
       livestream: !!this.event.livestream,
+      allowAnonymousLivestream: !!this.event.allowAnonymousLivestream,
+      recordingUrl: this.event.recordingUrl ?? "",
       attendanceMode: this.attendanceMode,
       maxAttendees: this.event.maxAttendees ?? null,
       eventType:
@@ -694,8 +720,7 @@ export default class PostEventBuilder extends Component {
 
   #resetInvalidLivestream(set) {
     if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
-      set("livestream", false);
-      this.event.livestream = false;
+      this.syncLivestream(false, { set });
     }
   }
 
@@ -885,7 +910,7 @@ export default class PostEventBuilder extends Component {
                   <form.Field
                     @format="full"
                     @name="livestream"
-                    @onSet={{fn this.syncFieldToEvent "livestream"}}
+                    @onSet={{this.syncLivestream}}
                     @title={{i18n
                       "discourse_post_event.builder_modal.livestream.label"
                     }}
@@ -897,6 +922,43 @@ export default class PostEventBuilder extends Component {
                         "discourse_post_event.builder_modal.livestream.checkbox_label"
                       }}
                     </field.Control>
+                  </form.Field>
+
+                  {{#if this.event.livestream}}
+                    <form.Field
+                      @format="full"
+                      @name="allowAnonymousLivestream"
+                      @onSet={{fn
+                        this.syncFieldToEvent
+                        "allowAnonymousLivestream"
+                      }}
+                      @title={{i18n
+                        "discourse_post_event.allow_anonymous_livestream"
+                      }}
+                      @type="checkbox"
+                      as |field|
+                    >
+                      <field.Control />
+                    </form.Field>
+                  {{/if}}
+                {{/if}}
+
+                {{#if this.showRecording}}
+                  <form.Field
+                    @format="full"
+                    @name="recordingUrl"
+                    @onSet={{fn this.syncFieldToEvent "recordingUrl"}}
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.recording.label"
+                    }}
+                    @type="input-url"
+                    as |field|
+                  >
+                    <field.Control
+                      placeholder={{i18n
+                        "discourse_post_event.builder_modal.recording.placeholder"
+                      }}
+                    />
                   </form.Field>
                 {{/if}}
 

@@ -58,7 +58,6 @@ zh_TW:
         save_query: "儲存查詢"
         write_manually: "手動撰寫 SQL"
         sql_label: "SQL"
-        optional: "選填"
       import:
         unparseable_json: "無法解析 JSON 檔案。"
         wrong_json: "JSON 檔案格式錯誤。JSON 檔案應包含一個「query」物件，且至少應有一個「sql」屬性。"
@@ -119,7 +118,7 @@ zh_TW:
         other: "%{count} 筆結果。"
       max_result_count:
         other: "顯示前 %{count} 筆結果。"
-      query_name: "查詢"
+      name: "名稱"
       query_groups: "群組"
       query_tags: "標簽"
       link: "連結："

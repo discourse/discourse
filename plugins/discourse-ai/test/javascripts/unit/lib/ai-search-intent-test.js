@@ -17,6 +17,25 @@ module("Discourse AI | Unit | Lib | ai-search-intent", function (hooks) {
     );
   });
 
+  test("a deferred answer opens on results, even for a question", function (assert) {
+    assert.deepEqual(
+      chooseTab("where did I put that message?", {
+        topics,
+        answerDeferred: true,
+      }),
+      { tab: "topics", reason: "answer_deferred" }
+    );
+    assert.deepEqual(
+      chooseTab("where did I put that message?", {
+        topics,
+        context: topics,
+        scope: "messages",
+        answerDeferred: true,
+      }),
+      { tab: "context", reason: "answer_deferred" }
+    );
+  });
+
   test("a lookup intent never moves a question off the answer", function (assert) {
     assert.deepEqual(
       chooseTab("where is the theme settings page?", {
@@ -124,6 +143,16 @@ module("Discourse AI | Unit | Lib | ai-search-intent", function (hooks) {
         intent: { intent: "answer", probability: 0.9 },
       }),
       { tab: "topics", reason: "syntax" }
+    );
+  });
+
+  test("a question quoting a phrase is not search syntax", function (assert) {
+    assert.notStrictEqual(
+      chooseTab('what does "slow mode" do?', {
+        topics,
+        intent: { intent: "answer", probability: 0.9 },
+      }).reason,
+      "syntax"
     );
   });
 

@@ -34,10 +34,12 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:path) { "/api/topics" }
   let(:version) { JsonApiKit::Timeline.current.to_s }
   let(:headers) { {} }
+  let(:subfolder) { nil }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
 
   before do
+    set_subfolder(subfolder) if subfolder
     allow(Discourse).to receive(:warn_exception)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
@@ -186,6 +188,20 @@ RSpec.describe "a JSON:API endpoint", type: :request do
           },
         }.deep_stringify_keys,
       )
+    end
+
+    context "when Discourse runs in a subfolder" do
+      let(:subfolder) { "/forum" }
+      let(:query) { { "fields" => { "topics" => "title,posts" }, "include" => "posts" } }
+      let(:topic_url) { "http://test.localhost/forum/api/topics/#{middle.id}" }
+
+      it "keeps the subfolder in resource and relationship links", :aggregate_failures do
+        expect(parsed_body.dig("data", "links", "self")).to eq(topic_url)
+        expect(parsed_body.dig("data", "relationships", "posts", "links")).to include(
+          "self" => "#{topic_url}/relationships/posts",
+          "related" => "#{topic_url}/posts",
+        )
+      end
     end
 
     context "when no record has that id" do

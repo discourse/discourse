@@ -1,6 +1,7 @@
-// quoted phrases and search operators are someone after precise results
+// search operators, or a query that is only quoted phrases, are someone after
+// precise results; a question can still quote a phrase
 const SEARCH_SYNTAX =
-  /"[^"]+"|(?:^|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:^|\s)[#@]\S+/i;
+  /^\s*(?:"[^"]+"\s*)+$|(?:^|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:^|\s)[#@]\S+/i;
 
 const QUESTION_MARK = /[?？]\s*$/;
 
@@ -77,6 +78,8 @@ const FOREIGN_SHARE = 0.6;
  *   can open a search on the answer when it is confident, but never away from it
  * @param {boolean} [found.prefersResults] whether the reader's recent searches
  *   show them leaving the answer for the results
+ * @param {boolean} [found.answerDeferred] whether the answer waits for the
+ *   reader to request it
  * @returns {{tab: SearchTab, reason: string}}
  */
 export function chooseTab(
@@ -89,6 +92,7 @@ export function chooseTab(
     searchedAgain,
     intent,
     prefersResults,
+    answerDeferred,
   } = {}
 ) {
   const topicCount = topics?.posts?.length ?? 0;
@@ -101,6 +105,13 @@ export function chooseTab(
     return {
       tab: contextCount > 0 ? "context" : "topics",
       reason: "syntax",
+    };
+  }
+
+  if (answerDeferred) {
+    return {
+      tab: contextCount > 0 ? "context" : "topics",
+      reason: "answer_deferred",
     };
   }
 

@@ -23,7 +23,9 @@ module DiscourseEvents
         return if value.blank?
         return Time.current if value == "now"
 
-        value.to_datetime
+        time = value.to_datetime
+        raise Discourse::InvalidParameters.new(name) if name == :after && time > 10.years.from_now
+        time
       rescue ArgumentError, Date::Error
         raise Discourse::InvalidParameters.new(name)
       end

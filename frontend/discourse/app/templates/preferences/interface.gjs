@@ -10,6 +10,10 @@ import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
+function updateTheme(controller, value) {
+  controller.set("themeId", value);
+}
+
 export default <template>
   <span>
     <PluginOutlet
@@ -25,6 +29,7 @@ export default <template>
       <div class="controls">
         <ComboBox
           @content={{@controller.userSelectableThemes}}
+          @onChange={{fn updateTheme @controller}}
           @value={{@controller.themeId}}
         />
       </div>

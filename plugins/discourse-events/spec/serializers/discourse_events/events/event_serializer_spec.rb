@@ -31,6 +31,34 @@ describe DiscourseEvents::Events::EventSerializer do
     end
   end
 
+  context "with a recording" do
+    fab!(:event) { Fabricate(:event, post:, recording_url: "https://youtu.be/abc") }
+
+    it "serializes recording_url" do
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event][:recording_url]).to eq("https://youtu.be/abc")
+    end
+
+    it "serializes the cached recording onebox" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key("https://youtu.be/abc"),
+        { onebox: "<aside>recording</aside>" },
+      )
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event][:recording_onebox]).to eq("<aside>recording</aside>")
+    end
+
+    it "omits recording_url without a recording" do
+      event.update_columns(recording_url: nil)
+      json = described_class.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event]).not_to have_key(:recording_url)
+      expect(json[:event]).not_to have_key(:recording_onebox)
+    end
+  end
+
   context "with reminders" do
     def serialized_reminders(reminders)
       event = Fabricate(:event, post: post, reminders: reminders)

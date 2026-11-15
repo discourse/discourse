@@ -44,6 +44,7 @@ module MarkdownEndpoint
     included do
       before_action :normalize_markdown_format
       after_action :add_markdown_discovery_header
+      after_action :add_markdown_canonical_header
       helper_method :markdown_alternate_link_tag, :markdown_alternate_url
     end
 
@@ -94,9 +95,33 @@ module MarkdownEndpoint
       return unless response.media_type == "text/html"
       return if markdown_alternate_url.blank?
 
-      value = %(<#{markdown_alternate_url}>; rel="alternate"; type="text/markdown")
-      response.headers["Link"] = [response.headers["Link"], value].compact.join(", ")
+      add_link_header(%(<#{markdown_alternate_url}>; rel="alternate"; type="text/markdown"))
       merge_vary_accept
+    end
+
+    # A Markdown response duplicates an HTML page, so it names that page as
+    # canonical. Crawlers read the canonical of a non-HTML document from the
+    # Link header.
+    def add_markdown_canonical_header
+      return unless response.status.between?(200, 299)
+      return unless response.media_type == "text/markdown"
+
+      add_link_header(%(<#{markdown_canonical_url}>; rel="canonical"))
+    end
+
+    def add_link_header(value)
+      response.headers["Link"] = [response.headers["Link"], value].compact.join(", ")
+    end
+
+    # The canonical URL the HTML page declares: the one the action set, or the
+    # default canonical with the HTML path of this Markdown route, so that the
+    # homepage, which serves the latest list in Markdown, points at `/latest`.
+    def markdown_canonical_url
+      return @canonical_url if @canonical_url.present?
+
+      uri = Addressable::URI.parse(default_canonical)
+      uri.path = (markdown_alternate_path || request.path).delete_suffix(".md")
+      uri.to_s
     end
 
     def merge_vary_accept

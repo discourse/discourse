@@ -4,6 +4,7 @@ require "stylesheet/compiler"
 
 RSpec.describe Stylesheet::Compiler do
   describe "compilation" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     Dir["#{Rails.root.join("app/assets/stylesheets/*.scss")}"].each do |path|
       path = File.basename(path, ".scss")
 
@@ -15,6 +16,7 @@ RSpec.describe Stylesheet::Compiler do
         expect(css.length).to be > 500
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   context "with a theme" do

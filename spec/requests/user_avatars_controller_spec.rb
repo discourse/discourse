@@ -14,15 +14,25 @@ RSpec.describe UserAvatarsController do
       )
     end
 
-    %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
-      it "rejects refreshing the selected Gravatar when #{setting} is enabled" do
-        SiteSetting.public_send("#{setting}=", true)
-
+    shared_examples "protecting the selected avatar from a Gravatar refresh" do
+      it "rejects the refresh and preserves the selected avatar" do
         post "/user_avatar/#{user.username}/refresh_gravatar.json"
 
         expect(response).to be_forbidden
         expect(user.reload.uploaded_avatar_id).to eq(upload.id)
       end
+    end
+
+    context "with auth_overrides_avatar enabled" do
+      before { SiteSetting.auth_overrides_avatar = true }
+
+      include_examples "protecting the selected avatar from a Gravatar refresh"
+    end
+
+    context "with discourse_connect_overrides_avatar enabled" do
+      before { SiteSetting.discourse_connect_overrides_avatar = true }
+
+      include_examples "protecting the selected avatar from a Gravatar refresh"
     end
   end
 
@@ -373,6 +383,17 @@ RSpec.describe UserAvatarsController do
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
 
       get "/user_avatar/default/#{user.username}/51/#{upload.id}.png"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "renders blank when the optimized image is outside of the store directories" do
+      SiteSetting.avatar_sizes = "50"
+      upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+      Fabricate(:optimized_image, upload:, width: 50, height: 50, url: "/other/x.png")
+
+      get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
 
       expect(response.status).to eq(200)
     end

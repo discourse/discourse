@@ -155,6 +155,19 @@ module DiscourseMcp
       request_context.ensure_scopes!("mcp:private-messages:#{access}")
     end
 
+    def ensure_private_message_draft_scope!(draft_key, request_context, access:)
+      topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+      private_message_draft =
+        draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
+          (
+            topic_id &&
+              Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
+          )
+      return if !private_message_draft
+
+      request_context.ensure_scopes!("mcp:private-messages:#{access}")
+    end
+
     def ensure_current_author!(arguments, user)
       requested_author = arguments["author_username"]
       return if requested_author.blank? || requested_author.casecmp?(user.username)

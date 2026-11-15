@@ -8,7 +8,7 @@ import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
-import getURL from "discourse/lib/get-url";
+import getURL, { getURLWithCDN } from "discourse/lib/get-url";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
@@ -266,7 +266,7 @@ export default class WelcomeBanner extends Component {
     if (this.siteSettings.welcome_banner_image) {
       return trustHTML(
         `background-image:url(${escapeExpression(
-          this.siteSettings.welcome_banner_image
+          getURLWithCDN(this.siteSettings.welcome_banner_image)
         )});`
       );
     }

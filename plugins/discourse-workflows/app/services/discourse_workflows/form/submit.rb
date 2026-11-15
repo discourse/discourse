@@ -35,13 +35,23 @@ module DiscourseWorkflows
       guardian.authenticated?
     end
 
-    def validate_form(trigger_node:, params:, submission_token_payload:)
-      fields =
-        Schemas::FormFields.with_keys(
-          CollectionParameters.rows(NodeData.parameters(trigger_node), "form_fields"),
+    def validate_form(
+      published_trigger:,
+      workflow:,
+      trigger_node:,
+      guardian:,
+      params:,
+      submission_token_payload:
+    )
+      config =
+        Schemas::FormFields.resolve_trigger_configuration(
+          NodeData.parameters(trigger_node).slice("form_fields"),
+          workflow_id: workflow.id,
+          workflow_name: published_trigger.workflow_version.name,
+          user: guardian.user,
         )
       Schemas::FormFields.validate_submission(
-        fields,
+        CollectionParameters.rows(config, "form_fields"),
         params.form_data,
         query_parameters: submission_token_payload["form_query_parameters"],
       )

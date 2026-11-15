@@ -83,7 +83,59 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".precise_search?" do
+    it "is true for search operators and searches of only quoted phrases" do
+      queries = [
+        "password status:open",
+        "-in:bookmarks reset",
+        "before:2026-01-01 outage",
+        "@sam",
+        "#how-to",
+        '"slow mode"',
+        '"slow mode" "rate limit"',
+      ]
+
+      expect(queries.reject { |query| described_class.precise_search?(query) }).to be_empty
+    end
+
+    it "is false for plain searches and questions" do
+      queries = [
+        "password reset",
+        'what does "slow mode" do?',
+        '"slow mode" settings',
+        "note: how do I reset it",
+        "email@example.com bounces",
+        nil,
+      ]
+
+      expect(queries.select { |query| described_class.precise_search?(query) }).to be_empty
+    end
+  end
+
   describe ".enqueue_reply" do
+    it "answers a deferred search only once" do
+      deferred_log =
+        AskAiLog.create!(
+          user:,
+          query: "猫 status:open",
+          asked_at: 1.minute.ago,
+          ask_outcome: :skipped,
+        )
+      enqueue = -> do
+        described_class.enqueue_reply(
+          user:,
+          request_id: SecureRandom.uuid,
+          query: deferred_log.query,
+          deferred_log_id: deferred_log.id,
+        )
+      end
+
+      expect { 2.times.map { enqueue.call } }.to change { Jobs::StreamDiscoverReply.jobs.size }.by(
+        1,
+      )
+      expect(deferred_log.reload.answer_requested_at).to be_present
+    end
+
     it "records a failed ask if the job cannot be queued" do
       allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
 

@@ -47,13 +47,21 @@ function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const slug = matches[1];
   const hashtagLookup = options.hashtagLookup;
+  let result;
 
-  // NOTE: The lookup function is only run when cooking
-  // server-side, and will only return a single result based on the
-  // slug lookup.
-  const result =
-    hashtagLookup &&
-    hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder);
+  if (hashtagLookup) {
+    const cache = (options.hashtagLookupCache ??= new Map());
+    const limit = options.hashtagLookupLimit ?? Infinity;
+
+    if (!cache.has(slug) && cache.size < limit) {
+      cache.set(
+        slug,
+        hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder)
+      );
+    }
+
+    result = cache.get(slug);
+  }
 
   // NOTE: When changing the HTML structure here, you must also change
   // it in the placeholder HTML code inside lib/hashtag-autocomplete, and vice-versa.

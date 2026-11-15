@@ -1058,6 +1058,58 @@ RSpec.describe Live::RoomsController do
       expect(metadata[:is_transcribing]).to eq(false)
     end
 
+    context "when recording locally" do
+      it "sets and clears the recording flag for allowed users" do
+        SiteSetting.live_local_recording_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(true)
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(false)
+      end
+
+      it "rejects starting when the user's groups can't record" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(403)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to be_nil
+      end
+
+      # Losing the permission mid-recording must not strand the indicator.
+      it "always allows clearing the flag" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+      end
+    end
+
     it "rejects video when no group is allowed to share a camera" do
       SiteSetting.live_video_allowed_groups = ""
 
@@ -1352,6 +1404,27 @@ RSpec.describe Live::RoomsController do
 
       expect(response.status).to eq(200)
       expect(Live::Room.exists?(private_room.id)).to eq(false)
+    end
+
+    it "returns 403 for a room moderator who is not the creator" do
+      private_room.room_memberships.create!(
+        user: other_participant,
+        role: Live::RoomMembership::ROLE_MODERATOR,
+      )
+      sign_in(other_participant)
+
+      delete "/live/rooms/#{private_room.id}.json"
+
+      expect(response.status).to eq(403)
+      expect(Live::Room.exists?(private_room.id)).to eq(true)
+    end
+
+    it "serializes can_delete for the creator" do
+      sign_in(room_owner)
+
+      get "/live/rooms/#{private_room.id}.json"
+
+      expect(response.parsed_body.dig("room", "can_delete")).to eq(true)
     end
 
     it "broadcasts the destroy to the members the room had" do

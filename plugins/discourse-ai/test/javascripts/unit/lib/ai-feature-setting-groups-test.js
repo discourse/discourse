@@ -101,13 +101,11 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     ]);
   });
 
-  test("returns correct groups for translation", function (assert) {
-    const groups = getSettingGroupsForFeature("translation");
-
-    assert.strictEqual(groups.length, 3, "translation should have 3 groups");
-    assert.true(
-      groups[2].settings.includes("ai_translation_backfill_start_date"),
-      "backfill should include the fixed start date"
+  test("translation settings live on their dedicated page", function (assert) {
+    assert.deepEqual(
+      getSettingGroupsForFeature("translation"),
+      [],
+      "the generic editor no longer owns translation settings"
     );
   });
 
@@ -130,6 +128,38 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       groups.length,
       0,
       "unknown feature should return empty array"
+    );
+  });
+  test("sentiment groups include backend selectors and background processing", function (assert) {
+    const groups = getSettingGroupsForFeature("sentiment");
+    assert.deepEqual(
+      groups.map((group) => group.key),
+      ["sentiment", "emotion", "background_processing"],
+      "groups both independent capabilities and background controls"
+    );
+    assert.deepEqual(
+      groups.flatMap((group) => group.settings),
+      [
+        "ai_sentiment_enabled",
+        "ai_sentiment_sentiment_classification_strategy",
+        "ai_sentiment_sentiment_agent",
+        "ai_sentiment_sentiment_decision_model",
+        "ai_sentiment_emotion_enabled",
+        "ai_sentiment_emotion_classification_strategy",
+        "ai_sentiment_emotion_agent",
+        "ai_sentiment_emotion_decision_model",
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+      "exposes background controls without secret endpoint JSON"
+    );
+    assert.deepEqual(
+      groups[2].settings,
+      [
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+      "places both controls in the background processing section"
     );
   });
 });

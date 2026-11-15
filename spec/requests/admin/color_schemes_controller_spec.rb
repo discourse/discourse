@@ -90,6 +90,25 @@ RSpec.describe Admin::ColorSchemesController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to be_present
       end
+
+      it "respects plugin restrictions on palette creation" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+        expect do post "/admin/color_schemes.json", params: valid_params end.not_to change {
+          ColorScheme.count
+        }
+        expect(response.status).to eq(403)
+      ensure
+        if plugin
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_guardian_can_create_color_scheme,
+            &modifier
+          )
+        end
+      end
     end
 
     shared_examples "color scheme creation not allowed" do
@@ -124,6 +143,43 @@ RSpec.describe Admin::ColorSchemesController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "respects plugin restrictions on theme edits" do
+        plugin = Plugin::Instance.new
+        locked_theme = Fabricate(:theme)
+        locked_theme.set_default!
+        theme_palette = Fabricate(:color_scheme, theme: locked_theme)
+        modifier = proc { |allowed, _guardian, theme| allowed && theme.id != locked_theme.id }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+        put "/admin/color_schemes/#{existing.id}.json",
+            params: {
+              color_scheme: {
+                default_light_on_theme: true,
+              },
+            }
+        expect(response.status).to eq(403)
+        expect(locked_theme.reload.color_scheme_id).not_to eq(existing.id)
+
+        put "/admin/color_schemes/#{theme_palette.id}.json",
+            params: {
+              color_scheme: {
+                colors: valid_params[:color_scheme][:colors],
+              },
+            }
+        expect(response.status).to eq(403)
+
+        put "/admin/color_schemes/#{existing.id}.json", params: valid_params
+        expect(response.status).to eq(200)
+      ensure
+        if plugin
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_guardian_can_edit_theme,
+            &modifier
+          )
+        end
+      end
 
       it "returns success" do
         put "/admin/color_schemes/#{existing.id}.json", params: valid_params

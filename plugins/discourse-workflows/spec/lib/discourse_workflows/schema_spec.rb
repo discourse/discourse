@@ -39,28 +39,12 @@ RSpec.describe DiscourseWorkflows::Schema do
   end
 
   describe "reusable schema constants" do
-    it "exposes reusable basic user and group properties" do
-      property_types =
-        {
-          "user" => described_class::BASIC_USER_PROPERTIES,
-          "group" => described_class::BASIC_GROUP_PROPERTIES,
-        }.transform_values do |properties|
-          properties.transform_values { |property| property.fetch("type") }
-        end
-
-      expect(property_types).to eq(
-        "user" => {
-          "id" => "integer",
-          "username" => "string",
-          "name" => %w[string null],
-          "avatar_template" => "string",
-        },
-        "group" => {
-          "id" => "integer",
-          "name" => "string",
-          "full_name" => %w[string null],
-          "automatic" => "boolean",
-        },
+    it "exposes reusable basic group properties" do
+      expect(described_class::BASIC_GROUP_PROPERTIES.transform_values { _1.fetch("type") }).to eq(
+        "id" => "integer",
+        "name" => "string",
+        "full_name" => %w[string null],
+        "automatic" => "boolean",
       )
     end
 
@@ -494,6 +478,26 @@ RSpec.describe DiscourseWorkflows::Schema do
       unregister_workflow_nodes(v1_class, v2_class)
     end
 
+    it "resolves each node once per distinct input" do
+      data_table = Fabricate(:discourse_workflows_data_table)
+      graph =
+        build_workflow_graph do |builder|
+          builder.node "trigger", "trigger:manual"
+          builder.node "table",
+                       "action:data_table",
+                       parameters: {
+                         "operation" => "get",
+                         "data_table_id" => data_table.id,
+                       }
+          builder.connect "trigger", "table"
+        end
+      allow(DiscourseWorkflows::DataTable).to receive(:find_by).and_call_original
+
+      described_class.resolve_graph(graph[:nodes], graph[:connections])
+
+      expect(DiscourseWorkflows::DataTable).to have_received(:find_by).once
+    end
+
     it "selects the source schema by output position" do
       schemas =
         %w[kept rejected].map { |field| described_class.document(field => { "type" => "boolean" }) }
@@ -766,8 +770,7 @@ RSpec.describe DiscourseWorkflows::Schema do
       end
 
       expect { described_class.resolve_graph(graph[:nodes], graph[:connections]) }.to raise_error(
-        ArgumentError,
-        "Output schema graph did not converge",
+        DiscourseWorkflows::Schema::GraphResolver::NotConverged,
       )
     end
 

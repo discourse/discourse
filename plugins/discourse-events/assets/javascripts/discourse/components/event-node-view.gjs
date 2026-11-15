@@ -25,12 +25,14 @@ const CLEARABLE_ATTRS = [
   "minimal",
   "chatEnabled",
   "livestream",
+  "allowAnonymousLivestream",
   "allDay",
   "allowedGroups",
   "reminders",
   "image",
   "closed",
   "hosts",
+  "recording",
 ];
 
 export default class EventNodeView extends Component {

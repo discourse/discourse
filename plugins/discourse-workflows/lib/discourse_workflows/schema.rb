@@ -26,6 +26,10 @@ module DiscourseWorkflows
       { "$schema" => DRAFT_URI, "type" => "object", "properties" => properties }.freeze
     end
 
+    def self.nullable_user(description)
+      { "type" => %w[object null], "description" => description, "properties" => USER_PROPERTIES }
+    end
+
     def self.entity_extension(name, properties)
       {
         "$schema" => DRAFT_URI,
@@ -44,14 +48,18 @@ module DiscourseWorkflows
         "id": { "type": "integer" },
         "title": { "type": "string" },
         "fancy_title": { "type": "string" },
+        "fancy_title_localized": { "type": "boolean", "description": "Whether fancy_title is a translation" },
         "slug": { "type": "string" },
         "url": { "type": "string", "description": "Absolute URL of the topic" },
         "archetype": { "type": "string", "description": "regular for topics, private_message for PMs" },
         "posts_count": { "type": "integer" },
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
+        "username": { "type": ["string", "null"], "description": "Username of the topic author" },
+        "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" },
         "tags": {
           "type": "array",
+          "x-optional": true,
           "items": {
             "type": "object",
             "properties": {
@@ -61,9 +69,9 @@ module DiscourseWorkflows
             }
           }
         },
-        "first_post_id": { "type": "integer" },
+        "first_post_id": { "type": ["integer", "null"] },
         "visible": { "type": "boolean" },
-        "visibility_reason_id": { "type": "integer" },
+        "visibility_reason_id": { "type": "integer", "x-optional": true },
         "closed": { "type": "boolean" },
         "archived": { "type": "boolean" },
         "created_at": { "type": "string", "format": "date-time" },
@@ -76,20 +84,24 @@ module DiscourseWorkflows
       {
         "id": { "type": "integer" },
         "raw": { "type": "string" },
-        "raw_truncated": { "type": "boolean" },
-        "raw_original_length": { "type": "integer" },
-        "cooked": { "type": "string" },
-        "cooked_truncated": { "type": "boolean" },
-        "cooked_original_length": { "type": "integer" },
+        "raw_truncated": { "type": "boolean", "x-optional": true },
+        "raw_original_length": { "type": "integer", "x-optional": true },
+        "cooked": { "type": "string", "x-optional": true },
+        "cooked_truncated": { "type": "boolean", "x-optional": true },
+        "cooked_original_length": { "type": "integer", "x-optional": true },
         "post_number": { "type": "integer" },
         "post_type": { "type": "integer" },
         "reply_to_post_number": { "type": ["integer", "null"] },
+        "reply_to_post_id": { "type": ["integer", "null"] },
+        "reply_to_username": { "type": ["string", "null"] },
         "topic_id": { "type": "integer" },
         "topic_slug": { "type": "string" },
         "topic_title": { "type": "string" },
         "post_url": { "type": "string", "description": "Relative URL of the post" },
+        "url": { "type": "string", "description": "Absolute URL of the post" },
         "category_id": { "type": ["integer", "null"] },
         "category_name": { "type": ["string", "null"] },
+        "category_slug": { "type": ["string", "null"] },
         "user_id": { "type": "integer" },
         "username": { "type": "string" },
         "created_at": { "type": "string", "format": "date-time" },
@@ -99,16 +111,8 @@ module DiscourseWorkflows
         "reply_count": { "type": "integer" },
         "score": { "type": ["number", "null"] },
         "tags": { "type": "array", "items": { "type": "string" } },
-        "upload_ids": { "type": "array", "items": { "type": "integer" } }
-      }
-    JSON
-
-    BASIC_USER_PROPERTIES = JSON.parse(<<~JSON).freeze
-      {
-        "id": { "type": "integer" },
-        "username": { "type": "string" },
-        "name": { "type": ["string", "null"] },
-        "avatar_template": { "type": "string" }
+        "upload_ids": { "type": "array", "items": { "type": "integer" } },
+        "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" }
       }
     JSON
 
@@ -127,7 +131,8 @@ module DiscourseWorkflows
         "silenced": { "type": "boolean" },
         "suspended": { "type": "boolean" },
         "uploaded_avatar_id": { "type": ["integer", "null"] },
-        "avatar_template": { "type": "string" }
+        "avatar_template": { "type": "string" },
+        "locale": { "type": "string", "description": "Interface locale, the site default when the user has not chosen one" }
       }
     JSON
 
@@ -165,10 +170,30 @@ module DiscourseWorkflows
       }
     JSON
 
-    TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "TopicListItemSerializer payload")
+    TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "Workflow topic payload")
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
-    BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
+    ACTOR_SCHEMA = document("actor" => nullable_user("User who performed the action"))
+    POST_AUTHOR_SCHEMA = document("user" => nullable_user("Post author"))
+    TOPIC_AUTHOR_SCHEMA = document("user" => nullable_user("Topic author"))
+    ASSIGNEE_PROPERTIES = {
+      "type" => "object",
+      "properties" => {
+        "type" => {
+          "type" => %w[string null],
+        },
+        "user" => {
+          "type" => "object",
+          "x-optional" => true,
+          "properties" => USER_PROPERTIES,
+        },
+        "group" => {
+          "type" => "object",
+          "x-optional" => true,
+          "properties" => BASIC_GROUP_PROPERTIES,
+        },
+      },
+    }.freeze
     IP_LOCATION_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "type": ["object", "null"],
@@ -187,30 +212,31 @@ module DiscourseWorkflows
       }
     JSON
 
-    USER_ACTION_PROPERTIES = JSON.parse(<<~JSON).freeze
+    USER_ACTION_PROPERTIES =
+      JSON
+        .parse(<<~JSON)
           {
             "title": { "type": ["string", "null"] },
             "bio_raw": { "type": ["string", "null"] },
             "website": { "type": ["string", "null"] },
+            "location": { "type": ["string", "null"] },
             "profile_background_upload_id": { "type": ["integer", "null"] },
             "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
             "trust_level_locked": { "type": "boolean" },
-            "user_fields": { "type": "object" },
-            "groups": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": { "type": "integer" },
-                  "name": { "type": "string" },
-                  "full_name": { "type": ["string", "null"] },
-                  "automatic": { "type": "boolean" }
-                }
-              }
-            }
+            "user_fields": { "type": "object" }
           }
         JSON
+        .merge(
+          "groups" => {
+            "type" => "array",
+            "items" => {
+              "type" => "object",
+              "properties" => BASIC_GROUP_PROPERTIES,
+            },
+          },
+        )
+        .freeze
 
     USER_STATS_PROPERTIES = JSON.parse(<<~JSON).freeze
           {
@@ -285,7 +311,7 @@ module DiscourseWorkflows
             "query": { "type": "object" },
             "method": { "type": "string" },
             "webhook_url": { "type": "string" },
-            "raw_body": { "type": "string" }
+            "raw_body": { "type": "string", "x-optional": true }
           }
         JSON
 
@@ -345,7 +371,7 @@ module DiscourseWorkflows
 
     USER_SEEN_SCHEMA =
       document(
-        BASIC_USER_SCHEMA.fetch("properties").merge(
+        USER_SCHEMA.fetch("properties").merge(
           "seen" => {
             "type" => "object",
             "description" => "User seen event details",
@@ -369,7 +395,10 @@ module DiscourseWorkflows
         ),
       )
 
-    REVIEWABLE_PROPERTIES = JSON.parse(<<~JSON).freeze
+    REVIEWABLE_PROPERTIES = {
+      "target_user" => nullable_user("User the reviewable is about"),
+      "created_by" => nullable_user("User who flagged or queued the item"),
+    }.merge(JSON.parse(<<~JSON)).freeze
       {
         "id": { "type": "integer" },
         "type": { "type": "string" },
@@ -378,7 +407,10 @@ module DiscourseWorkflows
         "target_id": { "type": ["integer", "null"] },
         "topic_id": { "type": ["integer", "null"] },
         "category_id": { "type": ["integer", "null"] },
-        "score": { "type": "number" },
+        "chat_channel_id": { "type": ["integer", "null"] },
+        "score": { "type": "number", "description": "Total review score. Flag scores are added after the item is queued, so this is usually 0 when the item is created" },
+        "potential_spam": { "type": "boolean" },
+        "url": { "type": "string", "description": "Absolute URL of the item in the review queue" },
         "created_at": { "type": ["string", "null"], "format": "date-time" }
       }
     JSON

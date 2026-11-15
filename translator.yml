@@ -24,6 +24,13 @@ files:
     destination_path: error_pages/503.html
     label: core
 
+  - source_path: plugins/blog/config/locales/client.en.yml
+    destination_path: plugins/blog/client.yml
+    label: blog
+  - source_path: plugins/blog/config/locales/server.en.yml
+    destination_path: plugins/blog/server.yml
+    label: blog
+
   - source_path: plugins/boards/config/locales/client.en.yml
     destination_path: plugins/boards/client.yml
     label: boards

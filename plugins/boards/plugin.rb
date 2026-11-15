@@ -30,10 +30,12 @@ after_initialize do
       require_relative "lib/discourse_workflows/nodes/create_board/v1"
       require_relative "lib/discourse_workflows/nodes/create_board_column/v1"
       require_relative "lib/discourse_workflows/nodes/card_moved/v1"
+      require_relative "lib/discourse_workflows/nodes/card_moved/v2"
       [
         DiscourseWorkflows::Nodes::CreateBoard::V1,
         DiscourseWorkflows::Nodes::CreateBoardColumn::V1,
         DiscourseWorkflows::Nodes::CardMoved::V1,
+        DiscourseWorkflows::Nodes::CardMoved::V2,
       ]
     end
   end
@@ -62,10 +64,28 @@ after_initialize do
     SvgSprite.expire_cache if saved_change_to_icon?
   end
 
-  add_to_serializer(:current_user, :can_manage_boards) { scope.can_manage_boards? }
+  add_to_serializer(
+    :current_user,
+    :can_manage_boards,
+    include_condition: -> { SiteSetting.boards_enabled },
+  ) { scope.can_manage_boards? }
 
-  add_to_serializer(:current_user, :can_edit_any_boards) do
-    Boards::Board.open.with_any_acl_permissions(scope, %w[edit manage]).exists?
+  add_to_serializer(
+    :current_user,
+    :can_edit_any_boards,
+    include_condition: -> { SiteSetting.boards_enabled },
+  ) { Boards::Board.open.with_any_acl_permissions(scope, %w[edit manage]).exists? }
+
+  add_to_serializer(
+    :current_user,
+    :can_see_any_boards,
+    include_condition: -> { SiteSetting.boards_enabled },
+  ) { Boards::Board.open.with_any_acl_permissions(scope, %w[view edit manage]).exists? }
+
+  register_preloaded_data("visibility") do |guardian|
+    next if guardian.authenticated?
+
+    { can_see_any_boards: Boards::Board.open.with_any_acl_permissions(guardian, %w[view]).exists? }
   end
 
   add_to_class(:topic, :board_cards_map) { @board_cards_map }
