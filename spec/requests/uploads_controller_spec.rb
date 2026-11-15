@@ -291,6 +291,27 @@ RSpec.describe UploadsController do
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
       end
 
+      it "rejects a GIF whose decoded canvas exceeds the megapixel limit with libvips" do
+        global_setting :enable_vips_image_processing, true
+        SiteSetting.max_image_megapixels = 5
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        file =
+          Rack::Test::UploadedFile.new(file_from_fixtures(filename), original_filename: filename)
+
+        expect { post "/uploads.json", params: { file:, upload_type: "composer" } }.not_to change {
+          Upload.count
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: filename,
+          ),
+        )
+      end
+
       it "returns an error when it could not determine the dimensions of an image" do
         post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
 
@@ -2055,6 +2076,17 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns 404 when the upload stub is not in the temporary upload folder" do
+        external_upload_stub.update!(key: "original/1X/logo.png")
+
+        post "/uploads/complete-external-upload.json",
+             params: {
+               unique_identifier: external_upload_stub.unique_identifier,
+             }
+
+        expect(response.status).to eq(404)
+      end
+
       it "handles ChecksumMismatchError" do
         ExternalUploadManager
           .any_instance
@@ -2151,6 +2183,54 @@ RSpec.describe UploadsController do
         expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
         expect(response.status).to eq(200)
         expect(response.parsed_body).to eq(UploadsController.serialize_upload(upload))
+      end
+
+      context "when the validated file is not modified during promotion" do
+        let(:logo_file) { file_from_fixtures("logo.png") }
+        let(:object_size) { 1.megabyte }
+
+        before do
+          SiteSetting.content_security_policy = false
+          get "/session/#{user.encoded_username}/become", params: { redirect: "false" }
+
+          external_upload_stub.update!(filesize: object_size)
+
+          @fake_s3 = FakeS3.create
+          @fake_s3.bucket(SiteSetting.s3_upload_bucket).put_object(
+            key: external_upload_stub.key,
+            size: object_size,
+            last_modified: Time.zone.now,
+            metadata: {
+            },
+          )
+
+          signed_url =
+            Discourse.store.signed_url_for_path(
+              external_upload_stub.key,
+              include_content_disposition: false,
+            )
+          uri = URI.parse(signed_url)
+          signed_url = uri.to_s.gsub(uri.query, "")
+          stub_request(:get, signed_url).with(query: hash_including({})).to_return(
+            status: 200,
+            body: logo_file.read,
+          )
+        end
+
+        it "stores the validated local bytes instead of moving the mutable external object" do
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+               }
+
+          expect(response.status).to eq(200)
+
+          upload = Upload.find(response.parsed_body["id"])
+          expect(upload.sha1).to eq(Upload.generate_digest(file_from_fixtures("logo.png")))
+
+          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          expect(@fake_s3.operation_called?(:put_object)).to eq(true)
+        end
       end
 
       context "with site setting uploads" do

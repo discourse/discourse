@@ -6,11 +6,12 @@ import { trackedArray, trackedSet } from "@ember/reactive/collections";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
-import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
-import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
-import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
-import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
+import {
+  CREATE_CATEGORY_STEP,
+  logOnboardingEvent,
+  onboardingStepKey,
+} from "discourse/lib/admin-onboarding";
 import { homepagePath } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -56,64 +57,26 @@ const STEPS = [
       this.designWizard.start({ onComplete: this.#onComplete });
     }
   },
-  class StartPosting extends OnboardingStep {
-    static name = "start_posting";
+  class CreateCategory extends OnboardingStep {
+    static name = CREATE_CATEGORY_STEP;
 
-    @service appEvents;
-    @service modal;
+    @service categoryTypeChooser;
 
-    icon = "comments";
+    icon = "folder-open";
 
     constructor() {
       super(...arguments);
 
-      this.appEvents.on("topic:created", this, this.completeStep);
-      this.appEvents.on(
-        "admin-onboarding:posting-complete",
-        this,
-        this.completeStep
-      );
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-
-      this.appEvents.off("topic:created", this, this.completeStep);
-      this.appEvents.off(
-        "admin-onboarding:posting-complete",
-        this,
-        this.completeStep
-      );
-    }
-
-    completeStep(_post, composer) {
-      return this.markAsCompleted({
-        topicOption: composer?.adminOnboardingTopicOption,
-      });
-    }
-
-    showStartPostingOptions() {
-      const options = applyValueTransformer(
-        "admin-onboarding-start-posting-options",
-        [PredefinedTopicOption]
-      );
-
-      if (options.length === 1) {
-        // show predefined topics directly if it's the only option available
-        return this.modal.show(PredefinedTopicsOptionsModal);
+      // completed by the category form, away from the banner, so this may be
+      // the first chance to notice that it was the last step left
+      if (this.completed) {
+        this.args.onCompleted?.(this.name);
       }
-
-      this.modal.show(StartPostingOptions, {
-        model: {
-          options,
-          isStepComplete: this.completed,
-        },
-      });
     }
 
     @action
-    async performAction() {
-      this.showStartPostingOptions();
+    performAction() {
+      this.categoryTypeChooser.createCategory();
     }
   },
   class InviteCollaborators extends OnboardingStep {
@@ -154,9 +117,7 @@ export default class AdminOnboardingBanner extends Component {
   // the key value store isn't reactive, but the progress count must be
   completedStepNames = trackedSet(
     this.steps
-      .filter(
-        (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
-      )
+      .filter((Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name)))
       .map((Step) => Step.name)
   );
 
@@ -252,7 +213,7 @@ export default class AdminOnboardingBanner extends Component {
   @action
   async checkIfOnboardingIsComplete() {
     const allStepsAreDone = this.steps.every(
-      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+      (Step) => !!this.keyValueStore.get(onboardingStepKey(Step.name))
     );
 
     if (allStepsAreDone) {
@@ -289,7 +250,7 @@ export default class AdminOnboardingBanner extends Component {
     await logOnboardingEvent(skipped ? "dismissed" : "completed");
     this.dismissed = true;
     this.steps.forEach((Step) => {
-      this.keyValueStore.remove(`onboarding_step_${Step.name}`);
+      this.keyValueStore.remove(onboardingStepKey(Step.name));
     });
     this.completedStepNames.clear();
 

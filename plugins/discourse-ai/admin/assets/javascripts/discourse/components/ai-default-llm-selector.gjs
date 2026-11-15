@@ -99,10 +99,9 @@ export default class AiDefaultLlmSelector extends Component {
 
   <template>
     <div class="ai-configure-default-llm">
-      <div class="ai-configure-default-llm__header">
-        <h3>{{i18n "discourse_ai.default_llm.title"}}</h3>
-        <p>{{i18n "discourse_ai.default_llm.description"}}</p>
-      </div>
+      <h3 class="ai-configure-default-llm__title">
+        {{i18n "discourse_ai.default_llm.title"}}
+      </h3>
 
       <div class="ai-configure-default-llm__setting">
         <ComboBox
@@ -118,6 +117,10 @@ export default class AiDefaultLlmSelector extends Component {
           @size="small"
         />
       </div>
+
+      <p class="ai-configure-default-llm__description">
+        {{i18n "discourse_ai.default_llm.description"}}
+      </p>
     </div>
   </template>
 }

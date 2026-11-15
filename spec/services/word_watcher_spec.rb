@@ -50,6 +50,21 @@ RSpec.describe WordWatcher do
     it "returns an empty hash when no words are present" do
       expect(described_class.words_for_action(:tag)).to eq({})
     end
+
+    it "isolates HTML replacements so they cannot absorb the content that follows" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "hello",
+        replacement: '<a href="https://example.com/">',
+        html: true,
+      )
+
+      expect(described_class.words_for_action(:replace).values.first).to include(
+        html: true,
+        replacement: '<a href="https://example.com/"></a>',
+      )
+    end
   end
 
   describe ".regexps_for_action" do

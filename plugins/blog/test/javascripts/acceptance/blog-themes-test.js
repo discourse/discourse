@@ -9,6 +9,10 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import interceptClick from "discourse/lib/intercept-click";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -127,6 +131,18 @@ acceptance("Blog themes and identity", function (needs) {
     }
   });
 
+  test("links to the editor and the live blog from the header", async function (assert) {
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".d-page-header__actions .btn-primary")
+      .hasText("Go to editor", "the editor is the primary action");
+    assert
+      .dom(".d-page-header__actions a.btn-default")
+      .hasText("View blog")
+      .hasAttribute("href", "https://blog.example.com", "the blog is linked")
+      .hasAttribute("target", "_blank", "the blog opens in a new tab");
+  });
+
   test("saves a draft without activation and blocks activating unsaved edits", async function (assert) {
     pretender.put("/admin/plugins/blog/themes/candidate.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
@@ -196,14 +212,8 @@ acceptance("Blog themes and identity", function (needs) {
       .doesNotHaveAttribute("aria-current");
     await click(".blog-theme-editor__customize");
     const form = formKit(".blog-theme-editor__form");
-    assert
-      .dom('[data-name="template_index"]')
-      .hasClass(
-        "blog-theme-editor__template-field",
-        "the custom editor receives its full-width layout"
-      );
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>{{ site.title }}</h1>"
     );
     assert
@@ -225,18 +235,16 @@ acceptance("Blog themes and identity", function (needs) {
         "the effective default is visible before editing"
       );
     await click(".blog-theme-editor__customize");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "site.title",
-        "customizing starts with visible working source"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes("site.title"),
+      "customizing starts with visible working source"
+    );
     assert
       .dom('[data-name="template_index"]')
       .doesNotExist("other templates are not stacked below it");
 
-    await fillControl(
-      '[data-name="template_layout"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_layout"]',
       "<main>Unsaved author edits</main>"
     );
     const editor = find(".blog-theme-editor__template-control");
@@ -259,18 +267,18 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-variables")
       .doesNotExist("inserting a snippet closes the reference");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "the inserted snippet is visible in the editor"
-      );
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "Unsaved author edits",
-        "inserting preserves the author's changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "the inserted snippet is visible in the editor"
+    );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "Unsaved author edits"
+      ),
+      "inserting preserves the author's changes"
+    );
     assert.strictEqual(
       find(".blog-theme-editor__template-control"),
       editor,
@@ -279,12 +287,12 @@ acceptance("Blog themes and identity", function (needs) {
 
     await click('[data-authoring-tab="design"]');
     await click('[data-authoring-tab="template_layout"]');
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "FormKit retains the snippet across tab changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "FormKit retains the snippet across tab changes"
+    );
 
     await click(".blog-theme-editor__restore-default");
     await click(".dialog-footer .btn-primary");
@@ -331,8 +339,8 @@ acceptance("Blog themes and identity", function (needs) {
       .fillIn(".blog { color: blue; }");
     await click('[data-authoring-tab="template_index"]');
     await click(".blog-theme-editor__customize");
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>Unsaved preview</h1>"
     );
     await click(".blog-theme-editor__preview-draft");
@@ -382,9 +390,12 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-preview")
       .doesNotExist("closing returns to the editor");
-    assert
-      .dom('[data-name="template_index"] .ace_content')
-      .includesText("Unsaved preview", "template edits survive previewing");
+    assert.true(
+      codeEditorValue('[data-name="template_index"]').includes(
+        "Unsaved preview"
+      ),
+      "template edits survive previewing"
+    );
   });
 
   test("explains that article previews need a published article", async function (assert) {
@@ -657,6 +668,65 @@ acceptance("Blog themes and identity", function (needs) {
     const form = formKit(".blog-identity__form");
     await form.field("blog_title").fillIn("New identity");
     await form.submit();
+  });
+
+  test("saves the article URL format with the identity", async function (assert) {
+    const saved = [];
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      const values = new URLSearchParams(request.requestBody);
+      saved.push(values.get("settings[blog_path_format][value]"));
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const today = moment.utc();
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/my-article", "the slug format shows an example")
+      .includesText(
+        `/${today.format("YYYY/MM")}/my-article`,
+        "the monthly format shows today's example"
+      )
+      .includesText(
+        `/${today.format("YYYY/MM/DD")}/my-article`,
+        "the daily format shows today's example"
+      );
+    const form = formKit(".blog-identity__form");
+    assert.form(".blog-identity__form").field("path_format").hasValue("slug");
+    await form.field("path_format").select("year_month_slug");
+    await form.submit();
+
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/news/{slug}");
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/news/my-article", "the custom format shows an example");
+    await form.submit();
+
+    assert.deepEqual(
+      saved,
+      ["/{year}/{month}/{slug}", "/news/{slug}"],
+      "presets and custom formats are saved as templates"
+    );
+  });
+
+  test("rejects a custom URL format without a unique placeholder", async function (assert) {
+    pretender.put("/admin/site_settings/bulk_update.json", () => {
+      assert.step("saved");
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const form = formKit(".blog-identity__form");
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/{year}/{month}");
+    await form.submit();
+
+    assert
+      .form(".blog-identity__form")
+      .field("custom_path_format")
+      .hasError(
+        "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
+      );
+    assert.verifySteps([], "nothing is saved");
   });
 
   test("warns before leaving a theme with unsaved changes", async function (assert) {

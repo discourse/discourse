@@ -3,6 +3,8 @@
 class Search
   DIACRITICS = /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
   HIGHLIGHT_CSS_CLASS = "search-highlight"
+  MAX_SEARCH_TERM_LENGTH = 500
+  MAX_SEARCH_TERM_WORDS = 50
 
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
@@ -1459,6 +1461,15 @@ class Search
   end
 
   def ts_rank_cd(weight_filter:, prefix_match: true)
+    # Cover-density ranking becomes expensive when many terms repeat in a post.
+    if @term.present? &&
+         (
+           @term.length > MAX_SEARCH_TERM_LENGTH ||
+             @term.scan(/[[:alnum:]]+/).length > MAX_SEARCH_TERM_WORDS
+         )
+      raise Discourse::InvalidParameters.new(:term)
+    end
+
     <<~SQL
       TS_RANK_CD(
         #{SiteSetting.search_ranking_weights.present? ? "'#{SiteSetting.search_ranking_weights}'," : ""}

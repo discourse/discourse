@@ -108,10 +108,13 @@ export default class ReviewIndexController extends Controller {
 
   @computed
   get statuses() {
+    const outcomes = this.siteSettings.review_queue_consistent_answers
+      ? ["problem_confirmed", "no_problem_found"]
+      : ["approved", "rejected"];
+
     return [
       "pending",
-      "approved",
-      "rejected",
+      ...outcomes,
       "deleted",
       "ignored",
       "reviewed",
@@ -202,6 +205,8 @@ export default class ReviewIndexController extends Controller {
 
     const createdAtStatuses = ["reviewed", "all"];
     const priorityStatuses = [
+      "problem_confirmed",
+      "no_problem_found",
       "approved",
       "rejected",
       "deleted",

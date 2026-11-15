@@ -269,10 +269,6 @@ zh_TW:
           name: "圖像產生…"
         image_generation_custom:
           name: "自訂"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -1054,6 +1050,14 @@ zh_TW:
           header_background: "頁首"
       fonts:
         heading_font: "標題字型"
+    mcp_theme_access:
+      "on": "開"
+      "off": "關"
+      none: "無"
+      changes:
+        server: "MCP 服務器"
+    mcp_app_setup:
+      none: "無"
     reviewables:
       ai_tool_action:
         title: "AI 工具動作"

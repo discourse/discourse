@@ -16,6 +16,9 @@ es:
         preview_archive: Archivo
         desktop: Escritorio
         mobile: Móvil
+        save: Guardar
+        path_formats:
+          custom: Personalizado
         back_to_themes: Volver a los temas
         new_theme_short: Nuevo tema
         themes: Tema
@@ -23,6 +26,8 @@ es:
         edit: Editar
         activate: Activar
         preview: Vista previa
+        customize: Personalizar
+        customized_theme_name: "%{name} (personalizado)"
         import: Importar
         export: Exportar
         active: Activo
@@ -35,6 +40,7 @@ es:
         change:
           title: título
           body: cuerpo
+          tags: etiquetas
       review:
         create: Crear enlace
         copy: Copiar

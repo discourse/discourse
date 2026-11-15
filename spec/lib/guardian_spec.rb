@@ -2066,6 +2066,26 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_activate?" do
+    fab!(:inactive_user)
+
+    it "allows staff to activate an inactive user" do
+      expect(Guardian.new(admin).can_activate?(inactive_user)).to eq(true)
+      expect(Guardian.new(moderator).can_activate?(inactive_user)).to eq(true)
+    end
+
+    it "does not allow a non-staff user to activate an inactive user" do
+      expect(Guardian.new(user).can_activate?(inactive_user)).to eq(false)
+    end
+
+    it "does not allow activating a configured developer email" do
+      Rails.configuration.stubs(:developer_emails).returns([inactive_user.email])
+
+      expect(Guardian.new(admin).can_activate?(inactive_user)).to eq(false)
+      expect(Guardian.new(moderator).can_activate?(inactive_user)).to eq(false)
+    end
+  end
+
   describe "#can_approve?" do
     it "wont allow a non-logged in user to approve" do
       expect(Guardian.new.can_approve?(user)).to be_falsey

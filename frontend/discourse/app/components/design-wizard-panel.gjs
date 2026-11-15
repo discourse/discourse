@@ -125,6 +125,8 @@ export default class DesignWizardPanel extends Component {
           "design-wizard-docked"
           (if this.collapsed "design-wizard-collapsed")
         }}
+      {{else}}
+        {{htmlClass "design-wizard-floating"}}
       {{/if}}
       <aside
         aria-hidden={{if this.hidden "true"}}

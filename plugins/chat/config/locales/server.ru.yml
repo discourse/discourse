@@ -61,6 +61,7 @@ ru:
         Посетите канал %{channel_url} и повторите попытку.
   chat:
     design_wizard_homepage_name: "Чат"
+    design_wizard_homepage_description: "Открывайте канал %{channel} , когда участники посещают вашу домашнюю страницу."
     deleted_chat_username: удалён
     crawler:
       directory_title: "Каналы чата"

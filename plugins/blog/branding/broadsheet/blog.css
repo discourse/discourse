@@ -159,6 +159,15 @@
   text-align: center;
 }
 
+.broadsheet__author-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .broadsheet__masthead .broadsheet__kicker {
   justify-content: center;
 }
@@ -178,6 +187,14 @@
   margin: 24px auto 0;
   color: var(--blog-muted);
   font: italic 22px / 1.45 var(--broadsheet-serif);
+}
+
+.broadsheet__tagline p {
+  margin: 0;
+}
+
+.broadsheet__tagline p + p {
+  margin-top: 0.6em;
 }
 
 .broadsheet__listing {
@@ -456,6 +473,16 @@
 .broadsheet__article-header {
   margin-bottom: 48px;
   text-align: center;
+}
+
+.broadsheet__article-cover {
+  margin: 0 0 48px;
+}
+
+.broadsheet__article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .broadsheet__article-header .broadsheet__kicker {

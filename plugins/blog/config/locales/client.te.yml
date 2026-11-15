@@ -12,10 +12,14 @@ te:
         preview_archive: ఆర్కైవ్ చెయ్యండి
         desktop: డెస్క్‌టాప్
         mobile: మొబైల్
+        save: సేవ్ చేయండి
+        path_formats:
+          custom: అనురూప
         themes: థీమ్స్
         theme_name: థీమ్ పేరు
         edit: సవరించండి
         preview: ప్రివ్యూ
+        customize: కస్టమైజ్
         export: ఎగుమతి
         active: క్రియాశీల
   js:
@@ -27,6 +31,7 @@ te:
         change:
           title: శీర్షిక
           body: బాడీ
+          tags: ట్యాగులు
       review:
         copy: నకలు
         status:

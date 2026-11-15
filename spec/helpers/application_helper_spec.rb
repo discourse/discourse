@@ -600,6 +600,20 @@ RSpec.describe ApplicationHelper do
       expect(helper.preloaded_json).to eq("{}")
     end
 
+    it "refuses to serialize for any request method when the credential is not allowed the HTML layout" do
+      @application_layout_preloader =
+        ApplicationLayoutPreloader.new(
+          guardian: Guardian.new(user),
+          theme_id: nil,
+          theme_target: nil,
+          login_method: nil,
+        )
+      request.env[Auth::DefaultCurrentUserProvider::HTML_LAYOUT_DISALLOWED_ENV] = true
+      request.env["REQUEST_METHOD"] = "POST"
+
+      expect { helper.preloaded_json }.to raise_error(Discourse::ScopedApiKeyHtmlNotAllowed)
+    end
+
     it "escapes and strips invalid unicode and strips in json body" do
       @application_layout_preloader =
         ApplicationLayoutPreloader.new(

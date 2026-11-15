@@ -14,6 +14,9 @@ ur:
         preview_archive: محفوظ شدہ
         desktop: ڈیسک ٹاپ
         mobile: موبائل
+        save: محفوظ
+        path_formats:
+          custom: اپنی مرضی کا
         back_to_themes: تھیمز پر واپسی
         new_theme_short: نئی تھیم
         themes: تِھیمز
@@ -21,6 +24,7 @@ ur:
         edit: ترمیم کریں
         activate: متحرک
         preview: جھلک دیکھیں
+        customize: مرضی کے مطابق بنائیں
         import: درآمد
         export: برآمد
         active: فعال
@@ -33,6 +37,7 @@ ur:
         change:
           title: عنوان
           body: متن
+          tags: ٹیگز
       review:
         label: عنوان
         create: رابطہ بنائیں

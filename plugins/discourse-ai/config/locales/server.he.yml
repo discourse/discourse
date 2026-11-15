@@ -194,10 +194,6 @@ he:
           name: "יצירת תמונות…"
         image_generation_custom:
           name: "מותאם"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "ננו בננה"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -580,6 +576,10 @@ he:
       fonts:
         base_font: "גופן גוף"
         heading_font: "גופן כותרת"
+    mcp_theme_access:
+      none: "ללא"
+    mcp_app_setup:
+      none: "ללא"
     reviewables:
       ai_tool_action:
         approve:

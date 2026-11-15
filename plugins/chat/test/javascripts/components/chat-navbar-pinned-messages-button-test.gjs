@@ -9,7 +9,6 @@ module("Component | ChatNavbar | PinnedMessagesButton", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {
-    this.siteSettings.chat_pinned_messages = true;
     this.fabricators = new ChatFabricators(getOwner(this));
     this.chatStateManager = getOwner(this).lookup("service:chat-state-manager");
     this.channel = this.fabricators.channel();

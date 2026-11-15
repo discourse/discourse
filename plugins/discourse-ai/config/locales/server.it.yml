@@ -174,8 +174,6 @@ it:
           name: "Quotazione azionaria (AlphaVantage)"
         image_generation_custom:
           name: "Personalizzato"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Inizia da zero..."
       name:
@@ -534,6 +532,12 @@ it:
       fonts:
         base_font: "Carattere del corpo"
         heading_font: "Carattere dell'intestazione"
+    mcp_theme_access:
+      "on": "On"
+      "off": "Off"
+      none: "nessuna"
+    mcp_app_setup:
+      none: "nessuna"
     reviewables:
       ai_tool_action:
         approve:

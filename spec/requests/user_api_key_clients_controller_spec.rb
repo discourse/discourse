@@ -47,6 +47,18 @@ RSpec.describe UserApiKeyClientsController do
       end
     end
 
+    context "with a non-string public_key" do
+      before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
+
+      it "returns a 400 without generating an RSA keypair" do
+        post "/user-api-key-client.json",
+             params: args.merge(scopes: "user_status", public_key: 4_096),
+             as: :json
+        expect(response.status).to eq(400)
+        expect(UserApiKeyClient.where(client_id: args[:client_id]).exists?).to eq(false)
+      end
+    end
+
     context "with only empty/blank scope tokens" do
       it "rejects scopes that resolve to an empty list after splitting" do
         post "/user-api-key-client.json", params: args.merge(scopes: ",")

@@ -18,3 +18,5 @@ ug:
     replies:
       one: "%{count} جاۋاب"
       other: "%{count} جاۋاب"
+    themes:
+      default: كۆڭۈلدىكى

@@ -368,7 +368,8 @@ class ReviewablesController < ApplicationController
   end
 
   def allowed_statuses
-    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.symbolize_keys.keys)
+    @allowed_statuses ||=
+      %i[reviewed all] + Reviewable::OUTCOME_STATUSES + Reviewable.statuses.symbolize_keys.keys
   end
 
   def version_required

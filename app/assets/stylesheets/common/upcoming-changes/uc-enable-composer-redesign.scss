@@ -1,3 +1,4 @@
+@use "lib/container";
 @use "lib/viewport";
 
 :where(.uc-enable-composer-redesign) {
@@ -336,11 +337,11 @@
     align-items: center;
     flex-wrap: nowrap;
 
-    @container (width < 600px) {
+    @include container.until(sm) {
       flex-direction: column;
     }
 
-    @container (width > 600px) {
+    @include container.from(sm) {
       border-top: 1px solid var(--primary-low);
       padding: var(--space-2) var(--space-4);
     }
@@ -351,30 +352,28 @@
       width: 100%;
       box-sizing: border-box;
 
-      @container (width < 600px) {
-        padding: 0 var(--space-4);
+      @include container.until(sm) {
+        padding: 0 var(--space-2);
         border-top: 1px solid var(--primary-low);
         border-bottom: 1px solid var(--primary-low);
       }
 
-      @include viewport.until(sm) {
-        padding-inline: var(--space-2);
-        border-top: 1px solid var(--primary-low);
+      // takes what the submit panel leaves, rather than 100% and then shrinking
+      @include container.from(sm) {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
       }
     }
 
     .submit-panel {
       margin: 0 !important;
 
-      @container (width < 600px) {
-        padding: var(--space-2) var(--space-4);
-        align-self: end;
-      }
-
-      @include viewport.until(sm) {
+      @include container.until(sm) {
         width: 100%;
         padding: var(--space-2) var(--space-2) 0; // parent has env safe area padding for bottom
         box-sizing: border-box;
+        align-self: end;
 
         .save-or-cancel {
           display: inline-flex !important;
@@ -397,13 +396,13 @@
     }
 
     .d-editor-button-bar__wrap {
-      @include viewport.until(sm) {
+      @include container.until(sm) {
         margin: 0;
       }
     }
 
     .d-editor-button-bar {
-      @include viewport.until(sm) {
+      @include container.until(sm) {
         padding-inline: var(--space-2);
       }
 

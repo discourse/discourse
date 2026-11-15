@@ -48,6 +48,7 @@ module ReviewableActionBuilder
     actions,
     id,
     icon: nil,
+    label: nil,
     button_class: nil,
     bundle: nil,
     client_action: nil,
@@ -67,7 +68,7 @@ module ReviewableActionBuilder
 
       action.icon = icon if icon
       action.button_class = button_class if button_class
-      action.label = "#{prefix}.title"
+      action.label = label || "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action if client_action
       action.confirm_message = "#{prefix}.confirm" if confirm

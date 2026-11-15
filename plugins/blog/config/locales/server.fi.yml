@@ -18,3 +18,5 @@ fi:
     replies:
       one: "%{count} vastaus"
       other: "%{count} vastausta"
+    themes:
+      default: Oletus

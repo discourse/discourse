@@ -12,9 +12,11 @@ lv:
         preview_archive: Arhīvs
         desktop: Personālais dators
         mobile: Mobilais
+        save: Saglabāt
         themes: Dizaini
         edit: Labot
         preview: Priekšskatījums
+        customize: Pielāgot
         import: Importēt
         export: Eksportēt
         active: Aktīvs
@@ -25,6 +27,7 @@ lv:
         change:
           title: virsraksts
           body: saturs
+          tags: birkas
       review:
         copy: Kopēt
         open: Atvērt

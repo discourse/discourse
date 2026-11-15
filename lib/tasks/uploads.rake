@@ -40,13 +40,11 @@ def gather_uploads
       source = "#{public_directory}#{from}"
       destination = "#{public_directory}#{to}"
 
-      # create destination directory & copy file unless it already exists
       unless file_exists?(destination)
-        `mkdir -p '#{File.dirname(destination)}'`
-        `cp --link '#{source}' '#{destination}'`
+        FileUtils.mkdir_p(File.dirname(destination))
+        FileUtils.ln(source, destination)
       end
 
-      # ensure file has been successfully copied over
       raise unless file_exists?(destination)
 
       # remap links in db

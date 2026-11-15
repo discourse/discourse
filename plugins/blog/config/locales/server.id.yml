@@ -15,3 +15,5 @@ id:
     search: Cari
     replies:
       other: "%{count} balasan"
+    themes:
+      default: Asal

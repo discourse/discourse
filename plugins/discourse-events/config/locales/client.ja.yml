@@ -27,6 +27,10 @@ ja:
               label: トピック ID
     discourse_events:
       title: "イベント"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "登録"
       preferences:
         reminders:
           preferences:

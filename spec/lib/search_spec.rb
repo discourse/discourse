@@ -532,6 +532,17 @@ RSpec.describe Search do
     expect(search.clean_term).to eq('"discourse"')
   end
 
+  it "limits the size of search text when ranking results" do
+    words = (1..51).map { |number| "word#{number}" }
+
+    expect { Search.new(words.first(50).join(" ")) }.not_to raise_error
+    expect { Search.new("a" * 500) }.not_to raise_error
+    expect { Search.new(words.join(" ")) }.not_to raise_error
+    expect { Search.execute(words.join(" ")) }.to raise_error(Discourse::InvalidParameters)
+    expect { Search.execute(words.join(",")) }.to raise_error(Discourse::InvalidParameters)
+    expect { Search.execute("a" * 501) }.to raise_error(Discourse::InvalidParameters)
+  end
+
   it "does not search when the search term is too small" do
     search = Search.new("evil", min_search_term_length: 5)
     search.execute

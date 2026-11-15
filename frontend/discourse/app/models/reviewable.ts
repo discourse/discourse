@@ -180,6 +180,8 @@ export interface ReviewableFields {
   created_at: string;
   can_edit: boolean;
   created_from_flag: boolean;
+  /** Whether approving means no problem was found, rather than confirming a reported one. */
+  approval_style: boolean;
   category_id?: number;
   topic_id?: number | null;
   post_id?: number;
@@ -373,31 +375,55 @@ export default class Reviewable extends RestModel {
     });
   }
 
-  @computed("resolvedType", "reviewable_scores", "status")
+  @computed(
+    "approval_style",
+    "type_source",
+    "resolvedType",
+    "reviewable_scores",
+    "status"
+  )
   get userReviewableContextQuestion(): string | null {
+    // Plugin approval-style types label their own actions instead of answering
+    // core's Yes/No question.
+    if (!this.approval_style || this.type_source !== "core") {
+      return null;
+    }
+
+    if (!this.siteSettings.review_queue_consistent_answers) {
+      return this.#approvalQuestion();
+    }
+
+    // Resolved items can only be undone or scrubbed, which doesn't answer the question.
+    if (this.status !== PENDING) {
+      return null;
+    }
+
+    // Framed so "Yes" means there's a problem, matching flagged reviewables.
+    // A whole sentence per noun, since translations agree with the noun.
     if (this.resolvedType === "ReviewableUser") {
-      // in this case the only remaining action is "scrub record" so the question shouldn't show
-      if (this.status !== PENDING) {
-        return null;
-      }
-      const isSuspectUser = this.reviewable_scores?.some(
-        (score) => score.reason_type === "suspect_user"
-      );
-      if (isSuspectUser) {
+      if (this.#isSuspectUser) {
         return i18n("review.context_question.suspect_user");
       }
-      return i18n("review.context_question.approve_user");
+      return i18n("review.context_question.something_wrong_with_account");
     }
-    if (this.resolvedType === "ReviewableQueuedPost") {
-      return i18n("review.context_question.approve_post");
-    }
+
     if (this.resolvedType === "ReviewableQueuedTopic") {
-      return i18n("review.context_question.approve_topic");
+      return i18n("review.context_question.something_wrong_with_topic");
     }
-    if (this.resolvedType === "ReviewablePost") {
-      return i18n("review.context_question.approve_post");
-    }
-    return null;
+    return i18n("review.context_question.something_wrong_with_post");
+  }
+
+  /**
+   * Whether resolving this reviewable answers whether there's a problem. Plugin
+   * types that aren't flags or approval queues (e.g. nominations) keep their
+   * approved/rejected wording.
+   */
+  get answersProblem(): boolean {
+    return (
+      this.type_source === "core" ||
+      this.created_from_flag ||
+      this.approval_style
+    );
   }
 
   @computed("category_id")
@@ -405,9 +431,16 @@ export default class Reviewable extends RestModel {
     return Category.findById(this.category_id);
   }
 
+  get #isSuspectUser(): boolean {
+    return !!this.reviewable_scores?.some(
+      (score) => score.reason_type === "suspect_user"
+    );
+  }
+
   /** Keeps the override assignable to RestModel; resolves without a save-result envelope. */
   override update(this: never, ...args: never[]): never;
   override update(updates: object): globalThis.Promise<void>;
+
   override update(updates: object): globalThis.Promise<void> {
     // If no changes, do nothing
     if (Object.keys(updates).length === 0) {
@@ -428,5 +461,22 @@ export default class Reviewable extends RestModel {
 
       this.setProperties(updated);
     });
+  }
+
+  /** The question asked before approval was framed around a problem; "Yes" approves. */
+  #approvalQuestion(): string | null {
+    if (this.resolvedType === "ReviewableUser") {
+      // in this case the only remaining action is "scrub record" so the question shouldn't show
+      if (this.status !== PENDING) {
+        return null;
+      }
+      return this.#isSuspectUser
+        ? i18n("review.context_question.suspect_user")
+        : i18n("review.context_question.approve_user");
+    }
+    if (this.resolvedType === "ReviewableQueuedTopic") {
+      return i18n("review.context_question.approve_topic");
+    }
+    return i18n("review.context_question.approve_post");
   }
 }

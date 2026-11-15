@@ -15,10 +15,6 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
 
   @action
   isItemSelected(item) {
-    if (this.channel.currentUserMembership.muted) {
-      return item === "muted";
-    }
-
     return this.channel.currentUserMembership.notificationLevel === item;
   }
 
@@ -34,23 +30,6 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
         );
       this.channel.currentUserMembership.notificationLevel =
         result.membership.notification_level;
-    } catch (err) {
-      popupAjaxError(err);
-    }
-    this.args.close();
-  }
-
-  @action
-  async toggleMuteChannel() {
-    try {
-      const result =
-        await this.chatApi.updateCurrentUserChannelNotificationsSettings(
-          this.channel.id,
-          {
-            muted: !this.channel.currentUserMembership.muted,
-          }
-        );
-      this.channel.currentUserMembership.muted = result.membership.muted;
     } catch (err) {
       popupAjaxError(err);
     }
@@ -92,33 +71,6 @@ export default class ChatChannelSidebarContextNotificationSubmenu extends Compon
           @action={{this.changePushNotifications "always"}}
           @label="chat.notification_levels.always"
           @title="chat.notification_levels.always"
-        />
-      </dropdown.item>
-
-      <dropdown.divider />
-
-      <dropdown.item>
-        <DButton
-          class={{dConcatClass
-            "chat-channel-sidebar-link-menu__mute-channel"
-            (if (this.isItemSelected "muted") "-selected")
-          }}
-          @action={{this.toggleMuteChannel}}
-          @icon={{if
-            this.channel.currentUserMembership.muted
-            "bell-slash"
-            "bell"
-          }}
-          @label={{if
-            this.channel.currentUserMembership.muted
-            "chat.settings.unmute"
-            "chat.settings.mute"
-          }}
-          @title={{if
-            this.channel.currentUserMembership.muted
-            "chat.settings.unmute"
-            "chat.settings.mute"
-          }}
         />
       </dropdown.item>
     </DDropdownMenu>

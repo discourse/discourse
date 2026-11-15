@@ -180,6 +180,7 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiSpamScanErrors
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
   register_problem_check ProblemCheck::AiAskAiExternalSource

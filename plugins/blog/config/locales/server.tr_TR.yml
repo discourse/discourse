@@ -18,3 +18,5 @@ tr_TR:
     replies:
       one: "%{count} yanıt"
       other: "%{count} yanıt"
+    themes:
+      default: Varsayılan

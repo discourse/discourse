@@ -531,7 +531,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#suspend" do
-    fab!(:created_post, :post)
+    fab!(:created_post) { Fabricate(:post, user:) }
     fab!(:other_user, :user)
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now, reason: "because of this post", post_id: created_post.id }
@@ -711,7 +711,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -723,7 +723,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics when deleting replies" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -839,8 +839,8 @@ RSpec.describe Admin::UsersController do
       include_examples "suspension of active user possible"
       include_examples "suspension of staff users"
 
-      it "cannot edit an arbitrary static doc post unrelated to the suspended user" do
-        static_doc_post = Fabricate(:post)
+      it "cannot edit a static doc post" do
+        static_doc_post = Fabricate(:post, user:)
         SiteSetting.tos_topic_id = static_doc_post.topic_id
 
         put "/admin/users/#{user.id}/suspend.json",
@@ -2140,6 +2140,39 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         expect(reg_user.active).to eq(false)
+      end
+    end
+
+    context "when the user has a configured developer email" do
+      fab!(:developer_user) do
+        Fabricate(:inactive_user, username: "dev_account", email: "dev@example.com")
+      end
+      fab!(:email_domain_group) do
+        Fabricate(:group, automatic_membership_email_domains: "example.com")
+      end
+
+      before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
+
+      it "prevents a moderator from activating the account" do
+        sign_in(moderator)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
+      end
+
+      it "prevents an admin from activating the account" do
+        sign_in(admin)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
       end
     end
   end

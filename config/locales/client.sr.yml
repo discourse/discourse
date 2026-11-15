@@ -6,6 +6,13 @@
 
 sr:
   js:
+    code_editor:
+      search:
+        next: "Dalje"
+        previous: "Prethodno"
+        close: "Zatvori"
+      fold:
+        to: "ka"
     user_api_key:
       deny: "Odustani"
       write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
@@ -365,8 +372,6 @@ sr:
         title: "Prilagodite svoj sajt"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
-      start_posting:
-        back: "Nazad"
     design_wizard:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
@@ -2847,9 +2852,9 @@ sr:
           title: "Dodaci"
       upcoming_changes:
         name: "Ime foruma"
-        enabled: "Omogućeno"
-        enabled_for_options:
-          everyone: "Svi"
+        enabled: "Omgućeno"
+        feedback: "Povratne informacije"
+        settings: "Podešavanje"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"

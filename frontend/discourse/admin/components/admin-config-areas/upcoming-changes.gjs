@@ -191,7 +191,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
             staffGroupName: this.staffGroupName,
           }),
           value: "enabled_for_staff",
-          filterFn: (change) => change.upcoming_change.enabled_for === "staff",
+          filterFn: (change) =>
+            change.upcoming_change.enabled_for === this.staffGroupName,
         },
         {
           label: i18n(
@@ -253,8 +254,11 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
+                class="d-table__header-cell upcoming-change__availability-header"
+              >{{i18n "admin.upcoming_changes.availability"}}</th>
+              <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
+              >{{i18n "admin.upcoming_changes.enabled"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

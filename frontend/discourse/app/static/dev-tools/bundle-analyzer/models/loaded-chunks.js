@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { basename, subscribeToFetchedResources } from "../fetched-resources.js";
 
 // Which of the report's chunks this browser has fetched, kept live so one
 // loaded while the modal is open lights up too.
@@ -13,16 +14,7 @@ export default class LoadedChunks {
       this.byBasename.set(basename(file), file);
     }
 
-    try {
-      this.observer = new PerformanceObserver((list) =>
-        this.#add(list.getEntries())
-      );
-      // Buffered, so this replays what the page already fetched.
-      this.observer.observe({ type: "resource", buffered: true });
-    } catch {
-      // PerformanceObserver unsupported; take the one reading available.
-      this.#add(performance.getEntriesByType("resource"));
-    }
+    this.unsubscribe = subscribeToFetchedResources((names) => this.#add(names));
   }
 
   has(file) {
@@ -30,20 +22,16 @@ export default class LoadedChunks {
   }
 
   teardown() {
-    this.observer?.disconnect();
+    this.unsubscribe();
   }
 
-  #add(entries) {
-    const added = entries
-      .map((entry) => this.byBasename.get(basename(entry.name)))
+  #add(names) {
+    const added = names
+      .map((name) => this.byBasename.get(name))
       .filter((file) => file && !this.files.has(file));
 
     if (added.length) {
       this.files = new Set([...this.files, ...added]);
     }
   }
-}
-
-function basename(url) {
-  return url.split("?")[0].split("/").pop();
 }
