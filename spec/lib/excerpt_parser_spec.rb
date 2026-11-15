@@ -40,6 +40,27 @@ RSpec.describe ExcerptParser do
     )
   end
 
+  describe ".get_excerpt" do
+    let(:html) { <<~HTML }
+        <aside class="onebox">
+          <header class="custom-header source">Merged discourse/discourse</header>
+          <article class="onebox-body">Add audio onebox #5</article>
+        </aside>
+      HTML
+
+    it "returns only the body text when keep_onebox_body is true and the header has other classes" do
+      expect(ExcerptParser.get_excerpt(html, 200, keep_onebox_body: true)).to eq(
+        "Add audio onebox #5",
+      )
+    end
+
+    it "returns only the header text when keep_onebox_source is true and the header has other classes" do
+      expect(ExcerptParser.get_excerpt(html, 200, keep_onebox_source: true)).to eq(
+        "Merged discourse/discourse",
+      )
+    end
+  end
+
   describe "keep_onebox_body parameter" do
     it "keeps the body content for external oneboxes" do
       html = <<~HTML.strip

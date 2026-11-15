@@ -35,6 +35,13 @@ module Onebox
       @uri ||= URI(::Onebox::Helpers.normalize_url_for_output(record[:link]))
     end
 
+    def header
+      name = "#{view.template_name}_header"
+      return unless Onebox.options.load_paths.any? { |path| template?(path, name) }
+
+      View.new(name, record).to_html
+    end
+
     def details
       {
         link: record[:link],
@@ -48,6 +55,8 @@ module Onebox
         metadata_2_label: record[:metadata_2_label],
         metadata_2_value: record[:metadata_2_value],
         subname: view.template_name,
+        header: header,
+        layout_class: record[:layout_class],
         view: view.to_html,
       }
     end

@@ -3,6 +3,10 @@ import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import {
+  completeOnboardingStep,
+  CREATE_CATEGORY_STEP,
+} from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -86,6 +90,8 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
+  @service appEvents;
+  @service currentUser;
   @service dialog;
   @service site;
   @service siteSettings;
@@ -202,10 +208,10 @@ export default class EditCategoryTabsController extends Controller {
       ...(this.model.category_type_settings ?? {}),
     };
     data.site_texts = {};
-    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+    data.category_type_ids = Object.keys(this.model.categoryTypes ?? {});
 
-    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
-      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    if (!data.category_type_ids.includes(DISCUSSION_TYPE_ID)) {
+      data.category_type_ids.unshift(DISCUSSION_TYPE_ID);
     }
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
@@ -368,7 +374,7 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { visibility, ...categoryData } = data;
+    const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
     // Category serialization converts an empty permission list to staff-only access.
@@ -397,13 +403,22 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const isNew = !this.model.id;
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
-      const result = await this.model.save();
+      const result = await this.model.save(category_type_ids);
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
+
+      // awaited ahead of the reloads below, which would cancel the audit write
+      if (isNew && this.currentUser?.show_site_owner_onboarding) {
+        await completeOnboardingStep(
+          { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+          CREATE_CATEGORY_STEP
+        );
+      }
 
       if (lostAccess) {
         this.router.transitionTo(homepageNavigationDestination());

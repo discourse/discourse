@@ -5,21 +5,21 @@ module DiscourseWorkflows
     module PostLike
       class V1 < NodeType
         OPERATIONS = %w[like unlike].freeze
-        OUTPUT_SCHEMA = {
-          "$schema" => Schema::DRAFT_URI,
-          "type" => "object",
-          "properties" => {
-            "post_id" => {
-              "type" => "integer",
-            },
-            "username" => {
-              "type" => "string",
-            },
-            "changed" => {
-              "type" => "boolean",
-            },
-          },
-        }.freeze
+        OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema.document(
+              "post_id" => {
+                "type" => "integer",
+              },
+              "username" => {
+                "type" => "string",
+              },
+              "changed" => {
+                "type" => "boolean",
+              },
+            ),
+            Schema::ACTOR_SCHEMA,
+          ).freeze
 
         description(
           name: "action:post_like",
@@ -47,6 +47,8 @@ module DiscourseWorkflows
             **actor_property(allow_anonymous: false),
           },
         )
+
+        deprecated(superseded_by: "2.0", changes: { "username" => "actor.username" })
 
         def execute(exec_ctx)
           items =
@@ -81,7 +83,11 @@ module DiscourseWorkflows
             raise_node_error!(result.errors.full_messages.join(", "), item_index:) if result.failed?
           end
 
-          { post_id: post.id, username: actor.username, changed: }
+          serialize_result(post, actor, changed)
+        end
+
+        def serialize_result(post, actor, changed)
+          { post_id: post.id, username: actor.username, actor: serialize_user(actor), changed: }
         end
       end
     end

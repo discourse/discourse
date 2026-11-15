@@ -57,11 +57,11 @@ be:
       llm_selector:
         none: "Няма"
       features:
-        disabled: "(адключана)"
-        groups: "групы:"
+        table:
+          status: "Статус"
+          groups: "Груп"
         edit: "Налады"
         filters:
-          all: "усе"
           reset: "скінуць"
         search:
           name: "Пошук"
@@ -71,7 +71,17 @@ be:
         spam:
           name: "Спам"
       translations:
-        category_scope: "катэгорыі"
+        settings:
+          ai_translation_category_scope:
+            label: "катэгорыі"
+          ai_translation_personal_messages:
+            choices:
+              none: "Няма"
+              all: "Усе"
+          content_localization_language_switcher:
+            choices:
+              none: "Ніхто"
+              all: "усе"
         model_progress:
           detail:
             columns:
@@ -110,6 +120,8 @@ be:
             other: "%{count}запісаў"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Няма"
+        no_decision_model_selected: "Няма"
         enable: "Уключыць"
         test_modal:
           spam: "Спам"

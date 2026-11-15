@@ -43,7 +43,10 @@ module DiscourseAi
                     :user_turn_count,
                     :protected_message_count,
                     :history_snapshot,
-                    :partial_raw_context
+                    :partial_raw_context,
+                    # Called with (tool, progress) whenever a tool reports progress, even when
+                    # skip_show_thinking hides the placeholders that would otherwise show it.
+                    :tool_progress_callback
       def initialize(
         post: nil,
         topic: nil,

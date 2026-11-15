@@ -109,7 +109,7 @@ module DiscourseVips
         File.chmod(0o700, socket_directory)
         FileUtils.rm_f(@socket_path)
       else
-        socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
+        socket_directory = Dir.mktmpdir("vips-")
         @socket_path = File.join(socket_directory, "socket")
       end
     end

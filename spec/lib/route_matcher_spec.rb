@@ -71,6 +71,39 @@ RSpec.describe RouteMatcher do
       ).to eq(false)
     end
 
+    it "requires record selectors to occur only in the path when restricted" do
+      matcher =
+        described_class.new(
+          path_params: %i[record_id name],
+          aliases: {
+            record_id: :id,
+          },
+          allowed_param_values: {
+            "record_id" => ["3"],
+          },
+        )
+
+      %i[record_id id name].each do |selector|
+        env =
+          request_env(path_parameters: { record_id: "3" }, query_parameters: { selector => "3" })
+        expect(matcher.match?(env: env)).to eq(false)
+
+        env = request_env(path_parameters: { record_id: "3" }, request_method: "PUT")
+        env["action_dispatch.request.request_parameters"] = { selector.to_s => "3" }
+        expect(matcher.match?(env: env)).to eq(false)
+      end
+
+      env = request_env(path_parameters: { record_id: "3" }, query_parameters: { page: "2" })
+      expect(matcher.match?(env: env)).to eq(true)
+    end
+
+    it "allows non-path selectors when path allowlists are blank" do
+      matcher = described_class.new(path_params: %i[id], allowed_param_values: { "id" => [] })
+      env = request_env(path_parameters: { id: "3" }, query_parameters: { id: "3" })
+
+      expect(matcher.match?(env: env)).to eq(true)
+    end
+
     it "treats nil canonical values as absent when an alias is recognized" do
       matcher =
         described_class.new(
@@ -226,7 +259,7 @@ RSpec.describe RouteMatcher do
       expect(request.env[described_class::PATH_PARAMETERS]).to include(id: "3")
     end
 
-    it "handles a missing ordinary category alias value" do
+    it "handles present and missing ordinary category alias values" do
       matcher =
         described_class.new(
           params: %i[category_id],
@@ -237,8 +270,19 @@ RSpec.describe RouteMatcher do
             "category_id" => ["3"],
           },
         )
+      env =
+        request_env(path_parameters: {}, query_parameters: { category_slug_path_with_id: "foo/3" })
 
+      expect(matcher.match?(env: env)).to eq(true)
       expect(matcher.match?(env: request_env(path_parameters: {}))).to eq(false)
+    end
+
+    it "ignores empty-named parameters when an ordinary parameter has no alias" do
+      matcher =
+        described_class.new(params: %i[topic_id], allowed_param_values: { "topic_id" => ["3"] })
+      env = request_env(path_parameters: {}, query_parameters: { "" => "3" })
+
+      expect(matcher.match?(env: env)).to eq(false)
     end
   end
 end

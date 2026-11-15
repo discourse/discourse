@@ -29,6 +29,16 @@ const CREATE_TYPES = [
   { name: i18n("admin.customize.theme.component"), value: COMPONENTS },
 ];
 
+const TypeSelect = <template>
+  <div class="label">{{i18n "admin.customize.theme.create_type"}}</div>
+  <ComboBox
+    @content={{CREATE_TYPES}}
+    @onChange={{@onChange}}
+    @value={{@value}}
+    @valueProperty="value"
+  />
+</template>;
+
 export default class InstallThemeModal extends Component {
   @service store;
 
@@ -240,6 +250,7 @@ export default class InstallThemeModal extends Component {
         remote: this.uploadUrl,
         branch: this.branch,
         public_key: this.publicKey,
+        component: this.component,
       };
 
       if (placeholder) {
@@ -488,6 +499,15 @@ export default class InstallThemeModal extends Component {
                       <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
+                  <div class="install-theme-content__placeholder-type">
+                    <TypeSelect
+                      @onChange={{this.updateSelectedType}}
+                      @value={{this.selectedType}}
+                    />
+                    <div class="install-theme-content__placeholder-type-tip">
+                      {{i18n "admin.customize.theme.placeholder_type_tip"}}
+                    </div>
+                  </div>
                 {{/if}}
               </div>
             {{/if}}
@@ -503,14 +523,9 @@ export default class InstallThemeModal extends Component {
                   value={{this.name}}
                   {{on "input" (withEventValue (fn (mut this.name)))}}
                 />
-                <div class="label">{{i18n
-                    "admin.customize.theme.create_type"
-                  }}</div>
-                <ComboBox
-                  @content={{CREATE_TYPES}}
+                <TypeSelect
                   @onChange={{this.updateSelectedType}}
                   @value={{this.selectedType}}
-                  @valueProperty="value"
                 />
               </div>
             {{/if}}

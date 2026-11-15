@@ -566,6 +566,16 @@ module("Integration | Component | UserMenu", function (hooks) {
       "active tab is now the reviewables tab"
     );
     assert.dom("#quick-access-review-queue ul li").exists({ count: 8 });
+
+    this.currentUser.set("reviewable_count", 0);
+    await settled();
+    assert
+      .dom(".top-tabs .btn.active")
+      .hasAttribute(
+        "id",
+        "user-menu-button-review-queue",
+        "reviewables tab stays active when the count drops to 0"
+      );
   });
 
   test("mentions tab only requests direct mentions", async function (assert) {

@@ -48,19 +48,59 @@
   &:hover {
     .chat-composer-upload__remove-btn {
       visibility: visible;
-      background: rgb(var(--always-black-rgb), 0.9);
-      padding: 5px;
-      border-radius: 100%;
-      font-size: var(--font-down-2);
     }
   }
 
   &__remove-btn {
-    border: 1px solid var(--primary-medium);
+    --d-button-flat-bg-color: rgb(var(--always-black-rgb), 0.9);
+    --d-button-flat-bg-color--hover: rgb(var(--always-black-rgb), 0.9);
+    --d-button-flat-bg-color--focus: rgb(var(--always-black-rgb), 0.9);
+    --d-button-flat-icon-color: #fff;
+    --d-button-flat-icon-color--hover: #fff;
     position: absolute;
     top: -8px;
     right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid var(--primary-medium);
+    border-radius: 50%;
+    font-size: var(--font-down-2);
+    line-height: 1;
     visibility: hidden;
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  &__preview-btn {
+    padding: 0;
+    cursor: zoom-in;
+  }
+
+  // beats the shared button focus style, which removes the outline
+  .chat-composer-upload__preview-btn:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  // outside the button, so button icon colours don't apply to it
+  .preview-video__badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-up-1);
+    color: #fff;
+    background: rgb(var(--always-black-rgb), 0.6);
+    border-radius: 100%;
+    padding: 0.35em;
+    pointer-events: none;
   }
 
   .preview {
@@ -81,20 +121,6 @@
       object-position: center;
       object-fit: cover;
       border-radius: var(--d-border-radius);
-    }
-
-    .preview-video__badge {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: var(--font-up-1);
-      color: #fff;
-      background: rgb(var(--always-black-rgb), 0.6);
-      border-radius: 100%;
-      padding: 0.35em;
-      margin: 0;
-      pointer-events: none;
     }
   }
 

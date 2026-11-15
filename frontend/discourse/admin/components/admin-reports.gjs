@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { service } from "@ember/service";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import { ajax } from "discourse/lib/ajax";
@@ -67,24 +66,10 @@ const REPORT_GROUPS = {
 };
 
 export default class AdminReports extends Component {
-  @service siteSettings;
-
   @bind
   async loadReports() {
     const response = await ajax("/admin/reports");
     return response.reports;
-  }
-
-  @bind
-  filterReports(reports) {
-    if (!reports) {
-      return [];
-    }
-
-    const hiddenReports = (this.siteSettings.dashboard_hidden_reports || "")
-      .split("|")
-      .filter(Boolean);
-    return reports.filter((report) => !hiddenReports.includes(report.type));
   }
 
   @bind
@@ -154,7 +139,7 @@ export default class AdminReports extends Component {
 
   @bind
   groupDropdownOptions(reports) {
-    const groups = this.groupReports(this.filterReports(reports));
+    const groups = this.groupReports(reports);
 
     return [
       {
@@ -174,7 +159,7 @@ export default class AdminReports extends Component {
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
         <DFilterControls
-          @array={{this.filterReports reports}}
+          @array={{reports}}
           @dropdownFilterQueryParam="group"
           @dropdownOptions={{this.groupDropdownOptions reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}

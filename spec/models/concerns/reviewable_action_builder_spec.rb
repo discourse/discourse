@@ -37,6 +37,7 @@ RSpec.describe ReviewableActionBuilder do
         user_actions,
         :approve_user,
         icon: "user-plus",
+        label: "reviewables.actions.answer_no.title",
         button_class: "btn-primary",
         client_action: "go",
         confirm: true,
@@ -45,10 +46,32 @@ RSpec.describe ReviewableActionBuilder do
 
       action = user_actions.to_a.first
       expect(action.icon).to eq("user-plus")
+      expect(action.label).to eq("reviewables.actions.answer_no.title")
+      expect(action.completed_message).to eq("reviewables.actions.approve_user.complete")
       expect(action.button_class).to eq("btn-primary")
       expect(action.client_action).to eq("go")
       expect(action.confirm_message).to eq("reviewables.actions.approve_user.confirm")
       expect(action.require_reject_reason).to be(true)
+    end
+
+    it "allows an extension action to opt into classification while ordinary actions remain optional" do
+      actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(actions, :approve_user)
+      reviewable_user.build_action(actions, :plugin_restrict, dsa_classification_required: true)
+
+      expect(actions.to_a.select(&:dsa_classification_required).map(&:server_action)).to eq(
+        ["plugin_restrict"],
+      )
+    end
+
+    it "keeps potentially illegal reviewables outside classification" do
+      reviewable_user.update!(potentially_illegal: true)
+      actions = Reviewable::Actions.new(reviewable_user, guardian)
+
+      reviewable_user.build_action(actions, :plugin_restrict, dsa_classification_required: true)
+
+      expect(actions.to_a.select(&:dsa_classification_required)).to be_empty
     end
 
     it "adds the action to the provided bundle" do

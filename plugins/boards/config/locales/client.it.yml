@@ -38,7 +38,9 @@ it:
         unassign_from_topic: "Annulla l'assegnazione di @%{username} dall'argomento"
         unassign_from_post: "Annulla assegnazione di @%{username} da #%{post_number}"
         edit_assignments: "Modifica assegnazioni..."
-        created_by: "Creato da"
+        owners:
+          one: "Proprietario"
+          other: "Proprietari"
       manage:
         name: "Nome"
         slug: "Abbreviazione"

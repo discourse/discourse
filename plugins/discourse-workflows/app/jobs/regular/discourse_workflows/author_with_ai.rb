@@ -7,20 +7,30 @@ module Jobs
 
       AI_RESPONSE_STATUSES = %w[needs_clarification proposed_patch explanation error].freeze
       TRIGGER_AUTHOR_FIELD_FACTS = [
-        "trigger:topic_created exposes the topic creator/first-post author under post.* and does not expose a top-level user object. Use exact paths such as post.username for the username, post.user_id for the user ID, and post.post_url for a link to the post.",
+        "trigger:topic_created exposes the topic under topic.*, the first post under post.*, and the topic author under user.*. Use exact paths such as user.trust_level for trust-level checks, user.username for the username, user.id for the user ID, and topic.url for an absolute link to the topic.",
         "trigger:post_created exposes the created post under post.* and the post author under user.*. Use exact paths such as user.trust_level for trust-level checks, user.username for the username, user.id for the user ID, user.admin/user.moderator/user.staff for staff checks, and post.post_url for a link to the post.",
         "For generic requests like 'when someone posts' or 'when anyone posts', trigger:post_created covers all regular posts, including first posts and replies. Do not ask to distinguish replies from topic starters unless the request explicitly says replies only or new topics only.",
-        "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs a first-post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. Use the exact fields returned by workflow_validate_patch for any first-post author data; do not assume post.trust_level is available.",
-        "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
+        "trigger:topic_closed exposes the closed topic under topic.* and whoever closed it under actor.*. topic.url is an absolute link and topic.username is the topic author. When the topic author's trust level or other user fields are needed, add action:topic with operation get and topic_id ={{ $json.topic.id }}, which returns the author under user.*; do not assume post.trust_level is available.",
+        "Do not ask whether trust level is available for trigger:post_created, trigger:post_edited or trigger:topic_created; it is available as user.trust_level.",
+        "A graph context node with a deprecation entry runs an older version whose output differs from the node catalog. deprecation.changes maps each key of that version to the catalog key holding the same data; for example { \"user\" => \"actor\" } means user.* on that node is whoever acted. Use that node's own keys. You cannot change a node's version; if the newer version is needed, ask the user to click Upgrade on the node.",
         "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_contracts.",
         "trigger:user_added_to_group and trigger:user_removed_from_group expose the affected user under user.*, the selected group under group.*, and event metadata under membership.*. Use user.username for the affected username and membership.action to distinguish added vs removed if needed.",
         "trigger:user_created and trigger:user_updated expose the affected user under user.* only, including user.username, user.trust_level, user.staged, and user.created_at. They do not expose a post or topic object. They also fire for staged users (accounts auto-created by incoming email or invites); to skip those, add condition:filter on user.staged equals false after the trigger.",
-        "trigger:reviewable_created and trigger:reviewable_approved expose the review queue item under reviewable.* only (reviewable.id, reviewable.type, reviewable.status, reviewable.target_type, reviewable.target_id, reviewable.topic_id, reviewable.category_id, reviewable.score, reviewable.created_at). They do not expose a post, topic, or user object; when a flagged post's content or author is needed, add action:post with operation get and post_id ={{ $json.reviewable.target_id }} after a condition:filter on reviewable.target_type equals Post.",
+        "trigger:reviewable_created and trigger:reviewable_approved expose the review queue item under reviewable.* (reviewable.id, reviewable.type, reviewable.status, reviewable.target_type, reviewable.target_id, reviewable.topic_id, reviewable.category_id, reviewable.score, reviewable.url, reviewable.created_at), with the user it is about under reviewable.target_user.* and the flagger under reviewable.created_by.*; trigger:reviewable_approved also exposes the approver under actor.*. They do not expose a post or topic object; when a flagged post's content is needed, add action:post with operation get and post_id ={{ $json.reviewable.target_id }} after a condition:filter on reviewable.target_type equals Post.",
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
+      SLOW_GENERATION_SECONDS = 120
+
+      # Lets callers that run the job inline report progress, such as the Admin Assistant.
+      attr_writer :on_progress
+
+      # Set when the run stopped because the LLM is out of AI credits, so callers that run
+      # the job inline can report it instead of a generic failure.
+      attr_reader :credit_limit_error
 
       def execute(args)
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         @generation_id = args[:generation_id]
         @session = ::DiscourseWorkflows::AiAuthoringSession.find_by(id: args[:session_id])
         @user = User.find_by(id: args[:user_id])
@@ -50,6 +60,16 @@ module Jobs
         end
 
         finish(parsed)
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        # Retrying cannot help until the credits reset, so end the generation instead of
+        # asking the admin how to proceed.
+        @credit_limit_error = e
+        publish_error(
+          I18n.t(
+            "discourse_workflows.ai.error_credit_limit_exceeded",
+            reset_time: e.allocation&.formatted_reset_time.presence || "",
+          ),
+        )
       rescue => e
         Discourse.warn_exception(e, message: "discourse-workflows: AI authoring failed")
         begin
@@ -62,9 +82,23 @@ module Jobs
           )
           publish_error(e.message)
         end
+      ensure
+        log_slow_generation(started_at)
       end
 
       private
+
+      def log_slow_generation(started_at)
+        return if @session.blank?
+
+        seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at).round
+        return if seconds < SLOW_GENERATION_SECONDS
+
+        Rails.logger.warn(
+          "discourse-workflows: AI authoring took #{seconds}s " \
+            "(status: #{@session.status}, user_id: #{@user&.id}, session_id: #{@session.id})",
+        )
+      end
 
       def finish(parsed)
         parsed = ask_how_to_proceed(parsed) if parsed["status"] == "error"
@@ -611,14 +645,16 @@ module Jobs
       end
 
       def publish_progress(stage, details = {})
+        message = I18n.t("discourse_workflows.ai.progress.#{stage}")
         ::DiscourseWorkflows::Ai::ProgressPublisher.publish(
           generation_id: @generation_id,
           user: @user,
           status: "progress",
           stage: stage.to_s,
-          message: I18n.t("discourse_workflows.ai.progress.#{stage}"),
+          message:,
           details: details,
         )
+        @on_progress&.call(message)
       end
 
       def publish_agent_stream_progress(partial, raw, type)
@@ -672,6 +708,7 @@ module Jobs
           message: message,
           details: details.merge(key: key.to_s),
         )
+        @on_progress&.call(message)
       end
 
       def publish_error(message)

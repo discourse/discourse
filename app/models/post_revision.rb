@@ -4,6 +4,9 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
+  # The history modal only loads this many of a post's newest revisions.
+  HISTORY_WINDOW = 99
+
   attr_accessor :silent
 
   serialize :modifications, type: Hash, coder: YAML
@@ -30,6 +33,18 @@ class PostRevision < ActiveRecord::Base
     SQL
   end
 
+  # Unlisted revisions are public, so one is still opened when no listed one is left among the
+  # revisions the history loads.
+  def self.latest_for(post, guardian, include_unlisted: false)
+    revisions = where(post_id: post.id).order(:number)
+    revisions = revisions.where(hidden: false) if !guardian.can_view_hidden_post_revisions?
+    return revisions.last if include_unlisted || guardian.can_navigate_unlisted_post_revisions?
+
+    loaded_numbers =
+      where(post_id: post.id).order(number: :desc).limit(HISTORY_WINDOW).select(:number)
+    revisions.where(unlisted: false, number: loaded_numbers).last || revisions.last
+  end
+
   def categories
     return [] if modifications["category_id"].blank?
 
@@ -37,11 +52,21 @@ class PostRevision < ActiveRecord::Base
   end
 
   def hide!
-    update_column(:hidden, true)
+    update_columns(hidden: true, unlisted: false)
   end
 
   def show!
     update_column(:hidden, false)
+  end
+
+  # Unlisting only trims what non-staff step through in the history; `hidden` is what
+  # restricts access.
+  def unlist!
+    update_column(:unlisted, true)
+  end
+
+  def relist!
+    update_column(:unlisted, false)
   end
 
   def create_notification
@@ -68,6 +93,7 @@ end
 #  hidden        :boolean          default(FALSE), not null
 #  modifications :text
 #  number        :integer
+#  unlisted      :boolean          default(FALSE), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  post_id       :integer

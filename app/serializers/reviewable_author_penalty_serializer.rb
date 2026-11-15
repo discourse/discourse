@@ -29,6 +29,12 @@ class ReviewableAuthorPenaltySerializer < ApplicationSerializer
   end
 
   def include_reason?
-    object.reason.present?
+    return false if object.reason.blank?
+
+    if object.kind == :suspension
+      scope.can_see_suspension_reason?(object.user)
+    else
+      scope.can_see_silencing_reason?(object.user)
+    end
   end
 end

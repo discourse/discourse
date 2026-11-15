@@ -62,7 +62,7 @@ months:
     regions: [br]
     mday: 15
   - name: Dia da Consciência Negra
-    regions: [br_spcapital]
+    regions: [br]
     mday: 20
   12:
   - name: Natal

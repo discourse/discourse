@@ -169,6 +169,40 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args["x-ms-reactions"]).to eq("disallow")
   end
 
+  describe "#html_part" do
+    it "sanitizes the preview and instructions it adds to the HTML body" do
+      unsafe_html = "<b onclick='alert(1)'>hi</b>"
+      builder =
+        Email::MessageBuilder.new(
+          to_address,
+          html_override:
+            +"%{email_preview} %{header_instructions} %{respond_instructions} %{unsubscribe_instructions}",
+          email_preview: unsafe_html,
+          header_instructions: unsafe_html,
+          respond_instructions: unsafe_html,
+          unsubscribe_instructions: unsafe_html,
+        )
+
+      html = Nokogiri.HTML5(builder.html_part.body.to_s)
+      expect(html.css("b").map(&:to_h)).to eq([{}] * 4)
+    end
+
+    it "renders the topic title as text in customized instructions" do
+      TranslationOverride.upsert!("en", "user_notifications.header_instructions", "%{topic_title}")
+      title = "[Verify](https://evil.example) <img src=x> \\[x"
+      builder =
+        Email::MessageBuilder.new(
+          to_address,
+          html_override: +"<div id='instructions'>%{header_instructions}</div>",
+          topic_title: title,
+          url: "/t/1",
+        )
+
+      instructions = Nokogiri.HTML5(builder.html_part.body.to_s).at_css("#instructions")
+      expect(instructions.text.strip).to eq(title)
+    end
+  end
+
   describe "recipient_username" do
     it "sets recipient_username when recipient_user is provided" do
       user = Fabricate(:user, username: "recipient_user")

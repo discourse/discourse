@@ -79,7 +79,7 @@ export default class GifsModal extends Component {
                 @loading={{this.search.loading}}
                 @loadMore={{this.search.loadMore}}
                 @pick={{this.pick}}
-                @root=".gifs-modal__content"
+                @root=".gifs-modal .d-modal__body"
               />
             </div>
           </div>

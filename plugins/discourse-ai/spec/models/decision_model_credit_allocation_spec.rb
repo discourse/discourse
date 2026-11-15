@@ -52,6 +52,25 @@ RSpec.describe DecisionModelCreditAllocation do
     end
   end
 
+  describe ".credits_available?" do
+    it "is false only once a charged feature has used up the daily allocation" do
+      Fabricate(
+        :decision_model_credit_allocation,
+        decision_model:,
+        daily_credits: 1000,
+        daily_used: 1000,
+      )
+      DecisionModelFeatureCreditCost.create!(
+        decision_model:,
+        feature_name: "free_feature",
+        credits_per_token: 0,
+      )
+
+      expect(described_class.credits_available?(decision_model, "workflow")).to eq(false)
+      expect(described_class.credits_available?(decision_model, "free_feature")).to eq(true)
+    end
+  end
+
   describe ".deduct_credits!" do
     fab!(:allocation) do
       Fabricate(:decision_model_credit_allocation, decision_model:, daily_credits: 1000)

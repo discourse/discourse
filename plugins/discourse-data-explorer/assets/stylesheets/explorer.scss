@@ -139,26 +139,19 @@ table.group-reports {
   .editor-panel {
     flex: 1 0 50%;
 
-    .ace-wrapper {
+    // Long lines scroll inside the editor instead of squeezing the schema.
+    min-width: 0;
+
+    .code-editor {
       --min-height: unset;
       min-height: var(--min-height);
-      position: relative;
       height: 100%;
       width: 100%;
-      box-sizing: border-box;
       border: none;
 
       @include viewport.until(sm) {
         --min-height: 300px;
       }
-    }
-
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
     }
   }
 
@@ -611,15 +604,10 @@ table.group-reports {
   .query-new__sql-editor {
     margin-bottom: 1.5em;
 
-    .ace-wrapper,
-    .ace-wrapper > .loading-container {
-      width: 100%;
-    }
-
     // the grippie lets the editor grow; give it a sensible starting height
-    .ace {
-      min-height: 200px;
+    .code-editor {
       width: 100%;
+      height: 200px;
     }
   }
 
@@ -800,6 +788,32 @@ table.group-reports {
 }
 
 .recent-queries {
+  .d-table__header-cell {
+    // DTableHeaderToggle carries directory-table header styles that don't suit d-table
+    .directory-table__column-header.sortable {
+      display: inline-flex;
+      justify-content: flex-start;
+      padding: 0;
+      border-bottom: none;
+      color: inherit;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+      }
+
+      .header-contents {
+        text-align: left;
+      }
+    }
+
+    &.query-created-by,
+    &.query-group-names,
+    &.query-created-at {
+      width: 12.5%;
+    }
+  }
+
   .d-table__row.query-row {
     .d-table__overview-link {
       @include viewport.until(md) {

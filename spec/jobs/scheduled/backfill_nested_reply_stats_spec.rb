@@ -21,6 +21,21 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(NestedViewPostStat.count).to eq(0)
   end
 
+  it "pauses automatic backfill at zero and resumes when the batch size is restored" do
+    NestedViewPostStat.delete_all
+    SiteSetting.nested_replies_backfill_batch_size = 0
+
+    execute
+    execute(category_id: topic.category_id)
+
+    expect(NestedViewPostStat.count).to eq(0)
+
+    SiteSetting.nested_replies_backfill_batch_size = 100
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(true)
+  end
+
   it "computes direct_reply_count for a parent with replies" do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
     3.times { Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number) }
@@ -233,6 +248,77 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
 
     expect(NestedViewPostStat.exists?(post_id: category_op.id)).to eq(true)
     expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(false)
+  end
+
+  it "fills the window with eligible topics when newer topics are not nested" do
+    SiteSetting.nested_replies_default = false
+    SiteSetting.nested_replies_backfill_batch_size = 1
+    3.times { Fabricate(:topic) }
+    NestedViewPostStat.delete_all
+
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(true)
+  end
+
+  it "filters the requested category before limiting the window" do
+    SiteSetting.nested_replies_backfill_batch_size = 1
+    other_topic = Fabricate(:topic, category: Fabricate(:category))
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    NestedViewPostStat.delete_all
+
+    execute(category_id: topic.category_id)
+
+    expect(NestedViewPostStat.where(post_id: [op.id, other_op.id]).pluck(:post_id)).to eq([op.id])
+  end
+
+  it "advances past complete topics without inspecting the next window" do
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    NestedViewPostStat.delete_all
+    NestedViewPostStat.create!(post_id: other_op.id)
+    SiteSetting.nested_replies_backfill_batch_size = 1
+
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(false)
+
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(true)
+  end
+
+  it "wraps the scan to repair missing stats and discover newer topics" do
+    SiteSetting.nested_replies_backfill_batch_size = 1
+    NestedViewPostStat.delete_all
+    execute
+    NestedViewPostStat.where(post_id: op.id).delete_all
+
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+
+    # Finish the current pass, then scan the new topic and the older topic.
+    execute
+    execute
+    execute
+
+    expect(
+      NestedViewPostStat.where(post_id: [op.id, other_op.id]).pluck(:post_id),
+    ).to contain_exactly(op.id, other_op.id)
+  end
+
+  it "keeps category scans independent from the scheduled scan" do
+    SiteSetting.nested_replies_backfill_batch_size = 1
+    NestedViewPostStat.delete_all
+
+    execute(category_id: topic.category_id)
+    NestedViewPostStat.where(post_id: op.id).delete_all
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(true)
   end
 
   it "respects the configured batch size" do

@@ -224,6 +224,29 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(response.parsed_body["workflow"]["active_version_id"]).to be_nil
     end
 
+    it "drops connections with a malformed input index" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              nodes: [
+                { id: "t1", type: "trigger:topic_closed", name: "Topic Closed" },
+                { id: "a1", type: "action:log", name: "Log" },
+              ],
+              connections: {
+                "Topic Closed" => {
+                  "main" => [[{ "node" => "Log", "type" => "main", "index" => {} }]],
+                },
+              },
+            },
+          },
+          as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(workflow.reload.connections).to eq({})
+    end
+
     it "updates the workflow tags" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 

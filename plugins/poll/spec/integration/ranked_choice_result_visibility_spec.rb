@@ -96,8 +96,7 @@ RSpec.describe "DiscoursePoll ranked choice result visibility" do
     expect(response.parsed_body["poll"]).to have_key("ranked_choice_outcome")
     expect(messages.size).to eq(1)
 
-    published_poll = messages.first.data.deep_stringify_keys["polls"].first
-    expect(published_poll).not_to have_key("ranked_choice_outcome")
+    expect(messages.first.data).to eq(post_id: post.id)
   end
 
   it "shows on-vote outcomes to voters without leaking them to non-voters" do
@@ -118,8 +117,7 @@ RSpec.describe "DiscoursePoll ranked choice result visibility" do
     expect(response.parsed_body["poll"]).to have_key("ranked_choice_outcome")
     expect(messages.size).to eq(1)
 
-    published_poll = messages.first.data.deep_stringify_keys["polls"].first
-    expect(published_poll).not_to have_key("ranked_choice_outcome")
+    expect(messages.first.data).to eq(post_id: post.id)
 
     sign_in(non_voter)
     expect(topic_view_poll(post)).not_to have_key("ranked_choice_outcome")

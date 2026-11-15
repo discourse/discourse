@@ -279,7 +279,13 @@ class Post < ActiveRecord::Base
     if Topic.visible_post_types.include?(post_type)
       opts.merge!(topic.secure_audience_publish_messages)
     else
-      opts[:user_ids] = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+      user_ids = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+
+      # Hidden post types are staff-only, but a private message's audience still
+      # bounds who may learn the topic exists.
+      user_ids &= topic.secure_audience_publish_messages[:user_ids] if topic.private_message?
+
+      opts[:user_ids] = user_ids
     end
 
     MessageBus.publish(channel, message, opts) if opts[:user_ids] != [] && opts[:group_ids] != []

@@ -6,7 +6,7 @@ describe "Edit category topic template" do
 
   before { sign_in admin }
 
-  let(:changes_banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:changes_banner) { PageObjects::Components::DFloatingControlBar.new }
 
   it "saves and displays a custom topic title placeholder" do
     visit "/c/#{category.slug}/edit/topic-template"

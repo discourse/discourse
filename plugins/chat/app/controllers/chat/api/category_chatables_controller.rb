@@ -11,7 +11,7 @@ class Chat::Api::CategoryChatablesController < ApplicationController
     if category.read_restricted?
       permissions =
         Group
-          .visible_groups(guardian.user, nil, include_everyone: true)
+          .visible_groups(guardian.user, nil, include_everyone: true, include_pseudogroups: true)
           .joins(:category_groups)
           .where(category_groups: { category_id: category.id })
           .where(
@@ -23,7 +23,12 @@ class Chat::Api::CategoryChatablesController < ApplicationController
           .pluck("groups.name", "COUNT(group_users.user_id)")
 
       group_names = permissions.map { |p| "@#{p[0]}" }
-      members_count = permissions.sum { |p| p[1].to_i }
+      members_count =
+        if group_names.include?("@#{Group[:logged_in_users].name}")
+          User.real.count
+        else
+          permissions.sum { |permission| permission[1].to_i }
+        end
 
       permissions_result = {
         allowed_groups: group_names,

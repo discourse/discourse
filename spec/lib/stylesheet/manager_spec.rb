@@ -951,6 +951,8 @@ RSpec.describe Stylesheet::Manager do
       STDERR.stubs(:write)
       StylesheetCache.destroy_all
       default_theme.set_default!
+      # the counts below cover these examples' own palettes, not the seeded ones
+      ColorScheme.update_all(user_selectable: false)
     end
 
     after do

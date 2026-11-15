@@ -63,6 +63,10 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
         [answer.id, other_answer.id, answer.id],
       )
       expect(data.map { |payload| payload.dig("topic", "id") }.uniq).to eq([topic.id])
+      expect(data.map { |payload| payload.dig("actor", "username") }.uniq).to eq([admin.username])
+      expect(data.map { |payload| payload.dig("user", "id") }).to eq(
+        [answer.user_id, other_answer.user_id, answer.user_id],
+      )
       expect(data).to all(match_node_output_schema(described_class))
       expect(post.topic.reload.topic_answers.pluck(:answer_post_id)).to eq([other_answer.id])
     end

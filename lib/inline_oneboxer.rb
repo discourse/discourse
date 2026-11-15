@@ -2,6 +2,7 @@
 
 class InlineOneboxer
   MIN_TITLE_LENGTH = 2
+  MAX_TITLE_LENGTH = 500
 
   def initialize(urls, opts = nil)
     @urls = urls
@@ -59,7 +60,10 @@ class InlineOneboxer
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split("|") unless always_allow
+    allowed_domains =
+      HostnameNormalizer.normalize_list(
+        SiteSetting.allowed_inline_onebox_domains,
+      ) unless always_allow
 
     return nil unless always_allow || allowed_domains
 
@@ -71,7 +75,9 @@ class InlineOneboxer
       end
 
     return nil if uri.blank? || uri.hostname.blank?
-    return nil unless always_allow || allowed_domains.include?(uri.hostname)
+
+    hostname = HostnameNormalizer.normalize(uri.hostname)
+    return nil unless always_allow || allowed_domains.include?(hostname)
     return nil if Onebox::DomainChecker.is_blocked?(uri.hostname)
 
     if data = Oneboxer.inline_data_for(url)
@@ -113,6 +119,8 @@ class InlineOneboxer
 
   def self.onebox_for(url, title, opts, css_class: nil)
     title = title && Emoji.gsub_emoji_to_unicode(title)
+    title = title.truncate(MAX_TITLE_LENGTH) if title
+
     if title && opts[:post_number]
       title += " - "
       if opts[:post_author]

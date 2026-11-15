@@ -57,14 +57,19 @@ export function extractErrorInfo(
       html = true;
     }
 
-    if (parsedJSON.errors?.length > 1) {
+    // JSON:API error objects carry their message in `detail`/`title`.
+    const errors = parsedJSON.errors?.map((e) => e?.detail ?? e?.title ?? e);
+
+    if (errors?.length > 1) {
       parsedError = i18n("multiple_errors", {
-        errors: parsedJSON.errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
+        errors: errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
       });
-    } else if (parsedJSON.errors?.length > 0) {
-      parsedError = i18n("generic_error_with_reason", {
-        error: parsedJSON.errors[0],
-      });
+    } else if (errors?.length > 0) {
+      parsedError = parsedJSON.skip_error_prefix
+        ? errors[0]
+        : i18n("generic_error_with_reason", {
+            error: errors[0],
+          });
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.message) {

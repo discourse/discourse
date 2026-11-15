@@ -12,7 +12,6 @@ describe "Admin Dashboard Redesign | Reports section" do
   end
 
   before do
-    SiteSetting.dashboard_improvements = true
     AdminDashboardSectionConfiguration.update(
       [
         { id: "reports", visible: true },

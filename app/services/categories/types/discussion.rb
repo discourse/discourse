@@ -6,6 +6,10 @@ module Categories
       type_id :discussion
 
       class << self
+        def svg_icon
+          "comment"
+        end
+
         def find_matches
           # All categories are implicitly discussion categories, so there's no
           # meaningful subset to count. Returning Category.none keeps count at 0,

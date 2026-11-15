@@ -87,11 +87,14 @@ export default {
 
       api.decorateCookedElement((elem) => {
         elem.querySelectorAll(".onebox").forEach((onebox) => {
+          const source = onebox.querySelector(".source");
+          if (!source || source.querySelector("svg, .site-icon")) {
+            return;
+          }
+
           Object.entries(oneboxTypes).forEach(([key, value]) => {
             if (onebox.classList.contains(key)) {
-              onebox
-                .querySelector(".source")
-                .insertAdjacentHTML("afterbegin", iconHTML(value));
+              source.insertAdjacentHTML("afterbegin", iconHTML(value));
             }
           });
         });

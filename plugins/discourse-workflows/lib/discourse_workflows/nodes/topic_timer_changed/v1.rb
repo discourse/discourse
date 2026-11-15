@@ -93,10 +93,10 @@ module DiscourseWorkflows
 
         def output
           {
-            topic: topic_data(@topic),
+            topic: serialize_topic_list_item(@topic),
             change: @change,
-            timer: timer_data(@timer.attributes),
-            previous_timer: @previous_attributes && timer_data(@previous_attributes),
+            timer: serialize_timer(@timer.attributes),
+            previous_timer: @previous_attributes && serialize_timer(@previous_attributes),
           }
         end
 
@@ -114,7 +114,7 @@ module DiscourseWorkflows
 
         private
 
-        def timer_data(attributes)
+        def serialize_timer(attributes)
           attributes.slice(*::TopicTimer::EVENT_ATTRIBUTES).merge(
             "id" => @timer.id,
             "status_type" => ::TopicTimer.types[attributes["status_type"]].to_s,

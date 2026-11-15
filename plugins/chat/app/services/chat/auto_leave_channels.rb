@@ -76,13 +76,17 @@ module Chat
           JOIN chat_channels cc ON cc.id = uccm.chat_channel_id AND cc.chatable_type = 'Category' #{channel_sql}
           JOIN categories c ON c.id = cc.chatable_id AND c.read_restricted = TRUE #{category_sql}
           LEFT JOIN valid_permissions vp ON vp.user_id = uccm.user_id AND vp.category_id = c.id
-          WHERE vp.user_id IS NULL
+          WHERE vp.user_id IS NULL AND NOT EXISTS (
+            SELECT 1 FROM category_groups cg
+            WHERE cg.category_id = c.id AND cg.group_id = :logged_in_users
+              AND cg.permission_type IN (:group_permissions)
+          )
         )
         RETURNING chat_channel_id, user_id
       SQL
 
       DB
-        .query_array(sql, group_permissions:)
+        .query_array(sql, group_permissions:, logged_in_users: Group::AUTO_GROUPS[:logged_in_users])
         .each { |channel_id, user_id| users_removed_map[channel_id] << user_id }
 
       if users_removed_map.present?

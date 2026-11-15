@@ -91,6 +91,30 @@ RSpec.describe Live::GuardianExtension do
     end
   end
 
+  describe "#can_record_live_locally?" do
+    before do
+      SiteSetting.live_local_recording_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
+    end
+
+    it "is true for users in the local recording groups" do
+      expect(member.guardian.can_record_live_locally?).to eq(true)
+    end
+
+    it "is false for users outside the local recording groups" do
+      expect(low_trust_user.guardian.can_record_live_locally?).to eq(false)
+    end
+
+    it "is false for anonymous visitors" do
+      expect(anonymous_guardian.can_record_live_locally?).to eq(false)
+    end
+
+    it "is false when no group is allowed" do
+      SiteSetting.live_local_recording_allowed_groups = ""
+
+      expect(member.guardian.can_record_live_locally?).to eq(false)
+    end
+  end
+
   describe "#can_invite_live_agents?" do
     it "is true for admins by default" do
       expect(staff.guardian.can_invite_live_agents?).to eq(true)
@@ -162,6 +186,40 @@ RSpec.describe Live::GuardianExtension do
 
     it "is false for a nil room" do
       expect(creator.guardian.can_manage_live_room?(nil)).to eq(false)
+    end
+  end
+
+  describe "#can_delete_live_room?" do
+    it "is true for the room creator" do
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(true)
+    end
+
+    it "is true for site staff" do
+      expect(staff.guardian.can_delete_live_room?(private_room)).to eq(true)
+    end
+
+    it "is false for a room moderator" do
+      expect(room_moderator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for a plain participant member" do
+      expect(member.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for ephemeral rooms" do
+      private_room.update!(ephemeral: true)
+
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false when the plugin is disabled" do
+      SiteSetting.live_enabled = false
+
+      expect(creator.guardian.can_delete_live_room?(private_room)).to eq(false)
+    end
+
+    it "is false for a nil room" do
+      expect(creator.guardian.can_delete_live_room?(nil)).to eq(false)
     end
   end
 

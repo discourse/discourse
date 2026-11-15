@@ -378,7 +378,7 @@ class UserNotifications < ActionMailer::Base
         @excerpts = {}
 
         @popular_topics.each do |t|
-          next if t.first_post.blank?
+          next if t.first_post.blank? || t.first_post.hidden?
           @excerpts[t.first_post.id] = email_excerpt(digest_post_cooked(t.first_post), t.first_post)
         end
 
@@ -851,14 +851,29 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
+          topic_title: "%{topic_title}",
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
           topic_url: topic_url,
         )
 
-      html = PrettyText.cook(message, sanitize: false).html_safe
+      # the title is substituted after cooking so it always renders as literal
+      # text and can never alter the template's Markdown structure
+      topic_title_text = gsub_emoji_to_unicode(title).to_s
+      html =
+        PrettyText
+          .cook(message, sanitize: false)
+          .gsub("%{topic_title}") { ERB::Util.html_escape(topic_title_text) }
+          .html_safe
+      # Customized bodies cook both %{message} and %{topic_title} as Markdown.
+      # Keep the subject unchanged, but use the same escaped title in both body values.
+      if translation_override_exists
+        body_topic_title =
+          topic_title_text.gsub(/[!"\#$%&'()*+,\-.\/:;<=>?@\[\]\\^_`{|}~]/) { |char| "\\#{char}" }
+        topic_title_text = ERB::Util.html_escape(body_topic_title)
+      end
+      message = message.gsub("%{topic_title}") { topic_title_text }
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&=
@@ -935,6 +950,7 @@ class UserNotifications < ActionMailer::Base
       locale: locale,
     }
 
+    email_opts[:body_topic_title] = body_topic_title if body_topic_title
     email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 
@@ -952,7 +968,9 @@ class UserNotifications < ActionMailer::Base
     allowed_groups = post.topic.allowed_groups.order("user_count DESC")
 
     allowed_groups.each do |g|
-      list.push("[#{g.name_full_preferred} (#{g.user_count})](#{g.full_url})")
+      list.push(
+        "[#{Email::MessageBuilder.escape_markdown(g.name_full_preferred)} (#{g.user_count})](#{g.full_url})",
+      )
       break if list.size >= SiteSetting.max_participant_names
     end
 
@@ -981,9 +999,9 @@ class UserNotifications < ActionMailer::Base
       break if list.size >= SiteSetting.max_participant_names
 
       if reveal_staged_email && u.staged?
-        list.push("#{u.email}")
+        list.push(Email::MessageBuilder.escape_markdown(u.email))
       else
-        list.push("[#{u.display_name}](#{u.full_url})")
+        list.push("[#{Email::MessageBuilder.escape_markdown(u.display_name)}](#{u.full_url})")
       end
     end
 

@@ -5,7 +5,7 @@ module DiscourseAi
     # What the search needs from an ask to choose its tab, given the result of
     # `DiscourseAi::AskAi::Ask`.
     class AskSerializer < ApplicationSerializer
-      attributes :request_id, :ask_log_id, :intent, :prefers_results
+      attributes :request_id, :ask_log_id, :intent, :prefers_results, :answer_deferred
 
       def request_id
         object.params.request_id
@@ -25,6 +25,14 @@ module DiscourseAi
 
       def include_intent?
         object.judgement.present?
+      end
+
+      def answer_deferred
+        true
+      end
+
+      def include_answer_deferred?
+        object.ask_log&.ask_outcome_skipped?
       end
 
       def prefers_results

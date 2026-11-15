@@ -8,6 +8,8 @@ module Chat
 
     self.table_name = "chat_channels"
 
+    SLUG_MAX_LENGTH = 100
+
     belongs_to :chatable, polymorphic: true
     belongs_to :direct_message,
                class_name: "Chat::DirectMessage",
@@ -42,7 +44,7 @@ module Chat
     validates :description, length: { maximum: 500 }
     validates :chatable_type, length: { maximum: 100 }
     validates :type, length: { maximum: 100 }
-    validates :slug, length: { maximum: 100 }
+    validates :slug, length: { maximum: SLUG_MAX_LENGTH }
     validates :emoji, length: { maximum: 100 }
     validate :ensure_slug_ok, if: :slug_changed?
     before_validation :generate_auto_slug

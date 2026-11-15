@@ -477,6 +477,13 @@ RSpec.describe PostGuardian do
         SiteSetting.enable_system_message_replies = false
         expect(Guardian.new(user).can_create_post?(private_message)).to eq(false)
       end
+
+      it "allows replies from members of an allowed group" do
+        group.add(groupless_user)
+        private_message.topic_allowed_groups.create!(group: group)
+
+        expect(groupless_user.guardian.can_create?(Post, private_message)).to eq(true)
+      end
     end
 
     context "with private message" do

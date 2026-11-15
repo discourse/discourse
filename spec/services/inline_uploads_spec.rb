@@ -535,7 +535,7 @@ RSpec.describe InlineUploads do
 
         <img src="#{upload.short_url}" alt="test">
 
-        <img src="#{upload2.short_url}" alt="test" height="150<img">
+        <img src="#{upload2.short_url}" alt="test" height="150&lt;img">
 
         > some quote
 

@@ -10,6 +10,9 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseLater from "discourse/lib/later";
 import Composer from "discourse/models/composer";
 
+// A space or new line typed after the end of a sentence counts as a pause.
+const SENTENCE_END_REGEXP = /(?:[.!?]\s|\n)$/;
+
 @classNameBindings(
   "composer.creatingPrivateMessage:private-message",
   "composeState",
@@ -28,6 +31,11 @@ export default class ComposerBody extends Component {
   @service capabilities;
 
   elementId = "reply-control";
+
+  #pausedComposer = null;
+  #pausedContent = null;
+  #typedComposer = null;
+  #typedReply = "";
 
   @computed("composer.action")
   get prefixedComposerAction() {
@@ -55,6 +63,11 @@ export default class ComposerBody extends Component {
     const lastKeyUp = new Date();
     this._lastKeyUp = lastKeyUp;
 
+    const composer = this.composer;
+    if (this.#appendedSentenceEnd(composer)) {
+      this.#typingPaused(composer);
+    }
+
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
     cancel(this._lastKeyTimeout);
@@ -63,6 +76,10 @@ export default class ComposerBody extends Component {
         return;
       }
       this.appEvents.trigger("composer:find-similar");
+
+      if (this.composer === composer) {
+        this.#typingPaused(composer);
+      }
     }, 1000);
   }
 
@@ -114,6 +131,36 @@ export default class ComposerBody extends Component {
       e.preventDefault();
       this.save(undefined, e);
     }
+  }
+
+  // Only an edit at the end counts, so editing earlier text in a reply that
+  // already ends a sentence doesn't fire on every key.
+  #appendedSentenceEnd(composer) {
+    const reply = composer?.reply || "";
+    const previous = composer === this.#typedComposer ? this.#typedReply : "";
+
+    this.#typedComposer = composer;
+    this.#typedReply = reply;
+
+    return (
+      reply.length > previous.length &&
+      reply.startsWith(previous) &&
+      SENTENCE_END_REGEXP.test(reply)
+    );
+  }
+
+  #typingPaused(composer) {
+    const content = `${composer?.title}\n${composer?.reply}`;
+
+    // Only pauses after an edit count, so a sentence end and the idle timer
+    // that follows it fire once.
+    if (composer === this.#pausedComposer && content === this.#pausedContent) {
+      return;
+    }
+
+    this.#pausedComposer = composer;
+    this.#pausedContent = content;
+    this.appEvents.trigger("composer:typing-paused", composer);
   }
 
   @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")

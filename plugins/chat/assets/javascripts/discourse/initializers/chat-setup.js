@@ -14,7 +14,6 @@ import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-cha
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension.js";
 import ChatHeaderIcon from "../components/chat/header/icon.gjs";
-import chatStyleguide from "../components/styleguide/organisms/chat.gjs";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -46,6 +45,12 @@ class ChatSetupInit {
         "ReviewableChatMessage",
         async () =>
           (await import("../components/reviewable/chat-message.gjs")).default
+      );
+
+      api.registerValueTransformer(
+        "admin-onboarding-banner-location",
+        ({ value, context }) =>
+          context.homepage === "chat" ? "chat_channel" : value
       );
 
       api.addAboutPageActivity("chat_messages", (periods) => {
@@ -231,7 +236,8 @@ class ChatSetupInit {
       }
 
       api.addStyleguideSection?.({
-        component: chatStyleguide,
+        component: async () =>
+          (await import("../components/styleguide/organisms/chat.gjs")).default,
         category: "organisms",
         id: "chat",
       });

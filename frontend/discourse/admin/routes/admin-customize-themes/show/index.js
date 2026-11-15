@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import hasTranslatableFields from "discourse/admin/lib/has-translatable-fields";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -28,6 +29,21 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       parentThemesSaved: false,
       userLocale: parentController.get("model.extras.locale"),
     });
+
+    const translationsLocale =
+      model.translations_locale || parentController.get("model.extras.locale");
+
+    if (
+      (model.settings?.some((setting) =>
+        hasTranslatableFields(setting.objects_schema)
+      ) ||
+        (model.locale && model.locale !== translationsLocale)) &&
+      !controller.translations?.some(
+        (translation) => translation.hasPendingChanges
+      )
+    ) {
+      controller.updateLocale(controller.locale);
+    }
   }
 
   @action

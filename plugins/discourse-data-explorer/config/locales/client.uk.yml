@@ -58,7 +58,6 @@ uk:
         save_query: "Зберегти запит"
         write_manually: "Напишіть SQL вручну"
         sql_label: "SQL"
-        optional: "опціонально"
       import:
         unparseable_json: "Непридатний для обробки JSON файл."
         wrong_json: "Неправильний JSON-файл. JSON-файл повинен містити об'єкт 'query', який повинен мати як мінімум властивість 'sql'."
@@ -125,7 +124,7 @@ uk:
         few: "Показано %{count} найкращі результати"
         many: "Показано %{count} найкращих результатів"
         other: "Показано %{count} найкращих результатів"
-      query_name: "Запит"
+      name: "Імʼя"
       query_groups: "Групи"
       query_tags: "Теґи"
       link: "Посилання для"
