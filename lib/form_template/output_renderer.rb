@@ -10,9 +10,7 @@ class FormTemplate::OutputRenderer
     def evaluate(object)
       value = super
       # Loops materialize ranges before render accounting runs, and answers can set their bounds.
-      if value.is_a?(Range) && value.size > RENDER_SCORE_LIMIT
-        raise Liquid::MemoryError, "Range limit exceeded"
-      end
+      resource_limits.increment_render_score(value.size) if value.is_a?(Range)
       value
     end
   end
@@ -33,5 +31,9 @@ class FormTemplate::OutputRenderer
         rethrow_errors: true,
       )
     template.render!(context)
+  rescue Liquid::Error
+    raise
+  rescue StandardError => e
+    raise Liquid::InternalError, e.message
   end
 end

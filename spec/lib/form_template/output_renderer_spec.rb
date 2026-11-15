@@ -40,13 +40,22 @@ RSpec.describe FormTemplate::OutputRenderer do
       values.answers["seats"] = "2.50"
       expect(described_class.render(values, source)).to eq("group 3.5 2.5")
 
+      values.answers["seats"] = "3.0"
+      expect(described_class.render(values, source)).to eq("group 4 3")
+
       values.answers["seats"] = ""
       expect(described_class.render(values, source)).to eq(" 1 ")
     end
 
+    it "accepts whole decimal answers where Liquid needs an integer" do
+      values.answers["seats"] = "3.0"
+      source = "{% for i in (1..answers.seats) %}{{ i }}{% endfor %}"
+      expect(described_class.render(values, source)).to eq("123")
+    end
+
     it "does not expand number answers beyond what a float can hold" do
       values.answers["seats"] = "1e-999999999"
-      expect(described_class.render(values, "{{ answers.seats }}")).to eq("0.0")
+      expect(described_class.render(values, "{{ answers.seats }}")).to eq("0")
 
       values.answers["seats"] = "1e-320"
       expect(described_class.render(values, "{{ answers.seats }}").bytesize).to eq(322)
@@ -67,6 +76,22 @@ RSpec.describe FormTemplate::OutputRenderer do
       expect(
         described_class.render(values, "{% for i in (1..answers.seats) %}{{ i }}{% endfor %}"),
       ).to eq("123")
+    end
+
+    it "counts every range towards the render limit, including ranges built again in a loop" do
+      values.answers["seats"] = "199990"
+      values.answers["description"] = "2000"
+      source =
+        "{% for i in (1..answers.description) %}{% for j in (1..answers.seats) %}{% endfor %}{% endfor %}"
+
+      expect { described_class.render(values, source) }.to raise_error(Liquid::MemoryError)
+    end
+
+    it "reports errors raised outside Liquid as Liquid errors" do
+      values.answers["seats"] = "-1#{"0" * 30}"
+      expect { described_class.render(values, "{{ 1.5 | round: answers.seats }}") }.to raise_error(
+        Liquid::Error,
+      )
     end
 
     it "does not interpret answer content" do

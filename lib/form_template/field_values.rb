@@ -72,7 +72,9 @@ class FormTemplate::FieldValues
 
     # Liquid writes decimals out digit by digit, so an exponent that underflows
     # a float would expand a few typed bytes into gigabytes.
-    Float(value).zero? ? BigDecimal(0) : BigDecimal(value)
+    decimal = Float(value).zero? ? BigDecimal(0) : BigDecimal(value)
+    # Range bounds and loop limits only accept integers.
+    decimal.frac.zero? ? decimal.to_i : decimal
   end
 
   # Numbers keep the spelling typed into the control, so a round trip through
