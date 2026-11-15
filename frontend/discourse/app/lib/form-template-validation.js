@@ -20,6 +20,10 @@ export function collectFormTemplateAnswers(
   if (!form || !fields) {
     return null;
   }
+  // The form has no fields while its template is loading or failed to load
+  if (fields.length && !form.querySelector("[name]")) {
+    return null;
+  }
   if (checkFormValidity) {
     _validateFormTemplateData(form);
     if (!form.checkValidity()) {
