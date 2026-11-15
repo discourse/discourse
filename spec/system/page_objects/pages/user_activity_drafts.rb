@@ -8,6 +8,21 @@ module PageObjects
         self
       end
 
+      def remove_draft(index = 0)
+        page.find(".post-list-item:nth-of-type(#{index + 1}) .remove-draft").click
+        self
+      end
+
+      def open_discarded
+        page.find(".user-drafts-header__link").click
+        self
+      end
+
+      def restore_draft(index = 0)
+        page.find(".post-list-item:nth-of-type(#{index + 1}) .restore-draft").click
+        self
+      end
+
       def has_drafts?(count: 1)
         page.has_css?(".post-list-item", count: count)
       end

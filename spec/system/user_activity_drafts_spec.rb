@@ -178,4 +178,38 @@ describe "User activity drafts" do
       expect(drafts_page).to have_no_bulk_controls
     end
   end
+
+  describe "discarded drafts" do
+    let(:composer) { PageObjects::Components::Composer.new }
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    before do
+      Draft.set(
+        user,
+        Draft::NEW_TOPIC,
+        0,
+        { title: "Lost topic", reply: "Content worth keeping", action: "createTopic" }.to_json,
+      )
+    end
+
+    it "restores a removed draft into the composer" do
+      drafts_page.visit(user)
+      drafts_page.remove_draft
+      dialog.click_danger
+
+      expect(drafts_page).to have_no_drafts
+
+      drafts_page.open_discarded
+
+      expect(page).to have_current_path("/u/#{user.username_lower}/activity/drafts/discarded")
+      expect(drafts_page).to have_drafts(count: 1)
+
+      drafts_page.restore_draft
+
+      expect(composer).to be_opened
+      expect(composer).to have_value("Content worth keeping")
+      expect(Draft.live.where(user: user, draft_key: Draft::NEW_TOPIC)).to exist
+      expect(Draft.discarded.where(user: user)).to be_empty
+    end
+  end
 end
