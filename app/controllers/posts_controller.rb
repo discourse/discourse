@@ -240,6 +240,10 @@ class PostsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
+    if params[:post][:form_template_data].present? || params[:post][:original_form_answers].present?
+      guardian.ensure_can_edit_form_submission!(post)
+    end
+
     # Answers the output template omits never reach raw, so they need their own check.
     original_answers = params[:post][:original_form_answers]
     if original_answers.present? && !post.form_submission&.answers_match?(original_answers)

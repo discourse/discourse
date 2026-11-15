@@ -26,7 +26,7 @@ class FormTemplatesController < ApplicationController
   def render_output
     if params[:post_id].present?
       post = Post.with_deleted.find(params[:post_id])
-      guardian.ensure_can_edit!(post)
+      guardian.ensure_can_edit_form_submission!(post)
       submission =
         FormTemplate::Submission.for_edit(
           post,

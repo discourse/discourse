@@ -209,6 +209,11 @@ module PostGuardian
     false
   end
 
+  # Saved answers can include ones the output template keeps out of the post.
+  def can_edit_form_submission?(post)
+    authenticated? && (is_staff? || post.user_id == user.id) && can_edit_post?(post)
+  end
+
   def is_in_edit_post_groups?
     user.in_any_groups?(SiteSetting.edit_all_post_groups_map)
   end

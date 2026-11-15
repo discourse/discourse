@@ -105,6 +105,18 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body).not_to have_key("form_submission")
     end
+
+    it "keeps saved answers from editors who are neither the author nor staff" do
+      sign_in(Fabricate(:trust_level_4))
+      get "/posts/#{form_post.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["can_edit"]).to eq(true)
+      expect(response.parsed_body).not_to have_key("form_submission")
+
+      sign_in(Fabricate(:moderator))
+      get "/posts/#{form_post.id}.json"
+      expect(response.parsed_body).to have_key("form_submission")
+    end
   end
 
   describe "#update" do
@@ -145,6 +157,29 @@ RSpec.describe PostsController do
           }
       expect(response.status).to eq(409)
       expect(form_post.reload.form_submission.answers["confirmed"]).to eq(true)
+    end
+
+    it "rejects form edits from editors who are neither the author nor staff" do
+      sign_in(Fabricate(:trust_level_4))
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              form_template_data: { answers: answers.merge("confirmed" => true) }.to_json,
+              original_text: form_post.raw,
+            },
+          }
+      expect(response.status).to eq(403)
+      expect(form_post.reload.form_submission.answers["confirmed"]).to eq(false)
+
+      put "/posts/#{form_post.id}.json",
+          params: {
+            post: {
+              raw: form_post.raw,
+              original_text: form_post.raw,
+              original_form_answers: answers.to_json,
+            },
+          }
+      expect(response.status).to eq(403)
     end
 
     it "falls back to markdown editing after a raw-only edit" do
@@ -230,6 +265,11 @@ RSpec.describe PostsController do
       expect(response.parsed_body["raw"]).to eq(submission.render)
 
       sign_in(Fabricate(:user))
+      post("/form-templates/render.json", params:)
+      expect(response.status).to eq(403)
+
+      form_post.recover!
+      sign_in(Fabricate(:trust_level_4))
       post("/form-templates/render.json", params:)
       expect(response.status).to eq(403)
     end

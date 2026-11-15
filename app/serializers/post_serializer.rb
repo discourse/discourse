@@ -430,7 +430,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_form_submission?
-    include_raw? && object.form_data.present? && scope.can_edit?(object) &&
+    include_raw? && object.form_data.present? && scope.can_edit_form_submission?(object) &&
       saved_form_submission.present?
   end
 
