@@ -69,7 +69,8 @@ module DiscourseWorkflows
 
     private
 
-    # A cleared draft is re-created with a new id, so the next post starts over.
+    # A cleared draft is re-created with a new id, so the next post starts over. A restored
+    # draft keeps its id, so phrases that fired before it was discarded don't fire again.
     def draft_id
       return @draft_id if defined?(@draft_id)
 

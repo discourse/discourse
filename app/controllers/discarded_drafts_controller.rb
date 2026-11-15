@@ -7,6 +7,7 @@ class DiscardedDraftsController < ApplicationController
     drafts =
       Draft
         .restorable
+        .includes(:user)
         .where(user_id: current_user.id)
         .order(deleted_at: :desc, id: :desc)
         .offset([params[:offset].to_i, 0].max)
