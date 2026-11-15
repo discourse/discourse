@@ -102,8 +102,12 @@ class Draft < ActiveRecord::Base
           owner = :owner,
           updated_at = CURRENT_TIMESTAMP,
           deleted_at = NULL
+        WHERE drafts.sequence <= :sequence
         RETURNING id
       SQL
+
+      # a draft restored since the sequence was read is newer than this save
+      raise Draft::OutOfSequence if !draft_id
 
       UserStat.update_draft_count(user.id)
     end
@@ -233,7 +237,10 @@ class Draft < ActiveRecord::Base
           .where(id: id)
           .where.not(Draft.live.where(user_id: user_id, draft_key: draft_key).arel.exists)
           .update_all(deleted_at: nil, sequence: sequence, updated_at: Time.zone.now)
-      raise RestoreConflict if count == 0
+      if count == 0
+        raise ActiveRecord::RecordNotFound if !Draft.discarded.exists?(id: id)
+        raise RestoreConflict
+      end
 
       UserStat.update_draft_count(user_id)
       reload

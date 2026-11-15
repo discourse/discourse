@@ -451,6 +451,37 @@ RSpec.describe Draft do
         expect(Draft.get(user, key, original.sequence)).to eq(content)
       end
 
+      it "rejects a save that read the sequence before a concurrent restore" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        discarded = Draft.discarded.find_by!(user: user, draft_key: key)
+        stale_sequence = DraftSequence.current(user, key)
+
+        restored = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args, **kwargs|
+          result = original.call(*args, **kwargs)
+          if !restored
+            restored = true
+            discarded.restore!
+          end
+          result
+        end
+
+        expect do
+          Draft.set(user, key, stale_sequence, { reply: "stale tab" }.to_json)
+        end.to raise_error(Draft::OutOfSequence)
+        expect(Draft.get(user, key, DraftSequence.current(user, key))).to eq(content)
+      end
+
+      it "reports a draft purged after it was loaded as missing" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        discarded = Draft.discarded.find_by!(user: user, draft_key: key)
+        Draft.where(id: discarded.id).delete_all
+
+        expect { discarded.restore! }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
       it "refuses to replace a live draft with the same key" do
         Draft.set(user, key, 0, content)
         discard(user, key)
