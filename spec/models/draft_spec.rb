@@ -482,6 +482,15 @@ RSpec.describe Draft do
         expect { discarded.restore! }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
+      it "reports a conflict when the draft was already restored" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        stale = Draft.discarded.find_by!(user: user, draft_key: key)
+        Draft.find(stale.id).restore!
+
+        expect { stale.restore! }.to raise_error(Draft::RestoreConflict)
+      end
+
       it "refuses to replace a live draft with the same key" do
         Draft.set(user, key, 0, content)
         discard(user, key)

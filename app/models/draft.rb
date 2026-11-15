@@ -238,7 +238,7 @@ class Draft < ActiveRecord::Base
           .where.not(Draft.live.where(user_id: user_id, draft_key: draft_key).arel.exists)
           .update_all(deleted_at: nil, sequence: sequence, updated_at: Time.zone.now)
       if count == 0
-        raise ActiveRecord::RecordNotFound if !Draft.discarded.exists?(id: id)
+        raise ActiveRecord::RecordNotFound if !Draft.exists?(id: id)
         raise RestoreConflict
       end
 

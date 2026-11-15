@@ -129,6 +129,20 @@ RSpec.describe DiscardedDraftsController do
       expect(draft.reload.deleted_at).to be_present
     end
 
+    it "returns not found when the draft is purged while restoring" do
+      draft = discarded_draft(user)
+      allow_any_instance_of(Draft).to receive(:restore!).and_wrap_original do |original|
+        Draft.where(id: draft.id).delete_all
+        original.call
+      end
+      sign_in(user)
+
+      put "/discarded_drafts/#{draft.id}/restore.json"
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
     it "does not restore another user's draft" do
       draft = discarded_draft(other_user)
       sign_in(user)

@@ -52,6 +52,8 @@ class DiscardedDraftsController < ApplicationController
       draft.restore!
     rescue Draft::RestoreConflict
       return render_json_error I18n.t("draft.restore_conflict"), status: 409
+    rescue ActiveRecord::RecordNotFound
+      raise Discourse::NotFound
     end
 
     render json: { draft: draft.data, draft_sequence: draft.sequence }
