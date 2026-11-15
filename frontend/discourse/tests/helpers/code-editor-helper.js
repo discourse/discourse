@@ -1,5 +1,4 @@
 import { settled } from "@ember/test-helpers";
-import { EditorView } from "@codemirror/view";
 
 /**
  * The editor view behind a rendered code editor, for tests that need to read
@@ -11,7 +10,8 @@ export function codeEditorView(target = ".code-editor") {
   const element =
     typeof target === "string" ? document.querySelector(target) : target;
 
-  return element ? EditorView.findFromDOM(element) : null;
+  const editor = element?.querySelector(".codemirror-editor") ?? element;
+  return editor?.codemirrorView ?? null;
 }
 
 export function codeEditorValue(target) {
