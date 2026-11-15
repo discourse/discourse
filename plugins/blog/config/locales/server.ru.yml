@@ -20,3 +20,5 @@ ru:
       few: "%{count} ответа"
       many: "%{count} ответов"
       other: "%{count} ответ"
+    themes:
+      default: Домашнюю страницу

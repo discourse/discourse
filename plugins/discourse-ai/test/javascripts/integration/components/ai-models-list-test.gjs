@@ -157,7 +157,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
         {
           id: -1,
           display_name: "Seeded decision",
-          provider: "system_one",
+          provider: "CDCK",
           seeded: true,
         },
       ],
@@ -185,6 +185,12 @@ module("Integration | Component | AiModelsList", function (hooks) {
       .dom("[data-model-id='-1'] .ai-models-list__edit-button")
       .doesNotExist("seeded decision models are read-only");
     assert
+      .dom("[data-model-id='-1'] .btn.disabled")
+      .exists("seeded decision models show a disabled edit button");
+    assert
+      .dom("[data-model-id='-1']")
+      .includesText("CDCK", "seeded decision models show the hosted provider");
+    assert
       .dom(
         ".ai-models-list__row[data-model-type='embedding'] .ai-models-list__type"
       )
@@ -211,7 +217,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
     );
 
     assert
-      .dom(".ai-models-list__type-filter option[value='decision']")
+      .dom(".d-filter-controls__dropdown option[value='decision']")
       .exists("offers the decision type even without models");
   });
 

@@ -18,3 +18,5 @@ et:
     replies:
       one: "%{count} vastus"
       other: "%{count} vastust"
+    themes:
+      default: Vaikimisi

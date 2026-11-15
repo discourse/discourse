@@ -2395,7 +2395,7 @@ class _PluginApi {
 
   /**
    * Register custom status names for a reviewable type, used in the
-   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   * review queue status badge (e.g. "Tool approved" instead of "No problem found").
    *
    * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
    *

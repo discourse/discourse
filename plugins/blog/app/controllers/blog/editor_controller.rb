@@ -81,6 +81,7 @@ module ::Blog
           raise ActiveRecord::RecordInvalid.new(publication)
         end
         on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_use_cover_upload) { raise Discourse::InvalidAccess }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
@@ -134,7 +135,11 @@ module ::Blog
         end
       render json: {
                title_diff_html: title_diff,
-               diff_html: DiscourseDiff.new(live.cooked.to_s, source.first_post.cooked).inline_html,
+               diff_html:
+                 DiscourseDiff.new(
+                   publication.article.cooked.to_s,
+                   source.first_post.cooked,
+                 ).inline_html,
              }
     rescue ONPDiff::DiffLimitExceeded
       render json: { title_diff_html: nil, diff_html: nil, diff_error: true }
@@ -275,7 +280,7 @@ module ::Blog
           Revision.new(data: Revision.capture(@publication, source))
         end
       @page_title = revision.title
-      @description = revision.data["excerpt"]
+      @description = revision.data["meta_description"].presence || revision.data["excerpt"]
       @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
       @template_variables =
         TemplateVariables.new(
@@ -308,7 +313,20 @@ module ::Blog
     end
 
     def metadata_params
-      params.require(:publication).permit(:path, :excerpt, :featured, :published_at).to_h
+      params
+        .require(:publication)
+        .permit(
+          :path,
+          :excerpt,
+          :featured,
+          :published_at,
+          :meta_description,
+          :canonical_url,
+          :cover_upload_id,
+          :cover_alt,
+          :co_authors,
+        )
+        .to_h
     end
   end
 end

@@ -16,3 +16,5 @@ th:
     search: ค้นหา
     replies:
       other: "%{count} ตอบ"
+    themes:
+      default: ค่าเริ่มต้น

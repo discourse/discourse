@@ -33,6 +33,35 @@ pl_PL:
       any_domain: "CIMD z dowolnej domeny"
     ace_editor:
       resize: "Zmień rozmiar edytora kodu"
+    code_editor:
+      resize: "Zmień rozmiar edytora kodu"
+      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść fokus poza edytor."
+      completions: "Uzupełnienia"
+      search:
+        find: "Znajdź"
+        replace: "Zamień"
+        next: "Dalej"
+        previous: "Poprzedni"
+        all: "Zaznacz wszystkie dopasowania"
+        match_case: "Dopasuj wielkość liter"
+        regexp: "Wyrażenie regularne"
+        by_word: "Całe słowa"
+        replace_all: "Zamień wszystko"
+        close: "Zamknij"
+        go_to_line: "Przejdź do wiersza"
+        go: "Utwórz"
+        current_match: "Bieżące dopasowanie"
+        on_line: "w wierszu"
+        replaced_match: "Zastąpiono dopasowanie w wierszu %{line}"
+        replaced_all: "Zastąpione dopasowania: %{matches}"
+      fold:
+        fold_line: "Zwijaj wiersz"
+        unfold_line: "Rozwiń wiersz"
+        folded_code: "Zwinięty kod"
+        unfold: "Rozwiń"
+        folded_lines: "Zwinięte wiersze"
+        unfolded_lines: "Rozwinięte wiersze"
+        to: "do"
     user_api_key:
       title: 'Autoryzuj "%{application_name}"'
       authorize: "Autoryzuj"
@@ -648,39 +677,16 @@ pl_PL:
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
+      create_category:
+        title: "Utwórz kategorię"
+        description: "Daj rozmowom miejsce, w którym będą mogły zamieszkać."
+        action: "Utwórz kategorię"
+        completed: "Utwórz inny"
       invite_collaborators:
         title: "Zaproś współpracowników"
         description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
         completed: "Zaproś więcej"
-      start_posting:
-        title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do dyskusji."
-        action: "Zobacz pomysły"
-        completed: "Zobacz więcej pomysłów"
-        choose_option: "Jak chcesz zacząć?"
-        predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj członkom temat do dyskusji"
-        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
-        use_predefined: "Przeglądaj szablony"
-        back: "Wstecz"
-        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
-        icebreakers:
-          plan_categories:
-            title: "Od jakich kategorii powinniśmy zacząć?"
-            description: "Zapytaj swój zespół, od jakich kategorii zacząć."
-            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
-          plan_invites:
-            title: "Kogo powinniśmy zaprosić przed startem?"
-            description: "Uzgodnij ze swoim zespołem, kogo zaprosić jako pierwszego."
-            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
-          introduce_yourself:
-            title: "Przedstaw się"
-            description: "Poproś członków, aby podzielili się kilkoma informacjami o sobie."
-            body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          write_your_own:
-            title: "Napisz swój własny"
-            description: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
       step_label: "Przejdź do kroku %{index}"
@@ -1254,6 +1260,10 @@ pl_PL:
       statuses:
         pending:
           title: "Oczekujące"
+        problem_confirmed:
+          title: "Problem potwierdzony"
+        no_problem_found:
+          title: "Nie znaleziono problemu"
         approved:
           title: "Zaakceptowany"
         approved_flag:
@@ -1286,6 +1296,9 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
+        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
+        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
+        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -1335,6 +1348,8 @@ pl_PL:
         reviewed: "Przejrzany"
         approved_by: "Zatwierdzono przez %{username} · %{relativeDate}"
         rejected_by: "Odrzucono przez %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem potwierdzony przez %{username} · %{relativeDate}"
+        no_problem_found_by: "%{username} nie znalazł żadnego problemu · %{relativeDate}"
         ignored_by: "Zignorowano przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
@@ -2695,6 +2710,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        invited_via_link_without_key: "link (użyto %{count} / %{max})"
         generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"
@@ -3036,6 +3052,7 @@ pl_PL:
       no_results: "Brak wyników"
       search: "Szukaj…"
       label: "Wybierz opcje"
+      remove_item: "Usuń %{name}"
     d_otp:
       screen_reader:
         one: Wprowadź liczbę
@@ -3149,7 +3166,6 @@ pl_PL:
         }.
     learn_more: "Dowiedz się więcej…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Informacja zwrotna…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -5793,6 +5809,7 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
+        description: "Każdy typ jest przeznaczony do innego rodzaju konwersacji."
         requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
         unavailable: "Niedostępne"
         ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"
@@ -7161,24 +7178,29 @@ pl_PL:
         name: "Nazwa"
         plugin: "Wtyczka"
         metadata: "Metadane"
-        enabled: "Włączona"
-        enabled_for: "Włączone dla..."
+        enabled: "Włączone?"
+        availability: "Dostępność"
         show_image: "Pokaż obraz"
-        edit_groups: "Edytuj grupy opt-in"
+        feedback: "Opinie"
+        toggle: "Włącz %{name}"
+        staff_always_included: "Personel jest zawsze uwzględniony"
+        audience_locked: "Tej zmiany nie można zastosować do innych grup"
+        toggle_instead_of_empty_groups: "Aby wyłączyć tę nadchodzącą zmianę, użyj przełącznika zamiast zmieniać uprawnienia grupy."
         groups_updated: "Grupy zaktualizowane!"
         save_groups: "Zapisz grupy"
         add_groups_to_enable: "Dodaj grupy, aby włączyć tę funkcję"
         no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
-        show_related_settings: "Pokaż powiązane ustawienia..."
+        settings: "Ustawienia"
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
+        change_enabled: "Włączono tę zmianę"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         depends_on_notice: "Aby wprowadzić tę zmianę, konieczne jest włączenie opcji %{dependencyLinks}."
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
-        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
+        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie można z niej zrezygnować."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
@@ -7186,7 +7208,7 @@ pl_PL:
         default_warning_short: "Domyślna wartość tego ustawienia uległa zmianie. Więcej informacji na ten temat znajdziesz na stronie <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzące zmiany</a>."
         enabled_for_options:
           no_one: "Nikt"
-          everyone: "Wszyscy"
+          eligible_users: "Uprawnieni użytkownicy"
           staff: "Tylko %{staffGroupName}"
           specific_groups: "Określone grupy"
           specific_groups_with_group_names:
@@ -10426,6 +10448,7 @@ pl_PL:
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
+        grant_moderation_confirm: "Czy na pewno chcesz mianować %{username} moderatorem?"
         unsuspend: "Odwieś"
         suspend: "Zawieś"
         show_flags_received: "Pokaż otrzymane flagi"

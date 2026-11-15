@@ -20,6 +20,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import type Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
 import type {
@@ -89,7 +90,6 @@ export interface ComposerFields {
   originalTags?: ComposerTags | null;
   featuredLink?: string | null;
   metaData?: ComposerMetaData | null;
-  adminOnboardingTopicOption?: string | null;
   typingTime?: number;
   composerTotalOpened?: number;
   composerOpened?: Date | null;
@@ -149,7 +149,6 @@ export interface ComposerOpenOptions {
   original_text?: string | null;
   original_title?: string | null;
   original_tags?: ComposerTags | null;
-  adminOnboardingTopicOption?: string | null;
   formTemplateId?: number;
   formTemplateDraft?: ComposerFormTemplateDraft | null;
   originalFormTemplateDraft?: ComposerFormTemplateDraft | null;
@@ -157,16 +156,6 @@ export interface ComposerOpenOptions {
   reply_to_user?: ComposerReplyToUser | null;
   [key: string]: unknown;
 }
-
-/** TODO(typescript-pending): Archetype field forwarders omit id; remove when Archetype declares its fields. */
-type ComposerArchetype = NonNullable<Site["archetypes"]>[number] & {
-  id: string;
-};
-/** TODO(typescript-pending): TopicDetails field forwarders omit edit permissions; remove when TopicDetails declares them. */
-type ComposerTopicDetails = Topic["details"] & {
-  can_edit?: boolean;
-  can_edit_tags?: boolean;
-};
 
 type TextOptions = { block?: boolean; space?: boolean; new_line?: boolean };
 
@@ -251,7 +240,6 @@ const CLOSED = "closed",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
-    adminOnboardingTopicOption: "adminOnboardingTopicOption",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
@@ -402,7 +390,7 @@ export default class Composer extends RestModel {
 
   @tracked _categoryId: number | null = null;
 
-  @tracked _archetypesOverride: ComposerArchetype[] | undefined;
+  @tracked _archetypesOverride: Archetype[] | undefined;
 
   @tracked _user!: User | null;
 
@@ -448,14 +436,14 @@ export default class Composer extends RestModel {
   }
 
   @computed("site.archetypes")
-  get archetypes(): ComposerArchetype[] | undefined {
+  get archetypes(): Archetype[] | undefined {
     if (this._archetypesOverride !== undefined) {
       return this._archetypesOverride;
     }
-    return this.site?.archetypes as ComposerArchetype[] | undefined;
+    return this.site?.archetypes;
   }
 
-  set archetypes(value: ComposerArchetype[] | undefined) {
+  set archetypes(value: Archetype[] | undefined) {
     this._archetypesOverride = value;
   }
 
@@ -656,10 +644,7 @@ export default class Composer extends RestModel {
 
   @computed("editingPost", "topic.details.can_edit")
   get disableTitleInput() {
-    return (
-      this.editingPost &&
-      !(this.topic?.details as ComposerTopicDetails | undefined)?.can_edit
-    );
+    return this.editingPost && !this.topic?.details?.can_edit;
   }
 
   @computed("privateMessage", "archetype.hasOptions")
@@ -763,7 +748,7 @@ export default class Composer extends RestModel {
   @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
     const options: {
-      userLink: { href: string; anchor: string } | null;
+      userLink: { href: string; anchor: string | null | undefined } | null;
       topicLink: { href: string; anchor: string } | null;
       postLink: { href: string; anchor: string } | null;
       userAvatar: string | null;
@@ -1329,7 +1314,7 @@ export default class Composer extends RestModel {
     if (this.title && post.post_number === 1) {
       const topic = this.topic!;
 
-      if ((topic.details as ComposerTopicDetails).can_edit) {
+      if (topic.details.can_edit) {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
@@ -1356,7 +1341,7 @@ export default class Composer extends RestModel {
           topicProps.categoryId = topic.get("category.id");
         }
         promise = promise.then(() => Topic.update(topic, topicProps));
-      } else if ((topic.details as ComposerTopicDetails).can_edit_tags) {
+      } else if (topic.details.can_edit_tags) {
         promise = promise.then(() => topic.updateTags(this.tags));
       }
     }
@@ -1787,7 +1772,6 @@ export default class Composer extends RestModel {
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
       metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
-      adminOnboardingTopicOption: opts.adminOnboardingTopicOption ?? null,
       reply: opts.reply || this.reply || "",
     });
 

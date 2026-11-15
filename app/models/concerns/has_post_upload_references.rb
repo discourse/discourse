@@ -29,20 +29,8 @@ module HasPostUploadReferences
       upload_ids << upload.id if upload.present?
     end
 
-    upload_references =
-      upload_ids.map do |upload_id|
-        {
-          target_id: id,
-          target_type: self.class.name,
-          upload_id: upload_id,
-          created_at: Time.zone.now,
-          updated_at: Time.zone.now,
-        }
-      end
-
     UploadReference.transaction do
-      UploadReference.where(target: self).delete_all
-      UploadReference.insert_all(upload_references) if upload_references.size > 0
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
 
       if SiteSetting.secure_uploads?
         Upload

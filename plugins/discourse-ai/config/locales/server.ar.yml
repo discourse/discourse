@@ -266,10 +266,6 @@ ar:
           name: "جارٍ إنشاء الصورة..."
         image_generation_custom:
           name: "مخصَّصة"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -1017,6 +1013,12 @@ ar:
       fonts:
         base_font: "خط النص الأساسي"
         heading_font: "خط العنوان"
+    mcp_theme_access:
+      none: "لا يوجد"
+      changes:
+        server: "خادم MCP"
+    mcp_app_setup:
+      none: "لا يوجد"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"

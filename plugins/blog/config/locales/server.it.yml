@@ -18,3 +18,5 @@ it:
     replies:
       one: "%{count} risposta"
       other: "%{count} risposte"
+    themes:
+      default: Predefinito

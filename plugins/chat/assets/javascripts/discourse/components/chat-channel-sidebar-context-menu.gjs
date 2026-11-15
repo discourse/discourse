@@ -4,6 +4,9 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { i18n } from "discourse-i18n";
+import { formatMuteEnd } from "discourse/plugins/chat/discourse/lib/chat-mute-durations";
+import ChatChannelSidebarContextMuteSubmenu from "./chat-channel-sidebar-context-mute-submenu.gjs";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu.gjs";
 
 export default class ChatChannelSidebarContextMenu extends Component {
@@ -34,6 +37,17 @@ export default class ChatChannelSidebarContextMenu extends Component {
     return this.currentUserMembership?.starred
       ? "chat.channel_settings.unstar_channel"
       : "chat.channel_settings.star_channel";
+  }
+
+  get mutedUntil() {
+    if (!this.currentUserMembership?.mutedUntil) {
+      return;
+    }
+
+    return formatMuteEnd(
+      this.currentUserMembership.mutedUntil,
+      this.currentUser
+    );
   }
 
   get leaveLabel() {
@@ -87,6 +101,23 @@ export default class ChatChannelSidebarContextMenu extends Component {
   }
 
   @action
+  async unmuteChannel() {
+    try {
+      const result =
+        await this.chatApi.updateCurrentUserChannelNotificationsSettings(
+          this.channel.id,
+          { muted: false }
+        );
+      this.currentUserMembership.muted = result.membership.muted;
+      this.currentUserMembership.mutedUntil = null;
+    } catch (err) {
+      popupAjaxError(err);
+    } finally {
+      this.args.close();
+    }
+  }
+
+  @action
   async navigateToSettings() {
     try {
       await this.router.transitionTo(
@@ -111,6 +142,19 @@ export default class ChatChannelSidebarContextMenu extends Component {
     });
   }
 
+  @action
+  openMuteSettings(_actionParam, event) {
+    this.menu.show(event.target, {
+      identifier: "chat-channel-menu-mute-submenu",
+      component: ChatChannelSidebarContextMuteSubmenu,
+      modalForMobile: true,
+      placement: "right-start",
+      offset: { mainAxis: 10, crossAxis: -5 },
+      data: { channel: this.channel },
+      onClose: () => this.args.close(),
+    });
+  }
+
   <template>
     <DDropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
@@ -123,6 +167,32 @@ export default class ChatChannelSidebarContextMenu extends Component {
           @suffixIcon="angle-right"
           @title="chat.channel_settings.notification_settings_context"
         />
+      </dropdown.item>
+      <dropdown.item>
+        {{#if this.currentUserMembership.muted}}
+          <DButton
+            class="chat-channel-sidebar-link-menu__unmute-channel"
+            @action={{this.unmuteChannel}}
+            @icon="bell"
+            @label="chat.settings.unmute"
+          >
+            {{#if this.mutedUntil}}
+              <span class="chat-channel-sidebar-link-menu__muted-until">
+                {{i18n "chat.settings.muted_until_hint" until=this.mutedUntil}}
+              </span>
+            {{/if}}
+          </DButton>
+        {{else}}
+          <DButton
+            class="chat-channel-sidebar-link-menu__open-mute-settings"
+            @action={{this.openMuteSettings}}
+            @forwardEvent={{true}}
+            @icon="bell-slash"
+            @label="chat.settings.mute"
+            @suffixIcon="angle-right"
+            @title="chat.settings.mute"
+          />
+        {{/if}}
       </dropdown.item>
       <dropdown.item>
         <DButton

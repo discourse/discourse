@@ -74,7 +74,13 @@ class CookedPostProcessor
         post_number = q["data-post"]
         topic_id = q["data-topic"]
         if topic_id && post_number
-          comparer = QuoteComparer.new(topic_id.to_i, post_number.to_i, q.css("blockquote").text)
+          comparer =
+            QuoteComparer.new(
+              topic_id.to_i,
+              post_number.to_i,
+              q.css("blockquote").text,
+              user: @post.user,
+            )
 
           q["class"] = ((q["class"] || "") + " quote-post-not-found").strip if comparer.missing?
           q["class"] = ((q["class"] || "") + " quote-modified").strip if comparer.modified?

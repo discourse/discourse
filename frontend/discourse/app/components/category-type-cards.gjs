@@ -36,67 +36,76 @@ export default class CategoryTypeCards extends Component {
 
   <template>
     <div class="category-type-cards">
-      {{#each @types as |type|}}
-        <div
-          class={{dConcatClass
-            "category-type-cards__card"
-            (unless (availableCategoryType type) "--unavailable")
-            (concat "--category-type-" type.id)
-          }}
-        >
-          <button
-            class="category-type-cards__card-select"
-            disabled={{unless (availableCategoryType type) true}}
-            type="button"
-            {{on "click" (fn this.selectType type)}}
+      <div class="category-type-cards__list">
+        {{#each @types as |type|}}
+          <div
+            class={{dConcatClass
+              "category-type-cards__card"
+              (unless (availableCategoryType type) "--unavailable")
+              (concat "--category-type-" type.id)
+            }}
           >
-            <span class="category-type-cards__card-icon">
-              {{dEmoji type.icon alt="" skipTitle=true}}
-            </span>
-            <span class="category-type-cards__card-name">
-              {{type.name}}
-            </span>
-            {{#if type.description}}
-              <span class="category-type-cards__card-description">
-                {{type.description}}
+            <button
+              class="category-type-cards__card-select"
+              disabled={{unless (availableCategoryType type) true}}
+              type="button"
+              {{on "click" (fn this.selectType type)}}
+            >
+              <span class="category-type-cards__card-icon">
+                {{#if type.svg_icon}}
+                  {{icon type.svg_icon}}
+                {{else}}
+                  {{dEmoji type.icon alt="" skipTitle=true}}
+                {{/if}}
               </span>
-            {{/if}}
-          </button>
-          {{#unless (availableCategoryType type)}}
-            <span class="category-type-cards__card-badge">
+              <span class="category-type-cards__card-name">
+                {{type.name}}
+              </span>
+              {{#if type.description}}
+                <span class="category-type-cards__card-description">
+                  {{type.description}}
+                </span>
+              {{/if}}
+              <span class="category-type-cards__card-chevron">
+                {{icon "chevron-right"}}
+              </span>
+            </button>
+            {{#unless (availableCategoryType type)}}
+              <span class="category-type-cards__card-badge">
+                <PluginOutlet
+                  @name="category-type-card-top-right-corner"
+                  @outletArgs={{lazyHash type=type}}
+                >
+                  {{unavailableBadgeText type}}
+                </PluginOutlet>
+              </span>
+            {{/unless}}
+            <div class="category-type-cards__card-bottom">
+
               <PluginOutlet
-                @name="category-type-card-top-right-corner"
+                @name="category-type-card-bottom"
                 @outletArgs={{lazyHash type=type}}
               >
-                {{unavailableBadgeText type}}
+                {{#if (showAskAdminMessage type)}}
+                  <button
+                    class="btn category-type-cards__ask-admin-message"
+                    type="button"
+                    {{on "click" (fn this.messageAdmin type)}}
+                  >
+                    <span class="category-type-cards__ask-admin-message-text">
+                      {{icon "envelope"}}
+                      {{askAdminToEnablePluginText type}}
+                    </span>
+                    <span class="category-type-cards__ask-admin-message-link">
+                      {{icon "arrow-right"}}
+                    </span>
+                  </button>
+                {{/if}}
               </PluginOutlet>
-            </span>
-          {{/unless}}
-          <div class="category-type-cards__card-bottom">
-
-            <PluginOutlet
-              @name="category-type-card-bottom"
-              @outletArgs={{lazyHash type=type}}
-            >
-              {{#if (showAskAdminMessage type)}}
-                <button
-                  class="btn category-type-cards__ask-admin-message"
-                  type="button"
-                  {{on "click" (fn this.messageAdmin type)}}
-                >
-                  <span class="category-type-cards__ask-admin-message-text">
-                    {{icon "envelope"}}
-                    {{askAdminToEnablePluginText type}}
-                  </span>
-                  <span class="category-type-cards__ask-admin-message-link">
-                    {{icon "arrow-right"}}
-                  </span>
-                </button>
-              {{/if}}
-            </PluginOutlet>
+            </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </div>
     </div>
   </template>
 }

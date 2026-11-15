@@ -1,10 +1,21 @@
-const TEST_FILE_RE = /tests\/(?!helpers\/).*-test\.(?:gjs|js|ts|gts)$/;
+/**
+ * Wraps each test module's body in a default-exported function.
+ *
+ * @param {object} options
+ * @param {string} options.root - absolute path of the build root. Only its own
+ *   `tests` directory counts, since a `tests/` higher up the checkout's path is
+ *   not a test directory.
+ */
+export default function wrapTestModulesPlugin({ root }) {
+  const escapedRoot = root.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const testModule = new RegExp(
+    `^${escapedRoot}/tests/(?!helpers/).*-test\\.(?:gjs|js|ts|gts)$`
+  );
 
-export default function wrapTestModulesPlugin() {
   return {
     name: "wrap-test-modules",
     transform: {
-      filter: { id: TEST_FILE_RE },
+      filter: { id: testModule },
       handler(code, id, { ast, magicString }) {
         let lastImportEnd = 0;
         for (const node of ast.body) {

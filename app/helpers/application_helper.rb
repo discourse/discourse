@@ -442,32 +442,35 @@ module ApplicationHelper
     Emoji.gsub_emoji_to_unicode(str)
   end
 
-  def application_logo_url
-    @application_logo_url ||=
+  def application_logo
+    @application_logo ||=
       if mobile_device?
-        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-          SiteSetting.site_mobile_logo_dark_url
-        elsif SiteSetting.site_mobile_logo_url.present?
-          SiteSetting.site_mobile_logo_url
-        end
-      else
-        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-          SiteSetting.site_logo_dark_url
+        if dark_color_scheme? && SiteIconManager.mobile_logo_dark
+          SiteIconManager.mobile_logo_dark
         else
-          SiteSetting.site_logo_url
+          SiteIconManager.mobile_logo
         end
+      elsif dark_color_scheme? && SiteSetting.logo_dark
+        SiteSetting.logo_dark
+      else
+        SiteSetting.logo
+      end
+  end
+
+  def application_logo_url
+    @application_logo_url ||= application_logo && full_cdn_url(application_logo.url)
+  end
+
+  def application_logo_dark
+    @application_logo_dark ||=
+      if dark_scheme_id != -1
+        logo = mobile_device? ? SiteIconManager.mobile_logo_dark : SiteSetting.logo_dark
+        logo if logo && full_cdn_url(logo.url) != application_logo_url
       end
   end
 
   def application_logo_dark_url
-    @application_logo_dark_url ||=
-      if dark_scheme_id != -1
-        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-          SiteSetting.site_mobile_logo_dark_url
-        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
-          SiteSetting.site_logo_dark_url
-        end
-      end
+    @application_logo_dark_url ||= application_logo_dark && full_cdn_url(application_logo_dark.url)
   end
 
   def waving_hand_url
@@ -1032,6 +1035,9 @@ module ApplicationHelper
 
   def preloaded_json
     return "{}" if !@application_layout_preloader
+    if Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+      raise Discourse::ScopedApiKeyHtmlNotAllowed
+    end
 
     @application_layout_preloader
       .preloaded_data

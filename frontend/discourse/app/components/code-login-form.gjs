@@ -305,6 +305,11 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  onDirtyCheck(transition) {
+    return !["login", "signup"].includes(transition.to?.name);
+  }
+
+  @action
   validateEmail(name, value, { addError }) {
     if (value && !emailValid(value)) {
       addError("email", {
@@ -1017,7 +1022,10 @@ export default class CodeLoginForm extends Component {
       return;
     }
 
-    const user = User.create(result.user);
+    const user = User.create({
+      id: result.user.id,
+      username: result.user.username,
+    });
     try {
       await updateCsrfToken();
       if (selection.file && result.can_upload_avatar) {
@@ -1150,6 +1158,7 @@ export default class CodeLoginForm extends Component {
           <Form
             class="code-login-form__email-step"
             @data={{this.emailFormData}}
+            @onDirtyCheck={{this.onDirtyCheck}}
             @onSubmit={{this.submitEmail}}
             as |form|
           >

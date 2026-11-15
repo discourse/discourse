@@ -13,10 +13,14 @@ bs_BA:
         preview_archive: Arhiva
         desktop: Desktop
         mobile: Mobilno
+        save: Sačuvaj
+        path_formats:
+          custom: Custom
         themes: Teme
         theme_name: Ime teme
         edit: Izmijeni
         preview: Pregled
+        customize: Customize
         export: Izvoz
         active: Active
   js:
@@ -28,6 +32,7 @@ bs_BA:
         change:
           title: naslov
           body: tijelo
+          tags: oznake
       review:
         copy: Copy
         open: Otvori

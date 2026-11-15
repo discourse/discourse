@@ -39,7 +39,7 @@ class CategoriesController < ApplicationController
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
-    redirect_to path("/c/#{params[:path]}")
+    redirect_to path(UrlHelper.encode("/c/#{params[:path]}"))
   end
 
   def index

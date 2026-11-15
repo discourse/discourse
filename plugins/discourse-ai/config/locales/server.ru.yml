@@ -206,8 +206,6 @@ ru:
           name: "Генерация изображений..."
         image_generation_custom:
           name: "Другое"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Начать с нуля..."
       name:
@@ -698,6 +696,12 @@ ru:
       fonts:
         base_font: "Шрифт текста"
         heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Включено"
+      "off": "Выключено"
+      none: "нет"
+    mcp_app_setup:
+      none: "нет"
     reviewables:
       ai_tool_action:
         title: "Действие инструмента ИИ"

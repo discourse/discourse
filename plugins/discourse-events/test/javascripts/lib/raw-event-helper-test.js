@@ -266,6 +266,23 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
     );
   });
 
+  test("parseReminders normalizes singular units for display and serialization", function (assert) {
+    for (const unit of ["minute", "hour", "day", "week"]) {
+      const [reminder] = parseReminders(`notification.1.${unit}`);
+
+      assert.strictEqual(
+        reminder.unit,
+        `${unit}s`,
+        "uses the translation key's plural unit"
+      );
+      assert.strictEqual(
+        reminderToBBCode(reminder),
+        `notification.1.${unit}s`,
+        "serializes the canonical unit"
+      );
+    }
+  });
+
   test("parseReminders defaults the type for legacy reminders without one", function (assert) {
     assert.deepEqual(parseReminders("15.minutes"), [
       { type: "notification", value: 15, unit: "minutes", period: "before" },

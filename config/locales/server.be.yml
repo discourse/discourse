@@ -2366,6 +2366,10 @@ be:
         many: "%{count}секунды"
         other: "%{count}секунды"
     actions:
+      answer_yes:
+        title: "Так"
+      answer_no:
+        title: "Не"
       agree:
         title: "ды"
       agree_and_suspend:

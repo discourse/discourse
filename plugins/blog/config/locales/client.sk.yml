@@ -14,6 +14,9 @@ sk:
         preview_archive: Archivovať
         desktop: Desktop
         mobile: Mobil
+        save: Uložiť
+        path_formats:
+          custom: Vlastné
         back_to_themes: Späť na témy
         new_theme_short: Nová téma
         themes: Témy
@@ -21,6 +24,8 @@ sk:
         edit: Upraviť
         activate: Aktivovať
         preview: Náhľad
+        customize: Upraviť
+        customized_theme_name: "%{name} (vlastné)"
         import: Import
         export: Exportovať
         active: Aktívny
@@ -33,6 +38,7 @@ sk:
         change:
           title: názov
           body: telo
+          tags: značky
       review:
         create: Vytvorte odkaz
         copy: Kopírovať

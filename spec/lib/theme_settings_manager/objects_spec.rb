@@ -112,6 +112,162 @@ RSpec.describe ThemeSettingsManager::Objects do
     )
   end
 
+  describe "tag properties" do
+    fab!(:tag) { Fabricate(:tag, name: "cat") }
+    fab!(:other_tag) { Fabricate(:tag, name: "dog") }
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        tag_styles:
+          type: objects
+          default: []
+          schema:
+            name: tag style
+            properties:
+              tags:
+                type: tags
+              position:
+                type: integer
+              children:
+                type: objects
+                schema:
+                  name: child
+                  properties:
+                    tags:
+                      type: tags
+      YAML
+      theme.save!
+    end
+
+    it "stores mixed IDs and source names as names in root and nested properties without mutating input" do
+      numeric_name_tag = Fabricate(:tag, name: tag.id.to_s)
+      objects = [
+        {
+          tags: [tag.id, numeric_name_tag.name, tag.name],
+          position: other_tag.id,
+          children: [{ "tags" => [other_tag.name, other_tag.id] }],
+        },
+      ]
+      original_objects = objects.deep_dup
+
+      theme.update_setting(:tag_styles, objects)
+
+      expected = [
+        {
+          "tags" => [tag.name, numeric_name_tag.name, tag.name],
+          "position" => other_tag.id,
+          "children" => [{ "tags" => [other_tag.name, other_tag.name] }],
+        },
+      ]
+      expect(theme.reload.theme_settings.find_by!(name: "tag_styles").json_value).to eq(expected)
+      expect(theme.settings[:tag_styles].value).to eq(expected)
+      expect(objects).to eq(original_objects)
+    end
+
+    it "rejects invalid tag values without changing the saved selection" do
+      theme.update_setting(:tag_styles, [{ tags: [tag.name] }])
+      setting = theme.reload.settings[:tag_styles]
+
+      [
+        [99_999_999],
+        [10**100],
+        [0],
+        [-1],
+        [tag.id.to_f],
+        [true],
+        [nil],
+        [{ id: tag.id }],
+        [[tag.id]],
+        tag.id,
+      ].each do |tags|
+        expect { setting.value = [{ tags: }] }.to raise_error(Discourse::InvalidParameters)
+        expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => [tag.name] }])
+      end
+    end
+
+    it "batches tag lookups across objects and nested properties" do
+      objects = Array.new(5) { { tags: [tag.id], children: [{ tags: [other_tag.id] }] } }
+      setting = theme.settings[:tag_styles]
+
+      queries = track_sql_queries { setting.value = objects }
+
+      expect(queries.grep(/FROM "tags"/).size).to eq(2)
+    end
+
+    it "does not add an ID lookup for source-name-only submissions" do
+      setting = theme.settings[:tag_styles]
+      objects = [{ tags: [tag.name] }]
+
+      queries = track_sql_queries { setting.value = objects }
+
+      expect(queries.grep(/FROM "tags"/).size).to eq(1)
+    end
+  end
+
+  describe "generated tag objects" do
+    fab!(:tag)
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        styles:
+          type: objects
+          default:
+            - tags: []
+              tag_objects: { stale: { id: 999 } }
+          schema:
+            properties:
+              tags:
+                type: tags
+              children:
+                type: objects
+                schema:
+                  properties:
+                    tags:
+                      type: tags
+              author_data:
+                type: objects
+                schema:
+                  properties:
+                    tags:
+                      type: tags
+                    tag_objects:
+                      type: string
+      YAML
+      theme.save!
+    end
+
+    it "does not expose generated objects in defaults or persist them from submitted payloads" do
+      setting = theme.settings[:styles]
+      expect(setting.default).to eq([{ "tags" => [] }])
+      input = [
+        {
+          tags: [tag.id],
+          tag_objects: {
+            tag.name => {
+              id: tag.id,
+              name: "forged",
+            },
+          },
+          children: [{ tags: [], tag_objects: { "unselected" => { id: tag.id } } }],
+          author_data: [{ tags: [], tag_objects: "author value" }],
+        },
+      ]
+      original = input.deep_dup
+      setting.value = input
+      expected = [
+        {
+          "tags" => [tag.name],
+          "children" => [{ "tags" => [] }],
+          "author_data" => [{ "tags" => [], "tag_objects" => "author value" }],
+        },
+      ]
+
+      expect(theme.theme_settings.find_by!(name: "styles").json_value).to eq(expected)
+      expect(theme.reload.settings[:styles].value).to eq(expected)
+      expect(input).to eq(original)
+    end
+  end
+
   describe "#categories" do
     fab!(:category_1, :category)
     fab!(:category_2, :category)

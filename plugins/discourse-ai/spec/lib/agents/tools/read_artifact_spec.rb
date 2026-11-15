@@ -43,6 +43,27 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       expect(tool.custom_raw).to include(%([ai-artifact id="#{new_artifact.id}"]))
     end
 
+    it "uses visibility permissions when the reply is attributed to another user" do
+      private_topic = Fabricate(:private_message_topic)
+      private_post = Fabricate(:post, topic: private_topic, user: private_topic.user)
+      private_artifact = Fabricate(:ai_artifact, post: private_post, user: private_topic.user)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          post: post,
+          user: Discourse.system_user,
+          guardian: post.user.guardian,
+        )
+      tool =
+        described_class.new(
+          { url: "#{Discourse.base_url}/discourse-ai/ai-bot/artifacts/#{private_artifact.id}" },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: context,
+        )
+
+      expect(tool.invoke {}).to eq(status: "error", error: "Access denied")
+    end
+
     it "handles invalid URLs" do
       tool =
         described_class.new(

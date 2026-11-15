@@ -66,6 +66,35 @@ RSpec.describe Blog::TemplateVariables do
       )
     end
 
+    it "describes the page with the blog description" do
+      SiteSetting.blog_description = "Notes & stories"
+
+      variables = described_class.new(tag:)
+
+      expect(variables.description).to eq("Notes & stories")
+      expect(variables.to_h["page"]).to include(
+        "description" => "Notes & stories",
+        "description_html" => "<p>Notes &amp; stories</p>",
+      )
+    end
+
+    it "describes tag pages with the tag's description" do
+      tag.update!(description: "Dispatches from [the field](/c/field).")
+
+      variables = described_class.new(tag:)
+
+      expect(variables.description).to eq("Dispatches from the field.")
+      expect(variables.to_h["page"]["description_html"]).to include(
+        "<a href=\"#{Discourse.base_url}/c/field\">the field</a>",
+      )
+    end
+
+    it "leaves the description out when the blog has none" do
+      SiteSetting.blog_description = ""
+
+      expect(described_class.new.to_h["page"]["description_html"]).to be_nil
+    end
+
     it "includes the full article on article pages" do
       article = Blog::ArticleVariables.new(publication)
 

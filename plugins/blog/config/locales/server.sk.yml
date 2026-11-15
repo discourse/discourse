@@ -20,3 +20,5 @@ sk:
       few: "%{count} odpovede"
       many: "%{count} odpovedí"
       other: "%{count} odpovedí"
+    themes:
+      default: Predvolené

@@ -50,6 +50,10 @@ lv:
         time: "Laiks"
       tool_help:
         create_category: "Izveidot jaunu sadaļu"
+    mcp_theme_access:
+      none: "nekas"
+    mcp_app_setup:
+      none: "nekas"
     reviewables:
       ai_tool_action:
         approve:

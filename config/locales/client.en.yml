@@ -654,39 +654,16 @@ en:
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
+      create_category:
+        title: "Create a category"
+        description: "Give conversations a place to live."
+        action: "Create category"
+        completed: "Create another"
       invite_collaborators:
         title: "Invite collaborators"
         description: "Early members bring it to life."
         action: "Create invite"
         completed: "Invite more"
-      start_posting:
-        title: "Start posting"
-        description: "Give people something to discuss."
-        action: "See ideas"
-        completed: "See more ideas"
-        choose_option: "How would you like to start?"
-        predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give members something to discuss"
-        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Browse templates"
-        back: "Back"
-        category_unavailable: "This category is unavailable for posting."
-        icebreakers:
-          plan_categories:
-            title: "What categories should we start with?"
-            description: "Ask your team which categories to launch with."
-            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
-          plan_invites:
-            title: "Who should we invite before we launch?"
-            description: "Agree with your team on who to invite first."
-            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
-          introduce_yourself:
-            title: "Introduce yourself"
-            description: "Get members sharing a little about themselves."
-            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          write_your_own:
-            title: "Write your own"
-            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
@@ -1231,6 +1208,10 @@ en:
       statuses:
         pending:
           title: "Pending"
+        problem_confirmed:
+          title: "Problem confirmed"
+        no_problem_found:
+          title: "No problem found"
         approved:
           title: "Approved"
         approved_flag:
@@ -1264,6 +1245,9 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
+        something_wrong_with_post: "Is there something wrong with this post?"
+        something_wrong_with_topic: "Is there something wrong with this topic?"
+        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1314,6 +1298,8 @@ en:
         reviewed: "Reviewed"
         approved_by: "Approved by %{username} · %{relativeDate}"
         rejected_by: "Rejected by %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem confirmed by %{username} · %{relativeDate}"
+        no_problem_found_by: "No problem found by %{username} · %{relativeDate}"
         ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
@@ -2654,6 +2640,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        invited_via_link_without_key: "link (%{count} / %{max} redeemed)"
         generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
@@ -2997,6 +2984,7 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+      remove_item: "Remove %{name}"
     d_otp:
       screen_reader:
         one: Enter a number
@@ -5622,6 +5610,7 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
+        description: "Each type comes set up for a different kind of conversation."
         requires_plugin: "Requires %{plugin_name} plugin"
         unavailable: "Unavailable"
         ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"
@@ -9372,6 +9361,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -10460,17 +10450,21 @@ en:
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
         status:
           customized: "Customized"
+          unknown: "Unknown baseline"
           outdated: "Outdated"
           invalid: "Invalid"
         title: "Site texts"
@@ -10490,6 +10484,10 @@ en:
         interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Already used"
         interpolation_key_invalid: "Unknown key — will not be interpolated"
+        unknown:
+          title: "The previous default was not recorded"
+          description: "This customization predates default tracking. Review the current default below and acknowledge it to track future changes."
+          acknowledge: "Acknowledge current default"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."

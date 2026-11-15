@@ -2187,6 +2187,10 @@ pt:
         other: "%{count} segundos"
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
+      answer_yes:
+        title: "Sim"
+      answer_no:
+        title: "Não"
       agree:
         title: "Sim"
       agree_and_silence:

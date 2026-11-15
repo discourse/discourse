@@ -223,10 +223,6 @@ es:
           name: "Generación de imagen..."
         image_generation_custom:
           name: "Personalizado"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -835,6 +831,14 @@ es:
       fonts:
         base_font: "Tipo de letra para textos"
         heading_font: "Tipo de letra para encabezados"
+    mcp_theme_access:
+      "on": "Activado"
+      "off": "Desactivado"
+      none: "ninguna"
+      changes:
+        server: "Servidor MCP"
+    mcp_app_setup:
+      none: "ninguna"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"

@@ -42,8 +42,8 @@
     pointer-events: none;
   }
 
-  img {
-    filter: blur(1em);
+  &:has(img) {
+    filter: blur(1.1em);
   }
 
   .discourse-no-touch & {
@@ -51,8 +51,8 @@
     &:focus {
       filter: blur(0.18em);
 
-      img {
-        filter: blur(0.5em);
+      &:has(img) {
+        filter: blur(0.55em);
       }
     }
   }

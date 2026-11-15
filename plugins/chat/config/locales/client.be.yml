@@ -25,8 +25,6 @@ be:
         title: "Замацаваныя"
       pinned: "замацаваныя"
       channel_settings:
-        edit: "рэдагаваць"
-        add: "дадаць"
         notification_settings_context: "Апавяшчэнні"
       close: "зачыніць"
       remove: "выдаліць"
@@ -57,16 +55,17 @@ be:
       search_view:
         filter_placeholder: Пошук паведамленняў
       about_view:
-        title: Загаловак
         name: імя
         description: Апісанне
       channel_info:
         back_to_channel: "Назад"
         tabs:
           members: Удзельнікі
+          preferences: Параметры
           settings: Налады
           search: Пошук
         remove_member: "выдаліць"
+        members_title: "%{channel} удзельнікаў"
       new_message_modal:
         filter: "Filter"
       direct_message_creator:
@@ -91,8 +90,6 @@ be:
         preview: "папярэдні прагляд"
         save: "захаваць"
         saved: "Захавана"
-        admin_title: "адміністратар"
-        settings_title: "Налады"
         category_label: "катэгорыя"
         history_label: "гісторыя"
         members_label: "Удзельнікі"

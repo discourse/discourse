@@ -2179,6 +2179,22 @@ RSpec.describe CookedPostProcessor do
       end
     end
 
+    context "with a quote of a private message the author cannot see" do
+      let!(:pm) { Fabricate(:private_message_post, raw: "the private contents of this post") }
+      let(:cp) { Fabricate(:post, raw: <<~MARKDOWN) }
+            [quote="#{pm.user.username}, post: #{pm.post_number}, topic:#{pm.topic_id}"]
+            the private contents of this post
+            [/quote]
+            test
+          MARKDOWN
+
+      it "marks the quote as not found and never as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css("aside.quote.quote-modified")).to be_blank
+        expect(cpp.doc.css("aside.quote.quote-post-not-found")).to be_present
+      end
+    end
+
     context "with external discourse instance quote" do
       let(:cp) { Fabricate(:post, user: user_with_auto_groups, raw: <<~MARKDOWN.strip) }
         [quote="random_guy_not_from_our_discourse, post:2004, topic:401"]

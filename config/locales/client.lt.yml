@@ -30,6 +30,16 @@ lt:
       any_domain: "CIMD iš bet kurio domeno"
     ace_editor:
       resize: "Keisti kodo redaktoriaus dydį"
+    code_editor:
+      resize: "Keisti kodo redaktoriaus dydį"
+      search:
+        replace: "Pakeisti"
+        next: "Kitas"
+        previous: "Buvęs"
+        close: "Uždaryti"
+        go: "Eiti"
+      fold:
+        to: "kam"
     user_api_key:
       title: 'Suteikti leidimą „%{application_name}“'
       authorize: "Leisti"
@@ -644,34 +654,13 @@ lt:
         completed: "Keisti parinktis"
         show_light_screenshot: "Rodyti šviesią ekrano kopiją"
         show_dark_screenshot: "Rodyti tamsaus režimo ekrano kopiją"
+      create_category:
+        action: "Sukurti kategoriją"
       invite_collaborators:
         title: "Pakviesti bendradarbius"
         description: "Pirmieji nariai suteikia jai gyvybę."
         action: "Sukurti kvietimą"
         completed: "Pakviesti daugiau"
-      start_posting:
-        title: "Pradėti skelbti"
-        description: "Suteikite žmonėms temą pokalbiams."
-        action: "Žr. idėjas"
-        completed: "Žr. daugiau idėjų"
-        choose_option: "Kaip norėtumėte pradėti?"
-        predefined_topics: "Pradiniai šablonai"
-        predefined_topics_description: "Pasirinkite iš pokalbių pradžios frazių rinkinio, kad pradėtumėte diskusijas"
-        use_predefined: "Peržiūrėti šablonus"
-        back: "Atgal"
-        category_unavailable: "Šioje kategorijoje negalima skelbti pranešimų."
-        icebreakers:
-          plan_categories:
-            title: "Nuo kokių kategorijų turėtume pradėti?"
-            body: "Prieš pradėdami išsiaiškinkime, kaip viską suorganizuoti! Apie ką žmonės labiausiai norės kalbėti? Galime pradėti nuo kelių kategorijų ir vėliau pridėti daugiau."
-          plan_invites:
-            body: "Visada maloniau prisijungti prie bendruomenės, kurioje jau yra keletas narių. Ką turėtume pakviesti pirmiausia? Pagalvokite apie žmones, kurie mėgsta bendrauti, padėti kitiems ir kurie džiaugtųsi galėdami prisijungti prie bendruomenės nuo pat pradžių."
-          introduce_yourself:
-            title: "Prisistatykite"
-            body: "Sveiki atvykę į bendruomenę! Susipažinkime. Prašau prisistatykite ir papasakokite šiek tiek apie savo pomėgius. Aš pradėsiu pirmas: man labai patinka technologijos ir mėgstu mokyti kitus!"
-          write_your_own:
-            title: "Parašykite savo"
-            description: "Pradėkite pokalbį, pasirinkdami temą, pritaikytą jūsų bendruomenei."
     design_wizard:
       title: "Pritaikykite savo svetainę"
       step_label: "Eikite į veiksmą %{index}"
@@ -2979,6 +2968,7 @@ lt:
       no_results: "Nėra rezultatų"
       search: "Paieška…"
       label: "Pasirinkite variantus"
+      remove_item: "Pašalinti %{name}"
     d_otp:
       screen_reader:
         one: Įveskite skaičių
@@ -3092,7 +3082,6 @@ lt:
         }.
     learn_more: "Sužinokite daugiau…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Sužinokite daugiau…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Atsiliepimai…</a>"
     mute: Nutildyti
     unmute: Pašalinti nutildymą
     last_post: Paskelbta
@@ -7117,24 +7106,22 @@ lt:
         name: "Pavadinimas"
         plugin: "Įskiepis"
         metadata: "Metaduomenys"
-        enabled: "Įgalinta"
-        enabled_for: "Įgalinta..."
+        enabled: "Įgalinti?"
         show_image: "Rodyti vaizdą"
-        edit_groups: "Redaguoti pasirinkimo grupes"
+        feedback: "Atsiliepimai"
         groups_updated: "Grupės atnaujintos!"
         save_groups: "Išsaugoti grupes"
         add_groups_to_enable: "Pridėkite grupes, kad įgalintumėte šią funkciją"
         no_changes_to_save: "Nėra pakeitimų, kuriuos būtų galima išsaugoti"
         select_groups: "Pasirinkite grupes…"
         opt_in_groups: "Pasirinkimo grupės"
-        show_related_settings: "Rodyti susijusius nustatymus..."
+        settings: "Nustatymai"
         opt_in_groups_instructions: "Pasirinkimo grupes galima naudoti tam, kad tam tikra vartotojų grupė galėtų išbandyti pakeitimą prieš jį išleidžiant visiems. Atminkite, kad šios grupės taps nereikšmingos, kai pakeitimas pasieks stabilią būseną."
         enabled_for_throttle: "Per greitai pakeitėte, kam šis pakeitimas įjungtas. Palaukite kelias sekundes ir bandykite dar kartą."
         change_enabled_for_success: "Įjungėte šį pakeitimą %{enabledFor}"
         change_disabled: "Jūs atsisakėte šio pakeitimo"
         depends_on_notice: "Šiam pakeitimui atlikti reikia įjungti %{dependencyLinks}."
         permanent_notice: "Šis pakeitimas dabar yra nuolatinis ir netrukus bus pašalintas. Jūs nebegalėsite atsisakyti."
-        permanent_soon_notice: "Šis pakeitimas netrukus taps nuolatiniu. Nebegalėsite atsisakyti."
         permanent_no_group_selection: "N/A, nuolatiniai pakeitimai taikomi visoms grupėms."
         no_changes: "Šiuo metu nėra jokių būsimų pakeitimų."
         preview: "Peržiūrėti"
@@ -7142,7 +7129,6 @@ lt:
         default_warning_short: "Šio nustatymo numatytoji reikšmė pasikeitė, daugiau apie tai skaitykite <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>būsimų pakeitimų</a> puslapyje."
         enabled_for_options:
           no_one: "Niekas"
-          everyone: "Visi"
           staff: "tik %{staffGroupName}"
           specific_groups: "Konkreti(-ios) grupė(-ės)"
           specific_groups_with_group_names:
@@ -7557,30 +7543,94 @@ lt:
               title: "„OpenGraph“ vaizdo šaltinis"
               description: "Pasirinkite, kaip pateikiami „OpenGraph“ peržiūros vaizdai temoms, kurios neturi savo vaizdo."
               uploaded: "Naudokite įkeltą paveikslėlį"
+              generated: "Sukurti paveikslėlį kiekvienai temai"
+            opengraph_image:
+              title: "OpenGraph paveikslėlis"
+              description: "Numatytasis OpenGraph paveikslėlis, naudojamas, kai puslapyje nėra kito tinkamo paveikslėlio. Jei laukelis paliekamas tuščias, bus naudojamas „large_icon“."
+            generate_topic_og_image:
+              title: "Sukurti teminius OG paveikslėlius"
+              description: "Automatiškai sukuria OpenGraph peržiūros paveikslėlius temoms, kuriose nėra paveikslėlio. Naudoja temos pavadinimą, kategoriją ir svetainės spalvas."
             og_image_preview:
+              title: "Sugeneruoto OG paveikslėlio peržiūra"
+              description: "Automatiškai sukurtų OpenGraph paveikslėlių peržiūra temoms, kuriose nėra vaizdų. Įveskite temos ID, kad galėtumėte išbandyti."
               generate: "Generuoti"
               topic_id_label: "Temos ID"
+              topic_id_placeholder: "pvz., 123"
+              placeholder: "Įveskite temos ID ir spustelėkite „Sukurti“, kad peržiūrėtumėte."
+              error: "Nepavyko sukurti peržiūros. Patikrinkite temos ID ir pabandykite dar kartą."
+            x_summary_large_image:
+              title: "X santraukos didelis paveikslėlis"
+              description: "X kortelės „didelis santraukos paveikslėlis“. Jei paliekamas tuščias, įprastos kortelės metaduomenys generuojami naudojant „OpenGraph_image“, jei tai nėra .svg failas."
+              help_text: "Rekomenduojamas dydis yra bent 280 x 150 pikselių. Nenaudokite SVG formato paveikslėlio."
         fonts:
+          title: "Šriftai"
+          header_description: "Konfigūruokite visoje svetainėje naudojamus šriftus, įskaitant bazinį šriftą, antraštės šriftą ir numatytąjį teksto dydį"
           form:
+            more_fonts: "Daugiau šriftų"
+            fewer_fonts: "Mažiau šriftų"
+            saved: "Šrifto nustatymai išsaugoti."
+            base_font:
+              title: "Bazinis šriftas"
             heading_font:
               title: "Antraštės šriftas"
+            default_text_size:
+              title: "Numatytasis teksto dydis"
+              description: "Šį dydį vėliau gali koreguoti kiekvienas vartotojas pagal savo pageidavimus."
           backfill_modal:
+            title: "Taikyti naujus numatytuosius teksto nustatymus?"
+            description:
+              one: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą esamam %{count} vartotojui?"
+              few: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamiems vartotojams?"
+              many: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
+              other: "Atnaujinote numatytąjį teksto dydį. Ar norite pritaikyti šį pakeitimą %{count} esamų vartotojų?"
             modal_yes: "Taip"
+            modal_no: "Ne, taikyti tik nuo šiol"
         welcome_banner:
+          title: "Sveikinimo reklamjuostė"
+          header_description: "Konfigūruokite reklamjuostę su paieškos lauku, rodoma lankytojams jūsų svetainėje."
+          saved: "Sveikinimo reklamjuostės nustatymai sėkmingai išsaugoti."
           form:
+            enabled_themes:
+              label: "Įjungta temose..."
+              description: "Pasirinkite, kurios temos turėtų rodyti reklamjuostę. Rodomos tik aktyvios temos."
+              select_label: "Pasirinkite temas"
+            background_image:
+              label: "Fono paveikslėlis"
+              description: "Šis paveikslėlis bus rodomas už reklamjuostės teksto."
+            text_color:
+              label: "Teksto spalva"
+              description: "Įkėlus aukščiau pateiktą „Fono paveikslėlį“, naudokite šį nustatymą, kad pakeistumėte reklamjuostės teksto spalvą ir užtikrintumėte, jog jį būtų galima įskaityti. Kai paliekamas tuščias arba fono paveikslėlis neįkeltas, spalvą valdo aktyvi tema."
             page_visibility:
+              label: "Puslapio matomumas"
+              description: "Pasirinkite, kur turėtų būti rodoma reklamjuostė."
               options:
                 top_menu_pages: "Pagrindinio meniu puslapiai"
+                homepage: "Tik pagrindinis puslapis"
                 discovery: "Atradimų puslapiai"
+                all_pages: "Visi puslapiai"
             location:
               label: "Vieta"
+              description: "Pasirinkite, kur puslapyje turėtų būti rodoma reklamjuostė."
+              options:
+                above_topic_content: "Aukščiau temos turinio"
+                below_site_header: "Žemiau svetainės antraštės"
             text_section:
+              title: "Tinkinamas tekstas"
               locale_label: "Kalba"
+            header_new_members:
+              label: "Antraštė naujiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Sveiki atvykę, %{preferred_display_name}!"
             header_logged_in:
+              label: "Antraštė prisijungusiems nariams"
+              description: "Galimi kintamieji: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Sveikas sugrįžęs, %{preferred_display_name}!"
             header_anonymous:
+              label: "Antraštė anoniminiams lankytojams"
+              description: "Galimas kintamasis: <code>&percnt;{site_name}</code>"
               placeholder: "Sveiki atvykę į %{site_name}!"
             subheader_logged_in:
+              label: "Paantraštė prisijungusiems nariams"
               description: "Antrinis tekstas, rodomas po antrašte prisijungusiems vartotojams."
               placeholder: "Peržiūrėkite, kas naujo bendruomenėje"
             subheader_anonymous:
@@ -7684,34 +7734,99 @@ lt:
           keywords: "splash"
         content:
           title: "Turinys"
+          header_description: "Konfigūruokite, kaip tvarkomos jūsų temos ir įrašai, ir tinkinkite turinio kūrimo patirtį savo nariams."
+          keywords: "topics|posts|categories|tags"
+          sub_pages:
+            categories_and_tags:
+              title: "Kategorijos ir žymos"
+            sharing:
+              title: "Dalijimasis"
+            posts_and_topics:
+              title: "Įrašai ir temos"
+            stats_and_thresholds:
+              title: "Statistika ir ribos"
         category_management:
+          title: "Kategorijų valdymas"
+          header_description: "Peržiūrėkite kategorijų tipus, hierarchiją ir šiuo metu kiekvienam tipui priskirtas kategorijas."
+          keywords: "categories|category types|discussion|category management"
+          create_category: "Sukurti kategoriją"
           tabs:
             settings: "Nustatymai"
           types:
+            unavailable: "Kategorijos tipas %{categoryType} nėra prieinamas."
             all:
               title: "Visos kategorijos"
+              description: "Visos kategorijos kiekviename sukonfigūruotame kategorijų tipe."
+          filter_placeholder: "Filtruoti kategorijas"
+          no_results: "Nerasta jokių %{type} kategorijų."
+          open_settings: "Atidaryti nustatymus"
           table:
             category: "Kategorija"
             visibility: "Matomumas"
             topics: "Temos"
           visibility:
             public: "Vieša"
+            restricted: "Apribota"
           visibility_filter:
             all: "Visos kategorijos"
+            public: "Viešos kategorijos"
+            restricted: "Apribotos kategorijos"
         permalinks:
           title: "Laikinos Nuorodos"
           header_description: "Peradresavimai taikyti URL, kurių forumas nežino"
+        user_defaults:
+          title: "Vartotojo numatytieji nustatymai"
+          header_description: "Nustatykite numatytąsias vertes parametrams, kurie turi įtakos jūsų vartotojams, ir sukonfigūruokite jų prisijungimo patirtį"
+          keywords: "users|onboarding|new"
+        user_fields:
+          title: "Vartotojo laukai"
+          header_description: "Sukurkite pasirinktinius vartotojų laukus, kad rinktumėte papildomą informaciją apie savo bendruomenės narius. Galite pasirinkti, kokia informacija reikalinga registracijos metu, kas rodoma profiliuose ir ką vartotojai gali atnaujinti."
+        watched_words:
+          title: "Stebimi žodžiai"
+          header_description: "Stebimi žodžiai yra moderavimo įrankiai, galintys atlikti įvairius veiksmus, įskaitant blokavimą, cenzūravimą, susiejimą arba įrašų, kuriuose yra tam tikrų žodžių, žymėjimą."
+        color_palettes:
+          title: "Spalvų paletės"
+          header_description: "Šios paletės nustato visoje jūsų bendruomenėje naudojamas spalvas. Jei paletę padarysite pasirenkamą vartotojui, nariai galės pasirinkti pageidaujamas spalvas savo nustatymuose."
         emoji:
           title: "Emoji"
+          header_description: "Pridėkite naujus jaustukus, kurie bus prieinami visiems. Pasirinkite kelis failus, kad sukurtumėte jaustukus naudodami jų failų pavadinimus. Pasirinkta grupė bus naudojama visiems vienu metu pridedamiems failams."
         themes:
           title: "Temos"
+          header_description: "Temos – tai išsamūs pritaikymai, kurie keičia daugelį jūsų forumo dizaino stiliaus elementų ir dažnai apima papildomas vartotojo sąsajos funkcijas"
         components:
           title: "Komponentai"
+          header_description: "Komponentai – tai smulkesni pritaikymai, kuriuos galima pridėti prie temų, siekiant pakeisti konkrečius jūsų forumo dizaino stiliaus elementus"
+          keywords: "theme|component|extension"
+        themes_and_components:
+          title: "Temos ir komponentai"
+          header_description: "Pritaikykite savo Discourse svetainę pagal savo poreikius naudodami temas ir komponentus"
+          keywords: "theme|component|extension|customize"
+        site_admin:
+          title: "Svetainės administratorius"
+          header_description: "Konfigūruokite įvairius su jūsų svetainės valdymu susijusius nustatymus"
+          keywords: "discover|bootstrap|apps"
+        site_texts:
+          title: "Svetainės tekstai"
+          header_description: "Pritaikyti bet kokį Discourse sistemoje naudojamą tekstą, kad jis atitiktų jūsų bendruomenės stilių ir toną"
         email:
+          title: "El. pašto nustatymai"
+          header_description: "Konfigūruokite nariams siunčiamų el. laiškų nustatymus"
+          keywords: "digest|unsubscribe|email|smtp|mailgun|sendgrid|preview summary"
           sub_pages:
+            server_settings:
+              title: "Serverio nustatymai"
+              header_description: "Konfigūruokite nariams siunčiamų el. laiškų nustatymus"
+            preview_summary:
+              title: "Peržiūrėti santrauką"
+              header_description: "Peržiūrėti neaktyviems vartotojams siunčiamų apibendrinamųjų el. laiškų turinį"
+            advanced_test:
+              title: "Išplėstinis testas"
+              header_description: "Sužinokite, kaip Discourse apdoroja gautus el. laiškus"
             templates:
               title: "Juodraščiai"
+              header_description: "Pritaikyti šablonus, naudojamus elektroniniams laiškams kurti"
         email_logs:
+          title: "El. pašto žurnalai"
           header_description: "Peržiūrėkite iš jūsų svetainės išsiųstų el. laiškų žurnalus"
           keywords: "sent|skipped|bounced|received|rejected|email logs"
           sub_pages:
@@ -7817,24 +7932,94 @@ lt:
             few: "Filtravimas pagal %{count} įrašo URL"
             many: "Filtravimas pagal %{count} įrašo URL"
             other: "Filtravimas pagal %{count} įrašo URL"
+          referrer:
+            one: "Filtravimas pagal %{count} nukreipimo nuorodą"
+            few: "Filtravimas pagal %{count} nukreipimo nuorodas"
+            many: "Filtravimas pagal %{count} nukreipimo nuorodų"
+            other: "Filtravimas pagal %{count} nukreipimo nuorodų"
+          country:
+            one: "Filtravimas pagal %{count} šalį"
+            few: "Filtravimas pagal %{count} šalis"
+            many: "Filtravimas pagal %{count} šalių"
+            other: "Filtravimas pagal %{count} šalių"
+          network:
+            one: "Filtravimas pagal %{count} tinklą"
+            few: "Filtravimas pagal %{count} tinklus"
+            many: "Filtravimas pagal %{count} tinklų"
+            other: "Filtravimas pagal %{count} tinklų"
+          browser:
+            one: "Filtravimas pagal %{count} naršyklę"
+            few: "Filtravimas pagal %{count} naršykles"
+            many: "Filtravimas pagal %{count} naršyklių"
+            other: "Filtravimas pagal %{count} naršyklių"
           language:
             one: "Filtruojama %{count} kalba"
             few: "Filtruojamos %{count} kalbos"
             many: "Filtruojama %{count} kalbų"
             other: "Filtruojama %{count} kalbų"
+          ip:
+            one: "Filtravimas pagal %{count} IP adresą"
+            few: "Filtravimas pagal %{count} IP adresus"
+            many: "Filtravimas pagal %{count} IP adresų"
+            other: "Filtravimas pagal %{count} IP adresų"
+        remove_filter_value: "Pašalinti %{value}"
+        clear_all: "Išvalyti viską"
         apply: "Kandidatuoti"
         apply_filters: "Taikyti filtrus"
+        filter_by:
+          one: "Filtruoti pagal %{label}, %{count} puslapio peržiūrą"
+          few: "Filtruoti pagal %{label}, %{count} puslapio peržiūras"
+          many: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+          other: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+        remove_filter: "Pašalinti filtrą %{filter}"
         view_more: "Žiūrėti daugiau"
+        no_dimension_data: "Šiam suskirstymui duomenų nėra."
+        direct_or_unknown: "Tiesioginis / nežinomas"
         cards:
+          acquisition: "Įsigijimas"
+          pages: "Puslapiai"
           visitors: "Lankytojai"
         dimensions:
+          referrers: "Srauto šaltiniai"
+          countries: "Šalys"
+          networks: "Tinklai"
+          top_urls: "Populiariausi URL adresai"
+          entry_urls: "Pradinis URL"
+          browsers: "Naršyklės"
           languages: "Kalbos"
+          ip_addresses: "IP adresai"
         filters:
+          traffic_type: "Srauto tipas"
+          top_url: "Populiariausias URL"
+          entry_url: "Pradinis URL"
+          referrer: "Srauto šaltinis"
+          country: "Šalis"
+          network: "Tinklas"
           browser: "Naršyklė"
           language: "Kalba"
           ip: "IP adresas"
+        headline:
+          one: "%{formatted_count} puslapio peržiūra"
+          few: "%{formatted_count} puslapio peržiūros"
+          many: "%{formatted_count} puslapio peržiūrų"
+          other: "%{formatted_count} puslapio peržiūrų"
+        metrics:
+          distinct_sessions:
+            label: "Atskiros sesijos"
+          logged_in_share:
+            label: "Prisijungusių dalis"
+          bounce_rate:
+            label: "Atšokimo rodiklis"
+          average_session_duration:
+            label: "Vidutinė sesijos trukmė"
         series:
+          logged_in_human: "Prisijungę"
           anonymous_human: "Anonimas"
+          likely_crawler: "Tikėtini paieškos robotai"
+        partial:
+          retention: "Puslapio peržiūrų duomenys iki %{date} nebepasiekiami, todėl šie rezultatai apima tik dalį pasirinkto datos intervalo."
+          pageview_limit: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{date} nuo %{time}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtraukiamos."
+          combined: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{pageviewLimitDate} nuo %{pageviewLimitTime}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtrauktos; puslapio peržiūrų duomenys iki %{date} nebepasiekiami."
       dashboard:
         title: "Suvestinė"
         version: "Versija"
@@ -7847,14 +8032,34 @@ lt:
         updates_available: "Yra atnaujinimų."
         version_check_pending: "Panašu, kad neseniai atnaujinai. Puiku!"
         commit_on_github: "Peržiūrėti commit %{sha} GitHub"
+        commits_ahead:
+          one: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomas pakeitimas"
+          few: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomi pakeitimai"
+          many: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
+          other: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
         dismiss_notice: "Ignoruoti"
+        site_advice:
+          title:
+            one: "%{count} užklausa reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            few: "%{count} užklausos reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            many: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            other: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
         new_features:
+          title: "Kas naujo?"
+          subtitle: "Nuolat išleidžiame naujų funkcijų ir patobulinimų. Šiame puslapyje aptariami svarbiausi aspektai, tačiau galite spustelėti „Sužinokite daugiau“, kad pamatytumėte išsamias leidimo pastabas."
+          no_new_features_found: "Sraute nėra elementų arba pasirinktas filtras nerado jokių rezultatų. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
+          no_new_features_error: "Įkeliant kanalą įvyko klaida. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
           learn_more: "Sužinoti daugiau..."
         refresh_problems: "Atnaujinti"
         space_used: "%{usedSize} panaudota"
         space_used_and_free: "%{usedSize} (%{freeSize} nemokama)"
         uploads: "Įkėlimai"
         backups: "Atsarginės kopijos"
+        backup_count:
+          one: "%{count} atsarginė kopija %{location}"
+          few: "%{count} atsarginės kopijos %{location}"
+          many: "%{count} atsarginių kopijų %{location}"
+          other: "%{count} atsarginių kopijų %{location}"
         lastest_backup: "Naujausi: %{date}"
         whats_new_in_discourse: Kas naujo Discourse?
         report_filter_any: "bet kuris"
@@ -7863,27 +8068,111 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
+        custom_date_range: Pasirinktas datų intervalas
+        loading: "Įkeliamas prietaisų skydelis…"
+        fetch_error: "Nepavyko įkelti prietaisų skydelio. Pabandykite atnaujinti puslapį."
+        stable: "stabilus"
         sections:
+          highlights:
+            title: "Svarbiausi dalykai"
           reports:
             title: "Pranešimai"
+            fetch_error: "Nepavyko įkelti ataskaitų. Pabandykite atnaujinti puslapį."
+          traffic:
+            title: "Svetainės srautas"
           engagement:
+            title: "Įsitraukimas"
+            fetch_error: "Nepavyko įkelti įsitraukimo. Pabandykite atnaujinti puslapį."
             activity_by_category:
+              title: "Veikla pagal kategoriją"
+              description: "Temos, įrašai ir narių dalyvavimas pagal kategoriją."
               category: "Kategorija"
               topics: "Temos"
               posts: "Pranešimai"
+              page_views: "Puslapio peržiūros"
               share: "Dalintis"
+              vs_prior: "Palyginti su ankstesniu"
+              empty: "Pasirinktu laikotarpiu veiklos nebuvo."
+              save_error: "Nepavyko išsaugoti jūsų pasirinkimo kitam kartui."
             whos_posting:
+              title: "Kas skelbia įrašus?"
+              new_members: "Nauji nariai"
               returning: "Grįžimas"
               staff: "Personalas"
+              empty: "Pasirinktu laikotarpiu įrašų nėra."
+              save_error: "Nepavyko išsaugoti jūsų pasirinkimo kitam kartui."
+              add_group: "Pridėti grupę"
               modal:
+                title: "Palyginti grupes"
+                search_placeholder: "Ieškoti grupių..."
+                counter: "Pasirinkta %{count} iš %{max} grupių"
                 apply: "Saugoti"
+                enable: "Įjungti %{title}"
+                disable: "Išjungti %{title}"
+                move_up: "Perkelti %{title} aukštyn"
+                move_down: "Perkelti %{title} žemyn"
+                footer_note: "Šie pakeitimai bus taikomi visiems vartotojams."
+                descriptions:
+                  new_members: "Užsiregistravo pasirinktu laikotarpiu"
+                  returning: "Užsiregistravo prieš pasirinktą laikotarpį"
+                  staff: "Administratoriai ir moderatoriai"
             trust_level_pipeline:
+              title: "Pasitikėjimo lygio procesas"
               trust_levels:
                 "0": "Naujas"
                 "1": "Pagrindinis"
                 "2": "Narys"
                 "3": "Nuolatinės"
                 "4": "Lyderis"
+              trend:
+                climbing:
+                  one: "+%{count} kyla"
+                  few: "+%{count} kyla"
+                  many: "+%{count} kyla"
+                  other: "+%{count} kyla"
+                dropping:
+                  one: "-%{count} krenta"
+                  few: "-%{count} krenta"
+                  many: "-%{count} krenta"
+                  other: "-%{count} krenta"
+              signups:
+                one: "+ %{formattedCount} registracija"
+                few: "+ %{formattedCount} registracijos"
+                many: "+ %{formattedCount} registracijų"
+                other: "+ %{formattedCount} registracijų"
+              signups_title: "Naujų registracijų, pasiekiančių šį pasitikėjimo lygį, skaičius"
+              count_title: "Bendras narių skaičius šiame pasitikėjimo lygyje"
+              arrivals_aria:
+                one: "%{count} narys buvo pakeltas iki šio pasitikėjimo lygio"
+                few: "%{count} nariai buvo pakelti iki šio pasitikėjimo lygio"
+                many: "%{count} narių buvo pakelta iki šio pasitikėjimo lygio"
+                other: "%{count} narių buvo pakelta iki šio pasitikėjimo lygio"
+              demotions_in_aria:
+                one: "%{count} narys nukrito iki šio pasitikėjimo lygio"
+                few: "%{count} nariai nukrito iki šio pasitikėjimo lygio"
+                many: "%{count} narių nukrito iki šio pasitikėjimo lygio"
+                other: "%{count} narių nukrito iki šio pasitikėjimo lygio"
+              stable_aria: "jokio judėjimo"
+            headline:
+              titles:
+                engagement_up: "Įsitraukimas pasirinktu laikotarpiu išaugo"
+                stickiness_and_daily_engagement_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų lojalumas ir kasdienis aktyvumas"
+                stickiness_and_new_signups_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų lojalumas ir naujų vartotojų skaičius"
+                stickiness_increased: "Pasirinktu laikotarpiu padidėjo vartotojų lojalumas"
+                daily_engagement_and_new_signups_increased: "Pasirinktu laikotarpiu išaugo kasdienis įsitraukimas ir naujų registracijų skaičius"
+                daily_engagement_increased: "Per nagrinėjamą laikotarpį kasdienis aktyvumas padidėjo"
+                new_signups_increased: "Per nagrinėjamą laikotarpį padaugėjo naujų registracijų"
+                engagement_declined: "Per nagrinėjamą laikotarpį aktyvumas sumažėjo"
+                some_engagement_declines: "Pasirinktu laikotarpiu įsitraukimas šiek tiek sumažėjo"
+                engagement_steady: "Įsitraukimas pasirinktu laikotarpiu yra pastovus"
+                insufficient_activity: "Dar nepakanka aktyvumo, kad būtų galima apibendrinti įsitraukimą."
+              summaries:
+                all_metrics_improved: "Padidėjo aktyvumas, kasdienis įsitraukimas ir naujų narių skaičius – tai rodo, kad vis daugiau narių prisijungia prie jūsų bendruomenės ir joje aktyviai dalyvauja."
+                stickiness_and_daily_engagement_up_new_signups_down: "Vartotojų lojalumas ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius mažėja."
+                stickiness_and_daily_engagement_up_new_signups_flat: "Vartotojų lojalumas ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius nesikeičia."
+                stickiness_and_daily_engagement_up: "Padidėjo vartotojų lojalumas ir kasdienis aktyvumas."
+                stickiness_and_new_signups_up_daily_engagement_down: "Vartotojų lojalumas ir naujų vartotojų skaičius didėja, tačiau kasdienis aktyvumas mažėja."
+                stickiness_up_daily_engagement_and_new_signups_down: "Vartotojų lojalumas padidėjo, tačiau kasdienis aktyvumas ir naujų vartotojų registracijų skaičius sumažėjo."
           search:
             title: "Paieška"
             table:

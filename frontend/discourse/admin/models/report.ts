@@ -600,9 +600,8 @@ export default class Report extends EmberObject {
         prev += "%";
       }
     } else {
-      // TODO(typescript-pending): formatter.number's inferred signature requires optional options; remove casts when typed.
-      prev = (number as (value: unknown) => string)(prev);
-      current = (number as (value: unknown) => string)(current);
+      prev = number(prev);
+      current = number(current);
     }
 
     return i18n("admin.dashboard.reports.trend_title", {
@@ -838,8 +837,7 @@ export default class Report extends EmberObject {
         `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
         {
           count: valAtT1,
-          // TODO(typescript-pending): remove when formatter.number types its optional options.
-          previousValue: (number as (value: unknown) => string)(valAtT1),
+          previousValue: number(valAtT1),
         }
       )
     );
@@ -916,10 +914,7 @@ export default class Report extends EmberObject {
   _secondsLabel(value: ReportCellValue): ReportCell {
     return {
       value: toNumber(value),
-      // TODO(typescript-pending): remove when durationTiny types its optional options.
-      formattedValue: (durationTiny as (value: ReportCellValue) => string)(
-        value
-      ),
+      formattedValue: durationTiny(value),
     };
   }
 

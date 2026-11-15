@@ -18,3 +18,5 @@ ca:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostes"
+    themes:
+      default: Per defecte

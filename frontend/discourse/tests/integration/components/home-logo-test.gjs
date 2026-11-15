@@ -22,6 +22,47 @@ module("Integration | Component | HomeLogo", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", null);
   });
 
+  test("reserves dimensions for light and dark logos", async function (assert) {
+    this.siteSettings.site_logo_url = bigLogo;
+    this.siteSettings.site_logo_dark_url = darkLogo;
+    this.siteSettings.site_logo_dimensions = {
+      [bigLogo]: { width: 600, height: 200 },
+      [darkLogo]: { width: 500, height: 150 },
+    };
+    this.session.set("darkModeAvailable", true);
+
+    await render(<template><HomeLogo /></template>);
+
+    assert
+      .dom("#site-logo")
+      .hasAttribute("width", "600", "reserves logo width");
+    assert
+      .dom("#site-logo")
+      .hasAttribute("height", "200", "reserves logo height");
+    assert
+      .dom("picture source")
+      .hasAttribute("width", "500", "uses dark logo width");
+    assert
+      .dom("picture source")
+      .hasAttribute("height", "150", "uses dark logo height");
+  });
+
+  test("omits dimensions for a replacement logo URL", async function (assert) {
+    this.siteSettings.site_logo_url = bigLogo;
+    this.siteSettings.site_logo_dimensions = {
+      [darkLogo]: { width: 500, height: 150 },
+    };
+
+    await render(<template><HomeLogo /></template>);
+
+    assert
+      .dom("#site-logo")
+      .doesNotHaveAttribute("width", "omits unrelated width");
+    assert
+      .dom("#site-logo")
+      .doesNotHaveAttribute("height", "omits unrelated height");
+  });
+
   test("basics", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;

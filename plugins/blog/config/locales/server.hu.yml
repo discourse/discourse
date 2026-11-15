@@ -18,3 +18,5 @@ hu:
     replies:
       one: "%{count} válasz"
       other: "%{count} válasz"
+    themes:
+      default: Alapértelmezett

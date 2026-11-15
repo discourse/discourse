@@ -32,7 +32,7 @@ writeResolverConfig(
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 const aliases = [
-  { find: "pretty-text", replacement: "pretty-text/addon" },
+  { find: "pretty-text", replacement: "discourse/pretty-text" },
   {
     find: "ember-buffered-proxy/helpers",
     replacement: "ember-buffered-proxy/addon/helpers",
@@ -113,7 +113,7 @@ export function buildConfig({ devMode } = {}) {
         skipPreflightCheck: true, // Skip per-file config verification
         babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
       }),
-      wrapTestModulesPlugin(),
+      wrapTestModulesPlugin({ root: import.meta.dirname }),
       discourseChunkNamesPlugin(),
       chunkImportMapPlugin({
         root: import.meta.dirname,

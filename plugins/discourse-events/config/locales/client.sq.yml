@@ -13,6 +13,10 @@ sq:
             topic_id:
               label: ID e temës
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Regjistrohuni"
       preferences:
         reminders:
           preferences:
