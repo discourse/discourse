@@ -5443,6 +5443,7 @@ en:
       revisions:
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
+        hidden_form_answers_changed: "This edit changed form answers that aren't shown in the post."
         unlisted:
           label: "Unlisted"
           description: "This edit is skipped when browsing the edit history, but its content is still public."

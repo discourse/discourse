@@ -31,6 +31,7 @@ class PostRevisionSerializer < ApplicationSerializer
              :reply_to_post_number_changes,
              :tags_changes,
              :category_id_changes,
+             :hidden_form_answers_changed,
              :can_edit,
              :diff_error
 
@@ -174,6 +175,16 @@ class PostRevisionSerializer < ApplicationSerializer
     nil
   end
 
+  def hidden_form_answers_changed
+    true
+  end
+
+  # Only flags the change: those answers are kept out of the post, so they stay out of its history.
+  def include_hidden_form_answers_changed?
+    !suppress_hidden_diffs? && previous["form_data"] != current["form_data"] &&
+      previous["raw"] == current["raw"]
+  end
+
   def diff_error
     @diff_error || false
   end
@@ -307,6 +318,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "user_id" => [post.user_id],
       "locale" => [post.locale],
       "reply_to_post_number" => [post.reply_to_post_number],
+      "form_data" => [post.form_data],
     }
 
     # Retrieve any `tracked_topic_fields`

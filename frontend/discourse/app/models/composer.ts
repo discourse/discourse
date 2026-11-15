@@ -109,7 +109,8 @@ export interface ComposerFields {
   originalFormTemplateDraft?: ComposerFormTemplateDraft | null;
   hasSavedFormTemplateDraft?: boolean;
   formSubmission?: PostFormSubmission | null;
-  formTemplateData?: Record<string, unknown> | null;
+  /** The JSON-encoded answers sent as form_template_data. */
+  formTemplateData?: string | null;
   composerHeight?: string | number;
   _hasTopicTemplates?: boolean;
 }
@@ -580,6 +581,15 @@ export default class Composer extends RestModel {
     "category"
   )
   get replyDirty() {
+    const formDraft = this.activeFormTemplateDraft;
+    if (formDraft) {
+      return !deepEqual(formDraft, this.originalFormTemplateDraft);
+    }
+    return (this.reply || "").trim() !== (this.originalText || "").trim();
+  }
+
+  /** The form draft, unless it belongs to a form the current category no longer offers. */
+  get activeFormTemplateDraft() {
     const formDraft = this.formTemplateDraft;
     if (
       formDraft &&
@@ -588,9 +598,8 @@ export default class Composer extends RestModel {
           (id) => String(id) === String(formDraft.id)
         ))
     ) {
-      return !deepEqual(formDraft, this.originalFormTemplateDraft);
+      return formDraft;
     }
-    return (this.reply || "").trim() !== (this.originalText || "").trim();
   }
 
   get currentFormTemplateDraft() {
@@ -1062,7 +1071,9 @@ export default class Composer extends RestModel {
     "titleLengthValid",
     "replyLength",
     "minimumPostLength",
-    "formTemplateDraft"
+    "formTemplateDraft",
+    "formSubmission",
+    "category"
   )
   get canSaveDraft() {
     if (this.action === Composer.ADD_TRANSLATION) {
@@ -1077,7 +1088,7 @@ export default class Composer extends RestModel {
       return false;
     }
 
-    if (this.formTemplateDraft) {
+    if (this.activeFormTemplateDraft) {
       return true;
     }
 

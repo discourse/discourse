@@ -432,6 +432,30 @@ module("Unit | Model | composer", function (hooks) {
     assert.strictEqual(composer.originalFormAnswers, JSON.stringify(answers));
   });
 
+  test("a form draft is ignored once the category no longer offers its form", function (assert) {
+    const [formCategory, plainCategory] =
+      getOwner(this).lookup("service:site").categories;
+    formCategory.set("form_template_ids", [3]);
+    plainCategory.set("form_template_ids", []);
+    const composer = createComposer.call(this, {
+      action: CREATE_TOPIC,
+      categoryId: formCategory.id,
+      formTemplateDraft: { id: 3, answers: { description: "Typed." } },
+      originalFormTemplateDraft: { id: 3, answers: {} },
+    });
+
+    assert.true(composer.replyDirty, "the form draft counts in its category");
+    assert.true(composer.canSaveDraft, "the form draft can be saved");
+
+    composer.set("categoryId", plainCategory.id);
+
+    assert.false(composer.replyDirty, "the stale form draft is not a change");
+    assert.false(composer.canSaveDraft, "an empty reply is not saved");
+
+    formCategory.set("form_template_ids", undefined);
+    plainCategory.set("form_template_ids", undefined);
+  });
+
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {
