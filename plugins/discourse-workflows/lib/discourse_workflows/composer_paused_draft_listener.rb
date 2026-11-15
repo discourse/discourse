@@ -74,7 +74,7 @@ module DiscourseWorkflows
       return @draft_id if defined?(@draft_id)
 
       @draft_id =
-        ::Draft.where(user_id: @snapshot.user.id, draft_key: @snapshot.draft_key).pick(:id)
+        ::Draft.live.where(user_id: @snapshot.user.id, draft_key: @snapshot.draft_key).pick(:id)
     end
   end
 end
