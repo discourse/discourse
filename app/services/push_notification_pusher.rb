@@ -125,24 +125,32 @@ class PushNotificationPusher
     return if revoked_endpoint?(endpoint)
 
     data = push_params.to_json
+    raise Discourse::InvalidParameters.new(:subscription) if data.include?("\\u0000")
     by_endpoint = PushSubscription.with_endpoint(endpoint)
 
     # overlapping registrations from an account switch must not both keep a row
     subscription =
       DistributedMutex.synchronize("push_subscription_#{Digest::SHA1.hexdigest(endpoint)}") do
-        # a browser endpoint delivers to whoever is signed in there now
-        by_endpoint.where.not(user_id: user.id).delete_all
+        PushSubscription.transaction do
+          # a browser endpoint delivers to whoever is signed in there now
+          by_endpoint.where.not(user_id: user.id).delete_all
 
-        existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
-        if existing
-          by_endpoint.where(user_id: user.id).where.not(id: existing.id).delete_all
-          existing.update!(data: data) if existing.data != data
-          existing
-        else
-          RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
-          created = PushSubscription.create!(user: user, data: data)
-          prune_subscriptions(user)
-          created
+          existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
+          if existing
+            by_endpoint.where(user_id: user.id).where.not(id: existing.id).delete_all
+            existing.update!(data: data) if existing.data != data
+            existing
+          else
+            RateLimiter.new(
+              user,
+              "push-subscribe",
+              SUBSCRIBE_RATE_LIMIT_PER_HOUR,
+              1.hour,
+            ).performed!
+            created = PushSubscription.create!(user: user, data: data)
+            prune_subscriptions(user)
+            created
+          end
         end
       end
 

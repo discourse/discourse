@@ -97,6 +97,24 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions).to be_empty
     end
 
+    it "rejects subscriptions containing null bytes" do
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: {
+               endpoint: "https://fcm.googleapis.com/fcm/send/abc",
+               keys: {
+                 p256dh: "256dh",
+                 auth: "a\u0000",
+               },
+             },
+             send_confirmation: false,
+           },
+           as: :json
+
+      expect(response.status).to eq(400)
+      expect(user.push_subscriptions).to be_empty
+    end
+
     it "accepts an endpoint at the size limit" do
       endpoint = "https://push.example/".ljust(PushSubscription::MAX_ENDPOINT_BYTES, "a")
       post "/push_notifications/subscribe.json",

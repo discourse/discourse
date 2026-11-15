@@ -432,6 +432,23 @@ RSpec.describe PushNotificationPusher do
         expect(user.push_subscriptions.count).to eq(1)
       end
 
+      it "keeps the current owner when a takeover is rate limited" do
+        RateLimiter.enable
+        endpoint = "https://fcm.googleapis.com/fcm/send/shared"
+        owner = Fabricate(:user)
+        PushNotificationPusher.subscribe(
+          owner,
+          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+          "false",
+        )
+        PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR.times do |index|
+          subscribe("https://fcm.googleapis.com/fcm/send/#{index}")
+        end
+
+        expect { subscribe(endpoint) }.to raise_error(RateLimiter::LimitExceeded)
+        expect(owner.push_subscriptions.count).to eq(1)
+      end
+
       it "keeps error tracking when the owner re-registers the same endpoint" do
         subscribe("https://fcm.googleapis.com/fcm/send/token")
         user.push_subscriptions.sole.update!(error_count: 2, first_error_at: 3.days.ago)

@@ -9,7 +9,7 @@ class PushSubscription < ActiveRecord::Base
   scope :with_endpoint,
         ->(endpoint) do
           where(
-            "data::jsonb ->> 'endpoint' = ? AND octet_length(data::jsonb ->> 'endpoint') <= ?",
+            "strpos(data, '\\u0000') = 0 AND data::jsonb ->> 'endpoint' = ? AND octet_length(data::jsonb ->> 'endpoint') <= ?",
             endpoint,
             MAX_ENDPOINT_BYTES,
           )
@@ -40,5 +40,5 @@ end
 #
 # Indexes
 #
-#  index_push_subscriptions_on_endpoint  ((((data)::jsonb ->> 'endpoint'::text))) WHERE (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048)
+#  index_push_subscriptions_on_endpoint  ((((data)::jsonb ->> 'endpoint'::text))) WHERE ((strpos((data)::text, '\u0000'::text) = 0) AND (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048))
 #

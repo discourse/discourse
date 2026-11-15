@@ -24406,7 +24406,7 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 -- Name: index_push_subscriptions_on_endpoint; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_push_subscriptions_on_endpoint ON public.push_subscriptions USING btree ((((data)::jsonb ->> 'endpoint'::text))) WHERE (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048);
+CREATE INDEX index_push_subscriptions_on_endpoint ON public.push_subscriptions USING btree ((((data)::jsonb ->> 'endpoint'::text))) WHERE ((strpos((data)::text, '\u0000'::text) = 0) AND (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048));
 
 
 --
