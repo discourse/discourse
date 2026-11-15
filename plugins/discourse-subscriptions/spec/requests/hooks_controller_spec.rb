@@ -225,6 +225,109 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         end
       end
 
+      it "preserves cancellation when the paid checkout is redelivered" do
+        post "/s/hooks.json"
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to contain_exactly(group)
+
+        ::Stripe::Webhook.stubs(:construct_event).returns(
+          type: "customer.subscription.deleted",
+          data: {
+            object: {
+              id: checkout_session_completed_data[:object][:subscription],
+              customer: checkout_session_completed_data[:object][:customer],
+              plan: list_line_items_data[:data].first[:price],
+              status: "canceled",
+            },
+          },
+        )
+        post "/s/hooks.json"
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to be_empty
+
+        ::Stripe::Webhook.stubs(:construct_event).returns(
+          type: "checkout.session.completed",
+          data: checkout_session_completed_data,
+        )
+        expect { post "/s/hooks.json" }.to not_change {
+          DiscourseSubscriptions::Customer.count
+        }.and not_change { DiscourseSubscriptions::Subscription.count }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to be_empty
+      end
+
+      it "acknowledges an asynchronous success after checkout without duplicating fulfillment" do
+        post "/s/hooks.json"
+        expect(response.status).to eq(200)
+
+        ::Stripe::Webhook.stubs(:construct_event).returns(
+          type: "checkout.session.async_payment_succeeded",
+          data: checkout_session_completed_data,
+        )
+        expect { post "/s/hooks.json" }.to not_change {
+          DiscourseSubscriptions::Customer.count
+        }.and not_change { DiscourseSubscriptions::Subscription.count }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to contain_exactly(group)
+      end
+
+      it "fulfills a retry after a transient line item lookup failure" do
+        ::Stripe::Checkout::Session
+          .stubs(:list_line_items)
+          .raises(::Stripe::APIConnectionError.new("connection failed"))
+          .then
+          .returns(list_line_items_data)
+
+        expect { post "/s/hooks.json" }.to not_change {
+          DiscourseSubscriptions::Customer.count
+        }.and not_change { DiscourseSubscriptions::Subscription.count }
+        expect(response.status).to eq(500)
+        expect(user.reload.groups).to be_empty
+
+        expect { post "/s/hooks.json" }.to change { DiscourseSubscriptions::Customer.count }.by(
+          1,
+        ).and change { DiscourseSubscriptions::Subscription.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to contain_exactly(group)
+        expect(DiscourseSubscriptions::Customer.order(:id).last.product_id).to eq(
+          list_line_items_data[:data].first[:price][:product],
+        )
+      end
+
+      it "fulfills a retry after a transient subscription metadata failure" do
+        ::Stripe::Subscription
+          .stubs(:update)
+          .raises(::Stripe::APIConnectionError.new("connection failed"))
+          .then
+          .returns({})
+
+        expect { post "/s/hooks.json" }.to not_change {
+          DiscourseSubscriptions::Customer.count
+        }.and not_change { DiscourseSubscriptions::Subscription.count }
+        expect(response.status).to eq(500)
+        expect(user.reload.groups).to be_empty
+
+        expect { post "/s/hooks.json" }.to change { DiscourseSubscriptions::Customer.count }.by(
+          1,
+        ).and change { DiscourseSubscriptions::Subscription.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to contain_exactly(group)
+      end
+
+      it "fulfills a new subscription after an earlier subscription was canceled" do
+        subscription.update!(status: "canceled")
+
+        expect { post "/s/hooks.json" }.to change { DiscourseSubscriptions::Subscription.count }.by(
+          1,
+        )
+
+        expect(response.status).to eq(200)
+        expect(user.reload.groups).to contain_exactly(group)
+        expect(subscription.reload.status).to eq("canceled")
+      end
+
       it "does not create records or add the user to the group when payment_status is not paid" do
         unpaid_data = checkout_session_completed_data.deep_dup
         unpaid_data[:object][:payment_status] = "unpaid"
