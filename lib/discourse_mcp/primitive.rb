@@ -30,7 +30,8 @@ module DiscourseMcp
       annotations: {},
       risk: :read,
       provider: :core,
-      availability: nil
+      availability: nil,
+      defer: false
     )
       @identifier = identifier.to_s
       @kind = kind.to_sym
@@ -44,12 +45,17 @@ module DiscourseMcp
       @risk = risk.to_sym
       @provider = provider.to_s
       @availability = availability
+      @defer = defer
       validate!
       freeze
     end
 
     def available?
       availability.nil? || availability.call
+    end
+
+    def deferred?
+      @defer
     end
 
     def consent_relevant?

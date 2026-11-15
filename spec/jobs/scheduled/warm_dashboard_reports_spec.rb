@@ -5,7 +5,6 @@ RSpec.describe Jobs::WarmDashboardReports do
 
   before do
     Discourse.cache.clear
-    SiteSetting.dashboard_improvements = true
     admin.update!(last_seen_at: 1.hour.ago)
   end
 
@@ -32,14 +31,6 @@ RSpec.describe Jobs::WarmDashboardReports do
       described_class.new.execute({})
 
       expect(warmed_signups).to be_present
-    end
-
-    it "skips warming when the new dashboard is disabled" do
-      SiteSetting.dashboard_improvements = false
-
-      described_class.new.execute({})
-
-      expect(warmed_signups).to be_nil
     end
 
     it "skips warming when no staff member has been seen recently" do

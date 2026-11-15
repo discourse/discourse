@@ -77,6 +77,14 @@ be:
       assign:
         errors:
           not_found: "Тэма не знойдзена."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Загаловак"
+    mcp_theme_access:
+      none: "ёсць"
+    mcp_app_setup:
+      none: "ёсць"
     reviewables:
       ai_tool_action:
         approve:

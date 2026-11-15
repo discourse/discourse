@@ -37,7 +37,7 @@
 
     // The timeline footer has "jump to post" and notification controls that
     // are irrelevant inside this picker; hide them.
-    .timeline-footer-controls {
+    &.show .topic-timeline .timeline-footer-controls {
       display: none;
     }
 

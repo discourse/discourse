@@ -3,7 +3,7 @@
 class AssetProcessor
   # Bump only when theme JS output changes; it rebakes every theme on every site. Plugin builds
   # also key on the processor's digest, so JS changes there rebuild them without a bump.
-  BASE_COMPILER_VERSION = 121
+  BASE_COMPILER_VERSION = 122
 
   BUNDLE =
     PrecompiledBundle.new(

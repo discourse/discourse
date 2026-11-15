@@ -61,8 +61,6 @@ sq:
         title: "E përzgjedhur"
       pinned: "E përzgjedhur"
       channel_settings:
-        edit: "Redakto"
-        add: "Shto"
         notification_settings_context: "Njoftimet"
       close: "Mbyll"
       remove: "Hiq"
@@ -96,16 +94,17 @@ sq:
       search_view:
         filter_placeholder: Kërko mesazhet
       about_view:
-        title: Titulli
         name: Emri
         description: Përshkrimi
       channel_info:
         back_to_channel: "Kthehu mbrapa"
         tabs:
           members: Anëtarë
+          preferences: Preferencat
           settings: Rregullimet
           search: Kërko
         remove_member: "Hiq"
+        members_title: "%{channel} anëtarë"
       new_message_modal:
         filter: "Filtro"
       direct_message_creator:
@@ -132,8 +131,6 @@ sq:
         preview: "Parashikimi"
         save: "Ruaj"
         saved: "U ruajt"
-        admin_title: "Admin"
-        settings_title: "Rregullimet"
         category_label: "Kategori"
         history_label: "Historia"
         members_label: "Anëtarë"

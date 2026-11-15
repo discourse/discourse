@@ -157,8 +157,7 @@ export default class InterfaceController extends Controller {
   @computed("model.user_option.homepage_id", "userSelectableHome.[]")
   get homepageId() {
     return (
-      this.model.user_option.homepage_id ||
-      this.userSelectableHome.firstObject.value
+      this.model.user_option.homepage_id || this.userSelectableHome[0].value
     );
   }
 

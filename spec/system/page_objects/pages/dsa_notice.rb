@@ -3,6 +3,11 @@
 module PageObjects
   module Pages
     class DsaNotice < Base
+      def visit_form
+        visit("/dsa/report-illegal-content")
+        self
+      end
+
       def form
         PageObjects::Components::FormKit.new(".dsa-notice .form-kit")
       end
@@ -27,6 +32,14 @@ module PageObjects
 
       def has_confirmation?
         has_css?(".dsa-notice h1", text: "Report received")
+      end
+
+      def submit_report(content_url:, name:, explanation:)
+        form.field("content_url").fill_in(content_url)
+        form.field("name").fill_in(name)
+        form.field("explanation").fill_in(explanation)
+        form.field("declaration").check
+        form.submit
       end
     end
   end

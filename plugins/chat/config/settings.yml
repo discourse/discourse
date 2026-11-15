@@ -7,7 +7,7 @@ chat:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397571"
   enable_public_channels:
@@ -136,9 +136,6 @@ chat:
     allow_any: false
     refresh: true
     area: "group_permissions"
-    depends_on:
-      - "chat_pinned_messages"
-    depends_behavior: "hidden"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators

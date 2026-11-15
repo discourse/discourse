@@ -481,7 +481,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
-    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+    shared_examples "reporting tool script errors to the model" do |custom_output:|
       it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
         custom_tool.update!(script: <<~JS)
           function invoke() {
@@ -509,6 +509,18 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           ['{"error":"Error: Category not found"}', tool_call.id, "tool", tool_call.name],
         )
       end
+    end
+
+    context "when a script error has no custom output" do
+      include_examples "reporting tool script errors to the model", custom_output: nil
+    end
+
+    context "when a script error follows setCustomRaw" do
+      include_examples "reporting tool script errors to the model", custom_output: "setCustomRaw"
+    end
+
+    context "when a script error follows streamCustomRaw" do
+      include_examples "reporting tool script errors to the model", custom_output: "streamCustomRaw"
     end
 
     it "uses custom tool in conversation" do
@@ -1060,7 +1072,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             message: "Hello",
           )
         speaker = agent.user
+        Fabricate(:ai_agent, user: speaker, enabled: true)
         agent.update!(enabled: false)
+        expect(speaker.reload).to be_active
 
         expect {
           Jobs::CreateAiChatReply.new.execute(
@@ -1078,6 +1092,53 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(error_message.message).to include(
           I18n.t("discourse_ai.ai_bot.errors.invalid_agent_id"),
         )
+      end
+
+      it "creates no queued chat message when disabling the last agent deactivates its speaker" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        speaker = agent.user
+        agent.update!(enabled: false)
+        expect(speaker.reload).not_to be_active
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            bot_user_id: speaker.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            authorization_user_id: user.id,
+          )
+        }.not_to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }
+      end
+
+      it "creates no queued chat message through an explicitly inactive speaker" do
+        message =
+          Fabricate(
+            :chat_message_without_service,
+            user:,
+            chat_channel: dm_channel,
+            message: "Hello",
+          )
+        speaker = agent.user
+        speaker.update!(active: false)
+
+        expect {
+          Jobs::CreateAiChatReply.new.execute(
+            channel_id: dm_channel.id,
+            message_id: message.id,
+            bot_user_id: speaker.id,
+            agent_id: agent.id,
+            llm_model_id: opus_model.id,
+            authorization_user_id: user.id,
+          )
+        }.not_to change { Chat::Message.where(chat_channel_id: dm_channel.id).count }
       end
 
       it "can run tools" do
@@ -1185,6 +1246,51 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(approval_messages.map(&:thread_id)).to contain_exactly(
           message.thread_id,
           message.thread_id,
+        )
+      end
+
+      it "shortens approval details that do not fit in a chat message" do
+        target = Fabricate(:user)
+        agent.update!(tools: ["SuspendUser"], require_approval: true)
+        DiscourseAi::Agents::Agent
+          .any_instance
+          .stubs(:stop_chain_on_pending_approval?)
+          .returns(true)
+        DiscourseAi::Agents::Tools::SuspendUser
+          .any_instance
+          .stubs(:approval_details)
+          .returns("Suspension details. " * 50)
+        SiteSetting.chat_maximum_message_length = 200
+
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "suspend_user",
+            id: "suspend",
+            parameters: {
+              username: target.username,
+              duration_days: 3,
+              reason: "spam",
+            },
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([[tool_call]]) do
+          ChatSDK::Message.create(channel_id: dm_channel.id, raw: "Suspend them", guardian:)
+        end
+
+        approval_message = Chat::Message.where(chat_channel: dm_channel).where.not(blocks: nil).sole
+        reviewable = ReviewableAiToolAction.last
+
+        expect(approval_message.message.length).to be <= 200
+        expect(approval_message.message).to start_with(
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened"),
+        )
+        expect(
+          approval_message.blocks.first["elements"].map { |element| element["action_id"] },
+        ).to eq(
+          %W[
+            ai_tool_approval::approve::#{reviewable.id}
+            ai_tool_approval::reject::#{reviewable.id}
+          ],
         )
       end
 
@@ -1312,7 +1418,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "normalizes a public legacy model mention to the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [claude_2])
       agent.update!(allow_topic_mentions: true)
@@ -1341,7 +1447,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "preserves the conversation model for a per-turn legacy model mention" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       agent.update!(allow_topic_mentions: true)
       topic = Fabricate(:topic, user: admin)
@@ -1365,7 +1471,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "normalizes a reply to a public legacy model post to the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [claude_2])
       agent.update!(allow_topic_mentions: true)
@@ -1392,7 +1498,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "reports an unavailable public legacy model mention through the topic agent" do
-      legacy_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      legacy_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, legacy_user.id)
       toggle_enabled_bots(bots: [opus_model])
       agent.update!(allow_topic_mentions: true)
@@ -2478,9 +2584,9 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
   describe ".legacy_recipient_for" do
     it "rejects an ambiguous conversation when the preferred bot is no longer a participant" do
-      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      second_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      former_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      first_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      second_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      former_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, first_model_user.id)
       opus_model.update_column(:user_id, second_model_user.id)
       Fabricate(:llm_model).update_column(:user_id, former_model_user.id)
@@ -2496,8 +2602,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "continues a legacy conversation with its preferred model recipient" do
-      first_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
-      preferred_model_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      first_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
+      preferred_model_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       claude_2.update_column(:user_id, first_model_user.id)
       opus_model.update_column(:user_id, preferred_model_user.id)
       toggle_enabled_bots(bots: [claude_2, opus_model])
@@ -2824,7 +2930,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "preserves the existing author when retrying a historical reply" do
-      historical_user = Fabricate(:user, id: DiscourseAi::BotUser.next_id)
+      historical_user = Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id)
       historical_model = Fabricate(:llm_model)
       historical_model.update_column(:user_id, historical_user.id)
       historical_reply =

@@ -266,7 +266,7 @@ describe "Content Localization" do
         expect(sidebar).to have_section_link("戦略")
 
         SiteSetting.set_locale_from_cookie = false
-        page.refresh
+        topic_page.visit_topic(topic)
         modal = topic_page.open_content_language_preferences
         expect(modal).to have_read_only_interface_language("English")
       end
@@ -864,7 +864,7 @@ describe "Content Localization" do
 
   context "for site settings" do
     let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
-    let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+    let(:banner) { PageObjects::Components::DFloatingControlBar.new }
 
     it "does not allow more than the maximum number of locales" do
       SiteSetting.content_localization_supported_locales = "en|ja"

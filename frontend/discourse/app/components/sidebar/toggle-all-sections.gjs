@@ -1,22 +1,23 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class ToggleAllSections extends Component {
   @service sidebarState;
 
   get collapsableSections() {
-    return this.args.sections.filter(
-      (section) => section.displaySection && !section.hideSectionHeader
-    );
+    return this.args.sections.filter((section) => !section.hideSectionHeader);
   }
 
   get allSectionsExpanded() {
     return this.collapsableSections.every((section) => {
-      return !this.sidebarState.collapsedSections.has(
-        getCollapsedSidebarSectionKey(section.name)
+      return (
+        this.sidebarState.activeExpandedSections.has(section.sectionKey) ||
+        !this.sidebarState.isSectionCollapsed(
+          section.sectionKey,
+          section.collapsedByDefault
+        )
       );
     });
   }
@@ -37,9 +38,9 @@ export default class ToggleAllSections extends Component {
 
     this.collapsableSections.forEach((section) => {
       if (collapse) {
-        this.sidebarState.collapseSection(section.name);
+        this.sidebarState.collapseSection(section.sectionKey);
       } else {
-        this.sidebarState.expandSection(section.name);
+        this.sidebarState.expandSection(section.sectionKey);
       }
     });
   }
@@ -47,6 +48,7 @@ export default class ToggleAllSections extends Component {
   <template>
     <DButton
       class="btn-transparent sidebar-toggle-all-sections"
+      data-sidebar-keep-open
       @action={{this.toggleAllSections}}
       @icon={{this.icon}}
       @title={{this.title}}

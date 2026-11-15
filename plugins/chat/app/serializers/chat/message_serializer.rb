@@ -185,10 +185,12 @@ module Chat
       return [] if reviewable_id.present? && user_flag_status == ReviewableScore.statuses[:pending]
 
       if scope.can_only_flag_chat_messages_as_illegal?
-        return PostActionType.flag_types.slice(:illegal).keys
+        return [] unless scope.can_flag_message_as?(object, scope.chat_flag_types[:illegal], {})
+        return scope.chat_flag_types.slice(:illegal).keys
       end
 
-      PostActionType.flag_types.map do |sym, id|
+      scope.chat_flag_types.filter_map do |sym, id|
+        next unless scope.can_flag_message_as?(object, id, {})
         if channel_object.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)
           next
         end
@@ -231,10 +233,6 @@ module Chat
 
     def pinned
       object.pinned_message.present?
-    end
-
-    def include_pinned?
-      SiteSetting.chat_pinned_messages
     end
 
     def thread

@@ -168,15 +168,10 @@ export default class ChatMessageInfo extends Component {
           </span>
         {{/if}}
 
-        {{#if this.siteSettings.chat_pinned_messages}}
-          {{#if (and @message.pinned (not (eq @context "pinned")))}}
-            <span
-              class="chat-message-info__pinned"
-              title={{i18n "chat.pinned"}}
-            >
-              {{dIcon "thumbtack"}}
-            </span>
-          {{/if}}
+        {{#if (and @message.pinned (not (eq @context "pinned")))}}
+          <span class="chat-message-info__pinned" title={{i18n "chat.pinned"}}>
+            {{dIcon "thumbtack"}}
+          </span>
         {{/if}}
 
         {{#if this.isFlagged}}

@@ -9,7 +9,6 @@ RSpec.describe Admin::Config::DesignWizardController do
   fab!(:other_channel) { Fabricate(:category_channel, name: "General") }
 
   before do
-    SiteSetting.concord_in_wizard = true
     SiteSetting.chat_enabled = true
     SiteSetting.enable_public_channels = true
     SiteSetting.general_category_id = general_category.id
@@ -165,8 +164,8 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
     end
 
-    %w[chat categories].each do |original_homepage|
-      it "restores the original #{original_homepage} homepage and channel settings after a preview" do
+    shared_examples "restoring homepage settings after a preview" do |original_homepage:|
+      it "restores the original homepage and channel settings" do
         SiteSetting.default_homepage = original_homepage
         SiteSetting.chat_homepage_channel = other_channel.id
 
@@ -186,6 +185,15 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.default_homepage).to eq(original_homepage)
         expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
       end
+    end
+
+    context "with the chat homepage" do
+      include_examples "restoring homepage settings after a preview", original_homepage: "chat"
+    end
+
+    context "with the categories homepage" do
+      include_examples "restoring homepage settings after a preview",
+                       original_homepage: "categories"
     end
 
     it "rejects settings that are not registered homepage settings" do

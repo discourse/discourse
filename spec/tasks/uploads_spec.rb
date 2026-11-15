@@ -258,6 +258,24 @@ RSpec.describe "tasks/uploads" do
     end
   end
 
+  describe "uploads:gather" do
+    let(:public_dir) { Dir.mktmpdir }
+
+    before { Rails.stubs(:public_path).returns(Pathname.new(public_dir)) }
+    after { FileUtils.rm_rf(public_dir) }
+
+    it "moves uploads from other site folders" do
+      upload = Fabricate(:upload, url: "/uploads/other/original/1X/it's.png")
+      FileUtils.mkdir_p(File.join(public_dir, "uploads/other/original/1X"))
+      File.write(File.join(public_dir, upload.url), "a")
+
+      capture_stdout { invoke_rake_task("uploads:gather") }
+
+      expect(upload.reload.url).to eq("/uploads/default/original/1X/it's.png")
+      expect(File.read(File.join(public_dir, upload.url))).to eq("a")
+    end
+  end
+
   describe "uploads:downsize" do
     def invoke_task
       capture_stdout { invoke_rake_task("uploads:downsize") }

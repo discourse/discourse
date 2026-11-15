@@ -65,6 +65,14 @@ module DiscourseMcp
           created_at: theme.created_at.iso8601,
           updated_at: theme.updated_at.iso8601,
           theme_fields: theme.theme_fields.map { |field| theme_field_json(field) },
+          settings:
+            theme.settings.values.map do |setting|
+              ThemeSettingsSerializer.new(setting, root: false).as_json
+            end,
+          translations:
+            theme.translations.map do |translation|
+              { key: translation.key, value: translation.value, default: translation.default }
+            end,
         }
       end
 
@@ -153,6 +161,15 @@ module DiscourseMcp
 
         theme = ::Theme.include_relations.find_by(id: arguments.fetch("theme_id"))
         raise ToolError, I18n.t("mcp.errors.theme_not_found") if theme.blank?
+
+        guardian.ensure_can_edit_theme!(theme)
+        if !guardian.can_edit_theme_relations?(
+             theme,
+             child_theme_ids: arguments["child_theme_ids"],
+             parent_theme_ids: arguments["parent_theme_ids"],
+           )
+          raise Discourse::InvalidAccess
+        end
 
         ensure_system_theme_editable!(theme, arguments)
         if arguments.keys == ["theme_id"]

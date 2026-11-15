@@ -104,7 +104,7 @@ export default <template>
           {{/unless}}
 
           {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner />
+            <AdminOnboardingBanner @location="above_main_container" />
           {{/if}}
 
           <WelcomeBanner @location="above_topic_content" />

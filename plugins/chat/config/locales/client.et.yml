@@ -42,8 +42,6 @@ et:
       pinned: "Esiletõstetud"
       browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
-        edit: "Muuda"
-        add: "Lisa"
         close_channel: "Sulge kanal"
         open_channel: "Ava kanal"
         archive_channel: "Arhiveeri kanal"
@@ -89,13 +87,14 @@ et:
       search_view:
         filter_placeholder: Otsi sõnumeid
       about_view:
-        title: Pealkiri
         name: Nimi
         description: Kirjeldus
       channel_info:
         back_to_channel: "Tagasi"
+        nav_label: "Kanali info"
         tabs:
           members: Liikmed
+          preferences: Eelistused
           settings: Sätted
           search: Otsi
         remove_member: "Eemalda"
@@ -129,9 +128,6 @@ et:
         save: "Salvesta"
         saved: "Salvestatud"
         unfollow: "Lahku"
-        admin_title: "Admin"
-        settings_title: "Sätted"
-        info_title: "Kanali info"
         category_label: "Foorum"
         history_label: "Ajalugu"
         members_label: "Liikmed"

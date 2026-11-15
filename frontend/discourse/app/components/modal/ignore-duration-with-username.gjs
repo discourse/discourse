@@ -75,7 +75,7 @@ export default class IgnoreDurationModal extends Component {
 
   @action
   updateIgnoredUsername(selected) {
-    this.ignoredUsername = selected.firstObject;
+    this.ignoredUsername = selected[0];
   }
 
   <template>

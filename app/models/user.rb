@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
+  MAX_FILTER_TERMS = 50
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
@@ -338,7 +339,12 @@ class User < ActiveRecord::Base
   scope :filter_by_username,
         ->(filter) do
           if filter.is_a?(Array)
-            where("username_lower ~* ?", "(#{filter.join("|")})")
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
+            patterns.empty? ? all : where("username_lower ILIKE ANY (ARRAY[:patterns])", patterns:)
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
@@ -356,9 +362,16 @@ class User < ActiveRecord::Base
           users = joins(:primary_email)
 
           if filter.is_a?(Array)
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+            return users if terms.empty?
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
             users.where(
-              "username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter",
-              filter: "(#{filter.join("|")})",
+              "username_lower ILIKE ANY (ARRAY[:patterns]) OR lower(user_emails.email) IN (:emails)",
+              patterns:,
+              emails: terms.map(&:downcase),
             )
           else
             users.where(
@@ -1415,9 +1428,9 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    reviewable_ids = Reviewable.created_solely_by(self).pluck(:id)
     ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-    Reviewable.where(created_by_id: id).delete_all
+    Reviewable.where(id: reviewable_ids).delete_all
 
     posts
       .order("post_number desc")
@@ -1547,8 +1560,8 @@ class User < ActiveRecord::Base
       single_sign_on_record&.external_email&.downcase == email
   end
 
-  def activate
-    email_token = email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
+  def activate(activation_email = email)
+    email_token = email_tokens.create!(email: activation_email, scope: EmailToken.scopes[:signup])
     EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
     reload
   end
@@ -1624,7 +1637,14 @@ class User < ActiveRecord::Base
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
         Category.unscoped.where(read_restricted: true)
       else
-        secure_categories.references(:categories)
+        Category.where(id: secure_categories.select(:id)).or(
+          Category.where(
+            id:
+              CategoryGroup.where(group_id: Group::AUTO_GROUPS[:logged_in_users]).select(
+                :category_id,
+              ),
+          ),
+        )
       end
 
     cats.pluck("categories.id").sort
@@ -2130,6 +2150,7 @@ class User < ActiveRecord::Base
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+      PushNotificationPusher.clear_subscriptions(self)
 
       email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
 

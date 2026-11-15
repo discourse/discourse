@@ -10,6 +10,10 @@ module PageObjects
         self
       end
 
+      def has_translation?(key, value)
+        find(".theme-translation", text: key).has_field?(with: value)
+      end
+
       def finish_install
         find(".finish-install").click
       end
@@ -60,7 +64,7 @@ module PageObjects
       end
 
       def changes_banner
-        PageObjects::Components::AdminChangesBanner.new
+        PageObjects::Components::DFloatingControlBar.new
       end
 
       def has_color_scheme_selector?

@@ -13,6 +13,7 @@ en:
   discourse_workflows:
     admin_assistant:
       generating: "Generating and validating an unpublished workflow draft"
+      generating_progress: "Generating the workflow. This can take a few minutes."
       create_summary: "Save this workflow as an unpublished draft?"
       not_allowed: "Only administrators who can manage workflows can create workflows."
       invalid_request: "The workflow request is empty, contains a secret, or is too long. Please provide a shorter description without secrets."
@@ -34,6 +35,7 @@ en:
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."
+      error_credit_limit_exceeded: "This site has used all of today's AI credits. Try again after %{reset_time}."
       error_invalid_mode: "Invalid AI workflow authoring mode."
       error_invalid_patch: "The AI proposal did not pass workflow validation: %{errors}"
       error_invalid_response: "AI returned an invalid response."
@@ -175,6 +177,13 @@ en:
       modal:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
+      composer_paused:
+        too_many_phrases: "A composer trigger can have at most %{max} phrases."
+        phrase_too_long: "The phrase '%{phrase}' is longer than %{max} characters."
+        invalid_phrase: "The phrase '%{phrase}' is invalid, matches any text, or could take too long to match."
+      composer_message:
+        no_user: "No user is available to show the composer message to."
+        no_composer: "Composer messages need a workflow started by the composer trigger."
       topic_tags:
         unknown_mode: "Unknown tag mode: %{mode}."
         no_tag_names: "No tag names provided."

@@ -55,22 +55,42 @@ RSpec.describe Onebox::Matcher do
     end
 
     describe "with a allowlisted port/scheme" do
-      %w[http://example.com https://example.com http://example.com:80 //example.com].each do |url|
-        it "finds an engine for '#{url}'" do
-          matcher = Onebox::Matcher.new(url, opts)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
-          expect(matcher.oneboxed).not_to be_nil
-        end
+      it "finds an engine for 'http://example.com'" do
+        matcher = Onebox::Matcher.new("http://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
+
+      it "finds an engine for 'https://example.com'" do
+        matcher = Onebox::Matcher.new("https://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
+
+      it "finds an engine for 'http://example.com:80'" do
+        matcher = Onebox::Matcher.new("http://example.com:80", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
+      end
+
+      it "finds an engine for '//example.com'" do
+        matcher = Onebox::Matcher.new("//example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).not_to be_nil
       end
     end
 
     describe "without a allowlisted port/scheme" do
-      %w[http://example.com:21 ftp://example.com].each do |url|
-        it "doesn't find an engine for '#{url}'" do
-          matcher = Onebox::Matcher.new(url, opts)
-          matcher.stubs(:ordered_engines).returns([TestEngine])
-          expect(matcher.oneboxed).to be_nil
-        end
+      it "doesn't find an engine for 'http://example.com:21'" do
+        matcher = Onebox::Matcher.new("http://example.com:21", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).to be_nil
+      end
+
+      it "doesn't find an engine for 'ftp://example.com'" do
+        matcher = Onebox::Matcher.new("ftp://example.com", opts)
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        expect(matcher.oneboxed).to be_nil
       end
     end
 

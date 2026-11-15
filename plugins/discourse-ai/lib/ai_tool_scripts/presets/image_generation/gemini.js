@@ -1,34 +1,67 @@
 /* eslint-disable no-undef, no-unused-vars */
+// `model` is defined by the preset that includes this script.
 const apiKey = secrets.get("google_api_key");
 
 function invoke(params) {
   const prompt = params.prompt;
+  const aspectRatio = params.aspect_ratio;
   const imageUrls = params.image_urls || [];
 
   // Determine mode: edit if image_urls provided, otherwise generate
   const isEditMode = imageUrls.length > 0;
 
   if (isEditMode) {
-    return performEdit(prompt, imageUrls);
+    return performEdit(prompt, imageUrls, aspectRatio);
   } else {
-    return performGeneration(prompt);
+    return performGeneration(prompt, aspectRatio);
   }
 }
 
-function performGeneration(prompt) {
+function detectImageMimeType(base64Data, imageUrl) {
+  if (base64Data.startsWith("/9j/")) {
+    return "image/jpeg";
+  }
+  if (base64Data.startsWith("iVBOR")) {
+    return "image/png";
+  }
+  if (/\.jpe?g$/i.test(imageUrl)) {
+    return "image/jpeg";
+  }
+  return "image/png";
+}
+
+function parseJsonResponse(result) {
+  try {
+    const data = JSON.parse(result.body);
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      return data;
+    }
+  } catch {
+    // Handled below as unexpected response format
+  }
+  return null;
+}
+
+function generationConfig(aspectRatio) {
+  const config = { responseModalities: ["Image"] };
+  if (aspectRatio) {
+    config.imageConfig = { aspectRatio };
+  }
+  return config;
+}
+
+function performGeneration(prompt, aspectRatio) {
   const body = {
     contents: [
       {
         parts: [{ text: prompt }],
       },
     ],
-    generationConfig: {
-      responseModalities: ["Image"],
-    },
+    generationConfig: generationConfig(aspectRatio),
   };
 
   const result = http.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       headers: {
         "x-goog-api-key": `${apiKey}`,
@@ -41,7 +74,7 @@ function performGeneration(prompt) {
   return processResponse(result, prompt);
 }
 
-function performEdit(prompt, imageUrls) {
+function performEdit(prompt, imageUrls, aspectRatio) {
   // Gemini supports multimodal input - include images in the parts array
   // Limit to first 10 images
   const imagesToEdit = imageUrls.slice(0, 10);
@@ -56,7 +89,7 @@ function performEdit(prompt, imageUrls) {
 
     parts.push({
       inlineData: {
-        mimeType: "image/png",
+        mimeType: detectImageMimeType(base64Data, imageUrl),
         data: base64Data,
       },
     });
@@ -71,13 +104,11 @@ function performEdit(prompt, imageUrls) {
         parts,
       },
     ],
-    generationConfig: {
-      responseModalities: ["Image"],
-    },
+    generationConfig: generationConfig(aspectRatio),
   };
 
   const result = http.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       headers: {
         "x-goog-api-key": `${apiKey}`,
@@ -91,7 +122,14 @@ function performEdit(prompt, imageUrls) {
 }
 
 function processResponse(result, prompt) {
-  const responseData = JSON.parse(result.body);
+  const responseData = parseJsonResponse(result);
+  if (!responseData) {
+    return {
+      error: "Unexpected API response format",
+      status: result.status,
+      body_preview: String(result.body || "").substring(0, 500),
+    };
+  }
 
   // Check for API errors
   if (responseData.error) {
@@ -117,10 +155,12 @@ function processResponse(result, prompt) {
   // Find the part with inlineData
   const parts = responseData.candidates[0].content.parts;
   let base64Image = null;
+  let mimeType = null;
 
   for (const part of parts) {
     if (part.inlineData && part.inlineData.data) {
       base64Image = part.inlineData.data;
+      mimeType = part.inlineData.mimeType;
       break;
     }
   }
@@ -132,7 +172,8 @@ function processResponse(result, prompt) {
     };
   }
 
-  const image = upload.create("generated_image.png", base64Image);
+  const extension = mimeType === "image/jpeg" ? "jpg" : "png";
+  const image = upload.create(`generated_image.${extension}`, base64Image);
 
   if (!image || image.error) {
     return {
@@ -154,5 +195,5 @@ function processResponse(result, prompt) {
 }
 
 function details() {
-  return "Generates and edits images using Gemini 2.5 Flash Image (Nano Banana). Supports generation mode (when no image_urls provided) and edit mode (when image_urls array is provided).";
+  return `Generates and edits images using Google's ${model} model. Supports generation mode (when no image_urls provided) and edit mode (when image_urls array is provided).`;
 }

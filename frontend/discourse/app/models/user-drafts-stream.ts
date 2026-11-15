@@ -1,0 +1,132 @@
+import { computed } from "@ember/object";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { cook, excerpt } from "discourse/lib/text";
+import Category from "discourse/models/category";
+import {
+  NEW_PRIVATE_MESSAGE_KEY,
+  NEW_TOPIC_KEY,
+} from "discourse/models/composer";
+import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
+import type User from "discourse/models/user";
+import UserDraft, {
+  type UserDraftData,
+  type UserDraftFields,
+} from "discourse/models/user-draft";
+
+type WireDraft = Omit<UserDraftFields, "data" | "post_number"> & {
+  data: string;
+  post_number?: number | null;
+};
+
+export default class UserDraftsStream extends RestModel {
+  declare user?: User;
+
+  limit = 30;
+  loading = false;
+  hasMore = false;
+  discarded = false;
+
+  content: UserDraft[] | null = null;
+
+  override init(...args: Parameters<RestModel["init"]>) {
+    super.init(...args);
+    this.reset();
+  }
+
+  @computed("content.length", "loading")
+  get noContent() {
+    return this.content?.length === 0 && !this.loading;
+  }
+
+  reset() {
+    this.setProperties({
+      loading: false,
+      hasMore: true,
+      content: [],
+    });
+  }
+
+  remove(draft: UserDraft) {
+    this.set(
+      "content",
+      this.content!.filter((item) => item.id !== draft.id)
+    );
+  }
+
+  findItems(site?: Site) {
+    if (site) {
+      this.set("site", site);
+    }
+
+    if (this.loading || !this.hasMore) {
+      return Promise.resolve<void>();
+    }
+
+    this.set("loading", true);
+
+    const path = this.discarded ? "/discarded_drafts.json" : "/drafts.json";
+    const url = `${path}?offset=${this.content!.length}&limit=${this.limit}`;
+    return ajax(url)
+      .then(
+        (
+          result:
+            | {
+                drafts?: WireDraft[];
+                discarded_drafts?: WireDraft[];
+                categories?: Parameters<Site["updateCategory"]>[0][];
+              }
+            | null
+            | undefined
+        ) => {
+          const drafts = this.discarded
+            ? result?.discarded_drafts
+            : result?.drafts;
+          if (!drafts) {
+            return;
+          }
+
+          result?.categories?.forEach((category) =>
+            Site.current().updateCategory(category)
+          );
+
+          this.set("hasMore", drafts.length >= this.limit);
+
+          // Each wire object is mutated in place: parse data first, then hydrate its derived fields.
+          const promises = (drafts as unknown as UserDraftFields[]).map(
+            (draft) => {
+              draft.data = JSON.parse(
+                draft.data as unknown as string
+              ) as UserDraftData;
+              return cook(draft.data.reply).then((cooked) => {
+                draft.excerpt = excerpt(cooked.toString(), 300);
+                draft.post_number = draft.data.postId || null;
+                if (
+                  draft.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY) ||
+                  draft.draft_key.startsWith(NEW_TOPIC_KEY)
+                ) {
+                  draft.title = draft.data.title;
+                }
+                if (draft.data.categoryId) {
+                  draft.category =
+                    Category.findById(draft.data.categoryId) || null;
+                }
+
+                this.content!.push(
+                  UserDraft.create(
+                    draft as UserDraftFields & Record<string, unknown>
+                  )
+                );
+              });
+            }
+          );
+
+          return Promise.all(promises);
+        }
+      )
+      .finally(() => {
+        this.set("loading", false);
+      });
+  }
+}

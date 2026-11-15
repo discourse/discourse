@@ -3,6 +3,7 @@ import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import { i18n } from "discourse-i18n";
 import AdminAssistantWorkflowPreview from "discourse/plugins/discourse-workflows/discourse/components/admin-assistant/workflow-preview";
 import { decorateWorkflowPreview } from "discourse/plugins/discourse-workflows/discourse/initializers/assistant-workflow-preview";
 import {
@@ -20,8 +21,8 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;");
 }
 
-function cookedPreview(configuration, kind = PREVIEW_KIND) {
-  return `<pre><code class="lang-admin-assistant-workflow">${escapeHtml(JSON.stringify({ kind, configuration }))}</code></pre>`;
+function cookedPreview(configuration, kind = PREVIEW_KIND, extra = {}) {
+  return `<pre><code class="lang-admin-assistant-workflow">${escapeHtml(JSON.stringify({ kind, configuration, ...extra }))}</code></pre>`;
 }
 
 function addNode(clientId, name, type = "action:log") {
@@ -214,6 +215,46 @@ module(
         </template>
       );
       assert.dom(".assistant-workflow-preview__warning").doesNotExist();
+      assert.dom(".assistant-workflow-preview__notice").doesNotExist();
+      assert
+        .dom(".assistant-workflow-preview__details-label")
+        .hasText(
+          i18n(
+            "discourse_workflows.admin_assistant.preview.exact_configuration"
+          )
+        );
+    });
+
+    test("labels shortened previews and explains where to review settings", async function (assert) {
+      this.message = {
+        id: 113,
+        blocks: [{ type: "confirmation", title: APPROVAL_TITLE }],
+        cooked: cookedPreview(
+          {
+            name: "Large workflow",
+            operations: [addNode("start", "Start", "trigger:manual")],
+          },
+          PREVIEW_KIND,
+          { shortened: true }
+        ),
+      };
+      await render(
+        <template>
+          <AdminAssistantWorkflowPreview @message={{this.message}} />
+        </template>
+      );
+
+      assert
+        .dom(".assistant-workflow-preview__notice")
+        .hasText(i18n("discourse_workflows.admin_assistant.preview.shortened"));
+      assert
+        .dom(".assistant-workflow-preview__details-label")
+        .hasText(
+          i18n(
+            "discourse_workflows.admin_assistant.preview.shortened_configuration"
+          )
+        );
+      assert.dom(".assistant-workflow-preview__node").exists({ count: 1 });
     });
 
     test("lays out cycles deterministically and labels them", async function (assert) {

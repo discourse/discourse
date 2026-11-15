@@ -679,6 +679,44 @@ describe DiscourseMcp::Tools do
       end.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "respects plugin restrictions on theme edits" do
+      component = Fabricate(:theme, component: true, name: "Restricted")
+      plugin = Plugin::Instance.new
+      modifier = proc { |allowed, _guardian, target| allowed && target.id != component.id }
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => component.id,
+            "name" => "Renamed",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "child_theme_ids" => [component.id],
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(component.reload.name).to eq("Restricted")
+      expect(theme.reload.child_theme_ids).to be_empty
+    ensure
+      if plugin
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
+
     it "updates attributes and fields" do
       result =
         described_class.call(

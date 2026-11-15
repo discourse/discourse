@@ -191,10 +191,17 @@ export default class MeshSignalHandler {
 
       if (pc.signalingState === "have-local-offer") {
         if (this.#getCurrentUserId() < remoteUserId) {
-          liveLog.info(
-            "[live] glare detected, rolling back local offer for peer"
-          );
-          await pc.setLocalDescription({ type: "rollback" });
+          // Safari can leave the remote microphone muted when it answers on
+          // a connection whose own offer was rolled back, so answer on a
+          // fresh one. Candidates queued so far belong to the incoming offer.
+          liveLog.info("[live] glare detected, recreating peer to answer");
+          this.#peerManager.destroy(roomId, remoteUserId, {
+            keepPendingCandidates: true,
+          });
+          pc = await this.#peerManager.create(roomId, remoteUserId);
+          if (!pc) {
+            return;
+          }
         } else {
           liveLog.info(
             "[live] glare detected, ignoring remote offer from peer"

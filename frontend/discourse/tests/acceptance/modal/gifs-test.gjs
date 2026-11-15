@@ -1,9 +1,14 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import GifsModal from "discourse/components/modal/gifs";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 
 function fetchResponse(body) {
   return { ok: true, status: 200, json: async () => body };
@@ -97,6 +102,67 @@ acceptance("Modal - GIFs", function (needs) {
     assert
       .dom(".gifs-modal .gifs-result")
       .exists({ count: 1 }, "renders the result returned by Klipy");
+  });
+
+  test("intersecting the sentinel in the modal loads the next page of GIFs", async function (assert) {
+    const observations = stubIntersectionObserver();
+    const results = [gif("first GIF", "/images/emoji/twitter/smile.png")];
+    const positions = [];
+
+    fetchStub.callsFake(async (url) => {
+      if (url.includes("/gifs/categories.json")) {
+        return categoriesResponse();
+      }
+
+      const position = new URL(url, window.location.origin).searchParams.get(
+        "pos"
+      );
+      positions.push(position);
+      return position === "0"
+        ? searchResponse({ results, next: "next-page" })
+        : searchResponse({ results: [gif("last GIF")] });
+    });
+
+    enableLoadMoreObserver();
+
+    try {
+      await visit("/");
+      getOwner(this).lookup("service:modal").show(GifsModal);
+      await settled();
+      await fillIn(".gifs-modal input[name=query]", "hello");
+
+      const sentinel = () =>
+        observations.findLast(
+          ({ element }) => element === find(".gifs-modal .load-more-sentinel")
+        );
+      assert.strictEqual(
+        sentinel().options.root,
+        find(".gifs-modal .d-modal__body"),
+        "observes the sentinel within the scrollable modal body"
+      );
+
+      assert.deepEqual(
+        positions,
+        ["0"],
+        "only fetches the first page initially"
+      );
+
+      await sentinel().trigger();
+
+      assert.deepEqual(
+        positions,
+        ["0", "next-page"],
+        "uses the pagination cursor"
+      );
+      assert
+        .dom(".gifs-modal .gifs-result")
+        .exists({ count: 2 }, "appends the next page to the existing results");
+
+      await sentinel().trigger();
+      assert.strictEqual(positions.length, 2, "stops after the last page");
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 
   test("picking a result invokes customPickHandler with markup", async function (assert) {

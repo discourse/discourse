@@ -351,6 +351,22 @@ module("Unit | Model | post-stream", function (hooks) {
       60,
       "it respects gaps"
     );
+
+    postStream.set("isMegaTopic", true);
+    postStream.appendPost(
+      postStream.store.createRecord("post", { id: 99, post_number: 1 })
+    );
+
+    assert.strictEqual(
+      postStream.findPostIdForPostNumber(1),
+      99,
+      "it finds loaded posts on mega topics"
+    );
+    assert.strictEqual(
+      postStream.findPostIdForPostNumber(5),
+      undefined,
+      "it ignores the stream on mega topics"
+    );
   });
 
   test("fillGapBefore", function (assert) {
@@ -1272,7 +1288,7 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
-  test("triggerNewPostInStream for ignored posts", async function (assert) {
+  test("triggerNewPostsInStream for ignored posts", async function (assert) {
     const postStream = buildStream.call(this, 280, [1]);
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", {

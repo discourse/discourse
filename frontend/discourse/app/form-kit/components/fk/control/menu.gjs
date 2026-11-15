@@ -29,6 +29,7 @@ export default class FKControlMenu extends FKBaseControl {
       @offset={{5}}
       @onRegisterApi={{this.registerMenuApi}}
       @placement="bottom-start"
+      @preservePlacement={{@preservePlacement}}
       @triggerClass="form-kit__control-menu-trigger"
     >
       <:trigger>

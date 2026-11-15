@@ -40,7 +40,8 @@ module JsonApiKit
 
         def relationship_path = options[:path]
 
-        def member_parameter(member = name) = parameter.member(member)
+        def member_parameter(member = name) =
+          parameter.member(options.fetch(:parameter_member, member))
 
         def window_parameters = base.page.window_names.map { page_parameter(it) }
 

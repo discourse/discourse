@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import SvgSingleColorPalettePlaceholder from "discourse/components/svg/single-color-palette-placeholder";
 import { getColorSchemeStyles } from "discourse/lib/color-transformations";
+import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 
 export default class ColorPalettePreview extends Component {
   get isBuiltInDefault() {
@@ -10,6 +11,32 @@ export default class ColorPalettePreview extends Component {
       !this.args.scheme?.colors?.length ||
       false
     );
+  }
+
+  get usesTintedSidebar() {
+    return this.args.defaultTheme?.id === HORIZON_THEME_ID;
+  }
+
+  get backgroundColor() {
+    if (!this.usesTintedSidebar) {
+      return "var(--header-background--preview, #fff)";
+    }
+
+    return this.args.scheme?.is_dark
+      ? "oklch(from var(--tertiary--preview, #08c) 10% 0.025 h)"
+      : "oklch(from var(--tertiary--preview, #08c) 96% calc(c * 0.125) h)";
+  }
+
+  get sidebarColor() {
+    return this.usesTintedSidebar
+      ? this.backgroundColor
+      : "var(--secondary--preview, #fff)";
+  }
+
+  get activeItemColor() {
+    return this.usesTintedSidebar
+      ? "var(--selected--preview, var(--tertiary-low--preview, #d1f0ff))"
+      : "var(--primary-low--preview, #e9e9e9)";
   }
 
   get styles() {
@@ -47,7 +74,12 @@ export default class ColorPalettePreview extends Component {
 
   <template>
     <div style={{this.styles}} ...attributes>
-      <SvgSingleColorPalettePlaceholder />
+      <SvgSingleColorPalettePlaceholder
+        @activeItemColor={{this.activeItemColor}}
+        @backgroundColor={{this.backgroundColor}}
+        @sidebarColor={{this.sidebarColor}}
+        @tintedSidebar={{this.usesTintedSidebar}}
+      />
     </div>
   </template>
 }

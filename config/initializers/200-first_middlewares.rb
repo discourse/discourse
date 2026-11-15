@@ -89,13 +89,8 @@ if Rails.env.test?
 
   Rails.configuration.middleware.unshift BlockRequestsMiddleware
 elsif Rails.configuration.multisite
-  assets_hostnames = GlobalSetting.cdn_hostnames
-
-  if assets_hostnames.empty?
-    assets_hostnames = Discourse::Application.config.database_configuration[Rails.env]["host_names"]
-  end
-
-  RailsMultisite::ConnectionManagement.asset_hostnames = assets_hostnames
+  # Never list site hostnames: `__ws` would serve one site's pages on another's origin.
+  RailsMultisite::ConnectionManagement.asset_hostnames = GlobalSetting.cdn_hostnames
 
   # Multisite needs to be first, because the request tracker and message bus rely on it
   Rails.configuration.middleware.unshift RailsMultisite::Middleware,

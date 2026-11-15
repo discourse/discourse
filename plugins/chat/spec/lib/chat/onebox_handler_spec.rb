@@ -61,7 +61,7 @@ describe Chat::OneboxHandler do
             <article class="onebox-body chat-onebox-body">
               <h3 class="chat-onebox-title">
                 <a href="/chat/c/-/#{public_channel.id}">
-                  <img src="/images/emoji/twitter/tada.png?v=15" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
+                  <img src="/images/emoji/twitter/tada.png?v=#{Emoji::EMOJI_VERSION}" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20">
                   <span class="clear-badge">#{public_channel.name}</span>
                 </a>
               </h3>

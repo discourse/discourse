@@ -249,7 +249,7 @@ class SiteSetting < ActiveRecord::Base
     return true if setting.blank?
 
     host = URI.parse(src).host
-    !setting.split("|").include?(host)
+    !HostnameNormalizer.any_equivalent?(host, setting.split("|"))
   rescue URI::Error
     true
   end
@@ -394,6 +394,18 @@ class SiteSetting < ActiveRecord::Base
     invite_code.present?
   end
   client_settings << :require_invite_code
+
+  def self.site_logo_dimensions
+    %i[logo logo_dark logo_small logo_small_dark mobile_logo mobile_logo_dark].each_with_object(
+      {},
+    ) do |name, dimensions|
+      upload = public_send(name)
+      if upload && upload.width.to_i > 0 && upload.height.to_i > 0
+        dimensions[full_cdn_url(upload.url)] = { width: upload.width, height: upload.height }
+      end
+    end
+  end
+  client_settings << :site_logo_dimensions
 
   %i[
     site_logo_url

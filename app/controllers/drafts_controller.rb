@@ -97,6 +97,8 @@ class DraftsController < ApplicationController
 
     json = success_json.merge(draft_sequence: sequence)
 
+    DiscourseEvent.trigger(:draft_saved, current_user, params[:draft_key], data)
+
     # check for conflicts when editing a post
     if data.present? && data["postId"].present? && data["action"].to_s.start_with?("edit")
       original_text = data["original_text"] || data["originalText"]

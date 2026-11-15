@@ -46,14 +46,15 @@ export default class AdminUsersListShowController extends Controller {
 
   /** @type {boolean | string | null | undefined} */
   @tracked asc = null;
-  @tracked showEmails = false;
 
   /** @type {HTMLInputElement | null} */
   lastSelected = null;
 
   #page = 1;
+
   #results = trackedArray();
   #canLoadMore = true;
+  @tracked _showEmails = false;
 
   get users() {
     return this.#results.flat();
@@ -65,6 +66,22 @@ export default class AdminUsersListShowController extends Controller {
 
   get columnCount() {
     let colCount = 7; // note that the first column is hardcoded in the template
+
+    if (this.showSource) {
+      colCount += 1;
+    }
+
+    if (this.showPostCount) {
+      colCount += 1;
+    }
+
+    if (!this.showLastEmailed) {
+      colCount -= 1;
+    }
+
+    if (!this.showReadTime) {
+      colCount -= 1;
+    }
 
     if (this.showEmails) {
       colCount += 1;
@@ -78,6 +95,10 @@ export default class AdminUsersListShowController extends Controller {
   }
 
   get canCheckEmails() {
+    if (this.query === "bots") {
+      return false;
+    }
+
     return new CanCheckEmailsHelper(
       this.model?.id,
       this.siteSettings.moderators_view_emails,
@@ -85,8 +106,28 @@ export default class AdminUsersListShowController extends Controller {
     ).canCheckEmails;
   }
 
+  get showEmails() {
+    return this.canCheckEmails && this._showEmails;
+  }
+
+  get showLastEmailed() {
+    return this.query !== "bots";
+  }
+
+  get showPostCount() {
+    return this.query === "bots";
+  }
+
+  get showReadTime() {
+    return this.query !== "bots";
+  }
+
   get showSilenceReason() {
     return this.query === "silenced";
+  }
+
+  get showSource() {
+    return this.query === "bots" && this.currentUser.admin;
   }
 
   get showSuspendReason() {
@@ -164,7 +205,7 @@ export default class AdminUsersListShowController extends Controller {
 
   @action
   toggleEmailVisibility() {
-    this.showEmails = !this.showEmails;
+    this._showEmails = !this._showEmails;
     this.resetFilters();
   }
 

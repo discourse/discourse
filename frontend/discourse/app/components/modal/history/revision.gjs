@@ -4,6 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
@@ -42,6 +43,18 @@ export default class Revision extends Component {
 
         {{#if @model.edit_reason}}
           <span class="edit-reason">{{@model.edit_reason}}</span>
+        {{/if}}
+
+        {{#if @model.unlisted}}
+          <DTooltip
+            class="revision-details__unlisted"
+            @content={{i18n "post.revisions.unlisted.description"}}
+          >
+            <:trigger>
+              {{dIcon "list"}}
+              <span>{{i18n "post.revisions.unlisted.label"}}</span>
+            </:trigger>
+          </DTooltip>
         {{/if}}
 
         {{#if this.site.desktopView}}
