@@ -473,6 +473,47 @@ RSpec.describe Draft do
         expect(Draft.get(user, key, DraftSequence.current(user, key))).to eq(content)
       end
 
+      it "rejects a save of a live draft that was discarded and restored meanwhile" do
+        sequence = Draft.set(user, key, 0, content)
+
+        restored = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args, **kwargs|
+          result = original.call(*args, **kwargs)
+          if !restored
+            restored = true
+            discard(user, key)
+            Draft.discarded.find_by!(user: user, draft_key: key).restore!
+          end
+          result
+        end
+
+        expect { Draft.set(user, key, sequence, { reply: "stale tab" }.to_json) }.to raise_error(
+          Draft::OutOfSequence,
+        )
+        expect(Draft.get(user, key, DraftSequence.current(user, key))).to eq(content)
+      end
+
+      it "keeps the newer sequence when a stale save of a live draft is rejected" do
+        sequence = Draft.set(user, key, 0, content)
+
+        saved_elsewhere = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args, **kwargs|
+          result = original.call(*args, **kwargs)
+          if !saved_elsewhere
+            saved_elsewhere = true
+            newer = Draft.set(user, key, sequence, { reply: "other tab" }.to_json)
+            Draft.set(user, key, newer, { reply: "other tab again" }.to_json)
+          end
+          result
+        end
+
+        expect { Draft.set(user, key, sequence, { reply: "stale tab" }.to_json) }.to raise_error(
+          Draft::OutOfSequence,
+        )
+        expect(DraftSequence.current(user, key)).to eq(sequence + 2)
+        expect(Draft.get(user, key, sequence + 2)).to eq({ reply: "other tab again" }.to_json)
+      end
+
       it "reports a draft purged after it was loaded as missing" do
         Draft.set(user, key, 0, content)
         discard(user, key)

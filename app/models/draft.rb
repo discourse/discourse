@@ -64,25 +64,41 @@ class Draft < ActiveRecord::Base
     if draft_id
       raise Draft::OutOfSequence if !force_save && (current_sequence != sequence)
 
+      read_sequence = current_sequence
       sequence = current_sequence if force_save
       sequence += 1
 
-      # we need to keep upping our sequence on every save
-      # if we do not do that there are bad race conditions
-      DraftSequence.upsert(
-        { sequence: sequence, draft_key: key, user_id: user.id },
-        unique_by: %i[user_id draft_key],
-      )
+      update_params = {
+        id: draft_id,
+        sequence: sequence,
+        data: data,
+        owner: owner || current_owner,
+        read_sequence: read_sequence,
+        force_save: force_save,
+      }
 
-      DB.exec(<<~SQL, id: draft_id, sequence: sequence, data: data, owner: owner || current_owner)
-        UPDATE drafts
-           SET sequence = :sequence
-             , data = :data
-             , revisions = revisions + 1
-             , owner = :owner
-             , updated_at = CURRENT_TIMESTAMP
-         WHERE id = :id
-      SQL
+      Draft.transaction(requires_new: true) do
+        # we need to keep upping our sequence on every save
+        # if we do not do that there are bad race conditions
+        DraftSequence.upsert(
+          { sequence: sequence, draft_key: key, user_id: user.id },
+          unique_by: %i[user_id draft_key],
+        )
+
+        updated = DB.exec(<<~SQL, update_params)
+          UPDATE drafts
+             SET sequence = :sequence
+               , data = :data
+               , revisions = revisions + 1
+               , owner = :owner
+               , updated_at = CURRENT_TIMESTAMP
+           WHERE id = :id
+             AND (:force_save OR sequence <= :read_sequence)
+        SQL
+
+        # another save or a restore moved the draft past the sequence this save read
+        raise Draft::OutOfSequence if updated == 0
+      end
     elsif sequence != current_sequence
       raise Draft::OutOfSequence
     else
