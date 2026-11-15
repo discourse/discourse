@@ -214,6 +214,38 @@ module("Component | ChatComposerUploads", function (hooks) {
     assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
 
+  test("an in-progress upload survives the input element changing", async function (assert) {
+    setupUploadPretender();
+    this.set("onUploadChanged", () => {});
+    this.set("inputEl", document.createElement("textarea"));
+
+    await render(
+      <template>
+        <ChatComposerUploads
+          @composerInputEl={{this.inputEl}}
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{this.onUploadChanged}}
+        />
+      </template>
+    );
+
+    const done = assert.async();
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("upload-mixin:chat-composer-uploader:upload-success", () => {
+      assert.dom(".chat-composer-upload").exists({ count: 1 });
+      done();
+    });
+    appEvents.trigger(
+      "upload-mixin:chat-composer-uploader:add-files",
+      createFile("avatar.png")
+    );
+
+    await waitFor(".chat-composer-upload");
+    this.set("inputEl", document.createElement("div"));
+
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
+  });
+
   test("removing a completed upload", async function (assert) {
     this.set("changedUploads", null);
     this.set("onUploadChanged", () => {});

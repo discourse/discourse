@@ -83,6 +83,8 @@ export default class ChatComposer extends Component {
   // chat addresses the whole channel with @all
   globalMentions = ["all"];
 
+  #richEditorLoading;
+
   constructor() {
     super(...arguments);
 
@@ -238,8 +240,8 @@ export default class ChatComposer extends Component {
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
-        ...options,
         triggerRule: async () => !(await textManipulation.inCodeBlock()),
+        ...options,
       })
     );
 
@@ -272,6 +274,14 @@ export default class ChatComposer extends Component {
     setCompositionMode(this.currentUser, preference);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  // the mode is a user preference shared with other open composers
+  @action
+  didUpdateEditorMode() {
+    if (this.useRichEditor) {
+      this.#loadRichEditor();
+    }
   }
 
   @action
@@ -539,10 +549,11 @@ export default class ChatComposer extends Component {
   }
 
   async #loadRichEditor() {
-    if (this.richEditorComponent) {
-      return;
-    }
+    this.#richEditorLoading ??= this.#importRichEditor();
+    await this.#richEditorLoading;
+  }
 
+  async #importRichEditor() {
     const component = await loadRichEditor();
 
     // read after the load, which registers the default extensions; mobile
@@ -773,6 +784,7 @@ export default class ChatComposer extends Component {
               <div
                 class="chat-composer__input-container"
                 {{on "click" this.focusOrPromptLogin}}
+                {{didUpdate this.didUpdateEditorMode this.useRichEditor}}
               >
                 {{#if this.editorComponent}}
                   <this.editorComponent
