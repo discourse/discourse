@@ -213,6 +213,61 @@ RSpec.describe Assignment do
         )
       end
     end
+
+    context "when some group members can't see the assigned target" do
+      fab!(:assigned_to, :group)
+      fab!(:category_group, :group)
+      fab!(:private_category) { Fabricate(:private_category, group: category_group) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+      fab!(:private_message) { Fabricate(:private_message_post).topic }
+      fab!(:insider, :user)
+      fab!(:outsider, :user)
+
+      before do
+        assigned_to.add(insider)
+        assigned_to.add(outsider)
+        category_group.add(insider)
+        private_message.allowed_users << insider
+      end
+
+      it "only notifies the members who can see an assigned topic" do
+        assignment = Fabricate(:topic_assignment, topic: private_topic, assigned_to:)
+        assignment.create_missing_notifications!
+
+        expect(Notification.for_assignment(assignment).pluck(:user_id)).to contain_exactly(
+          insider.id,
+        )
+      end
+
+      it "only notifies the members who can see an assigned post" do
+        assignment = Fabricate(:post_assignment, post: private_post, assigned_to:)
+        assignment.create_missing_notifications!
+
+        expect(Notification.for_assignment(assignment).pluck(:user_id)).to contain_exactly(
+          insider.id,
+        )
+      end
+
+      it "only notifies the members who can see an assigned private message" do
+        assignment = Fabricate(:topic_assignment, topic: private_message, assigned_to:)
+        assignment.create_missing_notifications!
+
+        expect(Notification.for_assignment(assignment).pluck(:user_id)).to contain_exactly(
+          insider.id,
+        )
+      end
+
+      it "does not notify a member who can't see the target when added to the group" do
+        assignment = Fabricate(:topic_assignment, topic: private_topic, assigned_to:)
+        late_member = Fabricate(:user)
+        assigned_to.add(late_member)
+
+        assignment.create_missing_notifications!(user_id: late_member.id)
+
+        expect(late_member.notifications.for_assignment(assignment)).to be_empty
+      end
+    end
   end
 
   describe "#reactivate!" do

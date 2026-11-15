@@ -106,6 +106,65 @@ RSpec.describe DiscourseWorkflows::FormsController do
       expect(execution.execution_data.context_data["__resume_token"]).to be_present
     end
 
+    context "with a dropdown field" do
+      before do
+        update_workflow_node(workflow, "trigger-1") do |node|
+          node["parameters"]["form_fields"] = [
+            {
+              "field_label" => "Plan",
+              "field_type" => "dropdown",
+              "required" => true,
+              "options" => {
+                "values" => [
+                  { "value" => "basic" },
+                  { "value" => "={{ $execution.workflow_id }}" },
+                ],
+              },
+            },
+          ]
+        end
+        publish_workflow!(workflow)
+      end
+
+      it "rejects a choice outside the form options before starting an execution" do
+        expect do
+          post form_path,
+               params: {
+                 resume_token: initial_resume_token,
+                 form_data: {
+                   plan: "other",
+                 },
+               },
+               headers: origin_headers
+        end.not_to change(DiscourseWorkflows::Execution, :count)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to eq(
+          [{ "field_label" => "Plan", "code" => "invalid_value" }],
+        )
+      end
+
+      it "starts an execution with a choice resolved from an expression" do
+        choice = workflow.id.to_s
+        token = initial_resume_token
+        expect(response.parsed_body["fields"].first["options"]).to include(
+          { "value" => choice, "label" => choice },
+        )
+
+        post form_path,
+             params: {
+               resume_token: token,
+               form_data: {
+                 plan: choice,
+               },
+             },
+             headers: origin_headers
+
+        expect(response).to have_http_status(:ok)
+        expect(DiscourseWorkflows::Execution.last.trigger_data["plan"]).to eq(choice)
+      end
+    end
+
     it "stores initial URL query parameters in the trigger payload" do
       get form_path, params: { source: "email", ref: "spring" }
       expect(response).to have_http_status(:ok)

@@ -43,12 +43,18 @@ module DiscourseWorkflows
       form_test_session.trigger_node
     end
 
-    def validate_form(form_node:, params:)
-      fields =
-        Schemas::FormFields.with_keys(
-          CollectionParameters.rows(NodeData.parameters(form_node), "form_fields"),
+    def validate_form(form_test_session:, workflow:, form_node:, guardian:, params:)
+      config =
+        Schemas::FormFields.resolve_trigger_configuration(
+          NodeData.parameters(form_node).slice("form_fields"),
+          workflow_id: workflow.id,
+          workflow_name: form_test_session.workflow_snapshot.workflow_name,
+          user: guardian.user,
         )
-      Schemas::FormFields.validate_submission(fields, params.form_data)
+      Schemas::FormFields.validate_submission(
+        CollectionParameters.rows(config, "form_fields"),
+        params.form_data,
+      )
     end
 
     def ensure_form_valid(form_validation:)

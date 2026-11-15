@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -62,6 +62,11 @@ export default class TagGroupsForm extends Component {
     let permissions = {};
     groupIds.forEach((id) => (permissions[id] = PermissionType.FULL));
     this.buffered.set("permissions", permissions);
+  }
+
+  @action
+  updateTags(field, tags) {
+    this.buffered.set(field, tags);
   }
 
   @action
@@ -145,6 +150,7 @@ export default class TagGroupsForm extends Component {
       <TagChooser
         @everyTag={{true}}
         @excludeSynonyms={{true}}
+        @onChange={{fn this.updateTags "tags"}}
         @options={{hash
           allowAny=true
           filterPlaceholder="tagging.groups.tags_placeholder"
@@ -160,6 +166,7 @@ export default class TagGroupsForm extends Component {
         <TagChooser
           @everyTag={{true}}
           @excludeSynonyms={{true}}
+          @onChange={{fn this.updateTags "parent_tag"}}
           @options={{hash
             allowAny=true
             filterPlaceholder="tagging.groups.parent_tag_placeholder"

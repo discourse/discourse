@@ -18,3 +18,5 @@ pt_BR:
     replies:
       one: "%{count} resposta"
       other: "%{count} respostas"
+    themes:
+      default: Padrão

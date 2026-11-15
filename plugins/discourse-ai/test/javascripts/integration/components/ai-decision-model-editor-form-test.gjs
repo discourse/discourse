@@ -15,7 +15,7 @@ module("Integration | Component | AiDecisionModelEditorForm", function (hooks) {
 
     this.decisionModels = {
       resultSetMeta: {
-        providers: ["system_one", "typesafe", "open_ai"],
+        providers: ["system_one", "typesafe", "open_ai", "gemini"],
         presets: [],
         ai_secrets: [],
         custom_header_limits: {

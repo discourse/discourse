@@ -61,6 +61,43 @@ describe Chat::DirectMessage do
       )
     end
 
+    context "when chatting with a bot" do
+      fab!(:bot) { Fabricate(:bot, username: "helpful_bot", name: "Helpful Bot") }
+
+      it "returns the bot's name" do
+        direct_message = Fabricate(:direct_message, users: [user1, bot])
+
+        expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq("Helpful Bot")
+      end
+
+      it "returns the bot's username when names are disabled" do
+        SiteSetting.enable_names = false
+        direct_message = Fabricate(:direct_message, users: [user1, bot])
+
+        expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq("helpful_bot")
+      end
+
+      it "returns the bot's username when it has no name" do
+        bot.update!(name: nil)
+        direct_message = Fabricate(:direct_message, users: [user1, bot])
+
+        expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq("helpful_bot")
+      end
+
+      it "returns usernames when other users are in the chat" do
+        direct_message = Fabricate(:direct_message, users: [user1, user2, bot])
+
+        expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
+          I18n.t(
+            "chat.channel.dm_title.multi_user",
+            comma_separated_usernames: [user2, bot].map(&:username)
+              .sort
+              .join(I18n.t("word_connector.comma")),
+          ),
+        )
+      end
+    end
+
     context "when user is deleted" do
       it "returns a placeholder username" do
         direct_message = Fabricate(:direct_message, users: [user1, user2])

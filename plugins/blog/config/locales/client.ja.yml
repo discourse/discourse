@@ -16,6 +16,9 @@ ja:
         preview_archive: アーカイブ
         desktop: デスクトップ
         mobile: モバイル
+        save: 保存
+        path_formats:
+          custom: カスタム
         back_to_themes: テーマに戻る
         new_theme_short: 新しいテーマ
         themes: テーマ
@@ -23,6 +26,8 @@ ja:
         edit: 編集
         activate: アクティベーション
         preview: プレビュー
+        customize: カスタマイズ
+        customized_theme_name: "%{name} (カスタム)"
         import: インポート
         export: エクスポート
         active: アクティブ
@@ -35,6 +40,7 @@ ja:
         change:
           title: タイトル
           body: 本文
+          tags: タグ
       review:
         create: リンクを作成
         copy: コピー

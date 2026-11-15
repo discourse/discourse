@@ -18,3 +18,5 @@ el:
     replies:
       one: "%{count} απάντηση"
       other: "%{count} απαντήσεις"
+    themes:
+      default: Προεπιλογή

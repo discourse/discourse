@@ -85,12 +85,15 @@ RSpec.describe Blog::BlogHelper, type: :helper do
       )
     end
 
-    it "uses the built-in template for article previews and in safe mode" do
+    it "uses the theme's template for article previews" do
       assign(:preview, true)
-      expect(helper.blog_render_template("about")).not_to include("class=\"custom\"")
 
-      assign(:preview, false)
+      expect(helper.blog_render_template("about")).to include("class=\"custom\"")
+    end
+
+    it "uses the built-in template in safe mode" do
       controller.params[:blog_safe_mode] = "1"
+
       expect(helper.blog_render_template("about")).not_to include("class=\"custom\"")
     end
 

@@ -840,6 +840,10 @@ module DiscourseAi
 
         result =
           tool.invoke do |progress, render_raw|
+            if !render_raw && progress.is_a?(String) && progress.present?
+              context.tool_progress_callback&.call(tool, progress)
+            end
+
             if render_raw
               update_blk.call("", tool.custom_raw, :partial_invoke)
               show_placeholder = false

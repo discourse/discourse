@@ -223,10 +223,6 @@ tr_TR:
           name: "Görüntü oluşturma..."
         image_generation_custom:
           name: "Özel"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -835,6 +831,14 @@ tr_TR:
       fonts:
         base_font: "Gövde yazı tipi"
         heading_font: "Başlık yazı tipi"
+    mcp_theme_access:
+      "on": "Açık"
+      "off": "Kapalı"
+      none: "hiçbiri"
+      changes:
+        server: "MCP sunucusu"
+    mcp_app_setup:
+      none: "hiçbiri"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"

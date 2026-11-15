@@ -17,3 +17,5 @@ vi:
     search: Tìm
     replies:
       other: "%{count} trả lời"
+    themes:
+      default: Mặc định

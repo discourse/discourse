@@ -92,6 +92,50 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
+  context "when login is required" do
+    fab!(:admin)
+
+    before do
+      SiteSetting.login_required = true
+      SiteSetting.auth_immediately = false
+      SiteSetting.enable_markdown_endpoints = true
+    end
+
+    it "redirects anonymous Markdown requests to login without exposing topic content" do
+      %w[/ /latest /latest.md].each do |path|
+        get path, headers: { "ACCEPT" => "text/markdown" }
+
+        expect(response).to redirect_to("/login")
+        expect(response.body).not_to include(topic.title, post.raw)
+        expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+      end
+
+      head "/", headers: { "ACCEPT" => "text/markdown" }
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to be_empty
+    end
+
+    it "serves the Markdown homepage to signed-in readers" do
+      sign_in(user)
+
+      get "/", headers: { "ACCEPT" => "text/markdown" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/markdown")
+      expect(response.body).to include(topic.title)
+    end
+
+    it "preserves the anonymous HTML login landing page" do
+      ["text/html", "*/*", "text/markdown, text/html"].each do |accept|
+        get "/", headers: { "ACCEPT" => accept }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("text/html")
+        expect(response.body).not_to include(topic.title, post.raw)
+      end
+    end
+  end
+
   it "preserves the configured HTML homepage and advertises latest Markdown" do
     Fabricate(:admin)
     SiteSetting.top_menu = "categories|latest|hot|top"

@@ -25,6 +25,8 @@ acceptance("Blog publication panel", function (needs) {
       path: "/an-unfinished-story",
       url: "https://blog.example.com/an-unfinished-story",
       excerpt: "",
+      meta_description: "",
+      canonical_url: "",
       featured: false,
       changes: [],
       edits_since_publish: 0,
@@ -410,12 +412,47 @@ acceptance("Blog publication panel", function (needs) {
   });
 
   test("saves article settings without publishing", async function (assert) {
+    publication = {
+      ...publication,
+      cover_upload_id: 12,
+      cover_url: "/images/discourse-logo-sketch.png",
+      co_authors: ["ada", "bob"],
+    };
     pretender.put("/blog-editor/publications/280.json", (request) => {
       const data = new URLSearchParams(request.requestBody);
       assert.strictEqual(
         data.get("publication[excerpt]"),
         "A revised introduction",
         "the excerpt is saved"
+      );
+      assert.strictEqual(
+        data.get("publication[meta_description]"),
+        "A summary for search engines",
+        "the meta description is saved"
+      );
+      assert.strictEqual(
+        data.get("publication[canonical_url]"),
+        "https://example.com/original",
+        "the canonical URL is saved"
+      );
+      assert.strictEqual(
+        data.get("publication[cover_upload_id]"),
+        "12",
+        "the cover is saved by its upload id"
+      );
+      assert.strictEqual(
+        data.get("publication[cover_alt]"),
+        "A lighthouse at dusk",
+        "the cover alt text is saved"
+      );
+      assert.false(
+        data.has("publication[cover_url]"),
+        "the cover preview URL is not sent"
+      );
+      assert.strictEqual(
+        data.get("publication[co_authors]"),
+        "ada,bob",
+        "co-authors are sent as one list of usernames"
       );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);
@@ -425,9 +462,25 @@ acceptance("Blog publication panel", function (needs) {
       .dom(`${PANEL}__form`)
       .isNotVisible("settings are collapsed by default");
     await click(`${PANEL}__settings-toggle`);
+    assert
+      .dom(`${PANEL}__form [name="canonical_url"]`)
+      .hasAttribute(
+        "placeholder",
+        "https://blog.example.com/an-unfinished-story",
+        "a blank canonical URL shows the article's own address"
+      );
     await formKit(`${PANEL}__form`)
       .field("excerpt")
       .fillIn("A revised introduction");
+    await formKit(`${PANEL}__form`)
+      .field("cover_alt")
+      .fillIn("A lighthouse at dusk");
+    await formKit(`${PANEL}__form`)
+      .field("meta_description")
+      .fillIn("A summary for search engines");
+    await formKit(`${PANEL}__form`)
+      .field("canonical_url")
+      .fillIn("https://example.com/original");
     await formKit(`${PANEL}__form`).submit();
     assert
       .dom(`${PANEL}__badge`)

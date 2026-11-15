@@ -2903,6 +2903,10 @@ fa_IR:
         one: "%{count} ثانیه"
         other: "%{count} ثانیه"
     actions:
+      answer_yes:
+        title: "بله"
+      answer_no:
+        title: "خیر"
       agree:
         title: "بله"
       agree_and_suspend:

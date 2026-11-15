@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -81,5 +81,46 @@ acceptance("Login Fields - From Signup Form", function () {
     assert
       .dom("#new-account-username")
       .hasValue("testuser", "username is preserved on round-trip");
+  });
+});
+
+acceptance("Code login - switching authentication pages", function (needs) {
+  needs.settings({
+    enable_local_logins_via_code: true,
+    enable_local_logins_via_email: true,
+  });
+
+  test("can switch from signup to login after entering an email", async function (assert) {
+    await visit("/signup");
+    await fillIn(".code-login-form__email-step input", "person@example.com");
+
+    await visit("/login");
+
+    assert.strictEqual(currentURL(), "/login");
+    assert.dom(".dialog-body").doesNotExist();
+    assert.dom(".login-fullpage").exists();
+  });
+
+  test("can switch from code login to signup after entering an email", async function (assert) {
+    await visit("/login?mode=code");
+    await fillIn(".code-login-form__email-step input", "person@example.com");
+
+    await visit("/signup");
+
+    assert.strictEqual(currentURL(), "/signup");
+    assert.dom(".dialog-body").doesNotExist();
+    assert.dom(".signup-fullpage").exists();
+  });
+
+  test("still confirms leaving an unfinished signup for another page", async function (assert) {
+    await visit("/signup");
+    await fillIn(".code-login-form__email-step input", "person@example.com");
+
+    await assert.rejects(visit("/latest"), /TransitionAborted/);
+
+    assert.strictEqual(currentURL(), "/signup");
+    assert.dom(".dialog-body").exists();
+    await click(".dialog-footer .btn-primary");
+    assert.strictEqual(currentURL(), "/latest");
   });
 });

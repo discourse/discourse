@@ -19,16 +19,20 @@ module Blog
     # (sites can switch modes), so articles may never claim them. A spec checks this covers every route.
     RESERVED_SEGMENTS = %w[
       about
+      author
       blog
       blog-custom.js
       blog-highlight
       blog-theme.css
+      feed
       feed.xml
+      page
       posts
       posts.atom
       posts.rss
       review
       robots.txt
+      rss
       session
       sitemap
       tag
@@ -41,6 +45,11 @@ module Blog
         get "/" => "articles#index"
         get "/archive" => "articles#index", :defaults => { archive: true }
         get "/tag/:tag" => "articles#index"
+        get "/author/:username" => "articles#index",
+            :constraints => {
+              username: %r{[^/]+},
+            },
+            :format => false
         get "/about" => "articles#about"
         get "/blog-theme.css" => "articles#theme_css", :format => false
         get "/blog-highlight/:version.js" => "articles#highlight_js", :format => false
@@ -61,9 +70,19 @@ module Blog
                   redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
                 :format => false
             get "/posts" => redirect { "#{Configuration.base_url}/" }, :format => false
-            %w[/posts.rss /posts.atom].each do |path|
+            # Feed and pagination URLs that other blog engines publish, kept for readers and links.
+            %w[/posts.rss /posts.atom /rss /feed].each do |path|
               get path => redirect { "#{Configuration.base_url}/feed.xml" }, :format => false
             end
+            get "/page/:page" =>
+                  redirect { |params, _|
+                    page = params[:page].to_i
+                    "#{Configuration.base_url}/#{"?page=#{page}" if page > 1}"
+                  },
+                :constraints => {
+                  page: /\d+/,
+                },
+                :format => false
             get "/robots.txt" => "articles#robots",
                 :defaults => {
                   format: "text",

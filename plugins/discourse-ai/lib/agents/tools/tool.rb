@@ -51,6 +51,11 @@ module DiscourseAi
             false
           end
 
+          # Tools that can take minutes, so conversations can tell the user it is still working.
+          def long_running?
+            false
+          end
+
           def available_for_context?(_context)
             true
           end

@@ -85,8 +85,8 @@
 
   // progress bar
   @media screen and (width <= 924px) {
-    grid-template-areas: "posts";
-    grid-template-columns: auto;
+    grid-template-areas: "posts posts";
+    grid-template-columns: minmax(0, 1fr) auto;
 
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
@@ -96,6 +96,13 @@
       position: relative;
     }
   }
+}
+
+.topic-footer-presence {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+  align-self: center;
 }
 
 .progress-back-container {

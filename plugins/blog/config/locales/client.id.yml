@@ -10,7 +10,9 @@ id:
       admin:
         insert: Masukkan
         preview_archive: Arsip
+        save: Simpan
         edit: Ubah
+        customize: Sesuaikan
         export: Ekspor
         active: Aktif
   js:
@@ -21,6 +23,7 @@ id:
         change:
           title: judul
           body: konten
+          tags: label
       review:
         copy: Salin
         open: Buka

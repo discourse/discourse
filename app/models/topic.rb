@@ -591,7 +591,7 @@ class Topic < ActiveRecord::Base
 
   def best_post
     posts
-      .where(post_type: Post.types[:regular], user_deleted: false)
+      .where(post_type: Post.types[:regular], user_deleted: false, hidden: false)
       .order("score desc nulls last")
       .limit(1)
       .first

@@ -1055,6 +1055,15 @@ RSpec.describe ApplicationController do
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
 
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
     it "does not allow invalid auth_redirect" do
       args[:user_api_public_key] = public_key
       get "/latest", params: args

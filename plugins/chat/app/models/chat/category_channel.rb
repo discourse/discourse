@@ -16,7 +16,16 @@ module Chat
     def allowed_group_ids
       return if !read_restricted?
 
-      STAFF_GROUP_IDS | category.secure_group_ids
+      STAFF_GROUP_IDS |
+        category
+          .category_groups
+          .where(
+            permission_type: [
+              CategoryGroup.permission_types[:full],
+              CategoryGroup.permission_types[:create_post],
+            ],
+          )
+          .pluck(:group_id)
     end
 
     def title(_ = nil)

@@ -125,6 +125,16 @@ class FakeS3
     )
 
     @s3_client.stub_responses(
+      :put_object,
+      ->(context) do
+        log_operation(context)
+
+        find_bucket(context.params)&.put_object(key: context.params[:key])
+        { etag: calculate_etag(context) }
+      end,
+    )
+
+    @s3_client.stub_responses(
       :copy_object,
       ->(context) do
         log_operation(context)

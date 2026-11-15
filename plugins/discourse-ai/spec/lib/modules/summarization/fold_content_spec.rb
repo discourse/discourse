@@ -278,6 +278,32 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       expect(result).to have_attributes(summarized_text: "日本語の要約", locale: "ja")
     end
 
+    it "asks the model again when the summary tool arrives without usable arguments" do
+      gist_summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: "ja")
+      empty_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "call_1",
+          name: "set_topic_summary",
+          parameters: {
+          },
+        )
+      summary_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "call_2",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "日本語の要約",
+          },
+        )
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([empty_call, summary_call]) do |spy|
+          gist_summarizer.summarize(user).tap { expect(spy.completions).to eq(2) }
+        end
+
+      expect(result).to have_attributes(summarized_text: "日本語の要約", locale: "ja")
+    end
+
     it "does not persist a gist when the model omits the summary tool" do
       gist_summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: "ja")
 

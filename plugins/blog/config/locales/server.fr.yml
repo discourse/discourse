@@ -18,3 +18,5 @@ fr:
     replies:
       one: "%{count} réponse"
       other: "%{count} réponses"
+    themes:
+      default: Par défaut

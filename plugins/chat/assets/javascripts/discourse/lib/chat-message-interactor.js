@@ -12,6 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { bind } from "discourse/lib/decorators";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
@@ -22,16 +23,6 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReactionModel, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-
-const removedSecondaryActions = new Set();
-
-export function removeChatComposerSecondaryActions(actionIds) {
-  actionIds.forEach((id) => removedSecondaryActions.add(id));
-}
-
-export function resetRemovedChatComposerSecondaryActions() {
-  removedSecondaryActions.clear();
-}
 
 export default class ChatMessageInteractor {
   @service appEvents;
@@ -276,7 +267,10 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
   }
 
   // Visitors and silenced users can't post, but can still link to and report messages.
@@ -301,7 +295,10 @@ export default class ChatMessageInteractor {
       buttons.push({ id: "flag", name: i18n("chat.flag"), icon: "flag" });
     }
 
-    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
   }
 
   select(checked = true) {

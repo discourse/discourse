@@ -3,6 +3,10 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -40,9 +44,11 @@ class ReviewableUser < Reviewable
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
     suspect_pending = status == "pending" && is_a_suspect_user?
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
 
     # For suspect users the destructive "confirm spam" bundle must be added
-    # before the approve action so it renders first in the queue UI.
+    # before the approve action so it renders first in the queue UI. With
+    # consistent answers every "Yes, there's a problem" bundle goes first.
     if suspect_pending
       bundle =
         actions.add_bundle(
@@ -64,6 +70,13 @@ class ReviewableUser < Reviewable
         bundle,
         require_reject_reason: false,
         dsa_classification_required: true,
+      )
+    elsif status == "pending" && consistent_answers
+      delete_user_actions(
+        actions,
+        nil,
+        require_reject_reason: true,
+        bundle_label: "reviewables.actions.answer_yes.title",
       )
     end
 
@@ -87,13 +100,15 @@ class ReviewableUser < Reviewable
         if suspect_pending
           a.label = "reviewables.actions.not_spam.title"
           a.description = "reviewables.actions.not_spam.description"
+        elsif consistent_answers
+          a.label = "reviewables.actions.answer_no.title"
         else
           a.label = "reviewables.actions.approve_user.title"
         end
       end
     end
 
-    if status == "pending" && !suspect_pending
+    if status == "pending" && !suspect_pending && !consistent_answers
       delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
@@ -142,9 +157,11 @@ class ReviewableUser < Reviewable
     self.class.transaction do
       scrubbed_at = Time.zone.now
       # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
+      # Match on the deleted user's ID, not the reviewable: the deletion may have been logged
+      # under another reviewable, such as a flagged post the user was deleted from.
       UserHistory
         .where(action: UserHistory.actions[:delete_user])
-        .where("details LIKE :query", query: "%\nusername: #{payload["username"]}\n%")
+        .where("details LIKE ?", "id: #{target_id}\n%")
         .where(created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes))
         .update_all(
           details:

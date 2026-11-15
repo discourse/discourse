@@ -2,10 +2,13 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import SiteSetting, {
-  isSettingValueTrue,
-} from "discourse/admin/models/site-setting";
+import { isSettingValueTrue } from "discourse/admin/models/site-setting";
 import { i18n } from "discourse-i18n";
+import {
+  findSetting,
+  isSettingVisible,
+  saveSettings,
+} from "../../../../lib/site-settings-form.js";
 
 const SENTIMENT_SETTING_LABELS = {
   ai_sentiment_enabled: "enabled",
@@ -18,6 +21,16 @@ const SENTIMENT_SETTING_LABELS = {
   ai_sentiment_emotion_decision_model: "decision_model",
   ai_sentiment_backfill_maximum_posts_per_hour: "posts_per_hour",
   ai_sentiment_backfill_post_max_age_days: "post_age_limit",
+};
+
+// Choice settings whose options must be created elsewhere first.
+const CREATE_CHOICE_LINKS = {
+  ai_embeddings_selected_model: {
+    route: "adminPlugins.show.discourse-ai-models.new",
+    query: { type: "embedding" },
+    labelKey: "discourse_ai.features.embeddings.add_model",
+    descriptionKey: "discourse_ai.features.embeddings.no_models",
+  },
 };
 
 export default class AdminPluginsShowDiscourseAiFeaturesEditController extends Controller {
@@ -33,7 +46,7 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
 
   @action
   findSetting(settingName) {
-    return this.settings.find((s) => s.setting === settingName);
+    return findSetting(this.settings, settingName);
   }
 
   @action
@@ -90,65 +103,34 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
     )?.[0];
   }
 
+  /**
+   * Where to create the first option for a choice setting that has none, so the
+   * form offers that instead of an empty dropdown.
+   */
+  @action
+  missingChoicesLink(setting) {
+    if (setting?.valid_values?.length) {
+      return null;
+    }
+    return CREATE_CHOICE_LINKS[setting?.setting] ?? null;
+  }
+
   @action
   isSettingVisible(setting, data) {
-    if (!setting) {
-      return false;
-    }
-    if (setting.depends_behavior !== "hidden") {
-      return true;
-    }
-
-    return (setting.depends_on || []).every((name) => {
-      const parent = this.findSetting(name);
-      if (!parent) {
-        return true;
-      }
-      const value = Object.hasOwn(data, name) ? data[name] : parent.value;
-      const allowedValues = setting.depends_on_values?.[name];
-      return allowedValues
-        ? allowedValues.map(String).includes(String(value))
-        : isSettingValueTrue(value);
-    });
+    return isSettingVisible(this.settings, setting, data);
   }
 
   @action
   async save(data) {
-    if (this.formApi) {
-      this.formApi.removeErrors();
-    }
+    const success = await saveSettings(
+      this.settings,
+      data,
+      this.formApi,
+      undefined,
+      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+    );
 
-    const errors = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      const setting = this.findSetting(key);
-      if (!setting) {
-        continue;
-      }
-
-      const valuesEqual = this.valuesEqual(setting.value, value);
-
-      if (valuesEqual) {
-        continue;
-      }
-
-      try {
-        await SiteSetting.update(key, value);
-        setting.value = value;
-      } catch (e) {
-        const errorMsg = e.jqXHR?.responseJSON?.errors?.[0] || "Unknown error";
-        errors[key] = errorMsg;
-
-        if (this.formApi) {
-          this.formApi.addError(key, {
-            title: setting.humanized_name,
-            message: errorMsg,
-          });
-        }
-      }
-    }
-
-    if (Object.keys(errors).length === 0) {
+    if (success) {
       this.toasts.success({
         data: { message: i18n("saved") },
         duration: 2000,
@@ -163,15 +145,5 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
         duration: 4000,
       });
     }
-  }
-
-  valuesEqual(a, b) {
-    if (a === b) {
-      return true;
-    }
-    if (a == null || b == null) {
-      return false;
-    }
-    return a.toString() === b.toString();
   }
 }

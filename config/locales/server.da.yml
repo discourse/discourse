@@ -3243,6 +3243,10 @@ da:
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_restore:

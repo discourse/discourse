@@ -7,6 +7,13 @@
 ru:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            gamification:
+              read_score_events: "Читайте события, связанные с геймификацией и начислением баллов."
+              create_score_events: "Создавайте события геймификации для начисления или вычета баллов."
+              update_score_events: "Обновите существующие события, связанные с геймификацией и начислением баллов."
       site_settings:
         categories:
           discourse_gamification: "Плагин Discourse «Геймификация»"

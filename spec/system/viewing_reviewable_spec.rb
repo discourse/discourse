@@ -335,16 +335,28 @@ describe "Viewing reviewable item" do
       expect(page).not_to have_text("hello world post contents.")
     end
 
-    it "shows context question for rejected queued post" do
+    it "asks whether the queued post has a problem, answering Yes before No" do
+      review_page.visit_reviewable(reviewable_queued_post)
+
+      expect(review_page).to have_context_question(
+        reviewable_queued_post,
+        I18n.t("js.review.context_question.something_wrong_with_post"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable_queued_post, %w[Yes No])
+      expect(review_page).to have_first_answer(reviewable_queued_post, "reviewable-action-dropdown")
+    end
+
+    it "offers an explicit approve action instead of the question for a rejected queued post" do
       reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
 
       review_page.visit_reviewable(reviewable_queued_post)
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable_queued_post)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable_queued_post)
       expect(review_page).to have_context_question(
         reviewable_queued_post,
-        I18n.t("js.review.context_question.approve_post"),
+        I18n.t("js.review.moderator_actions"),
       )
+      expect(page).to have_button(I18n.t("reviewables.actions.approve_post.action_title"))
     end
   end
 
@@ -372,13 +384,13 @@ describe "Viewing reviewable item" do
       rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
       rejection_reason_modal.delete_user
 
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
       expect(page).to have_text(user.name)
 
       expect(review_page).to have_no_context_question(
         reviewable,
-        I18n.t("js.review.context_question.approve_user"),
+        I18n.t("js.review.context_question.something_wrong_with_account"),
       )
 
       review_page.click_scrub_user_button
@@ -406,14 +418,62 @@ describe "Viewing reviewable item" do
       review_page.select_bundled_action(reviewable, "user-delete_user_block")
       rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
       rejection_reason_modal.delete_user
-      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
-      expect(review_page).to have_rejected_item_in_timeline(reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+      expect(review_page).to have_problem_confirmed_item_in_timeline(reviewable)
     end
 
     it "Allows to approve user" do
       reviewable = ReviewableUser.find_by_target_id(user.id)
 
       review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.something_wrong_with_account"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable, %w[Yes No])
+
+      review_page.click_approve_user_button
+
+      expect(review_page).to have_reviewable_with_no_problem_found_status(reviewable)
+      expect(review_page).to have_no_problem_found_item_in_timeline(reviewable)
+    end
+  end
+
+  describe "without consistent review answers" do
+    fab!(:user)
+
+    before do
+      SiteSetting.review_queue_consistent_answers = false
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+      user.update!(approved: false)
+      user.activate
+    end
+
+    it "asks for approval of a queued post, with approval first" do
+      reviewable = Fabricate(:reviewable_queued_post)
+
+      review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_post"),
+      )
+      expect(review_page).to have_answers_starting_with(reviewable, %w[Yes No])
+      expect(review_page).to have_first_answer(reviewable, "approve-post")
+    end
+
+    it "labels an approved user as approved" do
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+
+      review_page.visit_reviewable(reviewable)
+
+      expect(review_page).to have_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_user"),
+      )
+
       review_page.click_approve_user_button
 
       expect(review_page).to have_reviewable_with_approved_status(reviewable)

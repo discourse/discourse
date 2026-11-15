@@ -407,10 +407,10 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the server session if invite exists" do
+    it "does not store the invite key in the server session" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(server_session["invite-key"]).to eq(invite.invite_key)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "returns error if invite has already been redeemed" do
@@ -441,6 +441,86 @@ RSpec.describe InvitesController do
           base_url: Discourse.base_url,
         ),
       )
+    end
+  end
+
+  describe "#sso" do
+    fab!(:invite)
+
+    before do
+      SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
+      SiteSetting.discourse_connect_secret = "shjkfdhsfkjh"
+      SiteSetting.enable_discourse_connect = true
+    end
+
+    it "stores the invite key in the server session and redirects to the SSO flow" do
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response).to redirect_to("/session/sso")
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(
+        invite.invite_key,
+      )
+    end
+
+    it "does not store the invite key when the invite is not redeemable" do
+      invite.update!(expires_at: 1.day.ago)
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response).to redirect_to("/invites/#{invite.invite_key}")
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "does not store the invite key when the invite does not exist" do
+      post "/invites/missing/sso"
+
+      expect(response.status).to eq(404)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "is not available when DiscourseConnect is disabled" do
+      SiteSetting.enable_discourse_connect = false
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response.status).to eq(404)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "does not store the invite key when new registrations are disabled" do
+      SiteSetting.allow_new_registrations = false
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+      expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+
+      post "/invites/#{invite.invite_key}/sso"
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+      expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "is rate limited" do
+      RateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response.status).to eq(429)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    context "with forgery protection enabled" do
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "requires a CSRF token" do
+        post "/invites/#{invite.invite_key}/sso"
+
+        expect(response.status).to eq(403)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+      end
     end
   end
 

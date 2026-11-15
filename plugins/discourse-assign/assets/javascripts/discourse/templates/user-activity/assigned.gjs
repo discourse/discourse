@@ -1,6 +1,8 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
@@ -8,6 +10,11 @@ import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  <PluginOutlet
+    @name="before-assigned-topic-list"
+    @outletArgs={{lazyHash controller=@controller queue="user"}}
+  />
+
   {{#if @controller.doesntHaveAssignments}}
     <DEmptyState
       @body={{@controller.emptyStateBody}}

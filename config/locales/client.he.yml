@@ -22,6 +22,14 @@ he:
       verification_code: "קוד אימות"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
+    code_editor:
+      search:
+        replace: "החלפה"
+        next: "הבא"
+        previous: "הקודם"
+        close: "סגירה"
+      fold:
+        to: "עד"
     user_api_key:
       title: 'אישור של „%{application_name}”'
       authorize: "אישור"
@@ -549,17 +557,11 @@ he:
         completed: "שינוי האפשרויות"
         show_light_screenshot: "הצגת צילום מסך בהיר"
         show_dark_screenshot: "הצגת צילום מסך כהה"
+      create_category:
+        action: "יצירת קטגוריה"
       invite_collaborators:
         title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
-      start_posting:
-        action: "הצגת רעיונות"
-        completed: "הצגת רעיונות נוספים"
-        choose_option: "איך בא לך להתחיל?"
-        predefined_topics: "תבניות שוברות קרח"
-        predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
-        use_predefined: "עיון בתבניות"
-        back: "חזרה"
     design_wizard:
       title: "התאמת האתר שלך"
       step_label: "מעבר לשלב %{index}"
@@ -1069,6 +1071,7 @@ he:
         suspect_user: "האם זה משתמש ספאם?"
         approve_post: "לאשר את הפוסט הזה?"
         approve_topic: "לאשר את הנושא הזה?"
+        something_wrong_with_post: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שסומן"
@@ -2368,6 +2371,7 @@ he:
         redeemed_tab_with_count: "נוצלו (%{count})"
         invited_via: "הזמנה"
         invited_via_link: "קישור %{key}‏ (%{count} / %{max} נוצלו)"
+        invited_via_link_without_key: "קישור (%{count} / %{max} נוצלו)"
         groups: "קבוצות"
         topic: "נושא"
         sent: "נוצרו/נשלחו לאחרונה"
@@ -2674,6 +2678,7 @@ he:
       no_results: "אין תוצאות"
       search: "חיפוש…"
       label: "בחירת אפשרויות"
+      remove_item: "הסרת %{name}"
     d_otp:
       screen_reader:
         one: נא למלא מספר
@@ -2766,7 +2771,6 @@ he:
         }.
     learn_more: "מידע נוסף…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>משוב…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -5964,17 +5968,16 @@ he:
         name: "שם"
         plugin: "תוסף"
         metadata: "נתוני על"
-        enabled: "פעיל"
-        enabled_for: "פעיל עבור…"
+        enabled: "מאופשר?"
         show_image: "הצגת תמונה"
-        edit_groups: "עריכת קבוצות הסכמה"
+        feedback: "משוב"
         groups_updated: "הקבוצות עודכנו!"
         save_groups: "שמירת קבוצות"
         add_groups_to_enable: "יש להוסיף קבוצות כדי להפעיל את היכולת הזאת"
         no_changes_to_save: "אין שינויים לשמירה"
         select_groups: "בחירת קבוצות…"
         opt_in_groups: "קבוצות הסכמה"
-        show_related_settings: "הצגת הגדרות קשורות…"
+        settings: "הגדרות"
         change_enabled_for_success: "הפעלת את השינוי הזה עבור %{enabledFor}"
         change_disabled: "סירבת לשינוי הזה"
         permanent_notice: "השינוי הזה קבוע ויוסר בקרוב. אי אפשר לסרב לו."
@@ -5983,7 +5986,6 @@ he:
         preview: "תצוגה מקדימה"
         enabled_for_options:
           no_one: "אף אחד"
-          everyone: "כולם"
           staff: "%{staffGroupName} בלבד"
           specific_groups: "קבוצה או קבוצות מסוימות"
           specific_groups_with_group_names:

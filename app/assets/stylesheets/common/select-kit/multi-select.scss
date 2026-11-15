@@ -14,6 +14,23 @@
       min-height: 1px;
     }
 
+    // Clicking a choice removes it.
+    .tag-choice:not(.disabled) {
+      &:hover,
+      &:focus-visible {
+        .d-icon-xmark {
+          color: var(--danger);
+        }
+      }
+    }
+
+    // Mandatory choices are informational, so keep them legible; the cursor
+    // already signals they can't be removed.
+    .tag-choice.disabled {
+      opacity: 1;
+      background: var(--primary-very-low);
+    }
+
     &.is-disabled {
       .multi-select-header {
         background: var(--d-input-bg-color--disabled);

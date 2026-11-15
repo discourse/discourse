@@ -209,7 +209,6 @@ module CookedProcessorMixin
       RemoteImage.size_and_animated(absolute_url)
     end
   rescue URI::Error
-    # the secure uploads url helpers raise on malformed urls
   end
 
   def get_filename(upload, src)

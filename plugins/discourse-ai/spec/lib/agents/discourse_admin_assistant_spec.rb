@@ -20,6 +20,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
         DiscourseAi::Agents::Tools::SearchDiscourseNavigation,
         DiscourseAi::Agents::Tools::ReadSiteSetting,
         DiscourseAi::Agents::Tools::ChangeSiteSetting,
+        DiscourseAi::Agents::Tools::ListUpcomingChanges,
         DiscourseAi::Agents::Tools::ListReviewables,
         DiscourseAi::Agents::Tools::CloseTopic,
         DiscourseAi::Agents::Tools::LockPost,
@@ -75,6 +76,26 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
       "search_meta_discourse",
       "search_discourse_navigation",
     )
+  end
+
+  it "includes plugin and Upcoming Changes guidance in both PM and chat prompts" do
+    topic = Fabricate(:private_message_topic, user: admin)
+    channel = Fabricate(:direct_message_channel, users: [admin, Discourse.system_user])
+    contexts = [
+      DiscourseAi::Agents::BotContext.new(user: admin, topic: topic),
+      DiscourseAi::Agents::BotContext.new(user: admin, channel_id: channel.id),
+    ]
+
+    contexts.each do |context|
+      prompt = assistant.craft_prompt(context)
+
+      expect(prompt.system_message_text).to include(
+        "Plugins can be disabled via their enable site setting (false disables, true enables)",
+        "call `list_upcoming_changes`",
+        "never bypass hidden-setting restrictions with `change_site_setting`",
+      )
+      expect(prompt.tools.map(&:name)).to include("list_upcoming_changes")
+    end
   end
 
   it "is only available to administrators" do

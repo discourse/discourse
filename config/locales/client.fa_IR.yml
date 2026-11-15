@@ -10,6 +10,14 @@ fa_IR:
       choice_title: "غیرقانونی است"
       title: "گزارش محتوای ناقض قانون"
       email: "آدرس ایمیل"
+    code_editor:
+      search:
+        replace: "جایگزینی"
+        next: "بعدی"
+        previous: "پیشین"
+        close: "بستن"
+      fold:
+        to: "به"
     user_api_key:
       authorize: "اجازه دادن"
       deny: "لغو"
@@ -374,9 +382,6 @@ fa_IR:
       title: "موضوعات جدید و خوانده نشده"
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
-    admin_onboarding_banner:
-      start_posting:
-        back: "بازگشت"
     design_wizard:
       back: "بازگشت"
       next: "بعدی"
@@ -781,6 +786,7 @@ fa_IR:
         is_this_post: "آیا این %{reviewable_type}، %{reviewable_human_score_types} است؟"
         delimiter: "یا"
         something_else_wrong: "آیا مشکلی در %{reviewable_type} وجود دارد؟"
+        something_wrong_with_post: "آیا مشکلی در این نوشته وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -4858,11 +4864,11 @@ fa_IR:
           title: "پیشرفته"
       upcoming_changes:
         name: "نام"
-        enabled: "فعال شده"
+        enabled: "فعال شده؟"
+        feedback: "بازخورد"
         select_groups: "انتخاب گروه‌ها"
+        settings: "تنظیم"
         preview: "پیش‌نمایش"
-        enabled_for_options:
-          everyone: "همه"
         statuses:
           experimental: "آزمایشی"
         impact_roles:

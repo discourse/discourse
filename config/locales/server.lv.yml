@@ -640,6 +640,10 @@ lv:
       medium: "Vidējs"
       high: "Augsta"
     actions:
+      answer_yes:
+        title: "Jā"
+      answer_no:
+        title: "Nē"
       agree:
         title: "Jā"
       delete:

@@ -41,8 +41,9 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
   });
 
   test("trigger label is the literal formatted range for hand-picked custom periods", async function (assert) {
-    const start = new Date("2026-03-01");
-    const end = new Date("2026-04-28");
+    // Local day boundaries, as the dashboard controllers pass them.
+    const start = moment("2026-03-01").startOf("day").toDate();
+    const end = moment("2026-04-28").endOf("day").toDate();
 
     await render(
       <template>

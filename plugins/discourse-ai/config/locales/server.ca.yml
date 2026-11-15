@@ -90,6 +90,10 @@ ca:
       colors:
         light:
           header_background: "Capçalera"
+    mcp_theme_access:
+      none: "cap"
+    mcp_app_setup:
+      none: "cap"
     reviewables:
       ai_tool_action:
         approve:

@@ -52,7 +52,8 @@ module UserGuardian
     return true if !upload
     return true if user_avatar.user.uploaded_avatar_id == upload.id
     return true if user_avatar.contains_upload?(upload.id)
-    return true if upload.user_id == user_avatar.user_id || is_my_own?(upload)
+    return true if is_my_own?(upload)
+    return true if upload.user_id == user_avatar.user_id && can_see_upload?(upload)
 
     UserUpload.exists?(upload_id: upload.id, user_id: user.id)
   end

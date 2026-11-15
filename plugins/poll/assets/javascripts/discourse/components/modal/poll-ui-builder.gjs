@@ -59,6 +59,8 @@ export default class PollUiBuilderModal extends Component {
 
   @tracked chartType = BAR_CHART_TYPE;
   @tracked dynamic = false;
+
+  /** @type {import("moment").Moment | null | undefined} */
   @tracked pollAutoClose;
   @tracked pollGroups;
   @tracked pollMax = 2;

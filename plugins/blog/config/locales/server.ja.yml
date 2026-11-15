@@ -17,3 +17,5 @@ ja:
     search: 検索
     replies:
       other: "返信: %{count} 件"
+    themes:
+      default: デフォルト

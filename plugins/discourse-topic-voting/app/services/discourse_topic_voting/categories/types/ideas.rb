@@ -97,6 +97,10 @@ module DiscourseTopicVoting
           def icon
             "bulb"
           end
+
+          def svg_icon
+            "lightbulb"
+          end
         end
       end
     end

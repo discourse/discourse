@@ -111,6 +111,19 @@ RSpec.describe Service do
         it "returns nothing for a non-existent key" do
           expect(result[:params].non_existent_key).to be_nil
         end
+
+        it "keeps its own methods when keys are named after them" do
+          args[:params].merge!(
+            %i[to_h to_hash slice merge method_missing initialize].index_with({ param1: "two" }),
+          )
+
+          expect(result[:params]).to have_attributes(
+            param1: "one",
+            to_h: include(param1: "one"),
+            to_hash: include(param1: "one"),
+          )
+          expect(result[:params].slice(:param1)).to eq(param1: "one")
+        end
       end
 
       context "when there is a `params` step defined" do

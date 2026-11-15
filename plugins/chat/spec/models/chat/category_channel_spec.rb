@@ -60,7 +60,13 @@ RSpec.describe Chat::CategoryChannel do
       let(:private_category) { Fabricate(:private_category, group: group) }
       let(:channel) { Fabricate(:category_channel, chatable: private_category) }
 
-      it "returns groups with access to the associated category" do
+      it "returns groups with permission to post in the associated category" do
+        readonly_group = Fabricate(:group)
+        private_category.category_groups.create!(
+          group: readonly_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+
         expect(allowed_group_ids).to contain_exactly(*staff_groups, group.id)
       end
     end

@@ -67,8 +67,9 @@ const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
 const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
 
 // Old case where we supported attributes without quotation marks
+// The value class already accepts leading whitespace.
 const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
-  `^\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
+  `^\\[(quote|details)=([^${QUOTATION_MARKS.join("")}].+?)\\]`,
   "i"
 );
 
@@ -76,7 +77,7 @@ const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
 // NOTE: it does not match the closing bracket "]" because it makes the regexp too slow
 // due to the backtracking. So we check for the "]" manually.
 const BBCODE_TAG_REGEXP = new RegExp(
-  `\\[(?:(?:[-\\w]+(?:=(?:${QUOTATION_MARKS_NO_MATCH}|[^\\s\\]]+))?)+\\s*)+`,
+  `^\\[(?:(?:[-\\w]+(?:=(?:${QUOTATION_MARKS_NO_MATCH}|[^\\s\\]]+))?)+\\s*)+`,
   "i"
 );
 

@@ -7,6 +7,8 @@ class Report
 
   RELATED_ITEMS_LIMIT = 50
 
+  VALID_TYPE_REGEX = /\A[a-z0-9_]+\z/
+
   FILTERS = %i[
     name
     start_date

@@ -7,8 +7,9 @@ and bold sans-serif headings paired with serif summaries and article text.
 
 The theme keeps this site's identity, approved articles, author names, archive
 search, feeds, and native discussion section. It does not copy the reference's
-marketing navigation, logo, article images, analytics, or scripts. Author initials
-replace avatars because the current Liquid contract does not expose avatar URLs.
+marketing navigation, logo, article images, analytics, or scripts. Article bylines
+use author initials because article variables don't include avatar URLs; author
+pages show the avatar.
 A title-based graphic supplies the lead cover when the article has no image.
 System fonts avoid additional font downloads and font-related layout shifts.
 

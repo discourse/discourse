@@ -1,6 +1,6 @@
 # Discourse Patreon
 
-Enable syncronization between Discourse Groups and Patreon rewards, and enable Patreon Social Login,
+Enable synchronization between Discourse Groups and Patreon rewards, and enable Patreon Social Login,
 
 <img src="public/images/patreon-wordmark-navy.png?raw=true" width="292" height="104">
 
@@ -15,7 +15,7 @@ You need to fill the following fields on Settings -> Plugins:
 - Client ID
 - Client Secret
 - Creator's Access Token
-- Creator's Refesh Token
+- Creator's Refresh Token
 
 To get those values you must have a [Creator account first](https://www.patreon.com/become-a-patreon-creator).
 
@@ -27,7 +27,7 @@ Then you use the generated tokens to configure the plugin.
 
 ## Webhooks
 
-You should create [Patreon Webhooks](https://www.patreon.com/platform/documentation/webhooks) so every new pledge get's synced to Discourse ASAP.
+You should create [Patreon Webhooks](https://www.patreon.com/platform/documentation/webhooks) so every new pledge gets synced to Discourse ASAP.
 
 > To get it working, create a new Webhook for each trigger type and point then to `https://<DISCOURSE BASE URL>/patreon/webhook`, like https://meta.discourse.org/patreon/webhook for example.
 

@@ -145,10 +145,14 @@ const SECTIONS = [
   { component: moreTopics, category: "organisms", id: "more-topics" },
 ];
 
-export function addSection(section) {
+export function addSection({ component, ...section }) {
   if (!SECTIONS.some((s) => s.id === section.id)) {
-    SECTIONS.push(section);
+    SECTIONS.push({ ...section, loadComponent: component });
   }
+}
+
+export async function sectionComponent(section) {
+  return section.component ?? (await section.loadComponent());
 }
 
 export function sectionById(id) {
