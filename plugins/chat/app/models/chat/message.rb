@@ -197,10 +197,14 @@ module Chat
     def cook
       ensure_last_editor_id
 
-      self.cooked = self.class.cook(message, user_id: last_editor_id)
+      self.cooked = self.class.cook(message, user_id: last_editor_id, hashtag_user_ids:)
       self.cooked_version = BAKED_VERSION
 
       invalidate_parsed_mentions
+    end
+
+    def hashtag_user_ids
+      [user_id, last_editor_id].compact
     end
 
     def rebake!(invalidate_oneboxes: false, priority: nil, skip_notifications: false)
@@ -268,10 +272,7 @@ module Chat
 
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
-      # generally up to date than the creating user. For example, we use
-      # this when cooking #hashtags to determine whether we should render
-      # the found hashtag based on whether the user can access the channel it
-      # is referencing.
+      # generally up to date than the creating user.
       cooked =
         PrettyText.cook(
           message,
@@ -279,6 +280,7 @@ module Chat
           markdown_it_rules: rules,
           force_quote_link: true,
           user_id: opts[:user_id],
+          hashtag_user_ids: opts[:hashtag_user_ids],
           hashtag_context: "chat-composer",
         )
 
