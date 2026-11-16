@@ -120,9 +120,17 @@ export function validateUploadedFile(file, opts) {
     }
   }
 
-  if (!opts.bypassNewUserRestriction) {
+  if (!opts.bypassNewUserRestriction && user) {
+    if (
+      !user.can_embed_media &&
+      (isImage(name) || isVideo(name) || isAudio(name))
+    ) {
+      dialog.alert(i18n("post.errors.media_upload_not_allowed"));
+      return false;
+    }
+
     // ensures that new users can upload a file
-    if (user && !user.isAllowedToUploadAFile(opts.type)) {
+    if (!user.isAllowedToUploadAFile(opts.type)) {
       dialog.alert(
         i18n(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
       );

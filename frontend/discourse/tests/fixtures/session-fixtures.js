@@ -23,6 +23,7 @@ const sessionFixtures = {
       topic_count: 36,
       trust_level: 4,
       can_edit: true,
+      can_embed_media: true,
       can_invite_to_forum: true,
       can_ignore_users: true,
       can_mute_users: true,
