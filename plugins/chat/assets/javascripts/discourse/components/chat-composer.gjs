@@ -97,6 +97,7 @@ export default class ChatComposer extends Component {
   richEditorExtensions;
 
   #textareaInteractor;
+  #addUploads;
   #richEditorLoading;
 
   constructor() {
@@ -302,6 +303,16 @@ export default class ChatComposer extends Component {
     discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  setupUploads(addUploads) {
+    this.#addUploads = addUploads;
+  }
+
+  @action
+  uploadFiles(files) {
+    this.#addUploads?.(files, { pasted: true });
   }
 
   // the mode is a user preference shared with other open composers
@@ -1067,6 +1078,7 @@ export default class ChatComposer extends Component {
                     @placeholder={{this.placeholder}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
+                    @uploadFiles={{if this.canAttachUploads this.uploadFiles}}
                     @value={{this.draft.message}}
                   />
                 {{/if}}
@@ -1149,6 +1161,7 @@ export default class ChatComposer extends Component {
           @composerInputEl={{this.editor.element}}
           @existingUploads={{this.draft.uploads}}
           @fileUploadElementId={{this.fileUploadElementId}}
+          @onSetup={{this.setupUploads}}
           @onUploadChanged={{this.onUploadChanged}}
           @uploadDropZone={{@uploadDropZone}}
         />
