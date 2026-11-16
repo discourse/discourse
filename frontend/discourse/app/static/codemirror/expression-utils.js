@@ -1,4 +1,8 @@
 import {
+  completionSection,
+  standardCompletionSections,
+} from "discourse/lib/code-editor-completion-sections";
+import {
   ARRAY_METHODS,
   BOOLEAN_METHODS,
   DATE_METHODS,
@@ -7,12 +11,6 @@ import {
   GLOBAL_STATIC_METHODS,
   lookupMethodDoc,
   NUMBER_METHODS,
-  section,
-  SECTION_GLOBALS,
-  SECTION_METADATA,
-  SECTION_METHODS,
-  SECTION_PROPERTIES,
-  SECTION_RECOMMENDED,
   STRING_METHODS,
 } from "./completions-data.js";
 import { expressionLanguage } from "./lang-expression/index.js";
@@ -56,15 +54,9 @@ export const expressionUtils = {
   isInsideExpressionAt,
   lookupMethodDoc,
   methodsForType,
-  section,
+  section: completionSection,
   globalDocs: GLOBAL_DOCS,
-  sections: {
-    recommended: SECTION_RECOMMENDED,
-    properties: SECTION_PROPERTIES,
-    methods: SECTION_METHODS,
-    metadata: SECTION_METADATA,
-    globals: SECTION_GLOBALS,
-  },
+  sections: standardCompletionSections(),
   globalCompletions: GLOBAL_COMPLETIONS,
   globalStaticMethods: GLOBAL_STATIC_METHODS,
 };

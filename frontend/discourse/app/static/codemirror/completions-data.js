@@ -1,39 +1,5 @@
 import { i18n } from "discourse-i18n";
 
-function sectionHeader(name) {
-  return () => {
-    const header = document.createElement("div");
-    header.className = "cm-expr-section-header";
-    header.textContent = name;
-    return header;
-  };
-}
-
-export function section(name, rank) {
-  return { name, rank, header: sectionHeader(name) };
-}
-
-export const SECTION_RECOMMENDED = section(
-  i18n("codemirror.expression.sections.recommended"),
-  0
-);
-export const SECTION_PROPERTIES = section(
-  i18n("codemirror.expression.sections.properties"),
-  2
-);
-export const SECTION_METHODS = section(
-  i18n("codemirror.expression.sections.methods"),
-  3
-);
-export const SECTION_METADATA = section(
-  i18n("codemirror.expression.sections.metadata"),
-  4
-);
-export const SECTION_GLOBALS = section(
-  i18n("codemirror.expression.sections.globals"),
-  5
-);
-
 export function info(signature, description, example) {
   return () => {
     const div = document.createElement("div");

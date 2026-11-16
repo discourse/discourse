@@ -255,3 +255,15 @@
     font-style: italic;
   }
 }
+
+// Also shown by bare editors that sit outside `.code-editor`.
+.cm-tooltip-autocomplete .cm-completion-section-header {
+  padding: 0.1em 0.4em;
+  font-family: var(--font-family);
+  font-size: var(--font-down-3);
+  font-weight: 700;
+  color: var(--primary-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--primary-low);
+}

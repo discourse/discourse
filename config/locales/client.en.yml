@@ -57,6 +57,12 @@ en:
         folded_lines: "Folded lines"
         unfolded_lines: "Unfolded lines"
         to: "to"
+      completion_sections:
+        recommended: "Recommended"
+        properties: "Properties"
+        methods: "Methods"
+        metadata: "Metadata"
+        globals: "Globals"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
@@ -3579,12 +3585,6 @@ en:
 
     codemirror:
       expression:
-        sections:
-          recommended: "Recommended"
-          properties: "Properties"
-          methods: "Methods"
-          metadata: "Metadata"
-          globals: "Globals"
         methods:
           string:
             length: "The number of characters in the string."
