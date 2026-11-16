@@ -8,6 +8,8 @@ class PushNotificationController < ApplicationController
   def subscribe
     PushNotificationPusher.subscribe(current_user, push_params, params[:send_confirmation])
     render json: success_json
+  rescue PushNotificationPusher::EndpointTaken
+    render json: failed_json, status: :conflict
   end
 
   def unsubscribe

@@ -444,23 +444,6 @@ RSpec.describe PushNotificationPusher do
         end.to raise_error(RateLimiter::LimitExceeded)
       end
 
-      it "keeps the current owner when a takeover is rate limited" do
-        RateLimiter.enable
-        endpoint = "https://fcm.googleapis.com/fcm/send/shared"
-        owner = Fabricate(:user)
-        PushNotificationPusher.subscribe(
-          owner,
-          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
-          "false",
-        )
-        PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR.times do |index|
-          subscribe("https://fcm.googleapis.com/fcm/send/#{index}")
-        end
-
-        expect { subscribe(endpoint) }.to raise_error(RateLimiter::LimitExceeded)
-        expect(owner.push_subscriptions.count).to eq(1)
-      end
-
       it "keeps error tracking when the owner re-registers the same endpoint" do
         subscribe("https://fcm.googleapis.com/fcm/send/token")
         user.push_subscriptions.sole.update!(error_count: 2, first_error_at: 3.days.ago)
@@ -470,64 +453,17 @@ RSpec.describe PushNotificationPusher do
         expect(user.push_subscriptions.sole.error_count).to eq(2)
       end
 
-      it "starts error tracking afresh when another user takes over the endpoint" do
+      it "refuses an endpoint another account registered" do
         endpoint = "https://fcm.googleapis.com/fcm/send/shared"
-        PushSubscription.create!(
-          user: Fabricate(:user),
-          data: { endpoint: endpoint, keys: { p256dh: "old", auth: "old" } }.to_json,
-          error_count: 2,
-          first_error_at: 3.days.ago,
+        owner = Fabricate(:user)
+        PushNotificationPusher.subscribe(
+          owner,
+          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+          "false",
         )
 
-        subscribe(endpoint)
-
-        expect(
-          PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint).sole,
-        ).to have_attributes(user_id: user.id, error_count: 0, first_error_at: nil)
-      end
-
-      it "leaves the endpoint with a single account when two register it concurrently" do
-        endpoint = "https://fcm.googleapis.com/fcm/send/switched"
-        first_user_id = user.id
-        other_user = Fabricate(:user)
-        first_inserting = Queue.new
-        release_first = Queue.new
-        second_done = Queue.new
-        # pauses before the insert opens a transaction, which would hold the shared test connection
-        pause_first =
-          lambda do |subscription|
-            if subscription.new_record? && subscription.user_id == first_user_id
-              first_inserting << true
-              release_first.pop(timeout: 5)
-            end
-          end
-        PushSubscription.set_callback(:initialize, :after, pause_first)
-        threads = []
-
-        begin
-          threads << Thread.new { subscribe(endpoint) }
-          expect(first_inserting.pop(timeout: 5)).to eq(true)
-          threads << Thread.new do
-            PushNotificationPusher.subscribe(
-              other_user,
-              { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
-              "false",
-            )
-            second_done << true
-          end
-          second_done.pop(timeout: 1)
-        ensure
-          release_first << true
-          threads.each do |thread|
-            thread.kill unless thread.join(5)
-            thread.join
-          end
-          PushSubscription.skip_callback(:initialize, :after, pause_first)
-        end
-
-        expect(
-          PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint).pluck(:user_id),
-        ).to eq([other_user.id])
+        expect { subscribe(endpoint) }.to raise_error(PushNotificationPusher::EndpointTaken)
+        expect(PushSubscription.with_endpoint(endpoint).pluck(:user_id)).to eq([owner.id])
       end
     end
 
@@ -597,5 +533,68 @@ RSpec.describe PushNotificationPusher do
         )
       end
     end
+  end
+end
+
+RSpec.describe PushNotificationPusher, ".subscribe" do
+  # each thread needs its own connection to hold a transaction open
+  self.use_transactional_tests = false
+
+  let(:endpoint) { "https://fcm.googleapis.com/fcm/send/#{SecureRandom.hex}" }
+  let!(:first_user) { Fabricate(:user) }
+  let!(:second_user) { Fabricate(:user) }
+
+  after do
+    PushSubscription.where(user_id: [first_user.id, second_user.id]).delete_all
+    first_user.destroy!
+    second_user.destroy!
+  end
+
+  def subscribe(user)
+    ActiveRecord::Base.connection_pool.with_connection do
+      PushNotificationPusher.subscribe(
+        user,
+        { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+        "false",
+      )
+    end
+  end
+
+  it "leaves the endpoint with a single account when two register it concurrently" do
+    first_user_id = first_user.id
+    first_inserting = Queue.new
+    release_first = Queue.new
+    second_done = Queue.new
+    pause_first =
+      lambda do |subscription|
+        if subscription.new_record? && subscription.user_id == first_user_id
+          first_inserting << true
+          release_first.pop(timeout: 5)
+        end
+      end
+    PushSubscription.set_callback(:initialize, :after, pause_first)
+    ActiveRecord::Base.connection_pool.release_connection
+    threads = []
+
+    begin
+      threads << Thread.new { subscribe(first_user) }
+      expect(first_inserting.pop(timeout: 5)).to eq(true)
+      threads << Thread.new do
+        subscribe(second_user)
+      rescue PushNotificationPusher::EndpointTaken
+      ensure
+        second_done << true
+      end
+      second_done.pop(timeout: 1)
+    ensure
+      release_first << true
+      threads.each do |thread|
+        thread.kill unless thread.join(5)
+        thread.join
+      end
+      PushSubscription.skip_callback(:initialize, :after, pause_first)
+    end
+
+    expect(PushSubscription.with_endpoint(endpoint).pluck(:user_id)).to eq([first_user_id])
   end
 end

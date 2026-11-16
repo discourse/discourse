@@ -55,6 +55,30 @@ function pushSubscriptionOptions(applicationServerKey) {
   };
 }
 
+// The server keeps an endpoint with the account that first registered it, so a
+// browser now signed in to another account replaces it with a fresh one
+async function registerSubscription(
+  pushManager,
+  subscription,
+  applicationServerKey,
+  sendConfirmation
+) {
+  try {
+    await sendSubscriptionToServer(subscription, sendConfirmation);
+    return;
+  } catch (e) {
+    if (e.jqXHR?.status !== 409) {
+      throw e;
+    }
+  }
+
+  await subscription.unsubscribe();
+  const fresh = await pushManager.subscribe(
+    pushSubscriptionOptions(applicationServerKey)
+  );
+  await sendSubscriptionToServer(fresh, sendConfirmation);
+}
+
 export function register(user, router, appEvents, applicationServerKey) {
   if (!isPushNotificationsSupported()) {
     return;
@@ -86,7 +110,12 @@ export function register(user, router, appEvents, applicationServerKey) {
 
       if (subscription) {
         try {
-          await sendSubscriptionToServer(subscription, false);
+          await registerSubscription(
+            pushManager,
+            subscription,
+            applicationServerKey,
+            false
+          );
           return true;
         } catch (e) {
           // eslint-disable-next-line no-console
@@ -112,7 +141,12 @@ export function register(user, router, appEvents, applicationServerKey) {
         }
 
         // the new endpoint delivers nothing until the server knows it
-        await sendSubscriptionToServer(subscription, false);
+        await registerSubscription(
+          pushManager,
+          subscription,
+          applicationServerKey,
+          false
+        );
         return true;
       } catch (e) {
         // eslint-disable-next-line no-console
@@ -129,10 +163,20 @@ export function subscribe(callback, applicationServerKey) {
   }
 
   return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    return serviceWorkerRegistration.pushManager
+    const { pushManager } = serviceWorkerRegistration;
+
+    return pushManager
       .subscribe(pushSubscriptionOptions(applicationServerKey))
       .then((subscription) => {
-        sendSubscriptionToServer(subscription, true);
+        registerSubscription(
+          pushManager,
+          subscription,
+          applicationServerKey,
+          true
+        ).catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
         if (callback) {
           callback();
         }

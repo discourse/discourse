@@ -1,4 +1,4 @@
-import { settled } from "@ember/test-helpers";
+import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -6,6 +6,7 @@ import {
   isPushNotificationsEnabled,
   keyValueStore,
   register,
+  subscribe,
   userSubscriptionKey,
 } from "discourse/lib/push-notifications";
 import pretender, {
@@ -53,6 +54,27 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
       .stub(navigator.serviceWorker, "controller")
       .get(() => ({ state: "activated" }));
     sinon.stub(Notification, "permission").get(() => "granted");
+
+    this.takenSubscription = () => {
+      pretender.post("/push_notifications/subscribe", (request) => {
+        const data = parsePostData(request.requestBody);
+        this.subscribeRequests.push(data);
+        return data.subscription.endpoint === "taken"
+          ? response(409, { failed: "FAILED" })
+          : response({ success: "OK" });
+      });
+
+      return {
+        toJSON: () => ({
+          endpoint: "taken",
+          keys: { p256dh: "p256dh", auth: "auth" },
+        }),
+        unsubscribe: sinon.spy(() => {
+          this.pushManager.subscription = null;
+          return Promise.resolve(true);
+        }),
+      };
+    };
   });
 
   hooks.afterEach(function () {
@@ -196,5 +218,58 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
     assert.notStrictEqual(registered, false);
     assert.true(this.pushManager.subscribe.notCalled);
     assert.strictEqual(this.subscribeRequests.length, 0);
+  });
+
+  test("registers a fresh subscription when the endpoint belongs to another account", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    const taken = this.takenSubscription();
+    this.pushManager.subscription = taken;
+
+    const registered = await register(user, router, appEvents, "1|2|3");
+
+    assert.true(registered);
+    assert.true(taken.unsubscribe.calledOnce);
+    assert.deepEqual(
+      this.subscribeRequests.map((data) => data.subscription.endpoint),
+      ["taken", "restored"]
+    );
+  });
+
+  test("reports failure when the fresh subscription is refused too", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    this.pushManager.subscription = this.takenSubscription();
+    pretender.post("/push_notifications/subscribe", () =>
+      response(409, { failed: "FAILED" })
+    );
+    sinon.stub(console, "error");
+
+    assert.false(await register(user, router, appEvents, "1|2|3"));
+  });
+
+  test("enabling push registers a fresh subscription when the endpoint belongs to another account", async function (assert) {
+    const taken = this.takenSubscription();
+    this.pushManager.subscription = taken;
+    const create = this.pushManager.subscribe;
+    // browsers hand back the subscription they already hold
+    this.pushManager.subscribe = sinon.spy(function (options) {
+      return this.subscription
+        ? Promise.resolve(this.subscription)
+        : create.call(this, options);
+    });
+
+    await subscribe(null, "1|2|3");
+    await waitUntil(() => this.subscribeRequests.length === 2);
+
+    assert.true(taken.unsubscribe.calledOnce);
+    assert.deepEqual(
+      this.subscribeRequests.map((data) => [
+        data.subscription.endpoint,
+        data.send_confirmation,
+      ]),
+      [
+        ["taken", "true"],
+        ["restored", "true"],
+      ]
+    );
   });
 });
