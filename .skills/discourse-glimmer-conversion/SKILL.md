@@ -40,6 +40,8 @@ Imports you will reach for: `modifier` from `ember-modifier`; `tracked`, `cached
 1. **Minimal viable change.** Same file path, same name, same arg names, same yields, same
    DOM, same CSS classes and ids, same behavior. No drive-by refactors, no jQuery removal,
    no ui-kit swaps, no renames, unless it falls out of the conversion at zero extra cost.
+   The one exception is the extension: the result is `.gts` when its neighborhood is
+   TypeScript (Step 1); the module path and resolver name stay the same.
    A reviewer should be able to read the diff as "classic → Glimmer" and nothing else.
 2. **Tracked state and native getters only.** No `@computed`, no computed macros, no
    `@observes`, no `this.set`/`this.get` on own state, no `actions: {}` hash.
@@ -131,6 +133,7 @@ Write a short plan (in your reply, not a file) with:
   `this.args.x ?? default`).
 - **Own state**: fields the component mutates; which need `@tracked` (read by the template,
   by a getter the template reads, or by a modifier/`helperFn` that must re-run on it).
+- **File type**: `.gjs` or `.gts`, from the rule below.
 - **Shape**: class or template-only. The script prints "(none: expect a template-only
   component ...)" under declared members when the class has no members; confirm the
   "this.* reads in template" section is empty too.
@@ -141,6 +144,41 @@ Write a short plan (in your reply, not a file) with:
 - **Lifecycle**: each hook and its replacement, one concern at a time (Step 4).
 - **Consumers to edit** and **consumers to flag** (external).
 - **Tests to convert or add.**
+
+### `.gjs` or `.gts`
+
+The reusable in-repo libraries are moving to TypeScript, so the result takes the file type of
+its neighborhood, not the one it started with. The script's "file type" section prints the
+evidence and a suggestion. Write `.gts` when:
+
+- it lives in `frontend/discourse/app/ui-kit`, whose guide requires TypeScript for new and
+  reworked primitives: a `Signature`, TSDoc on the class and every public arg, and a type test
+  in `frontend/discourse/type-tests/ui-kit/`
+  (`docs/developer-guides/docs/03-code-internals/02-ui-kit.md`);
+- most components in its directory are `.gts` (float-kit); or
+- most of its family is: same-prefix siblings (`d-date-input`, `d-time-input`) or the
+  subdirectory it belongs to (`d-reorderable-list/`).
+
+Otherwise keep `.gjs`. Today that is app and admin components, select-kit, form-kit, and
+plugins; trust the script over this list.
+
+To write it, load the `discourse-writing-typescript` skill and follow its component pattern.
+Type each arg from what every caller passes, external ones included, so the `Signature`
+records the real contract instead of tightening it. That skill's faithful-port rule still
+holds: the Glimmer conversion is the only intended runtime change, so never add a guard,
+drop a `?.`, or change a fallback to satisfy a type; widen the type instead. Each untyped
+component the template renders needs a cast (its "Typing untyped dependencies"). When the
+script flags several, or the `Signature` would leak errors into many typed consumers, apply
+that skill's scope triage: keep `.gjs`, say why in the plan, and list the follow-up in the
+report.
+
+The rename is a `git mv` in the conversion commit. Angle-bracket call sites, absolute
+`discourse/...` imports and `modifyClass("component:...")` are extensionless and keep
+working. Relative imports carry the extension (`./x.gjs`) and break the bundle at runtime.
+Neither `lint:types` nor the import-extension lint rule notices (the rule skips specifiers
+that already have an extension), so update every importer the script lists. If the dev build
+then reports `UNLOADABLE_DEPENDENCY` for the old path, delete its stale generated declarations
+(`frontend/discourse-types/declarations/**/<name>.d.*`) and restart `bin/dev`.
 
 ## Step 2: class and state
 
@@ -328,6 +366,7 @@ Full recipes in the data-flow reference, including `<Input>`/`<Textarea>`, selec
 
 ```bash
 bin/lint --fix path/to/component.gjs path/to/changed/callsites... path/to/tests...
+pnpm lint:types                             # when the result is .gts
 .skills/discourse-glimmer-conversion/scripts/self-args.py path/to/component.gjs...
 bin/qunit path/to/component-test.gjs        # by PATH, one file per invocation
 bin/qunit frontend/discourse/tests/acceptance/<each file the script listed>.js
@@ -355,6 +394,7 @@ The reply must contain:
   dropped implicit defaults), with each call site edited;
 - external consumers found (`modifyClass`, imports, subclasses) with the edit each needs;
 - pre-existing bugs found, and whether each was fixed (same-or-less code) or preserved;
+- the file type, and why when it stays `.gjs` beside TypeScript siblings;
 - behavior you could not preserve, if any, and why;
 - the test and lint output.
 

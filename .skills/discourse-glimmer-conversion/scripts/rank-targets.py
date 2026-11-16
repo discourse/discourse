@@ -11,6 +11,7 @@ Run from the core checkout. `git fetch origin main` first.
 """
 
 import argparse
+import collections
 import json
 import os
 import re
@@ -79,6 +80,24 @@ def external_blob():
                 *dirs, "--exclude-dir=node_modules", "--exclude-dir=.git"], ok=(0, 1))
 
 
+# component-file extensions per directory on REF, for the `ts` flag (SKILL.md Step 1)
+DIR_EXTS = collections.defaultdict(collections.Counter)
+
+
+def load_dir_exts():
+    for f in run(["git", "ls-tree", "-r", "--name-only", REF, "--", *ROOTS]).split():
+        ext = f.rsplit(".", 1)[-1]
+        if ext in ("gjs", "gts"):
+            DIR_EXTS[os.path.dirname(f)][ext] += 1
+
+
+def comes_out_as_gts(path):
+    if path.startswith("frontend/discourse/app/ui-kit/"):
+        return True
+    counts = DIR_EXTS[os.path.dirname(path)]
+    return counts["gts"] > counts["gjs"]
+
+
 def git_grep_files(pattern):
     return run(["git", "grep", "-lE", pattern, REF, "--", *ROOTS], ok=(0, 1)).split()
 
@@ -135,7 +154,8 @@ def score(path, src, ext_blob):
                 reachable=bool(sites) or ext or connector, hooks=hooks, observers=observers, element=element,
                 jquery=jquery, mixins=mixins, events=events, computeds=computeds, subclasses=subclasses,
                 two_way=sorted(two_way), field_defaults=sorted(field_defaults),
-                wrapper="tagless" if tagless else ("explicit" if named_tag else "implicit div"))
+                wrapper="tagless" if tagless else ("explicit" if named_tag else "implicit div"),
+                ts=comes_out_as_gts(path))
 
 
 def main():
@@ -149,6 +169,7 @@ def main():
     if not classic:
         raise SystemExit(f"no classic components found on {REF}; the grep is more likely broken than the job done")
     skip = in_flight()
+    load_dir_exts()
     candidates = [f for f in classic if f not in INFRA and "/select-kit/" not in f and f not in skip]
     ext_blob = external_blob()
 
@@ -165,7 +186,8 @@ def main():
         print(f"  BLOCKED {r['file']}: {BLOCKED[r['file']]}")
     print(f"\n{'#':>3} {'sc':>3} {'ln':>4} {'st':>3} {'wrapper':<12} {'flags':<34} file")
     for i, r in enumerate(ranked[: opts.top], 1):
-        flags = [f"{k}:{r[k]}" for k in ["hooks", "observers", "element", "jquery", "mixins", "events", "computeds", "subclasses"] if r[k]]
+        flags = ["ts"] if r["ts"] else []
+        flags += [f"{k}:{r[k]}" for k in ["hooks", "observers", "element", "jquery", "mixins", "events", "computeds", "subclasses"] if r[k]]
         if r["ext"]:
             flags.append("ext")
         if r["two_way"]:

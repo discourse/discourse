@@ -222,6 +222,9 @@ end of the matching section with the commit sha.
   Keep the file path, keep the name, and list each hit in the report.
 - **Renaming or moving the file changes the resolver name**, so `modifyClass` logs
   `"component:x" was not found` and the patch is dropped. Never rename during a conversion.
+  Changing only the extension to `.gts` (SKILL.md Step 1) keeps the resolver name and the
+  absolute import path. Relative importers carry the extension, though, and a stale
+  `./x.gjs` breaks the whole bundle at runtime while both `lint:types` and `bin/lint` pass.
 - **External subclasses of the converted class** get a Glimmer base under a classic body.
   Select-kit bases (`ComboBoxComponent`, `DropdownSelectBoxComponent`,
   `SelectKitRowComponent`, `MultiSelectComponent`) and `UserCardContents` are subclassed

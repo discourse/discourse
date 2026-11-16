@@ -45,7 +45,10 @@ Rules the ranking can't apply for you:
    forwarded untouched into a classic child that sets it (`DEditor`, `ValueList`,
    select-kit without `@onChange`) keeps working through Glimmer, but only because the write
    goes through the reference, hidden. Give the child a callback anyway (data-flow §5).
-4. **Blocked, each needing its own PR or a decision** (the `BLOCKED` list in the script):
+4. **`ts` means the result is `.gts`** (ui-kit, or a directory that is mostly TypeScript).
+   It adds a `Signature`, TSDoc, and for ui-kit a type test, so count it as extra work when
+   filling a batch (SKILL.md Step 1).
+5. **Blocked, each needing its own PR or a decision** (the `BLOCKED` list in the script):
    `anonymous-topic-footer-buttons` (passes `this` into a plugin API that calls
    `.get()`) and `discourse-root` (converted once and reverted). `reviewable-field-editor`
    was listed for its `DEditor` write. The write-through finding above makes it an ordinary

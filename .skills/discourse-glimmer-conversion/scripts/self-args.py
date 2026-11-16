@@ -7,7 +7,7 @@ it shadows (`get value() { return this.args.value ?? ""; }` next to a `{{@value}
 read every one.
 
 Usage: .skills/discourse-glimmer-conversion/scripts/self-args.py [files...]
-With no files, scans every .gjs Glimmer component in core and bundled plugins.
+With no files, scans every .gjs and .gts Glimmer component in core and bundled plugins.
 """
 
 import os
@@ -17,7 +17,7 @@ import sys
 
 # forced-color variables in the environment would put escape codes into git output
 PLAIN_ENV = {k: v for k, v in os.environ.items() if k not in ("CLICOLOR_FORCE", "FORCE_COLOR")} | {"NO_COLOR": "1"}
-CLASS = re.compile(r"export default class (\w+) extends Component \{(.*?)\n  <template>(.*?)</template>", re.S)
+CLASS = re.compile(r"export default class (\w+)(?:<[^>]*>)? extends Component(?:<.*?>)?\s*\{(.*?)\n  <template>(.*?)</template>", re.S)
 MEMBER = re.compile(r"^  (?:@\w+(?:\([^)]*\))?\s+)*(?:get |set |async |static )?#?(\w+)\s*(?:=[^=]|\(|;)", re.M)
 # value reads only: `{{@x}}`, `(fn @x)`, `@x.y`; not `@x=` arguments passed to children
 ARG_READ = re.compile(r"(?<![\w-])@(\w+)(?=[}\s).|])")
@@ -26,7 +26,7 @@ ARG_READ = re.compile(r"(?<![\w-])@(\w+)(?=[}\s).|])")
 def default_files():
     r = subprocess.run(
         ["git", "-c", "color.ui=never", "grep", "-l", 'from "@glimmer/component"', "--",
-         "frontend/discourse/*.gjs", "plugins/*.gjs"],
+         "frontend/discourse/*.gjs", "frontend/discourse/*.gts", "plugins/*.gjs", "plugins/*.gts"],
         capture_output=True, text=True, env=PLAIN_ENV,
     )
     if r.returncode != 0 or not r.stdout.strip():

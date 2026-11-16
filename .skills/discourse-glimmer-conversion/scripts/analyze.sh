@@ -148,7 +148,7 @@ echo "  -- this.* reads in template"
 printf '%s\n' "$template_part" | grep -oE 'this\.[A-Za-z_][A-Za-z0-9_]*' | sort | uniq -c | sort -rn | prefix "" || true
 
 hr "call sites (angle-bracket, absolute and relative imports, string lookups)"
-site_re="from \"${import_path}\"|from \"\.{1,2}/([^\"]*/)?${base_name}\"|component:${resolver_name}([^A-Za-z0-9/_-]|\$)|\{\{component \"${resolver_name}\"|\{\{${resolver_name}[ }]"
+site_re="from \"${import_path}(\.g?[jt]s)?\"|from \"\.{1,2}/([^\"]*/)?${base_name}(\.g?[jt]s)?\"|component:${resolver_name}([^A-Za-z0-9/_-]|\$)|\{\{component \"${resolver_name}\"|\{\{${resolver_name}[ }]"
 [[ -n "$class_name" ]] && site_re="<${class_name}([^A-Za-z0-9_]|\$)|<\/${class_name}>|${site_re}"
 call_sites="$(grep -rnE "${includes[@]}" "${excludes[@]}" -- "$site_re" "${src_dirs[@]}" 2>/dev/null | grep -v "^$file:" | grep -v "^${rel}\.[a-z]*:" || true)"
 printf '%s\n' "$call_sites" | grep -v '^$' | strip_root | prefix "" || true
@@ -160,6 +160,113 @@ if [[ -z "$call_sites" && "$rel" != */connectors/* ]]; then
   echo "     reach it (grep the all-the checkouts for '<${class_name:-?}' and 'component:${resolver_name}')."
   echo "     If nothing renders it, propose deleting the file rather than converting it."
 fi
+
+hr "file type: .gjs or .gts (SKILL.md Step 1; follow the neighborhood, not the original)"
+# Relative imports carry an extension, so a .gjs -> .gts rename must update each of these.
+importer_re="from \"(\.{1,2}/([^\"]*/)?|${import_path%/*}/)${base_name}\.g?[jt]s\""
+read -r -d '' filetype_py <<'PY'
+import os, re, sys
+
+core, target, rel = sys.argv[1], sys.argv[2], sys.argv[3]
+here = os.path.dirname(target)
+base = os.path.basename(target).rsplit(".", 1)[0]
+exts = ("gts", "gjs", "ts", "js")
+kits = ("admin", "select-kit", "float-kit")
+
+
+def ext_of(name):
+    return name.rsplit(".", 1)[1] if "." in name else ""
+
+
+def existing(path):
+    if os.path.isfile(path):
+        return path
+    for e in exts:
+        for cand in (f"{path}.{e}", os.path.join(path, f"index.{e}")):
+            if os.path.isfile(cand):
+                return cand
+    return None
+
+
+def resolve(spec, from_dir):
+    if spec.startswith("."):
+        return existing(os.path.normpath(os.path.join(from_dir, spec)))
+    if spec.startswith("discourse/plugins/"):
+        plugin, _, rest = spec[len("discourse/plugins/"):].partition("/")
+        for root in (f"plugins/{plugin}/assets/javascripts", f"plugins/{plugin}/admin/assets/javascripts"):
+            hit = existing(os.path.join(core, root, rest))
+            if hit:
+                return hit
+        return None
+    if spec.startswith("discourse/"):
+        rest = spec[len("discourse/"):]
+        lib, _, tail = rest.partition("/")
+        if lib in kits:
+            return existing(os.path.join(core, "frontend/discourse", lib, tail))
+        return existing(os.path.join(core, "frontend/discourse/app", rest))
+    return None
+
+
+def shown(path):
+    return os.path.relpath(path, core) if path.startswith(core + "/") else path
+
+
+ts_hint = None
+if rel.startswith("frontend/discourse/app/ui-kit/"):
+    print("  ui-kit: new and reworked primitives are TypeScript with a Signature, TSDoc and a type test")
+    print("    (docs/developer-guides/docs/03-code-internals/02-ui-kit.md)")
+    test = os.path.join(core, "frontend/discourse/type-tests/ui-kit", f"{base}-test.gts")
+    print(f"    type test: {shown(test)}" + (" (exists)" if os.path.isfile(test) else " (add it)"))
+    ts_hint = "ui-kit rule"
+
+names = [n for n in os.listdir(here) if os.path.isfile(os.path.join(here, n)) and not n.endswith(".d.ts")]
+counts = {e: sum(1 for n in names if ext_of(n) == e) for e in exts}
+print("  directory: " + "  ".join(f".{e}={counts[e]}" for e in exts))
+if not ts_hint and counts["gts"] > counts["gjs"]:
+    ts_hint = "most components in the directory are .gts"
+
+parts = base.split("-")
+prefix = "-".join(parts[:2]) + "-" if len(parts) > 2 else base + "-"
+family = sorted(n for n in names if n.startswith(prefix) and n.rsplit(".", 1)[0] != base and ext_of(n) in exts)
+subdir = os.path.join(here, base)
+if os.path.isdir(subdir):
+    family += sorted(f"{base}/{n}" for n in os.listdir(subdir) if ext_of(n) in exts)
+if family:
+    print(f"  family ({prefix}*, {base}/): " + ", ".join(family))
+    typed = sum(1 for n in family if ext_of(n) in ("gts", "ts"))
+    if not ts_hint and typed * 2 > len(family):
+        ts_hint = "most of its family is TypeScript"
+
+# Helpers resolve in templates without a cast; components rendered from a .gts file need types.
+src = open(target).read()
+untyped = []
+for name, spec in re.findall(r'^import ([A-Z][A-Za-z0-9_]*)(?:,\s*\{[^}]*\})? from "([^"]+)"', src, re.M):
+    hit = resolve(spec, here)
+    if hit and ext_of(hit) in ("gjs", "js") and re.search(r"/(components|ui-kit|select-kit|float-kit|form-kit)/", hit):
+        untyped.append(f"{name} ({shown(hit)})")
+if untyped:
+    print("  renders untyped components (each needs a cast in a .gts file): " + ", ".join(untyped))
+
+importers = []
+for line in sys.stdin:
+    path, _, rest = line.rstrip("\n").partition(":")
+    path = os.path.abspath(path)
+    lineno, _, text = rest.partition(":")
+    m = re.search(r'from "([^"]+)"', text)
+    if m and resolve(m.group(1), os.path.dirname(path)) == target:
+        importers.append(f"{shown(path)}:{lineno}")
+if importers:
+    print("  imports with an extension (update them on a .gts rename): " + ", ".join(importers))
+
+if ts_hint:
+    print(f"  -> .gts ({ts_hint})")
+    if len(untyped) >= 3:
+        print("     several untyped components: apply the TypeScript skill's scope triage first")
+else:
+    print("  -> .gjs (the neighborhood is JavaScript)")
+PY
+grep -rnE "${includes[@]}" "${excludes[@]}" -- "$importer_re" "${src_dirs[@]}" 2>/dev/null \
+  | python3 -c "$filetype_py" "$core_dir" "$file" "$rel" || true
 
 hr "class fields that call sites also pass as args (classic lets the arg win; Glimmer needs this.args.x ?? default)"
 fields="$(printf '%s\n' "$members" | sed -E 's/^[0-9]+://' | grep -E '^ {2}(@tracked\s+)?[A-Za-z_][A-Za-z0-9_]*\s*=[^=]' | sed -E 's/^ {2}(@tracked[[:space:]]+)?//; s/[[:space:]]*=.*$//' | sort -u | tr '\n' '|' | sed 's/|$//')"
@@ -197,7 +304,7 @@ grep -rnE "${includes[@]}" "${excludes[@]}" -- "modifyClass\(\s*[\"'\`]component
 if [[ ${#external_dirs[@]} -gt 0 ]]; then
   hr "external checkouts under $all_the (flag, do not edit; single pass, about ten seconds)"
   ext_re="modifyClass\(\s*[\"'\`]component:${resolver_name}[\"'\`]|\{\{component \"${resolver_name}\""
-  [[ "$kind" == "core" || "$kind" == "plugin" ]] && ext_re="${ext_re}|\"${import_path}\""
+  [[ "$kind" == "core" || "$kind" == "plugin" ]] && ext_re="${ext_re}|\"${import_path}(\.g?[jt]s)?\""
   [[ -n "$class_name" ]] && ext_re="${ext_re}|<${class_name}([^A-Za-z0-9_]|\$)|extends ${class_name}([^A-Za-z0-9_]|\$)|${class_name}\.extend\("
   grep -rnE "${includes[@]}" "${excludes[@]}" -- "$ext_re" "${external_dirs[@]}" 2>/dev/null | grep -v "^$file:" | strip_root | prefix "" || true
 else
