@@ -286,16 +286,97 @@ module("Integration | Component | DockedComposer", function (hooks) {
       assert.strictEqual(submission.typingTime, 100);
       assert.true(submission.composerTime >= 12_000);
       assert.true(submission.composerTime < 60_000);
-      await clearRender();
-      window.dispatchEvent(new PageTransitionEvent("pagehide"));
       assert.strictEqual(keyValueStore.get(draftKey), undefined);
       assert.strictEqual(
         keyValueStore.getObject(`${draftKey}-timing`),
         undefined
       );
+
+      await fillIn(".d-editor-input", "A different unsent comment");
+      await clearRender();
+      const savedTiming = keyValueStore.getObject(`${draftKey}-timing`);
+      clock.tick(10_000);
+      window.dispatchEvent(new PageTransitionEvent("pagehide"));
+      assert.deepEqual(
+        keyValueStore.getObject(`${draftKey}-timing`),
+        savedTiming,
+        "leaving after destruction does not update the saved duration"
+      );
     } finally {
       clock.restore();
     }
+  });
+
+  test("excludes time away when returning to an empty composer", async function (assert) {
+    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    try {
+      await render(
+        <template>
+          <DockedComposer
+            @composerEvents={{false}}
+            @draftKey="test-empty-cached-composer"
+            @onSubmit={{handleSubmit}}
+          />
+        </template>
+      );
+      clock.tick(5_000);
+      window.dispatchEvent(
+        new PageTransitionEvent("pagehide", { persisted: true })
+      );
+      clock.tick(60_000);
+      window.dispatchEvent(
+        new PageTransitionEvent("pageshow", { persisted: true })
+      );
+      clock.tick(2_000);
+      await fillIn(".d-editor-input", "A comment after returning");
+      await click(".docked-composer__submit-btn");
+
+      assert.strictEqual(submission.typingTime, 100);
+      assert.true(
+        submission.composerTime >= 7_000,
+        "both open intervals count"
+      );
+      assert.true(
+        submission.composerTime < 60_000,
+        "the interval away is excluded"
+      );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("leaving preserves drafts changed or submitted in another tab", async function (assert) {
+    const draftKey = "test-shared-draft";
+    const keyValueStore = this.owner.lookup("service:key-value-store");
+    const composer = <template>
+      <DockedComposer @composerEvents={{false}} @draftKey={{draftKey}} />
+    </template>;
+
+    await render(composer);
+    await fillIn(".d-editor-input", "An older draft in this tab");
+    const newerDraft = "A newer draft from another tab";
+    keyValueStore.set({ key: draftKey, value: newerDraft });
+    window.dispatchEvent(new PageTransitionEvent("pagehide"));
+    await clearRender();
+    assert.strictEqual(keyValueStore.get(draftKey), newerDraft);
+
+    await render(composer);
+    assert.dom(".d-editor-input").hasValue(newerDraft);
+    keyValueStore.remove(draftKey);
+    keyValueStore.remove(`${draftKey}-timing`);
+    window.dispatchEvent(new PageTransitionEvent("pagehide"));
+    await clearRender();
+    assert.strictEqual(keyValueStore.get(draftKey), undefined);
+    assert.strictEqual(
+      keyValueStore.getObject(`${draftKey}-timing`),
+      undefined
+    );
   });
 
   test("ignores saved timing when an older client changes the draft text", async function (assert) {

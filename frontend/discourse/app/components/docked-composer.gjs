@@ -54,10 +54,15 @@ export default class DockedComposer extends Component {
   #composerOpenedAt = Date.now();
   #typingTime = 0;
   #lastTypedValue = "";
-  #onPageHide = () => this.persistDraft(this.reply);
+  #pageHiddenAt = null;
+  #onPageHide = () => {
+    this.#persistDraftTiming(this.reply);
+    this.#pageHiddenAt = Date.now();
+  };
   #onPageShow = (event) => {
-    if (event.persisted) {
-      this.loadDraft();
+    if (event.persisted && this.#pageHiddenAt !== null) {
+      this.#composerOpenedAt += Date.now() - this.#pageHiddenAt;
+      this.#pageHiddenAt = null;
     }
   };
 
@@ -223,14 +228,7 @@ export default class DockedComposer extends Component {
   persistDraft(value) {
     if (value?.length) {
       this.keyValueStore.set({ key: this.draftKey, value });
-      this.keyValueStore.setObject({
-        key: this.#draftTimingKey,
-        value: {
-          reply: value,
-          typingTime: this.#typingTime,
-          composerTime: Date.now() - this.#composerOpenedAt,
-        },
-      });
+      this.#persistDraftTiming(value);
     } else {
       this.keyValueStore.remove(this.draftKey);
       this.keyValueStore.remove(this.#draftTimingKey);
@@ -299,7 +297,7 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
-    this.persistDraft(this.reply);
+    this.#persistDraftTiming(this.reply);
     window.removeEventListener("pagehide", this.#onPageHide);
     window.removeEventListener("pageshow", this.#onPageShow);
     this.inputElement?.removeEventListener(
@@ -424,10 +422,25 @@ export default class DockedComposer extends Component {
     );
   }
 
+  #persistDraftTiming(value) {
+    if (!value?.length || this.keyValueStore.get(this.draftKey) !== value) {
+      return;
+    }
+    this.keyValueStore.setObject({
+      key: this.#draftTimingKey,
+      value: {
+        reply: value,
+        typingTime: this.#typingTime,
+        composerTime: Date.now() - this.#composerOpenedAt,
+      },
+    });
+  }
+
   #resetTiming(value = "") {
     this.#lastTypedValue = value;
     this.#typingTime = 0;
     this.#composerOpenedAt = Date.now();
+    this.#pageHiddenAt = null;
   }
 
   <template>
