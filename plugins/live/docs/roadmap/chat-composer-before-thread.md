@@ -39,7 +39,7 @@ would require changes to those behaviors and is outside this design.
 - Two participants sending at nearly the same time produce one thread. The first
   successful message is the original message; the other is a reply.
 - A participant who is typing when someone else starts the conversation retains
-  their text, completed uploads, selection, and focus during the transition.
+  their text and completed uploads during the transition.
 - Failed sends leave the draft available. Thread loading failures after a
   successful send do not make the client resend an accepted message.
 - Existing session rollover and channel permission rules continue to apply.
@@ -168,10 +168,9 @@ as a pending transition and apply the newest applicable state when it is safe.
 Before replacing the pending composer:
 
 1. Ensure there is no active upload or first-message request.
-2. Snapshot the current draft, completed uploads, selection, and whether the
-   composer owns focus.
+2. Capture the current draft and completed uploads.
 3. Initialize the real thread with that draft before its composer mounts.
-4. Mount the normal thread UI and restore focus and selection when appropriate.
+4. Mount the normal thread UI.
 5. Release the pending draft only after ownership has moved successfully.
 
 `ChatThread.setup` currently reloads a draft from ChatDraftsManager or creates a
@@ -263,7 +262,6 @@ Add focused Chat adapter tests and Live panel transition tests for:
 - No thread fetch, thread subscription, typing presence, or channel draft writes
   against an absent or synthetic thread ID.
 - Room/user/channel draft isolation and close/reopen restoration.
-- Selection and focus preservation when a remote thread arrives.
 - Completed uploads transferred; in-progress uploads finish before switching.
 - Existing thread draft preserved during the merge case.
 - Duplicate clicks blocked, validation failure retaining the draft, and load

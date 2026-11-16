@@ -1,6 +1,8 @@
 import Service, { service } from "@ember/service";
 import { optionalRequire } from "discourse/lib/utilities";
 
+// A room has no thread to save a draft against until someone sends a message,
+// so we keep the draft here when the chat panel closes.
 export default class LiveChatDrafts extends Service {
   @service currentUser;
 

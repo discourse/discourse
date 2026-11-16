@@ -47,7 +47,6 @@ export default class LiveChatPanel extends Component {
   @tracked draft = null;
   @tracked activationError = false;
   @tracked initialDraft = null;
-  @tracked composerSelection = null;
   @tracked uploadDropZone = null;
 
   pane = trackedObject({ sending: false });
@@ -239,14 +238,6 @@ export default class LiveChatPanel extends Component {
       return;
     }
 
-    const element = this.uploadDropZone?.querySelector("textarea");
-    this.composerSelection = element
-      ? {
-          focused: element === element.ownerDocument.activeElement,
-          start: element.selectionStart,
-          end: element.selectionEnd,
-        }
-      : null;
     this.initialDraft = null;
     const saved = this.chatDraftsManager.get(channel.id, thread.id);
     const pending = this.draft;
@@ -256,8 +247,6 @@ export default class LiveChatPanel extends Component {
         saved !== pending &&
         (saved.message || saved.uploads.length)
       ) {
-        const prefixLength =
-          saved.message.length + (saved.message && pending.message ? 2 : 0);
         saved.message = [saved.message, pending.message]
           .filter(Boolean)
           .join("\n\n");
@@ -271,10 +260,6 @@ export default class LiveChatPanel extends Component {
         );
         saved.editing = false;
         saved.inReplyTo = null;
-        if (this.composerSelection) {
-          this.composerSelection.start += prefixLength;
-          this.composerSelection.end += prefixLength;
-        }
         this.initialDraft = saved;
       } else {
         this.initialDraft = pending;
@@ -350,7 +335,6 @@ export default class LiveChatPanel extends Component {
           {{#each (array this.thread) key="id" as |thread|}}
             <ChatThread
               @channel={{this.channel}}
-              @composerSelection={{this.composerSelection}}
               @initialDraft={{this.initialDraft}}
               @thread={{thread}}
             />

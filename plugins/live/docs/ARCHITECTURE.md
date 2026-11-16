@@ -59,8 +59,8 @@ was published, Chat's deletion service retracts it and repairs channel tracking.
 Session updates contain no message content or channel identifiers. Clients fetch
 state through the permission-checked session endpoint. The panel defers switching
 to Chat's normal thread UI while a first send or upload is in progress, then
-transfers unsent text, completed uploads, focus, and selection. An existing thread
-draft is retained when merging a pending room draft.
+transfers unsent text and completed uploads. The panel merges the pending room
+draft with any existing thread draft.
 
 `live-chat-drafts` retains pending drafts in memory by user, room, and linked
 channel, allowing the panel to close and reopen without losing its draft. Pending

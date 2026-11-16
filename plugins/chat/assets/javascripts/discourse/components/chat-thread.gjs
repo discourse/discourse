@@ -104,23 +104,7 @@ export default class ChatThread extends Component {
           user: this.currentUser,
           thread: this.args.thread,
         });
-      if (this.args.composerSelection) {
-        next(() => {
-          if (this.isDestroying) {
-            return;
-          }
-          const { focused, start, end } = this.args.composerSelection;
-          const textarea = this.chatThreadComposer.textarea?.element;
-          if (textarea) {
-            if (focused) {
-              textarea.focus();
-            }
-            textarea.setSelectionRange(start, end);
-          }
-        });
-      } else {
-        this.chatThreadComposer.focus();
-      }
+      this.chatThreadComposer.focus();
     }
     this.loadMessages();
   }

@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import {
   click,
   fillIn,
-  find,
   render,
   settled,
   waitFor,
@@ -79,11 +78,9 @@ module("Live | Integration | Component | Live | ChatPanel", function (hooks) {
       .doesNotExist("opening creates no thread");
   });
 
-  test("transfers the draft and caret when another participant starts the thread", async function (assert) {
+  test("transfers the draft when another participant starts the thread", async function (assert) {
     await render(<template><LiveChatPanel @room={{this.room}} /></template>);
     await fillIn(".live-chat textarea", "I was composing this");
-    find(".live-chat textarea").focus();
-    find(".live-chat textarea").setSelectionRange(4, 7);
     this.state = { channel_id: 123, thread_id: 456 };
     await publishToMessageBus("/live/rooms/1/chat", { type: "updated" });
     await settled();
@@ -93,16 +90,6 @@ module("Live | Integration | Component | Live | ChatPanel", function (hooks) {
     assert
       .dom(".live-chat textarea")
       .hasValue("I was composing this", "the pending text is retained");
-    assert.strictEqual(
-      find(".live-chat textarea").selectionStart,
-      4,
-      "the selection is retained"
-    );
-    assert.strictEqual(
-      find(".live-chat textarea").selectionEnd,
-      7,
-      "the selection end is retained"
-    );
   });
 
   test("keeps the thread active across repeated session notifications", async function (assert) {
