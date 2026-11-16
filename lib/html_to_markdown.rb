@@ -331,7 +331,7 @@ class HtmlToMarkdown
 
     lists = node.ancestors("ul, ol")
     marker = "ol" == lists[0]&.name ? "1. " : "- "
-    indent = (" " * marker.size) * [1, lists.size].max
+    indent = " " * marker.size
     suffix = node == node.parent.elements[-1] ? "" : "\n"
 
     text.gsub!(/\n{2,}/, "\n\n")
