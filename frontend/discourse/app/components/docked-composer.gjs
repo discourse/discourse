@@ -8,7 +8,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, schedule, throttle } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -53,7 +53,7 @@ export default class DockedComposer extends Component {
   #rootElement = null;
   #composerOpenedAt = Date.now();
   #typingTime = 0;
-  #typingTimer = null;
+  #lastTypedValue = "";
 
   #handlePaste = (event) => {
     if (!this.inputElement || document.activeElement !== this.inputElement) {
@@ -199,6 +199,7 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
+      this.#lastTypedValue = saved;
       this.syncAutoResizeHeight();
     }
   }
@@ -215,8 +216,11 @@ export default class DockedComposer extends Component {
   @action
   onReplyChange(event) {
     const value = event?.target?.value ?? "";
+    if (value !== this.#lastTypedValue) {
+      this.#typingTime += 100;
+      this.#lastTypedValue = value;
+    }
     this.reply = value;
-    this.#typingTimer = throttle(this, this.#recordTyping, 100, false);
     this.persistDraft(value);
     this.syncAutoResizeHeight();
   }
@@ -231,8 +235,8 @@ export default class DockedComposer extends Component {
 
   @action
   setReply(value) {
-    this.#resetTiming();
     this.reply = value ?? "";
+    this.#resetTiming(this.reply);
     this.persistDraft(this.reply);
   }
 
@@ -269,7 +273,6 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
-    cancel(this.#typingTimer);
     this.inputElement?.removeEventListener(
       "keydown",
       this.#handleKeyDown,
@@ -392,13 +395,8 @@ export default class DockedComposer extends Component {
     );
   }
 
-  #recordTyping() {
-    this.#typingTime += 100;
-  }
-
-  #resetTiming() {
-    cancel(this.#typingTimer);
-    this.#typingTimer = null;
+  #resetTiming(value = "") {
+    this.#lastTypedValue = value;
     this.#typingTime = 0;
     this.#composerOpenedAt = Date.now();
   }

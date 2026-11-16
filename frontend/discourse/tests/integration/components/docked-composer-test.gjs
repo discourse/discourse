@@ -1,5 +1,12 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -72,6 +79,11 @@ module("Integration | Component | DockedComposer", function (hooks) {
 
     await fillIn(".d-editor-input", "First comment");
     await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[0].typingTime,
+      100,
+      "the first attempt includes its typing time"
+    );
     assert
       .dom(".d-editor-input")
       .hasValue("First comment", "rejected submission keeps the comment");
@@ -89,6 +101,78 @@ module("Integration | Component | DockedComposer", function (hooks) {
       submissions[2].typingTime,
       200,
       "the next comment starts with fresh timing"
+    );
+  });
+
+  test("replacing the text starts a fresh typing measurement", async function (assert) {
+    let composerApi;
+    let submission;
+    const registerApi = (api) => {
+      composerApi = api;
+    };
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-replace-typing"
+          @onRegisterApi={{registerApi}}
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "A discarded reply");
+    composerApi.setReply("An existing post");
+    await settled();
+    await fillIn(".d-editor-input", "An existing post edited");
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.typingTime,
+      100,
+      "only the edit counts toward the new measurement"
+    );
+  });
+
+  test("counts every input when keystrokes arrive within 100 milliseconds", async function (assert) {
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-rapid-typing"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    const editor = find(".d-editor-input");
+    for (const character of "hello") {
+      editor.value += character;
+      editor.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    await settled();
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.raw,
+      "hello",
+      "the rapid input reaches the submitted comment"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      500,
+      "each input counts like the regular composer"
     );
   });
 
