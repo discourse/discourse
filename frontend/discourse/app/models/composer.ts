@@ -1819,6 +1819,9 @@ export default class Composer extends RestModel {
 
       promise = promise.then(async () => {
         // Legacy postId loading does not populate opts.post; preserve that edit-path assumption.
+        // A post that left form mode comes back without form_submission, and the store
+        // only merges keys it receives, so a cached copy would keep the stale form.
+        opts.post!.set("form_submission", undefined);
         const post = await this.store.find("post", opts.post!.id);
         // When a draft is being restored, `opts` already carries the
         // composer's saved `reply_to_*` state (see `_draft_serializer`).

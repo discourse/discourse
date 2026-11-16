@@ -33,6 +33,19 @@ RSpec.describe FormTemplate::Submission do
       end.to raise_error(described_class::TooLarge)
     end
 
+    it "does not count a large definition against the answer size cap" do
+      choices = Array.new(3_000) { |i| "a-long-choice-name-#{i}" }
+      # Stands in for a tag-chooser expanded with a large tag group.
+      form_template.update_column(
+        :template,
+        [{ id: "options", type: "multi-select", choices: }].as_json.to_yaml,
+      )
+
+      snapshot = described_class.from_template(form_template, answers: { "options" => [] })
+
+      expect(snapshot.to_h.to_json.bytesize).to be > described_class::MAX_BYTES
+    end
+
     it "retains numeric spelling and isolates the snapshot from caller mutations" do
       form_template.update!(output_template: nil)
       snapshot = described_class.from_template(form_template, answers: { "seats" => "1e2" })

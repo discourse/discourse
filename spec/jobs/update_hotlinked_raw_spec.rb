@@ -33,9 +33,11 @@ RSpec.describe Jobs::UpdateHotlinkedRaw do
   end
 
   it "falls back to markdown editing when the rewritten answers outgrow the size cap" do
-    stub_const(FormTemplate::Submission, :MAX_BYTES, JSON.generate(post.form_data).bytesize + 1) do
-      described_class.new.execute(post_id: post.id)
-    end
+    stub_const(
+      FormTemplate::Submission,
+      :MAX_BYTES,
+      JSON.generate(post.form_data["answers"]).bytesize + 1,
+    ) { described_class.new.execute(post_id: post.id) }
 
     post.reload
     expect(post.raw).to include(upload.short_url)

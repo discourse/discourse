@@ -186,7 +186,9 @@ RSpec.describe Jobs::ExportUserArchive do
 
       data, = make_component_csv
 
-      expect(JSON.parse(data.first[:form_data])).to eq(submission.to_h)
+      expect(JSON.parse(data.first[:form_data])).to eq(
+        submission.to_h.slice("template_id", "answers"),
+      )
     end
 
     it "properly exports posts" do

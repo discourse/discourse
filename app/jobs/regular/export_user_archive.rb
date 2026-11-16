@@ -567,7 +567,7 @@ module Jobs
         "is_pm" => is_pm,
         "url" => url,
         "post_id" => user_archive["id"],
-        "form_data" => user_archive["form_data"]&.to_json,
+        "form_data" => user_archive["form_data"]&.slice("template_id", "answers")&.to_json,
       }
 
       user_archive.merge!(topic_hash)

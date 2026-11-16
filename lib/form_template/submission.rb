@@ -41,9 +41,9 @@ class FormTemplate::Submission
 
   def initialize(data, validate: true)
     raise ArgumentError unless data.is_a?(Hash)
-    encoded = JSON.generate(data, max_nesting: 20)
-    raise TooLarge if encoded.bytesize > MAX_BYTES
-    @data = JSON.parse(encoded, max_nesting: 20)
+    @data = JSON.parse(JSON.generate(data, max_nesting: 20), max_nesting: 20)
+    # Only answers come from posters; the definition is the admin's template with its tag choices.
+    raise TooLarge if JSON.generate(@data["answers"]).bytesize > MAX_BYTES
     # jsonb cannot store NUL.
     raise ArgumentError if contains_nul?(@data)
     unless @data.keys.sort == KEYS.sort && @data["format_version"] == FORMAT_VERSION &&

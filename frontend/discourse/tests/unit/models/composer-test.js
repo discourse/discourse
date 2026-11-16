@@ -456,6 +456,29 @@ module("Unit | Model | composer", function (hooks) {
     plainCategory.set("form_template_ids", undefined);
   });
 
+  test("editing a post that left form mode opens the markdown editor", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 123,
+      post_number: 1,
+      form_submission: { template_id: 3, template: "", answers: {} },
+    });
+    const topic = store.createRecord("topic", {
+      id: 456,
+      title: "a title",
+      details: { can_edit: true },
+    });
+    pretender.get("/posts/123", () =>
+      response({ id: 123, post_number: 1, raw: "Edited in markdown." })
+    );
+
+    const composer = createComposer.call(this, {});
+    await composer.open({ action: EDIT, post, topic, draftKey: "topic_456" });
+
+    assert.strictEqual(composer.reply, "Edited in markdown.");
+    assert.strictEqual(composer.formSubmission, null);
+  });
+
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {
