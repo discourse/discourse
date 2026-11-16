@@ -367,7 +367,7 @@ third line`
   });
 
   test("code button fences lines selected mid-line", async function (assert) {
-    this.set("value", "intro a\nb\noutro");
+    this.value = "intro a\nb\noutro";
 
     await render(<template><DEditor @value={{this.value}} /></template>);
 
