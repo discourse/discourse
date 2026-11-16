@@ -51,7 +51,7 @@ class Blog::Article::List
   end
 
   def fetch_publications(params:, tag:, author:)
-    publications = Blog::Publication.publicly_visible
+    publications = Blog::Publication.publicly_visible.articles
     if params.query.present?
       publications = publications.where(SEARCH_SQL, pattern: params.search_pattern)
     end

@@ -52,6 +52,14 @@ RSpec.describe Blog::ArticleMetadata do
       )
     end
 
+    it "describes a standalone page as a web page with no author" do
+      revision = Blog::Revision.new(data: article.data.merge("page" => true))
+      schema = JSON.parse(described_class.new(publication, revision:, description: nil).schema)
+
+      expect(schema["@type"]).to eq("WebPage")
+      expect(schema).not_to have_key("author")
+    end
+
     it "includes the article image" do
       revision = Blog::Revision.new(data: article.data.merge("image_url" => "/uploads/cover.png"))
       metadata = described_class.new(publication, revision:, description: nil)

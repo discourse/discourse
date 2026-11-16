@@ -23,11 +23,19 @@ import BlogThemeFields from "./blog-theme-fields.gjs";
 import BlogThemePreview from "./modal/blog-theme-preview.gjs";
 import BlogThemeVariables from "./modal/blog-theme-variables.gjs";
 
-const TEMPLATE_NAMES = ["layout", "index", "article", "about", "not_found"];
+const TEMPLATE_NAMES = [
+  "layout",
+  "index",
+  "article",
+  "page",
+  "about",
+  "not_found",
+];
 
 const PAGE_FOR_TEMPLATE = {
   template_index: "index",
   template_article: "article",
+  template_page: "page",
   template_about: "about",
   template_not_found: "not_found",
 };
@@ -86,6 +94,9 @@ export default class BlogThemeEditor extends Component {
   }
 
   get previewUnavailable() {
+    if (this.previewPage === "page") {
+      return !this.catalog?.has_page;
+    }
     return this.previewPage === "article" && !this.selectedArticle;
   }
 

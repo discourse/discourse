@@ -28,6 +28,7 @@ module ::Blog
                :cover_alt,
                :co_authors,
                :featured,
+               :page,
                :published_at,
                :last_published_at,
                :published,
@@ -147,6 +148,10 @@ module ::Blog
 
     def featured
       metadata["featured"]
+    end
+
+    def page
+      metadata["page"].present?
     end
 
     def published_at
