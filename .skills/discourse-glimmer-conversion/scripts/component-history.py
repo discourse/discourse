@@ -47,7 +47,8 @@ def snapshots(years, period):
                 dates.append(d)
     out = []
     for d in dates:
-        sha = run(["git", "rev-list", "-1", "--first-parent", f"--before={d.isoformat()}", REF]).strip()
+        # a bare date takes the current time of day, which would move snapshots between runs
+        sha = run(["git", "rev-list", "-1", "--first-parent", f"--before={d.isoformat()}T00:00:00Z", REF]).strip()
         if sha:
             out.append((f"{d.year} {prefix}{(d.month - 1) // months + 1}", d.isoformat(), sha))
     head = run(["git", "log", "-1", "--format=%H %cs", REF]).split()
@@ -258,7 +259,7 @@ def render(rows, period):
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>Classic vs Glimmer components</title>
 <style>{CSS}</style></head><body><div class="viz-root">
 <h1>Classic vs Glimmer components</h1>
-<p class="sub">Discourse {REF}, first-parent commit before each {"half-year" if period == "half" else "quarter"} start. Bundled counts grow as plugin and theme repos get merged into core.</p>
+<p class="sub">Discourse {REF}, first-parent commit before each {"half-year" if period == "half" else "quarter"} start (UTC). Bundled counts grow as plugin and theme repos get merged into core.</p>
 <div class="legend"><span style="--c:var(--series-2)">Classic</span><span style="--c:var(--series-1)">Glimmer</span></div>
 {charts}<div class="tip"></div></div><script>{JS}</script></body></html>"""
 
