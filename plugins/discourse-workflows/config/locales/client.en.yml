@@ -895,6 +895,7 @@ en:
           helpers:
             absolute_url: "Converts a relative path (e.g. a post or topic URL) into an absolute URL using the site's base URL. Already-absolute paths are returned unchanged."
       expression_language:
+        unclosed_expression: "This expression is missing its closing }}."
         methods:
           string:
             length: "The number of characters in the string."
