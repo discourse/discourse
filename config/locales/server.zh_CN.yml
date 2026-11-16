@@ -442,6 +442,7 @@ zh_CN:
         auto_generated_email_error: "当 'precedence' 标头设置为 list、junk、bulk 或 auto_reply，或者任何其他标头包含 auto-submitted、auto-replied 或 auto-generated 时，就会发生这种情况。"
         no_body_detected_error: "当我们无法提取正文且没有附件时，就会发生这种情况。"
         no_sender_detected_error: "当我们在“发件人”标头中找不到有效的电子邮件地址时，就会发生这种情况。"
+        authentication_failed_error: "当收到的电子邮件认证需要审核时会发生这种情况，但该操作会立即生效，无法排队处理。"
         from_reply_by_address_error: "当“发件人”标头与回复电子邮件地址时，就会发生这种情况。"
         inactive_user_error: "当发件人不活跃时，就会发生这种情况。"
         silenced_user_error: "当发件人被禁言时，就会发生这种情况。"
