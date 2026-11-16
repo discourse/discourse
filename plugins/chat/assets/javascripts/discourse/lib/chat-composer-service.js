@@ -5,7 +5,8 @@ import Service, { service } from "@ember/service";
 
 // The rich editor mounts asynchronously; a focus requested meanwhile is
 // replayed when it registers. Only the latest request across composers is kept,
-// matching the markdown editor, where the last focus call wins.
+// matching the markdown editor, where the last focus call wins, but text typed
+// meanwhile accumulates.
 let pendingFocus = null;
 
 export default class ChatComposerService extends Service {
@@ -14,7 +15,7 @@ export default class ChatComposerService extends Service {
   @tracked editor;
   @tracked scroller;
 
-  #awaitingEditor = false;
+  #awaitingEditorFor = null;
 
   init() {
     super.init(...arguments);
@@ -30,12 +31,17 @@ export default class ChatComposerService extends Service {
    * Marks the composer as mounted but still loading its editor, so focus
    * requests are kept for it instead of being dropped.
    */
-  awaitEditor() {
-    this.#awaitingEditor = true;
+  awaitEditor(owner) {
+    this.#awaitingEditorFor = owner;
   }
 
-  stopAwaitingEditor() {
-    this.#awaitingEditor = false;
+  // a composer replacing another starts awaiting before the old one tears down
+  stopAwaitingEditor(owner) {
+    if (this.#awaitingEditorFor !== owner) {
+      return;
+    }
+
+    this.#awaitingEditorFor = null;
 
     if (pendingFocus?.owner === this) {
       pendingFocus = null;
@@ -44,7 +50,7 @@ export default class ChatComposerService extends Service {
 
   registerEditor(editor) {
     this.editor = editor;
-    this.#awaitingEditor = false;
+    this.#awaitingEditorFor = null;
 
     const request = pendingFocus?.owner === this ? pendingFocus : null;
     if (!request) {
@@ -74,10 +80,17 @@ export default class ChatComposerService extends Service {
 
   @action
   focus(options = {}) {
-    if (this.editor) {
+    // an outgoing composer's editor stays registered until it tears down
+    if (this.editor?.element?.isConnected) {
       this.editor.focus(options);
-    } else if (this.#awaitingEditor) {
-      pendingFocus = { owner: this, options };
+    } else if (this.#awaitingEditorFor) {
+      const pendingText =
+        pendingFocus?.owner === this ? pendingFocus.options.addText : null;
+      const addText = [pendingText, options.addText].filter(Boolean).join("");
+      pendingFocus = {
+        owner: this,
+        options: { ...options, addText: addText || null },
+      };
     }
   }
 
