@@ -449,20 +449,32 @@ const extension = {
 
           const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
 
-          // a host with its own uploader takes the image as an attachment
+          // a host with its own uploader takes the image as an attachment, or
+          // declines it, leaving the same text as a disallowed image
           const { uploadFiles } = getContext();
           if (uploadFiles) {
-            const tr = view.state.tr;
-            [...dataImageUploader.getState(view.state).get(dataURI)]
-              .sort((a, b) => b - a)
-              .forEach((pos) =>
-                tr.delete(pos, pos + view.state.doc.nodeAt(pos).nodeSize)
-              );
-            view.dispatch(tr);
-
             const blob = await (await fetch(dataURI)).blob();
+            const accepted =
+              uploadFiles([new File([blob], fileName, { type: blob.type })]) !==
+              false;
+
+            const tr = view.state.tr;
+            [...(dataImageUploader.getState(view.state).get(dataURI) ?? [])]
+              .sort((a, b) => b - a)
+              .forEach((pos) => {
+                const end = pos + view.state.doc.nodeAt(pos).nodeSize;
+                if (accepted) {
+                  tr.delete(pos, end);
+                } else {
+                  tr.replaceWith(
+                    pos,
+                    end,
+                    view.state.schema.text(i18n("composer.image"))
+                  );
+                }
+              });
+            view.dispatch(tr);
             processingDataURIs.delete(dataURI);
-            uploadFiles([new File([blob], fileName, { type: blob.type })]);
             return;
           }
 
