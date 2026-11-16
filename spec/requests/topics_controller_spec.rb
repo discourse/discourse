@@ -3439,6 +3439,22 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(response.body).to include(I18n.t("invalid_access"))
       end
+
+      it "removes only the notifications of the refused topic" do
+        refused_notification = Fabricate(:notification, user:, topic: private_topic)
+        other_notifications = [
+          Fabricate(:notification, user:, topic:),
+          Fabricate(:notification, user:, topic: nil),
+        ]
+        sign_in(user)
+
+        get "/t/#{private_topic.id}.json", params: { topic_id: topic.id }
+        get "/t/#{private_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(Notification.exists?(refused_notification.id)).to eq(false)
+        expect(Notification.where(id: other_notifications.map(&:id)).count).to eq(2)
+      end
     end
 
     describe "when topic is allowed to a group" do
