@@ -518,10 +518,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "true",
       type: "bool",
     });
-    this.setProperties({
-      themeSetting,
-      theme: { id: 1, name: "Horizon" },
-    });
+    this.themeSetting = themeSetting;
+    this.theme = { id: 1, name: "Horizon" };
 
     await render(
       <template>
@@ -552,10 +550,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "A theme",
       textarea: true,
     });
-    this.setProperties({
-      translation,
-      theme: { id: 1, locale: "en" },
-    });
+    this.translation = translation;
+    this.theme = { id: 1, locale: "en" };
 
     await render(
       <template>

@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   find,
@@ -22,27 +22,29 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
   });
 
   test("waits for refreshed dashboard dates before allowing report generation", async function (assert) {
-    const state = trackedObject({
-      loading: true,
-      data: { questions: 1, start_date: "2026-08-01", end_date: "2026-08-31" },
+    const loading = tracked(true);
+    const data = tracked({
+      questions: 1,
+      start_date: "2026-08-01",
+      end_date: "2026-08-31",
     });
     await render(
       <template>
         <ModalContainer /><AskAiDashboard
-          @data={{state.data}}
-          @loading={{state.loading}}
+          @data={{data.value}}
+          @loading={{loading.value}}
         />
       </template>
     );
     assert
       .dom(".ask-ai-reports__generate")
       .isDisabled("cannot capture stale dates during refresh");
-    state.data = {
+    data.value = {
       questions: 1,
       start_date: "2026-09-01",
       end_date: "2026-09-09",
     };
-    state.loading = false;
+    loading.value = false;
     await settled();
     await click(".ask-ai-reports__generate");
     assert

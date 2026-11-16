@@ -37,12 +37,12 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("calls onFill when all slots are filled", async function (assert) {
-    this.set("filledValue", null);
-    this.onFillCallback = (value) => {
-      this.set("filledValue", value);
+    let filledValue = null;
+    const onFillCallback = (value) => {
+      filledValue = value;
     };
 
-    await render(<template><DOtp @onFill={{this.onFillCallback}} /></template>);
+    await render(<template><DOtp @onFill={{onFillCallback}} /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
     input.value = "123456";
@@ -50,19 +50,17 @@ module("Integration | ui-kit | DOtp", function (hooks) {
 
     await new Promise((resolve) => next(resolve));
 
-    assert.strictEqual(this.filledValue, "123456");
+    assert.strictEqual(filledValue, "123456");
   });
 
   test("calls onChange when filling slots", async function (assert) {
-    this.set("value", null);
+    let value = null;
 
-    this.onChangeCallback = (value) => {
-      this.set("value", value);
+    const onChangeCallback = (newValue) => {
+      value = newValue;
     };
 
-    await render(
-      <template><DOtp @onChange={{this.onChangeCallback}} /></template>
-    );
+    await render(<template><DOtp @onChange={{onChangeCallback}} /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
     input.value = "1";
@@ -70,14 +68,14 @@ module("Integration | ui-kit | DOtp", function (hooks) {
 
     await new Promise((resolve) => next(resolve));
 
-    assert.strictEqual(this.value, "1");
+    assert.strictEqual(value, "1");
 
     input.value = "12";
     input.dispatchEvent(new Event("input"));
 
     await new Promise((resolve) => next(resolve));
 
-    assert.strictEqual(this.value, "12");
+    assert.strictEqual(value, "12");
   });
 
   test("@autoFocus", async function (assert) {
@@ -189,19 +187,17 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   });
 
   test("allows editing after all slots are filled", async function (assert) {
-    this.set("value", null);
-    this.onChangeCallback = (value) => {
-      this.set("value", value);
+    let value = null;
+    const onChangeCallback = (newValue) => {
+      value = newValue;
     };
 
-    await render(
-      <template><DOtp @onChange={{this.onChangeCallback}} /></template>
-    );
+    await render(<template><DOtp @onChange={{onChangeCallback}} /></template>);
 
     await fillIn(".d-otp-input", "123456");
     await fillIn(".d-otp-input", "12345");
 
-    assert.strictEqual(this.value, "12345");
+    assert.strictEqual(value, "12345");
     assert.dom(".d-otp-slot:nth-child(6)").hasText("​ ");
   });
 

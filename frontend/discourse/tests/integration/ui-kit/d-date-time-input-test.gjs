@@ -1,4 +1,11 @@
-import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  click,
+  fillIn,
+  render,
+  rerender,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -16,7 +23,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
@@ -27,7 +34,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
@@ -37,12 +44,12 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
-    this.set("onChange", (date) => this.set("date", date));
+    const date = tracked(DEFAULT_DATE_TIME);
+    const onChange = (newDate) => (date.value = newDate);
 
     await render(
       <template>
-        <DDateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateTimeInput @date={{date.value}} @onChange={{onChange}} />
       </template>
     );
 
@@ -50,7 +57,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
     await triggerEvent(".date-picker", "change");
 
     assert.strictEqual(
-      this.date.format("YYYY-MM-DD HH:mm"),
+      date.value.format("YYYY-MM-DD HH:mm"),
       "2019-01-02 14:45",
       "it preserves the original time when changing the date"
     );
@@ -100,7 +107,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("can hide time", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(
       <template>
@@ -112,40 +119,37 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {
-    this.setProperties({
-      date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
-      timezone: "Europe/London",
-      onChange: (date) => this.set("date", date),
-    });
+    const date = tracked(moment.tz("2023-05-05T12:00:00", "Europe/London"));
+    const timezone = tracked("Europe/London");
+    const onChange = (newDate) => (date.value = newDate);
 
     await render(
       <template>
         <DDateTimeInput
-          @date={{this.date}}
-          @onChange={{this.onChange}}
-          @timezone={{this.timezone}}
+          @date={{date.value}}
+          @onChange={{onChange}}
+          @timezone={{timezone.value}}
         />
       </template>
     );
     await triggerEvent(".date-picker", "change");
-    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+01:00");
+    assert.strictEqual(date.value.format(), "2023-05-05T12:00:00+01:00");
 
-    this.setProperties({ timezone: "Australia/Sydney" });
+    timezone.value = "Australia/Sydney";
+    await rerender();
 
     await triggerEvent(".date-picker", "change");
-    assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+10:00");
+    assert.strictEqual(date.value.format(), "2023-05-05T12:00:00+10:00");
   });
 
   test("without @timezone a picked time keeps the browser's offset for that day", async function (assert) {
     for (const day of OUT_OF_DATA_RANGE_DAYS) {
-      this.setProperties({
-        date: moment(`${day} 10:00`),
-        onChange: (date) => this.set("date", date),
-      });
+      const date = tracked(moment(`${day} 10:00`));
+      const onChange = (newDate) => (date.value = newDate);
 
       await render(
         <template>
-          <DDateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
+          <DDateTimeInput @date={{date.value}} @onChange={{onChange}} />
         </template>
       );
 
@@ -154,12 +158,12 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       await timeSelectKit.selectRowByName("2:45 PM");
 
       assert.strictEqual(
-        this.date.toISOString(),
+        date.value.toISOString(),
         moment(`${day} 14:45`).toISOString(),
         `picking a time on ${day} resolves to the local instant`
       );
       assert.strictEqual(
-        this.date.format("YYYY-MM-DD HH:mm"),
+        date.value.format("YYYY-MM-DD HH:mm"),
         `${day} 14:45`,
         `picking a time on ${day} keeps the picked wall time`
       );
@@ -168,14 +172,12 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
   test("without @timezone a picked date keeps the browser's offset for that day", async function (assert) {
     for (const day of OUT_OF_DATA_RANGE_DAYS) {
-      this.setProperties({
-        date: moment("2026-05-05 14:45"),
-        onChange: (date) => this.set("date", date),
-      });
+      const date = tracked(moment("2026-05-05 14:45"));
+      const onChange = (newDate) => (date.value = newDate);
 
       await render(
         <template>
-          <DDateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
+          <DDateTimeInput @date={{date.value}} @onChange={{onChange}} />
         </template>
       );
 
@@ -183,12 +185,12 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       await triggerEvent(".date-picker", "change");
 
       assert.strictEqual(
-        this.date.toISOString(),
+        date.value.toISOString(),
         moment(`${day} 14:45`).toISOString(),
         `picking ${day} resolves to the local instant`
       );
       assert.strictEqual(
-        this.date.format("YYYY-MM-DD HH:mm"),
+        date.value.format("YYYY-MM-DD HH:mm"),
         `${day} 14:45`,
         `picking ${day} keeps the picked wall time`
       );
@@ -197,18 +199,16 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
   test("without @timezone a time picked relative to @relativeDate keeps the browser's offset", async function (assert) {
     for (const day of OUT_OF_DATA_RANGE_DAYS) {
-      this.setProperties({
-        date: null,
-        relativeDate: moment(`${day} 10:00`),
-        onChange: (date) => this.set("date", date),
-      });
+      const date = tracked(null);
+      const relativeDate = moment(`${day} 10:00`);
+      const onChange = (newDate) => (date.value = newDate);
 
       await render(
         <template>
           <DDateTimeInput
-            @date={{this.date}}
-            @onChange={{this.onChange}}
-            @relativeDate={{this.relativeDate}}
+            @date={{date.value}}
+            @onChange={{onChange}}
+            @relativeDate={{relativeDate}}
           />
         </template>
       );
@@ -218,12 +218,12 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       await timeSelectKit.selectRowByName("11:00 AM");
 
       assert.strictEqual(
-        this.date.toISOString(),
+        date.value.toISOString(),
         moment(`${day} 11:00`).toISOString(),
         `picking a time after ${day} 10:00 resolves to the local instant`
       );
       assert.strictEqual(
-        this.date.format("YYYY-MM-DD HH:mm"),
+        date.value.format("YYYY-MM-DD HH:mm"),
         `${day} 11:00`,
         `picking a time after ${day} 10:00 keeps the picked wall time`
       );
@@ -238,7 +238,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
           {{this.clearable}}</span>
       </template>
     }
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><Subclass @date={{this.date}} /></template>);
 
