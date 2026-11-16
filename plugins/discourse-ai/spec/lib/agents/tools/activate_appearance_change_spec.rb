@@ -107,6 +107,13 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     ).to have_attributes(acting_user_id: other_admin.id)
   end
 
+  it "tells the administrator to refresh the page after making it live" do
+    result = approve_as(other_admin, build_reviewable(appearance_change))
+
+    expect(result[:status]).to eq("success")
+    expect(result[:message]).to include("refresh the page")
+  end
+
   it "makes a new theme the default once approved" do
     theme_change = save_change(service: AppearanceChange::DraftTheme)
     item = build_reviewable(theme_change)
