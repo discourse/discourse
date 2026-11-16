@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -14,9 +15,9 @@ module("Integration | Component | TopicTitleEditor", function (hooks) {
   for (const isEditingLocalization of [false, true]) {
     test(`preserves the paste caret with localization=${isEditingLocalization}`, async function (assert) {
       const buffered = EmberObject.create({ title: "Before  after" });
-      this.translationTitle = buffered.title;
+      const translationTitle = tracked(buffered.title);
       const onTranslationTitleChange = (title) =>
-        this.set("translationTitle", title);
+        (translationTitle.value = title);
 
       await render(
         <template>
@@ -26,7 +27,7 @@ module("Integration | Component | TopicTitleEditor", function (hooks) {
             @isEditingLocalization={{isEditingLocalization}}
             @onTranslationTitleChange={{onTranslationTitleChange}}
             @translationLocale="ja"
-            @translationTitle={{this.translationTitle}}
+            @translationTitle={{translationTitle.value}}
           />
         </template>
       );
@@ -40,7 +41,7 @@ module("Integration | Component | TopicTitleEditor", function (hooks) {
       assert.strictEqual(textarea.selectionStart, 19);
       assert.strictEqual(textarea.selectionEnd, 19);
       assert.strictEqual(
-        isEditingLocalization ? this.translationTitle : buffered.title,
+        isEditingLocalization ? translationTitle.value : buffered.title,
         "Before first second after"
       );
     });
