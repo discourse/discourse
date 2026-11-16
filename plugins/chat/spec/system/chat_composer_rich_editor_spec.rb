@@ -274,6 +274,19 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_value("look  here")
   end
 
+  it "keeps a pasted embedded image away from an open topic composer when chat uploads are off" do
+    SiteSetting.chat_allow_uploads = false
+    topic = Fabricate(:post).topic
+    PageObjects::Pages::Topic.new.visit_topic_and_open_composer(topic)
+    chat_page.open_from_header
+    PageObjects::Pages::ChatDrawer.new.open_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    paste_embedded_image
+
+    expect(channel_page.composer).to have_value("look image here")
+  end
+
   it "keeps a pasted embedded image as text when chat uploads are off" do
     SiteSetting.chat_allow_uploads = false
     chat_page.visit_channel(channel_1)
