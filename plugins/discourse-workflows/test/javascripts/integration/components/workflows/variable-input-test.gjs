@@ -1,8 +1,13 @@
 import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import { registerCodeEditorLanguage } from "discourse/lib/code-editor-languages";
+import { overrideCodemirrorImportForTesting } from "discourse/lib/load-codemirror";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 import VariableInput from "discourse/plugins/discourse-workflows/admin/components/workflows/variable/input";
+import { resetExpressionLanguageForTesting } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-language/index";
 
 function editorText(element) {
   return element.querySelector(".cm-content")?.textContent ?? "";
@@ -88,6 +93,62 @@ module(
         "hello",
         "onChange was called with the value"
       );
+    });
+
+    test("shows an error when the editor fails to load", async function (assert) {
+      const failure = new Error("chunk failed");
+      overrideCodemirrorImportForTesting(() => Promise.reject(failure));
+      const consoleError = sinon.stub(console, "error");
+
+      try {
+        await render(<template><VariableInput @value="$json" /></template>);
+
+        assert
+          .dom(".workflows-variable-input__error")
+          .hasText(i18n("code_editor.load_failed"));
+        assert.true(consoleError.calledWith(failure), "the cause is logged");
+      } finally {
+        overrideCodemirrorImportForTesting(null);
+      }
+    });
+
+    test("stays a plain text field when the expression language fails to load", async function (assert) {
+      const failure = new Error("chunk failed");
+      resetExpressionLanguageForTesting();
+      registerCodeEditorLanguage("javascript", () => Promise.reject(failure));
+      const consoleError = sinon.stub(console, "error");
+      const extensions = sinon.stub().returns([]);
+
+      try {
+        await render(
+          <template>
+            <VariableInput @extensions={{extensions}} @value="$json" />
+          </template>
+        );
+
+        assert.dom(".cm-content").hasText("$json");
+        assert.false(extensions.called, "expression extensions are skipped");
+        assert.true(consoleError.calledWith(failure), "the cause is logged");
+      } finally {
+        resetExpressionLanguageForTesting();
+      }
+    });
+
+    test("stays a plain text field when its extensions fail to build", async function (assert) {
+      const failure = new Error("bad scope");
+      const consoleError = sinon.stub(console, "error");
+      const extensions = () => {
+        throw failure;
+      };
+
+      await render(
+        <template>
+          <VariableInput @extensions={{extensions}} @value="$json" />
+        </template>
+      );
+
+      assert.dom(".cm-content").hasText("$json");
+      assert.true(consoleError.calledWith(failure), "the cause is logged");
     });
   }
 );

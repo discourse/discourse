@@ -33,3 +33,9 @@ export function expressionUtils(cmParams) {
   }
   return build(cmParams);
 }
+
+/** @internal */
+export function resetExpressionLanguageForTesting() {
+  pending = null;
+  build = null;
+}
