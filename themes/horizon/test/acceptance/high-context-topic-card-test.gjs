@@ -1,5 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { settings } from "virtual:theme";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Topic from "discourse/models/topic";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -99,6 +100,47 @@ module(
 
       assert.dom(".hc-topic-card__last-reply").doesNotExist();
       assert.dom(".hc-topic-card__context").doesNotExist();
+    });
+
+    test("shows the topic image as a thumbnail when thumbnails are enabled", async function (assert) {
+      settings.topic_card_thumbnails = true;
+      const topic = topicFor({ image_url: "/uploads/default/topic-image.png" });
+
+      await render(
+        <template>
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
+        </template>
+      );
+
+      assert
+        .dom(".hc-topic-card__thumbnail img")
+        .hasAttribute("src", "/uploads/default/topic-image.png")
+        .hasAttribute("alt", "");
+    });
+
+    test("omits the thumbnail when the topic has no image", async function (assert) {
+      settings.topic_card_thumbnails = true;
+      const topic = topicFor();
+
+      await render(
+        <template>
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
+        </template>
+      );
+
+      assert.dom(".hc-topic-card__thumbnail").doesNotExist();
+    });
+
+    test("omits the thumbnail when thumbnails are disabled", async function (assert) {
+      const topic = topicFor({ image_url: "/uploads/default/topic-image.png" });
+
+      await render(
+        <template>
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
+        </template>
+      );
+
+      assert.dom(".hc-topic-card__thumbnail").doesNotExist();
     });
   }
 );

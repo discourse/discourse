@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { themePrefix } from "virtual:theme";
+import { settings, themePrefix } from "virtual:theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
@@ -95,6 +95,10 @@ export default class HighContextTopicCard extends Component {
     return this.args.topic.excerpt || this.args.topic.hasExcerpt;
   }
 
+  get showThumbnail() {
+    return settings.topic_card_thumbnails && this.args.topic.image_url;
+  }
+
   get statusBadge() {
     return getTopicStatusBadge(this.args.topic);
   }
@@ -143,190 +147,198 @@ export default class HighContextTopicCard extends Component {
     {{/if}}
 
     <td class="hc-topic-card">
-      <div class="hc-topic-card__header">
-        <div class="hc-topic-card__op">
-          <div class="hc-topic-card__avatar">
-            {{dAvatar this.topicCreator imageSize="medium"}}
-          </div>
-          <div class="hc-topic-card__op-info">
-            <span class="hc-topic-card__op-timestamp">
-              {{i18n (themePrefix "posted")}}
-              {{this.topicTimestamp}}
-            </span>
-            <span class="hc-topic-card__op-name">
-              {{i18n
-                (themePrefix "by_username")
-                username=this.topicCreator.username
-              }}</span>
-          </div>
-
-        </div>
-        <div class="hc-topic-card__status-tags">
-          {{#if this.hasSolved}}
-            <span
-              aria-label={{i18n (themePrefix "solved")}}
-              class="hc-topic-card__status --solved"
-            >
-              {{#if this.capabilities.viewport.sm}}
-                {{i18n (themePrefix "solved")}}
-              {{/if}}
-              {{dIcon "square-check"}}
-            </span>
-          {{/if}}
-
-          {{#if this.statusBadge}}
-            <span
-              aria-label={{i18n this.statusBadge.text}}
-              class={{dConcatClass
-                "hc-topic-card__status"
-                this.statusBadge.className
-              }}
-            >
-              {{dIcon this.statusBadge.icon}}
-
-              {{#if this.capabilities.viewport.sm}}
-                <span class="hc-topic-card__status-text">{{i18n
-                    this.statusBadge.text
-                  }}</span>
-              {{/if}}
-            </span>
-          {{/if}}
-          <PluginOutlet
-            @name="topic-list-before-link"
-            @outletArgs={{lazyHash topic=@topic}}
-          />
-        </div>
-      </div>
-
-      <div class="hc-topic-card__content">
-        <div aria-level="2" class="hc-topic-card__title" role="heading">
-          <TopicStatus @context="topic-list" @topic={{@topic}} />
-          <TopicLink
-            class="hc-topic-card__title raw-link raw-topic-link"
-            @topic={{@topic}}
-            {{on "focus" this.onTitleFocus}}
-            {{on "blur" this.onTitleBlur}}
-          />
-          {{~#if @topic.featured_link~}}
-            &nbsp;{{topicFeaturedLink @topic}}
-          {{~/if~}}
-          <PluginOutlet
-            @name="topic-list-after-title"
-            @outletArgs={{lazyHash topic=@topic}}
-          />
-          <UnreadIndicator @topic={{@topic}} />
-          <TopicPostBadges
-            @unreadPosts={{@topic.unread_posts}}
-            @unseen={{@topic.unseen}}
-            @url={{@topic.lastUnreadUrl}}
-          />
-        </div>
-
-        {{#if this.hasExcerpt}}
-          <TopicExcerpt class="hc-topic-card__excerpt" @topic={{@topic}} />
-        {{/if}}
-      </div>
-
-      {{#if this.hasContext}}
-        <div class="hc-topic-card__context">
-          {{#if this.hasLastReplyContext}}
-            <div class="hc-topic-card__last-reply">
-              {{dAvatar this.lastPoster.user imageSize="tiny"}}
-              <span
-                class="hc-topic-card__last-reply-name"
-              >{{this.lastPoster.username}}</span>
-              <span>{{i18n (themePrefix "replied")}}</span>
-              <span class="hc-topic-card__time">
-                {{dFormatDate @topic.last_posted_at leaveAgo="true"}}
-              </span>
-            </div>
-          {{/if}}
-          {{#if this.hasAssigned}}
-            {{#if this.assignedUser}}
-              <div class="hc-topic-card__assigned">
-                {{dIcon "user-plus"}}
-                <span class="sr-only">{{i18n
-                    "discourse_assign.assigned_to"
-                  }}</span>
-                <span
-                  class="hc-topic-card__assigned-name"
-                >{{this.assignedUser.username}}</span>
-              </div>
-            {{/if}}
-            {{#each this.indirectAssignees as |assignment|}}
-              <div class="hc-topic-card__assigned">
-                {{dIcon "user-plus"}}
-                <span class="sr-only">{{i18n
-                    "discourse_assign.assigned_to"
-                  }}</span>
-                <span
-                  class="hc-topic-card__assigned-name"
-                >{{assignment.user.username}}</span>
-                <span
-                  class="hc-topic-card__assigned-post"
-                >#{{assignment.postNumber}}</span>
-              </div>
-            {{/each}}
-          {{/if}}
+      {{#if this.showThumbnail}}
+        <div class="hc-topic-card__thumbnail">
+          <img alt="" loading="lazy" src={{@topic.image_url}} />
         </div>
       {{/if}}
 
-      <div class="hc-topic-card__footer">
-        <div class="hc-topic-card__category-tags">
-          {{#unless @hideCategory}}
-            <div class="hc-topic-card__category">
-              {{categoryLinkHTML @topic.category}}
+      <div class="hc-topic-card__body">
+        <div class="hc-topic-card__header">
+          <div class="hc-topic-card__op">
+            <div class="hc-topic-card__avatar">
+              {{dAvatar this.topicCreator imageSize="medium"}}
             </div>
-          {{/unless}}
+            <div class="hc-topic-card__op-info">
+              <span class="hc-topic-card__op-timestamp">
+                {{i18n (themePrefix "posted")}}
+                {{this.topicTimestamp}}
+              </span>
+              <span class="hc-topic-card__op-name">
+                {{i18n
+                  (themePrefix "by_username")
+                  username=this.topicCreator.username
+                }}</span>
+            </div>
 
-          {{#if this.hasTags}}
-            {{dDiscourseTags
-              @topic
-              mode="list"
-              className="hc-topic-card__tags"
-            }}
+          </div>
+          <div class="hc-topic-card__status-tags">
+            {{#if this.hasSolved}}
+              <span
+                aria-label={{i18n (themePrefix "solved")}}
+                class="hc-topic-card__status --solved"
+              >
+                {{#if this.capabilities.viewport.sm}}
+                  {{i18n (themePrefix "solved")}}
+                {{/if}}
+                {{dIcon "square-check"}}
+              </span>
+            {{/if}}
+
+            {{#if this.statusBadge}}
+              <span
+                aria-label={{i18n this.statusBadge.text}}
+                class={{dConcatClass
+                  "hc-topic-card__status"
+                  this.statusBadge.className
+                }}
+              >
+                {{dIcon this.statusBadge.icon}}
+
+                {{#if this.capabilities.viewport.sm}}
+                  <span class="hc-topic-card__status-text">{{i18n
+                      this.statusBadge.text
+                    }}</span>
+                {{/if}}
+              </span>
+            {{/if}}
+            <PluginOutlet
+              @name="topic-list-before-link"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
+          </div>
+        </div>
+
+        <div class="hc-topic-card__content">
+          <div aria-level="2" class="hc-topic-card__title" role="heading">
+            <TopicStatus @context="topic-list" @topic={{@topic}} />
+            <TopicLink
+              class="hc-topic-card__title raw-link raw-topic-link"
+              @topic={{@topic}}
+              {{on "focus" this.onTitleFocus}}
+              {{on "blur" this.onTitleBlur}}
+            />
+            {{~#if @topic.featured_link~}}
+              &nbsp;{{topicFeaturedLink @topic}}
+            {{~/if~}}
+            <PluginOutlet
+              @name="topic-list-after-title"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
+            <UnreadIndicator @topic={{@topic}} />
+            <TopicPostBadges
+              @unreadPosts={{@topic.unread_posts}}
+              @unseen={{@topic.unseen}}
+              @url={{@topic.lastUnreadUrl}}
+            />
+          </div>
+
+          {{#if this.hasExcerpt}}
+            <TopicExcerpt class="hc-topic-card__excerpt" @topic={{@topic}} />
           {{/if}}
         </div>
 
-        <div class="hc-topic-card__stats">
-          {{#if this.hasVotes}}
-            <span
-              aria-label={{this.voteCountLabel}}
-              class="hc-topic-card__votes"
-              title={{this.voteCountLabel}}
-            >
-              {{dIcon "check-to-slot" skipTitle=true}}
-              <span class="hc-topic-card__votes-count">{{dNumber
-                  @topic.vote_count
-                }}</span>
-            </span>
-          {{/if}}
+        {{#if this.hasContext}}
+          <div class="hc-topic-card__context">
+            {{#if this.hasLastReplyContext}}
+              <div class="hc-topic-card__last-reply">
+                {{dAvatar this.lastPoster.user imageSize="tiny"}}
+                <span
+                  class="hc-topic-card__last-reply-name"
+                >{{this.lastPoster.username}}</span>
+                <span>{{i18n (themePrefix "replied")}}</span>
+                <span class="hc-topic-card__time">
+                  {{dFormatDate @topic.last_posted_at leaveAgo="true"}}
+                </span>
+              </div>
+            {{/if}}
+            {{#if this.hasAssigned}}
+              {{#if this.assignedUser}}
+                <div class="hc-topic-card__assigned">
+                  {{dIcon "user-plus"}}
+                  <span class="sr-only">{{i18n
+                      "discourse_assign.assigned_to"
+                    }}</span>
+                  <span
+                    class="hc-topic-card__assigned-name"
+                  >{{this.assignedUser.username}}</span>
+                </div>
+              {{/if}}
+              {{#each this.indirectAssignees as |assignment|}}
+                <div class="hc-topic-card__assigned">
+                  {{dIcon "user-plus"}}
+                  <span class="sr-only">{{i18n
+                      "discourse_assign.assigned_to"
+                    }}</span>
+                  <span
+                    class="hc-topic-card__assigned-name"
+                  >{{assignment.user.username}}</span>
+                  <span
+                    class="hc-topic-card__assigned-post"
+                  >#{{assignment.postNumber}}</span>
+                </div>
+              {{/each}}
+            {{/if}}
+          </div>
+        {{/if}}
 
-          {{#if this.hasReplies}}
-            <span
-              aria-label={{this.replyCountLabel}}
-              class="hc-topic-card__replies"
-              title={{this.replyCountLabel}}
-            >
-              {{dIcon "reply" skipTitle=true}}
-              <span class="hc-topic-card__count">{{dNumber
-                  @topic.replyCount
-                }}</span>
-            </span>
-          {{/if}}
+        <div class="hc-topic-card__footer">
+          <div class="hc-topic-card__category-tags">
+            {{#unless @hideCategory}}
+              <div class="hc-topic-card__category">
+                {{categoryLinkHTML @topic.category}}
+              </div>
+            {{/unless}}
 
-          {{#if this.hasLikes}}
-            <span
-              aria-label={{this.likeCountLabel}}
-              class="hc-topic-card__likes"
-              title={{this.likeCountLabel}}
-            >
-              {{dIcon "heart" skipTitle=true}}
-              <span class="hc-topic-card__count">{{dNumber
-                  @topic.like_count
-                }}</span>
-            </span>
-          {{/if}}
+            {{#if this.hasTags}}
+              {{dDiscourseTags
+                @topic
+                mode="list"
+                className="hc-topic-card__tags"
+              }}
+            {{/if}}
+          </div>
+
+          <div class="hc-topic-card__stats">
+            {{#if this.hasVotes}}
+              <span
+                aria-label={{this.voteCountLabel}}
+                class="hc-topic-card__votes"
+                title={{this.voteCountLabel}}
+              >
+                {{dIcon "check-to-slot" skipTitle=true}}
+                <span class="hc-topic-card__votes-count">{{dNumber
+                    @topic.vote_count
+                  }}</span>
+              </span>
+            {{/if}}
+
+            {{#if this.hasReplies}}
+              <span
+                aria-label={{this.replyCountLabel}}
+                class="hc-topic-card__replies"
+                title={{this.replyCountLabel}}
+              >
+                {{dIcon "reply" skipTitle=true}}
+                <span class="hc-topic-card__count">{{dNumber
+                    @topic.replyCount
+                  }}</span>
+              </span>
+            {{/if}}
+
+            {{#if this.hasLikes}}
+              <span
+                aria-label={{this.likeCountLabel}}
+                class="hc-topic-card__likes"
+                title={{this.likeCountLabel}}
+              >
+                {{dIcon "heart" skipTitle=true}}
+                <span class="hc-topic-card__count">{{dNumber
+                    @topic.like_count
+                  }}</span>
+              </span>
+            {{/if}}
+          </div>
         </div>
       </div>
     </td>

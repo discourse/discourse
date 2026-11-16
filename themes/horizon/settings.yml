@@ -1,3 +1,6 @@
 topic_card_high_context:
   type: bool
   default: true
+topic_card_thumbnails:
+  type: bool
+  default: false
