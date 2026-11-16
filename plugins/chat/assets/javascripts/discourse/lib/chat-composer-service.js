@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 
 // The rich editor mounts asynchronously; a focus requested meanwhile is
@@ -56,10 +56,17 @@ export default class ChatComposerService extends Service {
 
     pendingFocus = null;
 
-    // never steal focus from a composer the user is already in
-    if (!document.activeElement?.classList.contains("chat-composer__input")) {
-      this.focus(request.options);
-    }
+    // an editor registers before it loads the draft, and typed text replayed
+    // into it then would replace the draft
+    schedule("afterRender", () => {
+      // never steal focus from a composer the user is already in
+      if (
+        this.editor === editor &&
+        !document.activeElement?.classList.contains("chat-composer__input")
+      ) {
+        this.focus(request.options);
+      }
+    });
   }
 
   unregisterEditor(editor) {

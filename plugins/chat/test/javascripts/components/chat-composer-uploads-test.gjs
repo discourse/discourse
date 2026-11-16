@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   render,
+  rerender,
   triggerKeyEvent,
   waitFor,
   waitUntil,
@@ -216,15 +218,15 @@ module("Component | ChatComposerUploads", function (hooks) {
 
   test("an in-progress upload survives the input element changing", async function (assert) {
     setupUploadPretender();
-    this.set("onUploadChanged", () => {});
-    this.set("inputEl", document.createElement("textarea"));
+    const onUploadChanged = () => {};
+    const inputEl = tracked(document.createElement("textarea"));
 
     await render(
       <template>
         <ChatComposerUploads
-          @composerInputEl={{this.inputEl}}
+          @composerInputEl={{inputEl.value}}
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{this.onUploadChanged}}
+          @onUploadChanged={{onUploadChanged}}
         />
       </template>
     );
@@ -241,7 +243,8 @@ module("Component | ChatComposerUploads", function (hooks) {
     );
 
     await waitFor(".chat-composer-upload");
-    this.set("inputEl", document.createElement("div"));
+    inputEl.value = document.createElement("div");
+    await rerender();
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
