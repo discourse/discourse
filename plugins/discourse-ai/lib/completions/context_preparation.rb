@@ -288,6 +288,8 @@ module DiscourseAi
       end
 
       def summarize(source, prompt:, **options)
+        thinking_effort =
+          ThinkingConfig.normalize_effort(@llm.llm_model.compression_thinking_effort)
         evidence = @llm.context_evidence(source)
         remaining = evidence.to_json
         offset = 0
@@ -323,7 +325,8 @@ module DiscourseAi
           high = remaining.length
           while low < high
             midpoint = (low + high + 1) / 2
-            size, capacity = @llm.prompt_capacity(build_prompt.call(midpoint))
+            size, capacity =
+              @llm.prompt_capacity(build_prompt.call(midpoint), thinking_effort: thinking_effort)
             if size <= capacity
               low = midpoint
             else
@@ -340,7 +343,8 @@ module DiscourseAi
           compression_prompt = build_prompt.call(low)
           remaining.slice!(0, low)
           offset += low
-          input_size, input_capacity = @llm.prompt_capacity(compression_prompt)
+          input_size, input_capacity =
+            @llm.prompt_capacity(compression_prompt, thinking_effort: thinking_effort)
           raise Error.new("summary_input_overflow", prompt: prompt) if input_size > input_capacity
           return if options[:cancel_manager]&.cancelled?
           # Maintenance shares the execution completion limit; latency and estimated
@@ -349,12 +353,13 @@ module DiscourseAi
                !options[:subagent_execution_state].reserve_completion
             raise Error.new("completion_limit", prompt: prompt)
           end
-          # Uncapped: thinking tokens count against max_tokens and could leave no summary.
+          # Uncapped: models that require thinking could spend the cap before producing a summary.
           summary = +""
           @llm.generate(
             compression_prompt,
             user: options[:user],
             feature_name: "context_compression",
+            thinking_effort: thinking_effort,
             feature_context: options[:feature_context],
             execution_context: options[:execution_context],
             cancel_manager: options[:cancel_manager],

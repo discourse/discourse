@@ -11,6 +11,7 @@ export default class AiLlm extends RestModel {
       "tokenizer",
       "max_prompt_tokens",
       "max_output_tokens",
+      "compression_thinking_effort",
       "url",
       "ai_secret_id",
       "provider_params",

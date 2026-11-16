@@ -27,6 +27,7 @@ import {
   normalizeProviderParams,
   providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
+import thinkingEffortOptions from "discourse/plugins/discourse-ai/discourse/lib/thinking-effort-options";
 
 export default class AiLlmEditorForm extends Component {
   @service toasts;
@@ -46,7 +47,7 @@ export default class AiLlmEditorForm extends Component {
     if (this.args.llmTemplate) {
       let [id, modelName] = this.args.llmTemplate.split(/-(.*)/);
       if (id === "none") {
-        return { provider_params: {} };
+        return { provider_params: {}, compression_thinking_effort: "default" };
       }
 
       const info = this.args.llms.resultSetMeta.presets.find(
@@ -57,6 +58,7 @@ export default class AiLlmEditorForm extends Component {
       return {
         max_prompt_tokens: modelInfo.tokens,
         max_output_tokens: modelInfo.max_output_tokens,
+        compression_thinking_effort: "default",
         tokenizer: info.tokenizer,
         url: modelInfo.endpoint || info.endpoint,
         display_name: modelInfo.display_name,
@@ -82,6 +84,8 @@ export default class AiLlmEditorForm extends Component {
     return {
       max_prompt_tokens: model.max_prompt_tokens,
       max_output_tokens: model.max_output_tokens,
+      compression_thinking_effort:
+        model.compression_thinking_effort || "default",
       ai_secret_id: model.ai_secret_id,
       tokenizer: model.tokenizer,
       url: model.url,
@@ -136,6 +140,10 @@ export default class AiLlmEditorForm extends Component {
         return { id: prov, name: t(prov) };
       })
       .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  get thinkingEffortValues() {
+    return thinkingEffortOptions();
   }
 
   get tokenizers() {
@@ -644,6 +652,21 @@ export default class AiLlmEditorForm extends Component {
           </form.Container>
         {{/if}}
       {{/unless}}
+
+      <form.Field
+        @format="large"
+        @helpText={{i18n "discourse_ai.llms.compression_thinking_effort_help"}}
+        @name="compression_thinking_effort"
+        @title={{i18n "discourse_ai.llms.compression_thinking_effort"}}
+        @type="select"
+        as |field|
+      >
+        <field.Control @includeNone={{false}} as |select|>
+          {{#each this.thinkingEffortValues as |effort|}}
+            <select.Option @value={{effort.id}}>{{effort.name}}</select.Option>
+          {{/each}}
+        </field.Control>
+      </form.Field>
 
       {{#if (gt data.llm_quotas.length 0)}}
         <form.Container

@@ -1501,6 +1501,8 @@ en:
         tokenizer: "Tokenizer"
         max_prompt_tokens: "Context window"
         max_output_tokens: "Max output tokens"
+        compression_thinking_effort: "Context compression thinking effort"
+        compression_thinking_effort_help: "Reasoning used when older conversation history is summarized to fit the context window. Lower effort may be faster and cheaper but can lose details."
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
         vision_enabled: "Supports image input"

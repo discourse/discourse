@@ -106,6 +106,10 @@ class LlmModel < ActiveRecord::Base
 
   attr_accessor :requested_vision_mode
 
+  before_validation do
+    self.compression_thinking_effort = nil if compression_thinking_effort == "default"
+  end
+
   before_update :preserve_legacy_user_identity, if: :will_save_change_to_user_id?
   before_destroy :ensure_no_vision_dependents
   before_destroy :preserve_legacy_user_identity
@@ -114,6 +118,11 @@ class LlmModel < ActiveRecord::Base
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
   validates :url, presence: true, if: -> { llm_endpoint&.requires_configured_url? != false }
+  validates :compression_thinking_effort,
+            inclusion: {
+              in: DiscourseAi::Completions::ThinkingConfig::VALUES,
+            },
+            allow_nil: true
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -765,27 +774,28 @@ end
 #
 # Table name: llm_models
 #
-#  id                       :bigint           not null, primary key
-#  allowed_attachment_types :text             default([]), not null, is an Array
-#  api_key                  :string
-#  cache_write_cost         :float            default(0.0)
-#  cached_input_cost        :float
-#  display_name             :string
-#  input_cost               :float
-#  max_output_tokens        :integer
-#  max_prompt_tokens        :integer          not null
-#  name                     :string           not null
-#  output_cost              :float
-#  provider                 :string           not null
-#  provider_params          :jsonb
-#  tokenizer                :string           not null
-#  url                      :string
-#  vision_enabled           :boolean          default(FALSE), not null
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  ai_secret_id             :bigint
-#  user_id                  :integer
-#  vision_llm_model_id      :bigint
+#  id                          :bigint           not null, primary key
+#  allowed_attachment_types    :text             default([]), not null, is an Array
+#  api_key                     :string
+#  cache_write_cost            :float            default(0.0)
+#  cached_input_cost           :float
+#  compression_thinking_effort :string
+#  display_name                :string
+#  input_cost                  :float
+#  max_output_tokens           :integer
+#  max_prompt_tokens           :integer          not null
+#  name                        :string           not null
+#  output_cost                 :float
+#  provider                    :string           not null
+#  provider_params             :jsonb
+#  tokenizer                   :string           not null
+#  url                         :string
+#  vision_enabled              :boolean          default(FALSE), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  ai_secret_id                :bigint
+#  user_id                     :integer
+#  vision_llm_model_id         :bigint
 #
 # Indexes
 #

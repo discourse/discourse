@@ -12,6 +12,7 @@ class LlmModelSerializer < ApplicationSerializer
              :provider,
              :max_prompt_tokens,
              :max_output_tokens,
+             :compression_thinking_effort,
              :tokenizer,
              :api_key,
              :ai_secret_id,

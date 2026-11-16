@@ -199,6 +199,17 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       }
     end
 
+    it "creates a model with a compression thinking override" do
+      post "/admin/plugins/discourse-ai/ai-llms.json",
+           params: {
+             ai_llm: valid_attrs.merge(compression_thinking_effort: "none"),
+           }
+
+      expect(response).to have_http_status(:created)
+      expect(LlmModel.last.compression_thinking_effort).to eq("none")
+      expect(response.parsed_body.dig("ai_llm", "compression_thinking_effort")).to eq("none")
+    end
+
     context "with quotas" do
       let(:group) { Fabricate(:group) }
       let(:quota_params) do
@@ -597,6 +608,52 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
   describe "PUT #update" do
     fab!(:llm_model)
+
+    it "saves and clears compression thinking effort without changing normal reasoning" do
+      llm_model.update!(provider_params: { reasoning_effort: "high" })
+      ["none", "low", "default", nil].each do |effort|
+        put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+            params: {
+              ai_llm: {
+                compression_thinking_effort: effort,
+              },
+            }
+
+        expect(response).to be_successful
+        expected = effort == "default" ? nil : effort
+        expect(llm_model.reload.compression_thinking_effort).to eq(expected)
+        expect(response.parsed_body.dig("ai_llm", "compression_thinking_effort")).to eq(expected)
+        expect(llm_model.lookup_custom_param("reasoning_effort")).to eq("high")
+      end
+    end
+
+    it "rejects invalid compression thinking effort" do
+      put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+          params: {
+            ai_llm: {
+              compression_thinking_effort: "turbo",
+            },
+          }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(llm_model.reload.compression_thinking_effort).to be_nil
+    end
+
+    it "allows a hosted model's compression preference while protecting its connection settings" do
+      hosted_model = Fabricate(:fake_model, id: -201)
+      original_name = hosted_model.name
+      put "/admin/plugins/discourse-ai/ai-llms/#{hosted_model.id}.json",
+          params: {
+            ai_llm: {
+              compression_thinking_effort: "low",
+              name: "replacement",
+            },
+          }
+
+      expect(response).to be_successful
+      expect(hosted_model.reload.compression_thinking_effort).to eq("low")
+      expect(hosted_model.name).to eq(original_name)
+    end
 
     context "with valid update params" do
       let(:update_attrs) { { provider: "anthropic" } }

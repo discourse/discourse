@@ -92,8 +92,11 @@ module DiscourseAi
         handle_feature_credit_costs_update(llm_model)
 
         if llm_model.seeded?
-          # For seeded models, only allow quota/credit updates (already handled above)
-          # Return success with updated model, don't allow other param changes
+          # Hosted connection settings stay fixed; compression effort is a local preference.
+          if params[:ai_llm].key?(:compression_thinking_effort) &&
+               !llm_model.update(params.require(:ai_llm).permit(:compression_thinking_effort))
+            return render_json_error llm_model
+          end
           log_llm_model_update(llm_model, initial_attributes, initial_quotas)
           return render json: LlmModelSerializer.new(llm_model)
         end
@@ -223,6 +226,7 @@ module DiscourseAi
             :tokenizer,
             :max_prompt_tokens,
             :max_output_tokens,
+            :compression_thinking_effort,
             :api_key,
             :ai_secret_id,
             :vision_enabled,
@@ -346,6 +350,8 @@ module DiscourseAi
           max_prompt_tokens: {
           },
           max_output_tokens: {
+          },
+          compression_thinking_effort: {
           },
           vision_enabled: {
           },

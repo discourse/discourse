@@ -34,6 +34,7 @@ import AiAgentResponseFormatEditor from "discourse/plugins/discourse-ai/discours
 import RagDocumentSources from "discourse/plugins/discourse-ai/discourse/components/rag-document-sources";
 import RagOptionsFk from "discourse/plugins/discourse-ai/discourse/components/rag-options-fk";
 import RagUploader from "discourse/plugins/discourse-ai/discourse/components/rag-uploader";
+import thinkingEffortOptions from "discourse/plugins/discourse-ai/discourse/lib/thinking-effort-options";
 import { toPlainObject } from "discourse/plugins/discourse-ai/discourse/lib/utilities";
 
 const TOOL_TOKEN_LOW_THRESHOLD = 2000;
@@ -109,19 +110,7 @@ export default class AgentEditor extends Component {
   }
 
   get thinkingEffortValues() {
-    return [
-      "default",
-      "none",
-      "minimal",
-      "low",
-      "medium",
-      "high",
-      "xhigh",
-      "max",
-    ].map((id) => ({
-      id,
-      name: i18n(`discourse_ai.ai_agent.thinking_effort_options.${id}`),
-    }));
+    return thinkingEffortOptions();
   }
 
   get forcedToolStrategies() {

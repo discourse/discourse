@@ -107,11 +107,66 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
           "<compressed_context>The codeword is QUARTZ-OTTER-731.</compressed_context>",
         )
         expect(prompts.first.skip_trim).to eq(true)
-        expect(options.first).to include(user: user, feature_name: "context_compression")
+        expect(options.first).to include(
+          user: user,
+          feature_name: "context_compression",
+          thinking_effort: nil,
+        )
         expect(options.first[:max_tokens]).to be_nil
         evidence = prompts.first.messages.last[:content]
         expect(evidence).to include(original[1][:content], original[3][:content])
         expect(evidence).not_to include(original.last[:content])
+      end
+    end
+
+    it "inherits model reasoning by default and applies compression overrides only to summaries" do
+      model.update!(name: "gpt-5.4", provider_params: { reasoning_effort: "high" })
+      body = { choices: [{ delta: { content: "The codeword is QUARTZ-OTTER-731." } }] }.to_json
+      efforts = []
+      stub_request(:post, model.url).to_return do |request|
+        efforts << JSON.parse(request.body)["reasoning_effort"]
+        { status: 200, body: "data: #{body}\n\ndata: [DONE]\n\n" }
+      end
+
+      [nil, "default", "none", "low"].each do |effort|
+        model.update!(compression_thinking_effort: effort)
+        expect(
+          described_class.new(model.to_llm, threshold: 50).prepare!(history_prompt, user: user),
+        ).to eq(:compressed)
+      end
+      expect(efforts).to eq(%w[high high none low])
+      expect(model.reload.lookup_custom_param("reasoning_effort")).to eq("high")
+    end
+
+    it "sizes compression chunks for the requested thinking effort on models with a reasoning floor" do
+      model.update!(
+        name: "gpt-6-astra",
+        max_prompt_tokens: 32_000,
+        max_output_tokens: nil,
+        compression_thinking_effort: "none",
+      )
+      llm = model.to_llm
+      prompt = history_prompt(repetitions: 6000)
+      body = { choices: [{ delta: { content: "The codeword is QUARTZ-OTTER-731." } }] }.to_json
+      stub_request(:post, model.url).to_return(
+        status: 200,
+        body: "data: #{body}\n\ndata: [DONE]\n\n",
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([]) do |_, _, prompts, options|
+        expect(described_class.new(llm).prepare!(prompt, user: user)).to eq(:compressed)
+        expect(prompts).to be_present
+        prompts
+          .zip(options)
+          .each do |request, generation_options|
+            expect(generation_options[:thinking_effort]).to eq("none")
+            size, capacity =
+              llm.prompt_capacity(request, thinking_effort: generation_options[:thinking_effort])
+            expect(size).to be <= capacity
+          end
+        expect(prompt.messages[1][:content]).to eq(
+          "<compressed_context>The codeword is QUARTZ-OTTER-731.</compressed_context>",
+        )
       end
     end
 
