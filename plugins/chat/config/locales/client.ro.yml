@@ -41,8 +41,6 @@ ro:
           few: "Sigur vrei să ștergi aceste %{count} mesaje?"
           other: "Sigur vrei să ștergi aceste %{count} de mesaje?"
       channel_settings:
-        edit: "Modifică"
-        add: "Adaugă"
         leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
         notification_settings_context: "Notificări"
         join: "Alătură-te"
@@ -103,15 +101,14 @@ ro:
         filter_placeholder: Caută mesaje
       members_view:
         add_member: Adaugă membru
-        back_to_settings: "Înapoi la setări"
       about_view:
-        title: Titlu
         name: Nume
         description: Descriere
       channel_info:
         back_to_channel: "Înapoi"
         tabs:
           members: Membri
+          preferences: Preferințe
           settings: Setări
           search: Caută
         remove_member: "Elimină"
@@ -170,6 +167,7 @@ ro:
         notification_level: "Trimite notificări instante"
         follow: "Alătură-te"
         followed: "Înscris"
+        muted_until_hint: "până la %{until}"
         threading_enabled: "Activat"
         threading_disabled: "Dezactivat"
         notifications: "Notificări"
@@ -177,8 +175,6 @@ ro:
         save: "Salvează"
         saved: "Salvat"
         unfollow: "Părăsește"
-        admin_title: "Administrator"
-        settings_title: "Setări"
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"

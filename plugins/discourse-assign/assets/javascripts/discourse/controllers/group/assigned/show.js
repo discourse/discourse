@@ -5,13 +5,22 @@ import UserTopicsList from "discourse/controllers/user-topics-list";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import {
+  assignedListQueryParams,
+  assignedListRequestParams,
+} from "../../../lib/assigned-list-query-params.js";
 
 export default class GroupAssignedShow extends UserTopicsList {
   @service taskActions;
   @service router;
   @controller user;
 
-  queryParams = ["order", "ascending", "search"];
+  queryParams = [
+    "order",
+    "ascending",
+    "search",
+    ...Object.keys(assignedListQueryParams()),
+  ];
   order = "";
   ascending = false;
   search = "";
@@ -37,16 +46,16 @@ export default class GroupAssignedShow extends UserTopicsList {
 
   refreshModel() {
     this.set("loading", true);
-    this.store
-      .findFiltered("topicList", {
-        filter: this.model.filter,
-        params: {
-          order: this.order,
-          ascending: this.ascending,
-          search: this.search,
-          direct: this.model.params.direct,
-        },
-      })
+
+    const params = assignedListRequestParams(this, {
+      order: this.order,
+      ascending: this.ascending,
+      search: this.search,
+      direct: this.model.params.direct,
+    });
+
+    return this.store
+      .findFiltered("topicList", { filter: this.model.filter, params })
       .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);

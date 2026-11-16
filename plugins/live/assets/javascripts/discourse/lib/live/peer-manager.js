@@ -452,7 +452,11 @@ export default class PeerManager {
   destroy(
     roomId,
     remoteUserId,
-    { resetRestartAttempts = true, closeConnection = true } = {}
+    {
+      resetRestartAttempts = true,
+      closeConnection = true,
+      keepPendingCandidates = false,
+    } = {}
   ) {
     const peers = this.#peerConnections.get(roomId);
     const pc = peers?.get(remoteUserId);
@@ -483,7 +487,9 @@ export default class PeerManager {
       this.#clearPeerRestartTimer(roomId, remoteUserId);
     }
     this.#clearConnectionTimeout(roomId, remoteUserId);
-    this.#clearPendingCandidates(roomId, remoteUserId);
+    if (!keepPendingCandidates) {
+      this.#clearPendingCandidates(roomId, remoteUserId);
+    }
     this.#clearSignalQueue(roomId, remoteUserId);
     this.#onPeerDestroyed(roomId, remoteUserId);
   }

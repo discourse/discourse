@@ -279,6 +279,9 @@
           "livestream": {
             "type": "boolean"
           },
+          "allow_anonymous_livestream": {
+            "type": "boolean"
+          },
           "livestream_onebox": {
             "type": [
               "string",
@@ -411,6 +414,7 @@
           "is_standalone",
           "should_display_invitees",
           "status",
+          "allow_anonymous_livestream",
           "at_capacity",
           "post",
           "occurrences"

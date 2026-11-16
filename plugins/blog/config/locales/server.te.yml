@@ -14,7 +14,10 @@ te:
     about: మా సంఘం గురించి
     community: సంఘం
     preview: ప్రివ్యూ
+    author: రచయిత
     search: వెతుకు
     replies:
       one: "%{count} ప్రత్యుత్తరం"
       other: "%{count} ప్రత్యుత్తరాలు"
+    themes:
+      default: అప్రమేయ

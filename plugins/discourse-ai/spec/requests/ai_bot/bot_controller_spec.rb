@@ -679,6 +679,114 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       end
     end
 
+    it "uses the retrying user's permissions when reading private topics" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      private_topic = Fabricate(:private_message_topic, user: moderator)
+      private_post =
+        Fabricate(:post, topic: private_topic, user: moderator, raw: "Confidential moderator notes")
+      user_private_topic = Fabricate(:private_message_topic, user: user)
+      user_private_post =
+        Fabricate(:post, topic: user_private_topic, user: user, raw: "Personal notes for 猫")
+      topic = Fabricate(:topic, user: moderator)
+      trigger_post =
+        Fabricate(:post, topic: topic, user: moderator, raw: "Hello @#{bot_user.username}")
+
+      expect(user.guardian.can_see?(private_topic)).to eq(false)
+
+      ai_agent.update!(tools: [["Read", { "read_private" => true }, false]])
+      AiAgent.agent_cache.flush!
+      bot =
+        DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: llm_model)
+
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          id: "call-1",
+          parameters: {
+            topic_id: private_topic.id,
+          },
+        )
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, ["Initial response"]],
+      ) do |_, _, prompts|
+        reply_post = DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+
+        expect(prompts.flat_map(&:messages).map { |message| message[:content] }.join).to include(
+          private_post.raw,
+        )
+      end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+      expect(response.status).to eq(200)
+
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      user_tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          id: "call-2",
+          parameters: {
+            topic_id: user_private_topic.id,
+          },
+        )
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, user_tool_call, ["Retry response"]],
+      ) do |_, _, prompts|
+        Jobs::CreateAiReply.new.execute(job_args)
+
+        tool_output = prompts.flat_map(&:messages).map { |message| message[:content] }.join
+        expect(tool_output).not_to include(private_post.raw)
+        expect(tool_output).to include("Topic not found")
+        expect(tool_output).to include(user_private_post.raw)
+      end
+
+      expect(reply_post.reload.raw).to eq("Retry response")
+    end
+
+    it "uses the retrying user's permissions when importing private artifacts" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      private_topic = Fabricate(:private_message_topic, user: moderator)
+      private_post = Fabricate(:post, topic: private_topic, user: moderator)
+      artifact = Fabricate(:ai_artifact, post: private_post, user: moderator)
+      topic = Fabricate(:topic, user: moderator)
+      trigger_post = Fabricate(:post, topic: topic, user: moderator)
+
+      expect(moderator.guardian.can_see?(private_post)).to eq(true)
+      expect(user.guardian.can_see?(private_post)).to eq(false)
+
+      ai_agent.update!(tools: [["ReadArtifact", {}, false]])
+      AiAgent.agent_cache.flush!
+
+      reply_post =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Initial response"]) do
+          DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+        end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+      expect(response.status).to eq(200)
+
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read_artifact",
+          id: "call-1",
+          parameters: {
+            url: "#{Discourse.base_url}/discourse-ai/ai-bot/artifacts/#{artifact.id}",
+          },
+        )
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, ["Retry response"]],
+      ) do |_, _, prompts|
+        expect { Jobs::CreateAiReply.new.execute(job_args) }.not_to change(AiArtifact, :count)
+        expect(prompts.flat_map(&:messages).map { |message| message[:content] }.join).to include(
+          "Access denied",
+        )
+      end
+
+      expect(reply_post.reload.raw).to eq("Retry response")
+    end
+
     it "allows retrying if LLM model has a negative id (seeded)" do
       seeded_llm_model = Fabricate(:llm_model, id: -9999, name: "second-model")
 

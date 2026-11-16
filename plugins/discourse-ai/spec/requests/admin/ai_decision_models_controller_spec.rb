@@ -35,7 +35,9 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       expect(response.parsed_body["ai_decision_models"].first["custom_headers"]).to eq(
         valid_attrs[:custom_headers],
       )
-      expect(response.parsed_body.dig("meta", "providers")).to eq(%w[system_one typesafe open_ai])
+      expect(response.parsed_body.dig("meta", "providers")).to eq(
+        %w[system_one typesafe open_ai gemini],
+      )
       expect(response.parsed_body.dig("meta", "custom_header_limits")).to eq(
         DecisionModel::CUSTOM_HEADER_LIMITS.stringify_keys,
       )
@@ -72,7 +74,7 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
       get "/admin/plugins/discourse-ai/ai-decision-models.json"
 
       serialized = response.parsed_body["ai_decision_models"].first
-      expect(serialized).to include("seeded" => true, "url" => "********")
+      expect(serialized).to include("seeded" => true, "url" => "********", "provider" => "CDCK")
       expect(serialized).not_to have_key("custom_headers")
       expect(serialized["credit_allocation"]).to include(
         "daily_credits" => 1000,

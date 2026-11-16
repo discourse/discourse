@@ -4,6 +4,7 @@ module ::Blog
   class Path < ActiveRecord::Base
     self.table_name = "blog_paths"
     belongs_to :publication
+    normalizes :path, with: ->(path) { Publication.normalize_path(path) }
     validates :path, presence: true, uniqueness: true
   end
 end

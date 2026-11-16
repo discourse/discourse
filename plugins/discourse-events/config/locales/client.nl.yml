@@ -33,6 +33,10 @@ nl:
               label: Topic-ID
     discourse_events:
       title: "Gebeurtenissen"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registreren"
       preferences:
         reminders:
           preferences:

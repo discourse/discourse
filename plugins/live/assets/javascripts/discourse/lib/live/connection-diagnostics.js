@@ -348,6 +348,11 @@ export function summarizeStats(report) {
           framesPerSecond: stat.framesPerSecond,
           frameWidth: stat.frameWidth,
           frameHeight: stat.frameHeight,
+          audioLevel: stat.audioLevel,
+          totalAudioEnergy: stat.totalAudioEnergy,
+          totalSamplesDuration: stat.totalSamplesDuration,
+          totalSamplesReceived: stat.totalSamplesReceived,
+          concealedSamples: stat.concealedSamples,
         });
         break;
       case "outbound-rtp":
@@ -588,12 +593,15 @@ export function probeIceServers(iceServers, options = {}) {
  * @param {number} params.currentUserId
  * @param {import("./peer-manager.js").default} params.peerManager
  * @param {(userId: number) => boolean} params.shouldMaintainPeer
+ * @param {(userId: number) => object|null} [params.playbackFor] - How this
+ *   device plays the peer's audio; see `ParticipantAudio#playbackFor`.
  */
 export async function collectPeers({
   room,
   currentUserId,
   peerManager,
   shouldMaintainPeer,
+  playbackFor,
 }) {
   const participants = new Map();
   for (const participant of room?.active_participants || []) {
@@ -622,6 +630,7 @@ export async function collectPeers({
         inRoster: !!participant.username,
         expected: shouldMaintainPeer(userId),
         recovery: peerManager.diagnosticsFor(room.id, userId),
+        playback: playbackFor?.(userId) ?? null,
         connection: pc ? await collectPeerConnection(pc) : null,
       };
     })
@@ -680,6 +689,148 @@ export function formatPairsByType(pairsByType) {
  */
 export function unexpectedLocalAddress(stats) {
   return stats?.localCandidates?.prflx > 0 && stats.route.startsWith("relay");
+}
+
+// Decoded audio quieter than this (linear RMS) is digital silence rather than
+// a live microphone, whose noise floor sits well above it.
+const SILENT_AUDIO_RMS = 0.0005;
+
+/**
+ * Root-mean-square level of everything decoded so far, from the cumulative
+ * energy the stats report keeps; unlike `audioLevel` it doesn't depend on
+ * whether the peer happened to be speaking when the report was collected.
+ *
+ * @param {{totalAudioEnergy?: number, totalSamplesDuration?: number}} entry
+ * @returns {number|null}
+ */
+export function averageAudioLevel(entry) {
+  if (
+    typeof entry?.totalAudioEnergy !== "number" ||
+    !(entry.totalSamplesDuration > 0)
+  ) {
+    return null;
+  }
+  return Math.sqrt(entry.totalAudioEnergy / entry.totalSamplesDuration);
+}
+
+/**
+ * Whether audio packets arrive but decode to silence, which puts the problem
+ * on the sender's side (muted or wrong input device) rather than the network
+ * or this device's playback.
+ */
+export function receivingSilence(entry) {
+  const level = averageAudioLevel(entry);
+  return (
+    entry?.kind === "audio" &&
+    entry.totalSamplesDuration > 5 &&
+    level !== null &&
+    level < SILENT_AUDIO_RMS
+  );
+}
+
+/**
+ * Formats a linear audio level as dBFS, the scale audio tools use.
+ *
+ * @param {number|null} level
+ * @returns {string|null}
+ */
+export function formatDbfs(level) {
+  if (typeof level !== "number") {
+    return null;
+  }
+  return level > 0 ? `${Math.round(20 * Math.log10(level))} dBFS` : "-∞ dBFS";
+}
+
+/**
+ * The main inbound audio stream for a peer: screen-share audio can add a
+ * second one, and the microphone is the one that carries the most packets.
+ */
+export function primaryInboundAudio(stats) {
+  return (stats?.inbound || [])
+    .filter((entry) => entry.kind === "audio")
+    .sort((a, b) => b.packetsReceived - a.packetsReceived)[0];
+}
+
+/**
+ * Reasons this device wouldn't play a peer's audio even when it arrives.
+ *
+ * @param {object|null} playback - From `ParticipantAudio#playbackFor`.
+ * @returns {string[]} Keys under `live.connection_diagnostics.playback_problems`.
+ */
+export function playbackProblems(playback) {
+  if (!playback) {
+    return [];
+  }
+
+  const problems = [];
+  if (playback.deafened) {
+    problems.push("deafened");
+  }
+  if (playback.mutedByUser) {
+    problems.push("muted_by_you");
+  }
+  if (playback.volume === 0) {
+    problems.push("volume_zero");
+  }
+
+  const element = playback.elements.find(({ role }) => role === "live");
+  if (!element) {
+    problems.push("no_element");
+    return problems;
+  }
+  if (element.paused) {
+    problems.push("paused");
+  }
+  // Deafen and per-peer mute are applied by muting the element.
+  if (element.muted && !playback.deafened && !playback.mutedByUser) {
+    problems.push("element_muted");
+  }
+  if (!element.tracks.length) {
+    problems.push("no_track");
+  } else if (element.tracks.every((track) => track.readyState === "ended")) {
+    problems.push("track_ended");
+  }
+  return problems;
+}
+
+function formatLevel(value) {
+  return typeof value === "number" ? value.toFixed(4) : "?";
+}
+
+function formatAudioLevels(entry) {
+  if (entry.kind !== "audio" || entry.totalSamplesDuration === undefined) {
+    return "";
+  }
+  const concealed =
+    entry.totalSamplesReceived > 0 && entry.concealedSamples !== undefined
+      ? `${((entry.concealedSamples / entry.totalSamplesReceived) * 100).toFixed(1)}%`
+      : "?";
+  return ` level=${formatLevel(entry.audioLevel)} avg=${formatLevel(averageAudioLevel(entry))} decoded=${Math.round(entry.totalSamplesDuration)}s concealed=${concealed}`;
+}
+
+function formatPlayback(playback) {
+  const lines = [];
+  lines.push(
+    `  playback: volume=${playback.volume} muted by me=${playback.mutedByUser} deafened=${playback.deafened}`
+  );
+  const problems = playbackProblems(playback);
+  if (problems.length) {
+    lines.push(`  note: playback problems: ${problems.join(", ")}`);
+  }
+  for (const element of playback.elements) {
+    const tracks = element.tracks.length
+      ? element.tracks
+          .map(
+            (track) =>
+              `${track.enabled ? "enabled" : "disabled"}/${track.muted ? "muted" : "unmuted"}/${track.readyState}`
+          )
+          .join(", ")
+      : "none";
+    lines.push(
+      `  ${element.role} element: paused=${element.paused} muted=${element.muted} volume=${element.volume} readyState=${element.readyState} sink=${element.sinkId || "default"} audio tracks=${tracks}`
+    );
+  }
+  return lines;
 }
 
 export function formatCandidateCounts(counts) {
@@ -800,6 +951,9 @@ export function formatReport({
       continue;
     }
 
+    if (peer.playback) {
+      formatPlayback(peer.playback).forEach((line) => push(line));
+    }
     push(
       `  state: connection=${connection.connectionState} ice=${connection.iceConnectionState} gathering=${connection.iceGatheringState} signaling=${connection.signalingState}`
     );
@@ -843,8 +997,13 @@ export function formatReport({
     }
     for (const entry of stats.inbound) {
       push(
-        `  in ${entry.kind} ${entry.codec ?? ""}: packets=${entry.packetsReceived} lost=${entry.packetsLost ?? "?"} jitter=${entry.jitter ?? "?"}${entry.frameWidth ? ` ${entry.frameWidth}x${entry.frameHeight}@${entry.framesPerSecond ?? "?"}` : ""}`
+        `  in ${entry.kind} ${entry.codec ?? ""}: packets=${entry.packetsReceived} lost=${entry.packetsLost ?? "?"} jitter=${entry.jitter ?? "?"}${formatAudioLevels(entry)}${entry.frameWidth ? ` ${entry.frameWidth}x${entry.frameHeight}@${entry.framesPerSecond ?? "?"}` : ""}`
       );
+      if (receivingSilence(entry)) {
+        push(
+          "  note: audio packets arrive but decode to silence; the sender's microphone is likely muted or the wrong input device"
+        );
+      }
     }
     for (const entry of stats.outbound) {
       push(

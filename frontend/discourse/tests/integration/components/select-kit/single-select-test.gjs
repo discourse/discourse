@@ -470,6 +470,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("langProperty", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "be" }],
       value: null,
@@ -480,6 +481,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
         <SingleSelect
           @content={{this.content}}
           @langProperty="foo"
+          @onChange={{this.onChange}}
           @value={{this.value}}
         />
       </template>
@@ -504,6 +506,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("name", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     this.setProperties({
       content: [{ id: 1, name: "john" }],
       value: null,
@@ -511,7 +514,11 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
 
     await render(
       <template>
-        <SingleSelect @content={{this.content}} @value={{this.value}} />
+        <SingleSelect
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
       </template>
     );
 

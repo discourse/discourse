@@ -48,6 +48,33 @@ export default class ParticipantAudio {
     return this.#muted.get(this.#key(roomId, userId)) ?? false;
   }
 
+  /**
+   * Snapshot of how a peer's audio is being played here, for diagnostics.
+   */
+  playbackFor(roomId, userId) {
+    const key = this.#key(roomId, userId);
+    const elements = this.#elements.get(key) || {};
+
+    return {
+      volume: this.volumeFor(roomId, userId),
+      mutedByUser: this.isMuted(roomId, userId),
+      deafened: this.#isDeafened(),
+      elements: Object.entries(elements).map(([role, element]) => ({
+        role,
+        paused: element.paused,
+        muted: element.muted,
+        volume: element.volume,
+        readyState: element.readyState,
+        sinkId: element.sinkId,
+        tracks: (element.srcObject?.getAudioTracks?.() || []).map((track) => ({
+          enabled: track.enabled,
+          muted: track.muted,
+          readyState: track.readyState,
+        })),
+      })),
+    };
+  }
+
   apply(roomId, userId) {
     const key = this.#key(roomId, userId);
     const elements = this.#elements.get(key);

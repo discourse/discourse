@@ -14,7 +14,10 @@ sv:
     about: Om
     community: Community
     preview: Förhandsgranska
+    author: Författare
     search: Sök
     replies:
       one: "%{count} svar"
       other: "%{count} svar"
+    themes:
+      default: Standard

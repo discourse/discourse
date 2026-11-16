@@ -28,8 +28,6 @@ sr:
         title: "Zakvačeno"
       pinned: "Zakvačeno"
       channel_settings:
-        edit: "Izmeni"
-        add: "Dodaj"
         notification_settings_context: "Obaveštenja"
       close: "Zatvori"
       remove: "Ukloni"
@@ -64,16 +62,17 @@ sr:
         today: Danas
         yesterday: Juče
       about_view:
-        title: Naslov
         name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"
         tabs:
           members: Članovi
+          preferences: Postavke
           settings: Podešavanja
           search: Pretraži
         remove_member: "Ukloni"
+        members_title: "%{channel} člana"
       new_message_modal:
         filter: "Filter"
       direct_message_creator:
@@ -94,8 +93,6 @@ sr:
         notifications: "Obaveštenja"
         save: "Sačuvaj"
         saved: "Sačuvano"
-        admin_title: "Admin"
-        settings_title: "Podešavanja"
         category_label: "Kategorija"
         history_label: "Istorija"
         members_label: "Članovi"

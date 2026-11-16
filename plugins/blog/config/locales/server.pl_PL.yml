@@ -16,7 +16,18 @@ pl_PL:
     blog_title: Nazwa bloga wyświetlana w nawigacji, tytułach stron i kanałach.
     blog_description: Krótki opis strony głównej, kanału informacyjnego i wyszukiwarek.
     blog_about: Treść w formacie Markdown dla strony „O mnie” na blogu.
+    blog_path_format: Szablon adresu dla nowych artykułów, np. /{year}/{month}/{slug}. Użyj {year}, {month}, {day}, {slug} i {id}, w tym {slug} lub {id}. Dopóki artykuł nie zostanie opublikowany po raz pierwszy, po jego tytule i dacie publikacji UTC będzie wyświetlany adres, którego nie wpisał redaktor. Opublikowane artykuły zachowują swoje adresy.
     blog_posts_per_page: Liczba artykułów wyświetlanych na każdej stronie głównej lub stronie archiwum.
+    keywords:
+      blog_about: "o stronie"
+      blog_description: "slogan"
+      blog_path_format: "format adresu|format niestandardowy"
+      blog_title: "nazwa bloga"
+  activerecord:
+    attributes:
+      blog/publication:
+        canonical_url: Kanoniczny adres URL
+        co_author_ids: Współautorzy
   blog:
     home: Home
     continue_reading: Czytaj dalej
@@ -51,6 +62,9 @@ pl_PL:
     footer: Napisane w Discourse. Zapraszamy do rozmowy.
     from_the_blog: Notatki ze społeczności
     tagged: Umieszczono w kategorii %{tag}
+    author: Autor
+    author_separator: ", "
+    last_author_separator: " i "
     search: Szukaj
     search_placeholder: Wyszukaj tytuły i fragmenty artykułów
     featured: Polecane
@@ -86,6 +100,9 @@ pl_PL:
       drafts_category: Wybierz osobną kategorię prywatnych szkiców, do której dostęp będą miały wyłącznie skonfigurowane grupy redakcyjne lub personel, odrębną od głównej kategorii współdzielonych szkiców.
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
       path_taken: jest zarezerwowany lub należy już do innego artykułu
+      co_authors_invalid: "musi być maksymalnie %{count} różnych aktywnych użytkowników, nie licząc autora artykułu"
+      canonical_url_invalid: musi to być pełny adres http lub https
+      path_format: "Formatuj, zaczynając od / i dodaj {slug} lub {id}. Można używać tylko {year}, {month}, {day}, {slug} i {id} , a pierwszy segment nie może być zarezerwowanym adresem bloga, takim jak /tag."
       future_date: musi to być dzisiaj albo wcześniej. Skorzystaj z opcji planowania, żeby opublikować artykuł w przyszłości.
       color: "Użyj dokładnie sześciu cyfr szesnastkowych, bez prefiksu #."
     latest_stories: Najnowsze historie
@@ -97,7 +114,11 @@ pl_PL:
       preview_diagnostic: "%{template}, wiersz %{line}: %{message}"
       template_invalid: "Podaj prawidłowy szablon Liquid o rozmiarze nie większym niż 65 536 bajtów."
       template_parse_error: "Nieprawidłowy szablon Liquid: %{error}"
-      current: Aktualny wygląd
+      default: Domyślna
+      descriptions:
+        default: Przejrzysty, cichy układ czytelniczy wbudowany w blog.
+        broadsheet: Układ redakcyjny gazety z nagłówkami szeryfowymi i ponumerowaną siatką artykułów.
+        discourse-blog: Zaokrąglone karty na miękkim lawendowym płótnie z główną historią.
       invalid: "Podaj nazwę (do 100 znaków), sześciocyfrowe kolory szesnastkowe i kod CSS/JavaScript o rozmiarze nie większym niż 65 536 bajtów każdy."
       limit: Możesz zapisać do 30 motywów bloga. Najpierw usuń nieużywany motyw.
       stale: Ten motyw został zmieniony. Odśwież go i sprawdź najnowszy szkic, zanim przejdziesz dalej.

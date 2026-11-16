@@ -1782,6 +1782,8 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
+    keywords:
+      company_url: "sitio web"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3518,6 +3520,10 @@ gl:
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
+      answer_yes:
+        title: "Si"
+      answer_no:
+        title: "Non"
       agree:
         title: "Si"
       agree_and_suspend:

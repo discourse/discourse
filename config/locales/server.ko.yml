@@ -1841,6 +1841,9 @@ ko:
       markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
+    keywords:
+      company_url: "웹 사이트"
+      title: "커뮤니티 이름"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3655,6 +3658,10 @@ ko:
       links:
         category: 카테고리 설정
     actions:
+      answer_yes:
+        title: "예"
+      answer_no:
+        title: "아니오"
       agree:
         title: "예"
       agree_and_keep_deleted:

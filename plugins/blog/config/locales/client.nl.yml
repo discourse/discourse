@@ -16,6 +16,9 @@ nl:
         preview_archive: Archief
         desktop: Desktop
         mobile: Mobiel
+        save: Opslaan
+        path_formats:
+          custom: Aangepast
         back_to_themes: Terug naar thema's
         new_theme_short: Nieuw thema
         themes: Thema's
@@ -23,6 +26,8 @@ nl:
         edit: Bewerken
         activate: Activeren
         preview: Voorbeeld
+        customize: Aanpassen
+        customized_theme_name: "%{name} (aangepast)"
         import: Importeren
         export: Exporteren
         active: Actief
@@ -35,6 +40,7 @@ nl:
         change:
           title: titel
           body: inhoud
+          tags: tags
       review:
         create: Link maken
         copy: Kopiëren

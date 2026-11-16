@@ -14,9 +14,12 @@ sk:
     about: O stránke
     community: Komunita
     preview: Náhľad
+    author: Autor
     search: Hľadať
     replies:
       one: "%{count} odpoveď"
       few: "%{count} odpovede"
       many: "%{count} odpovedí"
       other: "%{count} odpovedí"
+    themes:
+      default: Predvolené

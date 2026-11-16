@@ -116,7 +116,10 @@ module DiscourseAi
           if mcp_server_ids
             sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
-          RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
+          if params.key?(:rag_uploads) || params.key?(:rag_chunk_tokens) ||
+               params.key?(:rag_chunk_overlap_tokens)
+            RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
+          end
           log_ai_agent_update(@ai_agent, initial_attributes)
           log_ai_spam_model_update(initial_spam_settings)
 
@@ -463,6 +466,8 @@ module DiscourseAi
       end
 
       def attached_upload_ids(agent)
+        return agent.uploads.pluck(:id) unless ai_agent_params.key?(:rag_uploads)
+
         manual_upload_ids = ai_agent_params[:rag_uploads].to_a.map { |upload| upload[:id] }
         source_upload_ids = agent.rag_document_sources.where.not(upload_id: nil).pluck(:upload_id)
 

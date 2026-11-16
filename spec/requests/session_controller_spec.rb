@@ -927,6 +927,36 @@ RSpec.describe SessionController do
       expect(EmailLoginCode.active.for_email(user.email)).to be_empty
     end
 
+    it "activates the address the code was sent to when the primary email was changed before verification" do
+      deactivated_user =
+        Fabricate(:user, email: "person@example.com", password: "supersecurepassword")
+      Fabricate(:secondary_email, user: deactivated_user, email: "person.alt@example.com")
+      domain_group = Fabricate(:group, automatic_membership_email_domains: "other.example.org")
+      deactivated_user.deactivate(Discourse.system_user)
+
+      put "/u/update-activation-email.json",
+          params: {
+            username: deactivated_user.username,
+            password: "supersecurepassword",
+            email: "person@other.example.org",
+          }
+      expect(response.status).to eq(200)
+
+      secondary_code = EmailLoginCode.generate!(email: "person.alt@example.com")
+      post "/session/login-code/verify.json",
+           params: {
+             email: secondary_code.email,
+             code: secondary_code.code,
+           }
+      expect(response.status).to eq(200)
+
+      deactivated_user.reload
+      expect(deactivated_user).to be_active
+      expect(deactivated_user.email).to eq("person.alt@example.com")
+      expect(UserEmail.exists?(email: "person@other.example.org")).to eq(false)
+      expect(domain_group.reload.users).not_to include(deactivated_user)
+    end
+
     context "when verifying a code for an email invite" do
       let(:invite) { Fabricate(:invite, email: "invited@example.com") }
       let(:topic) { Fabricate(:topic) }
@@ -1123,6 +1153,38 @@ RSpec.describe SessionController do
     context "when verifying a code for a domain-scoped invite" do
       let(:invite) { Fabricate(:invite, email: nil, domain: "allowed.example") }
       let(:login_code) { EmailLoginCode.generate!(email: "person@blocked.example") }
+
+      it "activates the address the code was sent to when the primary email was changed before verification" do
+        deactivated_user =
+          Fabricate(:user, email: "person@example.com", password: "supersecurepassword")
+        Fabricate(:secondary_email, user: deactivated_user, email: "person@allowed.example")
+        domain_group = Fabricate(:group, automatic_membership_email_domains: "other.example.org")
+        deactivated_user.deactivate(Discourse.system_user)
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: deactivated_user.username,
+              password: "supersecurepassword",
+              email: "person@other.example.org",
+            }
+        expect(response.status).to eq(200)
+
+        secondary_code = EmailLoginCode.generate!(email: "person@allowed.example")
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               email: secondary_code.email,
+               code: secondary_code.code,
+             }
+        expect(response.status).to eq(200)
+
+        deactivated_user.reload
+        expect(deactivated_user).to be_active
+        expect(deactivated_user.email).to eq("person@allowed.example")
+        expect(UserEmail.exists?(email: "person@other.example.org")).to eq(false)
+        expect(domain_group.reload.users).not_to include(deactivated_user)
+        expect(invite.reload).to be_redeemed
+      end
 
       it "accepts a verified secondary email when the primary email is outside the allowed domain" do
         user.update!(email: "person@blocked.example")
@@ -2653,15 +2715,107 @@ RSpec.describe SessionController do
       let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
       let(:invite_email) { nil }
 
-      def login_with_sso_and_invite(invite_key = invite.invite_key)
-        server_session["invite-key"] = invite_key
+      def login_with_sso(email: "bob@bob.com")
         sso = get_sso("/")
         sso.external_id = "666"
-        sso.email = "bob@bob.com"
+        sso.email = email
         sso.name = "Sam Saffron"
         sso.username = "sam"
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers:
+      end
+
+      def login_with_sso_and_invite(invite_key = invite.invite_key)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite_key
+        login_with_sso
+      end
+
+      it "does not redeem an invite that was only loaded by the victim's browser" do
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
+
+        # A post containing `<img src="/invites/<key>">` makes every reader
+        # load the invite page without any interaction.
+        get "/invites/#{invite.invite_key}"
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(false)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.invited_user).to be_nil
+        expect(GroupUser.exists?(user:, group: invited_group.group)).to eq(false)
+      end
+
+      it "does not block SSO login with an invite that was only loaded by the victim's browser" do
+        invite.update!(email: "someotheremail@dave.com")
+
+        get "/invites/#{invite.invite_key}"
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(false)
+      end
+
+      it "does not redeem an invite key stored under the key the invite page used to write" do
+        server_session["invite-key"] = invite.invite_key
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(User.find_by_email("bob@bob.com").invited_user).to be_nil
+      end
+
+      it "only uses the invite key for one login attempt" do
+        Fabricate(:user, email: "bob@bob.com", suspended_till: 1.day.from_now)
+
+        post "/invites/#{invite.invite_key}/sso"
+        login_with_sso
+
+        expect(response.status).to eq(403)
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+      end
+
+      it "redeems the invite when the invite page submits the invite key" do
+        post "/invites/#{invite.invite_key}/sso"
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(
+          invite.invite_key,
+        )
+
+        login_with_sso
+
+        expect(response.status).to eq(302)
+        expect(invite.reload.redeemed?).to eq(true)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+      end
+
+      it "clears the invite key when validation fails so the next login succeeds" do
+        invite.update!(email: "someotheremail@dave.com")
+
+        post "/invites/#{invite.invite_key}/sso"
+
+        login_with_sso
+        expect(response.status).to eq(400)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+
+        login_with_sso
+        expect(response.status).to eq(302)
+      end
+
+      it "clears the invite key when redemption fails so the next login succeeds" do
+        invite.update!(domain: "example.com")
+
+        post "/invites/#{invite.invite_key}/sso"
+
+        login_with_sso
+        expect(response.status).to eq(412)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+
+        login_with_sso
+        expect(response.status).to eq(302)
       end
 
       it "errors if the invite key is invalid" do
@@ -2717,7 +2871,7 @@ RSpec.describe SessionController do
         user = User.find_by_email("bob@bob.com")
         expect(user.active).to eq(true)
         expect(session[:current_user_id]).to eq(user.id)
-        expect(server_session["invite-key"]).to eq(nil)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(nil)
       end
 
       it "creates the user account and redeems the invite but does not approve the user if must_approve_users is enabled" do
@@ -3847,6 +4001,33 @@ RSpec.describe SessionController do
               expect(UserAuthToken.hash_token(unhashed_token)).to eq(
                 user.user_auth_tokens.first.auth_token,
               )
+            end
+
+            it "does not log in a second client that replays the same token" do
+              freeze_time(Time.zone.parse("2026-11-06 12:00:05")) do
+                params = {
+                  login: user.username,
+                  password: "myawesomepassword",
+                  second_factor_token:
+                    ROTP::TOTP.new(user_second_factor.data).at(Time.zone.now + 30),
+                  second_factor_method: UserSecondFactor.methods[:totp],
+                }
+
+                post "/session.json", params: params
+                expect(session[:current_user_id]).to eq(user.id)
+
+                reset!
+
+                post "/session.json", params: params
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["error"]).to eq(
+                  I18n.t("login.invalid_second_factor_code"),
+                )
+                expect(session[:current_user_id]).to be_nil
+                expect(response.cookies["_t"]).to be_blank
+                expect(UserAuthToken.where(user: user).count).to eq(1)
+              end
             end
           end
 

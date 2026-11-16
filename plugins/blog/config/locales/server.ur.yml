@@ -14,7 +14,10 @@ ur:
     about: فورم کے متعلق
     community: کمیونٹی
     preview: جھلک دیکھیں
+    author: مصنف
     search: تلاش
     replies:
       one: "%{count} جواب"
       other: "%{count} جوابات"
+    themes:
+      default: ڈِیفالٹ

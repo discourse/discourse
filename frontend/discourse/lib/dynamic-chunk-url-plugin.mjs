@@ -1,7 +1,7 @@
 import { relative } from "path";
 
 const PREFIX = "virtual:dynamic-chunk-url:";
-const RESOLVED_PREFIX = "\0" + PREFIX;
+export const RESOLVED_PREFIX = "\0" + PREFIX;
 
 /*
  * Importing `virtual:dynamic-chunk-url:<specifier>` emits <specifier> as its own

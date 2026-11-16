@@ -9,6 +9,7 @@ RSpec.describe DiscourseAi::Decisions::Endpoints::Base do
         "system_one" => DiscourseAi::Decisions::Endpoints::SystemOne,
         "typesafe" => DiscourseAi::Decisions::Endpoints::Typesafe,
         "open_ai" => DiscourseAi::Decisions::Endpoints::OpenAi,
+        "gemini" => DiscourseAi::Decisions::Endpoints::Gemini,
       }.each do |provider, endpoint_class|
         model = Fabricate.build(:decision_model, provider:)
         expect(described_class.for(model)).to be_an_instance_of(endpoint_class)

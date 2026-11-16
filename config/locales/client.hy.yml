@@ -8,6 +8,14 @@ hy:
   js:
     dsa_notice:
       choice_title: "Անօրինական է"
+    code_editor:
+      search:
+        replace: "Փոխարինել"
+        next: "Հաջորդը"
+        previous: "Նախորդը"
+        close: "Փակել"
+      fold:
+        to: "մինչև"
     user_api_key:
       authorize: "Նույնականացնել"
       deny: "Չեղարկել"
@@ -315,9 +323,6 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Ետ"
     design_wizard:
       back: "Ետ"
       next: "Հաջորդը"
@@ -3873,9 +3878,10 @@ hy:
           title: "Հավելումներ"
       upcoming_changes:
         name: "Անուն"
+        enabled: "Միացվա՞ծ է:"
+        feedback: "Կարծիք"
+        settings: "Կարգավորումներ"
         preview: "Նախադիտում"
-        enabled_for_options:
-          everyone: "Բոլորը"
         impact_roles:
           moderators: "Մոդերատորներ"
           staff: "Անձնակազմ"

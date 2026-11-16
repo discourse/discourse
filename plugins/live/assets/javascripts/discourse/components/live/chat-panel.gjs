@@ -8,13 +8,24 @@ import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { optionalRequire } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar" with {
+  discourseImport: "optional",
+};
+// Chat's own loading skeleton doubles as the panel's loading state, so the hand-off to the
+// thread's identical skeleton reads as one continuous load instead of a spinner flashing into
+// a skeleton.
+import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skeleton" with {
+  discourseImport: "optional",
+};
+import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread" with {
+  discourseImport: "optional",
+};
 
 const SendButton = <template>
   <div class="chat-composer-button__wrapper">
@@ -46,22 +57,6 @@ export default class LiveChatPanel extends Component {
   @tracked sending = false;
   @tracked hideSkeleton = false;
   @tracked composerFocused = false;
-
-  // Resolved at runtime rather than statically imported: cross-plugin static
-  // imports aren't resolvable in the compiled plugin bundle and break the
-  // whole bundle load.
-  chatThread = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-thread"
-  );
-  // Chat's own loading skeleton doubles as the panel's loading state, so the
-  // hand-off to the thread's identical skeleton reads as one continuous load
-  // instead of a spinner flashing into a skeleton.
-  chatSkeleton = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-skeleton"
-  );
-  chatNavbar = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat/navbar"
-  );
 
   textareaElement = null;
   #sessionPath = null;
@@ -286,8 +281,8 @@ export default class LiveChatPanel extends Component {
       class={{dConcatClass "live-chat" (if this.unavailable "is-unavailable")}}
       {{didInsert this.loadSession}}
     >
-      {{#if this.chatNavbar}}
-        <this.chatNavbar as |navbar|>
+      {{#if ChatNavbar}}
+        <ChatNavbar as |navbar|>
           {{#if (and this.site.mobileView @onClose)}}
             <DButton
               class="btn-transparent no-text c-navbar__back-button"
@@ -318,7 +313,7 @@ export default class LiveChatPanel extends Component {
               />
             {{/if}}
           </navbar.Actions>
-        </this.chatNavbar>
+        </ChatNavbar>
       {{/if}}
 
       {{! eslint-disable ember/template-no-invalid-interactive }}
@@ -327,14 +322,14 @@ export default class LiveChatPanel extends Component {
         {{on "keydown" this.interceptEscape capture=true}}
       >
         {{#if this.loading}}
-          {{#if this.chatSkeleton}}
-            <this.chatSkeleton />
+          {{#if ChatSkeleton}}
+            <ChatSkeleton />
           {{else}}
             <DConditionalLoadingSpinner @condition={{true}} />
           {{/if}}
-        {{else if (and this.chatThread this.thread)}}
+        {{else if (and ChatThread this.thread)}}
           {{#each (array this.thread) key="id" as |thread|}}
-            <this.chatThread @thread={{thread}} />
+            <ChatThread @thread={{thread}} />
           {{/each}}
         {{else if this.unavailable}}
           <DEmptyState

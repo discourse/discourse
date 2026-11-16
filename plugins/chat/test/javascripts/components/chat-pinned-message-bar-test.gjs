@@ -78,32 +78,12 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.chat_pinned_messages = true;
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.noop = () => {};
   });
 
   test("does not render when the channel has no pins", async function (assert) {
     this.channel.pinnedMessagesCount = 0;
-
-    await render(
-      <template>
-        <ChatPinnedMessageBar
-          @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
-        />
-      </template>
-    );
-
-    assert.dom(".chat-pinned-bar").doesNotExist();
-  });
-
-  test("does not render when the site setting is disabled", async function (assert) {
-    this.siteSettings.chat_pinned_messages = false;
-    this.channel.pinnedMessagesCount = 2;
-    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
-      pinResponse(this.channel, 2)
-    );
 
     await render(
       <template>

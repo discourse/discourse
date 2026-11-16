@@ -14,11 +14,15 @@ hy:
         preview_archive: Արխիվ
         desktop: Համակարգչային
         mobile: Հեռախոսային
+        save: Պահպանել
+        path_formats:
+          custom: Մասնավոր
         themes: Թեմաներ
         theme_name: Թեմայի անվանում
         edit: Խմբագրել
         activate: Ակտիվացնել
         preview: Նախադիտում
+        customize: Անհատականացնել
         import: Ներմուծել
         export: Արտահանել
         active: Ակտիվ
@@ -31,6 +35,7 @@ hy:
         change:
           title: վերնագիր
           body: բովանդակություն
+          tags: պիտակներ
       review:
         copy: Կրկնօրինակել
         open: Բացել

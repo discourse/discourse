@@ -41,6 +41,18 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
       expect(posts).to contain_exactly(post)
     end
 
+    context "with a query longer than the relevance ranking limit" do
+      let(:query) { (1..51).map { |number| "word#{number}" }.join(" ") }
+
+      it "searches for matching topics" do
+        insert_candidate(post.topic)
+
+        posts = trigger_search(query)
+
+        expect(posts).to contain_exactly(post)
+      end
+    end
+
     context "with HYDE enabled" do
       it "uses HYDE embeddings and not asymmetric ones" do
         insert_candidate(post.topic)

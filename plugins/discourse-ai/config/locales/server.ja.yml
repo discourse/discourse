@@ -117,6 +117,11 @@ ja:
     ai_translation_include_bot_content: "有効にすると、ボット (0 未満のユーザー ID) が書き込んだコンテンツも翻訳に送信されます。"
     ai_translation_backfill_hourly_rate: "バックフィル操作中に 1 時間あたりに翻訳する投稿とトピックの数。既存のコンテンツの翻訳の自動バックフィルを無効にする場合は 0 に設定します。"
     ai_usage_rollup_after_days: "日次集計にロールアップするまでに、リクエストごとの AI 使用統計を保持する日数。ロールアップを無効にする場合は 0 に設定します。"
+    keywords:
+      ai_default_llm_model: "デフォルトの言語モデル"
+      ai_discord_search_enabled: "discord 統合"
+      ai_summarization_enabled: "要約"
+      ai_summary_gists_enabled: "トピックリストの短い要約"
   reviewables:
     reasons:
       flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。
@@ -210,10 +215,6 @@ ja:
           name: "画像の生成..."
         image_generation_custom:
           name: "カスタム"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -590,6 +591,12 @@ ja:
       fonts:
         base_font: "本文のフォント"
         heading_font: "見出しのフォント"
+    mcp_theme_access:
+      "on": "オン"
+      "off": "オフ"
+      none: "なし"
+    mcp_app_setup:
+      none: "なし"
     reviewables:
       ai_tool_action:
         title: "AI ツールアクション"

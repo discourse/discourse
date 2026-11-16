@@ -11,6 +11,7 @@ describe "Admin Customize Themes" do
   let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:code_editor) { PageObjects::Components::CodeEditor.new }
 
   before { sign_in(admin) }
 
@@ -83,14 +84,14 @@ describe "Admin Customize Themes" do
 
       visit("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
 
-      expect(find(".ace_content")).to have_content("console.log('test')")
+      expect(code_editor).to have_value_including("console.log('test')")
     end
 
     it "can edit the js field" do
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      expect(find(".ace_content")).to have_content("// Your code here")
-      find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
+      expect(code_editor).to have_value_including("// Your code here")
+      code_editor.set_input("console.log('test')\n")
       find(".save-theme").click
 
       expect(theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value).to start_with(
@@ -104,7 +105,7 @@ describe "Admin Customize Themes" do
         .update!(value: "console.log('second test')")
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      expect(find(".ace_content")).to have_content("console.log('second test')")
+      expect(code_editor).to have_value_including("console.log('second test')")
     end
 
     it "shows the description of the field the admin switches to" do

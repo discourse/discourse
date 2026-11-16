@@ -73,7 +73,6 @@ RSpec.describe "Chat channel as the homepage" do
     fab!(:other_channel, :category_channel)
     fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
 
-    let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
     let(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
     before do
@@ -106,25 +105,6 @@ RSpec.describe "Chat channel as the homepage" do
       expect_composer_in_viewport
     end
 
-    it "lets the owner tick off chatting by sending a first message in the homepage channel" do
-      visit("/")
-
-      expect(banner).to have_step(
-        "start_posting",
-        title: I18n.t("js.chat.admin_onboarding.start_posting.title"),
-        description:
-          I18n.t("js.chat.admin_onboarding.start_posting.description", channel: channel_1.title),
-      )
-      expect(banner.step_not_completed?("start_posting")).to eq(true)
-
-      banner.click_step_action("start_posting")
-      expect(channel_page.composer).to be_focused
-
-      channel_page.send_message("Hello everyone")
-
-      expect(banner.step_completed?("start_posting")).to eq(true)
-    end
-
     it "raises the checklist only once messages run beneath it" do
       visit("/")
 
@@ -139,7 +119,6 @@ RSpec.describe "Chat channel as the homepage" do
     end
 
     it "keeps the pinned message bar and channel notices clear of the checklist" do
-      SiteSetting.chat_pinned_messages = true
       Fabricate(
         :chat_pinned_message,
         chat_message: message_1,

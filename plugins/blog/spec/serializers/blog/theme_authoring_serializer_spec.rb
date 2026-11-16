@@ -29,6 +29,14 @@ RSpec.describe Blog::ThemeAuthoringSerializer do
     )
   end
 
+  context "when there are no published articles" do
+    let(:publications) { [] }
+
+    it "returns an empty articles list" do
+      expect(json["articles"]).to eq([])
+    end
+  end
+
   it "provides every built-in template keyed by its theme field" do
     expect(json["templates"].keys).to eq(Blog::BlogTheme::TEMPLATE_FIELDS)
     expect(json["templates"]["template_layout"]).to eq(Blog::TemplateRenderer.builtin("layout"))

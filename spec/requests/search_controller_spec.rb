@@ -86,6 +86,16 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized search text in full-page and header searches" do
+      term = (1..51).map { |number| "word#{number}" }.join(" ")
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+
+      get "/search/query.json", params: { term: term }
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 

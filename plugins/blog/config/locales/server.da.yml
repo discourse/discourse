@@ -14,7 +14,10 @@ da:
     about: Om
     community: Fællesskab
     preview: Forhåndsvisning
+    author: Forfatter
     search: Søg
     replies:
       one: "%{count} svar"
       other: "%{count} svar"
+    themes:
+      default: Standard

@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import {
   find,
@@ -9,7 +8,6 @@ import {
 } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
-import $ from "jquery";
 import { resetInlineOneboxCache } from "pretty-text/inline-oneboxer";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
@@ -45,10 +43,11 @@ import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-he
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { resetCategoryTagSearchCache } from "discourse/lib/category-tag-search";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import { clearRegisteredCodeEditorLanguages } from "discourse/lib/code-editor-languages";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { resetDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
-import deprecated, { clearBacklog } from "discourse/lib/deprecated";
+import { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -253,6 +252,7 @@ export function testCleanup(app) {
   clearDesktopNotificationHandlers();
   clearPluginDocumentTitleCounters();
   cleanUpHashtagTypeClasses();
+  clearRegisteredCodeEditorLanguages();
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
@@ -441,25 +441,9 @@ export async function selectDate(selector, date) {
   elem.blur();
 }
 
-export function queryAll(selector, context) {
-  deprecated(
-    "`queryAll` is deprecated. Use `findAll` from `@ember/test-helpers` for elements, or `assert.dom` from qunit-dom for assertions.",
-    {
-      id: "discourse.qunit-helpers.query-all",
-      since: "2026.7.0-latest",
-    }
-  );
-
-  context = context || "#ember-testing";
-  return $(selector, context);
-}
-
 export function query() {
   return document.querySelector("#ember-testing").querySelector(...arguments);
 }
-
-const JQUERY_SELECTOR_PATTERN =
-  /:(contains|visible|hidden|eq|lt|gt|even|odd|first|last|header|input|checkbox|radio|selected|parent)\b(?!-)/i;
 
 function elementsFor(target) {
   if (isEmpty(target)) {
@@ -467,18 +451,6 @@ function elementsFor(target) {
   }
 
   if (typeof target === "string") {
-    if (JQUERY_SELECTOR_PATTERN.test(target)) {
-      deprecated(
-        `"${target}" uses a jQuery-only selector. Use a native CSS selector instead; jQuery selector support will be removed.`,
-        {
-          id: "discourse.qunit-helpers.jquery-selector",
-          since: "2026.7.0-latest",
-        }
-      );
-
-      return $(target, "#ember-testing").toArray();
-    }
-
     return findAll(target);
   }
 

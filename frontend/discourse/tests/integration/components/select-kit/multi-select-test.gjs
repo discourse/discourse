@@ -61,12 +61,14 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   });
 
   test("maximum=1", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{this.onChange}}
           @options={{hash maximum=1}}
           @value={{this.value}}
         />
@@ -88,12 +90,14 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   });
 
   test("maximum=2", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{this.onChange}}
           @options={{hash maximum=2}}
           @value={{this.value}}
         />
@@ -107,12 +111,14 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   });
 
   test("pasting", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{this.onChange}}
           @options={{hash maximum=2}}
           @value={{this.value}}
         />
@@ -137,12 +143,14 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   });
 
   test("useHeaderSelectedCount=true", async function (assert) {
+    this.set("onChange", (value) => this.set("value", value));
     setDefaultState(this, { value: [1, 2] });
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{this.onChange}}
           @options={{hash useHeaderSelectedCount=true}}
           @value={{this.value}}
         />

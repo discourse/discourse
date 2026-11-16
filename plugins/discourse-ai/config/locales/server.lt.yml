@@ -229,6 +229,23 @@ lt:
           header_background: "Antraštė"
       fonts:
         heading_font: "Antraštės šriftas"
+    mcp_theme_access:
+      "on": "Įjungta"
+      "off": "Išjungta"
+      none: "nieko"
+      changes:
+        server: "MCP serveris"
+    mcp_app_setup:
+      none: "nieko"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Codex"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "DI įrankio veiksmas"

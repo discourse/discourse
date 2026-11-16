@@ -14,8 +14,11 @@ he:
     about: אודות
     community: קהילה
     preview: תצוגה מקדימה
+    author: מחבר/ת
     search: חיפוש
     replies:
       one: "תגובה"
       two: "שתי תגובות"
       other: "שתי תגובות"
+    themes:
+      default: ברירת מחדל

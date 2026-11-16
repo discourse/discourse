@@ -190,6 +190,10 @@ module DiscourseEvents
             "spiral_calendar"
           end
 
+          def svg_icon
+            "calendar-days"
+          end
+
           private
 
           def events_calendar_category_ids
