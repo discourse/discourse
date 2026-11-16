@@ -14,6 +14,7 @@ hu:
     about: Névjegy
     community: Közösség
     preview: Előnézet
+    author: Szerző
     search: Keresés
     replies:
       one: "%{count} válasz"

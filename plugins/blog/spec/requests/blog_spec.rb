@@ -479,6 +479,47 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).not_to include("Writes about")
     end
 
+    it "serves a standalone page at its path while leaving it out of listings and the feed" do
+      update_blog_metadata(publication, admin, page: true)
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css("h1").text).to eq(publication.article.title)
+      expect(html.at_css("#discussion")).to be_nil
+      expect(html.at_css('a[href*="/author/"]')).to be_nil
+      expect(html.at_css('meta[property="og:type"]')["content"]).to eq("website")
+      expect(JSON.parse(html.at_css('script[type="application/ld+json"]').text)["@type"]).to eq(
+        "WebPage",
+      )
+
+      theme =
+        create_blog_theme(
+          {
+            "name" => "Pages",
+            "accent_color" => "d64b2a",
+            "paper_color" => "f5f0e6",
+            "ink_color" => "19382d",
+            "css" => "",
+            "javascript" => "",
+            "template_page" => "<p id=custom>{{ article.title }}</p>",
+          },
+          user: admin,
+        )
+      activate_blog_theme(theme, user: admin)
+      get publication.url
+      expect(Nokogiri.HTML5(response.body).at_css("#custom").text).to eq(publication.article.title)
+
+      %w[/ /archive /feed.xml].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.body).not_to include(publication.url)
+      end
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).to include(publication.url)
+    end
+
     it "credits co-authors in the byline and lists the article on their author pages" do
       co_author = Fabricate(:user, name: "Bea Coauthor")
       update_blog_metadata(publication, admin, co_authors: co_author.username)

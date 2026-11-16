@@ -26,6 +26,9 @@ RSpec.describe ReviewableAuthorPenaltySerializer do
 
   describe "#reason" do
     it "is included for regular users when penalty reasons are not hidden" do
+      SiteSetting.hide_suspension_reasons = false
+      SiteSetting.hide_silencing_reasons = false
+
       expect(reasons_for(user)).to eq(
         "silence" => author.silence_reason,
         "suspension" => author.suspend_reason,
@@ -34,6 +37,7 @@ RSpec.describe ReviewableAuthorPenaltySerializer do
 
     it "is hidden from regular users by the setting matching the penalty kind" do
       SiteSetting.hide_suspension_reasons = true
+      SiteSetting.hide_silencing_reasons = false
       expect(reasons_for(user)).to eq("silence" => author.silence_reason, "suspension" => nil)
 
       SiteSetting.hide_suspension_reasons = false

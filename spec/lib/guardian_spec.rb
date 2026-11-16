@@ -3449,8 +3449,8 @@ RSpec.describe Guardian do
   end
 
   describe "suspension reasons" do
-    it "shows suspension reasons by default" do
-      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
+    it "hides suspension reasons by default" do
+      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
     end
 
     context "with hide suspension reason enabled" do
@@ -3471,8 +3471,8 @@ RSpec.describe Guardian do
   end
 
   describe "silencing reasons" do
-    it "shows silencing reasons by default" do
-      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(true)
+    it "hides silencing reasons by default" do
+      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(false)
     end
 
     context "with hide silencing reason enabled" do

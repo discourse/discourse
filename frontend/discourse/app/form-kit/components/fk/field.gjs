@@ -146,6 +146,7 @@ export default class FKField extends Component {
                     "form-kit__container-title"
                     (if field.labelFormat (concat "--" field.labelFormat))
                   }}
+                  id={{field.labelId}}
                   @fieldId={{field.id}}
                 >
                   <span>{{field.title}}</span>

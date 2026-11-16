@@ -122,6 +122,12 @@ RSpec.describe Blog::Article::List do
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
+      it "leaves out standalone pages" do
+        newer_publication.update_columns(page: true)
+
+        expect(result.listing[:publications]).to eq([featured_publication, older_publication])
+      end
+
       it "lists public articles with featured ones first, then newest first" do
         expect(result.listing).to eq(
           publications: [featured_publication, newer_publication, older_publication],

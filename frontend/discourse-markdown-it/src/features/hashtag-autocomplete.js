@@ -56,7 +56,11 @@ function addHashtag(buffer, matches, state) {
     if (!cache.has(slug) && cache.size < limit) {
       cache.set(
         slug,
-        hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder)
+        hashtagLookup(
+          slug,
+          options.hashtagUserIds ?? options.userId,
+          options.hashtagTypesInPriorityOrder
+        )
       );
     }
 

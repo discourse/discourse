@@ -12,6 +12,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
 export default class BreadCrumbs extends Component {
+  @service mobileTabBar;
   @service site;
   @service siteSettings;
 
@@ -46,17 +47,32 @@ export default class BreadCrumbs extends Component {
       });
   }
 
+  get hasSubcategoryDrop() {
+    return (
+      this.categoryBreadcrumbs.filter((breadcrumb) => breadcrumb.hasOptions)
+        .length > 1
+    );
+  }
+
   get showTagsSection() {
     return this.siteSettings.tagging_enabled && !this.editingCategory;
   }
 
+  // With the tab bar, the lists' views sit in it, which leaves the top of
+  // every list free for these
   get hidden() {
-    return this.site.mobileView && !this.args.category;
+    return (
+      this.site.mobileView && !this.args.category && !this.mobileTabBar.enabled
+    );
   }
 
   <template>
     <ol
-      class={{dConcatClass "category-breadcrumb" (if this.hidden "hidden")}}
+      class={{dConcatClass
+        "category-breadcrumb"
+        (if this.hidden "hidden")
+        (if this.hasSubcategoryDrop "--has-subcategory")
+      }}
       ...attributes
     >
       <PluginOutlet

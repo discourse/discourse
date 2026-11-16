@@ -3439,6 +3439,22 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(response.body).to include(I18n.t("invalid_access"))
       end
+
+      it "removes only the notifications of the refused topic" do
+        refused_notification = Fabricate(:notification, user:, topic: private_topic)
+        other_notifications = [
+          Fabricate(:notification, user:, topic:),
+          Fabricate(:notification, user:, topic: nil),
+        ]
+        sign_in(user)
+
+        get "/t/#{private_topic.id}.json", params: { topic_id: topic.id }
+        get "/t/#{private_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(Notification.exists?(refused_notification.id)).to eq(false)
+        expect(Notification.where(id: other_notifications.map(&:id)).count).to eq(2)
+      end
     end
 
     describe "when topic is allowed to a group" do
@@ -8130,6 +8146,55 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(Notification.count).to eq(0)
+      end
+    end
+
+    context "when a watching group member is ignoring the inviter" do
+      fab!(:inviter) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:victim, :user)
+
+      before do
+        pm.allowed_users << inviter
+        Fabricate(:post, topic: pm)
+        group.add(victim)
+        group
+          .group_users
+          .find_by(user_id: victim.id)
+          .update!(notification_level: NotificationLevels.all[:watching])
+        Fabricate(:ignored_user, user: victim, ignored_user: inviter)
+      end
+
+      it "does not create an invited_to_private_message notification for the ignoring member" do
+        sign_in(inviter)
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: group.name }
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user_id: victim.id,
+            notification_type: Notification.types[:invited_to_private_message],
+          ).count,
+        ).to eq(0)
+      end
+
+      it "still notifies the ignoring member when the inviter is staff" do
+        sign_in(admin)
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: group.name }
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user_id: victim.id,
+            notification_type: Notification.types[:invited_to_private_message],
+          ).count,
+        ).to eq(1)
       end
     end
 

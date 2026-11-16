@@ -10,6 +10,10 @@ pt:
       llm_model:
         name: "Id. do Modelo"
         max_prompt_tokens: "Janela de contexto"
+  site_settings:
+    keywords:
+      ai_discord_search_enabled: "integração do Discord"
+      ai_summarization_enabled: "resumos"
   reports:
     overall_sentiment:
       yaxis: "Data"

@@ -71,6 +71,9 @@ RSpec.describe FlaggedUserSerializer do
     end
 
     it "includes reasons for regular users when they are not hidden" do
+      SiteSetting.hide_suspension_reasons = false
+      SiteSetting.hide_silencing_reasons = false
+
       expect(serialize_for(user)).to include(
         silence_reason: flagged_user.silence_reason,
         suspend_reason: flagged_user.suspend_reason,
@@ -92,6 +95,7 @@ RSpec.describe FlaggedUserSerializer do
 
     it "hides the suspension reason without hiding the silence reason" do
       SiteSetting.hide_suspension_reasons = true
+      SiteSetting.hide_silencing_reasons = false
 
       json = serialize_for(user)
 

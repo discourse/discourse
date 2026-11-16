@@ -33,6 +33,12 @@ module Live
       user.in_any_groups?(SiteSetting.live_direct_calls_allowed_groups_map)
     end
 
+    # Only initiators need the sender group; recipients only need room access.
+    def can_send_live_file?
+      return false unless can_access_live?
+      user.in_any_groups?(SiteSetting.live_file_transfer_allowed_groups_map)
+    end
+
     # A specific user may be rung only by callers they could receive a
     # personal message from: muting or ignoring the caller, disabling
     # personal messages, or an allowlist that omits the caller all block the

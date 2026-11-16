@@ -1,5 +1,5 @@
 ---
-title: Write acceptance tests and component tests for Ember code in Discourse
+title: Write acceptance tests for Ember code in Discourse
 short_title: Acceptance tests
 id: acceptance-tests
 ---
@@ -8,72 +8,7 @@ Automated tests are a great way to protect your code against future regressions.
 
 Fortunately, it’s pretty easy these days to add basic tests to your Ember code!
 
-### Component Tests
-
-In the [previous tutorial](https://meta.discourse.org/t/adding-ember-components-to-discourse/48891) in this series we added a component called `fancy-snack` to display our snack with a fading background. Let’s write a test for it. Create the following file:
-
-**test/javascripts/components/snack-test.js**
-
-```js
-import componentTest from "helpers/component-test";
-
-moduleForComponent("fancy-snack", { integration: true });
-
-componentTest("test the rendering", {
-  template: "{{fancy-snack snack=testSnack}}",
-
-  setup() {
-    this.set("testSnack", {
-      name: "Potato Chips",
-      description: "Now with extra trans fat!",
-    });
-  },
-
-  test(assert) {
-    assert.equal(this.$(".fancy-snack-title h1").text(), "Potato Chips");
-    assert.equal(
-      this.$(".fancy-snack-description p").text(),
-      "Now with extra trans fat!"
-    );
-  },
-});
-```
-
-To run the test, open your browser on your development server to `/qunit?module=component%3Afancy-snack`. Your browser will then perform the component tests and output something like “2 assertions of 2 passed, 0 failed.”
-
-Note that while on the `/qunit` page you can run other tests. You can simply select a new test from the `Module` dropdown box at the top of the screen.
-
-Let’s step through the test to understand how it works.
-
-The `template` line tells Ember how we’d like to insert our component. It’s the exact same markup you’d use to place the component in a handlebars template so it should be familiar:
-
-```js
-template: '{{fancy-snack snack=testSnack}}’,
-```
-
-Note that it is passing `testSnack` through as the `snack` parameter. That is defined in the `setup()` method:
-
-```js
-setup() {
-  this.set('testSnack', {
-    name: 'Potato Chips',
-    description: 'Now with extra trans fat!'
-  });
-},
-```
-
-I’ve just put in some dummy data. That’s all we need to do to have Ember render the component. Finally, we have a couple of assertions in the `test()` method:
-
-```js
-test(assert) {
-  assert.equal(this.$('.fancy-snack-title h1').text(), 'Potato Chips');
-  assert.equal(this.$('.fancy-snack-description p').text(), 'Now with extra trans fat!');
-}
-```
-
-If you use `this.$()` you get access to a [jQuery](http://jquery.com/) selector in your template. The assertions here use that selector to grab the value of the snack’s title and snack’s description and compare them with what we expect. If the values match then the assertions will pass and our test is all working.
-
-It’s worth noting that you don’t need to test every little thing in a component like this. You should use some discretion and try to figure out what things in your code are likely to break or cause confusion to other developers down the road. If you test too many things in your template, it will mean it’s a pain for someone else in the future to change it. Just start small, testing the most obvious things, and in time you’ll get the hang of it.
+For component tests, see [Component tests](33-component-tests.md).
 
 ### Acceptance Tests
 

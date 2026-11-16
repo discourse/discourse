@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import {
   click,
@@ -16,13 +15,21 @@ import { undo } from "@codemirror/commands";
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import CodeEditor from "discourse/components/code-editor";
-import loadCodemirror from "discourse/lib/load-codemirror";
+import {
+  loadCodeEditorLanguage,
+  registerCodeEditorLanguage,
+} from "discourse/lib/code-editor-languages";
+import loadCodemirror, {
+  overrideCodemirrorImportForTesting,
+} from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
 import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
-import I18n from "discourse-i18n";
+import DModal from "discourse/ui-kit/d-modal";
+import I18n, { i18n } from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
@@ -88,13 +95,11 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("highlights by the language shortcut, following changes to it", async function (assert) {
-    const state = new (class {
-      @tracked language = "sql";
-    })();
+    const language = tracked("sql");
 
     await render(
       <template>
-        <CodeEditor @language={{state.language}} @value="select 1" />
+        <CodeEditor @language={{language.value}} @value="select 1" />
       </template>
     );
     await waitFor(".cm-content span[class]");
@@ -102,7 +107,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(highlightedTokens().includes("select"));
     const before = highlightedTokens();
 
-    state.language = "yaml";
+    language.value = "yaml";
     await settled();
     await waitUntil(
       () => JSON.stringify(highlightedTokens()) !== JSON.stringify(before)
@@ -158,29 +163,70 @@ module("Integration | Component | code-editor", function (hooks) {
       assert.true(view.hasFocus, "without leaving the editor");
 
       await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.dom(".cm-editor").isFocused("the next leaves the text");
+      assert
+        .dom(".cm-content")
+        .hasAttribute("tabindex", "-1", "so Tab moves past the editor");
       assert.strictEqual(seen.length, 0, "neither reaches the document");
 
-      await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(seen.length, 1, "a third passes through");
+      find(".cm-editor").dispatchEvent(new FocusEvent("focusout"));
+      assert
+        .dom(".cm-content")
+        .hasAttribute("tabindex", "-1", "a window switch keeps it out");
 
-      const tab = new KeyboardEvent("keydown", {
-        key: "Tab",
-        keyCode: 9,
-        bubbles: true,
-        cancelable: true,
-      });
-      view.contentDOM.dispatchEvent(tab);
-      assert.false(tab.defaultPrevented, "and Tab is free to move focus");
-      assert.strictEqual(view.state.doc.toString(), "one", "not indent");
+      await triggerKeyEvent(".cm-editor", "keydown", "Escape");
+      assert.strictEqual(seen.length, 1, "a third belongs to the page");
 
-      await triggerKeyEvent(".cm-content", "keydown", 65);
-      await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(seen.length, 1, "typing re-arms the sequence");
+      view.focus();
+      assert
+        .dom(".cm-content")
+        .doesNotHaveAttribute("tabindex", "coming back restores the tab order");
     } finally {
       document.documentElement.removeEventListener("keydown", spy, {
         capture: true,
       });
     }
+  });
+
+  test("Escape keeps focus inside a surrounding dialog", async function (assert) {
+    const closeModal = sinon.spy();
+    await render(
+      <template>
+        <DModal @closeModal={{closeModal}} @inline={{true}} @title="test">
+          <CodeEditor @value="one" />
+          <button type="button">After</button>
+        </DModal>
+      </template>
+    );
+    await waitFor(".cm-editor");
+    codeEditorView().focus();
+
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    assert.dom(".cm-editor").isFocused();
+    assert.false(closeModal.called, "the dialog stays open");
+
+    const tab = new KeyboardEvent("keydown", {
+      key: "Tab",
+      bubbles: true,
+      cancelable: true,
+    });
+    find(".cm-editor").dispatchEvent(tab);
+    assert.false(tab.defaultPrevented, "Tab can move on");
+
+    await triggerKeyEvent(".cm-editor", "keydown", "Escape");
+    assert.true(closeModal.called, "the next Escape closes the dialog");
+  });
+
+  test("Escape leaves the bare editor even with a selection", async function (assert) {
+    const Editor = await loadCodemirror();
+    await render(<template><Editor @value="one two" /></template>);
+    const view = codeEditorView(".codemirror-editor");
+
+    view.focus();
+    view.dispatch({ selection: { anchor: 0, head: 3 } });
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+
+    assert.dom(".cm-content").isNotFocused();
   });
 
   test("turns on code-editing behaviour", async function (assert) {
@@ -326,16 +372,14 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("wires the field's accessibility attributes", async function (assert) {
-    const state = new (class {
-      @tracked invalid = true;
-    })();
+    const invalid = tracked(true);
 
     await render(
       <template>
         <CodeEditor
           @describedBy="help"
           @inputId="field"
-          @invalid={{state.invalid}}
+          @invalid={{invalid.value}}
           @value=""
         />
       </template>
@@ -346,20 +390,143 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-content").hasAttribute("aria-describedby", "help");
     assert.dom(".cm-content").hasAttribute("aria-invalid", "true");
 
-    state.invalid = false;
+    invalid.value = false;
     await settled();
 
     assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
   });
 
+  test("is named and focused by its label", async function (assert) {
+    await render(
+      <template>
+        <label for="field" id="name">Name</label>
+        <CodeEditor @inputId="field" @labelledBy="name" @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.dom(".cm-content").hasAttribute("aria-labelledby", "name");
+
+    await click("label");
+    assert.true(codeEditorView().hasFocus);
+  });
+
+  test("leaves clicks on controls inside its label alone", async function (assert) {
+    await render(
+      <template>
+        <label for="field">
+          Name
+          <button type="button">Help</button>
+        </label>
+        <CodeEditor @inputId="field" @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+    // Tooltip triggers are spans with a button role.
+    const trigger = document.createElement("span");
+    trigger.setAttribute("role", "button");
+    find("label").append(trigger);
+
+    await click("label button");
+    assert.dom(".cm-content").isNotFocused();
+
+    await click("label [role='button']");
+    assert.dom(".cm-content").isNotFocused();
+  });
+
+  test("shows an error when the editor fails to load", async function (assert) {
+    const failure = new Error("chunk failed");
+    overrideCodemirrorImportForTesting(() => Promise.reject(failure));
+    const consoleError = sinon.stub(console, "error");
+
+    try {
+      await render(<template><CodeEditor @value="" /></template>);
+
+      assert
+        .dom(".code-editor__error")
+        .hasText(i18n("code_editor.load_failed"));
+      assert.dom(".code-editor .spinner").doesNotExist();
+      assert.true(consoleError.calledWith(failure), "the cause is logged");
+    } finally {
+      overrideCodemirrorImportForTesting(null);
+    }
+  });
+
+  [
+    ["fails to load", () => Promise.reject(new Error("chunk failed"))],
+    [
+      "fails to build",
+      async () => ({
+        default: () => {
+          throw new Error("bad options");
+        },
+      }),
+    ],
+    [
+      "builds an invalid extension",
+      async () => ({ default: () => "not an extension" }),
+    ],
+  ].forEach(([description, loader]) => {
+    test(`stays a plain text editor when its language ${description}`, async function (assert) {
+      registerCodeEditorLanguage("broken", loader);
+      const language = tracked("sql");
+      const consoleError = sinon.stub(console, "error");
+
+      await render(
+        <template>
+          <CodeEditor @language={{language.value}} @value="select 1" />
+        </template>
+      );
+      await waitFor(".cm-content span[class]");
+
+      language.value = "broken";
+      await waitUntil(() => consoleError.called);
+      await settled();
+
+      assert.dom(".cm-content").hasText("select 1");
+      assert.deepEqual(highlightedTokens(), [], "the old language is dropped");
+    });
+  });
+
+  test("ignores a superseded language load that fails", async function (assert) {
+    let calls = 0;
+    registerCodeEditorLanguage("flaky", () => {
+      calls++;
+      if (calls === 1) {
+        return new Promise((resolve, reject) =>
+          setTimeout(() => reject(new Error("stale")), 100)
+        );
+      }
+      return loadCodeEditorLanguage("sql").then((builder) => ({
+        default: builder,
+      }));
+    });
+    const options = tracked({}, {});
+    const consoleError = sinon.stub(console, "error");
+
+    const rendered = render(
+      <template>
+        <CodeEditor
+          @language="flaky"
+          @languageOptions={{options.value}}
+          @value="select 1"
+        />
+      </template>
+    );
+    await waitFor(".cm-content");
+    options.value = { schema: {} };
+    await rendered;
+
+    assert.true(consoleError.called, "the stale load failed");
+    assert.true(highlightedTokens().includes("select"));
+  });
+
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
-    const state = new (class {
-      @tracked disabled = true;
-    })();
+    const disabled = tracked(true);
 
     await render(
       <template>
-        <CodeEditor @disabled={{state.disabled}} @value="fixed" />
+        <CodeEditor @disabled={{disabled.value}} @value="fixed" />
       </template>
     );
     const view = codeEditorView();
@@ -368,7 +535,7 @@ module("Integration | Component | code-editor", function (hooks) {
     view.focus();
     assert.true(view.hasFocus, "it can still be read and copied");
 
-    state.disabled = false;
+    disabled.value = false;
     await settled();
 
     assert.false(view.state.readOnly);
@@ -430,49 +597,61 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("a value replaced from outside cannot be undone into the old document", async function (assert) {
-    const state = new (class {
-      @tracked value = "one";
-    })();
+    const editorValue = tracked("one");
+    const onChange = (newValue) => (editorValue.value = newValue);
 
     await render(
       <template>
-        <CodeEditor @onChange={{fn (mut state.value)}} @value={{state.value}} />
+        <CodeEditor @onChange={{onChange}} @value={{editorValue.value}} />
       </template>
     );
     const view = codeEditorView();
     view.dispatch({ changes: { from: 3, insert: " typed" } });
     await settled();
 
-    state.value = "two";
+    editorValue.value = "two";
     await settled();
     undo(view);
     await settled();
 
     assert.strictEqual(view.state.doc.toString(), "two");
-    assert.strictEqual(state.value, "two");
+    assert.strictEqual(editorValue.value, "two");
   });
 
   test("picks up language options that change after the editor is built", async function (assert) {
-    const state = new (class {
-      @tracked languageOptions = { schema: {} };
-    })();
+    const languageOptions = tracked({ schema: {} });
 
     await render(
       <template>
         <CodeEditor
           @language="sql"
-          @languageOptions={{state.languageOptions}}
+          @languageOptions={{languageOptions.value}}
           @value="SELECT badges."
         />
       </template>
     );
     await waitFor(".cm-content span[class]");
 
-    state.languageOptions = { schema: { badges: ["allow_title"] } };
+    languageOptions.value = { schema: { badges: ["allow_title"] } };
     await settled();
     await openCompletions(codeEditorView());
 
     assert.true(completionLabels().includes("allow_title"));
+  });
+
+  test("accepts null language options", async function (assert) {
+    await render(
+      <template>
+        <CodeEditor
+          @language="sql"
+          @languageOptions={{null}}
+          @value="select 1"
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    assert.true(highlightedTokens().includes("select"));
   });
 
   test("offers the completions a caller lists, beside the language's own", async function (assert) {
@@ -499,14 +678,12 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("marks the lines a caller reports as warnings", async function (assert) {
-    const state = new (class {
-      @tracked warnings = [{ line: 2, message: "Avoid this" }];
-    })();
+    const warnings = tracked([{ line: 2, message: "Avoid this" }]);
     const value = ["fine", "suspect", "fine"].join("\n");
 
     await render(
       <template>
-        <CodeEditor @lineWarnings={{state.warnings}} @value={{value}} />
+        <CodeEditor @lineWarnings={{warnings.value}} @value={{value}} />
       </template>
     );
     await waitFor(".cm-lintRange");
@@ -514,7 +691,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("suspect");
     assert.dom(".cm-lint-marker").exists({ count: 1 }, "with a gutter icon");
 
-    state.warnings = [];
+    warnings.value = [];
     await settled();
     await waitUntil(() => !document.querySelector(".cm-lintRange"));
 
@@ -522,19 +699,17 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("keeps line warnings when the value is swapped", async function (assert) {
-    const state = new (class {
-      @tracked value = "one\ntwo";
-    })();
+    const editorValue = tracked("one\ntwo");
     const warnings = [{ line: 1, message: "Avoid this" }];
 
     await render(
       <template>
-        <CodeEditor @lineWarnings={{warnings}} @value={{state.value}} />
+        <CodeEditor @lineWarnings={{warnings}} @value={{editorValue.value}} />
       </template>
     );
     await waitFor(".cm-lintRange");
 
-    state.value = "uno\ndos";
+    editorValue.value = "uno\ndos";
     await settled();
 
     assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("uno");
@@ -583,26 +758,24 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("shows a placeholder that arrives after the editor is built", async function (assert) {
-    const state = new (class {
-      @tracked placeholder = "";
-    })();
+    const placeholder = tracked("");
 
     await render(
       <template>
-        <CodeEditor @placeholder={{state.placeholder}} @value="" />
+        <CodeEditor @placeholder={{placeholder.value}} @value="" />
       </template>
     );
     await waitFor(".cm-editor");
 
     assert.dom(".cm-placeholder").doesNotExist();
 
-    state.placeholder = "Write something";
+    placeholder.value = "Write something";
     await settled();
     await waitFor(".cm-placeholder");
 
     assert.dom(".cm-placeholder").hasText("Write something");
 
-    state.placeholder = "";
+    placeholder.value = "";
     await settled();
     await waitUntil(() => !document.querySelector(".cm-placeholder"));
 

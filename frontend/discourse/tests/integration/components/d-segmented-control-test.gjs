@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DSegmentedControl from "discourse/components/d-segmented-control";
@@ -14,8 +15,8 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
   ];
 
   test("renders checked state and updates on click", async function (assert) {
-    this.set("selected", "week");
-    const handleSelect = (value) => this.set("selected", value);
+    const selected = tracked("week");
+    const handleSelect = (value) => (selected.value = value);
 
     await render(
       <template>
@@ -23,7 +24,7 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
           @items={{ITEMS}}
           @name="period"
           @onSelect={{handleSelect}}
-          @value={{this.selected}}
+          @value={{selected.value}}
         />
       </template>
     );

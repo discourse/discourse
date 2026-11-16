@@ -14,10 +14,8 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.setProperties({
-      comboBox: selectKit(".combo-box"),
-      singleSelect: selectKit(".single-select:not(.combo-box)"),
-    });
+    this.comboBox = selectKit(".combo-box");
+    this.singleSelect = selectKit(".single-select:not(.combo-box)");
   });
 
   hooks.afterEach(function () {

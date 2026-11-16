@@ -656,6 +656,8 @@ en:
         include_extensions_external_ids: "External ids"
         include_extensions_emails: "Emails"
         include_extensions_ips: "IP addresses and locations"
+        custom_field_names: "Include custom fields"
+        custom_field_names_placeholder: "Select custom fields"
         actor_username: "Performed by user"
       badge:
         operation: "Operation"
@@ -1091,6 +1093,10 @@ en:
         changes_silenced: "Silenced"
         changes_unsilenced: "Unsilenced"
       post_created:
+        post_type: "Post type"
+        post_type_description: "Choose whether regular posts or whispers should trigger the workflow"
+        post_type_regular: "Regular posts"
+        post_type_whisper: "Whispers"
         topic_type: "Topic type"
         topic_type_description: "Choose whether topics, personal messages, or both should trigger the workflow"
         topic_type_all: "All"

@@ -21,6 +21,7 @@ module CookedProcessorMixin
             locale: @opts[:locale],
           )
 
+        onebox = nil if respond_to?(:onebox_allowed?, true) && !onebox_allowed?(url, onebox)
         @has_oneboxes = true if onebox.present?
         onebox
       else

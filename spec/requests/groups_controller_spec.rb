@@ -1017,6 +1017,94 @@ RSpec.describe GroupsController do
       expect(visible_member).to include("last_seen_at", "last_posted_at")
     end
 
+    it "sorts members by activity timestamps only when their profiles are visible to the requester" do
+      hidden_user = Fabricate(:user, username: "aaa_hidden", last_seen_at: 1.minute.ago)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user, username: "aaa_visible", last_seen_at: 1.year.ago)
+      group.add(hidden_user)
+      group.add(visible_user)
+
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      hidden_member = members.find { |member| member["id"] == hidden_user.id }
+
+      expect(hidden_member).not_to include("last_seen_at")
+      expect(members.map { |member| member["id"] }).to eq(
+        [visible_user.id, user.id, hidden_user.id],
+      )
+
+      sign_in(admin)
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+
+      expect(members.map { |member| member["id"] }).to eq(
+        [hidden_user.id, visible_user.id, user.id],
+      )
+      expect(members.first).to include("last_seen_at")
+    end
+
+    it "does not sort members by activity timestamps of new users hidden from anonymous viewers" do
+      SiteSetting.hide_new_user_profiles = true
+
+      new_user = Fabricate(:user, username: "aaa_new", last_seen_at: 1.minute.ago)
+      established_user =
+        Fabricate(
+          :user,
+          username: "aaa_established",
+          trust_level: TrustLevel[2],
+          last_seen_at: 1.year.ago,
+        )
+      group.add(new_user)
+      group.add(established_user)
+
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      new_member = members.find { |member| member["id"] == new_user.id }
+      established_member = members.find { |member| member["id"] == established_user.id }
+
+      expect(new_member).not_to include("last_seen_at")
+      expect(established_member).to include("last_seen_at")
+      expect(members.map { |member| member["id"] }).to eq(
+        [established_user.id, user.id, new_user.id],
+      )
+    end
+
+    it "does not sort anonymous viewers' members by activity timestamps withheld from them" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      recent_user = Fabricate(:user, username: "aaa_recent", last_seen_at: 1.minute.ago)
+      older_user = Fabricate(:user, username: "bbb_older", last_seen_at: 1.year.ago)
+      group.add(recent_user)
+      group.add(older_user)
+
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      expect(members).to all(exclude("last_seen_at", "last_posted_at"))
+      expect(members.map { |member| member["username"] }.first(2)).to eq(%w[aaa_recent bbb_older])
+
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      expect(members.map { |member| member["id"] }.first(2)).to eq([older_user.id, recent_user.id])
+      expect(members.first).to include("last_seen_at")
+    end
+
     it "ensures that membership can be paginated" do
       freeze_time
 
@@ -2186,6 +2274,8 @@ RSpec.describe GroupsController do
     end
 
     it "allows members to be sorted by supported columns" do
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
 
       expect(response.status).to eq(200)
@@ -2193,6 +2283,7 @@ RSpec.describe GroupsController do
       members = response.parsed_body["members"]
 
       expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
+      expect(members.first(2)).to all(include("last_seen_at"))
 
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
 
