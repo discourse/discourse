@@ -31,6 +31,11 @@ en:
     blog_posts_per_page:
       Number of articles shown on each homepage or archive
       page.
+    keywords:
+      blog_about: "about page"
+      blog_description: "tagline"
+      blog_path_format: "address format|custom format"
+      blog_title: "blog name"
   activerecord:
     attributes:
       blog/publication:
