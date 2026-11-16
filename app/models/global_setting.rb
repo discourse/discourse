@@ -394,6 +394,11 @@ class GlobalSetting
     filter.is_a?(Array) ? filter : nil
   end
 
+  def self.load_plugin?(dir_name)
+    filter = load_plugins_filter
+    filter.is_a?(Array) ? filter.include?(dir_name) : filter == :all
+  end
+
   # Returns `:all`, `:none`, or an array of plugin directory names.
   def self.load_plugins_filter
     case ENV["LOAD_PLUGINS"]

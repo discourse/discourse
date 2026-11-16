@@ -10,6 +10,21 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
     context "when enabling" do
       let(:enabled) { true }
 
+      # `TranslationOverride.upsert!` reloads I18n and drops these, so use `Fabricate`.
+      before do
+        I18n.backend.store_translations(
+          :en,
+          test_subject: {
+            one: "one subject",
+            other: "other subject",
+          },
+          test_subject_improved: {
+            one: "one improved subject",
+            other: "other improved subject",
+          },
+        )
+      end
+
       it "updates email_subject to the simple format" do
         result
         expect(SiteSetting.email_subject).to eq(simple_email_subject)
@@ -46,13 +61,11 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
       end
 
       context "when translation overrides exist for pluralized keys with _improved variants" do
-        let(:translation_key) { "user_notifications.chat_summary.subject.chat_dm_1.one" }
-        let(:improved_key) { "user_notifications.chat_summary.subject.chat_dm_1_improved.one" }
+        let(:translation_key) { "test_subject.one" }
+        let(:improved_key) { "test_subject_improved.one" }
         let(:custom_value) { "custom plural override" }
 
-        before do
-          TranslationOverride.upsert!(SiteSetting.default_locale, translation_key, custom_value)
-        end
+        before { Fabricate(:translation_override, translation_key:, value: custom_value) }
 
         it "copies the override to the pluralized _improved leaf" do
           result
@@ -89,11 +102,11 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
       end
 
       context "when a pluralized translation override key already targets an _improved variant" do
-        let(:improved_key) { "user_notifications.chat_summary.subject.chat_dm_1_improved.one" }
+        let(:improved_key) { "test_subject_improved.one" }
         let(:improved_value) { "custom improved plural" }
 
         before do
-          TranslationOverride.upsert!(SiteSetting.default_locale, improved_key, improved_value)
+          Fabricate(:translation_override, translation_key: improved_key, value: improved_value)
         end
 
         it "does not overwrite the improved override" do
