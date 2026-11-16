@@ -144,7 +144,7 @@ module PageObjects
         end
 
         def focus
-          component.click
+          component.find(".chat-composer__input-container").click
         end
 
         def focused?
