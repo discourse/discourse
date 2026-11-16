@@ -93,13 +93,8 @@ test("updates when the arg changes", async function (assert) {
 });
 ```
 
-After changing tracked state, `await rerender()`: it waits only for that change to reach the
-DOM. `settled()` also waits for test waiters, pending requests and run loop timers, so a test
-that quietly depends on async work passes with it by accident. These conversions set the bar
-for new tests, so keep `settled()` for steps that start async work on purpose, and prefer the
-interaction helpers (`click`, `fillIn`), which settle on their own.
-
-The box's semantics (`Object.is` dedupe, `tracked(undefined)` for an empty box) are in
+Why `rerender()` and not `settled()` after a tracked change, and the box's semantics
+(`Object.is` dedupe, `tracked(undefined)` for an empty box), are in
 `discourse-writing-js-tests`. `this.set("x", ...)` on the test context still works (the
 template is lexically bound to the test function's `this`), which is why passing
 `this.set` tests are left alone.
